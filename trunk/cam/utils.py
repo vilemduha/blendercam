@@ -1968,25 +1968,20 @@ def exportGcodePath(verts,o):
 		plungefeedrate=	millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
 		last=(0,0,0)
-		#gcommand='{FEED}'
+
 		o.duration=0.0
 		f=millfeedrate
 		for vi in range(0,len(verts)):
-			#print(vi)
 			v=verts[vi]
 			if v[2]<last[2] and vi>0:
-				#f=plungefeedrate
-				#gcommand='{FEED}'
 				c.feedrate(plungefeedrate)
 				c.feed(x=v[0],y=v[1],z=v[2])
 			elif v[2]==last[2]==o.free_movement_height:
-				#f=freefeedrate
 				c.feedrate(freefeedrate)
 				c.rapid(x=v[0],y=v[1],z=v[2])
 				gcommand='{RAPID}'
 				
 			else:
-				#f=millfeedrate
 				c.feedrate(millfeedrate)
 				c.feed(x=v[0],y=v[1],z=v[2])
 			v1=Vector(v)
@@ -1994,17 +1989,8 @@ def exportGcodePath(verts,o):
 			vect=v1-v2
 			o.duration+=vect.length/f
 			last=v
-			#command=[gcommand,v[0],v[1],v[2],f]
-		
-			#commands.append(command)
 	c.program_end()
 	c.file_close()
-
-	return commands
-	
- 
-
-	
 
 				
 def getPaths(context,operation):#should do all path calculations.
