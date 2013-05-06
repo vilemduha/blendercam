@@ -40,7 +40,7 @@ bl_info = {
 	"blender": (2, 6, 3),
 	"location": "Properties > render",
 	"description": "Generate machining paths for CNC",
-	"warning": "do not use this script for production, only for development and testing currently",
+	"warning": "there is no warranty for the produced gcode by now",
 	"wiki_url": "blendercam.blogger.com",
 	"tracker_url": "https://projects.blender.org/tracker/index.php?"\
 		"func=detail&aid=22405",
@@ -53,7 +53,7 @@ PRECISION=5
 class machineSettings(bpy.types.PropertyGroup):
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	post_processor = EnumProperty(name='Post processor',
-		items=(('MACH3','Mach3','default mach3'),('EMC','EMC - experimental','default emc'),('HEIDENHAIN','Heidenhain - experimental','heidenhain - experimental')),
+		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC','default emc'),('HEIDENHAIN','Heidenhain  - experimental','heidenhain'),('TNC151','Heidenhain TNC151  - experimental','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1 - experimental','Sieg KX1'),('HM50','Hafco HM-50 - experimental','Hafco HM-50'),('CENTROID','Centroid M40 - experimental','Centroid M40'),('ANILAM','Anilam Crusader M - experimental','Anilam Crusader M')),
 		description='Post processor',
 		default='MACH3')
 	#units = EnumProperty(name='Units', items = (('IMPERIAL', ''))

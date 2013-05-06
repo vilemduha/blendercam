@@ -1928,14 +1928,28 @@ def exportGcodePath(verts,o):
 	m=s.cam_machine[0]
 	filename=bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))]+safeFileName(o.filename)
 	
-
+#		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC','default emc'),('HEIDENHAIN','Heidenhain  - experimental','heidenhain'),('TNC151','Heidenhain TNC151  - experimental','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1 - experimental','Sieg KX1'),('HM50','Hafco HM-50 - experimental','Hafco HM-50'),('CENTROID','Centroid M40 - experimental','Centroid M40'),('ANILAM','Anilam Crusader M - experimental','Anilam Crusader M')),
 	from . import nc
+	
+	if m.post_processor=='ISO':
+		from .nc import iso as postprocessor
+	
 	if m.post_processor=='MACH3':
 		from .nc import mach3 as postprocessor
 	elif m.post_processor=='EMC':
 		from .nc import emc2 as postprocessor
+	elif m.post_processor=='HM50':
+		from .nc import hm50 as postprocessor
 	elif m.post_processor=='HEIDENHAIN':
 		from .nc import heiden as postprocessor
+	elif m.post_processor=='TNC151':
+		from .nc import tnc151 as postprocessor
+	elif m.post_processor=='SIEGKX1':
+		from .nc import siegkx1 as postprocessor
+	elif m.post_processor=='CENTROID':
+		from .nc import centroid1 as postprocessor
+	elif m.post_processor=='ANILAM':
+		from .nc import anilam_crusader_m as postprocessor
 	c=postprocessor.Creator()
 	c.file_open(filename)
 	
@@ -1956,6 +1970,9 @@ def exportGcodePath(verts,o):
 			spdir_clockwise=False
 		
 		c.program_begin(0,filename)
+		c.absolute()
+		c.set_plane(0)
+		
 		c.spindle(o.spindle_rpm,spdir_clockwise)
 		c.feedrate(o.feedrate)
 		c.tool_change(o.cutter_id)
@@ -1973,6 +1990,7 @@ def exportGcodePath(verts,o):
 		f=millfeedrate
 		for vi in range(0,len(verts)):
 			v=verts[vi]
+			v=(v[0]*unitcorr,v[1]*unitcorr,v[2]*unitcorr)
 			if v[2]<last[2] and vi>0:
 				c.feedrate(plungefeedrate)
 				c.feed(x=v[0],y=v[1],z=v[2])
