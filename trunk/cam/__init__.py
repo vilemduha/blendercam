@@ -448,18 +448,21 @@ class CamOperationCopy(bpy.types.Operator):
 		  
 		s=bpy.context.scene
 		s.cam_operations.add()
-		o=s.cam_operations[-1]
 		copyop=s.cam_operations[s.cam_active_operation]
+		s.cam_active_operation+=1
+		l=len(s.cam_operations)-1
+		s.cam_operations.move(l,s.cam_active_operation)
+		o=s.cam_operations[s.cam_active_operation]
+
 		for k in copyop.keys():
 			o[k]=copyop[k]
-		s.cam_active_operation=len(s.cam_operations)-1
-		o.name='Operation_'+str(s.cam_active_operation+1)
-		o.filename=o.name
+		
+		o.name=o.name+'_copy'
+		o.filename=o.filename+'_copy'
 		ob=bpy.context.active_object
 		if ob!=None:
 			o.object_name=ob.name
 			o.minz=ob.location.z+ob.bound_box[0][2]
-		
 		return {'FINISHED'}
 	
 class CamOperationRemove(bpy.types.Operator):
