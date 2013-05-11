@@ -262,7 +262,36 @@ class camOperation(bpy.types.PropertyGroup):
 
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
+'''
+class ModalTimerOperator(bpy.types.Operator):
+	"""Operator which runs its self from a timer"""
+	bl_idname = "wm.modal_timer_operator"
+	bl_label = "Modal Timer Operator"
 
+	_timer = None
+
+	def modal(self, context, event):
+		if event.type == 'ESC':
+			return self.cancel(context)
+
+		if event.type == 'TIMER':
+			# change theme color, silly!
+			color = context.user_preferences.themes[0].view_3d.space.gradients.high_gradient
+			color.s = 1.0
+			color.h += 0.01
+
+		return {'PASS_THROUGH'}
+
+	def execute(self, context):
+		self._timer = context.window_manager.event_timer_add(0.1, context.window)
+		context.window_manager.modal_handler_add(self)
+		return {'RUNNING_MODAL'}
+
+	def cancel(self, context):
+		context.window_manager.event_timer_remove(self._timer)
+		return {'CANCELLED'}
+'''
+"""
 class PathsModal(bpy.types.Operator):
 	'''calculate CAM paths'''
 	bl_idname = "object.calculate_cam_paths_modal"
@@ -310,10 +339,35 @@ class PathsModal(bpy.types.Operator):
 				if ob.type=='MESH':
 					operation.onlycurves=False;
 		operation.warnings=''
-		utils.getPaths(context,operation)
+		
+		self.operation=operation
+		self.operation.test=0
+		self._timer = context.window_manager.event_timer_add(0.1, context.window)
+		context.window_manager.modal_handler_add(self)
+		return {'RUNNING_MODAL'}
+		#utils.getPaths(context,operation)
+		
+	def modal(self, context, event):
+		if event.type == 'ESC':
+			return self.cancel(context)
 
-		return {'FINISHED'}
-   
+		if event.type == 'TIMER':
+			#print('running')
+			self.operation.test+=1
+			for a in range(0,10000):
+				b=round(100*200/532/567.5)
+			# change theme color, silly!
+			
+			context.area.header_text_set("doing heavy calculations here " + str( self.operation.test))
+
+		return {'PASS_THROUGH'}
+
+	def cancel(self, context):
+		context.window_manager.event_timer_remove(self._timer)
+		context.area.header_text_set()
+		return {'CANCELLED'}
+		#return {'FINISHED'}
+"""
 class PathsSimple(bpy.types.Operator):
 	'''calculate CAM paths'''
 	bl_idname = "object.calculate_cam_paths"
@@ -626,7 +680,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 			and prop!='name_property'):
 				d.append(prop)
 	'''
-	preset_values = ['use_layers', 'duration', 'chipload', 'material_from_model', 'stay_low', 'carve_depth', 'dist_along_paths', 'source_image_crop_end_x', 'source_image_crop_end_y', 'material_size', 'material_radius_around_model', 'use_limit_curve', 'cut_type', 'use_exact', 'minz_from_ob', 'free_movement_height', 'source_image_crop_start_x', 'movement_insideout', 'spindle_rotation_direction', 'skin', 'source_image_crop_start_y', 'movement_type', 'source_image_crop', 'limit_curve', 'spindle_rpm', 'ambient_behaviour', 'cutter_type', 'source_image_scale_z', 'cutter_diameter', 'source_image_size_x', 'curve_object', 'cutter_flutes', 'ambient_radius', 'simulation_detail', 'update_offsetimage_tag', 'dist_between_paths', 'max', 'min', 'pixsize', 'slice_detail', 'parallel_step_back', 'drill_type', 'source_image_name', 'dont_merge', 'update_silhouete_tag', 'material_origin', 'inverse', 'waterline_fill', 'source_image_offset', 'circle_detail', 'strategy', 'update_zbufferimage_tag', 'stepdown', 'feedrate', 'cutter_tip_angle', 'cutter_id', 'path_object_name', 'pencil_threshold',  'geometry_source', 'optimize_threshold', 'protect_vertical', 'plunge_feedrate', 'minz', 'warnings', 'object_name', 'optimize', 'parallel_angle', 'cutter_length']
+	preset_values = ['use_layers', 'duration', 'chipload', 'material_from_model', 'stay_low', 'carve_depth', 'dist_along_paths', 'source_image_crop_end_x', 'source_image_crop_end_y', 'material_size', 'material_radius_around_model', 'use_limit_curve', 'cut_type', 'use_exact', 'minz_from_ob', 'free_movement_height', 'source_image_crop_start_x', 'movement_insideout', 'spindle_rotation_direction', 'skin', 'source_image_crop_start_y', 'movement_type', 'source_image_crop', 'limit_curve', 'spindle_rpm', 'ambient_behaviour', 'cutter_type', 'source_image_scale_z', 'cutter_diameter', 'source_image_size_x', 'curve_object', 'cutter_flutes', 'ambient_radius', 'simulation_detail', 'update_offsetimage_tag', 'dist_between_paths', 'max', 'min', 'pixsize', 'slice_detail', 'parallel_step_back', 'drill_type', 'source_image_name', 'dont_merge', 'update_silhouete_tag', 'material_origin', 'inverse', 'waterline_fill', 'source_image_offset', 'circle_detail', 'strategy', 'update_zbufferimage_tag', 'stepdown', 'feedrate', 'cutter_tip_angle', 'cutter_id', 'path_object_name', 'pencil_threshold',	 'geometry_source', 'optimize_threshold', 'protect_vertical', 'plunge_feedrate', 'minz', 'warnings', 'object_name', 'optimize', 'parallel_angle', 'cutter_length']
 
 	preset_subdir = "cam_operations"   
 	 
@@ -1094,8 +1148,8 @@ class CAM_AREA_Panel(bpy.types.Panel):
 				
  
 def get_panels():
-    types = bpy.types
-    return (
+	types = bpy.types
+	return (
 	CAM_UL_operations,
 	camOperation,
 	machineSettings,
@@ -1111,7 +1165,7 @@ def get_panels():
 	CAM_MACHINE_Panel,
 	
 	PathsSimple,
-	PathsModal,
+	#PathsModal,
 	PathsAll,
 	CAMPositionObject,
 	CAMSimulate,
