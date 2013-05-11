@@ -56,6 +56,9 @@ def progress(text,n):
 	sys.stdout.flush()
 	sys.stdout.write('\r%s %3s%% [%s>%s]' % (text,n, '='*d, ' '*(50-d)))
 	sys.stdout.flush()
+	#bpy.data.window_managers['WinMan'].progress_update(n)
+	#if bpy.context.scene.o
+	#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
 		#time.sleep(0.5)
 
 def getCircle(r,z):
@@ -318,7 +321,7 @@ def getPathPatternParallel(o,angle):
 	#if o.movement_type=='CONVENTIONAL'
 	#ar=numpy.array((1.1,1.1))
 	#ar.resize()
-	#if o.testing==0:
+	#if bpy.app.debug_value==0:
 	for a in range(int(-dim/pathd), int(dim/pathd)):#this is highly ineffective, computes path2x the area needed...
 		chunk=camPathChunk([])
 		for b in range(int(-dim/pathstep),int(dim/pathstep)):
@@ -830,7 +833,7 @@ def imagetonumpy(i,o):
 	y=0
 	count=0
 	na=numpy.array((0.1),dtype=float)
-	if o.testing==5:
+	if bpy.app.debug_value==5:
 		size=width*height
 		na.resize(size*4)
 		
@@ -989,7 +992,7 @@ def getImageCorners(o,i):#for pencil operation mainly
 	print('detect corners in the offset image')
 	vertical=i[:-2,1:-1]-i[1:-1,1:-1]-o.pencil_threshold> i[1:-1,1:-1]-i[2:,1:-1]
 	horizontal=i[1:-1,:-2]-i[1:-1,1:-1]-o.pencil_threshold> i[1:-1,1:-1]-i[1:-1,2:]
-	#if o.testing==2:
+	#if bpy.app.debug_value==2:
 	
 	ar=numpy.logical_or(vertical,horizontal)
 	#dilateAr(ar,1)
@@ -2924,7 +2927,7 @@ def getObjectSilhouette(operation):
 
 		if operation.onlycurves==False:#TODO if another silhouette algorithm is used, it needs to be done to support groups.
 			if operation.update_silhouete_tag:
-					if operation.testing==0:#raster based method - currently only stable one.
+					if bpy.app.debug_value==0:#raster based method - currently only stable one.
 						print('detecting silhouette - raster based')
 						samples=renderSampleImage(operation)
 						i=samples>operation.minz
@@ -2935,7 +2938,7 @@ def getObjectSilhouette(operation):
 						
 						operation.silhouete=silhouete
 						#return [silhouete]
-					elif operation.testing==1:#own method with intersections...
+					elif bpy.app.debug_value==1:#own method with intersections...
 						#first, duplicate the object, so we can split it:
 						activate(ob)
 						bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
@@ -3187,7 +3190,7 @@ def getObjectSilhouette(operation):
 							spoly.shift(ob.location.x,ob.location.y)
 						operation.silhouete=spolys
 					
-					elif operation.testing==4: # own method - with intersections.
+					elif bpy.app.debug_value==4: # own method - with intersections.
 						print('silh edge candidates detection')
 						t=time.time()
 						m=ob.data
@@ -3562,9 +3565,6 @@ def getPaths(context,operation):#should do all path calculations.
 	t=time.clock()
 	s=bpy.context.scene
 	o=operation
-	#op=o = s.cam_os[s.cam_active_o]
-	#op=bpy.context.scene.cam_os[o]
-	#ob=bpy.context.scene.objects.active
 	getBounds(o)
 	
 	
@@ -3615,7 +3615,7 @@ def getPaths(context,operation):#should do all path calculations.
 			#chunks=sortChunks(chunks)
 			#chunks.extend(chunks)
 			chunks=setChunksZ(chunksFromCurve,o.min.z)
-		if o.testing==0 or o.testing==1or o.testing==3 or o.testing==2:# or o.testing==4:
+		if bpy.app.debug_value==0 or bpy.app.debug_value==1or bpy.app.debug_value==3 or bpy.app.debug_value==2:# or bpy.app.debug_value==4:
 			chunksToMesh(chunks,o)
 	
 	if o.strategy=='POCKET':	
@@ -3643,7 +3643,7 @@ def getPaths(context,operation):#should do all path calculations.
 			for ch in chunksFromCurve:
 				ch.points.reverse()
 				
-		#if o.testing==1:
+		#if bpy.app.debug_value==1:
 			
 		chunksFromCurve=sortChunks(chunksFromCurve,o)	
 		
@@ -3858,7 +3858,7 @@ def getPaths(context,operation):#should do all path calculations.
 			'''
 			
 			
-			#if o.testing==1:
+			#if bpy.app.debug_value==1:
 			slicechunks=sortChunks(slicechunks,o)
 			if topdown:
 				slicechunks.reverse()

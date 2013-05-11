@@ -225,7 +225,7 @@ class camOperation(bpy.types.PropertyGroup):
 	#chip_rate
 	
 	#optimisation panel
-	testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
+	#testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
 	offset_image=numpy.array([],dtype=float)
 	zbuffer_image=numpy.array([],dtype=float)
 
@@ -263,7 +263,56 @@ class camOperation(bpy.types.PropertyGroup):
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
 
+class PathsModal(bpy.types.Operator):
+	'''calculate CAM paths'''
+	bl_idname = "object.calculate_cam_paths_modal"
+	bl_label = "Calculate CAM paths modal"
+	bl_options = {'REGISTER', 'UNDO'}
 
+	#this property was actually ignored, so removing it in 0.3
+	#operation= StringProperty(name="Operation",
+	#					   description="Specify the operation to calculate",default='Operation')
+						   
+	
+		
+	def execute(self, context):
+		#getIslands(context.object)
+		s=bpy.context.scene
+		operation = s.cam_operations[s.cam_active_operation]
+		if not operation.valid:
+				self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
+				#print("Operation can't be performed, see warnings for info")
+				return {'FINISHED'}
+		
+			
+		#these tags are for some optimisations, unfinished 
+		operation.update_offsetimage_tag=True
+		operation.update_zbufferimage_tag=True
+		operation.update_silhouete_tag=True
+		operation.update_ambient_tag=True
+		operation.update_bullet_collision_tag=True
+		#operation.material=bpy.context.scene.cam_material[0]
+		operation.operator=self
+		#'''#removed for groups support, this has to be done object by object...
+		if operation.geometry_source=='OBJECT':
+			
+			#bpy.ops.object.select_all(action='DESELECT')
+			ob=bpy.data.objects[operation.object_name]
+			operation.objects=[ob]
+		elif operation.geometry_source=='GROUP':
+			group=bpy.data.groups[operation.group_name]
+			operation.objects=group.objects
+		elif operation.geometry_source=='IMAGE':
+			operation.use_exact=False;
+		if operation.geometry_source=='OBJECT' or operation.geometry_source=='GROUP':
+			operation.onlycurves=True
+			for ob in operation.objects:
+				if ob.type=='MESH':
+					operation.onlycurves=False;
+		operation.warnings=''
+		utils.getPaths(context,operation)
+
+		return {'FINISHED'}
    
 class PathsSimple(bpy.types.Operator):
 	'''calculate CAM paths'''
@@ -577,7 +626,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 			and prop!='name_property'):
 				d.append(prop)
 	'''
-	preset_values = ['use_layers', 'duration', 'chipload', 'material_from_model', 'stay_low', 'carve_depth', 'dist_along_paths', 'source_image_crop_end_x', 'source_image_crop_end_y', 'material_size', 'material_radius_around_model', 'use_limit_curve', 'cut_type', 'use_exact', 'minz_from_ob', 'free_movement_height', 'source_image_crop_start_x', 'movement_insideout', 'spindle_rotation_direction', 'skin', 'source_image_crop_start_y', 'movement_type', 'source_image_crop', 'limit_curve', 'spindle_rpm', 'ambient_behaviour', 'cutter_type', 'source_image_scale_z', 'cutter_diameter', 'source_image_size_x', 'curve_object', 'cutter_flutes', 'ambient_radius', 'simulation_detail', 'update_offsetimage_tag', 'dist_between_paths', 'max', 'min', 'pixsize', 'slice_detail', 'parallel_step_back', 'drill_type', 'source_image_name', 'dont_merge', 'update_silhouete_tag', 'material_origin', 'inverse', 'waterline_fill', 'source_image_offset', 'circle_detail', 'strategy', 'update_zbufferimage_tag', 'stepdown', 'feedrate', 'cutter_tip_angle', 'cutter_id', 'path_object_name', 'pencil_threshold', 'testing', 'geometry_source', 'optimize_threshold', 'protect_vertical', 'plunge_feedrate', 'minz', 'warnings', 'object_name', 'optimize', 'parallel_angle', 'cutter_length']
+	preset_values = ['use_layers', 'duration', 'chipload', 'material_from_model', 'stay_low', 'carve_depth', 'dist_along_paths', 'source_image_crop_end_x', 'source_image_crop_end_y', 'material_size', 'material_radius_around_model', 'use_limit_curve', 'cut_type', 'use_exact', 'minz_from_ob', 'free_movement_height', 'source_image_crop_start_x', 'movement_insideout', 'spindle_rotation_direction', 'skin', 'source_image_crop_start_y', 'movement_type', 'source_image_crop', 'limit_curve', 'spindle_rpm', 'ambient_behaviour', 'cutter_type', 'source_image_scale_z', 'cutter_diameter', 'source_image_size_x', 'curve_object', 'cutter_flutes', 'ambient_radius', 'simulation_detail', 'update_offsetimage_tag', 'dist_between_paths', 'max', 'min', 'pixsize', 'slice_detail', 'parallel_step_back', 'drill_type', 'source_image_name', 'dont_merge', 'update_silhouete_tag', 'material_origin', 'inverse', 'waterline_fill', 'source_image_offset', 'circle_detail', 'strategy', 'update_zbufferimage_tag', 'stepdown', 'feedrate', 'cutter_tip_angle', 'cutter_id', 'path_object_name', 'pencil_threshold',  'geometry_source', 'optimize_threshold', 'protect_vertical', 'plunge_feedrate', 'minz', 'warnings', 'object_name', 'optimize', 'parallel_angle', 'cutter_length']
 
 	preset_subdir = "cam_operations"   
 	 
@@ -895,7 +944,7 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 				#elif ao.strategy=='SLICES':
 				#	layout.prop(ao,'slice_detail')	  
 					
-				layout.prop(ao,'testing')
+				#layout.prop(ao,'testing')
 				
 class CAM_MOVEMENT_Panel(bpy.types.Panel):
 	"""CAM movement panel"""
@@ -1062,6 +1111,7 @@ def get_panels():
 	CAM_MACHINE_Panel,
 	
 	PathsSimple,
+	PathsModal,
 	PathsAll,
 	CAMPositionObject,
 	CAMSimulate,
