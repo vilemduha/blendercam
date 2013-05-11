@@ -36,14 +36,13 @@ import Polygon
 bl_info = {
 	"name": "CAM - gcode generation tools",
 	"author": "Vilem Novak",
-	"version": (0, 2, 3),
-	"blender": (2, 6, 3),
+	"version": (0, 3, 0),
+	"blender": (2, 6, 7),
 	"location": "Properties > render",
 	"description": "Generate machining paths for CNC",
 	"warning": "there is no warranty for the produced gcode by now",
-	"wiki_url": "blendercam.blogger.com",
-	"tracker_url": "https://projects.blender.org/tracker/index.php?"\
-		"func=detail&aid=22405",
+	"wiki_url": "blendercam.blogspot.com",
+	"tracker_url": "",
 	"category": "Scene"}
   
   
@@ -53,7 +52,7 @@ PRECISION=5
 class machineSettings(bpy.types.PropertyGroup):
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	post_processor = EnumProperty(name='Post processor',
-		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC','default emc'),('HEIDENHAIN','Heidenhain  - experimental','heidenhain'),('TNC151','Heidenhain TNC151  - experimental','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1 - experimental','Sieg KX1'),('HM50','Hafco HM-50 - experimental','Hafco HM-50'),('CENTROID','Centroid M40 - experimental','Centroid M40'),('ANILAM','Anilam Crusader M - experimental','Anilam Crusader M')),
+		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC - LinuxCNC','default emc'),('HEIDENHAIN','Heidenhain  - experimental','heidenhain'),('TNC151','Heidenhain TNC151  - experimental','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1 - experimental','Sieg KX1'),('HM50','Hafco HM-50 - experimental','Hafco HM-50'),('CENTROID','Centroid M40 - experimental','Centroid M40'),('ANILAM','Anilam Crusader M - experimental','Anilam Crusader M')),
 		description='Post processor',
 		default='MACH3')
 	#units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
@@ -70,18 +69,51 @@ class machineSettings(bpy.types.PropertyGroup):
 	collet_size=bpy.props.FloatProperty(name="#Collet size", description="Collet size for collision detection",default=33, min=0.00001, max=320000,precision=PRECISION , unit="LENGTH")
 	#exporter_start = bpy.props.StringProperty(name="exporter start", default="%")
 
-	  
+'''
+def updateScale():
+	#TODO: move this to own update function.
+	if ob.scale.x!=ob.scale.y or ob.scale.y!=ob.scale.z:
+		if ob.scale.x!=ob.scale.y and ob.scale.y==ob.scale.z:
+			ob.scale.y=ob.scale.x
+			ob.scale.z=ob.scale.z
+		elif ob.scale.y!=ob.scale.x and ob.scale.y!=ob.scale.z:
+			ob.scale.x=ob.scale.y
+			ob.scale.z=ob.scale.y
+		elif ob.scale.z!=ob.scale.y and ob.scale.z!=ob.scale.x:
+			ob.scale.s=ob.scale.z
+			ob.scale.y=ob.scale.z
+'''
+	 
+def updateChipload(self,context):
+	o=self;
+	self.chipload = int((o.feedrate/(o.spindle_rpm*o.cutter_flutes))*1000000)/1000
+
 def operationValid(self,context):
-	operation=bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-	if operation.geometry_source=='OBJECT':
-		if not operation.object_name in bpy.data.objects :
-		   operation.valid=False;
-	if operation.geometry_source=='IMAGE':
-		if not operation.source_image_name in bpy.data.images:
-			operation.valid=False
-		else:
-			operation.use_exact=False
-	operation.valid=True
+	o=self
+	o.valid=True
+	o.warnings=""
+	o=bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+	if o.geometry_source=='OBJECT':
+		if not o.object_name in bpy.data.objects :
+			o.valid=False;
+			o.warnings="Operation has no valid data input"
+	if o.geometry_source=='GROUP':
+		if not o.group_name in bpy.data.groups:
+			o.valid=False;
+			o.warnings="Operation has no valid data input"
+		elif len(bpy.data.groups[o.group_name].objects)==0: 
+			o.valid=False;
+			o.warnings="Operation has no valid data input"
+		
+	if o.geometry_source=='IMAGE':
+		if not o.source_image_name in bpy.data.images:
+			o.valid=False
+			o.warnings="Operation has no valid data input"
+
+		o.use_exact=False
+	#print('validity ')
+	#print(o.valid)
+	
 
 class camOperation(bpy.types.PropertyGroup):
 	
@@ -90,13 +122,14 @@ class camOperation(bpy.types.PropertyGroup):
 	
 	#group = bpy.props.StringProperty(name='Object group', description='group of objects which will be included in this operation')
 	object_name = bpy.props.StringProperty(name='Object', description='object handled by this operation', update=operationValid)
-	curve_object = bpy.props.StringProperty(name='Curve object', description='curve which will be sampled along the 3d object')
-	source_image_name = bpy.props.StringProperty(name='image_source', description='image source')
+	group_name = bpy.props.StringProperty(name='Group', description='Object group handled by this operation', update=operationValid)
+	curve_object = bpy.props.StringProperty(name='Curve object', description='curve which will be sampled along the 3d object', update=operationValid)
+	source_image_name = bpy.props.StringProperty(name='image_source', description='image source', update=operationValid)
 	geometry_source = EnumProperty(name='Source of data',
 		items=(
-			('OBJECT','object', 'a'),('IMAGE','Image', 'a')),
+			('OBJECT','object', 'a'),('GROUP','Group of objects', 'a'),('IMAGE','Image', 'a')),
 		description='Geometry source',
-		default='OBJECT')
+		default='OBJECT', update=operationValid)
 	cutter_type = EnumProperty(name='Cutter',
 		items=(
 			('END', 'End', 'a'),
@@ -122,13 +155,13 @@ class camOperation(bpy.types.PropertyGroup):
 		default='PARALLEL')#,('SLICES','Slices','this prepares model for cutting from sheets of material')
 	#for cutout	   
 	cut_type = EnumProperty(name='Cut:',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE')  
-	render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)
+	#render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
 	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False)
 	
-	cutter_id = IntProperty(name="Tool number", description="Tool number", min=0, max=10000, default=0)
+	cutter_id = IntProperty(name="Tool number", description="For machines which support tool change based on tool id", min=0, max=10000, default=0)
 	cutter_diameter = FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius", min=0.000001, max=0.1, default=0.003, precision=PRECISION, unit="LENGTH")
 	cutter_length = FloatProperty(name="#Cutter length", description="#not supported#Cutter length", min=0.0, max=100.0, default=25.0,precision=PRECISION, unit="LENGTH")
-	cutter_flutes = IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2)
+	cutter_flutes = IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2, update = updateChipload)
 	cutter_tip_angle = FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0, max=180.0, default=60.0,precision=PRECISION)
 	
 	dist_between_paths = bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,precision=PRECISION, unit="LENGTH")
@@ -168,9 +201,9 @@ class camOperation(bpy.types.PropertyGroup):
 	limit_curve=   bpy.props.StringProperty(name='Limit curve', description='curve used to limit the area of the operation')
 	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH")
 	#feeds
-	feedrate = FloatProperty(name="Feedrate/minute", description="Feedrate m/min", min=0.00005, max=50.0, default=1.0,precision=PRECISION, unit="LENGTH")
+	feedrate = FloatProperty(name="Feedrate/minute", description="Feedrate m/min", min=0.00005, max=50.0, default=1.0,precision=PRECISION, unit="LENGTH", update = updateChipload)
 	plunge_feedrate = FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,precision=1, subtype='PERCENTAGE')
-	spindle_rpm = FloatProperty(name="#Spindle rpm", description="#not supported#Spindle speed ", min=1000, max=60000, default=12000)
+	spindle_rpm = FloatProperty(name="#Spindle rpm", description="#not supported#Spindle speed ", min=1000, max=60000, default=12000, update = updateChipload)
 	#movement parallel_step_back 
 	movement_type = EnumProperty(name='Movement type',items=(('CONVENTIONAL','Conventional', 'a'),('CLIMB', 'Climb', 'a'),('MEANDER', 'Meander' , 'a')	 ),description='movement type', default='CLIMB')
 	spindle_rotation_direction = EnumProperty(name='Spindle rotation', items=(('CW','Clock wise', 'a'),('CCW', 'Counter clock wise', 'a')),description='Spindle rotation direction',default='CW')
@@ -211,6 +244,8 @@ class camOperation(bpy.types.PropertyGroup):
 	update_offsetimage_tag=bpy.props.BoolProperty(name="mark offset image for update",description="mark for update", default=True)
 	#update_offsetimage_tag=True
 	update_silhouete_tag=bpy.props.BoolProperty(name="mark silhouette image for update",description="mark for update", default=True)
+	update_ambient_tag=bpy.props.BoolProperty(name="mark ambient polygon for update",description="mark for update", default=True)
+	update_bullet_collision_tag=bpy.props.BoolProperty(name="mark bullet collisionworld for update",description="mark for update", default=True)
 	#update_silhouete_tag=True
 
 	#material settings
@@ -223,7 +258,7 @@ class camOperation(bpy.types.PropertyGroup):
 	warnings = bpy.props.StringProperty(name='warnings', description='warnings', default='')
 	chipload = bpy.props.FloatProperty(name="chipload",description="Calculated chipload", default=0.0, unit='LENGTH', precision=PRECISION)
 
-	valid = True;
+	valid = bpy.props.BoolProperty(name="Valid",description="True if operation is ok for calculation", default=True);
 
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
@@ -236,8 +271,9 @@ class PathsSimple(bpy.types.Operator):
 	bl_label = "Calculate CAM paths"
 	bl_options = {'REGISTER', 'UNDO'}
 
-	operation = StringProperty(name="Operation",
-						   description="Specify the operation to calculate",default='Operation')
+	#this property was actually ignored, so removing it in 0.3
+	#operation= StringProperty(name="Operation",
+	#					   description="Specify the operation to calculate",default='Operation')
 						   
 	
 		
@@ -246,33 +282,43 @@ class PathsSimple(bpy.types.Operator):
 		s=bpy.context.scene
 		operation = s.cam_operations[s.cam_active_operation]
 		if not operation.valid:
-			   print('no data assigned')
-			   return {'FINISHED'}
+				self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
+				#print("Operation can't be performed, see warnings for info")
+				return {'FINISHED'}
 		
 			
 		#these tags are for some optimisations, unfinished 
 		operation.update_offsetimage_tag=True
 		operation.update_zbufferimage_tag=True
 		operation.update_silhouete_tag=True
-		
+		operation.update_ambient_tag=True
+		operation.update_bullet_collision_tag=True
 		#operation.material=bpy.context.scene.cam_material[0]
 		operation.operator=self
+		#'''#removed for groups support, this has to be done object by object...
 		if operation.geometry_source=='OBJECT':
 			
-			bpy.ops.object.select_all(action='DESELECT')
+			#bpy.ops.object.select_all(action='DESELECT')
 			ob=bpy.data.objects[operation.object_name]
-			bpy.context.scene.objects.active=ob
-			ob.select=True
-		else:
+			operation.objects=[ob]
+		elif operation.geometry_source=='GROUP':
+			group=bpy.data.groups[operation.group_name]
+			operation.objects=group.objects
+		elif operation.geometry_source=='IMAGE':
 			operation.use_exact=False;
+		if operation.geometry_source=='OBJECT' or operation.geometry_source=='GROUP':
+			operation.onlycurves=True
+			for ob in operation.objects:
+				if ob.type=='MESH':
+					operation.onlycurves=False;
 		operation.warnings=''
 		utils.getPaths(context,operation)
 
 		return {'FINISHED'}
 	
-	def draw(self, context):
-		layout = self.layout
-		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
+	#def draw(self, context):
+		#layout = self.layout
+		#layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
 		
 class PathsAll(bpy.types.Operator):
 	'''calculate all CAM paths'''
@@ -308,10 +354,10 @@ class CAMSimulate(bpy.types.Operator):
 	def execute(self, context):
 		s=bpy.context.scene
 		operation = s.cam_operations[s.cam_active_operation]
-		#operation.material=bpy.context.scene.cam_material[0]
-		if operation.geometry_source=='OBJECT' and operation.object_name in bpy.data.objects and bpy.data.objects[operation.object_name].type=='CURVE':
-			print('simulation of curve operations is not available')
-			return {'FINISHED'}
+		#operation.material=bpy.context.scene.cam_material[0]#TODO: check if this works after the change.
+		#if operation.geometry_source=='OBJECT' and operation.object_name in bpy.data.objects and #bpy.data.objects[operation.object_name].type=='CURVE':
+		#	print('simulation of curve operations is not available')
+		#	return {'FINISHED'}
 		if operation.path_object_name in bpy.data.objects:
 			utils.doSimulation(operation)
 		else:
@@ -433,6 +479,36 @@ class CamOperationRemove(bpy.types.Operator):
 		
 		return {'FINISHED'}
 
+class CamOperationMove(bpy.types.Operator):
+	'''Move CAM operation'''
+	bl_idname = "scene.cam_operation_move"
+	bl_label = "Move CAM operation in list"
+	
+	direction = EnumProperty(name='direction',
+		items=(('UP','Up',''),('DOWN','Down','')),
+		description='direction',
+		default='DOWN')
+		
+	@classmethod
+	def poll(cls, context):
+		return context.scene is not None
+
+	def execute(self, context):
+		#main(context)
+		a=bpy.context.scene.cam_active_operation
+		cops=bpy.context.scene.cam_operations
+		if self.direction=='UP':
+			if a>0:
+				cops.move(a,a-1)
+				bpy.context.scene.cam_active_operation -= 1
+
+		else:
+			if a<len(cops)-1:
+				cops.move(a,a+1)
+				bpy.context.scene.cam_active_operation += 1
+
+		return {'FINISHED'}
+
 
 
 class CAM_CUTTER_presets(Menu):
@@ -458,6 +534,7 @@ class AddPresetCamCutter(bl_operators.presets.AddPresetBase, Operator):
 	]
 
 	preset_values = [
+		"d.cutter_id",
 		"d.cutter_type",
 		"d.cutter_diameter",
 		"d.cutter_length",
@@ -482,20 +559,22 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 	preset_defines = [
 		"o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"
 	]
-	d=['o.ambient_behaviour', 'o.ambient_radius', 'o.borderwidth', 'o.carve_depth', 
-	'o.circle_detail', 'o.curve_object', 'o.cut_type', 'o.cutter_diameter', 'o.cutter_length', 
-	'o.cutter_tip_angle', 'o.cutter_type', 'o.dist_along_paths', 'o.dist_between_paths', 
-	'o.dont_merge', 'o.feedrate',  'o.free_movement_height',
-	  'o.inverse', 'o.limit_curve', 'o.material_from_model',
-	  'o.material_origin', 'o.material_radius_around_model', 'o.material_size', 
-	   'o.minz', 'o.minz_from_ob','o.movement_type', 'o.name', 
-	   'o.optimize', 'o.optimize_threshold', 'o.parallel_angle', 
-	  'o.pixsize', 'o.plunge_feedrate', 'o.protect_vertical', 'o.render_all', 
-	  'o.skin', 'o.slice_detail', 'o.source_image_name', 'o.source_image_offset',
-	   'o.source_image_scale_z', 'o.source_image_size_x', 'o.spindle_rpm', 'o.stay_low', 
-	   'o.stepdown', 'o.strategy', 'o.use_layers', 'o.use_limit_curve', 'o.waterline_fill']
-		
-	preset_values = d
+	'''
+	d1=dir(bpy.types.machineSettings.bl_rna)
+
+	d=[]
+	for prop in d1:
+		if (prop[:2]!='__' 
+			and prop!='bl_rna'
+			and prop!='translation_context'
+			and prop!='base'
+			and prop!='description'
+			and prop!='identifier'
+			and prop!='name'
+			and prop!='name_property'):
+				d.append(prop)
+	'''
+	preset_values = ['use_layers', 'duration', 'chipload', 'material_from_model', 'stay_low', 'carve_depth', 'dist_along_paths', 'source_image_crop_end_x', 'source_image_crop_end_y', 'material_size', 'material_radius_around_model', 'use_limit_curve', 'cut_type', 'use_exact', 'minz_from_ob', 'free_movement_height', 'source_image_crop_start_x', 'movement_insideout', 'spindle_rotation_direction', 'skin', 'source_image_crop_start_y', 'movement_type', 'source_image_crop', 'limit_curve', 'spindle_rpm', 'ambient_behaviour', 'cutter_type', 'source_image_scale_z', 'cutter_diameter', 'source_image_size_x', 'curve_object', 'cutter_flutes', 'ambient_radius', 'simulation_detail', 'update_offsetimage_tag', 'dist_between_paths', 'max', 'min', 'pixsize', 'slice_detail', 'parallel_step_back', 'drill_type', 'source_image_name', 'dont_merge', 'update_silhouete_tag', 'material_origin', 'inverse', 'waterline_fill', 'source_image_offset', 'circle_detail', 'strategy', 'update_zbufferimage_tag', 'stepdown', 'feedrate', 'cutter_tip_angle', 'cutter_id', 'path_object_name', 'pencil_threshold', 'testing', 'geometry_source', 'optimize_threshold', 'protect_vertical', 'plunge_feedrate', 'minz', 'warnings', 'object_name', 'optimize', 'parallel_angle', 'cutter_length']
 
 	preset_subdir = "cam_operations"   
 	 
@@ -509,7 +588,6 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 		"d = bpy.context.scene.cam_machine[0]",
 		"s = bpy.context.scene.unit_settings"
 	]
-
 	preset_values = [
 		"d.post_processor",
 		"s.system",
@@ -552,6 +630,7 @@ class CAM_CUTTER_Panel(bpy.types.Panel):
 				row.menu("CAM_CUTTER_presets", text=bpy.types.CAM_CUTTER_presets.bl_label)
 				row.operator("render.cam_preset_cutter_add", text="", icon='ZOOMIN')
 				row.operator("render.cam_preset_cutter_add", text="", icon='ZOOMOUT').remove_active = True
+				layout.prop(ao,'cutter_id')
 				layout.prop(ao,'cutter_type')
 				layout.prop(ao,'cutter_diameter')
 				#layout.prop(ao,'cutter_length')
@@ -591,8 +670,8 @@ class CAM_MACHINE_Panel(bpy.types.Panel):
 				layout.prop(ao,'feedrate_min')
 				layout.prop(ao,'feedrate_max')
 				#layout.prop(ao,'feedrate_default')
-				#layout.prop(ao,'spindle_min')
-				#layout.prop(ao,'spindle_max')
+				layout.prop(ao,'spindle_min')
+				layout.prop(ao,'spindle_max')
 				#layout.prop(ao,'spindle_default')
 				#layout.prop(ao,'axis4')
 				#layout.prop(ao,'axis5')
@@ -621,7 +700,7 @@ class CAM_MATERIAL_Panel(bpy.types.Panel):
 			if ao:
 				#print(dir(layout))
 				layout.template_running_jobs()
-				if ao.geometry_source=='OBJECT':
+				if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
 					row = layout.row(align=True)
 					layout.prop(ao,'material_from_model')
 					
@@ -661,23 +740,17 @@ class CAM_OPERATIONS_Panel(bpy.types.Panel):
 	def draw(self, context):
 		layout = self.layout
 		
-		'''
-		layout.label('!!!!WARNING!!!!! this is experimental script.')
-		layout.label('use at your own risk. ')
-		layout.label('unsupported properties have a # before them.	')
-		layout.label('Always run as simulation first, check the paths. ')
-		layout.label('if you have requests, post them to blenderartists.org')
-		layout.label('currently exports only to Mach 3')
-		'''
-
 		row = layout.row() 
 		scene=bpy.context.scene
-#row.template_list("MESH_UL_vgroups", "", ob, "vertex_groups", ob.vertex_groups, "active_index", rows=rows)
 		row.template_list("CAM_UL_operations", '', scene, "cam_operations", scene, 'cam_active_operation')
 		col = row.column(align=True)
 		col.operator("scene.cam_operation_add", icon='ZOOMIN', text="")
 		col.operator("scene.cam_operation_copy", icon='COPYDOWN', text="")
 		col.operator("scene.cam_operation_remove",icon='ZOOMOUT', text="")
+		#if group:
+		col.separator()
+		col.operator("scene.cam_operation_move", icon='TRIA_UP', text="").direction = 'UP'
+		col.operator("scene.cam_operation_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
 		#row = layout.row() 
 	   
 		if len(scene.cam_operations)>0:
@@ -699,16 +772,8 @@ class CAM_OPERATIONS_Panel(bpy.types.Panel):
 				layout.prop(ao,'geometry_source')
 				if ao.geometry_source=='OBJECT':
 					layout.prop_search(ao, "object_name", bpy.data, "objects")
-					if ao.object_name!=None:
-						o=bpy.data.objects[ao.object_name]
-						row = layout.row()
-						row.column().prop(o, "dimensions")
-						#col = layout.column(align=True)
-						#col.label('dimensions:')
-						#col.prop(o,'dimensions')
-						#col.label(o.dimensions)
-						#if o.scale.x!=o.scale.y==o.scale.z:
-							#o.dimensions.y=o.dimensions.z=o.dimensions.x
+				elif ao.geometry_source=='GROUP':
+					layout.prop_search(ao, "group_name", bpy.data, "groups")
 				else:
 					layout.prop_search(ao, "source_image_name", bpy.data, "images")
 					
@@ -739,33 +804,20 @@ class CAM_INFO_Panel(bpy.types.Panel):
 			layout.label('Add operation first')
 		if len(scene.cam_operations)>0:
 			ao=scene.cam_operations[scene.cam_active_operation]
-			if ao.geometry_source=='OBJECT' and bpy.data.objects[ao.object_name]!=None:
-				ob=bpy.data.objects[ao.object_name]
-				if ao.warnings!='':
-					layout.label(ao.warnings)
+			if ao.warnings!='':
+				layout.label(ao.warnings)
+			if ao.valid:
+				#ob=bpy.data.objects[ao.object_name]
 				#layout.separator()
 				if ao.duration>0:
-					layout.label('operation time'+str(int(ao.duration))+' min')	   
-				chipload = int((ao.feedrate/(ao.spindle_rpm*ao.cutter_flutes))*1000000)/1000
+					layout.label('operation time: '+str(int(ao.duration*100)/100.0)+' min')	   
 				#layout.prop(ao,'chipload')
-				layout.label(  'chipload: '+str(chipload)+getUnit()+' / tooth')
-				
-				#layout.label(str(ob.dimensions)
+				layout.label(  'chipload: '+str(round(ao.chipload,6))+getUnit()+' / tooth')
+				#layout.label(str(ob.dimensions.x))
 				#row=layout.row()
 			   
 				
-				'''
-				if ob.scale.x!=ob.scale.y or ob.scale.y!=ob.scale.z:
-					if ob.scale.x!=ob.scale.y and ob.scale.y==ob.scale.z:
-						ob.scale.y=ob.scale.x
-						ob.scale.z=ob.scale.z
-					elif ob.scale.y!=ob.scale.x and ob.scale.y!=ob.scale.z:
-						ob.scale.x=ob.scale.y
-						ob.scale.z=ob.scale.y
-					elif ob.scale.z!=ob.scale.y and ob.scale.z!=ob.scale.x:
-						ob.scale.s=ob.scale.z
-						ob.scale.y=ob.scale.z
-				 '''
+				
 				
 		
 class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
@@ -795,11 +847,14 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES':
 					layout.prop(ao,'movement_insideout')
 					
-				if ao.geometry_source=='OBJECT':
+				#if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
+					'''
 					o=bpy.data.objects[ao.object_name]
+					
 					if o.type=='MESH' and (ao.strategy=='DRILL'):
 						layout.label('Not supported for meshes')
 						return
+					'''
 					#elif o.type=='CURVE' and (ao.strategy!='CARVE' and ao.strategy!='POCKET' and ao.strategy!='DRILL' and ao.strategy!='CUTOUT'):
 					 #	 layout.label('Not supported for curves')
 					 #	 return
@@ -912,15 +967,15 @@ class CAM_OPTIMISATION_Panel(bpy.types.Panel):
 				layout.prop(ao,'optimize')
 				if ao.optimize:
 					layout.prop(ao,'optimize_threshold')
-				if ao.geometry_source=='OBJECT':
+				if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
 					layout.prop(ao,'use_exact')
 					if not ao.use_exact:
 						layout.prop(ao,'pixsize')
 				
 				layout.prop(ao,'simulation_detail')
 				layout.prop(ao,'circle_detail')
-				if not ao.use_exact:
-					layout.prop(ao,'render_all')
+				#if not ao.use_exact:#this will be replaced with groups of objects.
+				#layout.prop(ao,'render_all')# replaced with groups support
 				
 
 		
@@ -954,7 +1009,7 @@ class CAM_AREA_Panel(bpy.types.Panel):
 					layout.prop(ao,'ambient_radius')
 				
 			   
-				if ao.geometry_source=='OBJECT':
+				if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
 					layout.prop(ao,'minz_from_ob')
 					if not ao.minz_from_ob:
 						layout.prop(ao,'minz')
@@ -1008,6 +1063,7 @@ def get_panels():
 	CamOperationAdd,
 	CamOperationCopy,
 	CamOperationRemove,
+	CamOperationMove,
 	
 	CAM_CUTTER_presets,
 	CAM_OPERATION_presets,
@@ -1028,9 +1084,6 @@ def register():
 	
 	
 	try:
-		#d=dir(bpy.types)
-		#for t in d:
-		#	 if t
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_render)
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_dimensions)
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_antialiasing)

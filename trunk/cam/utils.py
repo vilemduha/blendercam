@@ -159,8 +159,8 @@ def getCutterBullet(o):
 		bpy.ops.rigidbody.object_add(type='ACTIVE')
 		cutter=bpy.context.active_object
 		cutter.rigid_body.collision_shape = 'CONE'
-		
-	o.cutter_shape=cutter
+	cutter.name='cam_cutter'	
+	o.cutter_shape=cutter#TODO: delete this object afterwards!
 	return cutter
 
 #prepares all objects needed for sampling with bullet collision
@@ -171,16 +171,19 @@ def prepareBulletCollision(o):
 	s.gravity=(0,0,0)
 	bpy.ops.object.select_all(action='SELECT')
 	bpy.ops.rigidbody.objects_remove()
-	collisionob=bpy.data.objects[o.object_name]
-	activate(collisionob)
-	bpy.ops.object.duplicate(linked=False)
-	collisionob=bpy.context.active_object
-	bpy.ops.rigidbody.object_add(type='ACTIVE')
-	collisionob.rigid_body.collision_shape = 'MESH'
-	collisionob.rigid_body.collision_margin = o.skin*BULLET_SCALE
-	bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
-	collisionob.location=collisionob.location*BULLET_SCALE
-	bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+	for collisionob in o.objects:
+		activate(collisionob)
+		bpy.ops.object.duplicate(linked=False)
+		if collisionob.type=='CURVE':#support for curve objects collision
+			bpy.ops.object.convert(target='MESH', keep_original=False)
+
+		collisionob=bpy.context.active_object
+		bpy.ops.rigidbody.object_add(type='ACTIVE')
+		collisionob.rigid_body.collision_shape = 'MESH'
+		collisionob.rigid_body.collision_margin = o.skin*BULLET_SCALE
+		bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
+		collisionob.location=collisionob.location*BULLET_SCALE
+		bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
 	getCutterBullet(o)
 	#stepping simulation so that objects are up to date
@@ -201,48 +204,48 @@ def cleanupBulletCollision(o):
 
 def positionObject(operation):
 	ob=bpy.data.objects[operation.object_name]
-	minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace(ob)	
+	minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace([ob])	
 	ob.location.x-=minx
 	ob.location.y-=miny
 	ob.location.z-=maxz
 
-def getBoundsWorldspace(ob):
-	print('getting bounds of object')
+def getBoundsWorldspace(obs):
+	print('getting bounds of object(s)')
 	t=time.time()
-	bb=ob.bound_box
-	mw=ob.matrix_world	
+		
 	maxx=maxy=maxz=-10000000
 	minx=miny=minz=10000000
-	if ob.type=='MESH':
-		for c in ob.data.vertices:
-			coord=c.co
-			worldCoord = mw * Vector((coord[0], coord[1], coord[2]))
-			minx=min(minx,worldCoord.x)
-			miny=min(miny,worldCoord.y)
-			minz=min(minz,worldCoord.z)
-			maxx=max(maxx,worldCoord.x)
-			maxy=max(maxy,worldCoord.y)
-			maxz=max(maxz,worldCoord.z)
-	else:
-		for coord in bb:
-			worldCoord = mw * Vector((coord[0], coord[1], coord[2]))
-			minx=min(minx,worldCoord.x)
-			miny=min(miny,worldCoord.y)
-			minz=min(minz,worldCoord.z)
-			maxx=max(maxx,worldCoord.x)
-			maxy=max(maxy,worldCoord.y)
-			maxz=max(maxz,worldCoord.z)
+	for ob in obs:
+		bb=ob.bound_box
+		mw=ob.matrix_world
+		if ob.type=='MESH':
+			for c in ob.data.vertices:
+				coord=c.co
+				worldCoord = mw * Vector((coord[0], coord[1], coord[2]))
+				minx=min(minx,worldCoord.x)
+				miny=min(miny,worldCoord.y)
+				minz=min(minz,worldCoord.z)
+				maxx=max(maxx,worldCoord.x)
+				maxy=max(maxy,worldCoord.y)
+				maxz=max(maxz,worldCoord.z)
+		else:
+			for coord in bb:
+				worldCoord = mw * Vector((coord[0], coord[1], coord[2]))
+				minx=min(minx,worldCoord.x)
+				miny=min(miny,worldCoord.y)
+				minz=min(minz,worldCoord.z)
+				maxx=max(maxx,worldCoord.x)
+				maxy=max(maxy,worldCoord.y)
+				maxz=max(maxz,worldCoord.z)
 	print(time.time()-t)
 	return minx,miny,minz,maxx,maxy,maxz
 	
 
 		 
 def getBounds(o):
-	if o.geometry_source=='OBJECT':
-		
+	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 		if o.material_from_model:
-			ob=bpy.data.objects[o.object_name]
-			minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace(ob)
+			minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace(o.objects)
 
 			o.min.x=minx-o.material_radius_around_model
 			o.min.y=miny-o.material_radius_around_model
@@ -632,14 +635,13 @@ def getPathPattern(operation):
 				for a in range(0,int(steps)):
 					dist=d
 					if a==int(o.cutter_diameter/2/o.dist_between_paths):
-						dist+=o.pixsize*2.5
+						if o.use_exact:
+							dist+=o.pixsize*0.85# this is here only because silhouette is still done with zbuffer method, even if we use bullet collisions.
+						else:
+							dist+=o.pixsize*2.5
 					p=outlinePoly(p,dist,o,True)
 					if p.nPoints()>0:
 						chunks=polyToChunks(p,zlevel)
-						#for ch in chunks:
-						#	ch.points.reverse()
-						#parentChildPoly(chunks,lastchunks,o)
-						
 						pathchunks.extend(chunks)
 					lastchunks=chunks
 				
@@ -649,21 +651,17 @@ def getPathPattern(operation):
 		parentChildPoly(pathchunks,pathchunks,o)	
 		pathchunks=sortChunks(pathchunks,o)
 		pathchunks=chunksRefine(pathchunks,o)
-		
-		
-		
-	
-	# print (pathchunks)
 	print(time.time()-t)
 	return pathchunks
 
-
+#this basically renders blender zbuffer and makes it accessible by saving & loading it again.
+#that's because blender doesn't allow accessing pixels in render :(
 def renderSampleImage(o):
 	t=time.time()
 	print('getting zbuffer')
-	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	
-	if o.geometry_source=='OBJECT':
+	
+	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 		pixsize=o.pixsize
 
 		sx=o.max.x-o.min.x
@@ -728,24 +726,24 @@ def renderSampleImage(o):
 
 			camera.data.type='ORTHO'
 			camera.data.ortho_scale=max(resx*o.pixsize,resy*o.pixsize)
-			camera.location=(minx+sx/2,miny+sy/2,1)
+			camera.location=(o.min.x+sx/2,o.min.y+sy/2,1)
 			camera.rotation_euler=(0,0,0)
-			if not o.render_all:
-				h=[]
-				ob=bpy.data.objects[o.object_name]
-				for obs in s.objects:
-					h.append(obs.hide_render)
-					if obs==ob:
-						obs.hide_render=False
-					else:
-						obs.hide_render=True
+			#if not o.render_all:#removed in 0.3
 			
+			h=[]
+			
+			#ob=bpy.data.objects[o.object_name]
+			for ob in s.objects:
+				h.append(ob.hide_render)
+				ob.hide_render=True
+			for ob in o.objects:
+				ob.hide_render=False
 			 
 			bpy.ops.render.render()
 			
-			if not o.render_all:
-				for id,obs in enumerate(s.objects):
-					obs.hide_render=h[id]
+			#if not o.render_all:
+			for id,obs in enumerate(s.objects):
+				obs.hide_render=h[id]
 			
 				
 			imgs=bpy.data.images
@@ -782,7 +780,10 @@ def renderSampleImage(o):
 		maxa=numpy.max(rawimage)
 		a=numpy.array((1.0,1.0))
 		a.resize(2*o.borderwidth+i.size[0],2*o.borderwidth+i.size[1])
-		a.fill(1.00001)
+		if o.strategy=='CUTOUT':#cutout strategy doesn't want to cut image border
+			a.fill(0)
+		else:#other operations want to avoid cutting anything outside image borders.
+			a.fill(1.00001)
 		#2*o.borderwidth
 		a[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]=rawimage
 		a=a[sx:ex+o.borderwidth*2,sy:ey+o.borderwidth*2]
@@ -1025,7 +1026,7 @@ def imageToChunks(o,image):
 	
 	indices1=ar.nonzero()
 	
-	r=(o.cutter_diameter/2)/pixsize+3# to prevent outline of the border
+	r=o.borderwidth# to prevent outline of the border was 3 before and also (o.cutter_diameter/2)/pixsize+o.borderwidth
 	w=image.shape[0]
 	h=image.shape[1]
 	coef=0.75#compensates for imprecisions
@@ -1402,9 +1403,12 @@ def sampleChunks(o,pathSamples,layers):
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	
 	if o.use_exact:#prepare collision world
-		prepareBulletCollision(o)
-		print('getting ambient')
-		o.ambient = getObjectOutline( o.ambient_radius , o , True)# in this method we need ambient from silhouette
+		if o.update_bullet_collision_tag:
+			prepareBulletCollision(o)
+			print('getting ambient')
+			o.ambient = getObjectOutline( o.ambient_radius , o , True)# in this method we need ambient from silhouette
+			o.update_ambient_tag=False  
+			o.update_bullet_collision_tag=False
 		#print (o.ambient)
 		cutter=o.cutter_shape
 		cutterdepth=cutter.dimensions.z/2
@@ -1415,8 +1419,11 @@ def sampleChunks(o,pathSamples,layers):
 		m=res/2
 		
 	t=time.time()
-	print('sampling paths')
+	#print('sampling paths')
 	
+	totlen=0;#total length of all chunks, to estimate sampling time.
+	for ch in pathSamples:
+		totlen+=len(ch.points)
 	layerchunks=[]
 	minz=o.minz
 	layeractivechunks=[]
@@ -1432,7 +1439,7 @@ def sampleChunks(o,pathSamples,layers):
 		ob=bpy.data.objects[o.object_name]
 		zinvert=ob.location.z+maxz#ob.bound_box[6][2]
 	
-	#n=0
+	n=0
 	
 	lastz=minz
 	for patternchunk in pathSamples:
@@ -1446,7 +1453,9 @@ def sampleChunks(o,pathSamples,layers):
 		#for t in range(0,threads):
 			
 		for s in patternchunk.points:
-			
+			#if n/100.0==int(n/100.0):
+			#	progress('sampling pahts ',int(100*n/totlen))
+			n+=1
 			x=s[0]
 			y=s[1]
 			maxz=minz
@@ -1753,8 +1762,13 @@ def doSimulation(o):
 	#for ch in chunks:
 	lasts=verts[1].co
 	l=len(verts)
+	perc=-1
+	vtotal=len(verts)
 	for i,vert in enumerate(verts):
-		progress('simulation',int(100*i/l))
+		if perc!=int(100*i/vtotal):
+			perc=int(100*i/vtotal)
+			progress('simulation',perc)
+		#progress('simulation ',int(100*i/l))
 		if i>0:
 			s=vert.co
 			v=s-lasts
@@ -1786,7 +1800,8 @@ def doSimulation(o):
 	l=len(bpy.path.basename(fn))
 	inamebase=oname+'.exr'
 	iname=fn[:-l]+inamebase
-	i=numpytoimage(si,iname)
+
+	i=numpytoimage(si,inamebase)
 	
 		
 	r=bpy.context.scene.render
@@ -1794,13 +1809,14 @@ def doSimulation(o):
 	r.image_settings.file_format='OPEN_EXR'
 	r.image_settings.color_mode='BW'
 	r.image_settings.color_depth='32'
+	
 	i.save_render(iname)
 	
-	if inamebase in bpy.data.images:
-		i=bpy.data.images[inamebase]
-		i.reload()
-	else:
-		i=bpy.data.images.load(iname)
+	#if inamebase in bpy.data.images:
+	#	i=bpy.data.images[inamebase]
+	#	i.reload()
+	#else:
+	i=bpy.data.images.load(iname)
 
 	if oname in bpy.data.objects:
 		ob=bpy.data.objects[oname]
@@ -1928,19 +1944,19 @@ def exportGcodePath(verts,o):
 	m=s.cam_machine[0]
 	filename=bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))]+safeFileName(o.filename)
 	
-#		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC','default emc'),('HEIDENHAIN','Heidenhain  - experimental','heidenhain'),('TNC151','Heidenhain TNC151  - experimental','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1 - experimental','Sieg KX1'),('HM50','Hafco HM-50 - experimental','Hafco HM-50'),('CENTROID','Centroid M40 - experimental','Centroid M40'),('ANILAM','Anilam Crusader M - experimental','Anilam Crusader M')),
 	from . import nc
-	
+	extension='.tap'
 	if m.post_processor=='ISO':
 		from .nc import iso as postprocessor
-	
 	if m.post_processor=='MACH3':
 		from .nc import mach3 as postprocessor
 	elif m.post_processor=='EMC':
-		from .nc import emc2 as postprocessor
+		extension = '.ngc'
+		from .nc import emc2b as postprocessor
 	elif m.post_processor=='HM50':
 		from .nc import hm50 as postprocessor
 	elif m.post_processor=='HEIDENHAIN':
+		extension='.H'
 		from .nc import heiden as postprocessor
 	elif m.post_processor=='TNC151':
 		from .nc import tnc151 as postprocessor
@@ -1951,6 +1967,7 @@ def exportGcodePath(verts,o):
 	elif m.post_processor=='ANILAM':
 		from .nc import anilam_crusader_m as postprocessor
 	c=postprocessor.Creator()
+	filename+=extension
 	c.file_open(filename)
 	
 	#unit system correction
@@ -1962,46 +1979,66 @@ def exportGcodePath(verts,o):
 		c.imperial()
 		unitcorr=1/0.0254;
 	for o in operations:
-		#spindle direction
+		
+		#start program
+		c.program_begin(0,filename)
+		c.comment('G-code generated with BlenderCAM and NC library')
+		#absolute coordinates
+		c.absolute()
+		#work-plane, by now always xy, 
+		c.set_plane(0)
+		c.flush_nc()
+
+		#spindle rpm and direction
 		###############
 		if o.spindle_rotation_direction=='CW':
 			spdir_clockwise=True
 		else:
 			spdir_clockwise=False
-		
-		c.program_begin(0,filename)
-		c.absolute()
-		c.set_plane(0)
-		
+
+		#write tool, not working yet probably 
+		c.comment('Tool change')
+		c.tool_change(o.cutter_id)
 		c.spindle(o.spindle_rpm,spdir_clockwise)
 		c.feedrate(o.feedrate)
-		c.tool_change(o.cutter_id)
+		c.flush_nc()
 		
-		commands=[]
+		
+		#commands=[]
 		m=bpy.context.scene.cam_machine[0]
+		
 		millfeedrate=min(o.feedrate,m.feedrate_max)
 		millfeedrate=unitcorr*max(millfeedrate,m.feedrate_min)
-		
 		plungefeedrate=	millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
+		
 		last=(0,0,0)
 
 		o.duration=0.0
 		f=millfeedrate
 		for vi in range(0,len(verts)):
 			v=verts[vi]
-			v=(v[0]*unitcorr,v[1]*unitcorr,v[2]*unitcorr)
-			if v[2]<last[2] and vi>0:
+			if v[0]==last[0]: vx=None; 
+			else:	vx=v[0]*unitcorr
+			if v[1]==last[1]: vy=None; 
+			else:	vy=v[1]*unitcorr
+			if v[2]==last[2]: vz=None; 
+			else:	vz=v[2]*unitcorr
+			
+			#v=(v[0]*unitcorr,v[1]*unitcorr,v[2]*unitcorr)
+			vec=Vector(v)-Vector(last)
+			plungeratio=1
+			if v[2]<last[2] and vi>0 and (vec.x+vec.y)/2<vec.z:#TODO: proper formula for angle which determines if move is plunge here!
 				c.feedrate(plungefeedrate)
-				c.feed(x=v[0],y=v[1],z=v[2])
-			elif v[2]==last[2]==o.free_movement_height:
+				c.feed(x=vx,y=vy,z=vz)
+			elif v[2]==last[2]==o.free_movement_height or vi==0:
 				c.feedrate(freefeedrate)
-				c.rapid(x=v[0],y=v[1],z=v[2])
+				c.rapid(x=vx,y=vy,z=vz)
 				gcommand='{RAPID}'
 				
 			else:
 				c.feedrate(millfeedrate)
-				c.feed(x=v[0],y=v[1],z=v[2])
+				c.feed(x=vx,y=vy,z=vz)
 			v1=Vector(v)
 			v2=Vector(last)
 			vect=v1-v2
@@ -2010,376 +2047,6 @@ def exportGcodePath(verts,o):
 	c.program_end()
 	c.file_close()
 
-				
-def getPaths(context,operation):#should do all path calculations.
-	
-	t=time.clock()
-	s=bpy.context.scene
-	o=operation
-	#op=o = s.cam_os[s.cam_active_o]
-	#op=bpy.context.scene.cam_os[o]
-	#ob=bpy.context.scene.objects.active
-	getBounds(o)
-	
-	
-	if o.use_limit_curve:
-		if o.limit_curve!='':
-			limit_curve=bpy.data.objects[o.limit_curve]
-			
-	
-	
-	
-	if o.strategy=='CUTOUT':
-		#ob=bpy.context.active_object
-		offset=True
-		if o.cut_type=='ONLINE' and o.geometry_source=='OBJECT' and bpy.data.objects[o.object_name].type=='CURVE':#is separate to allow open curves :)
-			print('separe')
-			chunksFromCurve=curveToChunks(bpy.data.objects[o.object_name])
-			for ch in chunksFromCurve:
-				print(ch.points)
-				
-				if len(ch.points)>2:
-					ch.poly=chunkToPoly(ch)
-		else:
-			if o.cut_type=='ONLINE':
-				p=getObjectOutline(0,o,True)
-				
-			elif o.cut_type=='OUTSIDE':
-				p=getObjectOutline(o.cutter_diameter/2,o,True)
-			elif o.cut_type=='INSIDE':
-				p=getObjectOutline(o.cutter_diameter/2,o,False)
-			chunksFromCurve=polyToChunks(p,-1)
-		
-		#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
-		
-		parentChildPoly(chunksFromCurve,chunksFromCurve,o)
-		chunksFromCurve=sortChunks(chunksFromCurve,o)
-		
-		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
-			for ch in chunksFromCurve:
-				ch.points.reverse()
-		chunks=[]
-		if o.use_layers:
-			n=math.ceil(-(o.min.z/o.stepdown))
-			for x in range(0,n):
-				layerend=max(-((x+1)*o.stepdown),o.min.z)
-				chunks.extend(setChunksZ(chunksFromCurve,layerend))
-		else:
-			#chunks=polyToChunks(p,o.min.z)
-			#chunks=sortChunks(chunks)
-			#chunks.extend(chunks)
-			chunks=setChunksZ(chunksFromCurve,o.min.z)
-		if o.testing==0 or o.testing==1or o.testing==3 or o.testing==2:# or o.testing==4:
-			chunksToMesh(chunks,o)
-	
-	if o.strategy=='POCKET':	
-		p=getObjectOutline(o.cutter_diameter/2,o,False)
-		all=Polygon.Polygon(p)
-		approxn=(min(o.max.x-o.min.x,o.max.y-o.min.y)/o.dist_between_paths)/2
-		i=0
-		chunks=[]
-		chunksFromCurve=[]
-		lastchunks=[]
-		while len(p)>0:
-			nchunks=polyToChunks(p,o.min.z)
-			chunksFromCurve.extend(nchunks)
-			parentChildDist(lastchunks,nchunks,o)
-			lastchunks=nchunks
-			
-			p=outlinePoly(p,o.dist_between_paths,o,False)
-			
-			#for c in p:
-			#	all.addContour(c)
-			percent=int(i/approxn*100)
-			progress('outlining polygons ',percent) 
-			i+=1
-		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
-			for ch in chunksFromCurve:
-				ch.points.reverse()
-				
-		#if o.testing==1:
-			
-		chunksFromCurve=sortChunks(chunksFromCurve,o)	
-		
-		chunks=[]
-		if o.use_layers:
-			n=math.ceil(-(o.min.z/o.stepdown))
-			for x in range(0,n):
-				layerend=max(-((x+1)*o.stepdown),o.min.z)
-				chunks.extend(setChunksZ(chunksFromCurve,layerend))
-		else:
-			chunks=setChunksZ(chunksFromCurve,o.min.z)
-		
-		
-		
-		
-		chunksToMesh(chunks,o)  
-	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL':  
-		
-		
-		ambient_level=0.0
-		
-		if o.strategy=='CARVE':
-			pathSamples=curveToChunks(bpy.data.objects[o.curve_object])  
-			pathSamples=sortChunks(pathSamples,o)#sort before sampling
-			pathSamples=chunksRefine(pathSamples,o)
-		elif o.strategy=='PENCIL':
-			prepareArea(o)
-			pathSamples=getImageCorners(o,o.offset_image)
-			#for ch in pathSamples:
-			#	for i,p in enumerate(ch.points):
-			#		ch.points[i]=(p[0],p[1],0)
-			pathSamples=sortChunks(pathSamples,o)#sort before sampling
-			
-		else: 
-			pathSamples=getPathPattern(o)
-	
-		#print (minz)
-		
-		
-		chunks=[]
-		if o.use_layers:
-			n=math.ceil(-(o.min.z/o.stepdown))
-			layers=[]
-			for x in range(0,n):
-				
-				layerstart=-(x*o.stepdown)
-				layerend=max(-((x+1)*o.stepdown),o.min.z)
-				layers.append([layerstart,layerend])
-				
-				
-		else:
-			layerstart=0#
-			layerend=o.min.z#
-			layers=[[layerstart,layerend]]
-		
-		chunks.extend(sampleChunks(o,pathSamples,layers))
-		if (o.strategy=='PARALLEL' or o.strategy=='CROSS') :#)and o.ambient_behaviour=='AROUND')
-			chunks=sortChunks(chunks,o)
-		#print(chunks)
-		if o.strategy=='CARVE':
-			for ch in chunks:
-				for vi in range(0,len(ch.points)):
-					ch.points[vi]=(ch.points[vi][0],ch.points[vi][1],ch.points[vi][2]-o.carve_depth)
-	
-		chunksToMesh(chunks,o)
-		
-	elif o.strategy=='WATERLINE':
-		topdown=True
-		tw=time.time()
-		chunks=[]
-		print ('retrieving object slices')
-		prepareArea(o)
-		layerstep=1000000000
-		if o.use_layers:
-			layerstep=math.floor(o.stepdown/o.slice_detail)
-			if layerstep==0:
-				layerstep=1
-				
-		#for projection of filled areas		
-		layerstart=0#
-		layerend=o.min.z#
-		layers=[[layerstart,layerend]]
-		#######################		
-		nslices=ceil(abs(o.minz/o.slice_detail))
-		lastislice=numpy.array([])
-		lastslice=Polygon.Polygon()#polyversion
-		layerstepinc=0
-		
-		slicesfilled=0
-		if o.ambient_behaviour=='AROUND':#not used yet
-			s=getObjectSilhouette(o)
-			ambient=s
-		else:
-			ambient=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
-			
-		for h in range(0,nslices):
-			layerstepinc+=1
-			slicechunks=[]
-			z=o.minz+h*o.slice_detail
-			#print(z)
-			#sliceimage=o.offset_image>z
-			islice=o.offset_image>z
-			slicepolys=imageToPoly(o,islice)
-			
-			poly=Polygon.Polygon()#polygversion
-			lastchunks=[]
-			#imagechunks=imageToChunks(o,islice)
-			#for ch in imagechunks:
-			#	slicechunks.append(camPathChunk([]))
-			#	for s in ch.points:
-			#		slicechunks[-1].points.append((s[0],s[1],z))
-					
-			
-			#print('found polys',layerstepinc,len(slicepolys))
-			for p in slicepolys:
-				#print('polypoints',p.nPoints(0))
-				poly+=p#polygversion
-				#print()
-				#polyToMesh(p,z)
-				nchunks=polyToChunks(p,z)
-				#print('chunksnum',len(nchunks))
-				#if len(nchunks)>0:
-				#	print('chunkpoints',len(nchunks[0].points))
-				#print()
-				lastchunks.extend(nchunks)
-				slicechunks.extend(nchunks)
-				#print('totchunks',len(slicechunks))
-			if len(slicepolys)>0:
-				slicesfilled+=1
-				#chunks.extend(polyToChunks(slicepolys[1],z))
-				#print(len(p),'slicelen')
-			
-			
-			#
-			#print(len(lastslice))
-			#'''
-			#print('test waterlayers')
-			#print(layerstep,layerstepinc)
-			if o.waterline_fill:
-				if (len(poly)>0 and slicesfilled==1) or (slicesfilled>0 and layerstepinc==layerstep):#fill first of all, and also fill layers
-					layerstepinc=0
-					offs=True
-					i=0
-					
-					if o.ambient_behaviour=='AROUND':
-						ilim=ceil(o.ambient_radius/o.dist_between_paths)
-						restpoly=poly
-					else:
-						ilim=200#this should be replaced... no limit, just check if the shape grows over limits.
-						
-						offs=False
-						boundrect=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
-						restpoly=boundrect-poly
-					
-					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
-					while len(restpoly)>0 and i<ilim:
-						nchunks=polyToChunks(restpoly,z)
-						#project paths 
-						nchunks=chunksRefine(nchunks,o)
-						nchunks=sampleChunks(o,nchunks,layers)
-						#########################
-						slicechunks.extend(nchunks)
-						parentChildDist(lastchunks,nchunks,o)
-						lastchunks=nchunks
-						#slicechunks.extend(polyToChunks(restpoly,z))
-						restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
-						i+=1
-				elif len(lastslice)>0:
-					if o.inverse:
-						restpoly=poly-lastslice
-					else:
-						restpoly=lastslice-poly#Polygon.Polygon(lastslice)
-					restpoly.simplify()
-						#for ci in range(0,len(poly)):
-						#  restpoly.addContour(poly[ci],poly.isHole(ci))
-					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
-					while len(restpoly)>0:
-						nchunks=polyToChunks(restpoly,z)
-						#project paths 
-						nchunks=chunksRefine(nchunks,o)
-						nchunks=sampleChunks(o,nchunks,layers)
-						#########################
-						slicechunks.extend(nchunks)
-						parentChildDist(lastchunks,nchunks,o)
-						lastchunks=nchunks
-						restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
-				
-						
-				percent=int(h/nslices*100)
-				progress('waterline layers ',percent)  
-				lastslice=poly
-				
-			#print(poly)
-			#print(len(lastslice))
-			'''
-			if len(lastislice)>0:
-				i=numpy.logical_xor(lastislice , islice)
-				
-				n=0
-				while i.sum()>0 and n<10000:
-					i=outlineImageBinary(o,o.dist_between_paths,i,False)
-					polys=imageToPoly(o,i)
-					for poly in polys:
-						chunks.extend(polyToChunks(poly,z))
-					n+=1
-			
-		
-					#restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
-					#chunks.extend(polyToChunks(restpoly,z))
-					
-			lastislice=islice
-			'''
-			
-			
-			#if o.testing==1:
-			slicechunks=sortChunks(slicechunks,o)
-			if topdown:
-				slicechunks.reverse()
-			#project chunks in between
-			
-			chunks.extend(slicechunks)
-		#chunks=sortChunks(chunks)
-		if topdown:
-			chunks.reverse()
-			'''
-			chi=0
-			if len(chunks)>2:
-				while chi<len(chunks)-2:
-					d=dist2d((chunks[chi][-1][0],chunks[chi][-1][1]),(chunks[chi+1][0][0],chunks[chi+1][0][1]))
-					if chunks[chi][0][2]>=chunks[chi+1][0][2] and d<o.dist_between_paths*2:
-						chunks[chi].extend(chunks[chi+1])
-						chunks.remove(chunks[chi+1])
-						chi=chi-1
-					chi+=1
-			'''
-		print(time.time()-tw)
-		chunksToMesh(chunks,o)	  
-		
-	elif o.strategy=='DRILL':
-		ob=bpy.data.objects[o.object_name]
-		l=ob.location
-		
-		if ob.type=='CURVE':
-			chunks=[]
-			for c in ob.data.splines:
-					maxx,minx,maxy,miny=-10000,10000,-10000,100000
-					for p in c.points:
-						if o.drill_type=='ALL_POINTS':
-							chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
-						minx=min(p.co.x,minx)
-						maxx=max(p.co.x,maxx)
-						miny=min(p.co.y,miny)
-						maxy=max(p.co.y,maxy)
-					for p in c.bezier_points:
-						if o.drill_type=='ALL_POINTS':
-							chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
-						minx=min(p.co.x,minx)
-						maxx=max(p.co.x,maxx)
-						miny=min(p.co.y,miny)
-						maxy=max(p.co.y,maxy)
-					cx=(maxx+minx)/2
-					cy=(maxy+miny)/2
-					
-					center=(cx,cy)
-					aspect=(maxx-minx)/(maxy-miny)
-					if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
-						chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.min.z)]))
-			chunks=sortChunks(chunks,o)
-			chunksToMesh(chunks,o)
-	elif o.strategy=='SLICES':
-		slicechunks = getSlices(o,0)
-		for slicechunk in slicechunks:
-			#print(slicechunk)
-			pslices=chunksToPolys(slicechunk)
-			#p1=outlinePoly(pslice,o.dist_between_paths,o,False)
-			for pslice in pslices:
-				p=pslice#-p1
-			#print(p)
-				polyToMesh(p,slicechunk[0][0][2])
-		
-	t1=time.clock()-t 
-	print('total time',str(t1))
 	
 #def getCenter(c):
 	
@@ -2679,8 +2346,8 @@ def sortChunks(chunks,o):
 	pos=(0,0,0)
 	#for ch in chunks:
 	#	ch.getNext()#this stores the unsortedchildren properties
-	print('numofchunks')
-	print(len(chunks))
+	#print('numofchunks')
+	#print(len(chunks))
 	while len(chunks)>0:
 		ch=None
 		if len(sortedchunks)==0 or len(lastch.parents)==0:#first chunk or when there are no parents -> parents come after children here...
@@ -3251,10 +2918,11 @@ def cutloops(csource,parentloop,loops):
 def getObjectSilhouette(operation):
 	o=operation
 	
-	if o.geometry_source=='OBJECT':
-		ob=bpy.data.objects[operation.object_name]
-		if ob.type=='MESH':
-			
+	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
+		
+		#for groups of objects, detect silhouette 1 by 1 and merge them in the end.
+
+		if operation.onlycurves==False:#TODO if another silhouette algorithm is used, it needs to be done to support groups.
 			if operation.update_silhouete_tag:
 					if operation.testing==0:#raster based method - currently only stable one.
 						print('detecting silhouette - raster based')
@@ -3780,16 +3448,22 @@ def getObjectSilhouette(operation):
 						chunksToMesh(cchunks,operation)
 						#spoly.shift(ob.location.x,ob.location.y)
 						#operation.silhouete=[spoly]
-		elif ob.type=='CURVE':#curve conversion to polygon format
-			chunks=curveToChunks(ob)
-			silhouete=chunksToPolys(chunks)
+		elif operation.onlycurves==True:#curve conversion to polygon format
+			allchunks=[]
+			for ob in operation.objects:
+				chunks=curveToChunks(ob)
+				allchunks.extend(chunks)
+			silhouete=chunksToPolys(allchunks)
 			operation.silhouete=silhouete
-
+			print('silhouete')
+			print(len(operation.silhouete))
 	else:#detecting silhouete in image
 		print('detecting silhouette - raster based')
 		samples=renderSampleImage(operation)
 		i=samples>operation.minz
 		chunks=imageToChunks(operation,i)
+		#chunks.pop(0)
+			
 		silhouete=chunksToPolys(chunks)
 		operation.silhouete=silhouete
 	operation.update_silhouete_tag=False
@@ -3809,7 +3483,8 @@ def getObjectOutline(radius,operation,Offset):
 	#sortok=False
 	#print('sizesorting')
 	#print(len(polygons))
-	'''
+	'''#this didnt work.
+	#TODO: support more levels of hierarchy with curves.
 	while sortok==False:
 		sortok=True
 		for pi in range(0,len(polygons)-1):
@@ -3880,3 +3555,374 @@ def addMachineObject():
        
 	o.dimensions=bpy.context.scene.cam_machine[0].working_area
 	activate(ao)
+	
+#this is the main function.
+def getPaths(context,operation):#should do all path calculations.
+	
+	t=time.clock()
+	s=bpy.context.scene
+	o=operation
+	#op=o = s.cam_os[s.cam_active_o]
+	#op=bpy.context.scene.cam_os[o]
+	#ob=bpy.context.scene.objects.active
+	getBounds(o)
+	
+	
+	if o.use_limit_curve:
+		if o.limit_curve!='':
+			limit_curve=bpy.data.objects[o.limit_curve]
+			
+	
+	
+	
+	if o.strategy=='CUTOUT':
+		#ob=bpy.context.active_object
+		offset=True
+		if o.cut_type=='ONLINE' and o.onlycurves==True:#is separate to allow open curves :)
+			print('separe')
+			chunksFromCurve=curveToChunks(bpy.data.objects[o.object_name])
+			for ch in chunksFromCurve:
+				print(ch.points)
+				
+				if len(ch.points)>2:
+					ch.poly=chunkToPoly(ch)
+		else:
+			if o.cut_type=='ONLINE':
+				p=getObjectOutline(0,o,True)
+				
+			elif o.cut_type=='OUTSIDE':
+				p=getObjectOutline(o.cutter_diameter/2,o,True)
+			elif o.cut_type=='INSIDE':
+				p=getObjectOutline(o.cutter_diameter/2,o,False)
+			chunksFromCurve=polyToChunks(p,-1)
+		
+		#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
+		
+		parentChildPoly(chunksFromCurve,chunksFromCurve,o)
+		chunksFromCurve=sortChunks(chunksFromCurve,o)
+		
+		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
+			for ch in chunksFromCurve:
+				ch.points.reverse()
+		chunks=[]
+		if o.use_layers:
+			n=math.ceil(-(o.min.z/o.stepdown))
+			for x in range(0,n):
+				layerend=max(-((x+1)*o.stepdown),o.min.z)
+				chunks.extend(setChunksZ(chunksFromCurve,layerend))
+		else:
+			#chunks=polyToChunks(p,o.min.z)
+			#chunks=sortChunks(chunks)
+			#chunks.extend(chunks)
+			chunks=setChunksZ(chunksFromCurve,o.min.z)
+		if o.testing==0 or o.testing==1or o.testing==3 or o.testing==2:# or o.testing==4:
+			chunksToMesh(chunks,o)
+	
+	if o.strategy=='POCKET':	
+		p=getObjectOutline(o.cutter_diameter/2,o,False)
+		all=Polygon.Polygon(p)
+		approxn=(min(o.max.x-o.min.x,o.max.y-o.min.y)/o.dist_between_paths)/2
+		i=0
+		chunks=[]
+		chunksFromCurve=[]
+		lastchunks=[]
+		while len(p)>0:
+			nchunks=polyToChunks(p,o.min.z)
+			chunksFromCurve.extend(nchunks)
+			parentChildDist(lastchunks,nchunks,o)
+			lastchunks=nchunks
+			
+			p=outlinePoly(p,o.dist_between_paths,o,False)
+			
+			#for c in p:
+			#	all.addContour(c)
+			percent=int(i/approxn*100)
+			progress('outlining polygons ',percent) 
+			i+=1
+		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
+			for ch in chunksFromCurve:
+				ch.points.reverse()
+				
+		#if o.testing==1:
+			
+		chunksFromCurve=sortChunks(chunksFromCurve,o)	
+		
+		chunks=[]
+		if o.use_layers:
+			n=math.ceil(-(o.min.z/o.stepdown))
+			for x in range(0,n):
+				layerend=max(-((x+1)*o.stepdown),o.min.z)
+				chunks.extend(setChunksZ(chunksFromCurve,layerend))
+		else:
+			chunks=setChunksZ(chunksFromCurve,o.min.z)
+		
+		
+		
+		
+		chunksToMesh(chunks,o)  
+	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL':  
+		
+		
+		ambient_level=0.0
+		
+		if o.strategy=='CARVE':
+			pathSamples=curveToChunks(bpy.data.objects[o.curve_object])  
+			pathSamples=sortChunks(pathSamples,o)#sort before sampling
+			pathSamples=chunksRefine(pathSamples,o)
+		elif o.strategy=='PENCIL':
+			prepareArea(o)
+			pathSamples=getImageCorners(o,o.offset_image)
+			#for ch in pathSamples:
+			#	for i,p in enumerate(ch.points):
+			#		ch.points[i]=(p[0],p[1],0)
+			pathSamples=sortChunks(pathSamples,o)#sort before sampling
+			
+		else: 
+			pathSamples=getPathPattern(o)
+	
+		#print (minz)
+		
+		
+		chunks=[]
+		if o.use_layers:
+			n=math.ceil(-(o.min.z/o.stepdown))
+			layers=[]
+			for x in range(0,n):
+				
+				layerstart=-(x*o.stepdown)
+				layerend=max(-((x+1)*o.stepdown),o.min.z)
+				layers.append([layerstart,layerend])
+				
+				
+		else:
+			layerstart=0#
+			layerend=o.min.z#
+			layers=[[layerstart,layerend]]
+		
+		chunks.extend(sampleChunks(o,pathSamples,layers))
+		if (o.strategy=='PARALLEL' or o.strategy=='CROSS') :#)and o.ambient_behaviour=='AROUND')
+			chunks=sortChunks(chunks,o)
+		#print(chunks)
+		if o.strategy=='CARVE':
+			for ch in chunks:
+				for vi in range(0,len(ch.points)):
+					ch.points[vi]=(ch.points[vi][0],ch.points[vi][1],ch.points[vi][2]-o.carve_depth)
+	
+		chunksToMesh(chunks,o)
+		
+	elif o.strategy=='WATERLINE':
+		topdown=True
+		tw=time.time()
+		chunks=[]
+		print ('retrieving object slices')
+		prepareArea(o)
+		layerstep=1000000000
+		if o.use_layers:
+			layerstep=math.floor(o.stepdown/o.slice_detail)
+			if layerstep==0:
+				layerstep=1
+				
+		#for projection of filled areas		
+		layerstart=0#
+		layerend=o.min.z#
+		layers=[[layerstart,layerend]]
+		#######################		
+		nslices=ceil(abs(o.minz/o.slice_detail))
+		lastislice=numpy.array([])
+		lastslice=Polygon.Polygon()#polyversion
+		layerstepinc=0
+		
+		slicesfilled=0
+		if o.ambient_behaviour=='AROUND':#not used yet
+			s=getObjectSilhouette(o)
+			ambient=s
+		else:
+			ambient=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
+			
+		for h in range(0,nslices):
+			layerstepinc+=1
+			slicechunks=[]
+			z=o.minz+h*o.slice_detail
+			#print(z)
+			#sliceimage=o.offset_image>z
+			islice=o.offset_image>z
+			slicepolys=imageToPoly(o,islice)
+			
+			poly=Polygon.Polygon()#polygversion
+			lastchunks=[]
+			#imagechunks=imageToChunks(o,islice)
+			#for ch in imagechunks:
+			#	slicechunks.append(camPathChunk([]))
+			#	for s in ch.points:
+			#		slicechunks[-1].points.append((s[0],s[1],z))
+					
+			
+			#print('found polys',layerstepinc,len(slicepolys))
+			for p in slicepolys:
+				#print('polypoints',p.nPoints(0))
+				poly+=p#polygversion
+				#print()
+				#polyToMesh(p,z)
+				nchunks=polyToChunks(p,z)
+				#print('chunksnum',len(nchunks))
+				#if len(nchunks)>0:
+				#	print('chunkpoints',len(nchunks[0].points))
+				#print()
+				lastchunks.extend(nchunks)
+				slicechunks.extend(nchunks)
+				#print('totchunks',len(slicechunks))
+			if len(slicepolys)>0:
+				slicesfilled+=1
+				#chunks.extend(polyToChunks(slicepolys[1],z))
+				#print(len(p),'slicelen')
+			
+			
+			#
+			#print(len(lastslice))
+			#'''
+			#print('test waterlayers')
+			#print(layerstep,layerstepinc)
+			if o.waterline_fill:
+				if (len(poly)>0 and slicesfilled==1) or (slicesfilled>0 and layerstepinc==layerstep):#fill first of all, and also fill layers
+					layerstepinc=0
+					offs=True
+					i=0
+					
+					if o.ambient_behaviour=='AROUND':
+						ilim=ceil(o.ambient_radius/o.dist_between_paths)
+						restpoly=poly
+					else:
+						ilim=200#this should be replaced... no limit, just check if the shape grows over limits.
+						
+						offs=False
+						boundrect=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
+						restpoly=boundrect-poly
+					
+					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
+					while len(restpoly)>0 and i<ilim:
+						nchunks=polyToChunks(restpoly,z)
+						#project paths 
+						nchunks=chunksRefine(nchunks,o)
+						nchunks=sampleChunks(o,nchunks,layers)
+						#########################
+						slicechunks.extend(nchunks)
+						parentChildDist(lastchunks,nchunks,o)
+						lastchunks=nchunks
+						#slicechunks.extend(polyToChunks(restpoly,z))
+						restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
+						i+=1
+				elif len(lastslice)>0:
+					if o.inverse:
+						restpoly=poly-lastslice
+					else:
+						restpoly=lastslice-poly#Polygon.Polygon(lastslice)
+					restpoly.simplify()
+						#for ci in range(0,len(poly)):
+						#  restpoly.addContour(poly[ci],poly.isHole(ci))
+					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
+					while len(restpoly)>0:
+						nchunks=polyToChunks(restpoly,z)
+						#project paths 
+						nchunks=chunksRefine(nchunks,o)
+						nchunks=sampleChunks(o,nchunks,layers)
+						#########################
+						slicechunks.extend(nchunks)
+						parentChildDist(lastchunks,nchunks,o)
+						lastchunks=nchunks
+						restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
+				
+						
+				percent=int(h/nslices*100)
+				progress('waterline layers ',percent)  
+				lastslice=poly
+				
+			#print(poly)
+			#print(len(lastslice))
+			'''
+			if len(lastislice)>0:
+				i=numpy.logical_xor(lastislice , islice)
+				
+				n=0
+				while i.sum()>0 and n<10000:
+					i=outlineImageBinary(o,o.dist_between_paths,i,False)
+					polys=imageToPoly(o,i)
+					for poly in polys:
+						chunks.extend(polyToChunks(poly,z))
+					n+=1
+			
+		
+					#restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
+					#chunks.extend(polyToChunks(restpoly,z))
+					
+			lastislice=islice
+			'''
+			
+			
+			#if o.testing==1:
+			slicechunks=sortChunks(slicechunks,o)
+			if topdown:
+				slicechunks.reverse()
+			#project chunks in between
+			
+			chunks.extend(slicechunks)
+		#chunks=sortChunks(chunks)
+		if topdown:
+			chunks.reverse()
+			'''
+			chi=0
+			if len(chunks)>2:
+				while chi<len(chunks)-2:
+					d=dist2d((chunks[chi][-1][0],chunks[chi][-1][1]),(chunks[chi+1][0][0],chunks[chi+1][0][1]))
+					if chunks[chi][0][2]>=chunks[chi+1][0][2] and d<o.dist_between_paths*2:
+						chunks[chi].extend(chunks[chi+1])
+						chunks.remove(chunks[chi+1])
+						chi=chi-1
+					chi+=1
+			'''
+		print(time.time()-tw)
+		chunksToMesh(chunks,o)	  
+		
+	elif o.strategy=='DRILL':
+		ob=bpy.data.objects[o.object_name]
+		l=ob.location
+		
+		if ob.type=='CURVE':
+			chunks=[]
+			for c in ob.data.splines:
+					maxx,minx,maxy,miny=-10000,10000,-10000,100000
+					for p in c.points:
+						if o.drill_type=='ALL_POINTS':
+							chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
+						minx=min(p.co.x,minx)
+						maxx=max(p.co.x,maxx)
+						miny=min(p.co.y,miny)
+						maxy=max(p.co.y,maxy)
+					for p in c.bezier_points:
+						if o.drill_type=='ALL_POINTS':
+							chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
+						minx=min(p.co.x,minx)
+						maxx=max(p.co.x,maxx)
+						miny=min(p.co.y,miny)
+						maxy=max(p.co.y,maxy)
+					cx=(maxx+minx)/2
+					cy=(maxy+miny)/2
+					
+					center=(cx,cy)
+					aspect=(maxx-minx)/(maxy-miny)
+					if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
+						chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.min.z)]))
+			chunks=sortChunks(chunks,o)
+			chunksToMesh(chunks,o)
+	elif o.strategy=='SLICES':
+		slicechunks = getSlices(o,0)
+		for slicechunk in slicechunks:
+			#print(slicechunk)
+			pslices=chunksToPolys(slicechunk)
+			#p1=outlinePoly(pslice,o.dist_between_paths,o,False)
+			for pslice in pslices:
+				p=pslice#-p1
+			#print(p)
+				polyToMesh(p,slicechunk[0][0][2])
+		
+	t1=time.clock()-t 
+	print('total time',str(t1))
