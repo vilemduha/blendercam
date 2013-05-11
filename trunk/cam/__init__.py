@@ -333,7 +333,7 @@ class PathsAll(bpy.types.Operator):
 			bpy.context.scene.cam_active_operation=i
 			print('\nCalculating path :'+o.name)
 			print('\n')
-			bpy.ops.object.calculate_cam_paths(operation=o.name)
+			bpy.ops.object.calculate_cam_paths()
 			i+=1
 
 		return {'FINISHED'}
