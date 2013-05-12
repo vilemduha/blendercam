@@ -524,7 +524,7 @@ class CamOperationAdd(bpy.types.Operator):
 		ob=bpy.context.active_object
 		if ob!=None:
 			o.object_name=ob.name
-			minx,miny,minz,maxx,maxy,maxz=utils.getBoundsWorldspace(ob)
+			minx,miny,minz,maxx,maxy,maxz=utils.getBoundsWorldspace([ob])
 			o.minz=minz
 		
 		return {'FINISHED'}
