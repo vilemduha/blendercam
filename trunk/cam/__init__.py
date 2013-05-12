@@ -1074,8 +1074,8 @@ class CAM_OPTIMISATION_Panel(bpy.types.Panel):
 				if ao.optimize:
 					layout.prop(ao,'optimize_threshold')
 				if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
-					exclude_exact=not (ao.strategy!='CUTOUT' and ao.strategy!='DRILL' and ao.strategy!='PENCIL')
-					if exclude_exact:
+					exclude_exact= ao.strategy=='CUTOUT' or ao.strategy=='DRILL' or ao.strategy=='PENCIL'
+					if not exclude_exact:
 						layout.prop(ao,'use_exact')
 					#if not ao.use_exact or:
 					layout.prop(ao,'pixsize')
