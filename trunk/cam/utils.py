@@ -1455,8 +1455,8 @@ def sampleChunks(o,pathSamples,layers):
 		#for t in range(0,threads):
 			
 		for s in patternchunk.points:
-			#if n/100.0==int(n/100.0):
-			#	progress('sampling pahts ',int(100*n/totlen))
+			if o.strategy!='WATERLINE' and n/200.0==int(n/200.0):
+				progress('sampling pahts ',int(100*n/totlen))
 			n+=1
 			x=s[0]
 			y=s[1]
@@ -2028,24 +2028,31 @@ def exportGcodePath(verts,o):
 			else:	vz=v[2]*unitcorr
 			
 			#v=(v[0]*unitcorr,v[1]*unitcorr,v[2]*unitcorr)
-			vec=Vector(v)-Vector(last)
+			vect=Vector(v)-Vector(last)
 			plungeratio=1
-			if v[2]<last[2] and vi>0 and (vec.x+vec.y)/2<vec.z:#TODO: proper formula for angle which determines if move is plunge here!
+			if v[2]<last[2] and vi>0:# and (vect.x+vect.y)/2<vect.z:#TODO: proper formula for angle which determines if move is plunge here!
+				#print('plunge')
+				#print(vect)
+				f=plungefeedrate
 				c.feedrate(plungefeedrate)
 				c.feed(x=vx,y=vy,z=vz)
 			elif v[2]==last[2]==o.free_movement_height or vi==0:
+				f=freefeedrate
 				c.feedrate(freefeedrate)
 				c.rapid(x=vx,y=vy,z=vz)
 				gcommand='{RAPID}'
 				
 			else:
+				f=millfeedrate
 				c.feedrate(millfeedrate)
 				c.feed(x=vx,y=vy,z=vz)
-			v1=Vector(v)
-			v2=Vector(last)
-			vect=v1-v2
-			o.duration+=vect.length/f
+			#v1=Vector(v)
+			#v2=Vector(last)
+			#vect=v1-v2
+			o.duration+=vect.length/(f/unitcorr)
 			last=v
+	#print('duration')
+	#print(o.duration)
 	c.program_end()
 	c.file_close()
 
