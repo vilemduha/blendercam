@@ -1216,7 +1216,7 @@ def prepareArea(o):
 		if o.inverse:
 			samples=numpy.maximum(samples,o.min.z-0.00001)
 		offsetArea(o,samples)
-		if o.ambient_behaviour=='AROUND' and o.ambient_radius>0.0:
+		if o.ambient_behaviour=='AROUND' and o.ambient_radius>0.0:#TODO: unify ambient generation into 1 function.
 			r=o.ambient_radius+o.pixsize*2.5#+(o.cutter_diameter/2.0)
 			print('outline ambient')
 			o.offset_image[:]=outlineImage(o,r,o.offset_image,o.minz)
@@ -1408,9 +1408,8 @@ def sampleChunks(o,pathSamples,layers):
 	if o.use_exact:#prepare collision world
 		if o.update_bullet_collision_tag:
 			prepareBulletCollision(o)
-			print('getting ambient')
-			o.ambient = getObjectOutline( o.ambient_radius , o , True)# in this method we need ambient from silhouette
-			o.update_ambient_tag=False  
+			#print('getting ambient')
+			getAmbient(o)  
 			o.update_bullet_collision_tag=False
 		#print (o.ambient)
 		cutter=o.cutter_shape
@@ -3472,7 +3471,14 @@ def getObjectSilhouette(operation):
 	operation.update_silhouete_tag=False
 	return operation.silhouete
 	
-
+def getAmbient(o):
+	if o.update_ambient_tag:
+		if o.ambient_behaviour=='AROUND':
+			o.ambient = getObjectOutline( o.ambient_radius , o , True)# in this method we need ambient from silhouette
+		else:
+			o.ambient=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
+	o.update_ambient_tag=False
+			
 	
 def getObjectOutline(radius,operation,Offset):
 	
@@ -3733,12 +3739,7 @@ def getPaths(context,operation):#should do all path calculations.
 		layerstepinc=0
 		
 		slicesfilled=0
-		if o.ambient_behaviour=='AROUND':#not used yet
-			s=getObjectSilhouette(o)
-			ambient=s
-		else:
-			ambient=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
-			
+		getAmbient(o)
 		for h in range(0,nslices):
 			layerstepinc+=1
 			slicechunks=[]
@@ -3788,11 +3789,11 @@ def getPaths(context,operation):#should do all path calculations.
 					offs=True
 					i=0
 					
-					if o.ambient_behaviour=='AROUND':
+					if o.ambient_behaviour=='AROUND':#TODO: use getAmbient
 						ilim=ceil(o.ambient_radius/o.dist_between_paths)
 						restpoly=poly
 					else:
-						ilim=200#this should be replaced... no limit, just check if the shape grows over limits.
+						ilim=200#TODO:this should be replaced... no limit, just check if the shape grows over limits.
 						
 						offs=False
 						boundrect=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
