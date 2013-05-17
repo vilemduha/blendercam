@@ -1653,6 +1653,66 @@ def setChunksZ(chunks,z):
 			chunk.points.append((s[0],s[1],z))
 		newchunks.append(chunk)
 	return newchunks
+	
+def setChunksZRamp(chunks,zstart,zend,o):
+	newchunks=[]
+	for ch in chunks:
+		chunk=camPathChunk([])
+		ch.getLength()
+		ltraveled=0
+		endpoint=None
+		for i,s in enumerate(ch.points):
+			
+			if i>0:
+				s2=ch.points[i-1]
+				ltraveled+=dist2d(s,s2)
+				ratio=ltraveled/ch.length
+			else:
+				ratio=0
+			z=zstart-o.stepdown*ratio
+			if z<zend and zend == o.min.z and endpoint==None and ch.closed==True:
+				endpoint=i+1
+				if endpoint==len(ch.points):
+					endpoint=0
+				print(endpoint,len(ch.points))
+			#else:
+			z=max(z,zend)
+			chunk.points.append((s[0],s[1],z))
+			if endpoint!=None:
+				break;
+			
+		if endpoint!=None:#append final contour on the bottom z level
+			i=endpoint+1
+			if i==len(ch.points):
+					i=0
+			while i!=endpoint:
+				
+				s=ch.points[i]
+				chunk.points.append((s[0],s[1],zend))
+				print(i,endpoint)
+				i+=1
+				if i==len(ch.points):
+					i=0
+			if o.ramp_out:
+				z=zend
+				i=endpoint
+				while z<0:
+					if i==len(ch.points):
+						i=0
+					s1=ch.points[i]
+					i2=i-1
+					if i2<0: i2=len(ch.points)-1
+					s2=ch.points[i2]
+					l=dist2d(s1,s2)
+					znew=z+atan(o.ramp_out_angle)*l
+					znew=min(0,znew)
+					chunk.points.append((s1[0],s1[1],znew))
+					z=znew
+					i+=1
+					
+					
+		newchunks.append(chunk)
+	return newchunks
 			
 def chunkToPoly(chunk):
 	pverts=[]
@@ -2286,6 +2346,7 @@ class camPathChunk:
 		self.parents=[]
 		#self.unsortedchildren=False
 		self.sorted=False#if the chunk has allready been milled in the simulation
+		self.length=0;#this is total length of this chunk.
 		
 	def dist(self,pos,o):
 		if self.closed:
@@ -2341,7 +2402,19 @@ class camPathChunk:
 				return child.getNext()	
 		#self.unsortedchildren=False		
 		return self
-			
+	
+	def getLength(self):
+		self.length=0
+		for vi,v1 in enumerate(self.points):
+			v2=Vector(v1)#this is for case of last point and not closed chunk..
+			if self.closed and vi==len(self.points)-1:
+				v2=Vector(self.points[0])
+			else:
+				v2=Vector(self.points[vi+1])
+			v1=Vector(v1)
+			v=v2-v1
+			self.length+=v.length
+			#print(v,pos)
 #def appendChunk(sorted,ch,o,pos)	
 	
 
@@ -2831,7 +2904,8 @@ def getSlices(operation, returnCurves):
 def curveToChunks(o):
 	activate(o)
 	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
-	
+	bpy.ops.group.objects_remove_all()
+
 	o=bpy.context.active_object
 	o.data.dimensions='3D'
 	try:
@@ -3587,13 +3661,16 @@ def getPaths(context,operation):#should do all path calculations.
 			
 	
 	
-	
+	###########cutout strategy is completely here:
 	if o.strategy=='CUTOUT':
 		#ob=bpy.context.active_object
 		offset=True
 		if o.cut_type=='ONLINE' and o.onlycurves==True:#is separate to allow open curves :)
 			print('separe')
-			chunksFromCurve=curveToChunks(bpy.data.objects[o.object_name])
+			chunksFromCurve=[]
+			for ob in o.objects:
+				chunksFromCurve.extend(curveToChunks(ob))
+			
 			for ch in chunksFromCurve:
 				print(ch.points)
 				
@@ -3619,16 +3696,33 @@ def getPaths(context,operation):#should do all path calculations.
 				ch.points.reverse()
 		chunks=[]
 		if o.use_layers:
+			steps=[]
 			n=math.ceil(-(o.min.z/o.stepdown))
+			layerstart=0
 			for x in range(0,n):
 				layerend=max(-((x+1)*o.stepdown),o.min.z)
-				chunks.extend(setChunksZ(chunksFromCurve,layerend))
+				steps.append([layerstart,layerend])
+				layerstart=layerend
 		else:
-			#chunks=polyToChunks(p,o.min.z)
-			#chunks=sortChunks(chunks)
-			#chunks.extend(chunks)
-			chunks=setChunksZ(chunksFromCurve,o.min.z)
-		if bpy.app.debug_value==0 or bpy.app.debug_value==1or bpy.app.debug_value==3 or bpy.app.debug_value==2:# or bpy.app.debug_value==4:
+				steps=[[0,o.min.z]]
+			
+		if o.helix_down:
+			for chunk in chunksFromCurve:
+				for step in steps:
+					chunks.extend(setChunksZRamp([chunk],step[0],step[1],o))
+					#if o.ramp_out:
+				#if o.ramp_out:
+				#	chunks.extend(ChunkRampOut([chunk], angle) )
+		else:
+			if o.first_down:
+				for chunk in chunksFromCurve:
+					for step in steps:
+						chunks.extend(setChunksZ([chunk],step[1]))
+			else:
+				for step in steps:
+					chunks.extend(setChunksZ(chunksFromCurve,step[1]))
+		
+		if bpy.app.debug_value==0 or bpy.app.debug_value==1 or bpy.app.debug_value==3 or bpy.app.debug_value==2:# or bpy.app.debug_value==4:
 			chunksToMesh(chunks,o)
 	
 	if o.strategy=='POCKET':	
@@ -3679,7 +3773,9 @@ def getPaths(context,operation):#should do all path calculations.
 		ambient_level=0.0
 		
 		if o.strategy=='CARVE':
-			pathSamples=curveToChunks(bpy.data.objects[o.curve_object])  
+			pathSamples=[]
+			for ob in o.objects:
+				pathSamples.extend(curveToChunks(ob))
 			pathSamples=sortChunks(pathSamples,o)#sort before sampling
 			pathSamples=chunksRefine(pathSamples,o)
 		elif o.strategy=='PENCIL':

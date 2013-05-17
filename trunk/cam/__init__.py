@@ -177,7 +177,11 @@ class camOperation(bpy.types.PropertyGroup):
 	circle_detail = bpy.props.IntProperty(name="Detail of circles used for curve offsets", default=64, min=12, max=512)
 	use_layers = bpy.props.BoolProperty(name="Use Layers",description="Use layers for roughing", default=True)
 	stepdown = bpy.props.FloatProperty(name="Step down", default=0.01, min=0.00001, max=32,precision=PRECISION, unit="LENGTH")
-	
+	first_down = bpy.props.BoolProperty(name="First down",description="First go down on a contour, then go to the next one", default=False)
+	helix_down = bpy.props.BoolProperty(name="Ramp contour",description="Ramps down the whole contour, so the cutline looks like helix", default=False)
+	ramp_out = bpy.props.BoolProperty(name="Ramp out",description="Ramp out to not leave mark on surface", default=False)
+	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=89 , precision=0, subtype="ANGLE" , unit="ROTATION" )
+
 	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation depth from object", default=True)
 	minz = bpy.props.FloatProperty(name="Operation depth", default=-0.01, min=-32, max=0,precision=PRECISION, unit="LENGTH")#this is input minz. True minimum z can be something else, depending on material e.t.c.
 	
@@ -1023,6 +1027,15 @@ class CAM_MOVEMENT_Panel(bpy.types.Panel):
 				   
 				layout.prop(ao,'spindle_rotation_direction')
 				layout.prop(ao,'free_movement_height')
+				if ao.strategy=='CUTOUT':
+					layout.prop(ao,'first_down')
+					if ao.first_down:
+						layout.prop(ao,'helix_down')
+						if ao.helix_down:
+							layout.prop(ao,'ramp_out')
+							if ao.ramp_out:
+								layout.prop(ao,'ramp_out_angle')
+							
 				layout.prop(ao,'stay_low')
 				layout.prop(ao,'protect_vertical')
 			  
@@ -1111,7 +1124,7 @@ class CAM_AREA_Panel(bpy.types.Panel):
 				layout.prop(ao,'use_layers')
 				if ao.use_layers:
 					layout.prop(ao,'stepdown')
-			   
+				
 				layout.prop(ao,'ambient_behaviour')
 				if ao.ambient_behaviour=='AROUND':
 					layout.prop(ao,'ambient_radius')
@@ -1191,7 +1204,7 @@ def register():
 	d.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
 	d.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
 	
-	
+	'''
 	try:
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_render)
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_dimensions)
@@ -1206,7 +1219,7 @@ def register():
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_freestyle)
 	except:
 		pass;
-	
+	'''
 
 def unregister():
 	for p in get_panels():
