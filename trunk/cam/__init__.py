@@ -180,7 +180,7 @@ class camOperation(bpy.types.PropertyGroup):
 	first_down = bpy.props.BoolProperty(name="First down",description="First go down on a contour, then go to the next one", default=False)
 	helix_down = bpy.props.BoolProperty(name="Ramp contour",description="Ramps down the whole contour, so the cutline looks like helix", default=False)
 	ramp_out = bpy.props.BoolProperty(name="Ramp out",description="Ramp out to not leave mark on surface", default=False)
-	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=89 , precision=0, subtype="ANGLE" , unit="ROTATION" )
+	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=0, subtype="ANGLE" , unit="ROTATION" )
 
 	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation depth from object", default=True)
 	minz = bpy.props.FloatProperty(name="Operation depth", default=-0.01, min=-32, max=0,precision=PRECISION, unit="LENGTH")#this is input minz. True minimum z can be something else, depending on material e.t.c.
