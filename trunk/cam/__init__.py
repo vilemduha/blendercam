@@ -1154,9 +1154,9 @@ class CAM_AREA_Panel(bpy.types.Panel):
 						col.prop(ao,'source_image_crop_start_y',text='start y') 
 						col.prop(ao,'source_image_crop_end_x',text='end x')
 						col.prop(ao,'source_image_crop_end_y',text='end y')
-				layout.prop(ao,'use_limit_curve')				   
-				if ao.use_limit_curve:
-					layout.prop_search(ao, "limit_curve", bpy.data, "objects")
+				#layout.prop(ao,'use_limit_curve')				   
+				#if ao.use_limit_curve:
+				#	layout.prop_search(ao, "limit_curve", bpy.data, "objects")
 				
 				
  
