@@ -52,7 +52,7 @@ PRECISION=5
 class machineSettings(bpy.types.PropertyGroup):
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	post_processor = EnumProperty(name='Post processor',
-		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC - LinuxCNC','default emc'),('HEIDENHAIN','Heidenhain  - experimental','heidenhain'),('TNC151','Heidenhain TNC151  - experimental','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1 - experimental','Sieg KX1'),('HM50','Hafco HM-50 - experimental','Hafco HM-50'),('CENTROID','Centroid M40 - experimental','Centroid M40'),('ANILAM','Anilam Crusader M - experimental','Anilam Crusader M')),
+		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC - LinuxCNC','default emc'),('HEIDENHAIN','Heidenhain','heidenhain'),('TNC151','Heidenhain TNC151','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1','Sieg KX1'),('HM50','Hafco HM-50','Hafco HM-50'),('CENTROID','Centroid M40','Centroid M40'),('ANILAM','Anilam Crusader M','Anilam Crusader M')),
 		description='Post processor',
 		default='MACH3')
 	#units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
@@ -143,11 +143,11 @@ class camOperation(bpy.types.PropertyGroup):
 			('CROSS','Cross', 'Cross paths'),
 			('BLOCK','Block', 'Block path'),
 			('SPIRAL','Spiral', 'Spiral path'),
-			('CIRCLES','Circles - EXPERIMENTAL', 'Circles path'),
+			('CIRCLES','Circles', 'Circles path'),
 			('WATERLINE','Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
-			('OUTLINEFILL','Outline Fill - EXPERIMENTAL', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
+			('OUTLINEFILL','Outline Fill', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
 			('CUTOUT','Cutout', 'Cut the silhouette with offset'),
-			('POCKET','Pocket - EXPERIMENTAL', 'Pocket operation'),
+			('POCKET','Pocket', 'Pocket operation'),
 			('CARVE','Carve', 'Pocket operation'),
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
 			('DRILL','Drill', 'Drill operation'),('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!')),
@@ -178,9 +178,10 @@ class camOperation(bpy.types.PropertyGroup):
 	use_layers = bpy.props.BoolProperty(name="Use Layers",description="Use layers for roughing", default=True)
 	stepdown = bpy.props.FloatProperty(name="Step down", default=0.01, min=0.00001, max=32,precision=PRECISION, unit="LENGTH")
 	first_down = bpy.props.BoolProperty(name="First down",description="First go down on a contour, then go to the next one", default=False)
-	helix_down = bpy.props.BoolProperty(name="Ramp contour",description="Ramps down the whole contour, so the cutline looks like helix", default=False)
+	contour_ramp = bpy.props.BoolProperty(name="Ramp contour",description="Ramps down the whole contour, so the cutline looks like helix", default=False)
 	ramp_out = bpy.props.BoolProperty(name="Ramp out",description="Ramp out to not leave mark on surface", default=False)
 	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=0, subtype="ANGLE" , unit="ROTATION" )
+	helix_enter = bpy.props.BoolProperty(name="Helix enter",description="Enter material in helix", default=False)
 
 	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation depth from object", default=True)
 	minz = bpy.props.FloatProperty(name="Operation depth", default=-0.01, min=-32, max=0,precision=PRECISION, unit="LENGTH")#this is input minz. True minimum z can be something else, depending on material e.t.c.
@@ -983,7 +984,6 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 					#elif o.type=='CURVE' and (ao.strategy!='CARVE' and ao.strategy!='POCKET' and ao.strategy!='DRILL' and ao.strategy!='CUTOUT'):
 					 #	 layout.label('Not supported for curves')
 					 #	 return
-				
 					
 				if ao.strategy=='CUTOUT':	
 					layout.prop(ao,'cut_type')
@@ -1045,12 +1045,13 @@ class CAM_MOVEMENT_Panel(bpy.types.Panel):
 				if ao.strategy=='CUTOUT':
 					layout.prop(ao,'first_down')
 					if ao.first_down:
-						layout.prop(ao,'helix_down')
-						if ao.helix_down:
+						layout.prop(ao,'contour_ramp')
+						if ao.contour_ramp:
 							layout.prop(ao,'ramp_out')
 							if ao.ramp_out:
 								layout.prop(ao,'ramp_out_angle')
-							
+				if ao.strategy=='POCKET':
+					layout.prop(ao,'helix_enter')
 				layout.prop(ao,'stay_low')
 				layout.prop(ao,'protect_vertical')
 			  

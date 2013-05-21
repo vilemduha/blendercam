@@ -2328,6 +2328,18 @@ def Circle(r,np):
 		
 	p=Polygon.Polygon(c)
 	return p
+	
+def Helix(r,np, zstart,pend,rev):
+	c=[]
+	pi=math.pi
+	v=mathutils.Vector((r,0,zstart))
+	e=mathutils.Euler((0,0,2.0*pi/np))
+	zstep=(zstart-pend[2])/(np*rev)
+	for a in range(0,int(np*rev)):
+		c.append((v.x+pend[0],v.y+pend[1],zstart-(a*zstep)))
+		v.rotate(e)
+	return c
+	
 def nRect(l,r):
 	s=((-l/2.0,-r/10.0),(l/2.0,-r/10.0),(l/2.0,r),(-l/2,r))
 	r= Polygon.Polygon(s)
@@ -3808,7 +3820,7 @@ def getPaths(context,operation):#should do all path calculations.
 		else:
 				steps=[[0,o.min.z]]
 			
-		if o.helix_down:
+		if o.contour_ramp:
 			for chunk in chunksFromCurve:
 				for step in steps:
 					chunks.extend(setChunksZRamp([chunk],step[0],step[1],o))
@@ -3855,17 +3867,37 @@ def getPaths(context,operation):#should do all path calculations.
 		#if bpy.app.debug_value==1:
 			
 		chunksFromCurve=sortChunks(chunksFromCurve,o)	
-		
+			
 		chunks=[]
 		if o.use_layers:
 			n=math.ceil(-(o.min.z/o.stepdown))
+			layers=[]
+			layerstart=0
 			for x in range(0,n):
 				layerend=max(-((x+1)*o.stepdown),o.min.z)
-				chunks.extend(setChunksZ(chunksFromCurve,layerend))
+				layers.append([layerstart,layerend])
+				layerstart=layerend
 		else:
-			chunks=setChunksZ(chunksFromCurve,o.min.z)
-		
-		
+			layers=[[0,o.min.z]]
+
+		for l in layers:
+			lchunks=setChunksZ(chunksFromCurve,l[1])
+			###########helix_enter first try here TODO: check if helix radius is not out of operation area.
+			if o.helix_enter:
+				helix_radius=o.cutter_diameter*0.5*0.75
+				
+				for ch in lchunks:
+					if ch.parents==[]:
+						p=ch.points[0]		
+						revolutions=0.25*(l[0]-p[2])/helix_radius
+						print(revolutions)
+						h=Helix(helix_radius,o.circle_detail, l[0],p,revolutions)
+						#print('helix')
+						#print(h)
+						#print(lchunks[0].points)
+						ch.points=h+ch.points
+						#print (lchunks[0].points)
+			chunks.extend(lchunks)
 		
 		
 		chunksToMesh(chunks,o)
