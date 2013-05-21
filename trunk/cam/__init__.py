@@ -150,7 +150,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('POCKET','Pocket - EXPERIMENTAL', 'Pocket operation'),
 			('CARVE','Carve', 'Pocket operation'),
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
-			('DRILL','Drill', 'Drill operation')),
+			('DRILL','Drill', 'Drill operation'),('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!')),
 		description='Strategy',
 		default='PARALLEL')#,('SLICES','Slices','this prepares model for cutting from sheets of material')
 	#for cutout	   
@@ -207,6 +207,7 @@ class camOperation(bpy.types.PropertyGroup):
 	#feeds
 	feedrate = FloatProperty(name="Feedrate/minute", description="Feedrate m/min", min=0.00005, max=50.0, default=1.0,precision=PRECISION, unit="LENGTH", update = updateChipload)
 	plunge_feedrate = FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,precision=1, subtype='PERCENTAGE')
+	plunge_angle = 	bpy.props.FloatProperty(name="Plunge angle", description="What angle is allready considered to plunge", default=math.pi/6, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" )
 	spindle_rpm = FloatProperty(name="#Spindle rpm", description="#not supported#Spindle speed ", min=1000, max=60000, default=12000, update = updateChipload)
 	#movement parallel_step_back 
 	movement_type = EnumProperty(name='Movement type',items=(('CONVENTIONAL','Conventional', 'a'),('CLIMB', 'Climb', 'a'),('MEANDER', 'Meander' , 'a')	 ),description='movement type', default='CLIMB')
@@ -461,7 +462,7 @@ class CAMSimulate(bpy.types.Operator):
 	def execute(self, context):
 		s=bpy.context.scene
 		operation = s.cam_operations[s.cam_active_operation]
-		#operation.material=bpy.context.scene.cam_material[0]#TODO: check if this works after the change.
+		
 		#if operation.geometry_source=='OBJECT' and operation.object_name in bpy.data.objects and #bpy.data.objects[operation.object_name].type=='CURVE':
 		#	print('simulation of curve operations is not available')
 		#	return {'FINISHED'}
@@ -564,8 +565,22 @@ class CamOperationCopy(bpy.types.Operator):
 		for k in copyop.keys():
 			o[k]=copyop[k]
 		
-		o.name=o.name+'_copy'
-		o.filename=o.filename+'_copy'
+		####get digits in the end
+		####
+		isdigit=True
+		numdigits=0
+		num=0
+		if o.name[-1].isdigit():
+			numdigits=1
+			while isdigit:
+				numdigits+=1
+				isdigit=o.name[-numdigits].isdigit()
+			numdigits-=1
+			o.name=o.name[:-numdigits]+str(int(o.name[-numdigits:])+1).zfill(numdigits)
+			o.filename=o.name
+		else:
+			o.name=o.name+'_copy'
+			o.filename=o.filename+'_copy'
 		ob=bpy.context.active_object
 		if ob!=None:
 			o.object_name=ob.name
@@ -1059,6 +1074,7 @@ class CAM_FEEDRATE_Panel(bpy.types.Panel):
 			if ao.valid:
 				layout.prop(ao,'feedrate')
 				layout.prop(ao,'plunge_feedrate')
+				layout.prop(ao,'plunge_angle')
 				layout.prop(ao,'spindle_rpm')
 
 class CAM_OPTIMISATION_Panel(bpy.types.Panel):

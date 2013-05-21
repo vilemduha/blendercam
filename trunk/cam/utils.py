@@ -163,7 +163,7 @@ def getCutterBullet(o):
 		cutter=bpy.context.active_object
 		cutter.rigid_body.collision_shape = 'CONE'
 	cutter.name='cam_cutter'	
-	o.cutter_shape=cutter#TODO: delete this object afterwards!
+	o.cutter_shape=cutter
 	return cutter
 
 #prepares all objects needed for sampling with bullet collision
@@ -345,9 +345,10 @@ def getPathPatternParallel(o,angle):
 				
 			if o.movement_type=='CONVENTIONAL' or o.movement_type=='CLIMB':
 				pathchunks[-2].points.reverse()
-			changechunk=pathchunks[-1]
-			pathchunks[-1]=pathchunks[-2]
-			pathchunks[-2]=changechunk
+			pathchunks[-1].points.extend(pathchunks[-2].points)
+			pathchunks.pop(-2)
+			#pathchunks[-1]=pathchunks[-2]
+			#=changechunk
 					
 		reverse = not reverse
 	
@@ -786,7 +787,7 @@ def renderSampleImage(o):
 		if o.strategy=='CUTOUT':#cutout strategy doesn't want to cut image border
 			a.fill(0)
 		else:#other operations want to avoid cutting anything outside image borders.
-			a.fill(1.00001)
+			a.fill(o.min.z)
 		#2*o.borderwidth
 		a[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]=rawimage
 		a=a[sx:ex+o.borderwidth*2,sy:ey+o.borderwidth*2]
@@ -1456,7 +1457,7 @@ def sampleChunks(o,pathSamples,layers):
 			
 		for s in patternchunk.points:
 			if o.strategy!='WATERLINE' and n/200.0==int(n/200.0):
-				progress('sampling pahts ',int(100*n/totlen))
+				progress('sampling paths ',int(100*n/totlen))
 			n+=1
 			x=s[0]
 			y=s[1]
@@ -1674,26 +1675,36 @@ def setChunksZRamp(chunks,zstart,zend,o):
 				ratio=ltraveled/ch.length
 			else:
 				ratio=0
-			z=zstart-stepdown*ratio
-			if z<=zend and zend == o.min.z and endpoint==None and ch.closed==True:
-				endpoint=i+1
-				if endpoint==len(ch.points):
-					endpoint=0
-				print(endpoint,len(ch.points))
+			znew=zstart-stepdown*ratio
+			if znew<=zend:
+				
+				ratio=((z-zend)/(z-znew))
+				v1=Vector(chunk.points[-1])
+				v2=Vector((s[0],s[1],znew))
+				v=v1+ratio*(v2-v1)
+				chunk.points.append((v.x,v.y,v.z))
+						
+				if zend == o.min.z and endpoint==None and ch.closed==True:
+					endpoint=i+1
+					if endpoint==len(ch.points):
+						endpoint=0
+					print(endpoint,len(ch.points))
 			#else:
-			z=max(z,zend)
-			chunk.points.append((s[0],s[1],z))
+			znew=max(znew,zend)
+			chunk.points.append((s[0],s[1],znew))
+			z=znew
 			if endpoint!=None:
 				break;
 		if not o.use_layers:
 			endpoint=0
 		if endpoint!=None:#append final contour on the bottom z level
-			i=endpoint+1
+			i=endpoint
+			started=False
 			#print('finaliz')
 			if i==len(ch.points):
 					i=0
-			while i!=endpoint:
-				
+			while i!=endpoint or not started:
+				started=True
 				s=ch.points[i]
 				chunk.points.append((s[0],s[1],zend))
 				#print(i,endpoint)
@@ -1738,19 +1749,6 @@ def chunkToPoly(chunk):
 	 
 	p=Polygon.Polygon(pverts)
 	return p
-
-def estimateTime(verts,operation):
-	operation.duration=0.0
-	
-	t=0.0
-	for i in range(0,len(verts)):
-		if i>0:
-			#print(verts[i-1])
-			v1=Vector(verts[i-1])
-			v2=Vector(verts[i])
-			v=v2-v1
-			t+=v.length/operation.feedrate
-	operation.duration=t
 
 
 def compare(v1,v2,vmiddle):
@@ -1983,7 +1981,6 @@ def chunksToMesh(chunks,o):
 	exportGcodePath(verts,o)
 	if o.use_exact:
 		cleanupBulletCollision(o)
-	#estimateTime(verts,o)
 		
 	edges=[]	
 	for a in range(0,len(verts)-1):
@@ -2093,6 +2090,7 @@ def exportGcodePath(verts,o):
 
 		o.duration=0.0
 		f=millfeedrate
+		downvector= Vector((0,0,-1))
 		for vi in range(0,len(verts)):
 			v=verts[vi]
 			if v[0]==last[0]: vx=None; 
@@ -2105,7 +2103,7 @@ def exportGcodePath(verts,o):
 			#v=(v[0]*unitcorr,v[1]*unitcorr,v[2]*unitcorr)
 			vect=Vector(v)-Vector(last)
 			plungeratio=1
-			if v[2]<last[2] and vi>0:# and (vect.x+vect.y)/2<vect.z:#TODO: proper formula for angle which determines if move is plunge here!
+			if vi>0  and vect.length>0 and downvector.angle(vect)<(pi/2-o.plunge_angle):
 				#print('plunge')
 				#print(vect)
 				f=plungefeedrate
@@ -2115,7 +2113,7 @@ def exportGcodePath(verts,o):
 				f=freefeedrate
 				c.feedrate(freefeedrate)
 				c.rapid(x=vx,y=vy,z=vz)
-				gcommand='{RAPID}'
+				#gcommand='{RAPID}'
 				
 			else:
 				f=millfeedrate
@@ -2435,7 +2433,7 @@ class camPathChunk:
 
 def sortChunks(chunks,o):
 	print('sorting paths')
-	sys.setrecursionlimit(100000)# the getNext() function of CamPathChunk was running out of recursion limits. TODO: rewrite CamPathChunk getNext() it to not be recursive
+	sys.setrecursionlimit(100000)# the getNext() function of CamPathChunk was running out of recursion limits. TODO: rewrite CamPathChunk getNext() it to not be recursive- works now won't do it/.
 	sortedchunks=[]
 	
 	lastch=None
@@ -2474,7 +2472,7 @@ def sortChunks(chunks,o):
 			chunks.remove(ch)
 			
 			
-			if o.stay_low and lastch!=None and ch.dist(pos,o)<2*o.dist_between_paths:				
+			if o.stay_low and lastch!=None and (ch.dist(pos,o)<2*o.dist_between_paths or (o.parallel_step_back and ch.dist(pos,o)<4*o.dist_between_paths)):
 				if o.strategy=='PARALLEL' or o.strategy=='CROSS':# for these paths sorting happens after sampling, thats why they need resample the connection
 					between=samplePathLow(o,lastch,ch,True)
 				else:
@@ -2718,8 +2716,98 @@ def meshloopToChunk(mesh):
 	chunks.append(chunk) 
 	return chunks
 
+def testbite(pos):
+	xs=(pos.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+	ys=(pos.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+	z=pos.z
+	m=int(o.cutterArray.shape[0]/2)
 
+	if xs>m+1 and xs<o.millimage.shape[0]-m-1 and ys>m+1 and ys<o.millimage.shape[1]-m-1 :
+		o.millimage[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(o.millimage[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
+	v.length+=o.simulation_detail
+	
+	
+def crazyPath(o):#TODO: try to do something with this crazy stuff!
+	MAX_BEND=0.1#in radians...#TODO: support operation chains ;)
+	prepareArea(o)
+	#o.millimage = 
+	sx=o.max.x-o.min.x
+	sy=o.max.y-o.min.y
 
+	resx=ceil(sx/o.simulation_detail)+2*o.borderwidth
+	resy=ceil(sy/o.simulation_detail)+2*o.borderwidth
+
+	o.millimage=numpy.array((0.1),dtype=float)
+	o.millimage.resize(resx,resy)
+	o.millimage.fill(0)
+	o.cutterArray=-getCutterArray(o,o.simulation_detail)#getting inverted cutter
+	crazy=camPathChunk([(0,0,0)])
+	testpos=(o.min.x,o.min.y,o.min.z)
+	
+	'''
+	verts=bpy.data.objects[o.path_object_name].data.vertices
+	
+	sx=o.max.x-o.min.x
+	sy=o.max.y-o.min.y
+
+	resx=ceil(sx/o.simulation_detail)+2*o.borderwidth
+	resy=ceil(sy/o.simulation_detail)+2*o.borderwidth
+
+	si=numpy.array((0.1),dtype=float)
+	si.resize(resx,resy)
+	si.fill(0)
+	cutterArray=getCutterArray(o,o.simulation_detail)
+	#cb=cutterArray<-1
+	#cutterArray[cb]=1
+	cutterArray=-cutterArray
+	m=int(cutterArray.shape[0]/2)
+	size=cutterArray.shape[0]
+	print(si.shape)
+	#for ch in chunks:
+	lasts=verts[1].co
+	l=len(verts)
+	perc=-1
+	vtotal=len(verts)
+	for i,vert in enumerate(verts):
+		if perc!=int(100*i/vtotal):
+			perc=int(100*i/vtotal)
+			progress('simulation',perc)
+		#progress('simulation ',int(100*i/l))
+		if i>0:
+			s=vert.co
+			v=s-lasts
+			
+			if v.length>o.simulation_detail:
+				l=v.length
+				
+				v.length=o.simulation_detail
+				while v.length<l:
+					
+					xs=(lasts.x+v.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+					ys=(lasts.y+v.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+					z=lasts.z+v.z
+					if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
+						si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
+					v.length+=o.simulation_detail
+		
+			xs=(s.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+			ys=(s.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+			if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
+				si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+s.z)
+				
+			lasts=s
+	si=si[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]
+	si+=-o.min.z
+	oname='csim_'+o.name
+	fn=bpy.data.filepath
+	iname=bpy.path.abspath(fn)
+	l=len(bpy.path.basename(fn))
+	inamebase=oname+'.exr'
+	iname=fn[:-l]+inamebase
+
+	i=numpytoimage(si,inamebase)
+	'''
+	
 def getSlices(operation, returnCurves):
 	ob=operation.object
 	layer_thickness=operation.slice_detail
@@ -3486,7 +3574,6 @@ def getObjectSilhouette(operation):
 							if len(verts)<1:
 								if len(ch)>2:
 									chunks.append(ch)
-								#cleanUpDict(ndict)
 								
 								#v1=ndict.popitem()
 								i=20000000
@@ -3589,7 +3676,7 @@ def getObjectOutline(radius,operation,Offset):
 	#print('sizesorting')
 	#print(len(polygons))
 	'''#this didnt work.
-	#TODO: support more levels of hierarchy with curves.
+	#TODO: support more levels of hierarchy with curves. - do it with the clipper library!
 	while sortok==False:
 		sortok=True
 		for pi in range(0,len(polygons)-1):
@@ -3781,7 +3868,9 @@ def getPaths(context,operation):#should do all path calculations.
 		
 		
 		
-		chunksToMesh(chunks,o)  
+		chunksToMesh(chunks,o)
+	elif o.strategy=='CRAZY':
+		crazyPath(o)
 	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL':  
 		
 		
@@ -3800,7 +3889,6 @@ def getPaths(context,operation):#should do all path calculations.
 			#	for i,p in enumerate(ch.points):
 			#		ch.points[i]=(p[0],p[1],0)
 			pathSamples=sortChunks(pathSamples,o)#sort before sampling
-			
 		else: 
 			pathSamples=getPathPattern(o)
 	
@@ -3824,7 +3912,7 @@ def getPaths(context,operation):#should do all path calculations.
 			layers=[[layerstart,layerend]]
 		
 		chunks.extend(sampleChunks(o,pathSamples,layers))
-		if (o.strategy=='PARALLEL' or o.strategy=='CROSS') :#)and o.ambient_behaviour=='AROUND')
+		if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):# and not o.parallel_step_back:
 			chunks=sortChunks(chunks,o)
 		#print(chunks)
 		if o.strategy=='CARVE':
