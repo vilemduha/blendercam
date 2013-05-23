@@ -180,9 +180,12 @@ class camOperation(bpy.types.PropertyGroup):
 	first_down = bpy.props.BoolProperty(name="First down",description="First go down on a contour, then go to the next one", default=False)
 	contour_ramp = bpy.props.BoolProperty(name="Ramp contour",description="Ramps down the whole contour, so the cutline looks like helix", default=False)
 	ramp_out = bpy.props.BoolProperty(name="Ramp out",description="Ramp out to not leave mark on surface", default=False)
-	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=0, subtype="ANGLE" , unit="ROTATION" )
+	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=1, subtype="ANGLE" , unit="ROTATION" )
 	helix_enter = bpy.props.BoolProperty(name="Helix enter",description="Enter material in helix", default=False)
-
+	helix_angle = 	bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" )
+	helix_diameter = bpy.props.FloatProperty(name = 'Helix diameter % of cutter D', default=90,min=10, max=100, precision=1,subtype='PERCENTAGE')
+	
+	
 	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation depth from object", default=True)
 	minz = bpy.props.FloatProperty(name="Operation depth", default=-0.01, min=-32, max=0,precision=PRECISION, unit="LENGTH")#this is input minz. True minimum z can be something else, depending on material e.t.c.
 	
@@ -1052,6 +1055,9 @@ class CAM_MOVEMENT_Panel(bpy.types.Panel):
 								layout.prop(ao,'ramp_out_angle')
 				if ao.strategy=='POCKET':
 					layout.prop(ao,'helix_enter')
+					if ao.helix_enter:
+						layout.prop(ao,'helix_angle')
+						layout.prop(ao,'helix_diameter')
 				layout.prop(ao,'stay_low')
 				layout.prop(ao,'protect_vertical')
 			  

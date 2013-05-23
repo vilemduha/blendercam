@@ -2338,6 +2338,8 @@ def Helix(r,np, zstart,pend,rev):
 	for a in range(0,int(np*rev)):
 		c.append((v.x+pend[0],v.y+pend[1],zstart-(a*zstep)))
 		v.rotate(e)
+	
+		
 	return c
 	
 def nRect(l,r):
@@ -3884,12 +3886,16 @@ def getPaths(context,operation):#should do all path calculations.
 			lchunks=setChunksZ(chunksFromCurve,l[1])
 			###########helix_enter first try here TODO: check if helix radius is not out of operation area.
 			if o.helix_enter:
-				helix_radius=o.cutter_diameter*0.5*0.75
+				helix_radius=o.cutter_diameter*0.5*o.helix_diameter*0.01#90 percent of cutter radius
+				helix_circumference=helix_radius*pi*2
 				
+				revheight=helix_circumference*tan(o.helix_angle)
 				for ch in lchunks:
 					if ch.parents==[]:
-						p=ch.points[0]		
-						revolutions=0.25*(l[0]-p[2])/helix_radius
+						p=ch.points[0]
+						
+						
+						revolutions=(l[0]-p[2])/revheight
 						print(revolutions)
 						h=Helix(helix_radius,o.circle_detail, l[0],p,revolutions)
 						#print('helix')
