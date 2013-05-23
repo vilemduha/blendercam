@@ -3898,6 +3898,12 @@ def getPaths(context,operation):#should do all path calculations.
 						revolutions=(l[0]-p[2])/revheight
 						print(revolutions)
 						h=Helix(helix_radius,o.circle_detail, l[0],p,revolutions)
+						#invert helix if not the typical direction
+						if (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' 	and o.spindle_rotation_direction=='CCW'):
+							nhelix=[]
+							for v in h:
+								nhelix.append((2*p[0]-v[0],v[1],v[2]))
+							h=nhelix
 						#print('helix')
 						#print(h)
 						#print(lchunks[0].points)
