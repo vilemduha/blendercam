@@ -3890,9 +3890,10 @@ def getPaths(context,operation):#should do all path calculations.
 				helix_circumference=helix_radius*pi*2
 				
 				revheight=helix_circumference*tan(o.helix_angle)
-				for ch in lchunks:
-					if ch.parents==[]:
-						p=ch.points[0]
+				for chi,ch in enumerate(lchunks):
+					if chunksFromCurve[chi].children==[]:
+					
+						p=ch.points[0]#TODO:intercept closest next point when it should stay low 
 						
 						
 						revolutions=(l[0]-p[2])/revheight
