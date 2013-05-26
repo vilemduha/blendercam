@@ -1,3 +1,0 @@
-class Codes():
-
-codes = Codes()
