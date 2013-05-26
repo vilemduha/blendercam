@@ -1,0 +1,3 @@
+class Codes():
+
+codes = Codes()
