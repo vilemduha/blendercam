@@ -31,6 +31,7 @@ from . import utils#, post_processors
 import numpy
 import Polygon
 from bpy.app.handlers import persistent
+import subprocess,os
 #from .utils import *
 
 bl_info = {
@@ -299,10 +300,10 @@ class camOperation(bpy.types.PropertyGroup):
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
 '''
-class ModalTimerOperator(bpy.types.Operator):
-	"""Operator which runs its self from a timer"""
-	bl_idname = "wm.modal_timer_operator"
-	bl_label = "Modal Timer Operator"
+class CamBackgroundMonitor(bpy.types.Operator):
+	"""Manages CAM background operations"""
+	bl_idname = "wm.cam_background_manager"
+	bl_label = "CAM background manager"
 
 	_timer = None
 
@@ -327,83 +328,28 @@ class ModalTimerOperator(bpy.types.Operator):
 		context.window_manager.event_timer_remove(self._timer)
 		return {'CANCELLED'}
 '''
-"""
-class PathsModal(bpy.types.Operator):
-	'''calculate CAM paths'''
-	bl_idname = "object.calculate_cam_paths_modal"
-	bl_label = "Calculate CAM paths modal"
+class PathsBackground(bpy.types.Operator):
+	'''calculate CAM paths in background'''
+	bl_idname = "object.calculate_cam_paths_background"
+	bl_label = "Calculate CAM paths in background"
 	bl_options = {'REGISTER', 'UNDO'}
-
-	#this property was actually ignored, so removing it in 0.3
-	#operation= StringProperty(name="Operation",
-	#					   description="Specify the operation to calculate",default='Operation')
-						   
-	
-		
 	def execute(self, context):
-		#getIslands(context.object)
-		s=bpy.context.scene
-		operation = s.cam_operations[s.cam_active_operation]
-		if not operation.valid:
-				self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
-				#print("Operation can't be performed, see warnings for info")
-				return {'FINISHED'}
+		bpy.ops.wm.save_mainfile()
+		bpath=bpy.app.binary_path
+		fpath=bpy.data.filepath
+		scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
 		
-			
-		#these tags are for some optimisations, unfinished 
-		operation.update_offsetimage_tag=True
-		operation.update_zbufferimage_tag=True
-		operation.update_silhouete_tag=True
-		operation.update_ambient_tag=True
-		operation.update_bullet_collision_tag=True
-		#operation.material=bpy.context.scene.cam_material[0]
-		operation.operator=self
-		#'''#removed for groups support, this has to be done object by object...
-		if operation.geometry_source=='OBJECT':
-			
-			#bpy.ops.object.select_all(action='DESELECT')
-			ob=bpy.data.objects[operation.object_name]
-			operation.objects=[ob]
-		elif operation.geometry_source=='GROUP':
-			group=bpy.data.groups[operation.group_name]
-			operation.objects=group.objects
-		elif operation.geometry_source=='IMAGE':
-			operation.use_exact=False;
-		if operation.geometry_source=='OBJECT' or operation.geometry_source=='GROUP':
-			operation.onlycurves=True
-			for ob in operation.objects:
-				if ob.type=='MESH':
-					operation.onlycurves=False;
-		operation.warnings=''
-		
-		self.operation=operation
-		self.operation.test=0
-		self._timer = context.window_manager.event_timer_add(0.1, context.window)
-		context.window_manager.modal_handler_add(self)
-		return {'RUNNING_MODAL'}
-		#utils.getPaths(context,operation)
-		
-	def modal(self, context, event):
-		if event.type == 'ESC':
-			return self.cancel(context)
-
-		if event.type == 'TIMER':
-			#print('running')
-			self.operation.test+=1
-			for a in range(0,10000):
-				b=round(100*200/532/567.5)
-			# change theme color, silly!
-			
-			context.area.header_text_set("doing heavy calculations here " + str( self.operation.test))
-
-		return {'PASS_THROUGH'}
-
-	def cancel(self, context):
-		context.window_manager.event_timer_remove(self._timer)
-		context.area.header_text_set()
-		return {'CANCELLED'}
-		#return {'FINISHED'}
-"""
+		proc = subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath])#, stdout=subprocess.PIPE, shell=True)
+		return {'FINISHED'}
+#		for a in range(0,10000):
+#			#print(proc.stdout.readline())
+#			inline = proc.stdout.readline()
+#			if not inline:
+#				break
+#			sys.stdout.write(str(inline))
+#			sys.stdout.flush()
+    
+    	
 class PathsSimple(bpy.types.Operator):
 	'''calculate CAM paths'''
 	bl_idname = "object.calculate_cam_paths"
@@ -1233,6 +1179,7 @@ def get_panels():
 	CAM_CUTTER_Panel,
 	CAM_MACHINE_Panel,
 	
+	PathsBackground,
 	PathsSimple,
 	#PathsModal,
 	PathsAll,
