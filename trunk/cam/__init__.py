@@ -30,7 +30,7 @@ from bpy.types import Menu, Operator, UIList
 from . import utils#, post_processors
 import numpy
 import Polygon
-
+from bpy.app.handlers import persistent
 #from .utils import *
 
 bl_info = {
@@ -47,8 +47,7 @@ bl_info = {
   
   
 PRECISION=5
-	
-  
+
 class machineSettings(bpy.types.PropertyGroup):
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	post_processor = EnumProperty(name='Post processor',
@@ -87,7 +86,21 @@ def updateScale():
 def updateChipload(self,context):
 	o=self;
 	self.chipload = int((o.feedrate/(o.spindle_rpm*o.cutter_flutes))*1000000)/1000
-
+	
+def getChangeData(o):####this is a function to check if object props have changed, to see if image updates are needed
+	s=bpy.context.scene
+	changedata=''
+	obs=[]
+	if o.geometry_source=='OBJECT':
+		obs=[bpy.data.objects[o.object_name]]
+	elif o.geometry_source=='GROUP':
+		obs=bpy.data.groups[o.grou_name]
+	for ob in obs:
+		changedata+=str(ob.location)
+		changedata+=str(ob.rotation_euler)
+		changedata+=str(ob.dimensions)
+	return changedata
+	
 def operationValid(self,context):
 	o=self
 	o.valid=True
@@ -111,9 +124,20 @@ def operationValid(self,context):
 			o.warnings="Operation has no valid data input"
 
 		o.use_exact=False
-	#print('validity ')
+	o.update_offsetimage_tag=True
+	o.update_zbufferimage_tag=True
+	print('validity ')
 	#print(o.valid)
-	
+def updateOffsetImage(self,context):
+	print('update offset')
+
+	self.update_offsetimage_tag=True
+
+def updateZbufferImage(self,context):
+	print('updatezbuf')
+	#print(self,context)
+	self.update_zbufferimage_tag=True
+	self.update_offsetimage_tag=True
 
 class camOperation(bpy.types.PropertyGroup):
 	
@@ -136,7 +160,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('BALL', 'Ball', 'a'),
 			('VCARVE', 'V-carve', 'a')),
 		description='Type of cutter used',
-		default='END')
+		default='END', update = updateOffsetImage)
 	strategy = EnumProperty(name='Strategy',
 		items=(
 			('PARALLEL','Parallel', 'Parallel lines on any angle'),
@@ -156,13 +180,13 @@ class camOperation(bpy.types.PropertyGroup):
 	#for cutout	   
 	cut_type = EnumProperty(name='Cut:',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE')  
 	#render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
-	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False)
+	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False, update = updateOffsetImage)
 	
 	cutter_id = IntProperty(name="Tool number", description="For machines which support tool change based on tool id", min=0, max=10000, default=0)
-	cutter_diameter = FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius", min=0.000001, max=0.1, default=0.003, precision=PRECISION, unit="LENGTH")
-	cutter_length = FloatProperty(name="#Cutter length", description="#not supported#Cutter length", min=0.0, max=100.0, default=25.0,precision=PRECISION, unit="LENGTH")
+	cutter_diameter = FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius", min=0.000001, max=0.1, default=0.003, precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
+	cutter_length = FloatProperty(name="#Cutter length", description="#not supported#Cutter length", min=0.0, max=100.0, default=25.0,precision=PRECISION, unit="LENGTH",  update = updateOffsetImage)
 	cutter_flutes = IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2, update = updateChipload)
-	cutter_tip_angle = FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0, max=180.0, default=60.0,precision=PRECISION)
+	cutter_tip_angle = FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0, max=180.0, default=60.0,precision=PRECISION,  update = updateOffsetImage)
 	
 	dist_between_paths = bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,precision=PRECISION, unit="LENGTH")
 	dist_along_paths = bpy.props.FloatProperty(name="Distance along toolpaths", default=0.0002, min=0.00001, max=32,precision=PRECISION, unit="LENGTH")
@@ -189,14 +213,14 @@ class camOperation(bpy.types.PropertyGroup):
 	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation depth from object", default=True)
 	minz = bpy.props.FloatProperty(name="Operation depth", default=-0.01, min=-32, max=0,precision=PRECISION, unit="LENGTH")#this is input minz. True minimum z can be something else, depending on material e.t.c.
 	
-	source_image_scale_z=bpy.props.FloatProperty(name="Image source depth scale", default=0.01, min=-1, max=1,precision=PRECISION, unit="LENGTH")
-	source_image_size_x=bpy.props.FloatProperty(name="Image source x size", default=0.1, min=-10, max=10,precision=PRECISION, unit="LENGTH")
-	source_image_offset=bpy.props.FloatVectorProperty(name = 'Image offset', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
-	source_image_crop=bpy.props.BoolProperty(name="Crop source image",description="Crop source image - the position of the sub-rectangle is relative to the whole image, so it can be used for e.g. finishing just a part of an image", default=True)
-	source_image_crop_start_x= bpy.props.FloatProperty(name = 'crop start x', default=0,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE')
-	source_image_crop_start_y= bpy.props.FloatProperty(name = 'crop start y', default=0,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE')
-	source_image_crop_end_x=   bpy.props.FloatProperty(name = 'crop end x', default=100,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE')
-	source_image_crop_end_y=   bpy.props.FloatProperty(name = 'crop end y', default=100,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE')
+	source_image_scale_z=bpy.props.FloatProperty(name="Image source depth scale", default=0.01, min=-1, max=1,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)
+	source_image_size_x=bpy.props.FloatProperty(name="Image source x size", default=0.1, min=-10, max=10,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)
+	source_image_offset=bpy.props.FloatVectorProperty(name = 'Image offset', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ",  update = updateZbufferImage)
+	source_image_crop=bpy.props.BoolProperty(name="Crop source image",description="Crop source image - the position of the sub-rectangle is relative to the whole image, so it can be used for e.g. finishing just a part of an image", default=False,  update = updateZbufferImage)
+	source_image_crop_start_x= bpy.props.FloatProperty(name = 'crop start x', default=0,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
+	source_image_crop_start_y= bpy.props.FloatProperty(name = 'crop start y', default=0,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
+	source_image_crop_end_x=   bpy.props.FloatProperty(name = 'crop end x', default=100,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
+	source_image_crop_end_y=   bpy.props.FloatProperty(name = 'crop end y', default=100,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
 	
 	protect_vertical = bpy.props.BoolProperty(name="Protect vertical",description="The path goes only vertically next to steep areas", default=True)
 	
@@ -207,7 +231,8 @@ class camOperation(bpy.types.PropertyGroup):
 	ambient_radius = FloatProperty(name="Ambient radius", description="Radius around the part which will be milled if ambient is set to Around", min=0.0, max=100.0, default=0.01, precision=PRECISION, unit="LENGTH")
 	use_limit_curve=bpy.props.BoolProperty(name="Use limit curve",description="A curve limits the operation area", default=False)
 	limit_curve=   bpy.props.StringProperty(name='Limit curve', description='curve used to limit the area of the operation')
-	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH")
+	
+	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
 	#feeds
 	feedrate = FloatProperty(name="Feedrate/minute", description="Feedrate m/min", min=0.00005, max=50.0, default=1.0,precision=PRECISION, unit="LENGTH", update = updateChipload)
 	plunge_feedrate = FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,precision=1, subtype='PERCENTAGE')
@@ -222,7 +247,7 @@ class camOperation(bpy.types.PropertyGroup):
 	stay_low = bpy.props.BoolProperty(name="Stay low if possible", default=False)
 	#optimization and performance
 	use_exact = bpy.props.BoolProperty(name="Use exact mode",description="Exact mode allows greater precision, but is slower with complex meshes", default=True)
-	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH")
+	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
 	simulation_detail=bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH")
 	optimize = bpy.props.BoolProperty(name="Reduce path points",description="Reduce path points", default=True)
 	optimize_threshold=bpy.props.FloatProperty(name="Reduction threshold", default=0.000005, min=0.00000001, max=1,precision=PRECISION, unit="LENGTH")
@@ -258,17 +283,19 @@ class camOperation(bpy.types.PropertyGroup):
 	#update_silhouete_tag=True
 
 	#material settings
-	material_from_model = bpy.props.BoolProperty(name="Estimate from model",description="Estimate material size from model", default=True)
-	material_radius_around_model = bpy.props.FloatProperty(name="radius around model",description="How much to add to model size on all sides", default=0.0, unit='LENGTH', precision=PRECISION)
-	material_origin=bpy.props.FloatVectorProperty(name = 'Material origin', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
-	material_size=bpy.props.FloatVectorProperty(name = 'Material size', default=(0.200,0.200,0.100), unit='LENGTH', precision=PRECISION,subtype="XYZ")
+	material_from_model = bpy.props.BoolProperty(name="Estimate from model",description="Estimate material size from model", default=True, update = updateZbufferImage)
+	material_radius_around_model = bpy.props.FloatProperty(name="radius around model",description="How much to add to model size on all sides", default=0.0, unit='LENGTH', precision=PRECISION, update = updateZbufferImage)
+	material_origin=bpy.props.FloatVectorProperty(name = 'Material origin', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateZbufferImage)
+	material_size=bpy.props.FloatVectorProperty(name = 'Material size', default=(0.200,0.200,0.100), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateZbufferImage)
 	min=bpy.props.FloatVectorProperty(name = 'Operation minimum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
 	max=bpy.props.FloatVectorProperty(name = 'Operation maximum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
 	warnings = bpy.props.StringProperty(name='warnings', description='warnings', default='')
 	chipload = bpy.props.FloatProperty(name="chipload",description="Calculated chipload", default=0.0, unit='LENGTH', precision=PRECISION)
 
 	valid = bpy.props.BoolProperty(name="Valid",description="True if operation is ok for calculation", default=True);
+	changedata = bpy.props.StringProperty(name='changedata', description='change data for checking if stuff changed.')
 
+	
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
 '''
@@ -399,9 +426,15 @@ class PathsSimple(bpy.types.Operator):
 				return {'FINISHED'}
 		
 			
-		#these tags are for some optimisations, unfinished 
-		operation.update_offsetimage_tag=True
-		operation.update_zbufferimage_tag=True
+		#these tags are for caching of some of the results.
+		chd=getChangeData(operation)
+		#print(chd)
+		#print(operation.changedata)
+		if operation.changedata!=chd:
+			#print('ojojojo')
+			operation.update_offsetimage_tag=True
+			operation.update_zbufferimage_tag=True
+			operation.changedata=chd
 		operation.update_silhouete_tag=True
 		operation.update_ambient_tag=True
 		operation.update_bullet_collision_tag=True
@@ -1221,7 +1254,8 @@ def get_panels():
 def register():
 	for p in get_panels():
 		bpy.utils.register_class(p)
-		
+	
+	#bpy.app.handlers.frame_change_pre.append(obchange_handler)
 	d = bpy.types.Scene
 	d.cam_operations = bpy.props.CollectionProperty(type=camOperation)
 	d.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")

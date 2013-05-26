@@ -35,7 +35,7 @@ import bmesh
 import Polygon
 import Polygon.Utils as pUtils
 import numpy
-import random,sys
+import random,sys, os
 import string
 #from . import post_processors
 #import multiprocessing 
@@ -296,7 +296,7 @@ def getBounds(o):
 		#o.max.z=min(o.min.z+m.working_area.z,o.max.z)
 		o.warnings+='Operation exceeds your machine limits'
 		
-	print (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
+	#print (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
 	
 
 def getPathPatternParallel(o,angle):
@@ -338,8 +338,8 @@ def getPathPatternParallel(o,angle):
 			
 				
 		#elif	 
-		
-		pathchunks.append(chunk)
+		if len(chunk.points)>0:
+			pathchunks.append(chunk)
 		if len(pathchunks)>1 and reverse and o.parallel_step_back:
 			#if (o.parallel_step_back and o.movement_type=='MEANDER') or ( o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW' and  not reverse )or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW' and  reverse):
 				
@@ -658,6 +658,13 @@ def getPathPattern(operation):
 	print(time.time()-t)
 	return pathchunks
 
+def getCachePath(o):
+	fn=bpy.data.filepath
+	l=len(bpy.path.basename(fn))
+	bn=bpy.path.basename(fn)[:-6]
+	iname=fn[:-l]+'temp_cam'+os.sep+bn+'_'+o.name
+	return iname
+	
 #this basically renders blender zbuffer and makes it accessible by saving & loading it again.
 #that's because blender doesn't allow accessing pixels in render :(
 def renderSampleImage(o):
@@ -675,10 +682,10 @@ def renderSampleImage(o):
 		resy=ceil(sy/o.pixsize)+2*o.borderwidth
 		
 		####setup image name
-		fn=bpy.data.filepath
-		iname=bpy.path.abspath(fn)
-		l=len(bpy.path.basename(fn))
-		iname=fn[:-l]+'zbuffer.exr'
+		#fn=bpy.data.filepath
+		#iname=bpy.path.abspath(fn)
+		#l=len(bpy.path.basename(fn))
+		iname=getCachePath(o)+'_z.exr'
 		
 		if o.update_zbufferimage_tag:
 			s=bpy.context.scene
@@ -764,7 +771,7 @@ def renderSampleImage(o):
 			r.image_settings.file_format=ff 		
 			r.image_settings.color_mode=cm
 		i=bpy.data.images.load(iname)
-		a=imagetonumpy(i,o)
+		a=imagetonumpy(i)
 		a=1.0-a
 		o.zbuffer_image=a
 	else:
@@ -780,7 +787,7 @@ def renderSampleImage(o):
 		o.pixsize=o.source_image_size_x/i.size[0]
 		print('pixel size in the image source', o.pixsize)
 		
-		rawimage=imagetonumpy(i,o)
+		rawimage=imagetonumpy(i)
 		maxa=numpy.max(rawimage)
 		a=numpy.array((1.0,1.0))
 		a.resize(2*o.borderwidth+i.size[0],2*o.borderwidth+i.size[1])
@@ -804,6 +811,19 @@ def renderSampleImage(o):
 	return o.zbuffer_image
 	#return numpy.array([])
 	
+def numpysave(a,iname):
+	inamebase=bpy.path.basename(iname)
+
+	i=numpytoimage(a,inamebase)
+	
+	r=bpy.context.scene.render
+	
+	r.image_settings.file_format='OPEN_EXR'
+	r.image_settings.color_mode='BW'
+	r.image_settings.color_depth='32'
+	
+	i.save_render(iname)
+
 def numpytoimage(a,iname):
 	print('numpy to image')
 	t=time.time()
@@ -823,7 +843,7 @@ def numpytoimage(a,iname):
 	
 	return i
 
-def imagetonumpy(i,o):
+def imagetonumpy(i):
 	t=time.time()
 	print('imagetonumpy')
 	inc=0
@@ -1213,6 +1233,10 @@ def prepareArea(o):
 	#if not o.use_exact:
 	renderSampleImage(o)
 	samples=o.zbuffer_image
+	
+	iname=getCachePath(o)+'_off.exr'
+
+	
 	if o.update_offsetimage_tag:
 		if o.inverse:
 			samples=numpy.maximum(samples,o.min.z-0.00001)
@@ -1222,6 +1246,14 @@ def prepareArea(o):
 			print('outline ambient')
 			o.offset_image[:]=outlineImage(o,r,o.offset_image,o.minz)
 			print('ambient done')
+		numpysave(o.offset_image,iname)
+	else:
+		print('loading offset image')
+		#try:
+		o.offset_image=imagetonumpy(bpy.data.images.load(iname))
+		#except:
+			
+		# 	o.update_offsetimage_tag=True;
 			
 def getSampleImage(s,sarray,minz):
 	
@@ -1870,22 +1902,12 @@ def doSimulation(o):
 	si=si[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]
 	si+=-o.min.z
 	oname='csim_'+o.name
-	fn=bpy.data.filepath
-	iname=bpy.path.abspath(fn)
-	l=len(bpy.path.basename(fn))
-	inamebase=oname+'.exr'
-	iname=fn[:-l]+inamebase
-
-	i=numpytoimage(si,inamebase)
 	
+	iname=getCachePath(o)+'_sim.exr'
+	inamebase=bpy.path.basename(iname)
+	i=numpysave(si,iname)
 		
-	r=bpy.context.scene.render
 	
-	r.image_settings.file_format='OPEN_EXR'
-	r.image_settings.color_mode='BW'
-	r.image_settings.color_depth='32'
-	
-	i.save_render(iname)
 	
 	#if inamebase in bpy.data.images:
 	#	i=bpy.data.images[inamebase]
@@ -2741,7 +2763,7 @@ def testbite(pos):
 	v.length+=o.simulation_detail
 	
 	
-def crazyPath(o):#TODO: try to do something with this crazy stuff!
+def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm.
 	MAX_BEND=0.1#in radians...#TODO: support operation chains ;)
 	prepareArea(o)
 	#o.millimage = 
@@ -2757,70 +2779,6 @@ def crazyPath(o):#TODO: try to do something with this crazy stuff!
 	o.cutterArray=-getCutterArray(o,o.simulation_detail)#getting inverted cutter
 	crazy=camPathChunk([(0,0,0)])
 	testpos=(o.min.x,o.min.y,o.min.z)
-	
-	'''
-	verts=bpy.data.objects[o.path_object_name].data.vertices
-	
-	sx=o.max.x-o.min.x
-	sy=o.max.y-o.min.y
-
-	resx=ceil(sx/o.simulation_detail)+2*o.borderwidth
-	resy=ceil(sy/o.simulation_detail)+2*o.borderwidth
-
-	si=numpy.array((0.1),dtype=float)
-	si.resize(resx,resy)
-	si.fill(0)
-	cutterArray=getCutterArray(o,o.simulation_detail)
-	#cb=cutterArray<-1
-	#cutterArray[cb]=1
-	cutterArray=-cutterArray
-	m=int(cutterArray.shape[0]/2)
-	size=cutterArray.shape[0]
-	print(si.shape)
-	#for ch in chunks:
-	lasts=verts[1].co
-	l=len(verts)
-	perc=-1
-	vtotal=len(verts)
-	for i,vert in enumerate(verts):
-		if perc!=int(100*i/vtotal):
-			perc=int(100*i/vtotal)
-			progress('simulation',perc)
-		#progress('simulation ',int(100*i/l))
-		if i>0:
-			s=vert.co
-			v=s-lasts
-			
-			if v.length>o.simulation_detail:
-				l=v.length
-				
-				v.length=o.simulation_detail
-				while v.length<l:
-					
-					xs=(lasts.x+v.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-					ys=(lasts.y+v.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-					z=lasts.z+v.z
-					if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
-						si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
-					v.length+=o.simulation_detail
-		
-			xs=(s.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-			ys=(s.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-			if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
-				si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+s.z)
-				
-			lasts=s
-	si=si[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]
-	si+=-o.min.z
-	oname='csim_'+o.name
-	fn=bpy.data.filepath
-	iname=bpy.path.abspath(fn)
-	l=len(bpy.path.basename(fn))
-	inamebase=oname+'.exr'
-	iname=fn[:-l]+inamebase
-
-	i=numpytoimage(si,inamebase)
-	'''
 	
 def getSlices(operation, returnCurves):
 	ob=operation.object
@@ -3897,7 +3855,7 @@ def getPaths(context,operation):#should do all path calculations.
 						
 						
 						revolutions=(l[0]-p[2])/revheight
-						print(revolutions)
+						#print(revolutions)
 						h=Helix(helix_radius,o.circle_detail, l[0],p,revolutions)
 						#invert helix if not the typical direction
 						if (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' 	and o.spindle_rotation_direction=='CCW'):
