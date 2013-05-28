@@ -31,7 +31,7 @@ from . import utils#, post_processors
 import numpy
 import Polygon
 from bpy.app.handlers import persistent
-import subprocess,os, sys
+import subprocess,os, sys, threading
 #from .utils import *
 
 bl_info = {
@@ -299,16 +299,23 @@ class camOperation(bpy.types.PropertyGroup):
 	
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
-def draw_callback_text(self, context):
-	#print("mouse points", len(self.mouse_path))
-
+def draw_callback_text(self, context, height):
 	font_id = 0	 # XXX, need to find out how best to get this.
 
 	# draw some text
-	blf.position(font_id, 15, 30, 0)
+	blf.position(font_id, 15, 30+30*height, 0)
 	blf.size(font_id, 20, 72)
 	blf.draw(font_id, self.text)
-
+	
+def threadread(proc, self):
+	inline = proc.readline()
+	inline=str(inline)
+	s=inline.find('progress{')
+	if s>-1:
+		#context.area.tag_redraw()
+		e=inline.find('}')
+		self.outtext=inline[ s+9 :e]
+		
 class PathsBackground(bpy.types.Operator):
 	'''calculate CAM paths in background'''
 	bl_idname = "object.calculate_cam_paths_background"
@@ -317,33 +324,29 @@ class PathsBackground(bpy.types.Operator):
 	
 	
 	def modal(self, context, event):
+		context.area.tag_redraw()
 		if event.type == 'ESC':
 			return self.cancel(context)
 
 		if event.type == 'TIMER':
-		
-			inline = str(self.proc.stdout.readline())
-			s=inline.find('progress{')
-			#print('timer')
-			if s>-1:
-				context.area.tag_redraw()
-				e=inline.find('}')
-				#if e==-1:
-				#print(inline,s,e)
+			if not self.readthread.is_alive():
+				self.readthread.join()
+				self.text=self.outtext
+				self.readthread=threading.Thread(target=threadread, args = (self.proc.stdout,self), daemon=True)
+				self.readthread.start()
 				
-				self.text=inline[ s+9 :e]
-				self.operation.warnings=self.text
 				print(self.text)
-			#	sys.stdout.flush()
 				if self.text=='finished':
 					
 					utils.reload_paths(self.operation)
 					
-					
+					context.window_manager.event_timer_remove(self._timer)
+					bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
 					return {'FINISHED'}
 			
-		return {'FINISHED'}
-		#return {'RUNNING_MODAL'}
+			return {'RUNNING_MODAL'}
+		return {'PASS_THROUGH'}
+
 	def execute(self, context):
 		mgr_ops = context.window_manager.operators.values()
 		print(mgr_ops)
@@ -353,20 +356,29 @@ class PathsBackground(bpy.types.Operator):
 			o=s.cam_operations[s.cam_active_operation]
 			self.operation=o
 			
-			self._timer = context.window_manager.event_timer_add(0.1, context.window)
+			self._timer = context.window_manager.event_timer_add(0.01, context.window)
 
 			bpy.ops.wm.save_mainfile()
 			bpath=bpy.app.binary_path
 			fpath=bpy.data.filepath
 			scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
-			self.proc = subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath], stdout=subprocess.PIPE)
+			self.proc = subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath],bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
 			self.text='computing operation in backgorund'
-			args = (self, context)
+			#height=0
+			#for op in mgr_ops:
+			#	if op.bl_idname == self.bl_idname: 
+			#		height+=1
+			height=s.cam_active_operation
+			args = (self, context, height)
 			self._handle = bpy.types.SpaceView3D.draw_handler_add(draw_callback_text, args, 'WINDOW', 'POST_PIXEL')
 			context.window_manager.modal_handler_add(self)
+			self.text=''
+			self.outtext=''
+			self.readthread=threading.Thread(target=threadread, args = (self.proc.stdout,self), daemon=True)
+			self.readthread.start()
 			return {'RUNNING_MODAL'}
 		
-		return {'CANCELLED'}
+		#return {'CANCELLED'}
 	def cancel(self, context):
 		context.window_manager.event_timer_remove(self._timer)
 		bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
