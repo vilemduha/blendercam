@@ -4150,6 +4150,9 @@ def getPaths(context,operation):#should do all path calculations.
 	
 def reload_paths(o):
 	oname = "cam_path_"+o.name
+	s=bpy.context.scene
+	if oname in s.objects:
+		s.objects.unlink(s.objects[oname])
 	dpath = getCachePath(o)+'.blend\\Object\\'
 	p=getCachePath(o)+'.blend\\Object\\'+ oname
 	bpy.ops.wm.link_append(
