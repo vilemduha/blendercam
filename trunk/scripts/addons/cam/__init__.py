@@ -19,7 +19,7 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-import bpy
+import bpy, bgl,blf 
 import mathutils
 import math
 from mathutils import *
@@ -31,7 +31,7 @@ from . import utils#, post_processors
 import numpy
 import Polygon
 from bpy.app.handlers import persistent
-import subprocess,os
+import subprocess,os, sys
 #from .utils import *
 
 bl_info = {
@@ -187,7 +187,7 @@ class camOperation(bpy.types.PropertyGroup):
 	cutter_diameter = FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius", min=0.000001, max=0.1, default=0.003, precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
 	cutter_length = FloatProperty(name="#Cutter length", description="#not supported#Cutter length", min=0.0, max=100.0, default=25.0,precision=PRECISION, unit="LENGTH",  update = updateOffsetImage)
 	cutter_flutes = IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2, update = updateChipload)
-	cutter_tip_angle = FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0, max=180.0, default=60.0,precision=PRECISION,  update = updateOffsetImage)
+	cutter_tip_angle = FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0, max=180.0, default=60.0,precision=PRECISION,	 update = updateOffsetImage)
 	
 	dist_between_paths = bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,precision=PRECISION, unit="LENGTH")
 	dist_along_paths = bpy.props.FloatProperty(name="Distance along toolpaths", default=0.0002, min=0.00001, max=32,precision=PRECISION, unit="LENGTH")
@@ -207,7 +207,7 @@ class camOperation(bpy.types.PropertyGroup):
 	ramp_out = bpy.props.BoolProperty(name="Ramp out",description="Ramp out to not leave mark on surface", default=False)
 	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=1, subtype="ANGLE" , unit="ROTATION" )
 	helix_enter = bpy.props.BoolProperty(name="Helix enter",description="Enter material in helix", default=False)
-	helix_angle = 	bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" )
+	helix_angle =	bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" )
 	helix_diameter = bpy.props.FloatProperty(name = 'Helix diameter % of cutter D', default=90,min=10, max=100, precision=1,subtype='PERCENTAGE')
 	
 	
@@ -216,8 +216,8 @@ class camOperation(bpy.types.PropertyGroup):
 	
 	source_image_scale_z=bpy.props.FloatProperty(name="Image source depth scale", default=0.01, min=-1, max=1,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)
 	source_image_size_x=bpy.props.FloatProperty(name="Image source x size", default=0.1, min=-10, max=10,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)
-	source_image_offset=bpy.props.FloatVectorProperty(name = 'Image offset', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ",  update = updateZbufferImage)
-	source_image_crop=bpy.props.BoolProperty(name="Crop source image",description="Crop source image - the position of the sub-rectangle is relative to the whole image, so it can be used for e.g. finishing just a part of an image", default=False,  update = updateZbufferImage)
+	source_image_offset=bpy.props.FloatVectorProperty(name = 'Image offset', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ",	 update = updateZbufferImage)
+	source_image_crop=bpy.props.BoolProperty(name="Crop source image",description="Crop source image - the position of the sub-rectangle is relative to the whole image, so it can be used for e.g. finishing just a part of an image", default=False,	update = updateZbufferImage)
 	source_image_crop_start_x= bpy.props.FloatProperty(name = 'crop start x', default=0,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
 	source_image_crop_start_y= bpy.props.FloatProperty(name = 'crop start y', default=0,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
 	source_image_crop_end_x=   bpy.props.FloatProperty(name = 'crop end x', default=100,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
@@ -237,7 +237,7 @@ class camOperation(bpy.types.PropertyGroup):
 	#feeds
 	feedrate = FloatProperty(name="Feedrate/minute", description="Feedrate m/min", min=0.00005, max=50.0, default=1.0,precision=PRECISION, unit="LENGTH", update = updateChipload)
 	plunge_feedrate = FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,precision=1, subtype='PERCENTAGE')
-	plunge_angle = 	bpy.props.FloatProperty(name="Plunge angle", description="What angle is allready considered to plunge", default=math.pi/6, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" )
+	plunge_angle =	bpy.props.FloatProperty(name="Plunge angle", description="What angle is allready considered to plunge", default=math.pi/6, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" )
 	spindle_rpm = FloatProperty(name="#Spindle rpm", description="#not supported#Spindle speed ", min=1000, max=60000, default=12000, update = updateChipload)
 	#movement parallel_step_back 
 	movement_type = EnumProperty(name='Movement type',items=(('CONVENTIONAL','Conventional', 'a'),('CLIMB', 'Climb', 'a'),('MEANDER', 'Meander' , 'a')	 ),description='movement type', default='CLIMB')
@@ -299,57 +299,81 @@ class camOperation(bpy.types.PropertyGroup):
 	
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
-'''
-class CamBackgroundMonitor(bpy.types.Operator):
-	"""Manages CAM background operations"""
-	bl_idname = "wm.cam_background_manager"
-	bl_label = "CAM background manager"
+def draw_callback_text(self, context):
+	#print("mouse points", len(self.mouse_path))
 
-	_timer = None
+	font_id = 0	 # XXX, need to find out how best to get this.
 
-	def modal(self, context, event):
-		if event.type == 'ESC':
-			return self.cancel(context)
+	# draw some text
+	blf.position(font_id, 15, 30, 0)
+	blf.size(font_id, 20, 72)
+	blf.draw(font_id, self.text)
 
-		if event.type == 'TIMER':
-			# change theme color, silly!
-			color = context.user_preferences.themes[0].view_3d.space.gradients.high_gradient
-			color.s = 1.0
-			color.h += 0.01
-
-		return {'PASS_THROUGH'}
-
-	def execute(self, context):
-		self._timer = context.window_manager.event_timer_add(0.1, context.window)
-		context.window_manager.modal_handler_add(self)
-		return {'RUNNING_MODAL'}
-
-	def cancel(self, context):
-		context.window_manager.event_timer_remove(self._timer)
-		return {'CANCELLED'}
-'''
 class PathsBackground(bpy.types.Operator):
 	'''calculate CAM paths in background'''
 	bl_idname = "object.calculate_cam_paths_background"
 	bl_label = "Calculate CAM paths in background"
 	bl_options = {'REGISTER', 'UNDO'}
-	def execute(self, context):
-		bpy.ops.wm.save_mainfile()
-		bpath=bpy.app.binary_path
-		fpath=bpy.data.filepath
-		scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
+	
+	
+	def modal(self, context, event):
+		if event.type == 'ESC':
+			return self.cancel(context)
+
+		if event.type == 'TIMER':
 		
-		proc = subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath])#, stdout=subprocess.PIPE, shell=True)
+			inline = str(self.proc.stdout.readline())
+			s=inline.find('progress{')
+			#print('timer')
+			if s>-1:
+				context.area.tag_redraw()
+				e=inline.find('}')
+				#if e==-1:
+				#print(inline,s,e)
+				
+				self.text=inline[ s+9 :e]
+				self.operation.warnings=self.text
+				print(self.text)
+			#	sys.stdout.flush()
+				if self.text=='finished':
+					
+					utils.reload_paths(self.operation)
+					
+					
+					return {'FINISHED'}
+			
 		return {'FINISHED'}
-#		for a in range(0,10000):
-#			#print(proc.stdout.readline())
-#			inline = proc.stdout.readline()
-#			if not inline:
-#				break
-#			sys.stdout.write(str(inline))
-#			sys.stdout.flush()
-    
-    	
+		#return {'RUNNING_MODAL'}
+	def execute(self, context):
+		mgr_ops = context.window_manager.operators.values()
+		print(mgr_ops)
+		#if not self.bl_idname in [op.bl_idname for op in mgr_ops]:
+		if True:
+			s=bpy.context.scene
+			o=s.cam_operations[s.cam_active_operation]
+			self.operation=o
+			
+			self._timer = context.window_manager.event_timer_add(0.1, context.window)
+
+			bpy.ops.wm.save_mainfile()
+			bpath=bpy.app.binary_path
+			fpath=bpy.data.filepath
+			scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
+			self.proc = subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath], stdout=subprocess.PIPE)
+			self.text='computing operation in backgorund'
+			args = (self, context)
+			self._handle = bpy.types.SpaceView3D.draw_handler_add(draw_callback_text, args, 'WINDOW', 'POST_PIXEL')
+			context.window_manager.modal_handler_add(self)
+			return {'RUNNING_MODAL'}
+		
+		return {'CANCELLED'}
+	def cancel(self, context):
+		context.window_manager.event_timer_remove(self._timer)
+		bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+		return {'CANCELLED'}
+
+	
+		
 class PathsSimple(bpy.types.Operator):
 	'''calculate CAM paths'''
 	bl_idname = "object.calculate_cam_paths"
@@ -872,7 +896,7 @@ class CAM_OPERATIONS_Panel(bpy.types.Panel):
 			if ao:
 				#if ao.warnings!='':
 			   #	 layout.label(ao.warnings)	 
-				layout.operator("object.calculate_cam_paths", text="Calculate path")
+				layout.operator("object.calculate_cam_paths_background", text="Calculate path")
 				
 				layout.operator("object.cam_simulate", text="Simulate this operation")
 				layout.prop(ao,'name')
@@ -1208,7 +1232,7 @@ def register():
 	d.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
 	d.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
 	
-	'''
+	
 	try:
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_render)
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_dimensions)
@@ -1223,7 +1247,7 @@ def register():
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_freestyle)
 	except:
 		pass;
-	'''
+	
 
 def unregister():
 	for p in get_panels():

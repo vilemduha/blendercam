@@ -47,14 +47,18 @@ def activate(o):
 	bpy.ops.object.select_all(action='DESELECT')
 	o.select=True
 	s.objects.active=o
-def progress(text,n):
+	
+def progress(text,n=None):
 	#for i in range(n+1):
 	#sys.stdout.flush()
-	d=int(n/2)
+	text=str(text)
+	if n== None:
+		n=''
+	else:
+		n=' ' + str(int(n)) + '%'
+	#d=int(n/2)
 	spaces=' '*(len(text)+55)
-	sys.stdout.write("\r\x1b[K"+spaces)
-	sys.stdout.flush()
-	sys.stdout.write('\r%s %3s%% [%s>%s]' % (text,n, '='*d, ' '*(50-d)))
+	sys.stdout.write('progress{%s%s}\n' % (text,n))
 	sys.stdout.flush()
 	#bpy.data.window_managers['WinMan'].progress_update(n)
 	#if bpy.context.scene.o
@@ -168,7 +172,7 @@ def getCutterBullet(o):
 
 #prepares all objects needed for sampling with bullet collision
 def prepareBulletCollision(o):
-	print('preparing collisions')
+	progress('preparing collisions')
 	t=time.time()
 	s=bpy.context.scene
 	s.gravity=(0,0,0)
@@ -193,7 +197,7 @@ def prepareBulletCollision(o):
 	bpy.context.scene.frame_set(0)
 	bpy.context.scene.frame_set(1)
 	bpy.context.scene.frame_set(2)
-	print(time.time()-t)
+	progress(time.time()-t)
 	
 
 	
@@ -213,7 +217,7 @@ def positionObject(operation):
 	ob.location.z-=maxz
 
 def getBoundsWorldspace(obs):
-	print('getting bounds of object(s)')
+	progress('getting bounds of object(s)')
 	t=time.time()
 		
 	maxx=maxy=maxz=-10000000
@@ -240,7 +244,7 @@ def getBoundsWorldspace(obs):
 				maxx=max(maxx,worldCoord.x)
 				maxy=max(maxy,worldCoord.y)
 				maxz=max(maxz,worldCoord.z)
-	print(time.time()-t)
+	progress(time.time()-t)
 	return minx,miny,minz,maxx,maxy,maxz
 	
 
@@ -296,7 +300,7 @@ def getBounds(o):
 		#o.max.z=min(o.min.z+m.working_area.z,o.max.z)
 		o.warnings+='Operation exceeds your machine limits'
 		
-	#print (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
+	#progress (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
 	
 
 def getPathPatternParallel(o,angle):
@@ -306,8 +310,8 @@ def getPathPatternParallel(o,angle):
 	pathd=o.dist_between_paths
 	pathstep=o.dist_along_paths
 	pathchunks=[]
-	#print(o.max.x,stepx)
-	#print(o.max.y,stepy)
+	#progress(o.max.x,stepx)
+	#progress(o.max.y,stepy)
 	
 	#angle=(angle/360)*2*math.pi
 	xm=(o.max.x+o.min.x)/2
@@ -363,29 +367,29 @@ def getPathPatternParallel(o,angle):
 													numpy.arange(int(-dim/pathd), int(dim/pathd))*pathd*v.x+ym,
 													numpy.arange(int(-dim/pathd), int(dim/pathd))*0))
 		#axis_across_paths=axis_across_paths.swapaxes(0,1)
-		#print(axis_across_paths)
+		#progress(axis_across_paths)
 		
 		axis_along_paths=numpy.array((numpy.arange(int(-dim/pathstep),int(dim/pathstep))*pathstep*v.x,
 												numpy.arange(int(-dim/pathstep),int(dim/pathstep))*pathstep*v.y,
 												numpy.arange(int(-dim/pathstep),int(dim/pathstep))*0+zlevel))#rotate this first
-		print(axis_along_paths)
+		progress(axis_along_paths)
 		#axis_along_paths = axis_along_paths.swapaxes(0,1)
-		#print(axis_along_paths)
+		#progress(axis_along_paths)
 		
 		chunks=numpy.array((1.0))
 		chunks.resize(3,a1res,a2res)
 
 		for a in range(0,len(axis_across_paths[0])):
-			#print(chunks[a,...,...].shape)
-			#print(axis_along_paths.shape)
+			#progress(chunks[a,...,...].shape)
+			#progress(axis_along_paths.shape)
 			nax=axis_along_paths.copy()
-			#print(nax.shape)
+			#progress(nax.shape)
 			nax[0]+=axis_across_paths[0][a]
 			nax[1]+=axis_across_paths[1][a]
-			#print(a)
-			#print(nax.shape)
-			#print(chunks.shape)
-			#print(chunks[...,a,...].shape)
+			#progress(a)
+			#progress(nax.shape)
+			#progress(chunks.shape)
+			#progress(chunks[...,a,...].shape)
 			chunks[...,a,...]=nax
 		'''	
 		''' 
@@ -419,7 +423,7 @@ def getPathPatternParallel(o,angle):
 def getPathPattern(operation):
 	o=operation
 	t=time.time()
-	print('building path pattern')
+	progress('building path pattern')
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	
 	pathchunks=[]
@@ -510,7 +514,7 @@ def getPathPattern(operation):
 		y=pathd/4
 		v=Vector((pathd/4,0,0))
 		
-		#print(x,y,midx,midy)
+		#progress(x,y,midx,midy)
 		e=Euler((0,0,0))
 		pi=math.pi 
 		chunk.points.append((midx+v.x,midy+v.y,zlevel))
@@ -522,7 +526,7 @@ def getPathPattern(operation):
 			v.rotate(e)
 			
 			v.length=(v.length+pathd/(offset/pathstep))
-			#print(v.x,v.y)
+			#progress(v.x,v.y)
 			if o.max.x>midx+v.x>o.min.x and o.max.y>midy+v.y>o.min.y:
 				chunk.points.append((midx+v.x,midy+v.y,zlevel))
 			else:
@@ -555,7 +559,7 @@ def getPathPattern(operation):
 		#y=pathd/4
 		v=Vector((1,0,0))
 		
-		#print(x,y,midx,midy)
+		#progress(x,y,midx,midy)
 		e=Euler((0,0,0))
 		pi=math.pi 
 		chunk=camPathChunk([])
@@ -655,7 +659,7 @@ def getPathPattern(operation):
 		parentChildPoly(pathchunks,pathchunks,o)	
 		pathchunks=sortChunks(pathchunks,o)
 		pathchunks=chunksRefine(pathchunks,o)
-	print(time.time()-t)
+	progress(time.time()-t)
 	return pathchunks
 
 def getCachePath(o):
@@ -669,7 +673,7 @@ def getCachePath(o):
 #that's because blender doesn't allow accessing pixels in render :(
 def renderSampleImage(o):
 	t=time.time()
-	print('getting zbuffer')
+	progress('getting zbuffer')
 	
 	
 	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
@@ -764,7 +768,7 @@ def renderSampleImage(o):
 						i=isearch
 						
 						
-						#print(iname)
+						#progress(iname)
 						i.save_render(iname)
 						o.update_zbufferimage_tag=False
 			
@@ -785,7 +789,7 @@ def renderSampleImage(o):
 		
 		
 		o.pixsize=o.source_image_size_x/i.size[0]
-		print('pixel size in the image source', o.pixsize)
+		progress('pixel size in the image source', o.pixsize)
 		
 		rawimage=imagetonumpy(i)
 		maxa=numpy.max(rawimage)
@@ -803,10 +807,10 @@ def renderSampleImage(o):
 		a*=o.source_image_scale_z
 		o.minz=numpy.min(a)
 		o.zbuffer_image=a
-	#print('got z buffer also with conversion in:')
-	print(time.time()-t)
+	#progress('got z buffer also with conversion in:')
+	progress(time.time()-t)
 	
-	#print(a)
+	#progress(a)
 	o.update_zbufferimage_tag=False
 	return o.zbuffer_image
 	#return numpy.array([])
@@ -825,9 +829,9 @@ def numpysave(a,iname):
 	i.save_render(iname)
 
 def numpytoimage(a,iname):
-	print('numpy to image')
+	progress('numpy to image')
 	t=time.time()
-	print(a.shape[0],a.shape[1])
+	progress(a.shape[0],a.shape[1])
 	bpy.ops.image.new(name=iname, width=a.shape[0], height=a.shape[1], color=(0, 0, 0, 1), alpha=True, generated_type='BLANK', float=True)
 	for image in bpy.data.images:
 		
@@ -839,13 +843,13 @@ def numpytoimage(a,iname):
 	a=a.reshape(d)
 	a=a.repeat(4)
 	i.pixels=a
-	print(time.time()-t)
+	progress(time.time()-t)
 	
 	return i
 
 def imagetonumpy(i):
 	t=time.time()
-	print('imagetonumpy')
+	progress('imagetonumpy')
 	inc=0
 	
 	width=i.size[0]
@@ -866,9 +870,9 @@ def imagetonumpy(i):
 			#id+=1
 		#na=na.reshape(size,4)
 		#na=na.swapaxes(0,1)
-		#print(na)
+		#progress(na)
 		#na=na[0]
-		#print(na)
+		#progress(na)
 		na=na.reshape(width,height,4)
 		na=na[...,1]
 		#na=na.reshape(width,height)
@@ -879,8 +883,8 @@ def imagetonumpy(i):
 		#na=numpy.array(i.pixels)
 		percent=0
 		id=0
-		#print(len(i.pixels))
-		#print
+		#progress(len(i.pixels))
+		#progress
 		for v in i.pixels:
 			if inc==0:
 				if x==width:
@@ -896,7 +900,7 @@ def imagetonumpy(i):
 			if inc==4:
 				inc=0
 		
-	print('\ntime '+str(time.time()-t))
+	progress('\ntime '+str(time.time()-t))
 	
 	return na
 
@@ -908,7 +912,7 @@ def offsetArea(o,samples):
 		sourceArray=samples
 		cutterArray=getCutterArray(o,o.pixsize)
 		
-		print('image size', sourceArray.shape)
+		progress('image size', sourceArray.shape)
 		
 		width=len(sourceArray)
 		height=len(sourceArray[0])
@@ -932,22 +936,22 @@ def offsetArea(o,samples):
 			for y in range(0,cwidth):
 				if cutterArray[x,y]>-10:
 					#i+=1
-					#print(i)
+					#progress(i)
 					compare=numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],compare)
 		
 		o.offset_image[m: width-cwidth+m, m:height-cwidth+m]=compare
-		#print('offseting done')
+		#progress('offseting done')
 		
-		print('\ntime '+str(time.time()-t))
+		progress('\ntime '+str(time.time()-t))
 		
 		o.update_offsetimage_tag=False
-		#print('doing offsetimage')
+		#progress('doing offsetimage')
 		#numpytoimage(o.offset_image,o)
 	return o.offset_image
 
 def outlineImageBinary(o,radius,i,offset):
 	t=time.time()
-	print('outline image')
+	progress('outline image')
 	r=ceil(radius/o.pixsize)
 	c=getCircleBinary(r)
 	w=len(i)
@@ -968,7 +972,7 @@ def outlineImageBinary(o,radius,i,offset):
 		a=indices1[0].item(id)
 		b=indices1[1].item(id)
 		if a>r and b>r and a<w-r and b<h-r:
-			#print(oar.shape,c.shape)
+			#progress(oar.shape,c.shape)
 			oar[a-r:a+r,b-r:b+r]=dofunc(oar[a-r:a+r,b-r:b+r],c)
 		
 	ar=i[:-1,:]!=i[1:,:]
@@ -977,14 +981,14 @@ def outlineImageBinary(o,radius,i,offset):
 		a=indices2[0].item(id)
 		b=indices2[1].item(id)
 		if a>r and b>r and a<w-r and b<h-r:
-			#print(oar.shape,c.shape)
+			#progress(oar.shape,c.shape)
 			oar[a-r:a+r,b-r:b+r]=dofunc(oar[a-r:a+r,b-r:b+r],c)
-	print(time.time()-t)
+	progress(time.time()-t)
 	return oar
 
 def outlineImage(o,radius,i,minz):
 	t=time.time()
-	print('outline image')
+	progress('outline image')
 	r=ceil(radius/o.pixsize)
 	c=getCircle(r,minz)
 	w=len(i)
@@ -998,7 +1002,7 @@ def outlineImage(o,radius,i,minz):
 			p3=i[a,b+1]
 			if p1<minz<p2 or p1>minz>p2 or p1<minz<p3 or p1>minz>p3:
 				oar[a-r:a+r,b-r:b+r]=numpy.maximum(oar[a-r:a+r,b-r:b+r],c)
-	print(time.time()-t)
+	progress(time.time()-t)
 	return oar
 
 def dilateAr(ar,cycles):
@@ -1010,7 +1014,7 @@ def dilateAr(ar,cycles):
 		
 def getImageCorners(o,i):#for pencil operation mainly
 	#i=numpy.logical_xor(lastislice , islice)
-	print('detect corners in the offset image')
+	progress('detect corners in the offset image')
 	vertical=i[:-2,1:-1]-i[1:-1,1:-1]-o.pencil_threshold> i[1:-1,1:-1]-i[2:,1:-1]
 	horizontal=i[1:-1,:-2]-i[1:-1,1:-1]-o.pencil_threshold> i[1:-1,1:-1]-i[1:-1,2:]
 	#if bpy.app.debug_value==2:
@@ -1035,8 +1039,8 @@ def getImageCorners(o,i):#for pencil operation mainly
 		if len(chunk.points)<2:
 			chunks.pop(chi)
 	
-	#print(len(polys))
-	#print(polys[0])
+	#progress(len(polys))
+	#progress(polys[0])
 	return chunks
 
 def imageToChunks(o,image):
@@ -1044,7 +1048,7 @@ def imageToChunks(o,image):
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	pixsize=o.pixsize
 	
-	#print('detecting outline')
+	#progress('detecting outline')
 	edges=[]
 	ar = image[:,:-1]-image[:,1:] 
 	
@@ -1072,7 +1076,7 @@ def imageToChunks(o,image):
 	chi=0
 	
 	polychunks=[]
-	#print(len(edges))
+	#progress(len(edges))
 	
 	d={}
 	for e in edges:
@@ -1085,7 +1089,7 @@ def imageToChunks(o,image):
 		verts1.append(e[1])
 		verts2.append(e[0])
 		
-	#print(time.time()-t)
+	#progress(time.time()-t)
 	t=time.time()
 	if len(edges)>0:
 	
@@ -1098,7 +1102,7 @@ def imageToChunks(o,image):
 		#verts=[123]
 		specialcase=0
 		closed=False
-		#print('condensing outline')
+		#progress('condensing outline')
 		while len(d)>0 and i<20000000:# and verts!=[]:  ####bacha na pripade krizku takzvane, kdy dva pixely na sebe uhlopricne jsou
 			verts=d.get(ch[-1],[])
 			closed=False
@@ -1243,12 +1247,12 @@ def prepareArea(o):
 		offsetArea(o,samples)
 		if o.ambient_behaviour=='AROUND' and o.ambient_radius>0.0:#TODO: unify ambient generation into 1 function.
 			r=o.ambient_radius+o.pixsize*2.5#+(o.cutter_diameter/2.0)
-			print('outline ambient')
+			progress('outline ambient')
 			o.offset_image[:]=outlineImage(o,r,o.offset_image,o.minz)
-			print('ambient done')
+			progress('ambient done')
 		numpysave(o.offset_image,iname)
 	else:
-		print('loading offset image')
+		progress('loading offset image')
 		#try:
 		o.offset_image=imagetonumpy(bpy.data.images.load(iname))
 		#except:
@@ -1621,7 +1625,7 @@ def sampleChunks(o,pathSamples,layers):
 	chunks=[]
 	for i,l in enumerate(layers):
 		chunks.extend(layerchunks[i])
-	print(time.time()-t)
+	progress(time.time()-t)
 	return chunks  
 
 def dist2d(v1,v2):
@@ -1637,9 +1641,9 @@ def polyRemoveDoubles(p,o):
 		veclist=[]
 		for v in c:
 			veclist.append(Vector((v[0],v[1])))
-		#print(len(veclist))
+		#progress(len(veclist))
 		s=curve_simplify.simplify_RDP(veclist, soptions)
-		#print(len(s))
+		#progress(len(s))
 		nc=[]
 		for i in range(0,len(s)):
 			nc.append(c[s[i]])
@@ -1649,7 +1653,7 @@ def polyRemoveDoubles(p,o):
 			
 		else:
 			pnew.addContour(p[ci],p.isHole(ci))
-	#print(time.time()-t)
+	#progress(time.time()-t)
 	return pnew
 	
 	
@@ -1662,12 +1666,12 @@ def polyToChunks(p,zlevel):#
 	
 	i=0
 	for o in p:
-		#print(p[i])
+		#progress(p[i])
 		if p.nPoints(i)>2:
 			chunk=camPathChunk([])
 			chunk.poly=Polygon.Polygon(o)
 			for v in o:
-				#print (v)
+				#progress (v)
 				chunk.points.append((v[0],v[1],zlevel))  
 			
 			chunk.points.append(chunk.points[0])#last point =first point
@@ -1720,7 +1724,7 @@ def setChunksZRamp(chunks,zstart,zend,o):
 					endpoint=i+1
 					if endpoint==len(ch.points):
 						endpoint=0
-					print(endpoint,len(ch.points))
+					#print(endpoint,len(ch.points))
 			#else:
 			znew=max(znew,zend)
 			chunk.points.append((s[0],s[1],znew))
@@ -1969,7 +1973,7 @@ def chunksToMesh(chunks,o):
 	origin=(0,0,o.free_movement_height)  
 	verts = [origin]
 	#verts=[]
-	print('building paths from chunks')
+	progress('building paths from chunks')
 	e=0.0001
 	for chi in range(0,len(chunks)):
 		ch=chunks[chi]
@@ -2468,7 +2472,7 @@ class camPathChunk:
 	
 
 def sortChunks(chunks,o):
-	print('sorting paths')
+	progress('sorting paths')
 	sys.setrecursionlimit(100000)# the getNext() function of CamPathChunk was running out of recursion limits. TODO: rewrite CamPathChunk getNext() it to not be recursive- works now won't do it/.
 	sortedchunks=[]
 	
@@ -2521,12 +2525,13 @@ def sortChunks(chunks,o):
 			lastch=ch
 			pos=lastch.points[-1]
 		i-=1	
+		'''
 		if i<-200:
 			for ch in chunks:
 				print(ch.sorted)
 				print(ch.getNext())
 				print(len(ch.points))
-	
+		'''
 	sys.setrecursionlimit(1000)
 
 	return sortedchunks
@@ -2695,7 +2700,7 @@ def meshFromCurveToChunk(object):
 
 
 def meshloopToChunk(mesh):
-	print('detecting contours')
+	progress('detecting contours')
 	chunks=[]
 	ekeys=mesh.edge_keys
 	
@@ -2733,12 +2738,12 @@ def meshloopToChunk(mesh):
 				chunks.append(chunk) 
 				#print(chunk)
 				spart=[]
-				print(len(chunks))
+				#print(len(chunks))
 			if len(ekeys)>0:
 				e=ekeys.pop()
 				spart=[e[0],e[1]]
 				
-	print(len(chunks))  
+	#print(len(chunks))  
 	chunk=[]
 	spart.pop(-1)
 	for vi in spart:
@@ -2791,7 +2796,7 @@ def getSlices(operation, returnCurves):
 	lastslice=None
 	maxzt = -100000000000000000000000000
 	minzt = 1000000000000000000000000000
-	print('slicing object')
+	progress('slicing object')
 	m=ob.data
 	#d={}#!
 	for p in m.polygons:
@@ -2895,7 +2900,7 @@ def getSlices(operation, returnCurves):
 					print ('parsed faces', i, firstslice, lastslice, len(slices))
 			i+=1  
 	#sliceobs=[]  
-	print('sorting slices') 
+	progress('sorting slices') 
 	slicechunks=[]
 	obs=[]
 	for sc in slices:
@@ -3106,7 +3111,7 @@ def getObjectSilhouette(operation):
 						spoly=Polygon.Polygon()
 						spolys=[]
 						for ob in obs:
-							print('silh edge candidates detection')
+							progress('silh edge candidates detection')
 							t=time.time()
 							m=ob.data
 								
@@ -3929,7 +3934,7 @@ def getPaths(context,operation):#should do all path calculations.
 		topdown=True
 		tw=time.time()
 		chunks=[]
-		print ('retrieving object slices')
+		progress ('retrieving object slices')
 		prepareArea(o)
 		layerstep=1000000000
 		if o.use_layers:
@@ -4135,4 +4140,26 @@ def getPaths(context,operation):#should do all path calculations.
 				polyToMesh(p,slicechunk[0][0][2])
 		
 	t1=time.clock()-t 
-	print('total time',str(t1))
+	progress('total time',t1)
+	
+	p=getCachePath(o)+'.blend'
+
+	bpy.ops.wm.save_mainfile(filepath=p)
+
+	progress('finished')
+	
+def reload_paths(o):
+	oname = "cam_path_"+o.name
+	dpath = getCachePath(o)+'.blend\\Object\\'
+	p=getCachePath(o)+'.blend\\Object\\'+ oname
+	bpy.ops.wm.link_append(
+            filepath=p,
+            filename=oname,
+            directory=dpath,
+            filemode=1,
+            link=False,
+            autoselect=True,
+            active_layer=True,
+            instance_groups=True,
+            relative_path=True)
+	

@@ -19,5 +19,5 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-import bpy
+import bpy, os
 bpy.ops.object.calculate_cam_paths()
