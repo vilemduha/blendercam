@@ -95,7 +95,7 @@ def getChangeData(o):####this is a function to check if object props have change
 	if o.geometry_source=='OBJECT':
 		obs=[bpy.data.objects[o.object_name]]
 	elif o.geometry_source=='GROUP':
-		obs=bpy.data.groups[o.grou_name]
+		obs=bpy.data.groups[o.group_name].objects
 	for ob in obs:
 		changedata+=str(ob.location)
 		changedata+=str(ob.rotation_euler)
@@ -273,7 +273,7 @@ class camOperation(bpy.types.PropertyGroup):
 	object=None
 	path_object_name=bpy.props.StringProperty(name='Path object', description='actual cnc path')
 	
-	
+	computing = bpy.props.BoolProperty(name="Computing right now",description="", default=False)
 	update_zbufferimage_tag=bpy.props.BoolProperty(name="mark zbuffer image for update",description="mark for update", default=True)
 	#update_zbufferimage_tag=True
 	update_offsetimage_tag=bpy.props.BoolProperty(name="mark offset image for update",description="mark for update", default=True)
@@ -305,6 +305,7 @@ def draw_callback_text(self, context, height):
 	# draw some text
 	blf.position(font_id, 15, 30+30*height, 0)
 	blf.size(font_id, 20, 72)
+	
 	blf.draw(font_id, self.text)
 	
 def threadread(proc, self):
@@ -330,18 +331,22 @@ class PathsBackground(bpy.types.Operator):
 
 		if event.type == 'TIMER':
 			if not self.readthread.is_alive():
+				context.area.tag_redraw()#TODO: bug this isn't redrawing anyway now, have to find how to find 3d view
 				self.readthread.join()
-				self.text=self.outtext
+				self.text=self.operation.name+': '+self.outtext
 				self.readthread=threading.Thread(target=threadread, args = (self.proc.stdout,self), daemon=True)
 				self.readthread.start()
 				
 				print(self.text)
-				if self.text=='finished':
+				if 'finished' in self.text:
 					
 					utils.reload_paths(self.operation)
 					
 					context.window_manager.event_timer_remove(self._timer)
 					bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+					self.operation.computing=False
+					#self.readthread.join()
+					
 					return {'FINISHED'}
 			
 			return {'RUNNING_MODAL'}
@@ -355,7 +360,7 @@ class PathsBackground(bpy.types.Operator):
 			s=bpy.context.scene
 			o=s.cam_operations[s.cam_active_operation]
 			self.operation=o
-			
+			o.computing=True
 			self._timer = context.window_manager.event_timer_add(0.01, context.window)
 
 			bpy.ops.wm.save_mainfile()
@@ -382,6 +387,7 @@ class PathsBackground(bpy.types.Operator):
 	def cancel(self, context):
 		context.window_manager.event_timer_remove(self._timer)
 		bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
+		self.operation.computing=False
 		return {'CANCELLED'}
 
 	
@@ -460,7 +466,7 @@ class PathsAll(bpy.types.Operator):
 			bpy.context.scene.cam_active_operation=i
 			print('\nCalculating path :'+o.name)
 			print('\n')
-			bpy.ops.object.calculate_cam_paths()
+			bpy.ops.object.calculate_cam_paths_background()
 			i+=1
 
 		return {'FINISHED'}
@@ -908,9 +914,13 @@ class CAM_OPERATIONS_Panel(bpy.types.Panel):
 			if ao:
 				#if ao.warnings!='':
 			   #	 layout.label(ao.warnings)	 
-				layout.operator("object.calculate_cam_paths_background", text="Calculate path")
+				if not ao.computing:
+					layout.operator("object.calculate_cam_paths_background", text="Calculate path")
+					layout.operator("object.cam_simulate", text="Simulate this operation")
+				else:
+					layout.label('operation is currently computing')
+					layout.prop(ao,'computing')
 				
-				layout.operator("object.cam_simulate", text="Simulate this operation")
 				layout.prop(ao,'name')
 				layout.prop(ao,'filename')
 				layout.prop(ao,'geometry_source')
