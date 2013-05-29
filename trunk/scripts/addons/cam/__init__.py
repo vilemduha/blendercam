@@ -303,8 +303,8 @@ def draw_callback_text(self, context, height):
 	font_id = 0	 # XXX, need to find out how best to get this.
 
 	# draw some text
-	blf.position(font_id, 15, 30+30*height, 0)
-	blf.size(font_id, 20, 72)
+	blf.position(font_id, 15, 60+18*height, 0)
+	blf.size(font_id, 15, 72)
 	
 	blf.draw(font_id, self.text)
 	
