@@ -690,7 +690,11 @@ def renderSampleImage(o):
 		#iname=bpy.path.abspath(fn)
 		#l=len(bpy.path.basename(fn))
 		iname=getCachePath(o)+'_z.exr'
-		
+		if not o.update_zbufferimage_tag:
+			try:
+				i=bpy.data.images.load(iname)
+			except:
+				o.update_zbufferimage_tag=True
 		if o.update_zbufferimage_tag:
 			s=bpy.context.scene
 		
@@ -770,14 +774,17 @@ def renderSampleImage(o):
 						
 						#progress(iname)
 						i.save_render(iname)
-						o.update_zbufferimage_tag=False
+						
 			
 			r.image_settings.file_format=ff 		
 			r.image_settings.color_mode=cm
-		i=bpy.data.images.load(iname)
+		
+			i=bpy.data.images.load(iname)
 		a=imagetonumpy(i)
 		a=1.0-a
 		o.zbuffer_image=a
+		o.update_zbufferimage_tag=False
+		
 	else:
 		i=bpy.data.images[o.source_image_name]
 		sx=int(i.size[0]*o.source_image_crop_start_x/100)
@@ -912,7 +919,7 @@ def offsetArea(o,samples):
 		sourceArray=samples
 		cutterArray=getCutterArray(o,o.pixsize)
 		
-		progress('image size', sourceArray.shape)
+		#progress('image size', sourceArray.shape)
 		
 		width=len(sourceArray)
 		height=len(sourceArray[0])
@@ -3886,8 +3893,9 @@ def getPaths(context,operation):#should do all path calculations.
 		
 		if o.strategy=='CARVE':
 			pathSamples=[]
-			for ob in o.objects:
-				pathSamples.extend(curveToChunks(ob))
+			#for ob in o.objects:
+			ob=bpy.data.objects[o.curve_object]
+			pathSamples.extend(curveToChunks(ob))
 			pathSamples=sortChunks(pathSamples,o)#sort before sampling
 			pathSamples=chunksRefine(pathSamples,o)
 		elif o.strategy=='PENCIL':
