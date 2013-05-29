@@ -4150,9 +4150,7 @@ def getPaths(context,operation):#should do all path calculations.
 	t1=time.clock()-t 
 	progress('total time',t1)
 	
-	p=getCachePath(o)+'.blend'
-
-	bpy.ops.wm.save_mainfile(filepath=p)
+	
 
 	progress('finished')
 	

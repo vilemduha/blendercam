@@ -313,7 +313,6 @@ def threadread(proc, self):
 	inline=str(inline)
 	s=inline.find('progress{')
 	if s>-1:
-		#context.area.tag_redraw()
 		e=inline.find('}')
 		self.outtext=inline[ s+9 :e]
 		
@@ -915,7 +914,8 @@ class CAM_OPERATIONS_Panel(bpy.types.Panel):
 				#if ao.warnings!='':
 			   #	 layout.label(ao.warnings)	 
 				if not ao.computing:
-					layout.operator("object.calculate_cam_paths_background", text="Calculate path")
+					layout.operator("object.calculate_cam_paths", text="Calculate path")
+					layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
 					layout.operator("object.cam_simulate", text="Simulate this operation")
 				else:
 					layout.label('operation is currently computing')
