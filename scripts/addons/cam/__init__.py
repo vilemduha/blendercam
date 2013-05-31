@@ -361,8 +361,8 @@ class PathsBackground(bpy.types.Operator):
 			self.operation=o
 			o.computing=True
 			self._timer = context.window_manager.event_timer_add(0.01, context.window)
-
-			bpy.ops.wm.save_mainfile()
+			if bpy.data.is_dirty:
+				bpy.ops.wm.save_mainfile()
 			bpath=bpy.app.binary_path
 			fpath=bpy.data.filepath
 			scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
