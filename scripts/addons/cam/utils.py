@@ -666,6 +666,8 @@ def getCachePath(o):
 	fn=bpy.data.filepath
 	l=len(bpy.path.basename(fn))
 	bn=bpy.path.basename(fn)[:-6]
+	
+	
 	iname=fn[:-l]+'temp_cam'+os.sep+bn+'_'+o.name
 	return iname
 	
@@ -2371,7 +2373,7 @@ def Helix(r,np, zstart,pend,rev):
 	for a in range(0,int(np*rev)):
 		c.append((v.x+pend[0],v.y+pend[1],zstart-(a*zstep)))
 		v.rotate(e)
-	
+	c.append((v.x+pend[0],v.y+pend[1],pend[2]))
 		
 	return c
 	
@@ -3880,9 +3882,50 @@ def getPaths(context,operation):#should do all path calculations.
 						#print(lchunks[0].points)
 						ch.points=h+ch.points
 						#print (lchunks[0].points)
+			#Arc retract here first try:
+			if o.retract_tangential:#TODO: check for entry and exit point before actual computing... will be much better.
+				for chi, ch in enumerate(lchunks):
+					#print(chunksFromCurve[chi])
+					#print(chunksFromCurve[chi].parents)
+					if chunksFromCurve[chi].parents==[] or len(chunksFromCurve[chi].parents)==1:
+						
+						revolutions=0.25
+						v1=Vector(ch.points[-1])
+						i=-2
+						v2=Vector(ch.points[i])
+						v=v1-v2
+						while v.length==0:
+							i=i-1
+							v2=Vector(ch.points[i])
+							v=v1-v2
+						
+						v.normalize()
+						rotangle=Vector((v.x,v.y)).angle_signed(Vector((1,0)))
+						e=Euler((0,0,pi/2.0))# TODO:#CW CLIMB!
+						v.rotate(e)
+						p=v1+v*o.retract_radius
+						center = p
+						p=(p.x,p.y,p.z)
+						
+						#progress(str((v1,v,p)))
+						h=Helix(o.retract_radius, o.circle_detail, p[2]+o.retract_height,p, revolutions)
+						
+						e=Euler((0,0,rotangle+pi))#angle to rotate whole retract move
+						rothelix=[]
+						for p in h:#rotate helix to go from tangent of vector
+							v1=Vector(p)
+							
+							v=v1-center
+							v.x=-v.x#flip it here first...
+							v.rotate(e)
+							p=center+v
+							rothelix.append(p)
+						#print(h)
+						rothelix.reverse()
+						ch.points.extend(rothelix)
 			chunks.extend(lchunks)
 		
-		
+		##################CUTOUT continues here
 		chunksToMesh(chunks,o)
 	elif o.strategy=='CRAZY':
 		crazyPath(o)

@@ -32,6 +32,7 @@ import numpy
 import Polygon
 from bpy.app.handlers import persistent
 import subprocess,os, sys, threading
+import pickle
 #from .utils import *
 
 bl_info = {
@@ -209,7 +210,9 @@ class camOperation(bpy.types.PropertyGroup):
 	helix_enter = bpy.props.BoolProperty(name="Helix enter",description="Enter material in helix", default=False)
 	helix_angle =	bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" )
 	helix_diameter = bpy.props.FloatProperty(name = 'Helix diameter % of cutter D', default=90,min=10, max=100, precision=1,subtype='PERCENTAGE')
-	
+	retract_tangential = bpy.props.BoolProperty(name="Retract tangential",description="Retract from material in circular motion", default=False)
+	retract_radius =  bpy.props.FloatProperty(name = 'Retract arc radius', default=0.001,min=0.000001, max=100, precision=PRECISION, unit="LENGTH")
+	retract_height =  bpy.props.FloatProperty(name = 'Retract arc height', default=0.001,min=0.00000, max=100, precision=PRECISION, unit="LENGTH")
 	
 	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation depth from object", default=True)
 	minz = bpy.props.FloatProperty(name="Operation depth", default=-0.01, min=-32, max=0,precision=PRECISION, unit="LENGTH")#this is input minz. True minimum z can be something else, depending on material e.t.c.
@@ -300,12 +303,9 @@ class camOperation(bpy.types.PropertyGroup):
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
 def draw_callback_text(self, context, height):
-	font_id = 0	 # XXX, need to find out how best to get this.
-
-	# draw some text
+	font_id = 0
 	blf.position(font_id, 15, 60+18*height, 0)
 	blf.size(font_id, 15, 72)
-	
 	blf.draw(font_id, self.text)
 	
 def threadread(proc, self):
@@ -1083,6 +1083,12 @@ class CAM_MOVEMENT_Panel(bpy.types.Panel):
 					if ao.helix_enter:
 						layout.prop(ao,'helix_angle')
 						layout.prop(ao,'helix_diameter')
+					layout.prop(ao,'retract_tangential')
+					if ao.retract_tangential:
+						layout.prop(ao,'retract_radius')
+						layout.prop(ao,'retract_height')
+						
+					
 				layout.prop(ao,'stay_low')
 				layout.prop(ao,'protect_vertical')
 			  
