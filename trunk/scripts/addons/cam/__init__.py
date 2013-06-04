@@ -21,7 +21,7 @@
 
 import bpy, bgl,blf 
 import mathutils
-import math
+import math, time
 from mathutils import *
 from bpy_extras.object_utils import object_data_add
 from bpy.props import *
@@ -263,29 +263,7 @@ class camOperation(bpy.types.PropertyGroup):
 	#chip_rate
 	
 	#optimisation panel
-	#testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
-	offset_image=numpy.array([],dtype=float)
-	zbuffer_image=numpy.array([],dtype=float)
-
-	#internal properties
-	###########################################
-	silhouete=Polygon.Polygon()
-	ambient = Polygon.Polygon()
-	operation_limit=Polygon.Polygon()
-	borderwidth=50
-	object=None
-	path_object_name=bpy.props.StringProperty(name='Path object', description='actual cnc path')
 	
-	computing = bpy.props.BoolProperty(name="Computing right now",description="", default=False)
-	update_zbufferimage_tag=bpy.props.BoolProperty(name="mark zbuffer image for update",description="mark for update", default=True)
-	#update_zbufferimage_tag=True
-	update_offsetimage_tag=bpy.props.BoolProperty(name="mark offset image for update",description="mark for update", default=True)
-	#update_offsetimage_tag=True
-	update_silhouete_tag=bpy.props.BoolProperty(name="mark silhouette image for update",description="mark for update", default=True)
-	update_ambient_tag=bpy.props.BoolProperty(name="mark ambient polygon for update",description="mark for update", default=True)
-	update_bullet_collision_tag=bpy.props.BoolProperty(name="mark bullet collisionworld for update",description="mark for update", default=True)
-	#update_silhouete_tag=True
-
 	#material settings
 	material_from_model = bpy.props.BoolProperty(name="Estimate from model",description="Estimate material size from model", default=True, update = updateZbufferImage)
 	material_radius_around_model = bpy.props.FloatProperty(name="radius around model",description="How much to add to model size on all sides", default=0.0, unit='LENGTH', precision=PRECISION, update = updateZbufferImage)
@@ -295,13 +273,37 @@ class camOperation(bpy.types.PropertyGroup):
 	max=bpy.props.FloatVectorProperty(name = 'Operation maximum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
 	warnings = bpy.props.StringProperty(name='warnings', description='warnings', default='')
 	chipload = bpy.props.FloatProperty(name="chipload",description="Calculated chipload", default=0.0, unit='LENGTH', precision=PRECISION)
-
+	#internal properties
+	###########################################
+	#testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
+	offset_image=numpy.array([],dtype=float)
+	zbuffer_image=numpy.array([],dtype=float)
+	
+	silhouete=Polygon.Polygon()
+	ambient = Polygon.Polygon()
+	operation_limit=Polygon.Polygon()
+	borderwidth=50
+	object=None
+	path_object_name=bpy.props.StringProperty(name='Path object', description='actual cnc path')
+	
+	
+	update_zbufferimage_tag=bpy.props.BoolProperty(name="mark zbuffer image for update",description="mark for update", default=True)
+	update_offsetimage_tag=bpy.props.BoolProperty(name="mark offset image for update",description="mark for update", default=True)
+	update_silhouete_tag=bpy.props.BoolProperty(name="mark silhouette image for update",description="mark for update", default=True)
+	update_ambient_tag=bpy.props.BoolProperty(name="mark ambient polygon for update",description="mark for update", default=True)
+	update_bullet_collision_tag=bpy.props.BoolProperty(name="mark bullet collisionworld for update",description="mark for update", default=True)
+	
+	
 	valid = bpy.props.BoolProperty(name="Valid",description="True if operation is ok for calculation", default=True);
 	changedata = bpy.props.StringProperty(name='changedata', description='change data for checking if stuff changed.')
-
-	
+	###############process related data
+	computing = bpy.props.BoolProperty(name="Computing right now",description="", default=False)
+	pid = bpy.props.IntProperty(name="process id", description="Background process id", default=-1)
+	outtext = bpy.props.StringProperty(name='outtext', description='outtext', default='')
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
+
+
 def draw_callback_text(self, context, height):
 	font_id = 0
 	blf.position(font_id, 15, 60+18*height, 0)
@@ -315,29 +317,23 @@ def threadread(proc, self):
 	if s>-1:
 		e=inline.find('}')
 		self.outtext=inline[ s+9 :e]
-		
-class PathsBackground(bpy.types.Operator):
-	'''calculate CAM paths in background'''
-	bl_idname = "object.calculate_cam_paths_background"
-	bl_label = "Calculate CAM paths in background"
-	bl_options = {'REGISTER', 'UNDO'}
-	
-	
-	def modal(self, context, event):
-		context.area.tag_redraw()
-		if event.type == 'ESC':
-			return self.cancel(context)
 
-		if event.type == 'TIMER':
-			if not self.readthread.is_alive():
-				context.area.tag_redraw()#TODO: bug this isn't redrawing anyway now, have to find how to find 3d view
-				self.readthread.join()
-				self.text=self.operation.name+': '+self.outtext
-				self.readthread=threading.Thread(target=threadread, args = (self.proc.stdout,self), daemon=True)
-				self.readthread.start()
+
+def header_info(self, context):
+	s=bpy.context.scene
+	text=' ahoj'
+	if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'processes'):
+		for p in bpy.ops.object.calculate_cam_paths_background.__class__.processes:
+			proc=p[0]
+			readthread=p[1]
+			operation=p[2]
+			if not readthread.is_alive():
+				readthread.join()
+				#text=outtext#self.operation.name+': '+self.outtext
 				
-				print(self.text)
-				if 'finished' in self.text:
+				print('captured')
+				#print(outtext)
+				if 'finished' in operation.outtext:
 					
 					utils.reload_paths(self.operation)
 					
@@ -347,49 +343,72 @@ class PathsBackground(bpy.types.Operator):
 					#self.readthread.join()
 					
 					return {'FINISHED'}
-			
-			return {'RUNNING_MODAL'}
-		return {'PASS_THROUGH'}
+				else:
+					readthread=threading.Thread(target=threadread, args = (proc.stdout,operation), daemon=True)
+					readthread.start()
+			#print(p[0].pid)
+			#print(dir(p[0]))
+			#p[0].kill()
+	''''
+	for o in bpy.context.scene.cam_operations:
+		if o.computing:
+			text=text+(' %s ' % (o.name))
+			#print(o.proc)
+	'''
+	t = time.localtime()
+	self.layout.label("%02d:%02d:%02d" % (t.tm_hour, t.tm_min, t.tm_sec) + text)
 
+@bpy.app.handlers.persistent
+def timer_update(context):
+	# hack to update UI
+	for area in bpy.context.screen.areas:
+		if area.type == 'INFO':
+			area.tag_redraw()
+	#text=sys.stdout.readline()
+	#print(text)
+
+
+class PathsBackground(bpy.types.Operator):
+	'''calculate CAM paths in background'''
+	bl_idname = "object.calculate_cam_paths_background"
+	bl_label = "Calculate CAM paths in background"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	processes=[]
+	
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None
+	
 	def execute(self, context):
 		mgr_ops = context.window_manager.operators.values()
-		print(mgr_ops)
+		#print(mgr_ops)
 		#if not self.bl_idname in [op.bl_idname for op in mgr_ops]:
 		if True:
 			s=bpy.context.scene
 			o=s.cam_operations[s.cam_active_operation]
 			self.operation=o
 			o.computing=True
-			self._timer = context.window_manager.event_timer_add(0.01, context.window)
 			if bpy.data.is_dirty:
 				bpy.ops.wm.save_mainfile()
 			bpath=bpy.app.binary_path
 			fpath=bpy.data.filepath
 			scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
-			self.proc = subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath],bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
-			self.text='computing operation in backgorund'
-			#height=0
-			#for op in mgr_ops:
-			#	if op.bl_idname == self.bl_idname: 
-			#		height+=1
-			height=s.cam_active_operation
-			args = (self, context, height)
-			self._handle = bpy.types.SpaceView3D.draw_handler_add(draw_callback_text, args, 'WINDOW', 'POST_PIXEL')
-			context.window_manager.modal_handler_add(self)
-			self.text=''
-			self.outtext=''
-			self.readthread=threading.Thread(target=threadread, args = (self.proc.stdout,self), daemon=True)
-			self.readthread.start()
-			return {'RUNNING_MODAL'}
-		
-		#return {'CANCELLED'}
-	def cancel(self, context):
-		context.window_manager.event_timer_remove(self._timer)
-		bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
-		self.operation.computing=False
-		return {'CANCELLED'}
+			
+			proc= subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath],bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
+			#print(self.proc.stdout)
+			#height=s.cam_active_operation
+			#args = (self, context, height)
+			outtext=''
+			readthread=threading.Thread(target=threadread, args = (proc.stdout,outtext), daemon=True)
+			readthread.start()
+			#self.__class__.processes=[]
+			bpy.ops.object.calculate_cam_paths_background.__class__.processes=[]
+			bpy.ops.object.calculate_cam_paths_background.__class__.processes.append([proc,readthread,o])
+			print(proc.pid)
 
-	
+			return {'FINISHED'}
+		
 		
 class PathsSimple(bpy.types.Operator):
 	'''calculate CAM paths'''
@@ -1248,6 +1267,7 @@ def get_panels():
 	AddPresetCamCutter,
 	AddPresetCamOperation,
 	AddPresetCamMachine,
+	#ModalMonitor
 	)
 	
 def register():
@@ -1260,6 +1280,9 @@ def register():
 	d.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
 	d.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
 	
+	bpy.app.handlers.scene_update_pre.append(timer_update)
+	bpy.types.INFO_HT_header.append(header_info)
+
 	
 	try:
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_render)
@@ -1284,7 +1307,8 @@ def unregister():
 	del d.cam_operations
 	del d.cam_active_operation
 	del d.cam_machine
-	#del d.cam_material
+	bpy.app.handlers.scene_update_pre.remove(timer_update)
+	bpy.types.INFO_HT_header.remove(header_info)
 
 if __name__ == "__main__":
 	register()
