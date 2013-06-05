@@ -37,7 +37,6 @@ def getCachePath(o):
 s=bpy.context.scene
 o=s.cam_operations[s.cam_active_operation]
 p=getCachePath(o)+'.blend'
-bpy.ops.wm.save_mainfile(filepath=p)
 picklepath=getCachePath(o)+'.pickle'
 f=open(picklepath,'wb')
 d={}
@@ -46,3 +45,4 @@ d['warnings']=o.warnings
 
 pickle.dump(d,f)
 f.close()
+bpy.ops.wm.save_mainfile(filepath=p)

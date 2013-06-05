@@ -36,6 +36,7 @@ import Polygon
 import Polygon.Utils as pUtils
 import numpy
 import random,sys, os
+import pickle
 import string
 #from . import post_processors
 #import multiprocessing 
@@ -1625,6 +1626,7 @@ def sampleChunks(o,pathSamples,layers):
 		lastrunchunks=thisrunchunks
 				
 			#print(len(layerchunks[i]))
+	progress('checking relations between paths')
 	if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
 		if len(layers)>1:# sorting help so that upper layers go first always
 			for i in range(0,len(layers)-1):
@@ -4200,10 +4202,13 @@ def getPaths(context,operation):#should do all path calculations.
 def reload_paths(o):
 	oname = "cam_path_"+o.name
 	s=bpy.context.scene
+	#for o in s.objects:
+	ob=None
 	if oname in s.objects:
-		s.objects.unlink(s.objects[oname])
-	dpath = getCachePath(o)+'.blend\\Object\\'
-	p=getCachePath(o)+'.blend\\Object\\'+ oname
+		s.objects[oname].data.name='xxx_cam_deleted_path'
+		ob=s.objects[oname]
+	dpath = getCachePath(o)+'.blend\\Mesh\\'
+	p=getCachePath(o)+'.blend\\Mesh\\'+ oname
 	bpy.ops.wm.link_append(
             filepath=p,
             filename=oname,
@@ -4214,4 +4219,20 @@ def reload_paths(o):
             active_layer=True,
             instance_groups=True,
             relative_path=True)
+	mesh=bpy.data.meshes[oname]
+	if ob==None:
+		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
+	else: 
+		s.objects[oname].data=mesh
+	ob=s.objects[mesh.name]
+	ob.location=(0,0,0)
+	o.path_object_name=oname
+	#unpickle here:
+	picklepath=getCachePath(o)+'.pickle'
+	f=open(picklepath,'rb')
+	d=pickle.load(f)
+	f.close()
+	o.warnings=d['warnings']
+	o.duration=d['duration']
+
 	
