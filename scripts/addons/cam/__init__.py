@@ -303,70 +303,67 @@ class camOperation(bpy.types.PropertyGroup):
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
 
-
-def draw_callback_text(self, context, height):
-	font_id = 0
-	blf.position(font_id, 15, 60+18*height, 0)
-	blf.size(font_id, 15, 72)
-	blf.draw(font_id, self.text)
+class threadCom:#object passed to threads to read background process stdout info 
+	def __init__(self,o,proc):
+		self.opname=o.name
+		self.outtext=''
+		self.proc=proc
+		
 	
-def threadread(proc, self):
-	inline = proc.readline()
+def threadread( tcom):
+	'''reads stdout of background process, done this way to have it non-blocking'''
+	inline = tcom.proc.stdout.readline()
 	inline=str(inline)
 	s=inline.find('progress{')
 	if s>-1:
 		e=inline.find('}')
-		self.outtext=inline[ s+9 :e]
+		tcom.outtext=inline[ s+9 :e]
 
 
 def header_info(self, context):
+	'''writes background operations data to header'''
 	s=bpy.context.scene
-	text=' ahoj'
-	if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'processes'):
-		for p in bpy.ops.object.calculate_cam_paths_background.__class__.processes:
-			proc=p[0]
-			readthread=p[1]
-			operation=p[2]
-			if not readthread.is_alive():
-				readthread.join()
-				#text=outtext#self.operation.name+': '+self.outtext
-				
-				print('captured')
-				#print(outtext)
-				if 'finished' in operation.outtext:
-					
-					utils.reload_paths(self.operation)
-					
-					context.window_manager.event_timer_remove(self._timer)
-					bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
-					self.operation.computing=False
-					#self.readthread.join()
-					
-					return {'FINISHED'}
-				else:
-					readthread=threading.Thread(target=threadread, args = (proc.stdout,operation), daemon=True)
-					readthread.start()
-			#print(p[0].pid)
-			#print(dir(p[0]))
-			#p[0].kill()
-	''''
-	for o in bpy.context.scene.cam_operations:
-		if o.computing:
-			text=text+(' %s ' % (o.name))
-			#print(o.proc)
-	'''
+	text=' '
 	t = time.localtime()
-	self.layout.label("%02d:%02d:%02d" % (t.tm_hour, t.tm_min, t.tm_sec) + text)
+	self.layout.label(s.cam_text)
 
 @bpy.app.handlers.persistent
 def timer_update(context):
-	# hack to update UI
+	'''monitoring of background processes'''
+	text=''
+	if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'processes'):
+		processes=bpy.ops.object.calculate_cam_paths_background.__class__.processes
+		for p in processes:
+			#proc=p[1].proc
+			readthread=p[0]
+			tcom=p[1]
+			if not readthread.is_alive():
+				readthread.join()
+				print(tcom.outtext)
+				text=text+('# %s %s #' % (tcom.opname,tcom.outtext))
+				print(tcom.outtext)
+				if 'finished' in tcom.outtext:
+					processes.remove(p)
+					s=bpy.context.scene
+					o=s.cam_operations[tcom.opname]
+					o.computing=False;
+					utils.reload_paths(o)
+				else:
+					readthread=threading.Thread(target=threadread, args = ([tcom]), daemon=True)
+					readthread.start()
+		s=bpy.context.scene
+		s.cam_text=text
 	for area in bpy.context.screen.areas:
 		if area.type == 'INFO':
 			area.tag_redraw()
-	#text=sys.stdout.readline()
-	#print(text)
-
+			
+@bpy.app.handlers.persistent
+def check_operations_on_load(context):
+	'''checks any broken computations on load and reset them.'''
+	s=bpy.context.scene
+	for o in s.cam_operations:
+		if o.computing:
+			o.computing=False
 
 class PathsBackground(bpy.types.Operator):
 	'''calculate CAM paths in background'''
@@ -376,38 +373,31 @@ class PathsBackground(bpy.types.Operator):
 	
 	processes=[]
 	
-	@classmethod
-	def poll(cls, context):
-		return context.active_object is not None
+	#@classmethod
+	#def poll(cls, context):
+	#	return context.active_object is not None
 	
 	def execute(self, context):
-		mgr_ops = context.window_manager.operators.values()
-		#print(mgr_ops)
-		#if not self.bl_idname in [op.bl_idname for op in mgr_ops]:
-		if True:
-			s=bpy.context.scene
-			o=s.cam_operations[s.cam_active_operation]
-			self.operation=o
-			o.computing=True
-			if bpy.data.is_dirty:
-				bpy.ops.wm.save_mainfile()
-			bpath=bpy.app.binary_path
-			fpath=bpy.data.filepath
-			scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
-			
-			proc= subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath],bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
-			#print(self.proc.stdout)
-			#height=s.cam_active_operation
-			#args = (self, context, height)
-			outtext=''
-			readthread=threading.Thread(target=threadread, args = (proc.stdout,outtext), daemon=True)
-			readthread.start()
-			#self.__class__.processes=[]
+		s=bpy.context.scene
+		o=s.cam_operations[s.cam_active_operation]
+		self.operation=o
+		o.computing=True
+		if bpy.data.is_dirty:
+			bpy.ops.wm.save_mainfile()
+		bpath=bpy.app.binary_path
+		fpath=bpy.data.filepath
+		scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
+		
+		proc= subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath],bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
+		
+		tcom=threadCom(o,proc)
+		readthread=threading.Thread(target=threadread, args = ([tcom]), daemon=True)
+		readthread.start()
+		#self.__class__.processes=[]
+		if not hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'processes'):
 			bpy.ops.object.calculate_cam_paths_background.__class__.processes=[]
-			bpy.ops.object.calculate_cam_paths_background.__class__.processes.append([proc,readthread,o])
-			print(proc.pid)
-
-			return {'FINISHED'}
+		bpy.ops.object.calculate_cam_paths_background.__class__.processes.append([readthread,tcom])
+		return {'FINISHED'}
 		
 		
 class PathsSimple(bpy.types.Operator):
@@ -938,7 +928,7 @@ class CAM_OPERATIONS_Panel(bpy.types.Panel):
 					layout.operator("object.cam_simulate", text="Simulate this operation")
 				else:
 					layout.label('operation is currently computing')
-					layout.prop(ao,'computing')
+					#layout.prop(ao,'computing')
 				
 				layout.prop(ao,'name')
 				layout.prop(ao,'filename')
@@ -1267,7 +1257,7 @@ def get_panels():
 	AddPresetCamCutter,
 	AddPresetCamOperation,
 	AddPresetCamMachine,
-	#ModalMonitor
+	#CamBackgroundMonitor
 	)
 	
 def register():
@@ -1275,12 +1265,14 @@ def register():
 		bpy.utils.register_class(p)
 	
 	#bpy.app.handlers.frame_change_pre.append(obchange_handler)
-	d = bpy.types.Scene
-	d.cam_operations = bpy.props.CollectionProperty(type=camOperation)
-	d.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
-	d.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
-	
+	s = bpy.types.Scene
+	s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
+	s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
+	s.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
+	s.cam_text= bpy.props.StringProperty()
 	bpy.app.handlers.scene_update_pre.append(timer_update)
+	#bpy.ops.run_cam_monitor()
+	bpy.app.handlers.load_post.append(check_operations_on_load)
 	bpy.types.INFO_HT_header.append(header_info)
 
 	
@@ -1303,10 +1295,10 @@ def register():
 def unregister():
 	for p in get_panels():
 		bpy.utils.unregister_class(p)
-	d = bpy.types.Scene
-	del d.cam_operations
-	del d.cam_active_operation
-	del d.cam_machine
+	s = bpy.types.Scene
+	del s.cam_operations
+	del s.cam_active_operation
+	del s.cam_machine
 	bpy.app.handlers.scene_update_pre.remove(timer_update)
 	bpy.types.INFO_HT_header.remove(header_info)
 
