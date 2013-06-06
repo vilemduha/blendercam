@@ -2549,22 +2549,20 @@ def sortChunks(chunks,o):
 		
 
 
-def outlinePoly(p,r,operation,offset):
+def outlinePoly(p,r,operation,offset = True, closed = True):
+	'''offsets or insets polygon by radius'''
 	#t=Polygon.getTolerance()
 	#e=0.0001
 	#Polygon.setTolerance(e)
 	vref=mathutils.Vector((1,0))
 	#p.simplify()
 	#print(p)
-	#print('polylength'+str(p.nPoints()))
-	#polyToMesh(p,0)
-	#bpy.context.scene.objects.unlink(bpy.context.active_object)
 	if p.nPoints()>2:
-		
-		#Polygon.setTolerance(t)
 		ci=0
 		pr=Polygon.Polygon()
-		pr = pr+p
+		if closed:
+			pr = pr+p#TODO fix this. this probably ruins depth in outlines! should add contours instead, or do a copy
+		
 		circle=Circle(r,operation.circle_detail)
 		polygons=[]
 		for c in p:
@@ -2580,10 +2578,14 @@ def outlinePoly(p,r,operation,offset):
 						v2=mathutils.Vector(c[vi-1])
 					else:
 						v2=mathutils.Vector(c[-1])
+						if not closed:
+							continue;
 					if vi<clen-1:
 						v3=mathutils.Vector(c[vi+1])
 					else:
 						v3= mathutils.Vector(c[0]) 
+						if not closed:
+							continue;
 					
 					
 					vect=v1-v2
@@ -2596,40 +2598,13 @@ def outlinePoly(p,r,operation,offset):
 					if (orientation==-1 and hole) or (orientation==1 and not hole):
 						rr+=math.pi
 					
-					#if hole:
-					  #  rr+=math.pi
 						
 					if vect.length>0:
 						rect.rotate(vect.angle_signed(vref)+rr,0.0,0.0)
 					rect.shift(fo[0],fo[1])
-					#vect.offset()
 					
-					#angle=vect.angle_signed(v1-v3)
-					
-					#this was supposed to save some computation time, but was buggy
-					#if (angle<math.pi+0.0001 and angle>-0.0001) or (angle>-math.pi-0.0001 and angle<-math.pi+0.0001):
-					
-					#circle=Polygon.Polygon(circlepattern)
-					
-					#polygons.append(circle)
-					#polygons.append(rect)
-					
-#					if bpy.context.scene['testing']==0:
-#						circle.shift(v[0],v[1])
-#						if offset:
-#							pr=pr+circle
-#						else:
-#							pr=pr-circle
-#					
-#						circle.shift(-v[0],-v[1])
-#						
-#						if offset:
-#							pr=pr+rect
-#						else:
-#							pr=pr-rect
-#					else:
-						
 					# this merges the rect with 1 circle and is actually faster... probably because it reduces the circle.
+					#TODO: implement proper arcs here, to save computation time , and avoid tiny bugs.. 
 					circle.shift(v[0],v[1])
 					shape=rect+circle
 					circle.shift(-v[0],-v[1])
@@ -2640,11 +2615,6 @@ def outlinePoly(p,r,operation,offset):
 					
 					
 					vi+=1
-			#pmerge=polyMerge(polygons)
-			#if offset:
-			#  pr=pr+pmerge
-			#else:
-			#  pr=pr-pmerge
 			ci+=1
 		
 		#pr.simplify()
@@ -2654,13 +2624,11 @@ def outlinePoly(p,r,operation,offset):
 			
 			if operation.optimize:
 				pr=polyRemoveDoubles(pr,operation)
-		
-		#if len(pr)>0:
-			#pr=orderPoly([pr])
-		
 		p=pr
 	return p
+	
 
+	
 def meshFromCurveToChunk(object):
 	mesh=object.data
 	#print('detecting contours from curve')
@@ -3707,6 +3675,7 @@ def getObjectOutline(radius,operation,Offset):
 			outline=outline+p
 	return outline
 
+	
 def addMachineObject():
 	
 	s=bpy.context.scene
@@ -3868,22 +3837,28 @@ def getPaths(context,operation):#should do all path calculations.
 					if chunksFromCurve[chi].children==[]:
 					
 						p=ch.points[0]#TODO:intercept closest next point when it should stay low 
+						#first thing to do is to check if helix enter can really enter.
+						checkc=Circle(helix_radius+o.cutter_diameter/2,o.circle_detail)
+						checkc.shift(p[0],p[1])
+						covers=False
+						for poly in o.silhouete:
+							if poly.covers(checkc):
+								covers=True
+								break;
 						
-						
-						revolutions=(l[0]-p[2])/revheight
-						#print(revolutions)
-						h=Helix(helix_radius,o.circle_detail, l[0],p,revolutions)
-						#invert helix if not the typical direction
-						if (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' 	and o.spindle_rotation_direction=='CCW'):
-							nhelix=[]
-							for v in h:
-								nhelix.append((2*p[0]-v[0],v[1],v[2]))
-							h=nhelix
-						#print('helix')
-						#print(h)
-						#print(lchunks[0].points)
-						ch.points=h+ch.points
-						#print (lchunks[0].points)
+						if covers:
+							revolutions=(l[0]-p[2])/revheight
+							#print(revolutions)
+							h=Helix(helix_radius,o.circle_detail, l[0],p,revolutions)
+							#invert helix if not the typical direction
+							if (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' 	and o.spindle_rotation_direction=='CCW'):
+								nhelix=[]
+								for v in h:
+									nhelix.append((2*p[0]-v[0],v[1],v[2]))
+								h=nhelix
+							ch.points=h+ch.points
+						else:
+							o.warnings=o.warnings+'Helix entry did not fit! \n '
 			#Arc retract here first try:
 			if o.retract_tangential:#TODO: check for entry and exit point before actual computing... will be much better.
 				for chi, ch in enumerate(lchunks):
@@ -3914,6 +3889,7 @@ def getPaths(context,operation):#should do all path calculations.
 						
 						e=Euler((0,0,rotangle+pi))#angle to rotate whole retract move
 						rothelix=[]
+						c=[]#polygon for outlining and checking collisions.
 						for p in h:#rotate helix to go from tangent of vector
 							v1=Vector(p)
 							
@@ -3922,9 +3898,26 @@ def getPaths(context,operation):#should do all path calculations.
 							v.rotate(e)
 							p=center+v
 							rothelix.append(p)
+							c.append((p[0],p[1]))
+							
+						c=Polygon.Polygon(c)
+						print('çoutline')
+						print(c)
+						coutline = outlinePoly(c,o.cutter_diameter/2,operation,offset = True, closed = False)
 						#print(h)
+						print('çoutline')
+						print(coutline)
+						polyToMesh(coutline,0)
 						rothelix.reverse()
-						ch.points.extend(rothelix)
+						
+						covers=False
+						for poly in o.silhouete:
+							if poly.covers(coutline):
+								covers=True
+								break;
+						
+						if covers:
+							ch.points.extend(rothelix)
 			chunks.extend(lchunks)
 		
 		##################CUTOUT continues here

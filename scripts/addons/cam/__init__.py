@@ -50,6 +50,10 @@ bl_info = {
   
 PRECISION=5
 
+
+def updateMachine(self,context):
+	utils.addMachineObject()
+
 class machineSettings(bpy.types.PropertyGroup):
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	post_processor = EnumProperty(name='Post processor',
@@ -57,7 +61,7 @@ class machineSettings(bpy.types.PropertyGroup):
 		description='Post processor',
 		default='MACH3')
 	#units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
-	working_area=bpy.props.FloatVectorProperty(name = 'Work Area', default=(0.500,0.500,0.100), unit='LENGTH', precision=PRECISION,subtype="XYZ")
+	working_area=bpy.props.FloatVectorProperty(name = 'Work Area', default=(0.500,0.500,0.100), unit='LENGTH', precision=PRECISION,subtype="XYZ",update = updateMachine)
 	feedrate_min=bpy.props.FloatProperty(name="Feedrate minimum /min", default=0.0, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
 	feedrate_max=bpy.props.FloatProperty(name="Feedrate maximum /min", default=2, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
 	feedrate_default=bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,precision=PRECISION)
@@ -323,8 +327,6 @@ def threadread( tcom):
 def header_info(self, context):
 	'''writes background operations data to header'''
 	s=bpy.context.scene
-	text=' '
-	t = time.localtime()
 	self.layout.label(s.cam_text)
 
 @bpy.app.handlers.persistent
@@ -348,6 +350,8 @@ def timer_update(context):
 					o=s.cam_operations[tcom.opname]
 					o.computing=False;
 					utils.reload_paths(o)
+					update_zbufferimage_tag = False
+					update_offsetimage_tag = False
 				else:
 					readthread=threading.Thread(target=threadread, args = ([tcom]), daemon=True)
 					readthread.start()
@@ -875,13 +879,16 @@ class CAM_UL_operations(UIList):
 	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 		# assert(isinstance(item, bpy.types.VertexGroup)
 		operation = item
-		#if self.layout_type in {'DEFAULT', 'COMPACT'}:
-		layout.label(text=operation.name, translate=False, icon_value=icon)
-			#icon = 'LOCKED' if vgroup.lock_weight else 'UNLOCKED'
-			#layout.prop(vgroup, "lock_weight", text="", icon=icon, emboss=False)
-		#elif self.layout_type in {'GRID'}:
-		#	 layout.alignment = 'CENTER'
-		#	 layout.label(text="", icon_value=icon)
+		if self.layout_type in {'DEFAULT', 'COMPACT'}:
+			
+			layout.label(text=item.name, translate=False, icon_value=icon)
+			icon = 'LOCKED' if operation.computing else 'UNLOCKED'
+			#layout.enabled=False
+			if operation.computing:
+				layout.label(text="computing" )
+		elif self.layout_type in {'GRID'}:
+			 layout.alignment = 'CENTER'
+			 layout.label(text="", icon_value=icon)
   
 	
 class CAM_OPERATIONS_Panel(bpy.types.Panel):
@@ -920,12 +927,13 @@ class CAM_OPERATIONS_Panel(bpy.types.Panel):
 			row.operator("render.cam_preset_operation_add", text="", icon='ZOOMOUT').remove_active = True
 			
 			if ao:
-				#if ao.warnings!='':
-			   #	 layout.label(ao.warnings)	 
 				if not ao.computing:
-					layout.operator("object.calculate_cam_paths", text="Calculate path")
-					layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
-					layout.operator("object.cam_simulate", text="Simulate this operation")
+					if ao.valid:
+						layout.operator("object.calculate_cam_paths", text="Calculate path")
+						layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
+						layout.operator("object.cam_simulate", text="Simulate this operation")
+					else:
+						layout.label("operation invalid, can't compute")
 				else:
 					layout.label('operation is currently computing')
 					#layout.prop(ao,'computing')
@@ -968,7 +976,9 @@ class CAM_INFO_Panel(bpy.types.Panel):
 		if len(scene.cam_operations)>0:
 			ao=scene.cam_operations[scene.cam_active_operation]
 			if ao.warnings!='':
-				layout.label(ao.warnings)
+				lines=ao.warnings.split('\n')
+				for l in lines:
+					layout.label(l)
 			if ao.valid:
 				#ob=bpy.data.objects[ao.object_name]
 				#layout.separator()
