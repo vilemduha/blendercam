@@ -2549,7 +2549,7 @@ def sortChunks(chunks,o):
 		
 
 
-def outlinePoly(p,r,operation,offset = True, closed = True):
+def outlinePoly(p,r,operation,offset = True):
 	'''offsets or insets polygon by radius'''
 	#t=Polygon.getTolerance()
 	#e=0.0001
@@ -2560,8 +2560,8 @@ def outlinePoly(p,r,operation,offset = True, closed = True):
 	if p.nPoints()>2:
 		ci=0
 		pr=Polygon.Polygon()
-		if closed:
-			pr = pr+p#TODO fix this. this probably ruins depth in outlines! should add contours instead, or do a copy
+		
+		pr = pr+p#TODO fix this. this probably ruins depth in outlines! should add contours instead, or do a copy
 		
 		circle=Circle(r,operation.circle_detail)
 		polygons=[]
@@ -2578,14 +2578,10 @@ def outlinePoly(p,r,operation,offset = True, closed = True):
 						v2=mathutils.Vector(c[vi-1])
 					else:
 						v2=mathutils.Vector(c[-1])
-						if not closed:
-							continue;
 					if vi<clen-1:
 						v3=mathutils.Vector(c[vi+1])
 					else:
 						v3= mathutils.Vector(c[0]) 
-						if not closed:
-							continue;
 					
 					
 					vect=v1-v2
@@ -3861,6 +3857,7 @@ def getPaths(context,operation):#should do all path calculations.
 							o.warnings=o.warnings+'Helix entry did not fit! \n '
 			#Arc retract here first try:
 			if o.retract_tangential:#TODO: check for entry and exit point before actual computing... will be much better.
+									#TODO: fix this for CW and CCW!
 				for chi, ch in enumerate(lchunks):
 					#print(chunksFromCurve[chi])
 					#print(chunksFromCurve[chi].parents)
@@ -3901,13 +3898,13 @@ def getPaths(context,operation):#should do all path calculations.
 							c.append((p[0],p[1]))
 							
 						c=Polygon.Polygon(c)
-						print('çoutline')
-						print(c)
-						coutline = outlinePoly(c,o.cutter_diameter/2,operation,offset = True, closed = False)
+						#print('çoutline')
+						#print(c)
+						coutline = outlinePoly(c,o.cutter_diameter/2,operation,offset = True)
 						#print(h)
-						print('çoutline')
-						print(coutline)
-						polyToMesh(coutline,0)
+						#print('çoutline')
+						#print(coutline)
+						#polyToMesh(coutline,0)
 						rothelix.reverse()
 						
 						covers=False
