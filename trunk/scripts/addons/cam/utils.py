@@ -1796,7 +1796,20 @@ def chunkToPoly(chunk):
 	p=Polygon.Polygon(pverts)
 	return p
 
-
+def compare(v1,v2,vmiddle,e):
+	#e=0.0001
+	v1=Vector(v1)
+	v2=Vector(v2)
+	vmiddle=Vector(vmiddle)
+	vect1=v2-v1
+	vect2=vmiddle-v1
+	vect1.normalize()
+	vect1*=vect2.length
+	v=vect2-vect1
+	if v.length<e:
+		return True
+	return False
+'''
 def compare(v1,v2,vmiddle,e):
 	#e=0.0001
 	v1=Vector(v1)
@@ -1806,8 +1819,6 @@ def compare(v1,v2,vmiddle,e):
 	vect2=vmiddle-v1
 	vect1.normalize()
 	vect2.normalize()
-	
-
 	x1=int(vect1.x/e)
 	y1=int(vect1.y/e)
 	z1=int(vect1.z/e)
@@ -1818,7 +1829,7 @@ def compare(v1,v2,vmiddle,e):
 	if x1==x2 and y1==y2 and z1==z2:
 		return True
 	return False
-
+'''
 def isVerticalLimit(v1,v2):
 	z=abs(v1[2]-v2[2])
 	verticality=0.05  
