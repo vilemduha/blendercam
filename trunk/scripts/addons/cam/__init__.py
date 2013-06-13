@@ -145,6 +145,13 @@ def updateZbufferImage(self,context):
 	self.update_zbufferimage_tag=True
 	self.update_offsetimage_tag=True
 
+def updateStrategy(o,context):
+	updateExact(o,context)
+
+def updateExact(o,context):
+	if o.use_exact and (o.strategy=='WATERLINE' or o.strategy=='POCKET' or o.inverse):
+		o.use_exact=False
+		
 class camOperation(bpy.types.PropertyGroup):
 	
 	name = bpy.props.StringProperty(name="Operation Name", default="Operation")
@@ -182,7 +189,8 @@ class camOperation(bpy.types.PropertyGroup):
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
 			('DRILL','Drill', 'Drill operation'),('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!')),
 		description='Strategy',
-		default='PARALLEL')#,('SLICES','Slices','this prepares model for cutting from sheets of material')
+		default='PARALLEL',
+		update = updateStrategy)#,('SLICES','Slices','this prepares model for cutting from sheets of material')
 	#for cutout	   
 	cut_type = EnumProperty(name='Cut:',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE')  
 	#render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
@@ -254,7 +262,7 @@ class camOperation(bpy.types.PropertyGroup):
 	parallel_step_back =  bpy.props.BoolProperty(name="Parallel step back", description='For roughing and finishing in one pass: mills material in climb mode, then steps back and goes between 2 last chunks back', default=False)
 	stay_low = bpy.props.BoolProperty(name="Stay low if possible", default=False)
 	#optimization and performance
-	use_exact = bpy.props.BoolProperty(name="Use exact mode",description="Exact mode allows greater precision, but is slower with complex meshes", default=True)
+	use_exact = bpy.props.BoolProperty(name="Use exact mode",description="Exact mode allows greater precision, but is slower with complex meshes", default=True, update = updateExact)
 	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
 	simulation_detail=bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH")
 	optimize = bpy.props.BoolProperty(name="Reduce path points",description="Reduce path points", default=True)
@@ -312,7 +320,7 @@ class threadCom:#object passed to threads to read background process stdout info
 		self.opname=o.name
 		self.outtext=''
 		self.proc=proc
-		
+		self.lasttext=''
 	
 def threadread( tcom):
 	'''reads stdout of background process, done this way to have it non-blocking'''
@@ -341,10 +349,13 @@ def timer_update(context):
 			tcom=p[1]
 			if not readthread.is_alive():
 				readthread.join()
-				print(tcom.outtext)
-				text=text+('# %s %s #' % (tcom.opname,tcom.outtext))
-				print(tcom.outtext)
-				if 'finished' in tcom.outtext:
+				#readthread.
+				tcom.lasttext=tcom.outtext
+				if tcom.outtext!='':
+					print(tcom.opname,tcom.outtext)
+					tcom.outtext=''
+					
+				if 'finished' in tcom.lasttext:
 					processes.remove(p)
 					s=bpy.context.scene
 					o=s.cam_operations[tcom.opname]
@@ -355,8 +366,12 @@ def timer_update(context):
 				else:
 					readthread=threading.Thread(target=threadread, args = ([tcom]), daemon=True)
 					readthread.start()
+					p[0]=readthread
+				
+			text=text+('# %s %s #' % (tcom.opname,tcom.lasttext))
 		s=bpy.context.scene
 		s.cam_text=text
+		
 	for area in bpy.context.screen.areas:
 		if area.type == 'INFO':
 			area.tag_redraw()
@@ -386,13 +401,15 @@ class PathsBackground(bpy.types.Operator):
 		o=s.cam_operations[s.cam_active_operation]
 		self.operation=o
 		o.computing=True
-		if bpy.data.is_dirty:
-			bpy.ops.wm.save_mainfile()
+		#if bpy.data.is_dirty:
+		#bpy.ops.wm.save_mainfile()#this has to be replaced with pickle stuff.. ojojoooooj :(
+		#picklepath=getCachePath(o)+'init.pickle'
+
 		bpath=bpy.app.binary_path
 		fpath=bpy.data.filepath
 		scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
 		
-		proc= subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath],bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
+		proc= subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath,'--', '-o='+str(s.cam_active_operation) ],bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
 		
 		tcom=threadCom(o,proc)
 		readthread=threading.Thread(target=threadread, args = ([tcom]), daemon=True)
@@ -419,52 +436,50 @@ class PathsSimple(bpy.types.Operator):
 	def execute(self, context):
 		#getIslands(context.object)
 		s=bpy.context.scene
-		operation = s.cam_operations[s.cam_active_operation]
-		if not operation.valid:
+		o = s.cam_operations[s.cam_active_operation]
+		if not o.valid:
 				self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
 				#print("Operation can't be performed, see warnings for info")
 				return {'FINISHED'}
-		
+		if o.computing:
+			return {'FINISHED'}
 			
+		
 		#these tags are for caching of some of the results.
-		chd=getChangeData(operation)
+		chd=getChangeData(o)
 		#print(chd)
-		#print(operation.changedata)
-		if operation.changedata!=chd:
+		#print(o.changedata)
+		if o.changedata!=chd:
 			#print('ojojojo')
-			operation.update_offsetimage_tag=True
-			operation.update_zbufferimage_tag=True
-			operation.changedata=chd
-		operation.update_silhouete_tag=True
-		operation.update_ambient_tag=True
-		operation.update_bullet_collision_tag=True
-		#operation.material=bpy.context.scene.cam_material[0]
-		operation.operator=self
+			o.update_offsetimage_tag=True
+			o.update_zbufferimage_tag=True
+			o.changedata=chd
+		o.update_silhouete_tag=True
+		o.update_ambient_tag=True
+		o.update_bullet_collision_tag=True
+		#o.material=bpy.context.scene.cam_material[0]
+		o.operator=self
 		#'''#removed for groups support, this has to be done object by object...
-		if operation.geometry_source=='OBJECT':
+		if o.geometry_source=='OBJECT':
 			
 			#bpy.ops.object.select_all(action='DESELECT')
-			ob=bpy.data.objects[operation.object_name]
-			operation.objects=[ob]
-		elif operation.geometry_source=='GROUP':
-			group=bpy.data.groups[operation.group_name]
-			operation.objects=group.objects
-		elif operation.geometry_source=='IMAGE':
-			operation.use_exact=False;
-		if operation.geometry_source=='OBJECT' or operation.geometry_source=='GROUP':
-			operation.onlycurves=True
-			for ob in operation.objects:
+			ob=bpy.data.objects[o.object_name]
+			o.objects=[ob]
+		elif o.geometry_source=='GROUP':
+			group=bpy.data.groups[o.group_name]
+			o.objects=group.objects
+		elif o.geometry_source=='IMAGE':
+			o.use_exact=False;
+		if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
+			o.onlycurves=True
+			for ob in o.objects:
 				if ob.type=='MESH':
-					operation.onlycurves=False;
-		operation.warnings=''
-		utils.getPaths(context,operation)
+					o.onlycurves=False;
+		o.warnings=''
+		utils.getPaths(context,o)
 
 		return {'FINISHED'}
-	
-	#def draw(self, context):
-		#layout = self.layout
-		#layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
-		
+
 class PathsAll(bpy.types.Operator):
 	'''calculate all CAM paths'''
 	bl_idname = "object.calculate_cam_paths_all"
@@ -883,7 +898,6 @@ class CAM_UL_operations(UIList):
 			
 			layout.label(text=item.name, translate=False, icon_value=icon)
 			icon = 'LOCKED' if operation.computing else 'UNLOCKED'
-			#layout.enabled=False
 			if operation.computing:
 				layout.label(text="computing" )
 		elif self.layout_type in {'GRID'}:

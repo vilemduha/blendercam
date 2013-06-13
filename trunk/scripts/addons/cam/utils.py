@@ -1636,7 +1636,6 @@ def sampleChunks(o,pathSamples,layers):
 	chunks=[]
 	for i,l in enumerate(layers):
 		chunks.extend(layerchunks[i])
-	progress(time.time()-t)
 	return chunks  
 
 def dist2d(v1,v2):
@@ -1798,8 +1797,8 @@ def chunkToPoly(chunk):
 	return p
 
 
-def compare(v1,v2,vmiddle):
-	e=0.0001
+def compare(v1,v2,vmiddle,e):
+	#e=0.0001
 	v1=Vector(v1)
 	v2=Vector(v2)
 	vmiddle=Vector(vmiddle)
@@ -1807,6 +1806,8 @@ def compare(v1,v2,vmiddle):
 	vect2=vmiddle-v1
 	vect1.normalize()
 	vect2.normalize()
+	
+
 	x1=int(vect1.x/e)
 	y1=int(vect1.y/e)
 	z1=int(vect1.z/e)
@@ -1838,7 +1839,7 @@ def optimizeChunk(chunk,operation):
 		#vmiddle=Vector()
 		#v1=Vector()
 		#v2=Vector()
-		if compare(chunk[vi-1],chunk[vi+1],chunk[vi]):
+		if compare(chunk[vi-1],chunk[vi+1],chunk[vi],operation.optimize_threshold):
 
 			chunk.pop(vi)
 			#vi-=1
@@ -3763,8 +3764,13 @@ def getPaths(context,operation):#should do all path calculations.
 			
 		if o.contour_ramp:
 			for chunk in chunksFromCurve:
-				for step in steps:
-					chunks.extend(setChunksZRamp([chunk],step[0],step[1],o))
+				if chunk.closed:
+					for step in steps:
+						chunks.extend(setChunksZRamp([chunk],step[0],step[1],o))
+				else:
+					chunks.extend(setChunksZ([chunk],step[1]))
+					#o.warnings
+					o.warnings=o.warnings+'Ramp in not suported for non-closed curves! \n '
 					#if o.ramp_out:
 				#if o.ramp_out:
 				#	chunks.extend(ChunkRampOut([chunk], angle) )
@@ -4187,8 +4193,9 @@ def getPaths(context,operation):#should do all path calculations.
 	
 	
 
-	progress('finished')
+	#progress('finished')
 	
+
 def reload_paths(o):
 	oname = "cam_path_"+o.name
 	s=bpy.context.scene
@@ -4197,32 +4204,44 @@ def reload_paths(o):
 	if oname in s.objects:
 		s.objects[oname].data.name='xxx_cam_deleted_path'
 		ob=s.objects[oname]
-	dpath = getCachePath(o)+'.blend\\Mesh\\'
-	p=getCachePath(o)+'.blend\\Mesh\\'+ oname
-	bpy.ops.wm.link_append(
-            filepath=p,
-            filename=oname,
-            directory=dpath,
-            filemode=1,
-            link=False,
-            autoselect=True,
-            active_layer=True,
-            instance_groups=True,
-            relative_path=True)
-	mesh=bpy.data.meshes[oname]
-	if ob==None:
-		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
-	else: 
-		s.objects[oname].data=mesh
-	ob=s.objects[mesh.name]
-	ob.location=(0,0,0)
-	o.path_object_name=oname
-	#unpickle here:
+	
 	picklepath=getCachePath(o)+'.pickle'
 	f=open(picklepath,'rb')
 	d=pickle.load(f)
 	f.close()
+	'''
+	passed=False
+	while not passed:
+		try:
+			f=open(picklepath,'rb')
+			d=pickle.load(f)
+			f.close()
+			passed=True
+		except:
+			print('sleep')
+			time.sleep(1)
+	'''
 	o.warnings=d['warnings']
 	o.duration=d['duration']
+	verts=d['path']
+	
+	edges=[]
+	for a in range(0,len(verts)-1):
+		edges.append((a,a+1))
+		
+	oname="cam_path_"+o.name
+	mesh = bpy.data.meshes.new(oname)
+	mesh.name=oname
+	mesh.from_pydata(verts, edges, [])
+	
+	if oname in s.objects:
+		s.objects[oname].data=mesh
+	else: 
+		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
+	ob=s.objects[oname]
+	ob.location=(0,0,0)
+	o.path_object_name=oname
+	#unpickle here:
+	
 
 	
