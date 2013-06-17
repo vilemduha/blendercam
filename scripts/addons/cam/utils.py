@@ -1555,8 +1555,8 @@ def sampleChunks(o,pathSamples,layers):
 				#print(l[1],l[0])
 				if l[1]<=newsample[2]<=l[0]:
 					
-					'''
-					if lastlayer!=None and lastlayer!=i:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...#TODO: - fix an ugly ugly bug here! goes down more than should...
+					
+					if lastlayer!=None and lastlayer!=i and abs(lastlayer-i)==1:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...#TODO: - fix an ugly ugly bug here! goes down more than should...
 						if i<lastlayer:
 							splitz= l[1]
 						else:
@@ -1577,7 +1577,7 @@ def sampleChunks(o,pathSamples,layers):
 							layeractivechunks[lastlayer].points.append(betweensample.to_tuple())
 						else:#this chunk is terminated, and allready in layerchunks /
 							layeractivechunks[lastlayer].points.insert(-1,betweensample.to_tuple())
-					'''
+					
 					lastlayer=i
 					lastsample=newsample
 					
