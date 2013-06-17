@@ -1535,7 +1535,7 @@ def sampleChunks(o,pathSamples,layers):
 			############################################
 			if maxz>=minz or (o.use_exact and o.ambient.isInside(x,y)):
 				sampled=True
-				maxz=max(minz,maxz)
+				#maxz=max(minz,maxz)
 				
 			
 			if sampled and (not o.inverse or (o.inverse and allsampled)):
@@ -1552,10 +1552,11 @@ def sampleChunks(o,pathSamples,layers):
 				terminatechunk=False
 				ch=layeractivechunks[i]
 				#print(i,l)
+				#print(l[1],l[0])
 				if l[1]<=newsample[2]<=l[0]:
 					
-					
-					if lastlayer!=None and lastlayer!=i:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...
+					'''
+					if lastlayer!=None and lastlayer!=i:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...#TODO: - fix an ugly ugly bug here! goes down more than should...
 						if i<lastlayer:
 							splitz= l[1]
 						else:
@@ -1565,12 +1566,6 @@ def sampleChunks(o,pathSamples,layers):
 						v2=newsample
 						if o.protect_vertical:
 							v1,v2=isVerticalLimit(v1,v2)
-						'''
-						if v1c!=v1:
-							chunk[vi]=v1
-						elif v2c!=v2:
-							chunk[vi-1]=v2
-						'''
 						v1=Vector(v1)
 						v2=Vector(v2)
 						
@@ -1582,6 +1577,7 @@ def sampleChunks(o,pathSamples,layers):
 							layeractivechunks[lastlayer].points.append(betweensample.to_tuple())
 						else:#this chunk is terminated, and allready in layerchunks /
 							layeractivechunks[lastlayer].points.insert(-1,betweensample.to_tuple())
+					'''
 					lastlayer=i
 					lastsample=newsample
 					
