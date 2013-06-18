@@ -1496,6 +1496,7 @@ def sampleChunks(o,pathSamples,layers):
 		for l in layers:
 			thisrunchunks.append([])
 		lastlayer=None
+		currentlayer=None
 		lastsample=None
 		#threads_count=4
 		
@@ -1510,9 +1511,8 @@ def sampleChunks(o,pathSamples,layers):
 			maxz=minz
 			
 			sampled=False
-			allsampled=True
 			
-			higherlayer=0
+			#higherlayer=0
 			newsample=(0,0,1);
 			
 			####sampling
@@ -1537,68 +1537,76 @@ def sampleChunks(o,pathSamples,layers):
 				sampled=True
 				#maxz=max(minz,maxz)
 				
-			
-			if sampled and (not o.inverse or (o.inverse and allsampled)):
-				if not higherlayer:#check for higher surfaces...
-					newsample=(x,y,maxz)
+			if sampled and (not o.inverse or (o.inverse)):
+				newsample=(x,y,maxz)
 					
-
-			elif o.ambient_behaviour=='ALL' and not o.inverse:
+			elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here
 				newsample=(x,y,minz)
 				
-			
-			
 			for i,l in enumerate(layers):
 				terminatechunk=False
 				ch=layeractivechunks[i]
 				#print(i,l)
 				#print(l[1],l[0])
 				if l[1]<=newsample[2]<=l[0]:
-					
-					
-					if lastlayer!=None and lastlayer!=i and abs(lastlayer-i)==1:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...#TODO: - fix an ugly ugly bug here! goes down more than should...
-						if i<lastlayer:
-							splitz= l[1]
+					lastlayer=currentlayer
+					currentlayer=i
+					if lastlayer!=None and currentlayer!=None and lastlayer!=currentlayer:# and lastsample[2]!=newsample[2]:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...#TODO: - fix an ugly ugly bug here! goes down more than should...
+						if currentlayer<lastlayer:
+							growing=True
+							r=range(currentlayer,lastlayer)
+							spliti=1
 						else:
-							splitz=l[0]
+							r=range(lastlayer,currentlayer)
+							growing=False
+							spliti=0
+						#print(r)
+						li=0
+						for ls in r:
+							splitz=layers[ls][1]
+							#print(ls)
 						
-						v1=lastsample
-						v2=newsample
-						if o.protect_vertical:
-							v1,v2=isVerticalLimit(v1,v2)
-						v1=Vector(v1)
-						v2=Vector(v2)
-						
-						ratio=(splitz-v1.z)/(v2.z-v1.z)
-						#print(ratio)
-						betweensample=v1+(v2-v1)*ratio
-						ch.points.append(betweensample.to_tuple())
-						if i<lastlayer:
-							layeractivechunks[lastlayer].points.append(betweensample.to_tuple())
-						else:#this chunk is terminated, and allready in layerchunks /
-							layeractivechunks[lastlayer].points.insert(-1,betweensample.to_tuple())
-					
-					lastlayer=i
-					lastsample=newsample
-					
-					
+							v1=lastsample
+							v2=newsample
+							if o.protect_vertical:
+								v1,v2=isVerticalLimit(v1,v2)
+							v1=Vector(v1)
+							v2=Vector(v2)
+							#print(v1,v2)
+							ratio=(splitz-v1.z)/(v2.z-v1.z)
+							#print(ratio)
+							betweensample=v1+(v2-v1)*ratio
+							
+							#ch.points.append(betweensample.to_tuple())
+							
+							if growing:
+								if li>0:
+									layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
+								else:
+									layeractivechunks[ls].points.append(betweensample.to_tuple())
+								layeractivechunks[ls+1].points.append(betweensample.to_tuple())
+							else:
+								
+								layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
+								layeractivechunks[ls+1].points.insert(0,betweensample.to_tuple())
+							li+=1
+							#this chunk is terminated, and allready in layerchunks /
+								
+						#ch.points.append(betweensample.to_tuple())#
 					ch.points.append(newsample)
-					
 				elif l[1]>newsample[2]:
 					ch.points.append((newsample[0],newsample[1],l[1]))
 				elif l[0]<newsample[2]:  #terminate chunk
 					terminatechunk=True
+
 				if terminatechunk:
 					if len(ch.points)>0:
-						
-						layerchunks[i].append(ch)
-						thisrunchunks[i].append(ch)
-						layeractivechunks[i]=camPathChunk([])
-				#
-				
-				#elif len(ch.points)>2:#optimisation on the fly - disabled, this made problems when parenting... should be after that probably
-				#	if(compare(ch.points[-3],ch.points[-1],ch.points[-2])):
-					#	ch.points.pop(-2)  
+						if len(ch.points)>0: 
+							layerchunks[i].append(ch)
+							thisrunchunks[i].append(ch)
+							layeractivechunks[i]=camPathChunk([])
+			lastsample=newsample
+				 
 		#n+=1
 					
 		for i,l in enumerate(layers):
@@ -2014,7 +2022,7 @@ def chunksToMesh(chunks,o):
 			last=Vector(ch[-1])
 			first=Vector(chunks[chi+1].points[0])
 			vect=first-last
-			if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*3:#case of neighbouring paths
+			if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*2.5:#case of neighbouring paths
 				lift=False
 			if abs(vect.x)<e and abs(vect.y)<e:#case of stepdown by cutting.
 				lift=False
