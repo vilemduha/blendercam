@@ -56,7 +56,7 @@ def progress(text,n=None):
 	if n== None:
 		n=''
 	else:
-		n=' ' + str(int(n)) + '%'
+		n=' ' + str(int(n*1000)/1000) + '%'
 	#d=int(n/2)
 	spaces=' '*(len(text)+55)
 	sys.stdout.write('progress{%s%s}\n' % (text,n))
@@ -1397,7 +1397,8 @@ def samplePathLow(o,ch1,ch2,dosample):
 		if o.use_exact:
 			cutterdepth=o.cutter_shape.dimensions.z/2
 			for p in bpath.points:
-				z=getSampleBullet(o.cutter_shape, p[0],p[1], cutterdepth, 10, o.minz)
+				z=getSampleBullet(o.cutter_shape, p[0],p[1], cutterdepth, 1, o.minz)
+				
 		else:
 			for p in bpath.points:
 				xs=(p[0]-minx)/pixsize+o.borderwidth+pixsize/2#-m
@@ -1517,10 +1518,17 @@ def sampleChunks(o,pathSamples,layers):
 			
 			####sampling
 			if o.use_exact:
-				
-				maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, minz)
+				#try to optimize this, wow that works!:
+				if bpy.app.debug_value==-1 and lastsample!=None:
+					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-0.001)#first try to the last sample
+					if maxz<minz-1:
+						maxz=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-0.001, minz)
+				else:
+					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-0.001)#first try to the last sample
+					if maxz<minz-1:
+						maxz=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-0.001, minz)
+					
 				if minz>maxz and (o.use_exact and o.ambient.isInside(x,y)):
-					#print('isinside')
 					maxz=minz;
 				#print(maxz)
 				#here we have 
