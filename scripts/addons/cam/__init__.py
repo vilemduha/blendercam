@@ -38,7 +38,7 @@ import pickle
 bl_info = {
 	"name": "CAM - gcode generation tools",
 	"author": "Vilem Novak",
-	"version": (0, 3, 0),
+	"version": (0, 4, 1),
 	"blender": (2, 6, 7),
 	"location": "Properties > render",
 	"description": "Generate machining paths for CNC",
@@ -266,7 +266,7 @@ class camOperation(bpy.types.PropertyGroup):
 	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
 	simulation_detail=bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH")
 	optimize = bpy.props.BoolProperty(name="Reduce path points",description="Reduce path points", default=True)
-	optimize_threshold=bpy.props.FloatProperty(name="Reduction threshold", default=0.000005, min=0.00000001, max=1,precision=PRECISION, unit="LENGTH")
+	optimize_threshold=bpy.props.FloatProperty(name="Reduction threshold", default=0.000001, min=0.00000001, max=1,precision=PRECISION, unit="LENGTH")
 	dont_merge = bpy.props.BoolProperty(name="Dont merge outlines when cutting",description="this is usefull when you want to cut around everything", default=False)
 	
 	pencil_threshold=bpy.props.FloatProperty(name="Pencil threshold", default=0.00002, min=0.00000001, max=1,precision=PRECISION, unit="LENGTH")
