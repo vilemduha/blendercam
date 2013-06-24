@@ -1518,16 +1518,13 @@ def sampleChunks(o,pathSamples,layers):
 			
 			####sampling
 			if o.use_exact:
-				#try to optimize this, wow that works!:
-				if bpy.app.debug_value==-1 and lastsample!=None:
-					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-0.001)#first try to the last sample
+				#try to optimize this, wow that works!lets try more:
+				if lastsample!=None:
+					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-o.dist_along_paths)#first try to the last sample
 					if maxz<minz-1:
-						maxz=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-0.001, minz)
+						maxz=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-o.dist_along_paths, minz)
 				else:
-					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-0.001)#first try to the last sample
-					if maxz<minz-1:
-						maxz=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-0.001, minz)
-					
+					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, minz)
 				if minz>maxz and (o.use_exact and o.ambient.isInside(x,y)):
 					maxz=minz;
 				#print(maxz)
@@ -3086,7 +3083,7 @@ def getObjectSilhouette(operation):
 
 		if operation.onlycurves==False:#TODO if another silhouette algorithm is used, it needs to be done to support groups.
 			if operation.update_silhouete_tag:
-					if bpy.app.debug_value==0:#raster based method - currently only stable one.
+					if 1:#bpy.app.debug_value==0:#raster based method - currently only stable one.
 						print('detecting silhouette - raster based')
 						samples=renderSampleImage(operation)
 						i=samples>operation.minz
