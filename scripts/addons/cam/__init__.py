@@ -134,6 +134,7 @@ def operationValid(self,context):
 	o.update_zbufferimage_tag=True
 	print('validity ')
 	#print(o.valid)
+	
 def updateOffsetImage(self,context):
 	print('update offset')
 
@@ -152,6 +153,7 @@ def updateExact(o,context):
 	if o.use_exact and (o.strategy=='WATERLINE' or o.strategy=='POCKET' or o.inverse):
 		o.use_exact=False
 		
+
 class camOperation(bpy.types.PropertyGroup):
 	
 	name = bpy.props.StringProperty(name="Operation Name", default="Operation")
@@ -245,6 +247,7 @@ class camOperation(bpy.types.PropertyGroup):
 	
 
 	ambient_radius = FloatProperty(name="Ambient radius", description="Radius around the part which will be milled if ambient is set to Around", min=0.0, max=100.0, default=0.01, precision=PRECISION, unit="LENGTH")
+	#ambient_cutter = EnumProperty(name='Borders',items=(('EXTRAFORCUTTER', 'Extra for cutter', "Extra space for cutter is cut around the segment"),('ONBORDER', "Cutter on edge", "Cutter goes exactly on edge of ambient with it's middle") ,('INSIDE', "Inside segment", 'Cutter stays within segment')   ),description='handling of ambient and cutter size',default='INSIDE')
 	use_limit_curve=bpy.props.BoolProperty(name="Use limit curve",description="A curve limits the operation area", default=False)
 	limit_curve=   bpy.props.StringProperty(name='Limit curve', description='curve used to limit the area of the operation')
 	
@@ -315,6 +318,11 @@ class camOperation(bpy.types.PropertyGroup):
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
 
+
+#class camChain(bpy.types.PropertyGroup):
+#	operations = bpy.types.CollectionProperty(type=camOperation)
+
+   
 class threadCom:#object passed to threads to read background process stdout info 
 	def __init__(self,o,proc):
 		self.opname=o.name
@@ -1252,6 +1260,7 @@ def get_panels():
 	return (
 	CAM_UL_operations,
 	camOperation,
+	#camChain,
 	machineSettings,
 	CAM_OPERATIONS_Panel,
 	CAM_INFO_Panel,
@@ -1291,6 +1300,8 @@ def register():
 	#bpy.app.handlers.frame_change_pre.append(obchange_handler)
 	s = bpy.types.Scene
 	s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
+	#s.cam_chains = bpy.props.CollectionProperty(type=camChain)
+
 	s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
 	s.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
 	s.cam_text= bpy.props.StringProperty()
@@ -1321,6 +1332,7 @@ def unregister():
 		bpy.utils.unregister_class(p)
 	s = bpy.types.Scene
 	del s.cam_operations
+	#del s.cam_chains
 	del s.cam_active_operation
 	del s.cam_machine
 	bpy.app.handlers.scene_update_pre.remove(timer_update)
