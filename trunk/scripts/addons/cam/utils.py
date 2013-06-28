@@ -317,6 +317,7 @@ def getPathPatternParallel(o,angle):
 	#angle=(angle/360)*2*math.pi
 	xm=(o.max.x+o.min.x)/2
 	ym=(o.max.y+o.min.y)/2
+	vm=Vector((xm,ym,0))
 	xdim=o.max.x-o.min.x
 	ydim=o.max.y-o.min.y
 	dim=(xdim+ydim)/2.0
@@ -334,8 +335,7 @@ def getPathPatternParallel(o,angle):
 			v.y=b*pathstep
 			
 			v.rotate(e)
-			v.x+=xm#shifting for the rotation, so pattern rotates around middle...
-			v.y+=ym
+			v+=vm#shifting for the rotation, so pattern rotates around middle...
 			if v.x>o.min.x and v.x<o.max.x and v.y>o.min.y and v.y<o.max.y:
 				chunk.points.append((v.x,v.y,zlevel))
 		if (reverse and o.movement_type=='MEANDER') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') :
