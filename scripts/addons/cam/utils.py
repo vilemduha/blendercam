@@ -4153,6 +4153,9 @@ def getPaths(context,operation):#should do all path calculations.
 			
 			
 			#if bpy.app.debug_value==1:
+			if (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CLIMB' and o.		spindle_rotation_direction=='CW'):
+				for chunk in slicechunks:
+					chunk.points.reverse()
 			slicechunks=sortChunks(slicechunks,o)
 			if topdown:
 				slicechunks.reverse()
