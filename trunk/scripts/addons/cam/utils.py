@@ -1462,8 +1462,9 @@ def sampleChunks(o,pathSamples,layers):
 		#print (o.ambient)
 		cutter=o.cutter_shape
 		cutterdepth=cutter.dimensions.z/2
-	else: # or prepare offset image
-		prepareArea(o)
+	else:
+		if o.strategy!='WATERLINE': # or prepare offset image, but not in some strategies.
+			prepareArea(o)
 		pixsize=o.pixsize
 		res=ceil(o.cutter_diameter/o.pixsize)
 		m=res/2
