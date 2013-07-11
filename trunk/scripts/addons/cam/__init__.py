@@ -105,6 +105,7 @@ def getChangeData(o):####this is a function to check if object props have change
 		changedata+=str(ob.location)
 		changedata+=str(ob.rotation_euler)
 		changedata+=str(ob.dimensions)
+		
 	return changedata
 	
 def operationValid(self,context):
