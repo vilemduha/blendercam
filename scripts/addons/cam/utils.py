@@ -4068,12 +4068,14 @@ def getPaths(context,operation):#should do all path calculations.
 			#print('test waterlayers')
 			#print(layerstep,layerstepinc)
 			if o.waterline_fill:
+				layerstart=min(o.max.z,z+o.stepdown)#
+				layerend=max(o.min.z,z)#
+				layers=[[layerstart,layerend]]
+			
 				if (len(poly)>0 and slicesfilled==1) or (slicesfilled>0 and layerstepinc==layerstep):#fill first of all, and also fill layers
 					layerstepinc=0
 					
-					layerstart=min(o.max.z,z+o.stepdown)#
-					layerend=max(o.min.z,z)#
-					layers=[[layerstart,layerend]]
+					
 					
 					
 					offs=True
@@ -4092,9 +4094,10 @@ def getPaths(context,operation):#should do all path calculations.
 					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
 					while len(restpoly)>0 and i<ilim:
 						nchunks=polyToChunks(restpoly,z)
-						#project paths 
-						nchunks=chunksRefine(nchunks,o)
-						nchunks=sampleChunks(o,nchunks,layers)
+						#project paths TODO: path projection during waterline is not working
+						#nchunks=chunksRefine(nchunks,o)
+						#nchunks=sampleChunks(o,nchunks,layers)
+						
 						#########################
 						slicechunks.extend(nchunks)
 						parentChildDist(lastchunks,nchunks,o)
@@ -4113,9 +4116,9 @@ def getPaths(context,operation):#should do all path calculations.
 					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
 					while len(restpoly)>0:
 						nchunks=polyToChunks(restpoly,z)
-						#project paths 
-						nchunks=chunksRefine(nchunks,o)
-						nchunks=sampleChunks(o,nchunks,layers)
+						#project paths TODO: path projection during waterline is not working 
+						#nchunks=chunksRefine(nchunks,o)
+						#nchunks=sampleChunks(o,nchunks,layers)
 						#########################
 						slicechunks.extend(nchunks)
 						parentChildDist(lastchunks,nchunks,o)
