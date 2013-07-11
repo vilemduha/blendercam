@@ -4070,6 +4070,12 @@ def getPaths(context,operation):#should do all path calculations.
 			if o.waterline_fill:
 				if (len(poly)>0 and slicesfilled==1) or (slicesfilled>0 and layerstepinc==layerstep):#fill first of all, and also fill layers
 					layerstepinc=0
+					
+					layerstart=min(o.max.z,z+o.stepdown)#
+					layerend=max(o.min.z,z)#
+					layers=[[layerstart,layerend]]
+					
+					
 					offs=True
 					i=0
 					
