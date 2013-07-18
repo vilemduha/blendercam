@@ -182,7 +182,7 @@ def prepareBulletCollision(o):
 	for collisionob in o.objects:
 		activate(collisionob)
 		bpy.ops.object.duplicate(linked=False)
-		if collisionob.type=='CURVE':#support for curve objects collision
+		if collisionob.type=='CURVE' or collisionob.type=='FONT':#support for curve objects collision
 			bpy.ops.object.convert(target='MESH', keep_original=False)
 
 		collisionob=bpy.context.active_object
@@ -2505,7 +2505,8 @@ class camPathChunk:
 	
 
 def sortChunks(chunks,o):
-	progress('sorting paths')
+	if o.strategy!='WATERLINE':
+		progress('sorting paths')
 	sys.setrecursionlimit(100000)# the getNext() function of CamPathChunk was running out of recursion limits. TODO: rewrite CamPathChunk getNext() it to not be recursive- works now won't do it/.
 	sortedchunks=[]
 	
@@ -2980,10 +2981,12 @@ def getSlices(operation, returnCurves):
 
 def curveToChunks(o):
 	activate(o)
+	
 	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
 	bpy.ops.group.objects_remove_all()
-
 	o=bpy.context.active_object
+	if o.type=='FONT':#support for text objects is only and only here.
+		bpy.ops.object.convert(target='CURVE', keep_original=False)
 	o.data.dimensions='3D'
 	try:
 		bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
@@ -4068,8 +4071,8 @@ def getPaths(context,operation):#should do all path calculations.
 			#print('test waterlayers')
 			#print(layerstep,layerstepinc)
 			if o.waterline_fill:
-				layerstart=min(o.max.z,z+o.stepdown)#
-				layerend=max(o.min.z,z)#
+				layerstart=min(o.max.z,z+o.slice_detail)#
+				layerend=max(o.min.z,z-o.slice_detail)#
 				layers=[[layerstart,layerend]]
 			
 				if (len(poly)>0 and slicesfilled==1) or (slicesfilled>0 and layerstepinc==layerstep):#fill first of all, and also fill layers
@@ -4117,8 +4120,8 @@ def getPaths(context,operation):#should do all path calculations.
 					while len(restpoly)>0:
 						nchunks=polyToChunks(restpoly,z)
 						#project paths TODO: path projection during waterline is not working 
-						#nchunks=chunksRefine(nchunks,o)
-						#nchunks=sampleChunks(o,nchunks,layers)
+						nchunks=chunksRefine(nchunks,o)
+						nchunks=sampleChunks(o,nchunks,layers)
 						#########################
 						slicechunks.extend(nchunks)
 						parentChildDist(lastchunks,nchunks,o)
