@@ -4075,28 +4075,23 @@ def getPaths(context,operation):#should do all path calculations.
 				layerend=max(o.min.z,z-o.slice_detail)#
 				layers=[[layerstart,layerend]]
 			
-				if (len(poly)>0 and slicesfilled==1) or (slicesfilled>0 and layerstepinc==layerstep):#fill first of all, and also fill layers
-					layerstepinc=0
-					
-					
-					
-					
-					offs=True
-					i=0
-					
-					if o.ambient_behaviour=='AROUND':#TODO: use getAmbient
-						ilim=ceil(o.ambient_radius/o.dist_between_paths)
-						restpoly=poly
-					else:
-						ilim=200#TODO:this should be replaced... no limit, just check if the shape grows over limits.
-						
-						offs=False
-						boundrect=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
-						restpoly=boundrect-poly
+				if len(lastslice)>0:#fill first of all, fill between polys
+					offs=False
+					if len(lastslice)>0:#between polys
+						if o.inverse:
+							restpoly=poly-lastslice
+						else:
+							restpoly=lastslice-poly#Polygon.Polygon(lastslice)
+						#print('filling between')
+					if (len(poly)==0 and slicesfilled>0):#first slice fill
+						restpoly=lastslice
+						#print('filling first')
 					
 					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
-					while len(restpoly)>0 and i<ilim:
-						nchunks=polyToChunks(restpoly,z)
+					fillz = z 
+					i=0
+					while len(restpoly)>0:
+						nchunks=polyToChunks(restpoly,fillz)
 						#project paths TODO: path projection during waterline is not working
 						#nchunks=chunksRefine(nchunks,o)
 						#nchunks=sampleChunks(o,nchunks,layers)
@@ -4108,25 +4103,35 @@ def getPaths(context,operation):#should do all path calculations.
 						#slicechunks.extend(polyToChunks(restpoly,z))
 						restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
 						i+=1
-				elif len(lastslice)>0:
-					if o.inverse:
-						restpoly=poly-lastslice
+						#print(i)
+				i=0
+				if (slicesfilled>0 and layerstepinc==layerstep) or (len(poly)>0 and slicesfilled==1):# fill layers and last slice
+					fillz=z
+					layerstepinc=0
+					if o.ambient_behaviour=='AROUND':#TODO: use getAmbient
+						ilim=ceil(o.ambient_radius/o.dist_between_paths)
+						restpoly=poly
+						offs=True
 					else:
-						restpoly=lastslice-poly#Polygon.Polygon(lastslice)
-					restpoly.simplify()
-						#for ci in range(0,len(poly)):
-						#  restpoly.addContour(poly[ci],poly.isHole(ci))
-					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
-					while len(restpoly)>0:
-						nchunks=polyToChunks(restpoly,z)
-						#project paths TODO: path projection during waterline is not working 
-						nchunks=chunksRefine(nchunks,o)
-						nchunks=sampleChunks(o,nchunks,layers)
+						ilim=1000#TODO:this should be replaced... no limit, just check if the shape grows over limits.
+						
+						offs=False
+						boundrect=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
+						restpoly=boundrect-poly
+					
+					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
+					i=0
+					while len(restpoly)>0 and i<ilim:
+						
+						nchunks=polyToChunks(restpoly,fillz)
 						#########################
 						slicechunks.extend(nchunks)
 						parentChildDist(lastchunks,nchunks,o)
 						lastchunks=nchunks
-						restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
+						#slicechunks.extend(polyToChunks(restpoly,z))
+						restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
+						i+=1
+				
 				
 						
 				percent=int(h/nslices*100)
