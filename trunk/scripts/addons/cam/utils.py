@@ -4083,7 +4083,7 @@ def getPaths(context,operation):#should do all path calculations.
 						else:
 							restpoly=lastslice-poly#Polygon.Polygon(lastslice)
 						#print('filling between')
-					if (len(poly)==0 and slicesfilled>0):#first slice fill
+					if (not o.inverse and len(poly)==0 and slicesfilled>0) or (o.inverse and len(poly)>0 and slicesfilled==1):#first slice fill
 						restpoly=lastslice
 						#print('filling first')
 					
@@ -4093,8 +4093,9 @@ def getPaths(context,operation):#should do all path calculations.
 					while len(restpoly)>0:
 						nchunks=polyToChunks(restpoly,fillz)
 						#project paths TODO: path projection during waterline is not working
-						#nchunks=chunksRefine(nchunks,o)
-						#nchunks=sampleChunks(o,nchunks,layers)
+						if o.waterline_project:
+							nchunks=chunksRefine(nchunks,o)
+							nchunks=sampleChunks(o,nchunks,layers)
 						
 						#########################
 						slicechunks.extend(nchunks)
@@ -4105,12 +4106,14 @@ def getPaths(context,operation):#should do all path calculations.
 						i+=1
 						#print(i)
 				i=0
-				if (slicesfilled>0 and layerstepinc==layerstep) or (len(poly)>0 and slicesfilled==1):# fill layers and last slice
+				if (slicesfilled>0 and layerstepinc==layerstep) or (not o.inverse and len(poly)>0 and slicesfilled==1) or (o.inverse and len(poly)==0 and slicesfilled>0):# fill layers and last slice
 					fillz=z
 					layerstepinc=0
 					if o.ambient_behaviour=='AROUND':#TODO: use getAmbient
 						ilim=ceil(o.ambient_radius/o.dist_between_paths)
 						restpoly=poly
+						if (o.inverse and len(poly)==0 and slicesfilled>0):
+							restpoly=lastslice
 						offs=True
 					else:
 						ilim=1000#TODO:this should be replaced... no limit, just check if the shape grows over limits.
@@ -4118,6 +4121,8 @@ def getPaths(context,operation):#should do all path calculations.
 						offs=False
 						boundrect=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
 						restpoly=boundrect-poly
+						if (o.inverse and len(poly)==0 and slicesfilled>0):
+							restpoly=boundrect-lastslice
 					
 					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
 					i=0

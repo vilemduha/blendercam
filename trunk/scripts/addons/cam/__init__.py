@@ -213,7 +213,7 @@ class camOperation(bpy.types.PropertyGroup):
 	
 	slice_detail = bpy.props.FloatProperty(name="Distance betwen slices", default=0.001, min=0.00001, max=32,precision=PRECISION, unit="LENGTH")
 	waterline_fill = bpy.props.BoolProperty(name="Fill areas between slices",description="Fill areas between slices in waterline mode", default=True)
-	
+	waterline_project = bpy.props.BoolProperty(name="Project paths",description="Project paths in areas between slices", default=True)
 	
 	circle_detail = bpy.props.IntProperty(name="Detail of circles used for curve offsets", default=64, min=12, max=512)
 	use_layers = bpy.props.BoolProperty(name="Use Layers",description="Use layers for roughing", default=True)
@@ -1064,7 +1064,7 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 					layout.prop(ao,'waterline_fill')  
 					if ao.waterline_fill:
 						layout.prop(ao,'dist_between_paths')			
-					
+						layout.prop(ao,'waterline_project')
 					layout.prop(ao,'skin')
 					layout.prop(ao,'inverse')
 				elif ao.strategy=='CARVE':
