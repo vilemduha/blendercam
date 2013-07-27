@@ -4075,7 +4075,7 @@ def getPaths(context,operation):#should do all path calculations.
 				layerend=max(o.min.z,z-o.slice_detail)#
 				layers=[[layerstart,layerend]]
 			
-				if len(lastslice)>0:#fill first of all, fill between polys
+				if len(lastslice)>0 or (o.inverse and len(poly)>0 and slicesfilled==1):#fill top slice for normal and first for inverse, fill between polys
 					offs=False
 					if len(lastslice)>0:#between polys
 						if o.inverse:
@@ -4106,7 +4106,7 @@ def getPaths(context,operation):#should do all path calculations.
 						i+=1
 						#print(i)
 				i=0
-				if (slicesfilled>0 and layerstepinc==layerstep) or (not o.inverse and len(poly)>0 and slicesfilled==1) or (o.inverse and len(poly)==0 and slicesfilled>0):# fill layers and last slice
+				if (slicesfilled>0 and layerstepinc==layerstep) or (not o.inverse and len(poly)>0 and slicesfilled==1) or (o.inverse and len(poly)==0 and slicesfilled>0):# fill layers and last slice, last slice with inverse is not working yet - inverse millings end now always on 0 so filling ambient does have no sense.
 					fillz=z
 					layerstepinc=0
 					if o.ambient_behaviour=='AROUND':#TODO: use getAmbient
