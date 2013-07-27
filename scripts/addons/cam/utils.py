@@ -1250,7 +1250,13 @@ def prepareArea(o):
 	
 	iname=getCachePath(o)+'_off.exr'
 
-	
+	if not o.update_offsetimage_tag:
+		progress('loading offset image')
+		try:
+			o.offset_image=imagetonumpy(bpy.data.images.load(iname))
+		except:
+			o.update_offsetimage_tag=True;
+		
 	if o.update_offsetimage_tag:
 		if o.inverse:
 			samples=numpy.maximum(samples,o.min.z-0.00001)
@@ -1261,13 +1267,7 @@ def prepareArea(o):
 			o.offset_image[:]=outlineImage(o,r,o.offset_image,o.minz)
 			progress('ambient done')
 		numpysave(o.offset_image,iname)
-	else:
-		progress('loading offset image')
-		#try:
-		o.offset_image=imagetonumpy(bpy.data.images.load(iname))
-		#except:
-			
-		# 	o.update_offsetimage_tag=True;
+		
 			
 def getSampleImage(s,sarray,minz):
 	
@@ -4194,6 +4194,19 @@ def getPaths(context,operation):#should do all path calculations.
 		
 	elif o.strategy=='DRILL':
 		ob=bpy.data.objects[o.object_name]
+		activate(ob)
+	
+		bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
+		bpy.ops.group.objects_remove_all()
+		ob=bpy.context.active_object
+		ob.data.dimensions='3D'
+		try:
+			bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+			bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+			bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+			
+		except:
+			pass
 		l=ob.location
 		
 		if ob.type=='CURVE':
@@ -4223,6 +4236,8 @@ def getPaths(context,operation):#should do all path calculations.
 						chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.min.z)]))
 			chunks=sortChunks(chunks,o)
 			chunksToMesh(chunks,o)
+		ob=bpy.context.active_object
+		bpy.context.scene.objects.unlink(ob)
 	elif o.strategy=='SLICES':
 		slicechunks = getSlices(o,0)
 		for slicechunk in slicechunks:
