@@ -316,12 +316,23 @@ class camOperation(bpy.types.PropertyGroup):
 	computing = bpy.props.BoolProperty(name="Computing right now",description="", default=False)
 	pid = bpy.props.IntProperty(name="process id", description="Background process id", default=-1)
 	outtext = bpy.props.StringProperty(name='outtext', description='outtext', default='')
+	
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
 
-
-#class camChain(bpy.types.PropertyGroup):
-#	operations = bpy.types.CollectionProperty(type=camOperation)
+class opName(bpy.types.PropertyGroup):#this type is defined just to hold reference to operations for chains
+	name = bpy.props.StringProperty(name="Operation name", default="Operation")
+   
+class camChain(bpy.types.PropertyGroup):#chain is just a set of operations which get connected on export into 1 file.
+	index = bpy.props.IntProperty(name="index", description="index in the hard-defined camChains", default=-1)
+	active_operation = bpy.props.IntProperty(name="active operation", description="active operation in chain", default=-1)
+	#operations = bpy.props.StringProperty(name='operations', description='operations', default='')
+	name = bpy.props.StringProperty(name="Chain Name", default="Chain")
+	filename = bpy.props.StringProperty(name="File name", default="Chain")
+	valid = bpy.props.BoolProperty(name="Valid",description="True if whole chain is ok for calculation", default=True);
+	computing = bpy.props.BoolProperty(name="Computing right now",description="", default=False)
+	operations= bpy.props.CollectionProperty(type=opName)
+	#bpy.types.CollectionProperty(type=camOperation)
 
    
 class threadCom:#object passed to threads to read background process stdout info 
@@ -558,6 +569,85 @@ class CAMPositionObject(bpy.types.Operator):
 		layout = self.layout
 		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
 
+class CamChainAdd(bpy.types.Operator):
+	'''Add new CAM chain'''
+	bl_idname = "scene.cam_chain_add"
+	bl_label = "Add new CAM chain"
+
+	@classmethod
+	def poll(cls, context):
+		return context.scene is not None
+
+	def execute(self, context):
+		#main(context)
+		s=bpy.context.scene
+		s.cam_chains.add()
+		chain=s.cam_chains[-1]
+		s.cam_active_chain=len(s.cam_chains)-1
+		chain.name='Chain_'+str(s.cam_active_chain+1)
+		chain.filename=chain.name
+		chain.index=s.cam_active_chain
+		
+		return {'FINISHED'}
+
+		
+class CamChainRemove(bpy.types.Operator):
+	'''Remove  CAM chain'''
+	bl_idname = "scene.cam_chain_remove"
+	bl_label = "Remove CAM chain"
+
+	@classmethod
+	def poll(cls, context):
+		return context.scene is not None
+
+	def execute(self, context):
+		bpy.context.scene.cam_chains.remove(bpy.context.scene.cam_active_chain)
+		if bpy.context.scene.cam_active_chain>0:
+			bpy.context.scene.cam_active_chain-=1
+		
+		return {'FINISHED'}
+
+class CamChainOperationAdd(bpy.types.Operator):
+	'''Add operation to chain'''
+	bl_idname = "scene.cam_chain_operation_add"
+	bl_label = "Add operation to chain"
+
+	@classmethod
+	def poll(cls, context):
+		return context.scene is not None
+
+	def execute(self, context):
+		s=bpy.context.scene
+		chain=s.cam_chains[s.cam_active_chain]
+		s=bpy.context.scene
+		#s.chaindata[chain.index].remove(chain.active_operation+1,s.cam_operations[s.cam_active_operation])
+		chain.operations.add()
+		chain.active_operation+=1
+		chain.operations[chain.active_operation].name=s.cam_operations[s.cam_active_operation].name
+		return {'FINISHED'}
+		
+class CamChainOperationRemove(bpy.types.Operator):
+	'''Remove operation from chain'''
+	bl_idname = "scene.cam_chain_operation_remove"
+	bl_label = "Remove operation from chain"
+
+	@classmethod
+	def poll(cls, context):
+		return context.scene is not None
+
+	def execute(self, context):
+		#main(context)
+		s=bpy.context.scene
+		chain=s.cam_chains[s.cam_active_chain]
+		s=bpy.context.scene
+		#s.chaindata[chain.index].append(s.cam_operations[s.cam_active_operation])
+		chain.operations.remove(chain.active_operation)
+		chain.active_operation-=1
+		if chain.active_operation<0:
+			chain.active_operation = 0
+		return {'FINISHED'}
+
+		
 class CamOperationAdd(bpy.types.Operator):
 	'''Add new CAM operation'''
 	bl_idname = "scene.cam_operation_add"
@@ -580,10 +670,8 @@ class CamOperationAdd(bpy.types.Operator):
 		#if len(s.cam_material)==0:
 		#	 s.cam_material.add()
 		  
-		s=bpy.context.scene
 		s.cam_operations.add()
 		o=s.cam_operations[-1]
-		copyop=s.cam_operations[s.cam_active_operation]
 		s.cam_active_operation=len(s.cam_operations)-1
 		o.name='Operation_'+str(s.cam_active_operation+1)
 		o.filename=o.name
@@ -912,12 +1000,80 @@ class CAM_UL_operations(UIList):
 		elif self.layout_type in {'GRID'}:
 			 layout.alignment = 'CENTER'
 			 layout.label(text="", icon_value=icon)
-  
+			 
+class CAM_UL_chains(UIList):
+	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
+		# assert(isinstance(item, bpy.types.VertexGroup)
+		chain = item
+		if self.layout_type in {'DEFAULT', 'COMPACT'}:
+			
+			layout.label(text=item.name, translate=False, icon_value=icon)
+			icon = 'LOCKED' if chain.computing else 'UNLOCKED'
+			if chain.computing:
+				layout.label(text="computing" )
+		elif self.layout_type in {'GRID'}:
+			 layout.alignment = 'CENTER'
+			 layout.label(text="", icon_value=icon)
+			 
+class CAM_CHAINS_Panel(bpy.types.Panel):
+	"""CAM chains panel"""
+	bl_label = "CAM chains"
+	bl_idname = "WORLD_PT_CAM_CHAINS"
 	
+	bl_space_type = "PROPERTIES"
+	bl_region_type = "WINDOW"
+	bl_context = "render"
+	
+	
+
+	def draw(self, context):
+		layout = self.layout
+		
+		row = layout.row() 
+		scene=bpy.context.scene
+		
+		row.template_list("CAM_UL_chains", '', scene, "cam_chains", scene, 'cam_active_chain')
+		col = row.column(align=True)
+		col.operator("scene.cam_chain_add", icon='ZOOMIN', text="")
+		#col.operator("scene.cam_operation_copy", icon='COPYDOWN', text="")
+		col.operator("scene.cam_chain_remove",icon='ZOOMOUT', text="")
+		#if group:
+		#col.separator()
+		#col.operator("scene.cam_operation_move", icon='TRIA_UP', text="").direction = 'UP'
+		#col.operator("scene.cam_operation_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
+		#row = layout.row() 
+	   
+		if len(scene.cam_chains)>0:
+			chain=scene.cam_chains[scene.cam_active_chain]
+
+			row = layout.row(align=True)
+			
+			if chain:
+				row.template_list("CAM_UL_operations", '', chain, "operations", chain, 'active_operation')
+				col = row.column(align=True)
+				col.operator("scene.cam_chain_operation_add", icon='ZOOMIN', text="")
+				col.operator("scene.cam_chain_operation_remove",icon='ZOOMOUT', text="")
+
+				if not chain.computing:
+					if chain.valid:
+						pass
+						#layout.operator("object.calculate_cam_paths", text="Calculate path")
+						#layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
+						#layout.operator("object.cam_simulate", text="Simulate this operation")
+					else:
+						layout.label("chain invalid, can't compute")
+				else:
+					layout.label('chain is currently computing')
+					#layout.prop(ao,'computing')
+				
+				layout.prop(chain,'name')
+				layout.prop(chain,'filename')
+		
+			 
 class CAM_OPERATIONS_Panel(bpy.types.Panel):
 	"""CAM operations panel"""
 	bl_label = "CAM operations"
-	bl_idname = "WORLD_PT_CAM"
+	bl_idname = "WORLD_PT_CAM_OPERATIONS"
 	
 	bl_space_type = "PROPERTIES"
 	bl_region_type = "WINDOW"
@@ -1260,9 +1416,12 @@ def get_panels():
 	types = bpy.types
 	return (
 	CAM_UL_operations,
+	CAM_UL_chains,
 	camOperation,
-	#camChain,
+	opName,
+	camChain,
 	machineSettings,
+	CAM_CHAINS_Panel,
 	CAM_OPERATIONS_Panel,
 	CAM_INFO_Panel,
 	CAM_MATERIAL_Panel,
@@ -1280,6 +1439,10 @@ def get_panels():
 	PathsAll,
 	CAMPositionObject,
 	CAMSimulate,
+	CamChainAdd,
+	CamChainRemove,
+	CamChainOperationAdd,
+	CamChainOperationRemove,
 	CamOperationAdd,
 	CamOperationCopy,
 	CamOperationRemove,
@@ -1300,9 +1463,14 @@ def register():
 	
 	#bpy.app.handlers.frame_change_pre.append(obchange_handler)
 	s = bpy.types.Scene
+	
+	s.cam_chains = bpy.props.CollectionProperty(type=camChain)
+	#chains now have to be generated this way :(
+	s.cam_active_chain = bpy.props.IntProperty(name="CAM Active Chain", description="The selected chain")
+	
 	s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
-	#s.cam_chains = bpy.props.CollectionProperty(type=camChain)
-
+	
+	
 	s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
 	s.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
 	s.cam_text= bpy.props.StringProperty()
@@ -1333,7 +1501,10 @@ def unregister():
 		bpy.utils.unregister_class(p)
 	s = bpy.types.Scene
 	del s.cam_operations
-	#del s.cam_chains
+	#cam chains are defined hardly now.
+	del s.cam_chains
+	
+	
 	del s.cam_active_operation
 	del s.cam_machine
 	bpy.app.handlers.scene_update_pre.remove(timer_update)
