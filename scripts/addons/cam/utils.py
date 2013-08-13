@@ -1034,7 +1034,7 @@ def getImageCorners(o,i):#for pencil operation mainly
 	
 	#chunks=imageToChunks(o,ar)
 	chunks=imageToChunks(o,ar)
-	for ch in chunks:#this is because the output from imageToChunks gave
+	for ch in chunks:#convert 2d chunks to 3d
 		for i,p in enumerate(ch.points):
 				ch.points[i]=(p[0],p[1],0)
 	
@@ -2545,8 +2545,10 @@ def sortChunks(chunks,o):
 			ch.adaptdist(pos,o)
 			chunks.remove(ch)
 			
-			
-			if o.stay_low and lastch!=None and (ch.dist(pos,o)<2*o.dist_between_paths or (o.parallel_step_back and ch.dist(pos,o)<4*o.dist_between_paths)):
+			mergedist=2*o.dist_between_paths
+			if o.strategy=='PENCIL':
+				mergedist=10*o.dist_between_paths
+			if o.stay_low and lastch!=None and (ch.dist(pos,o)<mergedist or (o.parallel_step_back and ch.dist(pos,o)<4*o.dist_between_paths)):
 				if o.strategy=='PARALLEL' or o.strategy=='CROSS':# for these paths sorting happens after sampling, thats why they need resample the connection
 					between=samplePathLow(o,lastch,ch,True)
 				else:
