@@ -55,6 +55,7 @@ def updateMachine(self,context):
 	utils.addMachineObject()
 
 class machineSettings(bpy.types.PropertyGroup):
+	'''stores all data for machines'''
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	post_processor = EnumProperty(name='Post processor',
 		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC - LinuxCNC','default emc'),('HEIDENHAIN','Heidenhain','heidenhain'),('TNC151','Heidenhain TNC151','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1','Sieg KX1'),('HM50','Hafco HM-50','Hafco HM-50'),('CENTROID','Centroid M40','Centroid M40'),('ANILAM','Anilam Crusader M','Anilam Crusader M')),
@@ -90,6 +91,7 @@ def updateScale():
 '''
 	 
 def updateChipload(self,context):
+	'''this is very simple computation of chip size, could be very much improved'''
 	o=self;
 	self.chipload = int((o.feedrate/(o.spindle_rpm*o.cutter_flutes))*1000000)/1000
 	
@@ -137,12 +139,13 @@ def operationValid(self,context):
 	#print(o.valid)
 	
 def updateOffsetImage(self,context):
-	print('update offset')
+	'''refresh offset image tag for rerendering'''
+	#print('update offset')
 
 	self.update_offsetimage_tag=True
 
 def updateZbufferImage(self,context):
-	print('updatezbuf')
+	#print('updatezbuf')
 	#print(self,context)
 	self.update_zbufferimage_tag=True
 	self.update_offsetimage_tag=True
@@ -623,7 +626,7 @@ class CamChainOperationAdd(bpy.types.Operator):
 		#s.chaindata[chain.index].remove(chain.active_operation+1,s.cam_operations[s.cam_active_operation])
 		chain.operations.add()
 		chain.active_operation+=1
-		chain.operations[chain.active_operation].name=s.cam_operations[s.cam_active_operation].name
+		chain.operations[-1].name=s.cam_operations[s.cam_active_operation].name
 		return {'FINISHED'}
 		
 class CamChainOperationRemove(bpy.types.Operator):
