@@ -883,6 +883,7 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 	preset_subdir = "cam_machines"
 			   
 	
+####Panel definitions
 class CAM_CUTTER_Panel(bpy.types.Panel):   
 	"""CAM cutter panel"""
 	bl_label = " "
@@ -954,9 +955,6 @@ class CAM_MACHINE_Panel(bpy.types.Panel):
 				#layout.prop(ao,'axis5')
 				#layout.prop(ao,'collet_size')
 
-def test():
-	print('running')			   
-	
 class CAM_MATERIAL_Panel(bpy.types.Panel):	 
 	"""CAM material panel"""
 	bl_label = "CAM Material size and position"
@@ -1170,10 +1168,6 @@ class CAM_INFO_Panel(bpy.types.Panel):
 				layout.label(  'chipload: '+str(round(ao.chipload,6))+getUnit()+' / tooth')
 				#layout.label(str(ob.dimensions.x))
 				#row=layout.row()
-			   
-				
-				
-				
 		
 class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 	"""CAM operation properties panel"""
@@ -1245,8 +1239,6 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 					layout.prop(ao,'inverse')
 				#elif ao.strategy=='SLICES':
 				#	layout.prop(ao,'slice_detail')	  
-					
-				#layout.prop(ao,'testing')
 				
 class CAM_MOVEMENT_Panel(bpy.types.Panel):
 	"""CAM movement panel"""
@@ -1352,8 +1344,6 @@ class CAM_OPTIMISATION_Panel(bpy.types.Panel):
 				layout.prop(ao,'circle_detail')
 				#if not ao.use_exact:#this will be replaced with groups of objects.
 				#layout.prop(ao,'render_all')# replaced with groups support
-				
-
 		
 class CAM_AREA_Panel(bpy.types.Panel):
 	"""CAM operation area panel"""
@@ -1413,9 +1403,9 @@ class CAM_AREA_Panel(bpy.types.Panel):
 				#if ao.use_limit_curve:
 				#	layout.prop_search(ao, "limit_curve", bpy.data, "objects")
 				
+
 				
- 
-def get_panels():
+def get_panels():#convenience function for bot register and unregister functions
 	types = bpy.types
 	return (
 	CAM_UL_operations,
@@ -1464,11 +1454,9 @@ def register():
 	for p in get_panels():
 		bpy.utils.register_class(p)
 	
-	#bpy.app.handlers.frame_change_pre.append(obchange_handler)
 	s = bpy.types.Scene
 	
 	s.cam_chains = bpy.props.CollectionProperty(type=camChain)
-	#chains now have to be generated this way :(
 	s.cam_active_chain = bpy.props.IntProperty(name="CAM Active Chain", description="The selected chain")
 	
 	s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
@@ -1478,7 +1466,6 @@ def register():
 	s.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
 	s.cam_text= bpy.props.StringProperty()
 	bpy.app.handlers.scene_update_pre.append(timer_update)
-	#bpy.ops.run_cam_monitor()
 	bpy.app.handlers.load_post.append(check_operations_on_load)
 	bpy.types.INFO_HT_header.append(header_info)
 
