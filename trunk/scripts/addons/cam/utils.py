@@ -200,7 +200,6 @@ def prepareBulletCollision(o):
 	bpy.context.scene.frame_set(2)
 	progress(time.time()-t)
 	
-
 	
 def cleanupBulletCollision(o):
 	for ob in bpy.context.scene.objects:
@@ -208,7 +207,6 @@ def cleanupBulletCollision(o):
 			activate(ob)
 			bpy.ops.rigidbody.object_remove()
 			bpy.ops.object.delete(use_global=False)
-	
 
 def positionObject(operation):
 	ob=bpy.data.objects[operation.object_name]
@@ -247,9 +245,7 @@ def getBoundsWorldspace(obs):
 				maxz=max(maxz,worldCoord.z)
 	progress(time.time()-t)
 	return minx,miny,minz,maxx,maxy,maxz
-	
-
-		 
+ 
 def getBounds(o):
 	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 		if o.material_from_model:
@@ -302,7 +298,6 @@ def getBounds(o):
 		o.warnings+='Operation exceeds your machine limits'
 		
 	#progress (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
-	
 
 def getPathPatternParallel(o,angle):
 	#minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
@@ -419,7 +414,6 @@ def getPathPatternParallel(o,angle):
 		'''
 		
 	return pathchunks 
-
 
 def getPathPattern(operation):
 	o=operation
@@ -824,7 +818,7 @@ def renderSampleImage(o):
 	o.update_zbufferimage_tag=False
 	return o.zbuffer_image
 	#return numpy.array([])
-	
+
 def numpysave(a,iname):
 	inamebase=bpy.path.basename(iname)
 
@@ -1021,7 +1015,6 @@ def dilateAr(ar,cycles):
 		#ar[1:-1,:]=numpy.logical_or(ar[1:-1,:],ar[2:,:] )
 		ar[:,1:-1]=numpy.logical_or(ar[:,1:-1],ar[:,:-2] )
 		#ar[:,1:-1]=numpy.logical_or(ar[:,1:-1],ar[:,2:] )
-		
 def getImageCorners(o,i):#for pencil operation mainly
 	#i=numpy.logical_xor(lastislice , islice)
 	progress('detect corners in the offset image')
@@ -1268,7 +1261,6 @@ def prepareArea(o):
 			progress('ambient done')
 		numpysave(o.offset_image,iname)
 		
-			
 def getSampleImage(s,sarray,minz):
 	
 	x=s[0]
@@ -1676,10 +1668,6 @@ def polyRemoveDoubles(p,o):
 	#progress(time.time()-t)
 	return pnew
 	
-	
-	
-	
-			
 def polyToChunks(p,zlevel):#
 	chunks=[]
 	#p=sortContours(p)
@@ -2188,12 +2176,6 @@ def exportGcodePath(verts,o):
 	c.program_end()
 	c.file_close()
 
-	
-#def getCenter(c):
-	
-	
-	#return (cx,cy)
-
 def orderPoly(polys):	#sor poly, do holes e.t.c.
 	p=Polygon.Polygon()
 	levels=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]] 
@@ -2374,7 +2356,6 @@ def polyToMesh(p,z):
 	mesh.update()
 	object_utils.object_data_add(bpy.context, mesh)
 	return bpy.context.active_object
-
 
 def Circle(r,np):
 	c=[]
@@ -2573,7 +2554,6 @@ def sortChunks(chunks,o):
 	return sortedchunks
 		
 
-
 def outlinePoly(p,r,operation,offset = True):
 	'''offsets or insets polygon by radius'''
 	#t=Polygon.getTolerance()
@@ -2648,8 +2628,6 @@ def outlinePoly(p,r,operation,offset = True):
 		p=pr
 	return p
 	
-
-	
 def meshFromCurveToChunk(object):
 	mesh=object.data
 	#print('detecting contours from curve')
@@ -2697,7 +2675,6 @@ def meshFromCurveToChunk(object):
 		#	print('itisnot')
 	chunks.append(chunk)
 	return chunks
-
 
 def meshloopToChunk(mesh):
 	progress('detecting contours')
@@ -2766,7 +2743,6 @@ def testbite(pos):
 	if xs>m+1 and xs<o.millimage.shape[0]-m-1 and ys>m+1 and ys<o.millimage.shape[1]-m-1 :
 		o.millimage[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(o.millimage[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
 	v.length+=o.simulation_detail
-	
 	
 def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm.
 	MAX_BEND=0.1#in radians...#TODO: support operation chains ;)
@@ -3011,7 +2987,6 @@ def curveToChunks(o):
 	
 	bpy.context.scene.objects.unlink(o)
 	return chunks
-
 
 def getVectorRight(lastv,verts):#most right vector from a set
 	defa=100
@@ -3640,7 +3615,6 @@ def getAmbient(o):
 		else:
 			o.ambient=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
 	o.update_ambient_tag=False
-			
 	
 def getObjectOutline(radius,operation,Offset):
 	
@@ -3697,7 +3671,6 @@ def getObjectOutline(radius,operation,Offset):
 			#print(p)
 			outline=outline+p
 	return outline
-
 	
 def addMachineObject():
 	
@@ -4254,10 +4227,7 @@ def getPaths(context,operation):#should do all path calculations.
 	t1=time.clock()-t 
 	progress('total time',t1)
 	
-	
-
 	#progress('finished')
-	
 
 def reload_paths(o):
 	oname = "cam_path_"+o.name
