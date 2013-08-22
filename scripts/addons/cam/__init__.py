@@ -584,7 +584,7 @@ class CAMSimulate(bpy.types.Operator):
 		#	print('simulation of curve operations is not available')
 		#	return {'FINISHED'}
 		if operation.path_object_name in bpy.data.objects:
-			utils.doSimulation(operation)
+			utils.doSimulation(operation.name,[operation])
 		else:
 		   print('no computed path to simulate')
 		   return {'FINISHED'}
@@ -606,13 +606,15 @@ class CAMSimulateChain(bpy.types.Operator):
 
 	def execute(self, context):
 		s=bpy.context.scene
-		operation = s.cam_operations[s.cam_active_operation]
+		chain=s.cam_chains[s.cam_active_chain]
+		chainops=getChainOperations(chain)
 		
-		#if operation.geometry_source=='OBJECT' and operation.object_name in bpy.data.objects and #bpy.data.objects[operation.object_name].type=='CURVE':
-		#	print('simulation of curve operations is not available')
-		#	return {'FINISHED'}
-		if operation.path_object_name in bpy.data.objects:
-			utils.doSimulation(operation)
+		canSimulate=True
+		for operation in chainops:
+			if not operation.path_object_name in bpy.data.objects:
+				canSimulate=False
+		if canSimulate:
+			utils.doSimulation(chain.name,chainops)
 		else:
 		   print('no computed path to simulate')
 		   return {'FINISHED'}
@@ -1502,6 +1504,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	PathsAll,
 	CAMPositionObject,
 	CAMSimulate,
+	CAMSimulateChain,
 	CamChainAdd,
 	CamChainRemove,
 	CamChainOperationAdd,
