@@ -208,7 +208,7 @@ class camOperation(bpy.types.PropertyGroup):
 		default='PARALLEL',
 		update = updateStrategy)#,('SLICES','Slices','this prepares model for cutting from sheets of material')
 	#for cutout	   
-	cut_type = EnumProperty(name='Cut:',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE', update = updateRest)  
+	cut_type = EnumProperty(name='Cut',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE', update = updateRest)  
 	#render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
 	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False, update = updateOffsetImage)
 	
@@ -534,15 +534,18 @@ class PathsAll(bpy.types.Operator):
 		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")	 
 		
 class PathsChain(bpy.types.Operator):
-	'''calculate all CAM paths'''
+	'''calculate a chain and export the gcode alltogether. '''
 	bl_idname = "object.calculate_cam_paths_chain"
 	bl_label = "Calculate CAM paths in current chain and export chain gcode"
 	bl_options = {'REGISTER', 'UNDO'}
 		
 	def execute(self, context):
 		import bpy
-		i=0
-		for o in bpy.context.scene.cam_operations:
+		s=bpy.context.scene
+		
+		chain=s.cam_chains[s.cam_active_chain]
+		
+		for o in s.cam_operations:
 			bpy.context.scene.cam_active_operation=i
 			print('\nCalculating path :'+o.name)
 			print('\n')
@@ -556,7 +559,8 @@ class PathsChain(bpy.types.Operator):
 		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")	 
 			 
 class CAMSimulate(bpy.types.Operator):
-	'''simulate CAM operation'''
+	'''simulate CAM operation
+	this is performed by: creating an image, painting Z depth of the brush substractively. Works only for some operations, can not be used for 4-5 axis.'''
 	bl_idname = "object.cam_simulate"
 	bl_label = "CAM simulation"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -583,7 +587,7 @@ class CAMSimulate(bpy.types.Operator):
 		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
 
 class CAMPositionObject(bpy.types.Operator):
-	'''position object for CAM operation'''
+	'''position object for CAM operation. Tests object bounds and places them so the object is aligned to be positive from x and y and negative from z.'''
 	bl_idname = "object.cam_position"
 	bl_label = "position object for CAM operation"
 	bl_options = {'REGISTER', 'UNDO'}
