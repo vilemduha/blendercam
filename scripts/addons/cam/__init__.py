@@ -333,9 +333,10 @@ class camOperation(bpy.types.PropertyGroup):
 #class camOperationChain(bpy.types.PropertyGroup):
    # c=bpy.props.collectionProperty()
 
-class opName(bpy.types.PropertyGroup):#this type is defined just to hold reference to operations for chains
+class opReference(bpy.types.PropertyGroup):#this type is defined just to hold reference to operations for chains
 	name = bpy.props.StringProperty(name="Operation name", default="Operation")
-   
+	computing = False;#for UiList display
+	
 class camChain(bpy.types.PropertyGroup):#chain is just a set of operations which get connected on export into 1 file.
 	index = bpy.props.IntProperty(name="index", description="index in the hard-defined camChains", default=-1)
 	active_operation = bpy.props.IntProperty(name="active operation", description="active operation in chain", default=-1)
@@ -343,7 +344,7 @@ class camChain(bpy.types.PropertyGroup):#chain is just a set of operations which
 	filename = bpy.props.StringProperty(name="File name", default="Chain")#filename of 
 	valid = bpy.props.BoolProperty(name="Valid",description="True if whole chain is ok for calculation", default=True);
 	computing = bpy.props.BoolProperty(name="Computing right now",description="", default=False)
-	operations= bpy.props.CollectionProperty(type=opName)#this is to hold just operation names.
+	operations= bpy.props.CollectionProperty(type=opReference)#this is to hold just operation names.
 
    
 class threadCom:#object passed to threads to read background process stdout info 
@@ -433,7 +434,7 @@ class PathsBackground(bpy.types.Operator):
 		self.operation=o
 		o.computing=True
 		#if bpy.data.is_dirty:
-		#bpy.ops.wm.save_mainfile()#this has to be replaced with pickle stuff.. ojojoooooj :(
+		#bpy.ops.wm.save_mainfile()#this has to be replaced with passing argument or pickle stuff.. 
 		#picklepath=getCachePath(o)+'init.pickle'
 
 		bpath=bpy.app.binary_path
@@ -533,6 +534,15 @@ class PathsAll(bpy.types.Operator):
 		layout = self.layout
 		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")	 
 		
+def getChainOperations(chain):
+	'''return chain operations, currently chain object can't store operations directly due to blender limitations'''
+	chop=[]
+	for cho in chain.operations:
+		for so in bpy.context.scene.cam_operations:
+			if so.name==cho.name:
+				chop.append(so)
+	return chop
+	
 class PathsChain(bpy.types.Operator):
 	'''calculate a chain and export the gcode alltogether. '''
 	bl_idname = "object.calculate_cam_paths_chain"
@@ -544,24 +554,50 @@ class PathsChain(bpy.types.Operator):
 		s=bpy.context.scene
 		
 		chain=s.cam_chains[s.cam_active_chain]
-		
-		for o in s.cam_operations:
-			bpy.context.scene.cam_active_operation=i
-			print('\nCalculating path :'+o.name)
-			print('\n')
-			bpy.ops.object.calculate_cam_paths_background()
-			i+=1
-
+		chainops=getChainOperations(chain)
+		verts=[]
+		for o in chainops:
+			#bpy.ops.object.calculate_cam_paths_background()
+			verts.append(bpy.data.objects[o.path_object_name].data.vertices)
+		utils.exportGcodePath(chain.filename,verts,chainops)
 		return {'FINISHED'}
 	
 	def draw(self, context):
 		layout = self.layout
 		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")	 
-			 
+
 class CAMSimulate(bpy.types.Operator):
 	'''simulate CAM operation
 	this is performed by: creating an image, painting Z depth of the brush substractively. Works only for some operations, can not be used for 4-5 axis.'''
 	bl_idname = "object.cam_simulate"
+	bl_label = "CAM simulation"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	operation = StringProperty(name="Operation",
+						   description="Specify the operation to calculate",default='Operation')
+
+	def execute(self, context):
+		s=bpy.context.scene
+		operation = s.cam_operations[s.cam_active_operation]
+		
+		#if operation.geometry_source=='OBJECT' and operation.object_name in bpy.data.objects and #bpy.data.objects[operation.object_name].type=='CURVE':
+		#	print('simulation of curve operations is not available')
+		#	return {'FINISHED'}
+		if operation.path_object_name in bpy.data.objects:
+			utils.doSimulation(operation)
+		else:
+		   print('no computed path to simulate')
+		   return {'FINISHED'}
+		return {'FINISHED'}
+	
+	def draw(self, context):
+		layout = self.layout
+		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
+
+		
+class CAMSimulateChain(bpy.types.Operator):
+	'''simulate CAM chain, compared to single op simulation just writes into one image and thus enables to see how ops work together.'''
+	bl_idname = "object.cam_simulate_chain"
 	bl_label = "CAM simulation"
 	bl_options = {'REGISTER', 'UNDO'}
 
@@ -1092,9 +1128,9 @@ class CAM_CHAINS_Panel(bpy.types.Panel):
 				if not chain.computing:
 					if chain.valid:
 						pass
-						#layout.operator("object.calculate_cam_paths", text="Calculate path")
+						layout.operator("object.calculate_cam_paths_chain", text="Export chain gcode")
 						#layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
-						#layout.operator("object.cam_simulate", text="Simulate this operation")
+						layout.operator("object.cam_simulate_chain", text="Simulate this chain")
 					else:
 						layout.label("chain invalid, can't compute")
 				else:
@@ -1445,7 +1481,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	CAM_UL_operations,
 	CAM_UL_chains,
 	camOperation,
-	opName,
+	opReference,
 	camChain,
 	machineSettings,
 	CAM_CHAINS_Panel,
@@ -1462,7 +1498,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	
 	PathsBackground,
 	PathsSimple,
-	#PathsModal,
+	PathsChain,
 	PathsAll,
 	CAMPositionObject,
 	CAMSimulate,

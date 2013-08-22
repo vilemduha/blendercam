@@ -2054,7 +2054,7 @@ def chunksToMesh(chunks,o):
 	ob.location=(0,0,0)
 	o.path_object_name=oname
 	verts=ob.data.vertices
-	exportGcodePath(verts,o)
+	exportGcodePath(o.filename,[verts],[o])
 
 	
 def safeFileName(name):#for export gcode
@@ -2062,11 +2062,14 @@ def safeFileName(name):#for export gcode
 	filename=''.join(c for c in name if c in valid_chars)
 	return filename
 	
-def exportGcodePath(verts,o):
-	operations=[o]#this is preparation for actual chain exporting
+	
+def exportGcodePath(filename,vertslist,operations):
+	'''exports gcode with the heeks cnc adopted library.'''
+	#verts=[verts]
+	#operations=[o]#this is preparation for actual chain exporting
 	s=bpy.context.scene
 	m=s.cam_machine[0]
-	filename=bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))]+safeFileName(o.filename)
+	filename=bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))]+safeFileName(filename)
 	
 	from . import nc
 	extension='.tap'
@@ -2102,16 +2105,18 @@ def exportGcodePath(verts,o):
 	else:
 		c.imperial()
 		unitcorr=1/0.0254;
-	for o in operations:
 		
-		#start program
-		c.program_begin(0,filename)
-		c.comment('G-code generated with BlenderCAM and NC library')
-		#absolute coordinates
-		c.absolute()
-		#work-plane, by now always xy, 
-		c.set_plane(0)
-		c.flush_nc()
+	#start program
+	c.program_begin(0,filename)
+	c.comment('G-code generated with BlenderCAM and NC library')
+	#absolute coordinates
+	c.absolute()
+	#work-plane, by now always xy, 
+	c.set_plane(0)
+	c.flush_nc()
+
+	for i,o in enumerate(operations):
+		verts=vertslist[i]
 
 		#spindle rpm and direction
 		###############
