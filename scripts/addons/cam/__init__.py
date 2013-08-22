@@ -165,6 +165,9 @@ def updateExact(o,context):
 	if o.use_exact and (o.strategy=='WATERLINE' or o.strategy=='POCKET' or o.inverse):
 		o.use_exact=False
 		
+def updateBridges(o,context):
+	o.changed=True
+	utils.setupBridges(o)
 def updateRest(o,context):
 	o.changed=True
 
@@ -290,7 +293,11 @@ class camOperation(bpy.types.PropertyGroup):
 	#calculations
 	duration = bpy.props.FloatProperty(name="Estimated time", default=0.01, min=0.0000, max=32,precision=PRECISION, unit="TIME", update = updateRest)
 	#chip_rate
-	
+	#bridges
+	use_bridges =  bpy.props.BoolProperty(name="Use bridges",description="use bridges in cutout", default=False, update = updateBridges)
+	bridges_width = bpy.props.FloatProperty(name = 'width of bridges', default=0.003, unit='LENGTH', precision=PRECISION, update = updateBridges)
+	bridges_per_curve = bpy.props.IntProperty(name="bridges per curve object", description="", default=3, min=1, max=512, update = updateBridges)
+	bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.1, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	#optimisation panel
 	
 	#material settings
@@ -330,8 +337,6 @@ class camOperation(bpy.types.PropertyGroup):
 	pid = bpy.props.IntProperty(name="process id", description="Background process id", default=-1)
 	outtext = bpy.props.StringProperty(name='outtext', description='outtext', default='')
 	
-#class camOperationChain(bpy.types.PropertyGroup):
-   # c=bpy.props.collectionProperty()
 
 class opReference(bpy.types.PropertyGroup):#this type is defined just to hold reference to operations for chains
 	name = bpy.props.StringProperty(name="Operation name", default="Operation")
@@ -1280,9 +1285,14 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 					 #	 layout.label('Not supported for curves')
 					 #	 return
 					
-				if ao.strategy=='CUTOUT':	
+				if ao.strategy=='CUTOUT':
 					layout.prop(ao,'cut_type')
 					layout.prop(ao,'dont_merge')
+					layout.prop(ao,'use_bridges')
+					if ao.use_bridges:
+						layout.prop(ao,'bridges_width')
+						layout.prop(ao,'bridges_per_curve')
+						layout.prop(ao,'bridges_max_distance')
 					
 				elif ao.strategy=='WATERLINE':
 					layout.prop(ao,'slice_detail')	

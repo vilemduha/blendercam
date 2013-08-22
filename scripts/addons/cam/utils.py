@@ -1997,7 +1997,33 @@ def doSimulation(name,operations):
 				disp.texture=t
 	ob.hide_render=True
 	
+'''
+def setupBridges(o):
+	oname='cam_bridge_'+o.name
 	
+	verts=[]
+	chunks=[]
+	for ob in o.objects:
+		#p=curveToPoly(o)
+		
+		chunks.extend(curveToChunks(ob))
+	
+	mesh = bpy.data.meshes.new(oname)
+	mesh.name=oname
+	mesh.from_pydata(verts, edges, [])
+	#if o.path!='' and o.path in s.objects:
+	#  s.objects[oname].data=mesh
+	#el
+	if oname in s.objects:
+		s.objects[oname].data=mesh
+	else: 
+		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
+		
+	ob=s.objects[mesh.name]
+	ob.location=(0,0,0)
+	
+	ob.hide_render=True
+'''
 def chunksToMesh(chunks,o):
 	##########convert sampled chunks to path, optimization of paths
 	s=bpy.context.scene
@@ -3801,7 +3827,14 @@ def getPaths(context,operation):#should do all path calculations.
 		
 		if bpy.app.debug_value==0 or bpy.app.debug_value==1 or bpy.app.debug_value==3 or bpy.app.debug_value==2:# or bpy.app.debug_value==4:
 			chunksToMesh(chunks,o)
-	
+		'''#bridge stuff from carve strategy:
+					pathSamples=[]
+			#for ob in o.objects:
+			ob=bpy.data.objects[o.curve_object]
+			pathSamples.extend(curveToChunks(ob))
+			pathSamples=sortChunks(pathSamples,o)#sort before sampling
+			pathSamples=chunksRefine(pathSamples,o)
+		'''
 	if o.strategy=='POCKET':	
 		p=getObjectOutline(o.cutter_diameter/2,o,False)
 		all=Polygon.Polygon(p)
