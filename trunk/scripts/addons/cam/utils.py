@@ -1873,8 +1873,10 @@ def optimizeChunk(chunk,operation):
 
 #def subcutter()
 
-def doSimulation(o):
-	verts=bpy.data.objects[o.path_object_name].data.vertices
+def doSimulation(name,operations):
+	'''perform simulation of operations. '''
+	o=operations[0]#initialization now happens from first operation, also for chains.
+	
 	
 	sx=o.max.x-o.min.x
 	sy=o.max.y-o.min.y
@@ -1885,51 +1887,58 @@ def doSimulation(o):
 	si=numpy.array((0.1),dtype=float)
 	si.resize(resx,resy)
 	si.fill(0)
-	cutterArray=getCutterArray(o,o.simulation_detail)
-	#cb=cutterArray<-1
-	#cutterArray[cb]=1
-	cutterArray=-cutterArray
-	m=int(cutterArray.shape[0]/2)
-	size=cutterArray.shape[0]
-	print(si.shape)
-	#for ch in chunks:
-	lasts=verts[1].co
-	l=len(verts)
-	perc=-1
-	vtotal=len(verts)
-	for i,vert in enumerate(verts):
-		if perc!=int(100*i/vtotal):
-			perc=int(100*i/vtotal)
-			progress('simulation',perc)
-		#progress('simulation ',int(100*i/l))
-		if i>0:
-			s=vert.co
-			v=s-lasts
-			
-			if v.length>o.simulation_detail:
-				l=v.length
-				
-				v.length=o.simulation_detail
-				while v.length<l:
-					
-					xs=(lasts.x+v.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-					ys=(lasts.y+v.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-					z=lasts.z+v.z
-					if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
-						si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
-					v.length+=o.simulation_detail
+	
+	for o in operations:
+		verts=bpy.data.objects[o.path_object_name].data.vertices
 		
-			xs=(s.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-			ys=(s.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-			if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
-				si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+s.z)
+		cutterArray=getCutterArray(o,o.simulation_detail)
+		#cb=cutterArray<-1
+		#cutterArray[cb]=1
+		cutterArray=-cutterArray
+		m=int(cutterArray.shape[0]/2)
+		size=cutterArray.shape[0]
+		print(si.shape)
+		#for ch in chunks:
+		lasts=verts[1].co
+		l=len(verts)
+		perc=-1
+		vtotal=len(verts)
+		for i,vert in enumerate(verts):
+			if perc!=int(100*i/vtotal):
+				perc=int(100*i/vtotal)
+				progress('simulation',perc)
+			#progress('simulation ',int(100*i/l))
+			if i>0:
+				s=vert.co
+				v=s-lasts
 				
-			lasts=s
+				if v.length>o.simulation_detail:
+					l=v.length
+					
+					v.length=o.simulation_detail
+					while v.length<l:
+						
+						xs=(lasts.x+v.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+						ys=(lasts.y+v.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+						z=lasts.z+v.z
+						if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
+							si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
+						v.length+=o.simulation_detail
+			
+				xs=(s.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+				ys=(s.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+				if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
+					si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+s.z)
+					
+				lasts=s
+				
+	o=operations[0]
 	si=si[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]
 	si+=-o.min.z
-	oname='csim_'+o.name
+	oname='csim_'+name
 	
-	iname=getCachePath(o)+'_sim.exr'
+	cp=getCachePath(o)[:-len(o.name)]+name
+	iname=cp+'_sim.exr'#TODO: currently uses still operation path instead of chain path, in case a chain is simulated.
 	inamebase=bpy.path.basename(iname)
 	i=numpysave(si,iname)
 		
