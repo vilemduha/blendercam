@@ -1015,6 +1015,7 @@ def dilateAr(ar,cycles):
 		#ar[1:-1,:]=numpy.logical_or(ar[1:-1,:],ar[2:,:] )
 		ar[:,1:-1]=numpy.logical_or(ar[:,1:-1],ar[:,:-2] )
 		#ar[:,1:-1]=numpy.logical_or(ar[:,1:-1],ar[:,2:] )
+		
 def getImageCorners(o,i):#for pencil operation mainly
 	#i=numpy.logical_xor(lastislice , islice)
 	progress('detect corners in the offset image')
@@ -2025,7 +2026,6 @@ def chunksToMesh(chunks,o):
 			v=(ch[-1][0],ch[-1][1],o.free_movement_height)
 			verts.append(v)
 			
-	exportGcodePath(verts,o)
 	if o.use_exact:
 		cleanupBulletCollision(o)
 		
@@ -2053,6 +2053,9 @@ def chunksToMesh(chunks,o):
 	ob=s.objects[mesh.name]
 	ob.location=(0,0,0)
 	o.path_object_name=oname
+	verts=ob.data.vertices
+	exportGcodePath(verts,o)
+
 	
 def safeFileName(name):#for export gcode
 	valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
@@ -2133,22 +2136,22 @@ def exportGcodePath(verts,o):
 		plungefeedrate=	millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
 		
-		last=(0,0,0)
+		last=Vector((0,0,0))
 
 		o.duration=0.0
 		f=millfeedrate
 		downvector= Vector((0,0,-1))
 		for vi in range(0,len(verts)):
-			v=verts[vi]
-			if v[0]==last[0]: vx=None; 
-			else:	vx=v[0]*unitcorr
-			if v[1]==last[1]: vy=None; 
-			else:	vy=v[1]*unitcorr
-			if v[2]==last[2]: vz=None; 
-			else:	vz=v[2]*unitcorr
+			v=verts[vi].co
+			if v.x==last.x: vx=None; 
+			else:	vx=v.x*unitcorr
+			if v.y==last.y: vy=None; 
+			else:	vy=v.y*unitcorr
+			if v.z==last.z: vz=None; 
+			else:	vz=v.z*unitcorr
 			
-			#v=(v[0]*unitcorr,v[1]*unitcorr,v[2]*unitcorr)
-			vect=Vector(v)-Vector(last)
+			#v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)
+			vect=v-last
 			plungeratio=1
 			if vi>0  and vect.length>0 and downvector.angle(vect)<(pi/2-o.plunge_angle):
 				#print('plunge')
@@ -2156,7 +2159,7 @@ def exportGcodePath(verts,o):
 				f=plungefeedrate
 				c.feedrate(plungefeedrate)
 				c.feed(x=vx,y=vy,z=vz)
-			elif v[2]==last[2]==o.free_movement_height or vi==0:
+			elif v.z==last.z==o.free_movement_height or vi==0:
 				f=freefeedrate
 				c.feedrate(freefeedrate)
 				c.rapid(x=vx,y=vy,z=vz)
