@@ -295,9 +295,10 @@ class camOperation(bpy.types.PropertyGroup):
 	#chip_rate
 	#bridges
 	use_bridges =  bpy.props.BoolProperty(name="Use bridges",description="use bridges in cutout", default=False, update = updateBridges)
-	bridges_width = bpy.props.FloatProperty(name = 'width of bridges', default=0.003, unit='LENGTH', precision=PRECISION, update = updateBridges)
-	bridges_per_curve = bpy.props.IntProperty(name="bridges per curve object", description="", default=3, min=1, max=512, update = updateBridges)
-	bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.1, unit='LENGTH', precision=PRECISION, update = updateBridges)
+	bridges_width = bpy.props.FloatProperty(name = 'width of bridges', default=0.002, unit='LENGTH', precision=PRECISION, update = updateBridges)
+	bridges_height = bpy.props.FloatProperty(name = 'height of bridges', description="Height from the bottom of the cutting operation", default=0.0005, unit='LENGTH', precision=PRECISION, update = updateBridges)
+	bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
+	bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	#optimisation panel
 	
 	#material settings
@@ -1291,6 +1292,7 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 					layout.prop(ao,'use_bridges')
 					if ao.use_bridges:
 						layout.prop(ao,'bridges_width')
+						layout.prop(ao,'bridges_height')
 						layout.prop(ao,'bridges_per_curve')
 						layout.prop(ao,'bridges_max_distance')
 					

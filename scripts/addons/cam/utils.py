@@ -1997,33 +1997,7 @@ def doSimulation(name,operations):
 				disp.texture=t
 	ob.hide_render=True
 	
-'''
-def setupBridges(o):
-	oname='cam_bridge_'+o.name
-	
-	verts=[]
-	chunks=[]
-	for ob in o.objects:
-		#p=curveToPoly(o)
-		
-		chunks.extend(curveToChunks(ob))
-	
-	mesh = bpy.data.meshes.new(oname)
-	mesh.name=oname
-	mesh.from_pydata(verts, edges, [])
-	#if o.path!='' and o.path in s.objects:
-	#  s.objects[oname].data=mesh
-	#el
-	if oname in s.objects:
-		s.objects[oname].data=mesh
-	else: 
-		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
-		
-	ob=s.objects[mesh.name]
-	ob.location=(0,0,0)
-	
-	ob.hide_render=True
-'''
+
 def chunksToMesh(chunks,o):
 	##########convert sampled chunks to path, optimization of paths
 	s=bpy.context.scene
@@ -2515,11 +2489,13 @@ class camPathChunk:
 	
 	def getLength(self):
 		self.length=0
+		
 		for vi,v1 in enumerate(self.points):
+			#print(len(self.points),vi)
 			v2=Vector(v1)#this is for case of last point and not closed chunk..
 			if self.closed and vi==len(self.points)-1:
 				v2=Vector(self.points[0])
-			else:
+			elif vi<len(self.points)-1:
 				v2=Vector(self.points[vi+1])
 			v1=Vector(v1)
 			v=v2-v1
@@ -3743,7 +3719,80 @@ def addMachineObject():
        
 	o.dimensions=bpy.context.scene.cam_machine[0].working_area
 	activate(ao)
-	
+
+def addBridges(ch,o,z):
+	ch.getLength()
+	n=int(ch.length/o.bridges_max_distance)
+	n = max(n,o.bridges_per_curve)
+	dist=ch.length/n
+	pos=[]
+	for i in range(0,n):
+		pos.append([i*dist+0.0001,i*dist+o.bridges_width+o.cutter_diameter])
+	dist=0
+	bridgeheight=min(0,o.min.z+o.bridges_height)
+	inbridge=False
+	posi=0
+	insertpoints=[]
+	changepoints=[]
+	vi=0
+	while vi<len(ch.points):
+		v1=ch.points[vi]
+		v2=Vector(v1)#this is for case of last point and not closed chunk..
+		if ch.closed and vi==len(ch.points)-1:
+			v2=Vector(ch.points[0])
+		else:
+			v2=Vector(ch.points[vi+1])
+		v1=Vector(v1)
+		v=v2-v1
+		dist+=v.length
+		
+		wasinbridge=inbridge
+		if not inbridge and posi<len(pos) and pos[posi][0]<dist:#detect start of bridge
+			
+			ratio=(dist-pos[posi][0])/v.length
+			point1=v2-v*ratio#TODO: optimize this
+			point2=v2-v*ratio
+			if bridgeheight>point1.z:
+				point1.z=min(point1.z,bridgeheight)
+				point2.z=max(point2.z,bridgeheight)
+				#ch.points.insert(vi-1,point1)
+				#ch.points.insert(vi,point2)
+				insertpoints.append([vi+1,point1.to_tuple()])
+				insertpoints.append([vi+1,point2.to_tuple()])
+			inbridge=True
+			
+		if wasinbridge and inbridge:#still in bridge, raise the point up.#
+			changepoints.append([vi,(v1.x,v1.y,max(v1.z,bridgeheight))])
+			#ch.points[vi]=(v1.x,v1.y,max(v1.z,bridgeheight))
+			
+		if inbridge and pos[posi][1]<dist:#detect end of bridge
+			ratio=(dist-pos[posi][1])/v.length
+			point1=v2-v*ratio
+			point2=v2-v*ratio
+			if bridgeheight>point1.z:
+				point1.z=max(point1.z,bridgeheight)
+				point2.z=min(point2.z,bridgeheight)
+				#ch.points.insert(vi,point1)
+				#ch.points.insert(vi+1,point2)
+				#vi+=2
+				insertpoints.append([vi+1,point1.to_tuple()])
+				insertpoints.append([vi+1,point2.to_tuple()])
+			inbridge=False
+			posi+=1 
+			vi-=1
+			dist-=v.length
+		vi+=1
+			
+		
+		
+		
+		if posi>=len(pos):
+			print('added bridges')
+			break;
+	for p in changepoints:
+		ch.points[p[0]]=p[1]
+	for pi in range(len(insertpoints)-1,-1,-1):
+		ch.points.insert(insertpoints[pi][0],insertpoints[pi][1])
 #this is the main function.
 def getPaths(context,operation):#should do all path calculations.
 	
@@ -3824,7 +3873,10 @@ def getPaths(context,operation):#should do all path calculations.
 			else:
 				for step in steps:
 					chunks.extend(setChunksZ(chunksFromCurve,step[1]))
-		
+		if o.use_bridges:
+			for ch in chunks:
+				addBridges(ch,o,0)
+				
 		if bpy.app.debug_value==0 or bpy.app.debug_value==1 or bpy.app.debug_value==3 or bpy.app.debug_value==2:# or bpy.app.debug_value==4:
 			chunksToMesh(chunks,o)
 		'''#bridge stuff from carve strategy:
