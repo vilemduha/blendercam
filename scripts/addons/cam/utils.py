@@ -3794,6 +3794,7 @@ def addBridges(ch,o,z):
 	for pi in range(len(insertpoints)-1,-1,-1):
 		ch.points.insert(insertpoints[pi][0],insertpoints[pi][1])
 #this is the main function.
+
 def getPaths(context,operation):#should do all path calculations.
 	
 	t=time.clock()
@@ -4376,6 +4377,7 @@ def reload_paths(o):
 	ob=s.objects[oname]
 	ob.location=(0,0,0)
 	o.path_object_name=oname
+	o.changed=False
 	#unpickle here:
 	
 
