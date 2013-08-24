@@ -515,7 +515,7 @@ class PathsSimple(bpy.types.Operator):
 					o.onlycurves=False;
 		o.warnings=''
 		utils.getPaths(context,o)
-
+		o.changed=False
 		return {'FINISHED'}
 
 class PathsAll(bpy.types.Operator):
