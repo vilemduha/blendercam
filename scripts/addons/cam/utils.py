@@ -1016,7 +1016,8 @@ def dilateAr(ar,cycles):
 		ar[:,1:-1]=numpy.logical_or(ar[:,1:-1],ar[:,:-2] )
 		#ar[:,1:-1]=numpy.logical_or(ar[:,1:-1],ar[:,2:] )
 		
-def getImageCorners(o,i):#for pencil operation mainly
+def getOffsetImageEdges(o,i):#for pencil operation mainly
+	'''detects areas in the offset image which are 'cavities' - the curvature changes.'''
 	#i=numpy.logical_xor(lastislice , islice)
 	progress('detect corners in the offset image')
 	vertical=i[:-2,1:-1]-i[1:-1,1:-1]-o.pencil_threshold> i[1:-1,1:-1]-i[2:,1:-1]
@@ -1024,10 +1025,13 @@ def getImageCorners(o,i):#for pencil operation mainly
 	#if bpy.app.debug_value==2:
 	
 	ar=numpy.logical_or(vertical,horizontal)
-	#dilateAr(ar,1)
+	dilateAr(ar,1)
 	
+	iname=getCachePath(o)+'_pencilthres.exr'
+	numpysave(ar,iname)
+	chunks = crazyStrokeImage(o,ar)
 	#chunks=imageToChunks(o,ar)
-	chunks=imageToChunks(o,ar)
+	#chunks=imageToChunksPencil(o,ar)
 	for ch in chunks:#convert 2d chunks to 3d
 		for i,p in enumerate(ch.points):
 				ch.points[i]=(p[0],p[1],0)
@@ -1046,7 +1050,109 @@ def getImageCorners(o,i):#for pencil operation mainly
 	#progress(len(polys))
 	#progress(polys[0])
 	return chunks
+	
+	
+def crazyStrokeImage(o,ar):
+	t=time.time()
+	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
+	pixsize=o.pixsize
+	edges=[]
+	
+	r=ceil((o.cutter_diameter/2)/o.pixsize)
+	d=2*r
+	
+	#sx=o.max.x-o.min.x
+	#sy=o.max.y-o.min.y
+	
+	cutterArray=getCircleBinary(r)
+	cutterArray=1-cutterArray
+	
+	cutterimagepix=cutterArray.sum()
+	
+	satisfypix=cutterimagepix/10#a threshold which says if it is valuable to cut in a direction
+	indices1=ar.nonzero()#first get white pixels
+	startpix=ar.sum()#
+	totpix=startpix
+	chunks=[]
+	nchunk=[indices1[0]]#startposition
+	lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
+	testvect=lastvect.normalized()*2#multiply *2 not to get values <1 pixel
+	rot=Euler((0,0,1))
+	i=0
+	perc=0
+	itests=0
+	maxtests=500
+	while totpix>startpix/3 or i<maxtests:#a ratio when the algorithm is allowed to end
+		
+		#if perc!=int(100*totpix/startpix):
+		#	perc=int(100*totpix/startpix)
+		#	progress('crazy path searching what to mill!',perc)
+		#progress('simulation ',int(100*i/l))
+		success=False
+		# define a vector which gets varied throughout the testing, growing and growing angle to sides.
+		testangle=0
+		testleftright=False
+		testlength=r
+		
+		while not success:
+			xs=lastvect.x+int(testvect.x)
+			ys=lastvect.y+int(testvect.y)
+			if xs>r+1 and xs<ar.shape[0]-r-1 and ys>r+1 and ys<ar.shape[1]-r-1 :
+				testar=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArray
+				if testar.sum()>satisfypix:
+					success=True
+			if success:
+				nchunk.append([xs,ys])
+				lastvect=Vector((xs,ys,0))
+				ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArray
+				print('success')
+				print(xs,ys,testlength,testangle)
+				print(lastvect)
+				print(testvect)
+			else:
+				nchunk.append([xs,ys])#for debugging purpose
+				#ar.shape[0]
+				testvect=lastvect.normalized()*testlength
+				if testleftright:
+					testangle=-testangle
+					testleftright=False
+				else:
+					testangle=abs(testangle)+0.005#increment angle
+					testleftright=True
+					
+				if testangle>1:#/testlength
+					testangle=0
+					testlength+=2
+				'''
+				if testlength>10:#weird test 
+					indices1=ar.nonzero()
+					nchunk.append(indices1[0])
+					lastvec=Vector((1,0,0))
+					testvec=Vector((1,0,0))
+					testlength=r
+					success=True
+				'''
+				rot.z=testangle
+				
+				testvect.rotate(rot)
+				#print(xs,ys,testlength,testangle)
+				#print(lastvect)
+				#print(testvect)
+			itests+=1
+			i+=1
+			#achjo
+			if i>maxtests:
+				success=True
+				i=0
 
+		#xs=(s.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+		#ys=(s.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+		i+=1
+		if i==10:
+			print('10 tests done')
+			totpix=ar.sum()
+	return [nchunk]
+	
 def imageToChunks(o,image):
 	t=time.time()
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
@@ -2547,7 +2653,7 @@ def sortChunks(chunks,o):
 			
 			mergedist=2*o.dist_between_paths
 			if o.strategy=='PENCIL':
-				mergedist=10*o.dist_between_paths
+				mergedist=2*o.dist_between_paths
 			if o.stay_low and lastch!=None and (ch.dist(pos,o)<mergedist or (o.parallel_step_back and ch.dist(pos,o)<4*o.dist_between_paths)):
 				if o.strategy=='PARALLEL' or o.strategy=='CROSS':# for these paths sorting happens after sampling, thats why they need resample the connection
 					between=samplePathLow(o,lastch,ch,True)
@@ -2779,6 +2885,7 @@ def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. 
 	o.cutterArray=-getCutterArray(o,o.simulation_detail)#getting inverted cutter
 	crazy=camPathChunk([(0,0,0)])
 	testpos=(o.min.x,o.min.y,o.min.z)
+	
 	
 def getSlices(operation, returnCurves):
 	ob=operation.object
@@ -3727,7 +3834,7 @@ def addBridges(ch,o,z):
 	dist=ch.length/n
 	pos=[]
 	for i in range(0,n):
-		pos.append([i*dist+0.0001,i*dist+o.bridges_width+o.cutter_diameter])
+		pos.append([i*dist+0.00001+dist/2.0,i*dist+0.00001+dist/2.0+o.bridges_width+o.cutter_diameter])
 	dist=0
 	bridgeheight=min(0,o.min.z+o.bridges_height)
 	inbridge=False
@@ -3740,7 +3847,7 @@ def addBridges(ch,o,z):
 		v2=Vector(v1)#this is for case of last point and not closed chunk..
 		if ch.closed and vi==len(ch.points)-1:
 			v2=Vector(ch.points[0])
-		else:
+		elif vi+1<len(ch.points):
 			v2=Vector(ch.points[vi+1])
 		v1=Vector(v1)
 		v=v2-v1
@@ -4043,7 +4150,7 @@ def getPaths(context,operation):#should do all path calculations.
 			pathSamples=chunksRefine(pathSamples,o)
 		elif o.strategy=='PENCIL':
 			prepareArea(o)
-			pathSamples=getImageCorners(o,o.offset_image)
+			pathSamples=getOffsetImageEdges(o,o.offset_image)
 			#for ch in pathSamples:
 			#	for i,p in enumerate(ch.points):
 			#		ch.points[i]=(p[0],p[1],0)
