@@ -10,7 +10,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
@@ -210,7 +210,7 @@ def cleanupBulletCollision(o):
 
 def positionObject(operation):
 	ob=bpy.data.objects[operation.object_name]
-	minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace([ob])	
+	minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace([ob]) 
 	ob.location.x-=minx
 	ob.location.y-=miny
 	ob.location.z-=maxz
@@ -337,7 +337,7 @@ def getPathPatternParallel(o,angle):
 			chunk.points.reverse()
 			
 				
-		#elif	 
+		#elif   
 		if len(chunk.points)>0:
 			pathchunks.append(chunk)
 		if len(pathchunks)>1 and reverse and o.parallel_step_back:
@@ -387,7 +387,7 @@ def getPathPatternParallel(o,angle):
 			#progress(chunks.shape)
 			#progress(chunks[...,a,...].shape)
 			chunks[...,a,...]=nax
-		'''	
+		''' 
 		''' 
 		for a in range(0,a1res):
 			chunks[a,...,1]=axis2
@@ -612,8 +612,8 @@ def getPathPattern(operation):
 		firstchunks=chunks
 		
 		#for ch in chunks:
-		#	if len(ch.points)>2:
-		#		polys.extend()
+		#   if len(ch.points)>2:
+		#	 polys.extend()
 				
 		approxn=(min(maxx-minx,maxy-miny)/o.dist_between_paths)/2
 		i=0
@@ -773,7 +773,7 @@ def renderSampleImage(o):
 						i.save_render(iname)
 						
 			
-			r.image_settings.file_format=ff 		
+			r.image_settings.file_format=ff   
 			r.image_settings.color_mode=cm
 		
 			i=bpy.data.images.load(iname)
@@ -1025,16 +1025,15 @@ def getOffsetImageEdges(o,i):#for pencil operation mainly
 	#if bpy.app.debug_value==2:
 	
 	ar=numpy.logical_or(vertical,horizontal)
-	#dilateAr(ar,0)
+	dilateAr(ar,1)
 	
-	iname=getCachePath(o)+'_pencilthres.exr'
-	numpysave(ar,iname)#save for comparison before
-	chunks = crazyStrokeImage(o,ar)
-	iname=getCachePath(o)+'_pencilthres_comp.exr'
+	#iname=getCachePath(o)+'_pencilthres.exr'
+	#numpysave(ar,iname)#save for comparison before
+	#chunks = crazyStrokeImage(o,ar)
+	#iname=getCachePath(o)+'_pencilthres_comp.exr'
+	#numpysave(ar,iname)#and after
 
-	numpysave(ar,iname)#and after
-
-	#chunks=imageToChunks(o,ar)
+	chunks=imageToChunks(o,ar)
 	#chunks=imageToChunksPencil(o,ar)
 	for ch in chunks:#convert 2d chunks to 3d
 		for i,p in enumerate(ch.points):
@@ -1051,9 +1050,34 @@ def getOffsetImageEdges(o,i):#for pencil operation mainly
 		if len(chunk.points)<2:
 			chunks.pop(chi)
 	
+	
 	#progress(len(polys))
 	#progress(polys[0])
 	return chunks
+	
+def chunksCoherency(chunks):
+	#checks chunks for their stability, for pencil path. it checks if the vectors direction doesn't jump too much too quickly, if this happens it splits the chunk on such places, too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often, but also means that some parts won't be milled 
+	nchunks=[]
+	for chunk in chunks:
+		if len(chunk.points)>2:
+			nchunk=camPathChunk([])
+			
+			#doesn't check for 1 point chunks here, they shouldn't get here at all.
+			lastvec=Vector(chunk.points[1])-Vector(chunk.points[0])
+			for i in range(0,len(chunk.points)-1):
+				nchunk.points.append(chunk.points[i])
+				vec=Vector(chunk.points[i+1])-Vector(chunk.points[i])
+				angle=vec.angle(lastvec,vec)
+				#print(angle,i)
+				if angle>1.05:#60 degrees is maximum toleration for pencil paths. 
+					if len(nchunk.points)>4:#this is a testing threshold
+						nchunks.append(nchunk)
+					nchunk=camPathChunk([])
+				lastvec=vec
+			if len(nchunk.points)>4:#this is a testing threshold
+				nchunks.append(nchunk)
+	return nchunks  
+
 	
 	
 def crazyStrokeImage(o,ar):
@@ -1093,7 +1117,7 @@ def crazyStrokeImage(o,ar):
 	itests=0
 	totaltests=0
 	maxtests=500
-	maxtotaltests=300000
+	maxtotaltests=1000000
 	xs=nchunk.points[-1][0]
 	ys=nchunk.points[-1][1]
 	
@@ -1102,8 +1126,8 @@ def crazyStrokeImage(o,ar):
 	while totpix>startpix*0.01 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
 		
 		#if perc!=int(100*totpix/startpix):
-		#	perc=int(100*totpix/startpix)
-		#	progress('crazy path searching what to mill!',perc)
+		#   perc=int(100*totpix/startpix)
+		#   progress('crazy path searching what to mill!',perc)
 		#progress('simulation ',int(100*i/l))
 		success=False
 		# define a vector which gets varied throughout the testing, growing and growing angle to sides.
@@ -1313,7 +1337,7 @@ def imageToChunks(o,image):
 							if take:
 								ch.append(v)
 								verts.remove(v)
-							#	break
+							#   break
 							
 			else:#here it has to be 2 always
 				done=False
@@ -1385,7 +1409,7 @@ def imageToChunks(o,image):
 			if len(nch.points)>2:
 				#polychunks[i].points=nch
 				nchunks.append(nch)
-		#m=		
+		#m=  
 		
 		return nchunks
 	else:
@@ -1521,7 +1545,7 @@ def chunksRefine(chunks,o):
 						newchunk.append((p.x,p.y,p.z))
 					
 					
-			newchunk.append(s)	
+			newchunk.append(s)  
 			v2=v1
 		#print('after',len(newchunk))
 		ch.points=newchunk
@@ -1776,9 +1800,9 @@ def sampleChunks(o,pathSamples,layers):
 			if len(ch.points)>0:  
 				
 				#if o.stay_low and len(layerchunks[i])>0:
-				#	between=samplePathLow(o,layerchunks[i][-1],ch)#this should be moved after sort
-				#	layerchunks[i][-1].points.extend(between)
-				#	layerchunks[i][-1].points.extend(ch.points) 
+				#   between=samplePathLow(o,layerchunks[i][-1],ch)#this should be moved after sort
+				#   layerchunks[i][-1].points.extend(between)
+				#   layerchunks[i][-1].points.extend(ch.points) 
 				#else:  
 					
 				layerchunks[i].append(ch)
@@ -2108,8 +2132,8 @@ def doSimulation(name,operations):
 	
 	
 	#if inamebase in bpy.data.images:
-	#	i=bpy.data.images[inamebase]
-	#	i.reload()
+	#   i=bpy.data.images[inamebase]
+	#   i.reload()
 	#else:
 	i=bpy.data.images.load(iname)
 
@@ -2134,7 +2158,7 @@ def doSimulation(name,operations):
 	
 	ob.location=((o.max.x+o.min.x)/2,(o.max.y+o.min.y)/2,o.min.z)
 	ob.scale.x=(o.max.x-o.min.x)/2
-	ob.scale.y=(o.max.y-o.min.y)/2	
+	ob.scale.y=(o.max.y-o.min.y)/2  
 	disp=ob.modifiers[-1]
 	disp.direction='Z'
 	disp.texture_coords='LOCAL'
@@ -2310,7 +2334,7 @@ def exportGcodePath(filename,vertslist,operations):
 		
 		millfeedrate=min(o.feedrate,m.feedrate_max)
 		millfeedrate=unitcorr*max(millfeedrate,m.feedrate_min)
-		plungefeedrate=	millfeedrate*o.plunge_feedrate/100
+		plungefeedrate= millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
 		
 		last=Vector((0,0,0))
@@ -2321,11 +2345,11 @@ def exportGcodePath(filename,vertslist,operations):
 		for vi in range(0,len(verts)):
 			v=verts[vi].co
 			if v.x==last.x: vx=None; 
-			else:	vx=v.x*unitcorr
+			else:   vx=v.x*unitcorr
 			if v.y==last.y: vy=None; 
-			else:	vy=v.y*unitcorr
+			else:   vy=v.y*unitcorr
 			if v.z==last.z: vz=None; 
-			else:	vz=v.z*unitcorr
+			else:   vz=v.z*unitcorr
 			
 			#v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)
 			vect=v-last
@@ -2356,7 +2380,7 @@ def exportGcodePath(filename,vertslist,operations):
 	c.program_end()
 	c.file_close()
 
-def orderPoly(polys):	#sor poly, do holes e.t.c.
+def orderPoly(polys):   #sor poly, do holes e.t.c.
 	p=Polygon.Polygon()
 	levels=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]] 
 	for ppart in polys:
@@ -2472,9 +2496,9 @@ def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies.
 	for ppart in chunks:
 		for ptest in chunks:
 			#if len(ptest.poly)==0:
-			#	ptest.poly=Polygon.Polygon(ptest.points)
+			#   ptest.poly=Polygon.Polygon(ptest.points)
 			#if len(ppart.poly)==0:
-			#	ppart.poly=Polygon.Polygon(ppart.points)
+			#   ppart.poly=Polygon.Polygon(ppart.points)
 				
 			if ppart!=ptest and len(ptest.poly)>0 and len(ppart.poly)>0 and ptest.poly.nPoints(0)>0 and ppart.poly.nPoints(0)>0:
 				if ptest.poly.isInside(ppart.poly[0][0][0],ppart.poly[0][0][1]):
@@ -2612,7 +2636,7 @@ class camPathChunk:
 				d1=dist2d(pos,self.points[0])
 				d2=dist2d(pos,self.points[-1])
 				#if d2<d1:
-				#	ch.points.reverse()
+				#   ch.points.reverse()
 				return min(d1,d2)
 			else:
 				return dist2d(pos,self.points[0])
@@ -2646,7 +2670,7 @@ class camPathChunk:
 		for child in self.children:
 			if child.sorted==False:
 				#unsortedchildren=True
-				return child.getNext()	
+				return child.getNext()  
 		#self.unsortedchildren=False		
 		return self
 	
@@ -2664,7 +2688,7 @@ class camPathChunk:
 			v=v2-v1
 			self.length+=v.length
 			#print(v,pos)
-#def appendChunk(sorted,ch,o,pos)	
+#def appendChunk(sorted,ch,o,pos)   
 	
 
 def sortChunks(chunks,o):
@@ -2677,7 +2701,7 @@ def sortChunks(chunks,o):
 	i=len(chunks)
 	pos=(0,0,0)
 	#for ch in chunks:
-	#	ch.getNext()#this stores the unsortedchildren properties
+	#   ch.getNext()#this stores the unsortedchildren properties
 	#print('numofchunks')
 	#print(len(chunks))
 	while len(chunks)>0:
@@ -2709,10 +2733,10 @@ def sortChunks(chunks,o):
 			chunks.remove(ch)
 			
 			mergedist=2*o.dist_between_paths
-			if o.strategy=='PENCIL':
-				mergedist=2*o.dist_between_paths
+			if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
+				mergedist=10*o.dist_between_paths
 			if o.stay_low and lastch!=None and (ch.dist(pos,o)<mergedist or (o.parallel_step_back and ch.dist(pos,o)<4*o.dist_between_paths)):
-				if o.strategy=='PARALLEL' or o.strategy=='CROSS':# for these paths sorting happens after sampling, thats why they need resample the connection
+				if o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL':# for these paths sorting happens after sampling, thats why they need resample the connection
 					between=samplePathLow(o,lastch,ch,True)
 				else:
 					between=samplePathLow(o,lastch,ch,False)#other paths either dont use sampling or are sorted before it.
@@ -2854,7 +2878,7 @@ def meshFromCurveToChunk(object):
 		chunk.closed=True
 		chunk.points.append((mesh.vertices[lastvi].co.x+x,mesh.vertices[lastvi].co.y+y,mesh.vertices[lastvi].co.z+z))
 	#else:
-		#	print('itisnot')
+		#   print('itisnot')
 	chunks.append(chunk)
 	return chunks
 
@@ -3021,7 +3045,7 @@ def getSlices(operation, returnCurves):
 							elif vert[2]==sz:
 									onslice.append(vert)
 					if len(onslice)==1:
-						#pass		
+						#pass	 
 						iv.append((onslice[0][0],onslice[0][1],sz))
 						#iv[-1]=(int(1000000000*iv[-1][0])/1000000000,int(1000000000*iv[-1][1])/1000000000,int(1000000000*iv[-1][2])/1000000000)			
 					elif len(onslice)==2:
@@ -3050,7 +3074,7 @@ def getSlices(operation, returnCurves):
 							
 					else:
 							pass
-							# print('strange count of layer faces',iv)	
+							# print('strange count of layer faces',iv)  
 							
 					
 					
@@ -3181,7 +3205,7 @@ def getVectorRight(lastv,verts):#most right vector from a set
 			vb=Vector(v)-v2
 			a=va.angle_signed(Vector(vb))
 			#if a<=0:
-			#	a=2*pi+a
+			#   a=2*pi+a
 			
 			if a<defa:
 				defa=a
@@ -3217,7 +3241,7 @@ def dictRemove(dict,val):
 	dict.pop(val)
 
 def getArea(poly):
-	return poly.area()	
+	return poly.area()  
 
 def addLoop(parentloop, start, end):
 	added=False
@@ -3323,7 +3347,7 @@ def getObjectSilhouette(operation):
 								#if v1 not in ndict[v2]:
 								ndict[v2].append(v1)
 								
-							chunks=[]	
+							chunks=[]   
 								
 							first=list(ndict.keys())[0]
 							ch=[first,ndict[first][0]]#first and his reference
@@ -3368,7 +3392,7 @@ def getObjectSilhouette(operation):
 												if len(ndict[ch[-2]])<=1:
 													ndict.pop(ch[-2])
 												#else:
-												#	ndict[ch[-2]].remove(ch[-1])
+												#   ndict[ch[-2]].remove(ch[-1])
 												done=True
 												if v[0]==ch[0][0] and v[1]==ch[0][1]:# and v[2]==ch[0][2]:
 													if len(ndict[v])==1:
@@ -3389,12 +3413,12 @@ def getObjectSilhouette(operation):
 								i+=1
 								#print(i,verts,len(ndict))
 								#if not done and len(ndict)>0:
-								#	print('weird things happen')
-								#	v1=ndict.popitem()
-								#	ch=[v1[0],v1[1][0]] 
+								#   print('weird things happen')
+								#   v1=ndict.popitem()
+								#   ch=[v1[0],v1[1][0]] 
 								#print(i,len(ndict))
 							#if len(ch)>2:
-							#	chunks.append(ch)	
+							#   chunks.append(ch)   
 							
 							print(time.time()-t)
 							loc=ob.location.to_2d()
@@ -3491,13 +3515,13 @@ def getObjectSilhouette(operation):
 							spolys.extend(polys)	
 							print('extended by',len(polysort))
 							#for poly in polysort:
-							#	spoly+=poly
+							#   spoly+=poly
 							bpy.context.scene.objects.unlink(ob)
 							'''
 							
 							'''
 								#spoly.addContour(c)
-							'''	
+							''' 
 							for ch in chunks:
 								print(ch)
 								nchunk=camPathChunk([])
@@ -3540,8 +3564,8 @@ def getObjectSilhouette(operation):
 								#print(edge_dict.get(tup))
 								#if edge_dict.get(tup)==1:
 									
-									#edge_dict.pop(tup)	
-									#print('pop')	
+									#edge_dict.pop(tup) 
+									#print('pop')   
 								#print(len(edge_dict))
 							#elif len(d[e])==2:
 								'''
@@ -3563,7 +3587,7 @@ def getObjectSilhouette(operation):
 											c+=m.vertices[vi].co
 										c=c/len(f.vertices)
 										centers.append(c)
-										#c.	
+										#c. 
 									verts1=[].extend(f1.vertices)
 									verts2=[].extend(f2.vertices)
 									append=False
@@ -3579,9 +3603,9 @@ def getObjectSilhouette(operation):
 									if append:
 										#if ori==1:
 										silh_candidates.append([v1.to_2d(),v2.to_2d()])
-										#	
+										#   
 										#else:
-										#	silh.candidates.append([v2.to_2d(),v1.to_2d()])
+										#   silh.candidates.append([v2.to_2d(),v1.to_2d()])
 										
 										t=(v1.to_2d().to_tuple(),v2.to_2d().to_tuple())
 										if edge_dict.get(t,0)==1:
@@ -3695,7 +3719,7 @@ def getObjectSilhouette(operation):
 									mink=k
 							return mink
 							
-						chunks=[]		
+						chunks=[]	 
 						first=ndict[startpoint]
 						print(first)
 						#left=Vector((-1,0))
@@ -3755,7 +3779,7 @@ def getObjectSilhouette(operation):
 						print(time.time()-t)
 						loc=ob.location.to_2d()
 						#for e in silh_candidates:
-						#	ori=0
+						#   ori=0
 							#v1=Vector(e[0])+loc
 							#v2=Vector(e[1])+loc
 							
@@ -3833,14 +3857,14 @@ def getObjectOutline(radius,operation,Offset):
 				polygons[pi+1]=swap
 				sortok=False
 		
-	'''	
+	''' 
 		
 	outlines=[]
 	for p in polygons:#sort by size before this???
 		#if len(ch.points)>2:
 		#3chp=[]
 		##for v in ch.points:
-		#	chp.append((v[0],v[1]))
+		#   chp.append((v[0],v[1]))
 		#p=Polygon.Polygon(chp)
 		#i+=1
 		#print(i)
@@ -3862,25 +3886,25 @@ def addMachineObject():
 	if s.objects.get('CAM_machine')!=None:
 	   o=s.objects['CAM_machine']
 	else:
-	    bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
-	    o=bpy.context.active_object
-	    o.name='CAM_machine'
-	    o.data.name='CAM_machine'
-	    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-	    o.draw_type = 'WIRE'
-	    bpy.ops.object.editmode_toggle()
-	    bpy.ops.mesh.delete(type='ONLY_FACE')
-	    bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE', action='TOGGLE')
-	    bpy.ops.mesh.select_all(action='TOGGLE')
-	    bpy.ops.mesh.subdivide(number_cuts=32, smoothness=0, quadtri=False, quadcorner='STRAIGHT_CUT', fractal=0, fractal_along_normal=0, seed=0)
-	    bpy.ops.mesh.select_nth(nth=2, offset=0)
-	    bpy.ops.mesh.delete(type='EDGE')
-	    bpy.ops.object.editmode_toggle()
-	    o.hide_render = True
-	    o.hide_select = True
-	    o.select=False
+		bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+		o=bpy.context.active_object
+		o.name='CAM_machine'
+		o.data.name='CAM_machine'
+		bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+		o.draw_type = 'WIRE'
+		bpy.ops.object.editmode_toggle()
+		bpy.ops.mesh.delete(type='ONLY_FACE')
+		bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE', action='TOGGLE')
+		bpy.ops.mesh.select_all(action='TOGGLE')
+		bpy.ops.mesh.subdivide(number_cuts=32, smoothness=0, quadtri=False, quadcorner='STRAIGHT_CUT', fractal=0, fractal_along_normal=0, seed=0)
+		bpy.ops.mesh.select_nth(nth=2, offset=0)
+		bpy.ops.mesh.delete(type='EDGE')
+		bpy.ops.object.editmode_toggle()
+		o.hide_render = True
+		o.hide_select = True
+		o.select=False
 	#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
-       
+	   
 	o.dimensions=bpy.context.scene.cam_machine[0].working_area
 	activate(ao)
 
@@ -4029,7 +4053,7 @@ def getPaths(context,operation):#should do all path calculations.
 					o.warnings=o.warnings+'Ramp in not suported for non-closed curves! \n '
 					#if o.ramp_out:
 				#if o.ramp_out:
-				#	chunks.extend(ChunkRampOut([chunk], angle) )
+				#   chunks.extend(ChunkRampOut([chunk], angle) )
 		else:
 			if o.first_down:
 				for chunk in chunksFromCurve:
@@ -4069,7 +4093,7 @@ def getPaths(context,operation):#should do all path calculations.
 			p=outlinePoly(p,o.dist_between_paths,o,False)
 			
 			#for c in p:
-			#	all.addContour(c)
+			#   all.addContour(c)
 			percent=int(i/approxn*100)
 			progress('outlining polygons ',percent) 
 			i+=1
@@ -4079,7 +4103,7 @@ def getPaths(context,operation):#should do all path calculations.
 				
 		#if bpy.app.debug_value==1:
 			
-		chunksFromCurve=sortChunks(chunksFromCurve,o)	
+		chunksFromCurve=sortChunks(chunksFromCurve,o)   
 			
 		chunks=[]
 		if o.use_layers:
@@ -4119,7 +4143,7 @@ def getPaths(context,operation):#should do all path calculations.
 							#print(revolutions)
 							h=Helix(helix_radius,o.circle_detail, l[0],p,revolutions)
 							#invert helix if not the typical direction
-							if (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' 	and o.spindle_rotation_direction=='CCW'):
+							if (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB'	and o.spindle_rotation_direction=='CCW'):
 								nhelix=[]
 								for v in h:
 									nhelix.append((2*p[0]-v[0],v[1],v[2]))
@@ -4209,8 +4233,8 @@ def getPaths(context,operation):#should do all path calculations.
 			prepareArea(o)
 			pathSamples=getOffsetImageEdges(o,o.offset_image)
 			#for ch in pathSamples:
-			#	for i,p in enumerate(ch.points):
-			#		ch.points[i]=(p[0],p[1],0)
+			#   for i,p in enumerate(ch.points):
+			#	 ch.points[i]=(p[0],p[1],0)
 			pathSamples=sortChunks(pathSamples,o)#sort before sampling
 		else: 
 			pathSamples=getPathPattern(o)
@@ -4235,7 +4259,10 @@ def getPaths(context,operation):#should do all path calculations.
 			layers=[[layerstart,layerend]]
 		
 		chunks.extend(sampleChunks(o,pathSamples,layers))
-		if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):# and not o.parallel_step_back:
+		if (o.strategy=='PENCIL'):# and bpy.app.debug_value==-3:
+			chunks=chunksCoherency(chunks)
+			
+		if (o.strategy=='PARALLEL' or o.strategy=='CROSS') or o.strategy=='PENCIL':# and not o.parallel_step_back:
 			chunks=sortChunks(chunks,o)
 		#print(chunks)
 		if o.strategy=='CARVE':
@@ -4257,11 +4284,11 @@ def getPaths(context,operation):#should do all path calculations.
 			if layerstep==0:
 				layerstep=1
 				
-		#for projection of filled areas		
+		#for projection of filled areas  
 		layerstart=0#
 		layerend=o.min.z#
 		layers=[[layerstart,layerend]]
-		#######################		
+		#######################  
 		nslices=ceil(abs(o.minz/o.slice_detail))
 		lastislice=numpy.array([])
 		lastslice=Polygon.Polygon()#polyversion
@@ -4282,9 +4309,9 @@ def getPaths(context,operation):#should do all path calculations.
 			lastchunks=[]
 			#imagechunks=imageToChunks(o,islice)
 			#for ch in imagechunks:
-			#	slicechunks.append(camPathChunk([]))
-			#	for s in ch.points:
-			#		slicechunks[-1].points.append((s[0],s[1],z))
+			#   slicechunks.append(camPathChunk([]))
+			#   for s in ch.points:
+			#	 slicechunks[-1].points.append((s[0],s[1],z))
 					
 			
 			#print('found polys',layerstepinc,len(slicepolys))
@@ -4296,7 +4323,7 @@ def getPaths(context,operation):#should do all path calculations.
 				nchunks=polyToChunks(p,z)
 				#print('chunksnum',len(nchunks))
 				#if len(nchunks)>0:
-				#	print('chunkpoints',len(nchunks[0].points))
+				#   print('chunkpoints',len(nchunks[0].points))
 				#print()
 				lastchunks.extend(nchunks)
 				slicechunks.extend(nchunks)
@@ -4432,7 +4459,7 @@ def getPaths(context,operation):#should do all path calculations.
 					chi+=1
 			'''
 		print(time.time()-tw)
-		chunksToMesh(chunks,o)	  
+		chunksToMesh(chunks,o)  
 		
 	elif o.strategy=='DRILL':
 		ob=bpy.data.objects[o.object_name]
