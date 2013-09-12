@@ -341,18 +341,17 @@ def getPathPatternParallel(o,angle):
 		if len(chunk.points)>0:
 			pathchunks.append(chunk)
 		if len(pathchunks)>1 and reverse and o.parallel_step_back:
-			#if (o.parallel_step_back and o.movement_type=='MEANDER') or ( o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW' and  not reverse )or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW' and  reverse):
+			#parallel step back - for finishing, best with climb movement, saves cutter life by going into material with climb, while using move back on the surface to improve finish(which would otherwise be a conventional move in the material)
 				
 			if o.movement_type=='CONVENTIONAL' or o.movement_type=='CLIMB':
 				pathchunks[-2].points.reverse()
-			pathchunks[-1].points.extend(pathchunks[-2].points)
-			pathchunks.pop(-2)
-			#pathchunks[-1]=pathchunks[-2]
-			#=changechunk
+			changechunk=pathchunks[-1]
+			pathchunks[-1]=pathchunks[-2]
+			pathchunks[-2]=changechunk
 					
 		reverse = not reverse
 	
-	#else:
+	#else:#alternative algorithm with numpy, didn't work as should so blocked now...
 		'''
 		v=Vector((1,0,0))
 		v.rotate(e)
@@ -1016,7 +1015,7 @@ def dilateAr(ar,cycles):
 		ar[:,1:-1]=numpy.logical_or(ar[:,1:-1],ar[:,:-2] )
 		#ar[:,1:-1]=numpy.logical_or(ar[:,1:-1],ar[:,2:] )
 		
-def getOffsetImageEdges(o,i):#for pencil operation mainly
+def getOffsetImageCavities(o,i):#for pencil operation mainly
 	'''detects areas in the offset image which are 'cavities' - the curvature changes.'''
 	#i=numpy.logical_xor(lastislice , islice)
 	progress('detect corners in the offset image')
@@ -1025,15 +1024,17 @@ def getOffsetImageEdges(o,i):#for pencil operation mainly
 	#if bpy.app.debug_value==2:
 	
 	ar=numpy.logical_or(vertical,horizontal)
-	dilateAr(ar,1)
 	
-	#iname=getCachePath(o)+'_pencilthres.exr'
-	#numpysave(ar,iname)#save for comparison before
-	#chunks = crazyStrokeImage(o,ar)
-	#iname=getCachePath(o)+'_pencilthres_comp.exr'
-	#numpysave(ar,iname)#and after
+	#this is newer strategy
+	iname=getCachePath(o)+'_pencilthres.exr'
+	numpysave(ar,iname)#save for comparison before
+	chunks = imageEdgeSearch_online(o,ar)
+	iname=getCachePath(o)+'_pencilthres_comp.exr'
+	numpysave(ar,iname)#and after
 
-	chunks=imageToChunks(o,ar)
+	#this is older strategy
+	#dilateAr(ar,1)
+	#chunks=imageToChunks(o,ar)
 	#chunks=imageToChunksPencil(o,ar)
 	for ch in chunks:#convert 2d chunks to 3d
 		for i,p in enumerate(ch.points):
@@ -1056,7 +1057,7 @@ def getOffsetImageEdges(o,i):#for pencil operation mainly
 	return chunks
 	
 def chunksCoherency(chunks):
-	#checks chunks for their stability, for pencil path. it checks if the vectors direction doesn't jump too much too quickly, if this happens it splits the chunk on such places, too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often, but also means that some parts won't be milled 
+	#checks chunks for their stability, for pencil path. it checks if the vectors direction doesn't jump too much too quickly, if this happens it splits the chunk on such places, too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often, but also means that some parts detected by cavity algorithm won't be milled 
 	nchunks=[]
 	for chunk in chunks:
 		if len(chunk.points)>2:
@@ -1079,8 +1080,144 @@ def chunksCoherency(chunks):
 	return nchunks  
 
 	
+def imageEdgeSearch_online(o,ar):#search edges for pencil strategy, another try.
+	t=time.time()
+	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
+	pixsize=o.pixsize
+	edges=[]
 	
-def crazyStrokeImage(o,ar):
+	r=3#ceil((o.cutter_diameter/12)/o.pixsize)
+	d=2*r
+	coef=0.75
+	#sx=o.max.x-o.min.x
+	#sy=o.max.y-o.min.y
+	#size=ar.shape[0]
+	maxarx=ar.shape[0]
+	maxary=ar.shape[1]
+	
+	directions=((-1,-1),(0,-1),(1,-1),(1,0),(1,1),(0,1),(-1,1),(-1,0))
+	
+	indices=ar.nonzero()#first get white pixels
+	startpix=ar.sum()#
+	totpix=startpix
+	chunks=[]
+	nchunk=camPathChunk([(indices[0][0],indices[1][0])])#startposition
+	dindex=3#index in the directions list
+	last_direction=directions[dindex]
+	test_direction=directions[dindex]
+	i=0
+	perc=0
+	itests=0
+	totaltests=0
+	maxtests=500
+	maxtotaltests=startpix*4
+	xs=nchunk.points[-1][0]
+	ys=nchunk.points[-1][1]
+	
+	ar[xs,ys]=False
+	
+	while totpix>startpix*0.01 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
+		
+		#if perc!=int(100*totpix/startpix):
+		#   perc=int(100*totpix/startpix)
+		#   progress('crazy path searching what to mill!',perc)
+		#progress('simulation ',int(100*i/l))
+		success=False
+		testangulardistance=0#distance from initial direction in the list of direction
+		testleftright=False#test both sides from last vector
+		testlength=r
+		
+		while not success:
+			xs=nchunk.points[-1][0]+test_direction[0]
+			ys=nchunk.points[-1][1]+test_direction[1]
+			
+			if xs>r and xs<ar.shape[0]-r and ys>r and ys<ar.shape[1]-r :
+				test=ar[xs,ys]
+				if 0:
+					print('test')
+					print(testar.sum(),satisfypix)
+					print(xs,ys,testlength,testangle)
+					print(lastvect)
+					print(testvect)
+					print(totpix)
+				if test:
+					success=True
+			if success:
+				nchunk.points.append([xs,ys])
+				last_direction=test_direction
+				ar[xs,ys]=False
+				if 0:
+					print('success')
+					print(xs,ys,testlength,testangle)
+					print(lastvect)
+					print(testvect)
+					print(itests)
+			else:
+				#nchunk.append([xs,ys])#for debugging purpose
+				#ar.shape[0]
+				test_direction=last_direction
+				if testleftright:
+					testangulardistance=-testangulardistance
+					testleftright=False
+				else:
+					testangulardistance+=1#increment angle
+					testleftright=True
+				
+				if abs(testangulardistance)>6:#/testlength
+					testangulardistance=0
+					indices=ar.nonzero()
+					chunks.append(nchunk)
+					nchunk=camPathChunk([(indices[0][0],indices[1][0])])#startposition
+					xs=nchunk.points[-1][0]
+					ys=nchunk.points[-1][1]
+					ar[xs,ys]=False
+					test_direction=directions[3]
+					last_direction=directions[3]
+					success=True
+					itests=0
+					print('reset')
+					
+				if nchunk.points[-1][0]+test_direction[0]<r:
+					testvect.x=r
+				if nchunk.points[-1][1]+test_direction[1]<r:
+					testvect.y=r
+				if nchunk.points[-1][0]+test_direction[0]>maxarx-r:
+					testvect.x=maxarx-r
+				if nchunk.points[-1][1]+test_direction[1]>maxary-r:
+					testvect.y=maxary-r
+
+				#dindex=directions.index(last_direction)
+				dindexmod=dindex+testangulardistance
+				while dindexmod<0:
+					dindexmod+=len(directions)
+				while dindexmod>len(directions):
+					dindexmod-=len(directions)
+					
+				test_direction=directions[dindexmod]
+				if 1:
+					print(xs,ys,test_direction,last_direction)
+					print(totpix)
+			itests+=1
+			totaltests+=1
+			
+		i+=1
+		if i%100==0:
+			print('100 succesfull tests done')
+			totpix=ar.sum()
+			print(totpix)
+			print(totaltests)
+			i=0
+	chunks.append(nchunk)
+	for ch in chunks:
+		#vecchunk=[]
+		#vecchunks.append(vecchunk)
+		ch=ch.points
+		for i in range(0,len(ch)):
+			ch[i]=((ch[i][0]+coef-o.borderwidth)*o.pixsize+minx,(ch[i][1]+coef-o.borderwidth)*o.pixsize+miny,0)
+			#vecchunk.append(Vector(ch[i]))
+	return chunks
+	
+def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
 	t=time.time()
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	pixsize=o.pixsize
@@ -1578,7 +1715,8 @@ def samplePathLow(o,ch1,ch2,dosample):
 			cutterdepth=o.cutter_shape.dimensions.z/2
 			for p in bpath.points:
 				z=getSampleBullet(o.cutter_shape, p[0],p[1], cutterdepth, 1, o.minz)
-				
+				if z>p[2]:
+					p[2]=z
 		else:
 			for p in bpath.points:
 				xs=(p[0]-minx)/pixsize+o.borderwidth+pixsize/2#-m
@@ -1589,8 +1727,8 @@ def samplePathLow(o,ch1,ch2,dosample):
 	return bpath
 
 def parentChildPoly(parents,children,o):
-	#print(children)
-	#print(parents)
+	#hierarchy based on polygons - a polygon inside another is his child.
+	#hierarchy works like this: - children get milled first. 
 	
 	for parent in parents:
 		#print(parent.poly)
@@ -1602,32 +1740,39 @@ def parentChildPoly(parents,children,o):
 					child.parents.append(parent)
 
 def parentChildDist(parents, children,o):
-		for child in children:
-			for parent in parents:
-				isrelation=False
-				if parent!=child:
-					for v in child.points:
-						for v1 in parent.points:
-							dlim=o.dist_between_paths*2
-							if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and o.parallel_step_back:
-								dlim=dlim*2
-							if dist2d(v,v1)<dlim:
-								isrelation=True
-								break
-						if isrelation:
+	#parenting based on distance between chunks
+	#hierarchy works like this: - children get milled first. 
+	dlim=o.dist_between_paths*2
+	if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and o.parallel_step_back:
+		dlim=dlim*2
+		
+	for child in children:
+		for parent in parents:
+			isrelation=False
+			if parent!=child:
+				for v in child.points:
+					for v1 in parent.points:
+						
+						if dist2d(v,v1)<dlim:
+							isrelation=True
 							break
 					if isrelation:
-						parent.children.append(child)
-						child.parents.append(parent)
+						break
+				if isrelation:
+					parent.children.append(child)
+					child.parents.append(parent)
 						
 def parentChild(parents, children, o):
+	#connect all children to all parents. Useful for any type of defining hierarchy.
+	#hierarchy works like this: - children get milled first. 
+
 	for child in children:
 		for parent in parents:
 				if parent!=child:
 					parent.children.append(child)
 					child.parents.append(parent)	
 
-#def threadedSampling():
+#def threadedSampling():#not really possible at all without running more blenders for same operation :( python!
 #samples in both modes now - image and bullet collision too.
 def sampleChunks(o,pathSamples,layers):
 	#
@@ -1737,7 +1882,7 @@ def sampleChunks(o,pathSamples,layers):
 				if l[1]<=newsample[2]<=l[0]:
 					lastlayer=currentlayer
 					currentlayer=i
-					if lastlayer!=None and currentlayer!=None and lastlayer!=currentlayer:# and lastsample[2]!=newsample[2]:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...#TODO: - fix an ugly ugly bug here! goes down more than should...
+					if lastlayer!=None and currentlayer!=None and lastlayer!=currentlayer:# and lastsample[2]!=newsample[2]:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
 						if currentlayer<lastlayer:
 							growing=True
 							r=range(currentlayer,lastlayer)
@@ -1792,8 +1937,8 @@ def sampleChunks(o,pathSamples,layers):
 							thisrunchunks[i].append(ch)
 							layeractivechunks[i]=camPathChunk([])
 			lastsample=newsample
-				 
-		#n+=1
+				
+			
 					
 		for i,l in enumerate(layers):
 			ch=layeractivechunks[i]
@@ -1811,8 +1956,7 @@ def sampleChunks(o,pathSamples,layers):
 				#parenting: not for outlinefilll!!! also higly unoptimized
 			if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
 				parentChildDist(thisrunchunks[i], lastrunchunks[i],o)
-				
-			
+
 		lastrunchunks=thisrunchunks
 				
 			#print(len(layerchunks[i]))
@@ -2495,13 +2639,10 @@ def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies.
 		
 	for ppart in chunks:
 		for ptest in chunks:
-			#if len(ptest.poly)==0:
-			#   ptest.poly=Polygon.Polygon(ptest.points)
-			#if len(ppart.poly)==0:
-			#   ppart.poly=Polygon.Polygon(ppart.points)
 				
 			if ppart!=ptest and len(ptest.poly)>0 and len(ppart.poly)>0 and ptest.poly.nPoints(0)>0 and ppart.poly.nPoints(0)>0:
 				if ptest.poly.isInside(ppart.poly[0][0][0],ppart.poly[0][0][1]):
+					#hierarchy works like this: - children get milled first. 
 					ptest.children.append(ppart)
 					ppart.parents.append(ptest)
  
@@ -2735,7 +2876,8 @@ def sortChunks(chunks,o):
 			mergedist=2*o.dist_between_paths
 			if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
 				mergedist=10*o.dist_between_paths
-			if o.stay_low and lastch!=None and (ch.dist(pos,o)<mergedist or (o.parallel_step_back and ch.dist(pos,o)<4*o.dist_between_paths)):
+			if o.stay_low and lastch!=None and (ch.dist(pos,o)<mergedist or (o.parallel_step_back and ch.dist(pos,o)<2*mergedist)):
+				print(mergedist,ch.dist(pos,o))
 				if o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL':# for these paths sorting happens after sampling, thats why they need resample the connection
 					between=samplePathLow(o,lastch,ch,True)
 				else:
@@ -4231,7 +4373,7 @@ def getPaths(context,operation):#should do all path calculations.
 			pathSamples=chunksRefine(pathSamples,o)
 		elif o.strategy=='PENCIL':
 			prepareArea(o)
-			pathSamples=getOffsetImageEdges(o,o.offset_image)
+			pathSamples=getOffsetImageCavities(o,o.offset_image)
 			#for ch in pathSamples:
 			#   for i,p in enumerate(ch.points):
 			#	 ch.points[i]=(p[0],p[1],0)
@@ -4259,10 +4401,10 @@ def getPaths(context,operation):#should do all path calculations.
 			layers=[[layerstart,layerend]]
 		
 		chunks.extend(sampleChunks(o,pathSamples,layers))
-		if (o.strategy=='PENCIL'):# and bpy.app.debug_value==-3:
-			chunks=chunksCoherency(chunks)
+		#if (o.strategy=='PENCIL') and bpy.app.debug_value==-3:
+			#chunks=chunksCoherency(chunks)
 			
-		if (o.strategy=='PARALLEL' or o.strategy=='CROSS') or o.strategy=='PENCIL':# and not o.parallel_step_back:
+		if ((o.strategy=='PARALLEL' or o.strategy=='CROSS') or o.strategy=='PENCIL'):# and not o.parallel_step_back:
 			chunks=sortChunks(chunks,o)
 		#print(chunks)
 		if o.strategy=='CARVE':
