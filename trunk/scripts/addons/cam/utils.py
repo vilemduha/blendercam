@@ -4407,7 +4407,7 @@ def getPaths(context,operation):#should do all path calculations.
 		
 		
 		chunks.extend(sampleChunks(o,pathSamples,layers))
-		if (o.strategy=='PENCIL') and bpy.app.debug_value==-3:
+		if (o.strategy=='PENCIL'):# and bpy.app.debug_value==-3:
 			chunks=chunksCoherency(chunks)
 			print('coherency check')
 			
