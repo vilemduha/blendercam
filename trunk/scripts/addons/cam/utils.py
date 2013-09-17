@@ -1025,24 +1025,27 @@ def getOffsetImageCavities(o,i):#for pencil operation mainly
 	
 	ar=numpy.logical_or(vertical,horizontal)
 	
-	#this is newer strategy
-	iname=getCachePath(o)+'_pencilthres.exr'
-	numpysave(ar,iname)#save for comparison before
-	chunks = imageEdgeSearch_online(o,ar)
-	iname=getCachePath(o)+'_pencilthres_comp.exr'
-	numpysave(ar,iname)#and after
-
-	#this is older strategy
-	#dilateAr(ar,1)
-	#chunks=imageToChunks(o,ar)
-	#chunks=imageToChunksPencil(o,ar)
-	for ch in chunks:#convert 2d chunks to 3d
-		for i,p in enumerate(ch.points):
-				ch.points[i]=(p[0],p[1],0)
 	
-	chunks=chunksRefine(chunks,o)
+	if 0:#this is newer strategy, finds edges nicely, but pff.going exacty on edge, it has tons of spikes and simply is not better than the old one
+		iname=getCachePath(o)+'_pencilthres.exr'
+		numpysave(ar,iname)#save for comparison before
+		chunks = imageEdgeSearch_online(o,ar,i)
+		iname=getCachePath(o)+'_pencilthres_comp.exr'
+		numpysave(ar,iname)#and after
+	else:#here is the old strategy with
+		dilateAr(ar,1)
+		iname=getCachePath(o)+'_pencilthres.exr'
+		numpysave(ar,iname)#save for comparison before
+		
+		chunks=imageToChunks(o,ar)
+		
+		for ch in chunks:#convert 2d chunks to 3d
+			for i,p in enumerate(ch.points):
+					ch.points[i]=(p[0],p[1],0)
+		
+		chunks=chunksRefine(chunks,o)
 	
-	
+	###crop pixels that are on outer borders
 	for chi in range(len(chunks)-1,-1,-1):
 		chunk=chunks[chi]
 		for si in range(len(chunk.points)-1,-1,-1):
@@ -1050,10 +1053,7 @@ def getOffsetImageCavities(o,i):#for pencil operation mainly
 				chunk.points.pop(si)
 		if len(chunk.points)<2:
 			chunks.pop(chi)
-	
-	
-	#progress(len(polys))
-	#progress(polys[0])
+			
 	return chunks
 	
 def chunksCoherency(chunks):
@@ -1070,7 +1070,7 @@ def chunksCoherency(chunks):
 				vec=Vector(chunk.points[i+1])-Vector(chunk.points[i])
 				angle=vec.angle(lastvec,vec)
 				#print(angle,i)
-				if angle>1.05:#60 degrees is maximum toleration for pencil paths. 
+				if angle>1.07:#60 degrees is maximum toleration for pencil paths. 
 					if len(nchunk.points)>4:#this is a testing threshold
 						nchunks.append(nchunk)
 					nchunk=camPathChunk([])
@@ -1080,7 +1080,7 @@ def chunksCoherency(chunks):
 	return nchunks  
 
 	
-def imageEdgeSearch_online(o,ar):#search edges for pencil strategy, another try.
+def imageEdgeSearch_online(o,ar,zimage):#search edges for pencil strategy, another try.
 	t=time.time()
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	pixsize=o.pixsize
@@ -1101,8 +1101,10 @@ def imageEdgeSearch_online(o,ar):#search edges for pencil strategy, another try.
 	startpix=ar.sum()#
 	totpix=startpix
 	chunks=[]
-	nchunk=camPathChunk([(indices[0][0],indices[1][0])])#startposition
-	dindex=3#index in the directions list
+	xs=indices[0][0]
+	ys=indices[1][0]
+	nchunk=camPathChunk([(xs,ys,zimage[xs,ys])])#startposition
+	dindex=0#index in the directions list
 	last_direction=directions[dindex]
 	test_direction=directions[dindex]
 	i=0
@@ -1111,39 +1113,33 @@ def imageEdgeSearch_online(o,ar):#search edges for pencil strategy, another try.
 	totaltests=0
 	maxtests=500
 	maxtotaltests=startpix*4
-	xs=nchunk.points[-1][0]
-	ys=nchunk.points[-1][1]
+	
 	
 	ar[xs,ys]=False
 	
-	while totpix>startpix*0.01 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
+	while totpix>0 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
 		
-		#if perc!=int(100*totpix/startpix):
-		#   perc=int(100*totpix/startpix)
-		#   progress('crazy path searching what to mill!',perc)
+		if perc!=int(100-100*totpix/startpix):
+		   perc=int(100-100*totpix/startpix)
+		   progress('pencil path searching',perc)
 		#progress('simulation ',int(100*i/l))
 		success=False
 		testangulardistance=0#distance from initial direction in the list of direction
 		testleftright=False#test both sides from last vector
-		testlength=r
-		
+		#achjo=0
 		while not success:
+			#print(achjo)
+			#achjo+=1
 			xs=nchunk.points[-1][0]+test_direction[0]
 			ys=nchunk.points[-1][1]+test_direction[1]
 			
 			if xs>r and xs<ar.shape[0]-r and ys>r and ys<ar.shape[1]-r :
 				test=ar[xs,ys]
-				if 0:
-					print('test')
-					print(testar.sum(),satisfypix)
-					print(xs,ys,testlength,testangle)
-					print(lastvect)
-					print(testvect)
-					print(totpix)
+				#print(test)
 				if test:
 					success=True
 			if success:
-				nchunk.points.append([xs,ys])
+				nchunk.points.append([xs,ys,zimage[xs,ys]])
 				last_direction=test_direction
 				ar[xs,ys]=False
 				if 0:
@@ -1160,31 +1156,38 @@ def imageEdgeSearch_online(o,ar):#search edges for pencil strategy, another try.
 					testangulardistance=-testangulardistance
 					testleftright=False
 				else:
+					testangulardistance=-testangulardistance
 					testangulardistance+=1#increment angle
 					testleftright=True
 				
 				if abs(testangulardistance)>6:#/testlength
 					testangulardistance=0
 					indices=ar.nonzero()
+					totpix=len(indices[0])
 					chunks.append(nchunk)
-					nchunk=camPathChunk([(indices[0][0],indices[1][0])])#startposition
-					xs=nchunk.points[-1][0]
-					ys=nchunk.points[-1][1]
-					ar[xs,ys]=False
+					if len(indices[0]>0):
+						xs=indices[0][0]
+						ys=indices[1][0]
+						nchunk=camPathChunk([(xs,ys,zimage[xs,ys])])#startposition
+						
+						ar[xs,ys]=False
+					else:
+						nchunk=camPathChunk([])
+					
 					test_direction=directions[3]
 					last_direction=directions[3]
 					success=True
 					itests=0
-					print('reset')
-					
-				if nchunk.points[-1][0]+test_direction[0]<r:
-					testvect.x=r
-				if nchunk.points[-1][1]+test_direction[1]<r:
-					testvect.y=r
-				if nchunk.points[-1][0]+test_direction[0]>maxarx-r:
-					testvect.x=maxarx-r
-				if nchunk.points[-1][1]+test_direction[1]>maxary-r:
-					testvect.y=maxary-r
+					#print('reset')
+				if len(nchunk.points)>0:
+					if nchunk.points[-1][0]+test_direction[0]<r:
+						testvect.x=r
+					if nchunk.points[-1][1]+test_direction[1]<r:
+						testvect.y=r
+					if nchunk.points[-1][0]+test_direction[0]>maxarx-r:
+						testvect.x=maxarx-r
+					if nchunk.points[-1][1]+test_direction[1]>maxary-r:
+						testvect.y=maxary-r
 
 				#dindex=directions.index(last_direction)
 				dindexmod=dindex+testangulardistance
@@ -1194,18 +1197,18 @@ def imageEdgeSearch_online(o,ar):#search edges for pencil strategy, another try.
 					dindexmod-=len(directions)
 					
 				test_direction=directions[dindexmod]
-				if 1:
-					print(xs,ys,test_direction,last_direction)
+				if 0:
+					print(xs,ys,test_direction,last_direction,testangulardistance)
 					print(totpix)
 			itests+=1
 			totaltests+=1
 			
 		i+=1
 		if i%100==0:
-			print('100 succesfull tests done')
+			#print('100 succesfull tests done')
 			totpix=ar.sum()
-			print(totpix)
-			print(totaltests)
+			#print(totpix)
+			#print(totaltests)
 			i=0
 	chunks.append(nchunk)
 	for ch in chunks:
@@ -1213,7 +1216,7 @@ def imageEdgeSearch_online(o,ar):#search edges for pencil strategy, another try.
 		#vecchunks.append(vecchunk)
 		ch=ch.points
 		for i in range(0,len(ch)):
-			ch[i]=((ch[i][0]+coef-o.borderwidth)*o.pixsize+minx,(ch[i][1]+coef-o.borderwidth)*o.pixsize+miny,0)
+			ch[i]=((ch[i][0]+coef-o.borderwidth)*o.pixsize+minx,(ch[i][1]+coef-o.borderwidth)*o.pixsize+miny,ch[i][2])
 			#vecchunk.append(Vector(ch[i]))
 	return chunks
 	
@@ -1531,7 +1534,8 @@ def imageToChunks(o,image):
 		
 		#print('directsimplify')
 		#p=Polygon.Polygon()
-		soptions=['distance','distance',o.pixsize*1.25,5,o.pixsize*1.25]
+		reduxratio=1.25#was 1.25
+		soptions=['distance','distance',o.pixsize*reduxratio,5,o.pixsize*reduxratio]
 		#soptions=['distance','distance',0.0,5,0,5,0]#o.pixsize*1.25,5,o.pixsize*1.25]
 		#polychunks=[]
 		nchunks=[]
@@ -2877,7 +2881,7 @@ def sortChunks(chunks,o):
 			if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
 				mergedist=10*o.dist_between_paths
 			if o.stay_low and lastch!=None and (ch.dist(pos,o)<mergedist or (o.parallel_step_back and ch.dist(pos,o)<2*mergedist)):
-				print(mergedist,ch.dist(pos,o))
+				#print(mergedist,ch.dist(pos,o))
 				if o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL':# for these paths sorting happens after sampling, thats why they need resample the connection
 					between=samplePathLow(o,lastch,ch,True)
 				else:
@@ -4378,6 +4382,7 @@ def getPaths(context,operation):#should do all path calculations.
 			#   for i,p in enumerate(ch.points):
 			#	 ch.points[i]=(p[0],p[1],0)
 			pathSamples=sortChunks(pathSamples,o)#sort before sampling
+			
 		else: 
 			pathSamples=getPathPattern(o)
 	
@@ -4400,9 +4405,11 @@ def getPaths(context,operation):#should do all path calculations.
 			layerend=o.min.z#
 			layers=[[layerstart,layerend]]
 		
+		
 		chunks.extend(sampleChunks(o,pathSamples,layers))
-		#if (o.strategy=='PENCIL') and bpy.app.debug_value==-3:
-			#chunks=chunksCoherency(chunks)
+		if (o.strategy=='PENCIL') and bpy.app.debug_value==-3:
+			chunks=chunksCoherency(chunks)
+			print('coherency check')
 			
 		if ((o.strategy=='PARALLEL' or o.strategy=='CROSS') or o.strategy=='PENCIL'):# and not o.parallel_step_back:
 			chunks=sortChunks(chunks,o)
@@ -4413,6 +4420,7 @@ def getPaths(context,operation):#should do all path calculations.
 					ch.points[vi]=(ch.points[vi][0],ch.points[vi][1],ch.points[vi][2]-o.carve_depth)
 	
 		chunksToMesh(chunks,o)
+		
 		
 	elif o.strategy=='WATERLINE':
 		topdown=True
