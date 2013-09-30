@@ -2177,7 +2177,7 @@ def isVerticalLimit(v1,v2,limit):
 		a=v3d.angle(v2d)
 		if a>pi/2:
 			a=abs(a-pi)
-		print(a)
+		#print(a)
 		if a<limit:
 			#print(abs(v1[0]-v2[0])/z)
 			#print(abs(v1[1]-v2[1])/z)
@@ -2188,6 +2188,7 @@ def isVerticalLimit(v1,v2,limit):
 				v2=(v1[0],v1[1],v2[2])
 				return v1,v2
 	return v1,v2
+	
 def optimizeChunk(chunk,operation):
 	
 	for vi in range(len(chunk)-2,0,-1):
@@ -2200,7 +2201,7 @@ def optimizeChunk(chunk,operation):
 			#vi-=1
 	#protect_vertical=True
 	if operation.protect_vertical:#protect vertical surfaces
-		print('verticality test')
+		#print('verticality test')
 		
 		
 		for vi in range(len(chunk)-1,0,-1):
