@@ -1904,7 +1904,7 @@ def sampleChunks(o,pathSamples,layers):
 							v1=lastsample
 							v2=newsample
 							if o.protect_vertical:
-								v1,v2=isVerticalLimit(v1,v2)
+								v1,v2=isVerticalLimit(v1,v2,o.protect_vertical_limit)
 							v1=Vector(v1)
 							v2=Vector(v2)
 							#print(v1,v2)
@@ -2164,13 +2164,23 @@ def compare(v1,v2,vmiddle,e):
 		return True
 	return False
 '''
-def isVerticalLimit(v1,v2):
+def isVerticalLimit(v1,v2,limit):
+	#print('verticality')
 	z=abs(v1[2]-v2[2])
-	verticality=0.05  
+	#verticality=0.05 
+	#this will be better.
+	#
+	#print(a)
 	if z>0:
-		
-		if abs(v1[0]-v2[0])/z<verticality and abs(v1[1]-v2[1])/z<verticality:
-
+		v2d=Vector((0,0,-1))
+		v3d=Vector((v1[0]-v2[0],v1[1]-v2[1],v1[2]-v2[2]))
+		a=v3d.angle(v2d)
+		if a>pi/2:
+			a=abs(a-pi)
+		print(a)
+		if a<limit:
+			#print(abs(v1[0]-v2[0])/z)
+			#print(abs(v1[1]-v2[1])/z)
 			if v1[2]>v2[2]:
 				v1=(v2[0],v2[1],v1[2])
 				return v1,v2
@@ -2190,17 +2200,17 @@ def optimizeChunk(chunk,operation):
 			#vi-=1
 	#protect_vertical=True
 	if operation.protect_vertical:#protect vertical surfaces
-		#print('verticality test')
+		print('verticality test')
 		
 		
 		for vi in range(len(chunk)-1,0,-1):
 			v1=chunk[vi]
 			v2=chunk[vi-1]
-			v1c,v2c=isVerticalLimit(v1,v2)
+			v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
 			if v1c!=v1:
-				chunk[vi]=v1
+				chunk[vi]=v1c
 			elif v2c!=v2:
-				chunk[vi-1]=v2
+				chunk[vi-1]=v2c
 			
 			
 		#print(vcorrected)
@@ -2391,10 +2401,11 @@ def chunksToMesh(chunks,o):
 	#el
 	if oname in s.objects:
 		s.objects[oname].data=mesh
+		ob=s.objects[oname]
 	else: 
-		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
+		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)#this returns some ObjectBase type,dunno what that is.
+		ob=ob.object
 		
-	ob=s.objects[mesh.name]
 	ob.location=(0,0,0)
 	o.path_object_name=oname
 	verts=ob.data.vertices

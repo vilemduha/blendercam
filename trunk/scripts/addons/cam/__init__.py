@@ -258,7 +258,7 @@ class camOperation(bpy.types.PropertyGroup):
 	source_image_crop_end_y=   bpy.props.FloatProperty(name = 'crop end y', default=100,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
 	
 	protect_vertical = bpy.props.BoolProperty(name="Protect vertical",description="The path goes only vertically next to steep areas", default=True)
-	
+	protect_vertical_limit = bpy.props.FloatProperty(name="Verticality limit", description="What angle is allready considered vertical", default=math.pi/45, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 		
 	ambient_behaviour = EnumProperty(name='Ambient',items=(('ALL', 'All', 'a'),('AROUND', 'Around', 'a')   ),description='handling ambient surfaces',default='ALL', update = updateRest)
 	
@@ -1368,6 +1368,8 @@ class CAM_MOVEMENT_Panel(bpy.types.Panel):
 					
 				layout.prop(ao,'stay_low')
 				layout.prop(ao,'protect_vertical')
+				if ao.protect_vertical:
+					layout.prop(ao,'protect_vertical_limit')
 			  
 				
 class CAM_FEEDRATE_Panel(bpy.types.Panel):
