@@ -39,7 +39,7 @@ def calculatePath(op):
 	s=bpy.context.scene
 	o=s.cam_operations[op]
 	s.cam_active_operation=op
-	bpy.ops.object.calculate_cam_paths()
+	bpy.ops.object.calculate_cam_path()
 
 	p=getCachePath(o)+'.blend'
 	picklepath=getCachePath(o)+'.pickle'

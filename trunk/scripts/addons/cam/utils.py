@@ -4141,7 +4141,7 @@ def addBridges(ch,o,z):
 		ch.points.insert(insertpoints[pi][0],insertpoints[pi][1])
 #this is the main function.
 
-def getPaths(context,operation):#should do all path calculations.
+def getPath(context,operation):#should do all path calculations.
 	
 	t=time.clock()
 	s=bpy.context.scene

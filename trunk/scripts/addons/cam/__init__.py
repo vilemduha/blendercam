@@ -72,6 +72,14 @@ class machineSettings(bpy.types.PropertyGroup):
 	spindle_default=bpy.props.FloatProperty(name="#Spindlespeed default /min", default=20000, min=0.00001, max=320000,precision=1)
 	axis4 = bpy.props.BoolProperty(name="#4th axis",description="Machine has 4th axis", default=0)
 	axis5 = bpy.props.BoolProperty(name="#5th axis",description="Machine has 5th axis", default=0)
+	'''rotary_axis1 = EnumProperty(name='Axis 1',
+		items=(
+			('X', 'X', 'x'),
+			('Y', 'Y', 'y'),
+			('Z', 'Z', 'z')),
+		description='Number 1 rotational axis',
+		default='X', update = updateOffsetImage)
+	'''
 	collet_size=bpy.props.FloatProperty(name="#Collet size", description="Collet size for collision detection",default=33, min=0.00001, max=320000,precision=PRECISION , unit="LENGTH")
 	#exporter_start = bpy.props.StringProperty(name="exporter start", default="%")
 
@@ -193,6 +201,14 @@ class camOperation(bpy.types.PropertyGroup):
 			('VCARVE', 'V-carve', 'a')),
 		description='Type of cutter used',
 		default='END', update = updateOffsetImage)
+	
+	axes = EnumProperty(name='Number of axes',
+		items=(
+			('3', '3 axis', 'a'),
+			('4', '4 axis', 'a'),
+			('5', '5 axis', 'a')),
+		description='How many axes will be used for the operation',
+		default='3', update = updateOffsetImage)
 	strategy = EnumProperty(name='Strategy',
 		items=(
 			('PARALLEL','Parallel', 'Parallel lines on any angle'),
@@ -210,6 +226,20 @@ class camOperation(bpy.types.PropertyGroup):
 		description='Strategy',
 		default='PARALLEL',
 		update = updateStrategy)#,('SLICES','Slices','this prepares model for cutting from sheets of material')
+	strategy4axis = EnumProperty(name='Strategy',
+		items=(
+			('PARALLEL','Parallel', 'Parallel lines on any angle'),
+			('CROSS','Cross', 'Cross paths')),
+		description='Strategy',
+		default='PARALLEL',
+		update = updateStrategy)
+	strategy5axis = EnumProperty(name='Strategy',
+		items=(
+			('PARALLEL','Parallel', 'Parallel lines on any angle'),
+			('CROSS','Cross', 'Cross paths')),
+		description='Strategy',
+		default='PARALLEL',
+		update = updateStrategy)
 	#for cutout	   
 	cut_type = EnumProperty(name='Cut',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE', update = updateRest)  
 	#render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
@@ -459,9 +489,9 @@ class PathsBackground(bpy.types.Operator):
 		return {'FINISHED'}
 		
 		
-class PathsSimple(bpy.types.Operator):
+class CalculatePath(bpy.types.Operator):
 	'''calculate CAM paths'''
-	bl_idname = "object.calculate_cam_paths"
+	bl_idname = "object.calculate_cam_path"
 	bl_label = "Calculate CAM paths"
 	bl_options = {'REGISTER', 'UNDO'}
 
@@ -514,7 +544,7 @@ class PathsSimple(bpy.types.Operator):
 				if ob.type=='MESH':
 					o.onlycurves=False;
 		o.warnings=''
-		utils.getPaths(context,o)
+		utils.getPath(context,o)
 		o.changed=False
 		return {'FINISHED'}
 
@@ -1029,7 +1059,7 @@ class CAM_MACHINE_Panel(bpy.types.Panel):
 				layout.prop(ao,'spindle_min')
 				layout.prop(ao,'spindle_max')
 				#layout.prop(ao,'spindle_default')
-				#layout.prop(ao,'axis4')
+				layout.prop(ao,'axis4')
 				#layout.prop(ao,'axis5')
 				#layout.prop(ao,'collet_size')
 
@@ -1187,7 +1217,7 @@ class CAM_OPERATIONS_Panel(bpy.types.Panel):
 			if ao:
 				if not ao.computing:
 					if ao.valid:
-						layout.operator("object.calculate_cam_paths", text="Calculate path")
+						layout.operator("object.calculate_cam_path", text="Calculate path")
 						layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
 						layout.operator("object.cam_simulate", text="Simulate this operation")
 					else:
@@ -1269,8 +1299,11 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 		if len(scene.cam_operations)>0:
 			ao=scene.cam_operations[scene.cam_active_operation]
 			if ao.valid:
-				layout.prop(ao,'strategy')
-				
+				layout.prop(ao,'axes')
+				if ao.axes=='3':
+					layout.prop(ao,'strategy')
+				elif ao.axes=='4':
+					layout.prop(ao,'strategy4axis')
 				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES':
 					layout.prop(ao,'movement_insideout')
 					
@@ -1513,7 +1546,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	CAM_MACHINE_Panel,
 	
 	PathsBackground,
-	PathsSimple,
+	CalculatePath,
 	PathsChain,
 	PathsAll,
 	CAMPositionObject,
