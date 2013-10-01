@@ -340,7 +340,7 @@ def getPathPatternParallel(o,angle):
 		#elif   
 		if len(chunk.points)>0:
 			pathchunks.append(chunk)
-		if len(pathchunks)>1 and reverse and o.parallel_step_back:
+		if len(pathchunks)>1 and reverse and o.parallel_step_back and not o.use_layers:
 			#parallel step back - for finishing, best with climb movement, saves cutter life by going into material with climb, while using move back on the surface to improve finish(which would otherwise be a conventional move in the material)
 				
 			if o.movement_type=='CONVENTIONAL' or o.movement_type=='CLIMB':
