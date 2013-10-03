@@ -1707,6 +1707,16 @@ def getSampleBullet(cutter, x,y, radius, startz, endz):
 	else:
 		return endz-10;
 	
+def dupliob(o,pos):
+	'''helper function for visualising cutter positions'''
+	activate(o)
+	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":True, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
+	s=1.0/BULLET_SCALE
+	bpy.ops.transform.resize(value=(s, s, s), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1)
+	o=bpy.context.active_object
+	bpy.ops.rigidbody.object_remove()
+	o.location=pos
+	
 def getSampleBulletNAxis(cutter, startpoint,endpoint,rotation, radius):
 	'''fully 3d collision test for NAxis milling'''
 	start=(startpoint*BULLET_SCALE).to_tuple()
@@ -1721,6 +1731,9 @@ def getSampleBulletNAxis(cutter, startpoint,endpoint,rotation, radius):
 		v=endpoint-startpoint# a vector in the opposite direction of sweep test
 		v.normalize()
 		res=(pos+v*radius)/BULLET_SCALE
+		if random.random()<0.02:
+			dupliob(cutter,res)
+				
 		return res
 	else:
 		return None;
@@ -2044,6 +2057,8 @@ def sampleChunks(o,pathSamples,layers):
 		chunks.extend(layerchunks[i])
 	return chunks  
 
+	
+	
 def sampleChunksNAxis(o,pathSamples,layers):
 	#
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
@@ -2103,9 +2118,11 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			sweepvect=endp-startp
 			sweepvect.normalize()
 			####sampling
-			#if rotation!=lastrotation:
-			#	cutter.rotation_euler=rotation
+			if rotation!=lastrotation:
+				cutter.rotation_euler=rotation
+				bpy.context.scene.frame_set(0)
 				#update scene here?
+				
 			#print(startp,endp)
 			#samplestartp=startp+sweepvect*0.3#this is correction for the sweep algorithm to work better.
 			newsample=getSampleBulletNAxis(cutter, startp, endp ,rotation, cutterdepth)
@@ -2173,7 +2190,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 								else:
 									
 									layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
-									layeractivechunks[ls+1].points.append(0,betweensample.to_tuple())
+									layeractivechunks[ls+1].points.append(betweensample.to_tuple())
 									#layeractivechunks[ls+1].points.insert(0,betweensample.to_tuple())
 								li+=1
 								#this chunk is terminated, and allready in layerchunks /
@@ -4461,7 +4478,6 @@ def addBridges(ch,o,z):
 #this is the main function.
 
 def getPath3axis(context,operation):
-	t=time.clock()
 	s=bpy.context.scene
 	o=operation
 	getBounds(o)
@@ -4996,8 +5012,6 @@ def getPath3axis(context,operation):
 			#print(p)
 				polyToMesh(p,slicechunk[0][0][2])
 		
-	t1=time.clock()-t 
-	progress('total time',t1)
 	
 	#progress('finished')
 	
@@ -5029,11 +5043,15 @@ def getPath4axis(context,operation):
 		chunksToMesh(chunks,o)
 
 def getPath(context,operation):#should do all path calculations.
-	
+	t=time.clock()
+
 	if operation.axes=='3':
 		getPath3axis(context,operation)
 	elif operation.axes=='4':
 		getPath4axis(context,operation)
+		
+	t1=time.clock()-t 
+	progress('total time',t1)
 
 def reload_paths(o):
 	oname = "cam_path_"+o.name
