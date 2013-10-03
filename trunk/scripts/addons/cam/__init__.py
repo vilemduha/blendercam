@@ -205,8 +205,8 @@ class camOperation(bpy.types.PropertyGroup):
 	axes = EnumProperty(name='Number of axes',
 		items=(
 			('3', '3 axis', 'a'),
-			('4', '4 axis', 'a'),
-			('5', '5 axis', 'a')),
+			('4', '#4 axis - EXPERIMENTAL', 'a'),
+			('5', '#5 axis - NOT WORKING', 'a')),
 		description='How many axes will be used for the operation',
 		default='3', update = updateOffsetImage)
 	strategy = EnumProperty(name='Strategy',
