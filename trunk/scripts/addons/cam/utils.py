@@ -2929,7 +2929,7 @@ def exportGcodePath(filename,vertslist,operations):
 				if o.axes=='3':
 					c.feed( x=vx, y=vy, z=vz )
 				else:
-					print(ra,rb)
+					#print(ra,rb)
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
 					
 			elif v.z==last.z==o.free_movement_height or vi==0:
