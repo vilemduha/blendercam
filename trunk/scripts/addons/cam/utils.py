@@ -44,13 +44,13 @@ import string
 BULLET_SCALE=1000 # this is a constant for scaling the rigidbody collision world for higher precision from bullet library
 
 def tuple_add(t,t1):#add two tuples as Vectors
-	return ((t[0]+t1[0],t[1]+t1[1],t[2]+t1[2]))
+	return (t[0]+t1[0],t[1]+t1[1],t[2]+t1[2])
 
 def tuple_sub(t,t1):#sub two tuples as Vectors
-	return ((t[0]-t1[0],t[1]-t1[1],t[2]-t1[2]))
+	return (t[0]-t1[0],t[1]-t1[1],t[2]-t1[2])
 
 def tuple_mul(t,c):#multiply two tuples with a number
-	return ((t[0]*c,t[1]*c,t[2]*c))
+	return (t[0]*c,t[1]*c,t[2]*c)
 	
 def activate(o):
 	s=bpy.context.scene
@@ -2338,17 +2338,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 		chunks.extend(layerchunks[i])
 	
 	'''
-	#conversion to N-axis coordinates
-	# this seems to work correctly
-	for ch in chunks:
-		for i,s in enumerate(ch.points):
-			r=ch.rotations[i]
-			r=Euler(r)
-			r.x=-r.x
-			r.y=-r.y
-			r.z=-r.z
-			s.rotate(r)
-			ch.points[i]=s
+	
 	'''
 	return chunks  
 	
@@ -2728,7 +2718,6 @@ def chunksToMesh(chunks,o):
 	verts = [origin]
 	if o.axes!='3':
 		verts_rotations=[(0,0,0)]
-	#verts=[]
 	progress('building paths from chunks')
 	e=0.0001
 	lifted=True
@@ -2767,10 +2756,10 @@ def chunksToMesh(chunks,o):
 				v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
 			else:
 				v=ch.startpoints[-1]
-				verts.rotations.extend(ch.rotations[-1])
+				verts_rotations.append(ch.rotations[-1])
 			verts.append(v)
 		lifted=lift
-		
+		#print(verts_rotations)
 	if o.use_exact:
 		cleanupBulletCollision(o)
 		
@@ -2785,7 +2774,18 @@ def chunksToMesh(chunks,o):
 	mesh.name=oname
 	mesh.from_pydata(verts, edges, [])
 	if o.axes!='3':
-		mesh.vertex_colors.new()
+		x=[]
+		y=[]
+		z=[]
+		for a,b,c in verts_rotations:#TODO: optimize this. this is just rewritten too many times...
+			#print(r)
+			x.append(a)
+			y.append(b)
+			z.append(c)
+			
+		mesh['rot_x']=x
+		mesh['rot_y']=y
+		mesh['rot_z']=z
 		
 
 	if oname in s.objects:
@@ -2798,7 +2798,7 @@ def chunksToMesh(chunks,o):
 	ob.location=(0,0,0)
 	o.path_object_name=oname
 	verts=ob.data.vertices
-	exportGcodePath(o.filename,[verts],[o])
+	exportGcodePath(o.filename,[ob.data],[o])
 
 def safeFileName(name):#for export gcode
 	valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
@@ -2848,7 +2848,7 @@ def exportGcodePath(filename,vertslist,operations):
 	else:
 		c.imperial()
 		unitcorr=1/0.0254;
-		
+	rotcorr=180.0/pi
 	#start program
 	c.program_begin(0,filename)
 	c.comment('G-code generated with BlenderCAM and NC library')
@@ -2859,8 +2859,13 @@ def exportGcodePath(filename,vertslist,operations):
 	c.flush_nc()
 
 	for i,o in enumerate(operations):
-		verts=vertslist[i]
-
+		mesh=vertslist[i]
+		verts=mesh.vertices
+		if o.axes!='3':
+			rx=mesh['rot_x']
+			ry=mesh['rot_y']
+			rz=mesh['rot_z']
+			
 		#spindle rpm and direction
 		###############
 		if o.spindle_rotation_direction=='CW':
@@ -2885,12 +2890,27 @@ def exportGcodePath(filename,vertslist,operations):
 		freefeedrate=m.feedrate_max*unitcorr
 		
 		last=Vector((0,0,0))
-
+		lastrot=Euler((0,0,0))
 		o.duration=0.0
 		f=millfeedrate
 		downvector= Vector((0,0,-1))
 		for vi in range(0,len(verts)):
-			v=verts[vi].co
+			v=verts[vi].co.copy()
+			if o.axes!='3':
+				r=Euler((rx[vi],ry[vi],rz[vi]))
+				#conversion to N-axis coordinates
+				# this seems to work correctly
+				rcompensate=r.copy()
+				rcompensate.x=-r.x
+				rcompensate.y=-r.y
+				rcompensate.z=-r.z
+				v.rotate(rcompensate)
+				
+				if r.x==lastrot.x: ra=None;
+				else:   ra=r.x*rotcorr
+				if r.y==lastrot.y: rb=None;
+				else:   rb=r.y*rotcorr
+
 			if v.x==last.x: vx=None; 
 			else:   vx=v.x*unitcorr
 			if v.y==last.y: vy=None; 
@@ -2906,22 +2926,36 @@ def exportGcodePath(filename,vertslist,operations):
 				#print(vect)
 				f=plungefeedrate
 				c.feedrate(plungefeedrate)
-				c.feed(x=vx,y=vy,z=vz)
+				if o.axes=='3':
+					c.feed( x=vx, y=vy, z=vz )
+				else:
+					print(ra,rb)
+					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
+					
 			elif v.z==last.z==o.free_movement_height or vi==0:
 				f=freefeedrate
 				c.feedrate(freefeedrate)
-				c.rapid(x=vx,y=vy,z=vz)
+				if o.axes=='3':
+					c.rapid( x = vx , y = vy , z = vz )
+				else:
+					c.rapid(x=vx, y=vy, z = vz, a = ra, b = rb)
 				#gcommand='{RAPID}'
 				
 			else:
 				f=millfeedrate
 				c.feedrate(millfeedrate)
-				c.feed(x=vx,y=vy,z=vz)
+				if o.axes=='3':
+					c.feed(x=vx,y=vy,z=vz)
+				else:
+					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
+
 			#v1=Vector(v)
 			#v2=Vector(last)
 			#vect=v1-v2
 			o.duration+=vect.length/(f/unitcorr)
 			last=v
+			if o.axes!='3':
+				lastrot=r
 	#print('duration')
 	#print(o.duration)
 	c.program_end()

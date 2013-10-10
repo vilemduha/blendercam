@@ -592,11 +592,11 @@ class PathsChain(bpy.types.Operator):
 		
 		chain=s.cam_chains[s.cam_active_chain]
 		chainops=getChainOperations(chain)
-		verts=[]
+		meshes=[]
 		for o in chainops:
 			#bpy.ops.object.calculate_cam_paths_background()
-			verts.append(bpy.data.objects[o.path_object_name].data.vertices)
-		utils.exportGcodePath(chain.filename,verts,chainops)
+			meshes.append(bpy.data.objects[o.path_object_name].data)
+		utils.exportGcodePath(chain.filename,meshes,chainops)
 		return {'FINISHED'}
 	
 	def draw(self, context):
