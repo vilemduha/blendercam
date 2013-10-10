@@ -43,6 +43,15 @@ import string
 
 BULLET_SCALE=1000 # this is a constant for scaling the rigidbody collision world for higher precision from bullet library
 
+def tuple_add(t,t1):#add two tuples as Vectors
+	return ((t[0]+t1[0],t[1]+t1[1],t[2]+t1[2]))
+
+def tuple_sub(t,t1):#sub two tuples as Vectors
+	return ((t[0]-t1[0],t[1]-t1[1],t[2]-t1[2]))
+
+def tuple_mul(t,c):#multiply two tuples with a number
+	return ((t[0]*c,t[1]*c,t[2]*c))
+	
 def activate(o):
 	s=bpy.context.scene
 	bpy.ops.object.select_all(action='DESELECT')
@@ -177,8 +186,12 @@ def prepareBulletCollision(o):
 	t=time.time()
 	s=bpy.context.scene
 	s.gravity=(0,0,0)
-	bpy.ops.object.select_all(action='SELECT')
-	bpy.ops.rigidbody.objects_remove()
+	#cleanup rigidbodies wrongly placed somewhere in the scene
+	for ob in bpy.context.scene.objects:
+		if ob.rigid_body != None and ob.name not in bpy.data.groups['machine'].objects:
+			activate(ob)
+			bpy.ops.rigidbody.object_remove()
+			
 	for collisionob in o.objects:
 		activate(collisionob)
 		bpy.ops.object.duplicate(linked=False)
@@ -192,8 +205,15 @@ def prepareBulletCollision(o):
 		bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
 		collisionob.location=collisionob.location*BULLET_SCALE
 		bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-
+	
 	getCutterBullet(o)
+	
+	#machine objects scaling up to simulation scale
+	if bpy.data.groups.find('machine')>-1:
+		for ob in bpy.data.groups['machine'].objects:
+			activate(ob)
+			bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
+			ob.location=ob.location*BULLET_SCALE
 	#stepping simulation so that objects are up to date
 	bpy.context.scene.frame_set(0)
 	bpy.context.scene.frame_set(1)
@@ -202,12 +222,22 @@ def prepareBulletCollision(o):
 	
 	
 def cleanupBulletCollision(o):
+	if bpy.data.groups.find('machine')>-1:
+		machinepresent=True
+	else:
+		machinepresent=False
 	for ob in bpy.context.scene.objects:
-		if ob.rigid_body != None:
+		if ob.rigid_body != None and not (machinepresent and ob.name in bpy.data.groups['machine'].objects):
 			activate(ob)
 			bpy.ops.rigidbody.object_remove()
 			bpy.ops.object.delete(use_global=False)
-
+	#machine objects scaling up to simulation scale
+	if machinepresent:
+		for ob in bpy.data.groups['machine'].objects:
+			activate(ob)
+			bpy.ops.transform.resize(value=(1.0/BULLET_SCALE, 1.0/BULLET_SCALE, 1.0/BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
+			ob.location=ob.location/BULLET_SCALE
+			
 def positionObject(operation):
 	ob=bpy.data.objects[operation.object_name]
 	minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace([ob]) 
@@ -665,7 +695,7 @@ def getPathPattern4axis(operation):
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	pathchunks=[]
 	zlevel=1#minz#this should do layers...
-	if o.strategy=='PARALLEL':
+	if o.strategy4axis=='PARALLELA':
 		cutterstart=Vector((0,0,0))#start point for casting
 		cutterend=Vector((0,0,0))#end point for casting
 		
@@ -687,21 +717,59 @@ def getPathPattern4axis(operation):
 			
 			for b in range(0,floor(circlesteps)+1):
 				#print(cutterstart,cutterend)
-				chunk.points.append(cutterstart.to_tuple())
+				chunk.startpoints.append(cutterstart.to_tuple())
 				chunk.endpoints.append(cutterend.to_tuple())
 				chunk.rotations.append((b*anglestep,0,0))
 				cutterstart.rotate(e)
 
 			chunk.depth=-radius
 			#last point = first
-			chunk.points.append(chunk.points[0])
+			chunk.startpoints.append(chunk.startpoints[0])
 			chunk.endpoints.append(chunk.endpoints[0])
 			chunk.rotations.append(chunk.rotations[0])
 			
 			pathchunks.append(chunk)
 			
-	
-		return pathchunks 
+	if o.strategy4axis=='PARALLELX':
+		cutterstart=Vector((0,0,0))#start point for casting
+		cutterend=Vector((0,0,0))#end point for casting
+		
+		my=max(abs(o.min.y),abs(o.max.y))
+		mz=max(abs(o.min.z),abs(o.max.z))
+		radius=math.sqrt(my*my+mz*mz)#max radius estimation
+		
+		circlesteps=(radius*pi*2)/o.dist_along_paths
+		steps=(o.max.x-o.min.x)/o.dist_between_paths
+		anglestep = 2*pi/circlesteps
+		e=Euler((anglestep,0,0))
+		
+		reverse=False
+		
+		for b in range(0,floor(circlesteps)+1):
+			chunk=camPathChunk([])
+			cutterstart.y=0
+			cutterstart.z=radius
+			e.x=anglestep*b
+			cutterstart.rotate(e)
+			for a in range(0,floor(steps)+1):
+				cutterstart.x=o.min.x+a*o.dist_between_paths
+				cutterend.x=cutterstart.x
+				chunk.startpoints.append(cutterstart.to_tuple())
+				chunk.endpoints.append(cutterend.to_tuple())
+				chunk.rotations.append((b*anglestep,0,0))
+				
+			chunk.depth=-radius
+			#last point = first
+			
+			
+			pathchunks.append(chunk)
+			
+			if (reverse and o.movement_type=='MEANDER') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') :
+				chunk.reverse()
+				
+			reverse=not reverse
+			
+	return pathchunks 
 	
 	
 def getCachePath(o):
@@ -1731,8 +1799,9 @@ def getSampleBulletNAxis(cutter, startpoint,endpoint,rotation, radius):
 		v=endpoint-startpoint# a vector in the opposite direction of sweep test
 		v.normalize()
 		res=(pos+v*radius)/BULLET_SCALE
-		if random.random()<0.02:
-			dupliob(cutter,res)
+		#this is a debug loop that duplicates the cutter on sampling positions, to see where it was moving...
+		#if random.random()<0.01:
+		#	dupliob(cutter,res)
 				
 		return res
 	else:
@@ -1953,7 +2022,7 @@ def sampleChunks(o,pathSamples,layers):
 				sampled=True
 				#maxz=max(minz,maxz)
 				
-			if sampled and (not o.inverse or (o.inverse)):
+			if sampled:# and (not o.inverse or (o.inverse)):uh what was this? disabled
 				newsample=(x,y,maxz)
 					
 			elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here
@@ -2078,7 +2147,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	
 	totlen=0;#total length of all chunks, to estimate sampling time.
 	for ch in pathSamples:
-		totlen+=len(ch.points)
+		totlen+=len(ch.startpoints)
 	layerchunks=[]
 	minz=o.minz
 	layeractivechunks=[]
@@ -2104,7 +2173,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 		lastrotation=(0,0,0)
 		#for t in range(0,threads):
 			
-		for si,startp in enumerate(patternchunk.points):
+		for si,startp in enumerate(patternchunk.startpoints):
 			if n/200.0==int(n/200.0):
 				progress('sampling paths ',int(100*n/totlen))
 			n+=1
@@ -2112,14 +2181,17 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			sampled=False
 			#print(si)
 			#print(patternchunk.points[si],patternchunk.endpoints[si])
-			startp=Vector(patternchunk.points[si])
+			startp=Vector(patternchunk.startpoints[si])
 			endp=Vector(patternchunk.endpoints[si])
 			rotation=patternchunk.rotations[si]
 			sweepvect=endp-startp
 			sweepvect.normalize()
 			####sampling
 			if rotation!=lastrotation:
+			
 				cutter.rotation_euler=rotation
+				if o.cutter_type=='VCARVE':
+					cutter.rotation_euler.x+=pi
 				bpy.context.scene.frame_set(0)
 				#update scene here?
 				
@@ -2178,25 +2250,39 @@ def sampleChunksNAxis(o,pathSamples,layers):
 								ratio=(splitdistance-lastdistance)/(distance-lastdistance)
 								#print(ratio)
 								betweensample=lastsample+(newsample-lastsample)*ratio
-								
-								#ch.points.append(betweensample.to_tuple())
+								#this probably doesn't work at all!!!! check this algoritm>
+								betweenrotation=tuple_add(lastrotation,tuple_mul(tuple_sub(rotation,lastrotation),ratio))
+								#startpoint = retract point, it has to be always available...
+								betweenstartpoint=laststartpoint+(startp-laststartpoint)*ratio
 								
 								if growing:
 									if li>0:
-										layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
+										layeractivechunks[ls].points.insert(-1,betweensample)
+										layeractivechunks[ls].rotations.insert(-1,betweenrotation)
+										layeractivechunks[ls].startpoints.insert(-1,betweenstartpoint)
 									else:
-										layeractivechunks[ls].points.append(betweensample.to_tuple())
-									layeractivechunks[ls+1].points.append(betweensample.to_tuple())
+										layeractivechunks[ls].points.append(betweensample)
+										layeractivechunks[ls].rotations.append(betweenrotation)
+										layeractivechunks[ls].startpoints.append(betweenstartpoint)
+									layeractivechunks[ls+1].points.append(betweensample)
+									layeractivechunks[ls+1].rotations.append(betweenrotation)
+									layeractivechunks[ls+1].startpoints.append(betweenstartpoint)
 								else:
 									
-									layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
-									layeractivechunks[ls+1].points.append(betweensample.to_tuple())
-									#layeractivechunks[ls+1].points.insert(0,betweensample.to_tuple())
+									layeractivechunks[ls].points.insert(-1,betweensample)
+									layeractivechunks[ls].rotations.insert(-1,betweenrotation)
+									layeractivechunks[ls].startpoints.insert(-1,betweenstartpoint)
+									layeractivechunks[ls+1].points.append(betweensample)
+									layeractivechunks[ls+1].rotations.append(betweenrotation)
+									layeractivechunks[ls+1].startpoints.append(betweenstartpoint)
+									#layeractivechunks[ls+1].points.insert(0,betweensample)
 								li+=1
 								#this chunk is terminated, and allready in layerchunks /
 									
-							#ch.points.append(betweensample.to_tuple())#
+							#ch.points.append(betweensample)#
 						ch.points.append(newsample)
+						ch.rotations.append(rotation)
+						ch.startpoints.append(startp)
 						lastdistance=distance
 						
 					
@@ -2204,8 +2290,12 @@ def sampleChunksNAxis(o,pathSamples,layers):
 						v=sweepvect*l[1]
 						p=startp-v
 						ch.points.append(p)
+						ch.rotations.append(rotation)
+						ch.startpoints.append(startp)
 					elif l[0]<distance:  #retract to original track
 						ch.points.append(startp)
+						ch.rotations.append(rotation)
+						ch.startpoints.append(startp)
 						#terminatechunk=True
 					'''
 					if terminatechunk:
@@ -2219,9 +2309,8 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			#else:
 			#	terminatechunk=True
 			lastsample=newsample
-			
-			
-					
+			lastrotation=rotation
+			laststartpoint=startp
 		for i,l in enumerate(layers):
 			ch=layeractivechunks[i]
 			if len(ch.points)>0:  
@@ -2235,8 +2324,9 @@ def sampleChunksNAxis(o,pathSamples,layers):
 		lastrunchunks=thisrunchunks
 				
 			#print(len(layerchunks[i]))
+	
 	progress('checking relations between paths')
-	'''
+	'''#this algorithm should also work for n-axis, but now is "sleeping"
 	if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
 		if len(layers)>1:# sorting help so that upper layers go first always
 			for i in range(0,len(layers)-1):
@@ -2247,6 +2337,19 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	for i,l in enumerate(layers):
 		chunks.extend(layerchunks[i])
 	
+	'''
+	#conversion to N-axis coordinates
+	# this seems to work correctly
+	for ch in chunks:
+		for i,s in enumerate(ch.points):
+			r=ch.rotations[i]
+			r=Euler(r)
+			r.x=-r.x
+			r.y=-r.y
+			r.z=-r.z
+			s.rotate(r)
+			ch.points[i]=s
+	'''
 	return chunks  
 	
 def dist2d(v1,v2):
@@ -2464,27 +2567,28 @@ def isVerticalLimit(v1,v2,limit):
 	
 def optimizeChunk(chunk,operation):
 	
-	for vi in range(len(chunk)-2,0,-1):
+	for vi in range(len(chunk.points)-2,0,-1):
 		#vmiddle=Vector()
 		#v1=Vector()
 		#v2=Vector()
-		if compare(chunk[vi-1],chunk[vi+1],chunk[vi],operation.optimize_threshold):
+		if compare(chunk.points[vi-1],chunk.points[vi+1],chunk.points[vi],operation.optimize_threshold):
 
 			chunk.pop(vi)
+			
 			#vi-=1
 	#protect_vertical=True
-	if operation.protect_vertical:#protect vertical surfaces
+	if operation.protect_vertical and operation.axes=='3':#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right?
 		#print('verticality test')
 		
 		
-		for vi in range(len(chunk)-1,0,-1):
-			v1=chunk[vi]
-			v2=chunk[vi-1]
+		for vi in range(len(chunk.points)-1,0,-1):
+			v1=chunk.points[vi]
+			v2=chunk.points[vi-1]
 			v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
 			if v1c!=v1:
-				chunk[vi]=v1c
+				chunk.points[vi]=v1c
 			elif v2c!=v2:
-				chunk[vi-1]=v2c
+				chunk.points[vi-1]=v2c
 			
 			
 		#print(vcorrected)
@@ -2493,7 +2597,7 @@ def optimizeChunk(chunk,operation):
 #def subcutter()
 
 def doSimulation(name,operations):
-	'''perform simulation of operations. '''
+	'''perform simulation of operations. only for 3 axis'''
 	o=operations[0]#initialization now happens from first operation, also for chains.
 	
 	
@@ -2622,27 +2726,35 @@ def chunksToMesh(chunks,o):
 	s=bpy.context.scene
 	origin=(0,0,o.free_movement_height)  
 	verts = [origin]
+	if o.axes!='3':
+		verts_rotations=[(0,0,0)]
 	#verts=[]
 	progress('building paths from chunks')
 	e=0.0001
+	lifted=True
 	for chi in range(0,len(chunks)):
 		ch=chunks[chi]
-		ch=ch.points
 		if o.optimize:
 			ch=optimizeChunk(ch,o)
 		
 		#lift and drop
 		
-		if verts[-1][2]==o.free_movement_height:
-			v=(ch[0][0],ch[0][1],o.free_movement_height)
+		if lifted:
+			if o.axes=='3':
+				v=(ch.points[0][0],ch.points[0][1],o.free_movement_height)
+			else:
+				v=ch.startpoints[0]#startpoints=retract points
+				verts_rotations.append(ch.rotations[0])
 			verts.append(v)
 		
-		verts.extend(ch)
-		
+		verts.extend(ch.points)
+		if o.axes!='3':
+			verts_rotations.extend(ch.rotations)
+			
 		lift = True
-		if chi<len(chunks)-1:
+		if chi<len(chunks)-1:#TODO: remake this for n axis
 			#nextch=
-			last=Vector(ch[-1])
+			last=Vector(ch.points[-1])
 			first=Vector(chunks[chi+1].points[0])
 			vect=first-last
 			if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*2.5:#case of neighbouring paths
@@ -2651,33 +2763,36 @@ def chunksToMesh(chunks,o):
 				lift=False
 			
 		if lift:
-			v=(ch[-1][0],ch[-1][1],o.free_movement_height)
+			if o.axes== '3':
+				v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
+			else:
+				v=ch.startpoints[-1]
+				verts.rotations.extend(ch.rotations[-1])
 			verts.append(v)
-			
+		lifted=lift
+		
 	if o.use_exact:
 		cleanupBulletCollision(o)
 		
+	#actual blender object generation starts here:
 	edges=[]	
 	for a in range(0,len(verts)-1):
 		edges.append((a,a+1))
-		
-			
 	
-	#print(verts[1])
-	#print(edges[1])  
 	oname="cam_path_"+o.name
 		
 	mesh = bpy.data.meshes.new(oname)
 	mesh.name=oname
 	mesh.from_pydata(verts, edges, [])
-	#if o.path!='' and o.path in s.objects:
-	#  s.objects[oname].data=mesh
-	#el
+	if o.axes!='3':
+		mesh.vertex_colors.new()
+		
+
 	if oname in s.objects:
 		s.objects[oname].data=mesh
 		ob=s.objects[oname]
 	else: 
-		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)#this returns some ObjectBase type,dunno what that is.
+		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
 		ob=ob.object
 		
 	ob.location=(0,0,0)
@@ -2685,68 +2800,6 @@ def chunksToMesh(chunks,o):
 	verts=ob.data.vertices
 	exportGcodePath(o.filename,[verts],[o])
 
-def chunksToMeshNAxis(chunks,o):
-	##########convert sampled chunks to path, optimization of paths
-	s=bpy.context.scene
-	origin=(0,0,o.free_movement_height)  
-	verts = [origin]
-	#verts=[]
-	progress('building paths from chunks')
-	e=0.0001
-	for chi in range(0,len(chunks)):
-		ch=chunks[chi]
-		ch=ch.points
-		if o.optimize:
-			ch=optimizeChunk(ch,o)
-		
-		#lift and drop
-		
-		if verts[-1][2]==o.free_movement_height:
-			v=(ch[0][0],ch[0][1],o.free_movement_height)
-			verts.append(v)
-		
-		verts.extend(ch)
-		
-		lift = True
-		if chi<len(chunks)-1:
-			#nextch=
-			last=Vector(ch[-1])
-			first=Vector(chunks[chi+1].points[0])
-			vect=first-last
-			if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*2.5:#case of neighbouring paths
-				lift=False
-			if abs(vect.x)<e and abs(vect.y)<e:#case of stepdown by cutting.
-				lift=False
-			
-		if lift:
-			v=(ch[-1][0],ch[-1][1],o.free_movement_height)
-			verts.append(v)
-			
-	if o.use_exact:
-		cleanupBulletCollision(o)
-		
-	edges=[]	
-	for a in range(0,len(verts)-1):
-		edges.append((a,a+1))
-	oname="cam_path_"+o.name
-	mesh = bpy.data.meshes.new(oname)
-	mesh.name=oname
-	mesh.from_pydata(verts, edges, [])
-	#if o.path!='' and o.path in s.objects:
-	#  s.objects[oname].data=mesh
-	#el
-	if oname in s.objects:
-		s.objects[oname].data=mesh
-		ob=s.objects[oname]
-	else: 
-		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)#this returns some ObjectBase type,dunno what that is.
-		ob=ob.object
-		
-	ob.location=(0,0,0)
-	o.path_object_name=oname
-	verts=ob.data.vertices
-	exportGcodePath(o.filename,[verts],[o])
-	
 def safeFileName(name):#for export gcode
 	valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
 	filename=''.join(c for c in name if c in valid_chars)
@@ -3097,14 +3150,15 @@ class camPathChunk:
 	#sorted=False
 	
 	#progressIndex=-1# for e.g. parallel strategy, when trying to save time..
-	def __init__(self,inpoints ,endpoints = [], rotations = []):
+	def __init__(self,inpoints ,startpoints = [], endpoints = [], rotations = []):
 		if len(inpoints)>2:
 			self.poly=Polygon.Polygon(inpoints)
 		else:
 			self.poly=Polygon.Polygon()
-		self.points=inpoints
-		self.endpoints = []
-		self.rotations = []
+		self.points=inpoints#for 3 axes, this is only storage of points. For N axes, here go the sampled points
+		self.startpoints = []#from where the sweep test begins, but also retract point for given path
+		self.endpoints = []#where sweep test ends
+		self.rotations = []#rotation of the machine axes
 		self.closed=False
 		self.children=[]
 		self.parents=[]
@@ -3135,7 +3189,7 @@ class camPathChunk:
 				return dist2d(pos,self.points[0])
 	
 	def adaptdist(self,pos,o):
-
+		#reorders chunk so that it starts at the closest point to pos.
 		if self.closed:
 			mind=10000000
 			minv=-1
@@ -3168,6 +3222,7 @@ class camPathChunk:
 		return self
 	
 	def getLength(self):
+		#computes length of the chunk - in 3d
 		self.length=0
 		
 		for vi,v1 in enumerate(self.points):
@@ -3181,6 +3236,18 @@ class camPathChunk:
 			v=v2-v1
 			self.length+=v.length
 			#print(v,pos)
+	
+	def reverse(self):
+		self.points.reverse()
+		self.startpoints.reverse()
+		self.endpoints.reverse()
+		self.rotations.reverse()
+	def pop(self, index):
+		self.points.pop(index)
+		if len(self.startpoints)>0:
+			self.startpoints.pop(index)
+			self.endpoints.pop(index)
+			self.rotations.pop(index)
 #def appendChunk(sorted,ch,o,pos)   
 	
 
@@ -4999,8 +5066,8 @@ def getPath3axis(context,operation):
 						chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.min.z)]))
 			chunks=sortChunks(chunks,o)
 			chunksToMesh(chunks,o)
-		ob=bpy.context.active_object
-		bpy.context.scene.objects.unlink(ob)
+		activate(ob)
+		bpy.ops.object.delete(use_global=False)#delete temporary object with applied transforms
 	elif o.strategy=='SLICES':
 		slicechunks = getSlices(o,0)
 		for slicechunk in slicechunks:
@@ -5020,7 +5087,7 @@ def getPath4axis(context,operation):
 	s=bpy.context.scene
 	o=operation
 	getBounds(o)
-	if o.strategy=='PARALLEL':  
+	if o.strategy4axis=='PARALLELA' or o.strategy4axis=='PARALLELX':  
 		pathSamples=getPathPattern4axis(o)
 		
 		depth=pathSamples[0].depth

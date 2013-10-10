@@ -228,10 +228,11 @@ class camOperation(bpy.types.PropertyGroup):
 		update = updateStrategy)#,('SLICES','Slices','this prepares model for cutting from sheets of material')
 	strategy4axis = EnumProperty(name='Strategy',
 		items=(
-			('PARALLEL','Parallel', 'Parallel lines on any angle'),
+			('PARALLELA','Parallel around A', 'Parallel lines around A axis'),
+			('PARALLELX','Parallel along X', 'Parallel lines along X axis'),
 			('CROSS','Cross', 'Cross paths')),
 		description='Strategy',
-		default='PARALLEL',
+		default='PARALLELA',
 		update = updateStrategy)
 	strategy5axis = EnumProperty(name='Strategy',
 		items=(
