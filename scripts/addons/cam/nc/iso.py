@@ -408,7 +408,7 @@ class Creator(nc.Creator):
         self.write_misc()
         self.write('\n')
 
-    def feed(self, x=None, y=None, z=None):
+    def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
         if self.same_xyz(x, y, z): return
         self.write_blocknum()
         if self.g0123_modal:
@@ -442,6 +442,31 @@ class Creator(nc.Creator):
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(dz)))
 
             self.z = z
+
+        if (a != None):
+            da = a - self.a
+            if (self.absolute_flag ):
+                self.write(self.SPACE() + self.A() + (self.fmt.string(a)))
+            else:
+                self.write(self.SPACE() + self.A() + (self.fmt.string(da)))
+            self.a = a
+
+        if (b != None):
+            db = b - self.b
+            if (self.absolute_flag ):
+                self.write(self.SPACE() + self.B() + (self.fmt.string(b)))
+            else:
+                self.write(self.SPACE() + self.B() + (self.fmt.string(db)))
+            self.b = b
+
+        if (c != None):
+            dc = c - self.c
+            if (self.absolute_flag ):
+                self.write(self.SPACE() + self.C() + (self.fmt.string(c)))
+            else:
+                self.write(self.SPACE() + self.C() + (self.fmt.string(dc)))
+            self.c = c
+
         if (self.fhv) : self.calc_feedrate_hv(math.sqrt(dx*dx+dy*dy), math.fabs(dz))
         self.write_feedrate()
         self.write_spindle()
