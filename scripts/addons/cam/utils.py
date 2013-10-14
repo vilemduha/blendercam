@@ -644,7 +644,7 @@ def getPathPattern(operation):
 	elif o.strategy=='OUTLINEFILL':
 		
 		
-		polys=getObjectSilhouette(o)
+		polys=getOperationSilhouette(o)
 		pathchunks=[]
 		chunks=[]
 		for p in polys:
@@ -1993,6 +1993,7 @@ def sampleChunks(o,pathSamples,layers):
 			n+=1
 			x=s[0]
 			y=s[1]
+			#if (not o.use_limit_curve) or (o.use_limit_curve and o.limit_poly.isInside(x,y)):
 			maxz=minz
 			
 			sampled=False
@@ -2022,7 +2023,7 @@ def sampleChunks(o,pathSamples,layers):
 			################################
 			#handling samples
 			############################################
-			if maxz>=minz or (o.use_exact and o.ambient.isInside(x,y)):
+			if (maxz>=minz or (o.use_exact and o.ambient.isInside(x,y))) and ((not o.use_limit_curve) or (o.use_limit_curve and o.limit_poly.isInside(x,y))) :
 				sampled=True
 				#maxz=max(minz,maxz)
 				
@@ -2095,8 +2096,8 @@ def sampleChunks(o,pathSamples,layers):
 							thisrunchunks[i].append(ch)
 							layeractivechunks[i]=camPathChunk([])
 			lastsample=newsample
+					
 				
-			
 					
 		for i,l in enumerate(layers):
 			ch=layeractivechunks[i]
@@ -2999,24 +3000,10 @@ def orderPoly(polys):   #sor poly, do holes e.t.c.
 	  
 	return p
 
-def curveToPoly(cob):
-	c=cob.data
-	verts=[]
-	pverts=[]
-	#contourscount=0
-	polys=[]
-	
-	for s in c.splines:
-		chunk=[]
-		for v in s.bezier_points:
-			chunk.append((v.co.x+cob.location.x,v.co.y+cob.location.y))
-		for v in s.points:
-			chunk.append((v.co.x+cob.location.x,v.co.y+cob.location.y))
-		
-		if len(chunk)>2:
-			polys.append(Polygon.Polygon(chunk)) 
-	p=orderPoly(polys)
-	return p
+def curveToPolys(cob):
+	chunks=curveToChunks(cob)
+	polys=chunksToPolys(chunks)
+	return polys
 '''
 def chunksToPoly(chunks):
 	
@@ -3861,7 +3848,9 @@ def cutloops(csource,parentloop,loops):
 	for l in parentloop[2]:
 		cutloops(csource,l,loops)
 
-def getObjectSilhouette(operation):
+
+	
+def getOperationSilhouette(operation):
 	o=operation
 	
 	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
@@ -4400,8 +4389,8 @@ def getObjectSilhouette(operation):
 				allchunks.extend(chunks)
 			silhouete=chunksToPolys(allchunks)
 			operation.silhouete=silhouete
-			print('silhouete')
-			print(len(operation.silhouete))
+			#print('silhouete')
+			#print(len(operation.silhouete))
 	else:#detecting silhouete in image
 		print('detecting silhouette - raster based')
 		samples=renderSampleImage(operation)
@@ -4424,7 +4413,7 @@ def getAmbient(o):
 	
 def getObjectOutline(radius,operation,Offset):
 	
-	polygons=getObjectSilhouette(operation)
+	polygons=getOperationSilhouette(operation)
 	outline=Polygon.Polygon()
 	i=0
 	#print('offseting polygons')
@@ -4606,8 +4595,11 @@ def getPath3axis(context,operation):
 	if o.use_limit_curve:
 		if o.limit_curve!='':
 			limit_curve=bpy.data.objects[o.limit_curve]
-			
-	
+			polys=curveToPolys(limit_curve)
+			o.limit_poly=Polygon.Polygon()
+			for p in polys:
+				o.limit_poly+=p
+			o.limit_poly = outlinePoly(o.limit_poly,o.cutter_diameter/2,operation,offset = False)#limit curve is made smaller by cutter radius...
 	
 	###########cutout strategy is completely here:
 	if o.strategy=='CUTOUT':
