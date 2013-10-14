@@ -52,7 +52,7 @@ PRECISION=5
 
 
 def updateMachine(self,context):
-	utils.addMachineObject()
+	utils.addMachineAreaObject()
 
 class machineSettings(bpy.types.PropertyGroup):
 	'''stores all data for machines'''
@@ -166,8 +166,15 @@ def updateZbufferImage(self,context):
 
 def updateStrategy(o,context):
 	o.changed=True
+	#print('update strategy')
+	if o.axes=='5':
+		utils.addOrientationObject(o)
+	else:
+		utils.removeOrientationObject(o)
 	updateExact(o,context)
 
+
+	
 def updateExact(o,context):
 	o.changed=True
 	if o.use_exact and (o.strategy=='WATERLINE' or o.strategy=='POCKET' or o.inverse):
@@ -208,7 +215,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('4', '#4 axis - EXPERIMENTAL', 'a'),
 			('5', '#5 axis - NOT WORKING', 'a')),
 		description='How many axes will be used for the operation',
-		default='3', update = updateOffsetImage)
+		default='3', update = updateStrategy)
 	strategy = EnumProperty(name='Strategy',
 		items=(
 			('PARALLEL','Parallel', 'Parallel lines on any angle'),
@@ -237,7 +244,16 @@ class camOperation(bpy.types.PropertyGroup):
 	strategy5axis = EnumProperty(name='Strategy',
 		items=(
 			('PARALLEL','Parallel', 'Parallel lines on any angle'),
-			('CROSS','Cross', 'Cross paths')),
+			('CROSS','Cross', 'Cross paths'),
+			('BLOCK','Block', 'Block path'),
+			('SPIRAL','Spiral', 'Spiral path'),
+			('CIRCLES','Circles', 'Circles path'),
+			('WATERLINE','Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
+			('OUTLINEFILL','Outline Fill', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
+			('CUTOUT','Cutout', 'Cut the silhouette with offset'),
+			('POCKET','Pocket', 'Pocket operation'),
+			('CARVE','Carve', 'Pocket operation'),
+			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.')),
 		description='Strategy',
 		default='PARALLEL',
 		update = updateStrategy)
@@ -246,7 +262,7 @@ class camOperation(bpy.types.PropertyGroup):
 	#render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
 	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False, update = updateOffsetImage)
 	
-	cutter_id = IntProperty(name="Tool number", description="For machines which support tool change based on tool id", min=0, max=10000, default=0, update = updateRest)
+	cutter_id = IntProperty(name="Tool number", description="For machines which support tool change based on tool id", min=0, max=10000, default=1, update = updateRest)
 	cutter_diameter = FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius", min=0.000001, max=0.1, default=0.003, precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
 	cutter_length = FloatProperty(name="#Cutter length", description="#not supported#Cutter length", min=0.0, max=100.0, default=25.0,precision=PRECISION, unit="LENGTH",  update = updateOffsetImage)
 	cutter_flutes = IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2, update = updateChipload)
@@ -778,7 +794,7 @@ class CamOperationAdd(bpy.types.Operator):
 		if len(s.cam_machine)==0:
 			s.cam_machine.add()
 		if s.objects.get('CAM_machine')==None:
-			utils.addMachineObject()
+			utils.addMachineAreaObject()
 		#if len(s.cam_material)==0:
 		#	 s.cam_material.add()
 		  
@@ -1305,6 +1321,8 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 					layout.prop(ao,'strategy')
 				elif ao.axes=='4':
 					layout.prop(ao,'strategy4axis')
+				elif ao.axes=='5':
+					layout.prop(ao,'strategy5axis')
 				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES':
 					layout.prop(ao,'movement_insideout')
 					
