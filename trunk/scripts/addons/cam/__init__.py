@@ -1076,7 +1076,7 @@ class CAM_MACHINE_Panel(bpy.types.Panel):
 				layout.prop(ao,'spindle_min')
 				layout.prop(ao,'spindle_max')
 				#layout.prop(ao,'spindle_default')
-				layout.prop(ao,'axis4')
+				#layout.prop(ao,'axis4')
 				#layout.prop(ao,'axis5')
 				#layout.prop(ao,'collet_size')
 
@@ -1316,7 +1316,7 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 		if len(scene.cam_operations)>0:
 			ao=scene.cam_operations[scene.cam_active_operation]
 			if ao.valid:
-				layout.prop(ao,'axes')
+				#layout.prop(ao,'axes')
 				if ao.axes=='3':
 					layout.prop(ao,'strategy')
 				elif ao.axes=='4':
