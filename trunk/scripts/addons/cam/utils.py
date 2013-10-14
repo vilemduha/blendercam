@@ -58,6 +58,22 @@ def activate(o):
 	o.select=True
 	s.objects.active=o
 	
+
+def dupliob(o,pos):
+	'''helper function for visualising cutter positions'''
+	activate(o)
+	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":True, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
+	s=1.0/BULLET_SCALE
+	bpy.ops.transform.resize(value=(s, s, s), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1)
+	o=bpy.context.active_object
+	bpy.ops.rigidbody.object_remove()
+	o.location=pos
+	
+def delob(ob):
+	'''object deletion for multiple uses'''
+	activate(ob)
+	bpy.ops.object.delete(use_global=False)
+
 def progress(text,n=None):
 	#for i in range(n+1):
 	#sys.stdout.flush()
@@ -228,9 +244,7 @@ def cleanupBulletCollision(o):
 		machinepresent=False
 	for ob in bpy.context.scene.objects:
 		if ob.rigid_body != None and not (machinepresent and ob.name in bpy.data.groups['machine'].objects):
-			activate(ob)
-			bpy.ops.rigidbody.object_remove()
-			bpy.ops.object.delete(use_global=False)
+			delob(ob)
 	#machine objects scaling up to simulation scale
 	if machinepresent:
 		for ob in bpy.data.groups['machine'].objects:
@@ -1774,16 +1788,6 @@ def getSampleBullet(cutter, x,y, radius, startz, endz):
 		return (pos[0][2]-radius)/BULLET_SCALE
 	else:
 		return endz-10;
-	
-def dupliob(o,pos):
-	'''helper function for visualising cutter positions'''
-	activate(o)
-	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":True, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
-	s=1.0/BULLET_SCALE
-	bpy.ops.transform.resize(value=(s, s, s), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1)
-	o=bpy.context.active_object
-	bpy.ops.rigidbody.object_remove()
-	o.location=pos
 	
 def getSampleBulletNAxis(cutter, startpoint,endpoint,rotation, radius):
 	'''fully 3d collision test for NAxis milling'''
@@ -4474,11 +4478,28 @@ def getObjectOutline(radius,operation,Offset):
 			outline=outline+p
 	return outline
 	
-def addMachineObject():
+def addOrientationObject(o):
+	name = o.name+' orientation'
+	s=bpy.context.scene
+	if s.objects.find(name)==-1:
+		bpy.ops.object.empty_add(type='SINGLE_ARROW', view_align=False, location=(0,0,0))
+
+		ob=bpy.context.active_object
+		ob.empty_draw_size=0.05
+		ob.show_name=True
+		ob.name=name
+
+def removeOrientationObject(o):
+	name=o.name+' orientation'
+	if bpy.context.scene.objects.find(name)>-1:
+		ob=bpy.context.scene.objects[name]
+		delob(ob)
+
+def addMachineAreaObject():
 	
 	s=bpy.context.scene
 	ao=bpy.context.active_object
-	if s.objects.get('CAM_machine')!=None:
+	if s.objects.get('CAM_machine_area')!=None:
 	   o=s.objects['CAM_machine']
 	else:
 		bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
@@ -5100,8 +5121,7 @@ def getPath3axis(context,operation):
 						chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.min.z)]))
 			chunks=sortChunks(chunks,o)
 			chunksToMesh(chunks,o)
-		activate(ob)
-		bpy.ops.object.delete(use_global=False)#delete temporary object with applied transforms
+		delob(ob)#delete temporary object with applied transforms
 	elif o.strategy=='SLICES':
 		slicechunks = getSlices(o,0)
 		for slicechunk in slicechunks:
@@ -5143,6 +5163,84 @@ def getPath4axis(context,operation):
 		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
 		chunksToMesh(chunks,o)
 
+def prepare5axisIndexed(o):
+	s=bpy.context.scene
+	#first store objects positions/rotations
+	o.matrices=[]
+	for ob in o.objects:
+		o.matrices.append(ob.matrix_world)
+	#then rotate them
+	for ob in o.objects:
+		ob.select=True
+		
+	s.cursor_location=(0,0,0)
+	oriname=o.name+' orientation'
+	ori=s.objects[oriname]
+	
+	rot=ori.rotation_euler.copy()
+	rot.x=-rot.x
+	rot.y=-rot.y
+	rot.z=-rot.z
+	rotationaxes = rotTo2axes(ori.rotation_euler,'CA')
+	
+	#bpy.context.space_data.pivot_point = 'CURSOR'
+	#bpy.context.space_data.pivot_point = 'CURSOR'
+
+	for ob in o.objects:
+		
+		ob.rotation_euler.rotate(rot)
+
+def cleanup5axisIndexed(operation):
+	for i,ob in enumerate(o.objects):
+		ob.matrix_world=o.matrices[i]
+		
+def rotTo2axes(e,axescombination):
+	'''converts an orientation object rotation to rotation defined by 2 rotational axes.
+	attempting to do this for all axes combinations.
+	'''
+	v=Vector((0,0,1))
+	v.rotate(e)
+	if axescombination=='CA':
+		v2d=Vector((v.x,v.y))
+		a1base=Vector((0,1))#?is this right?It should be vector defining 0 rotation
+		if v2d.length>0:
+			cangle=a1base.angle_signed(v2d)
+		else:
+			return(0,0)
+		v2d=Vector((v2d.length,v.z))
+		a2base=Vector((0,1))
+		aangle=a2base.angle_signed(v2d)
+		print(cangle,aangle)
+		return (cangle,aangle)
+	elif axescombination=='CB':
+		v2d=Vector((v.x,v.y))
+		a1base=Vector((1,0))#?is this right?It should be vector defining 0 rotation
+		if v2d.length>0:
+			cangle=a1base.angle_signed(v2d)
+		else:
+			return(0,0)
+		v2d=Vector((v2d.length,v.z))
+		a2base=Vector((0,1))
+		bangle=a2base.angle_signed(v2d)
+		print(cangle,bangle)
+		return (cangle,bangle)
+
+	'''
+	v2d=((v[a[0]],v[a[1]]))
+	angle1=a1base.angle(v2d)#C for ca
+	print(angle1)
+	if axescombination[0]=='C':
+		e1=Vector((0,0,-angle1))
+	elif axescombination[0]=='A':#TODO: finish this after prototyping stage
+		pass;
+	v.rotate(e1)
+	vbase=Vector(0,1,0)
+	bangle=v.angle(vzbase)
+	print(v)
+	print(bangle)
+	'''
+	return(angle1,angle2)
+	
 def getPath(context,operation):#should do all path calculations.
 	t=time.clock()
 
@@ -5150,7 +5248,11 @@ def getPath(context,operation):#should do all path calculations.
 		getPath3axis(context,operation)
 	elif operation.axes=='4':
 		getPath4axis(context,operation)
-		
+	elif operation.axes=='5':#5 axis operations are now only 3 axis operations that get rotated...
+		operation.orientation = prepare5axisIndexed(operation)
+		getPath3axis(context,operation)
+		cleanup5axisIndexed(operation)
+		pass
 	t1=time.clock()-t 
 	progress('total time',t1)
 
