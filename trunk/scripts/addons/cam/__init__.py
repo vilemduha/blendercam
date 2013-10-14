@@ -1316,7 +1316,7 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 		if len(scene.cam_operations)>0:
 			ao=scene.cam_operations[scene.cam_active_operation]
 			if ao.valid:
-				#layout.prop(ao,'axes')
+				layout.prop(ao,'axes')
 				if ao.axes=='3':
 					layout.prop(ao,'strategy')
 				elif ao.axes=='4':
@@ -1537,9 +1537,9 @@ class CAM_AREA_Panel(bpy.types.Panel):
 						col.prop(ao,'source_image_crop_start_y',text='start y') 
 						col.prop(ao,'source_image_crop_end_x',text='end x')
 						col.prop(ao,'source_image_crop_end_y',text='end y')
-				#layout.prop(ao,'use_limit_curve')				   
-				#if ao.use_limit_curve:
-				#	layout.prop_search(ao, "limit_curve", bpy.data, "objects")
+				layout.prop(ao,'use_limit_curve')				   
+				if ao.use_limit_curve:
+					layout.prop_search(ao, "limit_curve", bpy.data, "objects")
 				
 
 				
