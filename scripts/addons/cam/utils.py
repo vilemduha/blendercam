@@ -2733,7 +2733,7 @@ def chunksToMesh(chunks,o):
 		#lift and drop
 		
 		if lifted:
-			if o.axes=='3':
+			if o.axes=='3' or o.axes=='5':
 				v=(ch.points[0][0],ch.points[0][1],o.free_movement_height)
 			else:
 				v=ch.startpoints[0]#startpoints=retract points
@@ -2741,7 +2741,7 @@ def chunksToMesh(chunks,o):
 			verts.append(v)
 		
 		verts.extend(ch.points)
-		if o.axes!='3':
+		if o.axes!='3' and o.axes!='5':
 			verts_rotations.extend(ch.rotations)
 			
 		lift = True
@@ -2756,7 +2756,7 @@ def chunksToMesh(chunks,o):
 				lift=False
 			
 		if lift:
-			if o.axes== '3':
+			if o.axes== '3' or o.axes=='5':
 				v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
 			else:
 				v=ch.startpoints[-1]
@@ -5177,10 +5177,10 @@ def prepare5axisIndexed(o):
 	oriname=o.name+' orientation'
 	ori=s.objects[oriname]
 	
-	rot=ori.rotation_euler.copy()
-	rot.x=-rot.x
-	rot.y=-rot.y
-	rot.z=-rot.z
+	rot=ori.matrix_world.inverted()
+	#rot.x=-rot.x
+	#rot.y=-rot.y
+	#rot.z=-rot.z
 	rotationaxes = rotTo2axes(ori.rotation_euler,'CA')
 	
 	#bpy.context.space_data.pivot_point = 'CURSOR'
