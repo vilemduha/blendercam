@@ -108,3 +108,8 @@ def getCachePath(o):
 	
 	iname=fn[:-l]+'temp_cam'+os.sep+bn+'_'+o.name
 	return iname
+
+def safeFileName(name):#for export gcode
+	valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
+	filename=''.join(c for c in name if c in valid_chars)
+	return filename
