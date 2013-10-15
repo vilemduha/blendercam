@@ -1177,10 +1177,6 @@ def sortChunks(chunks,o):
 	sys.setrecursionlimit(1000)
 
 	return sortedchunks
-		
-
-	
-
 
 def testbite(pos):
 	xs=(pos.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
@@ -1208,7 +1204,6 @@ def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. 
 	o.cutterArray=-getCutterArray(o,o.simulation_detail)#getting inverted cutter
 	crazy=camPathChunk([(0,0,0)])
 	testpos=(o.min.x,o.min.y,o.min.z)
-	
 	
 def getSlices(operation, returnCurves):
 	'''function for slicing a mesh. It is now not used, but can be used for e.g. lasercutting from sheets a 3d model in the future.'''
