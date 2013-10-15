@@ -1,4 +1,4 @@
-import math,sys,os
+import math,sys,os,string
 import bpy
 import mathutils 
 from mathutils import *
