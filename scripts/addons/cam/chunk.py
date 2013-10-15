@@ -378,3 +378,83 @@ def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies.
 			returnpolys.append(ch.poly)
 	return returnpolys  
 		
+def meshFromCurveToChunk(object):
+	mesh=object.data
+	#print('detecting contours from curve')
+	chunks=[]
+	chunk=camPathChunk([])
+	ek=mesh.edge_keys
+	d={}
+	for e in ek:
+		d[e]=1#
+		#d=dict(ek)
+	dk=d.keys()
+	x=object.location.x
+	y=object.location.y
+	z=object.location.z
+	lastvi=0
+	vtotal=len(mesh.vertices)
+	perc=0
+	for vi in range(0,len(mesh.vertices)-1):
+		if not dk.isdisjoint([(vi,vi+1)]) and d[(vi,vi+1)]==1:
+			chunk.points.append((mesh.vertices[vi].co.x+x,mesh.vertices[vi].co.y+y,mesh.vertices[lastvi].co.z+z))
+		else:
+			chunk.points.append((mesh.vertices[vi].co.x+x,mesh.vertices[vi].co.y+y,mesh.vertices[lastvi].co.z+z))
+			if not(dk.isdisjoint([(vi,lastvi)])) or not(dk.isdisjoint([(lastvi,vi)])):
+				#print('itis')
+				chunk.closed=True
+				chunk.points.append((mesh.vertices[lastvi].co.x+x,mesh.vertices[lastvi].co.y+y,mesh.vertices[lastvi].co.z+z))#add first point to end#originally the z was mesh.vertices[lastvi].co.z+z
+				#chunk.append((mesh.vertices[lastvi].co.x+x,mesh.vertices[lastvi].co.y+y,mesh.vertices[lastvi].co.z+z))
+			#else:
+				#print('itisnot')
+			lastvi=vi+1
+			chunks.append(chunk)
+			chunk=camPathChunk([])
+		
+		if perc!=int(100*vi/vtotal):
+			perc=int(100*vi/vtotal)
+			progress('processing curve',perc)
+		
+	vi=len(mesh.vertices)-1
+	chunk.points.append((mesh.vertices[vi].co.x+x,mesh.vertices[vi].co.y+y,mesh.vertices[vi].co.z+z))  
+	if not(dk.isdisjoint([(vi,lastvi)])) or not(dk.isdisjoint([(lastvi,vi)])):
+		#print('itis')
+		chunk.closed=True
+		chunk.points.append((mesh.vertices[lastvi].co.x+x,mesh.vertices[lastvi].co.y+y,mesh.vertices[lastvi].co.z+z))
+	#else:
+		#   print('itisnot')
+	chunks.append(chunk)
+	return chunks
+
+	
+	
+def curveToChunks(o):
+	activate(o)
+	
+	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
+	bpy.ops.group.objects_remove_all()
+	o=bpy.context.active_object
+	if o.type=='FONT':#support for text objects is only and only here.
+		bpy.ops.object.convert(target='CURVE', keep_original=False)
+	o.data.dimensions='3D'
+	try:
+		bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+		bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+		bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+		
+	except:
+		pass
+	
+	#o.data.dimensions='3D'
+	o.data.bevel_depth=0
+	o.data.extrude=0
+	bpy.ops.object.convert(target='MESH', keep_original=False)
+	
+	o=bpy.context.active_object
+	chunks=meshFromCurveToChunk(o)
+	
+		
+	o=bpy.context.active_object
+	
+	bpy.context.scene.objects.unlink(o)
+	return chunks
