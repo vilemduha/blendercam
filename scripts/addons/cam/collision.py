@@ -6,6 +6,7 @@ from cam.simple import *
 
 BULLET_SCALE=1000 # this is a constant for scaling the rigidbody collision world for higher precision from bullet library
 
+
 #
 def getCutterBullet(o):
 	'''cutter for rigidbody simulation collisions
@@ -94,3 +95,36 @@ def cleanupBulletCollision(o):
 			activate(ob)
 			bpy.ops.transform.resize(value=(1.0/BULLET_SCALE, 1.0/BULLET_SCALE, 1.0/BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
 			ob.location=ob.location/BULLET_SCALE
+
+def getSampleBullet(cutter, x,y, radius, startz, endz):
+	'''collision test for 3 axis milling. Is simplified compared to the full 3d test'''
+	pos=bpy.context.scene.rigidbody_world.convex_sweep_test(cutter, (x*BULLET_SCALE, y*BULLET_SCALE, startz*BULLET_SCALE), (x*BULLET_SCALE, y*BULLET_SCALE, endz*BULLET_SCALE))
+	
+	#radius is subtracted because we are interested in cutter tip position, this gets collision object center
+	
+	if pos[3]==1:
+		return (pos[0][2]-radius)/BULLET_SCALE
+	else:
+		return endz-10;
+	
+def getSampleBulletNAxis(cutter, startpoint,endpoint,rotation, radius):
+	'''fully 3d collision test for NAxis milling'''
+	start=(startpoint*BULLET_SCALE).to_tuple()
+	end=(endpoint*BULLET_SCALE).to_tuple()
+	#cutter.rotation_euler=rotation
+	pos=bpy.context.scene.rigidbody_world.convex_sweep_test(cutter, start, end)
+	
+	#radius is subtracted because we are interested in cutter tip position, this gets collision object center
+	
+	if pos[3]==1:
+		pos=Vector(pos[0])
+		v=endpoint-startpoint# a vector in the opposite direction of sweep test
+		v.normalize()
+		res=(pos+v*radius)/BULLET_SCALE
+		#this is a debug loop that duplicates the cutter on sampling positions, to see where it was moving...
+		#if random.random()<0.01:
+		#	dupliob(cutter,res)
+				
+		return res
+	else:
+		return None;

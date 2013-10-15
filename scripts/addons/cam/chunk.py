@@ -458,3 +458,72 @@ def curveToChunks(o):
 	
 	bpy.context.scene.objects.unlink(o)
 	return chunks
+	
+def polyToChunks(p,zlevel):#
+	chunks=[]
+	#p=sortContours(p)
+	
+	i=0
+	for o in p:
+		#progress(p[i])
+		if p.nPoints(i)>2:
+			chunk=camPathChunk([])
+			chunk.poly=Polygon.Polygon(o)
+			for v in o:
+				#progress (v)
+				chunk.points.append((v[0],v[1],zlevel))  
+			
+			chunk.points.append(chunk.points[0])#last point =first point
+			chunk.closed=True
+			chunks.append(chunk)
+		i+=1
+	chunks.reverse()#this is for smaller shapes first.
+	#
+	return chunks
+
+			
+def chunkToPoly(chunk):
+	pverts=[]
+	
+	for v in chunk.points:
+		 
+		pverts.append((v[0],v[1]))
+	 
+	p=Polygon.Polygon(pverts)
+	return p
+
+def chunksRefine(chunks,o):
+	'''add extra points in between for chunks'''
+	for ch in chunks:
+		#print('before',len(ch))
+		newchunk=[]
+		v2=Vector(ch.points[0])
+		#print(ch.points)
+		for s in ch.points:
+			
+			v1=Vector(s)
+			#print(v1,v2)
+			v=v1-v2
+			
+			#print(v.length,o.dist_along_paths)
+			if v.length>o.dist_along_paths:
+				d=v.length
+				v.normalize()
+				i=0
+				vref=Vector((0,0,0))
+				
+				while vref.length<d:
+					i+=1
+					vref=v*o.dist_along_paths*i
+					if vref.length<d:
+						p=v2+vref
+						
+						newchunk.append((p.x,p.y,p.z))
+					
+					
+			newchunk.append(s)  
+			v2=v1
+		#print('after',len(newchunk))
+		ch.points=newchunk
+			
+	return chunks
