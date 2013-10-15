@@ -1,4 +1,4 @@
-import math,sys
+import math,sys,os
 import bpy
 import mathutils 
 from mathutils import *
@@ -99,3 +99,12 @@ def isVerticalLimit(v1,v2,limit):
 				v2=(v1[0],v1[1],v2[2])
 				return v1,v2
 	return v1,v2
+	
+def getCachePath(o):
+	fn=bpy.data.filepath
+	l=len(bpy.path.basename(fn))
+	bn=bpy.path.basename(fn)[:-6]
+	
+	
+	iname=fn[:-l]+'temp_cam'+os.sep+bn+'_'+o.name
+	return iname
