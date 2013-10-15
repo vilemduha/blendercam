@@ -38,7 +38,7 @@ import numpy
 import random,sys, os
 import pickle
 import string
-#from . import post_processors
+from . import patterns
 #import multiprocessing 
 
 BULLET_SCALE=1000 # this is a constant for scaling the rigidbody collision world for higher precision from bullet library
@@ -345,7 +345,7 @@ def getBounds(o):
 
 def getPathPatternParallel(o,angle):
 	#minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
-	ob=o.object
+	#ob=o.object
 	zlevel=1
 	pathd=o.dist_between_paths
 	pathstep=o.dist_along_paths

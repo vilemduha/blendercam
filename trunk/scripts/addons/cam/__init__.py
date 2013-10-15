@@ -27,6 +27,8 @@ from bpy_extras.object_utils import object_data_add
 from bpy.props import *
 import bl_operators
 from bpy.types import Menu, Operator, UIList
+#from . import patterns
+#from . import chunk_operations
 from . import utils#, post_processors
 import numpy
 import Polygon
@@ -1316,7 +1318,7 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 		if len(scene.cam_operations)>0:
 			ao=scene.cam_operations[scene.cam_active_operation]
 			if ao.valid:
-				layout.prop(ao,'axes')
+				#layout.prop(ao,'axes')
 				if ao.axes=='3':
 					layout.prop(ao,'strategy')
 				elif ao.axes=='4':
