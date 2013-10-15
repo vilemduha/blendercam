@@ -621,13 +621,17 @@ def getPathPattern(operation):
 					chunk.points.append((midx+v.x,midy+v.y,zlevel))
 				else:
 					if len(chunk.points)>0:
+						chunk.closed=False
 						pathchunks.append(chunk)
+						
 						chunk=camPathChunk([])
 				v.rotate(e)
 			
 			
 			if len(chunk.points)>0:
 				chunk.points.append(firstchunk.points[0])
+				if chunk==firstchunk:
+					chunk.closed=True
 				pathchunks.append(chunk)
 				chunk=camPathChunk([])
 		if o.movement_insideout=='OUTSIDEIN':
@@ -4492,6 +4496,7 @@ def limitChunks(chunks,o):
 		nchunks=[]
 		for ch in chunks:
 			nch=camPathChunk([])
+			nch1=nch
 			closed=True
 			for s in ch.points:
 				sampled=o.limit_poly.isInside(s[0],s[1])
@@ -4505,6 +4510,10 @@ def limitChunks(chunks,o):
 					
 			if len(nch.points)>1 and closed and ch.closed and ch.points[0]==ch.points[1]:
 				nch.closed=True
+			elif ch.closed and nch!=nch1 and nch.points[-1]==nch1.points[0]:#here adds beginning of closed chunk to the end, if the chunks were split during limiting
+				nch.points.extend(nch1.points)
+				nchunks.remove(nch1)
+				print('joining stuff')
 			if len(nch.points)>0:
 				nchunks.append(nch)
 		return nchunks
