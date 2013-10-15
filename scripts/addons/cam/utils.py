@@ -3211,7 +3211,9 @@ class camPathChunk:
 				return min(d1,d2)
 			else:
 				return dist2d(pos,self.points[0])
-	
+	def distStart(self,pos,o):
+		return dist2d(pos,self.points[0])
+		
 	def adaptdist(self,pos,o):
 		#reorders chunk so that it starts at the closest point to pos.
 		if self.closed:
@@ -3235,7 +3237,8 @@ class camPathChunk:
 			if o.movement_type=='MEANDER':
 				d1=dist2d(pos,self.points[0])
 				d2=dist2d(pos,self.points[-1])
-				
+				if d2<d1:
+					self.points.reverse()
 		
 	def getNext(self):
 		for child in self.children:
@@ -3319,7 +3322,7 @@ def sortChunks(chunks,o):
 			mergedist=2*o.dist_between_paths
 			if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
 				mergedist=10*o.dist_between_paths
-			if o.stay_low and lastch!=None and (ch.dist(pos,o)<mergedist or (o.parallel_step_back and ch.dist(pos,o)<2*mergedist)):
+			if o.stay_low and lastch!=None and (ch.distStart(pos,o)<mergedist or (o.parallel_step_back and ch.distStart(pos,o)<2*mergedist)):
 				#print(mergedist,ch.dist(pos,o))
 				if o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL':# for these paths sorting happens after sampling, thats why they need resample the connection
 					between=samplePathLow(o,lastch,ch,True)
@@ -3554,6 +3557,7 @@ def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. 
 	
 	
 def getSlices(operation, returnCurves):
+	'''function for slicing a mesh. It is now not used, but can be used for e.g. lasercutting from sheets a 3d model in the future.'''
 	ob=operation.object
 	layer_thickness=operation.slice_detail
 	edges=[]
@@ -4495,9 +4499,11 @@ def limitChunks(chunks,o):
 					nch.closed=False
 					closed=False
 					nchunks.append(nch)
-				else:
 					nch=camPathChunk([])
-			if len(nch.points)>0 and closed and ch.closed:
+				elif sampled:
+					nch.points.append(s)
+					
+			if len(nch.points)>1 and closed and ch.closed and ch.points[0]==ch.points[1]:
 				nch.closed=True
 			if len(nch.points)>0:
 				nchunks.append(nch)
@@ -4647,7 +4653,7 @@ def getPath3axis(context,operation):
 			chunksFromCurve=polyToChunks(p,-1)
 		
 		#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
-		
+		chunksFromCurve=limitChunks(chunksFromCurve,o)
 		parentChildPoly(chunksFromCurve,chunksFromCurve,o)
 		chunksFromCurve=sortChunks(chunksFromCurve,o)
 		
@@ -4689,17 +4695,10 @@ def getPath3axis(context,operation):
 		if o.use_bridges:
 			for ch in chunks:
 				addBridges(ch,o,0)
-				
+
 		if bpy.app.debug_value==0 or bpy.app.debug_value==1 or bpy.app.debug_value==3 or bpy.app.debug_value==2:# or bpy.app.debug_value==4:
 			chunksToMesh(chunks,o)
-		'''#bridge stuff from carve strategy:
-					pathSamples=[]
-			#for ob in o.objects:
-			ob=bpy.data.objects[o.curve_object]
-			pathSamples.extend(curveToChunks(ob))
-			pathSamples=sortChunks(pathSamples,o)#sort before sampling
-			pathSamples=chunksRefine(pathSamples,o)
-		'''
+
 	if o.strategy=='POCKET':	
 		p=getObjectOutline(o.cutter_diameter/2,o,False)
 		all=Polygon.Polygon(p)
@@ -4710,6 +4709,7 @@ def getPath3axis(context,operation):
 		lastchunks=[]
 		while len(p)>0:
 			nchunks=polyToChunks(p,o.min.z)
+			nchunks=limitChunks(nchunks,o)
 			chunksFromCurve.extend(nchunks)
 			parentChildDist(lastchunks,nchunks,o)
 			lastchunks=nchunks
@@ -4726,7 +4726,8 @@ def getPath3axis(context,operation):
 				ch.points.reverse()
 				
 		#if bpy.app.debug_value==1:
-			
+		
+
 		chunksFromCurve=sortChunks(chunksFromCurve,o)   
 			
 		chunks=[]
@@ -4859,6 +4860,7 @@ def getPath3axis(context,operation):
 			#for ch in pathSamples:
 			#   for i,p in enumerate(ch.points):
 			#	 ch.points[i]=(p[0],p[1],0)
+			pathSamples=limitChunks(pathSamples,o)
 			pathSamples=sortChunks(pathSamples,o)#sort before sampling
 			
 		else: 
