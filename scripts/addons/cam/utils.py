@@ -38,58 +38,15 @@ import numpy
 import random,sys, os
 import pickle
 import string
-from . import patterns
+from cam import chunk
+from cam.chunk import *
+from cam import collision
+from cam.collision import *
 #import multiprocessing 
+from cam import simple
+from cam.simple import * 
 
-BULLET_SCALE=1000 # this is a constant for scaling the rigidbody collision world for higher precision from bullet library
 
-def tuple_add(t,t1):#add two tuples as Vectors
-	return (t[0]+t1[0],t[1]+t1[1],t[2]+t1[2])
-
-def tuple_sub(t,t1):#sub two tuples as Vectors
-	return (t[0]-t1[0],t[1]-t1[1],t[2]-t1[2])
-
-def tuple_mul(t,c):#multiply two tuples with a number
-	return (t[0]*c,t[1]*c,t[2]*c)
-	
-def activate(o):
-	s=bpy.context.scene
-	bpy.ops.object.select_all(action='DESELECT')
-	o.select=True
-	s.objects.active=o
-	
-
-def dupliob(o,pos):
-	'''helper function for visualising cutter positions'''
-	activate(o)
-	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":True, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
-	s=1.0/BULLET_SCALE
-	bpy.ops.transform.resize(value=(s, s, s), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1)
-	o=bpy.context.active_object
-	bpy.ops.rigidbody.object_remove()
-	o.location=pos
-	
-def delob(ob):
-	'''object deletion for multiple uses'''
-	activate(ob)
-	bpy.ops.object.delete(use_global=False)
-
-def progress(text,n=None):
-	#for i in range(n+1):
-	#sys.stdout.flush()
-	text=str(text)
-	if n== None:
-		n=''
-	else:
-		n=' ' + str(int(n*1000)/1000) + '%'
-	#d=int(n/2)
-	spaces=' '*(len(text)+55)
-	sys.stdout.write('progress{%s%s}\n' % (text,n))
-	sys.stdout.flush()
-	#bpy.data.window_managers['WinMan'].progress_update(n)
-	#if bpy.context.scene.o
-	#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
-		#time.sleep(0.5)
 
 def getCircle(r,z):
 	car=numpy.array((0),dtype=float)
@@ -165,93 +122,7 @@ def getCutterArray(operation,pixsize):
 					car.itemset((a,b),z)
 	return car
 				
-#cutter for rigidbody simulation collisions
-#note that everything is 100x bigger for simulation precision.
-def getCutterBullet(o):
-	s=bpy.context.scene
-	if s.objects.get('cutter')!= None:
-		c=s.objects['cutter']
-		activate(c)
 
-	type=o.cutter_type
-	if type=='END':
-		bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius=BULLET_SCALE*o.cutter_diameter/2, depth=BULLET_SCALE*o.cutter_diameter, end_fill_type='NGON', view_align=False, enter_editmode=False, location=(-100,-100, -100), rotation=(0, 0, 0))
-		bpy.ops.rigidbody.object_add(type='ACTIVE')
-		cutter=bpy.context.active_object
-		cutter.rigid_body.collision_shape = 'CYLINDER'
-	elif type=='BALL':
-		bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, size=BULLET_SCALE*o.cutter_diameter/2, view_align=False, enter_editmode=False, location=(-100,-100, -100), rotation=(0, 0, 0))
-		bpy.ops.rigidbody.object_add(type='ACTIVE')
-		cutter=bpy.context.active_object
-		cutter.rigid_body.collision_shape = 'SPHERE'
-	elif type=='VCARVE':
-		
-		angle=o.cutter_tip_angle
-		s=math.tan(math.pi*(90-angle/2)/180)/2
-		bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE*o.cutter_diameter/2, radius2=0, depth = BULLET_SCALE*o.cutter_diameter*s, end_fill_type='NGON', view_align=False, enter_editmode=False, location=(-100,-100, -100), rotation=(math.pi, 0, 0))
-		bpy.ops.rigidbody.object_add(type='ACTIVE')
-		cutter=bpy.context.active_object
-		cutter.rigid_body.collision_shape = 'CONE'
-	cutter.name='cam_cutter'	
-	o.cutter_shape=cutter
-	return cutter
-
-#prepares all objects needed for sampling with bullet collision
-def prepareBulletCollision(o):
-	progress('preparing collisions')
-	t=time.time()
-	s=bpy.context.scene
-	s.gravity=(0,0,0)
-	#cleanup rigidbodies wrongly placed somewhere in the scene
-	for ob in bpy.context.scene.objects:
-		if ob.rigid_body != None and ob.name not in bpy.data.groups['machine'].objects:
-			activate(ob)
-			bpy.ops.rigidbody.object_remove()
-			
-	for collisionob in o.objects:
-		activate(collisionob)
-		bpy.ops.object.duplicate(linked=False)
-		if collisionob.type=='CURVE' or collisionob.type=='FONT':#support for curve objects collision
-			bpy.ops.object.convert(target='MESH', keep_original=False)
-
-		collisionob=bpy.context.active_object
-		bpy.ops.rigidbody.object_add(type='ACTIVE')
-		collisionob.rigid_body.collision_shape = 'MESH'
-		collisionob.rigid_body.collision_margin = o.skin*BULLET_SCALE
-		bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
-		collisionob.location=collisionob.location*BULLET_SCALE
-		bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-	
-	getCutterBullet(o)
-	
-	#machine objects scaling up to simulation scale
-	if bpy.data.groups.find('machine')>-1:
-		for ob in bpy.data.groups['machine'].objects:
-			activate(ob)
-			bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
-			ob.location=ob.location*BULLET_SCALE
-	#stepping simulation so that objects are up to date
-	bpy.context.scene.frame_set(0)
-	bpy.context.scene.frame_set(1)
-	bpy.context.scene.frame_set(2)
-	progress(time.time()-t)
-	
-	
-def cleanupBulletCollision(o):
-	if bpy.data.groups.find('machine')>-1:
-		machinepresent=True
-	else:
-		machinepresent=False
-	for ob in bpy.context.scene.objects:
-		if ob.rigid_body != None and not (machinepresent and ob.name in bpy.data.groups['machine'].objects):
-			delob(ob)
-	#machine objects scaling up to simulation scale
-	if machinepresent:
-		for ob in bpy.data.groups['machine'].objects:
-			activate(ob)
-			bpy.ops.transform.resize(value=(1.0/BULLET_SCALE, 1.0/BULLET_SCALE, 1.0/BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
-			ob.location=ob.location/BULLET_SCALE
-			
 def positionObject(operation):
 	ob=bpy.data.objects[operation.object_name]
 	minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace([ob]) 
@@ -1064,7 +935,7 @@ def offsetArea(o,samples):
 		if o.inverse:
 			sourceArray=-sourceArray+minz
 			
-		compare=o.offset_image[m: width-cwidth+m, m:height-cwidth+m]
+		comparearea=o.offset_image[m: width-cwidth+m, m:height-cwidth+m]
 		#i=0  
 		for x in range(0,cwidth):#cwidth):
 			text="Offsetting depth "+str(int(x*100/cwidth))
@@ -1074,9 +945,9 @@ def offsetArea(o,samples):
 				if cutterArray[x,y]>-10:
 					#i+=1
 					#progress(i)
-					compare=numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],compare)
+					comparearea=numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea)
 		
-		o.offset_image[m: width-cwidth+m, m:height-cwidth+m]=compare
+		o.offset_image[m: width-cwidth+m, m:height-cwidth+m]=comparearea
 		#progress('offseting done')
 		
 		progress('\ntime '+str(time.time()-t))
@@ -1190,29 +1061,6 @@ def getOffsetImageCavities(o,i):#for pencil operation mainly
 			
 	return chunks
 	
-def chunksCoherency(chunks):
-	#checks chunks for their stability, for pencil path. it checks if the vectors direction doesn't jump too much too quickly, if this happens it splits the chunk on such places, too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often, but also means that some parts detected by cavity algorithm won't be milled 
-	nchunks=[]
-	for chunk in chunks:
-		if len(chunk.points)>2:
-			nchunk=camPathChunk([])
-			
-			#doesn't check for 1 point chunks here, they shouldn't get here at all.
-			lastvec=Vector(chunk.points[1])-Vector(chunk.points[0])
-			for i in range(0,len(chunk.points)-1):
-				nchunk.points.append(chunk.points[i])
-				vec=Vector(chunk.points[i+1])-Vector(chunk.points[i])
-				angle=vec.angle(lastvec,vec)
-				#print(angle,i)
-				if angle>1.07:#60 degrees is maximum toleration for pencil paths. 
-					if len(nchunk.points)>4:#this is a testing threshold
-						nchunks.append(nchunk)
-					nchunk=camPathChunk([])
-				lastvec=vec
-			if len(nchunk.points)>4:#this is a testing threshold
-				nchunks.append(nchunk)
-	return nchunks  
-
 	
 def imageEdgeSearch_online(o,ar,zimage):#search edges for pencil strategy, another try.
 	t=time.time()
@@ -1782,6 +1630,7 @@ def getSampleImage(s,sarray,minz):
 		sb=s1b*(maxx-x)+s2b*(x-minx)
 		z=sa*(maxy-y)+sb*(y-miny)
 		return z
+
 def getSampleBullet(cutter, x,y, radius, startz, endz):
 	'''collision test for 3 axis milling. Is simplified compared to the full 3d test'''
 	pos=bpy.context.scene.rigidbody_world.convex_sweep_test(cutter, (x*BULLET_SCALE, y*BULLET_SCALE, startz*BULLET_SCALE), (x*BULLET_SCALE, y*BULLET_SCALE, endz*BULLET_SCALE))
@@ -2350,8 +2199,6 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	'''
 	return chunks  
 	
-def dist2d(v1,v2):
-	return math.sqrt((v1[0]-v2[0])*(v1[0]-v2[0])+(v1[1]-v2[1])*(v1[1]-v2[1]))
 
 def polyRemoveDoubles(p,o):
 	
@@ -2400,99 +2247,6 @@ def polyToChunks(p,zlevel):#
 	#
 	return chunks
 
-def setChunksZ(chunks,z):
-	newchunks=[]
-	for ch in chunks:
-		chunk=camPathChunk([])
-		for i,s in enumerate(ch.points):
-			chunk.points.append((s[0],s[1],z))
-		newchunks.append(chunk)
-	return newchunks
-	
-def setChunksZRamp(chunks,zstart,zend,o):
-	newchunks=[]
-	
-	if o.use_layers:
-		stepdown=o.stepdown
-	else:
-		stepdown=-o.min.z
-	for ch in chunks:
-		chunk=camPathChunk([])
-		ch.getLength()
-		ltraveled=0
-		endpoint=None
-		for i,s in enumerate(ch.points):
-			
-			if i>0:
-				s2=ch.points[i-1]
-				ltraveled+=dist2d(s,s2)
-				ratio=ltraveled/ch.length
-			else:
-				ratio=0
-			znew=zstart-stepdown*ratio
-			if znew<=zend:
-				
-				ratio=((z-zend)/(z-znew))
-				v1=Vector(chunk.points[-1])
-				v2=Vector((s[0],s[1],znew))
-				v=v1+ratio*(v2-v1)
-				chunk.points.append((v.x,v.y,v.z))
-						
-				if zend == o.min.z and endpoint==None and ch.closed==True:
-					endpoint=i+1
-					if endpoint==len(ch.points):
-						endpoint=0
-					#print(endpoint,len(ch.points))
-			#else:
-			znew=max(znew,zend)
-			chunk.points.append((s[0],s[1],znew))
-			z=znew
-			if endpoint!=None:
-				break;
-		if not o.use_layers:
-			endpoint=0
-		if endpoint!=None:#append final contour on the bottom z level
-			i=endpoint
-			started=False
-			#print('finaliz')
-			if i==len(ch.points):
-					i=0
-			while i!=endpoint or not started:
-				started=True
-				s=ch.points[i]
-				chunk.points.append((s[0],s[1],zend))
-				#print(i,endpoint)
-				i+=1
-				if i==len(ch.points):
-					i=0
-			if o.ramp_out:
-				z=zend
-				i=endpoint
-				
-				while z<0:
-					if i==len(ch.points):
-						i=0
-					s1=ch.points[i]
-					i2=i-1
-					if i2<0: i2=len(ch.points)-1
-					s2=ch.points[i2]
-					l=dist2d(s1,s2)
-					znew=z+tan(o.ramp_out_angle)*l
-					if znew>0:
-						ratio=(z/(z-znew))
-						v1=Vector(chunk.points[-1])
-						v2=Vector((s1[0],s1[1],znew))
-						v=v1+ratio*(v2-v1)
-						chunk.points.append((v.x,v.y,v.z))
-						
-					else:
-						chunk.points.append((s1[0],s1[1],znew))
-					z=znew
-					i+=1
-					
-					
-		newchunks.append(chunk)
-	return newchunks
 			
 def chunkToPoly(chunk):
 	pverts=[]
@@ -2503,96 +2257,7 @@ def chunkToPoly(chunk):
 	 
 	p=Polygon.Polygon(pverts)
 	return p
-
-def compare(v1,v2,vmiddle,e):
-	#e=0.0001
-	v1=Vector(v1)
-	v2=Vector(v2)
-	vmiddle=Vector(vmiddle)
-	vect1=v2-v1
-	vect2=vmiddle-v1
-	vect1.normalize()
-	vect1*=vect2.length
-	v=vect2-vect1
-	if v.length<e:
-		return True
-	return False
-'''
-def compare(v1,v2,vmiddle,e):
-	#e=0.0001
-	v1=Vector(v1)
-	v2=Vector(v2)
-	vmiddle=Vector(vmiddle)
-	vect1=v2-v1
-	vect2=vmiddle-v1
-	vect1.normalize()
-	vect2.normalize()
-	x1=int(vect1.x/e)
-	y1=int(vect1.y/e)
-	z1=int(vect1.z/e)
-	x2=int(vect2.x/e)
-	y2=int(vect2.y/e)
-	z2=int(vect2.z/e)
 	
-	if x1==x2 and y1==y2 and z1==z2:
-		return True
-	return False
-'''
-def isVerticalLimit(v1,v2,limit):
-	#print('verticality')
-	z=abs(v1[2]-v2[2])
-	#verticality=0.05 
-	#this will be better.
-	#
-	#print(a)
-	if z>0:
-		v2d=Vector((0,0,-1))
-		v3d=Vector((v1[0]-v2[0],v1[1]-v2[1],v1[2]-v2[2]))
-		a=v3d.angle(v2d)
-		if a>pi/2:
-			a=abs(a-pi)
-		#print(a)
-		if a<limit:
-			#print(abs(v1[0]-v2[0])/z)
-			#print(abs(v1[1]-v2[1])/z)
-			if v1[2]>v2[2]:
-				v1=(v2[0],v2[1],v1[2])
-				return v1,v2
-			else: 
-				v2=(v1[0],v1[1],v2[2])
-				return v1,v2
-	return v1,v2
-	
-def optimizeChunk(chunk,operation):
-	
-	for vi in range(len(chunk.points)-2,0,-1):
-		#vmiddle=Vector()
-		#v1=Vector()
-		#v2=Vector()
-		if compare(chunk.points[vi-1],chunk.points[vi+1],chunk.points[vi],operation.optimize_threshold):
-
-			chunk.pop(vi)
-			
-			#vi-=1
-	#protect_vertical=True
-	if operation.protect_vertical and operation.axes=='3':#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right?
-		#print('verticality test')
-		
-		
-		for vi in range(len(chunk.points)-1,0,-1):
-			v1=chunk.points[vi]
-			v2=chunk.points[vi-1]
-			v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
-			if v1c!=v1:
-				chunk.points[vi]=v1c
-			elif v2c!=v2:
-				chunk.points[vi-1]=v2c
-			
-			
-		#print(vcorrected)
-	return chunk			
-
-#def subcutter()
 
 def doSimulation(name,operations):
 	'''perform simulation of operations. only for 3 axis'''
@@ -3172,114 +2837,7 @@ def overlaps(bb1,bb2):#true if bb1 is child of bb2
 	if (ch2[1]>ch1[1]>ch1[0]>ch2[0] and ch2[3]>ch1[3]>ch1[2]>ch2[2]):
 		return True
 
-class camPathChunk:
-	#parents=[]
-	#children=[]
-	#sorted=False
-	
-	#progressIndex=-1# for e.g. parallel strategy, when trying to save time..
-	def __init__(self,inpoints ,startpoints = [], endpoints = [], rotations = []):
-		if len(inpoints)>2:
-			self.poly=Polygon.Polygon(inpoints)
-		else:
-			self.poly=Polygon.Polygon()
-		self.points=inpoints#for 3 axes, this is only storage of points. For N axes, here go the sampled points
-		self.startpoints = []#from where the sweep test begins, but also retract point for given path
-		self.endpoints = []#where sweep test ends
-		self.rotations = []#rotation of the machine axes
-		self.closed=False
-		self.children=[]
-		self.parents=[]
-		#self.unsortedchildren=False
-		self.sorted=False#if the chunk has allready been milled in the simulation
-		self.length=0;#this is total length of this chunk.
-		
-	def dist(self,pos,o):
-		if self.closed:
-			mind=10000000
-			minv=-1
-			for vi in range(0,len(self.points)):
-				v=self.points[vi]
-				#print(v,pos)
-				d=dist2d(pos,v)
-				if d<mind:
-					mind=d
-					minv=vi
-			return mind
-		else:
-			if o.movement_type=='MEANDER':
-				d1=dist2d(pos,self.points[0])
-				d2=dist2d(pos,self.points[-1])
-				#if d2<d1:
-				#   ch.points.reverse()
-				return min(d1,d2)
-			else:
-				return dist2d(pos,self.points[0])
-	def distStart(self,pos,o):
-		return dist2d(pos,self.points[0])
-		
-	def adaptdist(self,pos,o):
-		#reorders chunk so that it starts at the closest point to pos.
-		if self.closed:
-			mind=10000000
-			minv=-1
-			for vi in range(0,len(self.points)):
-				v=self.points[vi]
-				#print(v,pos)
-				d=dist2d(pos,v)
-				if d<mind:
-					mind=d
-					minv=vi
-			
-			newchunk=[]
-			newchunk.extend(self.points[minv:])
-			newchunk.extend(self.points[:minv+1])
-			self.points=newchunk
 
-
-		else:
-			if o.movement_type=='MEANDER':
-				d1=dist2d(pos,self.points[0])
-				d2=dist2d(pos,self.points[-1])
-				if d2<d1:
-					self.points.reverse()
-		
-	def getNext(self):
-		for child in self.children:
-			if child.sorted==False:
-				#unsortedchildren=True
-				return child.getNext()  
-		#self.unsortedchildren=False		
-		return self
-	
-	def getLength(self):
-		#computes length of the chunk - in 3d
-		self.length=0
-		
-		for vi,v1 in enumerate(self.points):
-			#print(len(self.points),vi)
-			v2=Vector(v1)#this is for case of last point and not closed chunk..
-			if self.closed and vi==len(self.points)-1:
-				v2=Vector(self.points[0])
-			elif vi<len(self.points)-1:
-				v2=Vector(self.points[vi+1])
-			v1=Vector(v1)
-			v=v2-v1
-			self.length+=v.length
-			#print(v,pos)
-	
-	def reverse(self):
-		self.points.reverse()
-		self.startpoints.reverse()
-		self.endpoints.reverse()
-		self.rotations.reverse()
-	def pop(self, index):
-		self.points.pop(index)
-		if len(self.startpoints)>0:
-			self.startpoints.pop(index)
-			self.endpoints.pop(index)
-			self.rotations.pop(index)
-#def appendChunk(sorted,ch,o,pos)   
 	
 
 def sortChunks(chunks,o):
