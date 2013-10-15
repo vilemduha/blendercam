@@ -1428,8 +1428,6 @@ def sampleChunks(o,pathSamples,layers):
 	for i,l in enumerate(layers):
 		chunks.extend(layerchunks[i])
 	return chunks  
-
-	
 	
 def sampleChunksNAxis(o,pathSamples,layers):
 	#
@@ -1645,10 +1643,6 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	'''
 	return chunks  
 	
-
-
-	
-
 def doSimulation(name,operations):
 	'''perform simulation of operations. only for 3 axis'''
 	o=operations[0]#initialization now happens from first operation, also for chains.
@@ -1773,7 +1767,6 @@ def doSimulation(name,operations):
 				disp.texture=t
 	ob.hide_render=True
 	
-
 def chunksToMesh(chunks,o):
 	##########convert sampled chunks to path, optimization of paths
 	s=bpy.context.scene
