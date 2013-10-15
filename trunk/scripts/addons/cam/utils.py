@@ -1993,7 +1993,6 @@ def sampleChunks(o,pathSamples,layers):
 			n+=1
 			x=s[0]
 			y=s[1]
-			#if (not o.use_limit_curve) or (o.use_limit_curve and o.limit_poly.isInside(x,y)):
 			maxz=minz
 			
 			sampled=False
@@ -4484,6 +4483,27 @@ def removeOrientationObject(o):
 		ob=bpy.context.scene.objects[name]
 		delob(ob)
 
+def limitChunks(chunks,o):
+	if o.use_limit_curve:
+		nchunks=[]
+		for ch in chunks:
+			nch=camPathChunk([])
+			closed=True
+			for s in ch.points:
+				sampled=o.limit_poly.isInside(s[0],s[1])
+				if not sampled and len(nch.points)>0:
+					nch.closed=False
+					closed=False
+					nchunks.append(nch)
+				else:
+					nch=camPathChunk([])
+			if len(nch.points)>0 and closed and ch.closed:
+				nch.closed=True
+			if len(nch.points)>0:
+				nchunks.append(nch)
+		return nchunks
+	else:
+		return chunks
 def addMachineAreaObject():
 	
 	s=bpy.context.scene
@@ -4925,10 +4945,11 @@ def getPath3axis(context,operation):
 			#print('found polys',layerstepinc,len(slicepolys))
 			for p in slicepolys:
 				#print('polypoints',p.nPoints(0))
-				poly+=p#polygversion
+				poly+=p#polygversion TODO: why is this added?
 				#print()
 				#polyToMesh(p,z)
 				nchunks=polyToChunks(p,z)
+				nchunks=limitChunks(nchunks,o)
 				#print('chunksnum',len(nchunks))
 				#if len(nchunks)>0:
 				#   print('chunkpoints',len(nchunks[0].points))
