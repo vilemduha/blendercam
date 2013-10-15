@@ -1737,51 +1737,6 @@ def samplePathLow(o,ch1,ch2,dosample):
 					p[2]=z
 	return bpath
 
-def parentChildPoly(parents,children,o):
-	#hierarchy based on polygons - a polygon inside another is his child.
-	#hierarchy works like this: - children get milled first. 
-	
-	for parent in parents:
-		#print(parent.poly)
-		for child in children:
-			#print(child.poly)
-			if child!=parent and len(child.poly)>0:
-				if parent.poly.isInside(child.poly[0][0][0],child.poly[0][0][1]):
-					parent.children.append(child)
-					child.parents.append(parent)
-
-def parentChildDist(parents, children,o):
-	#parenting based on distance between chunks
-	#hierarchy works like this: - children get milled first. 
-	dlim=o.dist_between_paths*2
-	if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and o.parallel_step_back:
-		dlim=dlim*2
-		
-	for child in children:
-		for parent in parents:
-			isrelation=False
-			if parent!=child:
-				for v in child.points:
-					for v1 in parent.points:
-						
-						if dist2d(v,v1)<dlim:
-							isrelation=True
-							break
-					if isrelation:
-						break
-				if isrelation:
-					parent.children.append(child)
-					child.parents.append(parent)
-						
-def parentChild(parents, children, o):
-	#connect all children to all parents. Useful for any type of defining hierarchy.
-	#hierarchy works like this: - children get milled first. 
-
-	for child in children:
-		for parent in parents:
-				if parent!=child:
-					parent.children.append(child)
-					child.parents.append(parent)	
 
 #def threadedSampling():#not really possible at all without running more blenders for same operation :( python!
 #samples in both modes now - image and bullet collision too.
@@ -2720,52 +2675,7 @@ def chunksToPoly(chunks):
 	  
 	return p
 '''
-def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
-	#print ('analyzing paths')
-	#verts=[]
-	#pverts=[]
-	polys=[]
-	for ch in chunks:
-		if len(ch.points)>2:
-			pchunk=[]
-			for v in ch.points:
-				pchunk.append((v[0],v[1]))
-			ch.poly=Polygon.Polygon(pchunk)
-			#ch.poly.simplify()
-		
-	for ppart in chunks:
-		for ptest in chunks:
-				
-			if ppart!=ptest and len(ptest.poly)>0 and len(ppart.poly)>0 and ptest.poly.nPoints(0)>0 and ppart.poly.nPoints(0)>0:
-				if ptest.poly.isInside(ppart.poly[0][0][0],ppart.poly[0][0][1]):
-					#hierarchy works like this: - children get milled first. 
-					ptest.children.append(ppart)
-					ppart.parents.append(ptest)
- 
-	parent=[]
-	for polyi in range(0,len(chunks)):
-		if len(chunks[polyi].parents)%2==1:
-			for parent in chunks[polyi].parents:
-				if len(parent.parents)+1==len(chunks[polyi].parents):
-					chunks[polyi].parents=[parent]
-					break
-		else:
-			chunks[polyi].parents=[]
 
-	for chi in range(0,len(chunks)):
-		ch=chunks[chi]
-		if len(ch.parents)>0:
-			ch.parents[0].poly=ch.parents[0].poly-ch.poly
-		
-	returnpolys=[]
-
-	for polyi in range(0,len(chunks)):#don't include 'children'
-		ch=chunks[polyi]
-		if len(ch.parents)==0:
-			ch.poly.simplify()
-			returnpolys.append(ch.poly)
-	return returnpolys  
-		
 def polyToMesh(p,z):
 	verts=[]
 	edges=[]
@@ -2836,9 +2746,6 @@ def overlaps(bb1,bb2):#true if bb1 is child of bb2
 	ch2=bb2
 	if (ch2[1]>ch1[1]>ch1[0]>ch2[0] and ch2[3]>ch1[3]>ch1[2]>ch2[2]):
 		return True
-
-
-	
 
 def sortChunks(chunks,o):
 	if o.strategy!='WATERLINE':
@@ -3032,63 +2939,6 @@ def meshFromCurveToChunk(object):
 	chunks.append(chunk)
 	return chunks
 
-def meshloopToChunk(mesh):
-	progress('detecting contours')
-	chunks=[]
-	ekeys=mesh.edge_keys
-	
-	e=ekeys.pop()
-	spart=[e[0],e[1]]
-	chunk=[]
-	while len(ekeys)>0:
-		foundsome=False
-		for ei in range(len(ekeys)-1,-1,-1):
-			e=ekeys[ei]
-			#print('checking')
-			#print(ei)
-			
-			if e[0]==spart[-1]:
-				spart.append(e[1])
-				foundsome=True
-				ekeys.remove(e)
-				#print('found')
-				#print(e)
-			elif e[1]==spart[-1]:
-				spart.append(e[0])
-				foundsome=True
-				ekeys.remove(e)
-				#print('found')
-				#print (e)
-		
-		if foundsome==False:
-			if len(spart)>0:
-				chunk=[]
-				spart.pop(-1)#otherwise i get double point
-				for vi in spart:
-					chunk.append((mesh.vertices[vi].co.x,mesh.vertices[vi].co.y,mesh.vertices[vi].co.z))
-				#print (spart)
-				#chunk.append((chunk[0][0],chunk[0][1],chunk[0][2]))#its the same point, - tuple, but that shouldnt do a harm
-				chunks.append(chunk) 
-				#print(chunk)
-				spart=[]
-				#print(len(chunks))
-			if len(ekeys)>0:
-				e=ekeys.pop()
-				spart=[e[0],e[1]]
-				
-	#print(len(chunks))  
-	chunk=[]
-	spart.pop(-1)
-	for vi in spart:
-		chunk.append((mesh.vertices[vi].co.x,mesh.vertices[vi].co.y,mesh.vertices[vi].co.z))
-	#print(spart)
-	#chunk.append(chunk[0])#its the same point, - tuple, but that shouldnt do a harm
-	#chunk.append((chunk[0][0],chunk[0][1],chunk[0][2]))
-	#print (spart)
-	# print(chunk)
-	
-	chunks.append(chunk) 
-	return chunks
 
 def testbite(pos):
 	xs=(pos.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
@@ -4049,34 +3899,6 @@ def removeOrientationObject(o):
 		ob=bpy.context.scene.objects[name]
 		delob(ob)
 
-def limitChunks(chunks,o):
-	if o.use_limit_curve:
-		nchunks=[]
-		for ch in chunks:
-			nch=camPathChunk([])
-			nch1=nch
-			closed=True
-			for s in ch.points:
-				sampled=o.limit_poly.isInside(s[0],s[1])
-				if not sampled and len(nch.points)>0:
-					nch.closed=False
-					closed=False
-					nchunks.append(nch)
-					nch=camPathChunk([])
-				elif sampled:
-					nch.points.append(s)
-					
-			if len(nch.points)>1 and closed and ch.closed and ch.points[0]==ch.points[1]:
-				nch.closed=True
-			elif ch.closed and nch!=nch1 and nch.points[-1]==nch1.points[0]:#here adds beginning of closed chunk to the end, if the chunks were split during limiting
-				nch.points.extend(nch1.points)
-				nchunks.remove(nch1)
-				print('joining stuff')
-			if len(nch.points)>0:
-				nchunks.append(nch)
-		return nchunks
-	else:
-		return chunks
 def addMachineAreaObject():
 	
 	s=bpy.context.scene
