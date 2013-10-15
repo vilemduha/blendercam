@@ -810,11 +810,6 @@ def chunksToMesh(chunks,o):
 	verts=ob.data.vertices
 	exportGcodePath(o.filename,[ob.data],[o])
 
-def safeFileName(name):#for export gcode
-	valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
-	filename=''.join(c for c in name if c in valid_chars)
-	return filename
-	
 	
 def exportGcodePath(filename,vertslist,operations):
 	'''exports gcode with the heeks cnc adopted library.'''
@@ -1480,7 +1475,6 @@ def cutloops(csource,parentloop,loops):
 		cutloops(csource,l,loops)
 
 
-	
 def getOperationSilhouette(operation):
 	o=operation
 	
