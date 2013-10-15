@@ -188,12 +188,12 @@ def samplePathLow(o,ch1,ch2,dosample):
 def sampleChunks(o,pathSamples,layers):
 	#
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
-	
+	getAmbient(o)  
+
 	if o.use_exact:#prepare collision world
 		if o.update_bullet_collision_tag:
 			prepareBulletCollision(o)
 			#print('getting ambient')
-			getAmbient(o)  
 			o.update_bullet_collision_tag=False
 		#print (o.ambient)
 		cutter=o.cutter_shape
@@ -201,6 +201,7 @@ def sampleChunks(o,pathSamples,layers):
 	else:
 		if o.strategy!='WATERLINE': # or prepare offset image, but not in some strategies.
 			prepareArea(o)
+		
 		pixsize=o.pixsize
 		res=ceil(o.cutter_diameter/o.pixsize)
 		m=res/2
@@ -262,7 +263,7 @@ def sampleChunks(o,pathSamples,layers):
 						maxz=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-o.dist_along_paths, minz)
 				else:
 					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, minz)
-				if minz>maxz and (o.use_exact and o.ambient.isInside(x,y)):
+				if minz>maxz and o.ambient.isInside(x,y):
 					maxz=minz;
 				#print(maxz)
 				#here we have 
@@ -275,15 +276,15 @@ def sampleChunks(o,pathSamples,layers):
 			################################
 			#handling samples
 			############################################
-			if (maxz>=minz or (o.use_exact and o.ambient.isInside(x,y))) and ((not o.use_limit_curve) or (o.use_limit_curve and o.limit_poly.isInside(x,y))) :
-				sampled=True
+			if (maxz>=minz and (o.ambient.isInside(x,y))) and ((not o.use_limit_curve) or (o.use_limit_curve and o.limit_poly.isInside(x,y))) :
+				newsample=(x,y,maxz)
 				#maxz=max(minz,maxz)
 				
-			if sampled:# and (not o.inverse or (o.inverse)):uh what was this? disabled
-				newsample=(x,y,maxz)
+			#if sampled:# and (not o.inverse or (o.inverse)):uh what was this? disabled
+			#	newsample=(x,y,maxz)
 					
-			elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here
-				newsample=(x,y,minz)
+			#elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here, this should be obsolete,
+			#	newsample=(x,y,minz)
 				
 			for i,l in enumerate(layers):
 				terminatechunk=False

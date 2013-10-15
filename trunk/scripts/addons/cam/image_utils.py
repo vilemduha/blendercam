@@ -628,8 +628,8 @@ def imageToChunks(o,image):
 	ar = image[:,:-1]-image[:,1:] 
 	
 	indices1=ar.nonzero()
-	
-	r=o.borderwidth# to prevent outline of the border was 3 before and also (o.cutter_diameter/2)/pixsize+o.borderwidth
+	borderspread=2#when the border was excluded precisely, sometimes it did remove some silhouette parts
+	r=o.borderwidth-borderspread# to prevent outline of the border was 3 before and also (o.cutter_diameter/2)/pixsize+o.borderwidth
 	w=image.shape[0]
 	h=image.shape[1]
 	coef=0.75#compensates for imprecisions
@@ -771,7 +771,7 @@ def imageToChunks(o,image):
 			vecchunk=[]
 			vecchunks.append(vecchunk)
 			for i in range(0,len(ch)):
-				ch[i]=((ch[i][0]+coef-o.borderwidth)*pixsize+minx,(ch[i][1]+coef-o.borderwidth)*pixsize+miny,0)
+				ch[i]=((ch[i][0]+coef-o.borderwidth+borderspread)*pixsize+minx,(ch[i][1]+coef-o.borderwidth+borderspread)*pixsize+miny,0)
 				vecchunk.append(Vector(ch[i]))
 		t=time.time()
 		#print('optimizing outline')
