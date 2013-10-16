@@ -1054,37 +1054,6 @@ def chunksToPoly(chunks):
 	return p
 '''
 
-def polyToMesh(p,z):
-	verts=[]
-	edges=[]
-	vi=0
-	ci=0
-	for c in p:
-		vi0=vi
-		ei=0
-		clen=p.nPoints(ci)
-		for v in c:
-			verts.append((v[0],v[1],z))
-			if ei>0:
-				edges.append((vi-1,vi))
-			if ei==clen-1:
-				edges.append((vi,vi0))
-			vi+=1 
-			ei+=1
-		ci+=1
-			
-	mesh = bpy.data.meshes.new("test")
-	bm = bmesh.new()
-	for v_co in verts:
-		 bm.verts.new(v_co)
-	  
-	for e in edges:
-		bm.edges.new((bm.verts[e[0]],bm.verts[e[1]]))
-		
-	bm.to_mesh(mesh)
-	mesh.update()
-	object_utils.object_data_add(bpy.context, mesh)
-	return bpy.context.active_object
 
 
 def Helix(r,np, zstart,pend,rev):
@@ -1189,22 +1158,7 @@ def testbite(pos):
 		o.millimage[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(o.millimage[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
 	v.length+=o.simulation_detail
 	
-def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm.
-	MAX_BEND=0.1#in radians...#TODO: support operation chains ;)
-	prepareArea(o)
-	#o.millimage = 
-	sx=o.max.x-o.min.x
-	sy=o.max.y-o.min.y
 
-	resx=ceil(sx/o.simulation_detail)+2*o.borderwidth
-	resy=ceil(sy/o.simulation_detail)+2*o.borderwidth
-
-	o.millimage=numpy.array((0.1),dtype=float)
-	o.millimage.resize(resx,resy)
-	o.millimage.fill(0)
-	o.cutterArray=-getCutterArray(o,o.simulation_detail)#getting inverted cutter
-	crazy=camPathChunk([(0,0,0)])
-	testpos=(o.min.x,o.min.y,o.min.z)
 	
 def getSlices(operation, returnCurves):
 	'''function for slicing a mesh. It is now not used, but can be used for e.g. lasercutting from sheets a 3d model in the future.'''
@@ -2435,9 +2389,8 @@ def getPath3axis(context,operation):
 		
 		##################CUTOUT continues here
 		chunksToMesh(chunks,o)
-	elif o.strategy=='CRAZY':
-		crazyPath(o)
-	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL':  
+	
+	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL' or o.strategy=='CRAZY':  
 		
 		
 		ambient_level=0.0
@@ -2457,7 +2410,11 @@ def getPath3axis(context,operation):
 			#	 ch.points[i]=(p[0],p[1],0)
 			pathSamples=limitChunks(pathSamples,o)
 			pathSamples=sortChunks(pathSamples,o)#sort before sampling
-		
+		elif o.strategy=='CRAZY':
+			prepareArea(o)
+			area=o.offset_image>o.min.z
+			pathSamples = crazyStrokeImage(o,area)
+			#pathSamples = sortChunks(pathSamples,o)
 		else: 
 			if o.strategy=='OUTLINEFILL':
 				getOperationSilhouette(o)

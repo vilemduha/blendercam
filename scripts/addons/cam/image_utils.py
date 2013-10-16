@@ -1,6 +1,7 @@
 import numpy
 import math
 import time
+import random
 
 import curve_simplify
 import mathutils
@@ -464,13 +465,30 @@ def imageEdgeSearch_online(o,ar,zimage):#search edges for pencil strategy, anoth
 			#vecchunk.append(Vector(ch[i]))
 	return chunks
 	
+def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm. started another thing below.
+	MAX_BEND=0.1#in radians...#TODO: support operation chains ;)
+	prepareArea(o)
+	#o.millimage = 
+	sx=o.max.x-o.min.x
+	sy=o.max.y-o.min.y
+
+	resx=ceil(sx/o.simulation_detail)+2*o.borderwidth
+	resy=ceil(sy/o.simulation_detail)+2*o.borderwidth
+
+	o.millimage=numpy.array((0.1),dtype=float)
+	o.millimage.resize(resx,resy)
+	o.millimage.fill(0)
+	o.cutterArray=-getCutterArray(o,o.simulation_detail)#getting inverted cutter
+	crazy=camPathChunk([(0,0,0)])
+	testpos=(o.min.x,o.min.y,o.min.z)
+	
 def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
 	t=time.time()
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	pixsize=o.pixsize
 	edges=[]
 	
-	r=3#ceil((o.cutter_diameter/12)/o.pixsize)
+	r=int((o.cutter_diameter/2.0)/o.pixsize)#ceil((o.cutter_diameter/12)/o.pixsize)
 	d=2*r
 	coef=0.75
 	#sx=o.max.x-o.min.x
@@ -485,16 +503,19 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 	
 	cutterimagepix=cutterArray.sum()
 	#ar.fill(True)
-	satisfypix=3#cutterimagepix/10#a threshold which says if it is valuable to cut in a direction
+	satisfypix=cutterimagepix*o.crazy_threshold1#a threshold which says if it is valuable to cut in a direction
+	toomuchpix=cutterimagepix*o.crazy_threshold2
 	indices=ar.nonzero()#first get white pixels
 	startpix=ar.sum()#
 	totpix=startpix
 	chunks=[]
-	nchunk=camPathChunk([(indices[0][0],indices[1][0])])#startposition
+	xs=indices[0][0]-r
+	ys=indices[1][0]
+	nchunk=camPathChunk([(xs,ys)])#startposition
 	print(indices)
 	print (indices[0][0],indices[1][0])
 	lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
-	testvect=lastvect.normalized()*2#multiply *2 not to get values <1 pixel
+	testvect=lastvect.normalized()*r/2.0#multiply *2 not to get values <1 pixel
 	rot=Euler((0,0,1))
 	i=0
 	perc=0
@@ -502,12 +523,15 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 	totaltests=0
 	maxtests=500
 	maxtotaltests=1000000
-	xs=nchunk.points[-1][0]
-	ys=nchunk.points[-1][1]
+	
 	
 	ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
-	
-	while totpix>startpix*0.01 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
+	anglerange=[-pi,pi]#range for angle of toolpath vector versus material vector
+	if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
+		anglerange=[-pi,0]
+	elif (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW'):
+		anglerange=[0,pi]
+	while totpix>0 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
 		
 		#if perc!=int(100*totpix/startpix):
 		#   perc=int(100*totpix/startpix)
@@ -531,12 +555,22 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 					print(lastvect)
 					print(testvect)
 					print(totpix)
-				if testar.sum()>satisfypix:
-					success=True
+				
+				eatpix=testar.sum()
+				cindices=testar.nonzero()
+				cx=cindices[0].sum()/eatpix
+				cy=cindices[1].sum()/eatpix
+				v=Vector((cx-r,cy-r))
+				angle=testvect.to_2d().angle_signed(v)
+				if anglerange[0]<angle<anglerange[1]:#this could be righthanded milling? lets see :)
+					if toomuchpix>eatpix>satisfypix:
+						success=True
 			if success:
 				nchunk.points.append([xs,ys])
 				lastvect=testvect
 				ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*(-cutterArray)
+				totpix-=eatpix
+				itests=0
 				if 0:
 					print('success')
 					print(xs,ys,testlength,testangle)
@@ -546,6 +580,7 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 			else:
 				#nchunk.append([xs,ys])#for debugging purpose
 				#ar.shape[0]
+				#TODO: after all angles were tested into material higher than toomuchpix, it should cancel, otherwise there is no problem with long travel in free space.....
 				testvect=lastvect.normalized()*testlength
 				if testleftright:
 					testangle=-testangle
@@ -554,9 +589,9 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 					testangle=abs(testangle)+0.05#increment angle
 					testleftright=True
 				
-				if abs(testangle)>1:#/testlength
+				if abs(testangle)>o.crazy_threshold3:#/testlength
 					testangle=0
-					testlength+=r/2
+					testlength+=r/4.0
 				if nchunk.points[-1][0]+testvect.x<r:
 					testvect.x=r
 				if nchunk.points[-1][1]+testvect.y<r:
@@ -586,24 +621,30 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 			itests+=1
 			totaltests+=1
 			#achjo
-			if itests>maxtests:
+			if itests>maxtests or testlength>r*3:
 				#print('resetting location')
 				indices=ar.nonzero()
 				chunks.append(nchunk)
-				nchunk=camPathChunk([(indices[0][0],indices[1][0])])#startposition
-				xs=nchunk.points[-1][0]
-				ys=nchunk.points[-1][1]
-				ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
-				#lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
-				testvect=lastvect.normalized()*2#multiply *2 not to get values <1 pixel
-				lastvect=testvect.copy()
+				if len(indices[0])>0:
+					index=random.randint(0,len(indices[0])-1)
+					#print(index,len(indices[0]))
+					xs=indices[0][0]-r
+					ys=indices[1][0]-r
+					nchunk=camPathChunk([(xs,ys)])#startposition
+					ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
+					#lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
+					r=random.random()*2*pi
+					e=Euler((0,0,r))
+					testvect=lastvect.normalized()*4#multiply *2 not to get values <1 pixel
+					testvect.rotate(e)
+					lastvect=testvect.copy()
 				success=True
 				itests=0
 		#xs=(s.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
 		#ys=(s.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
 		i+=1
-		if i%10==0:
-			print('10 succesfull tests done')
+		if i%100==0:
+			print('100 succesfull tests done')
 			totpix=ar.sum()
 			print(totpix)
 			print(totaltests)

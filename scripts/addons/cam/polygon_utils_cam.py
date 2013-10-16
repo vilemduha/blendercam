@@ -122,3 +122,35 @@ def outlinePoly(p,r,operation,offset = True):
 				pr=polyRemoveDoubles(pr,operation)
 		p=pr
 	return p
+
+def polyToMesh(p,z):
+	verts=[]
+	edges=[]
+	vi=0
+	ci=0
+	for c in p:
+		vi0=vi
+		ei=0
+		clen=p.nPoints(ci)
+		for v in c:
+			verts.append((v[0],v[1],z))
+			if ei>0:
+				edges.append((vi-1,vi))
+			if ei==clen-1:
+				edges.append((vi,vi0))
+			vi+=1 
+			ei+=1
+		ci+=1
+			
+	mesh = bpy.data.meshes.new("test")
+	bm = bmesh.new()
+	for v_co in verts:
+		 bm.verts.new(v_co)
+	  
+	for e in edges:
+		bm.edges.new((bm.verts[e[0]],bm.verts[e[1]]))
+		
+	bm.to_mesh(mesh)
+	mesh.update()
+	object_utils.object_data_add(bpy.context, mesh)
+	return bpy.context.active_object
