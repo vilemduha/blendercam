@@ -60,7 +60,7 @@ def positionObject(operation):
 	ob.location.z-=maxz
 
 def getBoundsWorldspace(obs):
-	progress('getting bounds of object(s)')
+	#progress('getting bounds of object(s)')
 	t=time.time()
 		
 	maxx=maxy=maxz=-10000000
@@ -87,7 +87,7 @@ def getBoundsWorldspace(obs):
 				maxx=max(maxx,worldCoord.x)
 				maxy=max(maxy,worldCoord.y)
 				maxz=max(maxz,worldCoord.z)
-	progress(time.time()-t)
+	#progress(time.time()-t)
 	return minx,miny,minz,maxx,maxy,maxz
  
 def getBounds(o):
@@ -2414,6 +2414,7 @@ def getPath3axis(context,operation):
 			prepareArea(o)
 			area=o.offset_image>o.min.z
 			pathSamples = crazyStrokeImage(o,area)
+			pathSamples=chunksRefine(pathSamples,o)
 			#pathSamples = sortChunks(pathSamples,o)
 		else: 
 			if o.strategy=='OUTLINEFILL':

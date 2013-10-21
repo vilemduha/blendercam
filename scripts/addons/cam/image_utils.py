@@ -296,14 +296,14 @@ def getOffsetImageCavities(o,i):#for pencil operation mainly
 	
 	if 0:#this is newer strategy, finds edges nicely, but pff.going exacty on edge, it has tons of spikes and simply is not better than the old one
 		iname=getCachePath(o)+'_pencilthres.exr'
-		numpysave(ar,iname)#save for comparison before
+		#numpysave(ar,iname)#save for comparison before
 		chunks = imageEdgeSearch_online(o,ar,i)
 		iname=getCachePath(o)+'_pencilthres_comp.exr'
-		numpysave(ar,iname)#and after
+		#numpysave(ar,iname)#and after
 	else:#here is the old strategy with
 		dilateAr(ar,1)
 		iname=getCachePath(o)+'_pencilthres.exr'
-		numpysave(ar,iname)#save for comparison before
+		#numpysave(ar,iname)#save for comparison before
 		
 		chunks=imageToChunks(o,ar)
 		
@@ -510,7 +510,9 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 	totpix=startpix
 	chunks=[]
 	xs=indices[0][0]-r
-	ys=indices[1][0]
+	if xs<r:xs=r
+	ys=indices[1][0]-r
+	if ys<r:ys=r
 	nchunk=camPathChunk([(xs,ys)])#startposition
 	print(indices)
 	print (indices[0][0],indices[1][0])
@@ -524,13 +526,19 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 	maxtests=500
 	maxtotaltests=1000000
 	
-	
+	print(xs,ys,indices[0][0],indices[1][0],r)
 	ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
 	anglerange=[-pi,pi]#range for angle of toolpath vector versus material vector
+	testangleinit=0
+	angleincrement=0.05
 	if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
 		anglerange=[-pi,0]
+		testangleinit=1
+		angleincrement=-0.05
 	elif (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW'):
 		anglerange=[0,pi]
+		testangleinit=-1
+		angleincrement=0.05
 	while totpix>0 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
 		
 		#if perc!=int(100*totpix/startpix):
@@ -539,7 +547,7 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 		#progress('simulation ',int(100*i/l))
 		success=False
 		# define a vector which gets varied throughout the testing, growing and growing angle to sides.
-		testangle=0
+		testangle=testangleinit
 		testleftright=False
 		testlength=r
 		
@@ -581,16 +589,22 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 				#nchunk.append([xs,ys])#for debugging purpose
 				#ar.shape[0]
 				#TODO: after all angles were tested into material higher than toomuchpix, it should cancel, otherwise there is no problem with long travel in free space.....
+				#TODO:the testing should start not from the same angle as lastvector, but more towards material. So values closer to toomuchpix are obtained rather than satisfypix
 				testvect=lastvect.normalized()*testlength
-				if testleftright:
-					testangle=-testangle
-					testleftright=False
-				else:
-					testangle=abs(testangle)+0.05#increment angle
-					testleftright=True
-				
+				increment=0.05
+				right=True
+				if testangleinit==0:#meander
+					if testleftright:
+						testangle=-testangle
+						testleftright=False
+					else:
+						testangle=abs(testangle)+angleincrement#increment angle
+						testleftright=True
+				else:#climb/conv.
+					testangle+=angleincrement
+					
 				if abs(testangle)>o.crazy_threshold3:#/testlength
-					testangle=0
+					testangle=testangleinit
 					testlength+=r/4.0
 				if nchunk.points[-1][0]+testvect.x<r:
 					testvect.x=r
@@ -621,7 +635,7 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 			itests+=1
 			totaltests+=1
 			#achjo
-			if itests>maxtests or testlength>r*3:
+			if itests>maxtests or testlength>r*1.5:
 				#print('resetting location')
 				indices=ar.nonzero()
 				chunks.append(nchunk)
@@ -629,7 +643,9 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 					index=random.randint(0,len(indices[0])-1)
 					#print(index,len(indices[0]))
 					xs=indices[0][0]-r
+					if xs<r:xs=r
 					ys=indices[1][0]-r
+					if ys<r:ys=r
 					nchunk=camPathChunk([(xs,ys)])#startposition
 					ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
 					#lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
@@ -912,6 +928,12 @@ def getSampleImage(s,sarray,minz):
 
 #this basically renders blender zbuffer and makes it accessible by saving & loading it again.
 #that's because blender doesn't allow accessing pixels in render :(
+def getResolution(o):
+	sx=o.max.x-o.min.x
+	sy=o.max.y-o.min.y
+
+	resx=ceil(sx/o.pixsize)+2*o.borderwidth
+	resy=ceil(sy/o.pixsize)+2*o.borderwidth
 def renderSampleImage(o):
 	t=time.time()
 	progress('getting zbuffer')
