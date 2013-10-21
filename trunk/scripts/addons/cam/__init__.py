@@ -159,12 +159,30 @@ def updateOffsetImage(self,context):
 
 	self.update_offsetimage_tag=True
 
+def checkMemoryLimit(o):
+	utils.getBounds(o)
+	sx=o.max.x-o.min.x
+	sy=o.max.y-o.min.y
+	resx=sx/o.pixsize
+	resy=sy/o.pixsize
+	res=resx*resy
+	limit=o.imgres_limit*1000000
+	
+	if res>limit:
+		ratio=(res/limit)
+		o.pixsize=o.pixsize*math.sqrt(ratio)
+		o.warnings=o.warnings+'sampling resolution had to be reduced!\n'
+	#print(ratio)
+
+
 def updateZbufferImage(self,context):
 	#print('updatezbuf')
 	#print(self,context)
 	self.changed=True
 	self.update_zbufferimage_tag=True
 	self.update_offsetimage_tag=True
+	getOperationSources(self)
+	checkMemoryLimit(self)
 
 def updateStrategy(o,context):
 	o.changed=True
@@ -209,7 +227,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('BALL', 'Ball', 'a'),
 			('VCARVE', 'V-carve', 'a')),
 		description='Type of cutter used',
-		default='END', update = updateOffsetImage)
+		default='END', update = updateZbufferImage)
 	
 	axes = EnumProperty(name='Number of axes',
 		items=(
@@ -334,13 +352,15 @@ class camOperation(bpy.types.PropertyGroup):
 	use_exact = bpy.props.BoolProperty(name="Use exact mode",description="Exact mode allows greater precision, but is slower with complex meshes", default=True, update = updateExact)
 	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
 	simulation_detail=bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateRest)
+	imgres_limit = bpy.props.IntProperty(name="Maximum resolution in megapixels", default=10, min=1, max=512,description="This property limits total memory usage and prevents crashes. Increase it if you know what are doing.", update = updateZbufferImage)
 	optimize = bpy.props.BoolProperty(name="Reduce path points",description="Reduce path points", default=True, update = updateRest)
 	optimize_threshold=bpy.props.FloatProperty(name="Reduction threshold", default=0.000001, min=0.00000001, max=1,precision=PRECISION, unit="LENGTH", update = updateRest)
+	
 	dont_merge = bpy.props.BoolProperty(name="Dont merge outlines when cutting",description="this is usefull when you want to cut around everything", default=False, update = updateRest)
 	
 	pencil_threshold=bpy.props.FloatProperty(name="Pencil threshold", default=0.00002, min=0.00000001, max=1,precision=PRECISION, unit="LENGTH", update = updateRest)
 	crazy_threshold1=bpy.props.FloatProperty(name="Crazy threshold 1", default=0.02, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
-	crazy_threshold2=bpy.props.FloatProperty(name="Crazy threshold 2", default=0.07, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
+	crazy_threshold2=bpy.props.FloatProperty(name="Crazy threshold 2", default=0.2, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
 	crazy_threshold3=bpy.props.FloatProperty(name="Crazy threshold 3", default=3.0, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
 	crazy_threshold4=bpy.props.FloatProperty(name="Crazy threshold 4", default=1.0, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
 	#calculations
@@ -512,6 +532,17 @@ class PathsBackground(bpy.types.Operator):
 		return {'FINISHED'}
 		
 		
+def getOperationSources(o):
+	if o.geometry_source=='OBJECT':
+		#bpy.ops.object.select_all(action='DESELECT')
+		ob=bpy.data.objects[o.object_name]
+		o.objects=[ob]
+	elif o.geometry_source=='GROUP':
+		group=bpy.data.groups[o.group_name]
+		o.objects=group.objects
+	elif o.geometry_source=='IMAGE':
+		o.use_exact=False;
+		
 class CalculatePath(bpy.types.Operator):
 	'''calculate CAM paths'''
 	bl_idname = "object.calculate_cam_path"
@@ -521,9 +552,7 @@ class CalculatePath(bpy.types.Operator):
 	#this property was actually ignored, so removing it in 0.3
 	#operation= StringProperty(name="Operation",
 	#					   description="Specify the operation to calculate",default='Operation')
-						   
-	
-		
+						
 	def execute(self, context):
 		#getIslands(context.object)
 		s=bpy.context.scene
@@ -551,22 +580,15 @@ class CalculatePath(bpy.types.Operator):
 		#o.material=bpy.context.scene.cam_material[0]
 		o.operator=self
 		#'''#removed for groups support, this has to be done object by object...
-		if o.geometry_source=='OBJECT':
-			
-			#bpy.ops.object.select_all(action='DESELECT')
-			ob=bpy.data.objects[o.object_name]
-			o.objects=[ob]
-		elif o.geometry_source=='GROUP':
-			group=bpy.data.groups[o.group_name]
-			o.objects=group.objects
-		elif o.geometry_source=='IMAGE':
-			o.use_exact=False;
+		getOperationSources(o)
+		
 		if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 			o.onlycurves=True
 			for ob in o.objects:
 				if ob.type=='MESH':
 					o.onlycurves=False;
 		o.warnings=''
+		checkMemoryLimit(o)
 		utils.getPath(context,o)
 		o.changed=False
 		return {'FINISHED'}
@@ -1490,7 +1512,15 @@ class CAM_OPTIMISATION_Panel(bpy.types.Panel):
 						layout.prop(ao,'use_exact')
 					#if not ao.use_exact or:
 					layout.prop(ao,'pixsize')
-				
+					layout.prop(ao,'imgres_limit')
+					
+					sx=ao.max.x-ao.min.x
+					sy=ao.max.y-ao.min.y
+					resx=int(sx/ao.pixsize)
+					resy=int(sy/ao.pixsize)
+					l='resolution:'+str(resx)+'x'+str(resy)
+					layout.label( l)
+					
 				layout.prop(ao,'simulation_detail')
 				layout.prop(ao,'circle_detail')
 				#if not ao.use_exact:#this will be replaced with groups of objects.
