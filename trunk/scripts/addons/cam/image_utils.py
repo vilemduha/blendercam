@@ -86,7 +86,7 @@ def getCutterArray(operation,pixsize):
 					car.itemset((a,b),z)
 	elif type=='CUSTOM':
 		cutob=bpy.data.objects[operation.cutter_object_name]
-		scale = cutob.dimensions.x/(operation.cutter_diameter*cutob.scale.x)
+		scale = ((cutob.dimensions.x/cutob.scale.x)/2)/r#
 		#print(cutob.scale)
 		vstart=Vector((0,0,-10))
 		vend=Vector((0,0,10))
@@ -102,7 +102,7 @@ def getCutterArray(operation,pixsize):
 				
 				c=cutob.ray_cast(vstart,vend)
 				if c[2]!=-1:
-					z=-c[0][2]
+					z=-c[0][2]/scale
 					#print(c)
 					if z>-9:
 						#print(z)
