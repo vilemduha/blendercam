@@ -84,6 +84,32 @@ def getCutterArray(operation,pixsize):
 				if v.length<=r:
 					z=(-v.length*s)
 					car.itemset((a,b),z)
+	elif type=='CUSTOM':
+		cutob=bpy.data.objects[operation.cutter_object_name]
+		scale = cutob.dimensions.x/(operation.cutter_diameter*cutob.scale.x)
+		#print(cutob.scale)
+		vstart=Vector((0,0,-10))
+		vend=Vector((0,0,10))
+		print('sampling custom cutter')
+		maxz=-1
+		for a in range(0,res):
+			vstart.x=(a+0.5-m)*ps*scale
+			vend.x=vstart.x
+			
+			for b in range(0,res):
+				vstart.y=(b+0.5-m)*ps*scale
+				vend.y=vstart.y
+				
+				c=cutob.ray_cast(vstart,vend)
+				if c[2]!=-1:
+					z=-c[0][2]
+					#print(c)
+					if z>-9:
+						#print(z)
+						if z>maxz:
+							maxz=z
+						car.itemset((a,b),z)
+		car-=maxz
 	return car
 				
 def numpysave(a,iname):
