@@ -35,6 +35,21 @@ def getCutterBullet(o):
 		bpy.ops.rigidbody.object_add(type='ACTIVE')
 		cutter=bpy.context.active_object
 		cutter.rigid_body.collision_shape = 'CONE'
+	elif type=='CUSTOM':
+		cutob=bpy.data.objects[o.cutter_object_name]
+		activate(cutob)
+		bpy.ops.object.duplicate()
+		bpy.ops.rigidbody.object_add(type='ACTIVE')
+		cutter=bpy.context.active_object
+		scale=o.cutter_diameter/cutob.dimensions.x
+		cutter.scale*=BULLET_SCALE*scale
+		bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+		bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
+		#print(cutter.dimensions,scale)
+		bpy.ops.rigidbody.object_add(type='ACTIVE')
+		cutter.rigid_body.collision_shape = 'CONVEX_HULL'
+		cutter.location=(-100,-100,-100)
+		
 	cutter.name='cam_cutter'	
 	o.cutter_shape=cutter
 	return cutter

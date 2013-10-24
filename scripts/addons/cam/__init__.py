@@ -223,12 +223,14 @@ class camOperation(bpy.types.PropertyGroup):
 		default='OBJECT', update=operationValid)
 	cutter_type = EnumProperty(name='Cutter',
 		items=(
-			('END', 'End', 'a'),
-			('BALL', 'Ball', 'a'),
-			('VCARVE', 'V-carve', 'a')),
+			('END', 'End', 'end - flat cutter'),
+			('BALL', 'Ball', 'ball cutter'),
+			('VCARVE', 'V-carve', 'v carve cutter'),
+			('CUSTOM', 'Custom', 'modellet cutter')),
 		description='Type of cutter used',
 		default='END', update = updateZbufferImage)
-	
+	cutter_object_name = bpy.props.StringProperty(name='Object', description='object used as custom cutter for this operation', update=updateZbufferImage)
+
 	axes = EnumProperty(name='Number of axes',
 		items=(
 			('3', '3 axis', 'a'),
@@ -1068,6 +1070,9 @@ class CAM_CUTTER_Panel(bpy.types.Panel):
 				layout.prop(ao,'cutter_flutes')
 				if ao.cutter_type=='VCARVE':
 					layout.prop(ao,'cutter_tip_angle')
+				if ao.cutter_type=='CUSTOM':
+					layout.prop_search(ao, "cutter_object_name", bpy.data, "objects")
+
    
 class CAM_MACHINE_Panel(bpy.types.Panel):	
 	"""CAM machine panel"""
