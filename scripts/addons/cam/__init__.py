@@ -160,18 +160,19 @@ def updateOffsetImage(self,context):
 	self.update_offsetimage_tag=True
 
 def checkMemoryLimit(o):
-	utils.getBounds(o)
+	#utils.getBounds(o)
 	sx=o.max.x-o.min.x
 	sy=o.max.y-o.min.y
 	resx=sx/o.pixsize
 	resy=sy/o.pixsize
 	res=resx*resy
 	limit=o.imgres_limit*1000000
-	
+	print('co se to deje')
 	if res>limit:
 		ratio=(res/limit)
 		o.pixsize=o.pixsize*math.sqrt(ratio)
 		o.warnings=o.warnings+'sampling resolution had to be reduced!\n'
+	print('furt nevim')
 	#print(ratio)
 
 
@@ -566,7 +567,7 @@ class CalculatePath(bpy.types.Operator):
 		if o.computing:
 			return {'FINISHED'}
 			
-		
+		print('ahoj0')
 		#these tags are for caching of some of the results.
 		chd=getChangeData(o)
 		#print(chd)
@@ -583,7 +584,7 @@ class CalculatePath(bpy.types.Operator):
 		o.operator=self
 		#'''#removed for groups support, this has to be done object by object...
 		getOperationSources(o)
-		
+		print('áhoj1')
 		if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 			o.onlycurves=True
 			for ob in o.objects:
@@ -591,6 +592,7 @@ class CalculatePath(bpy.types.Operator):
 					o.onlycurves=False;
 		o.warnings=''
 		checkMemoryLimit(o)
+		print('áhoj2')
 		utils.getPath(context,o)
 		o.changed=False
 		return {'FINISHED'}

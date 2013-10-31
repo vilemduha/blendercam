@@ -126,21 +126,27 @@ def numpysave(a,iname):
 	i.save_render(iname)
 
 def numpytoimage(a,iname):
-	progress('numpy to image')
+	print('numpy to image')
 	t=time.time()
-	progress(a.shape[0],a.shape[1])
-	bpy.ops.image.new(name=iname, width=a.shape[0], height=a.shape[1], color=(0, 0, 0, 1), alpha=True, generated_type='BLANK', float=True)
+	print(a.shape[0],a.shape[1])
+	foundimage=False
 	for image in bpy.data.images:
 		
 		if image.name[:len(iname)]==iname and image.size[0]==a.shape[0] and image.size[1]==a.shape[1]:
 			i=image
+			foundimage=True
+	if not foundimage:
+		bpy.ops.image.new(name=iname, width=a.shape[0], height=a.shape[1], color=(0, 0, 0, 1), alpha=True, generated_type='BLANK', float=True)
+		for image in bpy.data.images:
+			if image.name[:len(iname)]==iname and image.size[0]==a.shape[0] and image.size[1]==a.shape[1]:
+				i=image
 			
 	d=a.shape[0]*a.shape[1]
 	a=a.swapaxes(0,1)
 	a=a.reshape(d)
 	a=a.repeat(4)
 	i.pixels=a
-	progress(time.time()-t)
+	
 	
 	return i
 

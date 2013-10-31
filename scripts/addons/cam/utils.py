@@ -91,6 +91,7 @@ def getBoundsWorldspace(obs):
 	return minx,miny,minz,maxx,maxy,maxz
  
 def getBounds(o):
+	print('kolikrat sem rpijde')
 	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 		if o.material_from_model:
 			minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace(o.objects)
