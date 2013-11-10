@@ -214,7 +214,7 @@ def sampleChunks(o,pathSamples,layers):
 	for ch in pathSamples:
 		totlen+=len(ch.points)
 	layerchunks=[]
-	minz=o.minz
+	minz=o.minz-0.000001#correction for image method problems
 	layeractivechunks=[]
 	lastrunchunks=[]
 	
