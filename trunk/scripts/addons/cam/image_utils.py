@@ -290,6 +290,7 @@ def outlineImageBinary(o,radius,i,offset):
 	return oar
 
 def outlineImage(o,radius,i,minz):
+	minz=minz-0.0000001#correction test
 	t=time.time()
 	progress('outline image')
 	r=ceil(radius/o.pixsize)
@@ -958,14 +959,14 @@ def getSampleImage(s,sarray,minz):
 		z=sa*(maxy-y)+sb*(y-miny)
 		return z
 
-#this basically renders blender zbuffer and makes it accessible by saving & loading it again.
-#that's because blender doesn't allow accessing pixels in render :(
 def getResolution(o):
 	sx=o.max.x-o.min.x
 	sy=o.max.y-o.min.y
 
 	resx=ceil(sx/o.pixsize)+2*o.borderwidth
 	resy=ceil(sy/o.pixsize)+2*o.borderwidth
+#this basically renders blender zbuffer and makes it accessible by saving & loading it again.
+#that's because blender doesn't allow accessing pixels in render :(
 def renderSampleImage(o):
 	t=time.time()
 	progress('getting zbuffer')

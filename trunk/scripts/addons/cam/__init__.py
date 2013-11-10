@@ -40,7 +40,7 @@ import pickle
 bl_info = {
 	"name": "CAM - gcode generation tools",
 	"author": "Vilem Novak",
-	"version": (0, 5, 0),
+	"version": (0, 7, 0),
 	"blender": (2, 6, 7),
 	"location": "Properties > render",
 	"description": "Generate machining paths for CNC",
