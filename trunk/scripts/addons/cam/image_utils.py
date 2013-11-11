@@ -126,6 +126,7 @@ def numpysave(a,iname):
 	i.save_render(iname)
 
 def numpytoimage(a,iname):
+	t=time.time()
 	print('numpy to image')
 	t=time.time()
 	print(a.shape[0],a.shape[1])
@@ -138,6 +139,7 @@ def numpytoimage(a,iname):
 	if not foundimage:
 		bpy.ops.image.new(name=iname, width=a.shape[0], height=a.shape[1], color=(0, 0, 0, 1), alpha=True, generated_type='BLANK', float=True)
 		for image in bpy.data.images:
+			
 			if image.name[:len(iname)]==iname and image.size[0]==a.shape[0] and image.size[1]==a.shape[1]:
 				i=image
 			
@@ -145,14 +147,13 @@ def numpytoimage(a,iname):
 	a=a.swapaxes(0,1)
 	a=a.reshape(d)
 	a=a.repeat(4)
-	i.pixels=a
-	
-	
+	a[3::4]=1
+	i.pixels[:]=a[:]#this gives big speedup!	
+	print('\ntime '+str(time.time()-t))
 	return i
 
 def imagetonumpy(i):
 	t=time.time()
-	progress('imagetonumpy')
 	inc=0
 	
 	width=i.size[0]
@@ -161,50 +162,14 @@ def imagetonumpy(i):
 	y=0
 	count=0
 	na=numpy.array((0.1),dtype=float)
-	if bpy.app.debug_value==5:
+	if True:#bpy.app.debug_value==5:
 		size=width*height
-		na.resize(size*4)
-		
+		na.resize(size*4)		
 		id=0
-		
-		for id,v in enumerate(i.pixels):
-			#na.itemset(id,v)
-			na[id]=v
-			#id+=1
-		#na=na.reshape(size,4)
-		#na=na.swapaxes(0,1)
-		#progress(na)
-		#na=na[0]
-		#progress(na)
+		na[:]=i.pixels[:]
 		na=na.reshape(width,height,4)
-		na=na[...,1]
-		#na=na.reshape(width,height)
-		#na=na.swapaxes(0,1)
-		
-	else:
-		na.resize(width,height)
-		#na=numpy.array(i.pixels)
-		percent=0
-		id=0
-		#progress(len(i.pixels))
-		#progress
-		for v in i.pixels:
-			if inc==0:
-				if x==width:
-					x=0
-					y+=1
-					#if int(y/height*100)>percent:
-						#percent=int(y/height*100)
-						#progress('zbuffer conversion',percent)
-				na[x,y]=v
-				#na.itemset(x,y,v)
-				x+=1
-			inc+=1;
-			if inc==4:
-				inc=0
-		
-	progress('\ntime '+str(time.time()-t))
-	
+		na=na[...,1]		
+	print('\ntime '+str(time.time()-t))	
 	return na
 
 def offsetArea(o,samples):
