@@ -2175,7 +2175,8 @@ def getPath3axis(context,operation):
 			o.limit_poly=Polygon.Polygon()
 			for p in polys:
 				o.limit_poly+=p
-			o.limit_poly = outlinePoly(o.limit_poly,o.cutter_diameter/2,operation,offset = False)#limit curve is made smaller by cutter radius...
+			if o.limit_curve_restrict:
+				o.limit_poly = outlinePoly(o.limit_poly,o.cutter_diameter/2,operation,offset = False)#limit curve is made smaller by cutter radius...
 	
 	###########cutout strategy is completely here:
 	if o.strategy=='CUTOUT':
