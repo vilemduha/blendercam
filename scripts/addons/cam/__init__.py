@@ -336,6 +336,7 @@ class camOperation(bpy.types.PropertyGroup):
 	ambient_radius = FloatProperty(name="Ambient radius", description="Radius around the part which will be milled if ambient is set to Around", min=0.0, max=100.0, default=0.01, precision=PRECISION, unit="LENGTH", update = updateRest)
 	#ambient_cutter = EnumProperty(name='Borders',items=(('EXTRAFORCUTTER', 'Extra for cutter', "Extra space for cutter is cut around the segment"),('ONBORDER', "Cutter on edge", "Cutter goes exactly on edge of ambient with it's middle") ,('INSIDE', "Inside segment", 'Cutter stays within segment')   ),description='handling of ambient and cutter size',default='INSIDE')
 	use_limit_curve=bpy.props.BoolProperty(name="Use limit curve",description="A curve limits the operation area", default=False, update = updateRest)
+	limit_curve_restrict=bpy.props.BoolProperty(name="Cutter doesn't get out from curve limits",description="Cutter doesn't get out from curve limits", default=True, update = updateRest)
 	limit_curve=   bpy.props.StringProperty(name='Limit curve', description='curve used to limit the area of the operation', update = updateRest)
 	
 	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
@@ -1590,6 +1591,7 @@ class CAM_AREA_Panel(bpy.types.Panel):
 				layout.prop(ao,'use_limit_curve')				   
 				if ao.use_limit_curve:
 					layout.prop_search(ao, "limit_curve", bpy.data, "objects")
+					layout.prop(ao,"limit_curve_restrict")
 				
 
 				
