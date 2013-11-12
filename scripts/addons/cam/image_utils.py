@@ -164,39 +164,18 @@ def imagetonumpy(i):
 	y=0
 	count=0
 	na=numpy.array((0.1),dtype=float)
-	if True:
-		size=width*height
-		na.resize(size*4)		
-		id=0
-		#print(i.pixels[0])
-		na[:]=i.pixels[:]
-		#print(i.pixels[:20])
-		na=na[::4]
-		na=na.reshape(height,width)
-		na=na.swapaxes(0,1)
-		#print(na)
-		#na=na[...,1]	
-	else:
-		na.resize(width,height)
-		#na=numpy.array(i.pixels)
-		percent=0
-		id=0
-		#progress(len(i.pixels))
-		#progress
-		for v in i.pixels:
-			if inc==0:
-				if x==width:
-					x=0
-					y+=1
-					#if int(y/height*100)>percent:
-						#percent=int(y/height*100)
-						#progress('zbuffer conversion',percent)
-				na[x,y]=v
-				#na.itemset(x,y,v)
-				x+=1
-			inc+=1;
-			if inc==4:
-				inc=0		
+	
+	size=width*height
+	na.resize(size*4)		
+	id=0
+	#print(i.pixels[0])
+	na[:]=i.pixels[:]
+	#print(i.pixels[:20])
+	na=na[::4]
+	na=na.reshape(height,width)
+	na=na.swapaxes(0,1)
+	#print(na)
+	#na=na[...,1]	
 	print('\ntime '+str(time.time()-t))	
 	return na
 
@@ -1102,6 +1081,11 @@ def renderSampleImage(o):
 		a=(a-maxa)
 		a*=o.source_image_scale_z
 		o.minz=numpy.min(a)
+		o.min.z=numpy.min(a)
+		print('min z ', o.min.z)
+		print('max z ', o.max.z)
+		print('max image ', numpy.max(a))
+		print('min image ', numpy.min(a))
 		o.zbuffer_image=a
 	#progress('got z buffer also with conversion in:')
 	progress(time.time()-t)

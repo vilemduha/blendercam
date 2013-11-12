@@ -168,10 +168,10 @@ def checkMemoryLimit(o):
 	res=resx*resy
 	limit=o.imgres_limit*1000000
 	print('co se to deje')
-	if res>limit:
-		ratio=(res/limit)
-		o.pixsize=o.pixsize*math.sqrt(ratio)
-		o.warnings=o.warnings+'sampling resolution had to be reduced!\n'
+	#if res>limit:
+	#	ratio=(res/limit)
+	#	o.pixsize=o.pixsize*math.sqrt(ratio)
+	#	o.warnings=o.warnings+'sampling resolution had to be reduced!\n'
 	print('furt nevim')
 	#print(ratio)
 
