@@ -874,6 +874,7 @@ class CamOperationCopy(bpy.types.Operator):
 
 		for k in copyop.keys():
 			o[k]=copyop[k]
+		o.computing=False
 		
 		####get digits in the end
 		####
@@ -891,10 +892,10 @@ class CamOperationCopy(bpy.types.Operator):
 		else:
 			o.name=o.name+'_copy'
 			o.filename=o.filename+'_copy'
-		ob=bpy.context.active_object
-		if ob!=None:
-			o.object_name=ob.name
-			o.minz=ob.location.z+ob.bound_box[0][2]
+		#ob=bpy.context.active_object
+		#if ob!=None:
+		#	o.object_name=ob.name
+		#	o.minz=ob.location.z+ob.bound_box[0][2]
 		return {'FINISHED'}
 	
 class CamOperationRemove(bpy.types.Operator):

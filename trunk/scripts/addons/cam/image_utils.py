@@ -208,7 +208,7 @@ def offsetArea(o,samples):
 			text="Offsetting depth "+str(int(x*100/cwidth))
 			#o.operator.report({"INFO"}, text)
 			progress('offset ',int(x*100/cwidth))
-			for y in range(0,cwidth):
+			for y in range(0,cwidth):#TODO:OPTIMIZE THIS - this can run much faster when the areas won't be created each run????tests dont work now
 				if cutterArray[x,y]>-10:
 					#i+=1
 					#progress(i)
@@ -931,6 +931,66 @@ def getSampleImage(s,sarray,minz):
 		z=sa*(maxy-y)+sb*(y-miny)
 		return z
 
+def getMultiSampleImage(samples,sarray,minz):
+	
+	x=s[0]
+	y=s[1]
+	resultsamples=numpy.array(samples)
+	if (x<0 or x>len(sarray)-1) or (y<0 or y>len(sarray[0])-1):
+		return -10
+		#return None;#(sarray[y,x] bugs
+	else:
+		#return(sarray[int(x),int(y)])
+		minx=floor(x)
+		maxx=ceil(x)
+		if maxx==minx:
+			maxx+=1
+		miny=floor(y)
+		maxy=ceil(y)
+		if maxy==miny:
+			maxy+=1
+		
+		'''
+		s1a=sarray[minx,miny]#
+		s2a=sarray[maxx,miny]
+		s1b=sarray[minx,maxy]
+		s2b=sarray[maxx,maxy]
+		'''
+		s1a=sarray.item(minx,miny)#
+		s2a=sarray.item(maxx,miny)
+		s1b=sarray.item(minx,maxy)
+		s2b=sarray.item(maxx,maxy)
+		
+		#if s1a==minz and s2a==minz and s1b==minz and s2b==minz:
+		#  return
+		'''
+		if min(s1a,s2a,s1b,s2b)<-10:
+			#return -10
+			if s1a<-10:
+				s1a=s2a
+			if s2a<-10:
+				s2a=s1a
+			if s1b<-10:
+				s1b=s2b
+			if s2b<-10:
+				s2b=s1b
+	
+			sa=s1a*(maxx-x)+s2a*(x-minx)
+			sb=s1b*(maxx-x)+s2b*(x-minx)
+			if sa<-10:
+				sa=sb
+			if sb<-10:
+				sb=sa
+			z=sa*(maxy-y)+sb*(y-miny)
+			return z
+			
+		else:
+		''' 
+		sa=s1a*(maxx-x)+s2a*(x-minx)
+		sb=s1b*(maxx-x)+s2b*(x-minx)
+		z=sa*(maxy-y)+sb*(y-miny)
+		return z
+		
 def getResolution(o):
 	sx=o.max.x-o.min.x
 	sy=o.max.y-o.min.y
@@ -1068,6 +1128,7 @@ def renderSampleImage(o):
 		
 		rawimage=imagetonumpy(i)
 		maxa=numpy.max(rawimage)
+		mina=numpy.min(rawimage)
 		a=numpy.array((1.0,1.0))
 		a.resize(2*o.borderwidth+i.size[0],2*o.borderwidth+i.size[1])
 		if o.strategy=='CUTOUT':#cutout strategy doesn't want to cut image border
@@ -1078,8 +1139,9 @@ def renderSampleImage(o):
 		a[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]=rawimage
 		a=a[sx:ex+o.borderwidth*2,sy:ey+o.borderwidth*2]
 		
-		a=(a-maxa)
+		a=(a-mina)#TODO: fix this!!!!!
 		a*=o.source_image_scale_z
+		a+=o.source_image_offset.z
 		o.minz=numpy.min(a)
 		o.min.z=numpy.min(a)
 		print('min z ', o.min.z)
