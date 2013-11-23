@@ -1,4 +1,5 @@
 import math,sys,os,string
+import time
 import bpy
 import mathutils 
 from mathutils import *
@@ -13,7 +14,21 @@ def tuple_sub(t,t1):#sub two tuples as Vectors
 def tuple_mul(t,c):#multiply two tuples with a number
 	return (t[0]*c,t[1]*c,t[2]*c)
 	
+#timing functions for optimisation purposes...
+def timinginit():
+	return[0,0]
+	
+def timingstart(tinf):
+	t=time.time()
+	tinf[1]=t
 
+def timingadd(tinf):
+	t=time.time()
+	tinf[0]+=t-tinf[1]
+
+def timingprint(tinf):
+	print('time '+str(tinf[0])+'seconds')
+	
 def progress(text,n=None):
 	'''function for reporting during the script, works for background operations in the header.'''
 	#for i in range(n+1):
