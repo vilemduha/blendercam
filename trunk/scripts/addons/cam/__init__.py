@@ -1662,6 +1662,7 @@ def register():
 	bpy.types.INFO_HT_header.append(header_info)
 
 	
+	'''
 	try:
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_render)
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_dimensions)
@@ -1676,6 +1677,7 @@ def register():
 		bpy.utils.unregister_class(bpy.types.RENDER_PT_freestyle)
 	except:
 		pass;
+	'''
 	
 
 def unregister():

@@ -930,66 +930,6 @@ def getSampleImage(s,sarray,minz):
 		sb=s1b*(maxx-x)+s2b*(x-minx)
 		z=sa*(maxy-y)+sb*(y-miny)
 		return z
-
-def getMultiSampleImage(samples,sarray,minz):
-	
-	x=s[0]
-	y=s[1]
-	resultsamples=numpy.array(samples)
-	if (x<0 or x>len(sarray)-1) or (y<0 or y>len(sarray[0])-1):
-		return -10
-		#return None;#(sarray[y,x] bugs
-	else:
-		#return(sarray[int(x),int(y)])
-		minx=floor(x)
-		maxx=ceil(x)
-		if maxx==minx:
-			maxx+=1
-		miny=floor(y)
-		maxy=ceil(y)
-		if maxy==miny:
-			maxy+=1
-		
-		'''
-		s1a=sarray[minx,miny]#
-		s2a=sarray[maxx,miny]
-		s1b=sarray[minx,maxy]
-		s2b=sarray[maxx,maxy]
-		'''
-		s1a=sarray.item(minx,miny)#
-		s2a=sarray.item(maxx,miny)
-		s1b=sarray.item(minx,maxy)
-		s2b=sarray.item(maxx,maxy)
-		
-		#if s1a==minz and s2a==minz and s1b==minz and s2b==minz:
-		#  return
-		'''
-		if min(s1a,s2a,s1b,s2b)<-10:
-			#return -10
-			if s1a<-10:
-				s1a=s2a
-			if s2a<-10:
-				s2a=s1a
-			if s1b<-10:
-				s1b=s2b
-			if s2b<-10:
-				s2b=s1b
-	
-			sa=s1a*(maxx-x)+s2a*(x-minx)
-			sb=s1b*(maxx-x)+s2b*(x-minx)
-			if sa<-10:
-				sa=sb
-			if sb<-10:
-				sb=sa
-			z=sa*(maxy-y)+sb*(y-miny)
-			return z
-			
-		else:
-		''' 
-		sa=s1a*(maxx-x)+s2a*(x-minx)
-		sb=s1b*(maxx-x)+s2b*(x-minx)
-		z=sa*(maxy-y)+sb*(y-miny)
-		return z
 		
 def getResolution(o):
 	sx=o.max.x-o.min.x
@@ -1115,10 +1055,10 @@ def renderSampleImage(o):
 		
 	else:
 		i=bpy.data.images[o.source_image_name]
-		sx=int(i.size[0]*o.source_image_crop_start_x/100)
-		ex=int(i.size[0]*o.source_image_crop_end_x/100)
-		sy=int(i.size[1]*o.source_image_crop_start_y/100)
-		ey=int(i.size[1]*o.source_image_crop_end_y/100)
+		sx=int(i.size[0]*o.source_image_crop_start_x/100.0)
+		ex=int(i.size[0]*o.source_image_crop_end_x/100.0)
+		sy=int(i.size[1]*o.source_image_crop_start_y/100.0)
+		ey=int(i.size[1]*o.source_image_crop_end_y/100.0)
 		o.offset_image.resize(ex-sx+2*o.borderwidth,ey-sy+2*o.borderwidth)
 		
 		

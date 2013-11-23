@@ -229,7 +229,11 @@ def sampleChunks(o,pathSamples,layers):
 		zinvert=ob.location.z+maxz#ob.bound_box[6][2]
 	
 	n=0
-	
+	#timing for optimisation
+	samplingtime=timinginit()
+	sortingtime=timinginit()
+	totaltime=timinginit()
+	timingstart(totaltime)
 	lastz=minz
 	for patternchunk in pathSamples:
 		thisrunchunks=[]
@@ -269,8 +273,10 @@ def sampleChunks(o,pathSamples,layers):
 				#print(maxz)
 				#here we have 
 			else:
+				timingstart(samplingtime)
 				xs=(x-minx)/pixsize+o.borderwidth+pixsize/2#-m
 				ys=(y-miny)/pixsize+o.borderwidth+pixsize/2#-m
+				timingadd(samplingtime)
 				#if o.inverse:
 				#  maxz=layerstart
 				maxz=getSampleImage((xs,ys),o.offset_image,minz)+o.skin
@@ -368,21 +374,30 @@ def sampleChunks(o,pathSamples,layers):
 				layeractivechunks[i]=camPathChunk([])
 				#parenting: not for outlinefilll!!! also higly unoptimized
 			if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
+				timingstart(sortingtime)
 				parentChildDist(thisrunchunks[i], lastrunchunks[i],o)
+				timingadd(sortingtime)
 
 		lastrunchunks=thisrunchunks
 				
 			#print(len(layerchunks[i]))
 	progress('checking relations between paths')
+	timingstart(sortingtime)
+
 	if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
 		if len(layers)>1:# sorting help so that upper layers go first always
 			for i in range(0,len(layers)-1):
 				#print('layerstuff parenting')
 				parentChild(layerchunks[i+1],layerchunks[i],o)
-				
+	timingadd(sortingtime)
 	chunks=[]
+	
 	for i,l in enumerate(layers):
 		chunks.extend(layerchunks[i])
+	timingadd(totaltime)
+	timingprint(samplingtime)
+	timingprint(sortingtime)
+	timingprint(totaltime)
 	return chunks  
 	
 def sampleChunksNAxis(o,pathSamples,layers):
@@ -1438,7 +1453,7 @@ def getOperationSilhouette(operation):
 					if 1:#bpy.app.debug_value==0:#raster based method - currently only stable one.
 						print('detecting silhouette - raster based')
 						samples=renderSampleImage(operation)
-						i=samples>operation.minz
+						i=samples>operation.minz-0.0000001
 						#numpytoimage(i,'threshold')
 						#i=outlineImageBinary(operation,0.001,i,False)
 						chunks=imageToChunks(operation,i)
@@ -2293,6 +2308,9 @@ def getPath3axis(context,operation):
 		else:
 			layers=[[0,o.min.z]]
 
+		print(layers)
+		print(chunksFromCurve)
+		print(len(chunksFromCurve))
 		for l in layers:
 			lchunks=setChunksZ(chunksFromCurve,l[1])
 			###########helix_enter first try here TODO: check if helix radius is not out of operation area.
