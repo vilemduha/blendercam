@@ -167,16 +167,15 @@ def imagetonumpy(i):
 	
 	size=width*height
 	na.resize(size*4)		
-	id=0
-	#print(i.pixels[0])
-	na[:]=i.pixels[:]
-	#print(i.pixels[:20])
+	
+	p=i.pixels[:]#these 2 lines are about 15% faster than na=i.pixels[:].... whyyyyyyyy!!?!?!?!?! Blender image data access is evil.
+	na[:]=p
+	#na=numpy.array(i.pixels[:])#this was terribly slow... at least I know why now, it probably 
 	na=na[::4]
 	na=na.reshape(height,width)
 	na=na.swapaxes(0,1)
-	#print(na)
-	#na=na[...,1]	
-	print('\ntime '+str(time.time()-t))	
+	
+	print('\ntime of image to numpy '+str(time.time()-t))	
 	return na
 
 def offsetArea(o,samples):
