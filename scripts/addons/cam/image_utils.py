@@ -148,7 +148,7 @@ def numpytoimage(a,iname):
 	a=a.reshape(d)
 	a=a.repeat(4)
 	a[3::4]=1
-	#i.pixels=a
+	#i.pixels=a this was 50 percent slower...
 	i.pixels[:]=a[:]#this gives big speedup!	
 	print('\ntime '+str(time.time()-t))
 	return i

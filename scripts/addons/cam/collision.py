@@ -74,13 +74,14 @@ def prepareBulletCollision(o):
 			bpy.ops.object.convert(target='MESH', keep_original=False)
 
 		collisionob=bpy.context.active_object
-		bpy.ops.rigidbody.object_add(type='ACTIVE')
+		bpy.ops.rigidbody.object_add(type='ACTIVE')#using active instead of passive because of performance.TODO: check if this works also with 4axis...
 		collisionob.rigid_body.collision_shape = 'MESH'
+		collisionob.rigid_body.kinematic=True#268 and 70 
 		collisionob.rigid_body.collision_margin = o.skin*BULLET_SCALE
 		bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
 		collisionob.location=collisionob.location*BULLET_SCALE
 		bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-	
+		
 	getCutterBullet(o)
 	
 	#machine objects scaling up to simulation scale
