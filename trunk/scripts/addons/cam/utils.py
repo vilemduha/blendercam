@@ -1453,14 +1453,11 @@ def getOperationSilhouette(operation):
 					if 1:#bpy.app.debug_value==0:#raster based method - currently only stable one.
 						print('detecting silhouette - raster based')
 						samples=renderSampleImage(operation)
-						i=samples>operation.minz-0.0000001
-						#numpytoimage(i,'threshold')
-						#i=outlineImageBinary(operation,0.001,i,False)
+						i=samples>operation.minz-0.0000001#this was issue with totally flat meshes
 						chunks=imageToChunks(operation,i)
 						silhouete=chunksToPolys(chunks)#this conversion happens because we need the silh to be oriented, for milling directions.
-						
 						operation.silhouete=silhouete
-						#return [silhouete]
+						
 					elif bpy.app.debug_value==1:#own method with intersections...
 						#first, duplicate the object, so we can split it:
 						activate(ob)
