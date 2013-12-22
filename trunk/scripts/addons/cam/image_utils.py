@@ -689,7 +689,7 @@ def imageToChunks(o,image):
 	ar = image[:,:-1]-image[:,1:] 
 	
 	indices1=ar.nonzero()
-	borderspread=2#when the border was excluded precisely, sometimes it did remove some silhouette parts
+	borderspread=2#o.cutter_diameter/o.pixsize#when the border was excluded precisely, sometimes it did remove some silhouette parts
 	r=o.borderwidth-borderspread# to prevent outline of the border was 3 before and also (o.cutter_diameter/2)/pixsize+o.borderwidth
 	w=image.shape[0]
 	h=image.shape[1]
