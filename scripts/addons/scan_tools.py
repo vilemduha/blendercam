@@ -15,7 +15,7 @@ bl_info = {
 	"tracker_url": "",
 	"category": "Object"}
 
-def main(self,context, event, ray_max=100000.0):
+def floor(self,context, event, ray_max=100000.0):
 	"""Run this function on left mouse, execute the ray cast"""
 	# get the context arguments
 	scene = context.scene
@@ -57,14 +57,7 @@ def main(self,context, event, ray_max=100000.0):
 		hit, normal, face_index = obj_ray_cast(obj, matrix)
 		print(hit)
 		if hit is not None:
-			'''
-			
-			
-			length_squared = (hit_world - ray_origin).length_squared
-			if length_squared < best_length_squared:
-				best_length_squared = length_squared
-				best_obj = obj
-			'''
+
 			hit_world = matrix * hit
 			scene.cursor_location = hit_world
 			self.hits.append(hit)
@@ -83,27 +76,35 @@ def main(self,context, event, ray_max=100000.0):
 				up=mathutils.Vector((0,0,1))
 				r=n.rotation_difference(up)#.to_euler()
 				print(n,r)
-
+				
 				print(obj.rotation_quaternion)
+				print(matrix)
 				#print(r)
+				v=matrix * ((self.hits[0]+self.hits[1]+self.hits[2])/3)
+				obj.location-=v
 				m=obj.rotation_mode
-
+				bpy.ops.object.transform_apply(location=True, rotation=False, scale=True)
 				obj.rotation_mode='QUATERNION'
 				obj.rotation_quaternion.rotate(r)
 				obj.rotation_mode=m
-				
+				#obj.rotation_euler=obj.rotation_euler
+				#obj.update()
 				matrix = obj.matrix_world.copy()
-				v=matrix * self.hits[0]
-				obj.location-=v
+				print(matrix)
 				
-
+				
+				bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+				return True
+	return False
 
 class ObjectFloor(bpy.types.Operator):
 	"""define floor on scan mesh"""
 	bl_idname = "view3d.modal_operator_floor"
 	bl_label = "Floor"
-	
-	
+	bl_options = {'REGISTER', 'UNDO'}
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None
 	
 	def modal(self, context, event):
 		#self.report({'OPERATOR'}, "Select 3 or more points on the floor, Esc exits")
@@ -113,7 +114,9 @@ class ObjectFloor(bpy.types.Operator):
 		elif event.type == 'LEFTMOUSE' and event.value=='PRESS':
 			#print(dir(event))
 			#print(event.value)
-			main(self,context, event)
+			finish = floor(self,context, event)
+			if finish:
+				return{'FINISHED'}
 			return {'RUNNING_MODAL'}
 		elif event.type in {'RIGHTMOUSE', 'ESC'}:
 			#self.hits=[]
@@ -131,35 +134,38 @@ class ObjectFloor(bpy.types.Operator):
 			return {'CANCELLED'}
 
 def removeFloor(context,threshold):
-	
-
-
 	ob=bpy.context.active_object
 	m=ob.data
 	matrix = ob.matrix_world.copy()
+	sel=0
+	bpy.ops.object.editmode_toggle()
+	
+	bpy.ops.mesh.select_all(action='DESELECT')
+	bpy.ops.object.editmode_toggle()
 	for vert in m.vertices:
 		v=matrix*vert.co
-		if abs(v.z)<threshold:
+		if v.z<threshold:
 			vert.select=True
+			sel+=1
 		else:
 			vert.select=False
+	print(len(m.vertices),sel)
+	m.update()
 	bpy.ops.object.editmode_toggle()
-	for a in range(0,9):
+	for a in range(0,5):
 		bpy.ops.mesh.select_more()
-	for a in range(0,10):# this is larger, so legs etc won't be cut
+	for a in range(0,8):# this is larger, so legs etc won't be cut
 		bpy.ops.mesh.select_less()
 	bpy.ops.mesh.delete(type='VERT')
 	bpy.ops.object.editmode_toggle()
-	
-	#bpy.ops.object.select_all(action='DESELECT')
-	
 
-
+ 
 
 class RemoveFloor(bpy.types.Operator):
 	"""Tooltip"""
 	bl_idname = "object.remove_floor"
 	bl_label = "Remove Floor"
+	bl_options = {'REGISTER', 'UNDO'}
 	
 	threshold = bpy.props.FloatProperty(
 			name="threshold",
@@ -177,6 +183,7 @@ class RemoveFloor(bpy.types.Operator):
 
 def makeLOD(context):
 	ob=bpy.context.active_object
+	bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
 	parent=None
 	if ob.parent!=None:
 		parent=ob.parent
@@ -188,6 +195,7 @@ def makeLOD(context):
 	ob.select=True
 	bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
 	ob.hide=True
+	par=bpy.context.active_object
 	par.hide_render=True
 	if parent!=None:
 		par.parent  
@@ -197,7 +205,8 @@ class MakeLOD(bpy.types.Operator):
 	"""Tooltip"""
 	bl_idname = "object.make_lod"
 	bl_label = "make LOD"
-
+	bl_options = {'REGISTER', 'UNDO'}
+	
 	@classmethod
 	def poll(cls, context):
 		return context.active_object is not None
@@ -205,16 +214,40 @@ class MakeLOD(bpy.types.Operator):
 	def execute(self, context):
 		makeLOD(context)
 		return {'FINISHED'}
+		
+class ReconstructmeTransform(bpy.types.Operator):
+	"""Tooltip"""
+	bl_idname = "object.reconstructme_trans"
+	bl_label = "Reconstructme transform"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None
 
+	def execute(self, context):
+		reconstructmTransform(context)
+		return {'FINISHED'}
+		
+def reconstructmTransform(context):
+	ob=bpy.context.active_object
+	ob.scale=(0.001,0.001,0.001)
+	ob.rotation_euler.x=90
+	bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
+	ob.location=(0,0,0)
+	bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+	
 def register():
 	bpy.utils.register_class(ObjectFloor)
 	bpy.utils.register_class(RemoveFloor)
+	bpy.utils.register_class(ReconstructmeTransform)
 	bpy.utils.register_class(MakeLOD)
 
 
 def unregister():
 	bpy.utils.unregister_class(ObjectFloor)
 	bpy.utils.unregister_class(RemoveFloor)
+	bpy.utils.unregister_class(ReconstructmeTransform)
 	bpy.utils.unregister_class(MakeLOD)
 
 
