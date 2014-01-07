@@ -330,13 +330,13 @@ class camOperation(bpy.types.PropertyGroup):
 	protect_vertical = bpy.props.BoolProperty(name="Protect vertical",description="The path goes only vertically next to steep areas", default=True)
 	protect_vertical_limit = bpy.props.FloatProperty(name="Verticality limit", description="What angle is allready considered vertical", default=math.pi/45, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 		
-	ambient_behaviour = EnumProperty(name='Ambient',items=(('ALL', 'All', 'a'),('AROUND', 'Around', 'a')   ),description='handling ambient surfaces',default='ALL', update = updateRest)
+	ambient_behaviour = EnumProperty(name='Ambient',items=(('ALL', 'All', 'a'),('AROUND', 'Around', 'a')   ),description='handling ambient surfaces',default='ALL', update = updateZbufferImage)
 	
 
 	ambient_radius = FloatProperty(name="Ambient radius", description="Radius around the part which will be milled if ambient is set to Around", min=0.0, max=100.0, default=0.01, precision=PRECISION, unit="LENGTH", update = updateRest)
-	#ambient_cutter = EnumProperty(name='Borders',items=(('EXTRAFORCUTTER', 'Extra for cutter', "Extra space for cutter is cut around the segment"),('ONBORDER', "Cutter on edge", "Cutter goes exactly on edge of ambient with it's middle") ,('INSIDE', "Inside segment", 'Cutter stays within segment')   ),description='handling of ambient and cutter size',default='INSIDE')
+	#ambient_cutter = EnumProperty(name='Borders',items=(('EXTRAFORCUTTER', 'Extra for cutter', "Extra space for cutter is cut around the segment"),('ONBORDER', "Cutter on edge", "Cutter goes exactly on edge of ambient with it's middle") ,('INSIDE', "Inside segment", 'Cutter stays within segment')	 ),description='handling of ambient and cutter size',default='INSIDE')
 	use_limit_curve=bpy.props.BoolProperty(name="Use limit curve",description="A curve limits the operation area", default=False, update = updateRest)
-	limit_curve_restrict=bpy.props.BoolProperty(name="Cutter doesn't get out from curve limits",description="Cutter doesn't get out from curve limits", default=True, update = updateRest)
+	ambient_cutter_restrict=bpy.props.BoolProperty(name="Cutter stays in ambient limits",description="Cutter doesn't get out from ambient limits otherwise goes on the border exactly", default=True, update = updateRest)#restricts cutter inside ambient only
 	limit_curve=   bpy.props.StringProperty(name='Limit curve', description='curve used to limit the area of the operation', update = updateRest)
 	
 	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
@@ -1043,14 +1043,24 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 			   
 	
 ####Panel definitions
-class CAM_CUTTER_Panel(bpy.types.Panel):   
+class CAMButtonsPanel():
+	bl_space_type = 'PROPERTIES'
+	bl_region_type = 'WINDOW'
+	bl_context = "render"
+	# COMPAT_ENGINES must be defined in each subclass, external engines can add themselves here
+	'''
+	@classmethod
+	def poll(cls, context):
+		rd = context.scene.render
+		return (rd.use_game_engine is False) and (rd.engine in cls.COMPAT_ENGINES)
+	'''
+
+class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):   
 	"""CAM cutter panel"""
 	bl_label = " "
 	bl_idname = "WORLD_PT_CAM_CUTTER"
-	
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
+		
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 	
 	def draw_header(self, context):
 	   self.layout.menu("CAM_CUTTER_presets", text="CAM Cutter")
@@ -1078,14 +1088,12 @@ class CAM_CUTTER_Panel(bpy.types.Panel):
 					layout.prop_search(ao, "cutter_object_name", bpy.data, "objects")
 
    
-class CAM_MACHINE_Panel(bpy.types.Panel):	
+class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):	
 	"""CAM machine panel"""
 	bl_label = " "
 	bl_idname = "WORLD_PT_CAM_MACHINE"
-	
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
+		
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 	
 	def draw_header(self, context):
 	   self.layout.menu("CAM_MACHINE_presets", text="CAM Machine")
@@ -1117,14 +1125,12 @@ class CAM_MACHINE_Panel(bpy.types.Panel):
 				#layout.prop(ao,'axis5')
 				#layout.prop(ao,'collet_size')
 
-class CAM_MATERIAL_Panel(bpy.types.Panel):	 
+class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):	 
 	"""CAM material panel"""
 	bl_label = "CAM Material size and position"
 	bl_idname = "WORLD_PT_CAM_MATERIAL"
-	
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
+		
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 	
 	def draw(self, context):
 		layout = self.layout
@@ -1178,14 +1184,12 @@ class CAM_UL_chains(UIList):
 			 layout.alignment = 'CENTER'
 			 layout.label(text="", icon_value=icon)
 			 
-class CAM_CHAINS_Panel(bpy.types.Panel):
+class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM chains panel"""
 	bl_label = "CAM chains"
 	bl_idname = "WORLD_PT_CAM_CHAINS"
-	
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
+		
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 	
 	
 
@@ -1233,14 +1237,13 @@ class CAM_CHAINS_Panel(bpy.types.Panel):
 				layout.prop(chain,'filename')
 		
 			 
-class CAM_OPERATIONS_Panel(bpy.types.Panel):
+class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM operations panel"""
 	bl_label = "CAM operations"
 	bl_idname = "WORLD_PT_CAM_OPERATIONS"
 	
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
+	
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 	
 	
 
@@ -1301,14 +1304,13 @@ def getUnit():
 	elif bpy.context.scene.unit_settings.system == 'IMPERIAL':
 		return "''"
 									 
-class CAM_INFO_Panel(bpy.types.Panel):
+class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM info panel"""
 	bl_label = "CAM info & warnings"
 	bl_idname = "WORLD_PT_CAM_INFO"	  
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
-
+	
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	
 	def draw(self, context):
 		layout = self.layout
 		scene=bpy.context.scene
@@ -1331,14 +1333,13 @@ class CAM_INFO_Panel(bpy.types.Panel):
 				#layout.label(str(ob.dimensions.x))
 				#row=layout.row()
 		
-class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
+class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM operation properties panel"""
 	bl_label = "CAM operation setup"
 	bl_idname = "WORLD_PT_CAM_OPERATION"
 	
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
+	
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 	
 	
 
@@ -1420,14 +1421,13 @@ class CAM_OPERATION_PROPERTIES_Panel(bpy.types.Panel):
 				#elif ao.strategy=='SLICES':
 				#	layout.prop(ao,'slice_detail')	  
 				
-class CAM_MOVEMENT_Panel(bpy.types.Panel):
+class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM movement panel"""
 	bl_label = "CAM movement"
 	bl_idname = "WORLD_PT_CAM_MOVEMENT"	  
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
-
+	
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	
 	def draw(self, context):
 		layout = self.layout
 		scene=bpy.context.scene
@@ -1468,14 +1468,13 @@ class CAM_MOVEMENT_Panel(bpy.types.Panel):
 					layout.prop(ao,'protect_vertical_limit')
 			  
 				
-class CAM_FEEDRATE_Panel(bpy.types.Panel):
+class CAM_FEEDRATE_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM feedrate panel"""
 	bl_label = "CAM feedrate"
 	bl_idname = "WORLD_PT_CAM_FEEDRATE"	  
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
-
+	
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	
 	def draw(self, context):
 		layout = self.layout
 		scene=bpy.context.scene
@@ -1490,14 +1489,12 @@ class CAM_FEEDRATE_Panel(bpy.types.Panel):
 				layout.prop(ao,'plunge_angle')
 				layout.prop(ao,'spindle_rpm')
 
-class CAM_OPTIMISATION_Panel(bpy.types.Panel):
+class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM optimisation panel"""
 	bl_label = "CAM optimisation"
 	bl_idname = "WORLD_PT_CAM_OPTIMISATION"
 	
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 	
 	
 
@@ -1535,15 +1532,12 @@ class CAM_OPTIMISATION_Panel(bpy.types.Panel):
 				#if not ao.use_exact:#this will be replaced with groups of objects.
 				#layout.prop(ao,'render_all')# replaced with groups support
 		
-class CAM_AREA_Panel(bpy.types.Panel):
+class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM operation area panel"""
 	bl_label = "CAM operation area "
 	bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
 	
-	bl_space_type = "PROPERTIES"
-	bl_region_type = "WINDOW"
-	bl_context = "render"
-	
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 	
 
 	def draw(self, context):
@@ -1592,9 +1586,11 @@ class CAM_AREA_Panel(bpy.types.Panel):
 				layout.prop(ao,'use_limit_curve')				   
 				if ao.use_limit_curve:
 					layout.prop_search(ao, "limit_curve", bpy.data, "objects")
-					layout.prop(ao,"limit_curve_restrict")
+				layout.prop(ao,"ambient_cutter_restrict")
 				
-
+class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
+	bl_idname = 'BLENDERCAM_RENDER'
+	bl_label = "Blender CAM"
 				
 def get_panels():#convenience function for bot register and unregister functions
 	types = bpy.types
@@ -1639,6 +1635,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	AddPresetCamCutter,
 	AddPresetCamOperation,
 	AddPresetCamMachine,
+	BLENDERCAM_ENGINE
 	#CamBackgroundMonitor
 	)
 	
@@ -1650,10 +1647,9 @@ def register():
 	
 	s.cam_chains = bpy.props.CollectionProperty(type=camChain)
 	s.cam_active_chain = bpy.props.IntProperty(name="CAM Active Chain", description="The selected chain")
-	
+
 	s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
-	
-	
+
 	s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
 	s.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
 	s.cam_text= bpy.props.StringProperty()
