@@ -194,7 +194,7 @@ def sampleChunks(o,pathSamples,layers):
 	if o.use_exact:#prepare collision world
 		if o.update_bullet_collision_tag:
 			prepareBulletCollision(o)
-			#print('getting ambient')
+			
 			o.update_bullet_collision_tag=False
 		#print (o.ambient)
 		cutter=o.cutter_shape
@@ -268,8 +268,7 @@ def sampleChunks(o,pathSamples,layers):
 						maxz=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-o.dist_along_paths, minz)
 				else:
 					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, minz)
-				if minz>maxz and o.ambient.isInside(x,y):
-					maxz=minz;
+				
 				#print(maxz)
 				#here we have 
 			else:
@@ -280,10 +279,13 @@ def sampleChunks(o,pathSamples,layers):
 				#if o.inverse:
 				#  maxz=layerstart
 				maxz=getSampleImage((xs,ys),o.offset_image,minz)+o.skin
+			if minz>maxz and o.ambient.isInside(x,y):
+				maxz=minz;
 			################################
 			#handling samples
 			############################################
-			if (maxz>=minz and (o.ambient.isInside(x,y))) and ((not o.use_limit_curve) or (o.use_limit_curve and o.limit_poly.isInside(x,y))) :
+			if (maxz>=minz and (o.ambient.isInside(x,y))):
+				
 				newsample=(x,y,maxz)
 				#maxz=max(minz,maxz)
 				
@@ -1993,10 +1995,26 @@ def getOperationSilhouette(operation):
 	
 def getAmbient(o):
 	if o.update_ambient_tag:
+		if o.ambient_cutter_restrict:#cutter stays in ambient & limit curve
+			m=o.cutter_diameter/2
+		else: m=0
+
 		if o.ambient_behaviour=='AROUND':
-			o.ambient = getObjectOutline( o.ambient_radius , o , True)# in this method we need ambient from silhouette
+			r=o.ambient_radius - m
+			o.ambient = getObjectOutline( r , o , True)# in this method we need ambient from silhouette
 		else:
-			o.ambient=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
+			o.ambient=Polygon.Polygon(((o.min.x + m ,o.min.y + m ) , (o.min.x + m ,o.max.y - m ),(o.max.x - m ,o.max.y - m ),(o.max.x - m , o.min.y + m )))
+		
+		if o.use_limit_curve:
+			if o.limit_curve!='':
+				limit_curve=bpy.data.objects[o.limit_curve]
+				polys=curveToPolys(limit_curve)
+				o.limit_poly=Polygon.Polygon()
+				for p in polys:
+					o.limit_poly+=p
+				if o.ambient_cutter_restrict:
+					o.limit_poly = outlinePoly(o.limit_poly,o.cutter_diameter/2,o,offset = False)
+			o.ambient = o.ambient & o.limit_poly
 	o.update_ambient_tag=False
 	
 def getObjectOutline(radius,operation,Offset):
@@ -2076,7 +2094,7 @@ def addMachineAreaObject():
 	
 	s=bpy.context.scene
 	ao=bpy.context.active_object
-	if s.objects.get('CAM_machine_area')!=None:
+	if s.objects.get('CAM_machine')!=None:
 	   o=s.objects['CAM_machine']
 	else:
 		bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
@@ -2099,8 +2117,11 @@ def addMachineAreaObject():
 	#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
 	   
 	o.dimensions=bpy.context.scene.cam_machine[0].working_area
-	activate(ao)
-
+	if ao!=None:
+		activate(ao)
+	else:
+		bpy.context.scene.objects.active=None
+		
 def addBridges(ch,o,z):
 	ch.getLength()
 	n=int(ch.length/o.bridges_max_distance)
@@ -2180,15 +2201,7 @@ def getPath3axis(context,operation):
 	s=bpy.context.scene
 	o=operation
 	getBounds(o)
-	if o.use_limit_curve:
-		if o.limit_curve!='':
-			limit_curve=bpy.data.objects[o.limit_curve]
-			polys=curveToPolys(limit_curve)
-			o.limit_poly=Polygon.Polygon()
-			for p in polys:
-				o.limit_poly+=p
-			if o.limit_curve_restrict:
-				o.limit_poly = outlinePoly(o.limit_poly,o.cutter_diameter/2,operation,offset = False)#limit curve is made smaller by cutter radius...
+	
 	
 	###########cutout strategy is completely here:
 	if o.strategy=='CUTOUT':
@@ -2421,6 +2434,7 @@ def getPath3axis(context,operation):
 			pathSamples=chunksRefine(pathSamples,o)
 		elif o.strategy=='PENCIL':
 			prepareArea(o)
+			getAmbient(o)
 			pathSamples=getOffsetImageCavities(o,o.offset_image)
 			#for ch in pathSamples:
 			#   for i,p in enumerate(ch.points):
@@ -2584,7 +2598,8 @@ def getPath3axis(context,operation):
 					fillz=z
 					layerstepinc=0
 					if o.ambient_behaviour=='AROUND':#TODO: use getAmbient
-						ilim=ceil(o.ambient_radius/o.dist_between_paths)
+						m=o.ambient_cutter_restrict*o.cutter_diameter/2
+						ilim=ceil((o.ambient_radius-m)/o.dist_between_paths)
 						restpoly=poly
 						if (o.inverse and len(poly)==0 and slicesfilled>0):
 							restpoly=lastslice
@@ -2604,6 +2619,7 @@ def getPath3axis(context,operation):
 						
 						nchunks=polyToChunks(restpoly,fillz)
 						#########################
+						nchunks=limitChunks(nchunks,o)
 						slicechunks.extend(nchunks)
 						parentChildDist(lastchunks,nchunks,o)
 						lastchunks=nchunks

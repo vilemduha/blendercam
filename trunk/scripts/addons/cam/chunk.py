@@ -257,15 +257,16 @@ def optimizeChunk(chunk,operation):
 		#print(vcorrected)
 	return chunk			
 	
-def limitChunks(chunks,o):
+def limitChunks(chunks,o):#TODO: this should at least add point on area border... but shouldn't be needed at all at the first place...
 	if o.use_limit_curve:
 		nchunks=[]
 		for ch in chunks:
+			prevsampled=True
 			nch=camPathChunk([])
 			nch1=nch
 			closed=True
 			for s in ch.points:
-				sampled=o.limit_poly.isInside(s[0],s[1])
+				sampled=o.ambient.isInside(s[0],s[1])
 				if not sampled and len(nch.points)>0:
 					nch.closed=False
 					closed=False
@@ -273,10 +274,10 @@ def limitChunks(chunks,o):
 					nch=camPathChunk([])
 				elif sampled:
 					nch.points.append(s)
-					
+				prevsampled=sampled
 			if len(nch.points)>1 and closed and ch.closed and ch.points[0]==ch.points[1]:
 				nch.closed=True
-			elif ch.closed and nch!=nch1 and nch.points[-1]==nch1.points[0]:#here adds beginning of closed chunk to the end, if the chunks were split during limiting
+			elif ch.closed and nch!=nch1 and len(nch.points)>1 and nch.points[-1]==nch1.points[0]:#here adds beginning of closed chunk to the end, if the chunks were split during limiting
 				nch.points.extend(nch1.points)
 				nchunks.remove(nch1)
 				print('joining stuff')
