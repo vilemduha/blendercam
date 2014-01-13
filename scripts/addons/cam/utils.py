@@ -135,7 +135,7 @@ def getBounds(o):
 		o.min.z=o.source_image_offset.z+o.minz
 		o.max.z=o.source_image_offset.z
 	s=bpy.context.scene
-	m=s.cam_machine[0]
+	m=s.cam_machine
 	if o.max.x-o.min.x>m.working_area.x or o.max.y-o.min.y>m.working_area.y or o.max.z-o.min.z>m.working_area.z:
 		#o.max.x=min(o.min.x+m.working_area.x,o.max.x)
 		#o.max.y=min(o.min.y+m.working_area.y,o.max.y)
@@ -681,7 +681,7 @@ def doSimulation(name,operations):
 	oname='csim_'+name
 	
 	cp=getCachePath(o)[:-len(o.name)]+name
-	iname=cp+'_sim.exr'#TODO: currently uses still operation path instead of chain path, in case a chain is simulated.
+	iname=cp+'_sim.exr'
 	inamebase=bpy.path.basename(iname)
 	i=numpysave(si,iname)
 		
@@ -835,7 +835,7 @@ def exportGcodePath(filename,vertslist,operations):
 	#verts=[verts]
 	#operations=[o]#this is preparation for actual chain exporting
 	s=bpy.context.scene
-	m=s.cam_machine[0]
+	m=s.cam_machine
 	filename=bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))]+safeFileName(filename)
 	
 	from . import nc
@@ -906,7 +906,7 @@ def exportGcodePath(filename,vertslist,operations):
 		
 		
 		#commands=[]
-		m=bpy.context.scene.cam_machine[0]
+		m=bpy.context.scene.cam_machine
 		
 		millfeedrate=min(o.feedrate,m.feedrate_max)
 		millfeedrate=unitcorr*max(millfeedrate,m.feedrate_min)
@@ -1100,7 +1100,7 @@ def overlaps(bb1,bb2):#true if bb1 is child of bb2
 def sortChunks(chunks,o):
 	if o.strategy!='WATERLINE':
 		progress('sorting paths')
-	sys.setrecursionlimit(100000)# the getNext() function of CamPathChunk was running out of recursion limits. TODO: rewrite CamPathChunk getNext() it to not be recursive- works now won't do it/.
+	sys.setrecursionlimit(100000)# the getNext() function of CamPathChunk was running out of recursion limits.
 	sortedchunks=[]
 	
 	lastch=None
@@ -1443,6 +1443,7 @@ def cutloops(csource,parentloop,loops):
 		cutloops(csource,l,loops)
 
 
+		
 def getOperationSilhouette(operation):
 	o=operation
 	
@@ -2013,59 +2014,25 @@ def getAmbient(o):
 				for p in polys:
 					o.limit_poly+=p
 				if o.ambient_cutter_restrict:
-					o.limit_poly = outlinePoly(o.limit_poly,o.cutter_diameter/2,o,offset = False)
+					o.limit_poly = outlinePoly(o.limit_poly,o.cutter_diameter/2,o.circle_detail,o.optimize,o.optimize_threshold,offset = False)
 			o.ambient = o.ambient & o.limit_poly
 	o.update_ambient_tag=False
 	
-def getObjectOutline(radius,operation,Offset):
+def getObjectOutline(radius,o,Offset):
 	
-	polygons=getOperationSilhouette(operation)
+	polygons=getOperationSilhouette(o)
 	outline=Polygon.Polygon()
 	i=0
 	#print('offseting polygons')
-	
-	
-	# we have to sort polygons here, because when they are added, they can overwrite smaller polygons with holes...
-	#sortok=False
-	#print('sizesorting')
-	#print(len(polygons))
-	'''#this didnt work.
-	#TODO: support more levels of hierarchy with curves. - do it with the clipper library!
-	while sortok==False:
-		sortok=True
-		for pi in range(0,len(polygons)-1):
-			p1=polygons[pi]
-			p2=polygons[pi+1]
-			bb1=p1.boundingBox()
-			bb2=p2.boundingBox()
-			sx1=bb1[1]-bb1[0]
-			sy1=bb1[3]-bb1[2]
-			sx2=bb2[1]-bb2[0]
-			sy2=bb2[3]-bb2[2]
-			print(sx1*sy1,sx2*sy2)
-			#if sx1*sy1<sx2*sy2:#bounding box area is bigger... not really good but works now
-			if (bb1[0]<bb2[0] and bb1[1]>bb2[1]) and (bb1[2]<bb2[2] and bb1[3]>bb2[3]):
-				print('swap')
-				swap=polygons[pi]
-				polygons[pi]=polygons[pi+1]
-				polygons[pi+1]=swap
-				sortok=False
-		
-	''' 
 		
 	outlines=[]
 	for p in polygons:#sort by size before this???
-		#if len(ch.points)>2:
-		#3chp=[]
-		##for v in ch.points:
-		#   chp.append((v[0],v[1]))
-		#p=Polygon.Polygon(chp)
-		#i+=1
-		#print(i)
+		
+		
 		if radius>0:
-			p=outlinePoly(p,radius,operation,Offset)
+			p=outlinePoly(p,radius,o.circle_detail,o.optimize,o.optimize_threshold,Offset)
 					
-		if operation.dont_merge:
+		if o.dont_merge:
 			for ci in range(0,len(p)):
 				outline.addContour(p[ci],p.isHole(ci))
 		else:
@@ -2116,7 +2083,7 @@ def addMachineAreaObject():
 		o.select=False
 	#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
 	   
-	o.dimensions=bpy.context.scene.cam_machine[0].working_area
+	o.dimensions=bpy.context.scene.cam_machine.working_area
 	if ao!=None:
 		activate(ao)
 	else:
@@ -2152,7 +2119,7 @@ def addBridges(ch,o,z):
 		if not inbridge and posi<len(pos) and pos[posi][0]<dist:#detect start of bridge
 			
 			ratio=(dist-pos[posi][0])/v.length
-			point1=v2-v*ratio#TODO: optimize this
+			point1=v2-v*ratio#TODO: optimize this : how? what was meant by the initial comment?
 			point2=v2-v*ratio
 			if bridgeheight>point1.z:
 				point1.z=min(point1.z,bridgeheight)
@@ -2218,6 +2185,7 @@ def getPath3axis(context,operation):
 				
 				if len(ch.points)>2:
 					ch.poly=chunkToPoly(ch)
+					
 		else:
 			if o.cut_type=='ONLINE':
 				p=getObjectOutline(0,o,True)
@@ -2290,7 +2258,7 @@ def getPath3axis(context,operation):
 			parentChildDist(lastchunks,nchunks,o)
 			lastchunks=nchunks
 			
-			p=outlinePoly(p,o.dist_between_paths,o,False)
+			p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 			
 			#for c in p:
 			#   all.addContour(c)
@@ -2400,7 +2368,7 @@ def getPath3axis(context,operation):
 						c=Polygon.Polygon(c)
 						#print('çoutline')
 						#print(c)
-						coutline = outlinePoly(c,o.cutter_diameter/2,operation,offset = True)
+						coutline = outlinePoly(c,o.cutter_diameter/2,o.circle_detail,o.optimize,o.optimize_threshold,offset = True)
 						#print(h)
 						#print('çoutline')
 						#print(coutline)
@@ -2575,7 +2543,7 @@ def getPath3axis(context,operation):
 						restpoly=lastslice
 						#print('filling first')
 					
-					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
+					restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
 					fillz = z 
 					i=0
 					while len(restpoly)>0:
@@ -2590,14 +2558,14 @@ def getPath3axis(context,operation):
 						parentChildDist(lastchunks,nchunks,o)
 						lastchunks=nchunks
 						#slicechunks.extend(polyToChunks(restpoly,z))
-						restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
+						restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
 						i+=1
 						#print(i)
 				i=0
 				if (slicesfilled>0 and layerstepinc==layerstep) or (not o.inverse and len(poly)>0 and slicesfilled==1) or (o.inverse and len(poly)==0 and slicesfilled>0):# fill layers and last slice, last slice with inverse is not working yet - inverse millings end now always on 0 so filling ambient does have no sense.
 					fillz=z
 					layerstepinc=0
-					if o.ambient_behaviour=='AROUND':#TODO: use getAmbient
+					if o.ambient_behaviour=='AROUND':
 						m=o.ambient_cutter_restrict*o.cutter_diameter/2
 						ilim=ceil((o.ambient_radius-m)/o.dist_between_paths)
 						restpoly=poly
@@ -2613,7 +2581,7 @@ def getPath3axis(context,operation):
 						if (o.inverse and len(poly)==0 and slicesfilled>0):
 							restpoly=boundrect-lastslice
 					
-					restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
+					restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
 					i=0
 					while len(restpoly)>0 and i<ilim:
 						
@@ -2624,7 +2592,7 @@ def getPath3axis(context,operation):
 						parentChildDist(lastchunks,nchunks,o)
 						lastchunks=nchunks
 						#slicechunks.extend(polyToChunks(restpoly,z))
-						restpoly=outlinePoly(restpoly,o.dist_between_paths,o,offs)
+						restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
 						i+=1
 				
 				
@@ -2648,7 +2616,7 @@ def getPath3axis(context,operation):
 					n+=1
 			
 		
-					#restpoly=outlinePoly(restpoly,o.dist_between_paths,o,False)
+					#restpoly=outlinePoly(restpoly,o.dist_between_paths,oo.circle_detail,o.optimize,o.optimize_threshold,,False)
 					#chunks.extend(polyToChunks(restpoly,z))
 					
 			lastislice=islice
@@ -2732,7 +2700,7 @@ def getPath3axis(context,operation):
 		for slicechunk in slicechunks:
 			#print(slicechunk)
 			pslices=chunksToPolys(slicechunk)
-			#p1=outlinePoly(pslice,o.dist_between_paths,o,False)
+			#p1=outlinePoly(pslice,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 			for pslice in pslices:
 				p=pslice#-p1
 			#print(p)

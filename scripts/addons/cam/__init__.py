@@ -29,7 +29,7 @@ import bl_operators
 from bpy.types import Menu, Operator, UIList
 #from . import patterns
 #from . import chunk_operations
-from cam import utils#, post_processors
+from cam import utils, simple,polygon_utils_cam, pack#, post_processors
 import numpy
 import Polygon
 from bpy.app.handlers import persistent
@@ -85,21 +85,19 @@ class machineSettings(bpy.types.PropertyGroup):
 	collet_size=bpy.props.FloatProperty(name="#Collet size", description="Collet size for collision detection",default=33, min=0.00001, max=320000,precision=PRECISION , unit="LENGTH")
 	#exporter_start = bpy.props.StringProperty(name="exporter start", default="%")
 
-'''
-def updateScale():
-	#TODO: move this to own update function.
-	if ob.scale.x!=ob.scale.y or ob.scale.y!=ob.scale.z:
-		if ob.scale.x!=ob.scale.y and ob.scale.y==ob.scale.z:
-			ob.scale.y=ob.scale.x
-			ob.scale.z=ob.scale.z
-		elif ob.scale.y!=ob.scale.x and ob.scale.y!=ob.scale.z:
-			ob.scale.x=ob.scale.y
-			ob.scale.z=ob.scale.y
-		elif ob.scale.z!=ob.scale.y and ob.scale.z!=ob.scale.x:
-			ob.scale.s=ob.scale.z
-			ob.scale.y=ob.scale.z
-'''
+class PackObjectsSettings(bpy.types.PropertyGroup):
+	'''stores all data for machines'''
+	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
+	sheet_fill_direction = EnumProperty(name='Fill direction',
+		items=(('X','X','Fills sheet in X axis direction'),('Y','Y','Fills sheet in Y axis direction')),
+		description='Fill direction of the packer algorithm',
+		default='Y')
+	sheet_x = FloatProperty(name="X size", description="Sheet size", min=0.001, max=10, default=0.5, precision=PRECISION, unit="LENGTH")
+	sheet_y = FloatProperty(name="Y size", description="Sheet size", min=0.001, max=10, default=0.5, precision=PRECISION, unit="LENGTH")
+	distance = FloatProperty(name="Minimum distance", description="minimum distance between objects(should be at least cutter diameter!)", min=0.001, max=10, default=0.01, precision=PRECISION, unit="LENGTH")
+	rotate = bpy.props.BoolProperty(name="enable rotation",description="Enable rotation of elements", default=True)
 
+		
 def getChangeData(o):####this is a function to check if object props have changed, to see if image updates are needed
 	s=bpy.context.scene
 	changedata=''
@@ -198,6 +196,8 @@ def updateStrategy(o,context):
 	
 def updateExact(o,context):
 	o.changed=True
+	self.update_zbufferimage_tag=True
+	self.update_offsetimage_tag=True
 	if o.use_exact and (o.strategy=='WATERLINE' or o.strategy=='POCKET' or o.inverse):
 		o.use_exact=False
 		
@@ -618,7 +618,24 @@ class PathsAll(bpy.types.Operator):
 	
 	def draw(self, context):
 		layout = self.layout
-		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")	 
+		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
+		
+class CamPackObjects(bpy.types.Operator):
+	'''calculate all CAM paths'''
+	bl_idname = "object.cam_pack_objects"
+	bl_label = "Pack curves on sheet"
+	bl_options = {'REGISTER', 'UNDO'}
+		
+	def execute(self, context):
+		
+		obs=bpy.context.selected_objects
+		pack.packCurves()
+		#layout.
+		return {'FINISHED'}
+	
+	def draw(self, context):
+		layout = self.layout
+		
 		
 def getChainOperations(chain):
 	'''return chain operations, currently chain object can't store operations directly due to blender limitations'''
@@ -824,8 +841,7 @@ class CamOperationAdd(bpy.types.Operator):
 		if s.unit_settings.system=='NONE':
 			s.unit_settings.system='METRIC'
 		s.unit_settings.system_rotation='DEGREES'	
-		if len(s.cam_machine)==0:
-			s.cam_machine.add()
+		
 		if s.objects.get('CAM_machine')==None:
 			utils.addMachineAreaObject()
 		#if len(s.cam_material)==0:
@@ -859,10 +875,6 @@ class CamOperationCopy(bpy.types.Operator):
 		if s.unit_settings.system=='NONE':
 			s.unit_settings.system='METRIC'
 		s.unit_settings.system_rotation='DEGREES'	
-		if len(s.cam_machine)==0:
-			s.cam_machine.add()
-		#if len(s.cam_material)==0:
-		#	 s.cam_material.add()
 		  
 		s=bpy.context.scene
 		s.cam_operations.add()
@@ -1021,7 +1033,7 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 	preset_menu = "CAM_MACHINE_presets"
 
 	preset_defines = [
-		"d = bpy.context.scene.cam_machine[0]",
+		"d = bpy.context.scene.cam_machine",
 		"s = bpy.context.scene.unit_settings"
 	]
 	preset_values = [
@@ -1048,12 +1060,12 @@ class CAMButtonsPanel():
 	bl_region_type = 'WINDOW'
 	bl_context = "render"
 	# COMPAT_ENGINES must be defined in each subclass, external engines can add themselves here
-	'''
+	
 	@classmethod
 	def poll(cls, context):
 		rd = context.scene.render
-		return (rd.use_game_engine is False) and (rd.engine in cls.COMPAT_ENGINES)
-	'''
+		return rd.engine in cls.COMPAT_ENGINES
+	
 
 class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):   
 	"""CAM cutter panel"""
@@ -1102,28 +1114,28 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 		layout = self.layout
 		s=bpy.context.scene
 		us=s.unit_settings
-		if len(s.cam_machine)>0:
-			ao=s.cam_machine[0]
 		
-			if ao:
-				#cutter preset
-				row = layout.row(align=True)
-				row.menu("CAM_MACHINE_presets", text=bpy.types.CAM_MACHINE_presets.bl_label)
-				row.operator("render.cam_preset_machine_add", text="", icon='ZOOMIN')
-				row.operator("render.cam_preset_machine_add", text="", icon='ZOOMOUT').remove_active = True
-				#layout.prop(ao,'name')
-				layout.prop(ao,'post_processor')
-				layout.prop(us,'system')
-				layout.prop(ao,'working_area')
-				layout.prop(ao,'feedrate_min')
-				layout.prop(ao,'feedrate_max')
-				#layout.prop(ao,'feedrate_default')
-				layout.prop(ao,'spindle_min')
-				layout.prop(ao,'spindle_max')
-				#layout.prop(ao,'spindle_default')
-				#layout.prop(ao,'axis4')
-				#layout.prop(ao,'axis5')
-				#layout.prop(ao,'collet_size')
+		ao=s.cam_machine
+	
+		if ao:
+			#cutter preset
+			row = layout.row(align=True)
+			row.menu("CAM_MACHINE_presets", text=bpy.types.CAM_MACHINE_presets.bl_label)
+			row.operator("render.cam_preset_machine_add", text="", icon='ZOOMIN')
+			row.operator("render.cam_preset_machine_add", text="", icon='ZOOMOUT').remove_active = True
+			#layout.prop(ao,'name')
+			layout.prop(ao,'post_processor')
+			layout.prop(us,'system')
+			layout.prop(ao,'working_area')
+			layout.prop(ao,'feedrate_min')
+			layout.prop(ao,'feedrate_max')
+			#layout.prop(ao,'feedrate_default')
+			layout.prop(ao,'spindle_min')
+			layout.prop(ao,'spindle_max')
+			#layout.prop(ao,'spindle_default')
+			#layout.prop(ao,'axis4')
+			#layout.prop(ao,'axis5')
+			#layout.prop(ao,'collet_size')
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):	 
 	"""CAM material panel"""
@@ -1155,7 +1167,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
 						layout.prop(ao,'material_size')
 				else:
 					layout.label('Estimated from image')
-   
+		
 class CAM_UL_operations(UIList):
 	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 		# assert(isinstance(item, bpy.types.VertexGroup)
@@ -1588,6 +1600,27 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop_search(ao, "limit_curve", bpy.data, "objects")
 				layout.prop(ao,"ambient_cutter_restrict")
 				
+class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):	 
+	"""CAM material panel"""
+	bl_label = "Pack curves on sheet"
+	bl_idname = "WORLD_PT_CAM_PACK"
+		
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	
+	def draw(self, context):
+		layout = self.layout
+		scene=bpy.context.scene
+		settings=scene.cam_pack
+		layout.label('warning - algorithm is slow.' )
+		layout.label('only for curves now.' )
+		
+		layout.operator("object.cam_pack_objects")
+		layout.prop(settings,'sheet_fill_direction')
+		layout.prop(settings,'sheet_x')
+		layout.prop(settings,'sheet_y')
+		layout.prop(settings,'distance')
+		layout.prop(settings,'rotate')
+		
 class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
 	bl_idname = 'BLENDERCAM_RENDER'
 	bl_label = "Blender CAM"
@@ -1629,14 +1662,19 @@ def get_panels():#convenience function for bot register and unregister functions
 	CamOperationRemove,
 	CamOperationMove,
 	
+	
 	CAM_CUTTER_presets,
 	CAM_OPERATION_presets,
 	CAM_MACHINE_presets,
 	AddPresetCamCutter,
 	AddPresetCamOperation,
 	AddPresetCamMachine,
-	BLENDERCAM_ENGINE
+	BLENDERCAM_ENGINE,
 	#CamBackgroundMonitor
+	#pack module:
+	PackObjectsSettings,
+	CamPackObjects,
+	CAM_PACK_Panel
 	)
 	
 def register():
@@ -1649,14 +1687,16 @@ def register():
 	s.cam_active_chain = bpy.props.IntProperty(name="CAM Active Chain", description="The selected chain")
 
 	s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
-
+	
 	s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
-	s.cam_machine = bpy.props.CollectionProperty(type=machineSettings)
+	s.cam_machine = bpy.props.PointerProperty(type=machineSettings)
+	
 	s.cam_text= bpy.props.StringProperty()
 	bpy.app.handlers.scene_update_pre.append(timer_update)
 	bpy.app.handlers.load_post.append(check_operations_on_load)
 	bpy.types.INFO_HT_header.append(header_info)
-
+	
+	s.cam_pack = bpy.props.PointerProperty(type=PackObjectsSettings)
 	
 	'''
 	try:

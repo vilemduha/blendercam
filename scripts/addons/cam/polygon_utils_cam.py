@@ -23,11 +23,11 @@ def nRect(l,r):
 	r= Polygon.Polygon(s)
 	return r
 	
-def polyRemoveDoubles(p,o):
+def polyRemoveDoubles(p,optimize_threshold):
 	
 	#vecs=[]
 	pnew=Polygon.Polygon()
-	soptions=['distance','distance',0.0,5,o.optimize_threshold,5,o.optimize_threshold]
+	soptions=['distance','distance',0.0,5,optimize_threshold,5,optimize_threshold]
 	for ci,c in enumerate(p):# in range(0,len(p)):
 		
 		veclist=[]
@@ -49,7 +49,7 @@ def polyRemoveDoubles(p,o):
 	return pnew
 	
 	
-def outlinePoly(p,r,operation,offset = True):
+def outlinePoly(p,r,circle_detail,optimize,optimize_threshold,offset = True):
 	'''offsets or insets polygon by radius'''
 	#t=Polygon.getTolerance()
 	#e=0.0001
@@ -61,9 +61,9 @@ def outlinePoly(p,r,operation,offset = True):
 		ci=0
 		pr=Polygon.Polygon()
 		
-		pr = pr+p#TODO fix this. this probably ruins depth in outlines! should add contours instead, or do a copy
+		pr = Polygon.Polygon(p)#try a copy instead pr+p#TODO fix this. this probably ruins depth in outlines! should add contours instead, or do a copy
 		
-		circle=Circle(r,operation.circle_detail)
+		circle=Circle(r,circle_detail)
 		polygons=[]
 		for c in p:
 			if len(c)>2:
@@ -118,12 +118,14 @@ def outlinePoly(p,r,operation,offset = True):
 		
 		if pr.nPoints()>2:
 			
-			if operation.optimize:
-				pr=polyRemoveDoubles(pr,operation)
+			if optimize:
+				pr=polyRemoveDoubles(pr,optimize_threshold)
 		p=pr
 	return p
 
 def polyToMesh(p,z):
+	import bpy,bmesh
+	from bpy_extras import object_utils
 	verts=[]
 	edges=[]
 	vi=0

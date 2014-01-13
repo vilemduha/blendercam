@@ -338,45 +338,50 @@ def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies.
 	#verts=[]
 	#pverts=[]
 	polys=[]
-	for ch in chunks:
+	for ch in chunks:#first convert chunk to poly
 		if len(ch.points)>2:
 			pchunk=[]
 			for v in ch.points:
 				pchunk.append((v[0],v[1]))
 			ch.poly=Polygon.Polygon(pchunk)
-			#ch.poly.simplify()
+			ch.poly.simplify()
 		
-	for ppart in chunks:
+	for ppart in chunks:#then add hierarchy relations
 		for ptest in chunks:
 				
 			if ppart!=ptest and len(ptest.poly)>0 and len(ppart.poly)>0 and ptest.poly.nPoints(0)>0 and ppart.poly.nPoints(0)>0:
 				if ptest.poly.isInside(ppart.poly[0][0][0],ppart.poly[0][0][1]):
 					#hierarchy works like this: - children get milled first. 
-					ptest.children.append(ppart)
+					#ptest.children.append(ppart)
 					ppart.parents.append(ptest)
  
-	parent=[]
-	for polyi in range(0,len(chunks)):
-		if len(chunks[polyi].parents)%2==1:
-			for parent in chunks[polyi].parents:
-				if len(parent.parents)+1==len(chunks[polyi].parents):
-					chunks[polyi].parents=[parent]
-					break
+	
+	for ch in chunks:#now make only simple polygons with holes, not more polys inside others
+		#print(len(chunks[polyi].parents))
+		if len(ch.parents)%2==1:
+			for parent in ch.parents:
+				if len(parent.parents)+1==len(ch.parents):
+					ch.nparents=[parent]#nparents serves as temporary storage for parents, not to get mixed with the first parenting during the check
+					#break
 		else:
-			chunks[polyi].parents=[]
+			ch.nparents=[]
 
-	for chi in range(0,len(chunks)):
-		ch=chunks[chi]
+	for ch in chunks:#then subtract the 1st level holes
+		ch.parents=ch.nparents
+		ch.nparents=None
 		if len(ch.parents)>0:
-			ch.parents[0].poly=ch.parents[0].poly-ch.poly
+			print(len(ch.parents))
+			#ch.parents[0].poly=ch.parents[0].poly-ch.poly
+			ch.parents[0].poly.addContour(ch.poly[0],1)
 		
 	returnpolys=[]
 
-	for polyi in range(0,len(chunks)):#don't include 'children'
+	for polyi in range(0,len(chunks)):#export only the booleaned polygons
 		ch=chunks[polyi]
 		if len(ch.parents)==0:
-			ch.poly.simplify()
+			ch.poly.simplify()#TODO:THIS CHECK
 			returnpolys.append(ch.poly)
+	#print(len(returnpolys))
 	return returnpolys  
 		
 def meshFromCurveToChunk(object):
