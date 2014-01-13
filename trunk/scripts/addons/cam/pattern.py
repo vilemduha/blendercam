@@ -334,7 +334,7 @@ def getPathPattern(operation):
 		for porig in polys:
 			p=porig
 			while p.nPoints()>0:
-				p=outlinePoly(p,o.dist_between_paths,o,False)
+				p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 				if p.nPoints()>0:
 					nchunks=polyToChunks(p,zlevel)
 					#parentChildPoly(lastchunks,nchunks,o)
@@ -355,7 +355,7 @@ def getPathPattern(operation):
 							dist+=o.pixsize*0.85# this is here only because silhouette is still done with zbuffer method, even if we use bullet collisions.
 						else:
 							dist+=o.pixsize*2.5
-					p=outlinePoly(p,dist,o,True)
+					p=outlinePoly(p,dist,o.circle_detail,o.optimize,o.optimize_threshold,True)
 					if p.nPoints()>0:
 						chunks=polyToChunks(p,zlevel)
 						pathchunks.extend(chunks)

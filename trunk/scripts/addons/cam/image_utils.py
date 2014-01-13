@@ -530,6 +530,8 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 	maxtests=500
 	maxtotaltests=1000000
 	
+	
+	
 	print(xs,ys,indices[0][0],indices[1][0],r)
 	ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
 	anglerange=[-pi,pi]#range for angle of toolpath vector versus material vector
@@ -538,11 +540,11 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 	if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
 		anglerange=[-pi,0]
 		testangleinit=1
-		angleincrement=-0.05
+		angleincrement=-angleincrement
 	elif (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW'):
 		anglerange=[0,pi]
 		testangleinit=-1
-		angleincrement=0.05
+		angleincrement=angleincrement
 	while totpix>0 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
 		
 		#if perc!=int(100*totpix/startpix):
@@ -595,7 +597,6 @@ def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis 
 				#TODO: after all angles were tested into material higher than toomuchpix, it should cancel, otherwise there is no problem with long travel in free space.....
 				#TODO:the testing should start not from the same angle as lastvector, but more towards material. So values closer to toomuchpix are obtained rather than satisfypix
 				testvect=lastvect.normalized()*testlength
-				increment=0.05
 				right=True
 				if testangleinit==0:#meander
 					if testleftright:
@@ -1047,6 +1048,7 @@ def renderSampleImage(o):
 			r.image_settings.color_mode=cm
 		
 			i=bpy.data.images.load(iname)
+			bpy.context.scene.render.engine='BLENDERCAM_RENDER'
 		a=imagetonumpy(i)
 		a=1.0-a
 		o.zbuffer_image=a
@@ -1114,10 +1116,5 @@ def prepareArea(o):
 		if o.inverse:
 			samples=numpy.maximum(samples,o.min.z-0.00001)
 		offsetArea(o,samples)
-		if o.ambient_behaviour=='AROUND' and o.ambient_radius>0.0:#TODO: unify ambient generation into 1 function.
-			r=o.ambient_radius+o.pixsize*2.5#+(o.cutter_diameter/2.0)
-			progress('outline ambient')
-			o.offset_image[:]=outlineImage(o,r,o.offset_image,o.minz)
-			progress('ambient done')
 		numpysave(o.offset_image,iname)
 		
