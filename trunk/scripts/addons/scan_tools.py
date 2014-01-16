@@ -63,7 +63,7 @@ def floor(self,context, event, ray_max=100000.0):
 			self.hits.append(hit)
 			print(len(self.hits))
 			#if len(self.hits)==1:
-			#   
+			#	
 			n=mathutils.Vector((0,0,0))
 			if len(self.hits)>=3:
 				for a in range(0,len(self.hits)-2):
@@ -99,7 +99,7 @@ def floor(self,context, event, ray_max=100000.0):
 
 class ObjectFloor(bpy.types.Operator):
 	"""define floor on scan mesh"""
-	bl_idname = "view3d.modal_operator_floor"
+	bl_idname = "object.align_floor"
 	bl_label = "Floor"
 	bl_options = {'REGISTER', 'UNDO'}
 	@classmethod
@@ -162,7 +162,7 @@ def removeFloor(context,threshold):
  
 
 class RemoveFloor(bpy.types.Operator):
-	"""Tooltip"""
+	"""Remove floor (distance from XY plane in world coordinates) on aligned mesh"""
 	bl_idname = "object.remove_floor"
 	bl_label = "Remove Floor"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -198,11 +198,11 @@ def makeLOD(context):
 	par=bpy.context.active_object
 	par.hide_render=True
 	if parent!=None:
-		par.parent  
+		par.parent	
 
 
 class MakeLOD(bpy.types.Operator):
-	"""Tooltip"""
+	"""Add low poly mesh for view and hide high poly mesh"""
 	bl_idname = "object.make_lod"
 	bl_label = "make LOD"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -216,7 +216,7 @@ class MakeLOD(bpy.types.Operator):
 		return {'FINISHED'}
 		
 class ReconstructmeTransform(bpy.types.Operator):
-	"""Tooltip"""
+	"""Transform import from reconstructme to blender axes/scale"""
 	bl_idname = "object.reconstructme_trans"
 	bl_label = "Reconstructme transform"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -237,11 +237,30 @@ def reconstructmTransform(context):
 	ob.location=(0,0,0)
 	bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 	
+
+#panel containing all tools
+class VIEW3D_PT_tools_scantools(bpy.types.Panel):
+	bl_space_type = 'VIEW_3D'
+	bl_region_type = 'TOOLS'
+	bl_context = "objectmode"
+	bl_label = "Scan Tools"
+	bl_options = {'DEFAULT_CLOSED'}
+
+	def draw(self, context):
+		layout = self.layout
+		#col = layout.column(align=True)
+		#lt = context.window_manager.looptools
+		layout.operator("object.reconstructme_trans")
+		layout.operator("object.align_floor")
+		layout.operator("object.remove_floor")
+		layout.operator("object.make_lod")
+		
 def register():
 	bpy.utils.register_class(ObjectFloor)
 	bpy.utils.register_class(RemoveFloor)
 	bpy.utils.register_class(ReconstructmeTransform)
 	bpy.utils.register_class(MakeLOD)
+	bpy.utils.register_class(VIEW3D_PT_tools_scantools)
 
 
 def unregister():
@@ -249,6 +268,7 @@ def unregister():
 	bpy.utils.unregister_class(RemoveFloor)
 	bpy.utils.unregister_class(ReconstructmeTransform)
 	bpy.utils.unregister_class(MakeLOD)
+	bpy.utils.unregister_class(VIEW3D_PT_tools_scantools)
 
 
 if __name__ == "__main__":
