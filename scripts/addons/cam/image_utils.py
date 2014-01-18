@@ -833,7 +833,7 @@ def imageToChunks(o,image):
 			vecchunk=[]
 			vecchunks.append(vecchunk)
 			for i in range(0,len(ch)):
-				ch[i]=((ch[i][0]+coef-o.borderwidth+borderspread)*pixsize+minx,(ch[i][1]+coef-o.borderwidth+borderspread)*pixsize+miny,0)
+				ch[i]=((ch[i][0]+coef-o.borderwidth)*pixsize+minx,(ch[i][1]+coef-o.borderwidth)*pixsize+miny,0)
 				vecchunk.append(Vector(ch[i]))
 		t=time.time()
 		#print('optimizing outline')

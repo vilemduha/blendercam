@@ -146,3 +146,4 @@ def packCurves():
 				if rotate: rot+=rotchange
 			iter+=1
 		i+=1
+

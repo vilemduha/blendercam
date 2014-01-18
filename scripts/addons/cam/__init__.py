@@ -165,12 +165,12 @@ def checkMemoryLimit(o):
 	resy=sy/o.pixsize
 	res=resx*resy
 	limit=o.imgres_limit*1000000
-	print('co se to deje')
+	#print('co se to deje')
 	#if res>limit:
 	#	ratio=(res/limit)
 	#	o.pixsize=o.pixsize*math.sqrt(ratio)
 	#	o.warnings=o.warnings+'sampling resolution had to be reduced!\n'
-	print('furt nevim')
+	#print('furt nevim')
 	#print(ratio)
 
 
@@ -196,8 +196,8 @@ def updateStrategy(o,context):
 	
 def updateExact(o,context):
 	o.changed=True
-	self.update_zbufferimage_tag=True
-	self.update_offsetimage_tag=True
+	o.update_zbufferimage_tag=True
+	o.update_offsetimage_tag=True
 	if o.use_exact and (o.strategy=='WATERLINE' or o.strategy=='POCKET' or o.inverse):
 		o.use_exact=False
 		
@@ -568,7 +568,7 @@ class CalculatePath(bpy.types.Operator):
 		if o.computing:
 			return {'FINISHED'}
 			
-		print('ahoj0')
+		#print('ahoj0')
 		#these tags are for caching of some of the results.
 		chd=getChangeData(o)
 		#print(chd)
@@ -585,7 +585,7 @@ class CalculatePath(bpy.types.Operator):
 		o.operator=self
 		#'''#removed for groups support, this has to be done object by object...
 		getOperationSources(o)
-		print('áhoj1')
+		#print('áhoj1')
 		if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 			o.onlycurves=True
 			for ob in o.objects:
@@ -593,7 +593,7 @@ class CalculatePath(bpy.types.Operator):
 					o.onlycurves=False;
 		o.warnings=''
 		checkMemoryLimit(o)
-		print('áhoj2')
+		#print('áhoj2')
 		utils.getPath(context,o)
 		o.changed=False
 		return {'FINISHED'}
