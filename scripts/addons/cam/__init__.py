@@ -227,7 +227,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('END', 'End', 'end - flat cutter'),
 			('BALL', 'Ball', 'ball cutter'),
 			('VCARVE', 'V-carve', 'v carve cutter'),
-			('CUSTOM', 'Custom', 'modellet cutter')),
+			('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
 		description='Type of cutter used',
 		default='END', update = updateZbufferImage)
 	cutter_object_name = bpy.props.StringProperty(name='Object', description='object used as custom cutter for this operation', update=updateZbufferImage)
