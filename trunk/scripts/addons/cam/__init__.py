@@ -456,8 +456,9 @@ def header_info(self, context):
 def timer_update(context):
 	'''monitoring of background processes'''
 	text=''
-	if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'processes'):
-		processes=bpy.ops.object.calculate_cam_paths_background.__class__.processes
+	s=bpy.context.scene
+	if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'cam_processes'):
+		processes=bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes
 		for p in processes:
 			#proc=p[1].proc
 			readthread=p[0]
@@ -472,7 +473,7 @@ def timer_update(context):
 					
 				if 'finished' in tcom.lasttext:
 					processes.remove(p)
-					s=bpy.context.scene
+					
 					o=s.cam_operations[tcom.opname]
 					o.computing=False;
 					utils.reload_paths(o)
@@ -484,8 +485,7 @@ def timer_update(context):
 					p[0]=readthread
 				
 			text=text+('# %s %s #' % (tcom.opname,tcom.lasttext))
-		s=bpy.context.scene
-		s.cam_text=text
+	s.cam_text=text
 		
 	for area in bpy.context.screen.areas:
 		if area.type == 'INFO':
@@ -505,7 +505,7 @@ class PathsBackground(bpy.types.Operator):
 	bl_label = "Calculate CAM paths in background"
 	bl_options = {'REGISTER', 'UNDO'}
 	
-	processes=[]
+	#processes=[]
 	
 	#@classmethod
 	#def poll(cls, context):
@@ -529,10 +529,10 @@ class PathsBackground(bpy.types.Operator):
 		tcom=threadCom(o,proc)
 		readthread=threading.Thread(target=threadread, args = ([tcom]), daemon=True)
 		readthread.start()
-		#self.__class__.processes=[]
-		if not hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'processes'):
-			bpy.ops.object.calculate_cam_paths_background.__class__.processes=[]
-		bpy.ops.object.calculate_cam_paths_background.__class__.processes.append([readthread,tcom])
+		#self.__class__.cam_processes=[]
+		if not hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'cam_processes'):
+			bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes=[]
+		bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes.append([readthread,tcom])
 		return {'FINISHED'}
 		
 		
