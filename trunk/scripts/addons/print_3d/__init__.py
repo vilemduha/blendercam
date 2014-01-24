@@ -34,7 +34,7 @@ bl_info = {
 import bpy
 from bpy.props import *
 import subprocess, os
-
+import threading 
 PRECISION=7
 
 class PrintSettings(bpy.types.PropertyGroup):
@@ -53,6 +53,11 @@ class PrintSettings(bpy.types.PropertyGroup):
                 description="Path to engine executable",
                 subtype='FILE_PATH',
                 )
+	dirpath_engine = StringProperty(
+                name="Cura directory",
+                description="Path to cura top directory",
+                subtype='DIR_PATH',
+                )
 	interface = EnumProperty(name='interface',
 		items=(('STANDARD','Standard user',"Everybody, if you really don't want to mess with how things work"),('DEVELOPER','Developer','If you want to improve how things work and understand what you are doing')),
 		description='Interface type',
@@ -60,7 +65,7 @@ class PrintSettings(bpy.types.PropertyGroup):
 	mm=0.001
 	
 	
-	
+	'''
 	layerThickness=bpy.props.FloatProperty(name="layerThickness", description="layerThickness", default=0.1 * mm, min=0.00001, max=320000,precision=PRECISION)
 	initialLayerThickness=bpy.props.FloatProperty(name="initialLayerThickness", description="initialLayerThickness", default=0.15 * mm, min=0.00001, max=320000,precision=PRECISION)
 	filamentDiameter=bpy.props.FloatProperty(name="filamentDiameter", description="filamentDiameter", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
@@ -101,35 +106,71 @@ class PrintSettings(bpy.types.PropertyGroup):
 	fixHorrible=bpy.props.BoolProperty(name="fixHorrible", description="fixHorrible", default=0)
 	
 	propnames = ["layerThickness","initialLayerThickness","filamentDiameter","filamentFlow","extrusionWidth","insetCount","downSkinCount","upSkinCount","infillOverlap","initialSpeedupLayers","initialLayerSpeed","printSpeed","infillSpeed","printSpeed","moveSpeed","fanSpeedMin","fanSpeedMax","supportAngle","supportEverywhere","supportLineDistance","supportXYDistance","supportZDistance","supportExtruder","retractionAmount","retractionSpeed","retractionMinimalDistance","retractionAmountExtruderSwitch","minimalExtrusionBeforeRetraction","enableCombing","multiVolumeOverlap","objectSink","minimalLayerTime","minimalFeedrate","coolHeadLift","startCode","endCode","fixHorrible"]
-'''
+	'''
+
+class threadComPrint3d:#object passed to threads to read background process stdout info 
+	def __init__(self,ob,proc):
+		self.obname=ob.name
+		self.outtext=''
+		self.proc=proc
+		self.lasttext=''
 	
-			'retractionMinimalDistance': int(profile.getProfileSettingFloat('retraction_min_travel') * 1000),
-			'retractionAmountExtruderSwitch': int(profile.getProfileSettingFloat('retraction_dual_amount') * 1000),
-			'minimalExtrusionBeforeRetraction': int(profile.getProfileSettingFloat('retraction_minimal_extrusion') * 1000),
-			'enableCombing': 1 if profile.getProfileSetting('retraction_combing') == 'True' else 0,
-			'multiVolumeOverlap': int(profile.getProfileSettingFloat('overlap_dual') * 1000),
-			'objectSink': int(profile.getProfileSettingFloat('object_sink') * 1000),
-			'minimalLayerTime': int(profile.getProfileSettingFloat('cool_min_layer_time')),
-			'minimalFeedrate': int(profile.getProfileSettingFloat('cool_min_feedrate')),
-			'coolHeadLift': 1 if profile.getProfileSetting('cool_head_lift') == 'True' else 0,
-			'startCode': profile.getAlterationFileContents('start.gcode', extruderCount),
-			'endCode': profile.getAlterationFileContents('end.gcode', extruderCount),
+def threadread_print3d( tcom):
+	'''reads stdout of background process, done this way to have it non-blocking'''
+	#print(tcom.proc)
+	if tcom.proc!=None:
+		inline = tcom.proc.stdout.readline()
+		inline=str(inline)
+		s=inline.find('Preparing: ')
+		if s>-1:
+			tcom.outtext=inline[ s+11 :s+13]
+	
 
-			'extruderOffset[1].X': int(profile.getMachineSettingFloat('extruder_offset_x1') * 1000),
-			'extruderOffset[1].Y': int(profile.getMachineSettingFloat('extruder_offset_y1') * 1000),
-			'extruderOffset[2].X': int(profile.getMachineSettingFloat('extruder_offset_x2') * 1000),
-			'extruderOffset[2].Y': int(profile.getMachineSettingFloat('extruder_offset_y2') * 1000),
-			'extruderOffset[3].X': int(profile.getMachineSettingFloat('extruder_offset_x3') * 1000),
-			'extruderOffset[3].Y': int(profile.getMachineSettingFloat('extruder_offset_y3') * 1000),
-			'fixHorrible': 0,
-			'''
 
+def header_info_print3d(self, context):
+	'''writes background operations data to header'''
+	s=bpy.context.scene
+	self.layout.label(s.print3d_text)
+
+@bpy.app.handlers.persistent
+def timer_update_print3d(context):
+	'''monitoring of background processes'''
+	text=''
+	if hasattr(bpy.ops.object.print3d.__class__,'print3d_processes'):
+		processes=bpy.ops.object.print3d.__class__.print3d_processes
+		for p in processes:
+			#proc=p[1].proc
+			readthread=p[0]
+			tcom=p[1]
+			if not readthread.is_alive():
+				readthread.join()
+				#readthread.
+				tcom.lasttext=tcom.outtext
+				if tcom.outtext!='':
+					print(tcom.obname,tcom.outtext)
+					tcom.outtext=''
+					
+				if 'GCode file saved' in tcom.lasttext:
+					processes.remove(p)
+				else:
+					readthread=threading.Thread(target=threadread_print3d, args = ([tcom]), daemon=True)
+					readthread.start()
+					p[0]=readthread
+				
+			text=text+('# %s %s #' % (tcom.obname,tcom.lasttext))
+	s=bpy.context.scene
+	s.print3d_text=text
+		
+	for area in bpy.context.screen.areas:
+		if area.type == 'INFO':
+			area.tag_redraw()
+	
 class Print3d(bpy.types.Operator):
 	'''send object to 3d printer'''
 	bl_idname = "object.print3d"
 	bl_label = "Print object in 3d"
 	bl_options = {'REGISTER', 'UNDO'}
-	processes=[]
+	#processes=[]
 	
 	#@classmethod
 	#def poll(cls, context):
@@ -142,7 +183,10 @@ class Print3d(bpy.types.Operator):
 		s=bpy.context.scene
 		settings=s.print3d_settings
 		ob=bpy.context.active_object
-
+		
+		
+		'''
+		#this was first try - using the slicer directly. 
 		if settings.slicer=='CURA':
 			fpath=bpy.data.filepath+'_'+ob.name+'.stl'
 			gcodepath=bpy.data.filepath+'_'+ob.name+'.gcode'
@@ -181,6 +225,55 @@ class Print3d(bpy.types.Operator):
 			print(s)
 			print('gcode file exported:')
 			print(gcodepath)
+		'''
+		#second try - use cura command line options, with .ini files.
+		if settings.slicer=='CURA':
+			opath=bpy.data.filepath[:-6]
+			fpath=opath+'_'+ob.name+'.stl'
+			gcodepath=opath+'_'+ob.name+'.gcode'
+			enginepath=settings.dirpath_engine
+			
+			#Export stl, with a scale correcting blenders and Cura size interpretation in stl:
+			bpy.ops.export_mesh.stl(check_existing=False, filepath=fpath, filter_glob="*.stl", ascii=False, use_mesh_modifiers=True, axis_forward='Y', axis_up='Z', global_scale=1000)
+			
+			#this is Cura help line:
+			#CuraEngine [-h] [-v] [-m 3x3matrix] [-s <settingkey>=<value>] -o <output.gcode> <model.stl>
+			
+			#we build the command line here:
+			#commands=[enginepath+'python\python.exe,']#,'-m', 'Cura.cura', '%*']
+			os.chdir(settings.dirpath_engine)
+			print('\n\n\n')
+		
+			print(os.listdir())
+			commands=['python\\python.exe','-m', 'Cura.cura', '-s', fpath]
+			#commands=[enginepath+'cura.bat', '-s', fpath]
+			
+			#commands.extend()#'-o', gcodepath,
+			
+			print(commands)
+			print('\n\n\n')
+			
+			s=''
+			for command in commands:
+				s+=(command)+' '
+			print(s)
+			
+			
+			#run cura in background:
+			#proc = subprocess.call(commands,bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
+			#print(proc)
+			proc= subprocess.Popen(commands,bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)#,env={"PATH": enginepath})
+			print(proc)
+			tcom=threadComPrint3d(ob,proc)
+			readthread=threading.Thread(target=threadread_print3d, args = ([tcom]), daemon=True)
+			readthread.start()
+			#self.__class__.print3d_processes=[]
+			if not hasattr(bpy.ops.object.print3d.__class__,'print3d_processes'):
+				bpy.ops.object.print3d.__class__.print3d_processes=[]
+			bpy.ops.object.print3d.__class__.print3d_processes.append([readthread,tcom])
+			
+			#print('gcode file exported:')
+			#print(gcodepath)
 			
 		return {'FINISHED'}
 
@@ -206,34 +299,43 @@ class PRINT3D_SETTINGS_Panel(bpy.types.Panel):
 		#layout.prop(settings,'slicer')
 		layout.prop(settings,'printer')
 		
-		layout.prop(settings,'filepath_engine')
+		#layout.prop(settings,'filepath_engine')
+		layout.prop(settings,'dirpath_engine')
 		layout.operator("object.print3d")
 		
 		layout.separator()
 		
-		layout.prop(settings,'interface')
+		#layout.prop(settings,'interface')
 
-		if settings.interface=='DEVELOPER':
-			for prop in settings.propnames:
-				layout.prop(settings,prop)
+		#if settings.interface=='DEVELOPER':
+			#for prop in settings.propnames:
+			#	layout.prop(settings,prop)
 			
-		else:
-			layout.label('here will be settings for casual users after we tune them.')
-			layout.label('also, Cura binary should be found automagically,')
-			layout.label('so you really set up which printer you have.')
+		#else:
+			#layout.label('here will be settings for casual users after we tune them.')
+			#layout.label('also, Cura binary should be found automagically,')
+			#layout.label('so you really set up which printer you have.')
 		
 class PRINT3D_ENGINE(bpy.types.RenderEngine):
 	bl_idname = 'PRINT3D'
 	bl_label = "Print 3d"
 		
 def register():
+	s=bpy.types.Scene
+	s.print3d_text= bpy.props.StringProperty()
 	bpy.utils.register_module(__name__)
 	
 	bpy.types.Scene.print3d_settings=PointerProperty(type=PrintSettings)
+	
+	bpy.app.handlers.scene_update_pre.append(timer_update_print3d)
+	bpy.types.INFO_HT_header.append(header_info_print3d)
 	
 def unregister():
 	bpy.utils.unregister_module(__name__)
 	del bpy.types.Scene.print3d_settings
 	
+	bpy.app.handlers.scene_update_pre.remove(timer_update_print3d)
+	bpy.types.INFO_HT_header.remove(header_info_print3d)
+
 #if __name__ == "__main__":
 #	register()
