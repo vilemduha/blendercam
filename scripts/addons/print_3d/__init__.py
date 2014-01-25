@@ -118,12 +118,21 @@ class threadComPrint3d:#object passed to threads to read background process stdo
 def threadread_print3d( tcom):
 	'''reads stdout of background process, done this way to have it non-blocking'''
 	#print(tcom.proc)
-	if tcom.proc!=None:
-		inline = tcom.proc.stdout.readline()
-		inline=str(inline)
-		s=inline.find('Preparing: ')
+	#if tcom.proc!=None:
+	inline = tcom.proc.stdout.readline()
+	inline=str(inline)
+	s=inline.find('Preparing: ')
+	if s>-1:
+	
+		tcom.outtext=inline[ s+11 :s+13]
+	else:
+		#print(inline)
+		s=inline.find('GCode')
+		#print(s)
 		if s>-1:
-			tcom.outtext=inline[ s+11 :s+13]
+			tcom.outtext=inline[s:]
+			
+		
 	
 
 
@@ -152,18 +161,20 @@ def timer_update_print3d(context):
 					
 				if 'GCode file saved' in tcom.lasttext:
 					processes.remove(p)
+					
 				else:
 					readthread=threading.Thread(target=threadread_print3d, args = ([tcom]), daemon=True)
 					readthread.start()
 					p[0]=readthread
 				
 			text=text+('# %s %s #' % (tcom.obname,tcom.lasttext))
+	#print(processes,text)
 	s=bpy.context.scene
 	s.print3d_text=text
 		
-	for area in bpy.context.screen.areas:
-		if area.type == 'INFO':
-			area.tag_redraw()
+	#for area in bpy.context.screen.areas:
+		#if area.type == 'INFO':
+			#area.tag_redraw()
 	
 class Print3d(bpy.types.Operator):
 	'''send object to 3d printer'''
