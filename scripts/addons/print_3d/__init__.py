@@ -44,10 +44,40 @@ class PrintSettings(bpy.types.PropertyGroup):
 		items=(('CURA','Cura','the default slicer'),('INTERNAL','Internal (not existing)','experimental code')),
 		description='System to use',
 		default='CURA')
+	
+	printers=[]
+	for p in bpy.utils.script_paths():
+		try:
+			directory=p+'\\addons\\print_3d\\machine_profiles\\'
+			list=os.listdir(directory)
+			for profile in list:
+				if profile[-4:]=='.ini':
+					profile=profile
+					printers.append((directory+profile,profile[:-4],profile+' config file'))
+		except:
+			pass;
+	
 	printer = EnumProperty(name='printer',
-		items=(('PEACHY','Peachy','Peachy printer'),('OTHER','Other, but no other supported now.','no other supported now,just a stub')),
-		description='Printer',
-		default='PEACHY')
+		items=printers,
+		description='Printer')
+		#default='PEACHY')
+		
+	presets=[]
+	for p in bpy.utils.script_paths():
+		try:
+			directory=p+'\\addons\\print_3d\\ini\\'
+			list=os.listdir(directory)
+			for preset in list:
+				if preset[-4:]=='.ini':
+					#preset=preset[:-4]
+					presets.append((directory+preset,preset[:-4],preset+' config file'))
+		except:
+			pass;
+			
+	preset = EnumProperty(name='preset',
+		items=presets,
+		description='Preset')
+		#default='PEACHY')
 	filepath_engine = StringProperty(
                 name="Cura binary location",
                 description="Path to engine executable",
@@ -243,6 +273,7 @@ class Print3d(bpy.types.Operator):
 			fpath=opath+'_'+ob.name+'.stl'
 			gcodepath=opath+'_'+ob.name+'.gcode'
 			enginepath=settings.dirpath_engine
+			inipath=settings.preset
 			
 			#Export stl, with a scale correcting blenders and Cura size interpretation in stl:
 			bpy.ops.export_mesh.stl(check_existing=False, filepath=fpath, filter_glob="*.stl", ascii=False, use_mesh_modifiers=True, axis_forward='Y', axis_up='Z', global_scale=1000)
@@ -256,7 +287,7 @@ class Print3d(bpy.types.Operator):
 			print('\n\n\n')
 		
 			print(os.listdir())
-			commands=['python\\python.exe','-m', 'Cura.cura', '-s', fpath]
+			commands=['python\\python.exe','-m', 'Cura.cura','-i',inipath, '-s', fpath]
 			#commands=[enginepath+'cura.bat', '-s', fpath]
 			
 			#commands.extend()#'-o', gcodepath,
@@ -309,6 +340,7 @@ class PRINT3D_SETTINGS_Panel(bpy.types.Panel):
 			
 		#layout.prop(settings,'slicer')
 		layout.prop(settings,'printer')
+		layout.prop(settings,'preset')
 		
 		#layout.prop(settings,'filepath_engine')
 		layout.prop(settings,'dirpath_engine')
