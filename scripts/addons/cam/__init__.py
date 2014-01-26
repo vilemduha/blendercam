@@ -74,6 +74,9 @@ class machineSettings(bpy.types.PropertyGroup):
 	spindle_default=bpy.props.FloatProperty(name="#Spindlespeed default /min", default=20000, min=0.00001, max=320000,precision=1)
 	axis4 = bpy.props.BoolProperty(name="#4th axis",description="Machine has 4th axis", default=0)
 	axis5 = bpy.props.BoolProperty(name="#5th axis",description="Machine has 5th axis", default=0)
+	
+	eval_splitting = bpy.props.BoolProperty(name="Split files",description="split gcode file with large number of operations", default=True)#split large files
+	split_limit = IntProperty(name="Operations per file", description="Split files with larger number of operations than this", min=10000, max=20000000, default=800000)
 	'''rotary_axis1 = EnumProperty(name='Axis 1',
 		items=(
 			('X', 'X', 'x'),
@@ -1125,6 +1128,10 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 			row.operator("render.cam_preset_machine_add", text="", icon='ZOOMOUT').remove_active = True
 			#layout.prop(ao,'name')
 			layout.prop(ao,'post_processor')
+			layout.prop(ao,'eval_splitting')
+			if ao.eval_splitting:
+				layout.prop(ao,'split_limit')
+			
 			layout.prop(us,'system')
 			layout.prop(ao,'working_area')
 			layout.prop(ao,'feedrate_min')
@@ -1136,6 +1143,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 			#layout.prop(ao,'axis4')
 			#layout.prop(ao,'axis5')
 			#layout.prop(ao,'collet_size')
+			#
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):	 
 	"""CAM material panel"""
