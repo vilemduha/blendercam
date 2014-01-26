@@ -834,9 +834,27 @@ def exportGcodePath(filename,vertslist,operations):
 	'''exports gcode with the heeks cnc adopted library.'''
 	#verts=[verts]
 	#operations=[o]#this is preparation for actual chain exporting
+	progress('exporting gcode file')
 	s=bpy.context.scene
 	m=s.cam_machine
-	filename=bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))]+safeFileName(filename)
+	
+	#find out how many files will be done:
+	
+	split=False
+	
+	totops=0
+	findex=0
+	if m.eval_splitting:#detect whether splitting will happen
+		for mesh in vertslist:
+			totops+=len(mesh.vertices)
+		print(totops)
+		if totops>m.split_limit:
+			split=True
+			filesnum=ceil(totops/m.split_limit)
+			print('file will be separated into %i files' % filesnum)
+			
+	
+	basefilename=bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))]+safeFileName(filename)
 	
 	from . import nc
 	extension='.tap'
@@ -860,28 +878,42 @@ def exportGcodePath(filename,vertslist,operations):
 		from .nc import centroid1 as postprocessor
 	elif m.post_processor=='ANILAM':
 		from .nc import anilam_crusader_m as postprocessor
-	c=postprocessor.Creator()
-	filename+=extension
-	c.file_open(filename)
 	
-	#unit system correction
-	###############
+	
+	
 	if s.unit_settings.system=='METRIC':
-		c.metric()
 		unitcorr=1000.0
 	else:
-		c.imperial()
 		unitcorr=1/0.0254;
 	rotcorr=180.0/pi
-	#start program
-	c.program_begin(0,filename)
-	c.comment('G-code generated with BlenderCAM and NC library')
-	#absolute coordinates
-	c.absolute()
-	#work-plane, by now always xy, 
-	c.set_plane(0)
-	c.flush_nc()
-
+	
+	def startNewFile():
+		fileindex=''
+		if split:
+			fileindex='_'+str(findex)
+		filename=basefilename+fileindex+extension
+		c=postprocessor.Creator()
+		c.file_open(filename)
+	
+		#unit system correction
+		###############
+		if s.unit_settings.system=='METRIC':
+			c.metric()
+		else:
+			c.imperial()
+		#start program
+		c.program_begin(0,filename)
+		c.comment('G-code generated with BlenderCAM and NC library')
+		#absolute coordinates
+		c.absolute()
+		#work-plane, by now always xy, 
+		c.set_plane(0)
+		c.flush_nc()
+		return c
+		
+	c=startNewFile()
+	
+	processedops=0
 	for i,o in enumerate(operations):
 		mesh=vertslist[i]
 		verts=mesh.vertices
@@ -980,6 +1012,11 @@ def exportGcodePath(filename,vertslist,operations):
 			last=v
 			if o.axes!='3':
 				lastrot=r
+			processedops+=1
+			if split and processedops>m.split_limit:
+				findex+=1
+				c=startNewFile()
+				processedops=0
 	#print('duration')
 	#print(o.duration)
 	c.program_end()
