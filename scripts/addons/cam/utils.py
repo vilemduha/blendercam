@@ -252,7 +252,7 @@ def sampleChunks(o,pathSamples,layers):
 			n+=1
 			x=s[0]
 			y=s[1]
-			maxz=minz
+			z=minz# we'll store results into this
 			
 			sampled=False
 			
@@ -261,15 +261,15 @@ def sampleChunks(o,pathSamples,layers):
 			
 			####sampling
 			if o.use_exact:
-				#try to optimize this, wow that works!lets try more:
-				if lastsample!=None:
-					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-o.dist_along_paths)#first try to the last sample
-					if maxz<minz-1:
-						maxz=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-o.dist_along_paths, minz)
-				else:
-					maxz=getSampleBullet(cutter, x,y, cutterdepth, 1, minz)
 				
-				#print(maxz)
+				if lastsample!=None:#this is an optimalization, search only for near depths to the last sample. Saves about 30% of sampling time.
+					z=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-o.dist_along_paths)#first try to the last sample
+					if z<minz-1:
+						z=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-o.dist_along_paths, minz)
+				else:
+					z=getSampleBullet(cutter, x,y, cutterdepth, 1, minz)
+				
+				#print(z)
 				#here we have 
 			else:
 				timingstart(samplingtime)
@@ -277,20 +277,20 @@ def sampleChunks(o,pathSamples,layers):
 				ys=(y-miny)/pixsize+o.borderwidth+pixsize/2#-m
 				timingadd(samplingtime)
 				#if o.inverse:
-				#  maxz=layerstart
-				maxz=getSampleImage((xs,ys),o.offset_image,minz)+o.skin
-			if minz>maxz and o.ambient.isInside(x,y):
-				maxz=minz;
+				#  z=layerstart
+				z=getSampleImage((xs,ys),o.offset_image,minz)+o.skin
+			if minz>z and o.ambient.isInside(x,y):
+				z=minz;
 			################################
 			#handling samples
 			############################################
-			if (maxz>=minz and (o.ambient.isInside(x,y))):
+			if (z>=minz and (o.ambient.isInside(x,y))):
 				
-				newsample=(x,y,maxz)
-				#maxz=max(minz,maxz)
+				newsample=(x,y,z)
+				#z=max(minz,z)
 				
 			#if sampled:# and (not o.inverse or (o.inverse)):uh what was this? disabled
-			#	newsample=(x,y,maxz)
+			#	newsample=(x,y,z)
 					
 			#elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here, this should be obsolete,
 			#	newsample=(x,y,minz)
@@ -451,7 +451,6 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			if n/200.0==int(n/200.0):
 				progress('sampling paths ',int(100*n/totlen))
 			n+=1
-			maxz=minz
 			sampled=False
 			#print(si)
 			#print(patternchunk.points[si],patternchunk.endpoints[si])
@@ -483,7 +482,6 @@ def sampleChunksNAxis(o,pathSamples,layers):
 				newsample=endp
 				sampled=True
 				#print(newsample)
-				#maxz=max(minz,maxz)
 				
 			#elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here
 				#newsample=(x,y,minz)
@@ -2244,14 +2242,14 @@ def getPath3axis(context,operation):
 		chunks=[]
 		if o.use_layers:
 			steps=[]
-			n=math.ceil(-(o.min.z/o.stepdown))
-			layerstart=0
+			n=math.ceil((o.maxz-o.min.z)/o.stepdown)
+			layerstart=o.maxz
 			for x in range(0,n):
-				layerend=max(-((x+1)*o.stepdown),o.min.z)
+				layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
 				steps.append([layerstart,layerend])
 				layerstart=layerend
 		else:
-				steps=[[0,o.min.z]]
+				steps=[[o.maxz,o.min.z]]
 			
 		if o.contour_ramp:
 			for chunk in chunksFromCurve:
@@ -2313,19 +2311,19 @@ def getPath3axis(context,operation):
 			
 		chunks=[]
 		if o.use_layers:
-			n=math.ceil(-(o.min.z/o.stepdown))
+			n=math.ceil((o.maxz-o.min.z)/o.stepdown)
 			layers=[]
-			layerstart=0
+			layerstart=o.maxz
 			for x in range(0,n):
-				layerend=max(-((x+1)*o.stepdown),o.min.z)
+				layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
 				layers.append([layerstart,layerend])
 				layerstart=layerend
 		else:
-			layers=[[0,o.min.z]]
+			layers=[[o.maxz,o.min.z]]
 
-		print(layers)
-		print(chunksFromCurve)
-		print(len(chunksFromCurve))
+		#print(layers)
+		#print(chunksFromCurve)
+		#print(len(chunksFromCurve))
 		for l in layers:
 			lchunks=setChunksZ(chunksFromCurve,l[1])
 			###########helix_enter first try here TODO: check if helix radius is not out of operation area.
@@ -2464,17 +2462,17 @@ def getPath3axis(context,operation):
 		
 		chunks=[]
 		if o.use_layers:
-			n=math.ceil(-(o.min.z/o.stepdown))
+			n=math.ceil((o.maxz-o.min.z)/o.stepdown)
 			layers=[]
 			for x in range(0,n):
 				
-				layerstart=-(x*o.stepdown)
-				layerend=max(-((x+1)*o.stepdown),o.min.z)
+				layerstart=o.maxz-(x*o.stepdown)
+				layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
 				layers.append([layerstart,layerend])
 				
 				
 		else:
-			layerstart=0#
+			layerstart=o.maxz#
 			layerend=o.min.z#
 			layers=[[layerstart,layerend]]
 		
@@ -2564,7 +2562,7 @@ def getPath3axis(context,operation):
 			#print('test waterlayers')
 			#print(layerstep,layerstepinc)
 			if o.waterline_fill:
-				layerstart=min(o.max.z,z+o.slice_detail)#
+				layerstart=min(o.maxz,z+o.slice_detail)#
 				layerend=max(o.min.z,z-o.slice_detail)#
 				layers=[[layerstart,layerend]]
 			

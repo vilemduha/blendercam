@@ -320,6 +320,7 @@ class camOperation(bpy.types.PropertyGroup):
 	
 	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation depth from object", default=True, update = updateRest)
 	minz = bpy.props.FloatProperty(name="Operation depth", default=-0.01, min=-3, max=0,precision=PRECISION, unit="LENGTH", update = updateRest)#this is input minz. True minimum z can be something else, depending on material e.t.c.
+	maxz = bpy.props.FloatProperty(name="Operation depth start", default=0, min=-3, max=1,precision=PRECISION, unit="LENGTH", update = updateRest)#EXPERIMENTAL
 	
 	source_image_scale_z=bpy.props.FloatProperty(name="Image source depth scale", default=0.01, min=-1, max=1,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)
 	source_image_size_x=bpy.props.FloatProperty(name="Image source x size", default=0.1, min=-10, max=10,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)
@@ -1578,7 +1579,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.ambient_behaviour=='AROUND':
 					layout.prop(ao,'ambient_radius')
 				
-			   
+				layout.prop(ao,'maxz')#experimental
 				if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
 					layout.prop(ao,'minz_from_ob')
 					if not ao.minz_from_ob:
