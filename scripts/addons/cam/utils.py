@@ -2310,11 +2310,11 @@ def getPath3axis(context,operation):
 			for ci in range(0,len(pnew)):
 				newcenters.append(pnew.center(ci))
 				if contours_after!=contours_before or dist2d(newcenters[ci],centers[ci])>o.dist_between_paths:
-					print(dist2d(newcenters[ci],centers[ci]))
+					#print(dist2d(newcenters[ci],centers[ci]))
 					do_test=True
 					
 			if do_test:	
-				print('testing')
+				#print('testing')
 				prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
 				#print(contours_before,contours_after,len(prest))
 				if len(prest)!=contours_after:
@@ -2322,7 +2322,7 @@ def getPath3axis(context,operation):
 						bb=prest.boundingBox(ci)
 						#print(bb,bb[1]-bb[0],bb[3]-bb[2],o.dist_between_paths)
 						if min(bb[1]-bb[0],bb[3]-bb[2])<o.dist_between_paths*2:
-							print('adding extra contour rest')
+							#print('adding extra contour rest')
 							#print(prest[ci])
 							rest=Polygon.Polygon(prest[ci])
 							nchunk=polyToChunks(rest,o.min.z)
