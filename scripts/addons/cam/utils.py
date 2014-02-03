@@ -2286,6 +2286,7 @@ def getPath3axis(context,operation):
 		chunks=[]
 		chunksFromCurve=[]
 		lastchunks=[]
+		centers=None
 		while len(p)>0:
 			nchunks=polyToChunks(p,o.min.z)
 			nchunks=limitChunks(nchunks,o)
@@ -2293,9 +2294,27 @@ def getPath3axis(context,operation):
 			parentChildDist(lastchunks,nchunks,o)
 			lastchunks=nchunks
 			contours_before=len(p)
+			
+			if centers==None:
+				centers=[]
+				for ci in range(0,len(p)):
+					centers.append(p.center(ci))
 			pnew=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
+			
+			
+			
 			contours_after=len(pnew)
-			if True:#contours_before!=contours_after:#TODO: optimize this. This makes pocket calculation 2x slower :(
+			newcenters=[]
+			
+			do_test=False
+			for ci in range(0,len(pnew)):
+				newcenters.append(pnew.center(ci))
+				if contours_after!=contours_before or dist2d(newcenters[ci],centers[ci])>o.dist_between_paths:
+					print(dist2d(newcenters[ci],centers[ci]))
+					do_test=True
+					
+			if do_test:	
+				print('testing')
 				prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
 				#print(contours_before,contours_after,len(prest))
 				if len(prest)!=contours_after:
@@ -2303,19 +2322,16 @@ def getPath3axis(context,operation):
 						bb=prest.boundingBox(ci)
 						#print(bb,bb[1]-bb[0],bb[3]-bb[2],o.dist_between_paths)
 						if min(bb[1]-bb[0],bb[3]-bb[2])<o.dist_between_paths*2:
-							#print('adding extra contour rest')
+							print('adding extra contour rest')
 							#print(prest[ci])
 							rest=Polygon.Polygon(prest[ci])
 							nchunk=polyToChunks(rest,o.min.z)
 							nchunk=limitChunks(nchunk,o)
 							chunksFromCurve.extend(nchunk)
-
-			#   all.addContour(c)
-			#for c in p:
-			#   all.addContour(c)
 			percent=int(i/approxn*100)
 			progress('outlining polygons ',percent) 
 			p=pnew
+			centers=newcenters
 			i+=1
 		
 		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
