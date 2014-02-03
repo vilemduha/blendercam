@@ -2292,14 +2292,32 @@ def getPath3axis(context,operation):
 			chunksFromCurve.extend(nchunks)
 			parentChildDist(lastchunks,nchunks,o)
 			lastchunks=nchunks
-			
-			p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
-			
+			contours_before=len(p)
+			pnew=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
+			contours_after=len(pnew)
+			if True:#contours_before!=contours_after:#TODO: optimize this. This makes pocket calculation 2x slower :(
+				prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
+				#print(contours_before,contours_after,len(prest))
+				if len(prest)!=contours_after:
+					for ci in range(0,len(prest)):
+						bb=prest.boundingBox(ci)
+						#print(bb,bb[1]-bb[0],bb[3]-bb[2],o.dist_between_paths)
+						if min(bb[1]-bb[0],bb[3]-bb[2])<o.dist_between_paths*2:
+							#print('adding extra contour rest')
+							#print(prest[ci])
+							rest=Polygon.Polygon(prest[ci])
+							nchunk=polyToChunks(rest,o.min.z)
+							nchunk=limitChunks(nchunk,o)
+							chunksFromCurve.extend(nchunk)
+
+			#   all.addContour(c)
 			#for c in p:
 			#   all.addContour(c)
 			percent=int(i/approxn*100)
 			progress('outlining polygons ',percent) 
+			p=pnew
 			i+=1
+		
 		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
 			for ch in chunksFromCurve:
 				ch.points.reverse()
@@ -2446,8 +2464,12 @@ def getPath3axis(context,operation):
 			pathSamples=sortChunks(pathSamples,o)#sort before sampling
 		elif o.strategy=='CRAZY':
 			prepareArea(o)
-			area=o.offset_image>o.min.z
-			pathSamples = crazyStrokeImage(o,area)
+			
+			pathSamples = crazyStrokeImage(o)
+			#####this kind of worked and should work:
+			#area=o.offset_image>o.min.z
+			#pathSamples = crazyStrokeImageBinary(o,area)
+			#####
 			pathSamples=chunksRefine(pathSamples,o)
 			#pathSamples = sortChunks(pathSamples,o)
 		else: 
