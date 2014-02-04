@@ -485,8 +485,235 @@ def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. 
 	o.cutterArray=-getCutterArray(o,o.simulation_detail)#getting inverted cutter
 	crazy=camPathChunk([(0,0,0)])
 	testpos=(o.min.x,o.min.y,o.min.z)
+
+def buildStroke(start,end, cutterArray):
 	
-def crazyStrokeImage(o,ar):#this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
+	strokelength=max(abs(end[0]-start[0]),abs(end[1]-start[1]))
+	size_x = abs(end[0]-start[0])+cutterArray.size[0]
+	size_y = abs(end[1]-start[1])+cutterArray.size[0]
+	r=cutterArray.size[0]/2
+	
+	strokeArray=numpy.array((0),dtype=float)
+	strokeArray.resize(size_x,size_y)
+	strokeArray.fill(-10)
+	samplesx=numpy.round(numpy.linspace(start[0],end[0],strokelength))
+	samplesy=numpy.round(numpy.linspace(start[1],end[1],strokelength))
+	samplesz=numpy.round(numpy.linspace(start[2],end[2],strokelength))
+	
+	for i in range(0,len(strokelength)):
+		#strokeArray(samplesx[i]-r:samplesx[i]+r,samplesy[i]-r:samplesy[i]+r)
+		#strokeArray(samplesx[i]-r:samplesx[i]+r,samplesy[i]-r:samplesy[i]+r)
+		#cutterArray+samplesz[i]
+		strokeArray[samplesx[i]-r:samplesx[i]+r,samplesy[i]-r:samplesy[i]+r] = numpy.maximum(strokeArray[samplesx[i]-r:samplesx[i]+r,samplesy[i]-r:samplesy[i]+r] , cutterArray+samplesz[i])
+	return strokeArray
+
+def testStroke():
+	pass;
+def applyStroke():
+	pass;
+	
+def testStrokeBinary(img, stroke):
+	pass;#buildstroke()
+	
+def crazyStrokeImage(o):#this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
+	t=time.time()
+	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
+	pixsize=o.pixsize
+	edges=[]
+	
+	r=int((o.cutter_diameter/2.0)/o.pixsize)#ceil((o.cutter_diameter/12)/o.pixsize)
+	d=2*r
+	coef=0.75
+	#sx=o.max.x-o.min.x
+	#sy=o.max.y-o.min.y
+	#size=ar.shape[0]
+	
+	ar=o.offset_image.copy()
+	sampleimage=o.offset_image
+	finalstate=o.zbuffer_image
+	maxarx=ar.shape[0]
+	maxary=ar.shape[1]
+	
+	cutterArray=getCircleBinary(r)
+	cutterArrayNegative=-cutterArray
+	#cutterArray=1-cutterArray
+	
+	cutterimagepix=cutterArray.sum()
+	#ar.fill(True)
+	satisfypix=cutterimagepix*o.crazy_threshold1#a threshold which says if it is valuable to cut in a direction
+	toomuchpix=cutterimagepix*o.crazy_threshold2
+	indices=ar.nonzero()#first get white pixels
+	startpix=ar.sum()#
+	totpix=startpix
+	chunks=[]
+	xs=indices[0][0]-r
+	if xs<r:xs=r
+	ys=indices[1][0]-r
+	if ys<r:ys=r
+	nchunk=camPathChunk([(xs,ys)])#startposition
+	print(indices)
+	print (indices[0][0],indices[1][0])
+	lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
+	testvect=lastvect.normalized()*r/2.0#multiply *2 not to get values <1 pixel
+	rot=Euler((0,0,1))
+	i=0
+	perc=0
+	itests=0
+	totaltests=0
+	maxtests=500
+	maxtotaltests=1000000
+	
+	
+	
+	print(xs,ys,indices[0][0],indices[1][0],r)
+	ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
+	anglerange=[-pi,pi]#range for angle of toolpath vector versus material vector
+	testangleinit=0
+	angleincrement=0.05
+	if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
+		anglerange=[-pi,0]
+		testangleinit=1
+		angleincrement=-angleincrement
+	elif (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW'):
+		anglerange=[0,pi]
+		testangleinit=-1
+		angleincrement=angleincrement
+	while totpix>0 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
+		
+		#if perc!=int(100*totpix/startpix):
+		#   perc=int(100*totpix/startpix)
+		#   progress('crazy path searching what to mill!',perc)
+		#progress('simulation ',int(100*i/l))
+		success=False
+		# define a vector which gets varied throughout the testing, growing and growing angle to sides.
+		testangle=testangleinit
+		testleftright=False
+		testlength=r
+		
+		while not success:
+			xs=nchunk.points[-1][0]+int(testvect.x)
+			ys=nchunk.points[-1][1]+int(testvect.y)
+			if xs>r+1 and xs<ar.shape[0]-r-1 and ys>r+1 and ys<ar.shape[1]-r-1 :
+				testar=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArray
+				if 0:
+					print('test')
+					print(testar.sum(),satisfypix)
+					print(xs,ys,testlength,testangle)
+					print(lastvect)
+					print(testvect)
+					print(totpix)
+				
+				eatpix=testar.sum()
+				cindices=testar.nonzero()
+				cx=cindices[0].sum()/eatpix
+				cy=cindices[1].sum()/eatpix
+				v=Vector((cx-r,cy-r))
+				angle=testvect.to_2d().angle_signed(v)
+				if anglerange[0]<angle<anglerange[1]:#this could be righthanded milling? lets see :)
+					if toomuchpix>eatpix>satisfypix:
+						success=True
+			if success:
+				nchunk.points.append([xs,ys])
+				lastvect=testvect
+				ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*(-cutterArray)
+				totpix-=eatpix
+				itests=0
+				if 0:
+					print('success')
+					print(xs,ys,testlength,testangle)
+					print(lastvect)
+					print(testvect)
+					print(itests)
+			else:
+				#nchunk.append([xs,ys])#for debugging purpose
+				#ar.shape[0]
+				#TODO: after all angles were tested into material higher than toomuchpix, it should cancel, otherwise there is no problem with long travel in free space.....
+				#TODO:the testing should start not from the same angle as lastvector, but more towards material. So values closer to toomuchpix are obtained rather than satisfypix
+				testvect=lastvect.normalized()*testlength
+				right=True
+				if testangleinit==0:#meander
+					if testleftright:
+						testangle=-testangle
+						testleftright=False
+					else:
+						testangle=abs(testangle)+angleincrement#increment angle
+						testleftright=True
+				else:#climb/conv.
+					testangle+=angleincrement
+					
+				if abs(testangle)>o.crazy_threshold3:#/testlength
+					testangle=testangleinit
+					testlength+=r/4.0
+				if nchunk.points[-1][0]+testvect.x<r:
+					testvect.x=r
+				if nchunk.points[-1][1]+testvect.y<r:
+					testvect.y=r
+				if nchunk.points[-1][0]+testvect.x>maxarx-r:
+					testvect.x=maxarx-r
+				if nchunk.points[-1][1]+testvect.y>maxary-r:
+					testvect.y=maxary-r
+					
+				'''
+				if testlength>10:#weird test 
+					indices1=ar.nonzero()
+					nchunk.append(indices1[0])
+					lastvec=Vector((1,0,0))
+					testvec=Vector((1,0,0))
+					testlength=r
+					success=True
+				'''
+				rot.z=testangle
+				
+				testvect.rotate(rot)
+				if 0:
+					print(xs,ys,testlength,testangle)
+					print(lastvect)
+					print(testvect)
+					print(totpix)
+			itests+=1
+			totaltests+=1
+			#achjo
+			if itests>maxtests or testlength>r*1.5:
+				#print('resetting location')
+				indices=ar.nonzero()
+				chunks.append(nchunk)
+				if len(indices[0])>0:
+					index=random.randint(0,len(indices[0])-1)
+					#print(index,len(indices[0]))
+					xs=indices[0][0]-r
+					if xs<r:xs=r
+					ys=indices[1][0]-r
+					if ys<r:ys=r
+					nchunk=camPathChunk([(xs,ys)])#startposition
+					ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
+					#lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
+					r=random.random()*2*pi
+					e=Euler((0,0,r))
+					testvect=lastvect.normalized()*4#multiply *2 not to get values <1 pixel
+					testvect.rotate(e)
+					lastvect=testvect.copy()
+				success=True
+				itests=0
+		#xs=(s.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+		#ys=(s.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+		i+=1
+		if i%100==0:
+			print('100 succesfull tests done')
+			totpix=ar.sum()
+			print(totpix)
+			print(totaltests)
+			i=0
+	chunks.append(nchunk)
+	for ch in chunks:
+		#vecchunk=[]
+		#vecchunks.append(vecchunk)
+		ch=ch.points
+		for i in range(0,len(ch)):
+			ch[i]=((ch[i][0]+coef-o.borderwidth)*o.pixsize+minx,(ch[i][1]+coef-o.borderwidth)*o.pixsize+miny,0)
+			#vecchunk.append(Vector(ch[i]))
+	return chunks
+	
+def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
 	t=time.time()
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	pixsize=o.pixsize
