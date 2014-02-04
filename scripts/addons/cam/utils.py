@@ -2310,7 +2310,8 @@ def getPath3axis(context,operation):
 			for ci in range(0,len(pnew)):
 				newcenters.append(pnew.center(ci))
 				
-				if len(p)>=ci:#comparing polygons to detect larger changes in shape
+				if len(p)>ci:#comparing polygons to detect larger changes in shape
+					print(ci,len(p))
 					bb1=p.boundingBox(ci)
 					bb2=pnew.boundingBox(ci)
 					d1=dist2d(newcenters[ci],centers[ci])
@@ -2331,21 +2332,26 @@ def getPath3axis(context,operation):
 				prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
 				#print(contours_before,contours_after,len(prest))
 				#if len(prest)!=contours_after:
-				polyToMesh(prest,0)
+				#polyToMesh(prest,0)
 				#print(len(prest))
 				for ci in range(0,len(prest)):
-					bb1=prest.boundingBox(ci)
+					bbcontour=prest.boundingBox(ci)
 					add=False
-					if len(pnew)>=ci:
-						d=0
-						for bbi in range(0,4):
-							d=max(d,abs(bb2[bbi]-bb1[bbi]))
-						if d>o.dist_between_paths*2:
-							add=True
-					
-					if min(bb1[1]-bb1[0],bb1[3]-bb1[2])<o.dist_between_paths*2:
+					#if len(pnew)>ci:
+					d=0
+					bb2=pnew.boundingBox()
+					bb1=prest.boundingBox()
+					for bbi in range(0,4):
+						d=max(d,abs(bb2[bbi]-bb1[bbi]))
+					if d>o.dist_between_paths*2:
 						add=True
-					#print(bb1,bb1[1]-bb1[0],bb1[3]-bb1[2],o.dist_between_paths)
+						print('pnew boundbox vs restboundbox')
+						print(d/o.dist_between_paths)
+					
+					if min(bbcontour[1]-bbcontour[0],bbcontour[3]-bbcontour[2])<o.dist_between_paths*2:
+						add=True
+						print('small rest boundbox')
+					
 					
 					if add:
 						print('adding extra contour rest')
