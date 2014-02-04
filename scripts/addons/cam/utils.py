@@ -2293,73 +2293,72 @@ def getPath3axis(context,operation):
 			chunksFromCurve.extend(nchunks)
 			parentChildDist(lastchunks,nchunks,o)
 			lastchunks=nchunks
-			contours_before=len(p)
 			
-			if centers==None:
-				centers=[]
-				for ci in range(0,len(p)):
-					centers.append(p.center(ci))
 			pnew=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 			
-			
-			
-			contours_after=len(pnew)
-			newcenters=[]
-			
-			do_test=False
-			for ci in range(0,len(pnew)):
-				newcenters.append(pnew.center(ci))
+			if o.dist_between_paths>o.cutter_diameter/2.0:
+				o.warnings=o.warnings+'Distance between paths larger\n  than cutter radius can result in uncut areas!\n '
+
+				contours_before=len(p)
 				
-				if len(p)>ci:#comparing polygons to detect larger changes in shape
-					print(ci,len(p))
-					bb1=p.boundingBox(ci)
-					bb2=pnew.boundingBox(ci)
-					d1=dist2d(newcenters[ci],centers[ci])
-					d2=0
-					for bbi in range(0,4):
-						d2=max(d2,abs(bb2[bbi]-bb1[bbi]))
+				if centers==None:
+					centers=[]
+					for ci in range(0,len(p)):
+						centers.append(p.center(ci))
+				contours_after=len(pnew)
+				newcenters=[]
 				
-				if contours_after!=contours_before or d1>o.dist_between_paths or d2>o.dist_between_paths*2:
+				do_test=False
+				for ci in range(0,len(pnew)):
+					newcenters.append(pnew.center(ci))
+					
+					if len(p)>ci:#comparing polygons to detect larger changes in shape
+						#print(ci,len(p))
+						bb1=p.boundingBox(ci)
+						bb2=pnew.boundingBox(ci)
+						d1=dist2d(newcenters[ci],centers[ci])
+						d2=0
+						for bbi in range(0,4):
+							d2=max(d2,abs(bb2[bbi]-bb1[bbi]))
+					
+					if contours_after!=contours_before or d1>o.dist_between_paths or d2>o.dist_between_paths*2:
+						do_test=True
+						#print(contours_before,contours_after)
+						
+				if len(pnew)==0:
 					do_test=True
-					#print(contours_before,contours_after)
+				#print(contours_before,contours_after)
+				
+				if do_test:	
+					print('testing')
+					prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
 					
-			if len(pnew)==0:
-				do_test=True
-			print(contours_before,contours_after)
-			
-			if do_test:	
-				print('testing')
-				prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
-				#print(contours_before,contours_after,len(prest))
-				#if len(prest)!=contours_after:
-				#polyToMesh(prest,0)
-				#print(len(prest))
-				for ci in range(0,len(prest)):
-					bbcontour=prest.boundingBox(ci)
-					add=False
-					#if len(pnew)>ci:
-					d=0
-					bb2=pnew.boundingBox()
-					bb1=prest.boundingBox()
-					for bbi in range(0,4):
-						d=max(d,abs(bb2[bbi]-bb1[bbi]))
-					if d>o.dist_between_paths*2:
-						add=True
-						print('pnew boundbox vs restboundbox')
-						print(d/o.dist_between_paths)
-					
-					if min(bbcontour[1]-bbcontour[0],bbcontour[3]-bbcontour[2])<o.dist_between_paths*2:
-						add=True
-						print('small rest boundbox')
-					
-					
-					if add:
-						print('adding extra contour rest')
-						#print(prest[ci])
-						rest=Polygon.Polygon(prest[ci])
-						nchunk=polyToChunks(rest,o.min.z)
-						nchunk=limitChunks(nchunk,o)
-						chunksFromCurve.extend(nchunk)
+					for ci in range(0,len(prest)):
+						bbcontour=prest.boundingBox(ci)
+						add=False
+						#if len(pnew)>ci:
+						d=0
+						bb2=pnew.boundingBox()
+						bb1=prest.boundingBox()
+						for bbi in range(0,4):
+							d=max(d,abs(bb2[bbi]-bb1[bbi]))
+						if d>o.dist_between_paths*2:
+							add=True
+							#print('pnew boundbox vs restboundbox')
+							#print(d/o.dist_between_paths)
+						
+						if min(bbcontour[1]-bbcontour[0],bbcontour[3]-bbcontour[2])<o.dist_between_paths*2:
+							add=True
+							#print('small rest boundbox')
+						
+						
+						if add:
+							#print('adding extra contour rest')
+							#print(prest[ci])
+							rest=Polygon.Polygon(prest[ci])
+							nchunk=polyToChunks(rest,o.min.z)
+							nchunk=limitChunks(nchunk,o)
+							chunksFromCurve.extend(nchunk)
 			percent=int(i/approxn*100)
 			progress('outlining polygons ',percent) 
 			p=pnew
