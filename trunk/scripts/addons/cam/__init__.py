@@ -303,6 +303,7 @@ class camOperation(bpy.types.PropertyGroup):
 	slice_detail = bpy.props.FloatProperty(name="Distance betwen slices", default=0.001, min=0.00001, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	waterline_fill = bpy.props.BoolProperty(name="Fill areas between slices",description="Fill areas between slices in waterline mode", default=True, update = updateRest)
 	waterline_project = bpy.props.BoolProperty(name="Project paths",description="Project paths in areas between slices", default=True, update = updateRest)
+	outlines_count = bpy.props.IntProperty(name="Outlines count",description="Outlines count", default=1,min=1, max=32, update = updateRest)
 	
 	circle_detail = bpy.props.IntProperty(name="Detail of circles used for curve offsets", default=64, min=12, max=512, update = updateRest)
 	use_layers = bpy.props.BoolProperty(name="Use Layers",description="Use layers for roughing", default=True, update = updateRest)
@@ -1399,6 +1400,11 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					
 				if ao.strategy=='CUTOUT':
 					layout.prop(ao,'cut_type')
+					#layout.prop(ao,'dist_between_paths')
+					layout.prop(ao,'outlines_count')
+					if ao.outlines_count>1:
+						layout.prop(ao,'dist_between_paths')
+						layout.prop(ao,'movement_insideout')
 					layout.prop(ao,'dont_merge')
 					layout.prop(ao,'use_bridges')
 					if ao.use_bridges:
