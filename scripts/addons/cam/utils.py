@@ -2309,25 +2309,51 @@ def getPath3axis(context,operation):
 			do_test=False
 			for ci in range(0,len(pnew)):
 				newcenters.append(pnew.center(ci))
-				if contours_after!=contours_before or dist2d(newcenters[ci],centers[ci])>o.dist_between_paths:
-					#print(dist2d(newcenters[ci],centers[ci]))
+				
+				if len(p)>=ci:#comparing polygons to detect larger changes in shape
+					bb1=p.boundingBox(ci)
+					bb2=pnew.boundingBox(ci)
+					d1=dist2d(newcenters[ci],centers[ci])
+					d2=0
+					for bbi in range(0,4):
+						d2=max(d2,abs(bb2[bbi]-bb1[bbi]))
+				
+				if contours_after!=contours_before or d1>o.dist_between_paths or d2>o.dist_between_paths*2:
 					do_test=True
+					#print(contours_before,contours_after)
 					
+			if len(pnew)==0:
+				do_test=True
+			print(contours_before,contours_after)
+			
 			if do_test:	
-				#print('testing')
+				print('testing')
 				prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
 				#print(contours_before,contours_after,len(prest))
-				if len(prest)!=contours_after:
-					for ci in range(0,len(prest)):
-						bb=prest.boundingBox(ci)
-						#print(bb,bb[1]-bb[0],bb[3]-bb[2],o.dist_between_paths)
-						if min(bb[1]-bb[0],bb[3]-bb[2])<o.dist_between_paths*2:
-							#print('adding extra contour rest')
-							#print(prest[ci])
-							rest=Polygon.Polygon(prest[ci])
-							nchunk=polyToChunks(rest,o.min.z)
-							nchunk=limitChunks(nchunk,o)
-							chunksFromCurve.extend(nchunk)
+				#if len(prest)!=contours_after:
+				polyToMesh(prest,0)
+				#print(len(prest))
+				for ci in range(0,len(prest)):
+					bb1=prest.boundingBox(ci)
+					add=False
+					if len(pnew)>=ci:
+						d=0
+						for bbi in range(0,4):
+							d=max(d,abs(bb2[bbi]-bb1[bbi]))
+						if d>o.dist_between_paths*2:
+							add=True
+					
+					if min(bb1[1]-bb1[0],bb1[3]-bb1[2])<o.dist_between_paths*2:
+						add=True
+					#print(bb1,bb1[1]-bb1[0],bb1[3]-bb1[2],o.dist_between_paths)
+					
+					if add:
+						print('adding extra contour rest')
+						#print(prest[ci])
+						rest=Polygon.Polygon(prest[ci])
+						nchunk=polyToChunks(rest,o.min.z)
+						nchunk=limitChunks(nchunk,o)
+						chunksFromCurve.extend(nchunk)
 			percent=int(i/approxn*100)
 			progress('outlining polygons ',percent) 
 			p=pnew
