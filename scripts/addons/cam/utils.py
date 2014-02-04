@@ -2222,20 +2222,31 @@ def getPath3axis(context,operation):
 					ch.poly=chunkToPoly(ch)
 					
 		else:
+			chunksFromCurve=[]
 			if o.cut_type=='ONLINE':
 				p=getObjectOutline(0,o,True)
 				
-			elif o.cut_type=='OUTSIDE':
-				p=getObjectOutline(o.cutter_diameter/2,o,True)
-			elif o.cut_type=='INSIDE':
-				p=getObjectOutline(o.cutter_diameter/2,o,False)
-			chunksFromCurve=polyToChunks(p,-1)
+			else:
+				offset=True
+				if o.cut_type=='INSIDE':
+					offset=False
+				p=getObjectOutline(o.cutter_diameter/2,o,offset)
+				#if o.outlines_count>0:
+				#	for i in range(1,o.outlines_count):
+				#		chunksFromCurve.extend(polyToChunks(p,-1))
+				#		p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offset)
+				
+					
+			chunksFromCurve.extend(polyToChunks(p,-1))
 		
 		#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
 		chunksFromCurve=limitChunks(chunksFromCurve,o)
 		parentChildPoly(chunksFromCurve,chunksFromCurve,o)
 		chunksFromCurve=sortChunks(chunksFromCurve,o)
 		
+		#if o.outlines_count>0 and o.cut_type!='ONLINE' and o.movement_insideout=='OUTSIDEIN':#reversing just with more outlines
+		#	chunksFromCurve.reverse()
+						
 		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
 			for ch in chunksFromCurve:
 				ch.points.reverse()
@@ -2296,7 +2307,7 @@ def getPath3axis(context,operation):
 			
 			pnew=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 			
-			if o.dist_between_paths>o.cutter_diameter/2.0:
+			if o.dist_between_paths>o.cutter_diameter/2.0:#this mess under this IF condition is here ONLY because of the ability to have stepover> than cutter radius.
 				o.warnings=o.warnings+'Distance between paths larger\n  than cutter radius can result in uncut areas!\n '
 
 				contours_before=len(p)
@@ -2350,8 +2361,7 @@ def getPath3axis(context,operation):
 						if min(bbcontour[1]-bbcontour[0],bbcontour[3]-bbcontour[2])<o.dist_between_paths*2:
 							add=True
 							#print('small rest boundbox')
-						
-						
+
 						if add:
 							#print('adding extra contour rest')
 							#print(prest[ci])
@@ -2359,10 +2369,12 @@ def getPath3axis(context,operation):
 							nchunk=polyToChunks(rest,o.min.z)
 							nchunk=limitChunks(nchunk,o)
 							chunksFromCurve.extend(nchunk)
+				centers=newcenters
+
 			percent=int(i/approxn*100)
 			progress('outlining polygons ',percent) 
 			p=pnew
-			centers=newcenters
+			
 			i+=1
 		
 		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
