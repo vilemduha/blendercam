@@ -2253,23 +2253,23 @@ def getPath3axis(context,operation):
 				ch.points.reverse()
 		chunks=[]
 		if o.use_layers:
-			steps=[]
+			layers=[]
 			n=math.ceil((o.maxz-o.min.z)/o.stepdown)
 			layerstart=o.maxz
 			for x in range(0,n):
 				layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
-				steps.append([layerstart,layerend])
+				layers.append([layerstart,layerend])
 				layerstart=layerend
 		else:
-				steps=[[o.maxz,o.min.z]]
+				layers=[[o.maxz,o.min.z]]
 			
 		if o.contour_ramp:
 			for chunk in chunksFromCurve:
 				if chunk.closed:
-					for step in steps:
-						chunks.extend(setChunksZRamp([chunk],step[0],step[1],o))
+					for layer in layers:
+						chunks.extend(setChunksZRamp([chunk],layer[0],layer[1],o))
 				else:
-					chunks.extend(setChunksZ([chunk],step[1]))
+					chunks.extend(setChunksZ([chunk],layer[1]))
 					#o.warnings
 					o.warnings=o.warnings+'Ramp in not suported for non-closed curves! \n '
 					#if o.ramp_out:
@@ -2278,11 +2278,11 @@ def getPath3axis(context,operation):
 		else:
 			if o.first_down:
 				for chunk in chunksFromCurve:
-					for step in steps:
-						chunks.extend(setChunksZ([chunk],step[1]))
+					for layer in layers:
+						chunks.extend(setChunksZ([chunk],layer[1]))
 			else:
-				for step in steps:
-					chunks.extend(setChunksZ(chunksFromCurve,step[1]))
+				for layer in layers:
+					chunks.extend(setChunksZ(chunksFromCurve,layer[1]))
 		if o.use_bridges:
 			for ch in chunks:
 				addBridges(ch,o,0)
