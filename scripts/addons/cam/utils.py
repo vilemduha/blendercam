@@ -2263,26 +2263,27 @@ def getPath3axis(context,operation):
 		else:
 				layers=[[o.maxz,o.min.z]]
 			
-		if o.contour_ramp:
+		
+		extendorder=[]
+		if o.first_down:#each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again.
 			for chunk in chunksFromCurve:
-				if chunk.closed:
-					for layer in layers:
-						chunks.extend(setChunksZRampWholeContour([chunk],layer[0],layer[1],o))
-				else:
-					chunks.extend(setChunksZ([chunk],layer[1]))
-					#o.warnings
-					o.warnings=o.warnings+'Ramp in not suported for non-closed curves! \n '
-					#if o.ramp_out:
-				#if o.ramp_out:
-				#   chunks.extend(ChunkRampOut([chunk], angle) )
-		else:
-			if o.first_down:
-				for chunk in chunksFromCurve:
-					for layer in layers:
-						chunks.extend(setChunksZ([chunk],layer[1]))
-			else:
 				for layer in layers:
-					chunks.extend(setChunksZ(chunksFromCurve,layer[1]))
+					extendorder.append(chunk,layer)
+		else:
+			for layer in layers:
+				for chunk in chunksFromCurve:
+					extendorder.append([chunk,layer])
+					
+		for chl in extendorder:
+			chunk=chl[0]
+			layer=chl[1]
+			if o.contour_ramp and chunk.closed:
+				chunks.extend(setChunksZRampWholeContour([chunk],layer[0],layer[1],o))
+			else:
+				chunks.extend(setChunksZ([chunk],layer[1]))
+				if o.contour_ramp: 
+					o.warnings=o.warnings+'Ramp in not suported for non-closed curves! \n '
+						
 		if o.use_bridges:
 			for ch in chunks:
 				addBridges(ch,o,0)

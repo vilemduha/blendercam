@@ -220,7 +220,7 @@ def setChunksZRampWholeContour(chunks,zstart,zend,o):
 				z=zend
 				i=endpoint
 				
-				while z<0:
+				while z<o.maxz:
 					if i==len(ch.points):
 						i=0
 					s1=ch.points[i]
@@ -229,8 +229,8 @@ def setChunksZRampWholeContour(chunks,zstart,zend,o):
 					s2=ch.points[i2]
 					l=dist2d(s1,s2)
 					znew=z+tan(o.ramp_out_angle)*l
-					if znew>0:
-						ratio=(z/(z-znew))
+					if znew>o.maxz:
+						ratio=((z-o.maxz)/(z-znew))
 						v1=Vector(chunk.points[-1])
 						v2=Vector((s1[0],s1[1],znew))
 						v=v1+ratio*(v2-v1)
