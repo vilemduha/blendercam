@@ -1173,7 +1173,7 @@ def sortChunks(chunks,o):
 			ch.adaptdist(pos,o)
 			chunks.remove(ch)
 			
-			mergedist=2*o.dist_between_paths
+			mergedist=3*o.dist_between_paths
 			if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
 				mergedist=10*o.dist_between_paths
 			if o.stay_low and lastch!=None and (ch.distStart(pos,o)<mergedist or (o.parallel_step_back and ch.distStart(pos,o)<2*mergedist)):
