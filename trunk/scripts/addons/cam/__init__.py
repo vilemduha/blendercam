@@ -1473,14 +1473,14 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 				layout.prop(ao,'free_movement_height')
 				if ao.strategy=='CUTOUT':
 					layout.prop(ao,'first_down')
-					if ao.first_down:
-						layout.prop(ao,'contour_ramp')
-						if ao.contour_ramp:
-							layout.prop(ao,'ramp_in_angle')
-							layout.prop(ao,'ramp_out')
-							if ao.ramp_out:
-								
-								layout.prop(ao,'ramp_out_angle')
+					#if ao.first_down:
+					layout.prop(ao,'contour_ramp')
+					if ao.contour_ramp:
+						layout.prop(ao,'ramp_in_angle')
+						layout.prop(ao,'ramp_out')
+						if ao.ramp_out:
+							
+							layout.prop(ao,'ramp_out_angle')
 				if ao.strategy=='POCKET':
 					layout.prop(ao,'helix_enter')
 					if ao.helix_enter:
