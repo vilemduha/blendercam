@@ -2231,10 +2231,10 @@ def getPath3axis(context,operation):
 				if o.cut_type=='INSIDE':
 					offset=False
 				p=getObjectOutline(o.cutter_diameter/2,o,offset)
-				#if o.outlines_count>0:
-				#	for i in range(1,o.outlines_count):
-				#		chunksFromCurve.extend(polyToChunks(p,-1))
-				#		p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offset)
+				if o.outlines_count>1:
+					for i in range(1,o.outlines_count):
+						chunksFromCurve.extend(polyToChunks(p,-1))
+						p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offset)
 				
 					
 			chunksFromCurve.extend(polyToChunks(p,-1))
@@ -2242,7 +2242,8 @@ def getPath3axis(context,operation):
 		#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
 		chunksFromCurve=limitChunks(chunksFromCurve,o)
 		parentChildPoly(chunksFromCurve,chunksFromCurve,o)
-		chunksFromCurve=sortChunks(chunksFromCurve,o)
+		if o.outlines_count==1:
+			chunksFromCurve=sortChunks(chunksFromCurve,o)
 		
 		#if o.outlines_count>0 and o.cut_type!='ONLINE' and o.movement_insideout=='OUTSIDEIN':#reversing just with more outlines
 		#	chunksFromCurve.reverse()
