@@ -597,6 +597,9 @@ class CalculatePath(bpy.types.Operator):
 			for ob in o.objects:
 				if ob.type=='MESH':
 					o.onlycurves=False;
+		else:
+			o.onlycurves=False
+			
 		o.warnings=''
 		checkMemoryLimit(o)
 		#print('áhoj2')
