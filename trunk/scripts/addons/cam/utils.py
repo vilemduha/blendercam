@@ -2267,7 +2267,7 @@ def getPath3axis(context,operation):
 			for chunk in chunksFromCurve:
 				if chunk.closed:
 					for layer in layers:
-						chunks.extend(setChunksZRamp([chunk],layer[0],layer[1],o))
+						chunks.extend(setChunksZRampWholeContour([chunk],layer[0],layer[1],o))
 				else:
 					chunks.extend(setChunksZ([chunk],layer[1]))
 					#o.warnings

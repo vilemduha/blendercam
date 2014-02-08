@@ -311,6 +311,7 @@ class camOperation(bpy.types.PropertyGroup):
 	first_down = bpy.props.BoolProperty(name="First down",description="First go down on a contour, then go to the next one", default=False, update = updateRest)
 	contour_ramp = bpy.props.BoolProperty(name="Ramp contour - EXPERIMENTAL",description="Ramps down the whole contour, so the cutline looks like helix", default=False, update = updateRest)
 	ramp_out = bpy.props.BoolProperty(name="Ramp out - EXPERIMENTAL",description="Ramp out to not leave mark on surface", default=False, update = updateRest)
+	ramp_in_angle = bpy.props.FloatProperty(name="Ramp in angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 	helix_enter = bpy.props.BoolProperty(name="Helix enter - EXPERIMENTAL",description="Enter material in helix", default=False, update = updateRest)
 	helix_angle =	bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
@@ -1475,8 +1476,10 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 					if ao.first_down:
 						layout.prop(ao,'contour_ramp')
 						if ao.contour_ramp:
+							layout.prop(ao,'ramp_in_angle')
 							layout.prop(ao,'ramp_out')
 							if ao.ramp_out:
+								
 								layout.prop(ao,'ramp_out_angle')
 				if ao.strategy=='POCKET':
 					layout.prop(ao,'helix_enter')

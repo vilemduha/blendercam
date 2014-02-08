@@ -143,6 +143,108 @@ def setChunksZ(chunks,z):
 		newchunks.append(chunk)
 	return newchunks
 	
+def setChunksZRampWholeContour(chunks,zstart,zend,o):
+	newchunks=[]
+	
+	if o.use_layers:
+		stepdown=o.stepdown
+	else:
+		stepdown=-o.min.z
+	
+	for ch in chunks:
+		chunk=camPathChunk([])
+		estlength=(zstart-zend)/tan(o.ramp_in_angle)
+		ch.getLength()
+		ramplength=estlength#min(ch.length,estlength)
+		ltraveled=0
+		endpoint=None
+		i=0
+		znew=10
+		rounds=0#for counting if ramping makes more layers
+		while endpoint==None and not(znew==zend and i==0):#
+		#for i,s in enumerate(ch.points):
+			#print(i, znew, zend, len(ch.points))
+			s=ch.points[i]
+			
+			if i>0:
+				s2=ch.points[i-1]
+				ltraveled+=dist2d(s,s2)
+				ratio=ltraveled/ramplength
+			elif rounds>0 and i==0:
+				s2=ch.points[-1]
+				ltraveled+=dist2d(s,s2)
+				ratio=ltraveled/ramplength
+			else:
+				ratio=0
+			znew=zstart-stepdown*ratio
+			if znew<=zend:
+				
+				ratio=((z-zend)/(z-znew))
+				v1=Vector(chunk.points[-1])
+				v2=Vector((s[0],s[1],znew))
+				v=v1+ratio*(v2-v1)
+				chunk.points.append((v.x,v.y,v.z))
+						
+				if zend == o.min.z and endpoint==None and ch.closed==True:
+					endpoint=i+1
+					if endpoint==len(ch.points):
+						endpoint=0
+					#print(endpoint,len(ch.points))
+			#else:
+			znew=max(znew,zend)
+			chunk.points.append((s[0],s[1],znew))
+			z=znew
+			if endpoint!=None:
+				break;
+			i+=1
+			if i>=len(ch.points):
+				i=0
+				rounds+=1
+		if not o.use_layers:
+			endpoint=0
+		if endpoint!=None:#append final contour on the bottom z level
+			i=endpoint
+			started=False
+			#print('finaliz')
+			if i==len(ch.points):
+					i=0
+			while i!=endpoint or not started:
+				started=True
+				s=ch.points[i]
+				chunk.points.append((s[0],s[1],zend))
+				#print(i,endpoint)
+				i+=1
+				if i==len(ch.points):
+					i=0
+			if o.ramp_out:
+				z=zend
+				i=endpoint
+				
+				while z<0:
+					if i==len(ch.points):
+						i=0
+					s1=ch.points[i]
+					i2=i-1
+					if i2<0: i2=len(ch.points)-1
+					s2=ch.points[i2]
+					l=dist2d(s1,s2)
+					znew=z+tan(o.ramp_out_angle)*l
+					if znew>0:
+						ratio=(z/(z-znew))
+						v1=Vector(chunk.points[-1])
+						v2=Vector((s1[0],s1[1],znew))
+						v=v1+ratio*(v2-v1)
+						chunk.points.append((v.x,v.y,v.z))
+						
+					else:
+						chunk.points.append((s1[0],s1[1],znew))
+					z=znew
+					i+=1
+					
+					
+		newchunks.append(chunk)
+	return newchunks
+
 def setChunksZRamp(chunks,zstart,zend,o):
 	newchunks=[]
 	
@@ -227,7 +329,7 @@ def setChunksZRamp(chunks,zstart,zend,o):
 					
 		newchunks.append(chunk)
 	return newchunks
-
+	
 def optimizeChunk(chunk,operation):
 	
 	for vi in range(len(chunk.points)-2,0,-1):
