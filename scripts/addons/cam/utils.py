@@ -986,7 +986,7 @@ def exportGcodePath(filename,vertslist,operations):
 					#print(ra,rb)
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
 					
-			elif v.z==last.z==o.free_movement_height or vi==0:
+			elif v.z>=o.free_movement_height or vi==0:#v.z==last.z==o.free_movement_height or vi==0
 				f=freefeedrate
 				c.feedrate(freefeedrate)
 				if o.axes=='3':
@@ -2268,7 +2268,7 @@ def getPath3axis(context,operation):
 		if o.first_down:#each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again.
 			for chunk in chunksFromCurve:
 				for layer in layers:
-					extendorder.append(chunk,layer)
+					extendorder.append([chunk,layer])
 		else:
 			for layer in layers:
 				for chunk in chunksFromCurve:
