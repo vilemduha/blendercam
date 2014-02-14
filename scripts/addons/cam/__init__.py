@@ -452,12 +452,12 @@ def threadread( tcom):
 		e=inline.find('}')
 		tcom.outtext=inline[ s+9 :e]
 
-
+"""
 def header_info(self, context):
 	'''writes background operations data to header'''
 	s=bpy.context.scene
 	self.layout.label(s.cam_text)
-
+"""
 @bpy.app.handlers.persistent
 def timer_update(context):
 	'''monitoring of background processes'''
@@ -489,12 +489,13 @@ def timer_update(context):
 					readthread=threading.Thread(target=threadread, args = ([tcom]), daemon=True)
 					readthread.start()
 					p[0]=readthread
-				
-			text=text+('# %s %s #' % (tcom.opname,tcom.lasttext))
-	s.cam_text=text
+			o=s.cam_operations[tcom.opname]#changes
+			o.outtext=tcom.lasttext#changes
+			#text=text+('# %s %s #' % (tcom.opname,tcom.lasttext))#CHANGES
+	#s.cam_text=text#changes
 		
 	for area in bpy.context.screen.areas:
-		if area.type == 'INFO':
+		if area.type == 'PROPERTIES':
 			area.tag_redraw()
 			
 @bpy.app.handlers.persistent
@@ -1191,7 +1192,7 @@ class CAM_UL_operations(UIList):
 			layout.label(text=item.name, translate=False, icon_value=icon)
 			icon = 'LOCKED' if operation.computing else 'UNLOCKED'
 			if operation.computing:
-				layout.label(text="computing" )
+				layout.label(text=operation.outtext)#"computing" )
 		elif self.layout_type in {'GRID'}:
 			 layout.alignment = 'CENTER'
 			 layout.label(text="", icon_value=icon)
@@ -1715,7 +1716,7 @@ def register():
 	s.cam_text= bpy.props.StringProperty()
 	bpy.app.handlers.scene_update_pre.append(timer_update)
 	bpy.app.handlers.load_post.append(check_operations_on_load)
-	bpy.types.INFO_HT_header.append(header_info)
+	#bpy.types.INFO_HT_header.append(header_info)
 	
 	s.cam_pack = bpy.props.PointerProperty(type=PackObjectsSettings)
 	
@@ -1749,7 +1750,7 @@ def unregister():
 	del s.cam_active_operation
 	del s.cam_machine
 	bpy.app.handlers.scene_update_pre.remove(timer_update)
-	bpy.types.INFO_HT_header.remove(header_info)
+	#bpy.types.INFO_HT_header.remove(header_info)
 
 if __name__ == "__main__":
 	register()
