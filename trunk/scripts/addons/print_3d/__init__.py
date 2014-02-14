@@ -35,6 +35,7 @@ import bpy
 from bpy.props import *
 import subprocess, os
 import threading 
+import bgl, blf
 PRECISION=7
 
 class PrintSettings(bpy.types.PropertyGroup):
@@ -79,15 +80,15 @@ class PrintSettings(bpy.types.PropertyGroup):
 		description='Preset')
 		#default='PEACHY')
 	filepath_engine = StringProperty(
-                name="Cura binary location",
-                description="Path to engine executable",
-                subtype='FILE_PATH',
-                )
+				name="Cura binary location",
+				description="Path to engine executable",
+				subtype='FILE_PATH',
+				)
 	dirpath_engine = StringProperty(
-                name="Cura directory",
-                description="Path to cura top directory",
-                subtype='DIR_PATH',
-                )
+				name="Cura directory",
+				description="Path to cura top directory",
+				subtype='DIR_PATH',
+				)
 	interface = EnumProperty(name='interface',
 		items=(('STANDARD','Standard user',"Everybody, if you really don't want to mess with how things work"),('DEVELOPER','Developer','If you want to improve how things work and understand what you are doing')),
 		description='Interface type',
@@ -130,7 +131,7 @@ class PrintSettings(bpy.types.PropertyGroup):
 	minimalFeedrate=bpy.props.FloatProperty(name="minimalFeedrate", description="minimalFeedrate", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
 	coolHeadLift=bpy.props.BoolProperty(name="coolHeadLift", description="coolHeadLift", default=0)
 	
-	startCode=   bpy.props.StringProperty(name='LimitstartCodecurve', description='startCode')
+	startCode=	 bpy.props.StringProperty(name='LimitstartCodecurve', description='startCode')
 	endCode=   bpy.props.StringProperty(name='endCode', description='endCode')
 	
 	fixHorrible=bpy.props.BoolProperty(name="fixHorrible", description="fixHorrible", default=0)
@@ -144,6 +145,7 @@ class threadComPrint3d:#object passed to threads to read background process stdo
 		self.outtext=''
 		self.proc=proc
 		self.lasttext=''
+		self.progress=0
 	
 def threadread_print3d( tcom):
 	'''reads stdout of background process, done this way to have it non-blocking'''
@@ -153,8 +155,9 @@ def threadread_print3d( tcom):
 	inline=str(inline)
 	s=inline.find('Preparing: ')
 	if s>-1:
-	
-		tcom.outtext=inline[ s+11 :s+13]
+		perc=inline[ s+11 :s+14]
+		tcom.outtext=''.join(c for c in perc if c.isdigit())
+		tcom.progress = int(tcom.outtext)
 	else:
 		#print(inline)
 		s=inline.find('GCode')
@@ -165,16 +168,18 @@ def threadread_print3d( tcom):
 		
 	
 
-
+"""
 def header_info_print3d(self, context):
 	'''writes background operations data to header'''
 	s=bpy.context.scene
 	self.layout.label(s.print3d_text)
-
+"""
 @bpy.app.handlers.persistent
 def timer_update_print3d(context):
 	'''monitoring of background processes'''
 	text=''
+	s=bpy.context.scene
+	
 	if hasattr(bpy.ops.object.print3d.__class__,'print3d_processes'):
 		processes=bpy.ops.object.print3d.__class__.print3d_processes
 		for p in processes:
@@ -186,7 +191,7 @@ def timer_update_print3d(context):
 				#readthread.
 				tcom.lasttext=tcom.outtext
 				if tcom.outtext!='':
-					print(tcom.obname,tcom.outtext)
+					#print(tcom.obname,tcom.outtext)
 					tcom.outtext=''
 					
 				if 'GCode file saved' in tcom.lasttext:
@@ -197,14 +202,81 @@ def timer_update_print3d(context):
 					readthread.start()
 					p[0]=readthread
 				
-			text=text+('# %s %s #' % (tcom.obname,tcom.lasttext))
-	#print(processes,text)
-	s=bpy.context.scene
-	s.print3d_text=text
-		
-	#for area in bpy.context.screen.areas:
-		#if area.type == 'INFO':
-			#area.tag_redraw()
+			if tcom.lasttext!=tcom.outtext:
+				tcom.lasttext=tcom.outtext
+				for area in bpy.context.screen.areas:
+					#print(area.type)
+					if area.type == 'VIEW_3D':
+						area.tag_redraw()
+			
+"""			
+def draw_callback_box(context, pos_x, pos_y):
+
+	sc = context.scene
+	#calculate overall time
+	#overall_time = datetime.timedelta(seconds=int(time.time() - ScreencastKeysStatus.overall_time[0]))
+
+	#timer_color_r, timer_color_g, timer_color_b, timer_color_alpha = sc.screencast_keys_timer_color
+	pos_x = context.region.width - (sc.screencast_keys_timer_size * 12) + 12
+	pos_y = 10
+
+	#draw time
+	blf.size(0, sc.screencast_keys_timer_size, 72)
+	blf.position(0, pos_x, pos_y, 0)
+	bgl.glColor4f(timer_color_r, timer_color_g, timer_color_b, timer_color_alpha)
+	blf.draw(0, "Elapsed Time: %s" % (overall_time))
+"""
+def draw_callback_px_box(self, context):
+	wm = context.window_manager
+	sc = context.scene
+	pos_x, pos_y = 0,0 #getDisplayLocation(context)
+
+	# get text-width/height to resize the box
+
+	# Got the size right, now draw box using proper colors
+	box_color_r, box_color_g, box_color_b, box_color_alpha = .2,.6,.2,.1#sc.screencast_keys_box_color
+	if hasattr(bpy.ops.object.print3d.__class__,'print3d_processes'):
+		processes=bpy.ops.object.print3d.__class__.print3d_processes
+		i=0
+		for p in processes:
+			
+			#proc=p[1].proc
+			readthread=p[0]
+			tcom=p[1]
+			progress=tcom.progress*.01
+			box_width = context.region.width * progress
+			offset_y = 80
+			bar_height = 30
+			x0 = 0# max(0, pos_x - padding_x)
+			y0 = context.region.height-offset_y-bar_height*i# max(0, pos_y - padding_y)
+			x1 = box_width
+			y1 = bar_height+y0
+			positions = [[x0, y0], [x0, y1], [x1, y1], [x1, y0]]
+			settings = [[bgl.GL_QUADS, min(0.0, box_color_alpha)], [bgl.GL_LINE_LOOP, min(0.0, box_color_alpha)]]
+			#print('boxie')
+			for mode, box_alpha in settings:
+				bgl.glEnable(bgl.GL_BLEND)
+				bgl.glBegin(mode)
+				bgl.glColor4f(box_color_r, box_color_g, box_color_b, box_color_alpha)
+				for v1, v2 in positions:
+					bgl.glVertex2f(v1, v2)
+				bgl.glEnd()
+			
+			#TEXT HERE
+			#calculate overall time
+			
+			timer_color_r, timer_color_g, timer_color_b, timer_color_alpha = .9,.9,.9,1
+			pos_x = 12
+			pos_y = context.region.height-offset_y-bar_height*i+int(bar_height*.3)
+
+			#draw time
+			blf.size(0, int(bar_height*.5) , 72)
+			blf.position(0, pos_x, pos_y, 0)
+			bgl.glColor4f(timer_color_r, timer_color_g, timer_color_b, timer_color_alpha)
+			blf.draw(0, "%s : %s %%" % (tcom.obname,tcom.outtext))
+			i+=1
+def draw_callback_px(self, context):
+	draw_callback_px_box(self, context)
 	
 class Print3d(bpy.types.Operator):
 	'''send object to 3d printer'''
@@ -213,12 +285,29 @@ class Print3d(bpy.types.Operator):
 	bl_options = {'REGISTER', 'UNDO'}
 	#processes=[]
 	
-	#@classmethod
-	#def poll(cls, context):
-	#	return context.active_object is not None
+	
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None
+	
+	@staticmethod
+	def handle_add(self, context):
+		if not(hasattr(PrintSettings,'handle')) or PrintSettings.handle == None:
+			PrintSettings.handle = bpy.types.SpaceView3D.draw_handler_add(draw_callback_px, (self, context), 'WINDOW', 'POST_PIXEL')
+		#bpy.app.handlers.scene_update_pre.append(timer_update_print3d)
+		#ScreencastKeysStatus._handle = bpy.types.SpaceView3D.draw_handler_add(draw_callback_px, (self, context), 'WINDOW', 'POST_PIXEL')
+		#ScreencastKeysStatus._timer = context.window_manager.event_timer_add(0.075, context.window)
+	
+	@staticmethod
+	def handle_remove(context):
+		if ScreencastKeysStatus._handle is not None:
+			#context.window_manager.event_timer_remove(ScreencastKeysStatus._timer)
+			bpy.types.SpaceView3D.draw_handler_remove(PrintSettings._handle, 'WINDOW')
+		PrintSettings._handle = None
+		#PrintSettings._timer = None
 	
 	def execute(self, context):
-		
+		Print3d.handle_add(self,context)
 		
 		
 		s=bpy.context.scene
@@ -347,6 +436,10 @@ class PRINT3D_SETTINGS_Panel(bpy.types.Panel):
 		layout.operator("object.print3d")
 		
 		layout.separator()
+		#reporting code in the property window got moved to view_3d
+		#texts = scene.print3d_text.split('\n')
+		#for t in texts:
+		#	layout.label(text=t)
 		
 		#layout.prop(settings,'interface')
 
@@ -371,14 +464,16 @@ def register():
 	bpy.types.Scene.print3d_settings=PointerProperty(type=PrintSettings)
 	
 	bpy.app.handlers.scene_update_pre.append(timer_update_print3d)
-	bpy.types.INFO_HT_header.append(header_info_print3d)
+	
+	
+	#bpy.types.INFO_HT_header.append(header_info_print3d)
 	
 def unregister():
 	bpy.utils.unregister_module(__name__)
 	del bpy.types.Scene.print3d_settings
 	
 	bpy.app.handlers.scene_update_pre.remove(timer_update_print3d)
-	bpy.types.INFO_HT_header.remove(header_info_print3d)
+	#bpy.types.INFO_HT_header.remove(header_info_print3d)
 
 #if __name__ == "__main__":
 #	register()
