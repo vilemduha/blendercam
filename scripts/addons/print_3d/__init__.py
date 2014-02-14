@@ -157,13 +157,13 @@ def threadread_print3d( tcom):
 	if s>-1:
 		perc=inline[ s+11 :s+14]
 		tcom.outtext=''.join(c for c in perc if c.isdigit())
-		tcom.progress = int(tcom.outtext)
+		tcom.progress = min(100,int(tcom.outtext))
 	else:
 		#print(inline)
 		s=inline.find('GCode')
 		#print(s)
 		if s>-1:
-			tcom.outtext=inline[s:]
+			tcom.outtext='finished'#inline[s:]
 			
 		
 	
@@ -244,7 +244,7 @@ def draw_callback_px_box(self, context):
 			readthread=p[0]
 			tcom=p[1]
 			progress=tcom.progress*.01
-			box_width = context.region.width * progress
+			box_width = context.region.width * progress 
 			offset_y = 80
 			bar_height = 30
 			x0 = 0# max(0, pos_x - padding_x)
@@ -265,15 +265,15 @@ def draw_callback_px_box(self, context):
 			#TEXT HERE
 			#calculate overall time
 			
-			timer_color_r, timer_color_g, timer_color_b, timer_color_alpha = .9,.9,.9,1
-			pos_x = 12
+			timer_color_r, timer_color_g, timer_color_b, timer_color_alpha = .9,.9,.9,.5
+			pos_x = 20
 			pos_y = context.region.height-offset_y-bar_height*i+int(bar_height*.3)
 
 			#draw time
-			blf.size(0, int(bar_height*.5) , 72)
+			blf.size(0, int(bar_height*.45) , 72)
 			blf.position(0, pos_x, pos_y, 0)
 			bgl.glColor4f(timer_color_r, timer_color_g, timer_color_b, timer_color_alpha)
-			blf.draw(0, "%s : %s %%" % (tcom.obname,tcom.outtext))
+			blf.draw(0, "Slicing %s : %s %%" % (tcom.obname,tcom.outtext))
 			i+=1
 def draw_callback_px(self, context):
 	draw_callback_px_box(self, context)
@@ -373,28 +373,28 @@ class Print3d(bpy.types.Operator):
 			#we build the command line here:
 			#commands=[enginepath+'python\python.exe,']#,'-m', 'Cura.cura', '%*']
 			os.chdir(settings.dirpath_engine)
-			print('\n\n\n')
+			#print('\n\n\n')
 		
-			print(os.listdir())
+			#print(os.listdir())
 			commands=['python\\python.exe','-m', 'Cura.cura','-i',inipath, '-s', fpath]
 			#commands=[enginepath+'cura.bat', '-s', fpath]
 			
 			#commands.extend()#'-o', gcodepath,
 			
-			print(commands)
-			print('\n\n\n')
+			#print(commands)
+			#print('\n\n\n')
 			
 			s=''
 			for command in commands:
 				s+=(command)+' '
-			print(s)
+			#print(s)
 			
 			
 			#run cura in background:
 			#proc = subprocess.call(commands,bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
 			#print(proc)
 			proc= subprocess.Popen(commands,bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)#,env={"PATH": enginepath})
-			print(proc)
+			#print(proc)
 			tcom=threadComPrint3d(ob,proc)
 			readthread=threading.Thread(target=threadread_print3d, args = ([tcom]), daemon=True)
 			readthread.start()
