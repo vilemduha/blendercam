@@ -1058,6 +1058,36 @@ def curveToPolys(cob):
 	chunks=curveToChunks(cob)
 	polys=chunksToPolys(chunks)
 	return polys
+
+def polygonBoolean(context,boolean_type):
+	bpy.context.scene.cursor_location=(0,0,0)
+	ob=bpy.context.active_object
+	for ob1 in bpy.context.selected_objects:
+		if ob1!=ob:
+			break;
+	plist=curveToPolys(ob)
+	p1=Polygon.Polygon()
+	for p in plist:
+		p1+=p
+	plist=curveToPolys(ob1)
+	p2=Polygon.Polygon()
+	for p in plist:
+		p2+=p
+	if boolean_type=='UNION':
+		
+		p=p1+p2
+	elif boolean_type=='DIFFERENCE':
+		p=p1-p2
+	elif boolean_type=='INTERSECT':
+		p = p1 & p2
+		
+	polyToMesh(p,0)
+	bpy.ops.object.convert(target='CURVE')
+	bpy.context.scene.cursor_location=ob.location
+	bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+
+	return {'FINISHED'}
+		
 '''
 def chunksToPoly(chunks):
 	

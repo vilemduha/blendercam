@@ -937,6 +937,29 @@ class CamOperationRemove(bpy.types.Operator):
 		
 		return {'FINISHED'}
 
+class CamPolyBoolean(bpy.types.Operator):
+	'''Boolean operation on two curves'''
+	bl_idname = "object.curve_boolean"
+	bl_label = "Curve Boolean operation"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	boolean_type = EnumProperty(name='type',
+		items=(('UNION','Union',''),('DIFFERENCE','Difference',''),('INTERSECT','Intersect','')),
+		description='boolean type',
+		default='UNION')
+		
+	#@classmethod
+	#def poll(cls, context):
+	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+
+	def execute(self, context):
+		utils.polygonBoolean(context,self.boolean_type)
+		return {'FINISHED'}
+		
+	#def draw(self, context):
+	#	layout = self.layout
+	#	layout.prop(self, "boolean_type")
+
 class CamOperationMove(bpy.types.Operator):
 	'''Move CAM operation'''
 	bl_idname = "scene.cam_operation_move"
@@ -1696,7 +1719,9 @@ def get_panels():#convenience function for bot register and unregister functions
 	#pack module:
 	PackObjectsSettings,
 	CamPackObjects,
-	CAM_PACK_Panel
+	CAM_PACK_Panel,
+	
+	CamPolyBoolean
 	)
 	
 def register():
