@@ -54,7 +54,7 @@ class PrintSettings(bpy.types.PropertyGroup):
 			for profile in list:
 				if profile[-4:]=='.ini':
 					profile=profile
-					printers.append((directory+profile,profile[:-4],profile+' config file'))
+					printers.append((profile[:-4],profile[:-4],profile+' config file'))
 		except:
 			pass;
 	
@@ -194,7 +194,7 @@ def timer_update_print3d(context):
 					#print(tcom.obname,tcom.outtext)
 					tcom.outtext=''
 					
-				if 'GCode file saved' in tcom.lasttext:
+				if 'finished'in tcom.lasttext:#'GCode file saved' 
 					processes.remove(p)
 					
 				else:
@@ -209,23 +209,7 @@ def timer_update_print3d(context):
 					if area.type == 'VIEW_3D':
 						area.tag_redraw()
 			
-"""			
-def draw_callback_box(context, pos_x, pos_y):
 
-	sc = context.scene
-	#calculate overall time
-	#overall_time = datetime.timedelta(seconds=int(time.time() - ScreencastKeysStatus.overall_time[0]))
-
-	#timer_color_r, timer_color_g, timer_color_b, timer_color_alpha = sc.screencast_keys_timer_color
-	pos_x = context.region.width - (sc.screencast_keys_timer_size * 12) + 12
-	pos_y = 10
-
-	#draw time
-	blf.size(0, sc.screencast_keys_timer_size, 72)
-	blf.position(0, pos_x, pos_y, 0)
-	bgl.glColor4f(timer_color_r, timer_color_g, timer_color_b, timer_color_alpha)
-	blf.draw(0, "Elapsed Time: %s" % (overall_time))
-"""
 def draw_callback_px_box(self, context):
 	wm = context.window_manager
 	sc = context.scene
@@ -277,6 +261,60 @@ def draw_callback_px_box(self, context):
 			i+=1
 def draw_callback_px(self, context):
 	draw_callback_px_box(self, context)
+
+def tweakCuraPreferences(enginepath,printer):
+	filepath=enginepath+'\\Cura\preferences.ini'
+	
+	for p in bpy.utils.script_paths():
+		directory=p+'\\addons\\print_3d\\machine_profiles\\'
+		flist=os.listdir(directory)
+		n=printer+'.ini'
+		
+		if n in flist:
+			presetfilepath=directory+n
+			
+	f=open(filepath,'r')
+	text=f.read()
+	
+	machineblocks=[]
+	machinesnum=0
+	found=0
+	while found>-1:
+		found=text.find('[machine_',found+1)
+		if found>-1:
+			machineblocks.append(found)
+			machinesnum+=1
+	print(machinesnum)
+	
+	idx=text.find(printer)
+	printerindex=0
+	
+	if idx==-1:
+		print('Selected printer not in Cura settings, adding it')
+		print(presetfilepath)
+		printerindex=machinesnum
+		pf=open(presetfilepath,'r')
+		printerpreset = pf.read()
+		print(printerpreset)
+		pf.close()
+		text+=('\n\n[machine_%i]\n' % (machinesnum))
+		text+=printerpreset
+		print(text)
+		f.close()
+		f=open(filepath,'w')
+		#f.seek(0)
+		# clear file content 
+		#f.truncate()
+		f.write(text)
+		f.close()
+	else:
+		for m in machineblocks:
+			if m<idx<m+40:
+				printerindex=m
+				break;
+	
+		f.close()
+	return printerindex
 	
 class Print3d(bpy.types.Operator):
 	'''send object to 3d printer'''
@@ -358,12 +396,14 @@ class Print3d(bpy.types.Operator):
 		'''
 		#second try - use cura command line options, with .ini files.
 		if settings.slicer=='CURA':
+			
 			opath=bpy.data.filepath[:-6]
 			fpath=opath+'_'+ob.name+'.stl'
 			gcodepath=opath+'_'+ob.name+'.gcode'
 			enginepath=settings.dirpath_engine
 			inipath=settings.preset
-			
+			tweakCuraPreferences(enginepath,settings.printer)
+			#return {'FINISHED'}
 			#Export stl, with a scale correcting blenders and Cura size interpretation in stl:
 			bpy.ops.export_mesh.stl(check_existing=False, filepath=fpath, filter_glob="*.stl", ascii=False, use_mesh_modifiers=True, axis_forward='Y', axis_up='Z', global_scale=1000)
 			
