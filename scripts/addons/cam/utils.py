@@ -2799,50 +2799,54 @@ def getPath3axis(context,operation):
 		chunksToMesh(chunks,o)  
 		
 	elif o.strategy=='DRILL':
-		ob=bpy.data.objects[o.object_name]
-		activate(ob)
-	
-		bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
-		bpy.ops.group.objects_remove_all()
-		ob=bpy.context.active_object
-		ob.data.dimensions='3D'
-		try:
-			bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-			bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
-			bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-			
-		except:
-			pass
-		l=ob.location
+		chunks=[]
+		for ob in o.objects:
+			activate(ob)
 		
-		if ob.type=='CURVE':
-			chunks=[]
-			for c in ob.data.splines:
-					maxx,minx,maxy,miny=-10000,10000,-10000,100000
-					for p in c.points:
-						if o.drill_type=='ALL_POINTS':
-							chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
-						minx=min(p.co.x,minx)
-						maxx=max(p.co.x,maxx)
-						miny=min(p.co.y,miny)
-						maxy=max(p.co.y,maxy)
-					for p in c.bezier_points:
-						if o.drill_type=='ALL_POINTS':
-							chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
-						minx=min(p.co.x,minx)
-						maxx=max(p.co.x,maxx)
-						miny=min(p.co.y,miny)
-						maxy=max(p.co.y,maxy)
-					cx=(maxx+minx)/2
-					cy=(maxy+miny)/2
-					
-					center=(cx,cy)
-					aspect=(maxx-minx)/(maxy-miny)
-					if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
-						chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.min.z)]))
-			chunks=sortChunks(chunks,o)
-			chunksToMesh(chunks,o)
-		delob(ob)#delete temporary object with applied transforms
+			bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
+			bpy.ops.group.objects_remove_all()
+			ob=bpy.context.active_object
+			ob.data.dimensions='3D'
+			try:
+				bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+				bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+				bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+				
+			except:
+				pass
+			l=ob.location
+			
+			if ob.type=='CURVE':
+				
+				for c in ob.data.splines:
+						maxx,minx,maxy,miny=-10000,10000,-10000,100000
+						for p in c.points:
+							if o.drill_type=='ALL_POINTS':
+								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
+							minx=min(p.co.x,minx)
+							maxx=max(p.co.x,maxx)
+							miny=min(p.co.y,miny)
+							maxy=max(p.co.y,maxy)
+						for p in c.bezier_points:
+							if o.drill_type=='ALL_POINTS':
+								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
+							minx=min(p.co.x,minx)
+							maxx=max(p.co.x,maxx)
+							miny=min(p.co.y,miny)
+							maxy=max(p.co.y,maxy)
+						cx=(maxx+minx)/2
+						cy=(maxy+miny)/2
+						
+						center=(cx,cy)
+						aspect=(maxx-minx)/(maxy-miny)
+						if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
+							chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.min.z)]))
+						
+			delob(ob)#delete temporary object with applied transforms
+		print(chunks)
+		chunks=sortChunks(chunks,o)
+		print(chunks)
+		chunksToMesh(chunks,o)
 	elif o.strategy=='SLICES':
 		slicechunks = getSlices(o,0)
 		for slicechunk in slicechunks:
