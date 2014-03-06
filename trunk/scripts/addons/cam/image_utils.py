@@ -168,7 +168,8 @@ def imagetonumpy(i):
 	size=width*height
 	na.resize(size*4)		
 	
-	p=i.pixels[:]#these 2 lines are about 15% faster than na=i.pixels[:].... whyyyyyyyy!!?!?!?!?! Blender image data access is evil.
+	
+	p=i.pixels[:]#these 2 lines are about 15% faster than na[:]=i.pixels[:].... whyyyyyyyy!!?!?!?!?! Blender image data access is evil.
 	na[:]=p
 	#na=numpy.array(i.pixels[:])#this was terribly slow... at least I know why now, it probably 
 	na=na[::4]
@@ -1169,8 +1170,10 @@ def getResolution(o):
 def renderSampleImage(o):
 	t=time.time()
 	progress('getting zbuffer')
-	
-	
+	#print(o.zbuffer_image)
+	if not o.update_zbufferimage_tag and len(o.zbuffer_image)>0:#if we call this accidentally in more functions, which currently happens...
+		return o.zbuffer_image
+
 	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 		pixsize=o.pixsize
 

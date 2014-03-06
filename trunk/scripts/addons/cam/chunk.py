@@ -146,11 +146,7 @@ def setChunksZ(chunks,z):
 def setChunksZRampWholeContour(chunks,zstart,zend,o):
 	newchunks=[]
 	
-	if o.use_layers:
-		stepdown=o.stepdown
-	else:
-		stepdown=-o.min.z
-	
+	stepdown=zstart-zend
 	for ch in chunks:
 		chunk=camPathChunk([])
 		estlength=(zstart-zend)/tan(o.ramp_in_angle)
@@ -159,6 +155,7 @@ def setChunksZRampWholeContour(chunks,zstart,zend,o):
 		ltraveled=0
 		endpoint=None
 		i=0
+		#z=zstart
 		znew=10
 		rounds=0#for counting if ramping makes more layers
 		while endpoint==None and not(znew==zend and i==0):#
@@ -200,8 +197,8 @@ def setChunksZRampWholeContour(chunks,zstart,zend,o):
 			if i>=len(ch.points):
 				i=0
 				rounds+=1
-		if not o.use_layers:
-			endpoint=0
+		#if not o.use_layers:
+		#	endpoint=0
 		if endpoint!=None:#append final contour on the bottom z level
 			i=endpoint
 			started=False
@@ -245,89 +242,66 @@ def setChunksZRampWholeContour(chunks,zstart,zend,o):
 		newchunks.append(chunk)
 	return newchunks
 
-def setChunksZRamp(chunks,zstart,zend,o):
+def setChunksZRampZigZag(chunks,zstart,zend,o):
 	newchunks=[]
-	
-	if o.use_layers:
-		stepdown=o.stepdown
-	else:
-		stepdown=-o.min.z
-	for ch in chunks:
-		chunk=camPathChunk([])
-		ch.getLength()
-		ltraveled=0
-		endpoint=None
-		for i,s in enumerate(ch.points):
-			
-			if i>0:
-				s2=ch.points[i-1]
-				ltraveled+=dist2d(s,s2)
-				ratio=ltraveled/ch.length
+	print(zstart,zend)
+	if zend<zstart:#this check here is only for stupid setup, when the chunks lie actually above operation start z.
+		if o.use_layers:
+			stepdown=o.stepdown
+		else:
+			stepdown=o.maxz-o.min.z
+		stepdown=zstart-zend
+		for ch in chunks:
+			chunk=camPathChunk([])
+			estlength=(zstart-zend)/tan(o.ramp_in_angle)
+			ch.getLength()
+			ramplength=estlength
+			zigzaglength=ramplength/2.000
+			turns=1
+			if zigzaglength>ch.length:
+				#turns = ramplength/ch.length
+				zigzaglength=ch.length
+				ramppoints=ch.points
 			else:
-				ratio=0
-			znew=zstart-stepdown*ratio
-			if znew<=zend:
-				
-				ratio=((z-zend)/(z-znew))
-				v1=Vector(chunk.points[-1])
-				v2=Vector((s[0],s[1],znew))
-				v=v1+ratio*(v2-v1)
-				chunk.points.append((v.x,v.y,v.z))
-						
-				if zend == o.min.z and endpoint==None and ch.closed==True:
-					endpoint=i+1
-					if endpoint==len(ch.points):
-						endpoint=0
-					#print(endpoint,len(ch.points))
-			#else:
-			znew=max(znew,zend)
-			chunk.points.append((s[0],s[1],znew))
-			z=znew
-			if endpoint!=None:
-				break;
-		if not o.use_layers:
-			endpoint=0
-		if endpoint!=None:#append final contour on the bottom z level
-			i=endpoint
-			started=False
-			#print('finaliz')
-			if i==len(ch.points):
-					i=0
-			while i!=endpoint or not started:
-				started=True
-				s=ch.points[i]
-				chunk.points.append((s[0],s[1],zend))
-				#print(i,endpoint)
-				i+=1
-				if i==len(ch.points):
-					i=0
-			if o.ramp_out:
-				z=zend
-				i=endpoint
-				
-				while z<0:
-					if i==len(ch.points):
-						i=0
-					s1=ch.points[i]
-					i2=i-1
-					if i2<0: i2=len(ch.points)-1
-					s2=ch.points[i2]
-					l=dist2d(s1,s2)
-					znew=z+tan(o.ramp_out_angle)*l
-					if znew>0:
-						ratio=(z/(z-znew))
-						v1=Vector(chunk.points[-1])
-						v2=Vector((s1[0],s1[1],znew))
+				zigzagtraveled=0.0
+				haspoints=False
+				ramppoints=[ch.points[0]]
+				i=1
+				while not haspoints:
+					p1=ramppoints[-1]
+					p2=ch.points[i]
+					d=dist2d(p1,p2)
+					zigzagtraveled+=d
+					if zigzagtraveled>=zigzaglength:
+						ratio = 1-(zigzagtraveled-zigzaglength)/d
+						#print((ratio,zigzaglength))
+						v1=Vector(p1)
+						v2=Vector(p2)
 						v=v1+ratio*(v2-v1)
-						chunk.points.append((v.x,v.y,v.z))
-						
+						ramppoints.append((v.x,v.y,v.z))
+						haspoints=True
 					else:
-						chunk.points.append((s1[0],s1[1],znew))
-					z=znew
+						ramppoints.append(p2)
 					i+=1
-					
-					
-		newchunks.append(chunk)
+			negramppoints=ramppoints.copy()
+			negramppoints.reverse()
+			ramppoints.extend(negramppoints[1:])
+			print('turns %i' % turns)
+			traveled=0.0
+			chunk.points.append(ch.points[0])
+			for r in range(turns):
+				for p in range(0,len(ramppoints)):
+					p1=chunk.points[-1]
+					p2=ramppoints[p]
+					d=dist2d(p1,p2)
+					traveled+=d
+					ratio=traveled/ramplength
+					znew=zstart-stepdown*ratio
+					chunk.points.append((p2[0],p2[1],znew))
+			
+			chunks = setChunksZ([ch],zend)
+			chunk.points.extend(chunks[0].points)		
+			newchunks.append(chunk)
 	return newchunks
 	
 def optimizeChunk(chunk,operation):
@@ -460,12 +434,16 @@ def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies.
 	
 	for ch in chunks:#now make only simple polygons with holes, not more polys inside others
 		#print(len(chunks[polyi].parents))
+		found=False
 		if len(ch.parents)%2==1:
+			
 			for parent in ch.parents:
 				if len(parent.parents)+1==len(ch.parents):
 					ch.nparents=[parent]#nparents serves as temporary storage for parents, not to get mixed with the first parenting during the check
-					#break
-		else:
+					found=True
+					break
+				
+		if not found:
 			ch.nparents=[]
 
 	for ch in chunks:#then subtract the 1st level holes
@@ -589,7 +567,6 @@ def polyToChunks(p,zlevel):#
 	#
 	return chunks
 
-			
 def chunkToPoly(chunk):
 	pverts=[]
 	

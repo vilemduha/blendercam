@@ -251,7 +251,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('CIRCLES','Circles', 'Circles path'),
 			('WATERLINE','Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
 			('OUTLINEFILL','Outline Fill', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
-			('CUTOUT','Cutout', 'Cut the silhouette with offset'),
+			('CUTOUT','Cutout', 'Cut the silhouete with offset'),
 			('POCKET','Pocket', 'Pocket operation'),
 			('CARVE','Carve', 'Pocket operation'),
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
@@ -276,7 +276,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('CIRCLES','Circles', 'Circles path'),
 			('WATERLINE','Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
 			('OUTLINEFILL','Outline Fill', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
-			('CUTOUT','Cutout', 'Cut the silhouette with offset'),
+			('CUTOUT','Cutout', 'Cut the silhouete with offset'),
 			('POCKET','Pocket', 'Pocket operation'),
 			('CARVE','Carve', 'Pocket operation'),
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.')),
@@ -409,7 +409,7 @@ class camOperation(bpy.types.PropertyGroup):
 	changed=bpy.props.BoolProperty(name="True if any of the operation settings has changed",description="mark for update", default=False)
 	update_zbufferimage_tag=bpy.props.BoolProperty(name="mark zbuffer image for update",description="mark for update", default=True)
 	update_offsetimage_tag=bpy.props.BoolProperty(name="mark offset image for update",description="mark for update", default=True)
-	update_silhouete_tag=bpy.props.BoolProperty(name="mark silhouette image for update",description="mark for update", default=True)
+	update_silhouete_tag=bpy.props.BoolProperty(name="mark silhouete image for update",description="mark for update", default=True)
 	update_ambient_tag=bpy.props.BoolProperty(name="mark ambient polygon for update",description="mark for update", default=True)
 	update_bullet_collision_tag=bpy.props.BoolProperty(name="mark bullet collisionworld for update",description="mark for update", default=True)
 	
@@ -959,7 +959,58 @@ class CamPolyBoolean(bpy.types.Operator):
 	#def draw(self, context):
 	#	layout = self.layout
 	#	layout.prop(self, "boolean_type")
+	
+class CamOffsetSilhouete(bpy.types.Operator):
+	'''Curve offset operation '''
+	bl_idname = "object.silhouete_offset"
+	bl_label = "Silhouete offset"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	offset = bpy.props.FloatProperty(name="offset", default=.003, min=-100, max=100,precision=4, unit="LENGTH")
+		
+	#@classmethod
+	##def poll(cls, context):
+	#	return context.active_object is not None and context.active_object.type=='CURVE'
 
+	def execute(self, context):#this is almost same as getobjectoutline, just without the need of operation data
+		utils.silhoueteOffset(context,self.offset)
+		return {'FINISHED'}
+		
+	#def draw(self, context):
+	#	layout = self.layout
+	#	layout.prop(self, "boolean_type")
+	
+class CamObjectSilhouete(bpy.types.Operator):
+	'''Object silhouete '''
+	bl_idname = "object.silhouete"
+	bl_label = "Object silhouete"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	
+	#offset = bpy.props.FloatProperty(name="offset", default=.0001, min=-100, max=100,precision=4)
+		
+	#@classmethod
+	##def poll(cls, context):
+	#	return context.active_object is not None and context.active_object.type=='CURVE'
+	#
+		
+		
+	def execute(self, context):#this is almost same as getobjectoutline, just without the need of operation data
+		ob=bpy.context.active_object
+		self.silh=utils.getObjectSilhouete('OBJECTS', objects=bpy.context.selected_objects)
+		poly=Polygon.Polygon()
+		for p in self.silh:
+			for ci in range(0,len(p)):
+				poly.addContour(p[ci])
+		bpy.context.scene.cursor_location=(0,0,0)
+		polygon_utils_cam.polyToMesh(poly,0)#
+		bpy.ops.object.convert(target='CURVE')
+		bpy.context.scene.cursor_location=ob.location
+		bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+		#utils.chunksToMesh(silh)
+		return {'FINISHED'}
+		
+	
 class CamOperationMove(bpy.types.Operator):
 	'''Move CAM operation'''
 	bl_idname = "scene.cam_operation_move"
@@ -1721,7 +1772,9 @@ def get_panels():#convenience function for bot register and unregister functions
 	CamPackObjects,
 	CAM_PACK_Panel,
 	
-	CamPolyBoolean
+	CamPolyBoolean,
+	CamOffsetSilhouete,
+	CamObjectSilhouete
 	)
 	
 def register():
