@@ -246,10 +246,6 @@ def setChunksZRampZigZag(chunks,zstart,zend,o):
 	newchunks=[]
 	print(zstart,zend)
 	if zend<zstart:#this check here is only for stupid setup, when the chunks lie actually above operation start z.
-		if o.use_layers:
-			stepdown=o.stepdown
-		else:
-			stepdown=o.maxz-o.min.z
 		stepdown=zstart-zend
 		for ch in chunks:
 			chunk=camPathChunk([])
@@ -259,13 +255,15 @@ def setChunksZRampZigZag(chunks,zstart,zend,o):
 			zigzaglength=ramplength/2.000
 			turns=1
 			if zigzaglength>ch.length:
-				#turns = ramplength/ch.length
+				turns = ceil(zigzaglength/ch.length)
+				ramplength=turns*ch.length*2.0
 				zigzaglength=ch.length
 				ramppoints=ch.points
+				
 			else:
 				zigzagtraveled=0.0
 				haspoints=False
-				ramppoints=[ch.points[0]]
+				ramppoints=[(ch.points[0][0],ch.points[0][1],zstart)]
 				i=1
 				while not haspoints:
 					p1=ramppoints[-1]
