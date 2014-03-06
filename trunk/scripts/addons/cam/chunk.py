@@ -286,7 +286,7 @@ def setChunksZRampZigZag(chunks,zstart,zend,o):
 			ramppoints.extend(negramppoints[1:])
 			print('turns %i' % turns)
 			traveled=0.0
-			chunk.points.append(ch.points[0])
+			chunk.points.append((ch.points[0][0],ch.points[0][1],zstart))
 			for r in range(turns):
 				for p in range(0,len(ramppoints)):
 					p1=chunk.points[-1]
