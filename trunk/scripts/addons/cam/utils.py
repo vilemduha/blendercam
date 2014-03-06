@@ -2363,27 +2363,30 @@ def getPath3axis(context,operation):
 			
 		
 		extendorder=[]
-		if o.first_down:#each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again.
+		if o.first_down:#each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
 			for chunk in chunksFromCurve:
 				for layer in layers:
-					extendorder.append([chunk,layer])
+					extendorder.append([chunk.copy(),layer])
 		else:
 			for layer in layers:
 				for chunk in chunksFromCurve:
-					extendorder.append([chunk,layer])
-					
-		for chl in extendorder:
+					extendorder.append([chunk.copy(),layer])
+		
+		for chl in extendorder:#Set Z for all chunks
 			chunk=chl[0]
 			layer=chl[1]
-			if o.contour_ramp:
+			chunk.setZ(layer[1])
+		
+		
+		if o.contour_ramp:#add ramps
+			for chl in extendorder:
+				chunk=chl[0]
+				layer=chl[1]
 				if chunk.closed:
-					chunks.extend(setChunksZRampWholeContour([chunk],layer[0],layer[1],o))
+					chunks.append(chunk.rampContour(layer[0],layer[1],o))
 				else:
-					chunks.extend(setChunksZRampZigZag([chunk],layer[0],layer[1],o))
-			else:
-				chunks.extend(setChunksZ([chunk],layer[1]))
-				if o.contour_ramp: 
-					o.warnings=o.warnings+'Ramp in not suported for non-closed curves! \n '
+					chunks.append(chunk.rampZigZag(layer[0],layer[1],o))
+			
 						
 		if o.use_bridges:
 			for ch in chunks:
@@ -2511,7 +2514,7 @@ def getPath3axis(context,operation):
 				helix_radius=o.cutter_diameter*0.5*o.helix_diameter*0.01#90 percent of cutter radius
 				helix_circumference=helix_radius*pi*2
 				
-				revheight=helix_circumference*tan(o.helix_angle)
+				revheight=helix_circumference*tan(o.ramp_in_angle)
 				for chi,ch in enumerate(lchunks):
 					if chunksFromCurve[chi].children==[]:
 					
@@ -2538,6 +2541,8 @@ def getPath3axis(context,operation):
 							ch.points=h+ch.points
 						else:
 							o.warnings=o.warnings+'Helix entry did not fit! \n '
+							ch.closed=True
+							lchunks[chi]=ch.rampZigZag(l[0],l[1],o)
 			#Arc retract here first try:
 			if o.retract_tangential:#TODO: check for entry and exit point before actual computing... will be much better.
 									#TODO: fix this for CW and CCW!

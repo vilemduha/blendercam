@@ -314,7 +314,7 @@ class camOperation(bpy.types.PropertyGroup):
 	ramp_in_angle = bpy.props.FloatProperty(name="Ramp in angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 	helix_enter = bpy.props.BoolProperty(name="Helix enter - EXPERIMENTAL",description="Enter material in helix", default=False, update = updateRest)
-	helix_angle =	bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
+	#helix_angle =	bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 	helix_diameter = bpy.props.FloatProperty(name = 'Helix diameter % of cutter D', default=90,min=10, max=100, precision=1,subtype='PERCENTAGE', update = updateRest)
 	retract_tangential = bpy.props.BoolProperty(name="Retract tangential - EXPERIMENTAL",description="Retract from material in circular motion", default=False, update = updateRest)
 	retract_radius =  bpy.props.FloatProperty(name = 'Retract arc radius', default=0.001,min=0.000001, max=100, precision=PRECISION, unit="LENGTH", update = updateRest)
@@ -1562,7 +1562,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.strategy=='POCKET':
 					layout.prop(ao,'helix_enter')
 					if ao.helix_enter:
-						layout.prop(ao,'helix_angle')
+						layout.prop(ao,'ramp_in_angle')
 						layout.prop(ao,'helix_diameter')
 					layout.prop(ao,'retract_tangential')
 					if ao.retract_tangential:

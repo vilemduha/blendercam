@@ -14,16 +14,35 @@ class camPathChunk:
 		else:
 			self.poly=Polygon.Polygon()
 		self.points=inpoints#for 3 axes, this is only storage of points. For N axes, here go the sampled points
-		self.startpoints = []#from where the sweep test begins, but also retract point for given path
-		self.endpoints = []#where sweep test ends
-		self.rotations = []#rotation of the machine axes
+		self.startpoints = startpoints#from where the sweep test begins, but also retract point for given path
+		self.endpoints = endpoints#where sweep test ends
+		self.rotations = rotations#rotation of the machine axes
 		self.closed=False
 		self.children=[]
 		self.parents=[]
 		#self.unsortedchildren=False
 		self.sorted=False#if the chunk has allready been milled in the simulation
 		self.length=0;#this is total length of this chunk.
+	
+	def copy(self):
+		nchunk=camPathChunk([])
+		nchunk.points.extend(self.points)
+		nchunk.startpoints.extend(self.startpoints)
+		nchunk.endpoints.extend(self.endpoints)
+		nchunk.rotations.extend(self.rotations)
+		nchunk.closed=self.closed
+		nchunk.children=self.children
+		nchunk.parents=self.parents
+		nchunk.sorted=self.sorted
+		nchunk.length=self.length
+		return nchunk
 		
+	def setZ(self,z):
+		i=0
+		for p in self.points:
+			self.points[i]=(p[0],p[1],z)
+			i+=1
+			
 	def dist(self,pos,o):
 		if self.closed:
 			mind=10000000
@@ -109,45 +128,11 @@ class camPathChunk:
 			self.startpoints.pop(index)
 			self.endpoints.pop(index)
 			self.rotations.pop(index)
-#def appendChunk(sorted,ch,o,pos) 
-
-def chunksCoherency(chunks):
-	#checks chunks for their stability, for pencil path. it checks if the vectors direction doesn't jump too much too quickly, if this happens it splits the chunk on such places, too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often, but also means that some parts detected by cavity algorithm won't be milled 
-	nchunks=[]
-	for chunk in chunks:
-		if len(chunk.points)>2:
-			nchunk=camPathChunk([])
 			
-			#doesn't check for 1 point chunks here, they shouldn't get here at all.
-			lastvec=Vector(chunk.points[1])-Vector(chunk.points[0])
-			for i in range(0,len(chunk.points)-1):
-				nchunk.points.append(chunk.points[i])
-				vec=Vector(chunk.points[i+1])-Vector(chunk.points[i])
-				angle=vec.angle(lastvec,vec)
-				#print(angle,i)
-				if angle>1.07:#60 degrees is maximum toleration for pencil paths. 
-					if len(nchunk.points)>4:#this is a testing threshold
-						nchunks.append(nchunk)
-					nchunk=camPathChunk([])
-				lastvec=vec
-			if len(nchunk.points)>4:#this is a testing threshold
-				nchunks.append(nchunk)
-	return nchunks  
-
-def setChunksZ(chunks,z):
-	newchunks=[]
-	for ch in chunks:
-		chunk=camPathChunk([])
-		for i,s in enumerate(ch.points):
-			chunk.points.append((s[0],s[1],z))
-		newchunks.append(chunk)
-	return newchunks
-	
-def setChunksZRampWholeContour(chunks,zstart,zend,o):
-	newchunks=[]
-	
-	stepdown=zstart-zend
-	for ch in chunks:
+	def rampContour(self,zstart,zend,o):
+		
+		stepdown=zstart-zend
+		ch=self
 		chunk=camPathChunk([])
 		estlength=(zstart-zend)/tan(o.ramp_in_angle)
 		ch.getLength()
@@ -180,7 +165,7 @@ def setChunksZRampWholeContour(chunks,zstart,zend,o):
 				v1=Vector(chunk.points[-1])
 				v2=Vector((s[0],s[1],znew))
 				v=v1+ratio*(v2-v1)
-				chunk.points.append((v.x,v.y,v.z))
+				chunk.points.append((v.x,v.y,max(s[2],v.z)))
 						
 				if zend == o.min.z and endpoint==None and ch.closed==True:
 					endpoint=i+1
@@ -188,7 +173,7 @@ def setChunksZRampWholeContour(chunks,zstart,zend,o):
 						endpoint=0
 					#print(endpoint,len(ch.points))
 			#else:
-			znew=max(znew,zend)
+			znew=max(znew,zend,s[2])
 			chunk.points.append((s[0],s[1],znew))
 			z=znew
 			if endpoint!=None:
@@ -239,15 +224,14 @@ def setChunksZRampWholeContour(chunks,zstart,zend,o):
 					i+=1
 					
 					
-		newchunks.append(chunk)
-	return newchunks
+		
+		return chunk
 
-def setChunksZRampZigZag(chunks,zstart,zend,o):
-	newchunks=[]
-	print(zstart,zend)
-	if zend<zstart:#this check here is only for stupid setup, when the chunks lie actually above operation start z.
-		stepdown=zstart-zend
-		for ch in chunks:
+	def rampZigZag(self,zstart,zend,o):
+		#print(zstart,zend)
+		if zend<zstart:#this check here is only for stupid setup, when the chunks lie actually above operation start z.
+			stepdown=zstart-zend
+			ch=self
 			chunk=camPathChunk([])
 			estlength=(zstart-zend)/tan(o.ramp_in_angle)
 			ch.getLength()
@@ -263,7 +247,7 @@ def setChunksZRampZigZag(chunks,zstart,zend,o):
 			else:
 				zigzagtraveled=0.0
 				haspoints=False
-				ramppoints=[(ch.points[0][0],ch.points[0][1],zstart)]
+				ramppoints=[(ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart))]
 				i=1
 				while not haspoints:
 					p1=ramppoints[-1]
@@ -286,7 +270,7 @@ def setChunksZRampZigZag(chunks,zstart,zend,o):
 			ramppoints.extend(negramppoints[1:])
 			print('turns %i' % turns)
 			traveled=0.0
-			chunk.points.append((ch.points[0][0],ch.points[0][1],zstart))
+			chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
 			for r in range(turns):
 				for p in range(0,len(ramppoints)):
 					p1=chunk.points[-1]
@@ -295,12 +279,45 @@ def setChunksZRampZigZag(chunks,zstart,zend,o):
 					traveled+=d
 					ratio=traveled/ramplength
 					znew=zstart-stepdown*ratio
-					chunk.points.append((p2[0],p2[1],znew))
+					chunk.points.append((p2[0],p2[1],max(ch.points[0][1],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
 			
 			chunks = setChunksZ([ch],zend)
 			chunk.points.extend(chunks[0].points)		
-			newchunks.append(chunk)
+			return chunk
+#def appendChunk(sorted,ch,o,pos) 
+
+def chunksCoherency(chunks):
+	#checks chunks for their stability, for pencil path. it checks if the vectors direction doesn't jump too much too quickly, if this happens it splits the chunk on such places, too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often, but also means that some parts detected by cavity algorithm won't be milled 
+	nchunks=[]
+	for chunk in chunks:
+		if len(chunk.points)>2:
+			nchunk=camPathChunk([])
+			
+			#doesn't check for 1 point chunks here, they shouldn't get here at all.
+			lastvec=Vector(chunk.points[1])-Vector(chunk.points[0])
+			for i in range(0,len(chunk.points)-1):
+				nchunk.points.append(chunk.points[i])
+				vec=Vector(chunk.points[i+1])-Vector(chunk.points[i])
+				angle=vec.angle(lastvec,vec)
+				#print(angle,i)
+				if angle>1.07:#60 degrees is maximum toleration for pencil paths. 
+					if len(nchunk.points)>4:#this is a testing threshold
+						nchunks.append(nchunk)
+					nchunk=camPathChunk([])
+				lastvec=vec
+			if len(nchunk.points)>4:#this is a testing threshold
+				nchunks.append(nchunk)
+	return nchunks  
+
+def setChunksZ(chunks,z):
+	newchunks=[]
+	for ch in chunks:
+		chunk=ch.copy()
+		chunk.setZ(z)
+		newchunks.append(chunk)
 	return newchunks
+	
+
 	
 def optimizeChunk(chunk,operation):
 	
