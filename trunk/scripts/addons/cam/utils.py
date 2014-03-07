@@ -395,6 +395,10 @@ def sampleChunks(o,pathSamples,layers):
 	chunks=[]
 	
 	for i,l in enumerate(layers):
+		if o.ramp:
+			for ch in layerchunks[i]:
+				ch.zstart=layers[i][0]
+				ch.zend=layers[i][1]
 		chunks.extend(layerchunks[i])
 	timingadd(totaltime)
 	timingprint(samplingtime)
@@ -2378,7 +2382,7 @@ def getPath3axis(context,operation):
 			chunk.setZ(layer[1])
 		
 		
-		if o.contour_ramp:#add ramps
+		if o.ramp:#add ramps
 			for chl in extendorder:
 				chunk=chl[0]
 				layer=chl[1]
@@ -2490,7 +2494,7 @@ def getPath3axis(context,operation):
 		#if bpy.app.debug_value==1:
 		
 
-		chunksFromCurve=sortChunks(chunksFromCurve,o)   
+		chunksFromCurve=sortChunks(chunksFromCurve,o)
 			
 		chunks=[]
 		if o.use_layers:
@@ -2672,6 +2676,10 @@ def getPath3axis(context,operation):
 			
 		if ((o.strategy=='PARALLEL' or o.strategy=='CROSS') or o.strategy=='PENCIL'):# and not o.parallel_step_back:
 			chunks=sortChunks(chunks,o)
+		if o.ramp:
+			for ch in chunks:
+				nchunk = ch.rampZigZag(ch.zstart, ch.points[0][2],o)
+				ch.points=nchunk.points
 		#print(chunks)
 		if o.strategy=='CARVE':
 			for ch in chunks:

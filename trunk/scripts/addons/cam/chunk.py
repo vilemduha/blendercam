@@ -23,6 +23,8 @@ class camPathChunk:
 		#self.unsortedchildren=False
 		self.sorted=False#if the chunk has allready been milled in the simulation
 		self.length=0;#this is total length of this chunk.
+		self.zstart=0# this is stored for ramps mainly, because they are added afterwards, but have to use layer info
+		self.zend=0#
 	
 	def copy(self):
 		nchunk=camPathChunk([])
@@ -228,11 +230,12 @@ class camPathChunk:
 		return chunk
 
 	def rampZigZag(self,zstart,zend,o):
+		chunk=camPathChunk([])
 		#print(zstart,zend)
 		if zend<zstart:#this check here is only for stupid setup, when the chunks lie actually above operation start z.
 			stepdown=zstart-zend
 			ch=self
-			chunk=camPathChunk([])
+			
 			estlength=(zstart-zend)/tan(o.ramp_in_angle)
 			ch.getLength()
 			ramplength=estlength
@@ -247,7 +250,7 @@ class camPathChunk:
 			else:
 				zigzagtraveled=0.0
 				haspoints=False
-				ramppoints=[(ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart))]
+				ramppoints=[(ch.points[0][0],ch.points[0][1],ch.points[0][2])]
 				i=1
 				while not haspoints:
 					p1=ramppoints[-1]
@@ -279,11 +282,11 @@ class camPathChunk:
 					traveled+=d
 					ratio=traveled/ramplength
 					znew=zstart-stepdown*ratio
-					chunk.points.append((p2[0],p2[1],max(ch.points[0][1],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
+					chunk.points.append((p2[0],p2[1],max(p2[2],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
 			
-			chunks = setChunksZ([ch],zend)
-			chunk.points.extend(chunks[0].points)		
-			return chunk
+			#chunks = setChunksZ([ch],zend)
+			chunk.points.extend(ch.points)		
+		return chunk
 #def appendChunk(sorted,ch,o,pos) 
 
 def chunksCoherency(chunks):

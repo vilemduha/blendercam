@@ -309,7 +309,7 @@ class camOperation(bpy.types.PropertyGroup):
 	use_layers = bpy.props.BoolProperty(name="Use Layers",description="Use layers for roughing", default=True, update = updateRest)
 	stepdown = bpy.props.FloatProperty(name="Step down", default=0.01, min=0.00001, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	first_down = bpy.props.BoolProperty(name="First down",description="First go down on a contour, then go to the next one", default=False, update = updateRest)
-	contour_ramp = bpy.props.BoolProperty(name="Ramp contour - EXPERIMENTAL",description="Ramps down the whole contour, so the cutline looks like helix", default=False, update = updateRest)
+	ramp = bpy.props.BoolProperty(name="Ramp in - EXPERIMENTAL",description="Ramps down the whole contour, so the cutline looks like helix", default=False, update = updateRest)
 	ramp_out = bpy.props.BoolProperty(name="Ramp out - EXPERIMENTAL",description="Ramp out to not leave mark on surface", default=False, update = updateRest)
 	ramp_in_angle = bpy.props.FloatProperty(name="Ramp in angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 	ramp_out_angle = bpy.props.FloatProperty(name="Ramp out angle", default=math.pi/6, min=0, max=math.pi*0.4999 , precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
@@ -1552,13 +1552,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.strategy=='CUTOUT':
 					layout.prop(ao,'first_down')
 					#if ao.first_down:
-					layout.prop(ao,'contour_ramp')
-					if ao.contour_ramp:
-						layout.prop(ao,'ramp_in_angle')
-						layout.prop(ao,'ramp_out')
-						if ao.ramp_out:
-							
-							layout.prop(ao,'ramp_out_angle')
+					
 				if ao.strategy=='POCKET':
 					layout.prop(ao,'helix_enter')
 					if ao.helix_enter:
@@ -1568,7 +1562,14 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 					if ao.retract_tangential:
 						layout.prop(ao,'retract_radius')
 						layout.prop(ao,'retract_height')
+				
+				layout.prop(ao,'ramp')
+				if ao.ramp:
+					layout.prop(ao,'ramp_in_angle')
+					layout.prop(ao,'ramp_out')
+					if ao.ramp_out:
 						
+						layout.prop(ao,'ramp_out_angle')
 					
 				layout.prop(ao,'stay_low')
 				layout.prop(ao,'protect_vertical')
