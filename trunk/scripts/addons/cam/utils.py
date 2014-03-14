@@ -1555,7 +1555,11 @@ def getOperationSilhouete(operation):
 		if stype == 'OBJECTS' or stype=='IMAGE':
 			print('image method')
 			samples = renderSampleImage(operation)
-			i = samples>numpy.min(operation.zbuffer_image)-0.0000001#operation.minz-0.0000001#this solves issue with totally flat meshes, which people tend to mill instead of proper pockets. then the minimum was also maximum, and it didn't detect contour.
+			if stype=='OBJECTS':
+				i = samples > operation.minz-0.0000001#numpy.min(operation.zbuffer_image)-0.0000001##the small number solves issue with totally flat meshes, which people tend to mill instead of proper pockets. then the minimum was also maximum, and it didn't detect contour.
+			else:
+				i = samples > numpy.min(operation.zbuffer_image)#this fixes another numeric imprecision.
+				
 			chunks=	imageToChunks(operation,i)
 			operation.silhouete=chunksToPolys(chunks)
 			#print(operation.silhouete)

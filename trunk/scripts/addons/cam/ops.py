@@ -71,7 +71,46 @@ class CAMPositionObject(bpy.types.Operator):
 		layout = self.layout
 		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
 
-
+@bpy.app.handlers.persistent
+def timer_update(context):
+	'''monitoring of background processes'''
+	text=''
+	s=bpy.context.scene
+	if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'cam_processes'):
+		processes=bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes
+		for p in processes:
+			#proc=p[1].proc
+			readthread=p[0]
+			tcom=p[1]
+			if not readthread.is_alive():
+				readthread.join()
+				#readthread.
+				tcom.lasttext=tcom.outtext
+				if tcom.outtext!='':
+					print(tcom.opname,tcom.outtext)
+					tcom.outtext=''
+					
+				if 'finished' in tcom.lasttext:
+					processes.remove(p)
+					
+					o=s.cam_operations[tcom.opname]
+					o.computing=False;
+					utils.reload_paths(o)
+					update_zbufferimage_tag = False
+					update_offsetimage_tag = False
+				else:
+					readthread=threading.Thread(target=threadread, args = ([tcom]), daemon=True)
+					readthread.start()
+					p[0]=readthread
+			o=s.cam_operations[tcom.opname]#changes
+			o.outtext=tcom.lasttext#changes
+			#text=text+('# %s %s #' % (tcom.opname,tcom.lasttext))#CHANGES
+	#s.cam_text=text#changes
+		
+	for area in bpy.context.screen.areas:
+		if area.type == 'PROPERTIES':
+			area.tag_redraw()
+			
 class PathsBackground(bpy.types.Operator):
 	'''calculate CAM paths in background'''
 	bl_idname = "object.calculate_cam_paths_background"

@@ -156,8 +156,8 @@ def updateZbufferImage(self,context):
 	self.changed=True
 	self.update_zbufferimage_tag=True
 	self.update_offsetimage_tag=True
-	getOperationSources(self)
-	checkMemoryLimit(self)
+	ops.getOperationSources(self)
+	ops.checkMemoryLimit(self)
 
 def updateStrategy(o,context):
 	o.changed=True
@@ -407,48 +407,6 @@ class camChain(bpy.types.PropertyGroup):#chain is just a set of operations which
 	valid = bpy.props.BoolProperty(name="Valid",description="True if whole chain is ok for calculation", default=True);
 	computing = bpy.props.BoolProperty(name="Computing right now",description="", default=False)
 	operations= bpy.props.CollectionProperty(type=opReference)#this is to hold just operation names.
-
-   
-
-@bpy.app.handlers.persistent
-def timer_update(context):
-	'''monitoring of background processes'''
-	text=''
-	s=bpy.context.scene
-	if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'cam_processes'):
-		processes=bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes
-		for p in processes:
-			#proc=p[1].proc
-			readthread=p[0]
-			tcom=p[1]
-			if not readthread.is_alive():
-				readthread.join()
-				#readthread.
-				tcom.lasttext=tcom.outtext
-				if tcom.outtext!='':
-					print(tcom.opname,tcom.outtext)
-					tcom.outtext=''
-					
-				if 'finished' in tcom.lasttext:
-					processes.remove(p)
-					
-					o=s.cam_operations[tcom.opname]
-					o.computing=False;
-					utils.reload_paths(o)
-					update_zbufferimage_tag = False
-					update_offsetimage_tag = False
-				else:
-					readthread=threading.Thread(target=threadread, args = ([tcom]), daemon=True)
-					readthread.start()
-					p[0]=readthread
-			o=s.cam_operations[tcom.opname]#changes
-			o.outtext=tcom.lasttext#changes
-			#text=text+('# %s %s #' % (tcom.opname,tcom.lasttext))#CHANGES
-	#s.cam_text=text#changes
-		
-	for area in bpy.context.screen.areas:
-		if area.type == 'PROPERTIES':
-			area.tag_redraw()
 			
 @bpy.app.handlers.persistent
 def check_operations_on_load(context):
@@ -633,7 +591,7 @@ def register():
 	s.cam_machine = bpy.props.PointerProperty(type=machineSettings)
 	
 	s.cam_text= bpy.props.StringProperty()
-	bpy.app.handlers.scene_update_pre.append(timer_update)
+	bpy.app.handlers.scene_update_pre.append(ops.timer_update)
 	bpy.app.handlers.load_post.append(check_operations_on_load)
 	#bpy.types.INFO_HT_header.append(header_info)
 	
@@ -651,7 +609,7 @@ def unregister():
 	
 	del s.cam_active_operation
 	del s.cam_machine
-	bpy.app.handlers.scene_update_pre.remove(timer_update)
+	bpy.app.handlers.scene_update_pre.remove(ops.timer_update)
 	#bpy.types.INFO_HT_header.remove(header_info)
 
 if __name__ == "__main__":
