@@ -1086,26 +1086,33 @@ def silhoueteOffset(context,offset):
 def polygonBoolean(context,boolean_type):
 	bpy.context.scene.cursor_location=(0,0,0)
 	ob=bpy.context.active_object
+	obs=[]
 	for ob1 in bpy.context.selected_objects:
 		if ob1!=ob:
-			break;
+			obs.append(ob1)
 	plist=curveToPolys(ob)
 	p1=Polygon.Polygon()
-	for p in plist:
-		p1+=p
-	plist=curveToPolys(ob1)
-	p2=Polygon.Polygon()
-	for p in plist:
-		p2+=p
+	for pt in plist:
+		p1+=pt
+	polys=[]
+	for o in obs:
+		plist=curveToPolys(o)
+		p2=Polygon.Polygon()
+		for p in plist:
+			p2+=p
+		polys.append(p2)
+	print(polys)
 	if boolean_type=='UNION':
-		
-		p=p1+p2
+		for p2 in polys:
+			p1=p1+p2
 	elif boolean_type=='DIFFERENCE':
-		p=p1-p2
+		for p2 in polys:
+			p1=p1-p2
 	elif boolean_type=='INTERSECT':
-		p = p1 & p2
+		for p2 in polys:
+			p1=p1 & p2
 		
-	polyToMesh(p,0)
+	polyToMesh(p1,0)
 	bpy.ops.object.convert(target='CURVE')
 	bpy.context.scene.cursor_location=ob.location
 	bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
@@ -1532,6 +1539,9 @@ def cutloops(csource,parentloop,loops):
 		cutloops(csource,l,loops)
 
 def getOperationSilhouete(operation):
+	'''gets silhouete for the operation
+		uses image thresholding for everything except curves.
+	'''
 	if operation.update_silhouete_tag:
 		image=None
 		objects=None
@@ -1544,11 +1554,12 @@ def getOperationSilhouete(operation):
 			stype='IMAGE'
 		if stype == 'OBJECTS' or stype=='IMAGE':
 			print('image method')
-			renderSampleImage(operation)
-			samples = operation.zbuffer_image
-			i=samples>operation.minz-0.0000001#this was issue with totally flat meshes
-			chunks=imageToChunks(operation,i)
-			operation.silhouete=chunksToPolys(chunks)#this conversion happens because we need the silh to be oriented, for milling directions.
+			samples = renderSampleImage(operation)
+			i = samples>numpy.min(operation.zbuffer_image)-0.0000001#operation.minz-0.0000001#this solves issue with totally flat meshes, which people tend to mill instead of proper pockets. then the minimum was also maximum, and it didn't detect contour.
+			chunks=	imageToChunks(operation,i)
+			operation.silhouete=chunksToPolys(chunks)
+			#print(operation.silhouete)
+			#this conversion happens because we need the silh to be oriented, for milling directions.
 		else:
 			print('object method')
 			operation.silhouete=getObjectSilhouete(stype, objects=operation.objects)
@@ -2353,7 +2364,7 @@ def getPath3axis(context,operation):
 			for ch in chunksFromCurve:
 				ch.points.reverse()
 				
-		chunks=[]
+		
 		if o.use_layers:
 			layers=[]
 			n=math.ceil((o.maxz-o.min.z)/o.stepdown)
@@ -2381,8 +2392,8 @@ def getPath3axis(context,operation):
 			layer=chl[1]
 			chunk.setZ(layer[1])
 		
-		
-		if o.ramp:#add ramps
+		chunks=[]
+		if o.ramp:#add ramps or simply add chunks
 			for chl in extendorder:
 				chunk=chl[0]
 				layer=chl[1]
@@ -2390,7 +2401,9 @@ def getPath3axis(context,operation):
 					chunks.append(chunk.rampContour(layer[0],layer[1],o))
 				else:
 					chunks.append(chunk.rampZigZag(layer[0],layer[1],o))
-			
+		else:
+			for chl in extendorder:
+				chunks.append(chl[0])
 						
 		if o.use_bridges:
 			for ch in chunks:
