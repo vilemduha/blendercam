@@ -1287,10 +1287,16 @@ def renderSampleImage(o):
 		
 	else:
 		i=bpy.data.images[o.source_image_name]
-		sx=int(i.size[0]*o.source_image_crop_start_x/100.0)
-		ex=int(i.size[0]*o.source_image_crop_end_x/100.0)
-		sy=int(i.size[1]*o.source_image_crop_start_y/100.0)
-		ey=int(i.size[1]*o.source_image_crop_end_y/100.0)
+		if o.source_image_crop:
+			sx=int(i.size[0]*o.source_image_crop_start_x/100.0)
+			ex=int(i.size[0]*o.source_image_crop_end_x/100.0)
+			sy=int(i.size[1]*o.source_image_crop_start_y/100.0)
+			ey=int(i.size[1]*o.source_image_crop_end_y/100.0)
+		else:
+			sx=0
+			ex=i.size[0]
+			sy=0
+			ey=i.size[1]
 		o.offset_image.resize(ex-sx+2*o.borderwidth,ey-sy+2*o.borderwidth)
 		
 		
