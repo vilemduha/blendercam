@@ -25,7 +25,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = " "
 	bl_idname = "WORLD_PT_CAM_CUTTER"
 		
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	def draw_header(self, context):
 	   self.layout.menu("CAM_CUTTER_presets", text="CAM Cutter")
@@ -58,7 +58,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = " "
 	bl_idname = "WORLD_PT_CAM_MACHINE"
 		
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	def draw_header(self, context):
 	   self.layout.menu("CAM_MACHINE_presets", text="CAM Machine")
@@ -100,7 +100,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = "CAM Material size and position"
 	bl_idname = "WORLD_PT_CAM_MATERIAL"
 		
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	def draw(self, context):
 		layout = self.layout
@@ -160,7 +160,7 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = "CAM chains"
 	bl_idname = "WORLD_PT_CAM_CHAINS"
 		
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	
 
@@ -214,7 +214,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_idname = "WORLD_PT_CAM_OPERATIONS"
 	
 	
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	
 
@@ -275,7 +275,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = "CAM info & warnings"
 	bl_idname = "WORLD_PT_CAM_INFO"	  
 	
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	def draw(self, context):
 		layout = self.layout
@@ -305,7 +305,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_idname = "WORLD_PT_CAM_OPERATION"
 	
 	
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	
 
@@ -397,7 +397,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = "CAM movement"
 	bl_idname = "WORLD_PT_CAM_MOVEMENT"	  
 	
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	def draw(self, context):
 		layout = self.layout
@@ -447,7 +447,7 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = "CAM feedrate"
 	bl_idname = "WORLD_PT_CAM_FEEDRATE"	  
 	
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	def draw(self, context):
 		layout = self.layout
@@ -468,7 +468,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = "CAM optimisation"
 	bl_idname = "WORLD_PT_CAM_OPTIMISATION"
 	
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	
 
@@ -511,7 +511,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = "CAM operation area "
 	bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
 	
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 
 	def draw(self, context):
@@ -567,7 +567,7 @@ class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):
 	bl_label = "Pack curves on sheet"
 	bl_idname = "WORLD_PT_CAM_PACK"
 		
-	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	COMPAT_ENGINES = {'BLENDER_CAM'}
 	
 	def draw(self, context):
 		layout = self.layout

@@ -513,7 +513,7 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 	preset_subdir = "cam_machines"
 		
 class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
-	bl_idname = 'BLENDERCAM_RENDER'
+	bl_idname = 'BLENDER_CAM'
 	bl_label = "Blender CAM"
 				
 def get_panels():#convenience function for bot register and unregister functions
@@ -576,6 +576,35 @@ def get_panels():#convenience function for bot register and unregister functions
 	
 	)
 	
+def compatible_panels():
+	'''gets panels that are for blender internal, but are compatible with blender CAM'''
+	t = bpy.types
+	return (
+	t.TEXTURE_PT_context_texture,
+	t.TEXTURE_PT_preview,
+	t.TEXTURE_PT_colors,
+	t.TEXTURE_PT_clouds,
+	t.TEXTURE_PT_wood,
+	t.TEXTURE_PT_marble,
+	t.TEXTURE_PT_magic,
+	t.TEXTURE_PT_blend,
+	t.TEXTURE_PT_stucci,
+	t.TEXTURE_PT_image,
+	t.TEXTURE_PT_image_sampling,
+	t.TEXTURE_PT_image_mapping,
+	t.TEXTURE_PT_envmap,
+	t.TEXTURE_PT_envmap_sampling,
+	t.TEXTURE_PT_musgrave,
+	t.TEXTURE_PT_voronoi,
+	t.TEXTURE_PT_distortednoise,
+	t.TEXTURE_PT_voxeldata,
+	t.TEXTURE_PT_pointdensity,
+	t.TEXTURE_PT_pointdensity_turbulence,
+	t.TEXTURE_PT_ocean,
+	t.TEXTURE_PT_mapping,
+	t.TEXTURE_PT_influence,
+	t.TEXTURE_PT_custom_props
+	)
 def register():
 	for p in get_panels():
 		bpy.utils.register_class(p)
@@ -597,6 +626,9 @@ def register():
 	
 	s.cam_pack = bpy.props.PointerProperty(type=PackObjectsSettings)
 	
+	#add compatibility to standard blender panels
+	for p in compatible_panels():
+		p.COMPAT_ENGINES.add('BLENDER_CAM')
 
 def unregister():
 	for p in get_panels():
