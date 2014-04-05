@@ -603,7 +603,34 @@ def compatible_panels():
 	t.TEXTURE_PT_ocean,
 	t.TEXTURE_PT_mapping,
 	t.TEXTURE_PT_influence,
-	t.TEXTURE_PT_custom_props
+	t.TEXTURE_PT_custom_props,
+	
+	#scene
+	t.SCENE_PT_scene,
+	t.SCENE_PT_unit,
+	#t.SCENE_PT_keying_sets,
+	#t.SCENE_PT_keying_set_paths,
+	#t.SCENE_PT_color_management,
+	#t.SCENE_PT_audio,
+	t.SCENE_PT_physics,
+	t.SCENE_PT_rigid_body_world,
+	t.SCENE_PT_rigid_body_cache,
+	t.SCENE_PT_rigid_body_field_weights,
+	t.SCENE_PT_simplify,
+	t.SCENE_PT_custom_props,
+	
+	#world
+	t.WORLD_PT_context_world,
+	t.WORLD_PT_preview,
+	t.WORLD_PT_world,
+	#t.WORLD_PT_ambient_occlusion,
+	#t.WORLD_PT_environment_lighting,
+	#t.WORLD_PT_indirect_lighting,
+	#t.WORLD_PT_gather,
+	#t.WORLD_PT_mist,
+	#t.WORLD_PT_stars,
+	t.WORLD_PT_custom_props
+	
 	)
 def register():
 	for p in get_panels():
