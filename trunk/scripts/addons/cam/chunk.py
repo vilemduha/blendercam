@@ -195,11 +195,12 @@ class camPathChunk:
 			while i!=endpoint or not started:
 				started=True
 				s=ch.points[i]
-				chunk.points.append((s[0],s[1],zend))
+				chunk.points.append((s[0],s[1],s[2]))
 				#print(i,endpoint)
 				i+=1
 				if i==len(ch.points):
 					i=0
+			'''
 			if o.ramp_out:
 				z=zend
 				i=endpoint
@@ -225,7 +226,7 @@ class camPathChunk:
 					z=znew
 					i+=1
 					
-					
+			'''	
 		
 		return chunk
 
@@ -233,6 +234,7 @@ class camPathChunk:
 		chunk=camPathChunk([])
 		#print(zstart,zend)
 		if zend<zstart:#this check here is only for stupid setup, when the chunks lie actually above operation start z.
+			
 			stepdown=zstart-zend
 			ch=self
 			
@@ -241,6 +243,7 @@ class camPathChunk:
 			ramplength=estlength
 			zigzaglength=ramplength/2.000
 			turns=1
+			print('turns %i' % turns)
 			if zigzaglength>ch.length:
 				turns = ceil(zigzaglength/ch.length)
 				ramplength=turns*ch.length*2.0
@@ -253,25 +256,30 @@ class camPathChunk:
 				ramppoints=[(ch.points[0][0],ch.points[0][1],ch.points[0][2])]
 				i=1
 				while not haspoints:
+					print(i,zigzaglength,zigzagtraveled)
 					p1=ramppoints[-1]
 					p2=ch.points[i]
 					d=dist2d(p1,p2)
 					zigzagtraveled+=d
-					if zigzagtraveled>=zigzaglength:
+					if zigzagtraveled>=zigzaglength or i+1==len(ch.points):
 						ratio = 1-(zigzagtraveled-zigzaglength)/d
+						if (i+1==len(ch.points)):#this condition is for a rare case of combined layers+bridges+ramps...
+							ratio=1
 						#print((ratio,zigzaglength))
 						v1=Vector(p1)
 						v2=Vector(p2)
 						v=v1+ratio*(v2-v1)
 						ramppoints.append((v.x,v.y,v.z))
 						haspoints=True
+					#elif :
+						
 					else:
 						ramppoints.append(p2)
 					i+=1
 			negramppoints=ramppoints.copy()
 			negramppoints.reverse()
 			ramppoints.extend(negramppoints[1:])
-			print('turns %i' % turns)
+			
 			traveled=0.0
 			chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
 			for r in range(turns):

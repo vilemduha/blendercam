@@ -372,7 +372,7 @@ class camOperation(bpy.types.PropertyGroup):
 	offset_image=numpy.array([],dtype=float)
 	zbuffer_image=numpy.array([],dtype=float)
 	
-	silhouete=Polygon.Polygon()
+	silhouete= Polygon.Polygon()
 	ambient = Polygon.Polygon()
 	operation_limit=Polygon.Polygon()
 	borderwidth=50
