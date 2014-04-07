@@ -262,6 +262,9 @@ def draw_callback_px_box(self, context):
 def draw_callback_px(self, context):
 	draw_callback_px_box(self, context)
 
+def addLine(text,line):
+	text+=line+'\n'
+	
 def tweakCuraPreferences(enginepath,printer):
 	filepath=enginepath+'\\Cura\preferences.ini'
 	
@@ -275,7 +278,7 @@ def tweakCuraPreferences(enginepath,printer):
 			
 	f=open(filepath,'r')
 	text=f.read()
-	
+	f.close()
 	machineblocks=[]
 	machinesnum=0
 	found=0
@@ -284,36 +287,42 @@ def tweakCuraPreferences(enginepath,printer):
 		if found>-1:
 			machineblocks.append(found)
 			machinesnum+=1
-	print(machinesnum)
+	#print(machinesnum)
 	
 	idx=text.find(printer)
 	printerindex=0
 	
 	if idx==-1:
-		print('Selected printer not in Cura settings, adding it')
-		print(presetfilepath)
+		#print('Selected printer not in Cura settings, adding it')
+		#print(presetfilepath)
 		printerindex=machinesnum
 		pf=open(presetfilepath,'r')
 		printerpreset = pf.read()
-		print(printerpreset)
+		#print(printerpreset)
 		pf.close()
 		text+=('\n\n[machine_%i]\n' % (machinesnum))
 		text+=printerpreset
-		print(text)
-		f.close()
-		f=open(filepath,'w')
-		#f.seek(0)
-		# clear file content 
-		#f.truncate()
-		f.write(text)
-		f.close()
+		#print(text)
 	else:
-		for m in machineblocks:
+		for i,m in enumerate(machineblocks):
 			if m<idx<m+40:
-				printerindex=m
+				printerindex=i
 				break;
-	
-		f.close()
+	#set active machine to the printerindex
+	lines=text.split('\n')
+	#print(lines)
+	for i,l in enumerate(lines):
+		prop=l.split(' = ')
+		tweakprops={'active_machine':printerindex}
+		if tweakprops.get(prop[0])!=None:
+			lines[i]='%s = %s' %( prop[0],str(tweakprops[prop[0]]))
+	text=''
+	for l in lines:
+		addLine(text,l)
+		
+	f=open(filepath,'w')
+	f.write(text)
+	f.close()
 	return printerindex
 	
 class Print3d(bpy.types.Operator):
