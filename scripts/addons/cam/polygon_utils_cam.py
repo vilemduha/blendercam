@@ -22,6 +22,25 @@ def nRect(l,r):
 	s=((-l/2.0,-r/10.0),(l/2.0,-r/10.0),(l/2.0,r),(-l/2,r))
 	r= Polygon.Polygon(s)
 	return r
+
+def getLength(p,i=None):#i is contour index
+	if i==None:
+		contours=p
+	else:
+		contours=[p[i]]
+	length=0.0
+	for c in contours:
+		for vi,v1 in enumerate(c):
+			#print(len(self.points),vi)
+			v2=Vector(v1)#this is for case of last point and not closed chunk..
+			if vi==len(c)-1:
+				v2=Vector(c[0])
+			else:
+				v2=Vector(c[vi+1])
+			v1=Vector(v1)
+			v=v2-v1
+			length+=v.length
+	return length
 	
 def polyRemoveDoubles(p,optimize_threshold):
 	
