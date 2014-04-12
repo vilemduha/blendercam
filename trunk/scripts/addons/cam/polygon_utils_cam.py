@@ -5,7 +5,56 @@ from mathutils import *
 import curve_simplify
 
 import Polygon
+try:
+	from shapely.geometry import polygon as spolygon
+	from shapely import ops
+	from shapely import geometry
+	SHAPELY=True
+except:
+	SHAPELY=False
+	
 
+def Polygon2Shapely(p):
+	conts=[]
+	sp=geometry.Polygon()
+	#for ci,c in enumerate(p):
+	#	l=geometry.Polygon(c)
+	#	conts.append(l)
+	holes=[]
+	contours=[]
+	for ci,c in enumerate(p):
+		if p.isHole(ci):
+			print('ishole')
+			holes.append(c)
+		else:
+			contours.append(c)
+			
+	for c in contours:
+		sp=sp.union(spolygon.Polygon(c))
+	for h in holes:
+		sp=sp.difference(spolygon.Polygon(h))
+		
+	#sp=geometry.asMultiPolygon(conts)
+	#sp=ops.cascaded_union(sp)
+	return sp
+	
+def Shapely2Polygon(sp):
+	gt=sp.geometryType()
+	p=Polygon.Polygon()
+	if gt=='Polygon':
+		if sp.exterior!=None:
+			p.addContour(sp.exterior.coords,False)
+			for sc in sp.interiors:
+				p.addContour(sc.coords,True)
+	else:
+		p=Polygon.Polygon()
+		for spsub in sp:
+			p.addContour(spsub.exterior.coords,False)
+			for sc in spsub.interiors:
+				p.addContour(sc.coords,True)
+		
+	return p
+	
 def Circle(r,np):
 	c=[]
 	pi=math.pi  
@@ -67,6 +116,7 @@ def polyRemoveDoubles(p,optimize_threshold):
 	#progress(time.time()-t)
 	return pnew
 	
+
 	
 def outlinePoly(p,r,circle_detail,optimize,optimize_threshold,offset = True):
 	'''offsets or insets polygon by radius'''
@@ -77,63 +127,86 @@ def outlinePoly(p,r,circle_detail,optimize,optimize_threshold,offset = True):
 	#p.simplify()
 	#print(p)
 	if p.nPoints()>2:
-		ci=0
-		pr=Polygon.Polygon()
-		
-		pr = Polygon.Polygon(p)#try a copy instead pr+p#TODO fix this. this probably ruins depth in outlines! should add contours instead, or do a copy
-		
-		circle=Circle(r,circle_detail)
-		polygons=[]
-		for c in p:
-			if len(c)>2:
+		if SHAPELY:
+			sp=Polygon2Shapely(p)
+			if not offset:
+				r=-r
+			sp=sp.buffer(r)
+			pr=Shapely2Polygon(sp)
+			'''
+			sp=spolygon.Polygon()
+			for ci,c in enumerate(p):
 				hole=p.isHole(ci)
-				orientation=p.orientation(ci)
-				vi=0
-				clen=p.nPoints(ci)
-				for v in c:
-					v1=mathutils.Vector(v)
-					
-					if vi>0:
-						v2=mathutils.Vector(c[vi-1])
-					else:
-						v2=mathutils.Vector(c[-1])
-					if vi<clen-1:
-						v3=mathutils.Vector(c[vi+1])
-					else:
-						v3= mathutils.Vector(c[0]) 
-					
-					
-					vect=v1-v2
-					fo=v1+(v2-v1)/2.0
-					rect=nRect(vect.length,r)
-					rr=0.0
-					if not offset:
-						rr=math.pi
-					
-					if (orientation==-1 and hole) or (orientation==1 and not hole):
-						rr+=math.pi
-					
+				nsp=Polygon2Shapely(Polygon.Polygon(c))
+				if not offset:
+					r=-r
+				if hole:
+					r=-r
+				nsp=nsp.buffer(r)	
+				if hole:
+					sp=sp.difference(nsp)
+				else:
+					sp=sp.union(nsp)
+			pr=Shapely2Polygon(sp)
+			'''	
+		else:
+			ci=0
+			pr=Polygon.Polygon()
+			
+			pr = Polygon.Polygon(p)#try a copy instead pr+p#TODO fix this. this probably ruins depth in outlines! should add contours instead, or do a copy
+			
+			circle=Circle(r,circle_detail)
+			polygons=[]
+			for c in p:
+				if len(c)>2:
+					hole=p.isHole(ci)
+					orientation=p.orientation(ci)
+					vi=0
+					clen=p.nPoints(ci)
+					for v in c:
+						v1=mathutils.Vector(v)
 						
-					if vect.length>0:
-						rect.rotate(vect.angle_signed(vref)+rr,0.0,0.0)
-					rect.shift(fo[0],fo[1])
-					
-					# this merges the rect with 1 circle and is actually faster... probably because it reduces the circle.
-					#TODO: implement proper arcs here, to save computation time , and avoid tiny bugs.. 
-					circle.shift(v[0],v[1])
-					shape=rect+circle
-					circle.shift(-v[0],-v[1])
-					if offset:
-						pr=pr+shape
-					else:
-						pr=pr-shape
-					
-					
-					vi+=1
-			ci+=1
-		
-		#pr.simplify()
-		#Polygon.setTolerance(e)
+						if vi>0:
+							v2=mathutils.Vector(c[vi-1])
+						else:
+							v2=mathutils.Vector(c[-1])
+						if vi<clen-1:
+							v3=mathutils.Vector(c[vi+1])
+						else:
+							v3= mathutils.Vector(c[0]) 
+						
+						
+						vect=v1-v2
+						fo=v1+(v2-v1)/2.0
+						rect=nRect(vect.length,r)
+						rr=0.0
+						if not offset:
+							rr=math.pi
+						
+						if (orientation==-1 and hole) or (orientation==1 and not hole):
+							rr+=math.pi
+						
+							
+						if vect.length>0:
+							rect.rotate(vect.angle_signed(vref)+rr,0.0,0.0)
+						rect.shift(fo[0],fo[1])
+						
+						# this merges the rect with 1 circle and is actually faster... probably because it reduces the circle.
+						#TODO: implement proper arcs here, to save computation time , and avoid tiny bugs.. 
+						circle.shift(v[0],v[1])
+						shape=rect+circle
+						circle.shift(-v[0],-v[1])
+						if offset:
+							pr=pr+shape
+						else:
+							pr=pr-shape
+						
+						
+						vi+=1
+				ci+=1
+			
+			#pr.simplify()
+			#Polygon.setTolerance(e)
 		
 		if pr.nPoints()>2:
 			
