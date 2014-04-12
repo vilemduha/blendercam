@@ -53,6 +53,14 @@ from cam.polygon_utils_cam import *
 from cam import image_utils
 from cam.image_utils import *
 
+try:
+	from shapely.geometry import polygon as spolygon
+	from shapely import ops as sops
+	from shapely import geometry as sgeometry
+	SHAPELY=True
+except:
+	SHAPELY=False
+	
 def positionObject(operation):
 	ob=bpy.data.objects[operation.object_name]
 	minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace([ob]) 
@@ -1582,7 +1590,47 @@ def getObjectSilhouete(stype, objects=None):
 		silhouete=chunksToPolys(allchunks)
 		
 	elif stype=='OBJECTS':
-		if bpy.app.debug_value==0:#bpy.app.debug_value==0:#raster based method - currently only stable one.
+		totfaces=0
+		for ob in objects:
+			totfaces+=len(ob.data.polygons)
+			
+		if totfaces<20000:#boolean polygons method
+			t=time.time()
+			print('shapely getting silhouette')
+			polys=[]
+			for ob in objects:
+				
+				m=ob.data
+				m.calc_tessface()
+				id=0
+				e=0.000001
+				scaleup=100
+				for f in m.tessfaces:
+					if f.normal.z>0 and f.area>0.0 :
+						s=[]
+						c=f.center.xy
+						for i in f.vertices:
+							v=m.vertices[i].co
+							x=v.x
+							y=v.y
+							x=x+(x-c.x)*e
+							y=y+(y-c.y)*e
+							s.append((x,y))
+						if len(v)>2:
+							p=spolygon.Polygon(s)
+							#print(dir(p))
+							polys.append(p)
+						#if id==923:
+						#	m.polygons[923].select
+						id+=1	
+			#print(polys)
+			p=spolygon.Polygon()
+			p=sops.unary_union(polys)
+			print(time.time()-t)
+			
+			t=time.time()
+			silhouete = [polygon_utils_cam.Shapely2Polygon(p)]
+			'''
 			e=0.00001#one hunderth of a millimeter, should be ok.
 			origtol=Polygon.getTolerance()
 			print(origtol)
@@ -1609,10 +1657,7 @@ def getObjectSilhouete(stype, objects=None):
 				silh+=p
 				
 			#clean 0 area parts of the silhouete
-			remove=[]
-			for i in range(len(silh)-1,-1,-1):
-				if silh.area(i)<0.000001:
-					remove.append(i)
+			
 				
 			nsilh=Polygon.Polygon()
 			for i in range(0,len(silh)):
@@ -1623,523 +1668,7 @@ def getObjectSilhouete(stype, objects=None):
 			silh.shift(ob.location.x,ob.location.y)
 			silhouete=[silh]
 			Polygon.setTolerance(origtol)
-			
-		elif bpy.app.debug_value==1:#own method with intersections...
-			print('method2')
-			#first, duplicate the object, so we can split it:
-			ob=objects[0]
-			activate(ob)
-			bpy.ops.object.duplicate()
-			#remove doubles, then split the object in parts
-			bpy.ops.object.editmode_toggle()
-			bpy.ops.mesh.remove_doubles(threshold=0.000001, use_unselected=False)
-			bpy.ops.mesh.separate(type='LOOSE')
-			bpy.ops.object.editmode_toggle()
-			obs=bpy.context.selected_objects
-			spoly=Polygon.Polygon()
-			spolys=[]
-			for ob in obs:
-				progress('silh edge candidates detection')
-				t=time.time()
-				m=ob.data
-					
-					
-				m=ob.data
-				d={}
-				for e in m.edge_keys:
-					d[e]=[]
-				for f in m.polygons:
-					for ek in f.edge_keys:
-						if f.normal.z>0:
-							d[ek].append(f)
-				silh_candidates=[]
-				
-				#spoly=Polygon.Polygon()
-				for e in m.edge_keys:
-					
-					if len(d[e])==1:
-						v1=m.vertices[e[0]].co
-						v2=m.vertices[e[1]].co
-						silh_candidates.append((v2.to_tuple(),v1.to_tuple()))
-						
-				print(time.time()-t)
-				t=time.time()
-				
-				
-								
-				ndict={}# build a dictionary
-				r=10000000
-				startpoint=None
-				minx=100000000
-				for e in silh_candidates:
-					v1=(int(e[0][0]*r)/r,int(e[0][1]*r)/r,int(e[0][2]*r)/r)# slight rounding to avoid floating point imprecissions.
-					v2=(int(e[1][0]*r)/r,int(e[1][1]*r)/r,int(e[1][2]*r)/r)
-					if v1[0]<minx:
-						startpoint=v1
-						minx=v1[0]
-					if v2[0]<minx:
-						startpoint=v2
-						minx=v2[0]
-					ndict[v1]=[]
-					ndict[v2]=[]
-
-				for e in silh_candidates:# sort intersected edges:
-					v1=(int(e[0][0]*r)/r,int(e[0][1]*r)/r,int(e[0][2]*r)/r)
-					v2=(int(e[1][0]*r)/r,int(e[1][1]*r)/r,int(e[1][2]*r)/r)
-					#if v2 not in ndict[v1]:
-					ndict[v1].append(v2)
-					#if v1 not in ndict[v2]:
-					ndict[v2].append(v1)
-					
-				chunks=[]   
-					
-				first=list(ndict.keys())[0]
-				ch=[first,ndict[first][0]]#first and his reference
-				print(first)
-				ndict[first].remove(ndict[first][0])
-				#lastv=(startpoint,first[0])
-				i=0
-				#ndict.pop(ch[0])
-				
-				while len(ndict)>0 and i<200000:# and verts!=[]:
-					done=False
-					
-					verts=ndict.get(ch[-1],[])
-					if len(verts)<1:
-						print('unconnected point')
-						
-						if len(ch)>2:
-							chunks.append(ch)
-						print(verts)
-						#ndict.pop(ch[-1])
-						#v2=[]
-						#while v2=[]:
-						v1=list(ndict.keys())[0]
-						if len(ndict[v1])>0:
-							v2=ndict[v1][0]
-							
-							ch=[v1,v2]#first and his reference
-							ndict[v1].remove(v2)
-						else:
-							ndict.pop(v1)
-				
-					else:
-						done=False
-						for v in verts:
-							if not done:
-								if v[0]==ch[-2][0] and v[1]==ch[-2][1]:# and v[2]==ch[-2][2]:
-									pass
-								else:
-									verts.remove(v)
-									ch.append(v)
-									#ndict[v].remove(ndict[ch[-2]])
-									if len(ndict[ch[-2]])<=1:
-										ndict.pop(ch[-2])
-									#else:
-									#   ndict[ch[-2]].remove(ch[-1])
-									done=True
-									if v[0]==ch[0][0] and v[1]==ch[0][1]:# and v[2]==ch[0][2]:
-										if len(ndict[v])==1:
-											ndict.pop(ch[-1])
-											ch.pop(-1)
-											chunks.append(ch)
-											if len(ndict)>0:
-												v1=list(ndict.keys())[0]
-												v2=ndict[v1][0]
-												
-												ch=[v1,v2]#first and his reference
-												ndict[v1].remove(v2)
-												
-												
-												
-												
-					
-					i+=1
-					#print(i,verts,len(ndict))
-					#if not done and len(ndict)>0:
-					#   print('weird things happen')
-					#   v1=ndict.popitem()
-					#   ch=[v1[0],v1[1][0]] 
-					#print(i,len(ndict))
-				#if len(ch)>2:
-				#   chunks.append(ch)   
-				
-				print(time.time()-t)
-				loc=ob.location.to_2d()
-				cchunks=[]
-				
-				polygons=[]
-				for ch in chunks:
-					nch=[]
-					for v in ch:
-						nch.append((v[0],v[1]))
-					if len(nch)>2:
-						poly=Polygon.Polygon(nch)
-						polygons.append(poly)
-						
-				
-				polygons=sorted(polygons, key = getArea)
-
-				v1=Vector((0,0,10))
-				v2=Vector((0,0,-10))	
-				#obpoly=Polygon.Polygon()
-				
-				chunks=[]
-				print('basic polys found')
-				print(len(polygons))
-				for p in polygons:
-					np=Polygon.Polygon()
-					np+=p#.simplify()
-					#np.simplify()
-					
-					
-					chops=[]	
-					
-					looplevel=0
-					remove=[]
-					print('contours',len(np))
-					for c in np:
-						intersections=0
-						mainloop=[0,len(c),[]]
-						i1=0
-						for point1 in c:		
-							i2=0
-							for point2 in c:
-								if i1<i2 and point1==point2:# and not(i1==i2 and c1i==c2i):
-									intersections+=1
-									print (i1,i2)
-									addLoop(mainloop,i1,i2)
-									
-								i2+=1
-							i1+=1
-						
-						loops=[]
-						#print(mainloop)
-						cutloops(c,mainloop,loops)
-						#print(loops)
-						#print(len(loops))
-						
-						print('intersections')
-						print(intersections)
-				
-						for l in loops:
-							ch=camPathChunk(l)
-							
-							chunks.append(ch)
-					
-				polysort=chunksToPolys(chunks)
-				polys=[]
-				print('found polygons')
-				
-				for p in polysort:##################check for non-hole loops
-					cont=list(range(len(p)-1,-1,-1))
-					for ci in range(0,len(p)):
-						
-						if p.isHole(ci):
-							np=Polygon.Polygon(p[ci])
-							
-							ishole=True
-							
-							for a in range(0,30):# checks if this really isnt a hole..
-								sample=Vector(np.sample(random.random)).to_3d()
-								r=ob.ray_cast(v1+sample,v2+sample)
-			
-				
-								if not(r==(Vector((0.0, 0.0, 0.0)), Vector((0.0, 0.0, 0.0)), -1)):
-										ishole=False
-							if ishole==False:
-								cont.remove(ci)
-					newp=Polygon.Polygon()
-					for ci in cont:
-						newp.addContour(p[ci])
-					polys.append(newp)
-				
-								
-				#print(polysort)
-				spolys.extend(polys)	
-				print('extended by',len(polysort))
-				#for poly in polysort:
-				#   spoly+=poly
-				bpy.context.scene.objects.unlink(ob)
-				'''
-				
-				'''
-					#spoly.addContour(c)
-				''' 
-				for ch in chunks:
-					print(ch)
-					nchunk=camPathChunk([])
-					for v in ch:
-						nchunk.points.append((v[0]+loc.x,v[1]+loc.y,0))
-					cchunks.append(nchunk)
-				'''
-				#chunksToMesh(cchunks,operation)
-			for spoly in spolys:
-				spoly.shift(ob.location.x,ob.location.y)
-			silhouete=spolys
-		
-		elif bpy.app.debug_value==2: # own method - with intersections.
-			print('method3')
-			print('silh edge candidates detection')
-			t=time.time()
-			m=ob.data
-				
-				
-			m=ob.data
-			d={}
-			for e in m.edge_keys:
-				d[e]=[]
-			for f in m.polygons:
-				for ek in f.edge_keys:
-					if f.normal.z>0:
-						d[ek].append(f)
-			silh_candidates=[]
-			edge_dict={}
-			#spoly=Polygon.Polygon()
-			for e in m.edge_keys:
-				
-				if len(d[e])==1:
-					v1=m.vertices[e[0]].co
-					v2=m.vertices[e[1]].co
-					#silh_candidates.append([v1.to_2d(),v2.to_2d()])
-												
-					edge_dict[(v2.to_2d().to_tuple(),v1.to_2d().to_tuple())]=True
-					
-					#tup=(v1.to_2d().to_tuple(),v2.to_2d().to_tuple())
-					#print(edge_dict.get(tup))
-					#if edge_dict.get(tup)==1:
-						
-						#edge_dict.pop(tup) 
-						#print('pop')   
-					#print(len(edge_dict))
-				#elif len(d[e])==2:
-					'''
-					####
-					f1=d[e][0]
-					f2=d[e][1]
-					
-						
-					if f1.normal.z>0>f2.normal.z or f1.normal.z<0<f2.normal.z or ((f1.normal.z==0 or f2.normal.z==0) and f1.normal.z!=f2.normal.z):#
-						centers=[]
-						v1=m.vertices[e[0]].co
-						v2=m.vertices[e[1]].co
-						evect=v2-v1
-						
-						for a in range(0,2):
-							f=d[e][a]
-							c=Vector((0,0,0))
-							for vi in f.vertices:
-								c+=m.vertices[vi].co
-							c=c/len(f.vertices)
-							centers.append(c)
-							#c. 
-						verts1=[].extend(f1.vertices)
-						verts2=[].extend(f2.vertices)
-						append=False
-						ori=1
-						if (centers[0].z>centers[1].z and f1.normal.z>f2.normal.z):
-							if verts1.index(e[0])>verts1.index(e[1]):
-								ori=-1
-							append=True
-						elif (centers[0].z<centers[1].z and f1.normal.z<f2.normal.z):
-							if verts2.index(e[0])>verts2.index(e[1]):
-								ori=-1
-							append=True
-						if append:
-							#if ori==1:
-							silh_candidates.append([v1.to_2d(),v2.to_2d()])
-							#   
-							#else:
-							#   silh.candidates.append([v2.to_2d(),v1.to_2d()])
-							
-							t=(v1.to_2d().to_tuple(),v2.to_2d().to_tuple())
-							if edge_dict.get(t,0)==1:
-								edge_dict.pop(t)									
-							edge_dict[(v2.to_2d().to_tuple(),v1.to_2d().to_tuple())]=1
-							print(len(edge_dict))
-					'''
-							
-			print(time.time()-t)
-			t=time.time()
-			print('silhouete intersections')
-			intersects=[]
-			silh_candidates=[]
-			print(len(edge_dict))
-			#print(edge_dict)
-			silh_candidates.extend(edge_dict.keys())
-			for si in range(0,len(silh_candidates)):
-				e=silh_candidates[si]
-				silh_candidates[si]=[Vector(e[0]),Vector(e[1])]
-			print(len(silh_candidates))
-			for e1i in range(0,len(silh_candidates)):
-				e1=silh_candidates[e1i]
-				for e2i in range(e1i+1,len(silh_candidates)):
-					e2=silh_candidates[e2i]
-					#print(e1,e2)
-					if e1[0]!=e2[0] and e1[1]!=e2[0] and e1[0]!=e2[1] and e1[1]!=e2[1]:# and (e1[0][0]<e2[0][0]<e1[1][0] or e1[0][0]<e2[1][0]<e1[1][0])and(e1[0][1]<e2[0][1]<e1[1][1] or e1[0][1]<e2[1][1]<e1[1][1]):# and e1 not in toremove and e2 not in toremove:
-						intersect=mathutils.geometry.intersect_line_line_2d(e1[0],e1[1],e2[0],e2[1])
-						if intersect!=None:
-							if intersect!=e1 and intersect!=e2:
-								e1.append(intersect)
-								e2.append(intersect)
-							
-			ndict={}# build a dictionary
-			r=10000000
-			startpoint=None
-			minx=100000000
-			for e in silh_candidates:
-				#i=0
-				for v in e:
-					#e[i]=v.to_tuple()
-					
-					v1=(int(v.x*r)/r,int(v.y*r)/r)# slight rounding to avoid floating point imprecissions.
-					if v1[0]<minx:
-						startpoint=v1
-						minx=v1[0]
-					
-					ndict[v1]=[]
-
-					#i+=1
-			#firstedge=silh_candidates[0]
-			
-			for e in silh_candidates:# sort intersected edges:
-				if len(e)>2:
-					start=e.pop(0)
-					
-					while len(e)>0:
-						end=None
-						mind=10000000000000
-						endindex=-1
-						i=0
-						for vi in range(0,len(e)):
-							v=e[vi]
-							vec=v-start
-							if vec.length==0:
-								e.remove(v)
-								vi-=1
-							elif vec.length<mind:
-								mind=vec.length
-								end=v
-								endindex=vi
-							#i+=1
-						if end!=None:
-							v1=(int(start.x*r)/r,int(start.y*r)/r)
-							v2=(int(end.x*r)/r,int(end.y*r)/r)
-							#if v2 not in ndict[v1]:
-							ndict[v1].append(v2)
-							ndict[v2].append(v1)
-							#ndict[v2].append(v1)
-							start=e.pop(endindex)
-				else:
-					v1=(int(e[0].x*r)/r,int(e[0].y*r)/r)
-					v2=(int(e[1].x*r)/r,int(e[1].y*r)/r)
-					ndict[v1].append(v2)
-					ndict[v2].append(v1)
-			
 			'''
-			
-			'''
-			'''#some preliminary export
-			edgedict={}
-			silh_candidates=[]
-			keys=[]
-			keys.extend(ndict.keys())
-			for k in keys:
-				for v in ndict[k]:
-					silh_candidates.append([k,v])
-					
-			';''
-			
-			#ndict.pop(ndict.keys[0)
-			
-			'''
-			def getMinXDict(d):
-				keys=[]
-				keys.extend(d.keys())
-				minx=100000
-				mink=None
-				for k in keys:
-					if k[0]<minx:
-						minx=k[0]
-						mink=k
-				return mink
-				
-			chunks=[]	 
-			first=ndict[startpoint]
-			print(first)
-			#left=Vector((-1,0))
-			ri=getVectorRight(((startpoint[0]-0.1,startpoint[1]),startpoint),first)
-				
-			ch=[startpoint,first[ri]]#first and his reference
-			lastv=(startpoint,first[ri])
-			i=0
-			print(lastv)
-			
-			while len(d)>0 and i<20000:# and verts!=[]:
-				verts=ndict.get(ch[-1],[])
-				if len(verts)<1:
-					if len(ch)>2:
-						chunks.append(ch)
-					
-					#v1=ndict.popitem()
-					i=20000000
-					#v=getMinXDict(ndict)
-					#ch=[v] 
-				else:
-					print(i)
-					print(len(verts))
-					print(len(d))
-					vi=getVectorRight(lastv,verts)
-					
-					v=verts[vi]
-					if v[0]==ch[-2][0] and v[1]==ch[-2][1]:# and v[2]==ch[-2][2]:
-						pass
-					else:
-						#print(v,ch[-2])
-						ch.append(v)
-						lastv=(ch[-2],ch[-1])
-						dictRemove(ndict,ch[-2])
-						#ndict.pop(ch[-2])
-						done=True
-						if v[0]==ch[0][0] and v[1]==ch[0][1]:# and v[2]==ch[0][2]:
-							chunks.append(ch)
-							dictRemove(ndict,startpoint)
-							print('closed')
-							#cleanUpDict(ndict)
-							v=getMinXDict(ndict)
-							print(v)
-							ch=[ndict[v],ndict[v][0] ]
-							#i=20000000
-				
-				i+=1
-			#spoly.simplify()
-			#polyToMesh(spoly,0) 
-			#cand
-			print('found chunks')
-			print(len(chunks))
-			
-			#silh_candidates_vect=[]
-			
-			
-			print(time.time()-t)
-			loc=ob.location.to_2d()
-			#for e in silh_candidates:
-			#   ori=0
-				#v1=Vector(e[0])+loc
-				#v2=Vector(e[1])+loc
-				
-				#silh_candidates_vect.append([Vector((v1.x,v1.y)),Vector((v2.x,v2.y,0)),ori])
-			cchunks=[]
-			for ch in chunks:
-				nchunk=camPathChunk([])
-				for v in ch:
-					nchunk.points.append((v[0],v[1],0))
-				cchunks.append(nchunk)
-			
-			#chunksToMesh(cchunks,operation)
-			#spoly.shift(ob.location.x,ob.location.y)
-			
-	
 	return silhouete
 	
 def getAmbient(o):
