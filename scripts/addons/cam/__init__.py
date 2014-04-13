@@ -54,6 +54,7 @@ PRECISION=5
 
 
 def updateMachine(self,context):
+	print('update machine ')
 	utils.addMachineAreaObject()
 
 class machineSettings(bpy.types.PropertyGroup):
@@ -135,6 +136,7 @@ def operationValid(self,context):
 #Update functions start here
 def updateChipload(self,context):
 	'''this is very simple computation of chip size, could be very much improved'''
+	print('update chipload ')
 	o=self;
 	self.changed=True
 	self.chipload = int((o.feedrate/(o.spindle_rpm*o.cutter_flutes))*1000000)/1000
@@ -142,7 +144,8 @@ def updateChipload(self,context):
 	
 def updateOffsetImage(self,context):
 	'''refresh offset image tag for rerendering'''
-	#print('update offset')
+	
+	print('update offset')
 	self.changed=True
 
 	self.update_offsetimage_tag=True
@@ -151,7 +154,7 @@ def updateOffsetImage(self,context):
 
 
 def updateZbufferImage(self,context):
-	#print('updatezbuf')
+	print('updatezbuf')
 	#print(self,context)
 	self.changed=True
 	self.update_zbufferimage_tag=True
@@ -161,7 +164,7 @@ def updateZbufferImage(self,context):
 
 def updateStrategy(o,context):
 	o.changed=True
-	#print('update strategy')
+	print('update strategy')
 	if o.axes=='5':
 		utils.addOrientationObject(o)
 	else:
@@ -174,6 +177,7 @@ def updateCutout(o,context):
 		
 	
 def updateExact(o,context):
+	print('update exact ')
 	o.changed=True
 	o.update_zbufferimage_tag=True
 	o.update_offsetimage_tag=True
@@ -181,9 +185,11 @@ def updateExact(o,context):
 		o.use_exact=False
 		
 def updateBridges(o,context):
+	print('update bridges ')
 	o.changed=True
 	utils.setupBridges(o)
 def updateRest(o,context):
+	print('update rest ')
 	o.changed=True
 
 class camOperation(bpy.types.PropertyGroup):
