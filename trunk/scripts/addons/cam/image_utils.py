@@ -1171,9 +1171,7 @@ def renderSampleImage(o):
 	t=time.time()
 	progress('getting zbuffer')
 	#print(o.zbuffer_image)
-	if not o.update_zbufferimage_tag and len(o.zbuffer_image)>0:#if we call this accidentally in more functions, which currently happens...
-		#print('has zbuffer')
-		return o.zbuffer_image
+	
 
 	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 		pixsize=o.pixsize
@@ -1184,6 +1182,9 @@ def renderSampleImage(o):
 		resx=ceil(sx/o.pixsize)+2*o.borderwidth
 		resy=ceil(sy/o.pixsize)+2*o.borderwidth
 		
+		#if not o.update_zbufferimage_tag and len(o.zbuffer_image)==resx and len(o.zbuffer_image[0])==resy :#if we call this accidentally in more functions, which currently happens...
+			#print('has zbuffer')
+			#return o.zbuffer_image
 		####setup image name
 		#fn=bpy.data.filepath
 		#iname=bpy.path.abspath(fn)
@@ -1297,6 +1298,7 @@ def renderSampleImage(o):
 			ex=i.size[0]
 			sy=0
 			ey=i.size[1]
+			
 		o.offset_image.resize(ex-sx+2*o.borderwidth,ey-sy+2*o.borderwidth)
 		
 		
@@ -1346,6 +1348,7 @@ def prepareArea(o):
 		progress('loading offset image')
 		try:
 			o.offset_image=imagetonumpy(bpy.data.images.load(iname))
+			
 		except:
 			o.update_offsetimage_tag=True;
 		
