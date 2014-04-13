@@ -356,7 +356,7 @@ class camOperation(bpy.types.PropertyGroup):
 	crazy_threshold3=bpy.props.FloatProperty(name="Crazy threshold 3", default=3.0, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
 	crazy_threshold4=bpy.props.FloatProperty(name="Crazy threshold 4", default=1.0, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
 	#calculations
-	duration = bpy.props.FloatProperty(name="Estimated time", default=0.01, min=0.0000, max=32,precision=PRECISION, unit="TIME", update = updateRest)
+	duration = bpy.props.FloatProperty(name="Estimated time", default=0.01, min=0.0000, max=32,precision=PRECISION, unit="TIME")
 	#chip_rate
 	#bridges
 	use_bridges =  bpy.props.BoolProperty(name="Use bridges",description="use bridges in cutout", default=False, update = updateBridges)
