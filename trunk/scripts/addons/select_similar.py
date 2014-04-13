@@ -1,4 +1,3 @@
-'''
 bl_info = {
     "name": "Select Similar extended",
     "author": "Vilem Novak",
@@ -9,7 +8,7 @@ bl_info = {
     "warning": "",
     "wiki_url": "",
     "category": "Add Mesh"}
- '''   
+  
 import bpy
 from bpy.props import *
 prec=0.001;
@@ -40,7 +39,7 @@ def selectSimilarObject(condition,threshold):
             for o in bpy.context.scene.objects:
                 #print (o.material_slots)
                 if len(o.material_slots)>0 and o.material_slots[0].material!=None:
-                    print (precc3(m,o.material_slots[0].material.diffuse_color,prec))
+                    #print (precc3(m,o.material_slots[0].material.diffuse_color,prec))
                     if precc3(m,o.material_slots[0].material.diffuse_color,prec):
                         o.select=1;
                
