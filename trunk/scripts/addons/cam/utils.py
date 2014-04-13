@@ -846,6 +846,7 @@ def exportGcodePath(filename,vertslist,operations):
 	#verts=[verts]
 	#operations=[o]#this is preparation for actual chain exporting
 	progress('exporting gcode file')
+	t=time.time()
 	s=bpy.context.scene
 	m=s.cam_machine
 	
@@ -863,7 +864,7 @@ def exportGcodePath(filename,vertslist,operations):
 			split=True
 			filesnum=ceil(totops/m.split_limit)
 			print('file will be separated into %i files' % filesnum)
-			
+	print('1')	
 	
 	basefilename=bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))]+safeFileName(filename)
 	
@@ -961,6 +962,7 @@ def exportGcodePath(filename,vertslist,operations):
 		o.duration=0.0
 		f=millfeedrate
 		downvector= Vector((0,0,-1))
+		print('2')
 		for vi in range(0,len(verts)):
 			v=verts[vi].co.copy()
 			if o.axes!='3':
@@ -1030,6 +1032,8 @@ def exportGcodePath(filename,vertslist,operations):
 				processedops=0
 	#print('duration')
 	#print(o.duration)
+	
+	print(time.time()-t)
 	c.program_end()
 	c.file_close()
 
