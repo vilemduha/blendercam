@@ -263,112 +263,114 @@ def sampleChunks(o,pathSamples,layers):
 			n+=1
 			x=s[0]
 			y=s[1]
-			z=minz# we'll store results into this
-			
-			sampled=False
-			
-			#higherlayer=0
-			newsample=(0,0,1);
-			
-			####sampling
-			if o.use_exact:
+			if o.ambient.isInside(x,y):
+				z=minz# we'll store results into this
 				
-				if lastsample!=None:#this is an optimalization, search only for near depths to the last sample. Saves about 30% of sampling time.
-					z=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-o.dist_along_paths)#first try to the last sample
-					if z<minz-1:
-						z=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-o.dist_along_paths, minz)
+				sampled=False
+				
+				#higherlayer=0
+				newsample=(0,0,1);
+				
+				####sampling
+				if o.use_exact:
+					
+					if lastsample!=None:#this is an optimalization, search only for near depths to the last sample. Saves about 30% of sampling time.
+						z=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-o.dist_along_paths)#first try to the last sample
+						if z<minz-1:
+							z=getSampleBullet(cutter, x,y, cutterdepth, lastsample[2]-o.dist_along_paths, minz)
+					else:
+						z=getSampleBullet(cutter, x,y, cutterdepth, 1, minz)
+					
+					#print(z)
+					#here we have 
 				else:
-					z=getSampleBullet(cutter, x,y, cutterdepth, 1, minz)
+					timingstart(samplingtime)
+					xs=(x-minx)/pixsize+o.borderwidth+pixsize/2#-m
+					ys=(y-miny)/pixsize+o.borderwidth+pixsize/2#-m
+					timingadd(samplingtime)
+					#if o.inverse:
+					#  z=layerstart
+					z=getSampleImage((xs,ys),o.offset_image,minz)+o.skin
+				#if minz>z and o.ambient.isInside(x,y):
+				#	z=minz;
+				################################
+				#handling samples
+				############################################
 				
-				#print(z)
-				#here we have 
-			else:
-				timingstart(samplingtime)
-				xs=(x-minx)/pixsize+o.borderwidth+pixsize/2#-m
-				ys=(y-miny)/pixsize+o.borderwidth+pixsize/2#-m
-				timingadd(samplingtime)
-				#if o.inverse:
-				#  z=layerstart
-				z=getSampleImage((xs,ys),o.offset_image,minz)+o.skin
-			if minz>z and o.ambient.isInside(x,y):
-				z=minz;
-			################################
-			#handling samples
-			############################################
-			if (z>=minz and (o.ambient.isInside(x,y))):
-				
+				if minz>z:
+					z=minz
 				newsample=(x,y,z)
 				#z=max(minz,z)
-				
-			#if sampled:# and (not o.inverse or (o.inverse)):uh what was this? disabled
-			#	newsample=(x,y,z)
 					
-			#elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here, this should be obsolete,
-			#	newsample=(x,y,minz)
-				
-			for i,l in enumerate(layers):
-				terminatechunk=False
-				ch=layeractivechunks[i]
-				#print(i,l)
-				#print(l[1],l[0])
-				if l[1]<=newsample[2]<=l[0]:
-					lastlayer=currentlayer
-					currentlayer=i
-					if lastlayer!=None and currentlayer!=None and lastlayer!=currentlayer:# and lastsample[2]!=newsample[2]:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
-						if currentlayer<lastlayer:
-							growing=True
-							r=range(currentlayer,lastlayer)
-							spliti=1
-						else:
-							r=range(lastlayer,currentlayer)
-							growing=False
-							spliti=0
-						#print(r)
-						li=0
-						for ls in r:
-							splitz=layers[ls][1]
-							#print(ls)
+				#if sampled:# and (not o.inverse or (o.inverse)):uh what was this? disabled
+				#	newsample=(x,y,z)
 						
-							v1=lastsample
-							v2=newsample
-							if o.protect_vertical:
-								v1,v2=isVerticalLimit(v1,v2,o.protect_vertical_limit)
-							v1=Vector(v1)
-							v2=Vector(v2)
-							#print(v1,v2)
-							ratio=(splitz-v1.z)/(v2.z-v1.z)
-							#print(ratio)
-							betweensample=v1+(v2-v1)*ratio
-							
-							#ch.points.append(betweensample.to_tuple())
-							
-							if growing:
-								if li>0:
-									layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
-								else:
-									layeractivechunks[ls].points.append(betweensample.to_tuple())
-								layeractivechunks[ls+1].points.append(betweensample.to_tuple())
+				#elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here, this should be obsolete,
+				#	newsample=(x,y,minz)
+					
+				for i,l in enumerate(layers):
+					terminatechunk=False
+					ch=layeractivechunks[i]
+					#print(i,l)
+					#print(l[1],l[0])
+					if l[1]<=newsample[2]<=l[0]:
+						lastlayer=currentlayer
+						currentlayer=i
+						if lastlayer!=None and currentlayer!=None and lastlayer!=currentlayer:# and lastsample[2]!=newsample[2]:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
+							if currentlayer<lastlayer:
+								growing=True
+								r=range(currentlayer,lastlayer)
+								spliti=1
 							else:
+								r=range(lastlayer,currentlayer)
+								growing=False
+								spliti=0
+							#print(r)
+							li=0
+							for ls in r:
+								splitz=layers[ls][1]
+								#print(ls)
+							
+								v1=lastsample
+								v2=newsample
+								if o.protect_vertical:
+									v1,v2=isVerticalLimit(v1,v2,o.protect_vertical_limit)
+								v1=Vector(v1)
+								v2=Vector(v2)
+								#print(v1,v2)
+								ratio=(splitz-v1.z)/(v2.z-v1.z)
+								#print(ratio)
+								betweensample=v1+(v2-v1)*ratio
 								
-								layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
-								layeractivechunks[ls+1].points.insert(0,betweensample.to_tuple())
-							li+=1
-							#this chunk is terminated, and allready in layerchunks /
+								#ch.points.append(betweensample.to_tuple())
 								
-						#ch.points.append(betweensample.to_tuple())#
-					ch.points.append(newsample)
-				elif l[1]>newsample[2]:
-					ch.points.append((newsample[0],newsample[1],l[1]))
-				elif l[0]<newsample[2]:  #terminate chunk
-					terminatechunk=True
+								if growing:
+									if li>0:
+										layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
+									else:
+										layeractivechunks[ls].points.append(betweensample.to_tuple())
+									layeractivechunks[ls+1].points.append(betweensample.to_tuple())
+								else:
+									
+									layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
+									layeractivechunks[ls+1].points.insert(0,betweensample.to_tuple())
+								li+=1
+								#this chunk is terminated, and allready in layerchunks /
+									
+							#ch.points.append(betweensample.to_tuple())#
+						ch.points.append(newsample)
+					elif l[1]>newsample[2]:
+						ch.points.append((newsample[0],newsample[1],l[1]))
+					elif l[0]<newsample[2]:  #terminate chunk
+						terminatechunk=True
 
-				if terminatechunk:
-					if len(ch.points)>0:
-						if len(ch.points)>0: 
-							layerchunks[i].append(ch)
-							thisrunchunks[i].append(ch)
-							layeractivechunks[i]=camPathChunk([])
-			lastsample=newsample
+					if terminatechunk:
+						if len(ch.points)>0:
+							if len(ch.points)>0: 
+								layerchunks[i].append(ch)
+								thisrunchunks[i].append(ch)
+								layeractivechunks[i]=camPathChunk([])
+				lastsample=newsample
 					
 				
 					
@@ -974,8 +976,9 @@ def exportGcodePath(filename,vertslist,operations):
 		downvector= Vector((0,0,-1))
 		print('2')
 		for vi in range(0,len(verts)):
-			v=verts[vi].co.copy()
+			v=verts[vi].co
 			if o.axes!='3':
+				v=v.copy()#we rotate it so we copy the vector
 				r=Euler((rx[vi],ry[vi],rz[vi]))
 				#conversion to N-axis coordinates
 				# this seems to work correctly
@@ -999,7 +1002,7 @@ def exportGcodePath(filename,vertslist,operations):
 			
 			#v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)
 			vect=v-last
-			plungeratio=1
+			
 			if vi>0  and vect.length>0 and downvector.angle(vect)<(pi/2-o.plunge_angle):
 				#print('plunge')
 				#print(vect)

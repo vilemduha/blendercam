@@ -373,6 +373,11 @@ def optimizeChunk(chunk,operation):
 					chunk.points[-1]=v1c
 				elif v2c!=v2:
 					chunk.points[-2]=v2c
+	#add last point
+	if spoints:
+		chunk.append(points[-1],startpoints[-1],endpoints[-1])
+	else:
+		chunk.points.append(points[-1])
 	#=True
 	'''
 	if:#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right?
