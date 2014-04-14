@@ -1311,18 +1311,27 @@ def renderSampleImage(o):
 		mina=numpy.min(rawimage)
 		a=numpy.array((1.0,1.0))
 		a.resize(2*o.borderwidth+i.size[0],2*o.borderwidth+i.size[1])
+		neg=o.source_image_scale_z<0
 		if o.strategy=='CUTOUT':#cutout strategy doesn't want to cut image border
-			a.fill(0)
-		else:#other operations want to avoid cutting anything outside image borders.
-			a.fill(o.min.z)
+			a.fill(1-neg)
+		else:#other operations want to avoid cutting anything outside image borders
+			a.fill(neg)#
 		#2*o.borderwidth
 		a[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]=rawimage
 		a=a[sx:ex+o.borderwidth*2,sy:ey+o.borderwidth*2]
 		
-		a=(a-mina)#TODO: fix this!!!!!
-		a*=o.source_image_scale_z
-		a+=o.source_image_offset.z
-		o.minz=numpy.min(a)
+		if o.source_image_scale_z<0:#negative images place themselves under the 0 plane by inverting through scale multiplication
+			a=(a-mina)#first, put the image down, se we know the image minimum is on 0
+			a*=o.source_image_scale_z
+			
+		else:#place positive images under 0 plane, this is logical
+			a=(a-mina)#first, put the image down, se we know the image minimum is on 0
+			a*o.source_image_scale_z
+			a-=maxa
+			
+		a+=o.source_image_offset.z#after that, image gets offset.
+		
+		o.minz=numpy.min(a)#TODO: I really don't know why this is here...
 		o.min.z=numpy.min(a)
 		print('min z ', o.min.z)
 		print('max z ', o.max.z)

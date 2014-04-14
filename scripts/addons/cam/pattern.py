@@ -44,6 +44,7 @@ def getPathPatternParallel(o,angle):
 		v+=vm#shifting for the rotation, so pattern rotates around middle...
 		for b in range(int(-dim/pathstep),int(dim/pathstep)):
 			v+=dirvect
+			
 			if v.x>o.min.x and v.x<o.max.x and v.y>o.min.y and v.y<o.max.y:
 				chunk.points.append((v.x,v.y,zlevel))
 		if (reverse and o.movement_type=='MEANDER') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') :
