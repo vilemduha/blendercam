@@ -130,7 +130,12 @@ class camPathChunk:
 			self.startpoints.pop(index)
 			self.endpoints.pop(index)
 			self.rotations.pop(index)
-			
+	def append(self, point, startpoint=None,endpoint=None):
+		self.points.append(point)
+		if startpoint!=None:
+			self.startpoints.append(startpoint)
+		if endpoint!=None:
+			self.endpoints.append(endpoint)
 	def rampContour(self,zstart,zend,o):
 		
 		stepdown=zstart-zend
@@ -331,18 +336,46 @@ def setChunksZ(chunks,z):
 
 	
 def optimizeChunk(chunk,operation):
+	points=chunk.points
 	
+	chunk.points=[points[0]]
+	spoints=False
+	if len(chunk.startpoints)>0:
+		startpoints=chunk.startpoints
+		endpoints=chunk.endpoints
+		chunk.startpoints=[startpoints[0]]
+		chunk.endpoints=[endpoints[0]]
+		spoints=True
+	'''this was replaced by append. Pop method was much much slower! still testing however.
 	for vi in range(len(chunk.points)-2,0,-1):
 		#vmiddle=Vector()
 		#v1=Vector()
 		#v2=Vector()
 		if compare(chunk.points[vi-1],chunk.points[vi+1],chunk.points[vi],operation.optimize_threshold):
-
-			chunk.pop(vi)
 			
-			#vi-=1
-	#protect_vertical=True
-	if operation.protect_vertical and operation.axes=='3':#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right?
+			chunk.pop(vi)
+	'''
+	protect_vertical =  operation.protect_vertical and operation.axes=='3'
+	for vi in range(0,len(points)-1):
+		#vmiddle=Vector()
+		#v1=Vector()
+		#v2=Vector()
+		if not compare(chunk.points[-1],points[vi+1],points[vi],operation.optimize_threshold):
+			if spoints:
+				chunk.append(points[vi],startpoints[vi],endpoints[vi])
+			else:
+				chunk.points.append(points[vi])
+			if protect_vertical:
+				v1=chunk.points[-1]
+				v2=chunk.points[-2]
+				v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
+				if v1c!=v1:
+					chunk.points[-1]=v1c
+				elif v2c!=v2:
+					chunk.points[-2]=v2c
+	#=True
+	'''
+	if:#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right?
 		#print('verticality test')
 		
 		
@@ -357,6 +390,7 @@ def optimizeChunk(chunk,operation):
 			
 			
 		#print(vcorrected)
+	'''
 	return chunk			
 	
 def limitChunks(chunks,o):#TODO: this should at least add point on area border... but shouldn't be needed at all at the first place...

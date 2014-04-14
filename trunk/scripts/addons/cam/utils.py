@@ -238,6 +238,7 @@ def sampleChunks(o,pathSamples,layers):
 		zinvert=ob.location.z+maxz#ob.bound_box[6][2]
 	
 	n=0
+	last_percent=-1
 	#timing for optimisation
 	samplingtime=timinginit()
 	sortingtime=timinginit()
@@ -256,8 +257,9 @@ def sampleChunks(o,pathSamples,layers):
 		#for t in range(0,threads):
 			
 		for s in patternchunk.points:
-			if o.strategy!='WATERLINE' and n/200.0==int(n/200.0):
-				progress('sampling paths ',int(100*n/totlen))
+			if o.strategy!='WATERLINE' and int(100*n/totlen)!=last_percent:
+				last_percent=int(100*n/totlen)
+				progress('sampling paths ',last_percent)
 			n+=1
 			x=s[0]
 			y=s[1]
@@ -753,6 +755,7 @@ def doSimulation(name,operations):
 	
 def chunksToMesh(chunks,o):
 	##########convert sampled chunks to path, optimization of paths
+	t=time.time()
 	s=bpy.context.scene
 	origin=(0,0,o.free_movement_height)  
 	verts = [origin]
@@ -761,8 +764,12 @@ def chunksToMesh(chunks,o):
 	progress('building paths from chunks')
 	e=0.0001
 	lifted=True
+	test=bpy.app.debug_value
+	
 	for chi in range(0,len(chunks)):
+		print(chi)
 		ch=chunks[chi]
+		nverts=[]
 		if o.optimize:
 			ch=optimizeChunk(ch,o)
 		
@@ -802,7 +809,9 @@ def chunksToMesh(chunks,o):
 		#print(verts_rotations)
 	if o.use_exact:
 		cleanupBulletCollision(o)
-		
+	print(time.time()-t)
+	t=time.time()
+	
 	#actual blender object generation starts here:
 	edges=[]	
 	for a in range(0,len(verts)-1):
@@ -835,9 +844,10 @@ def chunksToMesh(chunks,o):
 		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
 		ob=ob.object
 		
+	print(time.time()-t)
+	
 	ob.location=(0,0,0)
 	o.path_object_name=oname
-	verts=ob.data.vertices
 	exportGcodePath(o.filename,[ob.data],[o])
 
 	
@@ -2214,6 +2224,8 @@ def getPath3axis(context,operation):
 			if o.strategy=='OUTLINEFILL':
 				getOperationSilhouete(o)
 			pathSamples=getPathPattern(o)
+			#chunksToMesh(pathSamples,o)#for testing pattern script
+			#return
 			if o.strategy=='OUTLINEFILL':
 				pathSamples=sortChunks(pathSamples,o)
 
