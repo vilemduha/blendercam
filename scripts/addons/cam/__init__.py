@@ -173,7 +173,7 @@ def updateStrategy(o,context):
 
 def updateCutout(o,context):
 	if o.outlines_count>1:
-		o.use_bridges=false
+		o.use_bridges=False
 		
 	
 def updateExact(o,context):
@@ -187,7 +187,8 @@ def updateExact(o,context):
 def updateBridges(o,context):
 	print('update bridges ')
 	o.changed=True
-	utils.setupBridges(o)
+	#utils.setupBridges(o)
+	
 def updateRest(o,context):
 	print('update rest ')
 	o.changed=True

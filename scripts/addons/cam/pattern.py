@@ -33,14 +33,17 @@ def getPathPatternParallel(o,angle):
 	#ar=numpy.array((1.1,1.1))
 	#ar.resize()
 	#if bpy.app.debug_value==0:
+	dirvect=Vector((0,1,0))
+	dirvect.rotate(e)
+	dirvect.normalize()
+	dirvect*=pathstep
 	for a in range(int(-dim/pathd), int(dim/pathd)):#this is highly ineffective, computes path2x the area needed...
 		chunk=camPathChunk([])
+		v=Vector((a*pathd,int(-dim/pathstep)*pathstep,0))
+		v.rotate(e)
+		v+=vm#shifting for the rotation, so pattern rotates around middle...
 		for b in range(int(-dim/pathstep),int(dim/pathstep)):
-			v.x=a*pathd
-			v.y=b*pathstep
-			
-			v.rotate(e)
-			v+=vm#shifting for the rotation, so pattern rotates around middle...
+			v+=dirvect
 			if v.x>o.min.x and v.x<o.max.x and v.y>o.min.y and v.y<o.max.y:
 				chunk.points.append((v.x,v.y,zlevel))
 		if (reverse and o.movement_type=='MEANDER') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') :

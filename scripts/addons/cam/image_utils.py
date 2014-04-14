@@ -1182,9 +1182,9 @@ def renderSampleImage(o):
 		resx=ceil(sx/o.pixsize)+2*o.borderwidth
 		resy=ceil(sy/o.pixsize)+2*o.borderwidth
 		
-		#if not o.update_zbufferimage_tag and len(o.zbuffer_image)==resx and len(o.zbuffer_image[0])==resy :#if we call this accidentally in more functions, which currently happens...
+		if not o.update_zbufferimage_tag and len(o.zbuffer_image)==resx and len(o.zbuffer_image[0])==resy :#if we call this accidentally in more functions, which currently happens...
 			#print('has zbuffer')
-			#return o.zbuffer_image
+			return o.zbuffer_image
 		####setup image name
 		#fn=bpy.data.filepath
 		#iname=bpy.path.abspath(fn)
@@ -1280,7 +1280,7 @@ def renderSampleImage(o):
 			r.image_settings.color_mode=cm
 		
 			i=bpy.data.images.load(iname)
-			bpy.context.scene.render.engine='BLENDERCAM_RENDER'
+			bpy.context.scene.render.engine='BLENDER_CAM'
 		a=imagetonumpy(i)
 		a=1.0-a
 		o.zbuffer_image=a
@@ -1298,7 +1298,7 @@ def renderSampleImage(o):
 			ex=i.size[0]
 			sy=0
 			ey=i.size[1]
-			
+		
 		o.offset_image.resize(ex-sx+2*o.borderwidth,ey-sy+2*o.borderwidth)
 		
 		
