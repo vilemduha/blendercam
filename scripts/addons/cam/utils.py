@@ -634,8 +634,8 @@ def sampleChunksNAxis(o,pathSamples,layers):
 def doSimulation(name,operations):
 	'''perform simulation of operations. only for 3 axis'''
 	o=operations[0]#initialization now happens from first operation, also for chains.
-	
-	
+	getBounds(o)#this is here because some background computed operations still didn't have bounds data
+	#BUG - background computed operations don't simulate, they have no bounds data 
 	sx=o.max.x-o.min.x
 	sy=o.max.y-o.min.y
 
@@ -698,6 +698,7 @@ def doSimulation(name,operations):
 	cp=getCachePath(o)[:-len(o.name)]+name
 	iname=cp+'_sim.exr'
 	inamebase=bpy.path.basename(iname)
+	print(si.shape[0],si.shape[1])
 	i=numpysave(si,iname)
 		
 	
@@ -769,7 +770,7 @@ def chunksToMesh(chunks,o):
 	test=bpy.app.debug_value
 	
 	for chi in range(0,len(chunks)):
-		print(chi)
+		#print(chi)
 		ch=chunks[chi]
 		nverts=[]
 		if o.optimize:
@@ -2688,7 +2689,9 @@ def reload_paths(o):
 	if oname in s.objects:
 		s.objects[oname].data=mesh
 	else: 
-		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
+		object_utils.object_data_add(bpy.context, mesh, operator=None)
+		ob=bpy.context.active_object
+		ob.name=oname
 	ob=s.objects[oname]
 	ob.location=(0,0,0)
 	o.path_object_name=oname
