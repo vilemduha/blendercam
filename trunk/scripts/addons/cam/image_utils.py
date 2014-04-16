@@ -127,10 +127,11 @@ def numpysave(a,iname):
 
 def numpytoimage(a,iname):
 	t=time.time()
-	print('numpy to image')
+	print('numpy to image',iname)
 	t=time.time()
 	print(a.shape[0],a.shape[1])
 	foundimage=False
+	
 	for image in bpy.data.images:
 		
 		if image.name[:len(iname)]==iname and image.size[0]==a.shape[0] and image.size[1]==a.shape[1]:
@@ -139,7 +140,7 @@ def numpytoimage(a,iname):
 	if not foundimage:
 		bpy.ops.image.new(name=iname, width=a.shape[0], height=a.shape[1], color=(0, 0, 0, 1), alpha=True, generated_type='BLANK', float=True)
 		for image in bpy.data.images:
-			
+			#print(image.name[:len(iname)],iname, image.size[0],a.shape[0],image.size[1],a.shape[1])
 			if image.name[:len(iname)]==iname and image.size[0]==a.shape[0] and image.size[1]==a.shape[1]:
 				i=image
 			
