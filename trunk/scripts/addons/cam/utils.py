@@ -187,7 +187,7 @@ def samplePathLow(o,ch1,ch2,dosample):
 			for p in bpath.points:
 				xs=(p[0]-minx)/pixsize+o.borderwidth+pixsize/2#-m
 				ys=(p[1]-miny)/pixsize+o.borderwidth+pixsize/2#-m
-				z=getSampleImage((xs,ys),o.offset_image,o.minz)+o.skin
+				z=-getSampleImage((xs,ys),o.offset_image,o.minz)+o.skin
 				if z>p[2]:
 					p[2]=z
 	return bpath
@@ -264,7 +264,7 @@ def sampleChunks(o,pathSamples,layers):
 			x=s[0]
 			y=s[1]
 			if o.ambient.isInside(x,y):
-				z=minz# we'll store results into this
+				#z=minz# we'll store results into this
 				
 				sampled=False
 				
@@ -941,7 +941,7 @@ def exportGcodePath(filename,vertslist,operations):
 	processedops=0
 	for i,o in enumerate(operations):
 		mesh=vertslist[i]
-		verts=mesh.vertices
+		verts=mesh.vertices[:]
 		if o.axes!='3':
 			rx=mesh['rot_x']
 			ry=mesh['rot_y']
@@ -970,14 +970,14 @@ def exportGcodePath(filename,vertslist,operations):
 		plungefeedrate= millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
 		
-		last=Vector((0,0,0))
+		last=Vector((100000000000,100000000000000,100000000000))#nonsense values so first step of the operation gets written for sure
 		lastrot=Euler((0,0,0))
-		o.duration=0.0
+		duration=0.0
 		f=millfeedrate
 		downvector= Vector((0,0,-1))
 		print('2')
-		for vi in range(0,len(verts)):
-			v=verts[vi].co
+		for vi,vert in enumerate(verts):
+			v=vert.co
 			if o.axes!='3':
 				v=v.copy()#we rotate it so we copy the vector
 				r=Euler((rx[vi],ry[vi],rz[vi]))
@@ -1035,7 +1035,7 @@ def exportGcodePath(filename,vertslist,operations):
 			#v1=Vector(v)
 			#v2=Vector(last)
 			#vect=v1-v2
-			o.duration+=vect.length/(f/unitcorr)
+			duration+=vect.length/(f/unitcorr)
 			last=v
 			if o.axes!='3':
 				lastrot=r
@@ -1044,6 +1044,8 @@ def exportGcodePath(filename,vertslist,operations):
 				findex+=1
 				c=startNewFile()
 				processedops=0
+				
+	o.duration=duration
 	#print('duration')
 	#print(o.duration)
 	
