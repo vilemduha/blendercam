@@ -23,7 +23,7 @@
 
 import bpy
 import subprocess,os, sys, threading
-from cam import utils
+from cam import utils, pack
 from bpy.props import *
 
 def getChangeData(o):####this is a function to check if object props have changed, to see if image updates are needed
