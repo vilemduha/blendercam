@@ -43,6 +43,9 @@ class Creator:
 		if len(self.buffer)>5000:
 			self.file.write(''.join(self.buffer))
 			self.buffer=[]
+			
+	def writem(self, a):
+		self.buffer.extend(a)
 	############################################################################
 	##	Programs
 
