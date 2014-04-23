@@ -29,7 +29,7 @@ import bl_operators
 from bpy.types import Menu, Operator, UIList
 #from . import patterns
 #from . import chunk_operations
-from cam import ui, ops,utils, simple,polygon_utils_cam, pack#, post_processors
+from cam import ui, ops,utils, simple,polygon_utils_cam#, post_processors
 import numpy
 import Polygon
 from bpy.app.handlers import persistent
