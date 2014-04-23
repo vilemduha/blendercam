@@ -171,7 +171,7 @@ class Creator(nc.Creator):
     ##  Programs
 
     def program_begin(self, id, name=''):
-        self.write((self.PROGRAM() % id) + self.SPACE() + (self.COMMENT(name)))
+        self.writem([(self.PROGRAM() % id) , self.SPACE() , (self.COMMENT(name))])
         self.write('\n')
 
     def program_stop(self, optional=False):
@@ -413,7 +413,7 @@ class Creator(nc.Creator):
         self.write_blocknum()
         if self.g0123_modal:
             if self.prev_g0123 != self.FEED():
-                self.write(self.SPACE() + self.FEED())
+                self.writem([self.SPACE() , self.FEED()])
                 self.prev_g0123 = self.FEED()
         else:
             self.write(self.FEED())
@@ -422,49 +422,49 @@ class Creator(nc.Creator):
         if (x != None):
             dx = x - self.x
             if (self.absolute_flag ):
-                self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
+                self.writem([self.SPACE() , self.X() , (self.fmt.string(x + self.shift_x))])
             else:
-                self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
+                self.writem([self.SPACE() , self.X() , (self.fmt.string(dx))])
             self.x = x
         if (y != None):
             dy = y - self.y
             if (self.absolute_flag ):
-                self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
+                self.writem([self.SPACE() , self.Y() , (self.fmt.string(y + self.shift_y))])
             else:
-                self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
+                self.writem([self.SPACE() , self.Y() , (self.fmt.string(dy))])
 
             self.y = y
         if (z != None):
             dz = z - self.z
             if (self.absolute_flag ):
-                self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
+                self.writem([self.SPACE() , self.Z() , (self.fmt.string(z + self.shift_z))])
             else:
-                self.write(self.SPACE() + self.Z() + (self.fmt.string(dz)))
+                self.writem([self.SPACE() , self.Z() , (self.fmt.string(dz))])
 
             self.z = z
 
         if (a != None):
             da = a - self.a
             if (self.absolute_flag ):
-                self.write(self.SPACE() + self.A() + (self.fmt.string(a)))
+                self.writem(self.SPACE() , self.A() , (self.fmt.string(a)))
             else:
-                self.write(self.SPACE() + self.A() + (self.fmt.string(da)))
+                self.writem(self.SPACE() , self.A() , (self.fmt.string(da)))
             self.a = a
 
         if (b != None):
             db = b - self.b
             if (self.absolute_flag ):
-                self.write(self.SPACE() + self.B() + (self.fmt.string(b)))
+                self.write(self.SPACE() , self.B() , (self.fmt.string(b)))
             else:
-                self.write(self.SPACE() + self.B() + (self.fmt.string(db)))
+                self.write(self.SPACE() , self.B() , (self.fmt.string(db)))
             self.b = b
 
         if (c != None):
             dc = c - self.c
             if (self.absolute_flag ):
-                self.write(self.SPACE() + self.C() + (self.fmt.string(c)))
+                self.write(self.SPACE() , self.C() , (self.fmt.string(c)))
             else:
-                self.write(self.SPACE() + self.C() + (self.fmt.string(dc)))
+                self.write(self.SPACE() , self.C() , (self.fmt.string(dc)))
             self.c = c
 
         if (self.fhv) : self.calc_feedrate_hv(math.sqrt(dx*dx+dy*dy), math.fabs(dz))
