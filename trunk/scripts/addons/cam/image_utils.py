@@ -909,7 +909,7 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 			#vecchunk.append(Vector(ch[i]))
 	return chunks
 	
-def imageToChunks(o,image):
+def imageToChunks(o,image, with_border=False):
 	t=time.time()
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	pixsize=o.pixsize
@@ -921,6 +921,9 @@ def imageToChunks(o,image):
 	indices1=ar.nonzero()
 	borderspread=2#o.cutter_diameter/o.pixsize#when the border was excluded precisely, sometimes it did remove some silhouette parts
 	r=o.borderwidth-borderspread# to prevent outline of the border was 3 before and also (o.cutter_diameter/2)/pixsize+o.borderwidth
+	if with_border:
+	#	print('border')
+		r=0#o.borderwidth/2
 	w=image.shape[0]
 	h=image.shape[1]
 	coef=0.75#compensates for imprecisions
@@ -1091,8 +1094,8 @@ def imageToChunks(o,image):
 	else:
 		return []
 	
-def imageToPoly(o,i):
-	polychunks=imageToChunks(o,i)
+def imageToPoly(o,i, with_border=False):
+	polychunks=imageToChunks(o,i, with_border)
 	polys=chunksToPolys(polychunks)
 	
 	#polys=orderPoly(polys)
@@ -1313,9 +1316,9 @@ def renderSampleImage(o):
 		a=numpy.array((1.0,1.0))
 		a.resize(2*o.borderwidth+i.size[0],2*o.borderwidth+i.size[1])
 		neg=o.source_image_scale_z<0
-		if o.strategy=='CUTOUT':#cutout strategy doesn't want to cut image border
+		if o.strategy=='WATERLINE':#waterline strategy needs image border to have ok ambient.
 			a.fill(1-neg)
-		else:#other operations want to avoid cutting anything outside image borders
+		else:#other operations like parallel need to reach the border  
 			a.fill(neg)#
 		#2*o.borderwidth
 		a[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]=rawimage
@@ -1327,8 +1330,8 @@ def renderSampleImage(o):
 			
 		else:#place positive images under 0 plane, this is logical
 			a=(a-mina)#first, put the image down, se we know the image minimum is on 0
-			a*o.source_image_scale_z
-			a-=maxa
+			a*=o.source_image_scale_z
+			a-=(maxa-mina)*o.source_image_scale_z
 			
 		a+=o.source_image_offset.z#after that, image gets offset.
 		

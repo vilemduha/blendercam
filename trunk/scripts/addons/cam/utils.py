@@ -139,13 +139,19 @@ def getBounds(o):
 			
 	else:
 		i=bpy.data.images[o.source_image_name]
-		sx=int(i.size[0]*o.source_image_crop_start_x/100)
-		ex=int(i.size[0]*o.source_image_crop_end_x/100)
-		sy=int(i.size[1]*o.source_image_crop_start_y/100)
-		ey=int(i.size[1]*o.source_image_crop_end_y/100)
-		#operation.image.resize(ex-sx,ey-sy)
-		crop=(sx,sy,ex,ey)
-		
+		if o.source_image_crop:
+			sx=int(i.size[0]*o.source_image_crop_start_x/100)
+			ex=int(i.size[0]*o.source_image_crop_end_x/100)
+			sy=int(i.size[1]*o.source_image_crop_start_y/100)
+			ey=int(i.size[1]*o.source_image_crop_end_y/100)
+			#operation.image.resize(ex-sx,ey-sy)
+			crop=(sx,sy,ex,ey)
+		else:
+			sx=0
+			ex=i.size[0]
+			sy=0
+			ey=i.size[1]
+			
 		o.pixsize=o.source_image_size_x/i.size[0]
 		
 		o.min.x=o.source_image_offset.x+(sx)*o.pixsize
@@ -224,6 +230,9 @@ def sampleChunks(o,pathSamples,layers):
 			prepareArea(o)
 		
 		pixsize=o.pixsize
+		
+		coordoffset=o.borderwidth+pixsize/2#-m
+		
 		res=ceil(o.cutter_diameter/o.pixsize)
 		m=res/2
 		
@@ -256,7 +265,7 @@ def sampleChunks(o,pathSamples,layers):
 	totaltime=timinginit()
 	timingstart(totaltime)
 	lastz=minz
-	coordoffset=+o.borderwidth+pixsize/2#-m
+	
 	for patternchunk in pathSamples:
 		thisrunchunks=[]
 		for l in layers:
@@ -1129,9 +1138,7 @@ def silhoueteOffset(context,offset):
 	#print(p[0])
 	#p.shift(ob.location.x,ob.location.y)
 	polyToMesh(p,ob.location.z)
-	bpy.ops.object.convert(target='CURVE')
-	bpy.context.scene.cursor_location=ob.location
-	bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+	
 	
 	return {'FINISHED'}
 	
@@ -1165,9 +1172,9 @@ def polygonBoolean(context,boolean_type):
 			p1=p1 & p2
 		
 	polyToMesh(p1,0)
-	bpy.ops.object.convert(target='CURVE')
-	bpy.context.scene.cursor_location=ob.location
-	bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+	#bpy.ops.object.convert(target='CURVE')
+	#bpy.context.scene.cursor_location=ob.location
+	#bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
 
 	return {'FINISHED'}
 		
@@ -1617,7 +1624,7 @@ def getOperationSilhouete(operation):
 			#print(operation.silhouete)
 			#this conversion happens because we need the silh to be oriented, for milling directions.
 		else:
-			print('object method')
+			print('object method')#this method is currently used only for curves. This is because exact silh for objects simply still doesn't work...
 			operation.silhouete=getObjectSilhouete(stype, objects=operation.objects)
 				
 		operation.update_silhouete_tag=False
@@ -1984,6 +1991,7 @@ def getPath3axis(context,operation):
 		for chl in extendorder:#Set Z for all chunks
 			chunk=chl[0]
 			layer=chl[1]
+			print(layer[1])
 			chunk.setZ(layer[1])
 		
 		chunks=[]
@@ -2333,6 +2341,7 @@ def getPath3axis(context,operation):
 		
 		slicesfilled=0
 		getAmbient(o)
+		#polyToMesh(o.ambient,0)
 		for h in range(0,nslices):
 			layerstepinc+=1
 			slicechunks=[]
@@ -2340,7 +2349,7 @@ def getPath3axis(context,operation):
 			#print(z)
 			#sliceimage=o.offset_image>z
 			islice=o.offset_image>z
-			slicepolys=imageToPoly(o,islice)
+			slicepolys=imageToPoly(o,islice,with_border=False)
 			
 			poly=Polygon.Polygon()#polygversion
 			lastchunks=[]
@@ -2413,28 +2422,23 @@ def getPath3axis(context,operation):
 						i+=1
 						#print(i)
 				i=0
+				'''
 				if (slicesfilled>0 and layerstepinc==layerstep) or (not o.inverse and len(poly)>0 and slicesfilled==1) or (o.inverse and len(poly)==0 and slicesfilled>0):# fill layers and last slice, last slice with inverse is not working yet - inverse millings end now always on 0 so filling ambient does have no sense.
 					fillz=z
 					layerstepinc=0
-					if o.ambient_behaviour=='AROUND':
-						m=o.ambient_cutter_restrict*o.cutter_diameter/2
-						ilim=ceil((o.ambient_radius-m)/o.dist_between_paths)
-						restpoly=poly
-						if (o.inverse and len(poly)==0 and slicesfilled>0):
-							restpoly=lastslice
-						offs=True
-					else:
-						ilim=1000#TODO:this should be replaced... no limit, just check if the shape grows over limits.
-						
-						offs=False
-						boundrect=Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
-						restpoly=boundrect-poly
-						if (o.inverse and len(poly)==0 and slicesfilled>0):
-							restpoly=boundrect-lastslice
+					
+					#ilim=1000#TODO:this should be replaced... no limit, just check if the shape grows over limits.
+					
+					offs=False
+					boundrect=o.ambient#Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
+					
+					restpoly=boundrect-poly
+					if (o.inverse and len(poly)==0 and slicesfilled>0):
+						restpoly=boundrect-lastslice
 					
 					restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
 					i=0
-					while len(restpoly)>0 and i<ilim:
+					while len(restpoly)>0:
 						
 						nchunks=polyToChunks(restpoly,fillz)
 						#########################
@@ -2447,7 +2451,7 @@ def getPath3axis(context,operation):
 						i+=1
 				
 				
-						
+				'''		
 				percent=int(h/nslices*100)
 				progress('waterline layers ',percent)  
 				lastslice=poly

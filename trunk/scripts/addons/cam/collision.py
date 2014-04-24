@@ -70,10 +70,13 @@ def prepareBulletCollision(o):
 	for collisionob in o.objects:
 		activate(collisionob)
 		bpy.ops.object.duplicate(linked=False)
-		if collisionob.type=='CURVE' or collisionob.type=='FONT':#support for curve objects collision
-			bpy.ops.object.convert(target='MESH', keep_original=False)
-
 		collisionob=bpy.context.active_object
+		if collisionob.type=='CURVE' or collisionob.type=='FONT':#support for curve objects collision
+			if collisionob.type=='CURVE':
+				odata=collisionob.data.dimensions
+				collisionob.data.dimensions='2D'
+			bpy.ops.object.convert(target='MESH', keep_original=False)
+		
 		bpy.ops.rigidbody.object_add(type='ACTIVE')#using active instead of passive because of performance.TODO: check if this works also with 4axis...
 		collisionob.rigid_body.collision_shape = 'MESH'
 		collisionob.rigid_body.kinematic=True#this fixed a serious bug and gave big speedup, rbs could move since they are now active...

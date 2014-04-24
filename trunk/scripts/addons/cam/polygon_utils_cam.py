@@ -247,4 +247,11 @@ def polyToMesh(p,z):
 	bm.to_mesh(mesh)
 	mesh.update()
 	object_utils.object_data_add(bpy.context, mesh)
+	
+	ob=bpy.context.active_object
+	ob.location=(0,0,0)
+	bpy.ops.object.convert(target='CURVE')
+	bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
+
+	
 	return bpy.context.active_object
