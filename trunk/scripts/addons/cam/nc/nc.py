@@ -40,7 +40,7 @@ class Creator:
 
 	def write(self, s):
 		self.buffer.append(s)
-		if len(self.buffer)>5000:
+		if len(self.buffer)>100000:
 			self.file.write(''.join(self.buffer))
 			self.buffer=[]
 			
