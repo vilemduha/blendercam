@@ -245,6 +245,7 @@ def sampleChunks(o,pathSamples,layers):
 	totaltime=timinginit()
 	timingstart(totaltime)
 	lastz=minz
+	coordoffset=+o.borderwidth+pixsize/2#-m
 	for patternchunk in pathSamples:
 		thisrunchunks=[]
 		for l in layers:
@@ -285,8 +286,8 @@ def sampleChunks(o,pathSamples,layers):
 					#here we have 
 				else:
 					timingstart(samplingtime)
-					xs=(x-minx)/pixsize+o.borderwidth+pixsize/2#-m
-					ys=(y-miny)/pixsize+o.borderwidth+pixsize/2#-m
+					xs=(x-minx)/pixsize+coordoffset
+					ys=(y-miny)/pixsize+coordoffset
 					timingadd(samplingtime)
 					#if o.inverse:
 					#  z=layerstart
@@ -981,7 +982,7 @@ def exportGcodePath(filename,vertslist,operations):
 		for vi,vert in enumerate(verts):
 			v=vert.co
 			if o.axes!='3':
-				v=v.copy()#we rotate it so we copy the vector
+				v=v.copy()#we rotate it so we need to copy the vector
 				r=Euler((rx[vi],ry[vi],rz[vi]))
 				#conversion to N-axis coordinates
 				# this seems to work correctly

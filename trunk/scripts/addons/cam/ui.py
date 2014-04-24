@@ -436,10 +436,10 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 				layout.prop(ao,'ramp')
 				if ao.ramp:
 					layout.prop(ao,'ramp_in_angle')
-					#layout.prop(ao,'ramp_out')
-					#if ao.ramp_out:
+					layout.prop(ao,'ramp_out')
+					if ao.ramp_out:
 						
-					#	layout.prop(ao,'ramp_out_angle')
+						layout.prop(ao,'ramp_out_angle')
 					
 				layout.prop(ao,'stay_low')
 				layout.prop(ao,'protect_vertical')
