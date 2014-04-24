@@ -124,18 +124,21 @@ class camPathChunk:
 		self.startpoints.reverse()
 		self.endpoints.reverse()
 		self.rotations.reverse()
+		
 	def pop(self, index):
 		self.points.pop(index)
 		if len(self.startpoints)>0:
 			self.startpoints.pop(index)
 			self.endpoints.pop(index)
 			self.rotations.pop(index)
+			
 	def append(self, point, startpoint=None,endpoint=None):
 		self.points.append(point)
 		if startpoint!=None:
 			self.startpoints.append(startpoint)
 		if endpoint!=None:
 			self.endpoints.append(endpoint)
+			
 	def rampContour(self,zstart,zend,o):
 		
 		stepdown=zstart-zend
@@ -205,33 +208,33 @@ class camPathChunk:
 				i+=1
 				if i==len(ch.points):
 					i=0
-			'''
-			if o.ramp_out:
-				z=zend
-				i=endpoint
-				
-				while z<o.maxz:
-					if i==len(ch.points):
-						i=0
-					s1=ch.points[i]
-					i2=i-1
-					if i2<0: i2=len(ch.points)-1
-					s2=ch.points[i2]
-					l=dist2d(s1,s2)
-					znew=z+tan(o.ramp_out_angle)*l
-					if znew>o.maxz:
-						ratio=((z-o.maxz)/(z-znew))
-						v1=Vector(chunk.points[-1])
-						v2=Vector((s1[0],s1[1],znew))
-						v=v1+ratio*(v2-v1)
-						chunk.points.append((v.x,v.y,v.z))
-						
-					else:
-						chunk.points.append((s1[0],s1[1],znew))
-					z=znew
-					i+=1
+			#ramp out
+		if o.ramp_out and ( not o.use_layers or o.first_down==False or (o.first_down and endpoint!=None)):
+			z=zend
+			#i=endpoint
+			
+			while z<o.maxz:
+				if i==len(ch.points):
+					i=0
+				s1=ch.points[i]
+				i2=i-1
+				if i2<0: i2=len(ch.points)-1
+				s2=ch.points[i2]
+				l=dist2d(s1,s2)
+				znew=z+tan(o.ramp_out_angle)*l
+				if znew>o.maxz:
+					ratio=((z-o.maxz)/(z-znew))
+					v1=Vector(chunk.points[-1])
+					v2=Vector((s1[0],s1[1],znew))
+					v=v1+ratio*(v2-v1)
+					chunk.points.append((v.x,v.y,v.z))
 					
-			'''	
+				else:
+					chunk.points.append((s1[0],s1[1],znew))
+				z=znew
+				i+=1
+					
+				
 		
 		return chunk
 
@@ -298,7 +301,69 @@ class camPathChunk:
 					chunk.points.append((p2[0],p2[1],max(p2[2],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
 			
 			#chunks = setChunksZ([ch],zend)
-			chunk.points.extend(ch.points)		
+			chunk.points.extend(ch.points)	
+			
+			######################################
+			#ramp out - this is the same thing, just on the other side..
+			if o.ramp_out:
+				zstart=o.maxz
+				stepdown=zstart-zend
+				
+				estlength=(zstart-zend)/tan(o.ramp_out_angle)
+				ch.getLength()
+				ramplength=estlength
+				zigzaglength=ramplength/2.000
+				turns=1
+				print('turns %i' % turns)
+				if zigzaglength>ch.length:
+					turns = ceil(zigzaglength/ch.length)
+					ramplength=turns*ch.length*2.0
+					zigzaglength=ch.length
+					ramppoints=ch.points.copy()
+					ramppoints.reverse()#revert points here, we go the other way.
+					
+				else:
+					zigzagtraveled=0.0
+					haspoints=False
+					ramppoints=[(ch.points[-1][0],ch.points[-1][1],ch.points[-1][2])]
+					i=len(ch.points)-2
+					while not haspoints:
+						print(i,zigzaglength,zigzagtraveled)
+						p1=ramppoints[-1]
+						p2=ch.points[i]
+						d=dist2d(p1,p2)
+						zigzagtraveled+=d
+						if zigzagtraveled>=zigzaglength or i+1==len(ch.points):
+							ratio = 1-(zigzagtraveled-zigzaglength)/d
+							if (i+1==len(ch.points)):#this condition is for a rare case of combined layers+bridges+ramps...
+								ratio=1
+							#print((ratio,zigzaglength))
+							v1=Vector(p1)
+							v2=Vector(p2)
+							v=v1+ratio*(v2-v1)
+							ramppoints.append((v.x,v.y,v.z))
+							haspoints=True
+						#elif :
+							
+						else:
+							ramppoints.append(p2)
+						i-=1
+				negramppoints=ramppoints.copy()
+				negramppoints.reverse()
+				ramppoints.extend(negramppoints[1:])
+				
+				traveled=0.0
+				#chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
+				for r in range(turns):
+					for p in range(0,len(ramppoints)):
+						p1=chunk.points[-1]
+						p2=ramppoints[p]
+						d=dist2d(p1,p2)
+						traveled+=d
+						ratio=1-(traveled/ramplength)
+						znew=zstart-stepdown*ratio
+						chunk.points.append((p2[0],p2[1],max(p2[2],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
+			
 		return chunk
 #def appendChunk(sorted,ch,o,pos) 
 
