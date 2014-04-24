@@ -24,7 +24,7 @@ def Polygon2Shapely(p):
 	contours=[]
 	for ci,c in enumerate(p):
 		if p.isHole(ci):
-			print('ishole')
+			#print('ishole')
 			holes.append(c)
 		else:
 			contours.append(c)

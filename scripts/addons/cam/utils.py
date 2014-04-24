@@ -98,7 +98,18 @@ def getBoundsWorldspace(obs):
 				maxz=max(maxz,worldCoord.z)
 	#progress(time.time()-t)
 	return minx,miny,minz,maxx,maxy,maxz
- 
+
+def getOperationSources(o):
+	if o.geometry_source=='OBJECT':
+		#bpy.ops.object.select_all(action='DESELECT')
+		ob=bpy.data.objects[o.object_name]
+		o.objects=[ob]
+	elif o.geometry_source=='GROUP':
+		group=bpy.data.groups[o.group_name]
+		o.objects=group.objects
+	elif o.geometry_source=='IMAGE':
+		o.use_exact=False;
+	
 def getBounds(o):
 	#print('kolikrat sem rpijde')
 	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
@@ -635,6 +646,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 def doSimulation(name,operations):
 	'''perform simulation of operations. only for 3 axis'''
 	o=operations[0]#initialization now happens from first operation, also for chains.
+	getOperationSources(o)
 	getBounds(o)#this is here because some background computed operations still didn't have bounds data
 	#BUG - background computed operations don't simulate, they have no bounds data 
 	sx=o.max.x-o.min.x
@@ -1141,7 +1153,7 @@ def polygonBoolean(context,boolean_type):
 		for p in plist:
 			p2+=p
 		polys.append(p2)
-	print(polys)
+	#print(polys)
 	if boolean_type=='UNION':
 		for p2 in polys:
 			p1=p1+p2
@@ -1632,16 +1644,25 @@ def getObjectSilhouete(stype, objects=None):
 			for ob in objects:
 				
 				m=ob.data
+				mw =ob.matrix_world
+				mwi = mw.inverted()
+				r=ob.rotation_euler
 				m.calc_tessface()
 				id=0
 				e=0.000001
 				scaleup=100
 				for f in m.tessfaces:
-					if f.normal.z>0 and f.area>0.0 :
+					n=f.normal.copy()
+					n.rotate(r)
+					#verts=[]
+					#for i in f.vertices:
+					#	verts.append(mw*m.vertices[i].co)
+					#n=mathutils.geometry.normal(verts[0],verts[1],verts[2])
+					if n.z>0.0 and f.area>0.0 :
 						s=[]
 						c=f.center.xy
 						for i in f.vertices:
-							v=m.vertices[i].co
+							v=mw* m.vertices[i].co
 							x=v.x
 							y=v.y
 							x=x+(x-c.x)*e
@@ -1655,7 +1676,6 @@ def getObjectSilhouete(stype, objects=None):
 						#	m.polygons[923].select
 						id+=1	
 			#print(polys)
-			p=spolygon.Polygon()
 			p=sops.unary_union(polys)
 			print(time.time()-t)
 			
