@@ -376,7 +376,8 @@ class CamChainAdd(bpy.types.Operator):
 	'''Add new CAM chain'''
 	bl_idname = "scene.cam_chain_add"
 	bl_label = "Add new CAM chain"
-
+	bl_options = {'REGISTER', 'UNDO'}
+	
 	@classmethod
 	def poll(cls, context):
 		return context.scene is not None
@@ -398,7 +399,8 @@ class CamChainRemove(bpy.types.Operator):
 	'''Remove  CAM chain'''
 	bl_idname = "scene.cam_chain_remove"
 	bl_label = "Remove CAM chain"
-
+	bl_options = {'REGISTER', 'UNDO'}
+	
 	@classmethod
 	def poll(cls, context):
 		return context.scene is not None
@@ -414,7 +416,8 @@ class CamChainOperationAdd(bpy.types.Operator):
 	'''Add operation to chain'''
 	bl_idname = "scene.cam_chain_operation_add"
 	bl_label = "Add operation to chain"
-
+	bl_options = {'REGISTER', 'UNDO'}
+	
 	@classmethod
 	def poll(cls, context):
 		return context.scene is not None
@@ -433,7 +436,8 @@ class CamChainOperationRemove(bpy.types.Operator):
 	'''Remove operation from chain'''
 	bl_idname = "scene.cam_chain_operation_remove"
 	bl_label = "Remove operation from chain"
-
+	bl_options = {'REGISTER', 'UNDO'}
+	
 	@classmethod
 	def poll(cls, context):
 		return context.scene is not None
@@ -455,7 +459,8 @@ class CamOperationAdd(bpy.types.Operator):
 	'''Add new CAM operation'''
 	bl_idname = "scene.cam_operation_add"
 	bl_label = "Add new CAM operation"
-
+	bl_options = {'REGISTER', 'UNDO'}
+	
 	@classmethod
 	def poll(cls, context):
 		return context.scene is not None
@@ -489,7 +494,8 @@ class CamOperationCopy(bpy.types.Operator):
 	'''Copy CAM operation'''
 	bl_idname = "scene.cam_operation_copy"
 	bl_label = "Copy active CAM operation"
-
+	bl_options = {'REGISTER', 'UNDO'}
+	
 	@classmethod
 	def poll(cls, context):
 		return context.scene is not None
@@ -539,7 +545,8 @@ class CamOperationRemove(bpy.types.Operator):
 	'''Remove CAM operation'''
 	bl_idname = "scene.cam_operation_remove"
 	bl_label = "Remove CAM operation"
-
+	bl_options = {'REGISTER', 'UNDO'}
+	
 	@classmethod
 	def poll(cls, context):
 		return context.scene is not None
@@ -630,6 +637,7 @@ class CamOperationMove(bpy.types.Operator):
 	'''Move CAM operation'''
 	bl_idname = "scene.cam_operation_move"
 	bl_label = "Move CAM operation in list"
+	bl_options = {'REGISTER', 'UNDO'}
 	
 	direction = EnumProperty(name='direction',
 		items=(('UP','Up',''),('DOWN','Down','')),
