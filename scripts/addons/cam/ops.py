@@ -306,6 +306,20 @@ class PathsChain(bpy.types.Operator):
 	def draw(self, context):
 		layout = self.layout
 		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")	 
+		
+class PathExport(bpy.types.Operator):
+	'''Export gcode. Can be used only when the path object is present'''
+	bl_idname = "object.cam_export"
+	bl_label = "Export operation gcode"
+	bl_options = {'REGISTER', 'UNDO'}
+		
+	def execute(self, context):
+		import bpy
+		s=bpy.context.scene
+		operation = s.cam_operations[s.cam_active_operation]
+		utils.exportGcodePath( operation.filename , [bpy.data.objects[operation.path_object_name].data] , [operation])
+		return {'FINISHED'}
+	
 
 class CAMSimulate(bpy.types.Operator):
 	'''simulate CAM operation

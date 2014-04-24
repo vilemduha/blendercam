@@ -247,7 +247,11 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 					if ao.valid:
 						layout.operator("object.calculate_cam_path", text="Calculate path")
 						layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
+						if ao.path_object_name!=None and scene.objects.get(ao.path_object_name)!=None:
+							layout.operator("object.cam_export", text="Export gcode")		
 						layout.operator("object.cam_simulate", text="Simulate this operation")
+
+							
 					else:
 						layout.label("operation invalid, can't compute")
 				else:
@@ -256,6 +260,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 				
 				layout.prop(ao,'name')
 				layout.prop(ao,'filename')
+				layout.prop(ao,'auto_export')
 				layout.prop(ao,'geometry_source')
 				if ao.geometry_source=='OBJECT':
 					layout.prop_search(ao, "object_name", bpy.data, "objects")
@@ -263,11 +268,11 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop_search(ao, "group_name", bpy.data, "groups")
 				else:
 					layout.prop_search(ao, "source_image_name", bpy.data, "images")
-					
+				
  
 				if ao.strategy=='CARVE':
 					layout.prop_search(ao, "curve_object", bpy.data, "objects")
-			   
+				
 
 									 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
