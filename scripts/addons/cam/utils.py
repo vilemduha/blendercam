@@ -2012,7 +2012,7 @@ def getPath3axis(context,operation):
 			
 			pnew=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 			
-			if o.dist_between_paths>o.cutter_diameter/2.0:#this mess under this IF condition is here ONLY because of the ability to have stepover> than cutter radius.
+			if o.dist_between_paths>o.cutter_diameter/2.0:#this mess under this IF condition is here ONLY because of the ability to have stepover> than cutter radius. Other CAM softwares don't allow this at all, maybe because of this mathematical problem and performance cost, but into soft materials, this is good to have.
 				o.warnings=o.warnings+'Distance between paths larger\n  than cutter radius can result in uncut areas!\n '
 
 				contours_before=len(p)
@@ -2071,9 +2071,12 @@ def getPath3axis(context,operation):
 							#print('adding extra contour rest')
 							#print(prest[ci])
 							rest=Polygon.Polygon(prest[ci])
-							nchunk=polyToChunks(rest,o.min.z)
-							nchunk=limitChunks(nchunk,o)
-							chunksFromCurve.extend(nchunk)
+							nchunks=polyToChunks(rest,o.min.z)
+							nchunks=limitChunks(nchunks,o)
+							parentChildDist(lastchunks,nchunks,o)
+							nchunks.extend(chunksFromCurve)#appending these to the beginning, so they get milled first.
+							chunksFromCurve=nchunks
+							
 				centers=newcenters
 
 			percent=int(i/approxn*100)
