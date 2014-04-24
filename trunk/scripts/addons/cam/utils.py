@@ -851,7 +851,8 @@ def chunksToMesh(chunks,o):
 	
 	ob.location=(0,0,0)
 	o.path_object_name=oname
-	exportGcodePath(o.filename,[ob.data],[o])
+	if o.auto_export:
+		exportGcodePath(o.filename,[ob.data],[o])
 
 	
 def exportGcodePath(filename,vertslist,operations):
@@ -1003,12 +1004,14 @@ def exportGcodePath(filename,vertslist,operations):
 			
 			#v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)
 			vect=v-last
-			
-			if vi>0  and vect.length>0 and downvector.angle(vect)<(pi/2-o.plunge_angle):
+			l=vect.length
+			if vi>0  and l>0 and downvector.angle(vect)<(pi/2-o.plunge_angle):
 				#print('plunge')
 				#print(vect)
-				f=plungefeedrate
-				c.feedrate(plungefeedrate)
+				if f!=plungefeedrate:
+					f=plungefeedrate
+					c.feedrate(plungefeedrate)
+					
 				if o.axes=='3':
 					c.feed( x=vx, y=vy, z=vz )
 				else:
@@ -1016,8 +1019,11 @@ def exportGcodePath(filename,vertslist,operations):
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
 					
 			elif v.z>=o.free_movement_height or vi==0:#v.z==last.z==o.free_movement_height or vi==0
-				f=freefeedrate
-				c.feedrate(freefeedrate)
+			
+				if f!=freefeedrate:
+					f=freefeedrate
+					c.feedrate(freefeedrate)
+					
 				if o.axes=='3':
 					c.rapid( x = vx , y = vy , z = vz )
 				else:
@@ -1025,8 +1031,11 @@ def exportGcodePath(filename,vertslist,operations):
 				#gcommand='{RAPID}'
 				
 			else:
-				f=millfeedrate
-				c.feedrate(millfeedrate)
+			
+				if f!=millfeedrate:
+					f=millfeedrate
+					c.feedrate(millfeedrate)
+					
 				if o.axes=='3':
 					c.feed(x=vx,y=vy,z=vz)
 				else:
@@ -1035,23 +1044,25 @@ def exportGcodePath(filename,vertslist,operations):
 			#v1=Vector(v)
 			#v2=Vector(last)
 			#vect=v1-v2
-			duration+=vect.length/(f/unitcorr)
+			duration+=l/f
 			last=v
 			if o.axes!='3':
 				lastrot=r
+				
 			processedops+=1
 			if split and processedops>m.split_limit:
 				findex+=1
 				c=startNewFile()
 				processedops=0
 				
-	o.duration=duration
+	o.duration=duration*unitcorr
 	#print('duration')
 	#print(o.duration)
 	
-	print(time.time()-t)
+	
 	c.program_end()
 	c.file_close()
+	print(time.time()-t)
 
 def orderPoly(polys):   #sor poly, do holes e.t.c.
 	p=Polygon.Polygon()

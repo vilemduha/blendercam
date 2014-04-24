@@ -197,7 +197,7 @@ class camOperation(bpy.types.PropertyGroup):
 	
 	name = bpy.props.StringProperty(name="Operation Name", default="Operation", update = updateRest)
 	filename = bpy.props.StringProperty(name="File name", default="Operation", update = updateRest)
-	
+	auto_export = bpy.props.BoolProperty(name="Auto export",description="export files immediately after path calculation", default=True)
 	#group = bpy.props.StringProperty(name='Object group', description='group of objects which will be included in this operation')
 	object_name = bpy.props.StringProperty(name='Object', description='object handled by this operation', update=operationValid)
 	group_name = bpy.props.StringProperty(name='Group', description='Object group handled by this operation', update=operationValid)
@@ -553,6 +553,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ops.CalculatePath,
 	ops.PathsChain,
 	ops.PathsAll,
+	ops.PathExport,
 	ops.CAMPositionObject,
 	ops.CAMSimulate,
 	ops.CAMSimulateChain,
