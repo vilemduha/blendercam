@@ -976,6 +976,7 @@ def exportGcodePath(filename,vertslist,operations):
 		duration=0.0
 		f=millfeedrate
 		downvector= Vector((0,0,-1))
+		plungelimit=(pi/2-o.plunge_angle)
 		print('2')
 		for vi,vert in enumerate(verts):
 			v=vert.co
@@ -1005,7 +1006,7 @@ def exportGcodePath(filename,vertslist,operations):
 			#v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)
 			vect=v-last
 			l=vect.length
-			if vi>0  and l>0 and downvector.angle(vect)<(pi/2-o.plunge_angle):
+			if vi>0  and l>0 and downvector.angle(vect)<plungelimit:
 				#print('plunge')
 				#print(vect)
 				if f!=plungefeedrate:
@@ -1041,9 +1042,7 @@ def exportGcodePath(filename,vertslist,operations):
 				else:
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
 
-			#v1=Vector(v)
-			#v2=Vector(last)
-			#vect=v1-v2
+			
 			duration+=l/f
 			last=v
 			if o.axes!='3':
