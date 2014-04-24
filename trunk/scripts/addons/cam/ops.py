@@ -23,8 +23,9 @@
 
 import bpy
 import subprocess,os, sys, threading
-from cam import utils, pack
+from cam import utils, pack,polygon_utils_cam
 from bpy.props import *
+import Polygon
 
 def getChangeData(o):####this is a function to check if object props have changed, to see if image updates are needed
 	s=bpy.context.scene
@@ -171,16 +172,7 @@ class PathsBackground(bpy.types.Operator):
 		return {'FINISHED'}
 		
 		
-def getOperationSources(o):
-	if o.geometry_source=='OBJECT':
-		#bpy.ops.object.select_all(action='DESELECT')
-		ob=bpy.data.objects[o.object_name]
-		o.objects=[ob]
-	elif o.geometry_source=='GROUP':
-		group=bpy.data.groups[o.group_name]
-		o.objects=group.objects
-	elif o.geometry_source=='IMAGE':
-		o.use_exact=False;
+
 		
 class CalculatePath(bpy.types.Operator):
 	'''calculate CAM paths'''
@@ -219,7 +211,7 @@ class CalculatePath(bpy.types.Operator):
 		#o.material=bpy.context.scene.cam_material[0]
 		o.operator=self
 		#'''#removed for groups support, this has to be done object by object...
-		getOperationSources(o)
+		utils.getOperationSources(o)
 		#print('áhoj1')
 		if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 			o.onlycurves=True
