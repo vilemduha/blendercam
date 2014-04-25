@@ -2349,8 +2349,9 @@ def getPath3axis(context,operation):
 			#print(z)
 			#sliceimage=o.offset_image>z
 			islice=o.offset_image>z
-			slicepolys=imageToPoly(o,islice,with_border=False)
-			
+			slicepolys=imageToPoly(o,islice,with_border=True)
+			#for pviz in slicepolys:
+			#	polyToMesh('slice',pviz,z)
 			poly=Polygon.Polygon()#polygversion
 			lastchunks=[]
 			#imagechunks=imageToChunks(o,islice)
@@ -2367,7 +2368,7 @@ def getPath3axis(context,operation):
 				#print()
 				#polyToMesh(p,z)
 				nchunks=polyToChunks(p,z)
-				nchunks=limitChunks(nchunks,o)
+				nchunks=limitChunks(nchunks,o, force=True)
 				#print('chunksnum',len(nchunks))
 				#if len(nchunks)>0:
 				#   print('chunkpoints',len(nchunks[0].points))
@@ -2384,14 +2385,13 @@ def getPath3axis(context,operation):
 			#
 			#print(len(lastslice))
 			#'''
-			#print('test waterlayers')
-			#print(layerstep,layerstepinc)
 			if o.waterline_fill:
 				layerstart=min(o.maxz,z+o.slice_detail)#
 				layerend=max(o.min.z,z-o.slice_detail)#
 				layers=[[layerstart,layerend]]
-			
-				if len(lastslice)>0 or (o.inverse and len(poly)>0 and slicesfilled==1):#fill top slice for normal and first for inverse, fill between polys
+				#####################################
+				#fill top slice for normal and first for inverse, fill between polys
+				if len(lastslice)>0 or (o.inverse and len(poly)>0 and slicesfilled==1):
 					offs=False
 					if len(lastslice)>0:#between polys
 						if o.inverse:
@@ -2403,6 +2403,8 @@ def getPath3axis(context,operation):
 						restpoly=lastslice
 						#print('filling first')
 					
+					#print(len(restpoly))
+					#polyToMesh('fillrest',restpoly,z)
 					restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
 					fillz = z 
 					i=0
@@ -2412,7 +2414,8 @@ def getPath3axis(context,operation):
 						if o.waterline_project:
 							nchunks=chunksRefine(nchunks,o)
 							nchunks=sampleChunks(o,nchunks,layers)
-						
+							
+						nchunks=limitChunks(nchunks,o, force=True)
 						#########################
 						slicechunks.extend(nchunks)
 						parentChildDist(lastchunks,nchunks,o)
@@ -2422,8 +2425,10 @@ def getPath3axis(context,operation):
 						i+=1
 						#print(i)
 				i=0
-				'''
-				if (slicesfilled>0 and layerstepinc==layerstep) or (not o.inverse and len(poly)>0 and slicesfilled==1) or (o.inverse and len(poly)==0 and slicesfilled>0):# fill layers and last slice, last slice with inverse is not working yet - inverse millings end now always on 0 so filling ambient does have no sense.
+				#'''
+				#####################################
+				# fill layers and last slice, last slice with inverse is not working yet - inverse millings end now always on 0 so filling ambient does have no sense.
+				if (slicesfilled>0 and layerstepinc==layerstep) or (not o.inverse and len(poly)>0 and slicesfilled==1) or (o.inverse and len(poly)==0 and slicesfilled>0):
 					fillz=z
 					layerstepinc=0
 					
@@ -2439,10 +2444,10 @@ def getPath3axis(context,operation):
 					restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
 					i=0
 					while len(restpoly)>0:
-						
+						print(i)
 						nchunks=polyToChunks(restpoly,fillz)
 						#########################
-						nchunks=limitChunks(nchunks,o)
+						nchunks=limitChunks(nchunks,o, force=True)
 						slicechunks.extend(nchunks)
 						parentChildDist(lastchunks,nchunks,o)
 						lastchunks=nchunks
@@ -2451,7 +2456,7 @@ def getPath3axis(context,operation):
 						i+=1
 				
 				
-				'''		
+				#'''
 				percent=int(h/nslices*100)
 				progress('waterline layers ',percent)  
 				lastslice=poly

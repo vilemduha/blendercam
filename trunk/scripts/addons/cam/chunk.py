@@ -463,8 +463,8 @@ def optimizeChunk(chunk,operation):
 	'''
 	return chunk			
 	
-def limitChunks(chunks,o):#TODO: this should at least add point on area border... but shouldn't be needed at all at the first place...
-	if o.use_limit_curve:
+def limitChunks(chunks,o, force=False):#TODO: this should at least add point on area border... but shouldn't be needed at all at the first place...
+	if o.use_limit_curve or force:
 		nchunks=[]
 		for ch in chunks:
 			prevsampled=True
