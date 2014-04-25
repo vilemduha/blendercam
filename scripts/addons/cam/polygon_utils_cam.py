@@ -22,6 +22,8 @@ def Polygon2Shapely(p):
 	#	conts.append(l)
 	holes=[]
 	contours=[]
+	#print(len(p))
+	#print(p)
 	for ci,c in enumerate(p):
 		if p.isHole(ci):
 			#print('ishole')
@@ -215,7 +217,7 @@ def outlinePoly(p,r,circle_detail,optimize,optimize_threshold,offset = True):
 		p=pr
 	return p
 
-def polyToMesh(p,z):
+def polyToMesh(name,p,z):
 	import bpy,bmesh
 	from bpy_extras import object_utils
 	verts=[]
@@ -249,6 +251,7 @@ def polyToMesh(p,z):
 	object_utils.object_data_add(bpy.context, mesh)
 	
 	ob=bpy.context.active_object
+	ob.name=name
 	ob.location=(0,0,0)
 	bpy.ops.object.convert(target='CURVE')
 	bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
