@@ -6,6 +6,7 @@ import curve_simplify
 
 import Polygon
 try:
+	import shapely
 	from shapely.geometry import polygon as spolygon
 	from shapely import ops
 	from shapely import geometry
@@ -17,24 +18,26 @@ except:
 def Polygon2Shapely(p):
 	conts=[]
 	sp=geometry.Polygon()
-	#for ci,c in enumerate(p):
-	#	l=geometry.Polygon(c)
-	#	conts.append(l)
 	holes=[]
 	contours=[]
 	#print(len(p))
 	#print(p)
 	for ci,c in enumerate(p):
-		if p.isHole(ci):
-			#print('ishole')
-			holes.append(c)
-		else:
-			contours.append(c)
+		#print(ci)
+		shapely_p=spolygon.Polygon(c)
+		if p.nPoints(ci)>2 and shapely_p.is_valid:
+		
+			if p.isHole(ci):
+				#print('ishole')
+				holes.append(shapely_p)
+			else:
+				contours.append(shapely_p)
 			
-	for c in contours:
-		sp=sp.union(spolygon.Polygon(c))
+	#for c in contours:
+		#sp=sp.union(spolygon.Polygon(c)
+	sp=shapely.ops.unary_union(contours)
 	for h in holes:
-		sp=sp.difference(spolygon.Polygon(h))
+		sp=sp.difference(h)
 		
 	#sp=geometry.asMultiPolygon(conts)
 	#sp=ops.cascaded_union(sp)
