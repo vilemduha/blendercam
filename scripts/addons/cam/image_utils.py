@@ -1284,7 +1284,7 @@ def renderSampleImage(o):
 			r.image_settings.color_mode=cm
 		
 			i=bpy.data.images.load(iname)
-			bpy.context.scene.render.engine='BLENDER_CAM'
+			bpy.context.scene.render.engine='BLENDERCAM_RENDER'
 		a=imagetonumpy(i)
 		a=1.0-a
 		o.zbuffer_image=a

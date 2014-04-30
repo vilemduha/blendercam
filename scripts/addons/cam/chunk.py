@@ -580,7 +580,7 @@ def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies.
 		ch.parents=ch.nparents
 		ch.nparents=None
 		if len(ch.parents)>0:
-			print(len(ch.parents))
+			#print(len(ch.parents))
 			#ch.parents[0].poly=ch.parents[0].poly-ch.poly
 			ch.parents[0].poly.addContour(ch.poly[0],1)
 		
@@ -613,9 +613,9 @@ def meshFromCurveToChunk(object):
 	perc=0
 	for vi in range(0,len(mesh.vertices)-1):
 		if not dk.isdisjoint([(vi,vi+1)]) and d[(vi,vi+1)]==1:
-			chunk.points.append((mesh.vertices[vi].co.x+x,mesh.vertices[vi].co.y+y,mesh.vertices[lastvi].co.z+z))
+			chunk.points.append((mesh.vertices[vi].co.x+x,mesh.vertices[vi].co.y+y,mesh.vertices[vi].co.z+z))
 		else:
-			chunk.points.append((mesh.vertices[vi].co.x+x,mesh.vertices[vi].co.y+y,mesh.vertices[lastvi].co.z+z))
+			chunk.points.append((mesh.vertices[vi].co.x+x,mesh.vertices[vi].co.y+y,mesh.vertices[vi].co.z+z))
 			if not(dk.isdisjoint([(vi,lastvi)])) or not(dk.isdisjoint([(lastvi,vi)])):
 				#print('itis')
 				chunk.closed=True
