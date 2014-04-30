@@ -204,7 +204,7 @@ def samplePathLow(o,ch1,ch2,dosample):
 			for p in bpath.points:
 				xs=(p[0]-minx)/pixsize+o.borderwidth+pixsize/2#-m
 				ys=(p[1]-miny)/pixsize+o.borderwidth+pixsize/2#-m
-				z=-getSampleImage((xs,ys),o.offset_image,o.minz)+o.skin
+				z=getSampleImage((xs,ys),o.offset_image,o.minz)+o.skin
 				if z>p[2]:
 					p[2]=z
 	return bpath
@@ -993,7 +993,7 @@ def exportGcodePath(filename,vertslist,operations):
 		plungefeedrate= millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
 		
-		last=Vector((100000000000,100000000000000,100000000000))#nonsense values so first step of the operation gets written for sure
+		last=Vector((0,0,o.free_movement_height))#nonsense values so first step of the operation gets written for sure
 		lastrot=Euler((0,0,0))
 		duration=0.0
 		f=millfeedrate
@@ -1065,17 +1065,23 @@ def exportGcodePath(filename,vertslist,operations):
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
 
 			
-			duration+=l/f
+			duration+=vect.length/f
+			print(duration)
 			last=v
 			if o.axes!='3':
 				lastrot=r
 				
 			processedops+=1
 			if split and processedops>m.split_limit:
+				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=o.free_movement_height*unitcorr)
+				#@v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
 				findex+=1
+				c.file_close()
 				c=startNewFile()
+				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=o.free_movement_height*unitcorr)
+				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=last.z*unitcorr)
 				processedops=0
-				
+			
 	o.duration=duration*unitcorr
 	#print('duration')
 	#print(o.duration)
@@ -1137,7 +1143,7 @@ def silhoueteOffset(context,offset):
 	p=outlinePoly(p,abs(offset),64,True,abs(offset)*0.002,offset>0)
 	#print(p[0])
 	#p.shift(ob.location.x,ob.location.y)
-	polyToMesh(p,ob.location.z)
+	polyToMesh('offset curve',p,ob.location.z)
 	
 	
 	return {'FINISHED'}
@@ -2236,7 +2242,15 @@ def getPath3axis(context,operation):
 			chunks.extend(lchunks)
 		
 		chunksToMesh(chunks,o)
-	
+		
+	elif o.strategy=='CURVE':
+		pathSamples=[]
+		ob=bpy.data.objects[o.curve_object]
+		pathSamples.extend(curveToChunks(ob))
+		pathSamples=sortChunks(pathSamples,o)#sort before sampling
+		pathSamples=chunksRefine(pathSamples,o)
+		chunksToMesh(pathSamples,o)
+		
 	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL' or o.strategy=='CRAZY':  
 		
 		
@@ -2568,7 +2582,7 @@ def getPath3axis(context,operation):
 			for pslice in pslices:
 				p=pslice#-p1
 			#print(p)
-				polyToMesh(p,slicechunk[0][0][2])
+				polyToMesh('slice',p,slicechunk[0][0][2])
 		
 	
 	#progress('finished')

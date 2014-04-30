@@ -237,6 +237,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('CUTOUT','Cutout', 'Cut the silhouete with offset'),
 			('POCKET','Pocket', 'Pocket operation'),
 			('CARVE','Carve', 'Pocket operation'),
+			('CURVE','Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
 			('DRILL','Drill', 'Drill operation'),('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!')),
 		description='Strategy',
@@ -261,7 +262,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('OUTLINEFILL','Outline Fill', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
 			('CUTOUT','Cutout', 'Cut the silhouete with offset'),
 			('POCKET','Pocket', 'Pocket operation'),
-			('CARVE','Carve', 'Pocket operation'),
+			('CARVE','Carve', 'Carve operation'),
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.')),
 		description='Strategy',
 		default='PARALLEL',
@@ -340,7 +341,7 @@ class camOperation(bpy.types.PropertyGroup):
 	free_movement_height = bpy.props.FloatProperty(name="Free movement height", default=0.01, min=0.0000, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	movement_insideout = EnumProperty(name='Direction', items=(('INSIDEOUT','Inside out', 'a'),('OUTSIDEIN', 'Outside in', 'a')),description='approach to the piece',default='INSIDEOUT', update = updateRest)
 	parallel_step_back =  bpy.props.BoolProperty(name="Parallel step back", description='For roughing and finishing in one pass: mills material in climb mode, then steps back and goes between 2 last chunks back', default=False, update = updateRest)
-	stay_low = bpy.props.BoolProperty(name="Stay low if possible", default=False, update = updateRest)
+	stay_low = bpy.props.BoolProperty(name="Stay low if possible", default=True, update = updateRest)
 	#optimization and performance
 	use_exact = bpy.props.BoolProperty(name="Use exact mode",description="Exact mode allows greater precision, but is slower with complex meshes", default=True, update = updateExact)
 	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
@@ -523,7 +524,7 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 	preset_subdir = "cam_machines"
 		
 class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
-	bl_idname = 'BLENDER_CAM'
+	bl_idname = 'BLENDERCAM_RENDER'
 	bl_label = "Blender CAM"
 				
 def get_panels():#convenience function for bot register and unregister functions
