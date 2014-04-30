@@ -30,22 +30,24 @@ class Creator:
 	##	Internals
 		
 	def file_open(self, name):
-		self.buffer=[]
+		#self.buffer=[]
 		self.file = open(name, 'w')
 
 	def file_close(self):
-		self.file.write(''.join(self.buffer))
-		self.buffer=[]
+		#self.file.write(''.join(self.buffer))
+		#self.buffer=[]
 		self.file.close()
 
 	def write(self, s):
-		self.buffer.append(s)
-		if len(self.buffer)>100000:
-			self.file.write(''.join(self.buffer))
-			self.buffer=[]
+		self.file.write(s)
+		#self.buffer.append(s)
+		#if len(self.buffer)>100000:
+		#	self.file.write(''.join(self.buffer))
+		#	self.buffer=[]
 			
 	def writem(self, a):
-		self.buffer.extend(a)
+		self.file.write(''.join(a))
+		#self.buffer.extend(a)
 	############################################################################
 	##	Programs
 
