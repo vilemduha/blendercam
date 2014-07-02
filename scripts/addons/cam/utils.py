@@ -1177,7 +1177,7 @@ def polygonBoolean(context,boolean_type):
 		for p2 in polys:
 			p1=p1 & p2
 		
-	polyToMesh(p1,0)
+	polyToMesh('boolean',p1,0)
 	#bpy.ops.object.convert(target='CURVE')
 	#bpy.context.scene.cursor_location=ob.location
 	#bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
