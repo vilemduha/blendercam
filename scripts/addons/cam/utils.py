@@ -1302,7 +1302,8 @@ def sortChunks(chunks,o):
 			mergedist=3*o.dist_between_paths
 			if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
 				mergedist=10*o.dist_between_paths
-			if o.stay_low and lastch!=None and (ch.distStart(pos,o)<mergedist or (o.parallel_step_back and ch.distStart(pos,o)<2*mergedist)):
+			if o.stay_low and lastch!=None and not(o.strategy=='CARVE' and o.carve_depth>0) and (ch.distStart(pos,o)<mergedist or (o.parallel_step_back and ch.distStart(pos,o)<2*mergedist)):
+				#CARVE should lift allways, when it goes below surface...
 				#print(mergedist,ch.dist(pos,o))
 				if o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL':# for these paths sorting happens after sampling, thats why they need resample the connection
 					between=samplePathLow(o,lastch,ch,True)

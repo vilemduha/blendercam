@@ -612,14 +612,16 @@ def meshFromCurveToChunk(object):
 	vtotal=len(mesh.vertices)
 	perc=0
 	for vi in range(0,len(mesh.vertices)-1):
+		co=(mesh.vertices[vi].co+object.location).to_tuple()
 		if not dk.isdisjoint([(vi,vi+1)]) and d[(vi,vi+1)]==1:
-			chunk.points.append((mesh.vertices[vi].co.x+x,mesh.vertices[vi].co.y+y,mesh.vertices[vi].co.z+z))
+			chunk.points.append(co)
 		else:
-			chunk.points.append((mesh.vertices[vi].co.x+x,mesh.vertices[vi].co.y+y,mesh.vertices[vi].co.z+z))
-			if not(dk.isdisjoint([(vi,lastvi)])) or not(dk.isdisjoint([(lastvi,vi)])):
-				#print('itis')
+			chunk.points.append(co)
+			if len(chunk.points)>2 and (not(dk.isdisjoint([(vi,lastvi)])) or not(dk.isdisjoint([(lastvi,vi)]))):#this was looping chunks of length of only 2 points...
+				print('itis')
+				
 				chunk.closed=True
-				chunk.points.append((mesh.vertices[lastvi].co.x+x,mesh.vertices[lastvi].co.y+y,mesh.vertices[lastvi].co.z+z))#add first point to end#originally the z was mesh.vertices[lastvi].co.z+z
+				chunk.points.append((mesh.vertices[lastvi].co+object.location).to_tuple())#add first point to end#originally the z was mesh.vertices[lastvi].co.z+z
 				#chunk.append((mesh.vertices[lastvi].co.x+x,mesh.vertices[lastvi].co.y+y,mesh.vertices[lastvi].co.z+z))
 			#else:
 				#print('itisnot')
