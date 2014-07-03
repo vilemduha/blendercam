@@ -1978,12 +1978,13 @@ def getPath3axis(context,operation):
 			layerstart=o.maxz
 			for x in range(0,n):
 				layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
-				layers.append([layerstart,layerend])
+				if int(layerstart*10**8)!=int(layerend*10**8):#it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
+					layers.append([layerstart,layerend])
 				layerstart=layerend
 		else:
 				layers=[[o.maxz,o.min.z]]
 			
-		
+		print(layers)
 		extendorder=[]
 		if o.first_down:#each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
 			for chunk in chunksFromCurve:
