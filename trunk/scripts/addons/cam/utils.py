@@ -284,14 +284,9 @@ def sampleChunks(o,pathSamples,layers):
 			n+=1
 			x=s[0]
 			y=s[1]
-			if o.ambient.isInside(x,y):
-				#z=minz# we'll store results into this
-				
-				sampled=False
-				
-				#higherlayer=0
-				newsample=(0,0,1);
-				
+			if not o.ambient.isInside(x,y):
+				newsample=(x,y,1)
+			else:
 				####sampling
 				if o.use_exact:
 					
@@ -328,73 +323,76 @@ def sampleChunks(o,pathSamples,layers):
 						
 				#elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here, this should be obsolete,
 				#	newsample=(x,y,minz)
-					
-				for i,l in enumerate(layers):
-					terminatechunk=False
-					ch=layeractivechunks[i]
-					#print(i,l)
-					#print(l[1],l[0])
-					if l[1]<=newsample[2]<=l[0]:
-						lastlayer=currentlayer
-						currentlayer=i
-						if lastlayer!=None and currentlayer!=None and lastlayer!=currentlayer:# and lastsample[2]!=newsample[2]:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
-							if currentlayer<lastlayer:
-								growing=True
-								r=range(currentlayer,lastlayer)
-								spliti=1
-							else:
-								r=range(lastlayer,currentlayer)
-								growing=False
-								spliti=0
-							#print(r)
-							li=0
-							for ls in r:
-								splitz=layers[ls][1]
-								#print(ls)
-							
-								v1=lastsample
-								v2=newsample
-								if o.protect_vertical:
-									v1,v2=isVerticalLimit(v1,v2,o.protect_vertical_limit)
-								v1=Vector(v1)
-								v2=Vector(v2)
-								#print(v1,v2)
-								ratio=(splitz-v1.z)/(v2.z-v1.z)
-								#print(ratio)
-								betweensample=v1+(v2-v1)*ratio
-								
-								#ch.points.append(betweensample.to_tuple())
-								
-								if growing:
-									if li>0:
-										layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
-									else:
-										layeractivechunks[ls].points.append(betweensample.to_tuple())
-									layeractivechunks[ls+1].points.append(betweensample.to_tuple())
-								else:
-									
-									layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
-									layeractivechunks[ls+1].points.insert(0,betweensample.to_tuple())
-								li+=1
-								#this chunk is terminated, and allready in layerchunks /
-									
-							#ch.points.append(betweensample.to_tuple())#
-						ch.points.append(newsample)
-					elif l[1]>newsample[2]:
-						ch.points.append((newsample[0],newsample[1],l[1]))
-					elif l[0]<newsample[2]:  #terminate chunk
-						terminatechunk=True
-
-					if terminatechunk:
-						if len(ch.points)>0:
-							if len(ch.points)>0: 
-								layerchunks[i].append(ch)
-								thisrunchunks[i].append(ch)
-								layeractivechunks[i]=camPathChunk([])
-				lastsample=newsample
-					
+			for i,l in enumerate(layers):
+				terminatechunk=False
 				
+				ch=layeractivechunks[i]
+				#print(i,l)
+				#print(l[1],l[0])
+				
+				if l[1]<=newsample[2]<=l[0]:
+					lastlayer=None #rather the last sample here ? has to be set to None, since sometimes lastsample vs lastlayer didn't fit and did ugly ugly stuff....
+					for i2,l2 in enumerate(layers):
+						if l2[1]<=lastsample[2]<=l2[0]:
+							lastlayer=i2
 					
+					currentlayer=i
+					if lastlayer!=None and lastlayer!=currentlayer:# and lastsample[2]!=newsample[2]:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
+						if currentlayer<lastlayer:
+							growing=True
+							r=range(currentlayer,lastlayer)
+							spliti=1
+						else:
+							r=range(lastlayer,currentlayer)
+							growing=False
+							spliti=0
+						#print(r)
+						li=0
+						for ls in r:
+							splitz=layers[ls][1]
+							#print(ls)
+						
+							v1=lastsample
+							v2=newsample
+							if o.protect_vertical:
+								v1,v2=isVerticalLimit(v1,v2,o.protect_vertical_limit)
+							v1=Vector(v1)
+							v2=Vector(v2)
+							#print(v1,v2)
+							ratio=(splitz-v1.z)/(v2.z-v1.z)
+							#print(ratio)
+							betweensample=v1+(v2-v1)*ratio
+							
+							#ch.points.append(betweensample.to_tuple())
+							
+							if growing:
+								if li>0:
+									layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
+								else:
+									layeractivechunks[ls].points.append(betweensample.to_tuple())
+								layeractivechunks[ls+1].points.append(betweensample.to_tuple())
+							else:
+								#print(v1,v2,betweensample,lastlayer,currentlayer)
+								layeractivechunks[ls].points.insert(-1,betweensample.to_tuple())
+								layeractivechunks[ls+1].points.insert(0,betweensample.to_tuple())
+							
+							li+=1
+							#this chunk is terminated, and allready in layerchunks /
+								
+						#ch.points.append(betweensample.to_tuple())#
+					ch.points.append(newsample)
+				elif l[1]>newsample[2]:
+					ch.points.append((newsample[0],newsample[1],l[1]))
+				elif l[0]<newsample[2]:  #terminate chunk
+					terminatechunk=True
+
+				if terminatechunk:
+					if len(ch.points)>0:
+						layerchunks[i].append(ch)
+						thisrunchunks[i].append(ch)
+						layeractivechunks[i]=camPathChunk([])
+			lastsample=newsample
+			
 		for i,l in enumerate(layers):
 			ch=layeractivechunks[i]
 			if len(ch.points)>0:  
@@ -657,7 +655,6 @@ def doSimulation(name,operations):
 	o=operations[0]#initialization now happens from first operation, also for chains.
 	getOperationSources(o)
 	getBounds(o)#this is here because some background computed operations still didn't have bounds data
-	#BUG - background computed operations don't simulate, they have no bounds data 
 	sx=o.max.x-o.min.x
 	sy=o.max.y-o.min.y
 
@@ -790,6 +787,7 @@ def chunksToMesh(chunks,o):
 	e=0.0001
 	lifted=True
 	test=bpy.app.debug_value
+	edges=[]	
 	
 	for chi in range(0,len(chunks)):
 		#print(chi)
@@ -807,8 +805,11 @@ def chunksToMesh(chunks,o):
 				v=ch.startpoints[0]#startpoints=retract points
 				verts_rotations.append(ch.rotations[0])
 			verts.append(v)
-		
+		#scount=len(verts)
 		verts.extend(ch.points)
+		#ecount=len(verts)
+		#for a in range(scount,ecount-1):
+		#	edges.append((a,a+1))
 		if o.axes!='3' and o.axes!='5':
 			verts_rotations.extend(ch.rotations)
 			
@@ -1066,7 +1067,7 @@ def exportGcodePath(filename,vertslist,operations):
 
 			
 			duration+=vect.length/f
-			print(duration)
+			#print(duration)
 			last=v
 			if o.axes!='3':
 				lastrot=r
@@ -2254,9 +2255,6 @@ def getPath3axis(context,operation):
 		chunksToMesh(pathSamples,o)
 		
 	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL' or o.strategy=='CRAZY':  
-		
-		
-		ambient_level=0.0
 		
 		if o.strategy=='CARVE':
 			pathSamples=[]

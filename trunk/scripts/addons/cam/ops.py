@@ -200,7 +200,7 @@ class CalculatePath(bpy.types.Operator):
 		chd=getChangeData(o)
 		#print(chd)
 		#print(o.changedata)
-		if o.changedata!=chd or 1:
+		if o.changedata!=chd:# or 1:
 			#print('ojojojo')
 			o.update_offsetimage_tag=True
 			o.update_zbufferimage_tag=True
