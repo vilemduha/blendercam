@@ -2,7 +2,12 @@ import bpy
 from cam import utils, simple,polygon_utils_cam
 import Polygon
 import random
-
+#this algorithm takes all selected curves, 
+#converts them to polygons,
+# offsets them by the pre-set margin
+#then chooses a starting location possibly inside the allready occupied area and moves and rotates the polygon out of the occupied area
+#if one or more positions are found where the poly doesn't overlap, it is placed and added to the occupied area - allpoly
+#this algorithm is very slow, a collision algorithm would be much much faster...
 def packCurves():
 	packsettings=bpy.context.scene.cam_pack
 	

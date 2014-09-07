@@ -23,7 +23,7 @@
 
 import bpy
 import subprocess,os, sys, threading
-from cam import utils, pack,polygon_utils_cam
+from cam import utils, pack,polygon_utils_cam,chunk
 from bpy.props import *
 import Polygon
 
@@ -265,6 +265,42 @@ class CamPackObjects(bpy.types.Operator):
 	
 	def draw(self, context):
 		layout = self.layout
+
+class CamSliceObjects(bpy.types.Operator):
+	'''calculate all CAM paths'''
+	#warning, this is a separate and neglected feature, it's a mess...
+	bl_idname = "object.cam_slice_objects"
+	bl_label = "Slice object - usefull for lasercut puzzles e.t.c."
+	bl_options = {'REGISTER', 'UNDO'}
+		
+	def execute(self, context):
+		from cam import slice
+		ob=bpy.context.active_object
+		slices = slice.getSlices(ob, bpy.context.scene.cam_slice.slice_distance)
+		#print(slicechunks)
+		for slicechunks in slices:
+			for slicechunk in slicechunks:
+				#these functions here are totally useless conversions, could generate slices more directly.
+				print (slicechunk)
+				nchp=[]
+				for p in slicechunk:
+					nchp.append((p[0],p[1]))
+				print(slicechunk)
+				ch = chunk.camPathChunk(nchp)
+
+				print(ch)
+				pslices=chunk.chunksToPolys([ch])
+				#p1=outlinePoly(pslice,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
+				for pslice in pslices:
+					p=pslice#-p1
+				#print(p)
+					print(len(ch.points))
+					polygon_utils_cam.polyToMesh('slice',p,slicechunk[0][2])
+		return {'FINISHED'}
+	
+	def draw(self, context):
+		layout = self.layout
+		
 		
 		
 def getChainOperations(chain):

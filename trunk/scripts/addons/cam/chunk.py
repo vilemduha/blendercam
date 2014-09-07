@@ -644,17 +644,34 @@ def meshFromCurveToChunk(object):
 	chunks.append(chunk)
 	return chunks
 
+def makeVisible(o):
+	storage=[True,[]]
 	
+	if not o.hide:
+		storage[0]=False
+	
+	for i in range(0,20):
+		storage[1].append(o.layers[i])
+	
+		o.layers[i]=bpy.context.scene.layers[i]
+	return storage
+
+def restoreVisibility(o,storage):
+	o.hide=storage[0]
+	print(storage)
+	for i in range(0,20):
+		o.layers[i]=storage[1][i]
+
 	
 def curveToChunks(o):
 	activate(o)
-	
+	storage = makeVisible(o)#this is here because all of this doesn't work when object is not visible or on current layer
 	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
 	bpy.ops.group.objects_remove_all()
-	o=bpy.context.active_object
-	if o.type=='FONT':#support for text objects is only and only here.
+	co=bpy.context.active_object
+	if co.type=='FONT':#support for text objects is only and only here.
 		bpy.ops.object.convert(target='CURVE', keep_original=False)
-	o.data.dimensions='3D'
+	co.data.dimensions='3D'
 	try:
 		bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 		bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
@@ -664,17 +681,18 @@ def curveToChunks(o):
 		pass
 	
 	#o.data.dimensions='3D'
-	o.data.bevel_depth=0
-	o.data.extrude=0
+	co.data.bevel_depth=0
+	co.data.extrude=0
 	bpy.ops.object.convert(target='MESH', keep_original=False)
 	
-	o=bpy.context.active_object
-	chunks=meshFromCurveToChunk(o)
+	co=bpy.context.active_object
+	chunks=meshFromCurveToChunk(co)
 	
 		
-	o=bpy.context.active_object
+	co=bpy.context.active_object
 	
-	bpy.context.scene.objects.unlink(o)
+	bpy.context.scene.objects.unlink(co)
+	restoreVisibility(o,storage)
 	return chunks
 	
 def polyToChunks(p,zlevel):#
