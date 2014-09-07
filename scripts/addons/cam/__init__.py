@@ -77,7 +77,7 @@ class machineSettings(bpy.types.PropertyGroup):
 	axis5 = bpy.props.BoolProperty(name="#5th axis",description="Machine has 5th axis", default=0)
 	
 	eval_splitting = bpy.props.BoolProperty(name="Split files",description="split gcode file with large number of operations", default=True)#split large files
-	split_limit = IntProperty(name="Operations per file", description="Split files with larger number of operations than this", min=10000, max=20000000, default=800000)
+	split_limit = IntProperty(name="Operations per file", description="Split files with larger number of operations than this", min=1000, max=20000000, default=800000)
 	'''rotary_axis1 = EnumProperty(name='Axis 1',
 		items=(
 			('X', 'X', 'x'),
@@ -101,6 +101,11 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
 	distance = FloatProperty(name="Minimum distance", description="minimum distance between objects(should be at least cutter diameter!)", min=0.001, max=10, default=0.01, precision=PRECISION, unit="LENGTH")
 	rotate = bpy.props.BoolProperty(name="enable rotation",description="Enable rotation of elements", default=True)
 
+class SliceObjectsSettings(bpy.types.PropertyGroup):
+	'''stores all data for machines'''
+	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
+	
+	slice_distance = FloatProperty(name="Slicing distance", description="slices distance in z, should be most often thickness of plywood sheet.", min=0.001, max=10, default=0.005, precision=PRECISION, unit="LENGTH")
 		
 
 	
@@ -159,7 +164,7 @@ def updateZbufferImage(self,context):
 	self.changed=True
 	self.update_zbufferimage_tag=True
 	self.update_offsetimage_tag=True
-	ops.getOperationSources(self)
+	utils.getOperationSources(self)
 	ops.checkMemoryLimit(self)
 
 def updateStrategy(o,context):
@@ -239,10 +244,12 @@ class camOperation(bpy.types.PropertyGroup):
 			('CARVE','Carve', 'Pocket operation'),
 			('CURVE','Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
-			('DRILL','Drill', 'Drill operation'),('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!')),
+			('DRILL','Drill', 'Drill operation'),('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
+			('MEDIAL_AXIS','Medial axis', 'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
+			),
 		description='Strategy',
 		default='PARALLEL',
-		update = updateStrategy)#,('SLICES','Slices','this prepares model for cutting from sheets of material')
+		update = updateStrategy)
 	strategy4axis = EnumProperty(name='Strategy',
 		items=(
 			('PARALLELA','Parallel around A', 'Parallel lines around A axis'),
@@ -549,6 +556,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ui.CAM_CUTTER_Panel,
 	ui.CAM_MACHINE_Panel,
 	ui.CAM_PACK_Panel,
+	ui.CAM_SLICE_Panel,
 	
 	ops.PathsBackground,
 	ops.CalculatePath,
@@ -568,6 +576,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ops.CamOperationMove,
 	#shape packing
 	ops.CamPackObjects,
+	ops.CamSliceObjects,
 	#other tools
 	ops.CamPolyBoolean,
 	ops.CamOffsetSilhouete,
@@ -584,6 +593,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	#CamBackgroundMonitor
 	#pack module:
 	PackObjectsSettings,
+	SliceObjectsSettings,
 	
 	
 	)
@@ -665,6 +675,7 @@ def register():
 	
 	s.cam_pack = bpy.props.PointerProperty(type=PackObjectsSettings)
 	
+	s.cam_slice = bpy.props.PointerProperty(type=SliceObjectsSettings)
 	#add compatibility to standard blender panels
 	for p in compatible_panels():
 		p.COMPAT_ENGINES.add('BLENDER_CAM')

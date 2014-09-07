@@ -10,7 +10,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
@@ -88,14 +88,18 @@ def getBoundsWorldspace(obs):
 				maxy=max(maxy,worldCoord.y)
 				maxz=max(maxz,worldCoord.z)
 		else:
+			
 			for coord in bb:
-				worldCoord = mw * Vector((coord[0], coord[1], coord[2]))
+				#this can work badly with some imported curves, don't know why...
+				#worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
+				worldCoord =mw * Vector((coord[0], coord[1], coord[2]))
 				minx=min(minx,worldCoord.x)
 				miny=min(miny,worldCoord.y)
 				minz=min(minz,worldCoord.z)
 				maxx=max(maxx,worldCoord.x)
 				maxy=max(maxy,worldCoord.y)
 				maxz=max(maxz,worldCoord.z)
+			
 	#progress(time.time()-t)
 	return minx,miny,minz,maxx,maxy,maxz
 
@@ -332,9 +336,10 @@ def sampleChunks(o,pathSamples,layers):
 				
 				if l[1]<=newsample[2]<=l[0]:
 					lastlayer=None #rather the last sample here ? has to be set to None, since sometimes lastsample vs lastlayer didn't fit and did ugly ugly stuff....
-					for i2,l2 in enumerate(layers):
-						if l2[1]<=lastsample[2]<=l2[0]:
-							lastlayer=i2
+					if lastsample!=None:
+						for i2,l2 in enumerate(layers):
+							if l2[1]<=lastsample[2]<=l2[0]:
+								lastlayer=i2
 					
 					currentlayer=i
 					if lastlayer!=None and lastlayer!=currentlayer:# and lastsample[2]!=newsample[2]:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
@@ -383,7 +388,7 @@ def sampleChunks(o,pathSamples,layers):
 					ch.points.append(newsample)
 				elif l[1]>newsample[2]:
 					ch.points.append((newsample[0],newsample[1],l[1]))
-				elif l[0]<newsample[2]:  #terminate chunk
+				elif l[0]<newsample[2]:	 #terminate chunk
 					terminatechunk=True
 
 				if terminatechunk:
@@ -398,10 +403,10 @@ def sampleChunks(o,pathSamples,layers):
 			if len(ch.points)>0:  
 				
 				#if o.stay_low and len(layerchunks[i])>0:
-				#   between=samplePathLow(o,layerchunks[i][-1],ch)#this should be moved after sort
-				#   layerchunks[i][-1].points.extend(between)
-				#   layerchunks[i][-1].points.extend(ch.points) 
-				#else:  
+				#	between=samplePathLow(o,layerchunks[i][-1],ch)#this should be moved after sort
+				#	layerchunks[i][-1].points.extend(between)
+				#	layerchunks[i][-1].points.extend(ch.points) 
+				#else:	
 					
 				layerchunks[i].append(ch)
 				thisrunchunks[i].append(ch)
@@ -600,7 +605,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 						ch.points.append(p)
 						ch.rotations.append(rotation)
 						ch.startpoints.append(startp)
-					elif l[0]<distance:  #retract to original track
+					elif l[0]<distance:	 #retract to original track
 						ch.points.append(startp)
 						ch.rotations.append(rotation)
 						ch.startpoints.append(startp)
@@ -723,8 +728,8 @@ def doSimulation(name,operations):
 	
 	
 	#if inamebase in bpy.data.images:
-	#   i=bpy.data.images[inamebase]
-	#   i.reload()
+	#	i=bpy.data.images[inamebase]
+	#	i.reload()
 	#else:
 	i=bpy.data.images.load(iname)
 
@@ -749,7 +754,10 @@ def doSimulation(name,operations):
 	
 	ob.location=((o.max.x+o.min.x)/2,(o.max.y+o.min.y)/2,o.min.z)
 	ob.scale.x=(o.max.x-o.min.x)/2
-	ob.scale.y=(o.max.y-o.min.y)/2  
+	ob.scale.y=(o.max.y-o.min.y)/2	
+	print(o.max.x, o.min.x)
+	print(o.max.y, o.min.y)
+	print('bounds')
 	disp=ob.modifiers[-1]
 	disp.direction='Z'
 	disp.texture_coords='LOCAL'
@@ -779,7 +787,7 @@ def chunksToMesh(chunks,o):
 	##########convert sampled chunks to path, optimization of paths
 	t=time.time()
 	s=bpy.context.scene
-	origin=(0,0,o.free_movement_height)  
+	origin=(0,0,o.free_movement_height)	 
 	verts = [origin]
 	if o.axes!='3':
 		verts_rotations=[(0,0,0)]
@@ -982,7 +990,7 @@ def exportGcodePath(filename,vertslist,operations):
 		c.comment('Tool change')
 		c.tool_change(o.cutter_id)
 		c.spindle(o.spindle_rpm,spdir_clockwise)
-		c.feedrate(o.feedrate)
+		c.feedrate(unitcorr*o.feedrate)
 		c.flush_nc()
 		
 		
@@ -994,7 +1002,7 @@ def exportGcodePath(filename,vertslist,operations):
 		plungefeedrate= millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
 		
-		last=Vector((0,0,o.free_movement_height))#nonsense values so first step of the operation gets written for sure
+		last=Vector((0.0,0.0,o.free_movement_height))#nonsense values so first step of the operation gets written for sure
 		lastrot=Euler((0,0,0))
 		duration=0.0
 		f=millfeedrate
@@ -1015,21 +1023,21 @@ def exportGcodePath(filename,vertslist,operations):
 				v.rotate(rcompensate)
 				
 				if r.x==lastrot.x: ra=None;
-				else:   ra=r.x*rotcorr
+				else:	ra=r.x*rotcorr
 				if r.y==lastrot.y: rb=None;
-				else:   rb=r.y*rotcorr
+				else:	rb=r.y*rotcorr
 
-			if v.x==last.x: vx=None; 
-			else:   vx=v.x*unitcorr
-			if v.y==last.y: vy=None; 
-			else:   vy=v.y*unitcorr
-			if v.z==last.z: vz=None; 
-			else:   vz=v.z*unitcorr
+			if vi>0 and v.x==last.x: vx=None; 
+			else:	vx=v.x*unitcorr
+			if vi>0 and v.y==last.y: vy=None; 
+			else:	vy=v.y*unitcorr
+			if vi>0 and v.z==last.z: vz=None; 
+			else:	vz=v.z*unitcorr
 			
 			#v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)
 			vect=v-last
 			l=vect.length
-			if vi>0  and l>0 and downvector.angle(vect)<plungelimit:
+			if vi>0	 and l>0 and downvector.angle(vect)<plungelimit:
 				#print('plunge')
 				#print(vect)
 				if f!=plungefeedrate:
@@ -1079,6 +1087,9 @@ def exportGcodePath(filename,vertslist,operations):
 				findex+=1
 				c.file_close()
 				c=startNewFile()
+				c.spindle(o.spindle_rpm,spdir_clockwise)
+				c.feedrate(unitcorr*o.feedrate)
+				c.flush_nc()
 				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=o.free_movement_height*unitcorr)
 				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=last.z*unitcorr)
 				processedops=0
@@ -1092,7 +1103,7 @@ def exportGcodePath(filename,vertslist,operations):
 	c.file_close()
 	print(time.time()-t)
 
-def orderPoly(polys):   #sor poly, do holes e.t.c.
+def orderPoly(polys):	#sor poly, do holes e.t.c.
 	p=Polygon.Polygon()
 	levels=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]] 
 	for ppart in polys:
@@ -1178,7 +1189,7 @@ def polygonBoolean(context,boolean_type):
 		for p2 in polys:
 			p1=p1 & p2
 		
-	polyToMesh('boolean',p1,0)
+	polyToMesh('boolean',p1,ob.location.z)
 	#bpy.ops.object.convert(target='CURVE')
 	#bpy.context.scene.cursor_location=ob.location
 	#bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
@@ -1269,7 +1280,7 @@ def sortChunks(chunks,o):
 	i=len(chunks)
 	pos=(0,0,0)
 	#for ch in chunks:
-	#   ch.getNext()#this stores the unsortedchildren properties
+	#	ch.getNext()#this stores the unsortedchildren properties
 	#print('numofchunks')
 	#print(len(chunks))
 	while len(chunks)>0:
@@ -1341,202 +1352,7 @@ def testbite(pos):
 	
 
 	
-def getSlices(operation, returnCurves):
-	'''function for slicing a mesh. It is now not used, but can be used for e.g. lasercutting from sheets a 3d model in the future.'''
-	ob=operation.object
-	layer_thickness=operation.slice_detail
-	edges=[]
-	verts = []
-	i=0
-	slices=[]#slice format is [length, minx,miny, maxx, maxy,verts,z]
-	firstslice=None
-	lastslice=None
-	maxzt = -100000000000000000000000000
-	minzt = 1000000000000000000000000000
-	progress('slicing object')
-	m=ob.data
-	#d={}#!
-	for p in m.polygons:
-		#a=i*50+12
-		
-		v1=m.vertices[p.vertices[0]].co
-		v2=m.vertices[p.vertices[1]].co
-		v3=m.vertices[p.vertices[2]].co
-		if len(p.vertices)==3:
-			tris=[[v1,v2,v3]]
-		else:
-			v4=m.vertices[p.vertices[3]].co
-			tris=[[v1,v2,v3],[v3,v4,v1]]
-			
-		for v in tris:  
-			#print(v)
-			minz=min(v[0].z,v[1].z,v[2].z)
-			maxz=max(v[0].z,v[1].z,v[2].z)
-					
-					
-			t=layer_thickness
-			
-			start=int(minz // t)
-			end=int(maxz // t +2)
-			if firstslice==None:
-					firstslice = start
-					lastslice = end
-					#print start, end
-					for s in range(firstslice,lastslice):
-							sz= s*t
-							slices.append([0.0,100000000000.0,100000000000.0,-100000000000.0,-100000000000.0,[],sz])
-	
-			if start<firstslice:
-					ns=[]
-					ind=0
-					for s in range(start, firstslice):
-							sz=s*t
-							slices.insert(ind,[0.0,100000000000.0,100000000000.0,-100000000000.0,-100000000000.0,[],sz])
-							ind+=1
-					firstslice=start
-			if end>lastslice:
-					for s in range(lastslice,end):
-							sz=s*t
-							slices.append([0.0,100000000000.0,100000000000.0,-100000000000.0,-100000000000.0,[],sz])
-							#i+=1
-					lastslice=end
-									
-								  
-			for s in range(start,end):
-					si=s-firstslice
-					sc=slices[si]
-					sz = sc[6]#s * t
-					
-					over=[]
-					under=[]
-					onslice=[]
-					iv=[]
-					for vert in v:
-							if vert[2]>sz:
-									over.append(vert)
-							elif vert[2]<sz:
-									under.append(vert)
-							elif vert[2]==sz:
-									onslice.append(vert)
-					if len(onslice)==1:
-						#pass	 
-						iv.append((onslice[0][0],onslice[0][1],sz))
-						#iv[-1]=(int(1000000000*iv[-1][0])/1000000000,int(1000000000*iv[-1][1])/1000000000,int(1000000000*iv[-1][2])/1000000000)			
-					elif len(onslice)==2:
-							#if p.normal.z<1.0:
-								#iv.extend([onslice[0],onslice[1]])
-							iv.append((onslice[0][0],onslice[0][1],sz))
-							iv.append((onslice[1][0],onslice[1][1],sz))
-							#iv[-2]=(int(1000000000*iv[-2][0])/1000000000,int(1000000000*iv[-2][1])/1000000000,int(1000000000*iv[-2][2])/1000000000)
-							#iv[-1]=(int(1000000000*iv[-1][0])/1000000000,int(1000000000*iv[-1][1])/1000000000,int(1000000000*iv[-1][2])/1000000000)
-					elif len(onslice)==3:
-							print('flat face')#,v)
-					for v1 in under:
-							for v2 in over:
-									coef=(sz-v1[2])/(v2[2]-v1[2])
-									x=v1[0]+(v2[0]-v1[0])*coef
-									y=v1[1]+(v2[1]-v1[1])*coef
-									z=sz#!
-									#iv.append((int(100000000*x)/100000000,int(100000000*y)/100000000,int(100000000*z)/100000000))#! z not needed!
-									iv.append((x,y,sz))
-					if len(iv)==2:
-							#d{iv[0]}
-							#sc=slices[si]
-							#print(iv)
-							sc[5].append(iv[0])
-							sc[5].append(iv[1])
-							
-					else:
-							pass
-							# print('strange count of layer faces',iv)  
-							
-					
-					
-							
-			if i % 10000 == 0:
-					print ('parsed faces', i, firstslice, lastslice, len(slices))
-			i+=1  
-	#sliceobs=[]  
-	progress('sorting slices') 
-	slicechunks=[]
-	obs=[]
-	for sc in slices:
-		if len(sc[5])>0:
-			i=0 
-			chi=0
-			
-			edges=[]
-			z=sc[5][0][2]
-			
-			slicechunks.append([])
-			
-			
-			d={}
-			for i in range(0,len(sc[5])):
-				d[sc[5][i]]=[]
-			for i in range(0,int(len(sc[5])/2)):
-				verts1=d[sc[5][i*2]]
-				verts2=d[sc[5][i*2+1]]
-				
-				if len(verts1)==2:
-					if verts1[0]==verts1[1]:
-						verts1.pop()
-				if  len(verts1)<2:
-					verts1.append(sc[5][i*2+1])
-					
-				if len(verts2)==2:
-					if verts2[0]==verts2[1]:
-						verts2.pop()
-					
-				if len(verts2)<2: 
-					verts2.append(sc[5][i*2])
-				
-				
-			
-			ch=[sc[5][0],sc[5][1]]#first and his reference
-			
-			d.pop(ch[0])
-		
-			i=0
-			verts=[123]
-			
-			while len(d)>0 and i<200000:# and verts!=[]:
-				verts=d.get(ch[-1],[])
-				if len(verts)<=1:
-					if len(ch)>2:
-						slicechunks[-1].append(ch)
-					v1=d.popitem()
-					ch=[v1[0],v1[1][0]] 
-					
-				elif len(verts)>2:
-					pass;
-					i+=1
-					
-					  
-				else:
-					done=False
-					for v in verts:
-						
-						if not done:
-							if v[0]==ch[-2][0] and v[1]==ch[-2][1]:# and v[2]==ch[-2][2]:
-								pass
-							else:
-								#print(v,ch[-2])
-								ch.append(v)
-								
-								d.pop(ch[-2])
-								done=True
-								if v[0]==ch[0][0] and v[1]==ch[0][1]:# and v[2]==ch[0][2]:
-									slicechunks[-1].append(ch)
-									print('closed')
-									#d.pop(ch[-1])
-									if len(d)>0:
-										v1=d.popitem()
-										ch=[v1[0],v1[1][0]]
-				i+=1
-		
-			slicechunks[-1].append(ch)################3this might be a bug!!!!
-		return slicechunks
+
 
 def getVectorRight(lastv,verts):#most right vector from a set
 	defa=100
@@ -1548,7 +1364,7 @@ def getVectorRight(lastv,verts):#most right vector from a set
 			vb=Vector(v)-v2
 			a=va.angle_signed(Vector(vb))
 			#if a<=0:
-			#   a=2*pi+a
+			#	a=2*pi+a
 			
 			if a<defa:
 				defa=a
@@ -1584,7 +1400,7 @@ def dictRemove(dict,val):
 	dict.pop(val)
 
 def getArea(poly):
-	return poly.area()  
+	return poly.area()	
 
 def addLoop(parentloop, start, end):
 	added=False
@@ -2050,7 +1866,7 @@ def getPath3axis(context,operation):
 			pnew=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 			
 			if o.dist_between_paths>o.cutter_diameter/2.0:#this mess under this IF condition is here ONLY because of the ability to have stepover> than cutter radius. Other CAM softwares don't allow this at all, maybe because of this mathematical problem and performance cost, but into soft materials, this is good to have.
-				o.warnings=o.warnings+'Distance between paths larger\n  than cutter radius can result in uncut areas!\n '
+				o.warnings=o.warnings+'Distance between paths larger\n	than cutter radius can result in uncut areas!\n '
 
 				contours_before=len(p)
 				
@@ -2268,7 +2084,7 @@ def getPath3axis(context,operation):
 			getAmbient(o)
 			pathSamples=getOffsetImageCavities(o,o.offset_image)
 			#for ch in pathSamples:
-			#   for i,p in enumerate(ch.points):
+			#	for i,p in enumerate(ch.points):
 			#	 ch.points[i]=(p[0],p[1],0)
 			pathSamples=limitChunks(pathSamples,o)
 			pathSamples=sortChunks(pathSamples,o)#sort before sampling
@@ -2343,11 +2159,11 @@ def getPath3axis(context,operation):
 			if layerstep==0:
 				layerstep=1
 				
-		#for projection of filled areas  
+		#for projection of filled areas	 
 		layerstart=0#
 		layerend=o.min.z#
 		layers=[[layerstart,layerend]]
-		#######################  
+		#######################	 
 		nslices=ceil(abs(o.minz/o.slice_detail))
 		lastislice=numpy.array([])
 		lastslice=Polygon.Polygon()#polyversion
@@ -2370,8 +2186,8 @@ def getPath3axis(context,operation):
 			lastchunks=[]
 			#imagechunks=imageToChunks(o,islice)
 			#for ch in imagechunks:
-			#   slicechunks.append(camPathChunk([]))
-			#   for s in ch.points:
+			#	slicechunks.append(camPathChunk([]))
+			#	for s in ch.points:
 			#	 slicechunks[-1].points.append((s[0],s[1],z))
 					
 			
@@ -2385,7 +2201,7 @@ def getPath3axis(context,operation):
 				nchunks=limitChunks(nchunks,o, force=True)
 				#print('chunksnum',len(nchunks))
 				#if len(nchunks)>0:
-				#   print('chunkpoints',len(nchunks[0].points))
+				#	print('chunkpoints',len(nchunks[0].points))
 				#print()
 				lastchunks.extend(nchunks)
 				slicechunks.extend(nchunks)
@@ -2522,7 +2338,7 @@ def getPath3axis(context,operation):
 					chi+=1
 			'''
 		print(time.time()-tw)
-		chunksToMesh(chunks,o)  
+		chunksToMesh(chunks,o)	
 		
 	elif o.strategy=='DRILL':
 		chunks=[]
@@ -2573,19 +2389,166 @@ def getPath3axis(context,operation):
 		chunks=sortChunks(chunks,o)
 		print(chunks)
 		chunksToMesh(chunks,o)
-	elif o.strategy=='SLICES':
-		slicechunks = getSlices(o,0)
-		for slicechunk in slicechunks:
-			#print(slicechunk)
-			pslices=chunksToPolys(slicechunk)
-			#p1=outlinePoly(pslice,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
-			for pslice in pslices:
-				p=pslice#-p1
-			#print(p)
-				polyToMesh('slice',p,slicechunk[0][0][2])
+	elif o.strategy=='MEDIAL_AXIS':
+		print('doing highly experimental stuff')
 		
-	
+		from cam.voronoi import Site, computeVoronoiDiagram
+		
+		chunksFromCurve=[]
+		
+		gp=Polygon.Polygon()	
+		for ob in o.objects:
+			p=getObjectOutline(0,o,True)
+			chunksFromCurve.extend(polyToChunks(p,-1))
+		
+			for i,c in enumerate(p):
+				gp.addContour(c,p.isHole(i))
+				
+		
+		chunksFromCurve = chunksRefine(chunksFromCurve,o)
+		
+		
+				
+		points=[]
+		for ch in chunksFromCurve:		
+			for pt in ch.points:
+				pvoro = Site(pt[0], pt[1])
+				points.append(pt)#(pt[0], pt[1]), pt[2])
+					
+		verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
+		nDupli,nZcolinear = unique(verts)
+		nVerts=len(verts)
+		print(str(nDupli)+" duplicates points ignored")
+		print(str(nZcolinear)+" z colinear points excluded")
+		if nVerts < 3:
+			self.report({'ERROR'}, "Not enough points")
+			return {'FINISHED'}
+		#Check colinear
+		xValues=[pt[0] for pt in verts]
+		yValues=[pt[1] for pt in verts]
+		if checkEqual(xValues) or checkEqual(yValues):
+			self.report({'ERROR'}, "Points are colinear")
+			return {'FINISHED'}
+		#Create diagram
+		print("Tesselation... ("+str(nVerts)+" points)")
+		xbuff, ybuff = 5, 5 # %
+		zPosition=0
+		vertsPts= [Point(vert[0], vert[1], vert[2]) for vert in verts]
+		#vertsPts= [Point(vert[0], vert[1]) for vert in verts]
+		
+		pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
+		
+		#
+		pts=[[pt[0], pt[1], zPosition] for pt in pts]
+		#Create new mesh structure
+		print("Create mesh...")
+		voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
+		vertr=[]
+		for p in pts:#check for verts to remove
+			if not gp.isInside(p[0],p[1]):
+				vertr.append(True)
+			else:
+				vertr.append(False)
+		for ei in range(len(edgesIdx)-1,-1,-1):
+			e=edgesIdx[ei]
+			do=True
+			p1=pts[e[0]]
+			p2=pts[e[1]]
+			
+			if vertr[e[0]]:
+				do=False
+			elif vertr[e[1]]:
+				do=False
+			if not do:
+				edgesIdx.remove(e)
+				
+		voronoiDiagram.from_pydata(pts, edgesIdx, []) #Fill the mesh with triangles
+		
+		voronoiDiagram.update(calc_edges=True) #Update mesh with new data
+		#create an object with that mesh
+		voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
+		#place object
+		#bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
+		
+		#update scene
+		bpy.context.scene.objects.link(voronoiObj) #Link object to scene
+		bpy.context.scene.objects.active = voronoiObj
+		voronoiObj.select = True
+		
+	''''
+	pt_list = []
+	x_max = obj[0][0]
+	x_min = obj[0][0]
+	y_min = obj[0][1]
+	y_max = obj[0][1]
+	# creates points in format for voronoi library, throwing away z
+	for pt in obj:
+		x, y = pt[0], pt[1]
+		x_max = max(x, x_max)
+		x_min = min(x, x_min)
+		y_max = max(y, y_max)
+		y_min = min(x, x_min)
+		pt_list.append(Site(pt[0], pt[1]))
+
+	res = computeVoronoiDiagram(pt_list)
+
+	edges = res[2]
+	delta = self.clip
+	x_max = x_max + delta
+	y_max = y_max + delta
+
+	x_min = x_min - delta
+	y_min = y_min - delta
+
+	# clipping box to bounding box.
+	pts_tmp = []
+	for pt in res[0]:
+		x, y = pt[0], pt[1]
+		if x < x_min:
+			x = x_min
+		if x > x_max:
+			x = x_max
+
+		if y < y_min:
+			y = y_min
+		if y > y_max:
+			y = y_max
+		pts_tmp.append((x, y, 0))
+
+	pts_out.append(pts_tmp)
+
+	edges_out.append([(edge[1], edge[2]) for edge in edges if -1 not in edge])
+
+	'''
+		
 	#progress('finished')
+	
+#tools for voroni graphs all copied from the delaunayVoronoi addon:
+class Point:
+	def __init__(self, x, y, z):
+		self.x, self.y, self.z= x, y, z
+
+def unique(L):
+	"""Return a list of unhashable elements in s, but without duplicates.
+	[[1, 2], [2, 3], [1, 2]] >>> [[1, 2], [2, 3]]"""
+	#For unhashable objects, you can sort the sequence and then scan from the end of the list, deleting duplicates as you go
+	nDupli=0
+	nZcolinear=0
+	L.sort()#sort() brings the equal elements together; then duplicates are easy to weed out in a single pass.
+	last = L[-1]
+	for i in range(len(L)-2, -1, -1):
+		if last[:2] == L[i][:2]:#XY coordinates compararison
+			if last[2] == L[i][2]:#Z coordinates compararison
+				nDupli+=1#duplicates vertices
+			else:#Z colinear
+				nZcolinear+=1
+			del L[i]
+		else:
+			last = L[i]
+	return (nDupli,nZcolinear)#list data type is mutable, input list will automatically update and doesn't need to be returned
+
+def checkEqual(lst):
+	return lst[1:] == lst[:-1]	
 	
 def getPath4axis(context,operation):
 	t=time.clock()
