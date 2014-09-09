@@ -106,7 +106,7 @@ class SliceObjectsSettings(bpy.types.PropertyGroup):
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	
 	slice_distance = FloatProperty(name="Slicing distance", description="slices distance in z, should be most often thickness of plywood sheet.", min=0.001, max=10, default=0.005, precision=PRECISION, unit="LENGTH")
-		
+	indexes = bpy.props.BoolProperty(name="add indexes",description="adds index text of layer + index", default=True)
 
 	
 def operationValid(self,context):

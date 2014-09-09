@@ -1,5 +1,7 @@
 #very simple slicing for 3d meshes, usefull for plywood cutting.
-	
+from cam import chunk, polygon_utils_cam
+import bpy
+
 def getSlices(ob,slice_distance):
 	'''function for slicing a mesh. It is now not used, but can be used for e.g. lasercutting from sheets a 3d model in the future.'''
 	
@@ -197,3 +199,57 @@ def getSlices(ob,slice_distance):
 			slicechunks[-1].append(ch)################3this might be a bug!!!!
 	#print(len(slicechunks))
 	return slicechunks
+
+
+	
+def doSlicing():
+	settings=bpy.context.scene.cam_slice
+	ob=bpy.context.active_object
+	layers = getSlices(ob, settings.slice_distance)
+	#print(layers)
+	sliceobjects=[]
+	i=1
+	for layer in layers:
+		pi=1
+		layerpolys=[]
+		for slicechunk in layer:
+			#these functions here are totally useless conversions, could generate slices more directly, just lazy to  write new functions
+			print (slicechunk)
+			nchp=[]
+			for p in slicechunk:
+				nchp.append((p[0],p[1]))
+			print(slicechunk)
+			ch = chunk.camPathChunk(nchp)
+
+			print(ch)
+			pslices=chunk.chunksToPolys([ch])
+			#p1=outlinePoly(pslice,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
+			print(pslices)
+			for pslice in pslices:
+				p = pslice#-p1
+				#print(p)
+				text = '%i - %i' % (i,pi)
+				bpy.ops.object.text_add()
+				textob = bpy.context.active_object
+				textob.data.size = 0.0035
+				textob.data.body = text
+				textob.data.align = 'CENTER'
+				
+				print(len(ch.points))
+				sliceobject = polygon_utils_cam.polyToMesh('slice',p,slicechunk[0][2])
+				textob.location=(0,0,0)
+				
+				textob.parent=sliceobject
+				
+				sliceobject.data.extrude = settings.slice_distance/2
+				sliceobject.data.dimensions = '2D'
+				sliceobjects.append(sliceobject)
+				pi+=1
+		#FIXME: the polys on same layer which are hollow are not joined by now, this prevents doing hollow surfaces :(
+		for p in layerpolys:
+			for p1 in layerpolys:
+				
+		i+=1
+	for o in sliceobjects:
+		o.select=True
+	bpy.ops.group.create(name='slices')
