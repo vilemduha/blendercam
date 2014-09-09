@@ -267,35 +267,15 @@ class CamPackObjects(bpy.types.Operator):
 		layout = self.layout
 
 class CamSliceObjects(bpy.types.Operator):
-	'''calculate all CAM paths'''
-	#warning, this is a separate and neglected feature, it's a mess...
+	'''Slice a mesh object horizontally'''
+	#warning, this is a separate and neglected feature, it's a mess - by now it just slices up the object.
 	bl_idname = "object.cam_slice_objects"
 	bl_label = "Slice object - usefull for lasercut puzzles e.t.c."
 	bl_options = {'REGISTER', 'UNDO'}
 		
 	def execute(self, context):
 		from cam import slice
-		ob=bpy.context.active_object
-		slices = slice.getSlices(ob, bpy.context.scene.cam_slice.slice_distance)
-		#print(slicechunks)
-		for slicechunks in slices:
-			for slicechunk in slicechunks:
-				#these functions here are totally useless conversions, could generate slices more directly.
-				print (slicechunk)
-				nchp=[]
-				for p in slicechunk:
-					nchp.append((p[0],p[1]))
-				print(slicechunk)
-				ch = chunk.camPathChunk(nchp)
-
-				print(ch)
-				pslices=chunk.chunksToPolys([ch])
-				#p1=outlinePoly(pslice,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
-				for pslice in pslices:
-					p=pslice#-p1
-				#print(p)
-					print(len(ch.points))
-					polygon_utils_cam.polyToMesh('slice',p,slicechunk[0][2])
+		slice.doSlicing()
 		return {'FINISHED'}
 	
 	def draw(self, context):
@@ -556,7 +536,7 @@ class CamOperationCopy(bpy.types.Operator):
 		o.computing=False
 		
 		####get digits in the end
-		####
+		
 		isdigit=True
 		numdigits=0
 		num=0
@@ -571,10 +551,7 @@ class CamOperationCopy(bpy.types.Operator):
 		else:
 			o.name=o.name+'_copy'
 			o.filename=o.filename+'_copy'
-		#ob=bpy.context.active_object
-		#if ob!=None:
-		#	o.object_name=ob.name
-		#	o.minz=ob.location.z+ob.bound_box[0][2]
+			
 		return {'FINISHED'}
 	
 class CamOperationRemove(bpy.types.Operator):
@@ -594,81 +571,8 @@ class CamOperationRemove(bpy.types.Operator):
 			bpy.context.scene.cam_active_operation-=1
 		
 		return {'FINISHED'}
-
-class CamPolyBoolean(bpy.types.Operator):
-	'''Boolean operation on two curves'''
-	bl_idname = "object.curve_boolean"
-	bl_label = "Curve Boolean operation"
-	bl_options = {'REGISTER', 'UNDO'}
 	
-	boolean_type = EnumProperty(name='type',
-		items=(('UNION','Union',''),('DIFFERENCE','Difference',''),('INTERSECT','Intersect','')),
-		description='boolean type',
-		default='UNION')
-		
-	#@classmethod
-	#def poll(cls, context):
-	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
-
-	def execute(self, context):
-		utils.polygonBoolean(context,self.boolean_type)
-		return {'FINISHED'}
-		
-	#def draw(self, context):
-	#	layout = self.layout
-	#	layout.prop(self, "boolean_type")
-	
-class CamOffsetSilhouete(bpy.types.Operator):
-	'''Curve offset operation '''
-	bl_idname = "object.silhouete_offset"
-	bl_label = "Silhouete offset"
-	bl_options = {'REGISTER', 'UNDO'}
-	
-	offset = bpy.props.FloatProperty(name="offset", default=.003, min=-100, max=100,precision=4, unit="LENGTH")
-		
-	#@classmethod
-	##def poll(cls, context):
-	#	return context.active_object is not None and context.active_object.type=='CURVE'
-
-	def execute(self, context):#this is almost same as getobjectoutline, just without the need of operation data
-		utils.silhoueteOffset(context,self.offset)
-		return {'FINISHED'}
-		
-	#def draw(self, context):
-	#	layout = self.layout
-	#	layout.prop(self, "boolean_type")
-	
-class CamObjectSilhouete(bpy.types.Operator):
-	'''Object silhouete '''
-	bl_idname = "object.silhouete"
-	bl_label = "Object silhouete"
-	bl_options = {'REGISTER', 'UNDO'}
-	
-	
-	#offset = bpy.props.FloatProperty(name="offset", default=.0001, min=-100, max=100,precision=4)
-		
-	#@classmethod
-	##def poll(cls, context):
-	#	return context.active_object is not None and context.active_object.type=='CURVE'
-	#
-		
-		
-	def execute(self, context):#this is almost same as getobjectoutline, just without the need of operation data
-		ob=bpy.context.active_object
-		self.silh=utils.getObjectSilhouete('OBJECTS', objects=bpy.context.selected_objects)
-		poly=Polygon.Polygon()
-		for p in self.silh:
-			for ci in range(0,len(p)):
-				poly.addContour(p[ci])
-		bpy.context.scene.cursor_location=(0,0,0)
-		polygon_utils_cam.polyToMesh(poly,0)#
-		bpy.ops.object.convert(target='CURVE')
-		bpy.context.scene.cursor_location=ob.location
-		bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
-		#utils.chunksToMesh(silh)
-		return {'FINISHED'}
-		
-	
+#move cam operation in the list up or down
 class CamOperationMove(bpy.types.Operator):
 	'''Move CAM operation'''
 	bl_idname = "scene.cam_operation_move"
@@ -699,3 +603,69 @@ class CamOperationMove(bpy.types.Operator):
 				bpy.context.scene.cam_active_operation += 1
 
 		return {'FINISHED'}
+
+#boolean operations for curve objects
+class CamPolyBoolean(bpy.types.Operator):
+	'''Boolean operation on two curves'''
+	bl_idname = "object.curve_boolean"
+	bl_label = "Curve Boolean operation"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	boolean_type = EnumProperty(name='type',
+		items=(('UNION','Union',''),('DIFFERENCE','Difference',''),('INTERSECT','Intersect','')),
+		description='boolean type',
+		default='UNION')
+		
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+
+	def execute(self, context):
+		utils.polygonBoolean(context,self.boolean_type)
+		return {'FINISHED'}
+
+	
+#this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
+class CamOffsetSilhouete(bpy.types.Operator):
+	'''Curve offset operation '''
+	bl_idname = "object.silhouete_offset"
+	bl_label = "Silhouete offset"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	offset = bpy.props.FloatProperty(name="offset", default=.003, min=-100, max=100,precision=4, unit="LENGTH")
+		
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None and (context.active_object.type=='CURVE'  or context.active_object.type=='MESH')
+
+	def execute(self, context):#this is almost same as getobjectoutline, just without the need of operation data
+		utils.silhoueteOffset(context,self.offset)
+		return {'FINISHED'}
+
+#Finds object silhouette, usefull for meshes, since with curves it's not needed.		
+class CamObjectSilhouete(bpy.types.Operator):
+	'''Object silhouete '''
+	bl_idname = "object.silhouete"
+	bl_label = "Object silhouete"
+	bl_options = {'REGISTER', 'UNDO'}
+		
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None and (context.active_object.type=='CURVE' or context.active_object.type=='MESH')
+
+		
+		
+	def execute(self, context):#this is almost same as getobjectoutline, just without the need of operation data
+		ob=bpy.context.active_object
+		self.silh=utils.getObjectSilhouete('OBJECTS', objects=bpy.context.selected_objects)
+		poly=Polygon.Polygon()
+		for p in self.silh:
+			for ci in range(0,len(p)):
+				poly.addContour(p[ci])
+		bpy.context.scene.cursor_location=(0,0,0)
+		polygon_utils_cam.polyToMesh(ob.name+'_silhouette',poly,0)#
+		bpy.ops.object.convert(target='CURVE')
+		bpy.context.scene.cursor_location=ob.location
+		bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+		return {'FINISHED'}
+		

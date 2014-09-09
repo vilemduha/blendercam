@@ -2396,85 +2396,116 @@ def getPath3axis(context,operation):
 		
 		chunksFromCurve=[]
 		
-		gp=Polygon.Polygon()	
+		gpoly=Polygon.Polygon()	
 		for ob in o.objects:
-			p=getObjectOutline(0,o,True)
-			chunksFromCurve.extend(polyToChunks(p,-1))
-		
-			for i,c in enumerate(p):
-				gp.addContour(c,p.isHole(i))
+			polys=getOperationSilhouete(o)
+			for poly in polys:
+				chunks=polyToChunks(poly,-1)
+				chunks = chunksRefine(chunks,o)
 				
-		
-		chunksFromCurve = chunksRefine(chunksFromCurve,o)
-		
-		
-				
-		points=[]
-		for ch in chunksFromCurve:		
-			for pt in ch.points:
-				pvoro = Site(pt[0], pt[1])
-				points.append(pt)#(pt[0], pt[1]), pt[2])
-					
-		verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
-		nDupli,nZcolinear = unique(verts)
-		nVerts=len(verts)
-		print(str(nDupli)+" duplicates points ignored")
-		print(str(nZcolinear)+" z colinear points excluded")
-		if nVerts < 3:
-			self.report({'ERROR'}, "Not enough points")
-			return {'FINISHED'}
-		#Check colinear
-		xValues=[pt[0] for pt in verts]
-		yValues=[pt[1] for pt in verts]
-		if checkEqual(xValues) or checkEqual(yValues):
-			self.report({'ERROR'}, "Points are colinear")
-			return {'FINISHED'}
-		#Create diagram
-		print("Tesselation... ("+str(nVerts)+" points)")
-		xbuff, ybuff = 5, 5 # %
-		zPosition=0
-		vertsPts= [Point(vert[0], vert[1], vert[2]) for vert in verts]
-		#vertsPts= [Point(vert[0], vert[1]) for vert in verts]
-		
-		pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
-		
-		#
-		pts=[[pt[0], pt[1], zPosition] for pt in pts]
-		#Create new mesh structure
-		print("Create mesh...")
-		voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
-		vertr=[]
-		for p in pts:#check for verts to remove
-			if not gp.isInside(p[0],p[1]):
-				vertr.append(True)
-			else:
-				vertr.append(False)
-		for ei in range(len(edgesIdx)-1,-1,-1):
-			e=edgesIdx[ei]
-			do=True
-			p1=pts[e[0]]
-			p2=pts[e[1]]
+				'''
+				chunksFromCurve.extend(polyToChunks(p,-1))
 			
-			if vertr[e[0]]:
-				do=False
-			elif vertr[e[1]]:
-				do=False
-			if not do:
-				edgesIdx.remove(e)
+				for i,c in enumerate(p):
+					gp.addContour(c,p.isHole(i))
+					
+			
+			chunksFromCurve = chunksRefine(chunksFromCurve,o)
+			
+			
+					
+			points=[]
+			for ch in chunksFromCurve:		
+				for pt in ch.points:
+					pvoro = Site(pt[0], pt[1])
+					points.append(pt)#(pt[0], pt[1]), pt[2])
+				'''
+				verts=[]
+				for ch in chunks:		
+					for pt in ch.points:
+						#pvoro = Site(pt[0], pt[1])
+						verts.append(pt)#(pt[0], pt[1]), pt[2])
+				#verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
+				nDupli,nZcolinear = unique(verts)
+				nVerts=len(verts)
+				print(str(nDupli)+" duplicates points ignored")
+				print(str(nZcolinear)+" z colinear points excluded")
+				if nVerts < 3:
+					self.report({'ERROR'}, "Not enough points")
+					return {'FINISHED'}
+				#Check colinear
+				xValues=[pt[0] for pt in verts]
+				yValues=[pt[1] for pt in verts]
+				if checkEqual(xValues) or checkEqual(yValues):
+					self.report({'ERROR'}, "Points are colinear")
+					return {'FINISHED'}
+				#Create diagram
+				print("Tesselation... ("+str(nVerts)+" points)")
+				xbuff, ybuff = 5, 5 # %
+				zPosition=0
+				vertsPts= [Point(vert[0], vert[1], vert[2]) for vert in verts]
+				#vertsPts= [Point(vert[0], vert[1]) for vert in verts]
 				
-		voronoiDiagram.from_pydata(pts, edgesIdx, []) #Fill the mesh with triangles
-		
-		voronoiDiagram.update(calc_edges=True) #Update mesh with new data
-		#create an object with that mesh
-		voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
-		#place object
-		#bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
-		
-		#update scene
-		bpy.context.scene.objects.link(voronoiObj) #Link object to scene
-		bpy.context.scene.objects.active = voronoiObj
-		voronoiObj.select = True
-		
+				pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
+				
+				#
+				pts=[[pt[0], pt[1], zPosition] for pt in pts]
+				newIdx=0
+				vertr=[]
+				filteredPts=[]
+				print('filter points')
+				for p in pts:
+					if not poly.isInside(p[0],p[1]):
+						vertr.append((True,-1))
+					else:
+						vertr.append((False,newIdx))
+						filteredPts.append(p)
+						newIdx+=1
+						
+				print('filter edges')		
+				filteredEdgs=[]
+				for e in edgesIdx:
+					
+					do=True
+					p1=pts[e[0]]
+					p2=pts[e[1]]
+					#print(p1,p2,len(vertr))
+					if vertr[e[0]][0]:
+						do=False
+					elif vertr[e[1]][0]:
+						do=False
+					if do:
+						filteredEdgs.append(((vertr[e[0]][1],vertr[e[1]][1])))
+				
+				#segments=[]
+				#processEdges=filteredEdgs.copy()
+				#chunk=camPathChunk([])
+				#chunk.points.append(filteredEdgs.pop())
+				#while len(filteredEdgs)>0:
+					
+				#Create new mesh structure
+				
+				print("Create mesh...")
+				voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
+				
+				
+						
+				voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
+				
+				voronoiDiagram.update(calc_edges=True) #Update mesh with new data
+				#create an object with that mesh
+				voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
+				#place object
+				#bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
+				
+				#update scene
+				bpy.context.scene.objects.link(voronoiObj) #Link object to scene
+				bpy.context.scene.objects.active = voronoiObj
+				voronoiObj.select = True
+				
+
+				#bpy.ops.object.convert(target='CURVE')
+		bpy.ops.object.join()
 	''''
 	pt_list = []
 	x_max = obj[0][0]
