@@ -275,7 +275,8 @@ class CamSliceObjects(bpy.types.Operator):
 		
 	def execute(self, context):
 		from cam import slice
-		slice.doSlicing()
+		ob=bpy.context.active_object
+		slice.sliceObject(ob)
 		return {'FINISHED'}
 	
 	def draw(self, context):
