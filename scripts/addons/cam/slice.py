@@ -202,9 +202,9 @@ def getSlices(ob,slice_distance):
 
 
 	
-def doSlicing():
+def sliceObject(ob):
 	settings=bpy.context.scene.cam_slice
-	ob=bpy.context.active_object
+	
 	layers = getSlices(ob, settings.slice_distance)
 	#print(layers)
 	sliceobjects=[]

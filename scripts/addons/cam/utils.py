@@ -1142,6 +1142,9 @@ def curveToPolys(cob):
 	polys=chunksToPolys(chunks)
 	return polys
 
+#separate function in blender, so you can offset any curve.
+#FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
+				
 def silhoueteOffset(context,offset):
 	bpy.context.scene.cursor_location=(0,0,0)
 	ob=bpy.context.active_object
@@ -1577,7 +1580,8 @@ def getAmbient(o):
 			o.ambient = o.ambient & o.limit_poly
 	o.update_ambient_tag=False
 	
-def getObjectOutline(radius,o,Offset):
+def getObjectOutline(radius,o,Offset):#FIXME: make this one operation independent
+#circle detail, optimize, optimize thresold.
 	
 	polygons=getOperationSilhouete(o)
 	outline=Polygon.Polygon()
@@ -1731,6 +1735,9 @@ def addBridges(ch,o,z):
 		for pi in range(len(insertpoints)-1,-1,-1):
 			ch.points.insert(insertpoints[pi][0],insertpoints[pi][1])
 #this is the main function.
+#FIXME: split strategies into separate file!
+#def cutoutStrategy(o):
+
 
 def getPath3axis(context,operation):
 	s=bpy.context.scene
