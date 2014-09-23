@@ -181,6 +181,7 @@ def imagetonumpy(i):
 	return na
 
 def offsetArea(o,samples):
+	''' offsets the whole image with the cutter + skin offsets '''
 	if o.update_offsetimage_tag:
 		minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 		o.offset_image.fill(-10)
@@ -224,8 +225,10 @@ def offsetArea(o,samples):
 		#progress('doing offsetimage')
 		#numpytoimage(o.offset_image,o)
 	return o.offset_image
-
+"""
+deprecated function, currently not used anywhere inside blender CAM.
 def outlineImageBinary(o,radius,i,offset):
+	'''takes a binary image, and performs offset on it, something like delate/erode, just with circular patter. The oldest offset solution in Blender CAM. '''
 	t=time.time()
 	progress('outline image')
 	r=ceil(radius/o.pixsize)
@@ -263,6 +266,7 @@ def outlineImageBinary(o,radius,i,offset):
 	return oar
 
 def outlineImage(o,radius,i,minz):
+	'''takes a binary image, and performs offset on it, something like delate/erode, just with circular patter. The oldest offset solution in Blender CAM. was used to add ambient to the operation in the image based method'''
 	minz=minz-0.0000001#correction test
 	t=time.time()
 	progress('outline image')
@@ -281,7 +285,8 @@ def outlineImage(o,radius,i,minz):
 				oar[a-r:a+r,b-r:b+r]=numpy.maximum(oar[a-r:a+r,b-r:b+r],c)
 	progress(time.time()-t)
 	return oar
-
+"""
+	
 def dilateAr(ar,cycles):
 	for c in range(cycles):
 		ar[1:-1,:]=numpy.logical_or(ar[1:-1,:],ar[:-2,:] )
@@ -737,15 +742,21 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 	cutterimagepix=cutterArray.sum()
 	#ar.fill(True)
 	satisfypix=cutterimagepix*o.crazy_threshold1#a threshold which says if it is valuable to cut in a direction
-	toomuchpix=cutterimagepix*o.crazy_threshold2
+	toomuchpix=cutterimagepix*o.crazy_threshold2#same, but upper limit
+	optimalpix=(satisfypix+toomuchpix)/2.0# the ideal eating ratio
 	indices=ar.nonzero()#first get white pixels
+	
 	startpix=ar.sum()#
 	totpix=startpix
+	
 	chunks=[]
-	xs=indices[0][0]-r
+	# try to find starting point here
+	
+	xs=indices[0][0]-r 
 	if xs<r:xs=r
 	ys=indices[1][0]-r
 	if ys<r:ys=r
+	
 	nchunk=camPathChunk([(xs,ys)])#startposition
 	print(indices)
 	print (indices[0][0],indices[1][0])
@@ -760,12 +771,13 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 	maxtotaltests=1000000
 	
 	
+	margin=0
 	
-	print(xs,ys,indices[0][0],indices[1][0],r)
+	#print(xs,ys,indices[0][0],indices[1][0],r)
 	ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
-	anglerange=[-pi,pi]#range for angle of toolpath vector versus material vector
+	anglerange=[-pi,pi]#range for angle of toolpath vector versus material vector - probably direction negative to the force applied on cutter by material. 
 	testangleinit=0
-	angleincrement=0.05
+	angleincrement=o.crazy_threshold4
 	if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
 		anglerange=[-pi,0]
 		testangleinit=1
@@ -786,10 +798,13 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 		testleftright=False
 		testlength=r
 		
+		foundsolutions=[]
 		while not success:
-			xs=nchunk.points[-1][0]+int(testvect.x)
-			ys=nchunk.points[-1][1]+int(testvect.y)
-			if xs>r+1 and xs<ar.shape[0]-r-1 and ys>r+1 and ys<ar.shape[1]-r-1 :
+			xs=int(nchunk.points[-1][0]+testvect.x)
+			ys=int(nchunk.points[-1][1]+testvect.y)
+			#print(xs,ys,ar.shape)
+			#print(d)
+			if xs>r+margin and xs<ar.shape[0]-r-margin and ys>r+margin and ys<ar.shape[1]-r-margin :
 				testar=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArray
 				if 0:
 					print('test')
@@ -807,10 +822,30 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 				angle=testvect.to_2d().angle_signed(v)
 				if anglerange[0]<angle<anglerange[1]:#this could be righthanded milling? lets see :)
 					if toomuchpix>eatpix>satisfypix:
-						success=True
+						foundsolutions.append([testvect.copy(),eatpix])
+						if len(foundsolutions)==2:
+							success=True
 			if success:
+				#fist, try to inter/extrapolate the recieved results.
+				'''
+				v1=foundsolutions[0][0]
+				v2=foundsolutions[1][0]
+				pix1=foundsolutions[0][1]
+				pix2=foundsolutions[1][1]
+				if pix1 == pix2:
+					ratio=0.5
+				else:
+					ratio=((optimalpix-pix1)/(pix2-pix1))
+				print(v2,v1,pix1,pix2)
+				print(ratio)
+				'''
+				testvect=foundsolutions[0][0]#v1#+(v2-v1)*ratio#rewriting with interpolated vect.
+				xs=int(nchunk.points[-1][0]+testvect.x)
+				ys=int(nchunk.points[-1][1]+testvect.y)
+				#if xs>r+margin and xs<ar.shape[0]-r-margin and ys>r+margin and ys<ar.shape[1]-r-margin :
 				nchunk.points.append([xs,ys])
 				lastvect=testvect
+				
 				ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*(-cutterArray)
 				totpix-=eatpix
 				itests=0
@@ -883,8 +918,8 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 					nchunk=camPathChunk([(xs,ys)])#startposition
 					ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
 					#lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
-					r=random.random()*2*pi
-					e=Euler((0,0,r))
+					randomrot=random.random()*2*pi
+					e=Euler((0,0,randomrot))
 					testvect=lastvect.normalized()*4#multiply *2 not to get values <1 pixel
 					testvect.rotate(e)
 					lastvect=testvect.copy()

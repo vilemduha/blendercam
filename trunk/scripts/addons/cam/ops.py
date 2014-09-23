@@ -27,36 +27,7 @@ from cam import utils, pack,polygon_utils_cam,chunk
 from bpy.props import *
 import Polygon
 
-def getChangeData(o):####this is a function to check if object props have changed, to see if image updates are needed
-	s=bpy.context.scene
-	changedata=''
-	obs=[]
-	if o.geometry_source=='OBJECT':
-		obs=[bpy.data.objects[o.object_name]]
-	elif o.geometry_source=='GROUP':
-		obs=bpy.data.groups[o.group_name].objects
-	for ob in obs:
-		changedata+=str(ob.location)
-		changedata+=str(ob.rotation_euler)
-		changedata+=str(ob.dimensions)
-		
-	return changedata
-
-def checkMemoryLimit(o):
-	#utils.getBounds(o)
-	sx=o.max.x-o.min.x
-	sy=o.max.y-o.min.y
-	resx=sx/o.pixsize
-	resy=sy/o.pixsize
-	res=resx*resy
-	limit=o.imgres_limit*1000000
-	#print('co se to deje')
-	#if res>limit:
-	#	ratio=(res/limit)
-	#	o.pixsize=o.pixsize*math.sqrt(ratio)
-	#	o.warnings=o.warnings+'sampling resolution had to be reduced!\n'
-	#print('furt nevim')
-	#print(ratio)	
+	
 
 
 class threadCom:#object passed to threads to read background process stdout info 
@@ -136,7 +107,7 @@ def timer_update(context):
 			area.tag_redraw()
 			
 class PathsBackground(bpy.types.Operator):
-	'''calculate CAM paths in background'''
+	'''calculate CAM paths in background. File has to be saved before.'''
 	bl_idname = "object.calculate_cam_paths_background"
 	bl_label = "Calculate CAM paths in background"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -188,6 +159,7 @@ class CalculatePath(bpy.types.Operator):
 		#getIslands(context.object)
 		s=bpy.context.scene
 		o = s.cam_operations[s.cam_active_operation]
+		
 		if not o.valid:
 				self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
 				#print("Operation can't be performed, see warnings for info")
@@ -195,37 +167,10 @@ class CalculatePath(bpy.types.Operator):
 		if o.computing:
 			return {'FINISHED'}
 			
-		#print('ahoj0')
-		#these tags are for caching of some of the results.
-		chd=getChangeData(o)
-		#print(chd)
-		#print(o.changedata)
-		if o.changedata!=chd:# or 1:
-			#print('ojojojo')
-			o.update_offsetimage_tag=True
-			o.update_zbufferimage_tag=True
-			o.changedata=chd
-		o.update_silhouete_tag=True
-		o.update_ambient_tag=True
-		o.update_bullet_collision_tag=True
-		#o.material=bpy.context.scene.cam_material[0]
 		o.operator=self
-		#'''#removed for groups support, this has to be done object by object...
-		utils.getOperationSources(o)
-		#print('áhoj1')
-		if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
-			o.onlycurves=True
-			for ob in o.objects:
-				if ob.type=='MESH':
-					o.onlycurves=False;
-		else:
-			o.onlycurves=False
-			
-		o.warnings=''
-		checkMemoryLimit(o)
-		#print('áhoj2')
+		
 		utils.getPath(context,o)
-		o.changed=False
+		
 		return {'FINISHED'}
 
 class PathsAll(bpy.types.Operator):
@@ -471,7 +416,16 @@ class CamChainOperationRemove(bpy.types.Operator):
 			chain.active_operation = 0
 		return {'FINISHED'}
 
+def fixUnits():
+	'''Sets up units for blender CAM'''
+	s=bpy.context.scene
+	if s.unit_settings.system=='NONE':#metric is hereby default
+		s.unit_settings.system='METRIC'
 		
+	s.unit_settings.system_rotation='DEGREES'	
+	
+	s.unit_settings.scale_length=1.0 # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed. 
+	
 class CamOperationAdd(bpy.types.Operator):
 	'''Add new CAM operation'''
 	bl_idname = "scene.cam_operation_add"
@@ -485,9 +439,8 @@ class CamOperationAdd(bpy.types.Operator):
 	def execute(self, context):
 		#main(context)
 		s=bpy.context.scene
-		if s.unit_settings.system=='NONE':
-			s.unit_settings.system='METRIC'
-		s.unit_settings.system_rotation='DEGREES'	
+		
+		fixUnits()
 		
 		if s.objects.get('CAM_machine')==None:
 			utils.addMachineAreaObject()
@@ -520,10 +473,9 @@ class CamOperationCopy(bpy.types.Operator):
 	def execute(self, context):
 		#main(context)
 		s=bpy.context.scene
-		if s.unit_settings.system=='NONE':
-			s.unit_settings.system='METRIC'
-		s.unit_settings.system_rotation='DEGREES'	
-		  
+		
+		fixUnits()
+		
 		s=bpy.context.scene
 		s.cam_operations.add()
 		copyop=s.cam_operations[s.cam_active_operation]

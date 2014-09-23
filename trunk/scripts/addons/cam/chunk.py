@@ -248,69 +248,7 @@ class camPathChunk:
 			
 			estlength=(zstart-zend)/tan(o.ramp_in_angle)
 			ch.getLength()
-			ramplength=estlength
-			zigzaglength=ramplength/2.000
-			turns=1
-			print('turns %i' % turns)
-			if zigzaglength>ch.length:
-				turns = ceil(zigzaglength/ch.length)
-				ramplength=turns*ch.length*2.0
-				zigzaglength=ch.length
-				ramppoints=ch.points
-				
-			else:
-				zigzagtraveled=0.0
-				haspoints=False
-				ramppoints=[(ch.points[0][0],ch.points[0][1],ch.points[0][2])]
-				i=1
-				while not haspoints:
-					print(i,zigzaglength,zigzagtraveled)
-					p1=ramppoints[-1]
-					p2=ch.points[i]
-					d=dist2d(p1,p2)
-					zigzagtraveled+=d
-					if zigzagtraveled>=zigzaglength or i+1==len(ch.points):
-						ratio = 1-(zigzagtraveled-zigzaglength)/d
-						if (i+1==len(ch.points)):#this condition is for a rare case of combined layers+bridges+ramps...
-							ratio=1
-						#print((ratio,zigzaglength))
-						v1=Vector(p1)
-						v2=Vector(p2)
-						v=v1+ratio*(v2-v1)
-						ramppoints.append((v.x,v.y,v.z))
-						haspoints=True
-					#elif :
-						
-					else:
-						ramppoints.append(p2)
-					i+=1
-			negramppoints=ramppoints.copy()
-			negramppoints.reverse()
-			ramppoints.extend(negramppoints[1:])
-			
-			traveled=0.0
-			chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
-			for r in range(turns):
-				for p in range(0,len(ramppoints)):
-					p1=chunk.points[-1]
-					p2=ramppoints[p]
-					d=dist2d(p1,p2)
-					traveled+=d
-					ratio=traveled/ramplength
-					znew=zstart-stepdown*ratio
-					chunk.points.append((p2[0],p2[1],max(p2[2],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
-			
-			#chunks = setChunksZ([ch],zend)
-			chunk.points.extend(ch.points)	
-			
-			######################################
-			#ramp out - this is the same thing, just on the other side..
-			if o.ramp_out:
-				zstart=o.maxz
-				stepdown=zstart-zend
-				
-				estlength=(zstart-zend)/tan(o.ramp_out_angle)
-				ch.getLength()
+			if ch.length>0:#for single point chunks..
 				ramplength=estlength
 				zigzaglength=ramplength/2.000
 				turns=1
@@ -319,16 +257,15 @@ class camPathChunk:
 					turns = ceil(zigzaglength/ch.length)
 					ramplength=turns*ch.length*2.0
 					zigzaglength=ch.length
-					ramppoints=ch.points.copy()
-					ramppoints.reverse()#revert points here, we go the other way.
+					ramppoints=ch.points
 					
 				else:
 					zigzagtraveled=0.0
 					haspoints=False
-					ramppoints=[(ch.points[-1][0],ch.points[-1][1],ch.points[-1][2])]
-					i=len(ch.points)-2
+					ramppoints=[(ch.points[0][0],ch.points[0][1],ch.points[0][2])]
+					i=1
 					while not haspoints:
-						print(i,zigzaglength,zigzagtraveled)
+						#print(i,zigzaglength,zigzagtraveled)
 						p1=ramppoints[-1]
 						p2=ch.points[i]
 						d=dist2d(p1,p2)
@@ -347,23 +284,89 @@ class camPathChunk:
 							
 						else:
 							ramppoints.append(p2)
-						i-=1
+						i+=1
 				negramppoints=ramppoints.copy()
 				negramppoints.reverse()
 				ramppoints.extend(negramppoints[1:])
 				
 				traveled=0.0
-				#chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
+				chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
 				for r in range(turns):
 					for p in range(0,len(ramppoints)):
 						p1=chunk.points[-1]
 						p2=ramppoints[p]
 						d=dist2d(p1,p2)
 						traveled+=d
-						ratio=1-(traveled/ramplength)
+						ratio=traveled/ramplength
 						znew=zstart-stepdown*ratio
 						chunk.points.append((p2[0],p2[1],max(p2[2],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
-			
+				
+				#chunks = setChunksZ([ch],zend)
+				chunk.points.extend(ch.points)	
+				
+			######################################
+			#ramp out - this is the same thing, just on the other side..
+			if o.ramp_out:
+				zstart=o.maxz
+				zend=ch.points[-1][2]
+				stepdown=zstart-zend
+				
+				estlength=(zstart-zend)/tan(o.ramp_out_angle)
+				ch.getLength()
+				if ch.length>0:
+					ramplength=estlength
+					zigzaglength=ramplength/2.000
+					turns=1
+					print('turns %i' % turns)
+					if zigzaglength>ch.length:
+						turns = ceil(zigzaglength/ch.length)
+						ramplength=turns*ch.length*2.0
+						zigzaglength=ch.length
+						ramppoints=ch.points.copy()
+						ramppoints.reverse()#revert points here, we go the other way.
+						
+					else:
+						zigzagtraveled=0.0
+						haspoints=False
+						ramppoints=[(ch.points[-1][0],ch.points[-1][1],ch.points[-1][2])]
+						i=len(ch.points)-2
+						while not haspoints:
+							#print(i,zigzaglength,zigzagtraveled)
+							p1=ramppoints[-1]
+							p2=ch.points[i]
+							d=dist2d(p1,p2)
+							zigzagtraveled+=d
+							if zigzagtraveled>=zigzaglength or i+1==len(ch.points):
+								ratio = 1-(zigzagtraveled-zigzaglength)/d
+								if (i+1==len(ch.points)):#this condition is for a rare case of combined layers+bridges+ramps...
+									ratio=1
+								#print((ratio,zigzaglength))
+								v1=Vector(p1)
+								v2=Vector(p2)
+								v=v1+ratio*(v2-v1)
+								ramppoints.append((v.x,v.y,v.z))
+								haspoints=True
+							#elif :
+								
+							else:
+								ramppoints.append(p2)
+							i-=1
+					negramppoints=ramppoints.copy()
+					negramppoints.reverse()
+					ramppoints.extend(negramppoints[1:])
+					
+					traveled=0.0
+					#chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
+					for r in range(turns):
+						for p in range(0,len(ramppoints)):
+							p1=chunk.points[-1]
+							p2=ramppoints[p]
+							d=dist2d(p1,p2)
+							traveled+=d
+							ratio=1-(traveled/ramplength)
+							znew=zstart-stepdown*ratio
+							chunk.points.append((p2[0],p2[1],max(p2[2],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
+		
 		return chunk
 #def appendChunk(sorted,ch,o,pos) 
 
@@ -401,66 +404,67 @@ def setChunksZ(chunks,z):
 
 	
 def optimizeChunk(chunk,operation):
-	points=chunk.points
-	
-	chunk.points=[points[0]]
-	spoints=False
-	if len(chunk.startpoints)>0:
-		startpoints=chunk.startpoints
-		endpoints=chunk.endpoints
-		chunk.startpoints=[startpoints[0]]
-		chunk.endpoints=[endpoints[0]]
-		spoints=True
-	'''this was replaced by append. Pop method was much much slower! still testing however.
-	for vi in range(len(chunk.points)-2,0,-1):
-		#vmiddle=Vector()
-		#v1=Vector()
-		#v2=Vector()
-		if compare(chunk.points[vi-1],chunk.points[vi+1],chunk.points[vi],operation.optimize_threshold):
+	if len(chunk.points)>2:
+		points=chunk.points
+		
+		chunk.points=[points[0]]
+		spoints=False
+		if len(chunk.startpoints)>0:
+			startpoints=chunk.startpoints
+			endpoints=chunk.endpoints
+			chunk.startpoints=[startpoints[0]]
+			chunk.endpoints=[endpoints[0]]
+			spoints=True
+		'''this was replaced by append. Pop method was much much slower! still testing however.
+		for vi in range(len(chunk.points)-2,0,-1):
+			#vmiddle=Vector()
+			#v1=Vector()
+			#v2=Vector()
+			if compare(chunk.points[vi-1],chunk.points[vi+1],chunk.points[vi],operation.optimize_threshold):
+				
+				chunk.pop(vi)
+		'''
+		protect_vertical =  operation.protect_vertical and operation.axes=='3'
+		for vi in range(0,len(points)-1):
+			#vmiddle=Vector()
+			#v1=Vector()
+			#v2=Vector()
+			if not compare(chunk.points[-1],points[vi+1],points[vi],operation.optimize_threshold):
+				if spoints:
+					chunk.append(points[vi],startpoints[vi],endpoints[vi])
+				else:
+					chunk.points.append(points[vi])
+				if protect_vertical:
+					v1=chunk.points[-1]
+					v2=chunk.points[-2]
+					v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
+					if v1c!=v1:
+						chunk.points[-1]=v1c
+					elif v2c!=v2:
+						chunk.points[-2]=v2c
+		#add last point
+		if spoints:
+			chunk.append(points[-1],startpoints[-1],endpoints[-1])
+		else:
+			chunk.points.append(points[-1])
+		#=True
+		'''
+		if:#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right?
+			#print('verticality test')
 			
-			chunk.pop(vi)
-	'''
-	protect_vertical =  operation.protect_vertical and operation.axes=='3'
-	for vi in range(0,len(points)-1):
-		#vmiddle=Vector()
-		#v1=Vector()
-		#v2=Vector()
-		if not compare(chunk.points[-1],points[vi+1],points[vi],operation.optimize_threshold):
-			if spoints:
-				chunk.append(points[vi],startpoints[vi],endpoints[vi])
-			else:
-				chunk.points.append(points[vi])
-			if protect_vertical:
-				v1=chunk.points[-1]
-				v2=chunk.points[-2]
+			
+			for vi in range(len(chunk.points)-1,0,-1):
+				v1=chunk.points[vi]
+				v2=chunk.points[vi-1]
 				v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
 				if v1c!=v1:
-					chunk.points[-1]=v1c
+					chunk.points[vi]=v1c
 				elif v2c!=v2:
-					chunk.points[-2]=v2c
-	#add last point
-	if spoints:
-		chunk.append(points[-1],startpoints[-1],endpoints[-1])
-	else:
-		chunk.points.append(points[-1])
-	#=True
-	'''
-	if:#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right?
-		#print('verticality test')
-		
-		
-		for vi in range(len(chunk.points)-1,0,-1):
-			v1=chunk.points[vi]
-			v2=chunk.points[vi-1]
-			v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
-			if v1c!=v1:
-				chunk.points[vi]=v1c
-			elif v2c!=v2:
-				chunk.points[vi-1]=v2c
-			
-			
-		#print(vcorrected)
-	'''
+					chunk.points[vi-1]=v2c
+				
+				
+			#print(vcorrected)
+		'''
 	return chunk			
 	
 def limitChunks(chunks,o, force=False):#TODO: this should at least add point on area border... but shouldn't be needed at all at the first place...

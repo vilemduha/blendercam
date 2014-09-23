@@ -1,5 +1,5 @@
 import bpy
-from cam import simple
+from cam import simple, utils
 from cam.simple import *
 
 def addTestCurve(loc):
@@ -90,7 +90,54 @@ def cleanUp():
 	while len(bpy.context.scene.cam_operations)>0:
 		bpy.ops.scene.cam_operation_remove()
 
+
+def testOperation(i):
 	
+	s=bpy.context.scene
+	o = s.cam_operations[i]
+	report=''
+	report+='testing operation '+ o.name+ '\n'
+	
+	utils.getPath(bpy.context,o)
+		
+	newresult=bpy.data.objects[o.path_object_name]
+	origname="test_cam_path_"+o.name
+	if origname not in s.objects:
+		report+='operation test has nothing to compare with, making the new result as comparable result.\n\n'
+		newresult.name = origname
+	else:
+		testresult = bpy.data.objects[origname]
+		m1 = testresult.data
+		m2 = newresult.data
+		test_ok=True
+		if len(m1.vertices) != len(m2.vertices):
+			report += "vertex counts don't match\n\n"
+			test_ok = False
+		else:
+			different_co_count=0
+			for i in range(0,len(m1.vertices)):
+				v1=m1.vertices[i]
+				v2=m2.vertices[i]
+				if v1.co != v2.co:
+					different_co_count+=1
+			if different_co_count>0:
+				report += 'vertex position is different on %i vertices \n\n' % (different_co_count)
+				test_ok = False
+		if test_ok:
+			report += 'test ok\n\n'
+		else:
+			report += 'test result is different\n \n '
+	print(report)
+	return report
+
+def testAll():
+	s=bpy.context.scene
+	report=''
+	for i in range(0, len(s.cam_operations)):
+		report+=testOperation(i)
+	print(report)
+		
+''''		
 tests=[
 		testCutout,
 		testParallel,
@@ -109,5 +156,6 @@ for i,t in enumerate(tests):
 
 
 #cleanUp()
+'''
 	
 	
