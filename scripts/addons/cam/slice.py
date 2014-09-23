@@ -246,8 +246,8 @@ def sliceObject(ob):
 				sliceobjects.append(sliceobject)
 				pi+=1
 		#FIXME: the polys on same layer which are hollow are not joined by now, this prevents doing hollow surfaces :(
-		for p in layerpolys:
-			for p1 in layerpolys:
+		#for p in layerpolys:
+			#for p1 in layerpolys:
 				
 		i+=1
 	for o in sliceobjects:

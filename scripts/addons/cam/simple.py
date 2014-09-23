@@ -47,8 +47,9 @@ def progress(text,n=None):
 	#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
 		#time.sleep(0.5)
 
-
+#
 def activate(o):
+	'''makes an object active, used many times in blender'''
 	s=bpy.context.scene
 	bpy.ops.object.select_all(action='DESELECT')
 	o.select=True
@@ -65,7 +66,7 @@ def delob(ob):
 	bpy.ops.object.delete(use_global=False)
 
 def dupliob(o,pos):
-	'''helper function for visualising cutter positions'''
+	'''helper function for visualising cutter positions in bullet simulation'''
 	activate(o)
 	bpy.ops.object.duplicate()
 	s=1.0/BULLET_SCALE

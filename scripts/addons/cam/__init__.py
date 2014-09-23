@@ -155,19 +155,18 @@ def updateOffsetImage(self,context):
 
 	self.update_offsetimage_tag=True
 
-
-
-
 def updateZbufferImage(self,context):
-	print('updatezbuf')
+	'''changes tags so offset and zbuffer images get updated on calculation time.'''
+	#print('updatezbuf')
 	#print(self,context)
 	self.changed=True
 	self.update_zbufferimage_tag=True
 	self.update_offsetimage_tag=True
 	utils.getOperationSources(self)
-	ops.checkMemoryLimit(self)
+	utils.checkMemoryLimit(self)
 
 def updateStrategy(o,context):
+	''''''
 	o.changed=True
 	print('update strategy')
 	if o.axes=='5':
@@ -196,6 +195,8 @@ def updateBridges(o,context):
 	
 def updateRest(o,context):
 	print('update rest ')
+	if o.use_layers:
+		o.parallel_step_back = False
 	o.changed=True
 
 class camOperation(bpy.types.PropertyGroup):
@@ -351,7 +352,7 @@ class camOperation(bpy.types.PropertyGroup):
 	stay_low = bpy.props.BoolProperty(name="Stay low if possible", default=True, update = updateRest)
 	#optimization and performance
 	use_exact = bpy.props.BoolProperty(name="Use exact mode",description="Exact mode allows greater precision, but is slower with complex meshes", default=True, update = updateExact)
-	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
+	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.1,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
 	simulation_detail=bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateRest)
 	imgres_limit = bpy.props.IntProperty(name="Maximum resolution in megapixels", default=10, min=1, max=512,description="This property limits total memory usage and prevents crashes. Increase it if you know what are doing.", update = updateZbufferImage)
 	optimize = bpy.props.BoolProperty(name="Reduce path points",description="Reduce path points", default=True, update = updateRest)

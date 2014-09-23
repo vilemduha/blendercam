@@ -52,6 +52,7 @@ from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
 from cam import image_utils
 from cam.image_utils import *
+from . import nc
 
 try:
 	from shapely.geometry import polygon as spolygon
@@ -113,7 +114,49 @@ def getOperationSources(o):
 		o.objects=group.objects
 	elif o.geometry_source=='IMAGE':
 		o.use_exact=False;
+		
+	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
+		o.onlycurves=True
+		for ob in o.objects:
+			if ob.type=='MESH':
+				o.onlycurves=False;
+	else:
+		o.onlycurves=False
+
+
+def checkMemoryLimit(o):
+	#utils.getBounds(o)
+	sx=o.max.x-o.min.x
+	sy=o.max.y-o.min.y
+	resx=sx/o.pixsize
+	resy=sy/o.pixsize
+	res=resx*resy
+	limit=o.imgres_limit*1000000
+	#print('co se to deje')
+	#if res>limit:
+	#	ratio=(res/limit)
+	#	o.pixsize=o.pixsize*math.sqrt(ratio)
+	#	o.warnings=o.warnings+'sampling resolution had to be reduced!\n'
+	#print('furt nevim')
+	#print(ratio)
 	
+def getChangeData(o):
+	'''this is a function to check if object props have changed, to see if image updates are needed in the image based method'''
+	s=bpy.context.scene
+	changedata=''
+	obs=[]
+	if o.geometry_source=='OBJECT':
+		obs=[bpy.data.objects[o.object_name]]
+	elif o.geometry_source=='GROUP':
+		obs=bpy.data.groups[o.group_name].objects
+	for ob in obs:
+		changedata+=str(ob.location)
+		changedata+=str(ob.rotation_euler)
+		changedata+=str(ob.dimensions)
+		
+	return changedata
+
+		
 def getBounds(o):
 	#print('kolikrat sem rpijde')
 	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
@@ -798,49 +841,53 @@ def chunksToMesh(chunks,o):
 	edges=[]	
 	
 	for chi in range(0,len(chunks)):
+		
 		#print(chi)
+		
 		ch=chunks[chi]
-		nverts=[]
-		if o.optimize:
-			ch=optimizeChunk(ch,o)
-		
-		#lift and drop
-		
-		if lifted:
-			if o.axes=='3' or o.axes=='5':
-				v=(ch.points[0][0],ch.points[0][1],o.free_movement_height)
-			else:
-				v=ch.startpoints[0]#startpoints=retract points
-				verts_rotations.append(ch.rotations[0])
-			verts.append(v)
-		#scount=len(verts)
-		verts.extend(ch.points)
-		#ecount=len(verts)
-		#for a in range(scount,ecount-1):
-		#	edges.append((a,a+1))
-		if o.axes!='3' and o.axes!='5':
-			verts_rotations.extend(ch.rotations)
+		if len(ch.points)>0:#TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
+			print(len(ch.points))
+			nverts=[]
+			if o.optimize:
+				ch=optimizeChunk(ch,o)
 			
-		lift = True
-		if chi<len(chunks)-1:#TODO: remake this for n axis
-			#nextch=
-			last=Vector(ch.points[-1])
-			first=Vector(chunks[chi+1].points[0])
-			vect=first-last
-			if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*2.5:#case of neighbouring paths
-				lift=False
-			if abs(vect.x)<e and abs(vect.y)<e:#case of stepdown by cutting.
-				lift=False
+			#lift and drop
 			
-		if lift:
-			if o.axes== '3' or o.axes=='5':
-				v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
-			else:
-				v=ch.startpoints[-1]
-				verts_rotations.append(ch.rotations[-1])
-			verts.append(v)
-		lifted=lift
-		#print(verts_rotations)
+			if lifted:
+				if o.axes=='3' or o.axes=='5':
+					v=(ch.points[0][0],ch.points[0][1],o.free_movement_height)
+				else:
+					v=ch.startpoints[0]#startpoints=retract points
+					verts_rotations.append(ch.rotations[0])
+				verts.append(v)
+			#scount=len(verts)
+			verts.extend(ch.points)
+			#ecount=len(verts)
+			#for a in range(scount,ecount-1):
+			#	edges.append((a,a+1))
+			if o.axes!='3' and o.axes!='5':
+				verts_rotations.extend(ch.rotations)
+				
+			lift = True
+			if chi<len(chunks)-1 and len(chunks[chi+1].points)>0:#TODO: remake this for n axis, and this check should be somewhere else...
+				#nextch=
+				last=Vector(ch.points[-1])
+				first=Vector(chunks[chi+1].points[0])
+				vect=first-last
+				if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*2.5:#case of neighbouring paths
+					lift=False
+				if abs(vect.x)<e and abs(vect.y)<e:#case of stepdown by cutting.
+					lift=False
+				
+			if lift:
+				if o.axes== '3' or o.axes=='5':
+					v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
+				else:
+					v=ch.startpoints[-1]
+					verts_rotations.append(ch.rotations[-1])
+				verts.append(v)
+			lifted=lift
+			#print(verts_rotations)
 	if o.use_exact:
 		cleanupBulletCollision(o)
 	print(time.time()-t)
@@ -885,7 +932,7 @@ def chunksToMesh(chunks,o):
 	if o.auto_export:
 		exportGcodePath(o.filename,[ob.data],[o])
 
-	
+		
 def exportGcodePath(filename,vertslist,operations):
 	'''exports gcode with the heeks cnc adopted library.'''
 	#verts=[verts]
@@ -913,7 +960,7 @@ def exportGcodePath(filename,vertslist,operations):
 	
 	basefilename=bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))]+safeFileName(filename)
 	
-	from . import nc
+	
 	extension='.tap'
 	if m.post_processor=='ISO':
 		from .nc import iso as postprocessor
@@ -1604,6 +1651,7 @@ def getObjectOutline(radius,o,Offset):#FIXME: make this one operation independen
 	return outline
 	
 def addOrientationObject(o):
+	'''the orientation object should be used to set up orientations of the object for 5 axis milling.'''
 	name = o.name+' orientation'
 	s=bpy.context.scene
 	if s.objects.find(name)==-1:
@@ -1853,7 +1901,21 @@ def getPath3axis(context,operation):
 
 		if bpy.app.debug_value==0 or bpy.app.debug_value==1 or bpy.app.debug_value==3 or bpy.app.debug_value==2:# or bpy.app.debug_value==4:
 			chunksToMesh(chunks,o)
-
+			
+	elif o.strategy=='CURVE':
+		pathSamples=[]
+		ob=bpy.data.objects[o.curve_object]
+		pathSamples.extend(curveToChunks(ob))
+		pathSamples=sortChunks(pathSamples,o)#sort before sampling
+		pathSamples=chunksRefine(pathSamples,o)
+		
+		if o.ramp:
+			for ch in pathSamples:
+				nchunk = ch.rampZigZag(ch.zstart, ch.points[0][2],o)
+				ch.points=nchunk.points
+				
+		chunksToMesh(pathSamples,o)
+		
 	if o.strategy=='POCKET':	
 		p=getObjectOutline(o.cutter_diameter/2,o,False)
 		all=Polygon.Polygon(p)
@@ -2069,13 +2131,7 @@ def getPath3axis(context,operation):
 		
 		chunksToMesh(chunks,o)
 		
-	elif o.strategy=='CURVE':
-		pathSamples=[]
-		ob=bpy.data.objects[o.curve_object]
-		pathSamples.extend(curveToChunks(ob))
-		pathSamples=sortChunks(pathSamples,o)#sort before sampling
-		pathSamples=chunksRefine(pathSamples,o)
-		chunksToMesh(pathSamples,o)
+	
 		
 	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL' or o.strategy=='CRAZY':  
 		
@@ -2098,10 +2154,11 @@ def getPath3axis(context,operation):
 		elif o.strategy=='CRAZY':
 			prepareArea(o)
 			
-			pathSamples = crazyStrokeImage(o)
+			#pathSamples = crazyStrokeImage(o)
 			#####this kind of worked and should work:
-			#area=o.offset_image>o.min.z
-			#pathSamples = crazyStrokeImageBinary(o,area)
+			area=o.offset_image<o.min.z
+			
+			pathSamples = crazyStrokeImageBinary(o,area)
 			#####
 			pathSamples=chunksRefine(pathSamples,o)
 			#pathSamples = sortChunks(pathSamples,o)
@@ -2695,6 +2752,28 @@ def rotTo2axes(e,axescombination):
 	
 def getPath(context,operation):#should do all path calculations.
 	t=time.clock()
+	#print('ahoj0')
+	
+	#these tags are for caching of some of the results. Not working well still - although it can save a lot of time during calculation...
+	chd=getChangeData(operation)
+	#print(chd)
+	#print(o.changedata)
+	if operation.changedata!=chd:# or 1:
+		operation.update_offsetimage_tag=True
+		operation.update_zbufferimage_tag=True
+		operation.changedata=chd
+	
+	operation.update_silhouete_tag=True
+	operation.update_ambient_tag=True
+	operation.update_bullet_collision_tag=True
+	
+
+	getOperationSources(operation)
+
+	operation.warnings=''
+	checkMemoryLimit(operation)
+	
+	
 
 	if operation.axes=='3':
 		getPath3axis(context,operation)
@@ -2704,7 +2783,8 @@ def getPath(context,operation):#should do all path calculations.
 		operation.orientation = prepare5axisIndexed(operation)
 		getPath3axis(context,operation)
 		cleanup5axisIndexed(operation)
-		pass
+		
+	operation.changed=False
 	t1=time.clock()-t 
 	progress('total time',t1)
 
@@ -2713,8 +2793,9 @@ def reload_paths(o):
 	s=bpy.context.scene
 	#for o in s.objects:
 	ob=None
+	old_pathmesh=None
 	if oname in s.objects:
-		s.objects[oname].data.name='xxx_cam_deleted_path'
+		old_pathmesh=s.objects[oname].data
 		ob=s.objects[oname]
 	
 	picklepath=getCachePath(o)+'.pickle'
@@ -2756,7 +2837,8 @@ def reload_paths(o):
 	ob.location=(0,0,0)
 	o.path_object_name=oname
 	o.changed=False
-	#unpickle here:
 	
+	if old_pathmesh != None:
+		bpy.data.meshes.remove(old_pathmesh)
 
 	
