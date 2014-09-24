@@ -309,63 +309,64 @@ class camPathChunk:
 			if o.ramp_out:
 				zstart=o.maxz
 				zend=ch.points[-1][2]
-				stepdown=zstart-zend
-				
-				estlength=(zstart-zend)/tan(o.ramp_out_angle)
-				ch.getLength()
-				if ch.length>0:
-					ramplength=estlength
-					zigzaglength=ramplength/2.000
-					turns=1
-					print('turns %i' % turns)
-					if zigzaglength>ch.length:
-						turns = ceil(zigzaglength/ch.length)
-						ramplength=turns*ch.length*2.0
-						zigzaglength=ch.length
-						ramppoints=ch.points.copy()
-						ramppoints.reverse()#revert points here, we go the other way.
-						
-					else:
-						zigzagtraveled=0.0
-						haspoints=False
-						ramppoints=[(ch.points[-1][0],ch.points[-1][1],ch.points[-1][2])]
-						i=len(ch.points)-2
-						while not haspoints:
-							#print(i,zigzaglength,zigzagtraveled)
-							p1=ramppoints[-1]
-							p2=ch.points[i]
-							d=dist2d(p1,p2)
-							zigzagtraveled+=d
-							if zigzagtraveled>=zigzaglength or i+1==len(ch.points):
-								ratio = 1-(zigzagtraveled-zigzaglength)/d
-								if (i+1==len(ch.points)):#this condition is for a rare case of combined layers+bridges+ramps...
-									ratio=1
-								#print((ratio,zigzaglength))
-								v1=Vector(p1)
-								v2=Vector(p2)
-								v=v1+ratio*(v2-v1)
-								ramppoints.append((v.x,v.y,v.z))
-								haspoints=True
-							#elif :
-								
-							else:
-								ramppoints.append(p2)
-							i-=1
-					negramppoints=ramppoints.copy()
-					negramppoints.reverse()
-					ramppoints.extend(negramppoints[1:])
+				if zend<zstart:#again, sometimes a chunk could theoretically end above the starting level.
+					stepdown=zstart-zend
 					
-					traveled=0.0
-					#chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
-					for r in range(turns):
-						for p in range(0,len(ramppoints)):
-							p1=chunk.points[-1]
-							p2=ramppoints[p]
-							d=dist2d(p1,p2)
-							traveled+=d
-							ratio=1-(traveled/ramplength)
-							znew=zstart-stepdown*ratio
-							chunk.points.append((p2[0],p2[1],max(p2[2],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
+					estlength=(zstart-zend)/tan(o.ramp_out_angle)
+					ch.getLength()
+					if ch.length>0:
+						ramplength=estlength
+						zigzaglength=ramplength/2.000
+						turns=1
+						print('turns %i' % turns)
+						if zigzaglength>ch.length:
+							turns = ceil(zigzaglength/ch.length)
+							ramplength=turns*ch.length*2.0
+							zigzaglength=ch.length
+							ramppoints=ch.points.copy()
+							ramppoints.reverse()#revert points here, we go the other way.
+							
+						else:
+							zigzagtraveled=0.0
+							haspoints=False
+							ramppoints=[(ch.points[-1][0],ch.points[-1][1],ch.points[-1][2])]
+							i=len(ch.points)-2
+							while not haspoints:
+								#print(i,zigzaglength,zigzagtraveled)
+								p1=ramppoints[-1]
+								p2=ch.points[i]
+								d=dist2d(p1,p2)
+								zigzagtraveled+=d
+								if zigzagtraveled>=zigzaglength or i+1==len(ch.points):
+									ratio = 1-(zigzagtraveled-zigzaglength)/d
+									if (i+1==len(ch.points)):#this condition is for a rare case of combined layers+bridges+ramps...
+										ratio=1
+									#print((ratio,zigzaglength))
+									v1=Vector(p1)
+									v2=Vector(p2)
+									v=v1+ratio*(v2-v1)
+									ramppoints.append((v.x,v.y,v.z))
+									haspoints=True
+								#elif :
+									
+								else:
+									ramppoints.append(p2)
+								i-=1
+						negramppoints=ramppoints.copy()
+						negramppoints.reverse()
+						ramppoints.extend(negramppoints[1:])
+						
+						traveled=0.0
+						#chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
+						for r in range(turns):
+							for p in range(0,len(ramppoints)):
+								p1=chunk.points[-1]
+								p2=ramppoints[p]
+								d=dist2d(p1,p2)
+								traveled+=d
+								ratio=1-(traveled/ramplength)
+								znew=zstart-stepdown*ratio
+								chunk.points.append((p2[0],p2[1],max(p2[2],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
 		
 		return chunk
 #def appendChunk(sorted,ch,o,pos) 
