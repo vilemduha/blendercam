@@ -569,9 +569,9 @@ class CamPolyBoolean(bpy.types.Operator):
 		description='boolean type',
 		default='UNION')
 		
-	@classmethod
-	def poll(cls, context):
-		return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+	#@classmethod
+	#def poll(cls, context):
+	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
 
 	def execute(self, context):
 		utils.polygonBoolean(context,self.boolean_type)
