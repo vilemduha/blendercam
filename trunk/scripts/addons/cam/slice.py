@@ -15,7 +15,7 @@ def getSlices(ob,slice_distance):
 	maxzt = -100000000000000000000000000
 	minzt = 1000000000000000000000000000
 	#progress('slicing object')
-	m=ob.data
+	m=ob.to_mesh(scene=bpy.context.scene, apply_modifiers=True, settings='PREVIEW')
 	#d={}#!
 	for p in m.polygons:
 		#a=i*50+12
@@ -214,17 +214,17 @@ def sliceObject(ob):
 		layerpolys=[]
 		for slicechunk in layer:
 			#these functions here are totally useless conversions, could generate slices more directly, just lazy to  write new functions
-			print (slicechunk)
+			#print (slicechunk)
 			nchp=[]
 			for p in slicechunk:
 				nchp.append((p[0],p[1]))
-			print(slicechunk)
+			#print(slicechunk)
 			ch = chunk.camPathChunk(nchp)
 
-			print(ch)
+			#print(ch)
 			pslices=chunk.chunksToPolys([ch])
 			#p1=outlinePoly(pslice,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
-			print(pslices)
+			#print(pslices)
 			for pslice in pslices:
 				p = pslice#-p1
 				#print(p)
@@ -235,7 +235,7 @@ def sliceObject(ob):
 				textob.data.body = text
 				textob.data.align = 'CENTER'
 				
-				print(len(ch.points))
+				#print(len(ch.points))
 				sliceobject = polygon_utils_cam.polyToMesh('slice',p,slicechunk[0][2])
 				textob.location=(0,0,0)
 				
