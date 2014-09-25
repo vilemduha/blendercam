@@ -1,0 +1,101 @@
+# blender CAM utils.py (c) 2012 Vilem Novak
+#
+# ***** BEGIN GPL LICENSE BLOCK *****
+#
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# ***** END GPL LICENCE BLOCK *****
+
+import bpy, os,pickle,time
+import sys       # to get command line args
+import argparse  # to parse options for us and print a nice help message
+
+def getCachePath(o):
+	fn=bpy.data.filepath
+	l=len(bpy.path.basename(fn))
+	bn=bpy.path.basename(fn)[:-6]
+	
+	try:
+		os.mkdir(fn[:-l]+'temp_cam')
+	except:
+		pass;
+	iname=fn[:-l]+'temp_cam'+os.sep+bn+'_'+o.name
+	return iname
+
+def calculatePath(op):
+	s=bpy.context.scene
+	o=s.cam_operations[op]
+	s.cam_active_operation=op
+	bpy.ops.object.calculate_cam_path()
+
+	p=getCachePath(o)+'.blend'
+	picklepath=getCachePath(o)+'.pickle'
+	f=open(picklepath,'wb')
+	d={}
+	d['duration']=o.duration
+	d['warnings']=o.warnings
+	#pickle path...
+	oname="cam_path_"+o.name
+	if oname in s.objects:
+		mesh=s.objects[oname].data
+		verts=[]
+		for v in mesh.vertices:
+			verts.append((v.co.x,v.co.y,v.co.z))
+		d['path']=verts
+	pickle.dump(d,f)
+	f.close()
+	#bpy.ops.wm.save_mainfile(filepath=p)
+	#f=open(picklepath,'wb')
+	passed=False
+	while not passed:
+		try:
+			f=open(picklepath,'rb')
+			d=pickle.load(f)
+			f.close()
+			passed=True
+		except:
+			print('sleep')
+			time.sleep(1)
+	sys.stdout.write('progress{%s}\n' % ('finished'))
+	sys.stdout.flush()
+	
+#parse arguments here
+argv = sys.argv
+
+if "--" not in argv:
+	argv = []  # as if no args are passed
+else:
+	argv = argv[argv.index("--") + 1:]  # get all args after "--"
+
+# When --help or no args are given, print this help
+usage_text = \
+"Run blender in background mode with this script:"
+"  blender --background --python " + __file__ + " -- [options]"
+
+parser = argparse.ArgumentParser(description=usage_text)
+
+# Example utility, add some text and renders or saves it (with options)
+# Possible types are: string, int, long, choice, float and complex.
+parser.add_argument("-o", "--operation", dest="op", type=int, required=True,
+		help="Index of the operation to calculate")
+'''
+parser.add_argument("-s", "--save", dest="save_path", metavar='FILE',
+		help="Save the generated file to the specified path")
+parser.add_argument("-r", "--render", dest="render_path", metavar='FILE',
+		help="Render an image to the specified path")
+'''
+args = parser.parse_args(argv)
+calculatePath(args.op)

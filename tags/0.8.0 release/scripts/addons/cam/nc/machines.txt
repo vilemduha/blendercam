@@ -1,0 +1,22 @@
+﻿emc2 LinuxCNC with tool offsets 0
+emc2b LinuxCNC 0
+emc2b_crc EMC2 with Cutter Comp   0
+mach3 Mach3 Machine Controller 0
+iso Standard ISO output 0
+iso_modal Standard ISO modal output 0
+iso_crc ISO with Cutter Comp 0
+siegkx1 Sieg KX1 machine 0
+hpgl2d 2.5D HPGL 0.01mm 0
+hpgl2dv 2.5D HPGL 0.25mm 0
+hpgl3d 3D HPGL 0.01mm 0
+hm50 Hafco HM-50 2400
+gantry_router Simple Gantry Router 0
+rez2 Prvá zváračská format rez 0
+centroid1 centroid mill  0
+anilam_crusader_m Anilam Crusader M 0
+makerbotHBP makerbotHBP 0
+lathe1 Lathe post 0
+emc2tap EMC Controller-tapping test 0
+tnc151 Heidenhain TNC151
+series1 Bridgeport Series I
+heiden Heidenhain test 0
