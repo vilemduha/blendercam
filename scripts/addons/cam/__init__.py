@@ -195,8 +195,8 @@ def updateBridges(o,context):
 	
 def updateRest(o,context):
 	print('update rest ')
-	if o.use_layers:
-		o.parallel_step_back = False
+	#if o.use_layers:
+		#o.parallel_step_back = False
 	o.changed=True
 
 class camOperation(bpy.types.PropertyGroup):
