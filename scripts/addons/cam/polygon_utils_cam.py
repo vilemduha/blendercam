@@ -261,3 +261,37 @@ def polyToMesh(name,p,z):
 
 	
 	return bpy.context.active_object
+
+def orderPoly(polys):	#sor poly, do holes e.t.c.
+	p=Polygon.Polygon()
+	levels=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]] 
+	for ppart in polys:
+		hits=0
+		for ptest in polys:
+			
+			if ppart!=ptest:
+				#print (ppart[0][0])
+				if ptest.isInside(ppart[0][0][0],ppart[0][0][1]):
+					hits+=1
+		#hole=0
+		#if hits % 2 ==1:
+		 # hole=1
+		if ppart.nPoints(0)>0:
+			ppart.simplify()
+			levels[hits].append(ppart)
+	li=0
+	for l in levels:	
+		
+		if li%2==1:
+			for part in l:
+				p=p-part
+			#hole=1
+		else:
+			for part in l:
+				p=p+part
+			
+		if li==1:#last chance to simplify stuff... :)
+			p.simplify()
+		li+=1
+	  
+	return p

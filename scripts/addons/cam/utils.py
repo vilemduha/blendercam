@@ -504,8 +504,8 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	print('sampling paths')
 	
 	totlen=0;#total length of all chunks, to estimate sampling time.
-	for ch in pathSamples:
-		totlen+=len(ch.startpoints)
+	for chs in pathSamples:
+		totlen+=len(chs.startpoints)
 	layerchunks=[]
 	minz=o.minz
 	layeractivechunks=[]
@@ -530,14 +530,17 @@ def sampleChunksNAxis(o,pathSamples,layers):
 		#threads_count=4
 		lastrotation=(0,0,0)
 		#for t in range(0,threads):
-			
-		for si,startp in enumerate(patternchunk.startpoints):
+		print(len(patternchunk.startpoints),len( patternchunk.endpoints))
+		
+		for si,startp in enumerate(patternchunk.startpoints):#TODO: seems we are writing into the source chunk , and that is why we need to write endpoints everywhere too?
 			if n/200.0==int(n/200.0):
 				progress('sampling paths ',int(100*n/totlen))
 			n+=1
 			sampled=False
 			#print(si)
-			#print(patternchunk.points[si],patternchunk.endpoints[si])
+			print(len(patternchunk.startpoints))
+			
+			#get the vector to sample 
 			startp=Vector(patternchunk.startpoints[si])
 			endp=Vector(patternchunk.endpoints[si])
 			rotation=patternchunk.rotations[si]
@@ -547,7 +550,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			if rotation!=lastrotation:
 			
 				cutter.rotation_euler=rotation
-				if o.cutter_type=='VCARVE':
+				if o.cutter_type=='VCARVE':# Bullet cone is always pointing Up Z in the object
 					cutter.rotation_euler.x+=pi
 				bpy.context.scene.frame_set(0)
 				#update scene here?
@@ -573,6 +576,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 				for i,l in enumerate(layers):
 					terminatechunk=False
 					ch=layeractivechunks[i]
+					print(patternchunk, ch)
 					#print(i,l)
 					#print(l[1],l[0])
 					v=startp-newsample
@@ -582,7 +586,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 						lastlayer=currentlayer
 						currentlayer=i
 						
-						if lastsample!=None and lastlayer!=None and currentlayer!=None and lastlayer!=currentlayer:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
+						if lastsample != None and lastlayer != None and currentlayer != None and lastlayer != currentlayer:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
 							if currentlayer<lastlayer:
 								growing=True
 								r=range(currentlayer,lastlayer)
@@ -593,6 +597,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 								spliti=0
 							#print(r)
 							li=0
+							
 							for ls in r:
 								splitdistance=layers[ls][1]
 							
@@ -610,36 +615,45 @@ def sampleChunksNAxis(o,pathSamples,layers):
 								betweenrotation=tuple_add(lastrotation,tuple_mul(tuple_sub(rotation,lastrotation),ratio))
 								#startpoint = retract point, it has to be always available...
 								betweenstartpoint=laststartpoint+(startp-laststartpoint)*ratio
-								
+								#here, we need to have also possible endpoints always..
+								betweenendpoint = lastendpoint+(endp-lastendpoint)*ratio
 								if growing:
 									if li>0:
 										layeractivechunks[ls].points.insert(-1,betweensample)
 										layeractivechunks[ls].rotations.insert(-1,betweenrotation)
 										layeractivechunks[ls].startpoints.insert(-1,betweenstartpoint)
+										#layeractivechunks[ls].endpoints.insert(-1,betweenendpoint)
 									else:
 										layeractivechunks[ls].points.append(betweensample)
 										layeractivechunks[ls].rotations.append(betweenrotation)
 										layeractivechunks[ls].startpoints.append(betweenstartpoint)
+										#layeractivechunks[ls].endpoints.append(betweenendpoint)
 									layeractivechunks[ls+1].points.append(betweensample)
 									layeractivechunks[ls+1].rotations.append(betweenrotation)
 									layeractivechunks[ls+1].startpoints.append(betweenstartpoint)
+									#layeractivechunks[ls+1].endpoints.append(betweenendpoint)
 								else:
 									
 									layeractivechunks[ls].points.insert(-1,betweensample)
 									layeractivechunks[ls].rotations.insert(-1,betweenrotation)
 									layeractivechunks[ls].startpoints.insert(-1,betweenstartpoint)
+									#layeractivechunks[ls].endpoints.insert(-1,betweenendpoint)
+									
 									layeractivechunks[ls+1].points.append(betweensample)
 									layeractivechunks[ls+1].rotations.append(betweenrotation)
 									layeractivechunks[ls+1].startpoints.append(betweenstartpoint)
+									#layeractivechunks[ls+1].endpoints.append(betweenendpoint)
+									
 									#layeractivechunks[ls+1].points.insert(0,betweensample)
 								li+=1
 								#this chunk is terminated, and allready in layerchunks /
-									
+							
 							#ch.points.append(betweensample)#
 						ch.points.append(newsample)
 						ch.rotations.append(rotation)
 						ch.startpoints.append(startp)
-						lastdistance=distance
+						#ch.endpoints.append(endp)
+						lastdistance = distance
 						
 					
 					elif l[1]>distance:
@@ -648,10 +662,12 @@ def sampleChunksNAxis(o,pathSamples,layers):
 						ch.points.append(p)
 						ch.rotations.append(rotation)
 						ch.startpoints.append(startp)
+						#ch.endpoints.append(endp)
 					elif l[0]<distance:	 #retract to original track
 						ch.points.append(startp)
 						ch.rotations.append(rotation)
 						ch.startpoints.append(startp)
+						#ch.endpoints.append(endp)
 						#terminatechunk=True
 					'''
 					if terminatechunk:
@@ -664,9 +680,10 @@ def sampleChunksNAxis(o,pathSamples,layers):
 					'''
 			#else:
 			#	terminatechunk=True
-			lastsample=newsample
-			lastrotation=rotation
-			laststartpoint=startp
+			lastsample = newsample
+			lastrotation = rotation
+			laststartpoint = startp
+			lastendpoint = endp
 		for i,l in enumerate(layers):
 			ch=layeractivechunks[i]
 			if len(ch.points)>0:  
@@ -674,7 +691,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 				thisrunchunks[i].append(ch)
 				layeractivechunks[i]=camPathChunk([])
 				#parenting: not for outlinefilll!!! also higly unoptimized
-			if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
+			if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS'):
 				parentChildDist(thisrunchunks[i], lastrunchunks[i],o)
 
 		lastrunchunks=thisrunchunks
@@ -697,9 +714,8 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	
 	'''
 	return chunks  
-	
-def doSimulation(name,operations):
-	'''perform simulation of operations. only for 3 axis'''
+
+def generateSimulationImage(name,operations):
 	o=operations[0]#initialization now happens from first operation, also for chains.
 	getOperationSources(o)
 	getBounds(o)#this is here because some background computed operations still didn't have bounds data
@@ -760,7 +776,7 @@ def doSimulation(name,operations):
 	o=operations[0]
 	si=si[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]
 	si+=-o.min.z
-	oname='csim_'+name
+	
 	
 	cp=getCachePath(o)[:-len(o.name)]+name
 	iname=cp+'_sim.exr'
@@ -775,7 +791,11 @@ def doSimulation(name,operations):
 	#	i.reload()
 	#else:
 	i=bpy.data.images.load(iname)
+	return i
 
+def createSimulationObject(name,operations,i):
+	oname='csim_'+name
+	
 	if oname in bpy.data.objects:
 		ob=bpy.data.objects[oname]
 	else:
@@ -826,13 +846,18 @@ def doSimulation(name,operations):
 				disp.texture=t
 	ob.hide_render=True
 	
+def doSimulation(name,operations):
+	'''perform simulation of operations. Currently only for 3 axis'''
+	i=generateSimulationImage(name,operations)
+	createSimulationObject(name,operations,i)
+	
 def chunksToMesh(chunks,o):
-	##########convert sampled chunks to path, optimization of paths
+	'''convert sampled chunks to path, optimization of paths'''
 	t=time.time()
 	s=bpy.context.scene
 	origin=(0,0,o.free_movement_height)	 
 	verts = [origin]
-	if o.axes!='3':
+	if o.machine_axes!='3':
 		verts_rotations=[(0,0,0)]
 	progress('building paths from chunks')
 	e=0.0001
@@ -854,7 +879,7 @@ def chunksToMesh(chunks,o):
 			#lift and drop
 			
 			if lifted:
-				if o.axes=='3' or o.axes=='5':
+				if o.machine_axes=='3' or o.machine_axes=='5':
 					v=(ch.points[0][0],ch.points[0][1],o.free_movement_height)
 				else:
 					v=ch.startpoints[0]#startpoints=retract points
@@ -865,7 +890,7 @@ def chunksToMesh(chunks,o):
 			#ecount=len(verts)
 			#for a in range(scount,ecount-1):
 			#	edges.append((a,a+1))
-			if o.axes!='3' and o.axes!='5':
+			if o.machine_axes!='3' and o.machine_axes!='5':
 				verts_rotations.extend(ch.rotations)
 				
 			lift = True
@@ -880,7 +905,7 @@ def chunksToMesh(chunks,o):
 					lift=False
 				
 			if lift:
-				if o.axes== '3' or o.axes=='5':
+				if o.machine_axes== '3' or o.machine_axes=='5':
 					v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
 				else:
 					v=ch.startpoints[-1]
@@ -903,7 +928,7 @@ def chunksToMesh(chunks,o):
 	mesh = bpy.data.meshes.new(oname)
 	mesh.name=oname
 	mesh.from_pydata(verts, edges, [])
-	if o.axes!='3':
+	if o.machine_axes!='3':
 		x=[]
 		y=[]
 		z=[]
@@ -934,9 +959,8 @@ def chunksToMesh(chunks,o):
 
 		
 def exportGcodePath(filename,vertslist,operations):
-	'''exports gcode with the heeks cnc adopted library.'''
-	#verts=[verts]
-	#operations=[o]#this is preparation for actual chain exporting
+	'''exports gcode with the heeks nc adopted library.'''
+	
 	progress('exporting gcode file')
 	t=time.time()
 	s=bpy.context.scene
@@ -1021,7 +1045,7 @@ def exportGcodePath(filename,vertslist,operations):
 	for i,o in enumerate(operations):
 		mesh=vertslist[i]
 		verts=mesh.vertices[:]
-		if o.axes!='3':
+		if o.machine_axes!='3':
 			rx=mesh['rot_x']
 			ry=mesh['rot_y']
 			rz=mesh['rot_z']
@@ -1058,7 +1082,7 @@ def exportGcodePath(filename,vertslist,operations):
 		print('2')
 		for vi,vert in enumerate(verts):
 			v=vert.co
-			if o.axes!='3':
+			if o.machine_axes!='3':
 				v=v.copy()#we rotate it so we need to copy the vector
 				r=Euler((rx[vi],ry[vi],rz[vi]))
 				#conversion to N-axis coordinates
@@ -1091,7 +1115,7 @@ def exportGcodePath(filename,vertslist,operations):
 					f=plungefeedrate
 					c.feedrate(plungefeedrate)
 					
-				if o.axes=='3':
+				if o.machine_axes=='3':
 					c.feed( x=vx, y=vy, z=vz )
 				else:
 					#print(ra,rb)
@@ -1103,7 +1127,7 @@ def exportGcodePath(filename,vertslist,operations):
 					f=freefeedrate
 					c.feedrate(freefeedrate)
 					
-				if o.axes=='3':
+				if o.machine_axes=='3':
 					c.rapid( x = vx , y = vy , z = vz )
 				else:
 					c.rapid(x=vx, y=vy, z = vz, a = ra, b = rb)
@@ -1115,7 +1139,7 @@ def exportGcodePath(filename,vertslist,operations):
 					f=millfeedrate
 					c.feedrate(millfeedrate)
 					
-				if o.axes=='3':
+				if o.machine_axes=='3':
 					c.feed(x=vx,y=vy,z=vz)
 				else:
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
@@ -1124,7 +1148,7 @@ def exportGcodePath(filename,vertslist,operations):
 			duration+=vect.length/f
 			#print(duration)
 			last=v
-			if o.axes!='3':
+			if o.machine_axes!='3':
 				lastrot=r
 				
 			processedops+=1
@@ -1150,39 +1174,6 @@ def exportGcodePath(filename,vertslist,operations):
 	c.file_close()
 	print(time.time()-t)
 
-def orderPoly(polys):	#sor poly, do holes e.t.c.
-	p=Polygon.Polygon()
-	levels=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]] 
-	for ppart in polys:
-		hits=0
-		for ptest in polys:
-			
-			if ppart!=ptest:
-				#print (ppart[0][0])
-				if ptest.isInside(ppart[0][0][0],ppart[0][0][1]):
-					hits+=1
-		#hole=0
-		#if hits % 2 ==1:
-		 # hole=1
-		if ppart.nPoints(0)>0:
-			ppart.simplify()
-			levels[hits].append(ppart)
-	li=0
-	for l in levels:	
-		
-		if li%2==1:
-			for part in l:
-				p=p-part
-			#hole=1
-		else:
-			for part in l:
-				p=p+part
-			
-		if li==1:#last chance to simplify stuff... :)
-			p.simplify()
-		li+=1
-	  
-	return p
 
 def curveToPolys(cob):
 	chunks=curveToChunks(cob)
@@ -2775,11 +2766,11 @@ def getPath(context,operation):#should do all path calculations.
 	
 	
 
-	if operation.axes=='3':
+	if operation.machine_axes=='3':
 		getPath3axis(context,operation)
-	elif operation.axes=='4':
+	elif operation.machine_axes=='4':
 		getPath4axis(context,operation)
-	elif operation.axes=='5':#5 axis operations are now only 3 axis operations that get rotated...
+	elif operation.machine_axes=='5':#5 axis operations are now only 3 axis operations that get rotated...
 		operation.orientation = prepare5axisIndexed(operation)
 		getPath3axis(context,operation)
 		cleanup5axisIndexed(operation)
