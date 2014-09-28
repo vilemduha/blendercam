@@ -446,25 +446,25 @@ class Creator(nc.Creator):
         if (a != None):
             da = a - self.a
             if (self.absolute_flag ):
-                self.writem(self.SPACE() , self.A() , (self.fmt.string(a)))
+                self.writem([self.SPACE() , self.A() , (self.fmt.string(a))])
             else:
-                self.writem(self.SPACE() , self.A() , (self.fmt.string(da)))
+                self.writem([self.SPACE() , self.A() , (self.fmt.string(da))])
             self.a = a
 
         if (b != None):
             db = b - self.b
             if (self.absolute_flag ):
-                self.write(self.SPACE() , self.B() , (self.fmt.string(b)))
+                self.write([self.SPACE() , self.B() , (self.fmt.string(b))])
             else:
-                self.write(self.SPACE() , self.B() , (self.fmt.string(db)))
+                self.write([self.SPACE() , self.B() , (self.fmt.string(db))])
             self.b = b
 
         if (c != None):
             dc = c - self.c
             if (self.absolute_flag ):
-                self.write(self.SPACE() , self.C() , (self.fmt.string(c)))
+                self.write([self.SPACE() , self.C() , (self.fmt.string(c))])
             else:
-                self.write(self.SPACE() , self.C() , (self.fmt.string(dc)))
+                self.write([self.SPACE() , self.C() , (self.fmt.string(dc))])
             self.c = c
 
         if (self.fhv) : self.calc_feedrate_hv(math.sqrt(dx*dx+dy*dy), math.fabs(dz))
