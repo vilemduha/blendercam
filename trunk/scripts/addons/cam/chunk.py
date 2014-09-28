@@ -8,15 +8,24 @@ class camPathChunk:
 	#sorted=False
 	
 	#progressIndex=-1# for e.g. parallel strategy, when trying to save time..
-	def __init__(self,inpoints ,startpoints = [], endpoints = [], rotations = []):
+	def __init__(self,inpoints ,startpoints = None, endpoints = None, rotations = None):
 		if len(inpoints)>2:
 			self.poly=Polygon.Polygon(inpoints)
 		else:
 			self.poly=Polygon.Polygon()
 		self.points=inpoints#for 3 axes, this is only storage of points. For N axes, here go the sampled points
-		self.startpoints = startpoints#from where the sweep test begins, but also retract point for given path
-		self.endpoints = endpoints#where sweep test ends
-		self.rotations = rotations#rotation of the machine axes
+		if startpoints:
+			self.startpoints = startpoints#from where the sweep test begins, but also retract point for given path
+		else:
+			self.startpoints = []
+		if endpoints:
+			self.endpoints = endpoints
+		else:
+			self.endpoints = []#where sweep test ends
+		if rotations:
+			self.rotations = rotations
+		else:
+			self.rotations = []#rotation of the machine axes
 		self.closed=False
 		self.children=[]
 		self.parents=[]

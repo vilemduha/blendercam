@@ -531,8 +531,9 @@ def sampleChunksNAxis(o,pathSamples,layers):
 		lastrotation=(0,0,0)
 		#for t in range(0,threads):
 		print(len(patternchunk.startpoints),len( patternchunk.endpoints))
-		
-		for si,startp in enumerate(patternchunk.startpoints):#TODO: seems we are writing into the source chunk , and that is why we need to write endpoints everywhere too?
+		spl=len(patternchunk.startpoints)
+		for si in range(0,spl):#,startp in enumerate(patternchunk.startpoints):#TODO: seems we are writing into the source chunk , and that is why we need to write endpoints everywhere too?
+			
 			if n/200.0==int(n/200.0):
 				progress('sampling paths ',int(100*n/totlen))
 			n+=1
@@ -576,7 +577,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 				for i,l in enumerate(layers):
 					terminatechunk=False
 					ch=layeractivechunks[i]
-					print(patternchunk, ch)
+					print(len(patternchunk.startpoints), len(ch.startpoints))
 					#print(i,l)
 					#print(l[1],l[0])
 					v=startp-newsample
@@ -622,27 +623,27 @@ def sampleChunksNAxis(o,pathSamples,layers):
 										layeractivechunks[ls].points.insert(-1,betweensample)
 										layeractivechunks[ls].rotations.insert(-1,betweenrotation)
 										layeractivechunks[ls].startpoints.insert(-1,betweenstartpoint)
-										#layeractivechunks[ls].endpoints.insert(-1,betweenendpoint)
+										layeractivechunks[ls].endpoints.insert(-1,betweenendpoint)
 									else:
 										layeractivechunks[ls].points.append(betweensample)
 										layeractivechunks[ls].rotations.append(betweenrotation)
 										layeractivechunks[ls].startpoints.append(betweenstartpoint)
-										#layeractivechunks[ls].endpoints.append(betweenendpoint)
+										layeractivechunks[ls].endpoints.append(betweenendpoint)
 									layeractivechunks[ls+1].points.append(betweensample)
 									layeractivechunks[ls+1].rotations.append(betweenrotation)
 									layeractivechunks[ls+1].startpoints.append(betweenstartpoint)
-									#layeractivechunks[ls+1].endpoints.append(betweenendpoint)
+									layeractivechunks[ls+1].endpoints.append(betweenendpoint)
 								else:
 									
 									layeractivechunks[ls].points.insert(-1,betweensample)
 									layeractivechunks[ls].rotations.insert(-1,betweenrotation)
 									layeractivechunks[ls].startpoints.insert(-1,betweenstartpoint)
-									#layeractivechunks[ls].endpoints.insert(-1,betweenendpoint)
+									layeractivechunks[ls].endpoints.insert(-1,betweenendpoint)
 									
 									layeractivechunks[ls+1].points.append(betweensample)
 									layeractivechunks[ls+1].rotations.append(betweenrotation)
 									layeractivechunks[ls+1].startpoints.append(betweenstartpoint)
-									#layeractivechunks[ls+1].endpoints.append(betweenendpoint)
+									layeractivechunks[ls+1].endpoints.append(betweenendpoint)
 									
 									#layeractivechunks[ls+1].points.insert(0,betweensample)
 								li+=1
@@ -652,7 +653,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 						ch.points.append(newsample)
 						ch.rotations.append(rotation)
 						ch.startpoints.append(startp)
-						#ch.endpoints.append(endp)
+						ch.endpoints.append(endp)
 						lastdistance = distance
 						
 					
@@ -662,12 +663,12 @@ def sampleChunksNAxis(o,pathSamples,layers):
 						ch.points.append(p)
 						ch.rotations.append(rotation)
 						ch.startpoints.append(startp)
-						#ch.endpoints.append(endp)
+						ch.endpoints.append(endp)
 					elif l[0]<distance:	 #retract to original track
 						ch.points.append(startp)
 						ch.rotations.append(rotation)
 						ch.startpoints.append(startp)
-						#ch.endpoints.append(endp)
+						ch.endpoints.append(endp)
 						#terminatechunk=True
 					'''
 					if terminatechunk:
@@ -684,13 +685,14 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			lastrotation = rotation
 			laststartpoint = startp
 			lastendpoint = endp
+			
 		for i,l in enumerate(layers):
 			ch=layeractivechunks[i]
 			if len(ch.points)>0:  
 				layerchunks[i].append(ch)
 				thisrunchunks[i].append(ch)
 				layeractivechunks[i]=camPathChunk([])
-				#parenting: not for outlinefilll!!! also higly unoptimized
+				
 			if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS'):
 				parentChildDist(thisrunchunks[i], lastrunchunks[i],o)
 
