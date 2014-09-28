@@ -425,7 +425,7 @@ def optimizeChunk(chunk,operation):
 				
 				chunk.pop(vi)
 		'''
-		protect_vertical =  operation.protect_vertical and operation.axes=='3'
+		protect_vertical =  operation.protect_vertical and operation.machine_axes=='3'
 		for vi in range(0,len(points)-1):
 			#vmiddle=Vector()
 			#v1=Vector()

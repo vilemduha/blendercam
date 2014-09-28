@@ -169,7 +169,7 @@ def updateStrategy(o,context):
 	''''''
 	o.changed=True
 	print('update strategy')
-	if o.axes=='5':
+	if o.machine_axes=='5':
 		utils.addOrientationObject(o)
 	else:
 		utils.removeOrientationObject(o)
@@ -224,7 +224,7 @@ class camOperation(bpy.types.PropertyGroup):
 		default='END', update = updateZbufferImage)
 	cutter_object_name = bpy.props.StringProperty(name='Object', description='object used as custom cutter for this operation', update=updateZbufferImage)
 
-	axes = EnumProperty(name='Number of axes',
+	machine_axes = EnumProperty(name='Number of axes',
 		items=(
 			('3', '3 axis', 'a'),
 			('4', '#4 axis - EXPERIMENTAL', 'a'),
@@ -246,8 +246,8 @@ class camOperation(bpy.types.PropertyGroup):
 			('CURVE','Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
 			('DRILL','Drill', 'Drill operation'),
-			#('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
-			#('MEDIAL_AXIS','Medial axis', 'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
+			('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
+			('MEDIAL_AXIS','Medial axis', 'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
 			),
 		description='Strategy',
 		default='PARALLEL',
@@ -313,9 +313,18 @@ class camOperation(bpy.types.PropertyGroup):
 	retract_radius =  bpy.props.FloatProperty(name = 'Retract arc radius', default=0.001,min=0.000001, max=100, precision=PRECISION, unit="LENGTH", update = updateRest)
 	retract_height =  bpy.props.FloatProperty(name = 'Retract arc height', default=0.001,min=0.00000, max=100, precision=PRECISION, unit="LENGTH", update = updateRest)
 	
-	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation depth from object", default=True, update = updateRest)
+	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation ending depth from object", default=True, update = updateRest)
 	minz = bpy.props.FloatProperty(name="Operation depth", default=-0.01, min=-3, max=0,precision=PRECISION, unit="LENGTH", update = updateRest)#this is input minz. True minimum z can be something else, depending on material e.t.c.
-	maxz = bpy.props.FloatProperty(name="Operation depth start", default=0, min=-3, max=1,precision=PRECISION, unit="LENGTH", update = updateRest)#EXPERIMENTAL
+	start_type = bpy.props.EnumProperty(name='Start type',
+		items=(
+			('ZLEVEL','Z level', 'Starts on a given Z level'),
+			('OPERATIONRESULT','Rest milling', 'For rest milling, operations have to be put in chain for this to work well.'),
+			),
+		description='Starting depth',
+		default='ZLEVEL',
+		update = updateStrategy)
+		
+	maxz = bpy.props.FloatProperty(name="Operation depth start", description='operation starting depth', default=0, min=-3, max=1,precision=PRECISION, unit="LENGTH", update = updateRest)#EXPERIMENTAL
 	
 	source_image_scale_z=bpy.props.FloatProperty(name="Image source depth scale", default=0.01, min=-1, max=1,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)
 	source_image_size_x=bpy.props.FloatProperty(name="Image source x size", default=0.1, min=-10, max=10,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)

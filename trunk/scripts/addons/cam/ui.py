@@ -326,12 +326,12 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 		if len(scene.cam_operations)>0:
 			ao=scene.cam_operations[scene.cam_active_operation]
 			if ao.valid:
-				#layout.prop(ao,'axes')
-				if ao.axes=='3':
+				layout.prop(ao,'machine_axes')
+				if ao.machine_axes=='3':
 					layout.prop(ao,'strategy')
-				elif ao.axes=='4':
+				elif ao.machine_axes=='4':
 					layout.prop(ao,'strategy4axis')
-				elif ao.axes=='5':
+				elif ao.machine_axes=='5':
 					layout.prop(ao,'strategy5axis')
 				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES':
 					layout.prop(ao,'movement_insideout')
