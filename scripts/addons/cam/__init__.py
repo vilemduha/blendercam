@@ -256,6 +256,7 @@ class camOperation(bpy.types.PropertyGroup):
 		items=(
 			('PARALLELA','Parallel around A', 'Parallel lines around A axis'),
 			('PARALLELX','Parallel along X', 'Parallel lines along X axis'),
+			('HELIXA','Helix around A', 'Helix around A axis, growing in X axis direction'),
 			('CROSS','Cross', 'Cross paths')),
 		description='Strategy',
 		default='PARALLELA',

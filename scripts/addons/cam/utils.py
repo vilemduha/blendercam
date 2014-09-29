@@ -530,7 +530,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 		#threads_count=4
 		lastrotation=(0,0,0)
 		#for t in range(0,threads):
-		print(len(patternchunk.startpoints),len( patternchunk.endpoints))
+		#print(len(patternchunk.startpoints),len( patternchunk.endpoints))
 		spl=len(patternchunk.startpoints)
 		for si in range(0,spl):#,startp in enumerate(patternchunk.startpoints):#TODO: seems we are writing into the source chunk , and that is why we need to write endpoints everywhere too?
 			
@@ -539,7 +539,6 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			n+=1
 			sampled=False
 			#print(si)
-			print(len(patternchunk.startpoints))
 			
 			#get the vector to sample 
 			startp=Vector(patternchunk.startpoints[si])
@@ -577,7 +576,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 				for i,l in enumerate(layers):
 					terminatechunk=False
 					ch=layeractivechunks[i]
-					print(len(patternchunk.startpoints), len(ch.startpoints))
+					
 					#print(i,l)
 					#print(l[1],l[0])
 					v=startp-newsample
@@ -2643,7 +2642,7 @@ def getPath4axis(context,operation):
 	s=bpy.context.scene
 	o=operation
 	getBounds(o)
-	if o.strategy4axis=='PARALLELA' or o.strategy4axis=='PARALLELX':  
+	if o.strategy4axis=='PARALLELA' or o.strategy4axis=='PARALLELX' or o.strategy4axis=='HELIXA' or o.strategy4axis=='CROSS':  
 		pathSamples=getPathPattern4axis(o)
 		
 		depth=pathSamples[0].depth
