@@ -454,5 +454,47 @@ def getPathPattern4axis(operation):
 				
 			reverse=not reverse
 			
+	if o.strategy4axis=='HELIXA':
+		print('helix')
+		cutterstart=Vector((0,0,0))#start point for casting
+		cutterend=Vector((0,0,0))#end point for casting
+		
+		my=max(abs(o.min.y),abs(o.max.y))
+		mz=max(abs(o.min.z),abs(o.max.z))
+		radius=math.sqrt(my*my+mz*mz)#max radius estimation
+		
+		circlesteps=(radius*pi*2)/o.dist_along_paths
+		steps=(o.max.x-o.min.x)/o.dist_between_paths
+		anglestep = 2*pi/circlesteps
+		
+		xstep=o.dist_between_paths / circlesteps
+		
+		e=Euler((anglestep,0,0))
+		
+		chunk=camPathChunk([])#only one chunk, init here
+		
+		for a in range(0,floor(steps)+1):
+			
+			cutterstart.x=o.min.x+a*o.dist_between_paths
+			cutterend.x=cutterstart.x
+			cutterstart.y=0
+			cutterstart.z=radius
+			
+			for b in range(0,floor(circlesteps)+1):
+				#print(cutterstart,cutterend)
+				cutterstart.x+=xstep
+				cutterend.x+=xstep
+				chunk.startpoints.append(cutterstart.to_tuple())
+				chunk.endpoints.append(cutterend.to_tuple())
+				chunk.rotations.append((b*anglestep,0,0))
+				cutterstart.rotate(e)
+
+			chunk.depth=-radius
+			#last point = first
+			
+			
+	pathchunks.append(chunk)
+	#print(pathchunks)	
+	#print(o.strategy4axis)
 	return pathchunks 
 	
