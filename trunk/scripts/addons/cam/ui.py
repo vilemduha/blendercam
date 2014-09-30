@@ -397,7 +397,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'skin')
 					layout.prop(ao,'inverse')
 				#elif ao.strategy=='SLICES':
-				#	layout.prop(ao,'slice_detail')	  
+				#	layout.prop(ao,'slice_detail')	
+			#first attempt to draw object list for orientations:
+				
 				
 class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM movement panel"""

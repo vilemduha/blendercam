@@ -586,6 +586,8 @@ def get_panels():#convenience function for bot register and unregister functions
 	ops.CamOperationCopy,
 	ops.CamOperationRemove,
 	ops.CamOperationMove,
+	#5 axis ops
+	ops.CamOrientationAdd,
 	#shape packing
 	ops.CamPackObjects,
 	ops.CamSliceObjects,

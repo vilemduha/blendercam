@@ -560,6 +560,40 @@ class CamOperationMove(bpy.types.Operator):
 
 		return {'FINISHED'}
 
+		
+#move cam operation in the list up or down
+class CamOrientationAdd(bpy.types.Operator):
+	'''Move CAM operation'''
+	bl_idname = "scene.cam_orientation_add"
+	bl_label = "Add orientation to cam operation"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+		
+	@classmethod
+	def poll(cls, context):
+		return context.scene is not None
+
+	def execute(self, context):
+		#main(context)
+		s=bpy.context.scene
+		a=s.cam_active_operation
+		o=s.cam_operations[a]
+		cops=bpy.context.scene.cam_operations
+		gname=o.name+'_orientations'
+		bpy.ops.object.empty_add(type='ARROWS')
+		
+		oriob=bpy.context.active_object
+		oriob.empty_draw_size=0.02 # 2 cm
+		
+		
+		if not gname in bpy.data.groups:
+			bpy.ops.group.create(name=gname)
+		else:
+			bpy.data.groups[gname].objects.link(oriob)
+		oriob.name='ori_'+o.name+'.'+str(len(bpy.data.groups[gname].objects)).zfill(3)
+		return {'FINISHED'}
+		
+		
 #boolean operations for curve objects
 class CamPolyBoolean(bpy.types.Operator):
 	'''Boolean operation on two curves'''
