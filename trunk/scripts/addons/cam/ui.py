@@ -141,6 +141,20 @@ class CAM_UL_operations(UIList):
 			 layout.alignment = 'CENTER'
 			 layout.label(text="", icon_value=icon)
 			 
+class CAM_UL_orientations(UIList):
+	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
+		# assert(isinstance(item, bpy.types.VertexGroup)
+		operation = item
+		if self.layout_type in {'DEFAULT', 'COMPACT'}:
+			
+			layout.label(text=item.name, translate=False, icon_value=icon)
+			#icon = 'LOCKED' if operation.computing else 'UNLOCKED'
+			#if operation.computing:
+			#	layout.label(text=operation.outtext)#"computing" )
+		elif self.layout_type in {'GRID'}:
+			 layout.alignment = 'CENTER'
+			 layout.label(text="", icon_value=icon)
+				 
 class CAM_UL_chains(UIList):
 	def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
 		# assert(isinstance(item, bpy.types.VertexGroup)
@@ -399,7 +413,11 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 				#elif ao.strategy=='SLICES':
 				#	layout.prop(ao,'slice_detail')	
 			#first attempt to draw object list for orientations:
-				
+			gname=bpy.data.groups[ao.name+'_orientations']
+			if gname in bpy.data.groups:
+				group=bpy.data.groups[ao.name+'_orientations']
+				row.template_list("CAM_UL_orientations", '', group, "objects", scene, 'active_orientation')
+
 				
 class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM movement panel"""

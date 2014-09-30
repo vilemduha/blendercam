@@ -277,27 +277,36 @@ class camOperation(bpy.types.PropertyGroup):
 		description='Strategy',
 		default='PARALLEL',
 		update = updateStrategy)
-	#for cutout	   
-	cut_type = EnumProperty(name='Cut',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE', update = updateRest)  
-	#render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
+		
 	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False, update = updateOffsetImage)
 	
+	#Cutout	   
+	cut_type = EnumProperty(name='Cut',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE', update = updateRest)  
+	#render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
+	outlines_count = bpy.props.IntProperty(name="Outlines count`EXPERIMENTAL",description="Outlines count", default=1,min=1, max=32, update = updateCutout)
+	
+	
+	#cutter
 	cutter_id = IntProperty(name="Tool number", description="For machines which support tool change based on tool id", min=0, max=10000, default=1, update = updateRest)
 	cutter_diameter = FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius", min=0.000001, max=0.1, default=0.003, precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
 	cutter_length = FloatProperty(name="#Cutter length", description="#not supported#Cutter length", min=0.0, max=100.0, default=25.0,precision=PRECISION, unit="LENGTH",  update = updateOffsetImage)
 	cutter_flutes = IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2, update = updateChipload)
 	cutter_tip_angle = FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0, max=180.0, default=60.0,precision=PRECISION,	 update = updateOffsetImage)
 	
+	#steps
 	dist_between_paths = bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	dist_along_paths = bpy.props.FloatProperty(name="Distance along toolpaths", default=0.0002, min=0.00001, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	parallel_angle = bpy.props.FloatProperty(name="Angle of paths", default=0, min=-360, max=360 , precision=0, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
+	#carve only
 	carve_depth = bpy.props.FloatProperty(name="Carve depth", default=0.001, min=-.100, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
+	#drill only
 	drill_type = EnumProperty(name='Holes on',items=(('MIDDLE_SYMETRIC', 'Middle of symetric curves', 'a'),('MIDDLE_ALL', 'Middle of all curve parts', 'a'),('ALL_POINTS', 'All points in curve', 'a')),description='Strategy to detect holes to drill',default='MIDDLE_SYMETRIC', update = updateRest)	
-	
+	#waterline only
 	slice_detail = bpy.props.FloatProperty(name="Distance betwen slices", default=0.001, min=0.00001, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	waterline_fill = bpy.props.BoolProperty(name="Fill areas between slices",description="Fill areas between slices in waterline mode", default=True, update = updateRest)
 	waterline_project = bpy.props.BoolProperty(name="Project paths",description="Project paths in areas between slices", default=True, update = updateRest)
-	outlines_count = bpy.props.IntProperty(name="Outlines count`EXPERIMENTAL",description="Outlines count", default=1,min=1, max=32, update = updateCutout)
+	
+	
 	
 	circle_detail = bpy.props.IntProperty(name="Detail of circles used for curve offsets", default=64, min=12, max=512, update = updateRest)
 	use_layers = bpy.props.BoolProperty(name="Use Layers",description="Use layers for roughing", default=True, update = updateRest)
@@ -326,7 +335,9 @@ class camOperation(bpy.types.PropertyGroup):
 		update = updateStrategy)
 		
 	maxz = bpy.props.FloatProperty(name="Operation depth start", description='operation starting depth', default=0, min=-3, max=1,precision=PRECISION, unit="LENGTH", update = updateRest)#EXPERIMENTAL
-	
+	#######################################################
+	######Image related
+	####################################################
 	source_image_scale_z=bpy.props.FloatProperty(name="Image source depth scale", default=0.01, min=-1, max=1,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)
 	source_image_size_x=bpy.props.FloatProperty(name="Image source x size", default=0.1, min=-10, max=10,precision=PRECISION, unit="LENGTH",  update = updateZbufferImage)
 	source_image_offset=bpy.props.FloatVectorProperty(name = 'Image offset', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ",	 update = updateZbufferImage)
@@ -336,6 +347,9 @@ class camOperation(bpy.types.PropertyGroup):
 	source_image_crop_end_x=   bpy.props.FloatProperty(name = 'crop end x', default=100,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
 	source_image_crop_end_y=   bpy.props.FloatProperty(name = 'crop end y', default=100,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
 	
+	#########################################################
+	########Toolpath related
+	#####################################################
 	protect_vertical = bpy.props.BoolProperty(name="Protect vertical",description="The path goes only vertically next to steep areas", default=True)
 	protect_vertical_limit = bpy.props.FloatProperty(name="Verticality limit", description="What angle is allready considered vertical", default=math.pi/45, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 		
@@ -408,7 +422,7 @@ class camOperation(bpy.types.PropertyGroup):
 	borderwidth=50
 	object=None
 	path_object_name=bpy.props.StringProperty(name='Path object', description='actual cnc path')
-	
+	#####update and tags and related
 	changed=bpy.props.BoolProperty(name="True if any of the operation settings has changed",description="mark for update", default=False)
 	update_zbufferimage_tag=bpy.props.BoolProperty(name="mark zbuffer image for update",description="mark for update", default=True)
 	update_offsetimage_tag=bpy.props.BoolProperty(name="mark offset image for update",description="mark for update", default=True)
