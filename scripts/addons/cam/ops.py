@@ -591,6 +591,7 @@ class CamOrientationAdd(bpy.types.Operator):
 		else:
 			bpy.data.groups[gname].objects.link(oriob)
 		oriob.name='ori_'+o.name+'.'+str(len(bpy.data.groups[gname].objects)).zfill(3)
+
 		return {'FINISHED'}
 		
 		
