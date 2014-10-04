@@ -563,9 +563,9 @@ class CamOperationMove(bpy.types.Operator):
 		
 #move cam operation in the list up or down
 class CamOrientationAdd(bpy.types.Operator):
-	'''Move CAM operation'''
+	'''Add orientation to cam operation'''
 	bl_idname = "scene.cam_orientation_add"
-	bl_label = "Add orientation to cam operation"
+	bl_label = "Add orientation"
 	bl_options = {'REGISTER', 'UNDO'}
 	
 		
