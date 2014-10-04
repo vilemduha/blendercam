@@ -277,7 +277,8 @@ class camOperation(bpy.types.PropertyGroup):
 		description='Strategy',
 		default='PARALLEL',
 		update = updateStrategy)
-		
+	active_orientation = bpy.props.IntProperty(name="active orientation",description="active orientation", default=0,min=0, max=32000, update = updateRest)
+	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
 	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False, update = updateOffsetImage)
 	
 	#Cutout	   
@@ -297,6 +298,7 @@ class camOperation(bpy.types.PropertyGroup):
 	dist_between_paths = bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	dist_along_paths = bpy.props.FloatProperty(name="Distance along toolpaths", default=0.0002, min=0.00001, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	parallel_angle = bpy.props.FloatProperty(name="Angle of paths", default=0, min=-360, max=360 , precision=0, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
+	
 	#carve only
 	carve_depth = bpy.props.FloatProperty(name="Carve depth", default=0.001, min=-.100, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	#drill only
@@ -306,9 +308,7 @@ class camOperation(bpy.types.PropertyGroup):
 	waterline_fill = bpy.props.BoolProperty(name="Fill areas between slices",description="Fill areas between slices in waterline mode", default=True, update = updateRest)
 	waterline_project = bpy.props.BoolProperty(name="Project paths",description="Project paths in areas between slices", default=True, update = updateRest)
 	
-	
-	
-	circle_detail = bpy.props.IntProperty(name="Detail of circles used for curve offsets", default=64, min=12, max=512, update = updateRest)
+	#movement and ramps
 	use_layers = bpy.props.BoolProperty(name="Use Layers",description="Use layers for roughing", default=True, update = updateRest)
 	stepdown = bpy.props.FloatProperty(name="Step down", default=0.01, min=0.00001, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	first_down = bpy.props.BoolProperty(name="First down",description="First go down on a contour, then go to the next one", default=False, update = updateRest)
@@ -348,7 +348,7 @@ class camOperation(bpy.types.PropertyGroup):
 	source_image_crop_end_y=   bpy.props.FloatProperty(name = 'crop end y', default=100,min=0, max=100, precision=PRECISION,subtype='PERCENTAGE',  update = updateZbufferImage)
 	
 	#########################################################
-	########Toolpath related
+	#Toolpath and area related
 	#####################################################
 	protect_vertical = bpy.props.BoolProperty(name="Protect vertical",description="The path goes only vertically next to steep areas", default=True)
 	protect_vertical_limit = bpy.props.FloatProperty(name="Verticality limit", description="What angle is allready considered vertical", default=math.pi/45, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
@@ -362,7 +362,7 @@ class camOperation(bpy.types.PropertyGroup):
 	ambient_cutter_restrict=bpy.props.BoolProperty(name="Cutter stays in ambient limits",description="Cutter doesn't get out from ambient limits otherwise goes on the border exactly", default=True, update = updateRest)#restricts cutter inside ambient only
 	limit_curve=   bpy.props.StringProperty(name='Limit curve', description='curve used to limit the area of the operation', update = updateRest)
 	
-	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
+	
 	#feeds
 	feedrate = FloatProperty(name="Feedrate/minute", description="Feedrate m/min", min=0.00005, max=50.0, default=1.0,precision=PRECISION, unit="LENGTH", update = updateChipload)
 	plunge_feedrate = FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,precision=1, subtype='PERCENTAGE', update = updateRest)
@@ -376,6 +376,7 @@ class camOperation(bpy.types.PropertyGroup):
 	parallel_step_back =  bpy.props.BoolProperty(name="Parallel step back", description='For roughing and finishing in one pass: mills material in climb mode, then steps back and goes between 2 last chunks back', default=False, update = updateRest)
 	stay_low = bpy.props.BoolProperty(name="Stay low if possible", default=True, update = updateRest)
 	#optimization and performance
+	circle_detail = bpy.props.IntProperty(name="Detail of circles used for curve offsets", default=64, min=12, max=512, update = updateRest)
 	use_exact = bpy.props.BoolProperty(name="Use exact mode",description="Exact mode allows greater precision, but is slower with complex meshes", default=True, update = updateExact)
 	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.1,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
 	simulation_detail=bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateRest)
@@ -564,6 +565,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	types = bpy.types
 	return (
 	ui.CAM_UL_operations,
+	ui.CAM_UL_orientations,
 	ui.CAM_UL_chains,
 	camOperation,
 	opReference,

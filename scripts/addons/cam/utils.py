@@ -1654,12 +1654,29 @@ def addOrientationObject(o):
 		ob.show_name=True
 		ob.name=name
 
-def removeOrientationObject(o):
+def removeOrientationObject(o):#not working
 	name=o.name+' orientation'
 	if bpy.context.scene.objects.find(name)>-1:
 		ob=bpy.context.scene.objects[name]
 		delob(ob)
 
+def addTranspMat(ob,mname,color,alpha):	
+	if mname in bpy.data.materials:
+			m=bpy.data.materials[mname]
+	else:
+		bpy.ops.material.new()
+		for m in bpy.data.materials:
+			if m.name[:8] == 'Material' and m.users==0:
+				m.name = mname
+				break;
+	ob.data.materials.append(m)
+			
+	ob.active_material.diffuse_color = color
+	ob.active_material.use_transparency = True
+	ob.active_material.alpha = alpha
+	ob.show_transparent = True
+	ob.draw_type = 'SOLID'
+		
 def addMachineAreaObject():
 	
 	s=bpy.context.scene
@@ -1672,7 +1689,7 @@ def addMachineAreaObject():
 		o.name='CAM_machine'
 		o.data.name='CAM_machine'
 		bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-		o.draw_type = 'WIRE'
+		o.draw_type = 'SOLID'
 		bpy.ops.object.editmode_toggle()
 		bpy.ops.mesh.delete(type='ONLY_FACE')
 		bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE', action='TOGGLE')
@@ -1680,7 +1697,10 @@ def addMachineAreaObject():
 		bpy.ops.mesh.subdivide(number_cuts=32, smoothness=0, quadtri=False, quadcorner='STRAIGHT_CUT', fractal=0, fractal_along_normal=0, seed=0)
 		bpy.ops.mesh.select_nth(nth=2, offset=0)
 		bpy.ops.mesh.delete(type='EDGE')
+		bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+
 		bpy.ops.object.editmode_toggle()
+		addTranspMat(o,"violet_transparent",(0.800000, 0.530886, 0.725165),0.1)
 		o.hide_render = True
 		o.hide_select = True
 		o.select=False
@@ -1691,6 +1711,37 @@ def addMachineAreaObject():
 		activate(ao)
 	else:
 		bpy.context.scene.objects.active=None
+
+			
+def addMaterialAreaObject():
+	
+	s=bpy.context.scene
+	ao=bpy.context.active_object
+	if s.objects.get('CAM_material')!=None:
+	   o=s.objects['CAM_material']
+	else:
+		bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+		o=bpy.context.active_object
+		o.name='CAM_material'
+		o.data.name='CAM_material'
+		bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+		
+		addTranspMat(o,'blue_transparent',(0.458695, 0.794658, 0.8),0.1)
+		o.hide_render = True
+		o.hide_select = True
+		o.select=False
+	#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
+	   
+	o.dimensions=bpy.context.scene.cam_machine.working_area
+	operation=s.cam_operations[s.cam_active_operation]
+	getOperationSources(operation)
+	getBounds(operation)
+	o.dimensions=(operation.max.x-operation.min.x,operation.max.y-operation.min.y,operation.max.z-operation.min.z)
+	o.location=(operation.min.x,operation.min.y,operation.max.z)
+	if ao!=None:
+		activate(ao)
+	else:
+		bpy.context.scene.objects.active=None		
 
 def getBridges(p,o):
 	# this function finds positions of the bridges, and returns these.

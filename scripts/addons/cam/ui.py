@@ -413,11 +413,16 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 				#elif ao.strategy=='SLICES':
 				#	layout.prop(ao,'slice_detail')	
 			#first attempt to draw object list for orientations:
-			gname=bpy.data.groups[ao.name+'_orientations']
+			#layout.operator("object.cam_pack_objects")
+			layout.operator("scene.cam_orientation_add")
+			gname=ao.name+'_orientations'
+			
 			if gname in bpy.data.groups:
+				layout.label('orientations')
 				group=bpy.data.groups[ao.name+'_orientations']
-				row.template_list("CAM_UL_orientations", '', group, "objects", scene, 'active_orientation')
-
+				layout.template_list("CAM_UL_orientations", '', group, "objects", ao, 'active_orientation')
+				layout.prop(group.objects[ao.active_orientation],'location')
+				layout.prop(group.objects[ao.active_orientation],'rotation_euler')
 				
 class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM movement panel"""
