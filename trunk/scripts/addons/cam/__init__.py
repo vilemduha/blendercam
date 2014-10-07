@@ -273,7 +273,9 @@ class camOperation(bpy.types.PropertyGroup):
 			('CUTOUT','Cutout', 'Cut the silhouete with offset'),
 			('POCKET','Pocket', 'Pocket operation'),
 			('CARVE','Carve', 'Carve operation'),
-			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.')),
+			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
+			('DRILL','Drill', 'Drill operation')
+			),
 		description='Strategy',
 		default='PARALLEL',
 		update = updateStrategy)
