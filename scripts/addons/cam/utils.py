@@ -860,6 +860,8 @@ def chunksToMesh(chunks,o):
 	verts = [origin]
 	if o.machine_axes!='3':
 		verts_rotations=[(0,0,0)]
+	#if o.machine_axes == '5':
+		
 	progress('building paths from chunks')
 	e=0.0001
 	lifted=True
@@ -891,7 +893,7 @@ def chunksToMesh(chunks,o):
 			#ecount=len(verts)
 			#for a in range(scount,ecount-1):
 			#	edges.append((a,a+1))
-			if o.machine_axes!='3' and o.machine_axes!='5':
+			if o.machine_axes!='3':
 				verts_rotations.extend(ch.rotations)
 				
 			lift = True
@@ -906,7 +908,7 @@ def chunksToMesh(chunks,o):
 					lift=False
 				
 			if lift:
-				if o.machine_axes== '3' or o.machine_axes=='5':
+				if o.machine_axes== '3':
 					v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
 				else:
 					v=ch.startpoints[-1]
@@ -1830,7 +1832,7 @@ def addBridges(ch,o,z):
 #def cutoutStrategy(o):
 
 
-def getPath3axis(context,operation):
+def getPath3and5axis(context,operation):
 	s=bpy.context.scene
 	o=operation
 	getBounds(o)
@@ -1942,8 +1944,7 @@ def getPath3axis(context,operation):
 						
 		
 
-		if bpy.app.debug_value==0 or bpy.app.debug_value==1 or bpy.app.debug_value==3 or bpy.app.debug_value==2:# or bpy.app.debug_value==4:
-			chunksToMesh(chunks,o)
+		chunksToMesh(chunks,o)
 			
 	elif o.strategy=='CURVE':
 		pathSamples=[]
@@ -2719,16 +2720,36 @@ def prepare5axisIndexed(o):
 	s=bpy.context.scene
 	#first store objects positions/rotations
 	o.matrices=[]
+	o.parents=[]
 	for ob in o.objects:
 		o.matrices.append(ob.matrix_world)
+		o.parents.append(ob.parent)
+		
 	#then rotate them
 	for ob in o.objects:
 		ob.select=True
 		
+	bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+	
 	s.cursor_location=(0,0,0)
 	oriname=o.name+' orientation'
 	ori=s.objects[oriname]
+	o.orientation_matrix=ori.matrix_world
 	
+	ori.select=True
+	s.objects.active=ori
+	# we parent all objects to the orientation object
+	bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
+	for ob in o.objects:
+		ob.select=False
+	#then we move the orientation object to 0,0
+	bpy.ops.object.location_clear()
+	bpy.ops.object.rotation_clear()
+	ori.select=False
+	for ob in o.objects:
+		ob.select=True
+		bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+	'''
 	rot=ori.matrix_world.inverted()
 	#rot.x=-rot.x
 	#rot.y=-rot.y
@@ -2739,13 +2760,20 @@ def prepare5axisIndexed(o):
 	#bpy.context.space_data.pivot_point = 'CURSOR'
 
 	for ob in o.objects:
-		
 		ob.rotation_euler.rotate(rot)
+	'''
+	
 
 def cleanup5axisIndexed(operation):
+	oriname=o.name+' orientation'
+	ori=s.objects[oriname]
+	ori.matrix_world=o.orientation_matrix
+	'''
+	for i,ob in enumerate(o.objects):#TODO: fix this here wrong order can cause objects out of place
+		ob.parent=o.parents[i]
 	for i,ob in enumerate(o.objects):
-		ob.matrix_world=o.matrices[i]
-		
+		ob.matrix_world=o.parents[i]
+	'''	
 def rotTo2axes(e,axescombination):
 	'''converts an orientation object rotation to rotation defined by 2 rotational axes.
 	attempting to do this for all axes combinations.
@@ -2819,13 +2847,17 @@ def getPath(context,operation):#should do all path calculations.
 	
 
 	if operation.machine_axes=='3':
-		getPath3axis(context,operation)
+		getPath3and5axis(context,operation)
 	elif operation.machine_axes=='4':
 		getPath4axis(context,operation)
 	elif operation.machine_axes=='5':#5 axis operations are now only 3 axis operations that get rotated...
 		operation.orientation = prepare5axisIndexed(operation)
-		getPath3axis(context,operation)
+		operation.strategy=operation.strategy5axis
+		
+		getPath3and5axis(context,operation)
+		
 		cleanup5axisIndexed(operation)
+		#transform5axisIndexed
 		
 	operation.changed=False
 	t1=time.clock()-t 

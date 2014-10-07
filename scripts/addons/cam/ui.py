@@ -405,7 +405,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'dist_along_paths')
 					if ao.strategy=='PARALLEL' or ao.strategy=='CROSS':
 						layout.prop(ao,'parallel_angle')
-						if not ao.use_layers:
+						if not ao.ramp:
 							layout.prop(ao,'parallel_step_back')
 						
 					layout.prop(ao,'skin')
