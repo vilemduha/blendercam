@@ -282,6 +282,14 @@ class camOperation(bpy.types.PropertyGroup):
 	active_orientation = bpy.props.IntProperty(name="active orientation",description="active orientation", default=0,min=0, max=32000, update = updateRest)
 	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
 	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False, update = updateOffsetImage)
+	array = bpy.props.BoolProperty(name="Use array",description="Create a repetitive array for producing the same thing manytimes", default=False, update = updateRest)
+	array_x_count = bpy.props.IntProperty(name="X count",description="X count", default=1,min=1, max=32000, update = updateRest)
+	array_y_count = bpy.props.IntProperty(name="Y count",description="Y count", default=1,min=1, max=32000, update = updateRest)
+	array_x_distance = FloatProperty(name="X distance", description="distance between operation origins", min=0.00001, max=1.0, default=0.01,precision=PRECISION, unit="LENGTH", update = updateRest)
+	array_y_distance = FloatProperty(name="Y distance", description="distance between operation origins", min=0.00001, max=1.0, default=0.01,precision=PRECISION, unit="LENGTH", update = updateRest)
+	
+	
+	
 	
 	#Cutout	   
 	cut_type = EnumProperty(name='Cut',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE', update = updateRest)  
