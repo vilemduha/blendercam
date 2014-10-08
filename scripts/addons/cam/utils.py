@@ -851,7 +851,26 @@ def doSimulation(name,operations):
 	'''perform simulation of operations. Currently only for 3 axis'''
 	i=generateSimulationImage(name,operations)
 	createSimulationObject(name,operations,i)
-	
+
+def extendChunks5axis(chunks,o):
+	s=bpy.context.scene
+	cutterstart=Vector((0,0,o.max.z))#start point for casting
+	cutterend=Vector((0,0,o.min.z))
+	oriname=o.name+' orientation'
+	ori=s.objects[oriname]
+	rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#warning-here it allready is reset to 0!!
+	a,b=rotationaxes#this is all nonsense by now.
+	for chunk in chunks:
+		for v in chunk.points:
+			cutterstart.x=v[0]
+			cutterstart.y=v[1]
+			cutterend.x=v[0]
+			cutterend.y=v[1]
+			chunk.startpoints.append(cutterstart.to_tuple())
+			chunk.endpoints.append(cutterend.to_tuple())
+			chunk.rotations.append((b,a,0))#TODO: this is a placeholder. It does 99.9% probably write total nonsense.
+			
+			
 def chunksToMesh(chunks,o):
 	'''convert sampled chunks to path, optimization of paths'''
 	t=time.time()
@@ -860,8 +879,19 @@ def chunksToMesh(chunks,o):
 	verts = [origin]
 	if o.machine_axes!='3':
 		verts_rotations=[(0,0,0)]
-	#if o.machine_axes == '5':
-		
+	if o.machine_axes == '5':
+		extendChunks5axis(chunks,o)
+	
+	if o.array:
+		nchunks=[]
+		for x in range(0,o.array_x_count):
+			for y in range(0,o.array_x_count):
+				print(x,y)
+				for ch in chunks:
+					ch=ch.copy()
+					ch.shift(x*o.array_x_distance, y*o.array_y_distance,0)
+					nchunks.append(ch)
+	chunks = nchunks			
 	progress('building paths from chunks')
 	e=0.0001
 	lifted=True
@@ -2722,7 +2752,7 @@ def prepare5axisIndexed(o):
 	o.matrices=[]
 	o.parents=[]
 	for ob in o.objects:
-		o.matrices.append(ob.matrix_world)
+		o.matrices.append(ob.matrix_world.copy())
 		o.parents.append(ob.parent)
 		
 	#then rotate them
@@ -2734,7 +2764,8 @@ def prepare5axisIndexed(o):
 	s.cursor_location=(0,0,0)
 	oriname=o.name+' orientation'
 	ori=s.objects[oriname]
-	o.orientation_matrix=ori.matrix_world
+	o.orientation_matrix=ori.matrix_world.copy()
+	rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#don't know what this is.
 	
 	ori.select=True
 	s.objects.active=ori
@@ -2747,7 +2778,8 @@ def prepare5axisIndexed(o):
 	bpy.ops.object.rotation_clear()
 	ori.select=False
 	for ob in o.objects:
-		ob.select=True
+		activate(ob)
+		
 		bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 	'''
 	rot=ori.matrix_world.inverted()
@@ -2765,17 +2797,24 @@ def prepare5axisIndexed(o):
 	
 
 def cleanup5axisIndexed(operation):
-	oriname=o.name+' orientation'
+	s=bpy.context.scene
+	oriname=operation.name+' orientation'
+	
 	ori=s.objects[oriname]
-	ori.matrix_world=o.orientation_matrix
-	'''
-	for i,ob in enumerate(o.objects):#TODO: fix this here wrong order can cause objects out of place
-		ob.parent=o.parents[i]
-	for i,ob in enumerate(o.objects):
-		ob.matrix_world=o.parents[i]
-	'''	
+	path=s.objects[operation.path_object_name]
+	
+	ori.matrix_world=operation.orientation_matrix
+	path.location = ori.location
+	path.rotation_euler = ori.rotation_euler
+	print(ori.matrix_world,operation.orientation_matrix)
+	for i,ob in enumerate(operation.objects):#TODO: fix this here wrong order can cause objects out of place
+		ob.parent=operation.parents[i]
+	for i,ob in enumerate(operation.objects):
+	
+		ob.matrix_world=operation.matrices[i]
+		
 def rotTo2axes(e,axescombination):
-	'''converts an orientation object rotation to rotation defined by 2 rotational axes.
+	'''converts an orientation object rotation to rotation defined by 2 rotational axes on the machine - for indexed machining.
 	attempting to do this for all axes combinations.
 	'''
 	v=Vector((0,0,1))

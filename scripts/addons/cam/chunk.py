@@ -48,6 +48,16 @@ class camPathChunk:
 		nchunk.length=self.length
 		return nchunk
 		
+	def shift(self,x,y,z):
+		
+		for i,p in enumerate(self.points):
+			self.points[i]=(p[0]+x,p[1]+y,p[2]+z)
+		for i,p in enumerate(self.startpoints):
+			self.startpoints[i]=(p[0]+x,p[1]+y,p[2]+z)
+		for i,p in enumerate(self.endpoints):
+			self.endpoints[i]=(p[0]+x,p[1]+y,p[2]+z)
+			
+		
 	def setZ(self,z):
 		i=0
 		for p in self.points:

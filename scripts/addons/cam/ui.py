@@ -414,16 +414,23 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 				#	layout.prop(ao,'slice_detail')	
 			#first attempt to draw object list for orientations:
 			#layout.operator("object.cam_pack_objects")
-			layout.operator("scene.cam_orientation_add")
-			gname=ao.name+'_orientations'
+			#layout.operator("scene.cam_orientation_add")
+			#gname=ao.name+'_orientations'
 			
-			if gname in bpy.data.groups:
-				layout.label('orientations')
-				group=bpy.data.groups[ao.name+'_orientations']
-				layout.template_list("CAM_UL_orientations", '', group, "objects", ao, 'active_orientation')
-				layout.prop(group.objects[ao.active_orientation],'location')
-				layout.prop(group.objects[ao.active_orientation],'rotation_euler')
-				
+			#if gname in bpy.data.groups:
+			#	layout.label('orientations')
+			#	group=bpy.data.groups[ao.name+'_orientations']
+			#	layout.template_list("CAM_UL_orientations", '', group, "objects", ao, 'active_orientation')
+			#	layout.prop(group.objects[ao.active_orientation],'location')
+			#	layout.prop(group.objects[ao.active_orientation],'rotation_euler')
+			if ao.machine_axes=='3':
+				layout.prop(ao,'array')
+				if ao.array:
+					layout.prop(ao,'array_x_count')
+					layout.prop(ao,'array_x_distance')
+					layout.prop(ao,'array_y_count')
+					layout.prop(ao,'array_y_distance')
+			
 class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM movement panel"""
 	bl_label = "CAM movement"
