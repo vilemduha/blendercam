@@ -797,6 +797,8 @@ def generateSimulationImage(name,operations):
 def createSimulationObject(name,operations,i):
 	oname='csim_'+name
 	
+	o=operations[0]
+	
 	if oname in bpy.data.objects:
 		ob=bpy.data.objects[oname]
 	else:
@@ -891,7 +893,8 @@ def chunksToMesh(chunks,o):
 					ch=ch.copy()
 					ch.shift(x*o.array_x_distance, y*o.array_y_distance,0)
 					nchunks.append(ch)
-	chunks = nchunks			
+		chunks = nchunks
+		
 	progress('building paths from chunks')
 	e=0.0001
 	lifted=True
@@ -1039,6 +1042,9 @@ def exportGcodePath(filename,vertslist,operations):
 		from .nc import centroid1 as postprocessor
 	elif m.post_processor=='ANILAM':
 		from .nc import anilam_crusader_m as postprocessor
+	elif m.post_processor=='GRAVOS':
+		extension = '.nc'
+		from .nc import gravos as postprocessor
 	
 	
 	
@@ -1092,10 +1098,16 @@ def exportGcodePath(filename,vertslist,operations):
 
 		#write tool, not working yet probably 
 		c.comment('Tool change')
-		c.tool_change(o.cutter_id)
 		c.spindle(o.spindle_rpm,spdir_clockwise)
-		c.feedrate(unitcorr*o.feedrate)
+		c.tool_change(o.cutter_id)
 		c.flush_nc()
+		o.spindle_start_time=5.0
+		c.dwell(o.spindle_start_time)
+		c.flush_nc()
+		
+		
+		c.feedrate(unitcorr*o.feedrate)
+		
 		
 		
 		#commands=[]
