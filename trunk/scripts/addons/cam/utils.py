@@ -217,7 +217,20 @@ def getBounds(o):
 		
 	#progress (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
 	
-	
+def getBoundsMultiple(operations):
+	"gets bounds of multiple operations, mainly for purpose of simulations or rest milling. highly suboptimal."
+	maxx = maxy = maxz = -10000000
+	minx = miny = minz = 10000000
+	for o in operations:
+		getBounds(o)
+		maxx = max( maxx, o.max.x)
+		maxy = max( maxy, o.max.y)
+		maxz = max( maxz, o.max.z)
+		minx = min( minx, o.min.x )
+		miny = min( miny, o.min.y )
+		minz = min( minz, o.min.z )
+		
+	return minx,miny,minz,maxx,maxy,maxz
 
 def samplePathLow(o,ch1,ch2,dosample):
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
@@ -717,15 +730,20 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	return chunks  
 
 def generateSimulationImage(name,operations):
-	o=operations[0]#initialization now happens from first operation, also for chains.
-	getOperationSources(o)
-	getBounds(o)#this is here because some background computed operations still didn't have bounds data
-	sx=o.max.x-o.min.x
-	sy=o.max.y-o.min.y
+	
+	for o in operations:
+		getOperationSources(o)
+	minx,miny,minz,maxx,maxy,maxz = getBoundsMultiple(operations)#this is here because some background computed operations still didn't have bounds data
+	sx=maxx-minx
+	sy=maxy-miny
+	
+	o=operations[0]#getting sim detail and others from first op.
+	simulation_detail=o.simulation_detail
+	borderwidth = o.borderwidth
+	resx=ceil(sx/simulation_detail)+2*borderwidth
+	resy=ceil(sy/simulation_detail)+2*borderwidth
 
-	resx=ceil(sx/o.simulation_detail)+2*o.borderwidth
-	resy=ceil(sy/o.simulation_detail)+2*o.borderwidth
-
+	#create array in which simulation happens, similar to an image to be painted in.
 	si=numpy.array((0.1),dtype=float)
 	si.resize(resx,resy)
 	si.fill(0)
@@ -733,7 +751,7 @@ def generateSimulationImage(name,operations):
 	for o in operations:
 		verts=bpy.data.objects[o.path_object_name].data.vertices
 		
-		cutterArray=getCutterArray(o,o.simulation_detail)
+		cutterArray=getCutterArray(o,simulation_detail)
 		#cb=cutterArray<-1
 		#cutterArray[cb]=1
 		cutterArray=-cutterArray
@@ -754,28 +772,28 @@ def generateSimulationImage(name,operations):
 				s=vert.co
 				v=s-lasts
 				
-				if v.length>o.simulation_detail:
+				if v.length>simulation_detail:
 					l=v.length
 					
-					v.length=o.simulation_detail
+					v.length=simulation_detail
 					while v.length<l:
 						
-						xs=(lasts.x+v.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-						ys=(lasts.y+v.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+						xs=(lasts.x+v.x-minx)/simulation_detail+borderwidth+simulation_detail/2#-m
+						ys=(lasts.y+v.y-miny)/simulation_detail+borderwidth+simulation_detail/2#-m
 						z=lasts.z+v.z
 						if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
 							si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
-						v.length+=o.simulation_detail
+						v.length+=simulation_detail
 			
-				xs=(s.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-				ys=(s.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
+				xs=(s.x-minx)/simulation_detail+borderwidth+simulation_detail/2#-m
+				ys=(s.y-miny)/simulation_detail+borderwidth+simulation_detail/2#-m
 				if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
 					si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+s.z)
 					
 				lasts=s
 				
 	o=operations[0]
-	si=si[o.borderwidth:-o.borderwidth,o.borderwidth:-o.borderwidth]
+	si=si[borderwidth:-borderwidth,borderwidth:-borderwidth]
 	si+=-o.min.z
 	
 	
@@ -1103,9 +1121,9 @@ def exportGcodePath(filename,vertslist,operations):
 		c.spindle(o.spindle_rpm,spdir_clockwise)
 		c.tool_change(o.cutter_id)
 		c.flush_nc()
-		o.spindle_start_time=5.0
-		c.dwell(o.spindle_start_time)
-		c.flush_nc()
+		if m.spindle_start_time>0:
+			c.dwell(m.spindle_start_time)
+			c.flush_nc()
 		
 		
 		c.feedrate(unitcorr*o.feedrate)
@@ -1760,8 +1778,12 @@ def addMachineAreaObject():
 
 			
 def addMaterialAreaObject():
-	
 	s=bpy.context.scene
+	operation=s.cam_operations[s.cam_active_operation]
+	getOperationSources(operation)
+	getBounds(operation)
+	
+	
 	ao=bpy.context.active_object
 	if s.objects.get('CAM_material')!=None:
 	   o=s.objects['CAM_material']
@@ -1779,9 +1801,8 @@ def addMaterialAreaObject():
 	#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
 	   
 	o.dimensions=bpy.context.scene.cam_machine.working_area
-	operation=s.cam_operations[s.cam_active_operation]
-	getOperationSources(operation)
-	getBounds(operation)
+	
+	
 	o.dimensions=(operation.max.x-operation.min.x,operation.max.y-operation.min.y,operation.max.z-operation.min.z)
 	o.location=(operation.min.x,operation.min.y,operation.max.z)
 	if ao!=None:
@@ -1992,7 +2013,7 @@ def getPath3and5axis(context,operation):
 			
 	elif o.strategy=='CURVE':
 		pathSamples=[]
-		ob=bpy.data.objects[o.curve_object]
+		ob=bpy.data.objects[o.object_name]
 		pathSamples.extend(curveToChunks(ob))
 		pathSamples=sortChunks(pathSamples,o)#sort before sampling
 		pathSamples=chunksRefine(pathSamples,o)
