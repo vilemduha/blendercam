@@ -89,6 +89,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 			#layout.prop(ao,'feedrate_default')
 			layout.prop(ao,'spindle_min')
 			layout.prop(ao,'spindle_max')
+			layout.prop(ao,'spindle_start_time')
 			#layout.prop(ao,'spindle_default')
 			#layout.prop(ao,'axis4')
 			#layout.prop(ao,'axis5')
@@ -283,9 +284,10 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 						layout.prop_search(ao, "group_name", bpy.data, "groups")
 					else:
 						layout.prop_search(ao, "source_image_name", bpy.data, "images")
+				else:
+					layout.prop_search(ao, "object_name", bpy.data, "objects")
 				
- 
-				if ao.strategy=='CARVE' or ao.strategy=='CURVE':
+				if ao.strategy=='CARVE':
 					layout.prop_search(ao, "curve_object", bpy.data, "objects")
 				
 

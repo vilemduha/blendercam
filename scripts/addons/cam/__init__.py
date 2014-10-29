@@ -56,6 +56,10 @@ PRECISION=5
 def updateMachine(self,context):
 	print('update machine ')
 	utils.addMachineAreaObject()
+	
+def updateMaterial(self,context):
+	print('update material')
+	utils.addMaterialAreaObject()
 
 class machineSettings(bpy.types.PropertyGroup):
 	'''stores all data for machines'''
@@ -73,6 +77,8 @@ class machineSettings(bpy.types.PropertyGroup):
 	spindle_min=bpy.props.FloatProperty(name="#Spindlespeed minimum /min", default=5000, min=0.00001, max=320000,precision=1)
 	spindle_max=bpy.props.FloatProperty(name="#Spindlespeed maximum /min", default=30000, min=0.00001, max=320000,precision=1)
 	spindle_default=bpy.props.FloatProperty(name="#Spindlespeed default /min", default=20000, min=0.00001, max=320000,precision=1)
+	spindle_start_time = bpy.props.FloatProperty(name="Spindle start delay ", description = 'Wait for the spindle to start spinning before starting the feeds , in seconds', default=0, min=0.0000, max=320000,precision=1)
+	
 	axis4 = bpy.props.BoolProperty(name="#4th axis",description="Machine has 4th axis", default=0)
 	axis5 = bpy.props.BoolProperty(name="#5th axis",description="Machine has 5th axis", default=0)
 	
@@ -413,12 +419,12 @@ class camOperation(bpy.types.PropertyGroup):
 	#optimisation panel
 	
 	#material settings
-	material_from_model = bpy.props.BoolProperty(name="Estimate from model",description="Estimate material size from model", default=True, update = updateZbufferImage)
-	material_radius_around_model = bpy.props.FloatProperty(name="radius around model",description="How much to add to model size on all sides", default=0.0, unit='LENGTH', precision=PRECISION, update = updateZbufferImage)
-	material_origin=bpy.props.FloatVectorProperty(name = 'Material origin', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateZbufferImage)
-	material_size=bpy.props.FloatVectorProperty(name = 'Material size', default=(0.200,0.200,0.100), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateZbufferImage)
-	min=bpy.props.FloatVectorProperty(name = 'Operation minimum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateRest)
-	max=bpy.props.FloatVectorProperty(name = 'Operation maximum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateRest)
+	material_from_model = bpy.props.BoolProperty(name="Estimate from model",description="Estimate material size from model", default=True, update = updateMaterial)
+	material_radius_around_model = bpy.props.FloatProperty(name="radius around model",description="How much to add to model size on all sides", default=0.0, unit='LENGTH', precision=PRECISION, update = updateMaterial)
+	material_origin=bpy.props.FloatVectorProperty(name = 'Material origin', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateMaterial)
+	material_size=bpy.props.FloatVectorProperty(name = 'Material size', default=(0.200,0.200,0.100), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateMaterial)
+	min = bpy.props.FloatVectorProperty(name = 'Operation minimum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
+	max = bpy.props.FloatVectorProperty(name = 'Operation maximum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
 	warnings = bpy.props.StringProperty(name='warnings', description='warnings', default='', update = updateRest)
 	chipload = bpy.props.FloatProperty(name="chipload",description="Calculated chipload", default=0.0, unit='LENGTH', precision=PRECISION, update = updateRest)
 	#internal properties
