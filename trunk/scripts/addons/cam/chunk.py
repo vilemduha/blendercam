@@ -686,8 +686,7 @@ def restoreVisibility(o,storage):
 	for i in range(0,20):
 		o.layers[i]=storage[1][i]
 
-	
-def curveToChunks(o):
+def meshFromCurve(o):
 	activate(o)
 	storage = makeVisible(o)#this is here because all of this doesn't work when object is not visible or on current layer
 	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
@@ -709,14 +708,18 @@ def curveToChunks(o):
 	co.data.extrude=0
 	bpy.ops.object.convert(target='MESH', keep_original=False)
 	
-	co=bpy.context.active_object
+	restoreVisibility(o,storage)
+	return bpy.context.active_object
+	
+def curveToChunks(o):
+	co = meshFromCurve(o)
 	chunks=meshFromCurveToChunk(co)
 	
 		
 	co=bpy.context.active_object
 	
 	bpy.context.scene.objects.unlink(co)
-	restoreVisibility(o,storage)
+	
 	return chunks
 	
 def polyToChunks(p,zlevel):#

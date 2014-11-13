@@ -572,7 +572,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			#samplestartp=startp+sweepvect*0.3#this is correction for the sweep algorithm to work better.
 			newsample=getSampleBulletNAxis(cutter, startp, endp ,rotation, cutterdepth)
 
-			
+			#print('totok',startp,endp,rotation,newsample)
 			################################
 			#handling samples
 			############################################
@@ -905,7 +905,7 @@ def chunksToMesh(chunks,o):
 	if o.array:
 		nchunks=[]
 		for x in range(0,o.array_x_count):
-			for y in range(0,o.array_x_count):
+			for y in range(0,o.array_y_count):
 				print(x,y)
 				for ch in chunks:
 					ch=ch.copy()
@@ -1460,7 +1460,7 @@ def testbite(pos):
 	
 
 
-def getVectorRight(lastv,verts):#most right vector from a set
+def getVectorRight(lastv,verts):#most right vector from a set regarding angle..
 	defa=100
 	v1=Vector(lastv[0])
 	v2=Vector(lastv[1])
@@ -2024,6 +2024,59 @@ def getPath3and5axis(context,operation):
 				ch.points=nchunk.points
 				
 		chunksToMesh(pathSamples,o)
+		
+	if o.strategy=='PROJECTED_CURVE':
+		pathSamples=[]
+		chunks=[]
+		ob=bpy.data.objects[o.curve_object]
+		pathSamples.extend(curveToChunks(ob))
+		
+		targetCurve=s.objects[o.curve_object1]
+		
+		from cam import chunk
+		if targetCurve.type=='MESH':
+			pass;
+			c=targetCurve.data
+		else:
+			c=chunk.meshFromCurve(targetCurve)
+			bpy.ops.object.editmode_toggle()
+			bpy.ops.mesh.select_all(action='SELECT')
+			bpy.ops.mesh.extrude_region_move()
+			bpy.ops.object.editmode_toggle()
+
+		
+		for ch in pathSamples:
+			ch.depth=0
+			for i,s in enumerate(ch.points):
+				np=c.closest_point_on_mesh(s)
+				ch.startpoints.append(s)
+				ch.endpoints.append(np[0])
+				ch.rotations.append((0,0,0))
+				vect = np[0]-Vector(s)
+				
+				ch.depth=min(ch.depth,-vect.length)
+		
+		
+		
+		if o.use_layers:
+			n=math.ceil(-(ch.depth/o.stepdown))
+			layers=[]
+			for x in range(0,n):
+				
+				layerstart=-(x*o.stepdown)
+				layerend=max(-((x+1)*o.stepdown),ch.depth)
+				layers.append([layerstart,layerend])
+		else:
+			layerstart=0#
+			layerend=ch.depth#
+			layers=[[layerstart,layerend]]
+		
+		print(ch.points)
+		#print(ch.startpoints)
+		print(ch.endpoints)
+		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
+		print(chunks)
+		chunksToMesh(chunks,o)
 		
 	if o.strategy=='POCKET':	
 		p=getObjectOutline(o.cutter_diameter/2,o,False)

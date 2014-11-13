@@ -128,6 +128,8 @@ def getPathPatternParallel(o,angle):
 		
 	return pathchunks 
 
+
+	
 def getPathPattern(operation):
 	o=operation
 	t=time.time()
