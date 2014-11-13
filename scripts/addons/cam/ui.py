@@ -287,9 +287,10 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 				else:
 					layout.prop_search(ao, "object_name", bpy.data, "objects")
 				
-				if ao.strategy=='CARVE':
+				if ao.strategy=='CARVE' or ao.strategy=='PROJECTED_CURVE':
 					layout.prop_search(ao, "curve_object", bpy.data, "objects")
-				
+					if ao.strategy=='PROJECTED_CURVE':
+						layout.prop_search(ao, "curve_object1", bpy.data, "objects")
 
 									 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -347,6 +348,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'strategy')
 				elif ao.machine_axes=='4':
 					layout.prop(ao,'strategy4axis')
+					layout.prop(ao,'rotary_axis_1')
+					
 				elif ao.machine_axes=='5':
 					layout.prop(ao,'strategy5axis')
 				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES':

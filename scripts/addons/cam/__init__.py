@@ -213,7 +213,8 @@ class camOperation(bpy.types.PropertyGroup):
 	#group = bpy.props.StringProperty(name='Object group', description='group of objects which will be included in this operation')
 	object_name = bpy.props.StringProperty(name='Object', description='object handled by this operation', update=operationValid)
 	group_name = bpy.props.StringProperty(name='Group', description='Object group handled by this operation', update=operationValid)
-	curve_object = bpy.props.StringProperty(name='Curve object', description='curve which will be sampled along the 3d object', update=operationValid)
+	curve_object = bpy.props.StringProperty(name='Curve source', description='curve which will be sampled along the 3d object', update=operationValid)
+	curve_object1 = bpy.props.StringProperty(name='Curve target', description='curve which will serve as attractor for the cutter when the cutter follows the curve', update=operationValid)
 	source_image_name = bpy.props.StringProperty(name='image_source', description='image source', update=operationValid)
 	geometry_source = EnumProperty(name='Source of data',
 		items=(
@@ -253,7 +254,8 @@ class camOperation(bpy.types.PropertyGroup):
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
 			('DRILL','Drill', 'Drill operation'),
 			('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
-			('MEDIAL_AXIS','Medial axis', 'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
+			('MEDIAL_AXIS','Medial axis', 'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke '),
+			('PROJECTED_CURVE','Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')
 			),
 		description='Strategy',
 		default='PARALLEL',
@@ -285,7 +287,19 @@ class camOperation(bpy.types.PropertyGroup):
 		description='Strategy',
 		default='PARALLEL',
 		update = updateStrategy)
-	active_orientation = bpy.props.IntProperty(name="active orientation",description="active orientation", default=0,min=0, max=32000, update = updateRest)
+		
+	#active_orientation = bpy.props.IntProperty(name="active orientation",description="active orientation", default=0,min=0, max=32000, update = updateRest)
+	rotary_axis_1 = EnumProperty(name='Rotary axis - A',
+		items=(
+			('X','X', ''),
+			('Y','Y', ''),
+			('Z','Z', ''),
+			),
+		description='Around which axis rotates the first rotary axis',
+		default='X',
+		update = updateStrategy)
+	
+	
 	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
 	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False, update = updateOffsetImage)
 	array = bpy.props.BoolProperty(name="Use array",description="Create a repetitive array for producing the same thing manytimes", default=False, update = updateRest)
@@ -542,7 +556,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 			and prop!='name_property'):
 				d.append(prop)
 	'''
-	preset_values = ['use_layers', 'duration', 'chipload', 'material_from_model', 'stay_low', 'carve_depth', 'dist_along_paths', 'source_image_crop_end_x', 'source_image_crop_end_y', 'material_size', 'material_radius_around_model', 'use_limit_curve', 'cut_type', 'use_exact', 'minz_from_ob', 'free_movement_height', 'source_image_crop_start_x', 'movement_insideout', 'spindle_rotation_direction', 'skin', 'source_image_crop_start_y', 'movement_type', 'source_image_crop', 'limit_curve', 'spindle_rpm', 'ambient_behaviour', 'cutter_type', 'source_image_scale_z', 'cutter_diameter', 'source_image_size_x', 'curve_object', 'cutter_flutes', 'ambient_radius', 'simulation_detail', 'update_offsetimage_tag', 'dist_between_paths', 'max', 'min', 'pixsize', 'slice_detail', 'parallel_step_back', 'drill_type', 'source_image_name', 'dont_merge', 'update_silhouete_tag', 'material_origin', 'inverse', 'waterline_fill', 'source_image_offset', 'circle_detail', 'strategy', 'update_zbufferimage_tag', 'stepdown', 'feedrate', 'cutter_tip_angle', 'cutter_id', 'path_object_name', 'pencil_threshold',	 'geometry_source', 'optimize_threshold', 'protect_vertical', 'plunge_feedrate', 'minz', 'warnings', 'object_name', 'optimize', 'parallel_angle', 'cutter_length']
+	preset_values = ['use_layers', 'duration', 'chipload', 'material_from_model', 'stay_low', 'carve_depth', 'dist_along_paths', 'source_image_crop_end_x', 'source_image_crop_end_y', 'material_size', 'material_radius_around_model', 'use_limit_curve', 'cut_type', 'use_exact', 'minz_from_ob', 'free_movement_height', 'source_image_crop_start_x', 'movement_insideout', 'spindle_rotation_direction', 'skin', 'source_image_crop_start_y', 'movement_type', 'source_image_crop', 'limit_curve', 'spindle_rpm', 'ambient_behaviour', 'cutter_type', 'source_image_scale_z', 'cutter_diameter', 'source_image_size_x', 'curve_object','curve_object1', 'cutter_flutes', 'ambient_radius', 'simulation_detail', 'update_offsetimage_tag', 'dist_between_paths', 'max', 'min', 'pixsize', 'slice_detail', 'parallel_step_back', 'drill_type', 'source_image_name', 'dont_merge', 'update_silhouete_tag', 'material_origin', 'inverse', 'waterline_fill', 'source_image_offset', 'circle_detail', 'strategy', 'update_zbufferimage_tag', 'stepdown', 'feedrate', 'cutter_tip_angle', 'cutter_id', 'path_object_name', 'pencil_threshold',	 'geometry_source', 'optimize_threshold', 'protect_vertical', 'plunge_feedrate', 'minz', 'warnings', 'object_name', 'optimize', 'parallel_angle', 'cutter_length']
 
 	preset_subdir = "cam_operations"   
 	 
@@ -581,7 +595,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	types = bpy.types
 	return (
 	ui.CAM_UL_operations,
-	ui.CAM_UL_orientations,
+	#ui.CAM_UL_orientations,
 	ui.CAM_UL_chains,
 	camOperation,
 	opReference,

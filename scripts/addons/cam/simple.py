@@ -14,6 +14,8 @@ def tuple_sub(t,t1):#sub two tuples as Vectors
 def tuple_mul(t,c):#multiply two tuples with a number
 	return (t[0]*c,t[1]*c,t[2]*c)
 	
+def tuple_length(t):#get length of vector, but passed in as tuple.
+	return (Vector(t).length)
 #timing functions for optimisation purposes...
 def timinginit():
 	return[0,0]
