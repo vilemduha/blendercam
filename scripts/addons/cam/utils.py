@@ -2035,8 +2035,7 @@ def getPath3and5axis(context,operation):
 		
 		from cam import chunk
 		if targetCurve.type=='MESH':
-			pass;
-			c=targetCurve.data
+			c=targetCurve
 		else:
 			c=chunk.meshFromCurve(targetCurve)
 			bpy.ops.object.editmode_toggle()
@@ -2056,8 +2055,10 @@ def getPath3and5axis(context,operation):
 				
 				ch.depth=min(ch.depth,-vect.length)
 		
-		
-		
+		#delete the curve copy
+		if not targetCurve.type=='MESH':
+			bpy.context.scene.objects.unlink(c)
+			
 		if o.use_layers:
 			n=math.ceil(-(ch.depth/o.stepdown))
 			layers=[]
@@ -2071,11 +2072,11 @@ def getPath3and5axis(context,operation):
 			layerend=ch.depth#
 			layers=[[layerstart,layerend]]
 		
-		print(ch.points)
+		#print(ch.points)
 		#print(ch.startpoints)
-		print(ch.endpoints)
+		#print(ch.endpoints)
 		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
-		print(chunks)
+		#print(chunks)
 		chunksToMesh(chunks,o)
 		
 	if o.strategy=='POCKET':	
