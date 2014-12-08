@@ -262,12 +262,12 @@ class camOperation(bpy.types.PropertyGroup):
 		update = updateStrategy)
 	strategy4axis = EnumProperty(name='Strategy',
 		items=(
-			('PARALLELA','Parallel around A', 'Parallel lines around A axis'),
-			('PARALLELX','Parallel along X', 'Parallel lines along X axis'),
-			('HELIXA','Helix around A', 'Helix around A axis, growing in X axis direction'),
+			('PARALLELR','Parallel around 1st rotary axis', 'Parallel lines around first rotary axis'),
+			('PARALLEL','Parallel along 1st rotary axis', 'Parallel lines along first rotary axis'),
+			('HELIX','Helix around 1st rotary axis', 'Helix around rotary axis'),
 			('CROSS','Cross', 'Cross paths')),
 		description='Strategy',
-		default='PARALLELA',
+		default='PARALLEL',
 		update = updateStrategy)
 	strategy5axis = EnumProperty(name='Strategy',
 		items=(
@@ -289,7 +289,7 @@ class camOperation(bpy.types.PropertyGroup):
 		update = updateStrategy)
 		
 	#active_orientation = bpy.props.IntProperty(name="active orientation",description="active orientation", default=0,min=0, max=32000, update = updateRest)
-	rotary_axis_1 = EnumProperty(name='Rotary axis - A',
+	rotary_axis_1 = EnumProperty(name='Rotary axis',
 		items=(
 			('X','X', ''),
 			('Y','Y', ''),
@@ -662,6 +662,7 @@ def compatible_panels():
 	'''gets panels that are for blender internal, but are compatible with blender CAM'''
 	t = bpy.types
 	return (
+	#textures
 	t.TEXTURE_PT_context_texture,
 	t.TEXTURE_PT_preview,
 	t.TEXTURE_PT_colors,
@@ -687,13 +688,65 @@ def compatible_panels():
 	t.TEXTURE_PT_influence,
 	t.TEXTURE_PT_custom_props,
 	
+	#meshes
+	t.DATA_PT_shape_keys,
+	t.DATA_PT_uv_texture,
+	t.DATA_PT_vertex_colors,
+	t.DATA_PT_customdata,
+	t.DATA_PT_custom_props_mesh,
+	
+	#materials
+	t.MATERIAL_PT_context_material,
+	t.MATERIAL_PT_preview,
+	t.MATERIAL_PT_pipeline,
+	t.MATERIAL_PT_diffuse,
+	t.MATERIAL_PT_specular,
+	t.MATERIAL_PT_shading,
+	t.MATERIAL_PT_transp,
+	t.MATERIAL_PT_mirror,
+	t.MATERIAL_PT_sss,
+	t.MATERIAL_PT_halo,
+	t.MATERIAL_PT_flare,
+	t.MATERIAL_PT_game_settings,
+	t.MATERIAL_PT_physics,
+	t.MATERIAL_PT_strand,
+	t.MATERIAL_PT_options,
+	t.MATERIAL_PT_shadow,
+	t.MATERIAL_PT_transp_game,
+	t.MATERIAL_PT_volume_density,
+	t.MATERIAL_PT_volume_shading,
+	t.MATERIAL_PT_volume_lighting,
+	t.MATERIAL_PT_volume_transp,
+	t.MATERIAL_PT_volume_integration,
+	t.MATERIAL_PT_volume_options,
+	t.MATERIAL_PT_custom_props,
+	
+	#particles
+	t.PARTICLE_PT_context_particles,
+	t.PARTICLE_PT_emission,
+	t.PARTICLE_PT_hair_dynamics,
+	t.PARTICLE_PT_cache,
+	t.PARTICLE_PT_velocity,
+	t.PARTICLE_PT_rotation,
+	t.PARTICLE_PT_physics,
+	t.PARTICLE_PT_boidbrain,
+	t.PARTICLE_PT_render,
+	t.PARTICLE_PT_draw,
+	t.PARTICLE_PT_children,
+	t.PARTICLE_PT_field_weights,
+	t.PARTICLE_PT_force_fields,
+	t.PARTICLE_PT_vertexgroups,
+	
+	
+	
 	#scene
 	t.SCENE_PT_scene,
 	t.SCENE_PT_unit,
-	#t.SCENE_PT_keying_sets,
-	#t.SCENE_PT_keying_set_paths,
-	#t.SCENE_PT_color_management,
-	#t.SCENE_PT_audio,
+	t.SCENE_PT_keying_sets,
+	t.SCENE_PT_keying_set_paths,
+	t.SCENE_PT_color_management,
+	
+	t.SCENE_PT_audio,
 	t.SCENE_PT_physics,
 	t.SCENE_PT_rigid_body_world,
 	t.SCENE_PT_rigid_body_cache,
@@ -705,12 +758,12 @@ def compatible_panels():
 	t.WORLD_PT_context_world,
 	t.WORLD_PT_preview,
 	t.WORLD_PT_world,
-	#t.WORLD_PT_ambient_occlusion,
-	#t.WORLD_PT_environment_lighting,
-	#t.WORLD_PT_indirect_lighting,
-	#t.WORLD_PT_gather,
-	#t.WORLD_PT_mist,
-	#t.WORLD_PT_stars,
+	t.WORLD_PT_ambient_occlusion,
+	t.WORLD_PT_environment_lighting,
+	t.WORLD_PT_indirect_lighting,
+	t.WORLD_PT_gather,
+	t.WORLD_PT_mist,
+	t.WORLD_PT_stars,
 	t.WORLD_PT_custom_props
 	
 	)

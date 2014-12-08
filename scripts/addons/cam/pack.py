@@ -7,7 +7,8 @@ import random
 # offsets them by the pre-set margin
 #then chooses a starting location possibly inside the allready occupied area and moves and rotates the polygon out of the occupied area
 #if one or more positions are found where the poly doesn't overlap, it is placed and added to the occupied area - allpoly
-#this algorithm is very slow, a collision algorithm would be much much faster...
+#this algorithm is very slow and STUPID, a collision algorithm would be much much faster...
+
 def packCurves():
 	packsettings=bpy.context.scene.cam_pack
 	
