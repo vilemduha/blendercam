@@ -982,27 +982,30 @@ def chunksToMesh(chunks,o):
 	mesh = bpy.data.meshes.new(oname)
 	mesh.name=oname
 	mesh.from_pydata(verts, edges, [])
-	if o.machine_axes!='3':
-		x=[]
-		y=[]
-		z=[]
-		for a,b,c in verts_rotations:#TODO: optimize this. this is just rewritten too many times...
-			#print(r)
-			x.append(a)
-			y.append(b)
-			z.append(c)
-			
-		mesh['rot_x']=x
-		mesh['rot_y']=y
-		mesh['rot_z']=z
-		
-
+	
 	if oname in s.objects:
 		s.objects[oname].data=mesh
 		ob=s.objects[oname]
 	else: 
 		ob=object_utils.object_data_add(bpy.context, mesh, operator=None)
 		ob=ob.object
+	
+	if o.machine_axes!='3':
+		#store rotations into shape keys, only way to store large arrays with correct floating point precision - object/mesh attributes can only store array up to 32000 intems.
+		x=[]
+		y=[]
+		z=[]
+		ob.shape_key_add()
+		ob.shape_key_add()
+		shapek=mesh.shape_keys.key_blocks[1]
+		shapek.name='rotations'
+		
+		for i,co in enumerate(verts_rotations):#TODO: optimize this. this is just rewritten too many times...
+			#print(r)
+			shapek.data[i].co=co
+			
+
+	
 		
 	print(time.time()-t)
 	
@@ -1052,7 +1055,7 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='HEIDENHAIN':
 		extension='.H'
 		from .nc import heiden as postprocessor
-	elif m.post_processor=='TNC151':
+	elif m.post_processor=='TNC11':
 		from .nc import tnc151 as postprocessor
 	elif m.post_processor=='SIEGKX1':
 		from .nc import siegkx1 as postprocessor
@@ -1105,9 +1108,7 @@ def exportGcodePath(filename,vertslist,operations):
 		mesh=vertslist[i]
 		verts=mesh.vertices[:]
 		if o.machine_axes!='3':
-			rx=mesh['rot_x']
-			ry=mesh['rot_y']
-			rz=mesh['rot_z']
+			rots=mesh.shape_keys.key_blocks['rotations'].data
 			
 		#spindle rpm and direction
 		###############
@@ -1149,7 +1150,7 @@ def exportGcodePath(filename,vertslist,operations):
 			v=vert.co
 			if o.machine_axes!='3':
 				v=v.copy()#we rotate it so we need to copy the vector
-				r=Euler((rx[vi],ry[vi],rz[vi]))
+				r=Euler(rots[vi].co)
 				#conversion to N-axis coordinates
 				# this seems to work correctly
 				rcompensate=r.copy()
@@ -1162,7 +1163,7 @@ def exportGcodePath(filename,vertslist,operations):
 				else:	ra=r.x*rotcorr
 				if r.y==lastrot.y: rb=None;
 				else:	rb=r.y*rotcorr
-
+				#print (	ra,rb)
 			if vi>0 and v.x==last.x: vx=None; 
 			else:	vx=v.x*unitcorr
 			if vi>0 and v.y==last.y: vy=None; 
@@ -1183,6 +1184,7 @@ def exportGcodePath(filename,vertslist,operations):
 				if o.machine_axes=='3':
 					c.feed( x=vx, y=vy, z=vz )
 				else:
+					
 					#print(ra,rb)
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
 					
@@ -2048,7 +2050,7 @@ def getPath3and5axis(context,operation):
 			ch.depth=0
 			for i,s in enumerate(ch.points):
 				np=c.closest_point_on_mesh(s)
-				ch.startpoints.append(s)
+				ch.startpoints.append(Vector(s))
 				ch.endpoints.append(np[0])
 				ch.rotations.append((0,0,0))
 				vect = np[0]-Vector(s)
@@ -2813,7 +2815,7 @@ def getPath4axis(context,operation):
 	s=bpy.context.scene
 	o=operation
 	getBounds(o)
-	if o.strategy4axis=='PARALLELA' or o.strategy4axis=='PARALLELX' or o.strategy4axis=='HELIXA' or o.strategy4axis=='CROSS':  
+	if o.strategy4axis=='PARALLELR' or o.strategy4axis=='PARALLEL' or o.strategy4axis=='HELIX' or o.strategy4axis=='CROSS':  
 		pathSamples=getPathPattern4axis(o)
 		
 		depth=pathSamples[0].depth

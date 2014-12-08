@@ -382,31 +382,62 @@ def getPathPattern4axis(operation):
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	pathchunks=[]
 	zlevel=1#minz#this should do layers...
-	if o.strategy4axis=='PARALLELA':
-		cutterstart=Vector((0,0,0))#start point for casting
-		cutterend=Vector((0,0,0))#end point for casting
-		
-		my=max(abs(o.min.y),abs(o.max.y))
-		mz=max(abs(o.min.z),abs(o.max.z))
-		radius=math.sqrt(my*my+mz*mz)#max radius estimation
-		
-		circlesteps=(radius*pi*2)/o.dist_along_paths
-		steps=(o.max.x-o.min.x)/o.dist_between_paths
-		anglestep = 2*pi/circlesteps
-		e=Euler((anglestep,0,0))
+	
 
+	#set axes for various options, Z option is obvious nonsense now.
+	if o.rotary_axis_1=='X':
+		a1=0
+		a2=1
+		a3=2
+	if o.rotary_axis_1=='Y':
+		a1=1
+		a2=0
+		a3=2
+	if o.rotary_axis_1=='Z':
+		a1=2
+		a2=0
+		a3=1
+	
+	#set radius for all types of operation
+	m1=max(abs(o.min[a2]),abs(o.max[a2]))
+	m2=max(abs(o.min[a3]),abs(o.max[a3]))
+	
+	radius=math.sqrt(m1*m1+m2*m2)#max radius estimation
+	
+	circlesteps=(radius*pi*2)/o.dist_along_paths
+	anglestep = 2*pi/circlesteps
+	#generalized rotation
+	e=Euler((0,0,0))
+	e[a1]=anglestep
+	
+	#generalized length of the operation
+	maxl=o.max[a1]
+	minl=o.min[a1]
+	steps=(maxl-minl)/o.dist_between_paths
+	
+	#set starting positions for cutter e.t.c.
+	cutterstart=Vector((0,0,0))
+	cutterend=Vector((0,0,0))#end point for casting
+
+
+	
+	if o.strategy4axis=='PARALLELR':
+		
 		for a in range(0,floor(steps)+1):
 			chunk=camPathChunk([])
-			cutterstart.x=o.min.x+a*o.dist_between_paths
-			cutterend.x=cutterstart.x
-			cutterstart.y=0
-			cutterstart.z=radius
+
+			cutterstart[a1]=o[a1]+a*o.dist_between_paths
+			cutterend[a1]=cutterstart[a1]
+			
+			cutterstart[a2]=radius
 			
 			for b in range(0,floor(circlesteps)+1):
 				#print(cutterstart,cutterend)
 				chunk.startpoints.append(cutterstart.to_tuple())
 				chunk.endpoints.append(cutterend.to_tuple())
-				chunk.rotations.append((b*anglestep,0,0))
+				rot=[0,0,0]
+				rot[a1]=b*anglestep
+				chunk.rotations.append(rot)
 				cutterstart.rotate(e)
 
 			chunk.depth=-radius
@@ -417,38 +448,28 @@ def getPathPattern4axis(operation):
 			
 			pathchunks.append(chunk)
 			
-	if o.strategy4axis=='PARALLELX':
-		cutterstart=Vector((0,0,0))#start point for casting
-		cutterend=Vector((0,0,0))#end point for casting
-		
-		my=max(abs(o.min.y),abs(o.max.y))
-		mz=max(abs(o.min.z),abs(o.max.z))
-		radius=math.sqrt(my*my+mz*mz)#max radius estimation
-		
-		circlesteps=(radius*pi*2)/o.dist_along_paths
-		steps=(o.max.x-o.min.x)/o.dist_between_paths
-		anglestep = 2*pi/circlesteps
-		e=Euler((anglestep,0,0))
-		
+	if o.strategy4axis=='PARALLEL':
+
 		reverse=False
 		
 		for b in range(0,floor(circlesteps)+1):
 			chunk=camPathChunk([])
-			cutterstart.y=0
-			cutterstart.z=radius
-			e.x=anglestep*b
+			cutterstart[a2]=0
+			cutterstart[a3]=radius
+			e[a1]=anglestep*b
 			cutterstart.rotate(e)
 			for a in range(0,floor(steps)+1):
-				cutterstart.x=o.min.x+a*o.dist_between_paths
-				cutterend.x=cutterstart.x
+				cutterstart[a1]=o.min[a1]+a*o.dist_between_paths
+				cutterend[a1]=cutterstart[a1]
 				chunk.startpoints.append(cutterstart.to_tuple())
 				chunk.endpoints.append(cutterend.to_tuple())
-				chunk.rotations.append((b*anglestep,0,0))
+				rot=[0,0,0]
+				rot[a1]=b*anglestep
+				chunk.rotations.append(rot)
 				
 			chunk.depth=-radius
 			#last point = first
-			
-			
+
 			pathchunks.append(chunk)
 			
 			if (reverse and o.movement_type=='MEANDER') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') :
@@ -456,47 +477,42 @@ def getPathPattern4axis(operation):
 				
 			reverse=not reverse
 			
-	if o.strategy4axis=='HELIXA':
+	if o.strategy4axis=='HELIX':
 		print('helix')
-		cutterstart=Vector((0,0,0))#start point for casting
-		cutterend=Vector((0,0,0))#end point for casting
 		
-		my=max(abs(o.min.y),abs(o.max.y))
-		mz=max(abs(o.min.z),abs(o.max.z))
-		radius=math.sqrt(my*my+mz*mz)#max radius estimation
-		
-		circlesteps=(radius*pi*2)/o.dist_along_paths
-		steps=(o.max.x-o.min.x)/o.dist_between_paths
-		anglestep = 2*pi/circlesteps
-		
-		xstep=o.dist_between_paths / circlesteps
-		
-		e=Euler((anglestep,0,0))
+		a1step=o.dist_between_paths / circlesteps
 		
 		chunk=camPathChunk([])#only one chunk, init here
 		
 		for a in range(0,floor(steps)+1):
 			
-			cutterstart.x=o.min.x+a*o.dist_between_paths
-			cutterend.x=cutterstart.x
-			cutterstart.y=0
-			cutterstart.z=radius
+			cutterstart[a1]=o.min[a1]+a*o.dist_between_paths
+			cutterend[a1]=cutterstart[a1]
+			cutterstart[a2]=0
+			cutterstart[a3]=radius
 			
 			for b in range(0,floor(circlesteps)+1):
 				#print(cutterstart,cutterend)
-				cutterstart.x+=xstep
-				cutterend.x+=xstep
+				cutterstart[a1]+=a1step
+				cutterend[a1]+=a1step
 				chunk.startpoints.append(cutterstart.to_tuple())
 				chunk.endpoints.append(cutterend.to_tuple())
-				chunk.rotations.append((b*anglestep,0,0))
+				
+				rot=[0,0,0]
+				rot[a1]=b*anglestep
+				chunk.rotations.append(rot)
+				
 				cutterstart.rotate(e)
 
 			chunk.depth=-radius
 			#last point = first
 			
-			
-	pathchunks.append(chunk)
+	
+	
+		pathchunks.append(chunk)
+	#print(chunk.startpoints)
 	#print(pathchunks)	
+	#sprint(len(pathchunks))
 	#print(o.strategy4axis)
 	return pathchunks 
 	

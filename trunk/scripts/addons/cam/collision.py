@@ -22,11 +22,21 @@ def getCutterBullet(o):
 		bpy.ops.rigidbody.object_add(type='ACTIVE')
 		cutter=bpy.context.active_object
 		cutter.rigid_body.collision_shape = 'CYLINDER'
-	elif type=='BALL':
-		bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, size=BULLET_SCALE*o.cutter_diameter/2, view_align=False, enter_editmode=False, location=(-100,-100, -100), rotation=(0, 0, 0))
-		bpy.ops.rigidbody.object_add(type='ACTIVE')
-		cutter=bpy.context.active_object
-		cutter.rigid_body.collision_shape = 'SPHERE'
+	elif type=='BALL' or type=='BALLNOSE':
+		if o.strategy!='PROJECTED_CURVE' and type=='BALLNOSE':#only ball, good for 3 axis and real ball cutters
+		
+			bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, size=BULLET_SCALE*o.cutter_diameter/2, view_align=False, enter_editmode=False, location=(-100,-100, -100), rotation=(0, 0, 0))
+			bpy.ops.rigidbody.object_add(type='ACTIVE')
+			cutter=bpy.context.active_object
+			cutter.rigid_body.collision_shape = 'SPHERE'
+		else:#ballnose ending used mainly when projecting from sides. the actual collision shape is capsule in this case.
+			bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, size=BULLET_SCALE*o.cutter_diameter/2, view_align=False, enter_editmode=False, location=(-100,-100, -100), rotation=(0, 0, 0))
+			bpy.ops.rigidbody.object_add(type='ACTIVE')
+			cutter=bpy.context.active_object
+			cutter.dimensions.z=0.2*BULLET_SCALE#should be sufficient for now... 20 cm.
+			cutter.rigid_body.collision_shape = 'CAPSULE'
+			bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+	
 	elif type=='VCARVE':
 		
 		angle=o.cutter_tip_angle
@@ -126,20 +136,22 @@ def getSampleBullet(cutter, x,y, radius, startz, endz):
 	else:
 		return endz-10;
 	
-def getSampleBulletNAxis(cutter, startpoint,endpoint,rotation, radius):
+def getSampleBulletNAxis(cutter, startpoint,endpoint,rotation, cutter_compensation):
 	'''fully 3d collision test for NAxis milling'''
-	start=(startpoint*BULLET_SCALE).to_tuple()
-	end=(endpoint*BULLET_SCALE).to_tuple()
+	cutterVec=Vector((0,0,1))*cutter_compensation#cutter compensation vector - cutter physics object has center in the middle, while cam needs the tip position.
+	cutterVec.rotate(Euler(rotation))
+	
+	start=(startpoint*BULLET_SCALE+cutterVec).to_tuple()
+	end=((endpoint)*BULLET_SCALE+cutterVec).to_tuple()
 	#cutter.rotation_euler=rotation
 	pos=bpy.context.scene.rigidbody_world.convex_sweep_test(cutter, start, end)
 	
-	#radius is subtracted because we are interested in cutter tip position, this gets collision object center
 	
 	if pos[3]==1:
 		pos=Vector(pos[0])
-		v=endpoint-startpoint# a vector in the opposite direction of sweep test
-		v.normalize()
-		res=(pos+v*radius)/BULLET_SCALE
+		#rescale and compensate from center to tip.
+		
+		res=pos/BULLET_SCALE-cutterVec/BULLET_SCALE
 		#this is a debug loop that duplicates the cutter on sampling positions, to see where it was moving...
 		#if random.random()<0.01:
 		#	dupliob(cutter,res)
