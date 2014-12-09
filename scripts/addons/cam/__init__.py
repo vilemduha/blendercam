@@ -235,7 +235,7 @@ class camOperation(bpy.types.PropertyGroup):
 		items=(
 			('3', '3 axis', 'a'),
 			('4', '#4 axis - EXPERIMENTAL', 'a'),
-			('5', '#5 axis - NOT WORKING', 'a')),
+			('5', '#5 axis - EXPERIMENTAL', 'a')),
 		description='How many axes will be used for the operation',
 		default='3', update = updateStrategy)
 	strategy = EnumProperty(name='Strategy',
@@ -260,7 +260,7 @@ class camOperation(bpy.types.PropertyGroup):
 		description='Strategy',
 		default='PARALLEL',
 		update = updateStrategy)
-	strategy4axis = EnumProperty(name='Strategy',
+	strategy4axis = EnumProperty(name='4 axis Strategy',
 		items=(
 			('PARALLELR','Parallel around 1st rotary axis', 'Parallel lines around first rotary axis'),
 			('PARALLEL','Parallel along 1st rotary axis', 'Parallel lines along first rotary axis'),
@@ -272,21 +272,10 @@ class camOperation(bpy.types.PropertyGroup):
 		update = updateStrategy)
 	strategy5axis = EnumProperty(name='Strategy',
 		items=(
-			('PARALLEL','Parallel', 'Parallel lines on any angle'),
-			('CROSS','Cross', 'Cross paths'),
-			('BLOCK','Block', 'Block path'),
-			('SPIRAL','Spiral', 'Spiral path'),
-			('CIRCLES','Circles', 'Circles path'),
-			('WATERLINE','Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
-			('OUTLINEFILL','Outline Fill', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
-			('CUTOUT','Cutout', 'Cut the silhouete with offset'),
-			('POCKET','Pocket', 'Pocket operation'),
-			('CARVE','Carve', 'Carve operation'),
-			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
-			('DRILL','Drill', 'Drill operation')
+			('INDEXED','Indexed 3-axis','all 3 axis strategies, just rotated by 4+5th axes'),
 			),
-		description='Strategy',
-		default='PARALLEL',
+		description='5 axis Strategy',
+		default='INDEXED',
 		update = updateStrategy)
 		
 	#active_orientation = bpy.props.IntProperty(name="active orientation",description="active orientation", default=0,min=0, max=32000, update = updateRest)

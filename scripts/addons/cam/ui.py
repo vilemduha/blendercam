@@ -348,10 +348,14 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'strategy')
 				elif ao.machine_axes=='4':
 					layout.prop(ao,'strategy4axis')
+					if ao.strategy4axis=='INDEXED':
+						layout.prop(ao,'strategy')
 					layout.prop(ao,'rotary_axis_1')
 					
 				elif ao.machine_axes=='5':
 					layout.prop(ao,'strategy5axis')
+					if ao.strategy5axis=='INDEXED':
+						layout.prop(ao,'strategy')
 				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES':
 					layout.prop(ao,'movement_insideout')
 					
