@@ -426,7 +426,7 @@ def getPathPattern4axis(operation):
 		for a in range(0,floor(steps)+1):
 			chunk=camPathChunk([])
 
-			cutterstart[a1]=o[a1]+a*o.dist_between_paths
+			cutterstart[a1]=o.min[a1]+a*o.dist_between_paths
 			cutterend[a1]=cutterstart[a1]
 			
 			cutterstart[a2]=radius

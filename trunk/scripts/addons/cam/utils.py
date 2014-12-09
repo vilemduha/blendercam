@@ -895,10 +895,12 @@ def chunksToMesh(chunks,o):
 	'''convert sampled chunks to path, optimization of paths'''
 	t=time.time()
 	s=bpy.context.scene
-	origin=(0,0,o.free_movement_height)	 
-	verts = [origin]
+	verts=[]
+	if o.machine_axes=='3':
+		origin=(0,0,o.free_movement_height)	 
+		verts = [origin]
 	if o.machine_axes!='3':
-		verts_rotations=[(0,0,0)]
+		verts_rotations=[]#(0,0,0)
 	if o.machine_axes == '5':
 		extendChunks5axis(chunks,o)
 	
@@ -1709,17 +1711,35 @@ def getObjectOutline(radius,o,Offset):#FIXME: make this one operation independen
 	return outline
 	
 def addOrientationObject(o):
-	'''the orientation object should be used to set up orientations of the object for 5 axis milling.'''
+	'''the orientation object should be used to set up orientations of the object for 4 and 5 axis milling.'''
 	name = o.name+' orientation'
 	s=bpy.context.scene
 	if s.objects.find(name)==-1:
-		bpy.ops.object.empty_add(type='SINGLE_ARROW', view_align=False, location=(0,0,0))
+		bpy.ops.object.empty_add(type='ARROWS', view_align=False, location=(0,0,0))
 
 		ob=bpy.context.active_object
 		ob.empty_draw_size=0.05
 		ob.show_name=True
 		ob.name=name
+	ob=s.objects[name]
+	if o.machine_axes=='4':
+		
+		if o.rotary_axis_1=='X':
+			ob.lock_rotation=[False,True,True]
+			ob.rotation_euler[1]=0
+			ob.rotation_euler[2]=0
+		if o.rotary_axis_1=='Y':
+			ob.lock_rotation=[True,False,True]
+			ob.rotation_euler[0]=0
+			ob.rotation_euler[2]=0
+		if o.rotary_axis_1=='Z':
+			ob.lock_rotation=[True,True,False]
+			ob.rotation_euler[0]=0
+			ob.rotation_euler[1]=0
 
+#def addCutterOrientationObject(o):
+	
+			
 def removeOrientationObject(o):#not working
 	name=o.name+' orientation'
 	if bpy.context.scene.objects.find(name)>-1:
@@ -2837,6 +2857,7 @@ def getPath4axis(context,operation):
 		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
 		chunksToMesh(chunks,o)
 
+		
 def prepare5axisIndexed(o):
 	s=bpy.context.scene
 	#first store objects positions/rotations
