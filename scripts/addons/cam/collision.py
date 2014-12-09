@@ -64,6 +64,7 @@ def getCutterBullet(o):
 	o.cutter_shape=cutter
 	return cutter
 
+	
 #
 def prepareBulletCollision(o):
 	'''prepares all objects needed for sampling with bullet collision'''

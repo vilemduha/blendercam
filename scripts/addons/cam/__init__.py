@@ -76,7 +76,7 @@ class machineSettings(bpy.types.PropertyGroup):
 	#UNSUPPORTED:
 	spindle_min=bpy.props.FloatProperty(name="#Spindlespeed minimum /min", default=5000, min=0.00001, max=320000,precision=1)
 	spindle_max=bpy.props.FloatProperty(name="#Spindlespeed maximum /min", default=30000, min=0.00001, max=320000,precision=1)
-	spindle_default=bpy.props.FloatProperty(name="#Spindlespeed default /min", default=20000, min=0.00001, max=320000,precision=1)
+	spindle_default=bpy.props.FloatProperty(name="#Spindlespeed default /min", default=15000, min=0.00001, max=320000,precision=1)
 	spindle_start_time = bpy.props.FloatProperty(name="Spindle start delay ", description = 'Wait for the spindle to start spinning before starting the feeds , in seconds', default=0, min=0.0000, max=320000,precision=1)
 	
 	axis4 = bpy.props.BoolProperty(name="#4th axis",description="Machine has 4th axis", default=0)
@@ -175,7 +175,7 @@ def updateStrategy(o,context):
 	''''''
 	o.changed=True
 	print('update strategy')
-	if o.machine_axes=='5':
+	if o.machine_axes=='5' or (o.machine_axes=='4' and o.strategy4axis=='INDEXED'):#INDEXED 4 AXIS DOESN'T EXIST NOW...
 		utils.addOrientationObject(o)
 	else:
 		utils.removeOrientationObject(o)
@@ -265,8 +265,9 @@ class camOperation(bpy.types.PropertyGroup):
 			('PARALLELR','Parallel around 1st rotary axis', 'Parallel lines around first rotary axis'),
 			('PARALLEL','Parallel along 1st rotary axis', 'Parallel lines along first rotary axis'),
 			('HELIX','Helix around 1st rotary axis', 'Helix around rotary axis'),
+			('INDEXED','Indexed 3-axis','all 3 axis strategies, just applied to the 4th axis'),
 			('CROSS','Cross', 'Cross paths')),
-		description='Strategy',
+		description='#Strategy',
 		default='PARALLEL',
 		update = updateStrategy)
 	strategy5axis = EnumProperty(name='Strategy',
@@ -397,7 +398,7 @@ class camOperation(bpy.types.PropertyGroup):
 	feedrate = FloatProperty(name="Feedrate/minute", description="Feedrate m/min", min=0.00005, max=50.0, default=1.0,precision=PRECISION, unit="LENGTH", update = updateChipload)
 	plunge_feedrate = FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,precision=1, subtype='PERCENTAGE', update = updateRest)
 	plunge_angle =	bpy.props.FloatProperty(name="Plunge angle", description="What angle is allready considered to plunge", default=math.pi/6, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
-	spindle_rpm = FloatProperty(name="#Spindle rpm", description="#not supported#Spindle speed ", min=1000, max=60000, default=12000, update = updateChipload)
+	spindle_rpm = FloatProperty(name="Spindle rpm", description="Spindle speed ", min=1000, max=60000, default=12000, update = updateChipload)
 	#movement parallel_step_back 
 	movement_type = EnumProperty(name='Movement type',items=(('CONVENTIONAL','Conventional', 'a'),('CLIMB', 'Climb', 'a'),('MEANDER', 'Meander' , 'a')	 ),description='movement type', default='CLIMB', update = updateRest)
 	spindle_rotation_direction = EnumProperty(name='Spindle rotation', items=(('CW','Clock wise', 'a'),('CCW', 'Counter clock wise', 'a')),description='Spindle rotation direction',default='CW', update = updateRest)
