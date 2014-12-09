@@ -874,7 +874,7 @@ def doSimulation(name,operations):
 
 def extendChunks5axis(chunks,o):
 	s=bpy.context.scene
-	cutterstart=Vector((0,0,o.max.z))#start point for casting
+	cutterstart=Vector((0,0,max(o.max.z,o.free_movement_height)))#start point for casting
 	cutterend=Vector((0,0,o.min.z))
 	oriname=o.name+' orientation'
 	ori=s.objects[oriname]
@@ -901,7 +901,7 @@ def chunksToMesh(chunks,o):
 		verts = [origin]
 	if o.machine_axes!='3':
 		verts_rotations=[]#(0,0,0)
-	if o.machine_axes == '5':
+	if (o.machine_axes == '5' and o.strategy5axis=='INDEXED') or (o.machine_axes=='4' and o.strategy4axis=='INDEXED'):
 		extendChunks5axis(chunks,o)
 	
 	if o.array:
@@ -2877,7 +2877,7 @@ def prepare5axisIndexed(o):
 	oriname=o.name+' orientation'
 	ori=s.objects[oriname]
 	o.orientation_matrix=ori.matrix_world.copy()
-	rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#don't know what this is.
+	rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#this should get somehow rotation for the axes that is actually written into the gcode....?????? TODO!
 	
 	ori.select=True
 	s.objects.active=ori
@@ -2999,16 +2999,16 @@ def getPath(context,operation):#should do all path calculations.
 
 	if operation.machine_axes=='3':
 		getPath3and5axis(context,operation)
+	
+	elif (operation.machine_axes=='5' and operation.strategy5axis=='INDEXED') or (operation.machine_axes=='4' and operation.strategy4axis=='INDEXED'):#5 axis operations are now only 3 axis operations that get rotated...
+		operation.orientation = prepare5axisIndexed(operation)#TODO RENAME THIS
+		
+		getPath3and5axis(context,operation)#TODO RENAME THIS
+		
+		cleanup5axisIndexed(operation)#TODO RENAME THIS
+		#transform5axisIndexed
 	elif operation.machine_axes=='4':
 		getPath4axis(context,operation)
-	elif operation.machine_axes=='5':#5 axis operations are now only 3 axis operations that get rotated...
-		operation.orientation = prepare5axisIndexed(operation)
-		operation.strategy=operation.strategy5axis
-		
-		getPath3and5axis(context,operation)
-		
-		cleanup5axisIndexed(operation)
-		#transform5axisIndexed
 		
 	operation.changed=False
 	t1=time.clock()-t 
