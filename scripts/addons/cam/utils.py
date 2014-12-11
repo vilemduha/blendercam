@@ -878,8 +878,9 @@ def extendChunks5axis(chunks,o):
 	cutterend=Vector((0,0,o.min.z))
 	oriname=o.name+' orientation'
 	ori=s.objects[oriname]
-	rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#warning-here it allready is reset to 0!!
-	a,b=rotationaxes#this is all nonsense by now.
+	#rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#warning-here it allready is reset to 0!!
+	print('rot',o.rotationaxes)
+	a,b=o.rotationaxes#this is all nonsense by now.
 	for chunk in chunks:
 		for v in chunk.points:
 			cutterstart.x=v[0]
@@ -888,7 +889,7 @@ def extendChunks5axis(chunks,o):
 			cutterend.y=v[1]
 			chunk.startpoints.append(cutterstart.to_tuple())
 			chunk.endpoints.append(cutterend.to_tuple())
-			chunk.rotations.append((b,a,0))#TODO: this is a placeholder. It does 99.9% probably write total nonsense.
+			chunk.rotations.append((a,b,0))#TODO: this is a placeholder. It does 99.9% probably write total nonsense.
 			
 			
 def chunksToMesh(chunks,o):
@@ -1736,7 +1737,10 @@ def addOrientationObject(o):
 			ob.lock_rotation=[True,True,False]
 			ob.rotation_euler[0]=0
 			ob.rotation_euler[1]=0
-
+	elif o.machine_axes=='5':
+		ob.lock_rotation=[False,False,True]
+		
+		ob.rotation_euler[2]=0#this will be a bit hard to rotate.....
 #def addCutterOrientationObject(o):
 	
 			
@@ -1919,7 +1923,7 @@ def addBridges(ch,o,z):
 #def cutoutStrategy(o):
 
 
-def getPath3and5axis(context,operation):
+def getPath3axis(context,operation):
 	s=bpy.context.scene
 	o=operation
 	getBounds(o)
@@ -2858,7 +2862,7 @@ def getPath4axis(context,operation):
 		chunksToMesh(chunks,o)
 
 		
-def prepare5axisIndexed(o):
+def prepareIndexed(o):
 	s=bpy.context.scene
 	#first store objects positions/rotations
 	o.matrices=[]
@@ -2877,8 +2881,7 @@ def prepare5axisIndexed(o):
 	oriname=o.name+' orientation'
 	ori=s.objects[oriname]
 	o.orientation_matrix=ori.matrix_world.copy()
-	rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#this should get somehow rotation for the axes that is actually written into the gcode....?????? TODO!
-	
+	o.rotationaxes= rotTo2axes(ori.rotation_euler,'CA')
 	ori.select=True
 	s.objects.active=ori
 	# we parent all objects to the orientation object
@@ -2908,7 +2911,7 @@ def prepare5axisIndexed(o):
 	'''
 	
 
-def cleanup5axisIndexed(operation):
+def cleanupIndexed(operation):
 	s=bpy.context.scene
 	oriname=operation.name+' orientation'
 	
@@ -2931,9 +2934,10 @@ def rotTo2axes(e,axescombination):
 	'''
 	v=Vector((0,0,1))
 	v.rotate(e)
+	#if axes
 	if axescombination=='CA':
 		v2d=Vector((v.x,v.y))
-		a1base=Vector((0,1))#?is this right?It should be vector defining 0 rotation
+		a1base=Vector((0,-1))#?is this right?It should be vector defining 0 rotation
 		if v2d.length>0:
 			cangle=a1base.angle_signed(v2d)
 		else:
@@ -2941,8 +2945,9 @@ def rotTo2axes(e,axescombination):
 		v2d=Vector((v2d.length,v.z))
 		a2base=Vector((0,1))
 		aangle=a2base.angle_signed(v2d)
-		print(cangle,aangle)
-		return (cangle,aangle)
+		print('angles',cangle,aangle)
+		return (cangle, aangle)
+		
 	elif axescombination=='CB':
 		v2d=Vector((v.x,v.y))
 		a1base=Vector((1,0))#?is this right?It should be vector defining 0 rotation
@@ -2952,10 +2957,13 @@ def rotTo2axes(e,axescombination):
 			return(0,0)
 		v2d=Vector((v2d.length,v.z))
 		a2base=Vector((0,1))
+		
 		bangle=a2base.angle_signed(v2d)
-		print(cangle,bangle)
+		
+		
+		print('angles',cangle,bangle)
+		
 		return (cangle,bangle)
-
 	'''
 	v2d=((v[a[0]],v[a[1]]))
 	angle1=a1base.angle(v2d)#C for ca
@@ -2998,14 +3006,14 @@ def getPath(context,operation):#should do all path calculations.
 	
 
 	if operation.machine_axes=='3':
-		getPath3and5axis(context,operation)
+		getPath3axis(context,operation)
 	
 	elif (operation.machine_axes=='5' and operation.strategy5axis=='INDEXED') or (operation.machine_axes=='4' and operation.strategy4axis=='INDEXED'):#5 axis operations are now only 3 axis operations that get rotated...
-		operation.orientation = prepare5axisIndexed(operation)#TODO RENAME THIS
+		operation.orientation = prepareIndexed(operation)#TODO RENAME THIS
 		
-		getPath3and5axis(context,operation)#TODO RENAME THIS
+		getPath3axis(context,operation)#TODO RENAME THIS
 		
-		cleanup5axisIndexed(operation)#TODO RENAME THIS
+		cleanupIndexed(operation)#TODO RENAME THIS
 		#transform5axisIndexed
 	elif operation.machine_axes=='4':
 		getPath4axis(context,operation)
