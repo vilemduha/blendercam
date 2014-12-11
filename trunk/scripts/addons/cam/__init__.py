@@ -288,7 +288,15 @@ class camOperation(bpy.types.PropertyGroup):
 		description='Around which axis rotates the first rotary axis',
 		default='X',
 		update = updateStrategy)
-	
+	rotary_axis_2 = EnumProperty(name='Rotary axis 2',
+		items=(
+			('X','X', ''),
+			('Y','Y', ''),
+			('Z','Z', ''),
+			),
+		description='Around which axis rotates the second rotary axis',
+		default='Z',
+		update = updateStrategy)
 	
 	skin = FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
 	inverse = bpy.props.BoolProperty(name="Inverse milling",description="Male to female model conversion", default=False, update = updateOffsetImage)
