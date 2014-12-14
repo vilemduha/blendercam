@@ -935,22 +935,23 @@ def chunksToMesh(chunks,o):
 			
 			#lift and drop
 			
-			if lifted:
-				if o.machine_axes=='3' or o.machine_axes=='5':
+			if lifted:#did the cutter lift before? if yes, put a new position above of the first point of next chunk. 
+				if o.machine_axes=='3' or (o.machine_axes=='5' and o.strategy5axis=='INDEXED') or (o.machine_axes=='4' and o.strategy4axis=='INDEXED'):
 					v=(ch.points[0][0],ch.points[0][1],o.free_movement_height)
-				else:
+				else:#otherwise, continue with the next chunk without lifting/dropping
 					v=ch.startpoints[0]#startpoints=retract points
 					verts_rotations.append(ch.rotations[0])
 				verts.append(v)
-			#scount=len(verts)
+			
+			#add whole chunk
 			verts.extend(ch.points)
-			#ecount=len(verts)
-			#for a in range(scount,ecount-1):
-			#	edges.append((a,a+1))
+			
+			#add rotations for n-axis
 			if o.machine_axes!='3':
 				verts_rotations.extend(ch.rotations)
 				
 			lift = True
+			#check if lifting should happen
 			if chi<len(chunks)-1 and len(chunks[chi+1].points)>0:#TODO: remake this for n axis, and this check should be somewhere else...
 				#nextch=
 				last=Vector(ch.points[-1])
@@ -962,7 +963,7 @@ def chunksToMesh(chunks,o):
 					lift=False
 				
 			if lift:
-				if o.machine_axes== '3':
+				if o.machine_axes=='3' or (o.machine_axes=='5' and o.strategy5axis=='INDEXED') or (o.machine_axes=='4' and o.strategy4axis=='INDEXED'):
 					v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
 				else:
 					v=ch.startpoints[-1]
@@ -1014,9 +1015,7 @@ def chunksToMesh(chunks,o):
 	
 	ob.location=(0,0,0)
 	o.path_object_name=oname
-	if o.auto_export:
-		exportGcodePath(o.filename,[ob.data],[o])
-
+	
 		
 def exportGcodePath(filename,vertslist,operations):
 	'''exports gcode with the heeks nc adopted library.'''
@@ -1155,7 +1154,7 @@ def exportGcodePath(filename,vertslist,operations):
 				v=v.copy()#we rotate it so we need to copy the vector
 				r=Euler(rots[vi].co)
 				#conversion to N-axis coordinates
-				# this seems to work correctly
+				# this seems to work correctly for 4 axis.
 				rcompensate=r.copy()
 				rcompensate.x=-r.x
 				rcompensate.y=-r.y
@@ -1167,6 +1166,9 @@ def exportGcodePath(filename,vertslist,operations):
 				if r.y==lastrot.y: rb=None;
 				else:	rb=r.y*rotcorr
 				#print (	ra,rb)
+				
+				
+				
 			if vi>0 and v.x==last.x: vx=None; 
 			else:	vx=v.x*unitcorr
 			if vi>0 and v.y==last.y: vy=None; 
@@ -2860,7 +2862,7 @@ def getPath4axis(context,operation):
 		
 		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
 		chunksToMesh(chunks,o)
-
+	
 		
 def prepareIndexed(o):
 	s=bpy.context.scene
@@ -2919,14 +2921,17 @@ def cleanupIndexed(operation):
 	path=s.objects[operation.path_object_name]
 	
 	ori.matrix_world=operation.orientation_matrix
+	#set correct path location
 	path.location = ori.location
 	path.rotation_euler = ori.rotation_euler
+	
 	print(ori.matrix_world,operation.orientation_matrix)
 	for i,ob in enumerate(operation.objects):#TODO: fix this here wrong order can cause objects out of place
 		ob.parent=operation.parents[i]
 	for i,ob in enumerate(operation.objects):
 	
 		ob.matrix_world=operation.matrices[i]
+		
 		
 def rotTo2axes(e,axescombination):
 	'''converts an orientation object rotation to rotation defined by 2 rotational axes on the machine - for indexed machining.
@@ -3017,7 +3022,12 @@ def getPath(context,operation):#should do all path calculations.
 		#transform5axisIndexed
 	elif operation.machine_axes=='4':
 		getPath4axis(context,operation)
-		
+	
+	#export gcode if automatic.
+	if o.auto_export:
+		p=bpy.data.objects[o.path_object_name]
+		exportGcodePath(o.filename,[p.data],[o])
+
 	operation.changed=False
 	t1=time.clock()-t 
 	progress('total time',t1)
