@@ -3024,9 +3024,9 @@ def getPath(context,operation):#should do all path calculations.
 		getPath4axis(context,operation)
 	
 	#export gcode if automatic.
-	if o.auto_export:
-		p=bpy.data.objects[o.path_object_name]
-		exportGcodePath(o.filename,[p.data],[o])
+	if operation.auto_export:
+		p=bpy.data.objects[operation.path_object_name]
+		exportGcodePath(operation.filename,[p.data],[operation])
 
 	operation.changed=False
 	t1=time.clock()-t 
