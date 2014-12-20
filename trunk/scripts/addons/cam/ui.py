@@ -318,7 +318,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.duration>0:
 					layout.label('operation time: '+str(int(ao.duration*100)/100.0)+' min')	   
 				#layout.prop(ao,'chipload')
-				layout.label(  'chipload: '+str(round(ao.chipload,6))+getUnit()+' / tooth')
+				layout.label(  'chipload: '+str(round(ao.chipload,8))+getUnit()+' / tooth')
 				#layout.label(str(ob.dimensions.x))
 				#row=layout.row()
 		
