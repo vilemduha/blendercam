@@ -734,6 +734,7 @@ def generateSimulationImage(name,operations):
 	for o in operations:
 		getOperationSources(o)
 	minx,miny,minz,maxx,maxy,maxz = getBoundsMultiple(operations)#this is here because some background computed operations still didn't have bounds data
+	print(minx,miny,minz,maxx,maxy,maxz)
 	sx=maxx-minx
 	sy=maxy-miny
 	
