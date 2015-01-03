@@ -773,7 +773,6 @@ def compatible_panels():
 	t.WORLD_PT_indirect_lighting,
 	t.WORLD_PT_gather,
 	t.WORLD_PT_mist,
-	t.WORLD_PT_stars,
 	t.WORLD_PT_custom_props
 	
 	)
