@@ -1,11 +1,11 @@
 import bpy
 from bpy.types import UIList
 
-def getUnit():
+def strInUnits(x,precision=5):
 	if bpy.context.scene.unit_settings.system == 'METRIC':
-		return 'mm'
+		return str( round(x,precision) )+' mm '
 	elif bpy.context.scene.unit_settings.system == 'IMPERIAL':
-		return "''"
+		return str( round(x/25.4,precision) )+"'' "
 		
 ####Panel definitions
 class CAMButtonsPanel():
@@ -318,7 +318,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.duration>0:
 					layout.label('operation time: '+str(int(ao.duration*100)/100.0)+' min')	   
 				#layout.prop(ao,'chipload')
-				layout.label(  'chipload: '+str(round(ao.chipload,8))+getUnit()+' / tooth')
+				layout.label(  'chipload: '+ strInUnits(ao.chipload,8) + ' / tooth')
 				#layout.label(str(ob.dimensions.x))
 				#row=layout.row()
 		
@@ -594,7 +594,8 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
 						i=bpy.data.images[ao.source_image_name]
 						if i!=None:
 							sy=int((ao.source_image_size_x/i.size[0])*i.size[1]*1000000)/1000
-							layout.label('image size on y axis: '+ str(sy)+getUnit())
+							
+							layout.label('image size on y axis: '+ strInUnits(sy,8))
 							#print(dir(layout))
 							layout.separator()
 					layout.prop(ao,'source_image_offset') 
