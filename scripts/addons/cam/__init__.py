@@ -212,7 +212,7 @@ def updateBridges(o,context):
 	#utils.setupBridges(o)
 	
 def updateRest(o,context):
-	print('update rest ')
+	#print('update rest ')
 	#if o.use_layers:
 		#o.parallel_step_back = False
 	o.changed=True
@@ -266,7 +266,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
 			('DRILL','Drill', 'Drill operation'),
 			('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
-			('MEDIAL_AXIS','Medial axis', 'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke '),
+			('MEDIAL_AXIS','Medial axis - EXPERIMENTAL', 'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke '),
 			('PROJECTED_CURVE','Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')
 			),
 		description='Strategy',

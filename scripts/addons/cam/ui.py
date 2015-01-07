@@ -1,6 +1,8 @@
 import bpy
 from bpy.types import UIList
 
+EXPERIMENTAL=True#False
+
 def strInUnits(x,precision=5):
 	if bpy.context.scene.unit_settings.system == 'METRIC':
 		return str( round(x,precision) )+' mm '
@@ -343,7 +345,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 		if len(scene.cam_operations)>0:
 			ao=scene.cam_operations[scene.cam_active_operation]
 			if ao.valid:
-				layout.prop(ao,'machine_axes')
+				if EXPERIMENTAL:
+					layout.prop(ao,'machine_axes')
 				if ao.machine_axes=='3':
 					layout.prop(ao,'strategy')
 				elif ao.machine_axes=='4':
