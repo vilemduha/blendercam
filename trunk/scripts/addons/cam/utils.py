@@ -1072,7 +1072,9 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='WIN-PC' :
 		extension='.din'
 		from .nc import winpc as postprocessor
-	
+	elif m.post_processor=='SHOPBOT PRS':
+		extension='.sbp'
+		from .nc import shopbot_prs as postprocessor
 	
 	if s.unit_settings.system=='METRIC':
 		unitcorr=1000.0
