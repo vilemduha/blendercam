@@ -151,7 +151,7 @@ def updateChipload(self,context):
 	o=self;
 	self.changed=True
 	#Old chipload
-	#self.chipload = int((o.feedrate/(o.spindle_rpm*o.cutter_flutes))*1000000)/1000
+	self.chipload = ((o.feedrate/(o.spindle_rpm*o.cutter_flutes)))
 	###New chipload with chip thining compensation.
 	# I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less than 50% cutter engagement with cylindrical end mills.
 	# formula 1 Nominal Chipload is " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
@@ -159,8 +159,8 @@ def updateChipload(self,context):
 	# Nominal Chipload = what you find in end mill data sheats recomended chip load at %50 cutter engagment. I have no programming or math back ground.
 	# I am sure there is a better way to do this. I dont get consistent result and I am not sure if there is something wrong with the units going into the formula, my math or my lack of underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck we will be one tiny step on the way to a slightly better chipload calculating function.
 
-	self.chipload = int((0.5*(o.cutter_diameter/o.dist_between_paths))/(math.sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
-
+	#self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(math.sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
+	print (self.chipload)
 	
 	
 	

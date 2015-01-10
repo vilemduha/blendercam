@@ -1123,7 +1123,7 @@ def exportGcodePath(filename,vertslist,operations):
 			spdir_clockwise=False
 
 		#write tool, not working yet probably 
-		c.comment('Tool change')
+		c.comment('Tool change - D = %s type %s flutes %s' % ( strInUnits(o.cutter_diameter,4),o.cutter_type, o.cutter_flutes))
 		c.spindle(o.spindle_rpm,spdir_clockwise)
 		c.tool_change(o.cutter_id)
 		c.flush_nc()

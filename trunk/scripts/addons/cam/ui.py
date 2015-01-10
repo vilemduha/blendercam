@@ -1,13 +1,12 @@
 import bpy
 from bpy.types import UIList
 
+from cam import simple
+from cam.simple import *
+
 EXPERIMENTAL=True#False
 
-def strInUnits(x,precision=5):
-	if bpy.context.scene.unit_settings.system == 'METRIC':
-		return str( round(x,precision) )+' mm '
-	elif bpy.context.scene.unit_settings.system == 'IMPERIAL':
-		return str( round(x/25.4,precision) )+"'' "
+
 		
 ####Panel definitions
 class CAMButtonsPanel():
