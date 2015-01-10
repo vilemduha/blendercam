@@ -5,14 +5,14 @@ from mathutils import *
 import curve_simplify
 
 import Polygon
-try:
-	import shapely
-	from shapely.geometry import polygon as spolygon
-	from shapely import ops
-	from shapely import geometry
-	SHAPELY=True
-except:
-	SHAPELY=False
+
+import shapely
+from shapely.geometry import polygon as spolygon
+from shapely import ops
+from shapely import geometry
+SHAPELY=True
+#except:
+#	SHAPELY=False
 	
 
 def Polygon2Shapely(p):

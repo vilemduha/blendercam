@@ -131,3 +131,9 @@ def safeFileName(name):#for export gcode
 	valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
 	filename=''.join(c for c in name if c in valid_chars)
 	return filename
+
+def strInUnits(x,precision=5):
+	if bpy.context.scene.unit_settings.system == 'METRIC':
+		return str( round(x * 1000,precision) )+' mm '
+	elif bpy.context.scene.unit_settings.system == 'IMPERIAL':
+		return str( round(x * 1000/25.4,precision) )+"'' "
