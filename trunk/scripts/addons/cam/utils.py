@@ -1236,9 +1236,16 @@ def exportGcodePath(filename,vertslist,operations):
 				c.spindle(o.spindle_rpm,spdir_clockwise)
 				c.feedrate(unitcorr*o.feedrate)
 				c.flush_nc()
+				if m.spindle_start_time>0:
+					c.dwell(m.spindle_start_time)
+					c.flush_nc()
 				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=o.free_movement_height*unitcorr)
 				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=last.z*unitcorr)
 				processedops=0
+			
+		
+		c.feedrate(unitcorr*o.feedrate)
+				
 			
 	o.duration=duration*unitcorr
 	#print('duration')
