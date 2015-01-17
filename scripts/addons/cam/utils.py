@@ -1107,6 +1107,7 @@ def exportGcodePath(filename,vertslist,operations):
 		return c
 		
 	c=startNewFile()
+	last_cutter=None;#[o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
 	
 	processedops=0
 	for i,o in enumerate(operations):
@@ -1121,11 +1122,16 @@ def exportGcodePath(filename,vertslist,operations):
 			spdir_clockwise=True
 		else:
 			spdir_clockwise=False
-
-		#write tool, not working yet probably 
-		c.comment('Tool change - D = %s type %s flutes %s' % ( strInUnits(o.cutter_diameter,4),o.cutter_type, o.cutter_flutes))
+		
 		c.spindle(o.spindle_rpm,spdir_clockwise)
-		c.tool_change(o.cutter_id)
+		#write tool, not working yet probably 
+		#print (last_cutter)
+		if last_cutter!=[o.cutter_id,o.cutter_diameter,o.cutter_type,o.cutter_flutes]:
+			c.comment('Tool change - D = %s type %s flutes %s' % ( strInUnits(o.cutter_diameter,4),o.cutter_type, o.cutter_flutes))
+			c.tool_change(o.cutter_id)
+			c.flush_nc()
+		last_cutter=[o.cutter_id,o.cutter_diameter,o.cutter_type,o.cutter_flutes]	
+		
 		c.flush_nc()
 		if m.spindle_start_time>0:
 			c.dwell(m.spindle_start_time)
@@ -1150,7 +1156,8 @@ def exportGcodePath(filename,vertslist,operations):
 		f=millfeedrate
 		downvector= Vector((0,0,-1))
 		plungelimit=(pi/2-o.plunge_angle)
-		print('2')
+		
+		#print('2')
 		for vi,vert in enumerate(verts):
 			v=vert.co
 			if o.machine_axes!='3':
@@ -1233,8 +1240,9 @@ def exportGcodePath(filename,vertslist,operations):
 				findex+=1
 				c.file_close()
 				c=startNewFile()
-				c.spindle(o.spindle_rpm,spdir_clockwise)
+				c.comment('Tool change - D = %s type %s flutes %s' % ( strInUnits(o.cutter_diameter,4),o.cutter_type, o.cutter_flutes))
 				c.tool_change(o.cutter_id)
+				c.spindle(o.spindle_rpm,spdir_clockwise)
 				c.feedrate(unitcorr*o.feedrate)
 				c.flush_nc()
 				if m.spindle_start_time>0:
