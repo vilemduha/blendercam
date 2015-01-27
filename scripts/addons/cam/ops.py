@@ -422,8 +422,9 @@ class CamChainOperationRemove(bpy.types.Operator):
 def fixUnits():
 	'''Sets up units for blender CAM'''
 	s=bpy.context.scene
-	if s.unit_settings.system=='NONE':#metric is hereby default
-		s.unit_settings.system='METRIC'
+	# dhull: leave unit settings alone - may also need to comment out scale_length below
+	#if s.unit_settings.system=='NONE':#metric is hereby default
+	#	s.unit_settings.system='METRIC'
 		
 	s.unit_settings.system_rotation='DEGREES'	
 	

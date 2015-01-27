@@ -137,3 +137,6 @@ def strInUnits(x,precision=5):
 		return str( round(x * 1000,precision) )+' mm '
 	elif bpy.context.scene.unit_settings.system == 'IMPERIAL':
 		return str( round(x * 1000/25.4,precision) )+"'' "
+	else:
+		return str(x)
+ 
