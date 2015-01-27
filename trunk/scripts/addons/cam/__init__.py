@@ -65,10 +65,13 @@ class machineSettings(bpy.types.PropertyGroup):
 	'''stores all data for machines'''
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	post_processor = EnumProperty(name='Post processor',
-		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC - LinuxCNC','default emc'),('HEIDENHAIN','Heidenhain','heidenhain'),('TNC151','Heidenhain TNC151','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1','Sieg KX1'),('HM50','Hafco HM-50','Hafco HM-50'),('CENTROID','Centroid M40','Centroid M40'),('ANILAM','Anilam Crusader M','Anilam Crusader M'),('GRAVOS','Gravos','Gravos'),('WIN-PC','Win-PC','German CNC'),('SHOPBOT PRS','ShopBot PRS','ShopBot PRS')),
+		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC - LinuxCNC','default emc'),('HEIDENHAIN','Heidenhain','heidenhain'),('TNC151','Heidenhain TNC151','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1','Sieg KX1'),('HM50','Hafco HM-50','Hafco HM-50'),('CENTROID','Centroid M40','Centroid M40'),('ANILAM','Anilam Crusader M','Anilam Crusader M'),('GRAVOS','Gravos','Gravos'),('WIN-PC','Win-PC','German CNC'),('SHOPBOT MTC','ShopBot MTC','ShopBot MTC')),
 		description='Post processor',
 		default='MACH3')
 	#units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
+	starting_position=bpy.props.FloatVectorProperty(name = 'Start position', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateMachine)
+	mtc_position=bpy.props.FloatVectorProperty(name = 'MTC position', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateMachine)
+	ending_position=bpy.props.FloatVectorProperty(name = 'End position', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ", update = updateMachine)
 	working_area=bpy.props.FloatVectorProperty(name = 'Work Area', default=(0.500,0.500,0.100), unit='LENGTH', precision=PRECISION,subtype="XYZ",update = updateMachine)
 	feedrate_min=bpy.props.FloatProperty(name="Feedrate minimum /min", default=0.0, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
 	feedrate_max=bpy.props.FloatProperty(name="Feedrate maximum /min", default=2, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
@@ -319,7 +322,8 @@ class camOperation(bpy.types.PropertyGroup):
 	array_y_distance = FloatProperty(name="Y distance", description="distance between operation origins", min=0.00001, max=1.0, default=0.01,precision=PRECISION, unit="LENGTH", update = updateRest)
 	
 	
-	
+	# pocket options
+	pocket_option = EnumProperty(name='Start Position', items=(('INSIDE', 'Inside', 'a'), ('OUTSIDE', 'Outside', 'a'), ('MIDDLE', 'Middle', 'a')), description='Pocket starting position', default='MIDDLE', update=updateRest)
 	
 	#Cutout	   
 	cut_type = EnumProperty(name='Cut',items=(('OUTSIDE', 'Outside', 'a'),('INSIDE', 'Inside', 'a'),('ONLINE', 'On line', 'a')),description='Type of cutter used',default='OUTSIDE', update = updateRest)  
@@ -329,10 +333,11 @@ class camOperation(bpy.types.PropertyGroup):
 	
 	#cutter
 	cutter_id = IntProperty(name="Tool number", description="For machines which support tool change based on tool id", min=0, max=10000, default=1, update = updateRest)
-	cutter_diameter = FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius", min=0.000001, max=0.1, default=0.003, precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
+	cutter_diameter = FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius", min=0.000001, max=10, default=0.003, precision=PRECISION, unit="LENGTH", update = updateOffsetImage)
 	cutter_length = FloatProperty(name="#Cutter length", description="#not supported#Cutter length", min=0.0, max=100.0, default=25.0,precision=PRECISION, unit="LENGTH",  update = updateOffsetImage)
 	cutter_flutes = IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2, update = updateChipload)
 	cutter_tip_angle = FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0, max=180.0, default=60.0,precision=PRECISION,	 update = updateOffsetImage)
+	cutter_description = StringProperty(name="Tool Description", default="", update = updateOffsetImage)
 	
 	#steps
 	dist_between_paths = bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
@@ -374,7 +379,7 @@ class camOperation(bpy.types.PropertyGroup):
 		default='ZLEVEL',
 		update = updateStrategy)
 		
-	maxz = bpy.props.FloatProperty(name="Operation depth start", description='operation starting depth', default=0, min=-3, max=1,precision=PRECISION, unit="LENGTH", update = updateRest)#EXPERIMENTAL
+	maxz = bpy.props.FloatProperty(name="Operation depth start", description='operation starting depth', default=0, min=-3, max=10,precision=PRECISION, unit="LENGTH", update = updateRest)#EXPERIMENTAL
 	#######################################################
 	######Image related
 	####################################################
@@ -404,7 +409,7 @@ class camOperation(bpy.types.PropertyGroup):
 	
 	
 	#feeds
-	feedrate = FloatProperty(name="Feedrate/minute", description="Feedrate m/min", min=0.00005, max=50.0, default=1.0,precision=PRECISION, unit="LENGTH", update = updateChipload)
+	feedrate = FloatProperty(name="Feedrate", description="Feedrate", min=0.00005, max=50.0, default=1.0,precision=PRECISION, unit="LENGTH", update = updateChipload)
 	plunge_feedrate = FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,precision=1, subtype='PERCENTAGE', update = updateRest)
 	plunge_angle =	bpy.props.FloatProperty(name="Plunge angle", description="What angle is allready considered to plunge", default=math.pi/6, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 	spindle_rpm = FloatProperty(name="Spindle rpm", description="Spindle speed ", min=1000, max=60000, default=12000, update = updateChipload)
@@ -532,6 +537,7 @@ class AddPresetCamCutter(bl_operators.presets.AddPresetBase, Operator):
 		"d.cutter_length",
 		"d.cutter_flutes",
 		"d.cutter_tip_angle",
+		"d.cutter_description",
 	]
 
 	preset_subdir = "cam_cutters"
@@ -583,6 +589,9 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 	preset_values = [
 		"d.post_processor",
 		"s.system",
+		"d.starting_position",
+		"d.mtc_position",
+		"d.ending_position",
 		"d.working_area",
 		"d.feedrate_min",
 		"d.feedrate_max",

@@ -875,7 +875,8 @@ def doSimulation(name,operations):
 
 def extendChunks5axis(chunks,o):
 	s=bpy.context.scene
-	cutterstart=Vector((0,0,max(o.max.z,o.free_movement_height)))#start point for casting
+	# dhull cutterstart=Vector((0,0,max(o.max.z,o.free_movement_height)))#start point for casting
+	cutterstart=Vector((m.starting_position.x, m.starting_position.y ,max(o.max.z, m.starting_position.z)))#start point for casting
 	cutterend=Vector((0,0,o.min.z))
 	oriname=o.name+' orientation'
 	ori=s.objects[oriname]
@@ -897,9 +898,11 @@ def chunksToMesh(chunks,o):
 	'''convert sampled chunks to path, optimization of paths'''
 	t=time.time()
 	s=bpy.context.scene
+	m=s.cam_machine
 	verts=[]
 	if o.machine_axes=='3':
-		origin=(0,0,o.free_movement_height)	 
+		# dhull origin=(0,0,o.free_movement_height)	 
+		origin=(m.starting_position.x, m.starting_position.y, m.starting_position.z)
 		verts = [origin]
 	if o.machine_axes!='3':
 		verts_rotations=[]#(0,0,0)
@@ -1072,14 +1075,16 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='WIN-PC' :
 		extension='.din'
 		from .nc import winpc as postprocessor
-	elif m.post_processor=='SHOPBOT PRS':
+	elif m.post_processor=='SHOPBOT MTC':
 		extension='.sbp'
-		from .nc import shopbot_prs as postprocessor
+		from .nc import shopbot_mtc as postprocessor
 	
 	if s.unit_settings.system=='METRIC':
 		unitcorr=1000.0
-	else:
+	elif s.unit_settings.system=='INCH':
 		unitcorr=1/0.0254;
+	else:
+		unitcorr=1;
 	rotcorr=180.0/pi
 	
 	def startNewFile():
@@ -1094,7 +1099,7 @@ def exportGcodePath(filename,vertslist,operations):
 		###############
 		if s.unit_settings.system=='METRIC':
 			c.metric()
-		else:
+		elif s.unit_settings.system=='INCH':
 			c.imperial()
 		#start program
 		c.program_begin(0,filename)
@@ -1138,7 +1143,7 @@ def exportGcodePath(filename,vertslist,operations):
 			c.flush_nc()
 		
 		
-		c.feedrate(unitcorr*o.feedrate)
+		# dhull c.feedrate(unitcorr*o.feedrate)
 		
 		
 		
@@ -1150,7 +1155,8 @@ def exportGcodePath(filename,vertslist,operations):
 		plungefeedrate= millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
 		
-		last=Vector((0.0,0.0,o.free_movement_height))#nonsense values so first step of the operation gets written for sure
+		# dhull last=Vector((0.0,0.0,o.free_movement_height))#nonsense values so first step of the operation gets written for sure
+		last=Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))#nonsense values so first step of the operation gets written for sure
 		lastrot=Euler((0,0,0))
 		duration=0.0
 		f=millfeedrate

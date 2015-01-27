@@ -52,6 +52,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'cutter_tip_angle')
 				if ao.cutter_type=='CUSTOM':
 					layout.prop_search(ao, "cutter_object_name", bpy.data, "objects")
+				layout.prop(ao, 'cutter_description')
 
    
 class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):	
@@ -84,6 +85,9 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 				layout.prop(ao,'split_limit')
 			
 			layout.prop(us,'system')
+			layout.prop(ao, 'starting_position')
+			layout.prop(ao, 'mtc_position')
+			layout.prop(ao, 'ending_position')
 			layout.prop(ao,'working_area')
 			layout.prop(ao,'feedrate_min')
 			layout.prop(ao,'feedrate_max')
@@ -413,6 +417,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'dist_along_paths')
 				elif ao.strategy=='DRILL':
 					layout.prop(ao,'drill_type')
+				elif ao.strategy=='POCKET':
+					layout.prop(ao,'pocket_option')
 				else:				 
 					layout.prop(ao,'dist_between_paths')
 					layout.prop(ao,'dist_along_paths')
