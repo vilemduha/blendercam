@@ -53,6 +53,7 @@ from cam.polygon_utils_cam import *
 from cam import image_utils
 from cam.image_utils import *
 from . import nc
+from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
 
 try:
 	from shapely.geometry import polygon as spolygon
@@ -254,19 +255,20 @@ def samplePathLow(o,ch1,ch2,dosample):
 	#print(len(bpath))
 	pixsize=o.pixsize
 	if dosample:
-		if o.use_exact:
-			cutterdepth=o.cutter_shape.dimensions.z/2
-			for p in bpath.points:
-				z=getSampleBullet(o.cutter_shape, p[0],p[1], cutterdepth, 1, o.minz)
-				if z>p[2]:
-					p[2]=z
-		else:
-			for p in bpath.points:
-				xs=(p[0]-minx)/pixsize+o.borderwidth+pixsize/2#-m
-				ys=(p[1]-miny)/pixsize+o.borderwidth+pixsize/2#-m
-				z=getSampleImage((xs,ys),o.offset_image,o.minz)+o.skin
-				if z>p[2]:
-					p[2]=z
+		if not (o.use_opencamlib and o.use_exact):
+			if o.use_exact:
+				cutterdepth=o.cutter_shape.dimensions.z/2
+				for p in bpath.points:
+					z=getSampleBullet(o.cutter_shape, p[0],p[1], cutterdepth, 1, o.minz)
+					if z>p[2]:
+						p[2]=z
+			else:
+				for p in bpath.points:
+					xs=(p[0]-minx)/pixsize+o.borderwidth+pixsize/2#-m
+					ys=(p[1]-miny)/pixsize+o.borderwidth+pixsize/2#-m
+					z=getSampleImage((xs,ys),o.offset_image,o.minz)+o.skin
+					if z>p[2]:
+						p[2]=z
 	return bpath
 
 
@@ -278,13 +280,17 @@ def sampleChunks(o,pathSamples,layers):
 	getAmbient(o)  
 
 	if o.use_exact:#prepare collision world
-		if o.update_bullet_collision_tag:
-			prepareBulletCollision(o)
-			
-			o.update_bullet_collision_tag=False
-		#print (o.ambient)
-		cutter=o.cutter_shape
-		cutterdepth=cutter.dimensions.z/2
+		if o.use_opencamlib:
+			oclSample(o, pathSamples)
+			cutterdepth=0
+		else:
+			if o.update_bullet_collision_tag:
+				prepareBulletCollision(o)
+				
+				o.update_bullet_collision_tag=False
+			#print (o.ambient)
+			cutter=o.cutter_shape
+			cutterdepth=cutter.dimensions.z/2
 	else:
 		if o.strategy!='WATERLINE': # or prepare offset image, but not in some strategies.
 			prepareArea(o)
@@ -347,8 +353,13 @@ def sampleChunks(o,pathSamples,layers):
 			if not o.ambient.isInside(x,y):
 				newsample=(x,y,1)
 			else:
+				if o.use_opencamlib and o.use_exact:
+					z=s[2]
+					if minz>z:
+						z=minz
+					newsample=(x,y,z)
 				####sampling
-				if o.use_exact:
+				elif o.use_exact and not o.use_opencamlib:
 					
 					if lastsample!=None:#this is an optimalization, search only for near depths to the last sample. Saves about 30% of sampling time.
 						z=getSampleBullet(cutter, x,y, cutterdepth, 1, lastsample[2]-o.dist_along_paths)#first try to the last sample
@@ -975,7 +986,7 @@ def chunksToMesh(chunks,o):
 				verts.append(v)
 			lifted=lift
 			#print(verts_rotations)
-	if o.use_exact:
+	if o.use_exact and not o.use_opencamlib:
 		cleanupBulletCollision(o)
 	print(time.time()-t)
 	t=time.time()
@@ -1414,6 +1425,7 @@ def sortChunks(chunks,o):
 		progress('sorting paths')
 	sys.setrecursionlimit(100000)# the getNext() function of CamPathChunk was running out of recursion limits.
 	sortedchunks=[]
+	chunks_to_resample=[]
 	
 	lastch=None
 	i=len(chunks)
@@ -1461,6 +1473,8 @@ def sortChunks(chunks,o):
 				else:
 					between=samplePathLow(o,lastch,ch,False)#other paths either dont use sampling or are sorted before it.
 			
+				if o.use_opencamlib and o.use_exact and (o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL'):
+					chunks_to_resample.append( (sortedchunks[-1], len(sortedchunks[-1].points), len(between.points) ) )
 				sortedchunks[-1].points.extend(between.points)
 				sortedchunks[-1].points.extend(ch.points)
 			else:
@@ -1475,6 +1489,8 @@ def sortChunks(chunks,o):
 				print(ch.getNext())
 				print(len(ch.points))
 		'''
+	if o.use_opencamlib and o.use_exact:
+		oclResampleChunks(o, chunks_to_resample)
 	sys.setrecursionlimit(1000)
 
 	return sortedchunks
@@ -2428,7 +2444,18 @@ def getPath3axis(context,operation):
 		chunksToMesh(chunks,o)
 		
 		
-	elif o.strategy=='WATERLINE':
+	elif o.strategy=='WATERLINE' and o.use_opencamlib:
+		getAmbient(o)
+		chunks=[]
+		oclGetWaterline(o, chunks)
+		chunks=limitChunks(chunks,o)
+		chunksToMesh(chunks,o)
+		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
+			for ch in chunksFromCurve:
+				ch.points.reverse()
+		
+		
+	elif o.strategy=='WATERLINE' and not o.use_opencamlib:
 		topdown=True
 		tw=time.time()
 		chunks=[]

@@ -561,6 +561,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
 					
 				layout.prop(ao,'simulation_detail')
 				layout.prop(ao,'circle_detail')
+				layout.prop(ao,'use_opencamlib')
 				#if not ao.use_exact:#this will be replaced with groups of objects.
 				#layout.prop(ao,'render_all')# replaced with groups support
 		
