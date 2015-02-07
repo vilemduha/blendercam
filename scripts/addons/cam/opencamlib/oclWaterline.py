@@ -33,7 +33,7 @@ for height in waterline_heights:
 	waterline.setSTL(stl_surf)
 	waterline.setCutter(cutter)
 	waterline.setZ(height)
-	waterline.setSampling(0.5)
+	waterline.setSampling(0.3)
 	waterline.run()
 	wl_loops = waterline.getLoops()
 	wl_file = open( 'oclWaterline' + str(wl_index) + '.txt', 'w')
