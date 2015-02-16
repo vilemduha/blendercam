@@ -2449,10 +2449,10 @@ def getPath3axis(context,operation):
 		chunks=[]
 		oclGetWaterline(o, chunks)
 		chunks=limitChunks(chunks,o)
-		chunksToMesh(chunks,o)
-		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
-			for ch in chunksFromCurve:
+		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
+			for ch in chunks:
 				ch.points.reverse()
+		chunksToMesh(chunks,o)
 		
 		
 	elif o.strategy=='WATERLINE' and not o.use_opencamlib:
