@@ -419,6 +419,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'drill_type')
 				elif ao.strategy=='POCKET':
 					layout.prop(ao,'pocket_option')
+					layout.prop(ao,'dist_between_paths')
 				else:				 
 					layout.prop(ao,'dist_between_paths')
 					layout.prop(ao,'dist_along_paths')
