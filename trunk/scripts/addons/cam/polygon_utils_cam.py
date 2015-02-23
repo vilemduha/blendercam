@@ -136,7 +136,7 @@ def outlinePoly(p,r,circle_detail,optimize,optimize_threshold,offset = True):
 			sp=Polygon2Shapely(p)
 			if not offset:
 				r=-r
-			sp=sp.buffer(r)
+			sp=sp.buffer(r,circle_detail)
 			pr=Shapely2Polygon(sp)
 			'''
 			sp=spolygon.Polygon()
@@ -262,6 +262,12 @@ def polyToMesh(name,p,z):
 	
 	return bpy.context.active_object
 
+def shapelyToMesh(name,p,z):
+	p = Shapely2Polygon(p)
+	ob = polyToMesh(name,p,z)
+	return ob
+	
+	
 def orderPoly(polys):	#sor poly, do holes e.t.c.
 	p=Polygon.Polygon()
 	levels=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]] 
