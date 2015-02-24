@@ -1106,6 +1106,9 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='SHOPBOT MTC':
 		extension='.sbp'
 		from .nc import shopbot_mtc as postprocessor
+	elif m.post_processor=='LYNX_OTTER_O':
+		extension='.nc'
+		from .nc import lynx_otter_o as postprocessor
 	
 	if s.unit_settings.system=='METRIC':
 		unitcorr=1000.0
@@ -1129,13 +1132,18 @@ def exportGcodePath(filename,vertslist,operations):
 			c.metric()
 		elif s.unit_settings.system=='INCH':
 			c.imperial()
+		c.flush_nc()
 		#start program
 		c.program_begin(0,filename)
+		c.flush_nc()
 		c.comment('G-code generated with BlenderCAM and NC library')
 		#absolute coordinates
 		c.absolute()
+		c.flush_nc()
 		#work-plane, by now always xy, 
 		c.set_plane(0)
+		c.flush_nc()
+		c.write_spindle()
 		c.flush_nc()
 		return c
 		
@@ -1157,6 +1165,7 @@ def exportGcodePath(filename,vertslist,operations):
 			spdir_clockwise=False
 		
 		c.spindle(o.spindle_rpm,spdir_clockwise)
+		c.flush_nc()
 		#write tool, not working yet probably 
 		#print (last_cutter)
 		if last_cutter!=[o.cutter_id,o.cutter_diameter,o.cutter_type,o.cutter_flutes]:
