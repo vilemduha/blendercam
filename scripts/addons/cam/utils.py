@@ -775,7 +775,7 @@ def generateSimulationImage(name,operations):
 	#create array in which simulation happens, similar to an image to be painted in.
 	si=numpy.array((0.1),dtype=float)
 	si.resize(resx,resy)
-	si.fill(0)
+	si.fill(o.max.z)
 	
 	for o in operations:
 		verts=bpy.data.objects[o.path_object_name].data.vertices
@@ -1512,15 +1512,7 @@ def sortChunks(chunks,o):
 
 	return sortedchunks
 
-def testbite(pos):
-	xs=(pos.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-	ys=(pos.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
-	z=pos.z
-	m=int(o.cutterArray.shape[0]/2)
 
-	if xs>m+1 and xs<o.millimage.shape[0]-m-1 and ys>m+1 and ys<o.millimage.shape[1]-m-1 :
-		o.millimage[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(o.millimage[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
-	v.length+=o.simulation_detail
 	
 
 	

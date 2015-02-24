@@ -692,9 +692,13 @@ def meshFromCurve(o):
 	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
 	bpy.ops.group.objects_remove_all()
 	co=bpy.context.active_object
-	if co.type=='FONT':#support for text objects is only and only here.
+	if co.type=='FONT':#support for text objects is only and only here, just convert them to curves.
 		bpy.ops.object.convert(target='CURVE', keep_original=False)
 	co.data.dimensions='3D'
+	co.data.bevel_depth=0
+	co.data.extrude=0
+	#first, convert to mesh to avoid parenting issues with hooks, then apply locrotscale.
+	bpy.ops.object.convert(target='MESH', keep_original=False)
 	try:
 		bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 		bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
@@ -703,10 +707,8 @@ def meshFromCurve(o):
 	except:
 		pass
 	
-	#o.data.dimensions='3D'
-	co.data.bevel_depth=0
-	co.data.extrude=0
-	bpy.ops.object.convert(target='MESH', keep_original=False)
+	
+	
 	
 	restoreVisibility(o,storage)
 	return bpy.context.active_object
