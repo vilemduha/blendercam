@@ -2106,29 +2106,62 @@ def getPath3axis(context,operation):
 		from cam import chunk
 		if targetCurve.type=='MESH':
 			c=targetCurve
+			for ch in pathSamples:
+				ch.depth=0
+				for i,s in enumerate(ch.points):
+					np=c.closest_point_on_mesh(s)
+					ch.startpoints.append(Vector(s))
+					ch.endpoints.append(np[0])
+					ch.rotations.append((0,0,0))
+					vect = np[0]-Vector(s)
+					
+					ch.depth=min(ch.depth,-vect.length)
 		else:
-			c=chunk.meshFromCurve(targetCurve)
+			extend_up=0.1
+			extend_down=0.04
+			tsamples = curveToChunks(targetCurve)
+			for chi,ch in enumerate(pathSamples):
+				cht=tsamples[chi].points
+				ch.depth=0
+				for i,s in enumerate(ch.points):
+					#move the points a bit
+					ep=Vector(cht[i])
+					sp=Vector(ch.points[i])
+					#extend startpoint
+					vecs=sp-ep
+					vecs.normalize()
+					vecs*=extend_up
+					sp+=vecs
+					ch.startpoints.append(sp)
+					
+					#extend endpoint
+					vece=sp-ep
+					vece.normalize()
+					vece*=extend_down
+					ep-=vece
+					ch.endpoints.append(ep)
+					
+					
+					ch.rotations.append((0,0,0))
+					
+					vec=sp-ep
+					ch.depth=min(ch.depth,-vec.length)
+					#ch.points[i]=sp.copy()
+				#ch.points=ch.endpoints#debug stuff
+				
+			'''#this was used when curve was interpreted as mesh. Direct conversion will do better results now, this "old " method can be used if needed later...
 			bpy.ops.object.editmode_toggle()
 			bpy.ops.mesh.select_all(action='SELECT')
 			bpy.ops.mesh.extrude_region_move()
 			bpy.ops.object.editmode_toggle()
-
+			
 		
-		for ch in pathSamples:
-			ch.depth=0
-			for i,s in enumerate(ch.points):
-				np=c.closest_point_on_mesh(s)
-				ch.startpoints.append(Vector(s))
-				ch.endpoints.append(np[0])
-				ch.rotations.append((0,0,0))
-				vect = np[0]-Vector(s)
-				
-				ch.depth=min(ch.depth,-vect.length)
+		
 		
 		#delete the curve copy
-		if not targetCurve.type=='MESH':
-			bpy.context.scene.objects.unlink(c)
-			
+		#if not targetCurve.type=='MESH':
+		#	bpy.context.scene.objects.unlink(c)
+		'''	
 		if o.use_layers:
 			n=math.ceil(-(ch.depth/o.stepdown))
 			layers=[]
@@ -2141,13 +2174,13 @@ def getPath3axis(context,operation):
 			layerstart=0#
 			layerend=ch.depth#
 			layers=[[layerstart,layerend]]
-		
 		#print(ch.points)
 		#print(ch.startpoints)
 		#print(ch.endpoints)
 		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
 		#print(chunks)
 		chunksToMesh(chunks,o)
+		#chunksToMesh(pathSamples,o)
 		
 	if o.strategy=='POCKET':	
 		p=getObjectOutline(o.cutter_diameter/2,o,False)
