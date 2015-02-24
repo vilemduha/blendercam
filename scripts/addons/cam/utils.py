@@ -740,6 +740,23 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	'''
 	return chunks  
 
+def simCutterSpot(xs,ys,z,cutterArray, si):	
+	m=int(cutterArray.shape[0]/2)
+	size=cutterArray.shape[0]
+	if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :#whole cutter in image
+		si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
+	elif xs>-m and xs< si.shape[0]+m and ys>-m and ys>si.shape[1]+m:#part of cutter in image, for extra large cutters
+		
+		startx=max(0,xs-m)
+		starty=max(0,ys-m)
+		endx=min(si.shape[0], xs-m+size)
+		endy=min(si.shape[0], ys-m+size)
+		castartx = max(0,m-xs)
+		castarty = max(0,m-ys)
+		caendx= min(size,si.shape[0]-xs+m)
+		caendy= min(size,si.shape[1]-ys+m)
+		si[startx:endx,starty:endy]=numpy.minimum(si[startx:endx,starty:endy],cutterArray[castartx:caendx,castarty:caendy]+z)
+		
 def generateSimulationImage(name,operations):
 	
 	for o in operations:
@@ -789,18 +806,18 @@ def generateSimulationImage(name,operations):
 					
 					v.length=simulation_detail
 					while v.length<l:
-						
 						xs=(lasts.x+v.x-minx)/simulation_detail+borderwidth+simulation_detail/2#-m
 						ys=(lasts.y+v.y-miny)/simulation_detail+borderwidth+simulation_detail/2#-m
 						z=lasts.z+v.z
-						if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
-							si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
+						#print(z)
+						simCutterSpot(xs,ys,z,cutterArray,si)
 						v.length+=simulation_detail
 			
 				xs=(s.x-minx)/simulation_detail+borderwidth+simulation_detail/2#-m
 				ys=(s.y-miny)/simulation_detail+borderwidth+simulation_detail/2#-m
-				if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
-					si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+s.z)
+				simCutterSpot(xs,ys,s.z,cutterArray,si)
+				#if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
+				#	si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+s.z)
 					
 				lasts=s
 				
@@ -2104,7 +2121,12 @@ def getPath3axis(context,operation):
 		targetCurve=s.objects[o.curve_object1]
 		
 		from cam import chunk
+		if targetCurve.type!='CURVE':
+			o.warnings=o.warnings+'Projection target and source have to be curve objects!\n '
+			return
+		'''	#mesh method is highly unstable, I don't like itwould be there at all.... better to use curves.
 		if targetCurve.type=='MESH':
+			
 			c=targetCurve
 			for ch in pathSamples:
 				ch.depth=0
@@ -2117,6 +2139,8 @@ def getPath3axis(context,operation):
 					
 					ch.depth=min(ch.depth,-vect.length)
 		else:
+		'''
+		if 1:
 			extend_up=0.1
 			extend_down=0.04
 			tsamples = curveToChunks(targetCurve)
@@ -2146,22 +2170,10 @@ def getPath3axis(context,operation):
 					
 					vec=sp-ep
 					ch.depth=min(ch.depth,-vec.length)
-					#ch.points[i]=sp.copy()
-				#ch.points=ch.endpoints#debug stuff
+					ch.points[i]=sp.copy()
 				
-			'''#this was used when curve was interpreted as mesh. Direct conversion will do better results now, this "old " method can be used if needed later...
-			bpy.ops.object.editmode_toggle()
-			bpy.ops.mesh.select_all(action='SELECT')
-			bpy.ops.mesh.extrude_region_move()
-			bpy.ops.object.editmode_toggle()
+				
 			
-		
-		
-		
-		#delete the curve copy
-		#if not targetCurve.type=='MESH':
-		#	bpy.context.scene.objects.unlink(c)
-		'''	
 		if o.use_layers:
 			n=math.ceil(-(ch.depth/o.stepdown))
 			layers=[]
@@ -2174,13 +2186,11 @@ def getPath3axis(context,operation):
 			layerstart=0#
 			layerend=ch.depth#
 			layers=[[layerstart,layerend]]
-		#print(ch.points)
-		#print(ch.startpoints)
-		#print(ch.endpoints)
+		
 		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
-		#print(chunks)
+		
 		chunksToMesh(chunks,o)
-		#chunksToMesh(pathSamples,o)
+		
 		
 	if o.strategy=='POCKET':	
 		p=getObjectOutline(o.cutter_diameter/2,o,False)
