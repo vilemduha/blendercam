@@ -572,11 +572,20 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			sweepvect.normalize()
 			####sampling
 			if rotation!=lastrotation:
-			
+				
 				cutter.rotation_euler=rotation
+				#cutter.rotation_euler.x=-cutter.rotation_euler.x
+				#print(rotation)
+
 				if o.cutter_type=='VCARVE':# Bullet cone is always pointing Up Z in the object
 					cutter.rotation_euler.x+=pi
+				cutter.update_tag()
+				#bpy.context.scene.frame_set(-1)
+				#bpy.context.scene.update()
+				#bpy.context.scene.frame_set(1)
+				bpy.context.scene.frame_set(2)#this has to be :( it resets the rigidbody world. No other way to update it probably now :(
 				bpy.context.scene.frame_set(0)
+				#bpy.context.scene.update()
 				#update scene here?
 				
 			#print(startp,endp)
