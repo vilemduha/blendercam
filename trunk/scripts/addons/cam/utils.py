@@ -912,9 +912,15 @@ def doSimulation(name,operations):
 	createSimulationObject(name,operations,i)
 
 def extendChunks5axis(chunks,o):
+
 	s=bpy.context.scene
-	# dhull cutterstart=Vector((0,0,max(o.max.z,o.free_movement_height)))#start point for casting
-	cutterstart=Vector((m.starting_position.x, m.starting_position.y ,max(o.max.z, m.starting_position.z)))#start point for casting
+	m=s.cam_machine
+	s=bpy.context.scene
+	free_movement_height = o.max.z + o.free_movement_height
+	if o.use_position_definitions:# dhull
+		cutterstart=Vector((m.starting_position.x, m.starting_position.y ,max(o.max.z, m.starting_position.z)))#start point for casting
+	else:
+		cutterstart=Vector((0,0,max(o.max.z,free_movement_height)))#start point for casting
 	cutterend=Vector((0,0,o.min.z))
 	oriname=o.name+' orientation'
 	ori=s.objects[oriname]
@@ -938,9 +944,15 @@ def chunksToMesh(chunks,o):
 	s=bpy.context.scene
 	m=s.cam_machine
 	verts=[]
+	
+	free_movement_height = o.max.z + o.free_movement_height
+	
 	if o.machine_axes=='3':
-		# dhull origin=(0,0,o.free_movement_height)	 
-		origin=(m.starting_position.x, m.starting_position.y, m.starting_position.z)
+		if o.use_position_definitions:
+			origin=(m.starting_position.x, m.starting_position.y, m.starting_position.z)# dhull
+		else:
+			origin=(0,0,free_movement_height)	 
+		
 		verts = [origin]
 	if o.machine_axes!='3':
 		verts_rotations=[]#(0,0,0)
@@ -979,7 +991,7 @@ def chunksToMesh(chunks,o):
 			
 			if lifted:#did the cutter lift before? if yes, put a new position above of the first point of next chunk. 
 				if o.machine_axes=='3' or (o.machine_axes=='5' and o.strategy5axis=='INDEXED') or (o.machine_axes=='4' and o.strategy4axis=='INDEXED'):
-					v=(ch.points[0][0],ch.points[0][1],o.free_movement_height)
+					v=(ch.points[0][0],ch.points[0][1],free_movement_height)
 				else:#otherwise, continue with the next chunk without lifting/dropping
 					v=ch.startpoints[0]#startpoints=retract points
 					verts_rotations.append(ch.rotations[0])
@@ -1006,7 +1018,7 @@ def chunksToMesh(chunks,o):
 				
 			if lift:
 				if o.machine_axes=='3' or (o.machine_axes=='5' and o.strategy5axis=='INDEXED') or (o.machine_axes=='4' and o.strategy4axis=='INDEXED'):
-					v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
+					v=(ch.points[-1][0],ch.points[-1][1],free_movement_height)
 				else:
 					v=ch.startpoints[-1]
 					verts_rotations.append(ch.rotations[-1])
@@ -1131,6 +1143,8 @@ def exportGcodePath(filename,vertslist,operations):
 		unitcorr=1;
 	rotcorr=180.0/pi
 	
+	free_movement_height=o.max.z+o.free_movement_height
+	
 	def startNewFile():
 		fileindex=''
 		if split:
@@ -1205,8 +1219,10 @@ def exportGcodePath(filename,vertslist,operations):
 		plungefeedrate= millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
 		
-		# dhull last=Vector((0.0,0.0,o.free_movement_height))#nonsense values so first step of the operation gets written for sure
-		last=Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))#nonsense values so first step of the operation gets written for sure
+		if o.use_position_definitions:# dhull 
+			last=Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
+		else:		
+			last=Vector((0.0,0.0,free_movement_height))#nonsense values so first step of the operation gets written for sure
 		lastrot=Euler((0,0,0))
 		duration=0.0
 		f=millfeedrate
@@ -1259,7 +1275,7 @@ def exportGcodePath(filename,vertslist,operations):
 					#print(ra,rb)
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
 					
-			elif v.z>=o.free_movement_height or vi==0:#v.z==last.z==o.free_movement_height or vi==0
+			elif v.z>=free_movement_height or vi==0:#v.z==last.z==free_movement_height or vi==0
 			
 				if f!=freefeedrate:
 					f=freefeedrate
@@ -1291,8 +1307,8 @@ def exportGcodePath(filename,vertslist,operations):
 				
 			processedops+=1
 			if split and processedops>m.split_limit:
-				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=o.free_movement_height*unitcorr)
-				#@v=(ch.points[-1][0],ch.points[-1][1],o.free_movement_height)
+				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=free_movement_height*unitcorr)
+				#@v=(ch.points[-1][0],ch.points[-1][1],free_movement_height)
 				findex+=1
 				c.file_close()
 				c=startNewFile()
@@ -1304,7 +1320,7 @@ def exportGcodePath(filename,vertslist,operations):
 				if m.spindle_start_time>0:
 					c.dwell(m.spindle_start_time)
 					c.flush_nc()
-				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=o.free_movement_height*unitcorr)
+				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=free_movement_height*unitcorr)
 				c.rapid(x=last.x*unitcorr,y=last.y*unitcorr,z=last.z*unitcorr)
 				processedops=0
 				
@@ -2986,7 +3002,7 @@ def prepareIndexed(o):
 	#then rotate them
 	for ob in o.objects:
 		ob.select=True
-		
+	s.objects.active=ob	
 	bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 	
 	s.cursor_location=(0,0,0)
