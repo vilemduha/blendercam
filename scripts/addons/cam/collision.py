@@ -23,7 +23,7 @@ def getCutterBullet(o):
 		cutter=bpy.context.active_object
 		cutter.rigid_body.collision_shape = 'CYLINDER'
 	elif type=='BALL' or type=='BALLNOSE':
-		if o.strategy!='PROJECTED_CURVE' and type=='BALLNOSE':#only ball, good for 3 axis and real ball cutters
+		if o.strategy!='PROJECTED_CURVE' or type=='BALL':#only sphere, good for 3 axis and real ball cutters for undercuts and projected curve
 		
 			bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, size=BULLET_SCALE*o.cutter_diameter/2, view_align=False, enter_editmode=False, location=(-100,-100, -100), rotation=(0, 0, 0))
 			bpy.ops.rigidbody.object_add(type='ACTIVE')
@@ -141,7 +141,10 @@ def getSampleBulletNAxis(cutter, startpoint,endpoint,rotation, cutter_compensati
 	'''fully 3d collision test for NAxis milling'''
 	cutterVec=Vector((0,0,1))*cutter_compensation#cutter compensation vector - cutter physics object has center in the middle, while cam needs the tip position.
 	cutterVec.rotate(Euler(rotation))
-	
+	#cutterVec = startpoint-endpoint
+	#cutterVec.normalize()
+	#cutterVec*=cutter_compensation
+	#cutterVec=Vector((0,0,0))
 	start=(startpoint*BULLET_SCALE+cutterVec).to_tuple()
 	end=((endpoint)*BULLET_SCALE+cutterVec).to_tuple()
 	#cutter.rotation_euler=rotation

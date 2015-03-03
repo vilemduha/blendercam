@@ -242,8 +242,9 @@ class camOperation(bpy.types.PropertyGroup):
 	cutter_type = EnumProperty(name='Cutter',
 		items=(
 			('END', 'End', 'end - flat cutter'),
-			('BALL', 'Ball', 'ball cutter'),
+			('BALLNOSE', 'Ballnose', 'ballnose cutter'),
 			('VCARVE', 'V-carve', 'v carve cutter'),
+			('BALL', 'Sphere', 'Sphere cutter'),
 			('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
 		description='Type of cutter used',
 		default='END', update = updateZbufferImage)
