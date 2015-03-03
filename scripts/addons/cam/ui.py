@@ -85,17 +85,20 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 				layout.prop(ao,'split_limit')
 			
 			layout.prop(us,'system')
-			layout.prop(ao, 'starting_position')
-			layout.prop(ao, 'mtc_position')
-			layout.prop(ao, 'ending_position')
+			
+			layout.prop(ao, 'use_position_definitions')
+			if ao.use_position_definitions:
+				layout.prop(ao, 'starting_position')
+				layout.prop(ao, 'mtc_position')
+				layout.prop(ao, 'ending_position')
 			layout.prop(ao,'working_area')
 			layout.prop(ao,'feedrate_min')
 			layout.prop(ao,'feedrate_max')
-			#layout.prop(ao,'feedrate_default')
+			layout.prop(ao,'feedrate_default')#TODO: spindle default and feedrate default should become part of the cutter definition...
 			layout.prop(ao,'spindle_min')
 			layout.prop(ao,'spindle_max')
 			layout.prop(ao,'spindle_start_time')
-			#layout.prop(ao,'spindle_default')
+			layout.prop(ao,'spindle_default')
 			#layout.prop(ao,'axis4')
 			#layout.prop(ao,'axis5')
 			#layout.prop(ao,'collet_size')
