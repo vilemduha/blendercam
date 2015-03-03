@@ -585,6 +585,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 				#bpy.context.scene.frame_set(1)
 				bpy.context.scene.frame_set(2)#this has to be :( it resets the rigidbody world. No other way to update it probably now :(
 				bpy.context.scene.frame_set(0)
+#bpy.context.scene.frame_set(-1)
 				#bpy.context.scene.update()
 				#update scene here?
 				
@@ -598,8 +599,8 @@ def sampleChunksNAxis(o,pathSamples,layers):
 			############################################
 			if newsample!=None:#this is weird, but will leave it this way now.. just prototyping here.
 				sampled=True
-			else:
-				newsample=endp
+			else:#TODO: why was this here?
+				newsample=startp
 				sampled=True
 				#print(newsample)
 				
