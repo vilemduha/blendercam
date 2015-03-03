@@ -373,7 +373,7 @@ class camOperation(bpy.types.PropertyGroup):
 	retract_height =  bpy.props.FloatProperty(name = 'Retract arc height', default=0.001,min=0.00000, max=100, precision=PRECISION, unit="LENGTH", update = updateRest)
 	
 	minz_from_ob = bpy.props.BoolProperty(name="Depth from object",description="Operation ending depth from object", default=True, update = updateRest)
-	minz = bpy.props.FloatProperty(name="Operation depth", default=-0.01, min=-3, max=0,precision=PRECISION, unit="LENGTH", update = updateRest)#this is input minz. True minimum z can be something else, depending on material e.t.c.
+	minz = bpy.props.FloatProperty(name="Operation depth end", default=-0.01, min=-3, max=3,precision=PRECISION, unit="LENGTH", update = updateRest)#this is input minz. True minimum z can be something else, depending on material e.t.c.
 	start_type = bpy.props.EnumProperty(name='Start type',
 		items=(
 			('ZLEVEL','Z level', 'Starts on a given Z level'),
