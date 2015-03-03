@@ -402,7 +402,9 @@ def getPathPattern4axis(operation):
 	m1=max(abs(o.min[a2]),abs(o.max[a2]))
 	m2=max(abs(o.min[a3]),abs(o.max[a3]))
 	
-	radius=math.sqrt(m1*m1+m2*m2)#max radius estimation
+	radius=o.max.z#math.sqrt(m1*m1+m2*m2)#max radius estimation
+	radiusend=o.min.z
+	
 	
 	circlesteps=(radius*pi*2)/o.dist_along_paths
 	anglestep = 2*pi/circlesteps
@@ -430,6 +432,7 @@ def getPathPattern4axis(operation):
 			cutterend[a1]=cutterstart[a1]
 			
 			cutterstart[a2]=radius
+			cutterend[a2]=radiusend
 			
 			for b in range(0,floor(circlesteps)+1):
 				#print(cutterstart,cutterend)
@@ -437,8 +440,10 @@ def getPathPattern4axis(operation):
 				chunk.endpoints.append(cutterend.to_tuple())
 				rot=[0,0,0]
 				rot[a1]=b*anglestep
+				
 				chunk.rotations.append(rot)
 				cutterstart.rotate(e)
+				cutterend.rotate(e)
 
 			chunk.depth=-radius
 			#last point = first
@@ -455,9 +460,14 @@ def getPathPattern4axis(operation):
 		for b in range(0,floor(circlesteps)+1):
 			chunk=camPathChunk([])
 			cutterstart[a2]=0
-			cutterstart[a3]=radius
+			cutterstart[a2]=radius
+			cutterend[a2]=radiusend
+			
 			e[a1]=anglestep*b
+			
 			cutterstart.rotate(e)
+			cutterend.rotate(e)
+			
 			for a in range(0,floor(steps)+1):
 				cutterstart[a1]=o.min[a1]+a*o.dist_between_paths
 				cutterend[a1]=cutterstart[a1]
@@ -490,6 +500,7 @@ def getPathPattern4axis(operation):
 			cutterend[a1]=cutterstart[a1]
 			cutterstart[a2]=0
 			cutterstart[a3]=radius
+			cutterend[a3]=radiusend
 			
 			for b in range(0,floor(circlesteps)+1):
 				#print(cutterstart,cutterend)
@@ -503,6 +514,7 @@ def getPathPattern4axis(operation):
 				chunk.rotations.append(rot)
 				
 				cutterstart.rotate(e)
+				cutterend.rotate(e)
 
 			chunk.depth=-radius
 			#last point = first
