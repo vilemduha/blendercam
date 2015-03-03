@@ -1035,9 +1035,12 @@ def chunksToMesh(chunks,o):
 		ob.shape_key_add()
 		shapek=mesh.shape_keys.key_blocks[1]
 		shapek.name='rotations'
-		
+		print(len(shapek.data))
+		print(len(verts_rotations))
+			
 		for i,co in enumerate(verts_rotations):#TODO: optimize this. this is just rewritten too many times...
 			#print(r)
+			
 			shapek.data[i].co=co
 			
 

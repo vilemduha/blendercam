@@ -151,12 +151,14 @@ class camPathChunk:
 			self.endpoints.pop(index)
 			self.rotations.pop(index)
 			
-	def append(self, point, startpoint=None,endpoint=None):
+	def append(self, point, startpoint=None,endpoint=None, rotation=None):
 		self.points.append(point)
 		if startpoint!=None:
 			self.startpoints.append(startpoint)
 		if endpoint!=None:
 			self.endpoints.append(endpoint)
+		if rotation!=None:
+			self.rotations.append(rotation)
 			
 	def rampContour(self,zstart,zend,o):
 		
@@ -428,13 +430,17 @@ def optimizeChunk(chunk,operation):
 		points=chunk.points
 		
 		chunk.points=[points[0]]
-		spoints=False
+		naxispoints=False
 		if len(chunk.startpoints)>0:
 			startpoints=chunk.startpoints
 			endpoints=chunk.endpoints
 			chunk.startpoints=[startpoints[0]]
 			chunk.endpoints=[endpoints[0]]
-			spoints=True
+			rotations=chunk.rotations
+			chunk.rotations=[rotations[0]]#TODO FIRST THIS ROTATIONS E.T.C. NEED TO MAKE A POINT ADDING FUNCTION SINCE THIS IS A MESS, WOULD BE TOO MUCH IF'S
+			naxispoints=True
+			#if len(chunk.rotations)>0:
+			
 		'''this was replaced by append. Pop method was much much slower! still testing however.
 		for vi in range(len(chunk.points)-2,0,-1):
 			#vmiddle=Vector()
@@ -450,26 +456,26 @@ def optimizeChunk(chunk,operation):
 			#v1=Vector()
 			#v2=Vector()
 			if not compare(chunk.points[-1],points[vi+1],points[vi],operation.optimize_threshold):
-				if spoints:
-					chunk.append(points[vi],startpoints[vi],endpoints[vi])
+				if naxispoints:
+					chunk.append(points[vi],startpoints[vi],endpoints[vi],rotations[vi])
 				else:
 					chunk.points.append(points[vi])
 				if protect_vertical:
 					v1=chunk.points[-1]
 					v2=chunk.points[-2]
 					v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
-					if v1c!=v1:
+					if v1c!=v1:#TODO FIX THIS FOR N AXIS?
 						chunk.points[-1]=v1c
 					elif v2c!=v2:
 						chunk.points[-2]=v2c
 		#add last point
-		if spoints:
-			chunk.append(points[-1],startpoints[-1],endpoints[-1])
+		if naxispoints:
+			chunk.append(points[-1],startpoints[-1],endpoints[-1],rotations[-1])
 		else:
 			chunk.points.append(points[-1])
 		#=True
 		'''
-		if:#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right?
+		if:#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right? or does it?
 			#print('verticality test')
 			
 			
