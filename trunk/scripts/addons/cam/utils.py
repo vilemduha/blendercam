@@ -917,7 +917,7 @@ def extendChunks5axis(chunks,o):
 	m=s.cam_machine
 	s=bpy.context.scene
 	free_movement_height = o.max.z + o.free_movement_height
-	if o.use_position_definitions:# dhull
+	if m.use_position_definitions:# dhull
 		cutterstart=Vector((m.starting_position.x, m.starting_position.y ,max(o.max.z, m.starting_position.z)))#start point for casting
 	else:
 		cutterstart=Vector((0,0,max(o.max.z,free_movement_height)))#start point for casting
@@ -948,7 +948,7 @@ def chunksToMesh(chunks,o):
 	free_movement_height = o.max.z + o.free_movement_height
 	
 	if o.machine_axes=='3':
-		if o.use_position_definitions:
+		if m.use_position_definitions:
 			origin=(m.starting_position.x, m.starting_position.y, m.starting_position.z)# dhull
 		else:
 			origin=(0,0,free_movement_height)	 
@@ -1143,7 +1143,7 @@ def exportGcodePath(filename,vertslist,operations):
 		unitcorr=1;
 	rotcorr=180.0/pi
 	
-	free_movement_height=o.max.z+o.free_movement_height
+	
 	
 	def startNewFile():
 		fileindex=''
@@ -1179,6 +1179,9 @@ def exportGcodePath(filename,vertslist,operations):
 	
 	processedops=0
 	for i,o in enumerate(operations):
+	
+		free_movement_height=o.max.z+o.free_movement_height
+		
 		mesh=vertslist[i]
 		verts=mesh.vertices[:]
 		if o.machine_axes!='3':
@@ -1219,7 +1222,7 @@ def exportGcodePath(filename,vertslist,operations):
 		plungefeedrate= millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
 		
-		if o.use_position_definitions:# dhull 
+		if m.use_position_definitions:# dhull 
 			last=Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
 		else:		
 			last=Vector((0.0,0.0,free_movement_height))#nonsense values so first step of the operation gets written for sure
