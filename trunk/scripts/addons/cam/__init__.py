@@ -666,9 +666,11 @@ def get_panels():#convenience function for bot register and unregister functions
 	ops.CamPackObjects,
 	ops.CamSliceObjects,
 	#other tools
-	ops.CamPolyBoolean,
+	ops.CamCurveBoolean,
 	ops.CamOffsetSilhouete,
 	ops.CamObjectSilhouete,
+	ops.CamCurveIntarsion,
+	
 	
 	
 	CAM_CUTTER_presets,
