@@ -597,7 +597,7 @@ class CamOrientationAdd(bpy.types.Operator):
 		
 		
 #boolean operations for curve objects
-class CamPolyBoolean(bpy.types.Operator):
+class CamCurveBoolean(bpy.types.Operator):
 	'''Boolean operation on two curves'''
 	bl_idname = "object.curve_boolean"
 	bl_label = "Curve Boolean operation"
@@ -616,7 +616,35 @@ class CamPolyBoolean(bpy.types.Operator):
 		utils.polygonBoolean(context,self.boolean_type)
 		return {'FINISHED'}
 
+#boolean operations for curve objects
+class CamCurveIntarsion(bpy.types.Operator):
+	'''makes curve cuttable both inside and outside, for intarsion and joints'''
+	bl_idname = "object.curve_intarsion"
+	bl_label = "Make curve intarsion compatible"
+	bl_options = {'REGISTER', 'UNDO'}
 	
+	radius = bpy.props.FloatProperty(name="offset", default=.003, min=0, max=100,precision=4, unit="LENGTH")
+		
+	#@classmethod
+	#def poll(cls, context):
+	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+
+	def execute(self, context):
+		utils.silhoueteOffset(context,-self.radius)
+		o1=bpy.context.active_object
+
+		utils.silhoueteOffset(context,2*self.radius)
+		o2=bpy.context.active_object
+		utils.silhoueteOffset(context,-self.radius)
+		o3=bpy.context.active_object
+		o1.select=True
+		o2.select=True
+		o3.select=False
+		bpy.ops.object.delete(use_global=False)
+		o3.select=True
+		return {'FINISHED'}	
+		
+		
 #this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
 class CamOffsetSilhouete(bpy.types.Operator):
 	'''Curve offset operation '''
