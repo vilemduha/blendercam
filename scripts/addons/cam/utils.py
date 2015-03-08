@@ -1478,6 +1478,50 @@ def overlaps(bb1,bb2):#true if bb1 is child of bb2
 	if (ch2[1]>ch1[1]>ch1[0]>ch2[0] and ch2[3]>ch1[3]>ch1[2]>ch2[2]):
 		return True
 
+
+def connectChunksLow(chunks,o):	
+	''' connects chunks that are close to each other without lifting, sampling them 'low' '''
+	if not o.stay_low or (o.strategy=='CARVE' and o.carve_depth>0):
+		return chunks
+		
+	connectedchunks=[]
+	mergedist=3*o.dist_between_paths
+	if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
+		mergedist=10*o.dist_between_paths
+	
+	if o.parallel_step_back:
+		mergedist*=2
+		
+	lastch=None
+	i=len(chunks)
+	pos=(0,0,0)
+	
+	for ch in chunks:
+			
+			if lastch!=None and (ch.distStart(pos,o)<mergedist):
+				#CARVE should lift allways, when it goes below surface...
+				#print(mergedist,ch.dist(pos,o))
+				if o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL':# for these paths sorting happens after sampling, thats why they need resample the connection
+					between=samplePathLow(o,lastch,ch,True)
+				else:
+					#print('addbetwee')
+					between=samplePathLow(o,lastch,ch,False)#other paths either dont use sampling or are sorted before it.
+			
+				if o.use_opencamlib and o.use_exact and (o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL'):
+					chunks_to_resample.append( (connectedchunks[-1], len(connectedchunks[-1].points), len(between.points) ) )
+					
+				connectedchunks[-1].points.extend(between.points)
+				connectedchunks[-1].points.extend(ch.points)
+			else:
+				connectedchunks.append(ch)
+			lastch=ch
+			pos=lastch.points[-1]
+			
+	if o.use_opencamlib and o.use_exact:
+		oclResampleChunks(o, chunks_to_resample)
+		
+	return connectedchunks
+			
 def sortChunks(chunks,o):
 	if o.strategy!='WATERLINE':
 		progress('sorting paths')
@@ -1515,28 +1559,11 @@ def sortChunks(chunks,o):
 				ch=parent.getNext()
 				break
 			
-		if ch!=None:#found next chunk
+		if ch!=None:#found next chunk, append it to list
 			ch.sorted=True
 			ch.adaptdist(pos,o)
 			chunks.remove(ch)
-			
-			mergedist=3*o.dist_between_paths
-			if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
-				mergedist=10*o.dist_between_paths
-			if o.stay_low and lastch!=None and not(o.strategy=='CARVE' and o.carve_depth>0) and (ch.distStart(pos,o)<mergedist or (o.parallel_step_back and ch.distStart(pos,o)<2*mergedist)):
-				#CARVE should lift allways, when it goes below surface...
-				#print(mergedist,ch.dist(pos,o))
-				if o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL':# for these paths sorting happens after sampling, thats why they need resample the connection
-					between=samplePathLow(o,lastch,ch,True)
-				else:
-					between=samplePathLow(o,lastch,ch,False)#other paths either dont use sampling or are sorted before it.
-			
-				if o.use_opencamlib and o.use_exact and (o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='PENCIL'):
-					chunks_to_resample.append( (sortedchunks[-1], len(sortedchunks[-1].points), len(between.points) ) )
-				sortedchunks[-1].points.extend(between.points)
-				sortedchunks[-1].points.extend(ch.points)
-			else:
-				sortedchunks.append(ch)
+			sortedchunks.append(ch)
 			lastch=ch
 			pos=lastch.points[-1]
 		i-=1	
@@ -1547,10 +1574,11 @@ def sortChunks(chunks,o):
 				print(ch.getNext())
 				print(len(ch.points))
 		'''
-	if o.use_opencamlib and o.use_exact:
-		oclResampleChunks(o, chunks_to_resample)
+		
+	
 	sys.setrecursionlimit(1000)
-
+	
+	sortedchunks = connectChunksLow(sortedchunks,o)
 	return sortedchunks
 
 
@@ -2477,8 +2505,8 @@ def getPath3axis(context,operation):
 			pathSamples=getPathPattern(o)
 			#chunksToMesh(pathSamples,o)#for testing pattern script
 			#return
-			if o.strategy=='OUTLINEFILL':
-				pathSamples=sortChunks(pathSamples,o)
+			if o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL':
+				pathSamples=connectChunksLow(pathSamples,o)
 
 		#print (minz)
 		

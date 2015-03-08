@@ -616,7 +616,7 @@ class CamCurveBoolean(bpy.types.Operator):
 		utils.polygonBoolean(context,self.boolean_type)
 		return {'FINISHED'}
 
-#boolean operations for curve objects
+#intarsion or joints
 class CamCurveIntarsion(bpy.types.Operator):
 	'''makes curve cuttable both inside and outside, for intarsion and joints'''
 	bl_idname = "object.curve_intarsion"

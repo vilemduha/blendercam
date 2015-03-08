@@ -324,6 +324,7 @@ def getPathPattern(operation):
 		pathchunks=[]
 		chunks=[]
 		for p in polys:
+			p=outlinePoly(p,o.dist_between_paths/3,o.circle_detail,o.optimize,o.optimize_threshold,False)#first, move a bit inside, because otherwise the border samples go crazy very often changin between hit/non hit and making too many jumps in the path.
 			chunks.extend(polyToChunks(p,0))
 		
 		pathchunks.extend(chunks)
@@ -366,10 +367,15 @@ def getPathPattern(operation):
 						chunks=polyToChunks(p,zlevel)
 						pathchunks.extend(chunks)
 					lastchunks=chunks
-				
-		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
-			for ch in pathchunks:
-				ch.points.reverse()
+		
+		if o.movement_insideout=='INSIDEOUT':
+			pathchunks.reverse()
+		for chunk in pathchunks:
+			if o.movement_insideout=='INSIDEOUT':
+				chunk.points.reverse()
+			if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
+				chunk.points.reverse()
+		
 		parentChildPoly(pathchunks,pathchunks,o)	
 		pathchunks=chunksRefine(pathchunks,o)
 	progress(time.time()-t)
