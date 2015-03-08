@@ -409,11 +409,12 @@ def getPathPattern4axis(operation):
 	m1=max(abs(o.min[a2]),abs(o.max[a2]))
 	m2=max(abs(o.min[a3]),abs(o.max[a3]))
 	
-	radius=o.max.z#math.sqrt(m1*m1+m2*m2)#max radius estimation
+	radius=max(o.max.z,0.0001)#math.sqrt(m1*m1+m2*m2)+operation.cutter_diameter*2#max radius estimation, but the minimum is object 
 	radiusend=o.min.z
 	
-	
-	circlesteps=(radius*pi*2)/o.dist_along_paths
+	mradius=max(radius,radiusend)
+	circlesteps=(mradius*pi*2)/o.dist_along_paths
+	circlesteps = max(4,circlesteps)
 	anglestep = 2*pi/circlesteps
 	#generalized rotation
 	e=Euler((0,0,0))
