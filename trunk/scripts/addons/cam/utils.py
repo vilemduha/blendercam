@@ -1497,7 +1497,7 @@ def connectChunksLow(chunks,o):
 	pos=(0,0,0)
 	
 	for ch in chunks:
-			
+		if len(ch.points)>0:
 			if lastch!=None and (ch.distStart(pos,o)<mergedist):
 				#CARVE should lift allways, when it goes below surface...
 				#print(mergedist,ch.dist(pos,o))
