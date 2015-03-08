@@ -367,7 +367,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 						layout.prop(ao,'strategy')
 					layout.prop(ao,'rotary_axis_1')
 					layout.prop(ao,'rotary_axis_2')
-				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES':
+				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES' or ao.strategy=='OUTLINEFILL':
 					layout.prop(ao,'movement_insideout')
 					
 				#if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
