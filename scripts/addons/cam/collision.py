@@ -141,6 +141,9 @@ def getSampleBulletNAxis(cutter, startpoint,endpoint,rotation, cutter_compensati
 	'''fully 3d collision test for NAxis milling'''
 	cutterVec=Vector((0,0,1))*cutter_compensation#cutter compensation vector - cutter physics object has center in the middle, while cam needs the tip position.
 	cutterVec.rotate(Euler(rotation))
+	#print(rotation)
+	#print(cutterVec)
+	#cutterVec=Vector((0,0,0))
 	#cutterVec = startpoint-endpoint
 	#cutterVec.normalize()
 	#cutterVec*=cutter_compensation

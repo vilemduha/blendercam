@@ -65,7 +65,7 @@ def getCutterArray(operation,pixsize):
 				v.y=(b+0.5-m)*ps
 				if(v.length<=r):
 					car.itemset((a,b),0)
-	elif type=='BALL':
+	elif type=='BALL' or type == 'BALLNOSE' :
 		for a in range(0,res):
 			v.x=(a+0.5-m)*ps
 			for b in range(0,res):

@@ -2249,7 +2249,8 @@ def getPath3axis(context,operation):
 			layers=[[layerstart,layerend]]
 		
 		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
-		
+		#for ch in pathSamples:
+		#	ch.points=ch.endpoints
 		chunksToMesh(chunks,o)
 		
 		
