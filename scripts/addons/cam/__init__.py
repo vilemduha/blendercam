@@ -433,6 +433,8 @@ class camOperation(bpy.types.PropertyGroup):
 	use_opencamlib = bpy.props.BoolProperty(name="Use OpenCAMLib",description="Use OpenCAMLib to sample paths or get waterline shape", default=False, update = updateOpencamlib)
 	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.1,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
 	simulation_detail=bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0001, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateRest)
+	do_simulation_feedrate = bpy.props.BoolProperty(name="Adjust feedrates with simulation",description="Adjust feedrates with simulation", default=True, update = updateRest)
+	
 	imgres_limit = bpy.props.IntProperty(name="Maximum resolution in megapixels", default=10, min=1, max=512,description="This property limits total memory usage and prevents crashes. Increase it if you know what are doing.", update = updateZbufferImage)
 	optimize = bpy.props.BoolProperty(name="Reduce path points",description="Reduce path points", default=True, update = updateRest)
 	optimize_threshold=bpy.props.FloatProperty(name="Reduction threshold", default=0.000001, min=0.00000001, max=1,precision=PRECISION, unit="LENGTH", update = updateRest)
