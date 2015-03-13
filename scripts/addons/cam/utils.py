@@ -166,7 +166,7 @@ def getBounds(o):
 
 			o.min.x=minx-o.material_radius_around_model
 			o.min.y=miny-o.material_radius_around_model
-			o.max.z=maxz
+			o.max.z=max(o.maxz,maxz)
 				
 			if o.minz_from_ob:
 					o.min.z=minz
