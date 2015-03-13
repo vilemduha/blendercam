@@ -1703,8 +1703,8 @@ def sortChunks(chunks,o):
 		
 	
 	sys.setrecursionlimit(1000)
-	
-	sortedchunks = connectChunksLow(sortedchunks,o)
+	if o.strategy!='DRILL':
+		sortedchunks = connectChunksLow(sortedchunks,o)
 	return sortedchunks
 
 
@@ -2903,14 +2903,14 @@ def getPath3axis(context,operation):
 						maxx,minx,maxy,miny=-10000,10000,-10000,100000
 						for p in c.points:
 							if o.drill_type=='ALL_POINTS':
-								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
+								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.minz)]))
 							minx=min(p.co.x,minx)
 							maxx=max(p.co.x,maxx)
 							miny=min(p.co.y,miny)
 							maxy=max(p.co.y,maxy)
 						for p in c.bezier_points:
 							if o.drill_type=='ALL_POINTS':
-								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.min.z)]))
+								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.minz)]))
 							minx=min(p.co.x,minx)
 							maxx=max(p.co.x,maxx)
 							miny=min(p.co.y,miny)
@@ -2921,7 +2921,7 @@ def getPath3axis(context,operation):
 						center=(cx,cy)
 						aspect=(maxx-minx)/(maxy-miny)
 						if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
-							chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.min.z)]))
+							chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.minz)]))
 						
 			delob(ob)#delete temporary object with applied transforms
 		print(chunks)
