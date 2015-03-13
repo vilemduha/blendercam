@@ -750,7 +750,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	'''
 	return chunks  
 
-def simCutterSpot(xs,ys,z,cutterArray, si, getvolume):	
+def simCutterSpot(xs,ys,z,cutterArray, si, getvolume = False):	
 	m=int(cutterArray.shape[0]/2)
 	size=cutterArray.shape[0]
 	if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :#whole cutter in image
@@ -875,12 +875,12 @@ def generateSimulationImage(name,operations):
 				xs=(s.x-minx)/simulation_detail+borderwidth+simulation_detail/2#-m
 				ys=(s.y-miny)/simulation_detail+borderwidth+simulation_detail/2#-m
 				volume_partial = simCutterSpot(xs,ys,s.z,cutterArray,si, o.do_simulation_feedrate)
-				if o.do_simulation_feedrate:
+				if o.do_simulation_feedrate:#compute volumes and write data into shapekey.
 					volume+=volume_partial
 					totalvolume+=volume
 					load = volume/l
-					#print(volume)
-					#this will show the shapekey as debugging graph
+					
+					#this will show the shapekey as debugging graph and will use same data to estimate parts with heavy load
 					if l!=0:
 						shapek.data[i].co.y = (load) *0.000002
 					else:
@@ -927,17 +927,22 @@ def generateSimulationImage(name,operations):
 				for i,d in enumerate(shapek.data):
 					d.co.y = nvals[i]
 					
+			#apply mapping - convert the values to actual feedrates.
 			total_load=0
 			max_load=0
-			for i,d in enumerate(shapek.data):	
+			for i,d in enumerate(shapek.data):
 				total_load+=d.co.y
 				max_load=max(max_load,d.co.y)
 			normal_load = total_load/len(shapek.data)
-			for  i,d in enumerate(shapek.data):	
-				if d.co.y>max_load*0.5:
-					d.co.z=d.co.y-normal_load
-
 			
+			thres=0.5
+			for  i,d in enumerate(shapek.data):
+				if d.co.y>max_load*thres:
+					d.co.z=max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
+				else:
+					d.co.z=1
+				#d.co.z*=0.01#debug
+				
 	o=operations[0]
 	si=si[borderwidth:-borderwidth,borderwidth:-borderwidth]
 	si+=-o.min.z
@@ -1325,9 +1330,14 @@ def exportGcodePath(filename,vertslist,operations):
 		m=bpy.context.scene.cam_machine
 		
 		millfeedrate=min(o.feedrate,m.feedrate_max)
+		
 		millfeedrate=unitcorr*max(millfeedrate,m.feedrate_min)
 		plungefeedrate= millfeedrate*o.plunge_feedrate/100
 		freefeedrate=m.feedrate_max*unitcorr
+		fadjust=False
+		if o.do_simulation_feedrate and mesh.shape_keys!= None and  mesh.shape_keys.key_blocks.find('feedrates')!=-1:
+			shapek =  mesh.shape_keys.key_blocks['feedrates']
+			fadjust=True
 		
 		if m.use_position_definitions:# dhull 
 			last=Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
@@ -1335,12 +1345,15 @@ def exportGcodePath(filename,vertslist,operations):
 			last=Vector((0.0,0.0,free_movement_height))#nonsense values so first step of the operation gets written for sure
 		lastrot=Euler((0,0,0))
 		duration=0.0
-		f=millfeedrate
+		f=millfeedrate 
+		fadjustval = 1 # if simulation load data is Not present
+		
 		downvector= Vector((0,0,-1))
 		plungelimit=(pi/2-o.plunge_angle)
 		
 		#print('2')
 		for vi,vert in enumerate(verts):
+		
 			v=vert.co
 			if o.machine_axes!='3':
 				v=v.copy()#we rotate it so we need to copy the vector
@@ -1368,15 +1381,21 @@ def exportGcodePath(filename,vertslist,operations):
 			if vi>0 and v.z==last.z: vz=None; 
 			else:	vz=v.z*unitcorr
 			
+			
+			if fadjust:
+				fadjustval = shapek.data[vi].co.z
+			
+				
+			
 			#v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)
 			vect=v-last
 			l=vect.length
 			if vi>0	 and l>0 and downvector.angle(vect)<plungelimit:
 				#print('plunge')
 				#print(vect)
-				if f!=plungefeedrate:
-					f=plungefeedrate
-					c.feedrate(plungefeedrate)
+				if f!=plungefeedrate or (fadjust and fadjustval!=1):
+					f=plungefeedrate * fadjustval
+					c.feedrate(f)
 					
 				if o.machine_axes=='3':
 					c.feed( x=vx, y=vy, z=vz )
@@ -1389,7 +1408,7 @@ def exportGcodePath(filename,vertslist,operations):
 			
 				if f!=freefeedrate:
 					f=freefeedrate
-					c.feedrate(freefeedrate)
+					c.feedrate(f)
 					
 				if o.machine_axes=='3':
 					c.rapid( x = vx , y = vy , z = vz )
@@ -1398,10 +1417,10 @@ def exportGcodePath(filename,vertslist,operations):
 				#gcommand='{RAPID}'
 				
 			else:
-			
-				if f!=millfeedrate:
-					f=millfeedrate
-					c.feedrate(millfeedrate)
+				
+				if f!=millfeedrate or (fadjust and fadjustval!=1):
+					f=millfeedrate * fadjustval
+					c.feedrate(f)
 					
 				if o.machine_axes=='3':
 					c.feed(x=vx,y=vy,z=vz)
