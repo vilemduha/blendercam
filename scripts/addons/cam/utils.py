@@ -234,7 +234,6 @@ def getBoundsMultiple(operations):
 	return minx,miny,minz,maxx,maxy,maxz
 
 def samplePathLow(o,ch1,ch2,dosample):
-	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	v1=Vector(ch1.points[-1])
 	v2=Vector(ch2.points[0])
 	
@@ -264,8 +263,8 @@ def samplePathLow(o,ch1,ch2,dosample):
 						p[2]=z
 			else:
 				for p in bpath.points:
-					xs=(p[0]-minx)/pixsize+o.borderwidth+pixsize/2#-m
-					ys=(p[1]-miny)/pixsize+o.borderwidth+pixsize/2#-m
+					xs=(p[0]-o.min.x)/pixsize+o.borderwidth+pixsize/2#-m
+					ys=(p[1]-o.min.y)/pixsize+o.borderwidth+pixsize/2#-m
 					z=getSampleImage((xs,ys),o.offset_image,o.minz)+o.skin
 					if z>p[2]:
 						p[2]=z
@@ -751,7 +750,6 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	return chunks  
 
 			
-
 def createSimulationObject(name,operations,i):
 	oname='csim_'+name
 	
@@ -809,7 +807,10 @@ def createSimulationObject(name,operations,i):
 	
 def doSimulation(name,operations):
 	'''perform simulation of operations. Currently only for 3 axis'''
-	i=image_utils.generateSimulationImage(name,operations)
+	for o in operations:
+		getOperationSources(o)
+	limits = getBoundsMultiple(operations)#this is here because some background computed operations still didn't have bounds data
+	i=image_utils.generateSimulationImage(name,operations,limits)
 	createSimulationObject(name,operations,i)
 
 def extendChunks5axis(chunks,o):

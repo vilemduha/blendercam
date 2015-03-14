@@ -511,11 +511,9 @@ def simCutterSpot(xs,ys,z,cutterArray, si, getvolume = False):
 		
 	return 0
 	
-def generateSimulationImage(name,operations):
+def generateSimulationImage(name,operations,limits):
 	
-	for o in operations:
-		getOperationSources(o)
-	minx,miny,minz,maxx,maxy,maxz = getBoundsMultiple(operations)#this is here because some background computed operations still didn't have bounds data
+	minx,miny,minz,maxx,maxy,maxz = limits
 	print(minx,miny,minz,maxx,maxy,maxz)
 	sx=maxx-minx
 	sy=maxy-miny
