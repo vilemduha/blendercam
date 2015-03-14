@@ -934,10 +934,21 @@ def crazyStrokeImage(o):#this surprisingly works, and can be used as a basis for
 	return chunks
 	
 def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
+	#works like this:
+	#start 'somewhere'
+	#try to go in various directions. 
+	#if somewhere the cutter load is appropriate - it is correct magnitude and side, continue in that directon
+	#try to continue straight or around that, looking 
 	t=time.time()
 	minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
 	pixsize=o.pixsize
 	edges=[]
+	#TODO this should be somewhere else, but here it is now to get at least some ambient for start of the operation.
+	ar[:o.borderwidth,:]=0
+	ar[-o.borderwidth:,:]=0
+	ar[:,:o.borderwidth]=0
+	ar[:,-o.borderwidth:]=0
+	debug = numpytoimage(ar,'start')
 	
 	r=int((o.cutter_diameter/2.0)/o.pixsize)#ceil((o.cutter_diameter/12)/o.pixsize)
 	d=2*r
@@ -954,9 +965,11 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 	
 	cutterimagepix=cutterArray.sum()
 	#ar.fill(True)
+	
+	anglelimit = o.crazy_threshold3 
 	satisfypix=cutterimagepix*o.crazy_threshold1#a threshold which says if it is valuable to cut in a direction
 	toomuchpix=cutterimagepix*o.crazy_threshold2#same, but upper limit
-	optimalpix=(satisfypix+toomuchpix)/2.0# the ideal eating ratio
+	optimalpix=cutterimagepix*o.crazy_threshold5#(satisfypix+toomuchpix)/2.0# the ideal eating ratio
 	indices=ar.nonzero()#first get white pixels
 	
 	startpix=ar.sum()#
@@ -965,7 +978,7 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 	chunks=[]
 	# try to find starting point here
 	
-	xs=indices[0][0]-r 
+	xs=indices[0][0]-r/2
 	if xs<r:xs=r
 	ys=indices[1][0]-r
 	if ys<r:ys=r
@@ -974,31 +987,33 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 	print(indices)
 	print (indices[0][0],indices[1][0])
 	lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
-	testvect=lastvect.normalized()*r/2.0#multiply *2 not to get values <1 pixel
+	testvect=lastvect.normalized()*r/4.0#multiply *2 not to get values <1 pixel
 	rot=Euler((0,0,1))
 	i=0
 	perc=0
 	itests=0
 	totaltests=0
-	maxtests=500
-	maxtotaltests=1000000
+	maxtests=2000
+	maxtotaltests=20000#1000000
 	
 	
 	margin=0
 	
 	#print(xs,ys,indices[0][0],indices[1][0],r)
-	ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
+	ar[xs-r:xs+r,ys-r:ys+r]=ar[xs-r:xs+r,ys-r:ys+r]*cutterArrayNegative
 	anglerange=[-pi,pi]#range for angle of toolpath vector versus material vector - probably direction negative to the force applied on cutter by material. 
 	testangleinit=0
 	angleincrement=o.crazy_threshold4
+	
 	if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
 		anglerange=[-pi,0]
-		testangleinit=1
+		testangleinit=anglelimit
 		angleincrement=-angleincrement
 	elif (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW'):
 		anglerange=[0,pi]
-		testangleinit=-1
+		testangleinit=-anglelimit
 		angleincrement=angleincrement
+	
 	while totpix>0 and totaltests<maxtotaltests:#a ratio when the algorithm is allowed to end
 		
 		#if perc!=int(100*totpix/startpix):
@@ -1018,10 +1033,10 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 			#print(xs,ys,ar.shape)
 			#print(d)
 			if xs>r+margin and xs<ar.shape[0]-r-margin and ys>r+margin and ys<ar.shape[1]-r-margin :
-				testar=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArray
+				testar=ar[xs-r:xs+r,ys-r:ys+r]*cutterArray
 				if 0:
 					print('test')
-					print(testar.sum(),satisfypix)
+					print(testar.sum(),satisfypix,toomuchpix)
 					print(xs,ys,testlength,testangle)
 					print(lastvect)
 					print(testvect)
@@ -1032,14 +1047,32 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 				cx=cindices[0].sum()/eatpix
 				cy=cindices[1].sum()/eatpix
 				v=Vector((cx-r,cy-r))
-				angle=testvect.to_2d().angle_signed(v)
-				if anglerange[0]<angle<anglerange[1]:#this could be righthanded milling? lets see :)
-					if toomuchpix>eatpix>satisfypix:
-						foundsolutions.append([testvect.copy(),eatpix])
-						if len(foundsolutions)==2:
-							success=True
+				#print(testvect.length,testvect)
+				
+				
+				if v.length!=0: 
+					angle=testvect.to_2d().angle_signed(v)
+					#if angle>pi:
+						#print('achjo\n\n\n\n\n',angle)
+					if (anglerange[0]<angle<anglerange[1] and toomuchpix>eatpix>satisfypix) or (eatpix>0 and totpix < startpix*0.025):#this could be righthanded milling? lets see :)
+							#print(xs,ys,angle)
+							foundsolutions.append([testvect.copy(),eatpix])
+							if len(foundsolutions)>=10 or totpix < startpix*0.025:
+								success=True
+			itests+=1
+			totaltests+=1
+			#achjo
+			
 			if success:
 				#fist, try to inter/extrapolate the recieved results.
+				closest=100000000
+				#print('evaluate')
+				for s in foundsolutions:
+					#print(abs(s[1]-optimalpix),optimalpix,abs(s[1]))
+					if abs(s[1]-optimalpix)<closest:
+						bestsolution=s
+						closest= abs(s[1]-optimalpix)
+						#print('closest',closest)
 				'''
 				v1=foundsolutions[0][0]
 				v2=foundsolutions[1][0]
@@ -1052,42 +1085,46 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 				print(v2,v1,pix1,pix2)
 				print(ratio)
 				'''
-				testvect=foundsolutions[0][0]#v1#+(v2-v1)*ratio#rewriting with interpolated vect.
+				testvect=bestsolution[0]#v1#+(v2-v1)*ratio#rewriting with interpolated vect.
 				xs=int(nchunk.points[-1][0]+testvect.x)
 				ys=int(nchunk.points[-1][1]+testvect.y)
 				#if xs>r+margin and xs<ar.shape[0]-r-margin and ys>r+margin and ys<ar.shape[1]-r-margin :
+				#nchunk.points.append([xs+v.x,ys+v.y])
 				nchunk.points.append([xs,ys])
 				lastvect=testvect
 				
-				ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*(-cutterArray)
-				totpix-=eatpix
+				ar[xs-r:xs+r,ys-r:ys+r]=ar[xs-r:xs+r,ys-r:ys+r]*cutterArrayNegative
+				totpix-=bestsolution[1]
 				itests=0
 				if 0:
 					print('success')
+					print(testar.sum(),satisfypix,toomuchpix)
 					print(xs,ys,testlength,testangle)
 					print(lastvect)
 					print(testvect)
 					print(itests)
+				totaltests = 0
 			else:
 				#nchunk.append([xs,ys])#for debugging purpose
 				#ar.shape[0]
 				#TODO: after all angles were tested into material higher than toomuchpix, it should cancel, otherwise there is no problem with long travel in free space.....
 				#TODO:the testing should start not from the same angle as lastvector, but more towards material. So values closer to toomuchpix are obtained rather than satisfypix
 				testvect=lastvect.normalized()*testlength
-				right=True
+				
 				if testangleinit==0:#meander
 					if testleftright:
-						testangle=-testangle
+						testangle=-testangle-angleincrement
 						testleftright=False
 					else:
-						testangle=abs(testangle)+angleincrement#increment angle
+						testangle=-testangle+angleincrement#increment angle
 						testleftright=True
 				else:#climb/conv.
 					testangle+=angleincrement
 					
-				if abs(testangle)>o.crazy_threshold3:#/testlength
+				if (abs(testangle)>o.crazy_threshold3 and len(nchunk.points)>1) or abs(testangle)>2*pi:#/testlength
 					testangle=testangleinit
 					testlength+=r/4.0
+					#print(itests,testlength)
 				if nchunk.points[-1][0]+testvect.x<r:
 					testvect.x=r
 				if nchunk.points[-1][1]+testvect.y<r:
@@ -1107,37 +1144,52 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 					success=True
 				'''
 				rot.z=testangle
-				
+				#if abs(testvect.normalized().y<-0.99):
+				#	print(testvect,rot.z)
 				testvect.rotate(rot)
+				
 				if 0:
 					print(xs,ys,testlength,testangle)
 					print(lastvect)
 					print(testvect)
 					print(totpix)
-			itests+=1
-			totaltests+=1
-			#achjo
-			if itests>maxtests or testlength>r*1.5:
-				#print('resetting location')
-				indices=ar.nonzero()
-				chunks.append(nchunk)
-				if len(indices[0])>0:
-					index=random.randint(0,len(indices[0])-1)
-					#print(index,len(indices[0]))
-					xs=indices[0][0]-r
-					if xs<r:xs=r
-					ys=indices[1][0]-r
-					if ys<r:ys=r
-					nchunk=camPathChunk([(xs,ys)])#startposition
-					ar[xs-r:xs-r+d,ys-r:ys-r+d]=ar[xs-r:xs-r+d,ys-r:ys-r+d]*cutterArrayNegative
-					#lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
-					randomrot=random.random()*2*pi
-					e=Euler((0,0,randomrot))
-					testvect=lastvect.normalized()*4#multiply *2 not to get values <1 pixel
-					testvect.rotate(e)
-					lastvect=testvect.copy()
-				success=True
-				itests=0
+				if itests>maxtests or testlength>r*1.5:
+					#if len(foundsolutions)>0:
+					
+					#print('resetting location')
+					#print(testlength,r)
+					indices=ar.nonzero()
+					chunks.append(nchunk)
+					if len(indices[0])>0:
+							found=False
+							ftests=0
+							while not found:
+								#look for next start point:
+								index=random.randint(0,len(indices[0])-1)
+								#print(index,len(indices[0]))
+								#print(indices[index])
+								xs=indices[0][index]-r
+								if xs<r:xs=r
+								ys=indices[1][index]-r
+								if ys<r:ys=r
+								#print(toomuchpix,ar[xs-r:xs-r+d,ys-r:ys-r+d].sum()*pi/4,satisfypix)
+								testarsum=ar[xs-r:xs-r+d,ys-r:ys-r+d].sum()*pi/4
+								if toomuchpix>testarsum>satisfypix or (totpix<startpix*0.025):
+									found=True
+									#print(xs,ys,indices[0][index],indices[1][index])
+								
+									nchunk=camPathChunk([(xs,ys)])#startposition
+									ar[xs-r:xs+r,ys-r:ys+r]=ar[xs-r:xs+r,ys-r:ys+r]*cutterArrayNegative
+									#lastvect=Vector((r,0,0))#vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
+									randomrot=random.random()*2*pi
+									e=Euler((0,0,randomrot))
+									testvect=lastvect.normalized()*2#multiply *2 not to get values <1 pixel
+									testvect.rotate(e)
+									lastvect=testvect.copy()
+								ftests+=1
+					
+					success=True
+					itests=0
 		#xs=(s.x-o.min.x)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
 		#ys=(s.y-o.min.y)/o.simulation_detail+o.borderwidth+o.simulation_detail/2#-m
 		i+=1
@@ -1148,6 +1200,8 @@ def crazyStrokeImageBinary(o,ar):#this surprisingly works, and can be used as a 
 			print(totaltests)
 			i=0
 	chunks.append(nchunk)
+	debug = numpytoimage(ar,'debug')
+	debug = numpytoimage(cutterArray,'debil')
 	for ch in chunks:
 		#vecchunk=[]
 		#vecchunks.append(vecchunk)

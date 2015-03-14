@@ -442,10 +442,11 @@ class camOperation(bpy.types.PropertyGroup):
 	dont_merge = bpy.props.BoolProperty(name="Dont merge outlines when cutting",description="this is usefull when you want to cut around everything", default=False, update = updateRest)
 	
 	pencil_threshold=bpy.props.FloatProperty(name="Pencil threshold", default=0.00002, min=0.00000001, max=1,precision=PRECISION, unit="LENGTH", update = updateRest)
-	crazy_threshold1=bpy.props.FloatProperty(name="Crazy threshold 1", default=0.02, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
-	crazy_threshold2=bpy.props.FloatProperty(name="Crazy threshold 2", default=0.2, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
-	crazy_threshold3=bpy.props.FloatProperty(name="Crazy threshold 3", default=3.0, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
-	crazy_threshold4=bpy.props.FloatProperty(name="Crazy threshold 4", default=1.0, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
+	crazy_threshold1=bpy.props.FloatProperty(name="min engagement", default=0.02, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
+	crazy_threshold5=bpy.props.FloatProperty(name="optimal engagement", default=0.3, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
+	crazy_threshold2=bpy.props.FloatProperty(name="max engagement", default=0.5, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
+	crazy_threshold3=bpy.props.FloatProperty(name="max angle", default=2, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
+	crazy_threshold4=bpy.props.FloatProperty(name="test angle step", default=0.05, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
 	#calculations
 	duration = bpy.props.FloatProperty(name="Estimated time", default=0.01, min=0.0000, max=32,precision=PRECISION, unit="TIME")
 	#chip_rate

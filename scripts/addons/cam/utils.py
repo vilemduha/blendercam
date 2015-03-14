@@ -2410,11 +2410,12 @@ def getPath3axis(context,operation):
 			
 			#pathSamples = crazyStrokeImage(o)
 			#####this kind of worked and should work:
-			area=o.offset_image<o.min.z
+			area=o.offset_image<o.minz+0.0001
 			
 			pathSamples = crazyStrokeImageBinary(o,area)
 			#####
 			pathSamples=chunksRefine(pathSamples,o)
+			#pathSamples=sortChunks(pathSamples,o)
 			#pathSamples = sortChunks(pathSamples,o)
 		else: 
 			if o.strategy=='OUTLINEFILL':
@@ -2445,7 +2446,7 @@ def getPath3axis(context,operation):
 			layers=[[layerstart,layerend]]
 		
 		
-		chunks.extend(sampleChunks(o,pathSamples,layers))
+		chunks=pathSamples#.extend(sampleChunks(o,pathSamples,layers))
 		if (o.strategy=='PENCIL'):# and bpy.app.debug_value==-3:
 			chunks=chunksCoherency(chunks)
 			print('coherency check')
