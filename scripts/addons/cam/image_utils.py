@@ -475,6 +475,221 @@ def imageEdgeSearch_online(o,ar,zimage):#search edges for pencil strategy, anoth
 			ch[i]=((ch[i][0]+coef-o.borderwidth)*o.pixsize+minx,(ch[i][1]+coef-o.borderwidth)*o.pixsize+miny,ch[i][2])
 			#vecchunk.append(Vector(ch[i]))
 	return chunks
+
+def simCutterSpot(xs,ys,z,cutterArray, si, getvolume = False):	
+	'''simulates a cutter cutting into stock, taking away the volume, and optionally returning the volume that has been milled. This is now used for feedrate tweaking.'''
+	m=int(cutterArray.shape[0]/2)
+	size=cutterArray.shape[0]
+	if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :#whole cutter in image
+		if getvolume:
+			volarray=si[xs-m:xs-m+size,ys-m:ys-m+size].copy()
+		si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
+		if getvolume:
+			volarray=si[xs-m:xs-m+size,ys-m:ys-m+size]-volarray
+			vsum = abs(volarray.sum())
+			print(vsum)
+			return vsum
+	
+	elif xs>-m and xs< si.shape[0]+m and ys>-m and ys>si.shape[1]+m:#part of cutter in image, for extra large cutters
+		
+		startx=max(0,xs-m)
+		starty=max(0,ys-m)
+		endx=min(si.shape[0], xs-m+size)
+		endy=min(si.shape[0], ys-m+size)
+		castartx = max(0,m-xs)
+		castarty = max(0,m-ys)
+		caendx= min(size,si.shape[0]-xs+m)
+		caendy= min(size,si.shape[1]-ys+m)
+		if getvolume:
+			volarray=si[startx:endx,starty:endy].copy()
+		si[startx:endx,starty:endy]=numpy.minimum(si[startx:endx,starty:endy],cutterArray[castartx:caendx,castarty:caendy]+z)
+		if getvolume:
+			volarray=si[startx:endx,starty:endy]-volarray
+			vsum = abs(volarray.sum())
+			print(vsum)
+			return vsum
+		
+	return 0
+	
+def generateSimulationImage(name,operations):
+	
+	for o in operations:
+		getOperationSources(o)
+	minx,miny,minz,maxx,maxy,maxz = getBoundsMultiple(operations)#this is here because some background computed operations still didn't have bounds data
+	print(minx,miny,minz,maxx,maxy,maxz)
+	sx=maxx-minx
+	sy=maxy-miny
+	
+	o=operations[0]#getting sim detail and others from first op.
+	simulation_detail=o.simulation_detail
+	borderwidth = o.borderwidth
+	resx=ceil(sx/simulation_detail)+2*borderwidth
+	resy=ceil(sy/simulation_detail)+2*borderwidth
+
+	#create array in which simulation happens, similar to an image to be painted in.
+	si=numpy.array((0.1),dtype=float)
+	si.resize(resx,resy)
+	si.fill(o.max.z)
+	
+	
+	for o in operations:
+		ob = bpy.data.objects[o.path_object_name]
+		m = ob.data
+		verts = m.vertices
+		
+		if o.do_simulation_feedrate:
+			kname = 'feedrates'
+			if m.shape_keys == None or 	m.shape_keys.key_blocks.find(kname)==-1:
+				ob.shape_key_add()
+				if len(m.shape_keys.key_blocks)==1:
+					ob.shape_key_add()
+				shapek=m.shape_keys.key_blocks[-1]
+				shapek.name=kname
+			else:
+				shapek = 	m.shape_keys.key_blocks[kname]
+			shapek.data[0].co =(0.0,0,0)
+				#print(len(shapek.data))
+				#print(len(verts_rotations))
+				
+				#for i,co in enumerate(verts_rotations):#TODO: optimize this. this is just rewritten too many times...
+					#print(r)
+				#	shapek.data[i].co=co
+			
+		totalvolume=0.0
+		
+		
+		cutterArray=getCutterArray(o,simulation_detail)
+		#cb=cutterArray<-1
+		#cutterArray[cb]=1
+		cutterArray=-cutterArray
+		m=int(cutterArray.shape[0]/2)
+		size=cutterArray.shape[0]
+		#print(si.shape)
+		#for ch in chunks:
+		lasts=verts[1].co
+		perc=-1
+		vtotal=len(verts)
+		for i,vert in enumerate(verts):
+			if perc!=int(100*i/vtotal):
+				perc=int(100*i/vtotal)
+				progress('simulation',perc)
+			#progress('simulation ',int(100*i/l))
+			
+			
+			if i>0:
+				volume = 0
+			
+				s=vert.co
+				v=s-lasts
+				
+				l=v.length
+				if v.length>simulation_detail:
+					
+					
+					v.length=simulation_detail
+					while v.length<l:
+						xs=(lasts.x+v.x-minx)/simulation_detail+borderwidth+simulation_detail/2#-m
+						ys=(lasts.y+v.y-miny)/simulation_detail+borderwidth+simulation_detail/2#-m
+						z=lasts.z+v.z
+						#print(z)
+						volume_partial = simCutterSpot(xs,ys,z,cutterArray,si, o.do_simulation_feedrate)
+						if o.do_simulation_feedrate:
+							totalvolume+=volume
+							volume+=volume_partial
+						v.length+=simulation_detail
+			
+			
+				xs=(s.x-minx)/simulation_detail+borderwidth+simulation_detail/2#-m
+				ys=(s.y-miny)/simulation_detail+borderwidth+simulation_detail/2#-m
+				volume_partial = simCutterSpot(xs,ys,s.z,cutterArray,si, o.do_simulation_feedrate)
+				if o.do_simulation_feedrate:#compute volumes and write data into shapekey.
+					volume+=volume_partial
+					totalvolume+=volume
+					load = volume/l
+					
+					#this will show the shapekey as debugging graph and will use same data to estimate parts with heavy load
+					if l!=0:
+						shapek.data[i].co.y = (load) *0.000002
+					else:
+						shapek.data[i].co.y=shapek.data[i-1].co.y
+					shapek.data[i].co.x = shapek.data[i-1].co.x + l*0.04
+					shapek.data[i].co.z = 0
+					
+				
+				#if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
+				#	si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+s.z)
+					
+				lasts=s
+		
+		if o.do_simulation_feedrate:#smoothing ,but only backward!
+			xcoef = shapek.data[len(shapek.data)-1].co.x/len(shapek.data)
+			for a in range(0,10):
+				#print(shapek.data[-1].co)
+				nvals=[]
+				val1=0#
+				val2=0
+				w1=0#
+				w2=0
+				
+				for i,d in enumerate(shapek.data):
+					val=d.co.y
+					
+					if i>1:
+						d1=shapek.data[i-1].co
+						val1=d1.y
+						if d1.x-d.co.x!=0:
+							w1=1/(abs(d1.x-d.co.x)/xcoef)
+					
+						
+					if i< len(shapek.data)-1:
+						d2=shapek.data[i+1].co
+						val2 = d2.y
+						if d2.x-d.co.x!=0:
+							w2=1/(abs(d2.x-d.co.x)/xcoef)
+					
+					#print(val,val1,val2,w1,w2)
+					
+					val=(val+val1*w1+val2*w2)/(1.0+w1+w2)
+					nvals.append(val)
+				for i,d in enumerate(shapek.data):
+					d.co.y = nvals[i]
+					
+			#apply mapping - convert the values to actual feedrates.
+			total_load=0
+			max_load=0
+			for i,d in enumerate(shapek.data):
+				total_load+=d.co.y
+				max_load=max(max_load,d.co.y)
+			normal_load = total_load/len(shapek.data)
+			
+			thres=0.5
+			for  i,d in enumerate(shapek.data):
+				if d.co.y>max_load*thres:
+					d.co.z=max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
+				else:
+					d.co.z=1
+				#d.co.z*=0.01#debug
+				
+	o=operations[0]
+	si=si[borderwidth:-borderwidth,borderwidth:-borderwidth]
+	si+=-o.min.z
+	
+	
+	cp=getCachePath(o)[:-len(o.name)]+name
+	iname=cp+'_sim.exr'
+	inamebase=bpy.path.basename(iname)
+	print(si.shape[0],si.shape[1])
+	i=numpysave(si,iname)
+		
+	
+	
+	#if inamebase in bpy.data.images:
+	#	i=bpy.data.images[inamebase]
+	#	i.reload()
+	#else:
+	i=bpy.data.images.load(iname)
+	return i
+
 	
 def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm. started another thing below.
 	MAX_BEND=0.1#in radians...#TODO: support operation chains ;)
