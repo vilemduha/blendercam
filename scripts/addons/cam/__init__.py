@@ -646,6 +646,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ui.CAM_MACHINE_Panel,
 	ui.CAM_PACK_Panel,
 	ui.CAM_SLICE_Panel,
+	ui.VIEW3D_PT_tools_curvetools,
 	
 	ops.PathsBackground,
 	ops.CalculatePath,
@@ -687,6 +688,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	#pack module:
 	PackObjectsSettings,
 	SliceObjectsSettings,
+	
 	
 	
 	)

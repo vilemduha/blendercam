@@ -665,3 +665,20 @@ class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
 		layout.operator("object.cam_slice_objects")
 		layout.prop(settings,'slice_distance')
 		layout.prop(settings,'indexes')
+		
+#panel containing all tools
+class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
+	bl_space_type = 'VIEW_3D'
+	bl_region_type = 'TOOLS'
+	bl_context = "objectmode"
+	bl_label = "Curve CAM Tools"
+	bl_options = {'DEFAULT_CLOSED'}
+
+	def draw(self, context):
+		layout = self.layout
+		#col = layout.column(align=True)
+		#lt = context.window_manager.looptools
+		layout.operator("object.curve_boolean")
+		layout.operator("object.curve_intarsion")
+		layout.operator("object.silhouete_offset")
+		layout.operator("object.make_lod")

@@ -536,12 +536,15 @@ def parentChildPoly(parents,children,o):
 					parent.children.append(child)
 					child.parents.append(parent)
 
-def parentChildDist(parents, children,o):
+def parentChildDist(parents, children,o, distance= None):
 	#parenting based on distance between chunks
-	#hierarchy works like this: - children get milled first. 
-	dlim=o.dist_between_paths*2
-	if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and o.parallel_step_back:
-		dlim=dlim*2
+	#hierarchy works like this: - children get milled first.
+	if distance==None:
+		dlim=o.dist_between_paths*2
+		if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and o.parallel_step_back:
+			dlim=dlim*2
+	else:
+		dlim = distance
 		
 	for child in children:
 		for parent in parents:
@@ -556,6 +559,7 @@ def parentChildDist(parents, children,o):
 					if isrelation:
 						break
 				if isrelation:
+					#print('truelink',dist2d(v,v1))
 					parent.children.append(child)
 					child.parents.append(parent)
 						

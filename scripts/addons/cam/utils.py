@@ -2410,13 +2410,14 @@ def getPath3axis(context,operation):
 			
 			#pathSamples = crazyStrokeImage(o)
 			#####this kind of worked and should work:
-			area=o.offset_image<o.minz+0.0001
+			millarea=o.zbuffer_image<o.minz+0.000001
+			avoidarea = o.offset_image>o.minz+0.000001
 			
-			pathSamples = crazyStrokeImageBinary(o,area)
+			pathSamples = crazyStrokeImageBinary(o,millarea,avoidarea)
 			#####
+			pathSamples=sortChunks(pathSamples,o)
 			pathSamples=chunksRefine(pathSamples,o)
-			#pathSamples=sortChunks(pathSamples,o)
-			#pathSamples = sortChunks(pathSamples,o)
+			
 		else: 
 			if o.strategy=='OUTLINEFILL':
 				getOperationSilhouete(o)
