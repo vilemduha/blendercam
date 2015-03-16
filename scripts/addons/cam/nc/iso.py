@@ -409,7 +409,7 @@ class Creator(nc.Creator):
         self.write('\n')
 
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        if self.same_xyz(x, y, z): return
+        if self.same_xyzabc(x, y, z, a, b, c): return
         self.write_blocknum()
         if self.g0123_modal:
             if self.prev_g0123 != self.FEED():
@@ -485,7 +485,27 @@ class Creator(nc.Creator):
                 return False
             
         return True
-
+	
+    def same_xyzabc(self, x=None, y=None, z=None, a=None, b=None, c=None):
+        if (x != None):
+            if (self.fmt.string(x + self.shift_x)) != (self.fmt.string(self.x)):
+                return False
+        if (y != None):
+            if (self.fmt.string(y + self.shift_y)) != (self.fmt.string(self.y)):
+                return False
+        if (z != None):
+            if (self.fmt.string(z + self.shift_z)) != (self.fmt.string(self.z)):
+                return False
+        if (a != None):
+            if (self.fmt.string(a)) != (self.fmt.string(self.a)):
+                return False
+        if (b != None):
+            if (self.fmt.string(b)) != (self.fmt.string(self.b)):
+                return False
+        if (c != None):
+            if (self.fmt.string(c)) != (self.fmt.string(self.c)):
+                return False   
+        return True
     
     def get_quadrant(self, dx, dy):
         if dx < 0:

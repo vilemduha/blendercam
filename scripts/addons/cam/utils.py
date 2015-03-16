@@ -1156,10 +1156,17 @@ def exportGcodePath(filename,vertslist,operations):
 				rcompensate.z=-r.z
 				v.rotate(rcompensate)
 				
-				if r.x==lastrot.x: ra=None;
-				else:	ra=r.x*rotcorr
+				if r.x==lastrot.x: 
+					ra=None;
+					#print(r.x,lastrot.x)
+				else:	
+					
+					ra=r.x*rotcorr
+					#print(ra,'RA')
+				#ra=r.x*rotcorr
 				if r.y==lastrot.y: rb=None;
 				else:	rb=r.y*rotcorr
+				#rb=r.y*rotcorr
 				#print (	ra,rb)
 				
 				
@@ -1191,7 +1198,7 @@ def exportGcodePath(filename,vertslist,operations):
 					c.feed( x=vx, y=vy, z=vz )
 				else:
 					
-					#print(ra,rb)
+					#print('plungef',ra,rb)
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
 					
 			elif v.z>=free_movement_height or vi==0:#v.z==last.z==free_movement_height or vi==0
@@ -1203,6 +1210,7 @@ def exportGcodePath(filename,vertslist,operations):
 				if o.machine_axes=='3':
 					c.rapid( x = vx , y = vy , z = vz )
 				else:
+					#print('rapidf',ra,rb)
 					c.rapid(x=vx, y=vy, z = vz, a = ra, b = rb)
 				#gcommand='{RAPID}'
 				
@@ -1215,6 +1223,7 @@ def exportGcodePath(filename,vertslist,operations):
 				if o.machine_axes=='3':
 					c.feed(x=vx,y=vy,z=vz)
 				else:
+					#print('normalf',ra,rb)
 					c.feed( x=vx, y=vy, z=vz ,a = ra, b = rb)
 
 			
