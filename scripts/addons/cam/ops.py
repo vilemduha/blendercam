@@ -644,7 +644,30 @@ class CamCurveIntarsion(bpy.types.Operator):
 		o3.select=True
 		return {'FINISHED'}	
 		
+class CamCurveRemoveDoubles(bpy.types.Operator):
+	'''curve remove doubles - warning, removes beziers!'''
+	bl_idname = "object.curve_remove_doubles"
+	bl_label = "Remove doubles - curve"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+		mode=False
+		if bpy.context.mode=='EDIT_CURVE':
+			bpy.ops.object.editmode_toggle()
+			mode=True
+		bpy.ops.object.convert(target='MESH')
+		bpy.ops.object.editmode_toggle()
+		bpy.ops.mesh.select_all(action='TOGGLE')
+		bpy.ops.mesh.remove_doubles()
+		bpy.ops.object.editmode_toggle()
+		bpy.ops.object.convert(target='CURVE')
+
+		if mode:
+			bpy.ops.object.editmode_toggle()
 		
+		return {'FINISHED'}	
+		
+
 #this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
 class CamOffsetSilhouete(bpy.types.Operator):
 	'''Curve offset operation '''

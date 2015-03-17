@@ -913,7 +913,8 @@ def chunksToMesh(chunks,o):
 				last=Vector(ch.points[-1])
 				first=Vector(chunks[chi+1].points[0])
 				vect=first-last
-				if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*2.5:#case of neighbouring paths
+				if (o.machine_axes=='3' and (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*2.5):
+					#or (o.machine_axes =='4' and vect.lengt<o.dist_between_paths*4):#case of neighbouring paths
 					lift=False
 				if abs(vect.x)<e and abs(vect.y)<e:#case of stepdown by cutting.
 					lift=False
