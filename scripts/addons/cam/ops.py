@@ -600,7 +600,7 @@ class CamOrientationAdd(bpy.types.Operator):
 class CamCurveBoolean(bpy.types.Operator):
 	'''Boolean operation on two curves'''
 	bl_idname = "object.curve_boolean"
-	bl_label = "Curve Boolean operation"
+	bl_label = "Curve Boolean"
 	bl_options = {'REGISTER', 'UNDO'}
 	
 	boolean_type = EnumProperty(name='type',
@@ -620,7 +620,7 @@ class CamCurveBoolean(bpy.types.Operator):
 class CamCurveIntarsion(bpy.types.Operator):
 	'''makes curve cuttable both inside and outside, for intarsion and joints'''
 	bl_idname = "object.curve_intarsion"
-	bl_label = "Make curve intarsion compatible"
+	bl_label = "Intarsion"
 	bl_options = {'REGISTER', 'UNDO'}
 	
 	radius = bpy.props.FloatProperty(name="offset", default=.003, min=0, max=100,precision=4, unit="LENGTH")
@@ -647,7 +647,7 @@ class CamCurveIntarsion(bpy.types.Operator):
 class CamCurveRemoveDoubles(bpy.types.Operator):
 	'''curve remove doubles - warning, removes beziers!'''
 	bl_idname = "object.curve_remove_doubles"
-	bl_label = "Remove doubles - curve"
+	bl_label = "C-Remove doubles"
 	bl_options = {'REGISTER', 'UNDO'}
 
 	def execute(self, context):
