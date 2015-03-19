@@ -913,8 +913,7 @@ def chunksToMesh(chunks,o):
 				last=Vector(ch.points[-1])
 				first=Vector(chunks[chi+1].points[0])
 				vect=first-last
-				if (o.machine_axes=='3' and (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*2.5):
-					#or (o.machine_axes =='4' and vect.lengt<o.dist_between_paths*4):#case of neighbouring paths
+				if (o.machine_axes=='3' and (o.strategy=='PARALLEL' or o.strategy=='CROSS') and vect.z==0 and vect.length<o.dist_between_paths*2.5) or (o.machine_axes =='4' and vect.length<o.dist_between_paths*2.5):#case of neighbouring paths
 					lift=False
 				if abs(vect.x)<e and abs(vect.y)<e:#case of stepdown by cutting.
 					lift=False
@@ -1062,14 +1061,14 @@ def exportGcodePath(filename,vertslist,operations):
 			c.metric()
 		elif s.unit_settings.system=='INCH':
 			c.imperial()
-		c.flush_nc()
+		
 		#start program
 		c.program_begin(0,filename)
 		c.flush_nc()
 		c.comment('G-code generated with BlenderCAM and NC library')
 		#absolute coordinates
 		c.absolute()
-		c.flush_nc()
+		
 		#work-plane, by now always xy, 
 		c.set_plane(0)
 		c.flush_nc()
