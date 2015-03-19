@@ -465,7 +465,14 @@ def getPathPattern4axis(operation):
 			pathchunks.append(chunk)
 			
 	if o.strategy4axis=='PARALLEL':
-
+		circlesteps=(mradius*pi*2)/o.dist_between_paths
+		steps=(maxl-minl)/o.dist_along_paths
+		
+		anglestep = 2*pi/circlesteps
+		#generalized rotation
+		e=Euler((0,0,0))
+		e[a1]=anglestep
+		
 		reverse=False
 		
 		for b in range(0,floor(circlesteps)+1):
@@ -482,7 +489,7 @@ def getPathPattern4axis(operation):
 			cutterend.rotate(e)
 			
 			for a in range(0,floor(steps)+1):
-				cutterstart[a1]=o.min[a1]+a*o.dist_between_paths
+				cutterstart[a1]=o.min[a1]+a*o.dist_along_paths
 				cutterend[a1]=cutterstart[a1]
 				chunk.startpoints.append(cutterstart.to_tuple())
 				chunk.endpoints.append(cutterend.to_tuple())
