@@ -269,7 +269,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('CIRCLES','Circles', 'Circles path'),
 			('WATERLINE','Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
 			('OUTLINEFILL','Outline Fill', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
-			('CUTOUT','Cutout', 'Cut the silhouete with offset'),
+			('CUTOUT','Profile(Cutout)', 'Cut the silhouete with offset'),
 			('POCKET','Pocket', 'Pocket operation'),
 			('CARVE','Carve', 'Pocket operation'),
 			('CURVE','Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
@@ -280,7 +280,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('PROJECTED_CURVE','Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')
 			),
 		description='Strategy',
-		default='PARALLEL',
+		default='CUTOUT',
 		update = updateStrategy)
 	strategy4axis = EnumProperty(name='4 axis Strategy',
 		items=(
