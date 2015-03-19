@@ -725,9 +725,13 @@ def compatible_panels():
 	t.TEXTURE_PT_custom_props,
 	
 	#meshes
+	t.DATA_PT_context_mesh,
+	t.DATA_PT_normals,
+	t.DATA_PT_texture_space,
 	t.DATA_PT_shape_keys,
 	t.DATA_PT_uv_texture,
 	t.DATA_PT_vertex_colors,
+	t.DATA_PT_vertex_groups,
 	t.DATA_PT_customdata,
 	t.DATA_PT_custom_props_mesh,
 	
