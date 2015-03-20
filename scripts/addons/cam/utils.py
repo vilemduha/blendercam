@@ -538,7 +538,6 @@ def sampleChunksNAxis(o,pathSamples,layers):
 		layerchunks.append([])
 		layeractivechunks.append(camPathChunk([]))
 		lastrunchunks.append([])
-			
 	n=0
 	
 	lastz=minz
@@ -582,9 +581,13 @@ def sampleChunksNAxis(o,pathSamples,layers):
 				#bpy.context.scene.frame_set(-1)
 				#bpy.context.scene.update()
 				#bpy.context.scene.frame_set(1)
-				bpy.context.scene.frame_set(2)#this has to be :( it resets the rigidbody world. No other way to update it probably now :(
+				bpy.context.scene.frame_set(1)#this has to be :( it resets the rigidbody world. No other way to update it probably now :(
+				bpy.context.scene.frame_set(2)#actually 2 frame jumps are needed.
 				bpy.context.scene.frame_set(0)
-#bpy.context.scene.frame_set(-1)
+				#
+				#
+				#bpy.context.scene.frame_set(-1)
+
 				#bpy.context.scene.update()
 				#update scene here?
 				
@@ -744,9 +747,6 @@ def sampleChunksNAxis(o,pathSamples,layers):
 	for i,l in enumerate(layers):
 		chunks.extend(layerchunks[i])
 	
-	'''
-	
-	'''
 	return chunks  
 
 			

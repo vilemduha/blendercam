@@ -4,7 +4,7 @@ import time
 from cam import simple
 from cam.simple import *
 
-BULLET_SCALE=1000 # this is a constant for scaling the rigidbody collision world for higher precision from bullet library
+BULLET_SCALE=10000 # this is a constant for scaling the rigidbody collision world for higher precision from bullet library
 
 
 #
