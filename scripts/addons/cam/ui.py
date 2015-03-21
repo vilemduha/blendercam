@@ -554,6 +554,8 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
 					exclude_exact= ao.strategy=='CUTOUT' or ao.strategy=='DRILL' or ao.strategy=='PENCIL'
 					if not exclude_exact:
 						layout.prop(ao,'use_exact')
+						if ao.use_exact:
+							layout.prop(ao,'exact_subdivide_edges')
 					#if not ao.use_exact or:
 					layout.prop(ao,'pixsize')
 					layout.prop(ao,'imgres_limit')

@@ -64,8 +64,49 @@ def getCutterBullet(o):
 	o.cutter_shape=cutter
 	return cutter
 
+def subdivideLongEdges(ob, threshold):
 	
-#
+	print('subdividing long edges')
+	m=ob.data
+
+	subdivides=[]
+	n=1
+	iter=0
+	while n>0:
+		n=0
+		for i,e in enumerate(m.edges):
+			v1=m.vertices[e.vertices[0]].co
+			v2=m.vertices[e.vertices[1]].co
+			vec=v2-v1
+			l=vec.length
+			if l>threshold:
+				n+=1
+				subdivides.append(i)
+		if n>0:
+			print(len(subdivides))
+			bpy.ops.object.editmode_toggle()
+			
+
+			#bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY')
+			#bpy.ops.mesh.tris_convert_to_quads()
+
+			bpy.ops.mesh.select_all(action='DESELECT')
+			bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE')
+			bpy.ops.object.editmode_toggle()
+			for i in subdivides:
+				m.edges[i].select=True
+			bpy.ops.object.editmode_toggle()
+			bpy.ops.mesh.subdivide(smoothness=0)
+			if iter==0:
+				bpy.ops.mesh.select_all(action='SELECT')
+				bpy.ops.mesh.quads_convert_to_tris(quad_method='SHORTEST_DIAGONAL', ngon_method='BEAUTY')
+			bpy.ops.mesh.select_all(action='DESELECT')
+			bpy.ops.object.editmode_toggle()
+			ob.update_from_editmode()
+		iter+=1
+		#n=0	
+		#
+		
 def prepareBulletCollision(o):
 	'''prepares all objects needed for sampling with bullet collision'''
 	progress('preparing collisions')
@@ -87,7 +128,10 @@ def prepareBulletCollision(o):
 				odata=collisionob.data.dimensions
 				collisionob.data.dimensions='2D'
 			bpy.ops.object.convert(target='MESH', keep_original=False)
-		
+		#subdivide long edges here:
+		if o.exact_subdivide_edges:
+			subdivideLongEdges(collisionob, o.cutter_diameter*2)
+			
 		bpy.ops.rigidbody.object_add(type='ACTIVE')#using active instead of passive because of performance.TODO: check if this works also with 4axis...
 		collisionob.rigid_body.collision_shape = 'MESH'
 		collisionob.rigid_body.kinematic=True#this fixed a serious bug and gave big speedup, rbs could move since they are now active...
