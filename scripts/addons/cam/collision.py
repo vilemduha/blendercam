@@ -68,7 +68,7 @@ def subdivideLongEdges(ob, threshold):
 	
 	print('subdividing long edges')
 	m=ob.data
-
+	scale=(ob.scale.x+ob.scale.y+ob.scale.z)/3
 	subdivides=[]
 	n=1
 	iter=0
@@ -79,7 +79,7 @@ def subdivideLongEdges(ob, threshold):
 			v2=m.vertices[e.vertices[1]].co
 			vec=v2-v1
 			l=vec.length
-			if l>threshold:
+			if l>threshold*scale:
 				n+=1
 				subdivides.append(i)
 		if n>0:
