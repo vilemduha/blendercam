@@ -126,7 +126,7 @@ def numpysave(a,iname):
 	i.save_render(iname)
 
 def numpytoimage(a,iname):
-	t=time.time()
+	
 	print('numpy to image',iname)
 	t=time.time()
 	print(a.shape[0],a.shape[1])
@@ -478,19 +478,21 @@ def imageEdgeSearch_online(o,ar,zimage):#search edges for pencil strategy, anoth
 
 def simCutterSpot(xs,ys,z,cutterArray, si, getvolume = False):	
 	'''simulates a cutter cutting into stock, taking away the volume, and optionally returning the volume that has been milled. This is now used for feedrate tweaking.'''
+	#xs=int(xs)
+	#ys=int(ys)
 	m=int(cutterArray.shape[0]/2)
 	size=cutterArray.shape[0]
-	if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :#whole cutter in image
+	if xs>m and xs<si.shape[0]-m and ys>m and ys<si.shape[1]-m :#whole cutter in image there 
 		if getvolume:
 			volarray=si[xs-m:xs-m+size,ys-m:ys-m+size].copy()
 		si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+z)
 		if getvolume:
 			volarray=si[xs-m:xs-m+size,ys-m:ys-m+size]-volarray
 			vsum = abs(volarray.sum())
-			print(vsum)
+			#print(vsum)
 			return vsum
 	
-	elif xs>-m and xs< si.shape[0]+m and ys>-m and ys>si.shape[1]+m:#part of cutter in image, for extra large cutters
+	elif xs>-m and xs< si.shape[0]+m and ys>-m and ys<si.shape[1]+m:#part of cutter in image, for extra large cutters
 		
 		startx=max(0,xs-m)
 		starty=max(0,ys-m)
@@ -500,13 +502,14 @@ def simCutterSpot(xs,ys,z,cutterArray, si, getvolume = False):
 		castarty = max(0,m-ys)
 		caendx= min(size,si.shape[0]-xs+m)
 		caendy= min(size,si.shape[1]-ys+m)
+		#print(startx,endx,starty,endy,castartx,caendx,castarty, caendy)
 		if getvolume:
 			volarray=si[startx:endx,starty:endy].copy()
 		si[startx:endx,starty:endy]=numpy.minimum(si[startx:endx,starty:endy],cutterArray[castartx:caendx,castarty:caendy]+z)
 		if getvolume:
 			volarray=si[startx:endx,starty:endy]-volarray
 			vsum = abs(volarray.sum())
-			print(vsum)
+			#print(vsum)
 			return vsum
 		
 	return 0
@@ -517,7 +520,7 @@ def generateSimulationImage(name,operations,limits):
 	print(minx,miny,minz,maxx,maxy,maxz)
 	sx=maxx-minx
 	sy=maxy-miny
-	
+	t=time.time()
 	o=operations[0]#getting sim detail and others from first op.
 	simulation_detail=o.simulation_detail
 	borderwidth = o.borderwidth
@@ -567,6 +570,7 @@ def generateSimulationImage(name,operations,limits):
 		lasts=verts[1].co
 		perc=-1
 		vtotal=len(verts)
+		dropped=0
 		for i,vert in enumerate(verts):
 			if perc!=int(100*i/vtotal):
 				perc=int(100*i/vtotal)
@@ -576,30 +580,41 @@ def generateSimulationImage(name,operations,limits):
 			
 			if i>0:
 				volume = 0
-			
+				volume_partial = 0
 				s=vert.co
 				v=s-lasts
 				
 				l=v.length
-				if v.length>simulation_detail:
+				if lasts.z<o.max.z or s.z<o.max.z and not (v.x==0 and v.y==0 and v.z>0):#only simulate inside material, and exclude lift-ups
+					if (v.x==0 and v.y==0 and v.z<0):#if the cutter goes straight down, we don't have to interpolate.
+						pass;
+						
+					elif v.length>simulation_detail:# and not :
+						
+						
+						v.length=simulation_detail
+						lastxs=xs
+						lastys=ys
+						while v.length<l:
+							xs=int((lasts.x+v.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-m
+							ys=int((lasts.y+v.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-m
+							z=lasts.z+v.z
+							#print(z)
+							if lastxs!=xs or lastys!=ys:
+								volume_partial = simCutterSpot(xs,ys,z,cutterArray,si, o.do_simulation_feedrate)
+								if o.do_simulation_feedrate:
+									totalvolume+=volume
+									volume+=volume_partial
+								lastxs=xs
+								lastys=ys
+							else:
+								dropped+=1
+							v.length+=simulation_detail
+				
 					
-					
-					v.length=simulation_detail
-					while v.length<l:
-						xs=(lasts.x+v.x-minx)/simulation_detail+borderwidth+simulation_detail/2#-m
-						ys=(lasts.y+v.y-miny)/simulation_detail+borderwidth+simulation_detail/2#-m
-						z=lasts.z+v.z
-						#print(z)
-						volume_partial = simCutterSpot(xs,ys,z,cutterArray,si, o.do_simulation_feedrate)
-						if o.do_simulation_feedrate:
-							totalvolume+=volume
-							volume+=volume_partial
-						v.length+=simulation_detail
-			
-			
-				xs=(s.x-minx)/simulation_detail+borderwidth+simulation_detail/2#-m
-				ys=(s.y-miny)/simulation_detail+borderwidth+simulation_detail/2#-m
-				volume_partial = simCutterSpot(xs,ys,s.z,cutterArray,si, o.do_simulation_feedrate)
+					xs=int((s.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-m
+					ys=int((s.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-m
+					volume_partial = simCutterSpot(xs,ys,s.z,cutterArray,si, o.do_simulation_feedrate)
 				if o.do_simulation_feedrate:#compute volumes and write data into shapekey.
 					volume+=volume_partial
 					totalvolume+=volume
@@ -612,13 +627,12 @@ def generateSimulationImage(name,operations,limits):
 						shapek.data[i].co.y=shapek.data[i-1].co.y
 					shapek.data[i].co.x = shapek.data[i-1].co.x + l*0.04
 					shapek.data[i].co.z = 0
-					
-				
-				#if xs>m+1 and xs<si.shape[0]-m-1 and ys>m+1 and ys<si.shape[1]-m-1 :
-				#	si[xs-m:xs-m+size,ys-m:ys-m+size]=numpy.minimum(si[xs-m:xs-m+size,ys-m:ys-m+size],cutterArray+s.z)
-					
+										
 				lasts=s
-		
+			
+			
+			
+		print('dropped '+str(dropped))
 		if o.do_simulation_feedrate:#smoothing ,but only backward!
 			xcoef = shapek.data[len(shapek.data)-1].co.x/len(shapek.data)
 			for a in range(0,10):
@@ -677,6 +691,9 @@ def generateSimulationImage(name,operations,limits):
 	iname=cp+'_sim.exr'
 	inamebase=bpy.path.basename(iname)
 	print(si.shape[0],si.shape[1])
+	#print(t)
+	
+	print('simulation done in %f seconds' % (time.time()-t))
 	i=numpysave(si,iname)
 		
 	
@@ -1508,6 +1525,9 @@ def getResolution(o):
 
 	resx=ceil(sx/o.pixsize)+2*o.borderwidth
 	resy=ceil(sy/o.pixsize)+2*o.borderwidth
+
+#def renderZbuffer():
+
 #this basically renders blender zbuffer and makes it accessible by saving & loading it again.
 #that's because blender doesn't allow accessing pixels in render :(
 def renderSampleImage(o):
