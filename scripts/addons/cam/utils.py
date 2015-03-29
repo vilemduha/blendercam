@@ -810,7 +810,7 @@ def doSimulation(name,operations):
 	for o in operations:
 		getOperationSources(o)
 	limits = getBoundsMultiple(operations)#this is here because some background computed operations still didn't have bounds data
-	i=image_utils.generateSimulationImage(name,operations,limits)
+	i=image_utils.generateSimulationImage(operations,limits)
 	cp=getCachePath(operations[0])[:-len(operations[0].name)]+name
 	iname=cp+'_sim.exr'
 	
