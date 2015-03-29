@@ -811,6 +811,11 @@ def doSimulation(name,operations):
 		getOperationSources(o)
 	limits = getBoundsMultiple(operations)#this is here because some background computed operations still didn't have bounds data
 	i=image_utils.generateSimulationImage(name,operations,limits)
+	cp=getCachePath(operations[0])[:-len(operations[0].name)]+name
+	iname=cp+'_sim.exr'
+	
+	numpysave(i,iname)
+	i=bpy.data.images.load(iname)
 	createSimulationObject(name,operations,i)
 
 def extendChunks5axis(chunks,o):
@@ -2516,6 +2521,8 @@ def getPath3axis(context,operation):
 			layerstepinc+=1
 			slicechunks=[]
 			z=o.minz+h*o.slice_detail
+			if h==0:
+				z+=0.0000001# if people do mill flat areas, this helps to reach those... otherwise first layer would actually be one slicelevel above min z.
 			#print(z)
 			#sliceimage=o.offset_image>z
 			islice=o.offset_image>z
@@ -2663,7 +2670,7 @@ def getPath3axis(context,operation):
 			#project chunks in between
 			
 			chunks.extend(slicechunks)
-		#chunks=sortChunks(chunks)
+		chunks=sortChunks(chunks,o)
 		if topdown:
 			chunks.reverse()
 			'''

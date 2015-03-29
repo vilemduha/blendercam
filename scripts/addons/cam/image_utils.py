@@ -513,6 +513,7 @@ def simCutterSpot(xs,ys,z,cutterArray, si, getvolume = False):
 			return vsum
 		
 	return 0
+
 	
 def generateSimulationImage(name,operations,limits):
 	
@@ -571,6 +572,10 @@ def generateSimulationImage(name,operations,limits):
 		perc=-1
 		vtotal=len(verts)
 		dropped=0
+		
+		xs=0
+		ys=0
+		
 		for i,vert in enumerate(verts):
 			if perc!=int(100*i/vtotal):
 				perc=int(100*i/vtotal)
@@ -585,7 +590,7 @@ def generateSimulationImage(name,operations,limits):
 				v=s-lasts
 				
 				l=v.length
-				if lasts.z<o.max.z or s.z<o.max.z and not (v.x==0 and v.y==0 and v.z>0):#only simulate inside material, and exclude lift-ups
+				if (lasts.z<maxz or s.z<maxz) and not (v.x==0 and v.y==0 and v.z>0):#only simulate inside material, and exclude lift-ups
 					if (v.x==0 and v.y==0 and v.z<0):#if the cutter goes straight down, we don't have to interpolate.
 						pass;
 						
@@ -684,7 +689,7 @@ def generateSimulationImage(name,operations,limits):
 				
 	o=operations[0]
 	si=si[borderwidth:-borderwidth,borderwidth:-borderwidth]
-	si+=-o.min.z
+	si+=-minz
 	
 	
 	cp=getCachePath(o)[:-len(o.name)]+name
@@ -694,17 +699,7 @@ def generateSimulationImage(name,operations,limits):
 	#print(t)
 	
 	print('simulation done in %f seconds' % (time.time()-t))
-	i=numpysave(si,iname)
-		
-	
-	
-	#if inamebase in bpy.data.images:
-	#	i=bpy.data.images[inamebase]
-	#	i.reload()
-	#else:
-	i=bpy.data.images.load(iname)
-	return i
-
+	return si
 	
 def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm. started another thing below.
 	MAX_BEND=0.1#in radians...#TODO: support operation chains ;)
