@@ -26,7 +26,9 @@ from mathutils import *
 from bpy_extras.object_utils import object_data_add
 from bpy.props import *
 import bl_operators
-from bpy.types import Menu, Operator, UIList
+from bpy.types import Menu, Operator, UIList, AddonPreferences
+
+
 #from . import patterns
 #from . import chunk_operations
 from cam import ui, ops,utils, simple,polygon_utils_cam#, post_processors
@@ -60,6 +62,24 @@ def updateMachine(self,context):
 def updateMaterial(self,context):
 	print('update material')
 	utils.addMaterialAreaObject()
+
+
+class CamAddonPreferences(AddonPreferences):
+    # this must match the addon name, use '__package__'
+    # when defining this in a submodule of a python package.
+    bl_idname = __package__
+
+    experimental = BoolProperty(
+            name="Show experimental features",
+            default=False,
+            )
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="Use experimental features when you want to help development of Blender CAM:")
+        
+        layout.prop(self, "experimental")
+
 
 class machineSettings(bpy.types.PropertyGroup):
 	'''stores all data for machines'''
@@ -226,6 +246,29 @@ def updateRest(o,context):
 		#o.parallel_step_back = False
 	o.changed=True
 
+def getStrategyList(scene, context):
+	use_experimental=bpy.context.user_preferences.addons['cam'].preferences.experimental
+	items =[
+			('CUTOUT','Profile(Cutout)', 'Cut the silhouete with offset'),
+			('POCKET','Pocket', 'Pocket operation'),
+			('DRILL','Drill', 'Drill operation'),
+			('PARALLEL','Parallel', 'Parallel lines on any angle'),
+			('CROSS','Cross', 'Cross paths'),
+			('BLOCK','Block', 'Block path'),
+			('SPIRAL','Spiral', 'Spiral path'),
+			('CIRCLES','Circles', 'Circles path'),
+			('OUTLINEFILL','Outline Fill', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
+			('CARVE','Carve', 'Pocket operation')
+			]
+	if use_experimental:
+		items.extend([('WATERLINE','Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
+			('CURVE','Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
+			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
+			('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
+			('MEDIAL_AXIS','Medial axis - EXPERIMENTAL', 'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke '),
+			('PROJECTED_CURVE','Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')])
+	return items
+	
 class camOperation(bpy.types.PropertyGroup):
 	
 	name = bpy.props.StringProperty(name="Operation Name", default="Operation", update = updateRest)
@@ -261,27 +304,10 @@ class camOperation(bpy.types.PropertyGroup):
 		description='How many axes will be used for the operation',
 		default='3', update = updateStrategy)
 	strategy = EnumProperty(name='Strategy',
-		items=(
-			('PARALLEL','Parallel', 'Parallel lines on any angle'),
-			('CROSS','Cross', 'Cross paths'),
-			('BLOCK','Block', 'Block path'),
-			('SPIRAL','Spiral', 'Spiral path'),
-			('CIRCLES','Circles', 'Circles path'),
-			('WATERLINE','Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
-			('OUTLINEFILL','Outline Fill', 'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
-			('CUTOUT','Profile(Cutout)', 'Cut the silhouete with offset'),
-			('POCKET','Pocket', 'Pocket operation'),
-			('CARVE','Carve', 'Pocket operation'),
-			('CURVE','Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
-			('PENCIL','Pencil - EXPERIMENTAL', 'Pencil operation - detects negative corners in the model and mills only those.'),
-			('DRILL','Drill', 'Drill operation'),
-			('CRAZY','Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
-			('MEDIAL_AXIS','Medial axis - EXPERIMENTAL', 'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke '),
-			('PROJECTED_CURVE','Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')
-			),
+		items=getStrategyList,
 		description='Strategy',
-		default='CUTOUT',
 		update = updateStrategy)
+		
 	strategy4axis = EnumProperty(name='4 axis Strategy',
 		items=(
 			('PARALLELR','Parallel around 1st rotary axis', 'Parallel lines around first rotary axis'),
@@ -633,6 +659,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	opReference,
 	camChain,
 	machineSettings,
+	CamAddonPreferences,
 	
 	ui.CAM_CHAINS_Panel,
 	ui.CAM_OPERATIONS_Panel,

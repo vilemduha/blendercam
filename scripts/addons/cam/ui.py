@@ -4,7 +4,7 @@ from bpy.types import UIList
 from cam import simple
 from cam.simple import *
 
-EXPERIMENTAL=True#False
+#EXPERIMENTAL=True#False
 
 
 		
@@ -343,7 +343,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 	def draw(self, context):
 		layout = self.layout
 		scene=bpy.context.scene
-		
+		use_experimental=bpy.context.user_preferences.addons['cam'].preferences.experimental
 			
 		row = layout.row() 
 		if len(scene.cam_operations)==0:
@@ -351,7 +351,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 		if len(scene.cam_operations)>0:
 			ao=scene.cam_operations[scene.cam_active_operation]
 			if ao.valid:
-				if EXPERIMENTAL:
+				if use_experimental:
 					layout.prop(ao,'machine_axes')
 				if ao.machine_axes=='3':
 					layout.prop(ao,'strategy')
@@ -667,7 +667,7 @@ class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
 		layout.operator("object.cam_slice_objects")
 		layout.prop(settings,'slice_distance')
 		layout.prop(settings,'indexes')
-		
+
 #panel containing all tools
 class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
 	bl_space_type = 'VIEW_3D'

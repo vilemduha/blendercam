@@ -153,6 +153,8 @@ def numpytoimage(a,iname):
 	i.pixels[:]=a[:]#this gives big speedup!	
 	print('\ntime '+str(time.time()-t))
 	return i
+	
+	
 
 
 def imagetonumpy(i):
@@ -515,10 +517,10 @@ def simCutterSpot(xs,ys,z,cutterArray, si, getvolume = False):
 	return 0
 
 	
-def generateSimulationImage(name,operations,limits):
+def generateSimulationImage(operations,limits):
 	
 	minx,miny,minz,maxx,maxy,maxz = limits
-	print(minx,miny,minz,maxx,maxy,maxz)
+	#print(minx,miny,minz,maxx,maxy,maxz)
 	sx=maxx-minx
 	sy=maxy-miny
 	t=time.time()
@@ -527,11 +529,12 @@ def generateSimulationImage(name,operations,limits):
 	borderwidth = o.borderwidth
 	resx=ceil(sx/simulation_detail)+2*borderwidth
 	resy=ceil(sy/simulation_detail)+2*borderwidth
-
+	#resx=ceil(sx/o.pixsize)+2*o.borderwidth
+	#resy=ceil(sy/o.pixsize)+2*o.borderwidth
 	#create array in which simulation happens, similar to an image to be painted in.
 	si=numpy.array((0.1),dtype=float)
 	si.resize(resx,resy)
-	si.fill(o.max.z)
+	si.fill(maxz)
 	
 	
 	for o in operations:
@@ -577,9 +580,9 @@ def generateSimulationImage(name,operations,limits):
 		ys=0
 		
 		for i,vert in enumerate(verts):
-			if perc!=int(100*i/vtotal):
-				perc=int(100*i/vtotal)
-				progress('simulation',perc)
+			#if perc!=int(100*i/vtotal):
+				#perc=int(100*i/vtotal)
+				#progress('simulation',perc)
 			#progress('simulation ',int(100*i/l))
 			
 			
@@ -637,7 +640,7 @@ def generateSimulationImage(name,operations,limits):
 			
 			
 			
-		print('dropped '+str(dropped))
+		#print('dropped '+str(dropped))
 		if o.do_simulation_feedrate:#smoothing ,but only backward!
 			xcoef = shapek.data[len(shapek.data)-1].co.x/len(shapek.data)
 			for a in range(0,10):
@@ -691,14 +694,9 @@ def generateSimulationImage(name,operations,limits):
 	si=si[borderwidth:-borderwidth,borderwidth:-borderwidth]
 	si+=-minz
 	
+	#print(si.shape[0],si.shape[1])
 	
-	cp=getCachePath(o)[:-len(o.name)]+name
-	iname=cp+'_sim.exr'
-	inamebase=bpy.path.basename(iname)
-	print(si.shape[0],si.shape[1])
-	#print(t)
-	
-	print('simulation done in %f seconds' % (time.time()-t))
+	#print('simulation done in %f seconds' % (time.time()-t))
 	return si
 	
 def crazyPath(o):#TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm. started another thing below.
