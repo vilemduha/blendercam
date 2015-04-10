@@ -456,7 +456,7 @@ class camOperation(bpy.types.PropertyGroup):
 	#optimization and performance
 	circle_detail = bpy.props.IntProperty(name="Detail of circles used for curve offsets", default=64, min=12, max=512, update = updateRest)
 	use_exact = bpy.props.BoolProperty(name="Use exact mode",description="Exact mode allows greater precision, but is slower with complex meshes", default=True, update = updateExact)
-	exact_subdivide_edges = bpy.props.BoolProperty(name="Auto subdivide long edges",description="This can avoid some collision issues when importing CAD models", default=True, update = updateExact)
+	exact_subdivide_edges = bpy.props.BoolProperty(name="Auto subdivide long edges",description="This can avoid some collision issues when importing CAD models", default=False, update = updateExact)
 	use_opencamlib = bpy.props.BoolProperty(name="Use OpenCAMLib",description="Use OpenCAMLib to sample paths or get waterline shape", default=False, update = updateOpencamlib)
 	pixsize=bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.1,precision=PRECISION, unit="LENGTH", update = updateZbufferImage)
 	simulation_detail=bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0002, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateRest)

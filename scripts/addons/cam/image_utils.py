@@ -626,7 +626,10 @@ def generateSimulationImage(operations,limits):
 				if o.do_simulation_feedrate:#compute volumes and write data into shapekey.
 					volume+=volume_partial
 					totalvolume+=volume
-					load = volume/l
+					if l>0:
+						load = volume/l
+					else:
+						load=0
 					
 					#this will show the shapekey as debugging graph and will use same data to estimate parts with heavy load
 					if l!=0:

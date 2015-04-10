@@ -823,7 +823,7 @@ def extendChunks5axis(chunks,o):
 	s=bpy.context.scene
 	m=s.cam_machine
 	s=bpy.context.scene
-	free_movement_height = o.max.z + o.free_movement_height
+	free_movement_height = o.free_movement_height# o.max.z + 
 	if m.use_position_definitions:# dhull
 		cutterstart=Vector((m.starting_position.x, m.starting_position.y ,max(o.max.z, m.starting_position.z)))#start point for casting
 	else:
@@ -852,7 +852,7 @@ def chunksToMesh(chunks,o):
 	m=s.cam_machine
 	verts=[]
 	
-	free_movement_height = o.max.z + o.free_movement_height
+	free_movement_height =  o.free_movement_height#o.max.z +
 	
 	if o.machine_axes=='3':
 		if m.use_position_definitions:
@@ -1087,7 +1087,7 @@ def exportGcodePath(filename,vertslist,operations):
 	processedops=0
 	for i,o in enumerate(operations):
 	
-		free_movement_height=o.max.z+o.free_movement_height
+		free_movement_height=o.free_movement_height#o.max.z+
 		
 		mesh=vertslist[i]
 		verts=mesh.vertices[:]
@@ -1451,7 +1451,25 @@ def connectChunksLow(chunks,o):
 		oclResampleChunks(o, chunks_to_resample)
 		
 	return connectedchunks
-			
+
+def getClosest(pos,chunks):
+	#ch=-1
+	mind=10000
+	d=100000000000
+	
+	for chtest in chunks:
+		cango=True
+		for child in chtest.children:# here was chtest.getNext==chtest, was doing recursion error and slowing down.
+			if child.sorted==False:
+				cango=False
+				break;
+		if cango:
+			d=chtest.dist(pos,o)
+			if d<mind:
+				ch=chtest
+				mind=d
+	return ch
+	
 def sortChunks(chunks,o):
 	if o.strategy!='WATERLINE':
 		progress('sorting paths')
@@ -1469,21 +1487,7 @@ def sortChunks(chunks,o):
 	while len(chunks)>0:
 		ch=None
 		if len(sortedchunks)==0 or len(lastch.parents)==0:#first chunk or when there are no parents -> parents come after children here...
-			#ch=-1
-			mind=10000
-			d=100000000000
-			
-			for chtest in chunks:
-				cango=True
-				for child in chtest.children:# here was chtest.getNext==chtest, was doing recursion error and slowing down.
-					if child.sorted==False:
-						cango=False
-						break;
-				if cango:
-					d=chtest.dist(pos,o)
-					if d<mind:
-						ch=chtest
-						mind=d
+			getClosest(pos,chunks)
 		elif len(lastch.parents)>0:# looks in parents for next candidate, recursively
 			for parent in lastch.parents:
 				ch=parent.getNext()
@@ -2695,7 +2699,8 @@ def getPath3axis(context,operation):
 			bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
 			bpy.ops.group.objects_remove_all()
 			ob=bpy.context.active_object
-			ob.data.dimensions='3D'
+			if ob.type=='CURVE':
+				ob.data.dimensions='3D'
 			try:
 				bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 				bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
@@ -2730,7 +2735,9 @@ def getPath3axis(context,operation):
 						aspect=(maxx-minx)/(maxy-miny)
 						if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
 							chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.minz)]))
-						
+			elif ob.type=='MESH':
+				for v in ob.data.vertices:
+					chunks.append(camPathChunk([(v.co.x+l.x,v.co.y+l.y,v.co.z+l.z)]))
 			delob(ob)#delete temporary object with applied transforms
 		print(chunks)
 		chunks=sortChunks(chunks,o)

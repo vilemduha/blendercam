@@ -114,14 +114,16 @@ class camPathChunk:
 				if d2<d1:
 					self.points.reverse()
 		
-	def getNext(self):
+	def getNext(self):#this should be deprecated after reworking sortchunks a bit
 		for child in self.children:
 			if child.sorted==False:
 				#unsortedchildren=True
 				return child.getNext()  
 		#self.unsortedchildren=False		
 		return self
+		
 	
+		
 	def getLength(self):
 		#computes length of the chunk - in 3d
 		self.length=0

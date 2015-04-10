@@ -385,10 +385,11 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.strategy=='CUTOUT':
 					layout.prop(ao,'cut_type')
 					#layout.prop(ao,'dist_between_paths')
-					layout.prop(ao,'outlines_count')
-					if ao.outlines_count>1:
-						layout.prop(ao,'dist_between_paths')
-						layout.prop(ao,'movement_insideout')
+					if use_experimental:
+						layout.prop(ao,'outlines_count')
+						if ao.outlines_count>1:
+							layout.prop(ao,'dist_between_paths')
+							layout.prop(ao,'movement_insideout')
 					layout.prop(ao,'dont_merge')
 					layout.prop(ao,'use_bridges')
 					if ao.use_bridges:
