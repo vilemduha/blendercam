@@ -1452,11 +1452,11 @@ def connectChunksLow(chunks,o):
 		
 	return connectedchunks
 
-def getClosest(pos,chunks):
+def getClosest(o,pos,chunks):
 	#ch=-1
 	mind=10000
 	d=100000000000
-	
+	ch=None
 	for chtest in chunks:
 		cango=True
 		for child in chtest.children:# here was chtest.getNext==chtest, was doing recursion error and slowing down.
@@ -1487,12 +1487,15 @@ def sortChunks(chunks,o):
 	while len(chunks)>0:
 		ch=None
 		if len(sortedchunks)==0 or len(lastch.parents)==0:#first chunk or when there are no parents -> parents come after children here...
-			getClosest(pos,chunks)
+			ch = getClosest(o,pos,chunks)
 		elif len(lastch.parents)>0:# looks in parents for next candidate, recursively
-			for parent in lastch.parents:
-				ch=parent.getNext()
-				break
-			
+			getClosest(o,pos,lastch.parents)
+			if ch==None:
+				ch = getClosest(o,pos,chunks)
+			#for parent in lastch.parents:
+			#	ch=parent.getNext()
+			#	break
+			#pass;
 		if ch!=None:#found next chunk, append it to list
 			ch.sorted=True
 			ch.adaptdist(pos,o)
@@ -2095,8 +2098,12 @@ def getPath3axis(context,operation):
 			
 	elif o.strategy=='CURVE':
 		pathSamples=[]
-		ob=bpy.data.objects[o.object_name]
-		pathSamples.extend(curveToChunks(ob))
+		getOperationSources(o)
+		if not o.onlycurves:
+			o.warnings+= 'at least one of assigned objects is not a curve'
+		#ob=bpy.data.objects[o.object_name]
+		for ob in o.objects:
+			pathSamples.extend(curveToChunks(ob))
 		pathSamples=sortChunks(pathSamples,o)#sort before sampling
 		pathSamples=chunksRefine(pathSamples,o)
 		
@@ -2106,6 +2113,8 @@ def getPath3axis(context,operation):
 				ch.points=nchunk.points
 				
 		chunksToMesh(pathSamples,o)
+		
+		
 		
 	if o.strategy=='PROJECTED_CURVE':
 		pathSamples=[]

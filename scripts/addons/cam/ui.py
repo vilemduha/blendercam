@@ -293,7 +293,10 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 					else:
 						layout.prop_search(ao, "source_image_name", bpy.data, "images")
 				else:
-					layout.prop_search(ao, "object_name", bpy.data, "objects")
+					if ao.geometry_source=='OBJECT':
+						layout.prop_search(ao, "object_name", bpy.data, "objects")
+					elif ao.geometry_source=='GROUP':
+						layout.prop_search(ao, "group_name", bpy.data, "groups")
 				
 				if ao.strategy=='CARVE' or ao.strategy=='PROJECTED_CURVE':
 					layout.prop_search(ao, "curve_object", bpy.data, "objects")

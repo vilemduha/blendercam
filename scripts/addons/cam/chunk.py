@@ -85,6 +85,7 @@ class camPathChunk:
 				return min(d1,d2)
 			else:
 				return dist2d(pos,self.points[0])
+				
 	def distStart(self,pos,o):
 		return dist2d(pos,self.points[0])
 		

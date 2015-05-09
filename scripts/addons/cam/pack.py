@@ -99,7 +99,7 @@ def packCurves():
 			p.shift(-x,-y)
 			p.rotate(-rot,0,0)
 			
-			if hits>=1 or (iter>10000 and hits>0):#here was originally more, but 90% of best solutions are still 1
+			if hits>=15 or (iter>10000 and hits>0):#here was originally more, but 90% of best solutions are still 1
 				placed=True
 				pf[3].location.x=best[0]
 				pf[3].location.y=best[1]
