@@ -689,6 +689,9 @@ def get_panels():#convenience function for bot register and unregister functions
 	ops.CamChainRemove,
 	ops.CamChainOperationAdd,
 	ops.CamChainOperationRemove,
+	ops.CamChainOperationUp,
+	ops.CamChainOperationDown,
+	
 	ops.CamOperationAdd,
 	ops.CamOperationCopy,
 	ops.CamOperationRemove,

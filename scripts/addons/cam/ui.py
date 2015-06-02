@@ -214,6 +214,9 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
 				col = row.column(align=True)
 				col.operator("scene.cam_chain_operation_add", icon='ZOOMIN', text="")
 				col.operator("scene.cam_chain_operation_remove",icon='ZOOMOUT', text="")
+				if len(chain.operations)>0:
+					col.operator("scene.cam_chain_operation_up",icon='TRIA_UP', text="")
+					col.operator("scene.cam_chain_operation_down",icon='TRIA_DOWN', text="")
 
 				if not chain.computing:
 					if chain.valid:

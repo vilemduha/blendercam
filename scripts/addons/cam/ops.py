@@ -388,7 +388,6 @@ class CamChainAdd(bpy.types.Operator):
 		chain.index=s.cam_active_chain
 		
 		return {'FINISHED'}
-
 		
 class CamChainRemove(bpy.types.Operator):
 	'''Remove  CAM chain'''
@@ -426,6 +425,44 @@ class CamChainOperationAdd(bpy.types.Operator):
 		chain.active_operation+=1
 		chain.operations[-1].name=s.cam_operations[s.cam_active_operation].name
 		return {'FINISHED'}
+
+class CamChainOperationUp(bpy.types.Operator):
+	'''Add operation to chain'''
+	bl_idname = "scene.cam_chain_operation_up"
+	bl_label = "Add operation to chain"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	@classmethod
+	def poll(cls, context):
+		return context.scene is not None
+
+	def execute(self, context):
+		s=bpy.context.scene
+		chain=s.cam_chains[s.cam_active_chain]
+		a=chain.active_operation
+		if a>0:
+			chain.operations.move(a,a-1)
+			chain.active_operation-=1
+		return {'FINISHED'}
+
+class CamChainOperationDown(bpy.types.Operator):
+	'''Add operation to chain'''
+	bl_idname = "scene.cam_chain_operation_down"
+	bl_label = "Add operation to chain"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	@classmethod
+	def poll(cls, context):
+		return context.scene is not None
+
+	def execute(self, context):
+		s=bpy.context.scene
+		chain=s.cam_chains[s.cam_active_chain]
+		a=chain.active_operation
+		if a<len(chain.operations)-1:
+			chain.operations.move(a,a+1)
+			chain.active_operation+=1
+		return {'FINISHED'}		
 		
 class CamChainOperationRemove(bpy.types.Operator):
 	'''Remove operation from chain'''
