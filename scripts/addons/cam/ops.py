@@ -142,7 +142,37 @@ class PathsBackground(bpy.types.Operator):
 		bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes.append([readthread,tcom])
 		return {'FINISHED'}
 		
+class KillPathsBackground(bpy.types.Operator):
+	'''calculate CAM paths in background. File has to be saved before.'''
+	bl_idname = "object.kill_calculate_cam_paths_background"
+	bl_label = "Kill background computation of an operation"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	#processes=[]
+	
+	#@classmethod
+	#def poll(cls, context):
+	#	return context.active_object is not None
+	
+	def execute(self, context):
+		s=bpy.context.scene
+		o=s.cam_operations[s.cam_active_operation]
+		self.operation=o
 		
+		
+		if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__,'cam_processes'):
+			processes=bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes
+			for p in processes:
+				#proc=p[1].proc
+				#readthread=p[0]
+				tcom=p[1]
+				if tcom.opname==o.name:
+					processes.remove(p)
+					tcom.proc.kill()
+					o.computing=False
+				
+		return {'FINISHED'}
+				
 
 		
 class CalculatePath(bpy.types.Operator):

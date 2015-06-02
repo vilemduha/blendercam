@@ -677,6 +677,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ui.VIEW3D_PT_tools_curvetools,
 	
 	ops.PathsBackground,
+	ops.KillPathsBackground,
 	ops.CalculatePath,
 	ops.PathsChain,
 	ops.PathsAll,

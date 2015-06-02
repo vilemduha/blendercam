@@ -278,7 +278,9 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 					else:
 						layout.label("operation invalid, can't compute")
 				else:
-					layout.label('operation is currently computing')
+					row=layout.row(align=True)
+					row.label('computing')
+					row.operator('object.kill_calculate_cam_paths_background', text="", icon='CANCEL')
 					#layout.prop(ao,'computing')
 				
 				layout.prop(ao,'name')
