@@ -101,10 +101,10 @@ def timer_update(context):
 			o.outtext=tcom.lasttext#changes
 			#text=text+('# %s %s #' % (tcom.opname,tcom.lasttext))#CHANGES
 	#s.cam_text=text#changes
-		
-	for area in bpy.context.screen.areas:
-		if area.type == 'PROPERTIES':
-			area.tag_redraw()
+	if bpy.context.screen!=None:
+		for area in bpy.context.screen.areas:
+			if area.type == 'PROPERTIES':
+				area.tag_redraw()
 			
 class PathsBackground(bpy.types.Operator):
 	'''calculate CAM paths in background. File has to be saved before.'''
