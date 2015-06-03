@@ -2683,7 +2683,7 @@ def getPath3axis(context,operation):
 			#project chunks in between
 			
 			chunks.extend(slicechunks)
-		chunks=sortChunks(chunks,o)
+		#chunks=sortChunks(chunks,o)
 		if topdown:
 			chunks.reverse()
 			'''
