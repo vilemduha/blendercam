@@ -97,7 +97,7 @@ def getLength(p,i=None):#i is contour index
 	return length
 	
 def polyRemoveDoubles(p,optimize_threshold):
-	
+	optimize_threshold*=0.000001
 	#vecs=[]
 	pnew=Polygon.Polygon()
 	soptions=['distance','distance',0.0,5,optimize_threshold,5,optimize_threshold]
@@ -125,6 +125,7 @@ def polyRemoveDoubles(p,optimize_threshold):
 	
 def outlinePoly(p,r,circle_detail,optimize,optimize_threshold,offset = True):
 	'''offsets or insets polygon by radius'''
+	optimize_threshold*=0.000001
 	#t=Polygon.getTolerance()
 	#e=0.0001
 	#Polygon.setTolerance(e)

@@ -1760,7 +1760,7 @@ def getObjectOutline(radius,o,Offset):#FIXME: make this one operation independen
 		
 		
 		if radius>0:
-			p=outlinePoly(p,radius,o.circle_detail,o.optimize,o.optimize_threshold,Offset)
+			p=outlinePoly(p,radius,o.circle_detail,o.optimize,o.optimize_threshold*0.000001,Offset)
 					
 		if o.dont_merge:
 			for ci in range(0,len(p)):

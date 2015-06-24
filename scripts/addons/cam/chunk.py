@@ -458,7 +458,7 @@ def optimizeChunk(chunk,operation):
 			#vmiddle=Vector()
 			#v1=Vector()
 			#v2=Vector()
-			if not compare(chunk.points[-1],points[vi+1],points[vi],operation.optimize_threshold):
+			if not compare(chunk.points[-1],points[vi+1],points[vi],operation.optimize_threshold*0.000001):
 				if naxispoints:
 					chunk.append(points[vi],startpoints[vi],endpoints[vi],rotations[vi])
 				else:
