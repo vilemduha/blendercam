@@ -2021,7 +2021,8 @@ def getPath3axis(context,operation):
 				
 					
 			chunksFromCurve.extend(polyToChunks(p,-1))
-		
+			if o.outlines_count>1 and o.movement_insideout=='OUTSIDEIN':
+				chunksFromCurve.reverse()
 		#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
 		chunksFromCurve=limitChunks(chunksFromCurve,o)
 		parentChildPoly(chunksFromCurve,chunksFromCurve,o)
