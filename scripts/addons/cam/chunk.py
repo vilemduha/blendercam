@@ -115,14 +115,45 @@ class camPathChunk:
 				if d2<d1:
 					self.points.reverse()
 		
-	def getNext(self):#this should be deprecated after reworking sortchunks a bit
-		for child in self.children:
-			if child.sorted==False:
-				#unsortedchildren=True
-				return child.getNext()  
+	#replaced with getNextClosest
+	#def getNext(self):#this should be deprecated after reworking sortchunks a bit
+	#	for child in self.children:
+	#		if child.sorted==False:
+	#			#unsortedchildren=True
+	#			return child.getNext()  
 		#self.unsortedchildren=False		
-		return self
+	#	return self
+	
+	def getNextClosest(self,o,pos):#this should be deprecated after reworking sortchunks a bit
+		mind=100000000000
 		
+		self.cango=False
+		closest=None
+		testlist=[]
+		testlist.extend(self.children)
+		ch=None
+		while len(testlist)>0:
+			chtest=testlist.pop()
+			if chtest.sorted==False:
+				self.cango=False
+				cango=True
+				
+				for child in chtest.children:
+					if child.sorted==False:
+						testlist.append(child)
+					cango=False
+					
+				if cango:
+					d=chtest.dist(pos,o)
+					if d<mind:
+						ch=chtest
+						mind=d
+		if ch!=None:
+			print('found some')
+			return ch
+		#self.unsortedchildren=False		
+		print('returning orig')
+		return self	
 	
 		
 	def getLength(self):
@@ -701,6 +732,7 @@ def restoreVisibility(o,storage):
 
 def meshFromCurve(o):
 	activate(o)
+	#print(o.name,o)
 	storage = makeVisible(o)#this is here because all of this doesn't work when object is not visible or on current layer
 	bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
 	bpy.ops.group.objects_remove_all()

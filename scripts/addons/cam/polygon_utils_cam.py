@@ -232,11 +232,12 @@ def polyToMesh(name,p,z):
 		vi0=vi
 		ei=0
 		clen=p.nPoints(ci)
-		for v in c:
+		for vii in range(0,clen-1):#TODO CHECK IF THIS WORKS, IS THERE ALWAYS ONE EXTRA POINT THAT COMES OUT OF NOWHERE?
+			v=c[vii]#same as vi...?
 			verts.append((v[0],v[1],z))
 			if ei>0:
 				edges.append((vi-1,vi))
-			if ei==clen-1:
+			if ei==clen-2:#check here too...
 				edges.append((vi,vi0))
 			vi+=1 
 			ei+=1

@@ -1245,6 +1245,8 @@ def exportGcodePath(filename,vertslist,operations):
 				findex+=1
 				c.file_close()
 				c=startNewFile()
+				c.spindle(o.spindle_rpm,spdir_clockwise)
+				c.flush_nc()
 				c.comment('Tool change - D = %s type %s flutes %s' % ( strInUnits(o.cutter_diameter,4),o.cutter_type, o.cutter_flutes))
 				c.tool_change(o.cutter_id)
 				c.spindle(o.spindle_rpm,spdir_clockwise)
@@ -1489,16 +1491,23 @@ def sortChunks(chunks,o):
 		if len(sortedchunks)==0 or len(lastch.parents)==0:#first chunk or when there are no parents -> parents come after children here...
 			ch = getClosest(o,pos,chunks)
 		elif len(lastch.parents)>0:# looks in parents for next candidate, recursively
-			getClosest(o,pos,lastch.parents)
+			#get siblings here
+			#siblings=[]
+			#for chs in lastch.parents:
+			#	siblings.extend(chs.children)
+			#ch = getClosest(o,pos,siblings)
+			#if ch==None:
+			#	ch = getClosest(o,pos,chunks)
+			for parent in lastch.parents:
+				ch=parent.getNextClosest(o,pos)
 			if ch==None:
 				ch = getClosest(o,pos,chunks)
-			#for parent in lastch.parents:
-			#	ch=parent.getNext()
 			#	break
 			#pass;
 		if ch!=None:#found next chunk, append it to list
 			ch.sorted=True
 			ch.adaptdist(pos,o)
+			print(ch)
 			chunks.remove(ch)
 			sortedchunks.append(ch)
 			lastch=ch
