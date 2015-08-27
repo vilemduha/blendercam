@@ -629,9 +629,9 @@ class CamOperationMove(bpy.types.Operator):
 		return {'FINISHED'}
 
 		
-#move cam operation in the list up or down
+
 class CamOrientationAdd(bpy.types.Operator):
-	'''Add orientation to cam operation'''
+	'''Add orientation to cam operation, for multiaxis operations'''
 	bl_idname = "scene.cam_orientation_add"
 	bl_label = "Add orientation"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -646,7 +646,6 @@ class CamOrientationAdd(bpy.types.Operator):
 		s=bpy.context.scene
 		a=s.cam_active_operation
 		o=s.cam_operations[a]
-		cops=bpy.context.scene.cam_operations
 		gname=o.name+'_orientations'
 		bpy.ops.object.empty_add(type='ARROWS')
 		
@@ -660,6 +659,26 @@ class CamOrientationAdd(bpy.types.Operator):
 			bpy.data.groups[gname].objects.link(oriob)
 		oriob.name='ori_'+o.name+'.'+str(len(bpy.data.groups[gname].objects)).zfill(3)
 
+		return {'FINISHED'}
+		
+
+class CamBridgeAdd(bpy.types.Operator):
+	'''Add orientation to cam operation, for multiaxis operations'''
+	bl_idname = "scene.cam_bridge_add"
+	bl_label = "Add bridge"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+		
+	@classmethod
+	def poll(cls, context):
+		return context.scene is not None
+
+	def execute(self, context):
+		#main(context)
+		s=bpy.context.scene
+		a=s.cam_active_operation
+		o=s.cam_operations[a]
+		utils.addBridge(o)
 		return {'FINISHED'}
 		
 		

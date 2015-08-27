@@ -1904,9 +1904,67 @@ def addMaterialAreaObject():
 	else:
 		bpy.context.scene.objects.active=None		
 
+
+def getContainer():
+	s=bpy.context.scene
+	if s.objects.get('CAM_OBJECTS')==None:
+		bpy.ops.object.empty_add(type='PLAIN_AXES', view_align=False)
+		container=bpy.context.active_object
+		container.name='CAM_OBJECTS'
+		container.location=[0,0,0]
+		container.hide=True
+	else:
+		container=s.objects['CAM_OBJECTS']
+	
+	return container
+
+
+def getSnappingObject(o):
+	s=bpy.context.scene
+	
+	bproj_name='cam_snap_object_'+o.name
+	
+	if s.objects.get(bproj_name)!=None:
+		ob=s.objects[bproj_name]
+	else:
+		ob=s.objects['BezierCircle.003']
+		activate(ob)
+		bpy.ops.object.duplicate()
+		ob=bpy.context.active_object
+		#should do with ALL objects from the operation sources, and join them!
+		ob.name=bproj_name
+		#ensure the object is 'flat'
+		ob.data.dimensions = '2D'
+		ob.data.dimensions = '3D'
+		ob.location.z=0
+		ob.data.extrude=0.01
+		bpy.ops.object.convert(target='MESH')
+		bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+		ob.parent=getContainer()
+		ob.hide=True
+	return ob
+
+def addBridge(o):	
+	container=getContainer()	
+	bpy.ops.object.empty_add(type='CUBE',location=[0,0,0], view_align=False)
+	b=bpy.context.active_object
+	b.name='bridge_'+o.name
+	b.rotation_euler.x=math.pi/2
+	b.empty_draw_size=0.01
+	b.lock_location[2]=True
+	b.parent=container
+	ob=getSnappingObject(o)
+	activate(b)
+	bpy.ops.object.constraint_add(type='SHRINKWRAP')
+	b.constraints[-1].target=ob
+	addToGroup(b,'cam_bridges_' + o.name )
+		
+		
 def getBridges(p,o):
 	# this function finds positions of the bridges, and returns these.
 	pass;
+	
+	
 def addBridges(ch,o,z):
 	#this functions adds Bridges to the finished chunks.
 	ch.getLength()
