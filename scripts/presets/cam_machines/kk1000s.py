@@ -1,5 +1,5 @@
 import bpy
-d = bpy.context.scene.cam_machine[0]
+d = bpy.context.scene.cam_machine
 s = bpy.context.scene.unit_settings
 
 d.exporter = 'MACH3'
