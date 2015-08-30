@@ -101,10 +101,16 @@ def timer_update(context):
 			o.outtext=tcom.lasttext#changes
 			#text=text+('# %s %s #' % (tcom.opname,tcom.lasttext))#CHANGES
 	#s.cam_text=text#changes
-	if bpy.context.screen!=None:
-		for area in bpy.context.screen.areas:
-			if area.type == 'PROPERTIES':
-				area.tag_redraw()
+	
+	# commented out by NFZ: asking every property area to redraw
+	# causes my netbook to come to a crawl and cpu overheats
+	# need to find a better way of doing this
+	# doesn't effect normal path calculation when commented out
+	# maybe this should only be enabled when when background calc selected
+	#if bpy.context.screen!=None:
+	#	for area in bpy.context.screen.areas:
+	#		if area.type == 'PROPERTIES':
+	#			area.tag_redraw()
 			
 class PathsBackground(bpy.types.Operator):
 	'''calculate CAM paths in background. File has to be saved before.'''
@@ -143,7 +149,7 @@ class PathsBackground(bpy.types.Operator):
 		return {'FINISHED'}
 		
 class KillPathsBackground(bpy.types.Operator):
-	'''calculate CAM paths in background. File has to be saved before.'''
+	'''Remove CAM path processes in background.'''
 	bl_idname = "object.kill_calculate_cam_paths_background"
 	bl_label = "Kill background computation of an operation"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -778,4 +784,3 @@ class CamObjectSilhouete(bpy.types.Operator):
 		bpy.context.scene.cursor_location=ob.location
 		bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
 		return {'FINISHED'}
-		
