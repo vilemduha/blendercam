@@ -152,8 +152,8 @@ class camPathChunk:
 			print('found some')
 			return ch
 		#self.unsortedchildren=False		
-		print('returning orig')
-		return self	
+		print('returning none')
+		return None	
 	
 		
 	def getLength(self):

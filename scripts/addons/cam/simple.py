@@ -77,6 +77,14 @@ def dupliob(o,pos):
 	bpy.ops.rigidbody.object_remove()
 	o.location=pos
 
+def addToGroup(ob,groupname):
+	activate(ob)
+	if bpy.data.groups.get(groupname)==None:
+		bpy.ops.group.create(name = groupname)
+	else:
+		bpy.ops.object.group_link(group=groupname)
+
+	
 def compare(v1,v2,vmiddle,e):
 	'''comparison for optimisation of paths'''
 	#e=0.0001
