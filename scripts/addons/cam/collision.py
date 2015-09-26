@@ -54,7 +54,8 @@ def getCutterBullet(o):
 		scale=o.cutter_diameter/cutob.dimensions.x
 		cutter.scale*=BULLET_SCALE*scale
 		bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-		bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
+		bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN',center = 'BOUNDS')
+		
 		#print(cutter.dimensions,scale)
 		bpy.ops.rigidbody.object_add(type='ACTIVE')
 		cutter.rigid_body.collision_shape = 'CONVEX_HULL'
