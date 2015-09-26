@@ -453,6 +453,7 @@ class camOperation(bpy.types.PropertyGroup):
 	movement_insideout = EnumProperty(name='Direction', items=(('INSIDEOUT','Inside out', 'a'),('OUTSIDEIN', 'Outside in', 'a')),description='approach to the piece',default='INSIDEOUT', update = updateRest)
 	parallel_step_back =  bpy.props.BoolProperty(name="Parallel step back", description='For roughing and finishing in one pass: mills material in climb mode, then steps back and goes between 2 last chunks back', default=False, update = updateRest)
 	stay_low = bpy.props.BoolProperty(name="Stay low if possible", default=True, update = updateRest)
+	merge_dist = bpy.props.FloatProperty(name="Merge distance - EXPERIMENTAL", default=0.0, min=0.0000, max=0.1,precision=PRECISION, unit="LENGTH", update = updateRest)
 	#optimization and performance
 	circle_detail = bpy.props.IntProperty(name="Detail of circles used for curve offsets", default=64, min=12, max=512, update = updateRest)
 	use_exact = bpy.props.BoolProperty(name="Use exact mode",description="Exact mode allows greater precision, but is slower with complex meshes", default=True, update = updateExact)

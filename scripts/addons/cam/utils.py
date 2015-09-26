@@ -1423,7 +1423,9 @@ def connectChunksLow(chunks,o):
 	
 	if o.parallel_step_back:
 		mergedist*=2
-		
+	if o.merge_dist>0:
+		mergedist=o.merge_dist
+	#mergedist=10
 	lastch=None
 	i=len(chunks)
 	pos=(0,0,0)
@@ -1927,7 +1929,8 @@ def getSnappingObject(o):
 	if s.objects.get(bproj_name)!=None:
 		ob=s.objects[bproj_name]
 	else:
-		ob=s.objects['BezierCircle.003']
+		getOperationSources(o)
+		ob=o.objects[0]
 		activate(ob)
 		bpy.ops.object.duplicate()
 		ob=bpy.context.active_object
@@ -1962,88 +1965,96 @@ def addBridge(o):
 		
 def getBridges(p,o):
 	# this function finds positions of the bridges, and returns these.
-	pass;
+	g=bpy.data.groups.get('cam_bridges_'+o.name)
+	bridges=[]
+	if g!=None:
+		for o in g.objects:
+			pos=o.matrix_world.to_translation()
+			pos=pos[0],pos[1]
+			bridges.append(pos)
+	return bridges
 	
 	
-def addBridges(ch,o,z):
-	#this functions adds Bridges to the finished chunks.
-	ch.getLength()
-	n=int(ch.length/o.bridges_max_distance)
-	bpc=o.bridges_per_curve
-	if o.bridges_width*bpc>ch.length/2:
-		bpc=math.floor(ch.length/(2*o.bridges_width))
-	n = max(n,bpc)
-	if n>0:
-		dist=ch.length/n
-		pos=[]
-		for i in range(0,n):
-			pos.append([i*dist+0.00001+dist/2.0,i*dist+0.00001+dist/2.0+o.bridges_width+o.cutter_diameter])
-		dist=0
-		bridgeheight=min(0,o.min.z+o.bridges_height)
-		inbridge=False
-		posi=0
-		insertpoints=[]
-		changepoints=[]
-		vi=0
-		while vi<len(ch.points):
-			v1=ch.points[vi]
-			v2=Vector(v1)#this is for case of last point and not closed chunk..
-			if ch.closed and vi==len(ch.points)-1:
-				v2=Vector(ch.points[0])
-			elif vi+1<len(ch.points):
-				v2=Vector(ch.points[vi+1])
-			v1=Vector(v1)
-			#if v1.z<bridgeheight or v2.z<bridgeheight:
-			v=v2-v1
-			dist+=v.length
-			
-			wasinbridge=inbridge
-			if not inbridge and posi<len(pos) and pos[posi][0]<dist:#detect start of bridge
+def addBridges(ch,o):
+	#this functions adds Bridges to the finished chunks. AUTOMATIC ONLY NOW!
+	if o.bridges_placement == 'AUTO':
+		ch.getLength()
+		n=int(ch.length/o.bridges_max_distance)
+		bpc=o.bridges_per_curve
+		if o.bridges_width*bpc>ch.length/2:
+			bpc=math.floor(ch.length/(2*o.bridges_width))
+		n = max(n,bpc)
+		if n>0:
+			dist=ch.length/n
+			pos=[]
+			for i in range(0,n):
+				pos.append([i*dist+0.00001+dist/2.0,i*dist+0.00001+dist/2.0+o.bridges_width+o.cutter_diameter])
+			dist=0
+			bridgeheight=min(0,o.min.z+o.bridges_height)
+			inbridge=False
+			posi=0
+			insertpoints=[]
+			changepoints=[]
+			vi=0
+			while vi<len(ch.points):
+				v1=ch.points[vi]
+				v2=Vector(v1)#this is for case of last point and not closed chunk..
+				if ch.closed and vi==len(ch.points)-1:
+					v2=Vector(ch.points[0])
+				elif vi+1<len(ch.points):
+					v2=Vector(ch.points[vi+1])
+				v1=Vector(v1)
+				#if v1.z<bridgeheight or v2.z<bridgeheight:
+				v=v2-v1
+				dist+=v.length
 				
-				ratio=(dist-pos[posi][0])/v.length
-				point1=v2-v*ratio#TODO: optimize this : how? what was meant by the initial comment?
-				point2=v2-v*ratio
-				if bridgeheight>point1.z:
-					point1.z=min(point1.z,bridgeheight)
-					point2.z=max(point2.z,bridgeheight)
-					#ch.points.insert(vi-1,point1)
-					#ch.points.insert(vi,point2)
-					insertpoints.append([vi+1,point1.to_tuple()])
-					insertpoints.append([vi+1,point2.to_tuple()])
-				inbridge=True
+				wasinbridge=inbridge
+				if not inbridge and posi<len(pos) and pos[posi][0]<dist:#detect start of bridge
+					
+					ratio=(dist-pos[posi][0])/v.length
+					point1=v2-v*ratio
+					point2=point1.copy()
+					if bridgeheight>point1.z:
+						point1.z=min(point1.z,bridgeheight)
+						point2.z=max(point2.z,bridgeheight)
+						#ch.points.insert(vi-1,point1)
+						#ch.points.insert(vi,point2)
+						insertpoints.append([vi+1,point1.to_tuple()])
+						insertpoints.append([vi+1,point2.to_tuple()])
+					inbridge=True
+					
+				if wasinbridge and inbridge:#still in bridge, raise the point up.#
+					changepoints.append([vi,(v1.x,v1.y,max(v1.z,bridgeheight))])
+					#ch.points[vi]=(v1.x,v1.y,max(v1.z,bridgeheight))
+					
+				if inbridge and pos[posi][1]<dist:#detect end of bridge
+					ratio=(dist-pos[posi][1])/v.length
+					point1=v2-v*ratio
+					point2=v2-v*ratio
+					if bridgeheight>point1.z:
+						point1.z=max(point1.z,bridgeheight)
+						point2.z=min(point2.z,bridgeheight)
+						#ch.points.insert(vi,point1)
+						#ch.points.insert(vi+1,point2)
+						#vi+=2
+						insertpoints.append([vi+1,point1.to_tuple()])
+						insertpoints.append([vi+1,point2.to_tuple()])
+					inbridge=False
+					posi+=1 
+					vi-=1
+					dist-=v.length
+				vi+=1
+					
 				
-			if wasinbridge and inbridge:#still in bridge, raise the point up.#
-				changepoints.append([vi,(v1.x,v1.y,max(v1.z,bridgeheight))])
-				#ch.points[vi]=(v1.x,v1.y,max(v1.z,bridgeheight))
 				
-			if inbridge and pos[posi][1]<dist:#detect end of bridge
-				ratio=(dist-pos[posi][1])/v.length
-				point1=v2-v*ratio
-				point2=v2-v*ratio
-				if bridgeheight>point1.z:
-					point1.z=max(point1.z,bridgeheight)
-					point2.z=min(point2.z,bridgeheight)
-					#ch.points.insert(vi,point1)
-					#ch.points.insert(vi+1,point2)
-					#vi+=2
-					insertpoints.append([vi+1,point1.to_tuple()])
-					insertpoints.append([vi+1,point2.to_tuple()])
-				inbridge=False
-				posi+=1 
-				vi-=1
-				dist-=v.length
-			vi+=1
 				
-			
-			
-			
-			if posi>=len(pos):
-				#print('added bridges')
-				break;
-		for p in changepoints:
-			ch.points[p[0]]=p[1]
-		for pi in range(len(insertpoints)-1,-1,-1):
-			ch.points.insert(insertpoints[pi][0],insertpoints[pi][1])
+				if posi>=len(pos):
+					#print('added bridges')
+					break;
+			for p in changepoints:
+				ch.points[p[0]]=p[1]
+			for pi in range(len(insertpoints)-1,-1,-1):
+				ch.points.insert(insertpoints[pi][0],insertpoints[pi][1])
 #this is the main function.
 #FIXME: split strategies into separate file!
 #def cutoutStrategy(o):
@@ -2146,7 +2157,7 @@ def getPath3axis(context,operation):
 				chunk=chl[0]
 				layer=chl[1]
 				if layer[1]<bridgeheight:
-					addBridges(chunk,o,0)
+					addBridges(chunk,o)
 				
 		if o.ramp:#add ramps or simply add chunks
 			for chl in extendorder:

@@ -23,7 +23,7 @@
 
 import bpy
 import subprocess,os, sys, threading
-from cam import utils, pack,polygon_utils_cam,chunk
+from cam import utils, pack,polygon_utils_cam,chunk,simple
 from bpy.props import *
 import Polygon
 
@@ -652,13 +652,9 @@ class CamOrientationAdd(bpy.types.Operator):
 		oriob=bpy.context.active_object
 		oriob.empty_draw_size=0.02 # 2 cm
 		
-		
-		if not gname in bpy.data.groups:
-			bpy.ops.group.create(name=gname)
-		else:
-			bpy.data.groups[gname].objects.link(oriob)
+		simple.addToGroup(oriob,gname)
 		oriob.name='ori_'+o.name+'.'+str(len(bpy.data.groups[gname].objects)).zfill(3)
-
+		
 		return {'FINISHED'}
 		
 

@@ -444,8 +444,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'dist_along_paths')
 					if ao.strategy=='PARALLEL' or ao.strategy=='CROSS':
 						layout.prop(ao,'parallel_angle')
-						if not ao.ramp:
-							layout.prop(ao,'parallel_step_back')
+						
 						
 					layout.prop(ao,'skin')
 					layout.prop(ao,'inverse')
@@ -487,11 +486,15 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 			ao=scene.cam_operations[scene.cam_active_operation]
 			if ao.valid:
 				layout.prop(ao,'movement_type')
+				
 				if ao.movement_type=='BLOCK' or ao.movement_type=='SPIRAL' or ao.movement_type=='CIRCLES':
 					layout.prop(ao,'movement_insideout')
 				   
 				layout.prop(ao,'spindle_rotation_direction')
 				layout.prop(ao,'free_movement_height')
+				if ao.strategy=='PARALLEL' or ao.strategy=='CROSS':
+					if not ao.ramp:
+						layout.prop(ao,'parallel_step_back')
 				if ao.strategy=='CUTOUT':
 					layout.prop(ao,'first_down')
 					#if ao.first_down:
@@ -515,6 +518,8 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 						layout.prop(ao,'ramp_out_angle')
 					
 				layout.prop(ao,'stay_low')
+				if ao.stay_low:
+					layout.prop(ao,'merge_dist')
 				layout.prop(ao,'protect_vertical')
 				if ao.protect_vertical:
 					layout.prop(ao,'protect_vertical_limit')
