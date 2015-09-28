@@ -294,7 +294,7 @@ class camOperation(bpy.types.PropertyGroup):
 			('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
 		description='Type of cutter used',
 		default='END', update = updateZbufferImage)
-	cutter_object_name = bpy.props.StringProperty(name='Object', description='object used as custom cutter for this operation', update=updateZbufferImage)
+	cutter_object_name = bpy.props.StringProperty(name='Cutter object', description='object used as custom cutter for this operation', update=updateZbufferImage)
 
 	machine_axes = EnumProperty(name='Number of axes',
 		items=(

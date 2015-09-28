@@ -45,13 +45,19 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
 				row.operator("render.cam_preset_cutter_add", text="", icon='ZOOMOUT').remove_active = True
 				layout.prop(ao,'cutter_id')
 				layout.prop(ao,'cutter_type')
-				layout.prop(ao,'cutter_diameter')
-				#layout.prop(ao,'cutter_length')
-				layout.prop(ao,'cutter_flutes')
 				if ao.cutter_type=='VCARVE':
 					layout.prop(ao,'cutter_tip_angle')
 				if ao.cutter_type=='CUSTOM':
+					if ao.use_exact:
+						layout.label(text='Warning - only convex shapes are supported. ', icon='COLOR_RED')
+						layout.label(text='If your custom cutter is concave,')
+						layout.label(text='switch exact mode off.')
+						
 					layout.prop_search(ao, "cutter_object_name", bpy.data, "objects")
+				
+				layout.prop(ao,'cutter_diameter')
+				#layout.prop(ao,'cutter_length')
+				layout.prop(ao,'cutter_flutes')
 				layout.prop(ao, 'cutter_description')
 
    
@@ -331,7 +337,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 			if ao.warnings!='':
 				lines=ao.warnings.split('\n')
 				for l in lines:
-					layout.label(l)
+					layout.label(text=l, icon='COLOR_RED')
 			if ao.valid:
 				#ob=bpy.data.objects[ao.object_name]
 				#layout.separator()
