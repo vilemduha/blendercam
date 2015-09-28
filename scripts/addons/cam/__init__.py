@@ -175,9 +175,9 @@ def updateChipload(self,context):
 	'''this is very simple computation of chip size, could be very much improved'''
 	print('update chipload ')
 	o=self;
-	self.changed=True
+	#self.changed=True
 	#Old chipload
-	self.chipload = ((o.feedrate/(o.spindle_rpm*o.cutter_flutes)))
+	o.chipload = ((o.feedrate/(o.spindle_rpm*o.cutter_flutes)))
 	###New chipload with chip thining compensation.
 	# I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less than 50% cutter engagement with cylindrical end mills.
 	# formula 1 Nominal Chipload is " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
@@ -186,17 +186,16 @@ def updateChipload(self,context):
 	# I am sure there is a better way to do this. I dont get consistent result and I am not sure if there is something wrong with the units going into the formula, my math or my lack of underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck we will be one tiny step on the way to a slightly better chipload calculating function.
 
 	#self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(math.sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
-	print (self.chipload)
+	print (o.chipload)
 	
 	
 	
 	
 def updateOffsetImage(self,context):
 	'''refresh offset image tag for rerendering'''
-	
+	updateChipload(self,context)
 	print('update offset')
 	self.changed=True
-
 	self.update_offsetimage_tag=True
 
 def updateZbufferImage(self,context):
@@ -503,7 +502,7 @@ class camOperation(bpy.types.PropertyGroup):
 	min = bpy.props.FloatVectorProperty(name = 'Operation minimum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
 	max = bpy.props.FloatVectorProperty(name = 'Operation maximum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
 	warnings = bpy.props.StringProperty(name='warnings', description='warnings', default='', update = updateRest)
-	chipload = bpy.props.FloatProperty(name="chipload",description="Calculated chipload", default=0.0, unit='LENGTH', precision=PRECISION, update = updateRest)
+	chipload = bpy.props.FloatProperty(name="chipload",description="Calculated chipload", default=0.0, unit='LENGTH', precision=10)
 	#internal properties
 	###########################################
 	#testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)

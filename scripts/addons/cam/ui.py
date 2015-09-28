@@ -339,14 +339,10 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 				for l in lines:
 					layout.label(text=l, icon='COLOR_RED')
 			if ao.valid:
-				#ob=bpy.data.objects[ao.object_name]
-				#layout.separator()
 				if ao.duration>0:
 					layout.label('operation time: '+str(int(ao.duration*100)/100.0)+' min')	   
-				#layout.prop(ao,'chipload')
-				layout.label(  'chipload: '+ strInUnits(ao.chipload,8) + ' / tooth')
-				#layout.label(str(ob.dimensions.x))
-				#row=layout.row()
+				layout.label(  'chipload: '+ strInUnits(ao.chipload,4) + ' / tooth')
+				
 		
 class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 	"""CAM operation properties panel"""
