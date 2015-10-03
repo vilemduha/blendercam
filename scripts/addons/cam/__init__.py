@@ -98,7 +98,7 @@ class machineSettings(bpy.types.PropertyGroup):
 	working_area=bpy.props.FloatVectorProperty(name = 'Work Area', default=(0.500,0.500,0.100), unit='LENGTH', precision=PRECISION,subtype="XYZ",update = updateMachine)
 	feedrate_min=bpy.props.FloatProperty(name="Feedrate minimum /min", default=0.0, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
 	feedrate_max=bpy.props.FloatProperty(name="Feedrate maximum /min", default=2, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
-	feedrate_default=bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,precision=PRECISION)
+	feedrate_default=bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
 	#UNSUPPORTED:
 	spindle_min=bpy.props.FloatProperty(name="#Spindlespeed minimum /min", default=5000, min=0.00001, max=320000,precision=1)
 	spindle_max=bpy.props.FloatProperty(name="#Spindlespeed maximum /min", default=30000, min=0.00001, max=320000,precision=1)
@@ -636,7 +636,7 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 	preset_values = [
 		"d.post_processor",
 		"s.system",
-		"s.use_position_definitions",
+		"d.use_position_definitions",
 		"d.starting_position",
 		"d.mtc_position",
 		"d.ending_position",
@@ -891,4 +891,3 @@ def unregister():
 
 if __name__ == "__main__":
 	register()
-	

@@ -79,7 +79,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 		ao=s.cam_machine
 	
 		if ao:
-			#cutter preset
+			#machine preset
 			row = layout.row(align=True)
 			row.menu("CAM_MACHINE_presets", text=bpy.types.CAM_MACHINE_presets.bl_label)
 			row.operator("render.cam_preset_machine_add", text="", icon='ZOOMIN')
