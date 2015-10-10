@@ -1044,7 +1044,7 @@ def exportGcodePath(filename,vertslist,operations):
 	
 	if s.unit_settings.system=='METRIC':
 		unitcorr=1000.0
-	elif s.unit_settings.system=='INCH':
+	elif s.unit_settings.system=='IMPERIAL':
 		unitcorr=1/0.0254;
 	else:
 		unitcorr=1;
@@ -1064,7 +1064,7 @@ def exportGcodePath(filename,vertslist,operations):
 		###############
 		if s.unit_settings.system=='METRIC':
 			c.metric()
-		elif s.unit_settings.system=='INCH':
+		elif s.unit_settings.system=='IMPERIAL':
 			c.imperial()
 		
 		#start program
