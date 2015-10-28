@@ -4,13 +4,10 @@ config/bookmarks.txt
 /scripts/freestyle/
 /scripts/modules/
 /scripts/startup/
-/scripts/presets/
 /scripts/templates_osl/
 /scripts/templates_py/
-/scripts/addons/
 *.spi1d
 *.pyc
 *.ocio
 *.spi3d
-*.py
 config/recent-files.txt
