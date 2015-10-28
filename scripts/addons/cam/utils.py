@@ -1016,6 +1016,9 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='EMC':
 		extension = '.ngc'
 		from .nc import emc2b as postprocessor
+	elif m.post_processor=='GRBL':
+		extension = '.ngc'
+		from .nc import grbl as postprocessor
 	elif m.post_processor=='HM50':
 		from .nc import hm50 as postprocessor
 	elif m.post_processor=='HEIDENHAIN':
@@ -3271,5 +3274,3 @@ def reload_paths(o):
 	
 	if old_pathmesh != None:
 		bpy.data.meshes.remove(old_pathmesh)
-
-	
