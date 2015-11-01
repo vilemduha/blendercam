@@ -446,7 +446,7 @@ class camOperation(bpy.types.PropertyGroup):
 	plunge_angle =	bpy.props.FloatProperty(name="Plunge angle", description="What angle is allready considered to plunge", default=math.pi/6, min=0, max=math.pi*0.5 , precision=0, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 	spindle_rpm = FloatProperty(name="Spindle rpm", description="Spindle speed ", min=1000, max=60000, default=12000, update = updateChipload)
 	#movement parallel_step_back 
-	movement_type = EnumProperty(name='Movement type',items=(('CONVENTIONAL','Conventional', 'a'),('CLIMB', 'Climb', 'a'),('MEANDER', 'Meander/Zig Zag' , 'a')	 ),description='movement type', default='CLIMB', update = updateRest)
+	movement_type = EnumProperty(name='Movement type',items=(('CONVENTIONAL','Conventional / Up milling', 'cutter rotates against the direction of the feed'),('CLIMB', 'Climb / Down milling', 'cutter rotates with the direction of the feed'),('MEANDER', 'Meander / Zig Zag' , 'cutting is done both with and against the rotation of the spindle')	 ),description='movement type', default='CLIMB', update = updateRest)
 	spindle_rotation_direction = EnumProperty(name='Spindle rotation', items=(('CW','Clock wise', 'a'),('CCW', 'Counter clock wise', 'a')),description='Spindle rotation direction',default='CW', update = updateRest)
 	free_movement_height = bpy.props.FloatProperty(name="Free movement height", default=0.01, min=0.0000, max=32,precision=PRECISION, unit="LENGTH", update = updateRest)
 	movement_insideout = EnumProperty(name='Direction', items=(('INSIDEOUT','Inside out', 'a'),('OUTSIDEIN', 'Outside in', 'a')),description='approach to the piece',default='INSIDEOUT', update = updateRest)
