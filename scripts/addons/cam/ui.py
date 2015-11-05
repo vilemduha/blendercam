@@ -381,6 +381,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 						layout.prop(ao,'strategy')
 					layout.prop(ao,'rotary_axis_1')
 					layout.prop(ao,'rotary_axis_2')
+
+				layout.prop(ao,'skin')
+
 				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES' or ao.strategy=='OUTLINEFILL':
 					layout.prop(ao,'movement_insideout')
 					
@@ -420,7 +423,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					if ao.waterline_fill:
 						layout.prop(ao,'dist_between_paths')			
 						layout.prop(ao,'waterline_project')
-					layout.prop(ao,'skin')
 					layout.prop(ao,'inverse')
 				elif ao.strategy=='CARVE':
 					layout.prop(ao,'carve_depth')
@@ -446,9 +448,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'dist_along_paths')
 					if ao.strategy=='PARALLEL' or ao.strategy=='CROSS':
 						layout.prop(ao,'parallel_angle')
-						
-						
-					layout.prop(ao,'skin')
+												
 					layout.prop(ao,'inverse')
 				#elif ao.strategy=='SLICES':
 				#	layout.prop(ao,'slice_detail')	
