@@ -382,8 +382,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'rotary_axis_1')
 					layout.prop(ao,'rotary_axis_2')
 
-				layout.prop(ao,'skin')
-
 				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES' or ao.strategy=='OUTLINEFILL':
 					layout.prop(ao,'movement_insideout')
 					
@@ -456,6 +454,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 			#layout.operator("object.cam_pack_objects")
 			#layout.operator("scene.cam_orientation_add")
 			#gname=ao.name+'_orientations'
+
+			layout.prop(ao,'skin')
 			
 			#if gname in bpy.data.groups:
 			#	layout.label('orientations')

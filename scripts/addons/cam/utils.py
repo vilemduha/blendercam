@@ -2229,8 +2229,8 @@ def strategy_proj_curve( s, o ):
 				#extend startpoint
 				vecs = sp-ep
 				vecs.normalize()
-				vecs* = extend_up
-				sp+ = vecs
+				vecs *= extend_up
+				sp += vecs
 				ch.startpoints.append(sp)
 				
 				#extend endpoint
@@ -2265,7 +2265,7 @@ def strategy_proj_curve( s, o ):
 	#	ch.points=ch.endpoints
 	chunksToMesh(chunks,o)
 
-def strategy_pocket( o ):
+#def strategy_pocket( o ):
 	
 	
 #this is the main function.
