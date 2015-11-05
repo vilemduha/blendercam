@@ -2058,228 +2058,235 @@ def addBridges(ch,o):
 				ch.points[p[0]]=p[1]
 			for pi in range(len(insertpoints)-1,-1,-1):
 				ch.points.insert(insertpoints[pi][0],insertpoints[pi][1])
+
+###########cutout strategy is completely here:
+def strategy_cutout( o ):
+	#ob=bpy.context.active_object
+	print('operation: cutout')
+	offset=True
+	if o.cut_type=='ONLINE' and o.onlycurves==True:#is separate to allow open curves :)
+		print('separate')
+		chunksFromCurve=[]
+		for ob in o.objects:
+			chunksFromCurve.extend(curveToChunks(ob))
+		p=Polygon.Polygon()	
+		for ch in chunksFromCurve:
+			#print(ch.points)
+			
+			if len(ch.points)>2:
+				ch.poly=chunkToPoly(ch)
+				#p.addContour(ch.poly)
+	else:
+		chunksFromCurve=[]
+		if o.cut_type=='ONLINE':
+			p=getObjectOutline(0,o,True)
+			
+		else:
+			offset=True
+			if o.cut_type=='INSIDE':
+				offset=False
+			p=getObjectOutline(o.cutter_diameter/2,o,offset)
+			if o.outlines_count>1:
+				for i in range(1,o.outlines_count):
+					chunksFromCurve.extend(polyToChunks(p,-1))
+					p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offset)
+			
+				
+		chunksFromCurve.extend(polyToChunks(p,-1))
+		if o.outlines_count>1 and o.movement_insideout=='OUTSIDEIN':
+			chunksFromCurve.reverse()
+	#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
+	chunksFromCurve=limitChunks(chunksFromCurve,o)
+	parentChildPoly(chunksFromCurve,chunksFromCurve,o)
+	if o.outlines_count==1:
+		chunksFromCurve=sortChunks(chunksFromCurve,o)
+	
+	#if o.outlines_count>0 and o.cut_type!='ONLINE' and o.movement_insideout=='OUTSIDEIN':#reversing just with more outlines
+	#	chunksFromCurve.reverse()
+					
+	if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
+		for ch in chunksFromCurve:
+			ch.points.reverse()
+		
+	if o.cut_type=='INSIDE':#there would bee too many conditions above, so for now it gets reversed once again when inside cutting.
+		for ch in chunksFromCurve:
+			ch.points.reverse()
+			
+	
+	if o.use_layers:
+		layers=[]
+		n=math.ceil((o.maxz-o.min.z)/o.stepdown)
+		layerstart=o.maxz
+		for x in range(0,n):
+			layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
+			if int(layerstart*10**8)!=int(layerend*10**8):#it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
+				layers.append([layerstart,layerend])
+			layerstart=layerend
+	else:
+			layers=[[o.maxz,o.min.z]]
+		
+	print(layers)
+	extendorder=[]
+	if o.first_down:#each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
+		for chunk in chunksFromCurve:
+			for layer in layers:
+				extendorder.append([chunk.copy(),layer])
+	else:
+		for layer in layers:
+			for chunk in chunksFromCurve:
+				extendorder.append([chunk.copy(),layer])
+	
+	for chl in extendorder:#Set Z for all chunks
+		chunk=chl[0]
+		layer=chl[1]
+		print(layer[1])
+		chunk.setZ(layer[1])
+	
+	chunks=[]
+	
+	if o.use_bridges:#add bridges to chunks
+		#bridges=getBridges(p,o)
+		bridgeheight=min(0,o.min.z+o.bridges_height)
+		for chl in extendorder:
+			chunk=chl[0]
+			layer=chl[1]
+			if layer[1]<bridgeheight:
+				addBridges(chunk,o)
+			
+	if o.ramp:#add ramps or simply add chunks
+		for chl in extendorder:
+			chunk=chl[0]
+			layer=chl[1]
+			if chunk.closed:
+				chunks.append(chunk.rampContour(layer[0],layer[1],o))
+			else:
+				chunks.append(chunk.rampZigZag(layer[0],layer[1],o))
+	else:
+		for chl in extendorder:
+			chunks.append(chl[0])
+
+	chunksToMesh(chunks,o)
+
+def strategy_curve( o ):
+	print('operation: curve')
+	pathSamples=[]
+	getOperationSources(o)
+	if not o.onlycurves:
+		o.warnings+= 'at least one of assigned objects is not a curve'
+	#ob=bpy.data.objects[o.object_name]
+	for ob in o.objects:
+		pathSamples.extend(curveToChunks(ob))
+	pathSamples=sortChunks(pathSamples,o)#sort before sampling
+	pathSamples=chunksRefine(pathSamples,o)
+	
+	if o.ramp:
+		for ch in pathSamples:
+			nchunk = ch.rampZigZag(ch.zstart, ch.points[0][2],o)
+			ch.points=nchunk.points
+			
+	chunksToMesh(pathSamples,o)
+	
+def strategy_proj_curve( s, o ):
+	print('operation: projected curve')
+	pathSamples = []
+	chunks = []
+	ob = bpy.data.objects[o.curve_object]
+	pathSamples.extend(curveToChunks(ob))
+	
+	targetCurve = s.objects[o.curve_object1]
+	
+	from cam import chunk
+	if targetCurve.type != 'CURVE':
+		o.warnings = o.warnings+'Projection target and source have to be curve objects!\n '
+		return
+	'''	#mesh method is highly unstable, I don't like itwould be there at all.... better to use curves.
+	if targetCurve.type=='MESH':
+		
+		c=targetCurve
+		for ch in pathSamples:
+			ch.depth=0
+			for i,s in enumerate(ch.points):
+				np=c.closest_point_on_mesh(s)
+				ch.startpoints.append(Vector(s))
+				ch.endpoints.append(np[0])
+				ch.rotations.append((0,0,0))
+				vect = np[0]-Vector(s)
+				
+				ch.depth=min(ch.depth,-vect.length)
+	else:
+	'''
+	if 1:
+		extend_up = 0.1
+		extend_down = 0.04
+		tsamples = curveToChunks(targetCurve)
+		for chi,ch in enumerate(pathSamples):
+			cht = tsamples[chi].points
+			ch.depth = 0
+			for i,s in enumerate(ch.points):
+				#move the points a bit
+				ep = Vector(cht[i])
+				sp = Vector(ch.points[i])
+				#extend startpoint
+				vecs = sp-ep
+				vecs.normalize()
+				vecs* = extend_up
+				sp+ = vecs
+				ch.startpoints.append(sp)
+				
+				#extend endpoint
+				vece = sp - ep
+				vece.normalize()
+				vece *= extend_down
+				ep -= vece
+				ch.endpoints.append(ep)
+						
+				ch.rotations.append((0,0,0))
+				
+				vec = sp - ep
+				ch.depth = min(ch.depth,-vec.length)
+				ch.points[i] = sp.copy()
+			
+			
+	if o.use_layers:
+		n = math.ceil(-(ch.depth/o.stepdown))
+		layers = []
+		for x in range(0,n):
+			
+			layerstart = -(x*o.stepdown)
+			layerend = max(-((x+1)*o.stepdown),ch.depth)
+			layers.append([layerstart,layerend])
+	else:
+		layerstart = 0#
+		layerend = ch.depth#
+		layers = [[layerstart,layerend]]
+	
+	chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
+	#for ch in pathSamples:
+	#	ch.points=ch.endpoints
+	chunksToMesh(chunks,o)
+
+def strategy_pocket( o ):
+	
+	
 #this is the main function.
 #FIXME: split strategies into separate file!
 #def cutoutStrategy(o):
-
-
-def getPath3axis(context,operation):
+def getPath3axis(context, operation):
 	s=bpy.context.scene
 	o=operation
 	getBounds(o)
 	
 	
-	###########cutout strategy is completely here:
 	if o.strategy=='CUTOUT':
-		#ob=bpy.context.active_object
-		offset=True
-		if o.cut_type=='ONLINE' and o.onlycurves==True:#is separate to allow open curves :)
-			print('separe')
-			chunksFromCurve=[]
-			for ob in o.objects:
-				chunksFromCurve.extend(curveToChunks(ob))
-			p=Polygon.Polygon()	
-			for ch in chunksFromCurve:
-				#print(ch.points)
-				
-				if len(ch.points)>2:
-					ch.poly=chunkToPoly(ch)
-					#p.addContour(ch.poly)
-		else:
-			chunksFromCurve=[]
-			if o.cut_type=='ONLINE':
-				p=getObjectOutline(0,o,True)
-				
-			else:
-				offset=True
-				if o.cut_type=='INSIDE':
-					offset=False
-				p=getObjectOutline(o.cutter_diameter/2,o,offset)
-				if o.outlines_count>1:
-					for i in range(1,o.outlines_count):
-						chunksFromCurve.extend(polyToChunks(p,-1))
-						p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offset)
-				
-					
-			chunksFromCurve.extend(polyToChunks(p,-1))
-			if o.outlines_count>1 and o.movement_insideout=='OUTSIDEIN':
-				chunksFromCurve.reverse()
-		#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
-		chunksFromCurve=limitChunks(chunksFromCurve,o)
-		parentChildPoly(chunksFromCurve,chunksFromCurve,o)
-		if o.outlines_count==1:
-			chunksFromCurve=sortChunks(chunksFromCurve,o)
+		strategy_cutout( o )
 		
-		#if o.outlines_count>0 and o.cut_type!='ONLINE' and o.movement_insideout=='OUTSIDEIN':#reversing just with more outlines
-		#	chunksFromCurve.reverse()
-						
-		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW'):
-			for ch in chunksFromCurve:
-				ch.points.reverse()
-			
-		if o.cut_type=='INSIDE':#there would bee too many conditions above, so for now it gets reversed once again when inside cutting.
-			for ch in chunksFromCurve:
-				ch.points.reverse()
-				
-		
-		if o.use_layers:
-			layers=[]
-			n=math.ceil((o.maxz-o.min.z)/o.stepdown)
-			layerstart=o.maxz
-			for x in range(0,n):
-				layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
-				if int(layerstart*10**8)!=int(layerend*10**8):#it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
-					layers.append([layerstart,layerend])
-				layerstart=layerend
-		else:
-				layers=[[o.maxz,o.min.z]]
-			
-		print(layers)
-		extendorder=[]
-		if o.first_down:#each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
-			for chunk in chunksFromCurve:
-				for layer in layers:
-					extendorder.append([chunk.copy(),layer])
-		else:
-			for layer in layers:
-				for chunk in chunksFromCurve:
-					extendorder.append([chunk.copy(),layer])
-		
-		for chl in extendorder:#Set Z for all chunks
-			chunk=chl[0]
-			layer=chl[1]
-			print(layer[1])
-			chunk.setZ(layer[1])
-		
-		chunks=[]
-		
-		if o.use_bridges:#add bridges to chunks
-			#bridges=getBridges(p,o)
-			bridgeheight=min(0,o.min.z+o.bridges_height)
-			for chl in extendorder:
-				chunk=chl[0]
-				layer=chl[1]
-				if layer[1]<bridgeheight:
-					addBridges(chunk,o)
-				
-		if o.ramp:#add ramps or simply add chunks
-			for chl in extendorder:
-				chunk=chl[0]
-				layer=chl[1]
-				if chunk.closed:
-					chunks.append(chunk.rampContour(layer[0],layer[1],o))
-				else:
-					chunks.append(chunk.rampZigZag(layer[0],layer[1],o))
-		else:
-			for chl in extendorder:
-				chunks.append(chl[0])
-						
-		
-
-		chunksToMesh(chunks,o)
-			
 	elif o.strategy=='CURVE':
-		pathSamples=[]
-		getOperationSources(o)
-		if not o.onlycurves:
-			o.warnings+= 'at least one of assigned objects is not a curve'
-		#ob=bpy.data.objects[o.object_name]
-		for ob in o.objects:
-			pathSamples.extend(curveToChunks(ob))
-		pathSamples=sortChunks(pathSamples,o)#sort before sampling
-		pathSamples=chunksRefine(pathSamples,o)
-		
-		if o.ramp:
-			for ch in pathSamples:
-				nchunk = ch.rampZigZag(ch.zstart, ch.points[0][2],o)
-				ch.points=nchunk.points
+		strategy_curve( o )
 				
-		chunksToMesh(pathSamples,o)
+	elif o.strategy=='PROJECTED_CURVE':
+		strategy_proj_curve(s, o)
 		
-		
-		
-	if o.strategy=='PROJECTED_CURVE':
-		pathSamples=[]
-		chunks=[]
-		ob=bpy.data.objects[o.curve_object]
-		pathSamples.extend(curveToChunks(ob))
-		
-		targetCurve=s.objects[o.curve_object1]
-		
-		from cam import chunk
-		if targetCurve.type!='CURVE':
-			o.warnings=o.warnings+'Projection target and source have to be curve objects!\n '
-			return
-		'''	#mesh method is highly unstable, I don't like itwould be there at all.... better to use curves.
-		if targetCurve.type=='MESH':
-			
-			c=targetCurve
-			for ch in pathSamples:
-				ch.depth=0
-				for i,s in enumerate(ch.points):
-					np=c.closest_point_on_mesh(s)
-					ch.startpoints.append(Vector(s))
-					ch.endpoints.append(np[0])
-					ch.rotations.append((0,0,0))
-					vect = np[0]-Vector(s)
-					
-					ch.depth=min(ch.depth,-vect.length)
-		else:
-		'''
-		if 1:
-			extend_up=0.1
-			extend_down=0.04
-			tsamples = curveToChunks(targetCurve)
-			for chi,ch in enumerate(pathSamples):
-				cht=tsamples[chi].points
-				ch.depth=0
-				for i,s in enumerate(ch.points):
-					#move the points a bit
-					ep=Vector(cht[i])
-					sp=Vector(ch.points[i])
-					#extend startpoint
-					vecs=sp-ep
-					vecs.normalize()
-					vecs*=extend_up
-					sp+=vecs
-					ch.startpoints.append(sp)
-					
-					#extend endpoint
-					vece=sp-ep
-					vece.normalize()
-					vece*=extend_down
-					ep-=vece
-					ch.endpoints.append(ep)
-					
-					
-					ch.rotations.append((0,0,0))
-					
-					vec=sp-ep
-					ch.depth=min(ch.depth,-vec.length)
-					ch.points[i]=sp.copy()
-				
-				
-			
-		if o.use_layers:
-			n=math.ceil(-(ch.depth/o.stepdown))
-			layers=[]
-			for x in range(0,n):
-				
-				layerstart=-(x*o.stepdown)
-				layerend=max(-((x+1)*o.stepdown),ch.depth)
-				layers.append([layerstart,layerend])
-		else:
-			layerstart=0#
-			layerend=ch.depth#
-			layers=[[layerstart,layerend]]
-		
-		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
-		#for ch in pathSamples:
-		#	ch.points=ch.endpoints
-		chunksToMesh(chunks,o)
-		
-		
-	if o.strategy=='POCKET':	
+	elif o.strategy=='POCKET':	
 		p=getObjectOutline(o.cutter_diameter/2,o,False)
 		all=Polygon.Polygon(p)
 		approxn=(min(o.max.x-o.min.x,o.max.y-o.min.y)/o.dist_between_paths)/2
@@ -2834,6 +2841,7 @@ def getPath3axis(context,operation):
 		chunks=sortChunks(chunks,o)
 		print(chunks)
 		chunksToMesh(chunks,o)
+		
 	elif o.strategy=='MEDIAL_AXIS':
 		print('doing highly experimental stuff')
 		
