@@ -1281,7 +1281,11 @@ def curveToPolys(cob):
 	chunks=curveToChunks(cob)
 	polys=chunksToPolys(chunks)
 	return polys
-
+	
+def curveToShapely(cob):
+	chunks=curveToChunks(cob)
+	polys=chunksToShapely(chunks)
+	return polys
 #separate function in blender, so you can offset any curve.
 #FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
 				
@@ -2295,6 +2299,12 @@ def getPath3axis(context, operation):
 		chunksFromCurve=[]
 		lastchunks=[]
 		centers=None
+		checkCenters=False
+		
+		if o.dist_between_paths>o.cutter_diameter/2.0:
+			checkCenters=True
+			o.warnings=o.warnings+'Distance between paths larger\n	than cutter radius can result in uncut areas!\n '
+
 		while len(p)>0:
 			nchunks=polyToChunks(p,o.min.z)
 			nchunks=limitChunks(nchunks,o)
@@ -2304,9 +2314,7 @@ def getPath3axis(context, operation):
 			
 			pnew=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 			
-			if o.dist_between_paths>o.cutter_diameter/2.0:#this mess under this IF condition is here ONLY because of the ability to have stepover> than cutter radius. Other CAM softwares don't allow this at all, maybe because of this mathematical problem and performance cost, but into soft materials, this is good to have.
-				o.warnings=o.warnings+'Distance between paths larger\n	than cutter radius can result in uncut areas!\n '
-
+			if checkCenters:
 				contours_before=len(p)
 				
 				if centers==None:
