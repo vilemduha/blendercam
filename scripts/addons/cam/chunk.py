@@ -1,4 +1,10 @@
 import Polygon
+
+import shapely
+from shapely.geometry import polygon as spolygon
+from shapely import ops
+from shapely import geometry
+
 from cam import simple
 from cam.simple import * 
 
@@ -606,7 +612,28 @@ def parentChild(parents, children, o):
 				if parent!=child:
 					parent.children.append(child)
 					child.parents.append(parent)	
+					
+def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
+	#print ('analyzing paths')
+	#verts=[]
+	#pverts=[]
+	polys=[]
+	for ch in chunks:#first convert chunk to poly
+		if len(ch.points)>2:
+			pchunk=[]
+			for v in ch.points:
+				pchunk.append((v[0],v[1]))
+			ch.poly=spolygon.Polygon(pchunk)
+			#ch.poly.simplify()
+	
+		
+	returnpolys=[]
 
+	for ch in chunks:#export only the booleaned polygons
+		returnpolys.append(ch.poly)
+	#print(len(returnpolys))
+	return returnpolys  
+	
 def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
 	#print ('analyzing paths')
 	#verts=[]
