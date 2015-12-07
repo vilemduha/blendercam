@@ -1278,11 +1278,7 @@ def curveToPolys(cob):
 	chunks=curveToChunks(cob)
 	polys=chunksToPolys(chunks)
 	return polys
-	
-def curveToShapely(cob):
-	chunks=curveToChunks(cob)
-	polys=chunksToShapely(chunks)
-	return polys
+
 #separate function in blender, so you can offset any curve.
 #FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
 				
