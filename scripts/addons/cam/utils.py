@@ -54,6 +54,8 @@ from cam import image_utils
 from cam.image_utils import *
 from . import nc
 from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
+import glob
+from importlib.machinery import SourceFileLoader
 
 
 from shapely.geometry import polygon as spolygon
@@ -90,7 +92,7 @@ def getBoundsWorldspace(obs):
 				maxy=max(maxy,worldCoord.y)
 				maxz=max(maxz,worldCoord.z)
 		else:
-			 
+
 			#for coord in bb:
 			for c in ob.data.splines:
 				for p in c.bezier_points:
@@ -123,7 +125,7 @@ def getSplineBounds(ob,curve):
 	maxx=maxy=maxz=-10000000
 	minx=miny=minz=10000000
 	mw=ob.matrix_world
-		
+
 	for p in curve.bezier_points:
 		coord=p.co
 		#this can work badly with some imported curves, don't know why...
@@ -148,7 +150,7 @@ def getSplineBounds(ob,curve):
 		maxz=max(maxz,worldCoord.z)
 	#progress(time.time()-t)
 	return minx,miny,minz,maxx,maxy,maxz
-	
+
 def getOperationSources(o):
 	if o.geometry_source=='OBJECT':
 		#bpy.ops.object.select_all(action='DESELECT')
@@ -1085,7 +1087,13 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='LYNX_OTTER_O':
 		extension='.nc'
 		from .nc import lynx_otter_o as postprocessor
-	
+
+	if not "postprocessor" in dir():
+		for cpp in getCustomPostProcessors():
+			if cpp.key == m.post_processor:
+				extension = cpp.extension
+				postprocessor = cpp
+
 	if s.unit_settings.system=='METRIC':
 		unitcorr=1000.0
 	elif s.unit_settings.system=='IMPERIAL':
@@ -1821,7 +1829,7 @@ def getObjectOutline(radius,o,Offset):#FIXME: make this one operation independen
 #circle detail, optimize, optimize thresold.
 	
 	polygons=getOperationSilhouete(o)
-	
+
 	i=0
 	#print('offseting polygons')
 		
@@ -1829,7 +1837,7 @@ def getObjectOutline(radius,o,Offset):#FIXME: make this one operation independen
 		offset=1
 	else:
 		offset=-1
-		
+
 	outlines=[]
 	i=0
 	#print(polygons, polygons.type)
@@ -1840,7 +1848,7 @@ def getObjectOutline(radius,o,Offset):#FIXME: make this one operation independen
 			#p=outlinePoly(p,radius,o.circle_detail,o.optimize,o.optimize_threshold*0.000001,Offset)
 			p1 = p1.buffer(radius*offset,resolution = o.circle_detail)
 		outlines.append(p1)
-	
+
 	print(outlines)
 	if o.dont_merge:
 		outline=sgeometry.MultiPolygon(outlines)
@@ -2059,14 +2067,14 @@ def addAutoBridges(o):
 		bpy.data.groups.new(bridgegroupname)
 	g= bpy.data.groups[bridgegroupname]
 	for ob in o.objects:
-		
+
 		if ob.type=='CURVE':
 			sply = curveToShapely(ob)
-			
+
 			mw=ob.matrix_world
 			for c in ob.data.splines:
 				blength = o.cutter_diameter*1
-				
+
 				minx,miny,minz,maxx,maxy,maxz = getSplineBounds(ob,c)
 				bpy.ops.mesh.primitive_plane_add(radius=blength, view_align=False, enter_editmode=False, location=(0, 0, 0))
 				b=bpy.context.active_object
@@ -2074,7 +2082,7 @@ def addAutoBridges(o):
 				b.show_name=True
 				b.dimensions.x=o.bridges_width
 				bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-				
+
 				bpy.ops.object.editmode_toggle()
 				bpy.ops.transform.translate(value=(0, blength/2, 0), constraint_axis=(False, True, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1)
 				bpy.ops.object.editmode_toggle()
@@ -2095,15 +2103,15 @@ def addAutoBridges(o):
 				b=bpy.context.active_object
 				b.location = maxx, (miny+maxy)/2, 0
 				b.rotation_euler.z=-pi/2
-				
 
-				
+
+
 def addBridges(ch,o):
 	'''this adds bridges to chunks, takes the bridge-objects group and uses the curves inside it as bridges.'''
 	bridgegroupname=o.bridges_group_name
 	bridgegroup=bpy.data.groups[bridgegroupname]
-	
-	
+
+
 
 	#get bridgepoly
 	shapes=[]
@@ -2133,21 +2141,21 @@ def addBridges(ch,o):
 			#dist+=v.length
 			p1=sgeometry.Point(chp1)
 			p2=sgeometry.Point(chp1)
-			
+
 			startinside = bridgespoly.contains(p1)
 			endinside = bridgespoly.contains(p2)
 			l=sgeometry.LineString([chp1,chp2])
 			intersections = bridgespoly.boundary.intersection(l)
-			
+
 			itempty = intersections.type == 'GeometryCollection'
 			itpoint = intersections.type == 'Point'
 			itmpoint = intersections.type == 'MultiPoint'
-			
+
 			#print(startinside, endinside,intersections, intersections.type)
 			#print(l,bridgespoly)
 			if not startinside:
 				#print('nothing found')
-				
+
 				newpoints.append(chp1)
 			#elif startinside and endinside and itempty:
 			#	newpoints.append((chp1[0],chp1[1],max(chp1[2],bridgeheight)))
@@ -2174,11 +2182,11 @@ def addBridges(ch,o):
 				ncpoints.append(cpoints.pop(mini))
 			cpoints = ncpoints
 			#endsorting
-			
-			
+
+
 			if startinside:
 				isinside=True
-			else:	
+			else:
 				isinside=False
 			for cp in cpoints:
 				v3= cp
@@ -2188,7 +2196,7 @@ def addBridges(ch,o):
 				else:
 					fractvect = v3 - v1
 					ratio = fractvect.length/v.length
-					
+
 				collisionz=v1.z+v.z*ratio
 				np1 = (v3.x, v3.y, collisionz)
 				np2	= (v3.x, v3.y, max(collisionz,bridgeheight))
@@ -2324,7 +2332,7 @@ def getPath3axis(context,operation):
 				offset=True
 				if o.cut_type=='INSIDE':
 					offset=False
-					
+
 				p=getObjectOutline(o.cutter_diameter/2,o,offset)
 				if o.outlines_count>1:
 					for i in range(1,o.outlines_count):
@@ -2393,9 +2401,9 @@ def getPath3axis(context,operation):
 					chunk.rampContour(layer[0],layer[1],o)
 				else:
 					chunk.rampZigZag(layer[0],layer[1],o)
-			
-		
-		
+
+
+
 		if o.use_bridges:#add bridges to chunks
 			#bridges=getBridges(p,o)
 			bridgeheight=min(0,o.min.z+o.bridges_height)
@@ -2404,12 +2412,12 @@ def getPath3axis(context,operation):
 				layer=chl[1]
 				if layer[1]<bridgeheight:
 					addBridges(chunk,o)
-		
-		
-		
+
+
+
 		for chl in extendorder:
 			chunks.append(chl[0])
-		
+
 						
 		
 
@@ -2917,7 +2925,7 @@ def getPath3axis(context,operation):
 					
 					#print(len(restpoly))
 					#polyToMesh('fillrest',restpoly,z)
-						
+
 					restpoly=restpoly.buffer(-o.dist_between_paths, resolution = o.circle_detail)
 					#outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
 					fillz = z 
@@ -3521,3 +3529,17 @@ def reload_paths(o):
 		bpy.data.meshes.remove(old_pathmesh)
 
 	
+def getCustomPostProcessors():
+	"""
+	Build custom post processor list.
+	"""
+	list = []
+	folder = bpy.utils.user_resource('SCRIPTS', os.path.join("presets", "cam_postprocessors"))
+	files = glob.glob(os.path.join(folder, "*.py"))
+	for f in files:
+		key = os.path.basename(f)[:-3].upper()
+		postprocessor = SourceFileLoader("cam.pp." + key, f).load_module()
+		postprocessor.key = key
+		list.append(postprocessor)
+
+	return list

@@ -84,8 +84,15 @@ class CamAddonPreferences(AddonPreferences):
 class machineSettings(bpy.types.PropertyGroup):
 	'''stores all data for machines'''
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
+	all = [('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC - LinuxCNC','default emc'),('HEIDENHAIN','Heidenhain','heidenhain'),
+				('TNC151','Heidenhain TNC151','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1','Sieg KX1'),('HM50','Hafco HM-50','Hafco HM-50'),
+				('CENTROID','Centroid M40','Centroid M40'),('ANILAM','Anilam Crusader M','Anilam Crusader M'),('GRAVOS','Gravos','Gravos'),('WIN-PC','Win-PC','German CNC'),
+				('SHOPBOT MTC','ShopBot MTC','ShopBot MTC'),('LYNX_OTTER_O','Lynx Otter o','Lynx Otter o')]
+	custom = utils.getCustomPostProcessors()
+	for cpp in custom:
+		all.append((cpp.key, cpp.name, cpp.description))
 	post_processor = EnumProperty(name='Post processor',
-		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC - LinuxCNC','default emc'),('HEIDENHAIN','Heidenhain','heidenhain'),('TNC151','Heidenhain TNC151','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1','Sieg KX1'),('HM50','Hafco HM-50','Hafco HM-50'),('CENTROID','Centroid M40','Centroid M40'),('ANILAM','Anilam Crusader M','Anilam Crusader M'),('GRAVOS','Gravos','Gravos'),('WIN-PC','Win-PC','German CNC'),('SHOPBOT MTC','ShopBot MTC','ShopBot MTC'),('LYNX_OTTER_O','Lynx Otter o','Lynx Otter o')),
+		items=all,
 		description='Post processor',
 		default='MACH3')
 	#units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
