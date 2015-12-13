@@ -54,6 +54,8 @@ from cam import image_utils
 from cam.image_utils import *
 from . import nc
 from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
+import glob
+from importlib.machinery import SourceFileLoader
 
 try:
 	from shapely.geometry import polygon as spolygon
@@ -1041,7 +1043,13 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='LYNX_OTTER_O':
 		extension='.nc'
 		from .nc import lynx_otter_o as postprocessor
-	
+
+	if not "postprocessor" in dir():
+		for cpp in getCustomPostProcessors():
+			if cpp.key == m.post_processor:
+				extension = cpp.extension
+				postprocessor = cpp
+
 	if s.unit_settings.system=='METRIC':
 		unitcorr=1000.0
 	elif s.unit_settings.system=='IMPERIAL':
@@ -3281,3 +3289,17 @@ def reload_paths(o):
 		bpy.data.meshes.remove(old_pathmesh)
 
 	
+def getCustomPostProcessors():
+	"""
+	Build custom post processor list.
+	"""
+	list = []
+	folder = bpy.utils.user_resource('SCRIPTS', os.path.join("presets", "cam_postprocessors"))
+	files = glob.glob(os.path.join(folder, "*.py"))
+	for f in files:
+		key = os.path.basename(f)[:-3].upper()
+		postprocessor = SourceFileLoader("cam.pp." + key, f).load_module()
+		postprocessor.key = key
+		list.append(postprocessor)
+
+	return list
