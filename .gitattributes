@@ -2,11 +2,11 @@
 
 # Source files
 # ============
-*.pxd		text
-*.py 		text
-*.py3 		text
-*.pyw 		text
-*.pyx  		text
+*.pxd		text eol=crlf
+*.py 		text eol=crlf
+*.py3 		text eol=crlf
+*.pyw 		text eol=crlf
+*.pyx  		text eol=crlf
 
 # Binary files
 # ============
