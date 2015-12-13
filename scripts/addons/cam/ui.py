@@ -410,7 +410,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 						#layout.prop(ao,'bridges_placement')
 						layout.prop(ao,'bridges_width')
 						layout.prop(ao,'bridges_height')
-						
+
 						layout.prop_search(ao, "bridges_group_name", bpy.data, "groups")
 						#layout.prop(ao,'bridges_group_name')
 						#if ao.bridges_placement == 'AUTO':

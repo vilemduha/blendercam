@@ -296,7 +296,7 @@ class camPathChunk:
 				i+=1
 					
 		self.points = chunk.points
-		
+
 
 	def rampZigZag(self,zstart,zend,o):
 		chunk=camPathChunk([])
@@ -610,7 +610,7 @@ def parentChild(parents, children, o):
 				if parent!=child:
 					parent.children.append(child)
 					child.parents.append(parent)	
-'''					
+'''
 def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
 	#print ('analyzing paths')
 	#verts=[]
@@ -632,7 +632,7 @@ def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchie
 	#print(len(returnpolys))
 	return returnpolys  
 '''
-	
+
 def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
 	#print ('analyzing paths')
 	#verts=[]
@@ -642,29 +642,29 @@ def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchie
 		if len(ch.points)>2:
 			pchunk=[]
 			ch.poly=sgeometry.Polygon(ch.points)
-			
+
 	for ppart in chunks:#then add hierarchy relations
 		for ptest in chunks:
-				
+
 			#if ppart!=ptest and len(ptest.poly)>0 and len(ppart.poly)>0 and ptest.poly.nPoints(0)>0 and ppart.poly.nPoints(0)>0:
 			if ppart!=ptest :
 				if ptest.poly.contains(ppart.poly):
-					#hierarchy works like this: - children get milled first. 
+					#hierarchy works like this: - children get milled first.
 					#ptest.children.append(ppart)
 					ppart.parents.append(ptest)
- 
-	
+
+
 	for ch in chunks:#now make only simple polygons with holes, not more polys inside others
 		#print(len(chunks[polyi].parents))
 		found=False
 		if len(ch.parents)%2==1:
-			
+
 			for parent in ch.parents:
 				if len(parent.parents)+1==len(ch.parents):
 					ch.nparents=[parent]#nparents serves as temporary storage for parents, not to get mixed with the first parenting during the check
 					found=True
 					break
-				
+
 		if not found:
 			ch.nparents=[]
 
@@ -679,8 +679,8 @@ def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchie
 			#polygon_utils_cam.shapelyToCurve('crust',ch.parents[0].poly,0)
 			#polygon_utils_cam.shapelyToCurve('hole',ch.poly,0)
 			ch.parents[0].poly = ch.parents[0].poly.difference(ch.poly)#sgeometry.Polygon( ch.parents[0].poly, ch.poly)
-			
-			
+
+
 	returnpolys=[]
 
 	for polyi in range(0,len(chunks)):#export only the booleaned polygons
@@ -694,11 +694,11 @@ def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchie
 			#print(ch.poly.boundary)
 	print('shapely hierarchies')
 	#print(len(returnpolys))
-	
-	
-	return returnpolys  
-		
-	
+
+
+	return returnpolys
+
+
 def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
 	#print ('analyzing paths')
 	#verts=[]
@@ -801,7 +801,7 @@ def meshFromCurveToChunk(object):
 		chunk.points.append((mesh.vertices[lastvi].co.x+x,mesh.vertices[lastvi].co.y+y,mesh.vertices[lastvi].co.z+z))
 	#else:
 		#   print('itisnot')
-		
+
 	chunks.append(chunk)
 	return chunks
 
@@ -896,12 +896,12 @@ def shapelyToChunks(p,zlevel):#
 			chunk.poly=spolygon.Polygon(s)#this should maybe be LineString? but for sorting, we need polygon inside functions.
 			for v in s:
 				#progress (v)
-				
+
 				if len(v)>2:
-					chunk.points.append((v[0],v[1],v[2]))  
+					chunk.points.append((v[0],v[1],v[2]))
 				else:
-					chunk.points.append((v[0],v[1],zlevel))  
-			
+					chunk.points.append((v[0],v[1],zlevel))
+
 			chunk.points.append((chunk.points[0][0],chunk.points[0][1],chunk.points[0][2]))#last point =first point
 			chunk.closed=True
 			chunks.append(chunk)
@@ -909,7 +909,7 @@ def shapelyToChunks(p,zlevel):#
 	chunks.reverse()#this is for smaller shapes first.
 	#
 	return chunks
-	
+
 def chunkToPoly(chunk):
 	pverts=[]
 	
@@ -922,14 +922,14 @@ def chunkToPoly(chunk):
 
 def chunkToShapely(chunk):
 	#pverts=[]
-	
+
 	#for v in chunk.points:
-		 
+
 	#	pverts.append((v[0],v[1]))
-	 
+
 	p=spolygon.Polygon(chunk.points)
-	return p	
-	
+	return p
+
 def chunksRefine(chunks,o):
 	'''add extra points in between for chunks'''
 	for ch in chunks:
