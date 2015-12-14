@@ -219,8 +219,9 @@ def updateStrategy(o,context):
 	updateExact(o,context)
 
 def updateCutout(o,context):
-	if o.outlines_count>1:
-		o.use_bridges=False
+	pass;
+	#if o.outlines_count>1:
+	#	o.use_bridges=False
 		
 	
 def updateExact(o,context):
@@ -481,6 +482,9 @@ class camOperation(bpy.types.PropertyGroup):
 	use_bridges =  bpy.props.BoolProperty(name="Use bridges",description="use bridges in cutout", default=False, update = updateBridges)
 	bridges_width = bpy.props.FloatProperty(name = 'width of bridges', default=0.002, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	bridges_height = bpy.props.FloatProperty(name = 'height of bridges', description="Height from the bottom of the cutting operation", default=0.0005, unit='LENGTH', precision=PRECISION, update = updateBridges)
+	bridges_group_name = bpy.props.StringProperty(name='Bridges Group', description='Group of curves used as bridges', update=operationValid)
+
+	'''commented this - auto bridges will be generated, but not as a setting of the operation
 	bridges_placement = bpy.props.EnumProperty(name='Bridge placement',
 		items=(
 			('AUTO','Automatic', 'Automatic bridges with a set distance'),
@@ -492,6 +496,9 @@ class camOperation(bpy.types.PropertyGroup):
 	
 	bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
 	bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
+	'''
+	group_name = bpy.props.StringProperty(name='Group', description='Object group handled by this operation', update=operationValid)
+
 	#optimisation panel
 	
 	#material settings

@@ -59,6 +59,7 @@ try:
 	from shapely.geometry import polygon as spolygon
 	from shapely import ops as sops
 	from shapely import geometry as sgeometry
+	#from shapely.geometry import * not possible until Polygon libs gets out finally..
 	SHAPELY=True
 except:
 	SHAPELY=False
@@ -1923,7 +1924,7 @@ def getContainer():
 		container=s.objects['CAM_OBJECTS']
 	
 	return container
-
+'''
 
 def getSnappingObject(o):
 	s=bpy.context.scene
@@ -1977,7 +1978,114 @@ def getBridges(p,o):
 			pos=pos[0],pos[1]
 			bridges.append(pos)
 	return bridges
+'''
 	
+def addBridges(ch,o):
+	bridgegroupname=o.bridges_group_name
+	bridgegroup=bpy.data.groups[bridgegroupname]
+	
+	
+	if 1:
+		#get bridgepoly
+		shapes=[]
+		for ob in bridgegroup.objects:
+			if ob.type == 'CURVE':
+				shapes.extend(curveToShapely(ob))
+		bridgespoly=sops.unary_union(shapes)
+		#buffer the poly, so the bridges are not actually milled...
+		bridgespoly = bridgespoly.buffer(distance = o.cutter_diameter/2.0)
+		####
+		bridgeheight=min(0,o.min.z+o.bridges_height)
+		vi=0
+		#shapelyToMesh('test',bridgespoly,0)
+		newpoints=[]
+		while vi<len(ch.points):
+			i1=vi
+			i2=vi
+			chp1=ch.points[i1]
+			chp2=ch.points[i1]#Vector(v1)#this is for case of last point and not closed chunk..
+			if vi+1<len(ch.points):
+				i2 = vi+1
+				chp2=ch.points[vi+1]#Vector(ch.points[vi+1])
+			v1=Vector(chp1)
+			v2=Vector(chp2)
+			if v1.z<bridgeheight or v2.z<bridgeheight:
+				v=v2-v1
+				#dist+=v.length
+				p1=sgeometry.Point(chp1)
+				p2=sgeometry.Point(chp1)
+				
+				startinside = bridgespoly.contains(p1)
+				endinside = bridgespoly.contains(p2)
+				l=sgeometry.LineString([chp1,chp2])
+				intersections = bridgespoly.boundary.intersection(l)
+				
+				itempty = intersections.type == 'GeometryCollection'
+				itpoint = intersections.type == 'Point'
+				itmpoint = intersections.type == 'MultiPoint'
+				
+				#print(startinside, endinside,intersections, intersections.type)
+				#print(l,bridgespoly)
+				if not startinside:
+					#print('nothing found')
+					
+					newpoints.append(chp1)
+				#elif startinside and endinside and itempty:
+				#	newpoints.append((chp1[0],chp1[1],max(chp1[2],bridgeheight)))
+				elif startinside:
+					newpoints.append((chp1[0],chp1[1],max(chp1[2],bridgeheight)))
+				#elif not startinside:
+				#	newpoints.append(chp1)
+				cpoints=[]
+				if itpoint:
+					cpoints= [Vector((intersections.x,intersections.y,intersections.z))]
+				elif itmpoint:
+					cpoints=[]
+					for p in intersections:
+						cpoints.append(Vector((p.x,p.y,p.z)))
+				#####sort collisions here :(
+				ncpoints=[]
+				while len(cpoints)>0:
+					mind=10000000
+					mini=-1
+					for i,p in enumerate(cpoints):
+						if min(mind, (p-v1).length)<mind:
+							mini=i
+							mind= (p-v1).length
+					ncpoints.append(cpoints.pop(mini))
+				cpoints = ncpoints
+				#endsorting
+				
+				
+				if startinside:
+					isinside=True
+				else:	
+					isinside=False
+				for cp in cpoints:
+					v3= cp
+					#print(v3)
+					if v.length==0:
+						ratio=1
+					else:
+						fractvect = v3 - v1
+						ratio = fractvect.length/v.length
+						
+					collisionz=v1.z+v.z*ratio
+					np1 = (v3.x, v3.y, collisionz)
+					np2	= (v3.x, v3.y, max(collisionz,bridgeheight))
+					if not isinside:
+						newpoints.extend((np1, np2))
+					else:
+						newpoints.extend((np2, np1))
+					isinside = not isinside
+				vi+=1
+			else:
+				newpoints.append(chp1)
+				vi+=1
+		ch.points=newpoints
+
+
+'''
 	
 def addBridges(ch,o):
 	#this functions adds Bridges to the finished chunks. AUTOMATIC ONLY NOW!
@@ -2062,8 +2170,10 @@ def addBridges(ch,o):
 #this is the main function.
 #FIXME: split strategies into separate file!
 #def cutoutStrategy(o):
-
-
+'''
+#this is the main function.
+#FIXME: split strategies into separate file!
+#def cutoutStrategy(o):
 def getPath3axis(context,operation):
 	s=bpy.context.scene
 	o=operation
@@ -2154,6 +2264,17 @@ def getPath3axis(context,operation):
 		
 		chunks=[]
 		
+		if o.ramp:#add ramps or simply add chunks
+			for chl in extendorder:
+				chunk=chl[0]
+				layer=chl[1]
+				if chunk.closed:
+					chunk.rampContour(layer[0],layer[1],o)
+				else:
+					chunk.rampZigZag(layer[0],layer[1],o)
+			
+		
+		
 		if o.use_bridges:#add bridges to chunks
 			#bridges=getBridges(p,o)
 			bridgeheight=min(0,o.min.z+o.bridges_height)
@@ -2162,18 +2283,12 @@ def getPath3axis(context,operation):
 				layer=chl[1]
 				if layer[1]<bridgeheight:
 					addBridges(chunk,o)
-				
-		if o.ramp:#add ramps or simply add chunks
-			for chl in extendorder:
-				chunk=chl[0]
-				layer=chl[1]
-				if chunk.closed:
-					chunks.append(chunk.rampContour(layer[0],layer[1],o))
-				else:
-					chunks.append(chunk.rampZigZag(layer[0],layer[1],o))
-		else:
-			for chl in extendorder:
-				chunks.append(chl[0])
+		
+		
+		
+		for chl in extendorder:
+			chunks.append(chl[0])
+		
 						
 		
 
@@ -2289,12 +2404,6 @@ def getPath3axis(context,operation):
 		chunksFromCurve=[]
 		lastchunks=[]
 		centers=None
-		checkCenters=False
-		
-		if o.dist_between_paths>o.cutter_diameter/2.0:
-			checkCenters=True
-			o.warnings=o.warnings+'Distance between paths larger\n	than cutter radius can result in uncut areas!\n '
-
 		while len(p)>0:
 			nchunks=polyToChunks(p,o.min.z)
 			nchunks=limitChunks(nchunks,o)
@@ -2304,7 +2413,9 @@ def getPath3axis(context,operation):
 			
 			pnew=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 			
-			if checkCenters:
+			if o.dist_between_paths>o.cutter_diameter/2.0:#this mess under this IF condition is here ONLY because of the ability to have stepover> than cutter radius. Other CAM softwares don't allow this at all, maybe because of this mathematical problem and performance cost, but into soft materials, this is good to have.
+				o.warnings=o.warnings+'Distance between paths larger\n	than cutter radius can result in uncut areas!\n '
+
 				contours_before=len(p)
 				
 				if centers==None:

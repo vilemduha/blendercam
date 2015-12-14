@@ -265,9 +265,85 @@ def polyToMesh(name,p,z):
 	return bpy.context.active_object
 
 def shapelyToMesh(name,p,z):
-	p = Shapely2Polygon(p)
-	ob = polyToMesh(name,p,z)
-	return ob
+	import bpy,bmesh
+	from bpy_extras import object_utils
+	verts=[]
+	edges=[]
+	vi=0
+	ci=0
+	#for c in p.exterior.coords:
+	
+	print(p.type)
+	if p.type=='Polygon':
+		clen=len(p.exterior.coords)
+		seq=[p.exterior.coords]
+	if p.type=='MultiPolygon':
+		clen=0
+		seq=[]
+		for sp in p:
+			clen+=len(sp.exterior.coords)
+			seq.append(sp.exterior.coords)
+				
+		
+	elif p.type=='MultiLineString':
+		seq=[]
+		for linestring in p:
+			seq.append(linestring.coords)
+	elif p.type=='MultiPoint':
+		return;
+	'''
+	for c in seq:
+		vi0=vi
+		ei=0
+		clen=len(c)
+		for vii in range(0,clen):#TODO CHECK IF THIS WORKS, IS THERE ALWAYS ONE EXTRA POINT THAT COMES OUT OF NOWHERE?
+			v=c[vii]#same as vi...?
+			verts.append((v[0],v[1],z))
+			if ei>0:
+				edges.append((vi-1,vi))
+				vi+=1 
+			ei+=1
+	ci+=1
+	print(verts,edges)
+	mesh = bpy.data.meshes.new("test")
+	bm = bmesh.new()
+	for v_co in verts:
+		 bm.verts.new(v_co)
+	
+	bm.verts.ensure_lookup_table()
+	for e in edges:
+		bm.edges.new((bm.verts[e[0]],bm.verts[e[1]]))
+		
+	bm.to_mesh(mesh)
+	mesh.update()
+	object_utils.object_data_add(bpy.context, mesh)
+	
+	ob=bpy.context.active_object
+	ob.name=name
+	ob.location=(0,0,0)
+	bpy.ops.object.convert(target='CURVE')
+	bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
+	
+	'''
+	w = 1 # weight  
+
+	
+	curvedata = bpy.data.curves.new(name=name, type='CURVE')  
+	curvedata.dimensions = '3D'  
+	  
+	objectdata = bpy.data.objects.new(name, curvedata)  
+	objectdata.location = (0,0,0) #object origin  
+	bpy.context.scene.objects.link(objectdata)  
+	
+	for c in seq:
+		polyline = curvedata.splines.new('POLY')  
+		polyline.points.add(len(c)-1)  
+		for num in range(len(c)):  
+			x, y = c[num][0],c[num][1]
+			
+			polyline.points[num].co = (x, y, z, w)  
+	
+	return objectdata#bpy.context.active_object
 	
 	
 def orderPoly(polys):	#sor poly, do holes e.t.c.

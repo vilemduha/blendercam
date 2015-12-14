@@ -295,9 +295,8 @@ class camPathChunk:
 				z=znew
 				i+=1
 					
-				
+		self.points = chunk.points
 		
-		return chunk
 
 	def rampZigZag(self,zstart,zend,o):
 		chunk=camPathChunk([])
@@ -428,8 +427,7 @@ class camPathChunk:
 								ratio=1-(traveled/ramplength)
 								znew=zstart-stepdown*ratio
 								chunk.points.append((p2[0],p2[1],max(p2[2],znew)))#max value here is so that it doesn't go below surface in the case of 3d paths
-		
-		return chunk
+		self.points=chunk.points
 #def appendChunk(sorted,ch,o,pos) 
 
 def chunksCoherency(chunks):
