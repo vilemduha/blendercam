@@ -264,7 +264,7 @@ def polyToMesh(name,p,z):
 	
 	return bpy.context.active_object
 
-def shapelyToMesh(name,p,z):
+def shapelyToCurve(name,p,z):
 	import bpy,bmesh
 	from bpy_extras import object_utils
 	verts=[]
@@ -291,40 +291,7 @@ def shapelyToMesh(name,p,z):
 			seq.append(linestring.coords)
 	elif p.type=='MultiPoint':
 		return;
-	'''
-	for c in seq:
-		vi0=vi
-		ei=0
-		clen=len(c)
-		for vii in range(0,clen):#TODO CHECK IF THIS WORKS, IS THERE ALWAYS ONE EXTRA POINT THAT COMES OUT OF NOWHERE?
-			v=c[vii]#same as vi...?
-			verts.append((v[0],v[1],z))
-			if ei>0:
-				edges.append((vi-1,vi))
-				vi+=1 
-			ei+=1
-	ci+=1
-	print(verts,edges)
-	mesh = bpy.data.meshes.new("test")
-	bm = bmesh.new()
-	for v_co in verts:
-		 bm.verts.new(v_co)
 	
-	bm.verts.ensure_lookup_table()
-	for e in edges:
-		bm.edges.new((bm.verts[e[0]],bm.verts[e[1]]))
-		
-	bm.to_mesh(mesh)
-	mesh.update()
-	object_utils.object_data_add(bpy.context, mesh)
-	
-	ob=bpy.context.active_object
-	ob.name=name
-	ob.location=(0,0,0)
-	bpy.ops.object.convert(target='CURVE')
-	bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
-	
-	'''
 	w = 1 # weight  
 
 	

@@ -91,21 +91,65 @@ def getBoundsWorldspace(obs):
 				maxy=max(maxy,worldCoord.y)
 				maxz=max(maxz,worldCoord.z)
 		else:
-			
-			for coord in bb:
-				#this can work badly with some imported curves, don't know why...
-				#worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
-				worldCoord =mw * Vector((coord[0], coord[1], coord[2]))
-				minx=min(minx,worldCoord.x)
-				miny=min(miny,worldCoord.y)
-				minz=min(minz,worldCoord.z)
-				maxx=max(maxx,worldCoord.x)
-				maxy=max(maxy,worldCoord.y)
-				maxz=max(maxz,worldCoord.z)
-			
+			 
+			#for coord in bb:
+			for c in ob.data.splines:
+				for p in c.bezier_points:
+					coord=p.co
+					#this can work badly with some imported curves, don't know why...
+					#worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
+					worldCoord =mw * Vector((coord[0], coord[1], coord[2]))
+					minx=min(minx,worldCoord.x)
+					miny=min(miny,worldCoord.y)
+					minz=min(minz,worldCoord.z)
+					maxx=max(maxx,worldCoord.x)
+					maxy=max(maxy,worldCoord.y)
+					maxz=max(maxz,worldCoord.z)
+				for p in c.points:
+					coord=p.co
+					#this can work badly with some imported curves, don't know why...
+					#worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
+					worldCoord =mw * Vector((coord[0], coord[1], coord[2]))
+					minx=min(minx,worldCoord.x)
+					miny=min(miny,worldCoord.y)
+					minz=min(minz,worldCoord.z)
+					maxx=max(maxx,worldCoord.x)
+					maxy=max(maxy,worldCoord.y)
+					maxz=max(maxz,worldCoord.z)
 	#progress(time.time()-t)
 	return minx,miny,minz,maxx,maxy,maxz
 
+def getSplineBounds(ob,curve):
+	#progress('getting bounds of object(s)')
+	maxx=maxy=maxz=-10000000
+	minx=miny=minz=10000000
+	mw=ob.matrix_world
+		
+	for p in curve.bezier_points:
+		coord=p.co
+		#this can work badly with some imported curves, don't know why...
+		#worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
+		worldCoord =mw * Vector((coord[0], coord[1], coord[2]))
+		minx=min(minx,worldCoord.x)
+		miny=min(miny,worldCoord.y)
+		minz=min(minz,worldCoord.z)
+		maxx=max(maxx,worldCoord.x)
+		maxy=max(maxy,worldCoord.y)
+		maxz=max(maxz,worldCoord.z)
+	for p in curve.points:
+		coord=p.co
+		#this can work badly with some imported curves, don't know why...
+		#worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
+		worldCoord =mw * Vector((coord[0], coord[1], coord[2]))
+		minx=min(minx,worldCoord.x)
+		miny=min(miny,worldCoord.y)
+		minz=min(minz,worldCoord.z)
+		maxx=max(maxx,worldCoord.x)
+		maxy=max(maxy,worldCoord.y)
+		maxz=max(maxz,worldCoord.z)
+	#progress(time.time()-t)
+	return minx,miny,minz,maxx,maxy,maxz
+	
 def getOperationSources(o):
 	if o.geometry_source=='OBJECT':
 		#bpy.ops.object.select_all(action='DESELECT')
@@ -1979,110 +2023,161 @@ def getBridges(p,o):
 			bridges.append(pos)
 	return bridges
 '''
-	
+
+def addAutoBridges(o):
+	'''attempt to add auto bridges as set of curves'''
+	getOperationSources(o)
+	if not o.onlycurves:
+		o.warnings.append('not curves')
+		return;
+	bridgegroupname=o.bridges_group_name
+	if bridgegroupname == '' or bpy.data.groups.get(bridgegroupname) == None:
+		bridgegroupname = 'bridges_'+o.name
+		bpy.data.groups.new(bridgegroupname)
+	g= bpy.data.groups[bridgegroupname]
+	for ob in o.objects:
+		
+		if ob.type=='CURVE':
+			sply = curveToShapely(ob)
+			mw=ob.matrix_world
+			for c in ob.data.splines:
+				blength = o.cutter_diameter*1
+				
+				minx,miny,minz,maxx,maxy,maxz = getSplineBounds(ob,c)
+				bpy.ops.mesh.primitive_plane_add(radius=blength, view_align=False, enter_editmode=False, location=(0, 0, 0))
+				b=bpy.context.active_object
+				b.name = 'bridge'
+				b.show_name=True
+				b.dimensions.x=o.bridges_width
+				bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+				
+				bpy.ops.object.editmode_toggle()
+				bpy.ops.transform.translate(value=(0, blength/2, 0), constraint_axis=(False, True, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1)
+				bpy.ops.object.editmode_toggle()
+				bpy.ops.object.convert(target='CURVE')
+
+				b.location = (minx+maxx)/2, miny, 0
+				b.rotation_euler.z=pi
+				g.objects.link(b)
+				bpy.ops.object.duplicate(linked=True)
+				b=bpy.context.active_object
+				b.location = (minx+maxx)/2, maxy, 0
+				b.rotation_euler.z=0
+				bpy.ops.object.duplicate(linked=True)
+				b=bpy.context.active_object
+				b.location = minx, (miny+maxy)/2, 0
+				b.rotation_euler.z=pi/2
+				bpy.ops.object.duplicate(linked=True)
+				b=bpy.context.active_object
+				b.location = maxx, (miny+maxy)/2, 0
+				b.rotation_euler.z=-pi/2
+				
+
+				
 def addBridges(ch,o):
+	'''this adds bridges to chunks, takes the bridge-objects group and uses the curves inside it as bridges.'''
 	bridgegroupname=o.bridges_group_name
 	bridgegroup=bpy.data.groups[bridgegroupname]
 	
 	
-	if 1:
-		#get bridgepoly
-		shapes=[]
-		for ob in bridgegroup.objects:
-			if ob.type == 'CURVE':
-				shapes.extend(curveToShapely(ob))
-		bridgespoly=sops.unary_union(shapes)
-		#buffer the poly, so the bridges are not actually milled...
-		bridgespoly = bridgespoly.buffer(distance = o.cutter_diameter/2.0)
-		####
-		bridgeheight=min(0,o.min.z+o.bridges_height)
-		vi=0
-		#shapelyToMesh('test',bridgespoly,0)
-		newpoints=[]
-		while vi<len(ch.points):
-			i1=vi
-			i2=vi
-			chp1=ch.points[i1]
-			chp2=ch.points[i1]#Vector(v1)#this is for case of last point and not closed chunk..
-			if vi+1<len(ch.points):
-				i2 = vi+1
-				chp2=ch.points[vi+1]#Vector(ch.points[vi+1])
-			v1=Vector(chp1)
-			v2=Vector(chp2)
-			if v1.z<bridgeheight or v2.z<bridgeheight:
-				v=v2-v1
-				#dist+=v.length
-				p1=sgeometry.Point(chp1)
-				p2=sgeometry.Point(chp1)
+
+	#get bridgepoly
+	shapes=[]
+	for ob in bridgegroup.objects:
+		if ob.type == 'CURVE':
+			shapes.extend(curveToShapely(ob))
+	bridgespoly=sops.unary_union(shapes)
+	#buffer the poly, so the bridges are not actually milled...
+	bridgespoly = bridgespoly.buffer(distance = o.cutter_diameter/2.0)
+	####
+	bridgeheight=min(0,o.min.z+o.bridges_height)
+	vi=0
+	#shapelyToCurve('test',bridgespoly,0)
+	newpoints=[]
+	while vi<len(ch.points):
+		i1=vi
+		i2=vi
+		chp1=ch.points[i1]
+		chp2=ch.points[i1]#Vector(v1)#this is for case of last point and not closed chunk..
+		if vi+1<len(ch.points):
+			i2 = vi+1
+			chp2=ch.points[vi+1]#Vector(ch.points[vi+1])
+		v1=Vector(chp1)
+		v2=Vector(chp2)
+		if v1.z<bridgeheight or v2.z<bridgeheight:
+			v=v2-v1
+			#dist+=v.length
+			p1=sgeometry.Point(chp1)
+			p2=sgeometry.Point(chp1)
+			
+			startinside = bridgespoly.contains(p1)
+			endinside = bridgespoly.contains(p2)
+			l=sgeometry.LineString([chp1,chp2])
+			intersections = bridgespoly.boundary.intersection(l)
+			
+			itempty = intersections.type == 'GeometryCollection'
+			itpoint = intersections.type == 'Point'
+			itmpoint = intersections.type == 'MultiPoint'
+			
+			#print(startinside, endinside,intersections, intersections.type)
+			#print(l,bridgespoly)
+			if not startinside:
+				#print('nothing found')
 				
-				startinside = bridgespoly.contains(p1)
-				endinside = bridgespoly.contains(p2)
-				l=sgeometry.LineString([chp1,chp2])
-				intersections = bridgespoly.boundary.intersection(l)
-				
-				itempty = intersections.type == 'GeometryCollection'
-				itpoint = intersections.type == 'Point'
-				itmpoint = intersections.type == 'MultiPoint'
-				
-				#print(startinside, endinside,intersections, intersections.type)
-				#print(l,bridgespoly)
-				if not startinside:
-					#print('nothing found')
-					
-					newpoints.append(chp1)
-				#elif startinside and endinside and itempty:
-				#	newpoints.append((chp1[0],chp1[1],max(chp1[2],bridgeheight)))
-				elif startinside:
-					newpoints.append((chp1[0],chp1[1],max(chp1[2],bridgeheight)))
-				#elif not startinside:
-				#	newpoints.append(chp1)
-				cpoints=[]
-				if itpoint:
-					cpoints= [Vector((intersections.x,intersections.y,intersections.z))]
-				elif itmpoint:
-					cpoints=[]
-					for p in intersections:
-						cpoints.append(Vector((p.x,p.y,p.z)))
-				#####sort collisions here :(
-				ncpoints=[]
-				while len(cpoints)>0:
-					mind=10000000
-					mini=-1
-					for i,p in enumerate(cpoints):
-						if min(mind, (p-v1).length)<mind:
-							mini=i
-							mind= (p-v1).length
-					ncpoints.append(cpoints.pop(mini))
-				cpoints = ncpoints
-				#endsorting
-				
-				
-				if startinside:
-					isinside=True
-				else:	
-					isinside=False
-				for cp in cpoints:
-					v3= cp
-					#print(v3)
-					if v.length==0:
-						ratio=1
-					else:
-						fractvect = v3 - v1
-						ratio = fractvect.length/v.length
-						
-					collisionz=v1.z+v.z*ratio
-					np1 = (v3.x, v3.y, collisionz)
-					np2	= (v3.x, v3.y, max(collisionz,bridgeheight))
-					if not isinside:
-						newpoints.extend((np1, np2))
-					else:
-						newpoints.extend((np2, np1))
-					isinside = not isinside
-				vi+=1
-			else:
 				newpoints.append(chp1)
-				vi+=1
-		ch.points=newpoints
+			#elif startinside and endinside and itempty:
+			#	newpoints.append((chp1[0],chp1[1],max(chp1[2],bridgeheight)))
+			elif startinside:
+				newpoints.append((chp1[0],chp1[1],max(chp1[2],bridgeheight)))
+			#elif not startinside:
+			#	newpoints.append(chp1)
+			cpoints=[]
+			if itpoint:
+				cpoints= [Vector((intersections.x,intersections.y,intersections.z))]
+			elif itmpoint:
+				cpoints=[]
+				for p in intersections:
+					cpoints.append(Vector((p.x,p.y,p.z)))
+			#####sort collisions here :(
+			ncpoints=[]
+			while len(cpoints)>0:
+				mind=10000000
+				mini=-1
+				for i,p in enumerate(cpoints):
+					if min(mind, (p-v1).length)<mind:
+						mini=i
+						mind= (p-v1).length
+				ncpoints.append(cpoints.pop(mini))
+			cpoints = ncpoints
+			#endsorting
+			
+			
+			if startinside:
+				isinside=True
+			else:	
+				isinside=False
+			for cp in cpoints:
+				v3= cp
+				#print(v3)
+				if v.length==0:
+					ratio=1
+				else:
+					fractvect = v3 - v1
+					ratio = fractvect.length/v.length
+					
+				collisionz=v1.z+v.z*ratio
+				np1 = (v3.x, v3.y, collisionz)
+				np2	= (v3.x, v3.y, max(collisionz,bridgeheight))
+				if not isinside:
+					newpoints.extend((np1, np2))
+				else:
+					newpoints.extend((np2, np1))
+				isinside = not isinside
+			vi+=1
+		else:
+			newpoints.append(chp1)
+			vi+=1
+	ch.points=newpoints
 
 
 '''

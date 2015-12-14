@@ -664,10 +664,10 @@ class CamOrientationAdd(bpy.types.Operator):
 		return {'FINISHED'}
 		
 
-class CamBridgeAdd(bpy.types.Operator):
+class CamBridgesAdd(bpy.types.Operator):
 	'''Add orientation to cam operation, for multiaxis operations'''
-	bl_idname = "scene.cam_bridge_add"
-	bl_label = "Add bridge"
+	bl_idname = "scene.cam_bridges_add"
+	bl_label = "Add bridges"
 	bl_options = {'REGISTER', 'UNDO'}
 	
 		
@@ -680,7 +680,7 @@ class CamBridgeAdd(bpy.types.Operator):
 		s=bpy.context.scene
 		a=s.cam_active_operation
 		o=s.cam_operations[a]
-		utils.addBridge(o)
+		utils.addAutoBridges(o)
 		return {'FINISHED'}
 		
 		
