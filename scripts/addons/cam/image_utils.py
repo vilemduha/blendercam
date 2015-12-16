@@ -1446,9 +1446,9 @@ def imageToChunks(o,image, with_border=False):
 	else:
 		return []
 	
-def imageToPoly(o,i, with_border=False):
+def imageToShapely(o,i, with_border=False):
 	polychunks=imageToChunks(o,i, with_border)
-	polys=chunksToPolys(polychunks)
+	polys=chunksToShapely(polychunks)
 	
 	#polys=orderPoly(polys)
 	t=time.time()

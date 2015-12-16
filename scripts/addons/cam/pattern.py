@@ -8,6 +8,8 @@ from cam.simple import *
 from cam.chunk import * 
 from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
+import shapely
+from shapely import geometry as sgeometry
 
 def getPathPatternParallel(o,angle):
 	#minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
@@ -324,8 +326,9 @@ def getPathPattern(operation):
 		pathchunks=[]
 		chunks=[]
 		for p in polys:
-			p=outlinePoly(p,o.dist_between_paths/3,o.circle_detail,o.optimize,o.optimize_threshold,False)#first, move a bit inside, because otherwise the border samples go crazy very often changin between hit/non hit and making too many jumps in the path.
-			chunks.extend(polyToChunks(p,0))
+			#p=outlinePoly(p,o.dist_between_paths/3,o.circle_detail,o.optimize,o.optimize_threshold,False)#first, move a bit inside, because otherwise the border samples go crazy very often changin between hit/non hit and making too many jumps in the path.
+			p=p.buffer(-o.dist_between_paths/3,o.circle_detail)#first, move a bit inside, because otherwise the border samples go crazy very often changin between hit/non hit and making too many jumps in the path.
+			chunks.extend(shapelyToChunks(p,0))
 		
 		pathchunks.extend(chunks)
 		lastchunks=chunks
@@ -340,10 +343,11 @@ def getPathPattern(operation):
 		
 		for porig in polys:
 			p=porig
-			while p.nPoints()>0:
-				p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
-				if p.nPoints()>0:
-					nchunks=polyToChunks(p,zlevel)
+			while not p.is_empty:#:p.nPoints()>0:
+				#p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
+				p=p.buffer(-o.dist_between_paths,o.circle_detail)
+				if not p.is_empty:
+					nchunks=shapelyToChunks(p,zlevel)
 					#parentChildPoly(lastchunks,nchunks,o)
 					pathchunks.extend(nchunks)
 					lastchunks=nchunks
@@ -362,9 +366,10 @@ def getPathPattern(operation):
 							dist+=o.pixsize*0.85# this is here only because silhouette is still done with zbuffer method, even if we use bullet collisions.
 						else:
 							dist+=o.pixsize*2.5
-					p=outlinePoly(p,dist,o.circle_detail,o.optimize,o.optimize_threshold,True)
-					if p.nPoints()>0:
-						chunks=polyToChunks(p,zlevel)
+					p=p.buffer(dist,o.circle_detail)
+					#p=outlinePoly(p,dist,o.circle_detail,o.optimize,o.optimize_threshold,True)
+					if not p.is_empty:
+						chunks=shapelyToChunks(p,zlevel)
 						pathchunks.extend(chunks)
 					lastchunks=chunks
 		

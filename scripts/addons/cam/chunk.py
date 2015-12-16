@@ -3,8 +3,8 @@ import Polygon
 import shapely
 from shapely.geometry import polygon as spolygon
 from shapely import ops
-from shapely import geometry
-
+from shapely import geometry as sgeometry
+from cam import polygon_utils_cam
 from cam import simple
 from cam.simple import * 
 
@@ -130,7 +130,7 @@ class camPathChunk:
 		#self.unsortedchildren=False		
 	#	return self
 	
-	def getNextClosest(self,o,pos):#this should be deprecated after reworking sortchunks a bit
+	def getNextClosest(self,o,pos):
 		mind=100000000000
 		
 		self.cango=False
@@ -155,10 +155,10 @@ class camPathChunk:
 						ch=chtest
 						mind=d
 		if ch!=None:
-			print('found some')
+			#print('found some')
 			return ch
 		#self.unsortedchildren=False		
-		print('returning none')
+		#print('returning none')
 		return None	
 	
 		
@@ -540,7 +540,7 @@ def limitChunks(chunks,o, force=False):#TODO: this should at least add point on 
 			nch1=nch
 			closed=True
 			for s in ch.points:
-				sampled=o.ambient.isInside(s[0],s[1])
+				sampled=o.ambient.contains(sgeometry.Point(s[0],s[1]))
 				if not sampled and len(nch.points)>0:
 					nch.closed=False
 					closed=False
@@ -569,8 +569,8 @@ def parentChildPoly(parents,children,o):
 		#print(parent.poly)
 		for child in children:
 			#print(child.poly)
-			if child!=parent and len(child.poly)>0:
-				if parent.poly.isInside(child.poly[0][0][0],child.poly[0][0][1]):
+			if child!=parent:# and len(child.poly)>0
+				if parent.poly.contains(sgeometry.Point(child.poly.boundary.coords[0])):
 					parent.children.append(child)
 					child.parents.append(parent)
 
@@ -610,7 +610,7 @@ def parentChild(parents, children, o):
 				if parent!=child:
 					parent.children.append(child)
 					child.parents.append(parent)	
-					
+'''					
 def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
 	#print ('analyzing paths')
 	#verts=[]
@@ -631,6 +631,73 @@ def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchie
 		returnpolys.append(ch.poly)
 	#print(len(returnpolys))
 	return returnpolys  
+'''
+	
+def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
+	#print ('analyzing paths')
+	#verts=[]
+	#pverts=[]
+	polys=[]
+	for ch in chunks:#first convert chunk to poly
+		if len(ch.points)>2:
+			pchunk=[]
+			ch.poly=sgeometry.Polygon(ch.points)
+			
+	for ppart in chunks:#then add hierarchy relations
+		for ptest in chunks:
+				
+			#if ppart!=ptest and len(ptest.poly)>0 and len(ppart.poly)>0 and ptest.poly.nPoints(0)>0 and ppart.poly.nPoints(0)>0:
+			if ppart!=ptest :
+				if ptest.poly.contains(ppart.poly):
+					#hierarchy works like this: - children get milled first. 
+					#ptest.children.append(ppart)
+					ppart.parents.append(ptest)
+ 
+	
+	for ch in chunks:#now make only simple polygons with holes, not more polys inside others
+		#print(len(chunks[polyi].parents))
+		found=False
+		if len(ch.parents)%2==1:
+			
+			for parent in ch.parents:
+				if len(parent.parents)+1==len(ch.parents):
+					ch.nparents=[parent]#nparents serves as temporary storage for parents, not to get mixed with the first parenting during the check
+					found=True
+					break
+				
+		if not found:
+			ch.nparents=[]
+
+	for ch in chunks:#then subtract the 1st level holes
+		ch.parents=ch.nparents
+		ch.nparents=None
+		if len(ch.parents)>0:
+			#print(len(ch.parents))
+			#ch.parents[0].poly=ch.parents[0].poly-ch.poly
+			#print(ch.parents[0].poly,[ch.poly])
+			print('addparent')
+			#polygon_utils_cam.shapelyToCurve('crust',ch.parents[0].poly,0)
+			#polygon_utils_cam.shapelyToCurve('hole',ch.poly,0)
+			ch.parents[0].poly = ch.parents[0].poly.difference(ch.poly)#sgeometry.Polygon( ch.parents[0].poly, ch.poly)
+			
+			
+	returnpolys=[]
+
+	for polyi in range(0,len(chunks)):#export only the booleaned polygons
+		ch=chunks[polyi]
+		if len(ch.parents)==0:
+			#ch.poly.simplify()#TODO:THIS CHECK
+			returnpolys.append(ch.poly)
+			#if len(ch.poly.interiors)>0:
+			#	print(ch.poly.interiors[0].coords[0])
+			#polygon_utils_cam.shapelyToCurve('test',ch.poly,0)
+			#print(ch.poly.boundary)
+	print('shapely hierarchies')
+	#print(len(returnpolys))
+	
+	
+	return returnpolys  
+		
 	
 def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
 	#print ('analyzing paths')
@@ -734,6 +801,7 @@ def meshFromCurveToChunk(object):
 		chunk.points.append((mesh.vertices[lastvi].co.x+x,mesh.vertices[lastvi].co.y+y,mesh.vertices[lastvi].co.z+z))
 	#else:
 		#   print('itisnot')
+		
 	chunks.append(chunk)
 	return chunks
 
@@ -816,6 +884,32 @@ def polyToChunks(p,zlevel):#
 	#
 	return chunks
 
+def shapelyToChunks(p,zlevel):#
+	chunks=[]
+	#p=sortContours(p)
+	seq=polygon_utils_cam.shapelyToCoords(p)
+	i=0
+	for s in seq:
+		#progress(p[i])
+		if len(s)>2:
+			chunk=camPathChunk([])
+			chunk.poly=spolygon.Polygon(s)#this should maybe be LineString? but for sorting, we need polygon inside functions.
+			for v in s:
+				#progress (v)
+				
+				if len(v)>2:
+					chunk.points.append((v[0],v[1],v[2]))  
+				else:
+					chunk.points.append((v[0],v[1],zlevel))  
+			
+			chunk.points.append((chunk.points[0][0],chunk.points[0][1],chunk.points[0][2]))#last point =first point
+			chunk.closed=True
+			chunks.append(chunk)
+		i+=1
+	chunks.reverse()#this is for smaller shapes first.
+	#
+	return chunks
+	
 def chunkToPoly(chunk):
 	pverts=[]
 	
@@ -826,6 +920,16 @@ def chunkToPoly(chunk):
 	p=Polygon.Polygon(pverts)
 	return p
 
+def chunkToShapely(chunk):
+	#pverts=[]
+	
+	#for v in chunk.points:
+		 
+	#	pverts.append((v[0],v[1]))
+	 
+	p=spolygon.Polygon(chunk.points)
+	return p	
+	
 def chunksRefine(chunks,o):
 	'''add extra points in between for chunks'''
 	for ch in chunks:
