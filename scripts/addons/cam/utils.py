@@ -1564,15 +1564,27 @@ def sortChunks(chunks,o):
 				ch = getClosest(o,pos,chunks)
 			#	break
 			#pass;
-		if ch!=None:#found next chunk, append it to list
-			ch.sorted=True
-			ch.adaptdist(pos,o)
+		if ch is not None:#found next chunk, append it to list
+			ch.sorted = True
+			ch.adaptdist(pos, o)
 			print(ch)
 			chunks.remove(ch)
 			sortedchunks.append(ch)
-			lastch=ch
-			pos=lastch.points[-1]
-		i-=1	
+			lastch = ch
+			pos = lastch.points[-1]
+		else:
+			# can't find chunks close enough and still some chunks left
+			# to be sorted. For now just move the remaining chunks over to 
+			# the sorted list.
+			# This fixes an infinite loop condition that occurs sometimes.
+			# This is a bandaid fix: need to find the root cause of this problem
+			# suspect it has to do with the sorted flag?
+			print("no chunks found closest. Chunks not sorted: ", len(chunks))
+			sortedchunks.extend(chunks)
+			chunks[:] = []
+			
+		i -= 1
+			
 		'''
 		if i<-200:
 			for ch in chunks:
