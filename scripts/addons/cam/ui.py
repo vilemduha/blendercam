@@ -408,13 +408,16 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'dont_merge')
 					layout.prop(ao,'use_bridges')
 					if ao.use_bridges:
-						layout.prop(ao,'bridges_placement')
+						#layout.prop(ao,'bridges_placement')
 						layout.prop(ao,'bridges_width')
 						layout.prop(ao,'bridges_height')
-						if ao.bridges_placement == 'AUTO':
-							layout.prop(ao,'bridges_per_curve')
-							layout.prop(ao,'bridges_max_distance')
-					
+						
+						layout.prop_search(ao, "bridges_group_name", bpy.data, "groups")
+						#layout.prop(ao,'bridges_group_name')
+						#if ao.bridges_placement == 'AUTO':
+						#	layout.prop(ao,'bridges_per_curve')
+						#	layout.prop(ao,'bridges_max_distance')
+					layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
 				elif ao.strategy=='WATERLINE':
 					layout.prop(ao,'slice_detail')	
 					layout.prop(ao,'waterline_fill')  

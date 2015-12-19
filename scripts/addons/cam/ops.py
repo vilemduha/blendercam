@@ -664,10 +664,10 @@ class CamOrientationAdd(bpy.types.Operator):
 		return {'FINISHED'}
 		
 
-class CamBridgeAdd(bpy.types.Operator):
+class CamBridgesAdd(bpy.types.Operator):
 	'''Add orientation to cam operation, for multiaxis operations'''
-	bl_idname = "scene.cam_bridge_add"
-	bl_label = "Add bridge"
+	bl_idname = "scene.cam_bridges_add"
+	bl_label = "Add bridges"
 	bl_options = {'REGISTER', 'UNDO'}
 	
 		
@@ -680,7 +680,7 @@ class CamBridgeAdd(bpy.types.Operator):
 		s=bpy.context.scene
 		a=s.cam_active_operation
 		o=s.cam_operations[a]
-		utils.addBridge(o)
+		utils.addAutoBridges(o)
 		return {'FINISHED'}
 		
 		
@@ -789,13 +789,13 @@ class CamObjectSilhouete(bpy.types.Operator):
 	def execute(self, context):#this is almost same as getobjectoutline, just without the need of operation data
 		ob=bpy.context.active_object
 		self.silh=utils.getObjectSilhouete('OBJECTS', objects=bpy.context.selected_objects)
-		poly=Polygon.Polygon()
-		for p in self.silh:
-			for ci in range(0,len(p)):
-				poly.addContour(p[ci])
+		#poly=Polygon.Polygon()
+		#for p in self.silh:
+		#	for ci in range(0,len(p)):
+		#		poly.addContour(p[ci])
 		bpy.context.scene.cursor_location=(0,0,0)
-		polygon_utils_cam.polyToMesh(ob.name+'_silhouette',poly,0)#
-		bpy.ops.object.convert(target='CURVE')
+		polygon_utils_cam.shapelyToCurve(ob.name+'_silhouette',self.silh,0)#
+		#bpy.ops.object.convert(target='CURVE')
 		bpy.context.scene.cursor_location=ob.location
 		bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
 		return {'FINISHED'}
