@@ -1,6 +1,8 @@
 import bpy
 from cam import utils, simple,polygon_utils_cam
-import Polygon
+import shapely
+from shapely import geometry as sgeometry
+from shapely import affinity
 import random
 #this algorithm takes all selected curves, 
 #converts them to polygons,
@@ -29,23 +31,21 @@ def packCurves():
 		bpy.ops.object.rotation_clear()
 
 		chunks=utils.curveToChunks(ob)
-		npolys=utils.chunksToPolys(chunks)
+		npolys=utils.chunksToShapely(chunks)
 		#add all polys in silh to one poly
-		poly=Polygon.Polygon()
-		for p in npolys:
-			poly+=p
-		poly.simplify()
-		poly=polygon_utils_cam.outlinePoly(poly,distance/1.5,8,True,.003,offset = True)
+		poly=shapely.ops.unary_union(npolys)
+		
+		poly=poly.buffer(distance/1.5,8)
 		polyfield.append([[0,0],0.0,poly,ob,z])
 	random.shuffle(polyfield)
 	#primitive layout here:
-	allpoly=Polygon.Polygon()#main collision poly.
+	allpoly=sgeometry.Polygon()#main collision poly.
 	
 	
 	shift=0.0015#one milimeter by now.
 	rotchange=.3123456#in radians
 	
-	xmin,xmax,ymin,ymax=polyfield[0][2].boundingBox()
+	xmin,xmax,ymin,ymax=polyfield[0][2].bounds()
 	if direction=='X':
 		mindist=-xmin
 	else:
@@ -75,11 +75,11 @@ def packCurves():
 			#print(x,y)
 			#p=Polygon.Polygon(porig)
 			p=porig
-			p.rotate(rot,0,0)
-			p.shift(x,y)
+			ptrans=affinity.rotate(p,rot,origin=sgeometry.Point(0,0), use_radians = True)
+			ptrans = affinity.translate(ptrans,x,y)
 			
-			xmin,xmax,ymin,ymax=p.boundingBox()
-			if xmin>0 and ymin>0 and ((direction=='Y' and xmax<sheetsizex) or (direction=='X' and ymax<sheetsizey)) and not p.overlaps(allpoly):
+			xmin,xmax,ymin,ymax=p.bounds
+			if xmin>0 and ymin>0 and ((direction=='Y' and xmax<sheetsizex) or (direction=='X' and ymax<sheetsizey)) and not ptrans.crosses(allpoly):
 				#we do more good solutions, choose best out of them:
 				hits+=1
 				if best==None:
@@ -96,8 +96,6 @@ def packCurves():
 
 
 					
-			p.shift(-x,-y)
-			p.rotate(-rot,0,0)
 			
 			if hits>=15 or (iter>10000 and hits>0):#here was originally more, but 90% of best solutions are still 1
 				placed=True
@@ -115,20 +113,21 @@ def packCurves():
 				#print(iter)
 				
 				#reset polygon to best position here:
-				p.rotate(best[2],0,0)
-				p.shift(best[0],best[1])
+				ptrans=affinity.rotate(ptrans,best[2],origin=sgeometry.Point(0,0))
+				ptrans = affinity.translate(ptrans,best[0],best[1])
 				
 				#polygon_utils_cam.polyToMesh(p,0.1)#debug visualisation
 				keep=[]
 				
-				npoly=Polygon.Polygon()
+				npoly=allpoly.union(ptrans)
+				'''
 				for ci in range(0,len(allpoly)):
 					cminx,cmaxx,cminy,cmaxy=allpoly.boundingBox(ci)
 					if direction=='X' and cmaxx>mindist-.1:
 							npoly.addContour(allpoly[ci])
 					if direction=='Y' and cmaxy>mindist-.1:
 							npoly.addContour(allpoly[ci])
-							
+				'''			
 				allpoly=npoly
 				#polygon_utils_cam.polyToMesh(allpoly,0.1)#debug visualisation
 				
