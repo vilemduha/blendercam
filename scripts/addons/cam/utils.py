@@ -1828,7 +1828,6 @@ def getAmbient(o):
 				#for p in polys:
 				#	o.limit_poly+=p
 				if o.ambient_cutter_restrict:
-					#o.limit_poly = outlinePoly(o.limit_poly,o.cutter_diameter/2,o.circle_detail,o.optimize,o.optimize_threshold,offset = False)
 					o.limit_poly = o.limit_poly.buffer(o.cutter_diameter/2,resolution = o.circle_detail)
 			o.ambient = o.ambient.intersection(o.limit_poly)
 	o.update_ambient_tag=False
@@ -1853,7 +1852,6 @@ def getObjectOutline(radius,o,Offset):#FIXME: make this one operation independen
 		print(p1.type,len(polygons))
 		i+=1
 		if radius>0:
-			#p=outlinePoly(p,radius,o.circle_detail,o.optimize,o.optimize_threshold*0.000001,Offset)
 			p1 = p1.buffer(radius*offset,resolution = o.circle_detail)
 		outlines.append(p1)
 	
@@ -1866,7 +1864,7 @@ def getObjectOutline(radius,o,Offset):#FIXME: make this one operation independen
 		#print(p)
 		outline=shapely.ops.unary_union(outlines)
 		#outline = sgeometry.MultiPolygon([outline])
-	shapelyToCurve('oboutline',outline,0)
+	#shapelyToCurve('oboutline',outline,0)
 	return outline
 	
 def addOrientationObject(o):
@@ -2331,17 +2329,18 @@ def strategy_cutout( o ):
 			offset=True
 			if o.cut_type=='INSIDE':
 				offset=False
+				
 			p=getObjectOutline(o.cutter_diameter/2,o,offset)
 			if o.outlines_count>1:
 				for i in range(1,o.outlines_count):
 					chunksFromCurve.extend(shapelyToChunks(p,-1))
 					p = p.buffer(distance = o.dist_between_paths * offset, resolution = o.circle_detail)
-					#p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offset)
 			
 				
 		chunksFromCurve.extend(shapelyToChunks(p,-1))
 		if o.outlines_count>1 and o.movement_insideout=='OUTSIDEIN':
 			chunksFromCurve.reverse()
+			
 	#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
 	chunksFromCurve=limitChunks(chunksFromCurve,o)
 	parentChildPoly(chunksFromCurve,chunksFromCurve,o)
@@ -2542,98 +2541,41 @@ def getPath3axis(context, operation):
 		chunksFromCurve=[]
 		lastchunks=[]
 		centers=None
+		firstoutline = p#for testing in the end.
+		prest = p.buffer(-o.cutter_diameter/2, o.circle_detail)
 		#shapelyToCurve('testik',p,0)
 		while not p.is_empty:
 			nchunks=shapelyToChunks(p,o.min.z)
+			
+			
+			pnew=p.buffer(-o.dist_between_paths,o.circle_detail)
+
+			if o.dist_between_paths>o.cutter_diameter/2.0:			
+				prest= prest.difference(pnew.boundary.buffer(o.cutter_diameter/2, o.circle_detail))
+				if not(pnew.contains(prest)):
+					#shapelyToCurve('cesta',pnew,0)
+					#shapelyToCurve('problemas',prest,0)
+					prest = shapelyToMultipolygon(prest)
+					fine=[]
+					go = []
+					for p1 in prest:
+						if pnew.contains(p1):
+							fine.append(p1)
+						else:
+							go.append(p1)
+					if len(go)>0:
+						for p1 in go:
+							nchunks1=shapelyToChunks(p1,o.min.z)
+							nchunks.extend(nchunks1)
+							prest=sgeometry.MultiPolygon(fine)
+							
 			nchunks=limitChunks(nchunks,o)
 			chunksFromCurve.extend(nchunks)
 			parentChildDist(lastchunks,nchunks,o)
+			
 			lastchunks=nchunks
 			
-			pnew=p.buffer(-o.dist_between_paths,o.circle_detail)
-			#pnew=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 			
-			if o.dist_between_paths>o.cutter_diameter/2.0:#this mess under this IF condition is here ONLY because of the ability to have stepover> than cutter radius. Other CAM softwares don't allow this at all, maybe because of this mathematical problem and performance cost, but into soft materials, this is good to have.
-				o.warnings=o.warnings+'Distance between paths larger\n	than cutter radius can result in uncut areas!\n '
-
-				contours_before=len(p.boundary)
-				
-				
-				if centers==None:
-					centers=[]
-					print(p.type)
-					p = shapelyToMultipolygon(p)
-					for i in range(0,len(p)):
-						centers.append(p[i].centroid)
-				
-				pnew = shapelyToMultipolygon(pnew)
-				contours_after=len(pnew)
-				newcenters=[]
-				
-				do_test=False
-				for ci in range(0,len(pnew)):
-					newcenters.append(pnew.centroid)
-					#dodelat
-					if len(p)>ci:#comparing polygons to detect larger changes in shape
-						#print(ci,len(p))
-						bb1=p[ci].bounds
-						bb2=pnew[ci].bounds
-						d1=dist2d((newcenters[ci].x,newcenters[ci].y),(centers[ci].x,centers[ci].y))
-						d2=0
-						for bbi in range(0,4):
-							d2=max(d2,abs(bb2[bbi]-bb1[bbi]))
-					
-					if contours_after!=contours_before or d1>o.dist_between_paths or d2>o.dist_between_paths*2:
-						do_test=True
-						#print(contours_before,contours_after)
-						
-				if len(pnew)==0:
-					do_test=True
-				#print(contours_before,contours_after)
-				
-				if do_test:	
-					print('testing')
-					prest=p.buffer(-o.cutter_diameter/2.0,o.circle_detail)#this estimates if there was a rest on the last cut
-					#prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
-					
-					prest = shapelyToMultipolygon(prest)
-					
-					for ci,p in enumerate(prest):#.geom?
-						bbcontour=p.bounds
-						add=False
-						#if len(pnew)>ci:
-						
-						d=0
-						bb2=pnew.bounds
-						bb1=prest.bounds
-						
-						if bb2!=():
-							for bbi in range(0,4):
-								print(bb1,bb2)
-								
-								d=max(d,abs(bb2[bbi]-bb1[bbi]))
-							#test to estimate if some of the paths might have disappeared:
-						if d>o.dist_between_paths*2:
-							add=True
-							#print('pnew boundbox vs restboundbox')
-							#print(d/o.dist_between_paths)
-						
-						if min(bbcontour[1]-bbcontour[0],bbcontour[3]-bbcontour[2])<o.dist_between_paths*2:
-							add=True
-							#print('small rest boundbox')
-
-						if add:
-							#print('adding extra contour rest')
-							#print(prest[ci])
-							rest=spolygon.Polygon(prest[ci])
-							nchunks=shapelyToChunks(rest,o.min.z)
-							nchunks=limitChunks(nchunks,o)
-							parentChildDist(lastchunks,nchunks,o)
-							nchunks.extend(chunksFromCurve)#appending these to the beginning, so they get milled first.
-							chunksFromCurve=nchunks
-							
-				centers=newcenters
-
 			percent=int(i/approxn*100)
 			progress('outlining polygons ',percent) 
 			p=pnew
@@ -2748,7 +2690,6 @@ def getPath3axis(context, operation):
 						#print('çoutline')
 						#print(c)
 						coutline = c.buffer(o.cutter_diameter/2,o.circle_detail)
-						#coutline = outlinePoly(c,o.cutter_diameter/2,o.circle_detail,o.optimize,o.optimize_threshold,offset = True)
 						#print(h)
 						#print('çoutline')
 						#print(coutline)
@@ -2952,7 +2893,7 @@ def getPath3axis(context, operation):
 					#polyToMesh('fillrest',restpoly,z)
 						
 					restpoly=restpoly.buffer(-o.dist_between_paths, resolution = o.circle_detail)
-					#outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
+					
 					fillz = z 
 					i=0
 					while not restpoly.is_empty:
@@ -2969,7 +2910,7 @@ def getPath3axis(context, operation):
 						lastchunks=nchunks
 						#slicechunks.extend(polyToChunks(restpoly,z))
 						restpoly=restpoly.buffer(-o.dist_between_paths, resolution = o.circle_detail)
-						#restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
+						
 						i+=1
 						#print(i)
 				i=0
@@ -2990,7 +2931,7 @@ def getPath3axis(context, operation):
 						restpoly=boundrect.difference(lastslice)
 					
 					restpoly=restpoly.buffer(-o.dist_between_paths, resolution = o.circle_detail)
-					#restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
+					
 					i=0
 					while not restpoly.is_empty: #'GeometryCollection':#len(restpoly.boundary.coords)>0:
 						#print(i)
@@ -3002,7 +2943,6 @@ def getPath3axis(context, operation):
 						lastchunks=nchunks
 						#slicechunks.extend(polyToChunks(restpoly,z))
 						restpoly=restpoly.buffer(-o.dist_between_paths, resolution = o.circle_detail)
-						#restpoly=outlinePoly(restpoly,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,offs)
 						i+=1
 				
 				
