@@ -2541,22 +2541,27 @@ def getPath3axis(context,operation):
 
 				contours_before=len(p.boundary)
 				
+				
 				if centers==None:
 					centers=[]
-					for p in range(0,len(p)):
-						centers.append(p.centroid())
-				contours_after=len(pnew.boundary)
+					print(p.type)
+					p = shapelyToMultipolygon(p)
+					for i in range(0,len(p)):
+						centers.append(p[i].centroid)
+				
+				pnew = shapelyToMultipolygon(pnew)
+				contours_after=len(pnew)
 				newcenters=[]
 				
 				do_test=False
 				for ci in range(0,len(pnew)):
-					newcenters.append(pnew.centroid())
-					dodelat
+					newcenters.append(pnew.centroid)
+					#dodelat
 					if len(p)>ci:#comparing polygons to detect larger changes in shape
 						#print(ci,len(p))
-						bb1=p.bounds(ci)
-						bb2=pnew.boundingBox(ci)
-						d1=dist2d(newcenters[ci],centers[ci])
+						bb1=p[ci].bounds
+						bb2=pnew[ci].bounds
+						d1=dist2d((newcenters[ci].x,newcenters[ci].y),(centers[ci].x,centers[ci].y))
 						d2=0
 						for bbi in range(0,4):
 							d2=max(d2,abs(bb2[bbi]-bb1[bbi]))
@@ -2571,17 +2576,26 @@ def getPath3axis(context,operation):
 				
 				if do_test:	
 					print('testing')
-					prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
+					prest=p.buffer(-o.cutter_diameter/2.0,o.circle_detail)#this estimates if there was a rest on the last cut
+					#prest=outlinePoly(p,o.cutter_diameter/2.0,o.circle_detail,o.optimize,o.optimize_threshold,False)#this estimates if there was a rest on the last cut
 					
-					for ci in range(0,len(prest)):
-						bbcontour=prest.boundingBox(ci)
+					prest = shapelyToMultipolygon(prest)
+					
+					for ci,p in enumerate(prest):#.geom?
+						bbcontour=p.bounds
 						add=False
 						#if len(pnew)>ci:
+						
 						d=0
-						bb2=pnew.boundingBox()
-						bb1=prest.boundingBox()
-						for bbi in range(0,4):
-							d=max(d,abs(bb2[bbi]-bb1[bbi]))
+						bb2=pnew.bounds
+						bb1=prest.bounds
+						
+						if bb2!=():
+							for bbi in range(0,4):
+								print(bb1,bb2)
+								
+								d=max(d,abs(bb2[bbi]-bb1[bbi]))
+							#test to estimate if some of the paths might have disappeared:
 						if d>o.dist_between_paths*2:
 							add=True
 							#print('pnew boundbox vs restboundbox')
@@ -2594,8 +2608,8 @@ def getPath3axis(context,operation):
 						if add:
 							#print('adding extra contour rest')
 							#print(prest[ci])
-							rest=Polygon.Polygon(prest[ci])
-							nchunks=polyToChunks(rest,o.min.z)
+							rest=spolygon.Polygon(prest[ci])
+							nchunks=shapelyToChunks(rest,o.min.z)
 							nchunks=limitChunks(nchunks,o)
 							parentChildDist(lastchunks,nchunks,o)
 							nchunks.extend(chunksFromCurve)#appending these to the beginning, so they get milled first.
@@ -2609,9 +2623,11 @@ def getPath3axis(context,operation):
 			
 			i+=1
 		
+		#if (o.poc)#TODO inside outside!
 		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
 			for ch in chunksFromCurve:
 				ch.points.reverse()
+				
 				
 		#if bpy.app.debug_value==1:
 		
