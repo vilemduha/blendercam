@@ -9,7 +9,7 @@ import Polygon
 import shapely
 from shapely.geometry import polygon as spolygon
 from shapely import ops
-from shapely import geometry as sgeometry
+from shapely import geometry
 SHAPELY=True
 #except:
 #	SHAPELY=False
@@ -17,7 +17,7 @@ SHAPELY=True
 
 def Polygon2Shapely(p):
 	conts=[]
-	sp=sgeometry.Polygon()
+	sp=geometry.Polygon()
 	holes=[]
 	contours=[]
 	#print(len(p))
@@ -39,7 +39,7 @@ def Polygon2Shapely(p):
 	for h in holes:
 		sp=sp.difference(h)
 		
-	#sp=sgeometry.asMultiPolygon(conts)
+	#sp=geometry.asMultiPolygon(conts)
 	#sp=ops.cascaded_union(sp)
 	return sp
 	
@@ -69,7 +69,7 @@ def Circle(r,np):
 		c.append((v.x,v.y))
 		v.rotate(e)
 		
-	p=spolygon.Polygon(c)
+	p=Polygon.Polygon(c)
 	return p
 
 def nRect(l,r):
@@ -264,85 +264,12 @@ def polyToMesh(name,p,z):
 	
 	return bpy.context.active_object
 
-def shapelyToCoords(anydata):
-	p=anydata
-	seq=[]
-	#print(p.type)
-	#print(p.geom_type)
-	if p.is_empty:
-	 return seq
-	elif p.type=='Polygon':
-		
-		#print('polygon')
-		clen=len(p.exterior.coords)
-		#seq = sgeometry.asMultiLineString(p)
-		seq=[p.exterior.coords]
-		#print(len(p.interiors))
-		for interior in p.interiors:
-			seq.append(interior.coords)
-	elif p.type=='MultiPolygon':
-		clen=0
-		seq=[]
-		for sp in p:
-			clen+=len(sp.exterior.coords)
-			seq.append(sp.exterior.coords)
-			for interior in sp.interiors:
-				seq.append(interior.coords)
-		
-	elif p.type=='MultiLineString':
-		seq=[]
-		for linestring in p:
-			seq.append(linestring.coords)
-	elif p.type=='MultiPoint':
-		return;
-	elif p.type=='GeometryCollection':
-		#print(dir(p))
-		#print(p.geometryType, p.geom_type)
-		clen=0
-		seq=[]
-		#print(p.boundary.coordsd)
-		for sp in p:
-			clen+=len(sp.exterior.coords)
-			seq.append(sp.exterior.coords)
-			for interior in sp.interiors:
-				seq.extend(interior.coords)
-		#for g in p.geom:
-		#	print(g.type)
+def shapelyToMesh(name,p,z):
+	p = Shapely2Polygon(p)
+	ob = polyToMesh(name,p,z)
+	return ob
 	
-	return seq
 	
-def shapelyToCurve(name,p,z):
-	import bpy,bmesh
-	from bpy_extras import object_utils
-	verts=[]
-	edges=[]
-	vi=0
-	ci=0
-	#for c in p.exterior.coords:
-	
-	print(p.type)
-	seq = shapelyToCoords(p)
-	w = 1 # weight  
-
-	
-	curvedata = bpy.data.curves.new(name=name, type='CURVE')  
-	curvedata.dimensions = '3D'  
-	  
-	objectdata = bpy.data.objects.new(name, curvedata)  
-	objectdata.location = (0,0,0) #object origin  
-	bpy.context.scene.objects.link(objectdata)  
-	
-	for c in seq:
-		polyline = curvedata.splines.new('POLY')  
-		polyline.points.add(len(c)-1)  
-		for num in range(len(c)):  
-			x, y = c[num][0],c[num][1]
-			
-			polyline.points[num].co = (x, y, z, w)  
-	
-	return objectdata#bpy.context.active_object
-	
-'''#outdated?
 def orderPoly(polys):	#sor poly, do holes e.t.c.
 	p=Polygon.Polygon()
 	levels=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]] 
@@ -376,4 +303,3 @@ def orderPoly(polys):	#sor poly, do holes e.t.c.
 		li+=1
 	  
 	return p
-'''
