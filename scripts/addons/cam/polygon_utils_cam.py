@@ -121,7 +121,29 @@ def polyRemoveDoubles(p,optimize_threshold):
 	#progress(time.time()-t)
 	return pnew
 	
-
+def shapelyRemoveDoubles(p,optimize_threshold):
+	optimize_threshold*=0.000001
+	#vecs=[]
+	
+	soptions=['distance','distance',0.0,5,optimize_threshold,5,optimize_threshold]
+	for ci,c in enumerate(p.boundary):# in range(0,len(p)):
+		
+		veclist=[]
+		for v in c:
+			veclist.append(Vector((v[0],v[1])))
+		#progress(len(veclist))
+		s=curve_simplify.simplify_RDP(veclist, soptions)
+		#progress(len(s))
+		nc=[]
+		for i in range(0,len(s)):
+			nc.append(c[s[i]])
+		
+		if len(nc)>2:
+			pnew.addContour(nc,p.isHole(ci))
+		else:
+			pnew.addContour(p[ci],p.isHole(ci))
+	#progress(time.time()-t)
+	return pnew
 	
 def outlinePoly(p,r,circle_detail,optimize,optimize_threshold,offset = True):
 	'''offsets or insets polygon by radius'''
@@ -264,6 +286,18 @@ def polyToMesh(name,p,z):
 	
 	return bpy.context.active_object
 
+def shapelyToMultipolygon(anydata):
+	if anydata.type == 'MultiPolygon':
+		return anydata
+	elif anydata.type == 'Polygon':
+		if not anydata.is_empty:
+			return shapely.geometry.MultiPolygon([anydata])
+		else:
+			return sgeometry.MultiPolygon()
+	else:
+		print(anydata.type, 'shapely conversion aborted')
+		return sgeometry.MultiPolygon()
+		
 def shapelyToCoords(anydata):
 	p=anydata
 	seq=[]
@@ -339,7 +373,10 @@ def shapelyToCurve(name,p,z):
 			x, y = c[num][0],c[num][1]
 			
 			polyline.points[num].co = (x, y, z, w)  
-	
+	objectdata.select = True
+	bpy.context.scene.objects.active = objectdata
+	for c in objectdata.data.splines:
+		c.use_cyclic_u=True
 	return objectdata#bpy.context.active_object
 	
 '''#outdated?
