@@ -2313,7 +2313,7 @@ def strategy_cutout( o ):
 		chunksFromCurve=[]
 		for ob in o.objects:
 			chunksFromCurve.extend(curveToChunks(ob))
-		p=Polygon.Polygon()	
+		#p=Polygon.Polygon()	
 		for ch in chunksFromCurve:
 			#print(ch.points)
 			
