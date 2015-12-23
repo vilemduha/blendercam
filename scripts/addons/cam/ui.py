@@ -381,7 +381,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 						layout.prop(ao,'strategy')
 					layout.prop(ao,'rotary_axis_1')
 					layout.prop(ao,'rotary_axis_2')
-
 				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES' or ao.strategy=='OUTLINEFILL':
 					layout.prop(ao,'movement_insideout')
 					
@@ -424,6 +423,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					if ao.waterline_fill:
 						layout.prop(ao,'dist_between_paths')			
 						layout.prop(ao,'waterline_project')
+					layout.prop(ao,'skin')
 					layout.prop(ao,'inverse')
 				elif ao.strategy=='CARVE':
 					layout.prop(ao,'carve_depth')
@@ -449,7 +449,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'dist_along_paths')
 					if ao.strategy=='PARALLEL' or ao.strategy=='CROSS':
 						layout.prop(ao,'parallel_angle')
-												
+						
+						
+					layout.prop(ao,'skin')
 					layout.prop(ao,'inverse')
 				#elif ao.strategy=='SLICES':
 				#	layout.prop(ao,'slice_detail')	
@@ -457,8 +459,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 			#layout.operator("object.cam_pack_objects")
 			#layout.operator("scene.cam_orientation_add")
 			#gname=ao.name+'_orientations'
-
-			layout.prop(ao,'skin')
 			
 			#if gname in bpy.data.groups:
 			#	layout.label('orientations')
@@ -576,7 +576,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.optimize:
 					layout.prop(ao,'optimize_threshold')
 				if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
-					exclude_exact= ao.strategy=='WATERLINE' or ao.strategy=='POCKET' or ao.strategy=='CUTOUT' or ao.strategy=='DRILL' or ao.strategy=='PENCIL'
+					exclude_exact= ao.strategy=='CUTOUT' or ao.strategy=='DRILL' or ao.strategy=='PENCIL'
 					if not exclude_exact:
 						layout.prop(ao,'use_exact')
 						if ao.use_exact:
