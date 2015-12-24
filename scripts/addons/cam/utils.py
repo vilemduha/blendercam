@@ -3057,14 +3057,15 @@ def getPath3axis(context, operation):
 		
 		from cam.voronoi import Site, computeVoronoiDiagram
 		
-		chunksFromCurve=[]
+		chunks=[]
 		
 		gpoly=spolygon.Polygon()	
 		for ob in o.objects:
 			polys=getOperationSilhouete(o)
+			mpoly = sgeometry.asMultiPolygon(polys)
 			for poly in polys:
-				chunks=shapelyToChunks(poly,-1)
-				chunks = chunksRefine(chunks,o)
+				schunks=shapelyToChunks(poly,-1)
+				schunks = chunksRefine(schunks,o)
 				
 				'''
 				chunksFromCurve.extend(polyToChunks(p,-1))
@@ -3084,7 +3085,7 @@ def getPath3axis(context, operation):
 					points.append(pt)#(pt[0], pt[1]), pt[2])
 				'''
 				verts=[]
-				for ch in chunks:		
+				for ch in schunks:		
 					for pt in ch.points:
 						#pvoro = Site(pt[0], pt[1])
 						verts.append(pt)#(pt[0], pt[1]), pt[2])
@@ -3112,7 +3113,7 @@ def getPath3axis(context, operation):
 				pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
 				
 				#
-				pts=[[pt[0], pt[1], zPosition] for pt in pts]
+				#pts=[[pt[0], pt[1], zPosition] for pt in pts]
 				newIdx=0
 				vertr=[]
 				filteredPts=[]
@@ -3122,23 +3123,33 @@ def getPath3axis(context, operation):
 						vertr.append((True,-1))
 					else:
 						vertr.append((False,newIdx))
-						filteredPts.append(p)
+						z=-mpoly.boundary.distance(sgeometry.Point(p))
+						#print(mpoly.distance(sgeometry.Point(0,0)))
+						#if(z!=0):print(z)
+						filteredPts.append((p[0],p[1],z))
 						newIdx+=1
 						
 				print('filter edges')		
 				filteredEdgs=[]
+				ledges=[]
 				for e in edgesIdx:
 					
 					do=True
 					p1=pts[e[0]]
 					p2=pts[e[1]]
 					#print(p1,p2,len(vertr))
-					if vertr[e[0]][0]:
+					if vertr[e[0]][0]: # exclude edges with allready excluded points
 						do=False
 					elif vertr[e[1]][0]:
 						do=False
 					if do:
 						filteredEdgs.append(((vertr[e[0]][1],vertr[e[1]][1])))
+						ledges.append(sgeometry.LineString((filteredPts[vertr[e[0]][1]],filteredPts[vertr[e[1]][1]])))
+						#print(ledges[-1].has_z)
+						
+				lines = shapely.ops.linemerge(ledges)
+				#shapelyToCurve('test',lines,0)
+				chunks.extend( shapelyToChunks(lines,0))
 				
 				#segments=[]
 				#processEdges=filteredEdgs.copy()
@@ -3147,7 +3158,7 @@ def getPath3axis(context, operation):
 				#while len(filteredEdgs)>0:
 					
 				#Create new mesh structure
-				
+				'''
 				print("Create mesh...")
 				voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
 				
@@ -3165,10 +3176,11 @@ def getPath3axis(context, operation):
 				bpy.context.scene.objects.link(voronoiObj) #Link object to scene
 				bpy.context.scene.objects.active = voronoiObj
 				voronoiObj.select = True
-				
+				'''
 
 				#bpy.ops.object.convert(target='CURVE')
-		bpy.ops.object.join()
+		chunksToMesh(chunks, o )
+		#bpy.ops.object.join()
 	''''
 	pt_list = []
 	x_max = obj[0][0]

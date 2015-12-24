@@ -549,7 +549,7 @@ def limitChunks(chunks,o, force=False):#TODO: this should at least add point on 
 				elif sampled:
 					nch.points.append(s)
 				prevsampled=sampled
-			if len(nch.points)>1 and closed and ch.closed and ch.points[0]==ch.points[1]:
+			if len(nch.points)>2 and closed and ch.closed and ch.points[0]==ch.points[1]:
 				nch.closed=True
 			elif ch.closed and nch!=nch1 and len(nch.points)>1 and nch.points[-1]==nch1.points[0]:#here adds beginning of closed chunk to the end, if the chunks were split during limiting
 				nch.points.extend(nch1.points)
@@ -891,19 +891,23 @@ def shapelyToChunks(p,zlevel):#
 	i=0
 	for s in seq:
 		#progress(p[i])
-		if len(s)>2:
+		if len(s)>1:
 			chunk=camPathChunk([])
-			chunk.poly=spolygon.Polygon(s)#this should maybe be LineString? but for sorting, we need polygon inside functions.
+			if len(s)==2:
+				sgeometry.LineString(s)
+			else:
+				chunk.poly=spolygon.Polygon(s)#this should maybe be LineString? but for sorting, we need polygon inside functions.
 			for v in s:
 				#progress (v)
-				
-				if len(v)>2:
+				#print(v)
+				if p.has_z:
 					chunk.points.append((v[0],v[1],v[2]))  
 				else:
 					chunk.points.append((v[0],v[1],zlevel))  
 			
-			chunk.points.append((chunk.points[0][0],chunk.points[0][1],chunk.points[0][2]))#last point =first point
-			chunk.closed=True
+			#chunk.points.append((chunk.points[0][0],chunk.points[0][1],chunk.points[0][2]))#last point =first point
+			if chunk.points[0]==chunk.points[-1] and len(s)>2:
+				chunk.closed=True
 			chunks.append(chunk)
 		i+=1
 	chunks.reverse()#this is for smaller shapes first.
