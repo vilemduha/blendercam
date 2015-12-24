@@ -2110,42 +2110,10 @@ def addAutoBridges(o):
 				g.objects.link( addBridge(p.x,p.y,pi,o.bridges_width, o.cutter_diameter*1))
 
 			mw=ob.matrix_world
-			'''
-			for c in ob.data.splines:
-				blength = o.cutter_diameter*1
-				
-				minx,miny,minz,maxx,maxy,maxz = getSplineBounds(ob,c)
-				bpy.ops.mesh.primitive_plane_add(radius=blength, view_align=False, enter_editmode=False, location=(0, 0, 0))
-				b=bpy.context.active_object
-				b.name = 'bridge'
-				b.show_name=True
-				b.dimensions.x=o.bridges_width
-				bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-				
-				bpy.ops.object.editmode_toggle()
-				bpy.ops.transform.translate(value=(0, blength/2, 0), constraint_axis=(False, True, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1)
-				bpy.ops.object.editmode_toggle()
-				bpy.ops.object.convert(target='CURVE')
-
-				b.location = (minx+maxx)/2, miny, 0
-				b.rotation_euler.z=pi
-				g.objects.link(b)
-				bpy.ops.object.duplicate(linked=True)
-				b=bpy.context.active_object
-				b.location = (minx+maxx)/2, maxy, 0
-				b.rotation_euler.z=0
-				bpy.ops.object.duplicate(linked=True)
-				b=bpy.context.active_object
-				b.location = minx, (miny+maxy)/2, 0
-				b.rotation_euler.z=pi/2
-				bpy.ops.object.duplicate(linked=True)
-				b=bpy.context.active_object
-				b.location = maxx, (miny+maxy)/2, 0
-				b.rotation_euler.z=-pi/2
-			'''
+			
 
 				
-def addBridges(ch,o):
+def useBridges(ch,o):
 	'''this adds bridges to chunks, takes the bridge-objects group and uses the curves inside it as bridges.'''
 	bridgegroupname=o.bridges_group_name
 	bridgegroup=bpy.data.groups[bridgegroupname]
@@ -2346,7 +2314,6 @@ def strategy_cutout( o ):
 		chunksFromCurve=[]
 		for ob in o.objects:
 			chunksFromCurve.extend(curveToChunks(ob))
-		#p=Polygon.Polygon()	
 		for ch in chunksFromCurve:
 			#print(ch.points)
 			
@@ -2440,7 +2407,7 @@ def strategy_cutout( o ):
 			chunk=chl[0]
 			layer=chl[1]
 			if layer[1]<bridgeheight:
-				addBridges(chunk,o)
+				useBridges(chunk,o)
 
 	for chl in extendorder:
 		chunks.append(chl[0])
@@ -2567,7 +2534,6 @@ def getPath3axis(context, operation):
 		
 	elif o.strategy=='POCKET':	
 		p=getObjectOutline(o.cutter_diameter/2,o,False)
-		#all=Polygon.Polygon(p)
 		approxn=(min(o.max.x-o.min.x,o.max.y-o.min.y)/o.dist_between_paths)/2
 		i=0
 		chunks=[]
@@ -3093,7 +3059,7 @@ def getPath3axis(context, operation):
 		
 		chunksFromCurve=[]
 		
-		gpoly=Polygon.Polygon()	
+		gpoly=spolygon.Polygon()	
 		for ob in o.objects:
 			polys=getOperationSilhouete(o)
 			for poly in polys:
