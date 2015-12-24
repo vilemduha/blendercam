@@ -3397,6 +3397,8 @@ def rotTo2axes(e,axescombination):
 def getPath(context,operation):#should do all path calculations.
 	t=time.clock()
 	#print('ahoj0')
+	if shapely.speedups.available:
+		shapely.speedups.enable()
 	
 	#these tags are for caching of some of the results. Not working well still - although it can save a lot of time during calculation...
 	chd=getChangeData(operation)
