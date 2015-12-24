@@ -2060,6 +2060,22 @@ def getBridges(p,o):
 			bridges.append(pos)
 	return bridges
 '''
+def addBridge(x,y,rot,sizex, sizey):
+	bpy.ops.mesh.primitive_plane_add(radius=sizey, view_align=False, enter_editmode=False, location=(0, 0, 0))
+	b=bpy.context.active_object
+	b.name = 'bridge'
+	#b.show_name=True
+	b.dimensions.x=sizex
+	bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+	
+	bpy.ops.object.editmode_toggle()
+	bpy.ops.transform.translate(value=(0, sizey/2, 0), constraint_axis=(False, True, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1)
+	bpy.ops.object.editmode_toggle()
+	bpy.ops.object.convert(target='CURVE')
+
+	b.location = x, y, 0
+	b.rotation_euler.z=rot
+	return b
 
 def addAutoBridges(o):
 	'''attempt to add auto bridges as set of curves'''
@@ -2075,9 +2091,26 @@ def addAutoBridges(o):
 	for ob in o.objects:
 		
 		if ob.type=='CURVE':
-			sply = curveToShapely(ob)
-			
+			curve = curveToShapely(ob)
+			#curve = shapelyToMultipolygon(curve)
+			for c in curve:
+				c=c.exterior
+				minx, miny, maxx, maxy = c.bounds
+				d1 = c.project(sgeometry.Point(maxx+1000, (maxy+miny)/2.0))
+				p = c.interpolate(d1)
+				g.objects.link( addBridge(p.x,p.y,-pi/2,o.bridges_width, o.cutter_diameter*1))
+				d1 = c.project(sgeometry.Point(minx-1000, (maxy+miny)/2.0))
+				p = c.interpolate(d1)
+				g.objects.link( addBridge(p.x,p.y,pi/2,o.bridges_width, o.cutter_diameter*1))
+				d1 = c.project(sgeometry.Point((minx + maxx)/2.0, maxy + 1000))
+				p = c.interpolate(d1)
+				g.objects.link( addBridge(p.x,p.y,0,o.bridges_width, o.cutter_diameter*1))
+				d1 = c.project(sgeometry.Point((minx + maxx) / 2.0 , miny - 1000))
+				p = c.interpolate(d1)
+				g.objects.link( addBridge(p.x,p.y,pi,o.bridges_width, o.cutter_diameter*1))
+
 			mw=ob.matrix_world
+			'''
 			for c in ob.data.splines:
 				blength = o.cutter_diameter*1
 				
@@ -2109,7 +2142,7 @@ def addAutoBridges(o):
 				b=bpy.context.active_object
 				b.location = maxx, (miny+maxy)/2, 0
 				b.rotation_euler.z=-pi/2
-				
+			'''
 
 				
 def addBridges(ch,o):
