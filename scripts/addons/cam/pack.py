@@ -2,16 +2,41 @@ import bpy
 from cam import utils, simple,polygon_utils_cam
 import shapely
 from shapely import geometry as sgeometry
-from shapely import affinity
-import random
+from shapely import affinity, prepared
+from shapely import speedups
+import random, time
+import mathutils
+from mathutils import Vector
 #this algorithm takes all selected curves, 
 #converts them to polygons,
 # offsets them by the pre-set margin
 #then chooses a starting location possibly inside the allready occupied area and moves and rotates the polygon out of the occupied area
 #if one or more positions are found where the poly doesn't overlap, it is placed and added to the occupied area - allpoly
 #this algorithm is very slow and STUPID, a collision algorithm would be much much faster...
+def translate(s,x,y):
+	ncoords=[]
+	for p in s.exterior.coords:
+		
+		ncoords.append((p[0]+x,p[1]+y))
+	
+	return sgeometry.Polygon(ncoords)
 
+def srotate(s,r,x,y):
+	ncoords=[]
+	e=mathutils.Euler((0,0,r))
+	for p in s.exterior.coords:
+		v1=Vector((p[0],p[1],0))
+		v2=Vector((x,y,0))
+		v=v1-v2
+		v.rotate(e)
+		ncoords.append((v[0],v[1]))
+	
+	return sgeometry.Polygon(ncoords)	
+	
 def packCurves():
+	if speedups.available:
+		speedups.enable()
+	t=time.time()
 	packsettings=bpy.context.scene.cam_pack
 	
 	sheetsizex=packsettings.sheet_x
@@ -36,6 +61,7 @@ def packCurves():
 		poly=shapely.ops.unary_union(npolys)
 		
 		poly=poly.buffer(distance/1.5,8)
+		poly=poly.simplify(0.0003)
 		polyfield.append([[0,0],0.0,poly,ob,z])
 	random.shuffle(polyfield)
 	#primitive layout here:
@@ -45,18 +71,21 @@ def packCurves():
 	shift=0.0015#one milimeter by now.
 	rotchange=.3123456#in radians
 	
-	xmin,xmax,ymin,ymax=polyfield[0][2].bounds()
+	xmin,ymin,xmax,ymax=polyfield[0][2].bounds
 	if direction=='X':
 		mindist=-xmin
 	else:
 		mindist=-ymin
 	i=0
+	p=polyfield[0][2]
+	placedpolys=[]
+	rotcenter=sgeometry.Point(0,0)
 	for pf in polyfield:
 		print(i)
 		rot=0
 		porig=pf[2]
 		placed=False
-		xmin,xmax,ymin,ymax=p.boundingBox()
+		xmin,ymin,xmax,ymax=p.bounds
 		#p.shift(-xmin,-ymin)
 		if direction=='X':
 			x=mindist
@@ -75,23 +104,33 @@ def packCurves():
 			#print(x,y)
 			#p=Polygon.Polygon(porig)
 			p=porig
-			ptrans=affinity.rotate(p,rot,origin=sgeometry.Point(0,0), use_radians = True)
-			ptrans = affinity.translate(ptrans,x,y)
 			
-			xmin,xmax,ymin,ymax=p.bounds
-			if xmin>0 and ymin>0 and ((direction=='Y' and xmax<sheetsizex) or (direction=='X' and ymax<sheetsizey)) and not ptrans.crosses(allpoly):
-				#we do more good solutions, choose best out of them:
-				hits+=1
-				if best==None:
-					best=[x,y,rot,xmax,ymax]
-					besthit=hits
-				if direction=='X':
-					if xmax<best[3]:
+			if rotate: 
+				#ptrans=srotate(p,rot,0,0)
+				ptrans=affinity.rotate(p,rot,origin = rotcenter, use_radians=True)
+				#ptrans = translate(ptrans,x,y)
+				ptrans = affinity.translate(ptrans,x,y)
+			else:
+				#ptrans = translate(p,x,y)
+				ptrans = affinity.translate(p,x,y)
+			xmin,ymin,xmax,ymax=ptrans.bounds
+			#print(iter,p.bounds)
+			
+			if xmin>0 and ymin>0 and ((direction=='Y' and xmax<sheetsizex) or (direction=='X' and ymax<sheetsizey)):
+				if allpoly.disjoint(ptrans):
+					#print('gothit')
+					#we do more good solutions, choose best out of them:
+					hits+=1
+					if best==None:
 						best=[x,y,rot,xmax,ymax]
 						besthit=hits
-				elif ymax<best[4]:
-					best=[x,y,rot,xmax,ymax]
-					besthit=hits
+					if direction=='X':
+						if xmax<best[3]:
+							best=[x,y,rot,xmax,ymax]
+							besthit=hits
+					elif ymax<best[4]:
+						best=[x,y,rot,xmax,ymax]
+						besthit=hits
 					
 
 
@@ -113,13 +152,16 @@ def packCurves():
 				#print(iter)
 				
 				#reset polygon to best position here:
-				ptrans=affinity.rotate(ptrans,best[2],origin=sgeometry.Point(0,0))
+				ptrans=affinity.rotate(porig,best[2],rotcenter, use_radians = True)
+				#ptrans=srotate(porig,best[2],0,0)
 				ptrans = affinity.translate(ptrans,best[0],best[1])
+				#ptrans = translate(ptrans,best[0],best[1])
 				
 				#polygon_utils_cam.polyToMesh(p,0.1)#debug visualisation
 				keep=[]
-				
-				npoly=allpoly.union(ptrans)
+				print(best[0],best[1])
+				#print(len(ptrans.exterior))
+				#npoly=allpoly.union(ptrans)
 				'''
 				for ci in range(0,len(allpoly)):
 					cminx,cmaxx,cminy,cmaxy=allpoly.boundingBox(ci)
@@ -128,11 +170,13 @@ def packCurves():
 					if direction=='Y' and cmaxy>mindist-.1:
 							npoly.addContour(allpoly[ci])
 				'''			
-				allpoly=npoly
+				#allpoly=npoly
+				placedpolys.append(ptrans)
+				allpoly=prepared.prep(sgeometry.MultiPolygon(placedpolys))
 				#polygon_utils_cam.polyToMesh(allpoly,0.1)#debug visualisation
 				
-				for c in p:
-					allpoly.addContour(c)
+				#for c in p:
+				#	allpoly.addContour(c)
 				#cleanup allpoly
 				print(iter,hits,besthit)
 			if not placed:
@@ -151,4 +195,7 @@ def packCurves():
 				if rotate: rot+=rotchange
 			iter+=1
 		i+=1
+	t=time.time()-t
 
+	polygon_utils_cam.shapelyToCurve('test',sgeometry.MultiPolygon(placedpolys),0)
+	print(t)
