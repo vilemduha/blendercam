@@ -431,6 +431,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 				elif ao.strategy=='PENCIL':
 					layout.prop(ao,'dist_along_paths')
 					layout.prop(ao,'pencil_threshold')
+				elif ao.strategy=='MEDIAL_AXIS':
+					layout.prop(ao,'crazy_threshold1', )
+
 				elif ao.strategy=='CRAZY':
 					layout.prop(ao,'crazy_threshold1')
 					layout.prop(ao,'crazy_threshold5')

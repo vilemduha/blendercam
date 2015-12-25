@@ -969,3 +969,40 @@ def chunksRefine(chunks,o):
 		ch.points=newchunk
 			
 	return chunks
+
+		
+def chunksRefineThreshold(chunks,distance, limitdistance):
+	'''add extra points in between for chunks'''
+	for ch in chunks:
+		#print('before',len(ch))
+		newchunk=[]
+		v2=Vector(ch.points[0])
+		#print(ch.points)
+		for s in ch.points:
+			
+			v1=Vector(s)
+			#print(v1,v2)
+			v=v1-v2
+			
+			#print(v.length,o.dist_along_paths)
+			if v.length>limitdistance:
+				d=v.length
+				v.normalize()
+				i=0
+				vref=Vector((0,0,0))
+				
+				while vref.length<d:
+					i+=1
+					vref=v*distance*i
+					if vref.length<d:
+						p=v2+vref
+						
+						newchunk.append((p.x,p.y,p.z))
+					
+					
+			newchunk.append(s)  
+			v2=v1
+		#print('after',len(newchunk))
+		ch.points=newchunk
+			
+	return chunks

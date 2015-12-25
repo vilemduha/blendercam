@@ -3059,13 +3059,16 @@ def getPath3axis(context, operation):
 		
 		chunks=[]
 		
-		gpoly=spolygon.Polygon()	
+		gpoly=spolygon.Polygon()
+		angle=o.cutter_tip_angle
+		slope=math.tan(math.pi*(90-angle/2)/180)
+		
 		for ob in o.objects:
 			polys=getOperationSilhouete(o)
 			mpoly = sgeometry.asMultiPolygon(polys)
 			for poly in polys:
 				schunks=shapelyToChunks(poly,-1)
-				schunks = chunksRefine(schunks,o)
+				schunks = chunksRefineThreshold(schunks,o.dist_along_paths, o.crazy_threshold1)#chunksRefine(schunks,o)
 				
 				'''
 				chunksFromCurve.extend(polyToChunks(p,-1))
@@ -3123,7 +3126,7 @@ def getPath3axis(context, operation):
 						vertr.append((True,-1))
 					else:
 						vertr.append((False,newIdx))
-						z=-mpoly.boundary.distance(sgeometry.Point(p))
+						z=-mpoly.boundary.distance(sgeometry.Point(p))*slope
 						#print(mpoly.distance(sgeometry.Point(0,0)))
 						#if(z!=0):print(z)
 						filteredPts.append((p[0],p[1],z))
@@ -3158,7 +3161,7 @@ def getPath3axis(context, operation):
 				#while len(filteredEdgs)>0:
 					
 				#Create new mesh structure
-				'''
+				
 				print("Create mesh...")
 				voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
 				
@@ -3176,11 +3179,13 @@ def getPath3axis(context, operation):
 				bpy.context.scene.objects.link(voronoiObj) #Link object to scene
 				bpy.context.scene.objects.active = voronoiObj
 				voronoiObj.select = True
-				'''
+				
 
 				#bpy.ops.object.convert(target='CURVE')
+		bpy.ops.object.join()
+		chunks = sortChunks(chunks, o )
 		chunksToMesh(chunks, o )
-		#bpy.ops.object.join()
+		#
 	''''
 	pt_list = []
 	x_max = obj[0][0]
