@@ -3063,127 +3063,148 @@ def getPath3axis(context, operation):
 		angle=o.cutter_tip_angle
 		slope=math.tan(math.pi*(90-angle/2)/180)
 		
+		#remember resolutions of curves, to refine them, 
+		#otherwise medial axis computation yields too many branches in curved parts
+		resolutions_before=[]
 		for ob in o.objects:
-			polys=getOperationSilhouete(o)
-			mpoly = sgeometry.asMultiPolygon(polys)
-			for poly in polys:
-				schunks=shapelyToChunks(poly,-1)
-				schunks = chunksRefineThreshold(schunks,o.dist_along_paths, o.crazy_threshold1)#chunksRefine(schunks,o)
+			if ob.type == 'CURVE':
+				resolutions_before.append(ob.data.resolution_u)
+				if ob.data.resolution_u < 64:
+					ob.data.resolution_u=64
+					
+					
+		polys=getOperationSilhouete(o)
+		mpoly = sgeometry.asMultiPolygon(polys)
+		for poly in polys:
+			schunks=shapelyToChunks(poly,-1)
+			schunks = chunksRefineThreshold(schunks,o.dist_along_paths, o.crazy_threshold1)#chunksRefine(schunks,o)
+			
+			'''
+			chunksFromCurve.extend(polyToChunks(p,-1))
+		
+			for i,c in enumerate(p):
+				gp.addContour(c,p.isHole(i))
 				
-				'''
-				chunksFromCurve.extend(polyToChunks(p,-1))
-			
-				for i,c in enumerate(p):
-					gp.addContour(c,p.isHole(i))
-					
-			
-			chunksFromCurve = chunksRefine(chunksFromCurve,o)
-			
-			
-					
-			points=[]
-			for ch in chunksFromCurve:		
+		
+		chunksFromCurve = chunksRefine(chunksFromCurve,o)
+		
+		
+				
+		points=[]
+		for ch in chunksFromCurve:		
+			for pt in ch.points:
+				pvoro = Site(pt[0], pt[1])
+				points.append(pt)#(pt[0], pt[1]), pt[2])
+			'''
+			verts=[]
+			for ch in schunks:		
 				for pt in ch.points:
-					pvoro = Site(pt[0], pt[1])
-					points.append(pt)#(pt[0], pt[1]), pt[2])
-				'''
-				verts=[]
-				for ch in schunks:		
-					for pt in ch.points:
-						#pvoro = Site(pt[0], pt[1])
-						verts.append(pt)#(pt[0], pt[1]), pt[2])
-				#verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
-				nDupli,nZcolinear = unique(verts)
-				nVerts=len(verts)
-				print(str(nDupli)+" duplicates points ignored")
-				print(str(nZcolinear)+" z colinear points excluded")
-				if nVerts < 3:
-					self.report({'ERROR'}, "Not enough points")
-					return {'FINISHED'}
-				#Check colinear
-				xValues=[pt[0] for pt in verts]
-				yValues=[pt[1] for pt in verts]
-				if checkEqual(xValues) or checkEqual(yValues):
-					self.report({'ERROR'}, "Points are colinear")
-					return {'FINISHED'}
-				#Create diagram
-				print("Tesselation... ("+str(nVerts)+" points)")
-				xbuff, ybuff = 5, 5 # %
-				zPosition=0
-				vertsPts= [Point(vert[0], vert[1], vert[2]) for vert in verts]
-				#vertsPts= [Point(vert[0], vert[1]) for vert in verts]
-				
-				pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
-				
-				#
-				#pts=[[pt[0], pt[1], zPosition] for pt in pts]
-				newIdx=0
-				vertr=[]
-				filteredPts=[]
-				print('filter points')
-				for p in pts:
-					if not poly.contains(sgeometry.Point(p)):
-						vertr.append((True,-1))
-					else:
-						vertr.append((False,newIdx))
+					#pvoro = Site(pt[0], pt[1])
+					verts.append(pt)#(pt[0], pt[1]), pt[2])
+			#verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
+			nDupli,nZcolinear = unique(verts)
+			nVerts=len(verts)
+			print(str(nDupli)+" duplicates points ignored")
+			print(str(nZcolinear)+" z colinear points excluded")
+			if nVerts < 3:
+				self.report({'ERROR'}, "Not enough points")
+				return {'FINISHED'}
+			#Check colinear
+			xValues=[pt[0] for pt in verts]
+			yValues=[pt[1] for pt in verts]
+			if checkEqual(xValues) or checkEqual(yValues):
+				self.report({'ERROR'}, "Points are colinear")
+				return {'FINISHED'}
+			#Create diagram
+			print("Tesselation... ("+str(nVerts)+" points)")
+			xbuff, ybuff = 5, 5 # %
+			zPosition=0
+			vertsPts= [Point(vert[0], vert[1], vert[2]) for vert in verts]
+			#vertsPts= [Point(vert[0], vert[1]) for vert in verts]
+			
+			pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
+			
+			#
+			#pts=[[pt[0], pt[1], zPosition] for pt in pts]
+			newIdx=0
+			vertr=[]
+			filteredPts=[]
+			print('filter points')
+			for p in pts:
+				if not poly.contains(sgeometry.Point(p)):
+					vertr.append((True,-1))
+				else:
+					vertr.append((False,newIdx))
+					if o.cutter_type == 'VCARVE':
 						z=-mpoly.boundary.distance(sgeometry.Point(p))*slope
-						#print(mpoly.distance(sgeometry.Point(0,0)))
-						#if(z!=0):print(z)
-						filteredPts.append((p[0],p[1],z))
-						newIdx+=1
+					elif o.cutter_type == 'BALL' or o.cutter_type == 'BALLNOSE':
+						d = -mpoly.boundary.distance(sgeometry.Point(p))
 						
-				print('filter edges')		
-				filteredEdgs=[]
-				ledges=[]
-				for e in edgesIdx:
+						z = sqr() - sqr(d) * math.tan(math.pi*(90-angle/2)/180)
+	
+					#print(mpoly.distance(sgeometry.Point(0,0)))
+					#if(z!=0):print(z)
+					filteredPts.append((p[0],p[1],z))
+					newIdx+=1
 					
-					do=True
-					p1=pts[e[0]]
-					p2=pts[e[1]]
-					#print(p1,p2,len(vertr))
-					if vertr[e[0]][0]: # exclude edges with allready excluded points
-						do=False
-					elif vertr[e[1]][0]:
-						do=False
-					if do:
-						filteredEdgs.append(((vertr[e[0]][1],vertr[e[1]][1])))
-						ledges.append(sgeometry.LineString((filteredPts[vertr[e[0]][1]],filteredPts[vertr[e[1]][1]])))
-						#print(ledges[-1].has_z)
-						
-				lines = shapely.ops.linemerge(ledges)
-				#shapelyToCurve('test',lines,0)
-				chunks.extend( shapelyToChunks(lines,0))
-				#segments=[]
-				#processEdges=filteredEdgs.copy()
-				#chunk=camPathChunk([])
-				#chunk.points.append(filteredEdgs.pop())
-				#while len(filteredEdgs)>0:
+			print('filter edges')		
+			filteredEdgs=[]
+			ledges=[]
+			for e in edgesIdx:
+				
+				do=True
+				p1=pts[e[0]]
+				p2=pts[e[1]]
+				#print(p1,p2,len(vertr))
+				if vertr[e[0]][0]: # exclude edges with allready excluded points
+					do=False
+				elif vertr[e[1]][0]:
+					do=False
+				if do:
+					filteredEdgs.append(((vertr[e[0]][1],vertr[e[1]][1])))
+					ledges.append(sgeometry.LineString((filteredPts[vertr[e[0]][1]],filteredPts[vertr[e[1]][1]])))
+					#print(ledges[-1].has_z)
 					
-				#Create new mesh structure
+			lines = shapely.ops.linemerge(ledges)
+			#shapelyToCurve('test',lines,0)
+			chunks.extend( shapelyToChunks(lines,0))
+			#segments=[]
+			#processEdges=filteredEdgs.copy()
+			#chunk=camPathChunk([])
+			#chunk.points.append(filteredEdgs.pop())
+			#while len(filteredEdgs)>0:
 				
-				print("Create mesh...")
-				voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
-				
-				
-						
-				voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
-				
-				voronoiDiagram.update(calc_edges=True) #Update mesh with new data
-				#create an object with that mesh
-				voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
-				#place object
-				#bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
-				
-				#update scene
-				bpy.context.scene.objects.link(voronoiObj) #Link object to scene
-				bpy.context.scene.objects.active = voronoiObj
-				voronoiObj.select = True
-				
-
-				#bpy.ops.object.convert(target='CURVE')
-		bpy.ops.object.join()
-		chunks = sortChunks(chunks, o )
-		chunksToMesh(chunks, o )
+			#Create new mesh structure
+			'''
+			print("Create mesh...")
+			voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
+			
+			
+					
+			voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
+			
+			voronoiDiagram.update(calc_edges=True) #Update mesh with new data
+			#create an object with that mesh
+			voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
+			#place object
+			#bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
+			
+			#update scene
+			bpy.context.scene.objects.link(voronoiObj) #Link object to scene
+			bpy.context.scene.objects.active = voronoiObj
+			voronoiObj.select = True
+			
+			'''
+			#bpy.ops.object.convert(target='CURVE')
+	oi=0
+	for ob in o.objects:
+		if ob.type == 'CURVE':
+			ob.data.resolution_u=resolutions_before[oi]
+			oi+=1
+			
+	#bpy.ops.object.join()
+	chunks = sortChunks(chunks, o )
+	chunksToMesh(chunks, o )
 		#
 	''''
 	pt_list = []
