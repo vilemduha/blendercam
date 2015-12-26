@@ -3130,7 +3130,7 @@ def getPath3axis(context, operation):
 						if d>=r:
 							z=-r
 						else:
-							print(r, d)
+							#print(r, d)
 							z = -r+sqrt(r*r - d*d )
 					#print(mpoly.distance(sgeometry.Point(0,0)))
 					#if(z!=0):print(z)
