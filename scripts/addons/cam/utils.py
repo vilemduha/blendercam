@@ -3062,7 +3062,9 @@ def getPath3axis(context, operation):
 		gpoly=spolygon.Polygon()
 		angle=o.cutter_tip_angle
 		slope=math.tan(math.pi*(90-angle/2)/180)
-		
+		if o.cutter_type=='VCARVE':
+			angle = o.cutter_tip_angle
+			maxdepth = - math.tan(math.pi*(90-angle/2)/180) * o.cutter_diameter/2
 		#remember resolutions of curves, to refine them, 
 		#otherwise medial axis computation yields too many branches in curved parts
 		resolutions_before=[]
@@ -3077,25 +3079,8 @@ def getPath3axis(context, operation):
 		mpoly = sgeometry.asMultiPolygon(polys)
 		for poly in polys:
 			schunks=shapelyToChunks(poly,-1)
-			schunks = chunksRefineThreshold(schunks,o.dist_along_paths, o.crazy_threshold1)#chunksRefine(schunks,o)
+			schunks = chunksRefineThreshold(schunks,o.medial_axis_subdivision, o.medial_axis_threshold)#chunksRefine(schunks,o)
 			
-			'''
-			chunksFromCurve.extend(polyToChunks(p,-1))
-		
-			for i,c in enumerate(p):
-				gp.addContour(c,p.isHole(i))
-				
-		
-		chunksFromCurve = chunksRefine(chunksFromCurve,o)
-		
-		
-				
-		points=[]
-		for ch in chunksFromCurve:		
-			for pt in ch.points:
-				pvoro = Site(pt[0], pt[1])
-				points.append(pt)#(pt[0], pt[1]), pt[2])
-			'''
 			verts=[]
 			for ch in schunks:		
 				for pt in ch.points:
@@ -3137,11 +3122,16 @@ def getPath3axis(context, operation):
 					vertr.append((False,newIdx))
 					if o.cutter_type == 'VCARVE':
 						z=-mpoly.boundary.distance(sgeometry.Point(p))*slope
+						if z<maxdepth:
+							z=maxdepth
 					elif o.cutter_type == 'BALL' or o.cutter_type == 'BALLNOSE':
-						d = -mpoly.boundary.distance(sgeometry.Point(p))
-						
-						z = sqr() - sqr(d) * math.tan(math.pi*(90-angle/2)/180)
-	
+						d = mpoly.boundary.distance(sgeometry.Point(p))
+						r = o.cutter_diameter/2.0
+						if d>=r:
+							z=-r
+						else:
+							print(r, d)
+							z = -r+sqrt(r*r - d*d )
 					#print(mpoly.distance(sgeometry.Point(0,0)))
 					#if(z!=0):print(z)
 					filteredPts.append((p[0],p[1],z))

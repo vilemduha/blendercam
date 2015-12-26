@@ -475,6 +475,9 @@ class camOperation(bpy.types.PropertyGroup):
 	crazy_threshold2=bpy.props.FloatProperty(name="max engagement", default=0.5, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
 	crazy_threshold3=bpy.props.FloatProperty(name="max angle", default=2, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
 	crazy_threshold4=bpy.props.FloatProperty(name="test angle step", default=0.05, min=0.00000001, max=100,precision=PRECISION, update = updateRest)
+	####
+	medial_axis_threshold=bpy.props.FloatProperty(name="Long vector threshold", default=0.001, min=0.00000001, max=100,precision=PRECISION,  unit="LENGTH", update = updateRest)
+	medial_axis_subdivision=bpy.props.FloatProperty(name="Fine subdivision", default=0.0002, min=0.00000001, max=100,precision=PRECISION,  unit="LENGTH", update = updateRest)
 	#calculations
 	duration = bpy.props.FloatProperty(name="Estimated time", default=0.01, min=0.0000, max=32,precision=PRECISION, unit="TIME")
 	#chip_rate
