@@ -327,6 +327,10 @@ def shapelyToCoords(anydata):
 		seq=[]
 		for linestring in p:
 			seq.append(linestring.coords)
+	elif p.type=='LineString':
+		seq=[]
+		seq.append(p.coords)
+	
 	elif p.type=='MultiPoint':
 		return;
 	elif p.type=='GeometryCollection':

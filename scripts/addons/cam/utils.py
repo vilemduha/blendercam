@@ -3153,7 +3153,6 @@ def getPath3axis(context, operation):
 				lines = shapely.ops.linemerge(ledges)
 				#shapelyToCurve('test',lines,0)
 				chunks.extend( shapelyToChunks(lines,0))
-				
 				#segments=[]
 				#processEdges=filteredEdgs.copy()
 				#chunk=camPathChunk([])
