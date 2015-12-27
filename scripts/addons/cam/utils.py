@@ -1479,6 +1479,9 @@ def connectChunksLow(chunks,o):
 	if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
 		mergedist=10*o.dist_between_paths
 	
+	if o.strategy=='MEDIAL_AXIS':
+		mergedist= 1*o.medial_axis_subdivision
+	
 	if o.parallel_step_back:
 		mergedist*=2
 	if o.merge_dist>0:
