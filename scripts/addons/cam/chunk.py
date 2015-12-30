@@ -972,7 +972,7 @@ def chunksRefine(chunks,o):
 
 		
 def chunksRefineThreshold(chunks,distance, limitdistance):
-	'''add extra points in between for chunks'''
+	'''add extra points in between for chunks. For medial axis strategy only !'''
 	for ch in chunks:
 		#print('before',len(ch))
 		newchunk=[]
