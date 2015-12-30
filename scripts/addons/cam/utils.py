@@ -2119,10 +2119,21 @@ def getBridgesPoly(o):
 		bridgegroupname=o.bridges_group_name
 		bridgegroup=bpy.data.groups[bridgegroupname]
 		shapes=[]
+		bpy.ops.object.select_all(action='DESELECT')
+
 		for ob in bridgegroup.objects:
 			if ob.type == 'CURVE':
-				shapes.extend(curveToShapely(ob))
+				ob.select=True
+		bpy.context.scene.objects.active = ob
+		bpy.ops.object.duplicate();
+		bpy.ops.object.join()
+		ob = bpy.context.active_object
+		shapes.extend(curveToShapely(ob))
+		ob.select=True
+		bpy.ops.object.delete(use_global=False)
 		bridgespoly=sops.unary_union(shapes)
+		
+
 		#buffer the poly, so the bridges are not actually milled...
 		o.bridgespolyorig = bridgespoly.buffer(distance = o.cutter_diameter/2.0)
 		o.bridgespoly_boundary = prepared.prep(o.bridgespolyorig.boundary)
