@@ -25,7 +25,8 @@ import bpy
 import subprocess,os, sys, threading
 from cam import utils, pack,polygon_utils_cam,chunk,simple
 from bpy.props import *
-import Polygon
+import shapely
+from shapely import geometry as sgeometry
 
 	
 
@@ -794,7 +795,9 @@ class CamObjectSilhouete(bpy.types.Operator):
 		#	for ci in range(0,len(p)):
 		#		poly.addContour(p[ci])
 		bpy.context.scene.cursor_location=(0,0,0)
-		polygon_utils_cam.shapelyToCurve(ob.name+'_silhouette',self.silh,0)#
+		#smp=sgeometry.asMultiPolygon(self.silh)
+		for smp in self.silh:
+			polygon_utils_cam.shapelyToCurve(ob.name+'_silhouette',smp,0)#
 		#bpy.ops.object.convert(target='CURVE')
 		bpy.context.scene.cursor_location=ob.location
 		bpy.ops.object.origin_set(type='ORIGIN_CURSOR')

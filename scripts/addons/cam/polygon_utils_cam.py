@@ -358,7 +358,7 @@ def shapelyToCurve(name,p,z):
 	ci=0
 	#for c in p.exterior.coords:
 	
-	print(p.type)
+	#print(p.type)
 	seq = shapelyToCoords(p)
 	w = 1 # weight  
 

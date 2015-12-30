@@ -692,7 +692,7 @@ def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchie
 			#	print(ch.poly.interiors[0].coords[0])
 			#polygon_utils_cam.shapelyToCurve('test',ch.poly,0)
 			#print(ch.poly.boundary)
-	print('shapely hierarchies')
+	#print('shapely hierarchies')
 	#print(len(returnpolys))
 	
 	
@@ -778,7 +778,7 @@ def meshFromCurveToChunk(object):
 		else:
 			chunk.points.append(co)
 			if len(chunk.points)>2 and (not(dk.isdisjoint([(vi,lastvi)])) or not(dk.isdisjoint([(lastvi,vi)]))):#this was looping chunks of length of only 2 points...
-				print('itis')
+				#print('itis')
 				
 				chunk.closed=True
 				chunk.points.append((mesh.vertices[lastvi].co+object.location).to_tuple())#add first point to end#originally the z was mesh.vertices[lastvi].co.z+z
@@ -819,7 +819,7 @@ def makeVisible(o):
 
 def restoreVisibility(o,storage):
 	o.hide=storage[0]
-	print(storage)
+	#print(storage)
 	for i in range(0,20):
 		o.layers[i]=storage[1][i]
 

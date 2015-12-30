@@ -59,7 +59,7 @@ from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChu
 from shapely.geometry import polygon as spolygon
 from shapely import ops as sops
 from shapely import geometry as sgeometry
-from shapely import affinity
+from shapely import affinity, prepared
 #from shapely.geometry import * not possible until Polygon libs gets out finally..
 SHAPELY=True
 	
@@ -1744,7 +1744,7 @@ def getObjectSilhouete(stype, objects=None):
 					#for i in f.vertices:
 					#	verts.append(mw*m.vertices[i].co)
 					#n=mathutils.geometry.normal(verts[0],verts[1],verts[2])
-					if n.z>0.0 and f.area>0.0 :
+					if f.area>0:#n.z>0.0 and f.area>0.0 :
 						s=[]
 						c=f.center.xy
 						for i in f.vertices:
@@ -2114,28 +2114,36 @@ def addAutoBridges(o):
 
 			mw=ob.matrix_world
 			
-
-				
+def getBridgesPoly(o):
+	if not hasattr(o, 'bridgespolyorig'):
+		bridgegroupname=o.bridges_group_name
+		bridgegroup=bpy.data.groups[bridgegroupname]
+		shapes=[]
+		for ob in bridgegroup.objects:
+			if ob.type == 'CURVE':
+				shapes.extend(curveToShapely(ob))
+		bridgespoly=sops.unary_union(shapes)
+		#buffer the poly, so the bridges are not actually milled...
+		o.bridgespolyorig = bridgespoly.buffer(distance = o.cutter_diameter/2.0)
+		o.bridgespoly_boundary = prepared.prep(o.bridgespolyorig.boundary)
+		o.bridgespoly = prepared.prep(o.bridgespolyorig)
+	
 def useBridges(ch,o):
 	'''this adds bridges to chunks, takes the bridge-objects group and uses the curves inside it as bridges.'''
-	bridgegroupname=o.bridges_group_name
-	bridgegroup=bpy.data.groups[bridgegroupname]
 	
 	
 
 	#get bridgepoly
-	shapes=[]
-	for ob in bridgegroup.objects:
-		if ob.type == 'CURVE':
-			shapes.extend(curveToShapely(ob))
-	bridgespoly=sops.unary_union(shapes)
-	#buffer the poly, so the bridges are not actually milled...
-	bridgespoly = bridgespoly.buffer(distance = o.cutter_diameter/2.0)
+	getBridgesPoly(o)
+	
 	####
 	bridgeheight=min(0,o.min.z+o.bridges_height)
 	vi=0
 	#shapelyToCurve('test',bridgespoly,0)
 	newpoints=[]
+	p1=sgeometry.Point(ch.points[0])
+	startinside = o.bridgespoly.contains(p1)
+	interrupted = False
 	while vi<len(ch.points):
 		i1=vi
 		i2=vi
@@ -2149,14 +2157,23 @@ def useBridges(ch,o):
 		if v1.z<bridgeheight or v2.z<bridgeheight:
 			v=v2-v1
 			#dist+=v.length
-			p1=sgeometry.Point(chp1)
-			p2=sgeometry.Point(chp1)
+			p2=sgeometry.Point(chp2)
 			
-			startinside = bridgespoly.contains(p1)
-			endinside = bridgespoly.contains(p2)
+			if interrupted:
+				p1=sgeometry.Point(chp1)
+				startinside = o.bridgespoly.contains(p1)
+				interrupted = False
+				
+				
+			endinside = o.bridgespoly.contains(p2)
 			l=sgeometry.LineString([chp1,chp2])
-			intersections = bridgespoly.boundary.intersection(l)
-			
+			#print(dir(bridgespoly_boundary))
+			if o.bridgespoly_boundary.intersects(l):
+				#print('intersects')
+				intersections = o.bridgespolyorig.boundary.intersection(l)
+			else:
+				intersections = sgeometry.GeometryCollection()
+				
 			itempty = intersections.type == 'GeometryCollection'
 			itpoint = intersections.type == 'Point'
 			itmpoint = intersections.type == 'MultiPoint'
@@ -2215,10 +2232,15 @@ def useBridges(ch,o):
 				else:
 					newpoints.extend((np2, np1))
 				isinside = not isinside
+				
+			startinside = endinside
+			p1=p2
+			
 			vi+=1
 		else:
 			newpoints.append(chp1)
 			vi+=1
+			interrupted = True
 	ch.points=newpoints
 
 
@@ -3189,15 +3211,15 @@ def getPath3axis(context, operation):
 			
 			'''
 			#bpy.ops.object.convert(target='CURVE')
-	oi=0
-	for ob in o.objects:
-		if ob.type == 'CURVE':
-			ob.data.resolution_u=resolutions_before[oi]
-			oi+=1
+		oi=0
+		for ob in o.objects:
+			if ob.type == 'CURVE':
+				ob.data.resolution_u=resolutions_before[oi]
+				oi+=1
 			
-	#bpy.ops.object.join()
-	chunks = sortChunks(chunks, o )
-	chunksToMesh(chunks, o )
+		#bpy.ops.object.join()
+		chunks = sortChunks(chunks, o )
+		chunksToMesh(chunks, o )
 		#
 	''''
 	pt_list = []
