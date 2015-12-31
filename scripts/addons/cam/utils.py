@@ -1575,6 +1575,7 @@ def sortChunks(chunks,o):
 			sortedchunks.append(ch)
 			lastch = ch
 			pos = lastch.points[-1]
+		print(i, len(chunks))
 		# experimental fix for infinite loop problem
 		#else:
 			# can't find chunks close enough and still some chunks left
@@ -2381,7 +2382,8 @@ def strategy_cutout( o ):
 			
 	#parentChildPoly(chunksFromCurve,chunksFromCurve,o)
 	chunksFromCurve=limitChunks(chunksFromCurve,o)
-	parentChildPoly(chunksFromCurve,chunksFromCurve,o)
+	if not o.dont_merge:
+		parentChildPoly(chunksFromCurve,chunksFromCurve,o)
 	if o.outlines_count==1:
 		chunksFromCurve=sortChunks(chunksFromCurve,o)
 	
