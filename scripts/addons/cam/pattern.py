@@ -326,7 +326,6 @@ def getPathPattern(operation):
 		pathchunks=[]
 		chunks=[]
 		for p in polys:
-			#p=outlinePoly(p,o.dist_between_paths/3,o.circle_detail,o.optimize,o.optimize_threshold,False)#first, move a bit inside, because otherwise the border samples go crazy very often changin between hit/non hit and making too many jumps in the path.
 			p=p.buffer(-o.dist_between_paths/3,o.circle_detail)#first, move a bit inside, because otherwise the border samples go crazy very often changin between hit/non hit and making too many jumps in the path.
 			chunks.extend(shapelyToChunks(p,0))
 		
@@ -344,7 +343,6 @@ def getPathPattern(operation):
 		for porig in polys:
 			p=porig
 			while not p.is_empty:#:p.nPoints()>0:
-				#p=outlinePoly(p,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
 				p=p.buffer(-o.dist_between_paths,o.circle_detail)
 				if not p.is_empty:
 					nchunks=shapelyToChunks(p,zlevel)
@@ -367,7 +365,6 @@ def getPathPattern(operation):
 						else:
 							dist+=o.pixsize*2.5
 					p=p.buffer(dist,o.circle_detail)
-					#p=outlinePoly(p,dist,o.circle_detail,o.optimize,o.optimize_threshold,True)
 					if not p.is_empty:
 						chunks=shapelyToChunks(p,zlevel)
 						pathchunks.extend(chunks)

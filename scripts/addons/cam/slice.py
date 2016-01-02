@@ -222,8 +222,7 @@ def sliceObject(ob):
 			ch = chunk.camPathChunk(nchp)
 
 			#print(ch)
-			pslices=chunk.chunksToPolys([ch])
-			#p1=outlinePoly(pslice,o.dist_between_paths,o.circle_detail,o.optimize,o.optimize_threshold,False)
+			pslices=chunk.chunksToShapely([ch])
 			#print(pslices)
 			for pslice in pslices:
 				p = pslice#-p1
@@ -236,7 +235,7 @@ def sliceObject(ob):
 				textob.data.align = 'CENTER'
 				
 				#print(len(ch.points))
-				sliceobject = polygon_utils_cam.polyToMesh('slice',p,slicechunk[0][2])
+				sliceobject = polygon_utils_cam.shapelyToCurve('slice',p,slicechunk[0][2])
 				textob.location=(0,0,0)
 				
 				textob.parent=sliceobject

@@ -1,4 +1,3 @@
-import Polygon
 
 import shapely
 from shapely.geometry import polygon as spolygon
@@ -16,9 +15,9 @@ class camPathChunk:
 	#progressIndex=-1# for e.g. parallel strategy, when trying to save time..
 	def __init__(self,inpoints ,startpoints = None, endpoints = None, rotations = None):
 		if len(inpoints)>2:
-			self.poly=Polygon.Polygon(inpoints)
+			self.poly=sgeometry.Polygon(inpoints)
 		else:
-			self.poly=Polygon.Polygon()
+			self.poly=sgeometry.Polygon()
 		self.points=inpoints#for 3 axes, this is only storage of points. For N axes, here go the sampled points
 		if startpoints:
 			self.startpoints = startpoints#from where the sweep test begins, but also retract point for given path
@@ -610,28 +609,7 @@ def parentChild(parents, children, o):
 				if parent!=child:
 					parent.children.append(child)
 					child.parents.append(parent)	
-'''					
-def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
-	#print ('analyzing paths')
-	#verts=[]
-	#pverts=[]
-	polys=[]
-	for ch in chunks:#first convert chunk to poly
-		if len(ch.points)>2:
-			pchunk=[]
-			for v in ch.points:
-				pchunk.append((v[0],v[1]))
-			ch.poly=spolygon.Polygon(pchunk)
-			#ch.poly.simplify()
-	
-		
-	returnpolys=[]
 
-	for ch in chunks:#export only the booleaned polygons
-		returnpolys.append(ch.poly)
-	#print(len(returnpolys))
-	return returnpolys  
-'''
 	
 def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
 	#print ('analyzing paths')
@@ -698,62 +676,7 @@ def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchie
 	
 	return returnpolys  
 		
-	
-def chunksToPolys(chunks):#this does more cleve chunks to Poly with hierarchies... ;)
-	#print ('analyzing paths')
-	#verts=[]
-	#pverts=[]
-	polys=[]
-	for ch in chunks:#first convert chunk to poly
-		if len(ch.points)>2:
-			pchunk=[]
-			for v in ch.points:
-				pchunk.append((v[0],v[1]))
-			ch.poly=Polygon.Polygon(pchunk)
-			ch.poly.simplify()
-		
-	for ppart in chunks:#then add hierarchy relations
-		for ptest in chunks:
-				
-			if ppart!=ptest and len(ptest.poly)>0 and len(ppart.poly)>0 and ptest.poly.nPoints(0)>0 and ppart.poly.nPoints(0)>0:
-				if ptest.poly.isInside(ppart.poly[0][0][0],ppart.poly[0][0][1]):
-					#hierarchy works like this: - children get milled first. 
-					#ptest.children.append(ppart)
-					ppart.parents.append(ptest)
- 
-	
-	for ch in chunks:#now make only simple polygons with holes, not more polys inside others
-		#print(len(chunks[polyi].parents))
-		found=False
-		if len(ch.parents)%2==1:
-			
-			for parent in ch.parents:
-				if len(parent.parents)+1==len(ch.parents):
-					ch.nparents=[parent]#nparents serves as temporary storage for parents, not to get mixed with the first parenting during the check
-					found=True
-					break
-				
-		if not found:
-			ch.nparents=[]
 
-	for ch in chunks:#then subtract the 1st level holes
-		ch.parents=ch.nparents
-		ch.nparents=None
-		if len(ch.parents)>0:
-			#print(len(ch.parents))
-			#ch.parents[0].poly=ch.parents[0].poly-ch.poly
-			ch.parents[0].poly.addContour(ch.poly[0],1)
-		
-	returnpolys=[]
-
-	for polyi in range(0,len(chunks)):#export only the booleaned polygons
-		ch=chunks[polyi]
-		if len(ch.parents)==0:
-			ch.poly.simplify()#TODO:THIS CHECK
-			returnpolys.append(ch.poly)
-	#print(len(returnpolys))
-	return returnpolys  
-		
 def meshFromCurveToChunk(object):
 	mesh=object.data
 	#print('detecting contours from curve')
@@ -862,28 +785,6 @@ def curveToChunks(o):
 	
 	return chunks
 	
-def polyToChunks(p,zlevel):#
-	chunks=[]
-	#p=sortContours(p)
-	
-	i=0
-	for o in p:
-		#progress(p[i])
-		if p.nPoints(i)>2:
-			chunk=camPathChunk([])
-			chunk.poly=Polygon.Polygon(o)
-			for v in o:
-				#progress (v)
-				chunk.points.append((v[0],v[1],zlevel))  
-			
-			chunk.points.append(chunk.points[0])#last point =first point
-			chunk.closed=True
-			chunks.append(chunk)
-		i+=1
-	chunks.reverse()#this is for smaller shapes first.
-	#
-	return chunks
-
 def shapelyToChunks(p,zlevel):#
 	chunks=[]
 	#p=sortContours(p)
@@ -914,16 +815,6 @@ def shapelyToChunks(p,zlevel):#
 	#
 	return chunks
 	
-def chunkToPoly(chunk):
-	pverts=[]
-	
-	for v in chunk.points:
-		 
-		pverts.append((v[0],v[1]))
-	 
-	p=Polygon.Polygon(pverts)
-	return p
-
 def chunkToShapely(chunk):
 	#pverts=[]
 	

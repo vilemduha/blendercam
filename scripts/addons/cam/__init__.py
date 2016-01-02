@@ -33,7 +33,8 @@ from bpy.types import Menu, Operator, UIList, AddonPreferences
 #from . import chunk_operations
 from cam import ui, ops, utils, simple, polygon_utils_cam#, post_processors
 import numpy
-import Polygon
+
+from shapely import geometry as sgeometry
 from bpy.app.handlers import persistent
 import subprocess,os, sys, threading
 import pickle
@@ -206,7 +207,7 @@ def updateZbufferImage(self,context):
 	self.update_zbufferimage_tag=True
 	self.update_offsetimage_tag=True
 	utils.getOperationSources(self)
-	utils.checkMemoryLimit(self)
+	#utils.checkMemoryLimit(self)
 
 def updateStrategy(o,context):
 	''''''
@@ -463,7 +464,7 @@ class camOperation(bpy.types.PropertyGroup):
 	simulation_detail=bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0002, min=0.00001, max=0.01,precision=PRECISION, unit="LENGTH", update = updateRest)
 	do_simulation_feedrate = bpy.props.BoolProperty(name="Adjust feedrates with simulation EXPERIMENTAL",description="Adjust feedrates with simulation", default=False, update = updateRest)
 	
-	imgres_limit = bpy.props.IntProperty(name="Maximum resolution in megapixels", default=10, min=1, max=512,description="This property limits total memory usage and prevents crashes. Increase it if you know what are doing.", update = updateZbufferImage)
+	imgres_limit = bpy.props.IntProperty(name="Maximum resolution in megapixels", default=16, min=1, max=512,description="This property limits total memory usage and prevents crashes. Increase it if you know what are doing.", update = updateZbufferImage)
 	optimize = bpy.props.BoolProperty(name="Reduce path points",description="Reduce path points", default=True, update = updateRest)
 	optimize_threshold=bpy.props.FloatProperty(name="Reduction threshold in μm", default=1, min=0.000000001, max=1000,precision=20, update = updateRest)
 	
@@ -519,9 +520,9 @@ class camOperation(bpy.types.PropertyGroup):
 	offset_image=numpy.array([],dtype=float)
 	zbuffer_image=numpy.array([],dtype=float)
 	
-	silhouete= Polygon.Polygon()
-	ambient = Polygon.Polygon()
-	operation_limit=Polygon.Polygon()
+	silhouete= sgeometry.Polygon()
+	ambient = sgeometry.Polygon()
+	operation_limit=sgeometry.Polygon()
 	borderwidth=50
 	object=None
 	path_object_name=bpy.props.StringProperty(name='Path object', description='actual cnc path')

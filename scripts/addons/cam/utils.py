@@ -33,8 +33,7 @@ from bpy.types import Menu, Operator
 from bpy_extras import object_utils
 import curve_simplify
 import bmesh
-import Polygon
-#import Polygon.Utils as pUtils
+
 import numpy
 import random,sys, os
 import pickle
@@ -178,10 +177,11 @@ def checkMemoryLimit(o):
 	res=resx*resy
 	limit=o.imgres_limit*1000000
 	#print('co se to deje')
-	#if res>limit:
-	#	ratio=(res/limit)
-	#	o.pixsize=o.pixsize*math.sqrt(ratio)
-	#	o.warnings=o.warnings+'sampling resolution had to be reduced!\n'
+	if res>limit:
+		ratio=(res/limit)
+		o.pixsize=o.pixsize*math.sqrt(ratio)
+		o.warnings=o.warnings+'sampling resolution had to be reduced!\n'
+		print('changing sampling resolution to %f' % o.pixsize)
 	#print('furt nevim')
 	#print(ratio)
 	
@@ -1320,12 +1320,6 @@ def exportGcodePath(filename,vertslist,operations):
 	c.file_close()
 	print(time.time()-t)
 
-
-def curveToPolys(cob):
-	chunks=curveToChunks(cob)
-	polys=chunksToPolys(chunks)
-	return polys
-	
 def curveToShapely(cob):
 	chunks=curveToChunks(cob)
 	polys=chunksToShapely(chunks)
@@ -1340,20 +1334,11 @@ def silhoueteOffset(context,offset):
 		silhs=curveToShapely(ob)
 	else:
 		silhs=getObjectSilhouete('OBJECTS',[ob])
-	#for p1 in plist:
-	#	p+=p1
-	print(silhs)
+	
 	polys = []
-	mp = sgeometry.MultiPolygon([silhs[0]],silhs[1:])
-	for p in silhs:
-		polys.append(p.buffer(offset, resolution = 64))
-	#mp = mp.buffer(offset,resolution = 64)
-	#p=outlinePoly(p,abs(offset),64,True,abs(offset)*0.002,offset>0)
-	#print(p[0])
-	#p.shift(ob.location.x,ob.location.y)
-	#for p in polys:
-	for s in polys:
-		shapelyToCurve('offset curve',s,ob.location.z)
+	mp = shapely.ops.unary_union(silhs)
+	mp = mp.buffer(offset, resolution = 64)
+	shapelyToCurve('offset curve',mp,ob.location.z)
 	
 	
 	return {'FINISHED'}
@@ -1365,85 +1350,31 @@ def polygonBoolean(context,boolean_type):
 	for ob1 in bpy.context.selected_objects:
 		if ob1!=ob:
 			obs.append(ob1)
-	plist=curveToPolys(ob)
-	p1=Polygon.Polygon()
-	for pt in plist:
-		p1+=pt
+	plist=curveToShapely(ob)
+	p1 = sgeometry.asMultiPolygon(plist)
 	polys=[]
 	for o in obs:
-		plist=curveToPolys(o)
-		p2=Polygon.Polygon()
-		for p in plist:
-			p2+=p
+		plist=curveToShapely(o)
+		p2 = sgeometry.asMultiPolygon(plist)
 		polys.append(p2)
 	#print(polys)
 	if boolean_type=='UNION':
 		for p2 in polys:
-			p1=p1+p2
+			p1=p1.union(p2)
 	elif boolean_type=='DIFFERENCE':
 		for p2 in polys:
-			p1=p1-p2
+			p1=p1.difference(p2)
 	elif boolean_type=='INTERSECT':
 		for p2 in polys:
-			p1=p1 & p2
+			p1=p1.intersection( p2)
 		
-	polyToMesh('boolean',p1,ob.location.z)
+	shapelyToCurve('boolean',p1,ob.location.z)
 	#bpy.ops.object.convert(target='CURVE')
 	#bpy.context.scene.cursor_location=ob.location
 	#bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
 
 	return {'FINISHED'}
 		
-'''
-def chunksToPoly(chunks):
-	
-	verts=[]
-	pverts=[]
-	p=Polygon.Polygon()
-	#contourscount=0
-	polys=[]
-	
-	for ch in chunks:
-		pchunk=[]
-		for v in ch:
-			pchunk.append((v[0],v[1]))
-		
-		if len(pchunk)>1:
-			polys.append(Polygon.Polygon(pchunk)) 
-	levels=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]] 
-	for ppart in polys:
-		hits=0
-		for ptest in polys:
-			
-			if ppart!=ptest:
-				#print (ppart[0][0])
-				if ptest.isInside(ppart[0][0][0],ppart[0][0][1]):
-					hits+=1
-		#hole=0
-		#if hits % 2 ==1:
-		 # hole=1
-		if ppart.nPoints(0)>0:
-			ppart.simplify()
-			levels[hits].append(ppart)
-	li=0
-	for l in levels:	
-		
-		if li%2==1:
-			for part in l:
-				p=p-part
-			#hole=1
-		else:
-			for part in l:
-				p=p+part
-			
-		if li==1:#last chance to simplify stuff... :)
-			p.simplify()
-		li+=1
-	  
-	return p
-'''
-
-
 
 def Helix(r,np, zstart,pend,rev):
 	c=[]
@@ -1578,6 +1509,7 @@ def sortChunks(chunks,o):
 		print(i, len(chunks))
 		# experimental fix for infinite loop problem
 		#else:
+			# THIS PROBLEM WASN'T HERE AT ALL. but keeping it here, it might fix the problems somwhere else:)
 			# can't find chunks close enough and still some chunks left
 			# to be sorted. For now just move the remaining chunks over to 
 			# the sorted list.
@@ -1589,14 +1521,6 @@ def sortChunks(chunks,o):
 			#chunks[:] = []
 			
 		i -= 1
-			
-		'''
-		if i<-200:
-			for ch in chunks:
-				print(ch.sorted)
-				print(ch.getNext())
-				print(len(ch.points))
-		'''
 		
 	
 	sys.setrecursionlimit(1000)
@@ -1654,9 +1578,6 @@ def dictRemove(dict,val):
 	for v in dict[val]:
 		dict[v].remove(val)
 	dict.pop(val)
-
-def getArea(poly):
-	return poly.area()	
 
 def addLoop(parentloop, start, end):
 	added=False
@@ -1768,45 +1689,7 @@ def getObjectSilhouete(stype, objects=None):
 			
 			t=time.time()
 			silhouete = [p]#[polygon_utils_cam.Shapely2Polygon(p)]
-			'''
-			e=0.00001#one hunderth of a millimeter, should be ok.
-			origtol=Polygon.getTolerance()
-			print(origtol)
-			Polygon.setTolerance(e)	
-			print('detecting silhouete - boolean based')
-			ob=objects[0]
-			m=ob.data
-			polys=[]
-			m.calc_tessface()
-			for f in m.tessfaces:
-				if f.normal.z>0 and f.area>0:
-					s=[]
-					for i in f.vertices:
-						v=m.vertices[i].co
-						s.append((v.x,v.y))
-					if len(v)>2:
-						p=Polygon.Polygon(s)
-						#print(dir(p))
-						polys.append(p)
-
-			#print(polys)
-			silh=Polygon.Polygon()
-			for p in polys:
-				silh+=p
-				
-			#clean 0 area parts of the silhouete
 			
-				
-			nsilh=Polygon.Polygon()
-			for i in range(0,len(silh)):
-				if i not in remove:
-					nsilh.addContour(silh[i],silh.isHole(i))
-			silh=nsilh
-			#silh.simplify()
-			silh.shift(ob.location.x,ob.location.y)
-			silhouete=[silh]
-			Polygon.setTolerance(origtol)
-			'''
 	return silhouete
 	
 def getAmbient(o):
@@ -1819,8 +1702,6 @@ def getAmbient(o):
 			r=o.ambient_radius - m
 			o.ambient = getObjectOutline( r , o , True)# in this method we need ambient from silhouete
 		else:
-			#o.ambient=Polygon.Polygon(((o.min.x + m ,o.min.y + m ) , (o.min.x + m ,o.max.y - m ),(o.max.x - m ,o.max.y - m ),(o.max.x - m , o.min.y + m )))
-			#SHAPELY stuff!
 			o.ambient=spolygon.Polygon(((o.min.x + m ,o.min.y + m ) , (o.min.x + m ,o.max.y - m ),(o.max.x - m ,o.max.y - m ),(o.max.x - m , o.min.y + m )))
 		
 		if o.use_limit_curve:
@@ -2009,61 +1890,7 @@ def getContainer():
 		container=s.objects['CAM_OBJECTS']
 	
 	return container
-'''
 
-def getSnappingObject(o):
-	s=bpy.context.scene
-	
-	bproj_name='cam_snap_object_'+o.name
-	
-	if s.objects.get(bproj_name)!=None:
-		ob=s.objects[bproj_name]
-	else:
-		getOperationSources(o)
-		ob=o.objects[0]
-		activate(ob)
-		bpy.ops.object.duplicate()
-		ob=bpy.context.active_object
-		#should do with ALL objects from the operation sources, and join them!
-		ob.name=bproj_name
-		#ensure the object is 'flat'
-		ob.data.dimensions = '2D'
-		ob.data.dimensions = '3D'
-		ob.location.z=0
-		ob.data.extrude=0.01
-		bpy.ops.object.convert(target='MESH')
-		bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
-		ob.parent=getContainer()
-		ob.hide=True
-	return ob
-
-def addBridge(o):	
-	container=getContainer()	
-	bpy.ops.object.empty_add(type='CUBE',location=[0,0,0], view_align=False)
-	b=bpy.context.active_object
-	b.name='bridge_'+o.name
-	b.rotation_euler.x=math.pi/2
-	b.empty_draw_size=0.01
-	b.lock_location[2]=True
-	b.parent=container
-	ob=getSnappingObject(o)
-	activate(b)
-	bpy.ops.object.constraint_add(type='SHRINKWRAP')
-	b.constraints[-1].target=ob
-	addToGroup(b,'cam_bridges_' + o.name )
-		
-		
-def getBridges(p,o):
-	# this function finds positions of the bridges, and returns these.
-	g=bpy.data.groups.get('cam_bridges_'+o.name)
-	bridges=[]
-	if g!=None:
-		for o in g.objects:
-			pos=o.matrix_world.to_translation()
-			pos=pos[0],pos[1]
-			bridges.append(pos)
-	return bridges
-'''
 def addBridge(x,y,rot,sizex, sizey):
 	bpy.ops.mesh.primitive_plane_add(radius=sizey, view_align=False, enter_editmode=False, location=(0, 0, 0))
 	b=bpy.context.active_object
@@ -2258,90 +2085,6 @@ def useBridges(ch,o):
 		ch.points=newpoints
 
 
-'''
-	
-def addBridges(ch,o):
-	#this functions adds Bridges to the finished chunks. AUTOMATIC ONLY NOW!
-	if o.bridges_placement == 'AUTO':
-		ch.getLength()
-		n=int(ch.length/o.bridges_max_distance)
-		bpc=o.bridges_per_curve
-		if o.bridges_width*bpc>ch.length/2:
-			bpc=math.floor(ch.length/(2*o.bridges_width))
-		n = max(n,bpc)
-		if n>0:
-			dist=ch.length/n
-			pos=[]
-			for i in range(0,n):
-				pos.append([i*dist+0.00001+dist/2.0,i*dist+0.00001+dist/2.0+o.bridges_width+o.cutter_diameter])
-			dist=0
-			bridgeheight=min(0,o.min.z+o.bridges_height)
-			inbridge=False
-			posi=0
-			insertpoints=[]
-			changepoints=[]
-			vi=0
-			while vi<len(ch.points):
-				v1=ch.points[vi]
-				v2=Vector(v1)#this is for case of last point and not closed chunk..
-				if ch.closed and vi==len(ch.points)-1:
-					v2=Vector(ch.points[0])
-				elif vi+1<len(ch.points):
-					v2=Vector(ch.points[vi+1])
-				v1=Vector(v1)
-				#if v1.z<bridgeheight or v2.z<bridgeheight:
-				v=v2-v1
-				dist+=v.length
-				
-				wasinbridge=inbridge
-				if not inbridge and posi<len(pos) and pos[posi][0]<dist:#detect start of bridge
-					
-					ratio=(dist-pos[posi][0])/v.length
-					point1=v2-v*ratio
-					point2=point1.copy()
-					if bridgeheight>point1.z:
-						point1.z=min(point1.z,bridgeheight)
-						point2.z=max(point2.z,bridgeheight)
-						#ch.points.insert(vi-1,point1)
-						#ch.points.insert(vi,point2)
-						insertpoints.append([vi+1,point1.to_tuple()])
-						insertpoints.append([vi+1,point2.to_tuple()])
-					inbridge=True
-					
-				if wasinbridge and inbridge:#still in bridge, raise the point up.#
-					changepoints.append([vi,(v1.x,v1.y,max(v1.z,bridgeheight))])
-					#ch.points[vi]=(v1.x,v1.y,max(v1.z,bridgeheight))
-					
-				if inbridge and pos[posi][1]<dist:#detect end of bridge
-					ratio=(dist-pos[posi][1])/v.length
-					point1=v2-v*ratio
-					point2=v2-v*ratio
-					if bridgeheight>point1.z:
-						point1.z=max(point1.z,bridgeheight)
-						point2.z=min(point2.z,bridgeheight)
-						#ch.points.insert(vi,point1)
-						#ch.points.insert(vi+1,point2)
-						#vi+=2
-						insertpoints.append([vi+1,point1.to_tuple()])
-						insertpoints.append([vi+1,point2.to_tuple()])
-					inbridge=False
-					posi+=1 
-					vi-=1
-					dist-=v.length
-				vi+=1
-					
-				
-				
-				
-				if posi>=len(pos):
-					#print('added bridges')
-					break;
-			for p in changepoints:
-				ch.points[p[0]]=p[1]
-			for pi in range(len(insertpoints)-1,-1,-1):
-				ch.points.insert(insertpoints[pi][0],insertpoints[pi][1])
-
-'''
 
 ###########cutout strategy is completely here:
 def strategy_cutout( o ):
@@ -2923,7 +2666,7 @@ def getPath3axis(context, operation):
 						if o.inverse:
 							restpoly=poly.difference(lastslice)
 						else:
-							restpoly=lastslice.difference(poly)#Polygon.Polygon(lastslice)
+							restpoly=lastslice.difference(poly)
 						#print('filling between')
 					if (not o.inverse and poly.is_empty and slicesfilled>0) or (o.inverse and not poly.is_empty and slicesfilled==1):#first slice fill
 						restpoly=lastslice
@@ -2964,8 +2707,7 @@ def getPath3axis(context, operation):
 					#ilim=1000#TODO:this should be replaced... no limit, just check if the shape grows over limits.
 					
 					#offs=False
-					boundrect=o.ambient#Polygon.Polygon(((o.min.x,o.min.y),(o.min.x,o.max.y),(o.max.x,o.max.y),(o.max.x,o.min.y)))
-					
+					boundrect=o.ambient
 					restpoly=boundrect.difference(poly)
 					if (o.inverse and poly.is_empty and slicesfilled>0):
 						restpoly=boundrect.difference(lastslice)
@@ -3236,52 +2978,6 @@ def getPath3axis(context, operation):
 		#bpy.ops.object.join()
 		chunks = sortChunks(chunks, o )
 		chunksToMesh(chunks, o )
-		#
-	''''
-	pt_list = []
-	x_max = obj[0][0]
-	x_min = obj[0][0]
-	y_min = obj[0][1]
-	y_max = obj[0][1]
-	# creates points in format for voronoi library, throwing away z
-	for pt in obj:
-		x, y = pt[0], pt[1]
-		x_max = max(x, x_max)
-		x_min = min(x, x_min)
-		y_max = max(y, y_max)
-		y_min = min(x, x_min)
-		pt_list.append(Site(pt[0], pt[1]))
-
-	res = computeVoronoiDiagram(pt_list)
-
-	edges = res[2]
-	delta = self.clip
-	x_max = x_max + delta
-	y_max = y_max + delta
-
-	x_min = x_min - delta
-	y_min = y_min - delta
-
-	# clipping box to bounding box.
-	pts_tmp = []
-	for pt in res[0]:
-		x, y = pt[0], pt[1]
-		if x < x_min:
-			x = x_min
-		if x > x_max:
-			x = x_max
-
-		if y < y_min:
-			y = y_min
-		if y > y_max:
-			y = y_max
-		pts_tmp.append((x, y, 0))
-
-	pts_out.append(pts_tmp)
-
-	edges_out.append([(edge[1], edge[2]) for edge in edges if -1 not in edge])
-
-	'''
 		
 	#progress('finished')
 	

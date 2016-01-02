@@ -102,7 +102,6 @@ def packCurves():
 			
 			#swap x and y, and add to x
 			#print(x,y)
-			#p=Polygon.Polygon(porig)
 			p=porig
 			
 			if rotate: 
