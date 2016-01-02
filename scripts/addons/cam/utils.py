@@ -1645,7 +1645,7 @@ def getObjectSilhouete(stype, objects=None):
 		for ob in objects:
 			totfaces+=len(ob.data.polygons)
 			
-		if totfaces<20000:#boolean polygons method
+		if totfaces<20000000:#boolean polygons method originaly was 20 000 poly limit, now limitless, it might become teribly slow, but who cares?
 			t=time.time()
 			print('shapely getting silhouette')
 			polys=[]
@@ -1666,7 +1666,7 @@ def getObjectSilhouete(stype, objects=None):
 					#for i in f.vertices:
 					#	verts.append(mw*m.vertices[i].co)
 					#n=mathutils.geometry.normal(verts[0],verts[1],verts[2])
-					if f.area>0:#n.z>0.0 and f.area>0.0 :
+					if f.area>0 and n.z!=0:#n.z>0.0 and f.area>0.0 :
 						s=[]
 						c=f.center.xy
 						for i in f.vertices:
@@ -1679,12 +1679,30 @@ def getObjectSilhouete(stype, objects=None):
 						if len(v)>2:
 							p=spolygon.Polygon(s)
 							#print(dir(p))
-							polys.append(p)
+							if p.is_valid:
+								polys.append(p)
 						#if id==923:
 						#	m.polygons[923].select
 						id+=1	
-			#print(polys)
-			p=sops.unary_union(polys)
+			#print(polys
+			if totfaces<20000:
+				p=sops.unary_union(polys)
+			else:	
+				print('computing in parts')
+				bigshapes=[]
+				i=1
+				part=20000
+				while i*part<totfaces:
+					print(i)
+					ar=polys[(i-1)*part:i*part]
+					bigshapes.append(sops.unary_union(ar))
+					i+=1
+				if (i-1)*part<totfaces:
+					last_ar = polys[(i-1)*part:]
+					bigshapes.append(sops.unary_union(last_ar))
+				print('joining')
+				p=sops.unary_union(bigshapes)
+					
 			print(time.time()-t)
 			
 			t=time.time()
