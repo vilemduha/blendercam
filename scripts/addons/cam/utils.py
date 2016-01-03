@@ -2870,7 +2870,7 @@ def getPath3axis(context, operation):
 		#otherwise medial axis computation yields too many branches in curved parts
 		resolutions_before=[]
 		for ob in o.objects:
-			if ob.type == 'CURVE':
+			if ob.type == 'CURVE' or ob.type == 'FONT':
 				resolutions_before.append(ob.data.resolution_u)
 				if ob.data.resolution_u < 64:
 					ob.data.resolution_u=64
@@ -2933,6 +2933,8 @@ def getPath3axis(context, operation):
 						else:
 							#print(r, d)
 							z = -r+sqrt(r*r - d*d )
+					else:
+						z=0#
 					#print(mpoly.distance(sgeometry.Point(0,0)))
 					#if(z!=0):print(z)
 					filteredPts.append((p[0],p[1],z))
@@ -2989,7 +2991,7 @@ def getPath3axis(context, operation):
 			#bpy.ops.object.convert(target='CURVE')
 		oi=0
 		for ob in o.objects:
-			if ob.type == 'CURVE':
+			if ob.type == 'CURVE' or ob.type == 'FONT':
 				ob.data.resolution_u=resolutions_before[oi]
 				oi+=1
 			
