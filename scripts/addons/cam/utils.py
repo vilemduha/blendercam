@@ -929,9 +929,11 @@ def chunksToMesh(chunks,o):
 	
 	for chi in range(0,len(chunks)):
 		
-		#print(chi)
+		print(chi)
 		
 		ch=chunks[chi]
+		print(chunks)
+		print (ch)
 		if len(ch.points)>0:#TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
 			print(len(ch.points))
 			nverts=[]
@@ -2193,14 +2195,7 @@ def strategy_cutout( o ):
 	
 	chunks=[]
 	
-	if o.ramp:#add ramps or simply add chunks
-		for chl in extendorder:
-			chunk=chl[0]
-			layer=chl[1]
-			if chunk.closed:
-				chunks.append(chunk.rampContour(layer[0],layer[1],o))
-			else:
-				chunks.append(chunk.rampZigZag(layer[0],layer[1],o))
+	
 
 	if o.use_bridges:#add bridges to chunks
 		#bridges=getBridges(p,o)
@@ -2211,9 +2206,20 @@ def strategy_cutout( o ):
 			layer=chl[1]
 			if layer[1]<bridgeheight:
 				useBridges(chunk,o)
-
-	for chl in extendorder:
-		chunks.append(chl[0])
+				
+	if o.ramp:#add ramps or simply add chunks
+		for chl in extendorder:
+			chunk=chl[0]
+			layer=chl[1]
+			if chunk.closed:
+				chunk.rampContour(layer[0],layer[1],o)
+				chunks.append(chunk)
+			else:
+				chunk.rampZigZag(layer[0],layer[1],o)
+				chunks.append(chunk)
+	else:
+		for chl in extendorder:
+			chunks.append(chl[0])
 			
 
 	chunksToMesh(chunks,o)
