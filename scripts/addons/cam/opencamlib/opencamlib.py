@@ -8,6 +8,7 @@ from cam.collision import BULLET_SCALE
 from cam import simple
 from cam.chunk import camPathChunk
 from cam.simple import * 
+from shapely import geometry as sgeometry
 
 OCL_SCALE = 1000
 
@@ -36,7 +37,7 @@ def chunkPointsToCSV(operation, chunks):
 	for ch in chunks:
 		p_index = 0;
 		for point in ch.points:
-				if operation.ambient.isInside( point[0], point[1] ):
+				if operation.ambient.contains( sgeometry.Point(point[0], point[1]) ):
 					csv_file.write( str(point[0]) + ' ' + str(point[1]) + '\n')
 				else:
 					ch.points[p_index] = ( point[0], point[1], 2 )

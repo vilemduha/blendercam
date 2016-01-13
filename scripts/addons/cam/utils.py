@@ -1406,6 +1406,7 @@ def connectChunksLow(chunks,o):
 		return chunks
 		
 	connectedchunks=[]
+	chunks_to_resample=[]#for OpenCAMLib sampling
 	mergedist=3*o.dist_between_paths
 	if o.strategy=='PENCIL':#this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
 		mergedist=10*o.dist_between_paths
