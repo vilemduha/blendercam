@@ -8,6 +8,5 @@ Known issues:
 
 To use OpenCAMLib, you will need Python 2.7 installation, with "python2.7" executable added to your path and OpenCAMLib library installed.
 
-OpenCAMLib and its installation instructions can be found at:
-https://github.com/aewallin/opencamlib
-
+OpenCAMLib installation instructions can be found at:
+https://github.com/vilemnovak/blendercam/wiki/Using-BlenderCAM-with-OpenCAMLib

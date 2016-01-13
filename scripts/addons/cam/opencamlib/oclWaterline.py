@@ -1,11 +1,12 @@
 import ocl
+import tempfile
 import camvtk
 		
-stl = camvtk.STLSurf("./model0.stl")
+stl = camvtk.STLSurf(tempfile.gettempdir()+"/model0.stl")
 stl_polydata = stl.src.GetOutput()
 stl_surf = ocl.STLSurf()
 camvtk.vtkPolyData2OCLSTL(stl_polydata, stl_surf)
-csv_file = open('ocl_settings.txt','r')
+csv_file = open(tempfile.gettempdir()+'/ocl_settings.txt','r')
 op_cutter_type = csv_file.readline().split()[0]
 op_cutter_diameter = float( csv_file.readline() )
 op_minz = float( csv_file.readline() )
@@ -21,7 +22,7 @@ elif op_cutter_type == 'VCARVE':
 else:
 	print "Cutter unsupported: " + op_cutter_type + '\n'
 	quit()
-wl_height_file = open( 'ocl_wl_heights.txt', 'r' )
+wl_height_file = open( tempfile.gettempdir()+'/ocl_wl_heights.txt', 'r' )
 waterline_heights = []
 for line in wl_height_file:
 	waterline_heights.append( float( line.split()[0] ) )
@@ -36,7 +37,7 @@ for height in waterline_heights:
 	waterline.setSampling(0.3)
 	waterline.run()
 	wl_loops = waterline.getLoops()
-	wl_file = open( 'oclWaterline' + str(wl_index) + '.txt', 'w')
+	wl_file = open( tempfile.gettempdir()+'/oclWaterline' + str(wl_index) + '.txt', 'w')
 	for l in wl_loops:
 		wl_file.write( 'l\n' )
 		for p in l:
