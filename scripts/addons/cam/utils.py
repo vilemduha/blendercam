@@ -537,7 +537,15 @@ def sampleChunks(o,pathSamples,layers):
 		if len(layers)>1:# sorting help so that upper layers go first always
 			for i in range(0,len(layers)-1):
 				#print('layerstuff parenting')
-				parentChild(layerchunks[i+1],layerchunks[i],o)
+				parents=[]
+				children=[]
+				for ch in layerchunks[i+1]:
+					if ch.children == []:
+						parents.append(ch)
+				for ch1 in layerchunks[i]:
+					if ch1.parents == []:
+						children.append(ch1)
+				parentChild(parents,children,o) #parent only last and first chunk, before it did this for all.
 	timingadd(sortingtime)
 	chunks=[]
 	
@@ -929,11 +937,11 @@ def chunksToMesh(chunks,o):
 	
 	for chi in range(0,len(chunks)):
 		
-		print(chi)
+		#print(chi)
 		
 		ch=chunks[chi]
-		print(chunks)
-		print (ch)
+		#print(chunks)
+		#print (ch)
 		if len(ch.points)>0:#TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
 			print(len(ch.points))
 			nverts=[]
@@ -1497,6 +1505,8 @@ def sortChunks(chunks,o):
 			#	ch = getClosest(o,pos,chunks)
 			for parent in lastch.parents:
 				ch=parent.getNextClosest(o,pos)
+				if ch!=None:
+					continue;
 			if ch==None:
 				ch = getClosest(o,pos,chunks)
 			#	break
@@ -1504,7 +1514,7 @@ def sortChunks(chunks,o):
 		if ch is not None:#found next chunk, append it to list
 			ch.sorted = True
 			ch.adaptdist(pos, o)
-			print(ch)
+			#print(len(ch.parents),'children')
 			chunks.remove(ch)
 			sortedchunks.append(ch)
 			lastch = ch

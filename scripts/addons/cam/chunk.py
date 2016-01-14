@@ -136,6 +136,8 @@ class camPathChunk:
 		closest=None
 		testlist=[]
 		testlist.extend(self.children)
+		tested=[]
+		tested.extend(self.children)
 		ch=None
 		while len(testlist)>0:
 			chtest=testlist.pop()
@@ -145,8 +147,10 @@ class camPathChunk:
 				
 				for child in chtest.children:
 					if child.sorted==False:
-						testlist.append(child)
-					cango=False
+						if child not in tested:
+							testlist.append(child)
+							tested.append(child)
+						cango=False
 					
 				if cango:
 					d=chtest.dist(pos,o)
