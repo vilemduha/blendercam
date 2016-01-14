@@ -728,6 +728,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ops.CamOffsetSilhouete,
 	ops.CamObjectSilhouete,
 	ops.CamCurveIntarsion,
+	ops.CamCurveOvercuts,
 	ops.CamCurveRemoveDoubles,
 	
 	

@@ -130,6 +130,7 @@ class camPathChunk:
 	#	return self
 	
 	def getNextClosest(self,o,pos):
+		#finds closest chunk that can be milled, when inside sorting hierarchy.
 		mind=100000000000
 		
 		self.cango=False
@@ -160,7 +161,6 @@ class camPathChunk:
 		if ch!=None:
 			#print('found some')
 			return ch
-		#self.unsortedchildren=False		
 		#print('returning none')
 		return None	
 	

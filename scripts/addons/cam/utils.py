@@ -536,9 +536,9 @@ def sampleChunks(o,pathSamples,layers):
 	if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
 		if len(layers)>1:# sorting help so that upper layers go first always
 			for i in range(0,len(layers)-1):
-				#print('layerstuff parenting')
 				parents=[]
 				children=[]
+				#only pick chunks that should have connectivity assigned - 'last' and 'first' ones of the layer.
 				for ch in layerchunks[i+1]:
 					if ch.children == []:
 						parents.append(ch)
