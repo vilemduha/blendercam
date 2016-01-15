@@ -1340,7 +1340,7 @@ def curveToShapely(cob):
 def silhoueteOffset(context,offset):
 	bpy.context.scene.cursor_location=(0,0,0)
 	ob=bpy.context.active_object
-	if ob.type=='CURVE':
+	if ob.type=='CURVE' or ob.type == 'FONT':
 		silhs=curveToShapely(ob)
 	else:
 		silhs=getObjectSilhouete('OBJECTS',[ob])
