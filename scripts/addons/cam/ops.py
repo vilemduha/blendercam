@@ -745,8 +745,8 @@ class CamCurveOvercuts(bpy.types.Operator):
 	
 	diameter = bpy.props.FloatProperty(name="diameter", default=.003, min=0, max=100,precision=4, unit="LENGTH")
 	threshold = bpy.props.FloatProperty(name="threshold", default=math.pi/2*.99, min=-3.14, max=3.14,precision=4, subtype="ANGLE" , unit="ROTATION")
-	do_outer = bpy.props.BoolProperty(name="Outer polygons", default=False)
-		
+	do_outer = bpy.props.BoolProperty(name="Outer polygons", default=True)
+	invert = bpy.props.BoolProperty(name="Invert", default=False)
 	#@classmethod
 	#def poll(cls, context):
 	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
@@ -782,11 +782,15 @@ class CamCurveOvercuts(bpy.types.Operator):
 							v2 = v2.xy#v2 = Vector((v2.x,v2.y,0))
 							if not v1.length==0 and not v2.length == 0:
 								a=v1.angle_signed(v2)
-								if ci==0:
-									sign=-1
-								else:
-									sign=1
-								if (ci==0 and a>self.threshold) or (ci>0 and a>self.threshold):
+								sign=1
+								#if ci==0:
+								#	sign=-1
+								#else:
+								#	sign=1
+								
+								if self.invert:# and ci>0:
+									sign*=-1
+								if (sign<0 and a<-self.threshold) or (sign>0 and a>self.threshold):
 									p=Vector((co[0],co[1]))
 									v1.normalize()
 									v2.normalize()
@@ -798,11 +802,11 @@ class CamCurveOvercuts(bpy.types.Operator):
 										shape= shapely.affinity.translate(shape,p.x,p.y)
 									else:
 										l=math.tan(a/2)*diameter/2
-										p1=p-v*l
+										p1=p-sign*v*l
 										l=shapely.geometry.LineString((p,p1))
 										shape=l.buffer(diameter/2, resolution = 64)
 									
-									if ci>0:
+									if sign>0:
 										negative_overcuts.append(shape)
 									else:	
 										positive_overcuts.append(shape)
@@ -815,7 +819,7 @@ class CamCurveOvercuts(bpy.types.Operator):
 		positive_overcuts = shapely.ops.unary_union(positive_overcuts)
 		#shapes.extend(overcuts)
 		fs=shapely.ops.unary_union(shapes)
-		fs = fs.difference(positive_overcuts)
+		fs = fs.union(positive_overcuts)
 		fs = fs.difference(negative_overcuts)
 		o=utils.shapelyToCurve(o1.name+'_overcuts',fs,o1.location.z)
 		#o=utils.shapelyToCurve('overcuts',overcuts,0)
