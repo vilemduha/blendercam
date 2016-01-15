@@ -714,19 +714,19 @@ class CamCurveIntarsion(bpy.types.Operator):
 	bl_label = "Intarsion"
 	bl_options = {'REGISTER', 'UNDO'}
 	
-	radius = bpy.props.FloatProperty(name="offset", default=.003, min=0, max=100,precision=4, unit="LENGTH")
+	diameter = bpy.props.FloatProperty(name="cutter diameter", default=.003, min=0, max=100,precision=4, unit="LENGTH")
 		
 	#@classmethod
 	#def poll(cls, context):
 	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
 
 	def execute(self, context):
-		utils.silhoueteOffset(context,-self.radius)
+		utils.silhoueteOffset(context,-self.diameter/2)
 		o1=bpy.context.active_object
 
-		utils.silhoueteOffset(context,2*self.radius)
+		utils.silhoueteOffset(context,self.diameter)
 		o2=bpy.context.active_object
-		utils.silhoueteOffset(context,-self.radius)
+		utils.silhoueteOffset(context,-self.diameter/2)
 		o3=bpy.context.active_object
 		o1.select=True
 		o2.select=True
