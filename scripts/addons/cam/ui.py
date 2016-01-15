@@ -702,13 +702,15 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
 	bl_region_type = 'TOOLS'
 	bl_context = "objectmode"
 	bl_label = "Curve CAM Tools"
-	bl_options = {'DEFAULT_CLOSED'}
-
+	bl_category = "Blender CAM"
+	#bl_options = {'DEFAULT_CLOSED'}
+	
 	def draw(self, context):
 		layout = self.layout
 		#col = layout.column(align=True)
 		#lt = context.window_manager.looptools
 		layout.operator("object.curve_boolean")
 		layout.operator("object.curve_intarsion")
+		layout.operator("object.curve_overcuts")
 		layout.operator("object.silhouete_offset")
 		layout.operator("object.curve_remove_doubles")
