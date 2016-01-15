@@ -143,4 +143,7 @@ def shapelyToCurve(name,p,z):
 	bpy.context.scene.objects.active = objectdata
 	for c in objectdata.data.splines:
 		c.use_cyclic_u=True
+	objectdata.data.show_handles=False
+	objectdata.data.show_normal_face=False
+	
 	return objectdata#bpy.context.active_object

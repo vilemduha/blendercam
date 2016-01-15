@@ -668,7 +668,7 @@ class CamOrientationAdd(bpy.types.Operator):
 		
 
 class CamBridgesAdd(bpy.types.Operator):
-	'''Add orientation to cam operation, for multiaxis operations'''
+	'''Add bridge objects to curve'''
 	bl_idname = "scene.cam_bridges_add"
 	bl_label = "Add bridges"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -843,7 +843,8 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
 		bpy.ops.mesh.remove_doubles()
 		bpy.ops.object.editmode_toggle()
 		bpy.ops.object.convert(target='CURVE')
-
+		a=bpy.context.active_object
+		a.data.show_normal_face = False
 		if mode:
 			bpy.ops.object.editmode_toggle()
 		
@@ -861,7 +862,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
 		
 	@classmethod
 	def poll(cls, context):
-		return context.active_object is not None and (context.active_object.type=='CURVE'  or context.active_object.type=='MESH')
+		return context.active_object is not None and (context.active_object.type=='CURVE' or context.active_object.type=='FONT' or context.active_object.type=='MESH')
 
 	def execute(self, context):#this is almost same as getobjectoutline, just without the need of operation data
 		utils.silhoueteOffset(context,self.offset)
