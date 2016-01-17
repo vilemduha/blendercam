@@ -101,11 +101,13 @@ def shapelyToCoords(anydata):
 		clen=0
 		seq=[]
 		#print(p.boundary.coordsd)
-		for sp in p:
+		for sp in p:#TODO
+			#seq.append(shapelyToCoords(sp))
 			clen+=len(sp.exterior.coords)
 			seq.append(sp.exterior.coords)
 			for interior in sp.interiors:
 				seq.extend(interior.coords)
+
 		#for g in p.geom:
 		#	print(g.type)
 	

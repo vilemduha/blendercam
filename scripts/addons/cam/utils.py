@@ -2974,10 +2974,18 @@ def getPath3axis(context, operation):
 					filteredEdgs.append(((vertr[e[0]][1],vertr[e[1]][1])))
 					ledges.append(sgeometry.LineString((filteredPts[vertr[e[0]][1]],filteredPts[vertr[e[1]][1]])))
 					#print(ledges[-1].has_z)
-					
+			
+				
+			bufpoly = poly.buffer(-o.cutter_diameter/2, resolution = 64)
+
 			lines = shapely.ops.linemerge(ledges)
-			#shapelyToCurve('test',lines,0)
+			#print(lines.type)
+			
+			if bufpoly.type=='Polygon' or bufpoly.type=='MultiPolygon':
+				lines=lines.difference(bufpoly)
+				chunks.extend(shapelyToChunks(bufpoly,maxdepth))
 			chunks.extend( shapelyToChunks(lines,0))
+			
 			#segments=[]
 			#processEdges=filteredEdgs.copy()
 			#chunk=camPathChunk([])
