@@ -32,7 +32,8 @@ class Creator:
 	def file_open(self, name):
 		#self.buffer=[]
 		self.file = open(name, 'w')
-
+		self.filename = name
+		
 	def file_close(self):
 		#self.file.write(''.join(self.buffer))
 		#self.buffer=[]
@@ -53,6 +54,9 @@ class Creator:
 
 	def program_begin(self, id, name=''):
 		"""Begin a program"""
+		pass
+
+	def add_stock(self, type_name, params):
 		pass
 
 	def program_stop(self, optional=False):
@@ -124,7 +128,7 @@ class Creator:
 		"""Change the tool"""
 		pass
 
-	def tool_defn(self, id, name='', radius=None, length=None, gradient=None):
+	def tool_defn(self, id, name='', params=None):
 		"""Define a tool"""
 		pass
 
@@ -135,6 +139,9 @@ class Creator:
 	def offset_length(self, id, length=None):
 		"""Set tool length offsetting"""
 		pass
+
+	def current_tool(self):
+		return None
 
 	############################################################################
 	##	Datums
@@ -209,11 +216,11 @@ class Creator:
 	############################################################################
 	##	Moves
 	
-	def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None, machine_coordinates=None):
+	def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
 		"""Rapid move"""
 		pass
 
-	def feed(self, x=None, y=None, z=None):
+	def feed(self, x=None, y=None, z=None, a = None, b = None, c = None):
 		"""Feed move"""
 		pass
 
@@ -263,7 +270,7 @@ class Creator:
 		"""Profile routine"""
 		pass
 
-	def drill(self, x=None, y=None, z=None, depth=None, standoff=None, dwell=None, peck_depth=None, retract_mode=None, spindle_mode=None):
+	def drill(self, x=None, y=None, dwell=None, depthparams = None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
 		"""Drilling routines"""
 		pass
 
@@ -413,6 +420,9 @@ def output(filename):
 def program_begin(id, name=''):
 	creator.program_begin(id, name)
 
+def add_stock(type_name, params):
+	creator.add_stock(type_name, params)
+
 def program_stop(optional=False):
 	creator.program_stop(optional)
 
@@ -467,14 +477,17 @@ def remove_temporary_origin():
 def tool_change(id):
 	creator.tool_change(id)
 
-def tool_defn(id, name='', radius=None, length=None, gradient=None):
-	creator.tool_defn(id, name, radius, length, gradient)
+def tool_defn(id, name='', params=None):
+	creator.tool_defn(id, name, params)
 
 def offset_radius(id, radius=None):
 	creator.offset_radius(id, radius)
 
 def offset_length(id, length=None):
 	creator.offset_length(id, length)
+
+def current_tool(self):
+	return creator.current_tool()
 
 ############################################################################
 ##	Datums
@@ -540,10 +553,10 @@ def gearrange(gear=0):
 ############################################################################
 ##	Moves
 
-def rapid(x=None, y=None, z=None, a=None, b=None, c=None, machine_coordinates=None):
-	creator.rapid(x, y, z, a, b, c, machine_coordinates)
+def rapid(x=None, y=None, z=None, a=None, b=None, c=None):
+	creator.rapid(x, y, z, a, b, c)
 
-def feed(x=None, y=None, z=None):
+def feed(x=None, y=None, z=None, a = None, b = None, c = None):
 	creator.feed(x, y, z)
 
 def arc_cw(x=None, y=None, z=None, i=None, j=None, k=None, r=None):
@@ -591,8 +604,8 @@ def pocket():
 def profile():
 	creator.profile()
 
-def drill(x=None, y=None, z=None, depth=None, standoff=None, dwell=None, peck_depth=None, retract_mode=None, spindle_mode=None):
-	creator.drill(x, y, z, depth, standoff, dwell, peck_depth, retract_mode, spindle_mode)
+def drill(x=None, y=None, dwell=None, depthparams = None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
+	creator.drill(x, y, dwell, depthparams, retract_mode, spindle_mode, internal_coolant_on, rapid_to_clearance)
 
 
 def tap(x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, pitch=None, stoppos=None, spin_in=None, spin_out=None, tap_mode=None, direction=None):
@@ -693,5 +706,3 @@ def build_bed_temp(temp=None):
 
 def chamber_temp(temp=None):
 	creator.chamber_temp(temp)
-	
-

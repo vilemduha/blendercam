@@ -5,25 +5,11 @@ class Creator(iso.Creator):
 	def init(self): 
 		iso.Creator.init(self) 
 		
-	def SPACE(self): return(' ')
-	
-	def COMMENT(self,comment): return( (';%s' % comment ) )
-	
 	def PROGRAM(self): return( '')
-	
-	def comment(self, text):
-		self.write((self.COMMENT(text) + '\n'))
 	
 	def program_begin(self, id, comment):
 		self.write( (';' + comment  + '\n') )
-	
-	def write_blocknum(self):
-		#optimise
-		#self.write(self.BLOCK() % self.n)
-		self.n += 1
-	
 		
-	
 	def FORMAT_DWELL(self): return( self.SPACE() + self.DWELL() + ' X%f')
 	
 	def SPINDLE_OFF(self): return('M05')
@@ -48,9 +34,7 @@ class Creator(iso.Creator):
 	'''
 	
 	def tool_change(self, id):
-		self.write_blocknum()
 		self.write(self.SPACE() + (self.TOOL() % id) + '\n')
-		self.write_blocknum()
 		self.write(self.SPACE() + self.s.str)
 		self.write('\n')
 		self.flush_nc()
@@ -64,9 +48,7 @@ class Creator(iso.Creator):
 	def PROGRAM_END(self): return( 'M30')
 	
 	def program_end(self):
-		self.write_blocknum()
 		self.write(self.SPACE() + self.SPINDLE_OFF() + self.SPACE() + self.PROGRAM_END() + '\n')
 		
 
 nc.creator = Creator()
-

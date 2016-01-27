@@ -12,7 +12,7 @@ class Creator(iso_modal.Creator):
         self.can_do_helical_arcs = False
         self.fmt.number_of_decimal_places = 2
 
-    def tool_defn(self, id, name='', radius=None, length=None, gradient=None):
+    def tool_defn(self, id, name='', params=None):
         pass
     
     def dwell(self, t):

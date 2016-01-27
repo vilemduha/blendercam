@@ -66,11 +66,6 @@ class CreatorIso(nc.Creator):
     def write_misc(self):
         if (len(self.m)) : self.write(self.m.pop())
 
-    def write_blocknum(self):
-        self.write(iso.codes.BLOCK() % self.n)
-        self.write(iso.codes.SPACE())
-        self.n += 10
-
     def write_spindle(self):
         self.write(self.s)
         self.s = ''
@@ -83,7 +78,6 @@ class CreatorIso(nc.Creator):
         self.write('\n')
 
     def program_stop(self, optional=False):
-        self.write_blocknum()
         if (optional) : 
             self.write(iso.codes.STOP_OPTIONAL() + '\n')
             self.prev_g0123 = ''
@@ -93,12 +87,10 @@ class CreatorIso(nc.Creator):
 
 
     def program_end(self):
-        self.write_blocknum()
         self.write(iso.codes.PROGRAM_END() + '\n')
 
     def flush_nc(self):
         if len(self.g) == 0 and len(self.m) == 0: return
-        self.write_blocknum()
         self.write_preps()
         self.write_misc()
         self.write('\n')
@@ -111,11 +103,9 @@ class CreatorIso(nc.Creator):
         self.write('\n')
 
     def sub_call(self, id):
-        self.write_blocknum()
         self.write((iso.codes.SUBPROG_CALL() % id) + '\n')
 
     def sub_end(self):
-        self.write_blocknum()
         self.write(iso.codes.SUBPROG_END() + '\n')
 
     ############################################################################
@@ -130,12 +120,10 @@ class CreatorIso(nc.Creator):
         self.fmt = iso.codes.FORMAT_MM()
 
     def absolute(self):
-        #self.write_blocknum()
         self.g += iso.codes.ABSOLUTE()
         self.absolute_flag = True
 
     def incremental(self):
-        #self.write_blocknum()
         self.g += iso.codes.INCREMENTAL()
         self.absolute_flag = False
 
@@ -149,7 +137,6 @@ class CreatorIso(nc.Creator):
         elif (plane == 2) : self.g += iso.codes.PLANE_YZ()
 
     def set_temporary_origin(self, x=None, y=None, z=None, a=None, b=None, c=None):
-        self.write_blocknum()
         self.write((iso.codes.SET_TEMPORARY_COORDINATE_SYSTEM()))
         if (x != None): self.write( iso.codes.SPACE() + 'X ' + (self.fmt % x) )
         if (y != None): self.write( iso.codes.SPACE() + 'Y ' + (self.fmt % y) )
@@ -160,7 +147,6 @@ class CreatorIso(nc.Creator):
         self.write('\n')
 
     def remove_temporary_origin(self):
-        self.write_blocknum()
         self.write((iso.codes.REMOVE_TEMPORARY_COORDINATE_SYSTEM()))
         self.write('\n')
 
@@ -168,23 +154,11 @@ class CreatorIso(nc.Creator):
     ##  Tools
 
     def tool_change(self, id):
-        self.write_blocknum()
         self.write((iso.codes.TOOL() % id) + '\n')
         self.t = id
 
-    def tool_defn(self, id, name='', radius=None, length=None, gradient=None):
+    def tool_defn(self, id, name='', params=None):
         pass
-        self.write_blocknum()
-        self.write(iso.codes.TOOL_DEFINITION())
-        self.write(('P%i' % id) + ' ')
-
-        if (radius != None):
-            self.write(('R%.3f' % radius) + ' ')
-
-        if (length != None):
-            self.write('Z%.3f' % length)
-
-            self.write('\n')
 
     def offset_radius(self, id, radius=None):
         pass
@@ -251,7 +225,7 @@ class CreatorIso(nc.Creator):
     ############################################################################
     ##  Moves
 
-    def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None, machine_coordinates=None ):
+    def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
         self.write_blocknum()
         if self.g0123_modal:
             if self.prev_g0123 != iso.codes.RAPID():
@@ -317,7 +291,7 @@ class CreatorIso(nc.Creator):
         self.write_misc()
         self.write('\n')
 
-    def feed(self, x=None, y=None, z=None):
+    def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
         if self.same_xyz(x, y, z): return
         self.write_blocknum()
         if self.g0123_modal:

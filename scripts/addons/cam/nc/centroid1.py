@@ -130,7 +130,7 @@ class Creator(iso_modal.Creator):
             self.write ('\n')
 
 
-    def tool_defn(self, id, name='', radius=None, length=None, gradient=None):
+    def tool_defn(self, id, name='', params=None):
         #self.write('G43 \n')
         pass
 
