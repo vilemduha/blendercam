@@ -138,8 +138,12 @@ class PathsBackground(bpy.types.Operator):
 
 		bpath=bpy.app.binary_path
 		fpath=bpy.data.filepath
-		scriptpath=bpy.utils.script_paths()[0]+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
 		
+		for p in bpy.utils.script_paths():
+			scriptpath=p+os.sep+'addons'+os.sep+'cam'+os.sep+'backgroundop.py_'
+			print(scriptpath)
+			if os.path.isfile(scriptpath):
+				break;
 		proc= subprocess.Popen([bpath, '-b', fpath,'-P',scriptpath,'--', '-o='+str(s.cam_active_operation) ],bufsize=1, stdout=subprocess.PIPE,stdin=subprocess.PIPE)
 		
 		tcom=threadCom(o,proc)

@@ -845,7 +845,7 @@ class BasReliefsettings(bpy.types.PropertyGroup):
 	attenuation = FloatProperty(name="Gradient attenuation", description="Gradient attenuation", min=0.000001, max=100.0, default=1.0, precision=PRECISION)
 	min_gridsize = bpy.props.IntProperty(name="Minimum grid size", default=16, min=2, max=512)
 	smooth_iterations=bpy.props.IntProperty(name="Smooth iterations", default=1, min=1, max=64)
-	vcycle_iterations=bpy.props.IntProperty(name="V-cycle iterations",description="set up higher for plananr constraint", default=2, min=1, max=64)
+	vcycle_iterations=bpy.props.IntProperty(name="V-cycle iterations",description="set up higher for plananr constraint", default=2, min=1, max=128)
 	linbcg_iterations = bpy.props.IntProperty(name="Linbcg iterations",description="set lower for flatter relief, and when using planar constraint", default=5, min=1, max=64)
 	use_planar=bpy.props.BoolProperty(name="Use planar constraint",description="", default=False)
 	gradient_scaling_mask_use=bpy.props.BoolProperty(name="Scale gradients with mask",description="", default=False)
