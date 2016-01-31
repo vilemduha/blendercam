@@ -73,7 +73,8 @@ class Creator(nc.Creator):
 	##	Codes
 
 	def SPACE(self): return('')
-	def FORMAT_FEEDRATE(self): return('%.2f') 
+	def FORMAT_FEEDRATE(self): return('%.2f')
+	def FEEDRATE(self): return((self.SPACE() + ' F'))
 	def FORMAT_ANG(self): return('%.1f')
 	def FORMAT_TIME(self): return('%.2f')
 	def FORMAT_DWELL(self): return('P%f')
@@ -156,7 +157,7 @@ class Creator(nc.Creator):
 	##	Internals
 
 	def write_feedrate(self):
-		self.f.write(self)
+		self.write(self.f)
 
 	def write_preps(self):
 		self.g_plane.write(self)
@@ -298,8 +299,8 @@ class Creator(nc.Creator):
 	def offset_length(self, id, length=None):
 		pass
 
-    def current_tool(self):
-        return self.t
+	def current_tool(self):
+		return self.t
 
 	############################################################################
 	##	Datums
