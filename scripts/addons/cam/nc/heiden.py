@@ -74,7 +74,7 @@ class Creator(nc.Creator):
 
 	def SPACE(self): return('')
 	def FORMAT_FEEDRATE(self): return('%.2f')
-	def FEEDRATE(self): return((self.SPACE() + ' F'))
+	def FEEDRATE(self): return((self.SPACE() + 'F'))
 	def FORMAT_ANG(self): return('%.1f')
 	def FORMAT_TIME(self): return('%.2f')
 	def FORMAT_DWELL(self): return('P%f')
@@ -157,7 +157,7 @@ class Creator(nc.Creator):
 	##	Internals
 
 	def write_feedrate(self):
-		self.write(self.f)
+		self.f.write(self)
 
 	def write_preps(self):
 		self.g_plane.write(self)
@@ -324,7 +324,7 @@ class Creator(nc.Creator):
 	##	Rates + Modes
 
 	def feedrate(self, f):
-		self.f = self.SPACE() + self.FEEDRATE() + self.ffmt.string(f)
+		self.f.set(f)
 		self.fhv = False
 
 	def feedrate_hv(self, fh, fv):
