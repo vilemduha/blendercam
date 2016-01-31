@@ -212,7 +212,6 @@ class Creator(nc.Creator):
 		i = 0
 		if self.g_plane.str:
 			i += 1
-			self.write(self.SPACE())
 		self.g_plane.write(self)
 		for g in self.g_list:
 			if i > 0:
@@ -228,7 +227,7 @@ class Creator(nc.Creator):
 
 	def write_spindle(self):
 		if self.s.str:
-			self.write('\n' if self.m_codes_on_their_own_line else self.SPACE())
+			self.write('\n' if self.m_codes_on_their_own_line else '')
 		self.s.write(self)
 
 	def output_fixture(self):
