@@ -1078,7 +1078,7 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='HEIDENHAIN':
 		extension='.H'
 		from .nc import heiden as postprocessor
-	elif m.post_processor=='TNC11':
+	elif m.post_processor=='TNC151':
 		from .nc import tnc151 as postprocessor
 	elif m.post_processor=='SIEGKX1':
 		from .nc import siegkx1 as postprocessor
@@ -2883,6 +2883,9 @@ def getPath3axis(context, operation):
 		if o.cutter_type=='VCARVE':
 			angle = o.cutter_tip_angle
 			maxdepth = - math.tan(math.pi*(90-angle/2)/180) * o.cutter_diameter/2
+		elif o.cutter_type=='BALLNOSE' or o.cutter_type=='BALL':
+			#angle = o.cutter_tip_angle
+			maxdepth = o.cutter_diameter/2
 		#remember resolutions of curves, to refine them, 
 		#otherwise medial axis computation yields too many branches in curved parts
 		resolutions_before=[]
