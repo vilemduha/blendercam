@@ -2,8 +2,8 @@ from . import nc
 from . import iso
 
 class Creator(iso.Creator):
-	def init(self): 
-		iso.Creator.init(self) 
+	def __init__(self): 
+		iso.Creator.__init__(self) 
 		
 	def SPACE(self): return(' ')
 	
