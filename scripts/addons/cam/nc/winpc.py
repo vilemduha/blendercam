@@ -14,19 +14,10 @@ class Creator(iso_modal.Creator):
         self.useCrc = False
         self.start_of_line = True
 
-    def write_blocknum(self):
-        self.start_of_line = True
-
-    def SPACE(self):
-        if self.start_of_line == True:
-            self.start_of_line = False
-            return ''
-        else:
-            return ' '
+    def SPACE_STR(self): return ' '
 	
     def TOOL(self): return('T%i' + self.SPACE() )
 	
-    def PROGRAM_END(self): return( 'M02')
         
 ############################################################################
 ## Internal 
@@ -43,7 +34,6 @@ class Creator(iso_modal.Creator):
         #self.rapid( x=0.0, y=0.0, z=30.0 )
 
     def program_end(self):
-        self.write_blocknum()
         self.write(self.SPACE() + self.PROGRAM_END() + '\n')
         #self.rapid( x=0.0, y=0.0, z=30.0 )
 
@@ -55,22 +45,18 @@ class Creator(iso_modal.Creator):
         pass
 
     def tool_change(self, id):
-        self.write_blocknum()
         self.write(self.SPACE() + (self.TOOL() % id) + self.SPACE() + '\n')
         self.t = id
 
     def comment(self, text):
-        self.write_blocknum()
         self.write((self.COMMENT(text) + '\n'))
 
 # This is the coordinate system we're using.  G54->G59, G59.1, G59.2, G59.3
 # These are selected by values from 1 to 9 inclusive.
     def workplane(self, id):
         if ((id >= 1) and (id <= 6)):
-            self.write_blocknum()
             self.write( (self.WORKPLANE() % (id + self.WORKPLANE_BASE())) + '\t (Select Relative Coordinate System)\n')
         if ((id >= 7) and (id <= 9)):
-            self.write_blocknum()
             self.write( ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + ('.%i' % (id - 6))) + '\t (Select Relative Coordinate System)\n')
 
 

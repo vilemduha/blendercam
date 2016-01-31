@@ -2,10 +2,12 @@ from . import nc
 from . import iso
 
 class Creator(iso.Creator):
-	def init(self): 
-		iso.Creator.init(self) 
+	def __init__(self): 
+		iso.Creator.__init__(self) 
 		
-	def PROGRAM(self): return( '')
+	def SPACE_STR(self): return ' '
+	def COMMENT(self, comment): return( (';%s' % comment ) )
+	def PROGRAM(self): return(None)
 	
 	def program_begin(self, id, comment):
 		self.write( (';' + comment  + '\n') )

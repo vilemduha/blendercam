@@ -2,10 +2,10 @@ from . import nc
 from . import iso
 
 class Creator(iso.Creator):
-	def init(self): 
-		iso.Creator.init(self) 
+	def __init__(self): 
+		iso.Creator.__init__(self) 
 
-	def SPACE(self): return(' ')
+	def SPACE_STR(self): return(' ')
         
 	def program_begin(self, id, comment):
 		self.write( ('(' + 'GCode created using the HeeksCNC Mach3 post processor' + ')' + '\n') )
