@@ -1078,7 +1078,7 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='HEIDENHAIN':
 		extension='.H'
 		from .nc import heiden as postprocessor
-	elif m.post_processor=='TNC11':
+	elif m.post_processor=='TNC151':
 		from .nc import tnc151 as postprocessor
 	elif m.post_processor=='SIEGKX1':
 		from .nc import siegkx1 as postprocessor
