@@ -72,10 +72,10 @@ class Address:
         if self.str == None: return ''
         if self.modal:
             if self.str != self.previous:
-                writer.write(self.str)
+                writer.write(writer.SPACE() + self.str)
                 self.previous = self.str            
         else:
-            writer.write(self.str)
+            writer.write(writer.SPACE() + self.str)
         self.str = None
     
 class AddressPlusMinus(Address):
@@ -96,10 +96,8 @@ class AddressPlusMinus(Address):
         if self.str2 == None: return ''
         if self.modal:
             if self.str2 != self.previous2:
-                writer.write(writer.SPACE())
-                writer.write(self.str2)
+                writer.write(writer.SPACE() + self.str2)
                 self.previous2 = self.str2            
         else:
-            writer.write(writer.SPACE())
-            writer.write(self.str2)
+            writer.write(writer.SPACE() + self.str2)
         self.str2 = None

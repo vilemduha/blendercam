@@ -206,7 +206,6 @@ class Creator(nc.Creator):
 			self.start_of_line = s[-1] == '\n'
 
 	def write_feedrate(self):
-		self.write(self.SPACE())
 		self.f.write(self)
 
 	def write_preps(self):
