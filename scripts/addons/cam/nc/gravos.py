@@ -5,6 +5,7 @@ class Creator(iso.Creator):
 	def init(self): 
 		iso.Creator.init(self) 
 		
+	def SPACE_STR(self): return ' '
 	def PROGRAM(self): return( '')
 	
 	def program_begin(self, id, comment):
