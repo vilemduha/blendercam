@@ -52,7 +52,7 @@ class Creator(iso_modal.Creator):
 
 
     # no tool definition lines wanted
-    def tool_defn(self, id, name='', radius=None, length=None, gradient=None):
+    def tool_defn(self, id, name='', params=None):
         pass
 
     # no comments wanted

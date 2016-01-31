@@ -1,4 +1,4 @@
-from . import nc
+import nc
 
 units = 1.0
 
@@ -8,14 +8,34 @@ class Redirector(nc.Creator):
         nc.Creator.__init__(self)
 
         self.original = original
-        self.x = original.x * units
-        self.y = original.y * units
-        self.z = original.z * units
+        self.x = None
+        self.y = None
+        self.z = None
+        if original.x != None: self.x = original.x * units
+        if original.y != None: self.y = original.y * units
+        if original.z != None: self.z = original.z * units
         self.imperial = False
+        
+    def cut_path(self):
+        pass
 
     ############################################################################
     ##  Programs
+    def write(self, s):
+        self.original.write(s)
+        
+    def output_fixture(self):
+        self.original.output_fixture()
+        
+    def increment_fixture(self):
+        self.original.increment_fixture()
 
+    def get_fixture(self):
+        return self.original.get_fixture()
+    
+    def set_fixture(self, fixture):
+        self.original.set_fixture(fixture)
+        
     def program_begin(self, id, name=''):
         self.cut_path()
         self.original.program_begin(id, name)
@@ -35,7 +55,7 @@ class Redirector(nc.Creator):
     ############################################################################
     ##  Subprograms
     
-    def sub_begin(self, id, name=''):
+    def sub_begin(self, id, name=None):
         self.cut_path()
         self.original.sub_begin(id, name)
 
@@ -46,6 +66,12 @@ class Redirector(nc.Creator):
     def sub_end(self):
         self.cut_path()
         self.original.sub_end()
+        
+    def disable_output(self):
+        self.original.disable_output()
+        
+    def enable_output(self):
+        self.original.enable_output()
 
     ############################################################################
     ##  Settings
@@ -90,9 +116,9 @@ class Redirector(nc.Creator):
         self.cut_path()
         self.original.tool_change(id)
 
-    def tool_defn(self, id, name='', radius=None, length=None, gradient=None):
+    def tool_defn(self, id, name='', params=None):
         self.cut_path()
-        self.original.tool_defn(id, name, radius, length, gradient)
+        self.original.tool_defn(id, name, params)
 
     def offset_radius(self, id, radius=None):
         self.cut_path()
@@ -143,9 +169,9 @@ class Redirector(nc.Creator):
     ############################################################################
     ##  Moves
 
-    def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None, machine_coordinates=None):
+    def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
         self.cut_path()
-        self.original.rapid(x, y, z, a, b, c, machine_coordinates)
+        self.original.rapid(x, y, z, a, b, c)
         if x != None: self.x = x * units
         if y != None: self.y = y * units
         if z != None: self.z = z * units
@@ -156,7 +182,7 @@ class Redirector(nc.Creator):
     def z2(self, z):
         return z
     
-    def feed(self, x=None, y=None, z=None):
+    def feed(self, x=None, y=None, z=None, a = None, b = None, c = None):
         px = self.x
         py = self.y
         pz = self.z
@@ -221,7 +247,10 @@ class Redirector(nc.Creator):
     def pattern(self):
         self.cut_path()
         self.original.pattern()
-
+        
+    def pattern_uses_subroutine(self):
+        return self.original.pattern_uses_subroutine()
+        
     def pocket(self):
         self.cut_path()
         self.original.pocket()
@@ -234,9 +263,9 @@ class Redirector(nc.Creator):
         self.cut_path()
         self.circular_pocket(x, y, ToolDiameter, HoleDiameter, ClearanceHeight, StartHeight, MaterialTop, FeedRate, SpindleRPM, HoleDepth, DepthOfCut, StepOver)
 
-    def drill(self, x=None, y=None, z=None, depth=None, standoff=None, dwell=None, peck_depth=None,retract_mode=None, spindle_mode=None):
+    def drill(self, x=None, y=None, dwell=None, depthparams = None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
         self.cut_path()
-        self.original.drill(x, y, z, depth, standoff, dwell, peck_depth, retract_mode, spindle_mode)
+        self.original.drill(x, y, dwell, depthparams, spindle_mode, internal_coolant_on, rapid_to_clearance)
 
     # argument list adapted for compatibility with Tapping module
     # wild guess - I'm unsure about the purpose of this file and wether this works -haberlerm
@@ -249,6 +278,9 @@ class Redirector(nc.Creator):
         self.cut_path()
         self.original.bore(x, y, self.z2(z), self.z2(zretract), depth, standoff, dwell_Bottom, feed_in, feed_out, stoppos, shift_back, shift_right, backbore, stop)
 
+    def end_canned_cycle(self):
+        self.original.end_canned_cycle()
+        
     ############################################################################
     ##  Misc
 
@@ -263,4 +295,6 @@ class Redirector(nc.Creator):
     def variable_set(self, id, value):
         self.cut_path()
         self.original.variable_set(id, value)
-
+        
+    def set_ocl_cutter(self, cutter):
+        self.original.set_ocl_cutter(cutter)

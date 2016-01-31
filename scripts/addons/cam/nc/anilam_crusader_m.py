@@ -78,7 +78,7 @@ class Creator(iso.Creator):
         self.write(('T%i' % id) + '\n')
         self.t = id
 
-    def tool_defn(self, id, name='', radius=None, length=None, gradient=None):
+    def tool_defn(self, id, name='', params=None):
         self.write_blocknum()
         self.write(('T10%.2d' % id) + ' ')
 
@@ -104,8 +104,7 @@ class Creator(iso.Creator):
     def write_blocknum(self): 
         pass
         
-    def drill(self, x=None, y=None, z=None, depth=None, standoff=None, dwell=None, peck_depth=None,retract_mode=None, spindle_mode=None):
+    def drill(self, x=None, y=None, dwell=None, depthparams = None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance = None):
         self.write('(Canned drill cycle ops are not yet supported here on this Anilam Crusader M postprocessor)')
 
 nc.creator = Creator()
-

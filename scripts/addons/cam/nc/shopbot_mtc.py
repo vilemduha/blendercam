@@ -147,7 +147,7 @@ class Creator(nc.Creator):
 	############################################################################
 	##	Moves
 
-	def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None, machine_coordinates=None ):
+	def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
 		# different commands for X only, or Y only, or Z only, or (X and Y), or (X, Y, and Z)
 		if (x != None and y != None and z != None):
 			self.write('J3,' + (self.fmt.string(x * self.unitscale)))

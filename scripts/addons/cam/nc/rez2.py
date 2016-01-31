@@ -163,26 +163,15 @@ class Creator(nc.Creator):
         #self.write_blocknum()
         #self.write((iso.TOOL % id) + '\n')
 	#self.write('\n')
-	pass
-    def tool_defn(self, id, name='', radius=None, length=None, gradient=None):
-        #self.write_blocknum()
-	#self.write(iso.TOOL_DEFINITION)
-	#self.write(('P%i' % id) + ' ')
-
-	#if (radius != None):
-	#	self.write(('R%.3f' % radius) + ' ')
-
-	#if (length != None):
-	#	self.write('Z%.3f' % length)
-
-	#self.write('\n')
-	pass
+		pass
+    def tool_defn(self, id, name='', params=None):
+		pass
 
     def offset_radius(self, id, radius=None):
-	pass
+		pass
 
     def offset_length(self, id, length=None):
-	pass
+		pass
 
     ############################################################################
     ##  Datums
@@ -492,7 +481,7 @@ class Creator(nc.Creator):
 	# revert it.  I must set the mode so that I can be sure the values I'm passing in make
 	# sense to the end-machine.
 	#
-    def drill(self, x=None, y=None, z=None, depth=None, standoff=None, dwell=None, peck_depth=None,retract_mode=None, spindle_mode=None):
+    def drill(self, x=None, y=None, dwell=None, depthparams = None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
 	if (standoff == None):
 		# This is a bad thing.  All the drilling cycles need a retraction (and starting) height.
 		return
