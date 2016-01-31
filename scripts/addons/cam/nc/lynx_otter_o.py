@@ -64,7 +64,6 @@ class Creator(iso.Creator):
 	def PROGRAM_END(self): return( 'M30')
 	
 	def program_end(self):
-		self.write_blocknum()
 		self.write(self.SPACE() + self.SPINDLE_OFF() + self.SPACE() + self.PROGRAM_END() + '\n')
 		
 
