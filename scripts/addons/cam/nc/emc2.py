@@ -12,7 +12,6 @@ class Creator(iso.Creator):
 	def BORE_FEED_OUT(self): return('G85')
 	def BORE_SPINDLE_STOP_RAPID_OUT(self): return('G86')
 	def BORE_DWELL_FEED_OUT(self, format, dwell): return('G89') + self.SPACE() + (format.string(dwell))
-	def FEEDRATE(self): return((self.SPACE() + ' F'))
 
 	def program_begin(self, id, comment):
 		self.write( ('(' + comment + ')' + '\n') )
@@ -48,8 +47,6 @@ class Creator(iso.Creator):
 		elif (plane == 2) : 
 			self.write(self.PLANE_YZ() + '\t (Select YZ Plane)\n')
 
-	def comment(self, text):
-		self.write((self.COMMENT(text) + '\n'))
 
 	# This is the coordinate system we're using.  G54->G59, G59.1, G59.2, G59.3
 	# These are selected by values from 1 to 9 inclusive.
