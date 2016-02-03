@@ -86,7 +86,20 @@ class machineSettings(bpy.types.PropertyGroup):
 	'''stores all data for machines'''
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	post_processor = EnumProperty(name='Post processor',
-		items=(('ISO','Iso','this should export a standardized gcode'),('MACH3','Mach3','default mach3'),('EMC','EMC - LinuxCNC','default emc'),('GRBL','grbl','grbl on Arduino cnc shield'),('HEIDENHAIN','Heidenhain','heidenhain'),('TNC151','Heidenhain TNC151','Post Processor for the Heidenhain TNC151 machine'),('SIEGKX1','Sieg KX1','Sieg KX1'),('HM50','Hafco HM-50','Hafco HM-50'),('CENTROID','Centroid M40','Centroid M40'),('ANILAM','Anilam Crusader M','Anilam Crusader M'),('GRAVOS','Gravos','Gravos'),('WIN-PC','Win-PC','German CNC'),('SHOPBOT MTC','ShopBot MTC','ShopBot MTC'),('LYNX_OTTER_O','Lynx Otter o','Lynx Otter o')),
+		items=(('ISO', 'Iso', 'exports standardized gcode ISO 6983 (RS-274)'),
+			('MACH3', 'Mach3', 'default mach3'),
+			('EMC', 'LinuxCNC - EMC2', 'Linux based CNC control software - formally EMC2'),
+			('GRBL', 'grbl', 'optimized gcode for grbl firmware on Arduino with cnc shield'),
+			('HEIDENHAIN', 'Heidenhain', 'heidenhain'),
+			('TNC151', 'Heidenhain TNC151', 'Post Processor for the Heidenhain TNC151 machine'),
+			('SIEGKX1', 'Sieg KX1', 'Sieg KX1'),
+			('HM50', 'Hafco HM-50', 'Hafco HM-50'),
+			('CENTROID', 'Centroid M40', 'Centroid M40'),
+			('ANILAM', 'Anilam Crusader M', 'Anilam Crusader M'),
+			('GRAVOS', 'Gravos', 'Gravos'),
+			('WIN-PC', 'WinPC-NC', 'German CNC by Burkhard Lewetz'),
+			('SHOPBOT MTC', 'ShopBot MTC', 'ShopBot MTC'),
+			('LYNX_OTTER_O', 'Lynx Otter o', 'Lynx Otter o')),
 		description='Post processor',
 		default='MACH3')
 	#units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
