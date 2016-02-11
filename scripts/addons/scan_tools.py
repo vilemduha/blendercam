@@ -38,9 +38,9 @@ def floor(self,context, event, ray_max=100000.0):
 		matrix_inv = matrix.inverted()
 		ray_origin_obj = matrix_inv * ray_origin
 		ray_target_obj = matrix_inv * ray_target
-
+		vec = ray_target_obj - ray_origin_obj
 		# cast the ray
-		hit, normal, face_index = obj.ray_cast(ray_origin_obj, ray_target_obj)
+		result, hit, normal, face_index = obj.ray_cast(ray_origin_obj, vec, vec.length)
 
 		if face_index != -1:
 			return hit, normal, face_index
