@@ -45,8 +45,10 @@ def calculatePath(op):
 	picklepath=getCachePath(o)+'.pickle'
 	f=open(picklepath,'wb')
 	d={}
+	
 	d['duration']=o.duration
 	d['warnings']=o.warnings
+	
 	#pickle path...
 	oname="cam_path_"+o.name
 	if oname in s.objects:

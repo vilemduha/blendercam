@@ -480,7 +480,7 @@ class camOperation(bpy.types.PropertyGroup):
 	medial_axis_threshold=bpy.props.FloatProperty(name="Long vector threshold", default=0.001, min=0.00000001, max=100,precision=PRECISION,  unit="LENGTH", update = updateRest)
 	medial_axis_subdivision=bpy.props.FloatProperty(name="Fine subdivision", default=0.0002, min=0.00000001, max=100,precision=PRECISION,  unit="LENGTH", update = updateRest)
 	#calculations
-	duration = bpy.props.FloatProperty(name="Estimated time", default=0.01, min=0.0000, max=32,precision=PRECISION, unit="TIME")
+	duration = bpy.props.FloatProperty(name="Estimated time", default=0.01, min=0.0000, max=3200000000,precision=PRECISION, unit="TIME")
 	#chip_rate
 	#bridges
 	use_bridges =  bpy.props.BoolProperty(name="Use bridges",description="use bridges in cutout", default=False, update = updateBridges)
