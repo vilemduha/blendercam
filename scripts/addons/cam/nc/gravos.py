@@ -11,8 +11,7 @@ class Creator(iso.Creator):
 	
 	def program_begin(self, id, comment):
 		self.write( (';' + comment  + '\n') )
-		
-	def FORMAT_DWELL(self): return( self.SPACE() + self.DWELL() + ' X%f')
+	def TIME(self): return('X')	
 	
 	def SPINDLE_OFF(self): return('M05')
 	#optimize
@@ -22,7 +21,7 @@ class Creator(iso.Creator):
 	def SPINDLE_DWELL(self,dwell):
 		w='\n'+self.BLOCK() % self.n+ self.DWELL() % dwell
 		return w
-		
+	
 	def SPINDLE_CW(self,dwell):
 		return('M03' + self.SPINDLE_DWELL(dwell) )
 
@@ -36,8 +35,9 @@ class Creator(iso.Creator):
 	'''
 	
 	def tool_change(self, id):
+		#print(self.SPACE())
+		#print(self.TOOL())
 		self.write(self.SPACE() + (self.TOOL() % id) + '\n')
-		self.write(self.SPACE() + self.s.str)
 		self.write('\n')
 		self.flush_nc()
 		self.t = id
