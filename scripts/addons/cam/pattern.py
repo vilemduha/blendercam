@@ -10,6 +10,7 @@ from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
 import shapely
 from shapely import geometry as sgeometry
+import numpy
 
 def getPathPatternParallel(o,angle):
 	#minx,miny,minz,maxx,maxy,maxz=o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z
@@ -34,48 +35,55 @@ def getPathPatternParallel(o,angle):
 	#if o.movement_type=='CONVENTIONAL'
 	#ar=numpy.array((1.1,1.1))
 	#ar.resize()
-	#if bpy.app.debug_value==0:
-	dirvect=Vector((0,1,0))
-	dirvect.rotate(e)
-	dirvect.normalize()
-	dirvect*=pathstep
-	for a in range(int(-dim/pathd), int(dim/pathd)):#this is highly ineffective, computes path2x the area needed...
-		chunk=camPathChunk([])
-		v=Vector((a*pathd,int(-dim/pathstep)*pathstep,0))
-		v.rotate(e)
-		v+=vm#shifting for the rotation, so pattern rotates around middle...
-		for b in range(int(-dim/pathstep),int(dim/pathstep)):
-			v+=dirvect
-			
-			if v.x>o.min.x and v.x<o.max.x and v.y>o.min.y and v.y<o.max.y:
-				chunk.points.append((v.x,v.y,zlevel))
-		if (reverse and o.movement_type=='MEANDER') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') :
-			chunk.points.reverse()
-			
+	#defaultar=numpy.arange(int(-dim/pathd), int(dim/pathd)).tolist()
+	if bpy.app.debug_value==0:
+		dirvect=Vector((0,1,0))
+		dirvect.rotate(e)
+		dirvect.normalize()
+		dirvect*=pathstep
+		for a in range(int(-dim/pathd), int(dim/pathd)):#this is highly ineffective, computes path2x the area needed...
+			chunk=camPathChunk([])
+			#chunk=camPathChunk(defaultar.copy())
+			v=Vector((a*pathd,int(-dim/pathstep)*pathstep,0))
+			v.rotate(e)
+			v+=vm#shifting for the rotation, so pattern rotates around middle...
+			for b in range(int(-dim/pathstep),int(dim/pathstep)):
+				v+=dirvect
 				
-		#elif   
-		if len(chunk.points)>0:
-			pathchunks.append(chunk)
-		if len(pathchunks)>1 and reverse and o.parallel_step_back and not o.use_layers:
-			#parallel step back - for finishing, best with climb movement, saves cutter life by going into material with climb, while using move back on the surface to improve finish(which would otherwise be a conventional move in the material)
+				if v.x>o.min.x and v.x<o.max.x and v.y>o.min.y and v.y<o.max.y:
+					chunk.points.append((v.x,v.y,zlevel))
+					#chunk.points[a]=(v.x,v.y,zlevel)
+			if (reverse and o.movement_type=='MEANDER') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') :
+				chunk.points.reverse()
 				
-			if o.movement_type=='CONVENTIONAL' or o.movement_type=='CLIMB':
-				pathchunks[-2].points.reverse()
-			changechunk=pathchunks[-1]
-			pathchunks[-1]=pathchunks[-2]
-			pathchunks[-2]=changechunk
 					
-		reverse = not reverse
-	
-	#else:#alternative algorithm with numpy, didn't work as should so blocked now...
-		'''
-		v=Vector((1,0,0))
+			#elif   
+			if len(chunk.points)>0:
+				pathchunks.append(chunk)
+			if len(pathchunks)>1 and reverse and o.parallel_step_back and not o.use_layers:
+				#parallel step back - for finishing, best with climb movement, saves cutter life by going into material with climb, while using move back on the surface to improve finish(which would otherwise be a conventional move in the material)
+					
+				if o.movement_type=='CONVENTIONAL' or o.movement_type=='CLIMB':
+					pathchunks[-2].points.reverse()
+				changechunk=pathchunks[-1]
+				pathchunks[-1]=pathchunks[-2]
+				pathchunks[-2]=changechunk
+						
+			reverse = not reverse
+			#print (chunk.points)
+	else:#alternative algorithm with numpy, didn't work as should so blocked now...
+		
+		v=Vector((0,1,0))
+		#e.z=-e.z
 		v.rotate(e)
+		e1=Euler((0,0,-math.pi/2))
+		v1=v.copy()
+		v1.rotate(e1)
 		a1res=int(dim/pathd)-int(-dim/pathd)
 		a2res=int(dim/pathstep)-int(-dim/pathstep)
 		
-		axis_across_paths=numpy.array((numpy.arange(int(-dim/pathd), int(dim/pathd))*pathd*v.y+xm,
-													numpy.arange(int(-dim/pathd), int(dim/pathd))*pathd*v.x+ym,
+		axis_across_paths=numpy.array((numpy.arange(int(-dim/pathd), int(dim/pathd))*pathd*v1.x+xm,
+													numpy.arange(int(-dim/pathd), int(dim/pathd))*pathd*v1.y+ym,
 													numpy.arange(int(-dim/pathd), int(dim/pathd))*0))
 		#axis_across_paths=axis_across_paths.swapaxes(0,1)
 		#progress(axis_across_paths)
@@ -87,9 +95,9 @@ def getPathPatternParallel(o,angle):
 		#axis_along_paths = axis_along_paths.swapaxes(0,1)
 		#progress(axis_along_paths)
 		
-		chunks=numpy.array((1.0))
-		chunks.resize(3,a1res,a2res)
-
+		#chunks=numpy.array((1.0))
+		#chunks.resize(3,a1res,a2res)
+		chunks=[]
 		for a in range(0,len(axis_across_paths[0])):
 			#progress(chunks[a,...,...].shape)
 			#progress(axis_along_paths.shape)
@@ -101,32 +109,30 @@ def getPathPatternParallel(o,angle):
 			#progress(nax.shape)
 			#progress(chunks.shape)
 			#progress(chunks[...,a,...].shape)
-			chunks[...,a,...]=nax
-		''' 
-		''' 
-		for a in range(0,a1res):
-			chunks[a,...,1]=axis2
+			#if v.x>o.min.x and v.x<o.max.x and v.y>o.min.y and v.y<o.max.y:
+			
+			xfitmin=nax[0]>o.min.x
+			xfitmax=nax[0]<o.max.x
+			xfit=xfitmin & xfitmax
+			#print(xfit,nax)
+			nax=numpy.array([nax[0][xfit],nax[1][xfit],nax[2][xfit]])
+			yfitmin=nax[1]>o.min.y
+			yfitmax=nax[1]<o.max.y
+			yfit=yfitmin & yfitmax
+			nax=numpy.array([nax[0][yfit],nax[1][yfit],nax[2][yfit]])
+			chunks.append(nax.swapaxes(0,1))
+		#chunks
 		
-		for a in range(0,a1res):
-			for b in range(0,a2res):
-				v.x=chunks.item(a,b,0)
-				v.y=chunks.item(a,b,1)
-				v.rotate(e)
-				v.x+=xm
-				v.y+=ym
-				if v.x>o.min.x and v.x<o.max.x and v.y>o.min.y and v.y<o.max.y:
-					chunks.itemset(a,b,0,v.x)
-					chunks.itemset(a,b,1,v.y)
-				else:
-					chunks.itemset(a,b,0,-10)
-					chunks.itemset(a,b,1,-10)
-					chunks.itemset(a,b,2,-10)
 		
-				
-		chunks[...,...,2]=zlevel
-		
-		pathchunks=chunks 
-		'''
+		#print(chunks)
+		#chunks=chunks.swapaxes(0,1)
+		#chunks=chunks.swapaxes(1,2)
+		#print(chunks)
+		pathchunks=[]
+		for ch in chunks:
+			ch=ch.tolist()
+			pathchunks.append(camPathChunk(ch)) 
+			#print (ch)
 		
 	return pathchunks 
 
