@@ -97,7 +97,7 @@ def oclSamplePoints(operation, points):
 	if os.path.isdir(bpy.utils.script_path_pref()+"/addons/cam/opencamlib"):
 		call([ "python2.7", bpy.utils.script_path_pref()+"/addons/cam/opencamlib/oclSample.py"])
 	else:
-		call([ "python2.7", py.utils.script_path_user()+"/addons/cam/opencamlib/oclSample.py"])
+		call([ "python2.7", bpy.utils.script_path_pref()+"/addons/cam/opencamlib/oclSample.py"])
 	pointSamplesFromCSV(points)
 
 def oclSample(operation, chunks):
