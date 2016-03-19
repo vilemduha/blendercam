@@ -22,7 +22,9 @@ class Creator(iso_modal.Creator):
 
     def PROGRAM(self): return None
     def PROGRAM_END(self): return( 'T0' + self.SPACE() + 'M06' + self.SPACE() + 'M02')
-        
+    def dwell(self, t):
+    	self.write('\n')
+    	iso_modal.Creator.dwell(self, t)
 ############################################################################
 ## Begin Program 
 
