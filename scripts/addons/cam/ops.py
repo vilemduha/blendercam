@@ -289,7 +289,7 @@ class PathsChain(bpy.types.Operator):
 	bl_idname = "object.calculate_cam_paths_chain"
 	bl_label = "Calculate CAM paths in current chain and export chain gcode"
 	bl_options = {'REGISTER', 'UNDO'}
-		
+
 	def execute(self, context):
 		import bpy
 		s=bpy.context.scene
@@ -303,9 +303,6 @@ class PathsChain(bpy.types.Operator):
 		utils.exportGcodePath(chain.filename,meshes,chainops)
 		return {'FINISHED'}
 	
-	def draw(self, context):
-		layout = self.layout
-		layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")	 
 		
 class PathExport(bpy.types.Operator):
 	'''Export gcode. Can be used only when the path object is present'''
