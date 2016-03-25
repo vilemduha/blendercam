@@ -1141,6 +1141,8 @@ def exportGcodePath(filename,vertslist,operations):
 	last_cutter=None;#[o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
 	
 	processedops=0
+	last = Vector((0,0,0))
+	
 	for i,o in enumerate(operations):
 	
 		free_movement_height=o.free_movement_height#o.max.z+
@@ -1196,7 +1198,8 @@ def exportGcodePath(filename,vertslist,operations):
 		if m.use_position_definitions:# dhull 
 			last=Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
 		else:		
-			last=Vector((0.0,0.0,free_movement_height))#nonsense values so first step of the operation gets written for sure
+			if i<1:
+				last=Vector((0.0,0.0,free_movement_height))#nonsense values so first step of the operation gets written for sure
 		lastrot=Euler((0,0,0))
 		duration=0.0
 		f=0.1123456#nonsense value, so first feedrate always gets written 
@@ -1208,7 +1211,11 @@ def exportGcodePath(filename,vertslist,operations):
 		
 		#print('2')
 		for vi,vert in enumerate(verts):
-		
+			# skip the first vertex if this is a chained operation
+			# ie: outputting more than one operation
+			# otherwise the machine gets sent back to 0,0 for each operation which is unecessary
+			if i>0 and vi==0:
+				continue 
 			v=vert.co
 			if o.machine_axes!='3':
 				v=v.copy()#we rotate it so we need to copy the vector
