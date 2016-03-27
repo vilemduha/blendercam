@@ -2518,6 +2518,9 @@ def strategy_pocket( o ):
 						ch.points.extend(rothelix)
 		chunks.extend(lchunks)
 	
+	if o.first_down:
+		chunks=sortChunks(chunks,o)
+		
 	chunksToMesh(chunks,o)
 		
 def strategy_drill( o ):
