@@ -2344,10 +2344,276 @@ def strategy_proj_curve( s, o ):
 	#	ch.points=ch.endpoints
 	chunksToMesh(chunks,o)
 
+def strategy_pocket( o ):
+	print('operation: projected curve')
+	p=getObjectOutline(o.cutter_diameter/2,o,False)
+	approxn=(min(o.max.x-o.min.x,o.max.y-o.min.y)/o.dist_between_paths)/2
+	i=0
+	chunks=[]
+	chunksFromCurve=[]
+	lastchunks=[]
+	centers=None
+	firstoutline = p#for testing in the end.
+	prest = p.buffer(-o.cutter_diameter/2, o.circle_detail)
+	#shapelyToCurve('testik',p,0)
+	while not p.is_empty:
+		nchunks=shapelyToChunks(p,o.min.z)
+		
+		
+		pnew=p.buffer(-o.dist_between_paths,o.circle_detail)
+
+		if o.dist_between_paths>o.cutter_diameter/2.0:			
+			prest= prest.difference(pnew.boundary.buffer(o.cutter_diameter/2, o.circle_detail))
+			if not(pnew.contains(prest)):
+				#shapelyToCurve('cesta',pnew,0)
+				#shapelyToCurve('problemas',prest,0)
+				prest = shapelyToMultipolygon(prest)
+				fine=[]
+				go = []
+				for p1 in prest:
+					if pnew.contains(p1):
+						fine.append(p1)
+					else:
+						go.append(p1)
+				if len(go)>0:
+					for p1 in go:
+						nchunks1=shapelyToChunks(p1,o.min.z)
+						nchunks.extend(nchunks1)
+						prest=sgeometry.MultiPolygon(fine)
+						
+		nchunks=limitChunks(nchunks,o)
+		chunksFromCurve.extend(nchunks)
+		parentChildDist(lastchunks,nchunks,o)
+		
+		lastchunks=nchunks
+		
+		
+		percent=int(i/approxn*100)
+		progress('outlining polygons ',percent) 
+		p=pnew
+		
+		i+=1
+	
+	#if (o.poc)#TODO inside outside!
+	if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
+		for ch in chunksFromCurve:
+			ch.points.reverse()
+			
+			
+	#if bpy.app.debug_value==1:
+	
+
+	chunksFromCurve=sortChunks(chunksFromCurve,o)
+		
+	chunks=[]
+	if o.use_layers:
+		n=math.ceil((o.maxz-o.min.z)/o.stepdown)
+		layers=[]
+		layerstart=o.maxz
+		for x in range(0,n):
+			layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
+			layers.append([layerstart,layerend])
+			layerstart=layerend
+	else:
+		layers=[[o.maxz,o.min.z]]
+
+	#print(layers)
+	#print(chunksFromCurve)
+	#print(len(chunksFromCurve))
+	for l in layers:
+		lchunks=setChunksZ(chunksFromCurve,l[1])
+		###########helix_enter first try here TODO: check if helix radius is not out of operation area.
+		if o.helix_enter:
+			helix_radius=o.cutter_diameter*0.5*o.helix_diameter*0.01#90 percent of cutter radius
+			helix_circumference=helix_radius*pi*2
+			
+			revheight=helix_circumference*tan(o.ramp_in_angle)
+			for chi,ch in enumerate(lchunks):
+				if chunksFromCurve[chi].children==[]:
+				
+					p=ch.points[0]#TODO:intercept closest next point when it should stay low 
+					#first thing to do is to check if helix enter can really enter.
+					checkc=Circle(helix_radius+o.cutter_diameter/2,o.circle_detail)
+					checkc = affinity.translate(checkc,p[0],p[1])
+					covers=False
+					for poly in o.silhouete:
+						if poly.contains(checkc):
+							covers=True
+							break;
+					
+					if covers:
+						revolutions=(l[0]-p[2])/revheight
+						#print(revolutions)
+						h=Helix(helix_radius,o.circle_detail, l[0],p,revolutions)
+						#invert helix if not the typical direction
+						if (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB'	and o.spindle_rotation_direction=='CCW'):
+							nhelix=[]
+							for v in h:
+								nhelix.append((2*p[0]-v[0],v[1],v[2]))
+							h=nhelix
+						ch.points=h+ch.points
+					else:
+						o.warnings=o.warnings+'Helix entry did not fit! \n '
+						ch.closed=True
+						lchunks[chi]=ch.rampZigZag(l[0],l[1],o)
+		#Arc retract here first try:
+		if o.retract_tangential:#TODO: check for entry and exit point before actual computing... will be much better.
+								#TODO: fix this for CW and CCW!
+			for chi, ch in enumerate(lchunks):
+				#print(chunksFromCurve[chi])
+				#print(chunksFromCurve[chi].parents)
+				if chunksFromCurve[chi].parents==[] or len(chunksFromCurve[chi].parents)==1:
+					
+					revolutions=0.25
+					v1=Vector(ch.points[-1])
+					i=-2
+					v2=Vector(ch.points[i])
+					v=v1-v2
+					while v.length==0:
+						i=i-1
+						v2=Vector(ch.points[i])
+						v=v1-v2
+					
+					v.normalize()
+					rotangle=Vector((v.x,v.y)).angle_signed(Vector((1,0)))
+					e=Euler((0,0,pi/2.0))# TODO:#CW CLIMB!
+					v.rotate(e)
+					p=v1+v*o.retract_radius
+					center = p
+					p=(p.x,p.y,p.z)
+					
+					#progress(str((v1,v,p)))
+					h=Helix(o.retract_radius, o.circle_detail, p[2]+o.retract_height,p, revolutions)
+					
+					e=Euler((0,0,rotangle+pi))#angle to rotate whole retract move
+					rothelix=[]
+					c=[]#polygon for outlining and checking collisions.
+					for p in h:#rotate helix to go from tangent of vector
+						v1=Vector(p)
+						
+						v=v1-center
+						v.x=-v.x#flip it here first...
+						v.rotate(e)
+						p=center+v
+						rothelix.append(p)
+						c.append((p[0],p[1]))
+						
+					c=sgeometry.Polygon(c)
+					#print('çoutline')
+					#print(c)
+					coutline = c.buffer(o.cutter_diameter/2,o.circle_detail)
+					#print(h)
+					#print('çoutline')
+					#print(coutline)
+					#polyToMesh(coutline,0)
+					rothelix.reverse()
+					
+					covers=False
+					for poly in o.silhouete:
+						if poly.contains(coutline):
+							covers=True
+							break;
+					
+					if covers:
+						ch.points.extend(rothelix)
+		chunks.extend(lchunks)
+	
+	chunksToMesh(chunks,o)
+		
+def strategy_drill( o ):
+	chunks=[]
+	for ob in o.objects:
+		activate(ob)
+	
+		bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
+		bpy.ops.group.objects_remove_all()
+		ob=bpy.context.active_object
+		if ob.type=='CURVE':
+			ob.data.dimensions='3D'
+		try:
+			bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+			bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+			bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+			
+		except:
+			pass
+		l=ob.location
+		
+		if ob.type=='CURVE':
+			
+			for c in ob.data.splines:
+				maxx,minx,maxy,miny,maxz,minz=-10000,10000,-10000,10000,-10000,10000
+				for p in c.points:
+					if o.drill_type=='ALL_POINTS':
+						chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,p.co.z+l.z)]))
+					minx=min(p.co.x,minx)
+					maxx=max(p.co.x,maxx)
+					miny=min(p.co.y,miny)
+					maxy=max(p.co.y,maxy)
+					minz=min(p.co.z,minz)
+					maxz=max(p.co.z,maxz)
+				for p in c.bezier_points:
+					if o.drill_type=='ALL_POINTS':
+						chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,p.co.z+l.z)]))
+					minx=min(p.co.x,minx)
+					maxx=max(p.co.x,maxx)
+					miny=min(p.co.y,miny)
+					maxy=max(p.co.y,maxy)
+					minz=min(p.co.z,minz)
+					maxz=max(p.co.z,maxz)
+				cx=(maxx+minx)/2
+				cy=(maxy+miny)/2
+				cz=(maxz+minz)/2
+				
+				center=(cx,cy)
+				aspect=(maxx-minx)/(maxy-miny)
+				if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
+					chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,cz+l.z)]))
+						
+		elif ob.type=='MESH':
+			for v in ob.data.vertices:
+				chunks.append(camPathChunk([(v.co.x+l.x,v.co.y+l.y,v.co.z+l.z)]))
+		delob(ob)#delete temporary object with applied transforms
+
+	if o.use_layers:
+		layers = []
+		n = math.ceil((o.maxz-o.min.z)/o.stepdown)
+		layerstart = o.maxz
+		for x in range(0, n):
+			layerend = max(o.maxz-((x+1)*o.stepdown), o.min.z)
+			if int(layerstart*10**8)!=int(layerend*10**8):#it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
+				layers.append([layerstart, layerend])
+			layerstart = layerend
+	else:
+			layers = [[o.maxz, o.min.z]]
+
+	chunklayers = []
+	for layer in layers:
+		for chunk in chunks:
+			# If using object for minz then use z from points in object
+			if o.minz_from_ob:
+				z = chunk.points[0][2]
+			else: # using operation minz 
+				z = o.minz
+			# only add a chunk layer if the chunk z point is in or lower than the layer 
+			if z <= layer[0]:
+				if z <= layer[1]:
+					z = layer[1]
+				# perform peck drill
+				newchunk = chunk.copy()
+				newchunk.setZ(z)
+				chunklayers.append(newchunk)
+				# retract tool to maxz (operation depth start in ui)
+				newchunk = chunk.copy()
+				newchunk.setZ(o.maxz)
+				chunklayers.append(newchunk)
+					
+	
+	chunklayers = sortChunks( chunklayers, o)
+	chunksToMesh( chunklayers, o)
 	
 #this is the main function.
 #FIXME: split strategies into separate file!
-#def cutoutStrategy(o):
 def getPath3axis(context, operation):
 	s=bpy.context.scene
 	o=operation
@@ -2363,181 +2629,8 @@ def getPath3axis(context, operation):
 	elif o.strategy=='PROJECTED_CURVE':
 		strategy_proj_curve(s, o)
 		
-	elif o.strategy=='POCKET':	
-		p=getObjectOutline(o.cutter_diameter/2,o,False)
-		approxn=(min(o.max.x-o.min.x,o.max.y-o.min.y)/o.dist_between_paths)/2
-		i=0
-		chunks=[]
-		chunksFromCurve=[]
-		lastchunks=[]
-		centers=None
-		firstoutline = p#for testing in the end.
-		prest = p.buffer(-o.cutter_diameter/2, o.circle_detail)
-		#shapelyToCurve('testik',p,0)
-		while not p.is_empty:
-			nchunks=shapelyToChunks(p,o.min.z)
-			
-			
-			pnew=p.buffer(-o.dist_between_paths,o.circle_detail)
-
-			if o.dist_between_paths>o.cutter_diameter/2.0:			
-				prest= prest.difference(pnew.boundary.buffer(o.cutter_diameter/2, o.circle_detail))
-				if not(pnew.contains(prest)):
-					#shapelyToCurve('cesta',pnew,0)
-					#shapelyToCurve('problemas',prest,0)
-					prest = shapelyToMultipolygon(prest)
-					fine=[]
-					go = []
-					for p1 in prest:
-						if pnew.contains(p1):
-							fine.append(p1)
-						else:
-							go.append(p1)
-					if len(go)>0:
-						for p1 in go:
-							nchunks1=shapelyToChunks(p1,o.min.z)
-							nchunks.extend(nchunks1)
-							prest=sgeometry.MultiPolygon(fine)
-							
-			nchunks=limitChunks(nchunks,o)
-			chunksFromCurve.extend(nchunks)
-			parentChildDist(lastchunks,nchunks,o)
-			
-			lastchunks=nchunks
-			
-			
-			percent=int(i/approxn*100)
-			progress('outlining polygons ',percent) 
-			p=pnew
-			
-			i+=1
-		
-		#if (o.poc)#TODO inside outside!
-		if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
-			for ch in chunksFromCurve:
-				ch.points.reverse()
-				
-				
-		#if bpy.app.debug_value==1:
-		
-
-		chunksFromCurve=sortChunks(chunksFromCurve,o)
-			
-		chunks=[]
-		if o.use_layers:
-			n=math.ceil((o.maxz-o.min.z)/o.stepdown)
-			layers=[]
-			layerstart=o.maxz
-			for x in range(0,n):
-				layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
-				layers.append([layerstart,layerend])
-				layerstart=layerend
-		else:
-			layers=[[o.maxz,o.min.z]]
-
-		#print(layers)
-		#print(chunksFromCurve)
-		#print(len(chunksFromCurve))
-		for l in layers:
-			lchunks=setChunksZ(chunksFromCurve,l[1])
-			###########helix_enter first try here TODO: check if helix radius is not out of operation area.
-			if o.helix_enter:
-				helix_radius=o.cutter_diameter*0.5*o.helix_diameter*0.01#90 percent of cutter radius
-				helix_circumference=helix_radius*pi*2
-				
-				revheight=helix_circumference*tan(o.ramp_in_angle)
-				for chi,ch in enumerate(lchunks):
-					if chunksFromCurve[chi].children==[]:
-					
-						p=ch.points[0]#TODO:intercept closest next point when it should stay low 
-						#first thing to do is to check if helix enter can really enter.
-						checkc=Circle(helix_radius+o.cutter_diameter/2,o.circle_detail)
-						checkc = affinity.translate(checkc,p[0],p[1])
-						covers=False
-						for poly in o.silhouete:
-							if poly.contains(checkc):
-								covers=True
-								break;
-						
-						if covers:
-							revolutions=(l[0]-p[2])/revheight
-							#print(revolutions)
-							h=Helix(helix_radius,o.circle_detail, l[0],p,revolutions)
-							#invert helix if not the typical direction
-							if (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB'	and o.spindle_rotation_direction=='CCW'):
-								nhelix=[]
-								for v in h:
-									nhelix.append((2*p[0]-v[0],v[1],v[2]))
-								h=nhelix
-							ch.points=h+ch.points
-						else:
-							o.warnings=o.warnings+'Helix entry did not fit! \n '
-							ch.closed=True
-							lchunks[chi]=ch.rampZigZag(l[0],l[1],o)
-			#Arc retract here first try:
-			if o.retract_tangential:#TODO: check for entry and exit point before actual computing... will be much better.
-									#TODO: fix this for CW and CCW!
-				for chi, ch in enumerate(lchunks):
-					#print(chunksFromCurve[chi])
-					#print(chunksFromCurve[chi].parents)
-					if chunksFromCurve[chi].parents==[] or len(chunksFromCurve[chi].parents)==1:
-						
-						revolutions=0.25
-						v1=Vector(ch.points[-1])
-						i=-2
-						v2=Vector(ch.points[i])
-						v=v1-v2
-						while v.length==0:
-							i=i-1
-							v2=Vector(ch.points[i])
-							v=v1-v2
-						
-						v.normalize()
-						rotangle=Vector((v.x,v.y)).angle_signed(Vector((1,0)))
-						e=Euler((0,0,pi/2.0))# TODO:#CW CLIMB!
-						v.rotate(e)
-						p=v1+v*o.retract_radius
-						center = p
-						p=(p.x,p.y,p.z)
-						
-						#progress(str((v1,v,p)))
-						h=Helix(o.retract_radius, o.circle_detail, p[2]+o.retract_height,p, revolutions)
-						
-						e=Euler((0,0,rotangle+pi))#angle to rotate whole retract move
-						rothelix=[]
-						c=[]#polygon for outlining and checking collisions.
-						for p in h:#rotate helix to go from tangent of vector
-							v1=Vector(p)
-							
-							v=v1-center
-							v.x=-v.x#flip it here first...
-							v.rotate(e)
-							p=center+v
-							rothelix.append(p)
-							c.append((p[0],p[1]))
-							
-						c=sgeometry.Polygon(c)
-						#print('çoutline')
-						#print(c)
-						coutline = c.buffer(o.cutter_diameter/2,o.circle_detail)
-						#print(h)
-						#print('çoutline')
-						#print(coutline)
-						#polyToMesh(coutline,0)
-						rothelix.reverse()
-						
-						covers=False
-						for poly in o.silhouete:
-							if poly.contains(coutline):
-								covers=True
-								break;
-						
-						if covers:
-							ch.points.extend(rothelix)
-			chunks.extend(lchunks)
-		
-		chunksToMesh(chunks,o)
-		
+	elif o.strategy=='POCKET':
+		strategy_pocket( o )
 	
 		
 	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL' or o.strategy=='CRAZY':  
@@ -2830,58 +2923,8 @@ def getPath3axis(context, operation):
 		chunksToMesh(chunks,o)	
 		
 	elif o.strategy=='DRILL':
-		chunks=[]
-		for ob in o.objects:
-			activate(ob)
-		
-			bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
-			bpy.ops.group.objects_remove_all()
-			ob=bpy.context.active_object
-			if ob.type=='CURVE':
-				ob.data.dimensions='3D'
-			try:
-				bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-				bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
-				bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-				
-			except:
-				pass
-			l=ob.location
+		strategy_drill( o )
 			
-			if ob.type=='CURVE':
-				
-				for c in ob.data.splines:
-						maxx,minx,maxy,miny=-10000,10000,-10000,100000
-						for p in c.points:
-							if o.drill_type=='ALL_POINTS':
-								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.minz)]))
-							minx=min(p.co.x,minx)
-							maxx=max(p.co.x,maxx)
-							miny=min(p.co.y,miny)
-							maxy=max(p.co.y,maxy)
-						for p in c.bezier_points:
-							if o.drill_type=='ALL_POINTS':
-								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.minz)]))
-							minx=min(p.co.x,minx)
-							maxx=max(p.co.x,maxx)
-							miny=min(p.co.y,miny)
-							maxy=max(p.co.y,maxy)
-						cx=(maxx+minx)/2
-						cy=(maxy+miny)/2
-						
-						center=(cx,cy)
-						aspect=(maxx-minx)/(maxy-miny)
-						if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
-							chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.minz)]))
-			elif ob.type=='MESH':
-				for v in ob.data.vertices:
-					chunks.append(camPathChunk([(v.co.x+l.x,v.co.y+l.y,v.co.z+l.z)]))
-			delob(ob)#delete temporary object with applied transforms
-		print(chunks)
-		chunks=sortChunks(chunks,o)
-		print(chunks)
-		chunksToMesh(chunks,o)
-		
 	elif o.strategy=='MEDIAL_AXIS':
 		print('doing highly experimental stuff')
 		
