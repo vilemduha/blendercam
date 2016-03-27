@@ -2520,6 +2520,97 @@ def strategy_pocket( o ):
 	
 	chunksToMesh(chunks,o)
 		
+def strategy_drill( o ):
+	chunks=[]
+	for ob in o.objects:
+		activate(ob)
+	
+		bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
+		bpy.ops.group.objects_remove_all()
+		ob=bpy.context.active_object
+		if ob.type=='CURVE':
+			ob.data.dimensions='3D'
+		try:
+			bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+			bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+			bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+			
+		except:
+			pass
+		l=ob.location
+		
+		if ob.type=='CURVE':
+			
+			for c in ob.data.splines:
+				maxx,minx,maxy,miny,maxz,minz=-10000,10000,-10000,10000,-10000,10000
+				for p in c.points:
+					if o.drill_type=='ALL_POINTS':
+						chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,p.co.z+l.z)]))
+					minx=min(p.co.x,minx)
+					maxx=max(p.co.x,maxx)
+					miny=min(p.co.y,miny)
+					maxy=max(p.co.y,maxy)
+					minz=min(p.co.z,minz)
+					maxz=max(p.co.z,maxz)
+				for p in c.bezier_points:
+					if o.drill_type=='ALL_POINTS':
+						chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,p.co.z+l.z)]))
+					minx=min(p.co.x,minx)
+					maxx=max(p.co.x,maxx)
+					miny=min(p.co.y,miny)
+					maxy=max(p.co.y,maxy)
+					minz=min(p.co.z,minz)
+					maxz=max(p.co.z,maxz)
+				cx=(maxx+minx)/2
+				cy=(maxy+miny)/2
+				cz=(maxz+minz)/2
+				
+				center=(cx,cy)
+				aspect=(maxx-minx)/(maxy-miny)
+				if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
+					chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,cz+l.z)]))
+						
+		elif ob.type=='MESH':
+			for v in ob.data.vertices:
+				chunks.append(camPathChunk([(v.co.x+l.x,v.co.y+l.y,v.co.z+l.z)]))
+		delob(ob)#delete temporary object with applied transforms
+
+	if o.use_layers:
+		layers = []
+		n = math.ceil((o.maxz-o.min.z)/o.stepdown)
+		layerstart = o.maxz
+		for x in range(0, n):
+			layerend = max(o.maxz-((x+1)*o.stepdown), o.min.z)
+			if int(layerstart*10**8)!=int(layerend*10**8):#it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
+				layers.append([layerstart, layerend])
+			layerstart = layerend
+	else:
+			layers = [[o.maxz, o.min.z]]
+
+	chunklayers = []
+	for layer in layers:
+		for chunk in chunks:
+			# If using object for minz then use z from points in object
+			if o.minz_from_ob:
+				z = chunk.points[0][2]
+			else: # using operation minz 
+				z = o.minz
+			# only add a chunk layer if the chunk z point is in or lower than the layer 
+			if z <= layer[0]:
+				if z <= layer[1]:
+					z = layer[1]
+				# perform peck drill
+				newchunk = chunk.copy()
+				newchunk.setZ(z)
+				chunklayers.append(newchunk)
+				# retract tool to maxz (operation depth start in ui)
+				newchunk = chunk.copy()
+				newchunk.setZ(o.maxz)
+				chunklayers.append(newchunk)
+					
+	
+	chunklayers = sortChunks( chunklayers, o)
+	chunksToMesh( chunklayers, o)
 	
 #this is the main function.
 #FIXME: split strategies into separate file!
@@ -2832,58 +2923,8 @@ def getPath3axis(context, operation):
 		chunksToMesh(chunks,o)	
 		
 	elif o.strategy=='DRILL':
-		chunks=[]
-		for ob in o.objects:
-			activate(ob)
-		
-			bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
-			bpy.ops.group.objects_remove_all()
-			ob=bpy.context.active_object
-			if ob.type=='CURVE':
-				ob.data.dimensions='3D'
-			try:
-				bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-				bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
-				bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-				
-			except:
-				pass
-			l=ob.location
+		strategy_drill( o )
 			
-			if ob.type=='CURVE':
-				
-				for c in ob.data.splines:
-						maxx,minx,maxy,miny=-10000,10000,-10000,100000
-						for p in c.points:
-							if o.drill_type=='ALL_POINTS':
-								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.minz)]))
-							minx=min(p.co.x,minx)
-							maxx=max(p.co.x,maxx)
-							miny=min(p.co.y,miny)
-							maxy=max(p.co.y,maxy)
-						for p in c.bezier_points:
-							if o.drill_type=='ALL_POINTS':
-								chunks.append(camPathChunk([(p.co.x+l.x,p.co.y+l.y,o.minz)]))
-							minx=min(p.co.x,minx)
-							maxx=max(p.co.x,maxx)
-							miny=min(p.co.y,miny)
-							maxy=max(p.co.y,maxy)
-						cx=(maxx+minx)/2
-						cy=(maxy+miny)/2
-						
-						center=(cx,cy)
-						aspect=(maxx-minx)/(maxy-miny)
-						if (1.3>aspect>0.7 and o.drill_type=='MIDDLE_SYMETRIC') or o.drill_type=='MIDDLE_ALL': 
-							chunks.append(camPathChunk([(center[0]+l.x,center[1]+l.y,o.minz)]))
-			elif ob.type=='MESH':
-				for v in ob.data.vertices:
-					chunks.append(camPathChunk([(v.co.x+l.x,v.co.y+l.y,v.co.z+l.z)]))
-			delob(ob)#delete temporary object with applied transforms
-		print(chunks)
-		chunks=sortChunks(chunks,o)
-		print(chunks)
-		chunksToMesh(chunks,o)
-		
 	elif o.strategy=='MEDIAL_AXIS':
 		print('doing highly experimental stuff')
 		
