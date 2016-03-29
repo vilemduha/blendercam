@@ -2507,6 +2507,7 @@ def strategy_pocket( o ):
 	chunksToMesh(chunks,o)
 		
 def strategy_drill( o ):
+	print('operation: Drill')
 	chunks=[]
 	for ob in o.objects:
 		activate(ob)
@@ -2587,6 +2588,180 @@ def strategy_drill( o ):
 	
 	chunklayers = sortChunks( chunklayers, o)
 	chunksToMesh( chunklayers, o)
+
+def strategy_medial_axis( o ):
+	print('operation: Medial Axis')	
+	print('doing highly experimental stuff')
+	
+	from cam.voronoi import Site, computeVoronoiDiagram
+	
+	chunks=[]
+	
+	gpoly=spolygon.Polygon()
+	angle=o.cutter_tip_angle
+	slope=math.tan(math.pi*(90-angle/2)/180)
+	if o.cutter_type=='VCARVE':
+		angle = o.cutter_tip_angle
+		maxdepth = - math.tan(math.pi*(90-angle/2)/180) * o.cutter_diameter/2
+	elif o.cutter_type=='BALLNOSE' or o.cutter_type=='BALL':
+		#angle = o.cutter_tip_angle
+		maxdepth = o.cutter_diameter/2
+	#remember resolutions of curves, to refine them, 
+	#otherwise medial axis computation yields too many branches in curved parts
+	resolutions_before=[]
+	for ob in o.objects:
+		if ob.type == 'CURVE' or ob.type == 'FONT':
+			resolutions_before.append(ob.data.resolution_u)
+			if ob.data.resolution_u < 64:
+				ob.data.resolution_u=64
+				
+				
+	polys=getOperationSilhouete(o)
+	mpoly = sgeometry.asMultiPolygon(polys)
+	for poly in polys:
+		schunks=shapelyToChunks(poly,-1)
+		schunks = chunksRefineThreshold(schunks,o.medial_axis_subdivision, o.medial_axis_threshold)#chunksRefine(schunks,o)
+		
+		verts=[]
+		for ch in schunks:		
+			for pt in ch.points:
+				#pvoro = Site(pt[0], pt[1])
+				verts.append(pt)#(pt[0], pt[1]), pt[2])
+		#verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
+		nDupli,nZcolinear = unique(verts)
+		nVerts=len(verts)
+		print(str(nDupli)+" duplicates points ignored")
+		print(str(nZcolinear)+" z colinear points excluded")
+		if nVerts < 3:
+			self.report({'ERROR'}, "Not enough points")
+			return {'FINISHED'}
+		#Check colinear
+		xValues=[pt[0] for pt in verts]
+		yValues=[pt[1] for pt in verts]
+		if checkEqual(xValues) or checkEqual(yValues):
+			self.report({'ERROR'}, "Points are colinear")
+			return {'FINISHED'}
+		#Create diagram
+		print("Tesselation... ("+str(nVerts)+" points)")
+		xbuff, ybuff = 5, 5 # %
+		zPosition=0
+		vertsPts= [Point(vert[0], vert[1], vert[2]) for vert in verts]
+		#vertsPts= [Point(vert[0], vert[1]) for vert in verts]
+		
+		pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
+		
+		#
+		#pts=[[pt[0], pt[1], zPosition] for pt in pts]
+		newIdx=0
+		vertr=[]
+		filteredPts=[]
+		print('filter points')
+		for p in pts:
+			if not poly.contains(sgeometry.Point(p)):
+				vertr.append((True,-1))
+			else:
+				vertr.append((False,newIdx))
+				if o.cutter_type == 'VCARVE':
+					z=-mpoly.boundary.distance(sgeometry.Point(p))*slope
+					if z<maxdepth:
+						z=maxdepth
+				elif o.cutter_type == 'BALL' or o.cutter_type == 'BALLNOSE':
+					d = mpoly.boundary.distance(sgeometry.Point(p))
+					r = o.cutter_diameter/2.0
+					if d>=r:
+						z=-r
+					else:
+						#print(r, d)
+						z = -r+sqrt(r*r - d*d )
+				else:
+					z=0#
+				#print(mpoly.distance(sgeometry.Point(0,0)))
+				#if(z!=0):print(z)
+				filteredPts.append((p[0],p[1],z))
+				newIdx+=1
+				
+		print('filter edges')		
+		filteredEdgs=[]
+		ledges=[]
+		for e in edgesIdx:
+			
+			do=True
+			p1=pts[e[0]]
+			p2=pts[e[1]]
+			#print(p1,p2,len(vertr))
+			if vertr[e[0]][0]: # exclude edges with allready excluded points
+				do=False
+			elif vertr[e[1]][0]:
+				do=False
+			if do:
+				filteredEdgs.append(((vertr[e[0]][1],vertr[e[1]][1])))
+				ledges.append(sgeometry.LineString((filteredPts[vertr[e[0]][1]],filteredPts[vertr[e[1]][1]])))
+				#print(ledges[-1].has_z)
+		
+			
+		bufpoly = poly.buffer(-o.cutter_diameter/2, resolution = 64)
+
+		lines = shapely.ops.linemerge(ledges)
+		#print(lines.type)
+		
+		if bufpoly.type=='Polygon' or bufpoly.type=='MultiPolygon':
+			lines=lines.difference(bufpoly)
+			chunks.extend(shapelyToChunks(bufpoly,maxdepth))
+		chunks.extend( shapelyToChunks(lines,0))
+		
+		#segments=[]
+		#processEdges=filteredEdgs.copy()
+		#chunk=camPathChunk([])
+		#chunk.points.append(filteredEdgs.pop())
+		#while len(filteredEdgs)>0:
+			
+		#Create new mesh structure
+		'''
+		print("Create mesh...")
+		voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
+		
+		
+				
+		voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
+		
+		voronoiDiagram.update(calc_edges=True) #Update mesh with new data
+		#create an object with that mesh
+		voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
+		#place object
+		#bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
+		
+		#update scene
+		bpy.context.scene.objects.link(voronoiObj) #Link object to scene
+		bpy.context.scene.objects.active = voronoiObj
+		voronoiObj.select = True
+		
+		'''
+		#bpy.ops.object.convert(target='CURVE')
+	oi=0
+	for ob in o.objects:
+		if ob.type == 'CURVE' or ob.type == 'FONT':
+			ob.data.resolution_u=resolutions_before[oi]
+			oi+=1
+		
+	#bpy.ops.object.join()
+	chunks = sortChunks(chunks, o )
+
+	layers = getLayers(o, o.maxz, o.min.z)
+		
+	chunklayers = []
+
+	for layer in layers:
+		for chunk in chunks:
+			if chunk.isbelowZ(layer[0]):
+				newchunk = chunk.copy()
+				newchunk.clampZ(layer[1])
+				chunklayers.append(newchunk)
+
+	if o.first_down:
+		chunklayers = sortChunks(chunklayers, o)
+
+	chunksToMesh(chunklayers, o )
+
 	
 #this is the main function.
 #FIXME: split strategies into separate file!
@@ -2888,161 +3063,7 @@ def getPath3axis(context, operation):
 		strategy_drill( o )
 			
 	elif o.strategy=='MEDIAL_AXIS':
-		print('doing highly experimental stuff')
-		
-		from cam.voronoi import Site, computeVoronoiDiagram
-		
-		chunks=[]
-		
-		gpoly=spolygon.Polygon()
-		angle=o.cutter_tip_angle
-		slope=math.tan(math.pi*(90-angle/2)/180)
-		if o.cutter_type=='VCARVE':
-			angle = o.cutter_tip_angle
-			maxdepth = - math.tan(math.pi*(90-angle/2)/180) * o.cutter_diameter/2
-		elif o.cutter_type=='BALLNOSE' or o.cutter_type=='BALL':
-			#angle = o.cutter_tip_angle
-			maxdepth = o.cutter_diameter/2
-		#remember resolutions of curves, to refine them, 
-		#otherwise medial axis computation yields too many branches in curved parts
-		resolutions_before=[]
-		for ob in o.objects:
-			if ob.type == 'CURVE' or ob.type == 'FONT':
-				resolutions_before.append(ob.data.resolution_u)
-				if ob.data.resolution_u < 64:
-					ob.data.resolution_u=64
-					
-					
-		polys=getOperationSilhouete(o)
-		mpoly = sgeometry.asMultiPolygon(polys)
-		for poly in polys:
-			schunks=shapelyToChunks(poly,-1)
-			schunks = chunksRefineThreshold(schunks,o.medial_axis_subdivision, o.medial_axis_threshold)#chunksRefine(schunks,o)
-			
-			verts=[]
-			for ch in schunks:		
-				for pt in ch.points:
-					#pvoro = Site(pt[0], pt[1])
-					verts.append(pt)#(pt[0], pt[1]), pt[2])
-			#verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
-			nDupli,nZcolinear = unique(verts)
-			nVerts=len(verts)
-			print(str(nDupli)+" duplicates points ignored")
-			print(str(nZcolinear)+" z colinear points excluded")
-			if nVerts < 3:
-				self.report({'ERROR'}, "Not enough points")
-				return {'FINISHED'}
-			#Check colinear
-			xValues=[pt[0] for pt in verts]
-			yValues=[pt[1] for pt in verts]
-			if checkEqual(xValues) or checkEqual(yValues):
-				self.report({'ERROR'}, "Points are colinear")
-				return {'FINISHED'}
-			#Create diagram
-			print("Tesselation... ("+str(nVerts)+" points)")
-			xbuff, ybuff = 5, 5 # %
-			zPosition=0
-			vertsPts= [Point(vert[0], vert[1], vert[2]) for vert in verts]
-			#vertsPts= [Point(vert[0], vert[1]) for vert in verts]
-			
-			pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
-			
-			#
-			#pts=[[pt[0], pt[1], zPosition] for pt in pts]
-			newIdx=0
-			vertr=[]
-			filteredPts=[]
-			print('filter points')
-			for p in pts:
-				if not poly.contains(sgeometry.Point(p)):
-					vertr.append((True,-1))
-				else:
-					vertr.append((False,newIdx))
-					if o.cutter_type == 'VCARVE':
-						z=-mpoly.boundary.distance(sgeometry.Point(p))*slope
-						if z<maxdepth:
-							z=maxdepth
-					elif o.cutter_type == 'BALL' or o.cutter_type == 'BALLNOSE':
-						d = mpoly.boundary.distance(sgeometry.Point(p))
-						r = o.cutter_diameter/2.0
-						if d>=r:
-							z=-r
-						else:
-							#print(r, d)
-							z = -r+sqrt(r*r - d*d )
-					else:
-						z=0#
-					#print(mpoly.distance(sgeometry.Point(0,0)))
-					#if(z!=0):print(z)
-					filteredPts.append((p[0],p[1],z))
-					newIdx+=1
-					
-			print('filter edges')		
-			filteredEdgs=[]
-			ledges=[]
-			for e in edgesIdx:
-				
-				do=True
-				p1=pts[e[0]]
-				p2=pts[e[1]]
-				#print(p1,p2,len(vertr))
-				if vertr[e[0]][0]: # exclude edges with allready excluded points
-					do=False
-				elif vertr[e[1]][0]:
-					do=False
-				if do:
-					filteredEdgs.append(((vertr[e[0]][1],vertr[e[1]][1])))
-					ledges.append(sgeometry.LineString((filteredPts[vertr[e[0]][1]],filteredPts[vertr[e[1]][1]])))
-					#print(ledges[-1].has_z)
-			
-				
-			bufpoly = poly.buffer(-o.cutter_diameter/2, resolution = 64)
-
-			lines = shapely.ops.linemerge(ledges)
-			#print(lines.type)
-			
-			if bufpoly.type=='Polygon' or bufpoly.type=='MultiPolygon':
-				lines=lines.difference(bufpoly)
-				chunks.extend(shapelyToChunks(bufpoly,maxdepth))
-			chunks.extend( shapelyToChunks(lines,0))
-			
-			#segments=[]
-			#processEdges=filteredEdgs.copy()
-			#chunk=camPathChunk([])
-			#chunk.points.append(filteredEdgs.pop())
-			#while len(filteredEdgs)>0:
-				
-			#Create new mesh structure
-			'''
-			print("Create mesh...")
-			voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
-			
-			
-					
-			voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
-			
-			voronoiDiagram.update(calc_edges=True) #Update mesh with new data
-			#create an object with that mesh
-			voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
-			#place object
-			#bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
-			
-			#update scene
-			bpy.context.scene.objects.link(voronoiObj) #Link object to scene
-			bpy.context.scene.objects.active = voronoiObj
-			voronoiObj.select = True
-			
-			'''
-			#bpy.ops.object.convert(target='CURVE')
-		oi=0
-		for ob in o.objects:
-			if ob.type == 'CURVE' or ob.type == 'FONT':
-				ob.data.resolution_u=resolutions_before[oi]
-				oi+=1
-			
-		#bpy.ops.object.join()
-		chunks = sortChunks(chunks, o )
-		chunksToMesh(chunks, o )
+		strategy_medial_axis( o )
 		
 	#progress('finished')
 	

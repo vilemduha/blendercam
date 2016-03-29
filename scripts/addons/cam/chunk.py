@@ -85,10 +85,20 @@ class camPathChunk:
 			
 		
 	def setZ(self,z):
-		i=0
-		for p in self.points:
-			self.points[i]=(p[0],p[1],z)
-			i+=1
+		for i,p in enumerate(self.points):
+			self.points[i] = (p[0], p[1], z)
+
+	def isbelowZ(self, z):
+		isbelow = False
+		for p in (self.points):
+			if p[2] <= z:
+				isbelow = True
+		return isbelow
+
+	def clampZ(self, z):
+		for i,p in enumerate(self.points):
+			if p[2] < z:
+				self.points[i] = (p[0], p[1], z)
 			
 	def dist(self,pos,o):
 		if self.closed:

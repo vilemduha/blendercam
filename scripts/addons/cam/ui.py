@@ -524,7 +524,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.strategy=='PARALLEL' or ao.strategy=='CROSS':
 					if not ao.ramp:
 						layout.prop(ao,'parallel_step_back')
-				if ao.strategy=='CUTOUT' or ao.strategy=='POCKET':
+				if ao.strategy=='CUTOUT' or ao.strategy=='POCKET' or ao.strategy=='MEDIAL_AXIS':
 					layout.prop(ao,'first_down')
 					#if ao.first_down:
 					
