@@ -86,8 +86,8 @@ def packCurves():
 		polyfield.append([[0,0],0.0,poly,ob,z])
 	random.shuffle(polyfield)
 	#primitive layout here:
-	allpoly=sgeometry.Polygon()#main collision poly.
-	
+	allpoly=prepared.prep(sgeometry.Polygon())#main collision poly.
+	#allpoly=sgeometry.Polygon()#main collision poly.
 	
 	shift=0.0015#one milimeter by now.
 	rotchange=.3123456#in radians
@@ -137,7 +137,8 @@ def packCurves():
 			#print(iter,p.bounds)
 			
 			if xmin>0 and ymin>0 and ((direction=='Y' and xmax<sheetsizex) or (direction=='X' and ymax<sheetsizey)):
-				if allpoly.disjoint(ptrans):
+				if not allpoly.intersects(ptrans):
+				#if allpoly.disjoint(ptrans):
 					#print('gothit')
 					#we do more good solutions, choose best out of them:
 					hits+=1
@@ -193,6 +194,9 @@ def packCurves():
 				#allpoly=npoly
 				placedpolys.append(ptrans)
 				allpoly=prepared.prep(sgeometry.MultiPolygon(placedpolys))
+				#*** temporary fix until prepared geometry code is setup properly
+				#allpoly=sgeometry.MultiPolygon(placedpolys)
+				
 				#polygon_utils_cam.polyToMesh(allpoly,0.1)#debug visualisation
 				
 				#for c in p:
