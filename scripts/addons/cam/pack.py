@@ -192,7 +192,10 @@ def packCurves():
 				'''			
 				#allpoly=npoly
 				placedpolys.append(ptrans)
-				allpoly=prepared.prep(sgeometry.MultiPolygon(placedpolys))
+				#allpoly=prepared.prep(sgeometry.MultiPolygon(placedpolys))
+				#*** temporary fix until prepared geometry code is setup properly
+				allpoly=sgeometry.MultiPolygon(placedpolys)
+				
 				#polygon_utils_cam.polyToMesh(allpoly,0.1)#debug visualisation
 				
 				#for c in p:
