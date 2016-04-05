@@ -130,6 +130,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 			#layout.prop(ao,'axis5')
 			#layout.prop(ao,'collet_size')
 			#
+			layout.prop(ao,'enable_manual_tool_change')
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):	 
 	"""CAM material panel"""
