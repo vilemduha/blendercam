@@ -137,13 +137,17 @@ class machineSettings(bpy.types.PropertyGroup):
 
     #post processor options
 
-	output_block_numbers =  bpy.props.BoolProperty(name="output block numbers", description="output block numbers ie N10", default=False)
+	output_block_numbers =  BoolProperty(name = "output block numbers", description = "output block numbers ie N10 at start of line", default = False)
 
-	output_tool_definitions =  bpy.props.BoolProperty(name="output tool definitions", description="output tool definitions", default=False)
+	start_block_number =  IntProperty(name = "start block number", description = "the starting block number ie 10", default = 10)
+
+	block_number_increment =  IntProperty(name = "block number increment", description = "how much the block number should increment for the next line", default = 10)
+
+	output_tool_definitions =  BoolProperty(name = "output tool definitions", description = "output tool definitions", default = False)
 	
-	output_tool_change =  bpy.props.BoolProperty(name="output tool change commands", description="output tool change commands: Tn M06", default=False)
+	output_tool_change =  BoolProperty(name = "output tool change commands", description = "output tool change commands ie: Tn M06", default = False)
 
-	output_g43_on_tool_change = bpy.props.BoolProperty(name="output G43 on tool change", description="output G43 on tool change line", default=False)
+	output_g43_on_tool_change = BoolProperty(name = "output G43 on tool change", description = "output G43 on tool change line", default = False)
 
 
 class PackObjectsSettings(bpy.types.PropertyGroup):
@@ -541,13 +545,13 @@ class camOperation(bpy.types.PropertyGroup):
 	chipload = bpy.props.FloatProperty(name="chipload",description="Calculated chipload", default=0.0, unit='LENGTH', precision=10)
 
 	#g-code options for operation
-	output_header =  bpy.props.BoolProperty(name = "output g-code header", description = "output user defined g-code command header at start of program", default = False)
+	output_header =  BoolProperty(name = "output g-code header", description = "output user defined g-code command header at start of operation", default = False)
 
-	gcode_header =  bpy.props.StringProperty(name = "g-code header", description = "g-code commands at start of operation", default = "G53 G0")
+	gcode_header =  StringProperty(name = "g-code header", description = "g-code commands at start of operation", default = "G53 G0")
 	
-	output_trailer =  bpy.props.BoolProperty(name = "output g-code trailer", description = "output user defined g-code command trailer at end of operation", default = False)
+	output_trailer =  BoolProperty(name = "output g-code trailer", description = "output user defined g-code command trailer at end of operation", default = False)
 
-	gcode_trailer =  bpy.props.StringProperty(name = "g-code trailer", description = "g-code commands at end of operation", default = "M02")
+	gcode_trailer =  StringProperty(name = "g-code trailer", description = "g-code commands at end of operation", default = "M02")
 	
 		
 	#internal properties

@@ -51,7 +51,8 @@ from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
 from cam import image_utils
 from cam.image_utils import *
-from . import nc
+from cam.nc import nc
+from cam.nc import iso
 from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
 
 
@@ -1108,13 +1109,22 @@ def exportGcodePath(filename,vertslist,operations):
 	rotcorr=180.0/pi
 	
 	
-	
 	def startNewFile():
 		fileindex=''
 		if split:
 			fileindex='_'+str(findex)
 		filename=basefilename+fileindex+extension
 		c=postprocessor.Creator()
+
+		# process user overrides for post processor settings
+		if isinstance(c, iso.Creator):
+			c.output_block_numbers = m.output_block_numbers
+			c.start_block_number = m.start_block_number
+			c.block_number_increment = m.block_number_increment
+			c.output_tool_definitions = m.output_tool_definitions
+			c.output_tool_change = m.output_tool_change
+			c.output_g43_on_tool_change_line = m.output_g43_on_tool_change
+
 		c.file_open(filename)
 	
 		#unit system correction
@@ -1145,6 +1155,9 @@ def exportGcodePath(filename,vertslist,operations):
 	
 	for i,o in enumerate(operations):
 	
+		if o.output_header:
+			c.write(o.gcode_header + '\n')
+			
 		free_movement_height=o.free_movement_height#o.max.z+
 		
 		mesh=vertslist[i]
@@ -1161,7 +1174,7 @@ def exportGcodePath(filename,vertslist,operations):
 		
 		#write tool, not working yet probably 
 		#print (last_cutter)
-		if last_cutter!=[o.cutter_id,o.cutter_diameter,o.cutter_type,o.cutter_flutes]:
+		if m.output_tool_change and last_cutter!=[o.cutter_id,o.cutter_diameter,o.cutter_type,o.cutter_flutes]:
 			c.comment('Tool change - D = %s type %s flutes %s' % ( strInUnits(o.cutter_diameter,4),o.cutter_type, o.cutter_flutes))
 			c.tool_change(o.cutter_id)
 			c.flush_nc()
@@ -1331,7 +1344,9 @@ def exportGcodePath(filename,vertslist,operations):
 				
 		
 		c.feedrate(unitcorr*o.feedrate)
-				
+		
+		if o.output_trailer:
+			c.write(o.gcode_trailer + '\n')
 			
 	o.duration=duration*unitcorr
 	#print('duration')

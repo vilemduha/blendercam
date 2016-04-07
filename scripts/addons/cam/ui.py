@@ -131,6 +131,9 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 			#layout.prop(ao,'collet_size')
 			#
 			layout.prop(ao, 'output_block_numbers')
+			if ao.output_block_numbers:
+				layout.prop(ao, 'start_block_number')
+				layout.prop(ao, 'block_number_increment')
 			layout.prop(ao, 'output_tool_definitions')
 			layout.prop(ao, 'output_tool_change')
 			if ao.output_tool_change:
