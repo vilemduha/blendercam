@@ -87,6 +87,7 @@ class Creator(nc.Creator):
 		self.block_number_increment = 10
 		self.block_number_restart_after = None
 		self.output_tool_definitions = True
+		self.output_tool_change = True
 		self.output_g43_on_tool_change_line = False
 		self.output_internal_coolant_commands = False
 		self.output_g98_and_g99 = True
@@ -298,7 +299,7 @@ class Creator(nc.Creator):
 			line = f_in.readline()
 		   
 			if (len(line) == 0) : break
-			f_out.write(self.BLOCK() % n + self.SPACE_STR() + line)
+			f_out.write(self.BLOCK() % n + self.SPACE() + line)
 			n += self.block_number_increment
 			if self.block_number_restart_after != None:
 				if n >= self.block_number_restart_after:
