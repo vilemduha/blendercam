@@ -114,10 +114,10 @@ class machineSettings(bpy.types.PropertyGroup):
 	feedrate_max=bpy.props.FloatProperty(name="Feedrate maximum /min", default=2, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
 	feedrate_default=bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
 	#UNSUPPORTED:
-	spindle_min=bpy.props.FloatProperty(name="#Spindlespeed minimum /min", default=5000, min=0.00001, max=320000,precision=1)
-	spindle_max=bpy.props.FloatProperty(name="#Spindlespeed maximum /min", default=30000, min=0.00001, max=320000,precision=1)
-	spindle_default=bpy.props.FloatProperty(name="#Spindlespeed default /min", default=15000, min=0.00001, max=320000,precision=1)
-	spindle_start_time = bpy.props.FloatProperty(name="Spindle start delay ", description = 'Wait for the spindle to start spinning before starting the feeds , in seconds', default=0, min=0.0000, max=320000,precision=1)
+	spindle_min=bpy.props.FloatProperty(name="Spindle speed minimum RPM", default=5000, min=0.00001, max=320000,precision=1)
+	spindle_max=bpy.props.FloatProperty(name="Spindle speed maximum RPM", default=30000, min=0.00001, max=320000,precision=1)
+	spindle_default=bpy.props.FloatProperty(name="Spindle speed default RPM", default=15000, min=0.00001, max=320000,precision=1)
+	spindle_start_time = bpy.props.FloatProperty(name="Spindle start delay seconds", description = 'Wait for the spindle to start spinning before starting the feeds , in seconds', default=0, min=0.0000, max=320000,precision=1)
 	
 	axis4 = bpy.props.BoolProperty(name="#4th axis",description="Machine has 4th axis", default=0)
 	axis5 = bpy.props.BoolProperty(name="#5th axis",description="Machine has 5th axis", default=0)
