@@ -135,6 +135,17 @@ class machineSettings(bpy.types.PropertyGroup):
 	collet_size=bpy.props.FloatProperty(name="#Collet size", description="Collet size for collision detection",default=33, min=0.00001, max=320000,precision=PRECISION , unit="LENGTH")
 	#exporter_start = bpy.props.StringProperty(name="exporter start", default="%")
 
+    #post processor options
+
+	output_block_numbers =  bpy.props.BoolProperty(name="output block numbers", description="output block numbers ie N10", default=False)
+
+	output_tool_definitions =  bpy.props.BoolProperty(name="output tool definitions", description="output tool definitions", default=False)
+	
+	output_tool_change =  bpy.props.BoolProperty(name="output tool change commands", description="output tool change commands: Tn M06", default=False)
+
+	output_g43_on_tool_change = bpy.props.BoolProperty(name="output G43 on tool change", description="output G43 on tool change line", default=False)
+
+
 class PackObjectsSettings(bpy.types.PropertyGroup):
 	'''stores all data for machines'''
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
@@ -249,6 +260,7 @@ def updateExact(o,context):
 def updateOpencamlib(o,context):
 	print('update opencamlib ')
 	o.changed=True
+	
 def updateBridges(o,context):
 	print('update bridges ')
 	o.changed=True
@@ -527,6 +539,17 @@ class camOperation(bpy.types.PropertyGroup):
 	max = bpy.props.FloatVectorProperty(name = 'Operation maximum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
 	warnings = bpy.props.StringProperty(name='warnings', description='warnings', default='', update = updateRest)
 	chipload = bpy.props.FloatProperty(name="chipload",description="Calculated chipload", default=0.0, unit='LENGTH', precision=10)
+
+	#g-code options for operation
+	output_header =  bpy.props.BoolProperty(name = "output g-code header", description = "output user defined g-code command header at start of program", default = False)
+
+	gcode_header =  bpy.props.StringProperty(name = "g-code header", description = "g-code commands at start of operation", default = "G53 G0")
+	
+	output_trailer =  bpy.props.BoolProperty(name = "output g-code trailer", description = "output user defined g-code command trailer at end of operation", default = False)
+
+	gcode_trailer =  bpy.props.StringProperty(name = "g-code trailer", description = "g-code commands at end of operation", default = "M02")
+	
+		
 	#internal properties
 	###########################################
 	#testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
@@ -643,7 +666,8 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 			and prop!='name_property'):
 				d.append(prop)
 	'''
-	preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth', 'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material_size', 'o.material_radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact','o.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height', 'o.source_image_crop_start_x', 'o.movement_insideout', 'o.spindle_rotation_direction', 'o.skin', 'o.source_image_crop_start_y', 'o.movement_type', 'o.source_image_crop', 'o.limit_curve', 'o.spindle_rpm', 'o.ambient_behaviour', 'o.cutter_type', 'o.source_image_scale_z', 'o.cutter_diameter', 'o.source_image_size_x', 'o.curve_object', 'o.curve_object1', 'o.cutter_flutes', 'o.ambient_radius', 'o.simulation_detail', 'o.update_offsetimage_tag', 'o.dist_between_paths', 'o.max', 'o.min', 'o.pixsize', 'o.slice_detail', 'o.parallel_step_back', 'o.drill_type', 'o.source_image_name', 'o.dont_merge', 'o.update_silhouete_tag', 'o.material_origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.circle_detail', 'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle', 'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source', 'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.warnings', 'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length']
+	preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth', 'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material_size', 'o.material_radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact','o.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height', 'o.source_image_crop_start_x', 'o.movement_insideout', 'o.spindle_rotation_direction', 'o.skin', 'o.source_image_crop_start_y', 'o.movement_type', 'o.source_image_crop', 'o.limit_curve', 'o.spindle_rpm', 'o.ambient_behaviour', 'o.cutter_type', 'o.source_image_scale_z', 'o.cutter_diameter', 'o.source_image_size_x', 'o.curve_object', 'o.curve_object1', 'o.cutter_flutes', 'o.ambient_radius', 'o.simulation_detail', 'o.update_offsetimage_tag', 'o.dist_between_paths', 'o.max', 'o.min', 'o.pixsize', 'o.slice_detail', 'o.parallel_step_back', 'o.drill_type', 'o.source_image_name', 'o.dont_merge', 'o.update_silhouete_tag', 'o.material_origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.circle_detail', 'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle', 'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source', 'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.warnings', 'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
+	'o.output_header', 'o.gcode_header''o.output_trailer', 'o.gcode_trailer']
 
 	preset_subdir = "cam_operations"   
 	 
@@ -674,6 +698,10 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 		"d.axis4",
 		"d.axis5",
 		"d.collet_size",
+		"d.output_tool_change",
+		"d.output_block_numbers",
+		"d.output_tool_definitions",
+		"d.output_g43_on_tool_change",
 	]
 
 	preset_subdir = "cam_machines"
@@ -704,6 +732,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ui.CAM_MOVEMENT_Panel,
 	ui.CAM_FEEDRATE_Panel,
 	ui.CAM_CUTTER_Panel,
+	ui.CAM_GCODE_Panel,
 	ui.CAM_MACHINE_Panel,
 	ui.CAM_PACK_Panel,
 	ui.CAM_SLICE_Panel,
