@@ -2127,8 +2127,24 @@ def useBridges(ch,o):
 				interrupted = True
 		ch.points=newpoints
 
-
-
+def getLayers(operation, startdepth, enddepth):
+	'''returns a list of layers bounded by startdepth and enddepth
+	   uses operation.stepdown to determine number of layers.
+	'''
+	if operation.use_layers:
+		layers = []
+		n = math.ceil((startdepth - enddepth) / operation.stepdown)
+		layerstart = operation.maxz
+		for x in range(0, n):
+			layerend = max(startdepth - ((x+1) * operation.stepdown), enddepth)
+			if int(layerstart * 10**8) != int(layerend * 10**8):#it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
+				layers.append([layerstart, layerend])
+			layerstart = layerend
+	else:
+			layers = [[startdepth, enddepth]]
+	
+	return layers
+	
 ###########cutout strategy is completely here:
 def strategy_cutout( o ):
 	#ob=bpy.context.active_object
@@ -2185,20 +2201,8 @@ def strategy_cutout( o ):
 			ch.points.reverse()
 			
 	
-	if o.use_layers:
-		layers=[]
-		n=math.ceil((o.maxz-o.min.z)/o.stepdown)
-		layerstart=o.maxz
-		for x in range(0,n):
-			layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
-			if int(layerstart*10**8)!=int(layerend*10**8):#it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
-				layers.append([layerstart,layerend])
-			layerstart=layerend
-	else:
-			layers=[[o.maxz,o.min.z]]
+	layers = getLayers(o, o.maxz, o.min.z)
 		
-	print(layers)
-	
 	extendorder=[]
 	if o.first_down:#each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
 		for chunk in chunksFromCurve:
@@ -2325,19 +2329,7 @@ def strategy_proj_curve( s, o ):
 				ch.depth = min(ch.depth,-vec.length)
 				ch.points[i] = sp.copy()
 			
-			
-	if o.use_layers:
-		n = math.ceil(-(ch.depth/o.stepdown))
-		layers = []
-		for x in range(0,n):
-			
-			layerstart = -(x*o.stepdown)
-			layerend = max(-((x+1)*o.stepdown),ch.depth)
-			layers.append([layerstart,layerend])
-	else:
-		layerstart = 0#
-		layerend = ch.depth#
-		layers = [[layerstart,layerend]]
+	layers = getLayers(o, 0, ch.depth)		
 	
 	chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
 	#for ch in pathSamples:
@@ -2406,16 +2398,7 @@ def strategy_pocket( o ):
 	chunksFromCurve=sortChunks(chunksFromCurve,o)
 		
 	chunks=[]
-	if o.use_layers:
-		n=math.ceil((o.maxz-o.min.z)/o.stepdown)
-		layers=[]
-		layerstart=o.maxz
-		for x in range(0,n):
-			layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
-			layers.append([layerstart,layerend])
-			layerstart=layerend
-	else:
-		layers=[[o.maxz,o.min.z]]
+	layers = getLayers(o, o.maxz, o.min.z)
 
 	#print(layers)
 	#print(chunksFromCurve)
@@ -2518,6 +2501,9 @@ def strategy_pocket( o ):
 						ch.points.extend(rothelix)
 		chunks.extend(lchunks)
 	
+	if o.first_down:
+		chunks = sortChunks(chunks, o)
+		
 	chunksToMesh(chunks,o)
 		
 def strategy_drill( o ):
@@ -2575,17 +2561,7 @@ def strategy_drill( o ):
 				chunks.append(camPathChunk([(v.co.x+l.x,v.co.y+l.y,v.co.z+l.z)]))
 		delob(ob)#delete temporary object with applied transforms
 
-	if o.use_layers:
-		layers = []
-		n = math.ceil((o.maxz-o.min.z)/o.stepdown)
-		layerstart = o.maxz
-		for x in range(0, n):
-			layerend = max(o.maxz-((x+1)*o.stepdown), o.min.z)
-			if int(layerstart*10**8)!=int(layerend*10**8):#it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
-				layers.append([layerstart, layerend])
-			layerstart = layerend
-	else:
-			layers = [[o.maxz, o.min.z]]
+	layers = getLayers(o, o.maxz, o.min.z)
 
 	chunklayers = []
 	for layer in layers:
@@ -2677,21 +2653,7 @@ def getPath3axis(context, operation):
 		
 		
 		chunks=[]
-		if o.use_layers:
-			n=math.ceil((o.maxz-o.min.z)/o.stepdown)
-			layers=[]
-			for x in range(0,n):
-				
-				layerstart=o.maxz-(x*o.stepdown)
-				layerend=max(o.maxz-((x+1)*o.stepdown),o.min.z)
-				layers.append([layerstart,layerend])
-				
-				
-		else:
-			layerstart=o.maxz#
-			layerend=o.min.z#
-			layers=[[layerstart,layerend]]
-		
+		layers = getLayers(o, o.maxz, o.min.z)		
 		
 		chunks.extend(sampleChunks(o,pathSamples,layers))
 		if (o.strategy=='PENCIL'):# and bpy.app.debug_value==-3:
@@ -3122,18 +3084,7 @@ def getPath4axis(context,operation):
 		depth=pathSamples[0].depth
 		chunks=[]
 		
-		if o.use_layers:
-			n=math.ceil(-(depth/o.stepdown))
-			layers=[]
-			for x in range(0,n):
-				
-				layerstart=-(x*o.stepdown)
-				layerend=max(-((x+1)*o.stepdown),depth)
-				layers.append([layerstart,layerend])
-		else:
-			layerstart=0#
-			layerend=depth#
-			layers=[[layerstart,layerend]]
+		layers = getLayers(o, 0, depth)
 		
 		chunks.extend(sampleChunksNAxis(o,pathSamples,layers))
 		chunksToMesh(chunks,o)
