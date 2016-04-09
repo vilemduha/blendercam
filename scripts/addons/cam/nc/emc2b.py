@@ -21,7 +21,12 @@ class Creator(iso_modal.Creator):
             return ' '
 
     def PROGRAM(self): return None
-    def PROGRAM_END(self): return( 'T0' + self.SPACE() + 'M06' + self.SPACE() + 'M02')
+    def PROGRAM_END(self): 
+        if self.output_tool_change:
+            return( 'T0' + self.SPACE() + 'M06' + self.SPACE() + 'M02')
+        else:
+            return('MO2')
+			
     def dwell(self, t):
     	self.write('\n')
     	iso_modal.Creator.dwell(self, t)

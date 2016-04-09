@@ -130,7 +130,15 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 			#layout.prop(ao,'axis5')
 			#layout.prop(ao,'collet_size')
 			#
-
+			layout.prop(ao, 'output_block_numbers')
+			if ao.output_block_numbers:
+				layout.prop(ao, 'start_block_number')
+				layout.prop(ao, 'block_number_increment')
+			layout.prop(ao, 'output_tool_definitions')
+			layout.prop(ao, 'output_tool_change')
+			if ao.output_tool_change:
+				layout.prop(ao, 'output_g43_on_tool_change')
+			
 class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):	 
 	"""CAM material panel"""
 	bl_label = "CAM Material size and position"
@@ -678,6 +686,30 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.use_limit_curve:
 					layout.prop_search(ao, "limit_curve", bpy.data, "objects")
 				layout.prop(ao,"ambient_cutter_restrict")
+
+class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
+	"""CAM operation g-code options panel"""
+	bl_label = "CAM g-code options "
+	bl_idname = "WORLD_PT_CAM_GCODE"
+	
+	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+	
+
+	def draw(self, context):
+		layout = self.layout
+		scene=bpy.context.scene
+		row = layout.row() 
+		if len(scene.cam_operations)==0:
+			layout.label('Add operation first')
+		if len(scene.cam_operations)>0:
+			ao=scene.cam_operations[scene.cam_active_operation]
+			if ao.valid:
+				layout.prop(ao, 'output_header')
+				if ao.output_header:
+					layout.prop(ao, 'gcode_header')
+				layout.prop(ao, 'output_trailer')
+				if ao.output_trailer:
+					layout.prop(ao, 'gcode_trailer')
 				
 class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):	 
 	"""CAM material panel"""
