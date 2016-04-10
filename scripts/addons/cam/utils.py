@@ -1453,6 +1453,7 @@ def connectChunksLow(chunks,o):
 	
 	if o.parallel_step_back:
 		mergedist*=2
+		
 	if o.merge_dist>0:
 		mergedist=o.merge_dist
 	#mergedist=10
@@ -1539,8 +1540,10 @@ def sortChunks(chunks,o):
 			#	break
 			#pass;
 		if ch is not None:#found next chunk, append it to list
-			ch.sorted = True
-			ch.adaptdist(pos, o)
+			#only adaptdist the chunk if it has not been sorted before
+			if not ch.sorted:
+				ch.adaptdist(pos, o)
+				ch.sorted = True
 			#print(len(ch.parents),'children')
 			chunks.remove(ch)
 			sortedchunks.append(ch)
@@ -2408,7 +2411,6 @@ def strategy_pocket( o ):
 			
 			
 	#if bpy.app.debug_value==1:
-	
 
 	chunksFromCurve=sortChunks(chunksFromCurve,o)
 		
@@ -2419,7 +2421,7 @@ def strategy_pocket( o ):
 	#print(chunksFromCurve)
 	#print(len(chunksFromCurve))
 	for l in layers:
-		lchunks=setChunksZ(chunksFromCurve,l[1])
+		lchunks = setChunksZ(chunksFromCurve,l[1])
 		###########helix_enter first try here TODO: check if helix radius is not out of operation area.
 		if o.helix_enter:
 			helix_radius=o.cutter_diameter*0.5*o.helix_diameter*0.01#90 percent of cutter radius
@@ -2428,7 +2430,6 @@ def strategy_pocket( o ):
 			revheight=helix_circumference*tan(o.ramp_in_angle)
 			for chi,ch in enumerate(lchunks):
 				if chunksFromCurve[chi].children==[]:
-				
 					p=ch.points[0]#TODO:intercept closest next point when it should stay low 
 					#first thing to do is to check if helix enter can really enter.
 					checkc=Circle(helix_radius+o.cutter_diameter/2,o.circle_detail)
@@ -2514,8 +2515,9 @@ def strategy_pocket( o ):
 					
 					if covers:
 						ch.points.extend(rothelix)
+						
 		chunks.extend(lchunks)
-	
+
 	if o.first_down:
 		chunks = sortChunks(chunks, o)
 		

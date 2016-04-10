@@ -609,7 +609,7 @@ def parentChildPoly(parents,children,o):
 					child.parents.append(parent)
 
 def parentChildDist(parents, children,o, distance= None):
-	#parenting based on distance between chunks
+	#parenting based on x,y distance between chunks
 	#hierarchy works like this: - children get milled first.
 	if distance==None:
 		dlim=o.dist_between_paths*2
