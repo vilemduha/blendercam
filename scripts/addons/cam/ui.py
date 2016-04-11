@@ -361,7 +361,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.label(text=l, icon='COLOR_RED')
 			if ao.valid:
 				if ao.duration>0:
-					layout.label('operation time: '+str(int(ao.duration*100)/100.0)+' min')	   
+					layout.label('operation time: '+str(int(ao.duration*100)//3600.0)+' hour, '+str((int(ao.duration*100)//60.0)%60)+' min, '+str((int(ao.duration*100)%60.0)//1)+' sec.')	   
 				layout.label(  'chipload: '+ strInUnits(ao.chipload,4) + ' / tooth')
 				
 		
