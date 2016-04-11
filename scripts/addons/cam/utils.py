@@ -1973,13 +1973,14 @@ def addAutoBridges(o):
 	'''attempt to add auto bridges as set of curves'''
 	getOperationSources(o)
 	if not o.onlycurves:
-		o.warnings.append('not curves')
+		o.warnings+=('not curves')
 		return;
 	bridgegroupname=o.bridges_group_name
 	if bridgegroupname == '' or bpy.data.groups.get(bridgegroupname) == None:
 		bridgegroupname = 'bridges_'+o.name
 		bpy.data.groups.new(bridgegroupname)
 	g= bpy.data.groups[bridgegroupname]
+	o.bridges_group_name = bridgegroupname
 	for ob in o.objects:
 		
 		if ob.type=='CURVE':
@@ -2002,7 +2003,7 @@ def addAutoBridges(o):
 				g.objects.link( addBridge(p.x,p.y,pi,o.bridges_width, o.cutter_diameter*1))
 
 			mw=ob.matrix_world
-			
+	
 def getBridgesPoly(o):
 	if not hasattr(o, 'bridgespolyorig'):
 		bridgegroupname=o.bridges_group_name
