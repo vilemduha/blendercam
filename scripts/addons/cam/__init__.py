@@ -134,6 +134,12 @@ class machineSettings(bpy.types.PropertyGroup):
 	'''
 	collet_size=bpy.props.FloatProperty(name="#Collet size", description="Collet size for collision detection",default=33, min=0.00001, max=320000,precision=PRECISION , unit="LENGTH")
 	#exporter_start = bpy.props.StringProperty(name="exporter start", default="%")
+	enable_manual_tool_change = bpy.props.BoolProperty(
+		name="Enable manual tool change",
+		description="Enable manual tool changing logic which involves G43 command",
+		default=True
+    )
+
 
 class PackObjectsSettings(bpy.types.PropertyGroup):
 	'''stores all data for machines'''

@@ -1161,7 +1161,8 @@ def exportGcodePath(filename,vertslist,operations):
 		
 		#write tool, not working yet probably 
 		#print (last_cutter)
-		if last_cutter!=[o.cutter_id,o.cutter_diameter,o.cutter_type,o.cutter_flutes]:
+		if last_cutter!=[o.cutter_id,o.cutter_diameter,o.cutter_type,o.cutter_flutes] and \
+			m.enable_manual_tool_change:
 			c.comment('Tool change - D = %s type %s flutes %s' % ( strInUnits(o.cutter_diameter,4),o.cutter_type, o.cutter_flutes))
 			c.tool_change(o.cutter_id)
 			c.flush_nc()

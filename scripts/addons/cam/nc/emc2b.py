@@ -1,3 +1,4 @@
+import bpy
 from . import nc
 from . import iso_modal
 import math
@@ -21,10 +22,16 @@ class Creator(iso_modal.Creator):
             return ' '
 
     def PROGRAM(self): return None
-    def PROGRAM_END(self): return( 'T0' + self.SPACE() + 'M06' + self.SPACE() + 'M02')
+
+    def PROGRAM_END(self):
+        if bpy.context.scene.cam_machine.enable_manual_tool_change:
+            return( 'T0' + self.SPACE() + 'M06' + self.SPACE() + 'M02')
+        else:
+            return('M02')
+
     def dwell(self, t):
-    	self.write('\n')
-    	iso_modal.Creator.dwell(self, t)
+        self.write('\n')
+        iso_modal.Creator.dwell(self, t)
 ############################################################################
 ## Begin Program 
 
