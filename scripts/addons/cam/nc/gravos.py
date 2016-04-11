@@ -38,7 +38,7 @@ class Creator(iso.Creator):
 		#print(self.SPACE())
 		#print(self.TOOL())
 		self.write(self.SPACE() + (self.TOOL() % id) + '\n')
-		self.write('\n')
+		#self.write('\n')
 		self.flush_nc()
 		self.t = id
 		
