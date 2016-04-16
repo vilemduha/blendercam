@@ -1107,6 +1107,8 @@ def exportGcodePath(filename,vertslist,operations):
 	else:
 		unitcorr=1;
 	rotcorr=180.0/pi
+
+	use_experimental = bpy.context.user_preferences.addons['cam'].preferences.experimental
 	
 	
 	def startNewFile():
@@ -1117,7 +1119,8 @@ def exportGcodePath(filename,vertslist,operations):
 		c=postprocessor.Creator()
 
 		# process user overrides for post processor settings
-		if isinstance(c, iso.Creator):
+		
+		if use_experimental and isinstance(c, iso.Creator):
 			c.output_block_numbers = m.output_block_numbers
 			c.start_block_number = m.start_block_number
 			c.block_number_increment = m.block_number_increment
@@ -1155,7 +1158,7 @@ def exportGcodePath(filename,vertslist,operations):
 	
 	for i,o in enumerate(operations):
 	
-		if o.output_header:
+		if use_experimental and o.output_header:
 			c.write(o.gcode_header + '\n')
 			
 		free_movement_height=o.free_movement_height#o.max.z+
@@ -1174,7 +1177,7 @@ def exportGcodePath(filename,vertslist,operations):
 		
 		#write tool, not working yet probably 
 		#print (last_cutter)
-		if m.output_tool_change and last_cutter!=[o.cutter_id,o.cutter_diameter,o.cutter_type,o.cutter_flutes]:
+		if ((not use_experimental) or m.output_tool_change) and last_cutter!=[o.cutter_id,o.cutter_diameter,o.cutter_type,o.cutter_flutes]:
 			c.comment('Tool change - D = %s type %s flutes %s' % ( strInUnits(o.cutter_diameter,4),o.cutter_type, o.cutter_flutes))
 			c.tool_change(o.cutter_id)
 			c.flush_nc()
@@ -1345,7 +1348,7 @@ def exportGcodePath(filename,vertslist,operations):
 		
 		c.feedrate(unitcorr*o.feedrate)
 		
-		if o.output_trailer:
+		if use_experimental and o.output_trailer:
 			c.write(o.gcode_trailer + '\n')
 			
 	o.duration=duration*unitcorr

@@ -548,7 +548,7 @@ class camOperation(bpy.types.PropertyGroup):
 	output_header =  BoolProperty(name = "output g-code header", description = "output user defined g-code command header at start of operation", default = False)
 
 	gcode_header =  StringProperty(name = "g-code header", description = "g-code commands at start of operation", default = "G53 G0")
-	
+
 	output_trailer =  BoolProperty(name = "output g-code trailer", description = "output user defined g-code command trailer at end of operation", default = False)
 
 	gcode_trailer =  StringProperty(name = "g-code trailer", description = "g-code commands at end of operation", default = "M02")

@@ -100,6 +100,8 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 		ao=s.cam_machine
 	
 		if ao:
+			use_experimental = bpy.context.user_preferences.addons['cam'].preferences.experimental
+			
 			#machine preset
 			row = layout.row(align=True)
 			row.menu("CAM_MACHINE_presets", text=bpy.types.CAM_MACHINE_presets.bl_label)
@@ -126,18 +128,20 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 			layout.prop(ao,'spindle_max')
 			layout.prop(ao,'spindle_start_time')
 			layout.prop(ao,'spindle_default')
-			#layout.prop(ao,'axis4')
-			#layout.prop(ao,'axis5')
-			#layout.prop(ao,'collet_size')
-			#
-			layout.prop(ao, 'output_block_numbers')
-			if ao.output_block_numbers:
-				layout.prop(ao, 'start_block_number')
-				layout.prop(ao, 'block_number_increment')
-			layout.prop(ao, 'output_tool_definitions')
-			layout.prop(ao, 'output_tool_change')
-			if ao.output_tool_change:
-				layout.prop(ao, 'output_g43_on_tool_change')
+			
+			if use_experimental:
+				layout.prop(ao,'axis4')
+				layout.prop(ao,'axis5')
+				layout.prop(ao,'collet_size')
+				
+				layout.prop(ao, 'output_block_numbers')
+				if ao.output_block_numbers:
+					layout.prop(ao, 'start_block_number')
+					layout.prop(ao, 'block_number_increment')
+				layout.prop(ao, 'output_tool_definitions')
+				layout.prop(ao, 'output_tool_change')
+				if ao.output_tool_change:
+					layout.prop(ao, 'output_g43_on_tool_change')
 			
 class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):	 
 	"""CAM material panel"""
@@ -518,6 +522,8 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 	def draw(self, context):
 		layout = self.layout
 		scene=bpy.context.scene
+		use_experimental = bpy.context.user_preferences.addons['cam'].preferences.experimental
+		
 		row = layout.row() 
 		if len(scene.cam_operations)==0:
 			layout.label('Add operation first')
@@ -534,7 +540,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.strategy=='PARALLEL' or ao.strategy=='CROSS':
 					if not ao.ramp:
 						layout.prop(ao,'parallel_step_back')
-				if ao.strategy=='CUTOUT' or ao.strategy=='POCKET' or ao.strategy=='MEDIAL_AXIS':
+				if ao.strategy=='CUTOUT' or (use_experimental and (ao.strategy=='POCKET' or ao.strategy=='MEDIAL_AXIS')):
 					layout.prop(ao,'first_down')
 					#if ao.first_down:
 					
@@ -704,14 +710,19 @@ class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
 		if len(scene.cam_operations)==0:
 			layout.label('Add operation first')
 		if len(scene.cam_operations)>0:
-			ao=scene.cam_operations[scene.cam_active_operation]
-			if ao.valid:
-				layout.prop(ao, 'output_header')
-				if ao.output_header:
-					layout.prop(ao, 'gcode_header')
-				layout.prop(ao, 'output_trailer')
-				if ao.output_trailer:
-					layout.prop(ao, 'gcode_trailer')
+			use_experimental = bpy.context.user_preferences.addons['cam'].preferences.experimental
+			if use_experimental:
+				ao=scene.cam_operations[scene.cam_active_operation]
+				if ao.valid:
+					layout.prop(ao, 'output_header')
+					if ao.output_header:
+						layout.prop(ao, 'gcode_header')
+					layout.prop(ao, 'output_trailer')
+					if ao.output_trailer:
+						layout.prop(ao, 'gcode_trailer')
+			else:
+				layout.label('Enable Show experimental features')
+				layout.label('in Blender CAM Addon preferences')
 				
 class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):	 
 	"""CAM material panel"""
