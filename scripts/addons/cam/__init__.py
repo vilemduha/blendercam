@@ -143,9 +143,9 @@ class machineSettings(bpy.types.PropertyGroup):
 
 	block_number_increment =  IntProperty(name = "block number increment", description = "how much the block number should increment for the next line", default = 10)
 
-	output_tool_definitions =  BoolProperty(name = "output tool definitions", description = "output tool definitions", default = False)
+	output_tool_definitions =  BoolProperty(name = "output tool definitions", description = "output tool definitions", default = True)
 	
-	output_tool_change =  BoolProperty(name = "output tool change commands", description = "output tool change commands ie: Tn M06", default = False)
+	output_tool_change =  BoolProperty(name = "output tool change commands", description = "output tool change commands ie: Tn M06", default = True)
 
 	output_g43_on_tool_change = BoolProperty(name = "output G43 on tool change", description = "output G43 on tool change line", default = False)
 
