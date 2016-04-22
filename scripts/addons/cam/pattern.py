@@ -57,7 +57,8 @@ def getPathPatternParallel(o,angle):
 	#ar=numpy.array((1.1,1.1))
 	#ar.resize()
 	#defaultar=numpy.arange(int(-dim/pathd), int(dim/pathd)).tolist()
-	if bpy.app.debug_value==0:
+	if bpy.app.debug_value==1:# by default off
+		#this is the original pattern method, slower, but well tested:
 		dirvect=Vector((0,1,0))
 		dirvect.rotate(e)
 		dirvect.normalize()
