@@ -736,94 +736,113 @@ class CamCurveIntarsion(bpy.types.Operator):
 		o3.select=True
 		return {'FINISHED'}	
 
-#intarsion or joints
-class CamCurveOvercuts(bpy.types.Operator):
+#Overcut type B
+class CamCurveOvercutsB(bpy.types.Operator):
 	'''Adds overcuts for slots'''
-	bl_idname = "object.curve_overcuts"
-	bl_label = "Add Overcuts"
+	bl_idname = "object.curve_overcuts_b"
+	bl_label = "Add Overcuts-B"
 	bl_options = {'REGISTER', 'UNDO'}
 	
 	
-	diameter = bpy.props.FloatProperty(name="diameter", default=.003, min=0, max=100,precision=4, unit="LENGTH")
-	threshold = bpy.props.FloatProperty(name="threshold", default=math.pi/2*.99, min=-3.14, max=3.14,precision=4, subtype="ANGLE" , unit="ROTATION")
-	do_outer = bpy.props.BoolProperty(name="Outer polygons", default=True)
-	invert = bpy.props.BoolProperty(name="Invert", default=False)
-	#@classmethod
-	#def poll(cls, context):
-	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+	diameter = bpy.props.FloatProperty(name="Tool diameter", default=.003, min=0, max=100,precision=4, unit="LENGTH")
+	style = bpy.props.EnumProperty(
+				name="style",
+				items=(('OPEDGE', 'opposite edge', 'place corner overcuts on opposite edges'),
+					('DOGBONE', 'Dog-bone / Corner Point', 'place overcuts at center of corners'),
+					('TBONE', 'T-bone', 'place corner overcuts on the same edge')),
+				default='DOGBONE',
+				description='style of overcut to use')
+	threshold = bpy.props.FloatProperty(name="Angle threshold", default=math.pi/2*.99, min=-3.14, max=3.14,precision=4, subtype="ANGLE" , unit="ROTATION")
+	do_inverse = bpy.props.BoolProperty(name="Inverse", description='inverse overcut operation on all curves', default=True)
+	nextedge = bpy.props.BoolProperty(name="next edge", description='change to the next edge the overcut is to be on', default=False)
 
 	def execute(self, context):
-		#utils.silhoueteOffset(context,-self.diameter)
 		o1=bpy.context.active_object
 		shapes=utils.curveToShapely(o1)
 		negative_overcuts=[]
 		positive_overcuts=[]
 		diameter = self.diameter*1.001
+		radius = diameter/2
 		for s in shapes:
-				s=shapely.geometry.polygon.orient(s,1)
-				if s.boundary.type == 'LineString':
-					loops = [s.boundary]#s=shapely.geometry.asMultiLineString(s)
-				else:	
-					loops = s.boundary
-				
-				for ci,c in enumerate(loops):
-					if ci>0 or self.do_outer:
-						#c=s.boundary
-						for i,co in enumerate(c.coords):
-							i1=i-1
-							if i1==-1:
-								i1=-2
-							i2=i+1
-							if i2 == len(c.coords):
-								i2=0
-								
-							v1 = Vector(co) - Vector(c.coords[i1])
-							v1 = v1.xy#Vector((v1.x,v1.y,0))
-							v2 = Vector(c.coords[i2]) - Vector(co)
-							v2 = v2.xy#v2 = Vector((v2.x,v2.y,0))
-							if not v1.length==0 and not v2.length == 0:
-								a=v1.angle_signed(v2)
-								sign=1
-								#if ci==0:
-								#	sign=-1
-								#else:
-								#	sign=1
-								
-								if self.invert:# and ci>0:
-									sign*=-1
-								if (sign<0 and a<-self.threshold) or (sign>0 and a>self.threshold):
-									p=Vector((co[0],co[1]))
-									v1.normalize()
-									v2.normalize()
-									v=v1-v2
-									v.normalize()
-									p=p-v*diameter/2
-									if abs(a)<math.pi/2:
-										shape=utils.Circle(diameter/2,64)
-										shape= shapely.affinity.translate(shape,p.x,p.y)
-									else:
-										l=math.tan(a/2)*diameter/2
-										p1=p-sign*v*l
-										l=shapely.geometry.LineString((p,p1))
-										shape=l.buffer(diameter/2, resolution = 64)
+			s=shapely.geometry.polygon.orient(s,1)
+			if s.boundary.type == 'LineString':
+				loops = [s.boundary]
+			else:	
+				loops = s.boundary
+			
+			for ci,c in enumerate(loops):
+				sides = 0
+				for i,co in enumerate(c.coords):
+					i1=i-1
+					if i1==-1:
+						i1=-2
+					i2=i+1
+					if i2 == len(c.coords):
+						i2=0
+						
+					v1 = Vector(co).xy - Vector(c.coords[i1]).xy
+					#v1 = v1.xy
+					v2 = Vector(c.coords[i2]).xy - Vector(co).xy
+					#v2 = v2.xy
+					if not v1.length==0 and not v2.length == 0:
+						a = v1.angle_signed(v2)
+						if self.do_inverse:
+							sign = -1
+						else:
+							sign = 1
+											
+						if (sign<0 and a<-self.threshold) or (sign>0 and a>self.threshold):
+							# a corner with an overcut has been found
+							# which means a new side has been found
+							sides += 1
+							p = Vector((co[0],co[1]))
+							v1.normalize()
+							v2.normalize()
+							# figure out which direction vector to use
+							# v is the main direction vector to move the overcut shape along
+							# ev is the direction vector used to elongate the overcut shape
+							if self.style != 'DOGBONE':
+								# t-bone and opposite edge styles get treated nearly the same
+								nextedge = self.nextedge
+								if self.style == 'TBONE':
+									nextedge = (sides % 2) == nextedge
 									
-									if sign>0:
-										negative_overcuts.append(shape)
-									else:	
-										positive_overcuts.append(shape)
+								if nextedge:
+									v = v1
+									ev = v2
+								else:
+									v = -v2
+									ev = -v1
 									
-								print(a)
-					
+							else: # DOGBONE style
+								v = v1 - v2
+								v.normalize()
+								ev = v * math.tan(a/2) * -sign
+								
+							# move the overcut shape center position 1 radius in direction v
+							p -= v * radius
+								
+							if abs(a) < math.pi/2:
+								shape = utils.Circle(radius, 64)
+								shape = shapely.affinity.translate(shape, p.x, p.y)
+							else: # elongate overcut circle to make sure tool bit can fit into slot
+								p1 = p + (ev * radius)
+								l = shapely.geometry.LineString((p, p1))
+								shape = l.buffer(radius, resolution = 64)
 							
-				#for c in s.boundary:
+							if sign>0:
+								negative_overcuts.append(shape)
+							else:	
+								positive_overcuts.append(shape)
+							
+						print(a)
+					
 		negative_overcuts = shapely.ops.unary_union(negative_overcuts)
 		positive_overcuts = shapely.ops.unary_union(positive_overcuts)
-		#shapes.extend(overcuts)
 		fs=shapely.ops.unary_union(shapes)
 		fs = fs.union(positive_overcuts)
 		fs = fs.difference(negative_overcuts)
 		o=utils.shapelyToCurve(o1.name+'_overcuts',fs,o1.location.z)
-		#o=utils.shapelyToCurve('overcuts',overcuts,0)
 		return {'FINISHED'}	
 
 		
