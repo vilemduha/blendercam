@@ -843,7 +843,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
 				default='DOGBONE',
 				description='style of overcut to use')
 	threshold = bpy.props.FloatProperty(name="Max Inside Angle", default=math.pi/2, min=-3.14, max=3.14, description='The maximum angle to be considered as an inside corner', precision=4, subtype="ANGLE" , unit="ROTATION")
-	do_inverse = bpy.props.BoolProperty(name="Inverse", description='inverse overcut operation on all curves', default=True)
+	do_invert = bpy.props.BoolProperty(name="Invert", description='invert overcut operation on all curves', default=True)
 	otherEdge = bpy.props.BoolProperty(name="other edge", description='change to the other edge for the overcut to be on', default=False)
 
 	def execute(self, context):
@@ -877,7 +877,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
 
 					if not v1.length==0 and not v2.length == 0:
 						a = v1.angle_signed(v2)
-						if self.do_inverse:
+						if self.do_invert:
 							sign = -1
 						else:
 							sign = 1
