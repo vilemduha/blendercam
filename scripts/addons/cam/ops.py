@@ -736,6 +736,96 @@ class CamCurveIntarsion(bpy.types.Operator):
 		o3.select=True
 		return {'FINISHED'}	
 
+class CamCurveOvercuts(bpy.types.Operator):
+	'''Adds overcuts for slots'''
+	bl_idname = "object.curve_overcuts"
+	bl_label = "Add Overcuts"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	
+	diameter = bpy.props.FloatProperty(name="diameter", default=.003, min=0, max=100,precision=4, unit="LENGTH")
+	threshold = bpy.props.FloatProperty(name="threshold", default=math.pi/2*.99, min=-3.14, max=3.14,precision=4, subtype="ANGLE" , unit="ROTATION")
+	do_outer = bpy.props.BoolProperty(name="Outer polygons", default=True)
+	invert = bpy.props.BoolProperty(name="Invert", default=False)
+	#@classmethod
+	#def poll(cls, context):
+	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+
+	def execute(self, context):
+		#utils.silhoueteOffset(context,-self.diameter)
+		o1=bpy.context.active_object
+		shapes=utils.curveToShapely(o1)
+		negative_overcuts=[]
+		positive_overcuts=[]
+		diameter = self.diameter*1.001
+		for s in shapes:
+				s=shapely.geometry.polygon.orient(s,1)
+				if s.boundary.type == 'LineString':
+					loops = [s.boundary]#s=shapely.geometry.asMultiLineString(s)
+				else:	
+					loops = s.boundary
+				
+				for ci,c in enumerate(loops):
+					if ci>0 or self.do_outer:
+						#c=s.boundary
+						for i,co in enumerate(c.coords):
+							i1=i-1
+							if i1==-1:
+								i1=-2
+							i2=i+1
+							if i2 == len(c.coords):
+								i2=0
+								
+							v1 = Vector(co) - Vector(c.coords[i1])
+							v1 = v1.xy#Vector((v1.x,v1.y,0))
+							v2 = Vector(c.coords[i2]) - Vector(co)
+							v2 = v2.xy#v2 = Vector((v2.x,v2.y,0))
+							if not v1.length==0 and not v2.length == 0:
+								a=v1.angle_signed(v2)
+								sign=1
+								#if ci==0:
+								#	sign=-1
+								#else:
+								#	sign=1
+								
+								if self.invert:# and ci>0:
+									sign*=-1
+								if (sign<0 and a<-self.threshold) or (sign>0 and a>self.threshold):
+									p=Vector((co[0],co[1]))
+									v1.normalize()
+									v2.normalize()
+									v=v1-v2
+									v.normalize()
+									p=p-v*diameter/2
+									if abs(a)<math.pi/2:
+										shape=utils.Circle(diameter/2,64)
+										shape= shapely.affinity.translate(shape,p.x,p.y)
+									else:
+										l=math.tan(a/2)*diameter/2
+										p1=p-sign*v*l
+										l=shapely.geometry.LineString((p,p1))
+										shape=l.buffer(diameter/2, resolution = 64)
+									
+									if sign>0:
+										negative_overcuts.append(shape)
+									else:	
+										positive_overcuts.append(shape)
+									
+								print(a)
+					
+							
+				#for c in s.boundary:
+		negative_overcuts = shapely.ops.unary_union(negative_overcuts)
+		positive_overcuts = shapely.ops.unary_union(positive_overcuts)
+		#shapes.extend(overcuts)
+		fs=shapely.ops.unary_union(shapes)
+		fs = fs.union(positive_overcuts)
+		fs = fs.difference(negative_overcuts)
+		o=utils.shapelyToCurve(o1.name+'_overcuts',fs,o1.location.z)
+		#o=utils.shapelyToCurve('overcuts',overcuts,0)
+		return {'FINISHED'}	
+
+
 #Overcut type B
 class CamCurveOvercutsB(bpy.types.Operator):
 	'''Adds overcuts for slots'''
@@ -744,7 +834,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
 	bl_options = {'REGISTER', 'UNDO'}
 	
 	
-	diameter = bpy.props.FloatProperty(name="Tool diameter", default=.003, min=0, max=100,precision=4, unit="LENGTH")
+	diameter = bpy.props.FloatProperty(name="Tool diameter", default=.003, description='Tool bit diameter used in cut operation', min=0, max=100,precision=4, unit="LENGTH")
 	style = bpy.props.EnumProperty(
 				name="style",
 				items=(('OPEDGE', 'opposite edge', 'place corner overcuts on opposite edges'),
@@ -752,9 +842,9 @@ class CamCurveOvercutsB(bpy.types.Operator):
 					('TBONE', 'T-bone', 'place corner overcuts on the same edge')),
 				default='DOGBONE',
 				description='style of overcut to use')
-	threshold = bpy.props.FloatProperty(name="Angle threshold", default=math.pi/2*.99, min=-3.14, max=3.14,precision=4, subtype="ANGLE" , unit="ROTATION")
+	threshold = bpy.props.FloatProperty(name="Max Inside Angle", default=math.pi/2, min=-3.14, max=3.14, description='The maximum angle to be considered as an inside corner', precision=4, subtype="ANGLE" , unit="ROTATION")
 	do_inverse = bpy.props.BoolProperty(name="Inverse", description='inverse overcut operation on all curves', default=True)
-	nextedge = bpy.props.BoolProperty(name="next edge", description='change to the next edge the overcut is to be on', default=False)
+	otherEdge = bpy.props.BoolProperty(name="other edge", description='change to the other edge for the overcut to be on', default=False)
 
 	def execute(self, context):
 		o1=bpy.context.active_object
@@ -763,8 +853,10 @@ class CamCurveOvercutsB(bpy.types.Operator):
 		positive_overcuts=[]
 		diameter = self.diameter*1.001
 		radius = diameter/2
+		anglethreshold = math.pi - self.threshold
+		
 		for s in shapes:
-			s=shapely.geometry.polygon.orient(s,1)
+			s = shapely.geometry.polygon.orient(s,1)
 			if s.boundary.type == 'LineString':
 				loops = [s.boundary]
 			else:	
@@ -773,17 +865,16 @@ class CamCurveOvercutsB(bpy.types.Operator):
 			for ci,c in enumerate(loops):
 				sides = 0
 				for i,co in enumerate(c.coords):
-					i1=i-1
+					i1 = i-1
 					if i1==-1:
-						i1=-2
-					i2=i+1
+						i1 = -2
+					i2 = i+1
 					if i2 == len(c.coords):
-						i2=0
+						i2 = 0
 						
 					v1 = Vector(co).xy - Vector(c.coords[i1]).xy
-					#v1 = v1.xy
 					v2 = Vector(c.coords[i2]).xy - Vector(co).xy
-					#v2 = v2.xy
+
 					if not v1.length==0 and not v2.length == 0:
 						a = v1.angle_signed(v2)
 						if self.do_inverse:
@@ -791,7 +882,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
 						else:
 							sign = 1
 											
-						if (sign<0 and a<-self.threshold) or (sign>0 and a>self.threshold):
+						if (sign<0 and a<-anglethreshold) or (sign>0 and a>anglethreshold):
 							# a corner with an overcut has been found
 							# which means a new side has been found
 							sides += 1
@@ -803,11 +894,11 @@ class CamCurveOvercutsB(bpy.types.Operator):
 							# ev is the direction vector used to elongate the overcut shape
 							if self.style != 'DOGBONE':
 								# t-bone and opposite edge styles get treated nearly the same
-								nextedge = self.nextedge
+								otherEdge = self.otherEdge
 								if self.style == 'TBONE':
-									nextedge = (sides % 2) == nextedge
+									otherEdge = (sides % 2) == otherEdge
 									
-								if nextedge:
+								if otherEdge:
 									v = v1
 									ev = v2
 								else:
