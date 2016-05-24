@@ -1714,19 +1714,18 @@ def getObjectSilhouete(stype, objects=None):
 					#n=mathutils.geometry.normal(verts[0],verts[1],verts[2])
 					if f.area>0 and n.z!=0:#n.z>0.0 and f.area>0.0 :
 						s=[]
-						c=f.center.xy
+						c=mw * f.center
+						c=c.xy
 						for i in f.vertices:
 							v=mw* m.vertices[i].co
-							x=v.x
-							y=v.y
-							x=x+(x-c.x)*e
-							y=y+(y-c.y)*e
-							s.append((x,y))
-						if len(v)>2:
+							s.append((v.x,v.y))
+						if len(s)>2:
+							#print(s)
 							p=spolygon.Polygon(s)
 							#print(dir(p))
 							if p.is_valid:
-								polys.append(p)
+								#polys.append(p)
+								polys.append(p.buffer(e,resolution = 0))
 						#if id==923:
 						#	m.polygons[923].select
 						id+=1	
