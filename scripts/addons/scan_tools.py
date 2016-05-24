@@ -236,7 +236,45 @@ def reconstructmTransform(context):
 	bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
 	ob.location=(0,0,0)
 	bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+
+class RemoveSmallParts(bpy.types.Operator):
+	"""Transform import from reconstructme to blender axes/scale"""
+	bl_idname = "object.remove_small_parts"
+	bl_label = "Remove small parts"
+	bl_options = {'REGISTER', 'UNDO'}
 	
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None
+
+	def execute(self, context):
+		removeSmallParts(context)
+		return {'FINISHED'}	
+	
+def removeSmallParts(context):
+	actob=bpy.context.active_object
+	bpy.ops.object.editmode_toggle()
+	bpy.ops.mesh.separate(type='LOOSE')
+	bpy.ops.object.editmode_toggle()
+	obs=bpy.context.selected_objects
+	rem=[]
+	nrem=[]
+	for ob in obs:
+		if len(ob.data.vertices)<300:
+			print(ob.name)
+			rem.append(ob)
+		else:
+			nrem.append(ob)
+	bpy.ops.object.select_all(action='DESELECT')
+	for ob in rem:
+		ob.select=True
+	bpy.ops.object.delete(use_global=False)
+	for ob in nrem:
+		ob.select=True
+	bpy.context.scene.objects.active=nrem[0]
+	bpy.ops.object.join()
+
+
 
 #panel containing all tools
 class VIEW3D_PT_tools_scantools(bpy.types.Panel):
@@ -253,12 +291,14 @@ class VIEW3D_PT_tools_scantools(bpy.types.Panel):
 		layout.operator("object.reconstructme_trans")
 		layout.operator("object.align_floor")
 		layout.operator("object.remove_floor")
+		layout.operator("object.remove_small_parts")
 		layout.operator("object.make_lod")
 		
 def register():
 	bpy.utils.register_class(ObjectFloor)
 	bpy.utils.register_class(RemoveFloor)
 	bpy.utils.register_class(ReconstructmeTransform)
+	bpy.utils.register_class(RemoveSmallParts)
 	bpy.utils.register_class(MakeLOD)
 	bpy.utils.register_class(VIEW3D_PT_tools_scantools)
 
@@ -267,6 +307,7 @@ def unregister():
 	bpy.utils.unregister_class(ObjectFloor)
 	bpy.utils.unregister_class(RemoveFloor)
 	bpy.utils.unregister_class(ReconstructmeTransform)
+	bpy.utils.unregister_class(RemoveSmallParts)
 	bpy.utils.unregister_class(MakeLOD)
 	bpy.utils.unregister_class(VIEW3D_PT_tools_scantools)
 

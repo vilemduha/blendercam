@@ -1658,7 +1658,16 @@ def getOperationSilhouete(operation):
 				stype='CURVES'
 		else:
 			stype='IMAGE'
-		if stype == 'OBJECTS' or stype=='IMAGE':
+			
+		totfaces=0
+		if stype=='OBJECTS':
+			for ob in operation.objects:
+				if ob.type=='MESH':
+					totfaces+=len(ob.data.polygons)
+			
+		
+			
+		if (stype == 'OBJECTS' and totfaces>200000) or stype=='IMAGE':
 			print('image method')
 			samples = renderSampleImage(operation)
 			if stype=='OBJECTS':
@@ -1714,19 +1723,18 @@ def getObjectSilhouete(stype, objects=None):
 					#n=mathutils.geometry.normal(verts[0],verts[1],verts[2])
 					if f.area>0 and n.z!=0:#n.z>0.0 and f.area>0.0 :
 						s=[]
-						c=f.center.xy
+						c=mw * f.center
+						c=c.xy
 						for i in f.vertices:
 							v=mw* m.vertices[i].co
-							x=v.x
-							y=v.y
-							x=x+(x-c.x)*e
-							y=y+(y-c.y)*e
-							s.append((x,y))
-						if len(v)>2:
+							s.append((v.x,v.y))
+						if len(s)>2:
+							#print(s)
 							p=spolygon.Polygon(s)
 							#print(dir(p))
 							if p.is_valid:
-								polys.append(p)
+								#polys.append(p)
+								polys.append(p.buffer(e,resolution = 0))
 						#if id==923:
 						#	m.polygons[923].select
 						id+=1	
@@ -1975,9 +1983,9 @@ def addBridge(x,y,rot,sizex, sizey):
 def addAutoBridges(o):
 	'''attempt to add auto bridges as set of curves'''
 	getOperationSources(o)
-	if not o.onlycurves:
-		o.warnings+=('not curves')
-		return;
+	#if not o.onlycurves:
+	#	o.warnings+=('not curves')
+	#	return;
 	bridgegroupname=o.bridges_group_name
 	if bridgegroupname == '' or bpy.data.groups.get(bridgegroupname) == None:
 		bridgegroupname = 'bridges_'+o.name
@@ -1986,26 +1994,28 @@ def addAutoBridges(o):
 	o.bridges_group_name = bridgegroupname
 	for ob in o.objects:
 		
-		if ob.type=='CURVE':
+		if ob.type=='CURVE' or ob.type=='TEXT':
 			curve = curveToShapely(ob)
-			#curve = shapelyToMultipolygon(curve)
-			for c in curve:
-				c=c.exterior
-				minx, miny, maxx, maxy = c.bounds
-				d1 = c.project(sgeometry.Point(maxx+1000, (maxy+miny)/2.0))
-				p = c.interpolate(d1)
-				g.objects.link( addBridge(p.x,p.y,-pi/2,o.bridges_width, o.cutter_diameter*1))
-				d1 = c.project(sgeometry.Point(minx-1000, (maxy+miny)/2.0))
-				p = c.interpolate(d1)
-				g.objects.link( addBridge(p.x,p.y,pi/2,o.bridges_width, o.cutter_diameter*1))
-				d1 = c.project(sgeometry.Point((minx + maxx)/2.0, maxy + 1000))
-				p = c.interpolate(d1)
-				g.objects.link( addBridge(p.x,p.y,0,o.bridges_width, o.cutter_diameter*1))
-				d1 = c.project(sgeometry.Point((minx + maxx) / 2.0 , miny - 1000))
-				p = c.interpolate(d1)
-				g.objects.link( addBridge(p.x,p.y,pi,o.bridges_width, o.cutter_diameter*1))
+		if ob.type == 'MESH':
+			
+			curve = getObjectSilhouete('OBJECTS',[ob])
+		#curve = shapelyToMultipolygon(curve)
+		for c in curve:
+			c=c.exterior
+			minx, miny, maxx, maxy = c.bounds
+			d1 = c.project(sgeometry.Point(maxx+1000, (maxy+miny)/2.0))
+			p = c.interpolate(d1)
+			g.objects.link( addBridge(p.x,p.y,-pi/2,o.bridges_width, o.cutter_diameter*1))
+			d1 = c.project(sgeometry.Point(minx-1000, (maxy+miny)/2.0))
+			p = c.interpolate(d1)
+			g.objects.link( addBridge(p.x,p.y,pi/2,o.bridges_width, o.cutter_diameter*1))
+			d1 = c.project(sgeometry.Point((minx + maxx)/2.0, maxy + 1000))
+			p = c.interpolate(d1)
+			g.objects.link( addBridge(p.x,p.y,0,o.bridges_width, o.cutter_diameter*1))
+			d1 = c.project(sgeometry.Point((minx + maxx) / 2.0 , miny - 1000))
+			p = c.interpolate(d1)
+			g.objects.link( addBridge(p.x,p.y,pi,o.bridges_width, o.cutter_diameter*1))
 
-			mw=ob.matrix_world
 	
 def getBridgesPoly(o):
 	if not hasattr(o, 'bridgespolyorig'):
@@ -2535,6 +2545,8 @@ def strategy_drill( o ):
 	
 		bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
 		bpy.ops.group.objects_remove_all()
+		bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+
 		ob=bpy.context.active_object
 		if ob.type=='CURVE':
 			ob.data.dimensions='3D'
@@ -2844,7 +2856,7 @@ def getPath3axis(context, operation):
 			#return
 			if o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL':
 				pathSamples=connectChunksLow(pathSamples,o)
-
+		
 		#print (minz)
 		
 		
@@ -2867,7 +2879,9 @@ def getPath3axis(context, operation):
 			for ch in chunks:
 				for vi in range(0,len(ch.points)):
 					ch.points[vi]=(ch.points[vi][0],ch.points[vi][1],ch.points[vi][2]-o.carve_depth)
-	
+		if o.use_bridges:
+			for chunk in chunks:
+				useBridges(chunk,o)
 		chunksToMesh(chunks,o)
 		
 		
