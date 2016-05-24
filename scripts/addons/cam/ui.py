@@ -441,18 +441,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 							layout.prop(ao,'dist_between_paths')
 							layout.prop(ao,'movement_insideout')
 					layout.prop(ao,'dont_merge')
-					layout.prop(ao,'use_bridges')
-					if ao.use_bridges:
-						#layout.prop(ao,'bridges_placement')
-						layout.prop(ao,'bridges_width')
-						layout.prop(ao,'bridges_height')
-						
-						layout.prop_search(ao, "bridges_group_name", bpy.data, "groups")
-						#layout.prop(ao,'bridges_group_name')
-						#if ao.bridges_placement == 'AUTO':
-						#	layout.prop(ao,'bridges_per_curve')
-						#	layout.prop(ao,'bridges_max_distance')
-					layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
 				elif ao.strategy=='WATERLINE':
 					layout.prop(ao,'slice_detail')	
 					layout.prop(ao,'waterline_fill')  
@@ -489,6 +477,20 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 						layout.prop(ao,'parallel_angle')
 												
 					layout.prop(ao,'inverse')
+				if ao.type!='POCKET' or ao.type!='DRILL' or ao.type !='CURVE' or ao.type != 'MEDIAL_AXIS':	
+					layout.prop(ao,'use_bridges')				
+					if ao.use_bridges:
+						#layout.prop(ao,'bridges_placement')
+						layout.prop(ao,'bridges_width')
+						layout.prop(ao,'bridges_height')
+						
+						layout.prop_search(ao, "bridges_group_name", bpy.data, "groups")
+						#layout.prop(ao,'bridges_group_name')
+						#if ao.bridges_placement == 'AUTO':
+						#	layout.prop(ao,'bridges_per_curve')
+						#	layout.prop(ao,'bridges_max_distance')
+					layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
+
 				#elif ao.strategy=='SLICES':
 				#	layout.prop(ao,'slice_detail')	
 			#first attempt to draw object list for orientations:

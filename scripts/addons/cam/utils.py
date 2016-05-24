@@ -1983,9 +1983,9 @@ def addBridge(x,y,rot,sizex, sizey):
 def addAutoBridges(o):
 	'''attempt to add auto bridges as set of curves'''
 	getOperationSources(o)
-	if not o.onlycurves:
-		o.warnings+=('not curves')
-		return;
+	#if not o.onlycurves:
+	#	o.warnings+=('not curves')
+	#	return;
 	bridgegroupname=o.bridges_group_name
 	if bridgegroupname == '' or bpy.data.groups.get(bridgegroupname) == None:
 		bridgegroupname = 'bridges_'+o.name
@@ -1994,26 +1994,28 @@ def addAutoBridges(o):
 	o.bridges_group_name = bridgegroupname
 	for ob in o.objects:
 		
-		if ob.type=='CURVE':
+		if ob.type=='CURVE' or ob.type=='TEXT':
 			curve = curveToShapely(ob)
-			#curve = shapelyToMultipolygon(curve)
-			for c in curve:
-				c=c.exterior
-				minx, miny, maxx, maxy = c.bounds
-				d1 = c.project(sgeometry.Point(maxx+1000, (maxy+miny)/2.0))
-				p = c.interpolate(d1)
-				g.objects.link( addBridge(p.x,p.y,-pi/2,o.bridges_width, o.cutter_diameter*1))
-				d1 = c.project(sgeometry.Point(minx-1000, (maxy+miny)/2.0))
-				p = c.interpolate(d1)
-				g.objects.link( addBridge(p.x,p.y,pi/2,o.bridges_width, o.cutter_diameter*1))
-				d1 = c.project(sgeometry.Point((minx + maxx)/2.0, maxy + 1000))
-				p = c.interpolate(d1)
-				g.objects.link( addBridge(p.x,p.y,0,o.bridges_width, o.cutter_diameter*1))
-				d1 = c.project(sgeometry.Point((minx + maxx) / 2.0 , miny - 1000))
-				p = c.interpolate(d1)
-				g.objects.link( addBridge(p.x,p.y,pi,o.bridges_width, o.cutter_diameter*1))
+		if ob.type == 'MESH':
+			
+			curve = getObjectSilhouete('OBJECTS',[ob])
+		#curve = shapelyToMultipolygon(curve)
+		for c in curve:
+			c=c.exterior
+			minx, miny, maxx, maxy = c.bounds
+			d1 = c.project(sgeometry.Point(maxx+1000, (maxy+miny)/2.0))
+			p = c.interpolate(d1)
+			g.objects.link( addBridge(p.x,p.y,-pi/2,o.bridges_width, o.cutter_diameter*1))
+			d1 = c.project(sgeometry.Point(minx-1000, (maxy+miny)/2.0))
+			p = c.interpolate(d1)
+			g.objects.link( addBridge(p.x,p.y,pi/2,o.bridges_width, o.cutter_diameter*1))
+			d1 = c.project(sgeometry.Point((minx + maxx)/2.0, maxy + 1000))
+			p = c.interpolate(d1)
+			g.objects.link( addBridge(p.x,p.y,0,o.bridges_width, o.cutter_diameter*1))
+			d1 = c.project(sgeometry.Point((minx + maxx) / 2.0 , miny - 1000))
+			p = c.interpolate(d1)
+			g.objects.link( addBridge(p.x,p.y,pi,o.bridges_width, o.cutter_diameter*1))
 
-			mw=ob.matrix_world
 	
 def getBridgesPoly(o):
 	if not hasattr(o, 'bridgespolyorig'):
@@ -2854,7 +2856,7 @@ def getPath3axis(context, operation):
 			#return
 			if o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL':
 				pathSamples=connectChunksLow(pathSamples,o)
-
+		
 		#print (minz)
 		
 		
@@ -2877,7 +2879,9 @@ def getPath3axis(context, operation):
 			for ch in chunks:
 				for vi in range(0,len(ch.points)):
 					ch.points[vi]=(ch.points[vi][0],ch.points[vi][1],ch.points[vi][2]-o.carve_depth)
-	
+		if o.use_bridges:
+			for chunk in chunks:
+				useBridges(chunk,o)
 		chunksToMesh(chunks,o)
 		
 		
