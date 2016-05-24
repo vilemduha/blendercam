@@ -2535,6 +2535,8 @@ def strategy_drill( o ):
 	
 		bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked":False, "mode":'TRANSLATION'}, TRANSFORM_OT_translate={"value":(0, 0, 0), "constraint_axis":(False, False, False), "constraint_orientation":'GLOBAL', "mirror":False, "proportional":'DISABLED', "proportional_edit_falloff":'SMOOTH', "proportional_size":1, "snap":False, "snap_target":'CLOSEST', "snap_point":(0, 0, 0), "snap_align":False, "snap_normal":(0, 0, 0), "texture_space":False, "release_confirm":False})
 		bpy.ops.group.objects_remove_all()
+		bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+
 		ob=bpy.context.active_object
 		if ob.type=='CURVE':
 			ob.data.dimensions='3D'
