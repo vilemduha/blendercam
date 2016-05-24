@@ -1658,7 +1658,16 @@ def getOperationSilhouete(operation):
 				stype='CURVES'
 		else:
 			stype='IMAGE'
-		if stype == 'OBJECTS' or stype=='IMAGE':
+			
+		totfaces=0
+		if stype=='OBJECTS':
+			for ob in operation.objects:
+				if ob.type=='MESH':
+					totfaces+=len(ob.data.polygons)
+			
+		
+			
+		if (stype == 'OBJECTS' and totfaces>200000) or stype=='IMAGE':
 			print('image method')
 			samples = renderSampleImage(operation)
 			if stype=='OBJECTS':
