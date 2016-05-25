@@ -1159,7 +1159,9 @@ def exportGcodePath(filename,vertslist,operations):
 	for i,o in enumerate(operations):
 	
 		if use_experimental and o.output_header:
-			c.write(o.gcode_header + '\n')
+			lines = o.gcode_header.split(';')
+			for aline in lines:
+				c.write(aline + '\n')
 			
 		free_movement_height=o.free_movement_height#o.max.z+
 		
@@ -1349,7 +1351,9 @@ def exportGcodePath(filename,vertslist,operations):
 		c.feedrate(unitcorr*o.feedrate)
 		
 		if use_experimental and o.output_trailer:
-			c.write(o.gcode_trailer + '\n')
+			lines = o.gcode_trailer.split(';')
+			for aline in lines:
+				c.write(aline + '\n')
 			
 	o.duration=duration*unitcorr
 	#print('duration')
