@@ -354,7 +354,7 @@ def getPathPattern(operation):
 		pathchunks=[]
 		chunks=[]
 		for p in polys:
-			p=p.buffer(-o.dist_between_paths/3,o.circle_detail)#first, move a bit inside, because otherwise the border samples go crazy very often changin between hit/non hit and making too many jumps in the path.
+			p=p.buffer(-o.dist_between_paths/10,o.circle_detail)#first, move a bit inside, because otherwise the border samples go crazy very often changin between hit/non hit and making too many jumps in the path.
 			chunks.extend(shapelyToChunks(p,0))
 		
 		pathchunks.extend(chunks)
@@ -374,7 +374,11 @@ def getPathPattern(operation):
 				p=p.buffer(-o.dist_between_paths,o.circle_detail)
 				if not p.is_empty:
 					nchunks=shapelyToChunks(p,zlevel)
-					#parentChildPoly(lastchunks,nchunks,o)
+					
+					if o.movement_insideout=='INSIDEOUT':
+						parentChildDist(lastchunks,nchunks,o)
+					else:
+						parentChildDist(nchunks,lastchunks,o)
 					pathchunks.extend(nchunks)
 					lastchunks=nchunks
 				percent=int(i/approxn*100)
@@ -394,20 +398,23 @@ def getPathPattern(operation):
 							dist+=o.pixsize*2.5
 					p=p.buffer(dist,o.circle_detail)
 					if not p.is_empty:
-						chunks=shapelyToChunks(p,zlevel)
-						pathchunks.extend(chunks)
-					lastchunks=chunks
+						nchunks=shapelyToChunks(p,zlevel)
+						if o.movement_insideout=='INSIDEOUT':
+							parentChildDist(nchunks,lastchunks,o)
+						else:
+							parentChildDist(lastchunks,nchunks,o)
+						pathchunks.extend(nchunks)
+						lastchunks=nchunks
 		
-		if o.movement_insideout=='INSIDEOUT':
-			pathchunks.reverse()
+		
 		for chunk in pathchunks:
 			if o.movement_insideout=='INSIDEOUT':
 				chunk.points.reverse()
 			if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
 				chunk.points.reverse()
 		
-		parentChildPoly(pathchunks,pathchunks,o)	
-		pathchunks=chunksRefine(pathchunks,o)
+		#parentChildPoly(pathchunks,pathchunks,o)	
+		#chunksRefine(pathchunks,o)
 	progress(time.time()-t)
 	return pathchunks
 	
