@@ -607,7 +607,7 @@ def parentChildPoly(parents,children,o):
 				if parent.poly.contains(sgeometry.Point(child.poly.boundary.coords[0])):
 					parent.children.append(child)
 					child.parents.append(parent)
-
+			
 def parentChildDist(parents, children,o, distance= None):
 	#parenting based on x,y distance between chunks
 	#hierarchy works like this: - children get milled first.
@@ -617,23 +617,40 @@ def parentChildDist(parents, children,o, distance= None):
 			dlim=dlim*2
 	else:
 		dlim = distance
+	#print('distance')
+	#print(len(children),len(parents))
+	#i=0
+	#simplification greatly speeds up the distance finding algorithms. 
+	for child in children:
+		child.simppoly=child.poly.simplify(0.0003)
+	for parent in parents:
+		parent.simppoly=parent.poly.simplify(0.0003)
 		
 	for child in children:
 		for parent in parents:
+			#print(i)
+			#i+=1
 			isrelation=False
 			if parent!=child:
-				for v in child.points:
-					for v1 in parent.points:
-						
-						if dist2d(v,v1)<dlim:
-							isrelation=True
+				if not parent.poly.is_empty and not child.poly.is_empty:
+					d=parent.simppoly.distance(child.simppoly)
+					if d<dlim:
+						isrelation = True
+				else:#this is the old method, preferably should be replaced in all cases
+					print('warning, sorting will be slow due to bad parenting in parentChildDist')
+					for v in child.points:
+						for v1 in parent.points:
+							
+							if dist2d(v,v1)<dlim:
+								isrelation=True
+								break
+						if isrelation:
 							break
-					if isrelation:
-						break
 				if isrelation:
 					#print('truelink',dist2d(v,v1))
 					parent.children.append(child)
 					child.parents.append(parent)
+	#print('distance done')
 						
 def parentChild(parents, children, o):
 	#connect all children to all parents. Useful for any type of defining hierarchy.

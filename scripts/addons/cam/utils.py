@@ -534,7 +534,7 @@ def sampleChunks(o,pathSamples,layers):
 	progress('checking relations between paths')
 	timingstart(sortingtime)
 
-	if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
+	if (o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy == 'OUTLINEFILL'):
 		if len(layers)>1:# sorting help so that upper layers go first always
 			for i in range(0,len(layers)-1):
 				parents=[]
@@ -2407,8 +2407,9 @@ def strategy_pocket( o ):
 						
 		nchunks=limitChunks(nchunks,o)
 		chunksFromCurve.extend(nchunks)
+		print(i)
 		parentChildDist(lastchunks,nchunks,o)
-		
+		#print('parented')
 		lastchunks=nchunks
 		
 		
@@ -2852,6 +2853,7 @@ def getPath3axis(context, operation):
 			if o.strategy=='OUTLINEFILL':
 				getOperationSilhouete(o)
 			pathSamples=getPathPattern(o)
+			pathSamples = sortChunks(pathSamples,o)
 			#chunksToMesh(pathSamples,o)#for testing pattern script
 			#return
 			if o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL':
@@ -2868,7 +2870,8 @@ def getPath3axis(context, operation):
 			chunks=chunksCoherency(chunks)
 			print('coherency check')
 			
-		if ((o.strategy=='PARALLEL' or o.strategy=='CROSS') or o.strategy=='PENCIL'):# and not o.parallel_step_back:
+		if ((o.strategy=='PARALLEL' or o.strategy=='CROSS') or o.strategy=='PENCIL'):# or o.strategy =='OUTLINEFILL'):# and not o.parallel_step_back:
+			print('sorting')
 			chunks=sortChunks(chunks,o)
 		if o.ramp:
 			for ch in chunks:

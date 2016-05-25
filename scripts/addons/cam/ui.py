@@ -477,7 +477,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 						layout.prop(ao,'parallel_angle')
 												
 					layout.prop(ao,'inverse')
-				if ao.type!='POCKET' or ao.type!='DRILL' or ao.type !='CURVE' or ao.type != 'MEDIAL_AXIS':	
+				if ao.strategy!='POCKET' or ao.strategy!='DRILL' or ao.strategy !='CURVE' or ao.strategy != 'MEDIAL_AXIS':	
 					layout.prop(ao,'use_bridges')				
 					if ao.use_bridges:
 						#layout.prop(ao,'bridges_placement')
