@@ -384,6 +384,7 @@ def getPathPattern(operation):
 				percent=int(i/approxn*100)
 				progress('outlining polygons ',percent) 
 				i+=1
+		pathchunks.reverse()
 		if not(o.inverse):#dont do ambient for inverse milling
 			lastchunks=firstchunks
 			for p in polys:
@@ -406,15 +407,17 @@ def getPathPattern(operation):
 						pathchunks.extend(nchunks)
 						lastchunks=nchunks
 		
+		if o.movement_insideout == 'OUTSIDEIN':
+			pathchunks.reverse()
 		
 		for chunk in pathchunks:
-			if o.movement_insideout=='INSIDEOUT':
+			if o.movement_insideout=='OUTSIDEIN':
 				chunk.points.reverse()
 			if (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CCW'):
 				chunk.points.reverse()
 		
 		#parentChildPoly(pathchunks,pathchunks,o)	
-		#chunksRefine(pathchunks,o)
+		chunksRefine(pathchunks,o)
 	progress(time.time()-t)
 	return pathchunks
 	

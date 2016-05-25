@@ -636,8 +636,8 @@ def parentChildDist(parents, children,o, distance= None):
 					d=parent.simppoly.distance(child.simppoly)
 					if d<dlim:
 						isrelation = True
-				else:#this is the old method, preferably should be replaced in all cases
-					print('warning, sorting will be slow due to bad parenting in parentChildDist')
+				else:#this is the old method, preferably should be replaced in most cases except parallell where this method works probably faster.
+					#print('warning, sorting will be slow due to bad parenting in parentChildDist')
 					for v in child.points:
 						for v1 in parent.points:
 							
