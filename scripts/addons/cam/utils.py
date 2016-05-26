@@ -301,6 +301,10 @@ def samplePathLow(o,ch1,ch2,dosample):
 	if dosample:
 		if not (o.use_opencamlib and o.use_exact):
 			if o.use_exact:
+				if o.update_bullet_collision_tag:
+					prepareBulletCollision(o)
+					o.update_bullet_collision_tag = False
+					
 				cutterdepth=o.cutter_shape.dimensions.z/2
 				for p in bpath.points:
 					z=getSampleBullet(o.cutter_shape, p[0],p[1], cutterdepth, 1, o.minz)
@@ -329,8 +333,7 @@ def sampleChunks(o,pathSamples,layers):
 			cutterdepth=0
 		else:
 			if o.update_bullet_collision_tag:
-				prepareBulletCollision(o)
-				
+				prepareBulletCollision(o)			
 				o.update_bullet_collision_tag=False
 			#print (o.ambient)
 			cutter=o.cutter_shape
