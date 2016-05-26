@@ -384,7 +384,7 @@ class camPathChunk:
 				ramppoints.extend(negramppoints[1:])
 				
 				traveled=0.0
-				chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][1],zstart)))
+				chunk.points.append((ch.points[0][0],ch.points[0][1],max(ch.points[0][2],zstart)))
 				for r in range(turns):
 					for p in range(0,len(ramppoints)):
 						p1=chunk.points[-1]
