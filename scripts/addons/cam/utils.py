@@ -2304,8 +2304,7 @@ def strategy_curve( o ):
 	
 	if o.ramp:
 		for ch in pathSamples:
-			nchunk = ch.rampZigZag(ch.zstart, ch.points[0][2],o)
-			ch.points=nchunk.points
+			ch.rampZigZag(ch.zstart, ch.points[0][2],o)
 			
 	chunksToMesh(pathSamples,o)
 	
@@ -2445,6 +2444,11 @@ def strategy_pocket( o ):
 	#print(len(chunksFromCurve))
 	for l in layers:
 		lchunks = setChunksZ(chunksFromCurve,l[1])
+		if o.ramp:
+			for ch in lchunks:
+				ch.zstart = l[0]
+				ch.zend = l[1]
+		
 		###########helix_enter first try here TODO: check if helix radius is not out of operation area.
 		if o.helix_enter:
 			helix_radius=o.cutter_diameter*0.5*o.helix_diameter*0.01#90 percent of cutter radius
@@ -2477,7 +2481,7 @@ def strategy_pocket( o ):
 					else:
 						o.warnings=o.warnings+'Helix entry did not fit! \n '
 						ch.closed=True
-						lchunks[chi]=ch.rampZigZag(l[0],l[1],o)
+						ch.rampZigZag(l[0],l[1],o)
 		#Arc retract here first try:
 		if o.retract_tangential:#TODO: check for entry and exit point before actual computing... will be much better.
 								#TODO: fix this for CW and CCW!
@@ -2541,8 +2545,13 @@ def strategy_pocket( o ):
 						
 		chunks.extend(lchunks)
 
+	if o.ramp:
+		for ch in chunks:
+			ch.rampZigZag(ch.zstart, ch.points[0][2], o)
+
 	if o.first_down:
 		chunks = sortChunks(chunks, o)
+
 		
 	chunksToMesh(chunks,o)
 		
@@ -2885,8 +2894,7 @@ def getPath3axis(context, operation):
 				chunks = connectChunksLow(chunks,o)
 		if o.ramp:
 			for ch in chunks:
-				nchunk = ch.rampZigZag(ch.zstart, ch.points[0][2],o)
-				ch.points=nchunk.points
+				ch.rampZigZag(ch.zstart, ch.points[0][2],o)
 		#print(chunks)
 		if o.strategy=='CARVE':
 			for ch in chunks:
