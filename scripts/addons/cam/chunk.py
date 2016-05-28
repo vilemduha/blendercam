@@ -622,14 +622,18 @@ def parentChildDist(parents, children,o, distance= None):
 	#i=0
 	#simplification greatly speeds up the distance finding algorithms. 
 	for child in children:
-		child.simppoly=child.poly.simplify(0.0003)
+		if not child.poly.is_empty:
+			child.simppoly=child.poly.simplify(0.0003)
 	for parent in parents:
-		parent.simppoly=parent.poly.simplify(0.0003)
-		
+		if not parent.poly.is_empty:
+			parent.simppoly=parent.poly.simplify(0.0003)
+	i=0
+	
 	for child in children:
 		for parent in parents:
 			#print(i)
-			#i+=1
+			#print(len(children),len(parents))
+			i+=1
 			isrelation=False
 			if parent!=child:
 				if not parent.poly.is_empty and not child.poly.is_empty:
@@ -640,7 +644,6 @@ def parentChildDist(parents, children,o, distance= None):
 					#print('warning, sorting will be slow due to bad parenting in parentChildDist')
 					for v in child.points:
 						for v1 in parent.points:
-							
 							if dist2d(v,v1)<dlim:
 								isrelation=True
 								break
@@ -651,7 +654,35 @@ def parentChildDist(parents, children,o, distance= None):
 					parent.children.append(child)
 					child.parents.append(parent)
 	#print('distance done')
+
+'''
+def parentChildDist(parents, children,o, distance= None):
+	#parenting based on distance between chunks
+	#hierarchy works like this: - children get milled first.
+	if distance==None:
+		dlim=o.dist_between_paths*2
+		if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and o.parallel_step_back:
+			dlim=dlim*2
+	else:
+		dlim = distance
+		
+	for child in children:
+		for parent in parents:
+			isrelation=False
+			if parent!=child:
+				for v in child.points:
+					for v1 in parent.points:
 						
+						if dist2d(v,v1)<dlim:
+							isrelation=True
+							break
+					if isrelation:
+						break
+				if isrelation:
+					#print('truelink',dist2d(v,v1))
+					parent.children.append(child)
+					child.parents.append(parent)
+'''						
 def parentChild(parents, children, o):
 	#connect all children to all parents. Useful for any type of defining hierarchy.
 	#hierarchy works like this: - children get milled first. 

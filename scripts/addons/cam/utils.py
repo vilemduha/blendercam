@@ -378,7 +378,6 @@ def sampleChunks(o,pathSamples,layers):
 	totaltime=timinginit()
 	timingstart(totaltime)
 	lastz=minz
-	
 	for patternchunk in pathSamples:
 		thisrunchunks=[]
 		for l in layers:
@@ -515,22 +514,13 @@ def sampleChunks(o,pathSamples,layers):
 		for i,l in enumerate(layers):
 			ch=layeractivechunks[i]
 			if len(ch.points)>0:  
-				
-				#if o.stay_low and len(layerchunks[i])>0:
-				#	between=samplePathLow(o,layerchunks[i][-1],ch)#this should be moved after sort
-				#	layerchunks[i][-1].points.extend(between)
-				#	layerchunks[i][-1].points.extend(ch.points) 
-				#else:	
-					
 				layerchunks[i].append(ch)
 				thisrunchunks[i].append(ch)
 				layeractivechunks[i]=camPathChunk([])
-				#parenting: not for outlinefilll!!! also higly unoptimized
+				
+			#PARENTING	
 			if (o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy == 'OUTLINEFILL'):
 				timingstart(sortingtime)
-				#if o.strategy == 'OUTLINEFILL' and o.movement_insideout == 'INSIDEOUT':
-				#	parentChildDist( lastrunchunks[i],thisrunchunks[i],o)
-				#else:
 				parentChildDist(thisrunchunks[i], lastrunchunks[i],o)
 				timingadd(sortingtime)
 
@@ -790,7 +780,7 @@ def sampleChunksNAxis(o,pathSamples,layers):
 				
 			if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL'):
 				parentChildDist(thisrunchunks[i], lastrunchunks[i],o)
-
+				
 		lastrunchunks=thisrunchunks
 				
 			#print(len(layerchunks[i]))
@@ -2873,7 +2863,8 @@ def getPath3axis(context, operation):
 			if o.strategy=='OUTLINEFILL':
 				getOperationSilhouete(o)
 			pathSamples=getPathPattern(o)
-			pathSamples = sortChunks(pathSamples,o)#have to be sorted once before, because of the parenting inside of samplechunks
+			if o.strategy=='OUTLINEFILL':
+				pathSamples = sortChunks(pathSamples,o)#have to be sorted once before, because of the parenting inside of samplechunks
 			#chunksToMesh(pathSamples,o)#for testing pattern script
 			#return
 			if o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES':
