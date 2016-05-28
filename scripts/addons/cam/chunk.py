@@ -670,7 +670,7 @@ def chunksToShapely(chunks):#this does more cleve chunks to Poly with hierarchie
 	polys=[]
 	for ch in chunks:#first convert chunk to poly
 		if len(ch.points)>2:
-			pchunk=[]
+			#pchunk=[]
 			ch.poly=sgeometry.Polygon(ch.points)
 			
 	for ppart in chunks:#then add hierarchy relations
