@@ -150,6 +150,12 @@ def prepareBulletCollision(o):
 				odata=collisionob.data.dimensions
 				collisionob.data.dimensions='2D'
 			bpy.ops.object.convert(target='MESH', keep_original=False)
+
+		if o.use_modifiers:
+			newmesh = collisionob.to_mesh(bpy.context.scene, True, 'RENDER')
+			oldmesh = collisionob.data
+			collisionob.data = newmesh
+			bpy.data.meshes.remove(oldmesh)
 		#subdivide long edges here:
 		if o.exact_subdivide_edges:
 			subdivideLongEdges(collisionob, o.cutter_diameter*2)
