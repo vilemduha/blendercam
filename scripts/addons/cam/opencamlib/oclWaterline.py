@@ -12,10 +12,10 @@ op_cutter_diameter = float( csv_file.readline() )
 op_minz = float( csv_file.readline() )
 csv_file.close();
 
-cutter_length = 70
+cutter_length = 150
 if op_cutter_type == 'END':
 	cutter = ocl.CylCutter( op_cutter_diameter*1000, cutter_length)
-elif op_cutter_type == 'BALL':
+elif op_cutter_type == 'BALLNOSE':
 	cutter = ocl.BallCutter( op_cutter_diameter*1000, cutter_length)
 elif op_cutter_type == 'VCARVE':
 	cutter = ocl.ConeCutter( op_cutter_diameter*1000, 1, cutter_length)
@@ -28,14 +28,15 @@ for line in wl_height_file:
 	waterline_heights.append( float( line.split()[0] ) )
 wl_height_file.close()
 wl_index = 0
+waterline = ocl.Waterline()
+waterline.setSTL(stl_surf)
+waterline.setCutter(cutter)
+waterline.setSampling(0.1)
 for height in waterline_heights:
 	print( str(height) + '\n' )
-	waterline = ocl.Waterline()
-	waterline.setSTL(stl_surf)
-	waterline.setCutter(cutter)
+	waterline.reset();
 	waterline.setZ(height)
-	waterline.setSampling(0.3)
-	waterline.run()
+	waterline.run2()
 	wl_loops = waterline.getLoops()
 	wl_file = open( tempfile.gettempdir()+'/oclWaterline' + str(wl_index) + '.txt', 'w')
 	for l in wl_loops:

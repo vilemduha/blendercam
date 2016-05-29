@@ -85,7 +85,7 @@ def exportModelsToSTL(operation):
 		bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 		bpy.ops.transform.resize(value=(OCL_SCALE, OCL_SCALE, OCL_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
 		bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-		bpy.ops.export_mesh.stl(check_existing=True, filepath=file_name, filter_glob="*.stl", ascii=False, use_mesh_modifiers=True, axis_forward='Y', axis_up='Z', global_scale=1.0)
+		bpy.ops.export_mesh.stl(check_existing=True, filepath=file_name, filter_glob="*.stl", use_selection=True, ascii=False, use_mesh_modifiers=True, axis_forward='Y', axis_up='Z', global_scale=1.0)
 		bpy.ops.object.delete()
 		file_number += 1
 	
@@ -121,9 +121,9 @@ def oclResampleChunks(operation, chunks_to_resample):
 	chunkPointsResampleFromCSV(chunks_to_resample)
 def oclWaterlineLayerHeights( operation ):
 	layers = []
-	l_first = operation.maxz
 	l_last = operation.minz
 	l_step = operation.stepdown
+	l_first = operation.maxz - l_step
 	l_depth = l_first
 	while l_depth > (l_last+0.0000001):
 		layers.append(l_depth)
@@ -143,6 +143,7 @@ def waterlineChunksFromCSV( operation, chunks ):
 	wl_index = 0
 	for layer in layers:
 		csv_file = open(tempfile.gettempdir() + '/oclWaterline' + str(wl_index) + '.txt', 'r')
+		print(str(wl_index) + "\n")
 		for line in csv_file:
 			if( line[0] == 'l'):
 				chunks.append( camPathChunk( inpoints = [] ) )
@@ -151,6 +152,7 @@ def waterlineChunksFromCSV( operation, chunks ):
 				chunks[-1].points.append( (point[0], point[1], point[2] ) )
 		wl_index += 1
 		csv_file.close()
+	chunks.append( camPathChunk( inpoints = [] ) )
 
 def oclGetMedialAxis(operation, chunks):
 	oclWaterlineHeightsToCSV( operation )

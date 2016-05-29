@@ -16,7 +16,7 @@ csv_file.close();
 cutter_length=5
 if op_cutter_type == 'END':
 	cutter = ocl.CylCutter( op_cutter_diameter*1000, cutter_length)
-elif op_cutter_type == 'BALL':
+elif op_cutter_type == 'BALLNOSE':
 	cutter = ocl.BallCutter( op_cutter_diameter*1000, cutter_length)
 elif op_cutter_type == 'VCARVE':
 	cutter = ocl.ConeCutter( op_cutter_diameter*1000, 1, cutter_length)
