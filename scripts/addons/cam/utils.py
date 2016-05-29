@@ -1664,7 +1664,12 @@ def getOperationSilhouete(operation):
 		if stype=='OBJECTS':
 			for ob in operation.objects:
 				if ob.type=='MESH':
-					totfaces+=len(ob.data.polygons)
+					if operation.use_modifiers:
+						mesh = ob.to_mesh(bpy.context.scene, True, 'RENDER')
+						totfaces += len(mesh.polygons)
+						bpy.data.meshes.remove(mesh)
+					else:
+						totfaces+=len(ob.data.polygons)
 			
 		
 			
@@ -1682,12 +1687,12 @@ def getOperationSilhouete(operation):
 			#this conversion happens because we need the silh to be oriented, for milling directions.
 		else:
 			print('object method')#this method is currently used only for curves. This is because exact silh for objects simply still doesn't work...
-			operation.silhouete=getObjectSilhouete(stype, objects=operation.objects)
+			operation.silhouete=getObjectSilhouete(stype, objects = operation.objects, use_modifiers = operation.use_modifiers)
 				
 		operation.update_silhouete_tag=False
 	return operation.silhouete
 		
-def getObjectSilhouete(stype, objects=None):
+def getObjectSilhouete(stype, objects=None, use_modifiers = False):
 	#o=operation
 	if stype=='CURVES':#curve conversion to polygon format
 		allchunks=[]
@@ -1707,8 +1712,11 @@ def getObjectSilhouete(stype, objects=None):
 			polys=[]
 			for ob in objects:
 				
-				m=ob.data
-				mw =ob.matrix_world
+				if use_modifiers:
+					m = ob.to_mesh(bpy.context.scene, True, 'RENDER')
+				else:
+					m = ob.data
+				mw = ob.matrix_world
 				mwi = mw.inverted()
 				r=ob.rotation_euler
 				m.calc_tessface()
@@ -1738,7 +1746,10 @@ def getObjectSilhouete(stype, objects=None):
 								polys.append(p.buffer(e,resolution = 0))
 						#if id==923:
 						#	m.polygons[923].select
-						id+=1	
+						id+=1
+				if use_modifiers:
+					bpy.data.meshes.remove(m)	
+	
 			#print(polys
 			if totfaces<20000:
 				p=sops.unary_union(polys)
@@ -1762,7 +1773,7 @@ def getObjectSilhouete(stype, objects=None):
 			
 			t=time.time()
 			silhouete = [p]#[polygon_utils_cam.Shapely2Polygon(p)]
-			
+		
 	return silhouete
 	
 def getAmbient(o):

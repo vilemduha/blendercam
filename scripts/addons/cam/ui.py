@@ -300,6 +300,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 		#row = layout.row() 
 	   
 		if len(scene.cam_operations)>0:
+			use_experimental = bpy.context.user_preferences.addons['cam'].preferences.experimental
 			ao=scene.cam_operations[scene.cam_active_operation]
 
 			row = layout.row(align=True)
@@ -350,6 +351,10 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop_search(ao, "curve_object", bpy.data, "objects")
 					if ao.strategy=='PROJECTED_CURVE':
 						layout.prop_search(ao, "curve_object1", bpy.data, "objects")
+
+				if use_experimental and ao.geometry_source in ['OBJECT', 'GROUP']:
+					layout.prop(ao, 'use_modifiers')
+
 
 									 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
