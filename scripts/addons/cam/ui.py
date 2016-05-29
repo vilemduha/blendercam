@@ -161,7 +161,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
 			if ao:
 				#print(dir(layout))
 				layout.template_running_jobs()
-				if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
+				if ao.geometry_source in ['OBJECT', 'GROUP']:
 					row = layout.row(align=True)
 					layout.prop(ao,'material_from_model')
 					
@@ -347,7 +347,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 					elif ao.geometry_source=='GROUP':
 						layout.prop_search(ao, "group_name", bpy.data, "groups")
 				
-				if ao.strategy=='CARVE' or ao.strategy=='PROJECTED_CURVE':
+				if ao.strategy in ['CARVE', 'PROJECTED_CURVE']:
 					layout.prop_search(ao, "curve_object", bpy.data, "objects")
 					if ao.strategy=='PROJECTED_CURVE':
 						layout.prop_search(ao, "curve_object1", bpy.data, "objects")
@@ -422,7 +422,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'rotary_axis_1')
 					layout.prop(ao,'rotary_axis_2')
 
-				if ao.strategy=='BLOCK' or ao.strategy=='SPIRAL' or ao.strategy=='CIRCLES' or ao.strategy=='OUTLINEFILL':
+				if ao.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'OUTLINEFILL']:
 					layout.prop(ao,'movement_insideout')
 					
 				#if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
@@ -482,7 +482,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 						layout.prop(ao,'parallel_angle')
 												
 					layout.prop(ao,'inverse')
-				if ao.strategy!='POCKET' or ao.strategy!='DRILL' or ao.strategy !='CURVE' or ao.strategy != 'MEDIAL_AXIS':	
+				if ao.strategy not in ['POCKET', 'DRILL', 'CURVE', 'MEDIAL_AXIS']:	
 					layout.prop(ao,'use_bridges')				
 					if ao.use_bridges:
 						#layout.prop(ao,'bridges_placement')
@@ -539,7 +539,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 			if ao.valid:
 				layout.prop(ao,'movement_type')
 				
-				if ao.movement_type=='BLOCK' or ao.movement_type=='SPIRAL' or ao.movement_type=='CIRCLES':
+				if ao.movement_type in ['BLOCK', 'SPIRAL', 'CIRCLES']:
 					layout.prop(ao,'movement_insideout')
 				   
 				layout.prop(ao,'spindle_rotation_direction')
@@ -623,7 +623,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if ao.optimize:
 					layout.prop(ao,'optimize_threshold')
 				if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
-					exclude_exact= ao.strategy=='WATERLINE' or ao.strategy=='POCKET' or ao.strategy=='CUTOUT' or ao.strategy=='DRILL' or ao.strategy=='PENCIL'
+					exclude_exact = ao.strategy in ['WATERLINE', 'POCKET', 'CUTOUT', 'DRILL', 'PENCIL']
 					if not exclude_exact:
 						layout.prop(ao,'use_exact')
 						if ao.use_exact:
@@ -672,7 +672,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
 					layout.prop(ao,'ambient_radius')
 				
 				layout.prop(ao,'maxz')#experimental
-				if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
+				if ao.geometry_source in ['OBJECT', 'GROUP']:
 					layout.prop(ao,'minz_from_ob')
 					if not ao.minz_from_ob:
 						layout.prop(ao,'minz')

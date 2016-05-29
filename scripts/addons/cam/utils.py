@@ -2839,7 +2839,7 @@ def getPath3axis(context, operation):
 		strategy_pocket( o )
 	
 		
-	elif o.strategy=='PARALLEL' or o.strategy=='CROSS' or o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES' or o.strategy=='OUTLINEFILL' or o.strategy=='CARVE'or o.strategy=='PENCIL' or o.strategy=='CRAZY':  
+	elif o.strategy in ['PARALLEL', 'CROSS', 'BLOCK', 'SPIRAL', 'CIRCLES', 'OUTLINEFILL', 'CARVE', 'PENCIL', 'CRAZY']:
 		
 		if o.strategy=='CARVE':
 			pathSamples=[]
@@ -2878,7 +2878,7 @@ def getPath3axis(context, operation):
 				pathSamples = sortChunks(pathSamples,o)#have to be sorted once before, because of the parenting inside of samplechunks
 			#chunksToMesh(pathSamples,o)#for testing pattern script
 			#return
-			if o.strategy=='BLOCK' or o.strategy=='SPIRAL' or o.strategy=='CIRCLES':
+			if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
 				pathSamples=connectChunksLow(pathSamples,o)
 		
 		#print (minz)
@@ -2892,7 +2892,7 @@ def getPath3axis(context, operation):
 			chunks=chunksCoherency(chunks)
 			print('coherency check')
 			
-		if ((o.strategy=='PARALLEL' or o.strategy=='CROSS') or o.strategy=='PENCIL' or o.strategy =='OUTLINEFILL'):# and not o.parallel_step_back:
+		if o.strategy in ['PARALLEL', 'CROSS', 'PENCIL', 'OUTLINEFILL']:# and not o.parallel_step_back:
 			print('sorting')
 			chunks=sortChunks(chunks,o)
 			if o.strategy == 'OUTLINEFILL':
@@ -3160,7 +3160,7 @@ def getPath4axis(context,operation):
 	s=bpy.context.scene
 	o=operation
 	getBounds(o)
-	if o.strategy4axis=='PARALLELR' or o.strategy4axis=='PARALLEL' or o.strategy4axis=='HELIX' or o.strategy4axis=='CROSS':  
+	if o.strategy4axis in ['PARALLELR', 'PARALLEL', 'HELIX', 'CROSS']:  
 		pathSamples=getPathPattern4axis(o)
 		
 		depth=pathSamples[0].depth
