@@ -623,10 +623,10 @@ def parentChildDist(parents, children,o, distance= None):
 	#simplification greatly speeds up the distance finding algorithms. 
 	for child in children:
 		if not child.poly.is_empty:
-			child.simppoly=child.poly.simplify(0.0003)
+			child.simppoly=child.poly.simplify(0.0003).boundary
 	for parent in parents:
 		if not parent.poly.is_empty:
-			parent.simppoly=parent.poly.simplify(0.0003)
+			parent.simppoly=parent.poly.simplify(0.0003).boundary
 	i=0
 	
 	for child in children:
@@ -638,7 +638,7 @@ def parentChildDist(parents, children,o, distance= None):
 			if parent!=child:
 				if not parent.poly.is_empty and not child.poly.is_empty:
 					#print(dir(parent.simppoly))
-					d=parent.simppoly.boundary.distance(child.simppoly.boundary)
+					d=parent.simppoly.distance(child.simppoly)
 					if d<dlim:
 						isrelation = True
 				else:#this is the old method, preferably should be replaced in most cases except parallell where this method works probably faster.
