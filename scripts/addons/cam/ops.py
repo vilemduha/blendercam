@@ -861,6 +861,8 @@ class CamMeshGetPockets(bpy.types.Operator):
 	bl_label = "Get pocket surfaces"
 	bl_options = {'REGISTER', 'UNDO'}
 
+	threshold = bpy.props.FloatProperty(name="horizontal threshold", default=.99, min=0, max=1.0, precision=4)
+
 	@classmethod
 	def poll(cls, context):
 		return context.active_object is not None and (context.active_object.type=='MESH')
@@ -868,6 +870,7 @@ class CamMeshGetPockets(bpy.types.Operator):
 	def execute(self, context):
 		obs = bpy.context.selected_objects
 		s=bpy.context.scene
+		cobs = []
 		for ob in obs:
 			if ob.type=='MESH':
 				pockets={}
@@ -881,7 +884,7 @@ class CamMeshGetPockets(bpy.types.Operator):
 				i=0
 				for f in m.polygons:
 					n= mw * f.normal
-					if n.z > 0.9999 :
+					if n.z >= self.threshold:
 						f.select=True
 						z=m.vertices[f.vertices[0]].co.z
 						if pockets.get(z)==None:
@@ -892,7 +895,6 @@ class CamMeshGetPockets(bpy.types.Operator):
 				print(len(pockets))
 				for p in pockets:
 					print(p)
-				cobs=[]
 				ao = bpy.context.active_object
 				i=0
 				for p in pockets:
@@ -917,6 +919,7 @@ class CamMeshGetPockets(bpy.types.Operator):
 					bpy.ops.object.editmode_toggle()
 					ao.select=False
 					s.objects.active=bpy.context.selected_objects[0]
+					cobs.append(s.objects.active)
 					bpy.ops.object.convert(target='CURVE')
 					bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
 
@@ -924,6 +927,15 @@ class CamMeshGetPockets(bpy.types.Operator):
 					ao.select=True
 					s.objects.active=ao
 					#bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE')
+			
+			# turn off selection of all objects in 3d view
+			bpy.ops.object.select_all(action='DESELECT')
+			# make new curves more visible by making them selected in the 3d view
+			# This also allows the active object to still work with the operator
+			# if the user decides to change the horizontal threshold property
+			for obj in cobs:
+				obj.select = True
+				
 		return {'FINISHED'}			
 
 #this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
