@@ -702,7 +702,7 @@ class CamCurveBoolean(bpy.types.Operator):
 		
 	@classmethod
 	def poll(cls, context):
-		return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+		return context.active_object is not None and context.active_object.type in ['CURVE','FONT'] and len(bpy.context.selected_objects)==2
 
 	def execute(self, context):
 		utils.polygonBoolean(context,self.boolean_type)
@@ -715,11 +715,11 @@ class CamCurveIntarsion(bpy.types.Operator):
 	bl_label = "Intarsion"
 	bl_options = {'REGISTER', 'UNDO'}
 	
-	diameter = bpy.props.FloatProperty(name="cutter diameter", default=.003, min=0, max=100,precision=4, unit="LENGTH")
+	diameter = bpy.props.FloatProperty(name="cutter diameter", default=.001, min=0, max=100,precision=4, unit="LENGTH")
 		
-	@classmethod
+	@classmethod	
 	def poll(cls, context):
-		return context.active_object is not None and (context.active_object.type=='CURVE')
+		return context.active_object is not None and (context.active_object.type in ['CURVE','FONT'])
 
 	def execute(self, context):
 		utils.silhoueteOffset(context,-self.diameter/2)
@@ -750,7 +750,7 @@ class CamCurveOvercuts(bpy.types.Operator):
 	invert = bpy.props.BoolProperty(name="Invert", default=False)
 	@classmethod
 	def poll(cls, context):
-		return context.active_object is not None and (context.active_object.type=='CURVE')
+		return context.active_object is not None and (context.active_object.type in ['CURVE','FONT'])
 
 	def execute(self, context):
 		#utils.silhoueteOffset(context,-self.diameter)

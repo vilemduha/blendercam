@@ -259,7 +259,7 @@ def getBounds(o):
 		#o.max.x=min(o.min.x+m.working_area.x,o.max.x)
 		#o.max.y=min(o.min.y+m.working_area.y,o.max.y)
 		#o.max.z=min(o.min.z+m.working_area.z,o.max.z)
-		o.warnings+='Operation exceeds your machine limits'
+		o.warnings+='Operation exceeds your machine limits\n'
 		
 	#progress (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
 	
@@ -2300,7 +2300,7 @@ def strategy_curve( o ):
 	pathSamples=[]
 	getOperationSources(o)
 	if not o.onlycurves:
-		o.warnings+= 'at least one of assigned objects is not a curve'
+		o.warnings+= 'at least one of assigned objects is not a curve\n'
 	#ob=bpy.data.objects[o.object_name]
 	for ob in o.objects:
 		pathSamples.extend(curveToChunks(ob))
@@ -2663,7 +2663,7 @@ def strategy_medial_axis( o ):
 		#angle = o.cutter_tip_angle
 		maxdepth = o.cutter_diameter/2
 	else:
-		o.warnings+='\nOnly Ballnose, Ball and V-carve cutters\n are supported \n'
+		o.warnings+='Only Ballnose, Ball and V-carve cutters\n are supported \n'
 		return
 	#remember resolutions of curves, to refine them, 
 	#otherwise medial axis computation yields too many branches in curved parts
@@ -3338,8 +3338,11 @@ def getPath(context,operation):#should do all path calculations.
 	elif operation.machine_axes=='4':
 		getPath4axis(context,operation)
 	
+	
 	#export gcode if automatic.
 	if operation.auto_export:
+		if bpy.data.objects.get(operation.path_object_name)==None:
+			return;
 		p=bpy.data.objects[operation.path_object_name]
 		exportGcodePath(operation.filename,[p.data],[operation])
 

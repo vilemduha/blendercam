@@ -174,24 +174,25 @@ def operationValid(self,context):
 	o=self
 	o.changed=True
 	o.valid=True
+	invalidmsg = "Operation has no valid data input\n"
 	o.warnings=""
 	o=bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
 	if o.geometry_source=='OBJECT':
 		if not o.object_name in bpy.data.objects :
 			o.valid=False;
-			o.warnings="Operation has no valid data input"
+			o.warnings= invalidmsg
 	if o.geometry_source=='GROUP':
 		if not o.group_name in bpy.data.groups:
 			o.valid=False;
-			o.warnings="Operation has no valid data input"
+			o.warnings=invalidmsg
 		elif len(bpy.data.groups[o.group_name].objects)==0: 
 			o.valid=False;
-			o.warnings="Operation has no valid data input"
+			o.warnings=invalidmsg
 		
 	if o.geometry_source=='IMAGE':
 		if not o.source_image_name in bpy.data.images:
 			o.valid=False
-			o.warnings="Operation has no valid data input"
+			o.warnings=invalidmsg
 
 		o.use_exact=False
 	o.update_offsetimage_tag=True
