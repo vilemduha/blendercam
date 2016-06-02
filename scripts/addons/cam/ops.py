@@ -884,7 +884,7 @@ class CamMeshGetPockets(bpy.types.Operator):
 				i=0
 				for f in m.polygons:
 					n= mw * f.normal
-					if n.z >= self.threshold:
+					if n.z > self.threshold :
 						f.select=True
 						z=m.vertices[f.vertices[0]].co.z
 						if pockets.get(z)==None:
