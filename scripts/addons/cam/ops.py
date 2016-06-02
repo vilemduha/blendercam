@@ -700,9 +700,9 @@ class CamCurveBoolean(bpy.types.Operator):
 		description='boolean type',
 		default='UNION')
 		
-	#@classmethod
-	#def poll(cls, context):
-	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
 
 	def execute(self, context):
 		utils.polygonBoolean(context,self.boolean_type)
@@ -717,9 +717,9 @@ class CamCurveIntarsion(bpy.types.Operator):
 	
 	diameter = bpy.props.FloatProperty(name="cutter diameter", default=.003, min=0, max=100,precision=4, unit="LENGTH")
 		
-	#@classmethod
-	#def poll(cls, context):
-	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None and (context.active_object.type=='CURVE')
 
 	def execute(self, context):
 		utils.silhoueteOffset(context,-self.diameter/2)
@@ -748,9 +748,9 @@ class CamCurveOvercuts(bpy.types.Operator):
 	threshold = bpy.props.FloatProperty(name="threshold", default=math.pi/2*.99, min=-3.14, max=3.14,precision=4, subtype="ANGLE" , unit="ROTATION")
 	do_outer = bpy.props.BoolProperty(name="Outer polygons", default=True)
 	invert = bpy.props.BoolProperty(name="Invert", default=False)
-	#@classmethod
-	#def poll(cls, context):
-	#	return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None and (context.active_object.type=='CURVE')
 
 	def execute(self, context):
 		#utils.silhoueteOffset(context,-self.diameter)
@@ -832,6 +832,10 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
 	bl_idname = "object.curve_remove_doubles"
 	bl_label = "C-Remove doubles"
 	bl_options = {'REGISTER', 'UNDO'}
+	
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None and (context.active_object.type=='CURVE')
 
 	def execute(self, context):
 		mode=False
@@ -948,7 +952,7 @@ class CamObjectSilhouete(bpy.types.Operator):
 		
 	@classmethod
 	def poll(cls, context):
-		return context.active_object is not None and (context.active_object.type=='CURVE' or context.active_object.type=='MESH')
+		return context.active_object is not None and (context.active_object.type=='MESH')
 
 		
 		

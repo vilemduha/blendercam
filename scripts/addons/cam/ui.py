@@ -785,6 +785,7 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
 		layout.operator("object.curve_boolean")
 		layout.operator("object.curve_intarsion")
 		layout.operator("object.curve_overcuts")
+		layout.operator("object.silhouete")
 		layout.operator("object.silhouete_offset")
 		layout.operator("object.curve_remove_doubles")
 		layout.operator("object.mesh_get_pockets")
