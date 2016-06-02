@@ -2662,6 +2662,9 @@ def strategy_medial_axis( o ):
 	elif o.cutter_type=='BALLNOSE' or o.cutter_type=='BALL':
 		#angle = o.cutter_tip_angle
 		maxdepth = o.cutter_diameter/2
+	else:
+		o.warnings+='\nOnly Ballnose, Ball and V-carve cutters\n are supported \n'
+		return
 	#remember resolutions of curves, to refine them, 
 	#otherwise medial axis computation yields too many branches in curved parts
 	resolutions_before=[]
@@ -2674,6 +2677,7 @@ def strategy_medial_axis( o ):
 				
 	polys=getOperationSilhouete(o)
 	mpoly = sgeometry.asMultiPolygon(polys)
+	mpoly_boundary = mpoly.boundary
 	for poly in polys:
 		schunks=shapelyToChunks(poly,-1)
 		schunks = chunksRefineThreshold(schunks,o.medial_axis_subdivision, o.medial_axis_threshold)#chunksRefine(schunks,o)
