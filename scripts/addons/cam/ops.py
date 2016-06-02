@@ -702,7 +702,7 @@ class CamCurveBoolean(bpy.types.Operator):
 		
 	@classmethod
 	def poll(cls, context):
-		return context.active_object is not None and context.active_object.type=='CURVE' and len(bpy.context.selected_objects)==2
+		return context.active_object is not None and context.active_object.type in ['CURVE','FONT'] and len(bpy.context.selected_objects)==2
 
 	def execute(self, context):
 		utils.polygonBoolean(context,self.boolean_type)
@@ -715,11 +715,11 @@ class CamCurveIntarsion(bpy.types.Operator):
 	bl_label = "Intarsion"
 	bl_options = {'REGISTER', 'UNDO'}
 	
-	diameter = bpy.props.FloatProperty(name="cutter diameter", default=.003, min=0, max=100,precision=4, unit="LENGTH")
+	diameter = bpy.props.FloatProperty(name="cutter diameter", default=.001, min=0, max=100,precision=4, unit="LENGTH")
 		
-	@classmethod
+	@classmethod	
 	def poll(cls, context):
-		return context.active_object is not None and (context.active_object.type=='CURVE')
+		return context.active_object is not None and (context.active_object.type in ['CURVE','FONT'])
 
 	def execute(self, context):
 		utils.silhoueteOffset(context,-self.diameter/2)
@@ -750,7 +750,7 @@ class CamCurveOvercuts(bpy.types.Operator):
 	invert = bpy.props.BoolProperty(name="Invert", default=False)
 	@classmethod
 	def poll(cls, context):
-		return context.active_object is not None and (context.active_object.type=='CURVE')
+		return context.active_object is not None and (context.active_object.type in ['CURVE','FONT'])
 
 	def execute(self, context):
 		#utils.silhoueteOffset(context,-self.diameter)
@@ -861,6 +861,10 @@ class CamMeshGetPockets(bpy.types.Operator):
 	bl_label = "Get pocket surfaces"
 	bl_options = {'REGISTER', 'UNDO'}
 
+	threshold = bpy.props.FloatProperty(name="horizontal threshold", default=.99, min=0, max=1.0, precision=4)
+
+
+	
 	@classmethod
 	def poll(cls, context):
 		return context.active_object is not None and (context.active_object.type=='MESH')
@@ -881,7 +885,7 @@ class CamMeshGetPockets(bpy.types.Operator):
 				i=0
 				for f in m.polygons:
 					n= mw * f.normal
-					if n.z > 0.9999 :
+					if n.z > self.threshold :
 						f.select=True
 						z=m.vertices[f.vertices[0]].co.z
 						if pockets.get(z)==None:
