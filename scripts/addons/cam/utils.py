@@ -1686,7 +1686,7 @@ def getOperationSilhouete(operation):
 			#print(operation.silhouete)
 			#this conversion happens because we need the silh to be oriented, for milling directions.
 		else:
-			print('object method')#this method is currently used only for curves. This is because exact silh for objects simply still doesn't work...
+			print('object method for retrieving silhouette')#
 			operation.silhouete=getObjectSilhouete(stype, objects = operation.objects, use_modifiers = operation.use_modifiers)
 				
 		operation.update_silhouete_tag=False
@@ -2051,7 +2051,8 @@ def getBridgesPoly(o):
 
 		#buffer the poly, so the bridges are not actually milled...
 		o.bridgespolyorig = bridgespoly.buffer(distance = o.cutter_diameter/2.0)
-		o.bridgespoly_boundary = prepared.prep(o.bridgespolyorig.boundary)
+		o.bridgespoly_boundary = o.bridgespolyorig.boundary
+		o.bridgespoly_boundary_prep = prepared.prep(o.bridgespolyorig.boundary)
 		o.bridgespoly = prepared.prep(o.bridgespolyorig)
 	
 def useBridges(ch,o):
@@ -2096,9 +2097,9 @@ def useBridges(ch,o):
 				endinside = o.bridgespoly.contains(p2)
 				l=sgeometry.LineString([chp1,chp2])
 				#print(dir(bridgespoly_boundary))
-				if o.bridgespoly_boundary.intersects(l):
+				if o.bridgespoly_boundary_prep.intersects(l):
 					#print('intersects')
-					intersections = o.bridgespolyorig.boundary.intersection(l)
+					intersections = o.bridgespoly_boundary.intersection(l)
 				else:
 					intersections = sgeometry.GeometryCollection()
 					
