@@ -850,7 +850,77 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
 			bpy.ops.object.editmode_toggle()
 		
 		return {'FINISHED'}	
-		
+
+class CamMeshGetPockets(bpy.types.Operator):
+	'''Detect pockets in a mesh and extract them as curves'''
+	bl_idname = "object.mesh_get_pockets"
+	bl_label = "Get pocket surfaces"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None and (context.active_object.type=='MESH')
+	
+	def execute(self, context):
+		obs = bpy.context.selected_objects
+		s=bpy.context.scene
+		for ob in obs:
+			if ob.type=='MESH':
+				pockets={}
+				mw = ob.matrix_world
+				m=ob.data
+				i=0
+				bpy.ops.object.editmode_toggle()
+				bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='FACE')
+				bpy.ops.mesh.select_all(action='DESELECT')
+				bpy.ops.object.editmode_toggle()
+				i=0
+				for f in m.polygons:
+					n= mw * f.normal
+					if n.z > 0.9999 :
+						f.select=True
+						z=m.vertices[f.vertices[0]].co.z
+						if pockets.get(z)==None:
+							pockets[z] = [i]
+						else:
+							pockets[z].append(i)
+					i+=1
+				print(len(pockets))
+				for p in pockets:
+					print(p)
+				cobs=[]
+				ao = bpy.context.active_object
+				i=0
+				for p in pockets:
+					print(i)
+					i+=1
+					
+					sf = pockets[p]
+					for f in m.polygons:
+						f.select=False
+					
+					for fi in sf:
+						f=m.polygons[fi]
+						f.select=True
+					
+					bpy.ops.object.editmode_toggle()
+					
+					bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE')
+					bpy.ops.mesh.region_to_loop()
+					bpy.ops.mesh.separate(type = 'SELECTED')
+					
+					bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='FACE')
+					bpy.ops.object.editmode_toggle()
+					ao.select=False
+					s.objects.active=bpy.context.selected_objects[0]
+					bpy.ops.object.convert(target='CURVE')
+					bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
+
+					bpy.context.selected_objects[0].select=False
+					ao.select=True
+					s.objects.active=ao
+					#bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE')
+		return {'FINISHED'}			
 
 #this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
 class CamOffsetSilhouete(bpy.types.Operator):
