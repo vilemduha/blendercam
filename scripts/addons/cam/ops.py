@@ -709,7 +709,7 @@ class CamCurveBoolean(bpy.types.Operator):
 			utils.polygonBoolean(context,self.boolean_type)
 			return {'FINISHED'}
 		else:
-			self.report({'ERROR'}, 'atleast 2 curves must be selected')
+			self.report({'ERROR'}, 'at least 2 curves must be selected')
 			return {'CANCELLED'}
 
 #intarsion or joints
