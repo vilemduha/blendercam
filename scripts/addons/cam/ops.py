@@ -690,7 +690,7 @@ class CamBridgesAdd(bpy.types.Operator):
 		
 #boolean operations for curve objects
 class CamCurveBoolean(bpy.types.Operator):
-	'''Boolean operation on two curves'''
+	'''perform Boolean operation on two or more curves'''
 	bl_idname = "object.curve_boolean"
 	bl_label = "Curve Boolean"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -702,11 +702,15 @@ class CamCurveBoolean(bpy.types.Operator):
 		
 	@classmethod
 	def poll(cls, context):
-		return context.active_object is not None and context.active_object.type in ['CURVE','FONT'] and len(bpy.context.selected_objects)==2
+		return context.active_object is not None and context.active_object.type in ['CURVE','FONT']
 
 	def execute(self, context):
-		utils.polygonBoolean(context,self.boolean_type)
-		return {'FINISHED'}
+		if len(context.selected_objects)>1:
+			utils.polygonBoolean(context,self.boolean_type)
+			return {'FINISHED'}
+		else:
+			self.report({'ERROR'}, 'atleast 2 curves must be selected')
+			return {'CANCELLED'}
 
 #intarsion or joints
 class CamCurveIntarsion(bpy.types.Operator):
