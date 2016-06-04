@@ -1538,7 +1538,7 @@ def sortChunks(chunks,o):
 			for parent in lastch.parents:
 				ch=parent.getNextClosest(o,pos)
 				if ch!=None:
-					continue;
+					break
 			if ch==None:
 				ch = getClosest(o,pos,chunks)
 			#	break
@@ -2381,7 +2381,7 @@ def strategy_proj_curve( s, o ):
 	chunksToMesh(chunks,o)
 
 def strategy_pocket( o ):
-	print('operation: projected curve')
+	print('operation: pocket')
 	p=getObjectOutline(o.cutter_diameter/2,o,False)
 	approxn=(min(o.max.x-o.min.x,o.max.y-o.min.y)/o.dist_between_paths)/2
 	i=0
