@@ -873,7 +873,8 @@ class CamMeshGetPockets(bpy.types.Operator):
 	bl_label = "Get pocket surfaces"
 	bl_options = {'REGISTER', 'UNDO'}
 
-	threshold = bpy.props.FloatProperty(name="horizontal threshold", default=.99, min=0, max=1.0, precision=4)
+	threshold = bpy.props.FloatProperty(name="horizontal threshold", description="How horizontal the surface must be for a pocket: 1.0 perfectly flat, 0.0 is any orientation", default=.99, min=0, max=1.0, precision=4)
+	zlimit = bpy.props.FloatProperty(name="z limit", description="maximum z height considered for pocket operation, default is 0.0", default=0.0, min=-1000.0, max=1000.0, precision=4, unit='LENGTH')
 
 	@classmethod
 	def poll(cls, context):
@@ -887,22 +888,22 @@ class CamMeshGetPockets(bpy.types.Operator):
 			if ob.type=='MESH':
 				pockets={}
 				mw = ob.matrix_world
-				m=ob.data
-				i=0
+				mesh = ob.data
 				bpy.ops.object.editmode_toggle()
 				bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='FACE')
 				bpy.ops.mesh.select_all(action='DESELECT')
 				bpy.ops.object.editmode_toggle()
 				i=0
-				for f in m.polygons:
-					n= mw * f.normal
+				for face in mesh.polygons:
+					n = mw * face.normal
 					if n.z > self.threshold :
-						f.select=True
-						z=m.vertices[f.vertices[0]].co.z
-						if pockets.get(z)==None:
-							pockets[z] = [i]
-						else:
-							pockets[z].append(i)
+						face.select = True
+						z = (mw * mesh.vertices[face.vertices[0]].co).z
+						if z < self.zlimit:
+							if pockets.get(z)==None:
+								pockets[z] = [i]
+							else:
+								pockets[z].append(i)
 					i+=1
 				print(len(pockets))
 				for p in pockets:
@@ -914,12 +915,12 @@ class CamMeshGetPockets(bpy.types.Operator):
 					i+=1
 					
 					sf = pockets[p]
-					for f in m.polygons:
-						f.select=False
+					for face in mesh.polygons:
+						face.select = False
 					
 					for fi in sf:
-						f=m.polygons[fi]
-						f.select=True
+						face = mesh.polygons[fi]
+						face.select = True
 					
 					bpy.ops.object.editmode_toggle()
 					
