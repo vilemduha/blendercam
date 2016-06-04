@@ -599,10 +599,18 @@ class CamOperationRemove(bpy.types.Operator):
 		return context.scene is not None
 
 	def execute(self, context):
-		#main(context)
-		bpy.context.scene.cam_operations.remove(bpy.context.scene.cam_active_operation)
-		if bpy.context.scene.cam_active_operation>0:
-			bpy.context.scene.cam_active_operation-=1
+		scene = context.scene
+		try:
+			ao = scene.cam_operations[scene.cam_active_operation]
+			ob = bpy.data.objects[ao.path_object_name]
+			scene.objects.active = ob
+			bpy.ops.object.delete(True)
+		except:
+			pass
+		
+		scene.cam_operations.remove(scene.cam_active_operation)
+		if scene.cam_active_operation>0:
+			scene.cam_active_operation-=1
 		
 		return {'FINISHED'}
 	

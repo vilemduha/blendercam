@@ -63,8 +63,29 @@ def updateMachine(self,context):
 def updateMaterial(self,context):
 	print('update material')
 	utils.addMaterialAreaObject()
-
-
+	
+def selectObject(ob):
+	bpy.ops.object.select_all(action='DESELECT')
+	ob.select = True
+	
+def updateOperation(self, context):
+	scene = context.scene
+	ao = scene.cam_operations[scene.cam_active_operation]
+	# highlight the cutting path if it exists
+	# if no cutting path then try highlighting the object in the 3d view
+	try:
+		ob = bpy.data.objects[ao.path_object_name]
+		selectObject(ob)
+	except:
+		if ao.geometry_source=='OBJECT':
+			try:
+				ob = bpy.data.objects[ao.object_name]
+				selectObject(ob)
+			except:
+				pass
+	
+	
+	
 class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
     # when defining this in a submodule of a python package.
@@ -920,7 +941,7 @@ def register():
 
 	s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
 	
-	s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
+	s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation", update=updateOperation)
 	s.cam_machine = bpy.props.PointerProperty(type=machineSettings)
 	
 	s.cam_text= bpy.props.StringProperty()

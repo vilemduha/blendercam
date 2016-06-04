@@ -325,7 +325,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 					row.label('computing')
 					row.operator('object.kill_calculate_cam_paths_background', text="", icon='CANCEL')
 					#layout.prop(ao,'computing')
-				
+					
 				sub = layout.column()
 				sub.active = not ao.computing
 				
