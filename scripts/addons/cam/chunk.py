@@ -827,7 +827,7 @@ def restoreVisibility(o,storage):
 	for i in range(0,20):
 		o.layers[i]=storage[1][i]
 
-def meshFromCurve(o):
+def meshFromCurve(o, use_modifiers = False):
 	#print(o.name,o)
 	storage = makeVisible(o)#this is here because all of this doesn't work when object is not visible or on current layer
 	activate(o)
@@ -842,8 +842,18 @@ def meshFromCurve(o):
 	co.data.dimensions='3D'
 	co.data.bevel_depth=0
 	co.data.extrude=0
+
+	if use_modifiers:
+		newmesh = co.to_mesh(bpy.context.scene, True, 'RENDER')
+		oldmesh = co.data
+		co.data = newmesh
+		bpy.data.meshes.remove(oldmesh)
+		print('moded')
+
 	#first, convert to mesh to avoid parenting issues with hooks, then apply locrotscale.
 	bpy.ops.object.convert(target='MESH', keep_original=False)
+	
+	
 	try:
 		bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 		bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
