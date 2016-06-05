@@ -553,7 +553,7 @@ class camOperation(bpy.types.PropertyGroup):
 	bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	'''
 	group_name = bpy.props.StringProperty(name='Group', description='Object group handled by this operation', update=operationValid)
-	use_modifiers = BoolProperty(name = "use mesh modifiers", description = "include mesh modifiers using render level when calculating operation, does not effect original mesh", default = False)
+	use_modifiers = BoolProperty(name = "use mesh modifiers", description = "include mesh modifiers using render level when calculating operation, does not effect original mesh", default = False, update=operationValid)
 	#optimisation panel
 	
 	#material settings
