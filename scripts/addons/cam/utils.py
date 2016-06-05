@@ -1691,7 +1691,7 @@ def getOperationSilhouete(operation):
 			#this conversion happens because we need the silh to be oriented, for milling directions.
 		else:
 			print('object method for retrieving silhouette')#
-			operation.silhouete=getObjectSilhouete(stype, objects = operation.objects, use_modifiers = operation.use_modifiers)
+			operation.silhouete=getObjectSilhouete(stype, objects = operation.objects)
 				
 		operation.update_silhouete_tag=False
 	return operation.silhouete
