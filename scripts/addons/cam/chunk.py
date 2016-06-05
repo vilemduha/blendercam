@@ -868,8 +868,8 @@ def meshFromCurve(o, use_modifiers = False):
 	restoreVisibility(o,storage)
 	return bpy.context.active_object
 	
-def curveToChunks(o):
-	co = meshFromCurve(o)
+def curveToChunks(o, use_modifiers = False):
+	co = meshFromCurve(o, use_modifiers)
 	#if co.type!='MESH':
 	#	return []
 	chunks=meshFromCurveToChunk(co)

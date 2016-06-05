@@ -1370,8 +1370,8 @@ def exportGcodePath(filename,vertslist,operations):
 	c.file_close()
 	print(time.time()-t)
 
-def curveToShapely(cob):
-	chunks=curveToChunks(cob)
+def curveToShapely(cob, use_modifiers = False):
+	chunks=curveToChunks(cob, use_modifiers)
 	polys=chunksToShapely(chunks)
 	return polys
 #separate function in blender, so you can offset any curve.
@@ -1758,7 +1758,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers = False):
 						id+=1
 				if use_modifiers:
 					bpy.data.meshes.remove(m)	
-	
+			print('phase 2')
 			#print(polys
 			if totfaces<20000:
 				p=sops.unary_union(polys)
@@ -2052,7 +2052,7 @@ def getBridgesPoly(o):
 		bpy.ops.object.duplicate();
 		bpy.ops.object.join()
 		ob = bpy.context.active_object
-		shapes.extend(curveToShapely(ob))
+		shapes.extend(curveToShapely(ob, o.use_bridge_modifiers))
 		ob.select=True
 		bpy.ops.object.delete(use_global=False)
 		bridgespoly=sops.unary_union(shapes)
