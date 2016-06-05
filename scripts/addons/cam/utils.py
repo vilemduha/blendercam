@@ -1673,16 +1673,11 @@ def getOperationSilhouete(operation):
 		if stype=='OBJECTS':
 			for ob in operation.objects:
 				if ob.type=='MESH':
-					if operation.use_modifiers:
-						mesh = ob.to_mesh(bpy.context.scene, True, 'RENDER')
-						totfaces += len(mesh.polygons)
-						bpy.data.meshes.remove(mesh)
-					else:
-						totfaces+=len(ob.data.polygons)
+					totfaces+=len(ob.data.polygons)
 			
 		
 			
-		if (stype == 'OBJECTS' and totfaces>200000) or stype=='IMAGE':
+		if (stype == 'OBJECTS' and totfaces>200000) or stype=='IMAGE' or operation.use_modifiers:
 			print('image method')
 			samples = renderSampleImage(operation)
 			if stype=='OBJECTS':
@@ -1758,7 +1753,6 @@ def getObjectSilhouete(stype, objects=None, use_modifiers = False):
 						id+=1
 				if use_modifiers:
 					bpy.data.meshes.remove(m)	
-			print('phase 2')
 			#print(polys
 			if totfaces<20000:
 				p=sops.unary_union(polys)
