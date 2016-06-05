@@ -2672,7 +2672,7 @@ def strategy_medial_axis( o ):
 		#angle = o.cutter_tip_angle
 		maxdepth = o.cutter_diameter/2
 	else:
-		o.warnings+='Only Ballnose, Ball and V-carve cutters\n are supported \n'
+		o.warnings+='Only Ballnose, Ball and V-carve cutters\n are supported'
 		return
 	#remember resolutions of curves, to refine them, 
 	#otherwise medial axis computation yields too many branches in curved parts
