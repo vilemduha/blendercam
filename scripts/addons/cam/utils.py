@@ -65,22 +65,27 @@ SHAPELY=True
 	
 def positionObject(operation):
 	ob=bpy.data.objects[operation.object_name]
-	minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace([ob]) 
+	minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace([ob], operation.use_modifiers) 
 	ob.location.x-=minx
 	ob.location.y-=miny
 	ob.location.z-=maxz
 
-def getBoundsWorldspace(obs):
+def getBoundsWorldspace(obs, use_modifiers = False):
 	#progress('getting bounds of object(s)')
 	t=time.time()
 		
 	maxx=maxy=maxz=-10000000
 	minx=miny=minz=10000000
 	for ob in obs:
-		bb=ob.bound_box
+		#bb=ob.bound_box
 		mw=ob.matrix_world
 		if ob.type=='MESH':
-			for c in ob.data.vertices:
+			if use_modifiers:
+				mesh = ob.to_mesh(bpy.context.scene, True, 'RENDER')
+			else:
+				mesh = ob.data
+				
+			for c in mesh.vertices:
 				coord=c.co
 				worldCoord = mw * Vector((coord[0], coord[1], coord[2]))
 				minx=min(minx,worldCoord.x)
@@ -89,6 +94,9 @@ def getBoundsWorldspace(obs):
 				maxx=max(maxx,worldCoord.x)
 				maxy=max(maxy,worldCoord.y)
 				maxz=max(maxz,worldCoord.z)
+				
+			if use_modifiers:
+				bpy.data.meshes.remove(mesh)
 		else:
 			 
 			#for coord in bb:
@@ -207,7 +215,7 @@ def getBounds(o):
 	#print('kolikrat sem rpijde')
 	if o.geometry_source=='OBJECT' or o.geometry_source=='GROUP':
 		if o.material_from_model:
-			minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace(o.objects)
+			minx,miny,minz,maxx,maxy,maxz=getBoundsWorldspace(o.objects, o.use_modifiers)
 
 			o.min.x=minx-o.material_radius_around_model
 			o.min.y=miny-o.material_radius_around_model
@@ -2199,7 +2207,7 @@ def strategy_cutout( o ):
 		print('separate')
 		chunksFromCurve=[]
 		for ob in o.objects:
-			chunksFromCurve.extend(curveToChunks(ob))
+			chunksFromCurve.extend(curveToChunks(ob, o.use_modifiers))
 		for ch in chunksFromCurve:
 			#print(ch.points)
 			
