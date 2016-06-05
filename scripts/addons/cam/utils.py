@@ -1038,6 +1038,7 @@ def chunksToMesh(chunks,o):
 	print(time.time()-t)
 	
 	ob.location=(0,0,0)
+	ob.select = True
 	o.path_object_name=oname
 	
 		
