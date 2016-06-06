@@ -952,7 +952,8 @@ class CamMeshGetPockets(bpy.types.Operator):
 			# if the user decides to change the horizontal threshold property
 			for obj in cobs:
 				obj.select = True
-				
+			bpy.ops.group.create(name = "multi level pocket ")
+
 		return {'FINISHED'}			
 
 #this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
