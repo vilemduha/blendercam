@@ -968,6 +968,7 @@ def meshFromCurve(o, use_modifiers = False):
 	if use_modifiers:
 		newmesh = co.to_mesh(bpy.context.scene, True, 'RENDER')
 		oldmesh = co.data
+		co.modifiers.clear()
 		co.data = newmesh
 		bpy.data.meshes.remove(oldmesh)
 	
