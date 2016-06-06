@@ -64,25 +64,32 @@ def updateMaterial(self,context):
 	print('update material')
 	utils.addMaterialAreaObject()
 	
-def selectObject(ob):
-	bpy.ops.object.select_all(action='DESELECT')
-	ob.select = True
-	
 def updateOperation(self, context):
 	scene = context.scene
 	ao = scene.cam_operations[scene.cam_active_operation]
+	# try highlighting the object in the 3d view and make it active
+	bpy.ops.object.select_all(action='DESELECT')
+	if ao.geometry_source=='OBJECT':
+		try:
+			ob = bpy.data.objects[ao.object_name]
+			simple.activate(ob)
+		except:
+			pass
+	elif ao.geometry_source=='GROUP':
+		try:
+			group = bpy.data.groups[ao.group_name]
+			for obj in group.objects:
+				obj.select = True
+		except:
+			pass
+
 	# highlight the cutting path if it exists
-	# if no cutting path then try highlighting the object in the 3d view
 	try:
 		ob = bpy.data.objects[ao.path_object_name]
-		selectObject(ob)
+		ob.select = True
 	except:
-		if ao.geometry_source=='OBJECT':
-			try:
-				ob = bpy.data.objects[ao.object_name]
-				selectObject(ob)
-			except:
-				pass
+		pass
+		
 	
 	
 	
