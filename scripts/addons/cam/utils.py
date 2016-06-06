@@ -1038,8 +1038,16 @@ def chunksToMesh(chunks,o):
 	print(time.time()-t)
 	
 	ob.location=(0,0,0)
-	ob.select = True
 	o.path_object_name=oname
+	
+	# parent the path object to source object if object mode
+	if o.geometry_source=='OBJECT':
+		activate(o.objects[0])
+		ob.select = True
+		bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
+	else:
+		ob.select = True
+
 	
 		
 def exportGcodePath(filename,vertslist,operations):
