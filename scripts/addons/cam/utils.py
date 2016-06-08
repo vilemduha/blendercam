@@ -1038,8 +1038,16 @@ def chunksToMesh(chunks,o):
 	print(time.time()-t)
 	
 	ob.location=(0,0,0)
-	ob.select = True
 	o.path_object_name=oname
+	
+	# parent the path object to source object if object mode
+	if o.geometry_source=='OBJECT':
+		activate(o.objects[0])
+		ob.select = True
+		bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
+	else:
+		ob.select = True
+
 	
 		
 def exportGcodePath(filename,vertslist,operations):
@@ -1370,8 +1378,8 @@ def exportGcodePath(filename,vertslist,operations):
 	c.file_close()
 	print(time.time()-t)
 
-def curveToShapely(cob):
-	chunks=curveToChunks(cob)
+def curveToShapely(cob, use_modifiers = False):
+	chunks=curveToChunks(cob, use_modifiers)
 	polys=chunksToShapely(chunks)
 	return polys
 #separate function in blender, so you can offset any curve.
@@ -1673,16 +1681,11 @@ def getOperationSilhouete(operation):
 		if stype=='OBJECTS':
 			for ob in operation.objects:
 				if ob.type=='MESH':
-					if operation.use_modifiers:
-						mesh = ob.to_mesh(bpy.context.scene, True, 'RENDER')
-						totfaces += len(mesh.polygons)
-						bpy.data.meshes.remove(mesh)
-					else:
-						totfaces+=len(ob.data.polygons)
+					totfaces+=len(ob.data.polygons)
 			
 		
 			
-		if (stype == 'OBJECTS' and totfaces>200000) or stype=='IMAGE':
+		if (stype == 'OBJECTS' and totfaces>200000) or stype=='IMAGE' or operation.use_modifiers:
 			print('image method')
 			samples = renderSampleImage(operation)
 			if stype=='OBJECTS':
@@ -1696,7 +1699,7 @@ def getOperationSilhouete(operation):
 			#this conversion happens because we need the silh to be oriented, for milling directions.
 		else:
 			print('object method for retrieving silhouette')#
-			operation.silhouete=getObjectSilhouete(stype, objects = operation.objects, use_modifiers = operation.use_modifiers)
+			operation.silhouete=getObjectSilhouete(stype, objects = operation.objects)
 				
 		operation.update_silhouete_tag=False
 	return operation.silhouete
@@ -1758,7 +1761,6 @@ def getObjectSilhouete(stype, objects=None, use_modifiers = False):
 						id+=1
 				if use_modifiers:
 					bpy.data.meshes.remove(m)	
-	
 			#print(polys
 			if totfaces<20000:
 				p=sops.unary_union(polys)
@@ -2052,7 +2054,7 @@ def getBridgesPoly(o):
 		bpy.ops.object.duplicate();
 		bpy.ops.object.join()
 		ob = bpy.context.active_object
-		shapes.extend(curveToShapely(ob))
+		shapes.extend(curveToShapely(ob, o.use_bridge_modifiers))
 		ob.select=True
 		bpy.ops.object.delete(use_global=False)
 		bridgespoly=sops.unary_union(shapes)

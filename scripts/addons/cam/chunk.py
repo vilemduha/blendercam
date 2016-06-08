@@ -961,16 +961,16 @@ def meshFromCurve(o, use_modifiers = False):
 	co.data.bevel_depth=0
 	co.data.extrude=0
 
-	if use_modifiers:
-		newmesh = co.to_mesh(bpy.context.scene, True, 'RENDER')
-		oldmesh = co.data
-		co.data = newmesh
-		bpy.data.meshes.remove(oldmesh)
-		print('moded')
 
 	#first, convert to mesh to avoid parenting issues with hooks, then apply locrotscale.
 	bpy.ops.object.convert(target='MESH', keep_original=False)
 	
+	if use_modifiers:
+		newmesh = co.to_mesh(bpy.context.scene, True, 'RENDER')
+		oldmesh = co.data
+		co.modifiers.clear()
+		co.data = newmesh
+		bpy.data.meshes.remove(oldmesh)
 	
 	try:
 		bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
@@ -986,8 +986,8 @@ def meshFromCurve(o, use_modifiers = False):
 	restoreVisibility(o,storage)
 	return bpy.context.active_object
 	
-def curveToChunks(o):
-	co = meshFromCurve(o)
+def curveToChunks(o, use_modifiers = False):
+	co = meshFromCurve(o, use_modifiers)
 	#if co.type!='MESH':
 	#	return []
 	chunks=meshFromCurveToChunk(co)
