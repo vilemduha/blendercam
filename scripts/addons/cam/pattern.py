@@ -316,8 +316,11 @@ def getPathPattern(operation):
 			v=Vector((-r,0,0))
 			steps=2*pi*r/pathstep
 			e.z=2*pi/steps
+			laststepchunks=[]
+			currentstepchunks=[]
 			for a in range(0,int(steps)):
-				
+				laststepchunks = currentstepchunks
+				currentstepchunks = []
 				
 				if o.max.x>midx+v.x>o.min.x and o.max.y>midy+v.y>o.min.y:
 					chunk.points.append((midx+v.x,midy+v.y,zlevel))
@@ -325,17 +328,22 @@ def getPathPattern(operation):
 					if len(chunk.points)>0:
 						chunk.closed=False
 						pathchunks.append(chunk)
-						
+						currentstepchunks.append(chunk)
 						chunk=camPathChunk([])
 				v.rotate(e)
-			
+				
 			
 			if len(chunk.points)>0:
 				chunk.points.append(firstchunk.points[0])
 				if chunk==firstchunk:
 					chunk.closed=True
 				pathchunks.append(chunk)
+				currentstepchunks.append(chunk)
 				chunk=camPathChunk([])
+			for ch in laststepchunks:
+				for p in currentstepchunks:
+					parentChildDist(p,ch,o)
+			
 		if o.movement_insideout=='OUTSIDEIN':
 			pathchunks.reverse()
 		for chunk in pathchunks:
