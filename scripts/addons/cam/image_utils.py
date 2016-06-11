@@ -566,6 +566,8 @@ def generateSimulationImage(operations,limits):
 		
 		if o.do_simulation_feedrate:
 			kname = 'feedrates'
+			m.use_customdata_edge_crease = True
+
 			if m.shape_keys == None or 	m.shape_keys.key_blocks.find(kname)==-1:
 				ob.shape_key_add()
 				if len(m.shape_keys.key_blocks)==1:
@@ -589,7 +591,7 @@ def generateSimulationImage(operations,limits):
 		#cb=cutterArray<-1
 		#cutterArray[cb]=1
 		cutterArray=-cutterArray
-		m=int(cutterArray.shape[0]/2)
+		mid=int(cutterArray.shape[0]/2)
 		size=cutterArray.shape[0]
 		#print(si.shape)
 		#for ch in chunks:
@@ -602,9 +604,9 @@ def generateSimulationImage(operations,limits):
 		ys=0
 		
 		for i,vert in enumerate(verts):
-			#if perc!=int(100*i/vtotal):
-				#perc=int(100*i/vtotal)
-				#progress('simulation',perc)
+			if perc!=int(100*i/vtotal):
+				perc=int(100*i/vtotal)
+				progress('simulation',perc)
 			#progress('simulation ',int(100*i/l))
 			
 			
@@ -626,8 +628,8 @@ def generateSimulationImage(operations,limits):
 						lastxs=xs
 						lastys=ys
 						while v.length<l:
-							xs=int((lasts.x+v.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-m
-							ys=int((lasts.y+v.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-m
+							xs=int((lasts.x+v.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-middle
+							ys=int((lasts.y+v.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-middle
 							z=lasts.z+v.z
 							#print(z)
 							if lastxs!=xs or lastys!=ys:
@@ -642,8 +644,8 @@ def generateSimulationImage(operations,limits):
 							v.length+=simulation_detail
 				
 					
-					xs=int((s.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-m
-					ys=int((s.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-m
+					xs=int((s.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-middle
+					ys=int((s.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-middle
 					volume_partial = simCutterSpot(xs,ys,s.z,cutterArray,si, o.do_simulation_feedrate)
 				if o.do_simulation_feedrate:#compute volumes and write data into shapekey.
 					volume+=volume_partial
@@ -660,7 +662,6 @@ def generateSimulationImage(operations,limits):
 						shapek.data[i].co.y=shapek.data[i-1].co.y
 					shapek.data[i].co.x = shapek.data[i-1].co.x + l*0.04
 					shapek.data[i].co.z = 0
-										
 				lasts=s
 			
 			
@@ -708,11 +709,16 @@ def generateSimulationImage(operations,limits):
 			normal_load = total_load/len(shapek.data)
 			
 			thres=0.5
+			
+			totverts = len(shapek.data)
 			for  i,d in enumerate(shapek.data):
 				if d.co.y>max_load*thres:
 					d.co.z=max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
 				else:
 					d.co.z=1
+				if i<totverts-1:
+					m.edges[i].crease = d.co.y/normal_load/2
+
 				#d.co.z*=0.01#debug
 				
 	o=operations[0]

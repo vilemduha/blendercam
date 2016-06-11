@@ -1225,6 +1225,7 @@ def exportGcodePath(filename,vertslist,operations):
 		fadjust=False
 		if o.do_simulation_feedrate and mesh.shape_keys!= None and  mesh.shape_keys.key_blocks.find('feedrates')!=-1:
 			shapek =  mesh.shape_keys.key_blocks['feedrates']
+			
 			fadjust=True
 		
 		if m.use_position_definitions:# dhull 
