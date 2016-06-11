@@ -1241,6 +1241,7 @@ def exportGcodePath(filename,vertslist,operations):
 		downvector= Vector((0,0,-1))
 		plungelimit=(pi/2-o.plunge_angle)
 		
+		scale_graph=0.05 #warning this has to be same as in export in utils!!!!
 		
 		#print('2')
 		for vi,vert in enumerate(verts):
@@ -1285,8 +1286,8 @@ def exportGcodePath(filename,vertslist,operations):
 			
 			
 			if fadjust:
-				fadjustval = shapek.data[vi].co.z
-			
+				fadjustval = shapek.data[vi].co.z / scale_graph
+				
 				
 			
 			#v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)

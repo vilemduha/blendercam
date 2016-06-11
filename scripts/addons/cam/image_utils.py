@@ -710,14 +710,16 @@ def generateSimulationImage(operations,limits):
 			
 			thres=0.5
 			
+			scale_graph=0.05 #warning this has to be same as in export in utils!!!!
+			
 			totverts = len(shapek.data)
 			for  i,d in enumerate(shapek.data):
-				if d.co.y>max_load*thres:
-					d.co.z=max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
+				if d.co.y>normal_load:
+					d.co.z=scale_graph*max(0.1,normal_load/d.co.y)#original method was : max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
 				else:
-					d.co.z=1
+					d.co.z=scale_graph*1
 				if i<totverts-1:
-					m.edges[i].crease = d.co.y/normal_load/2
+					m.edges[i].crease = d.co.y/(normal_load*4)
 
 				#d.co.z*=0.01#debug
 				
