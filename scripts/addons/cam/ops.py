@@ -927,17 +927,13 @@ class CamCurveOvercutsB(bpy.types.Operator):
 				idx -= len(insideCorners)
 			return insideCorners[idx]
 			
-		def getNextDelta(curidx, nextidx):
+		def getCornerDelta(curidx, nextidx):
 			nonlocal cornerCnt
-			if nextidx < curidx:
-				nextidx += cornerCnt
-			return nextidx - curidx
+			delta = nextidx - curidx
+			if delta < 0:
+				delta += cornerCnt
+			return delta
 			
-		def getPrevDelta(curidx, previdx):
-			nonlocal cornerCnt
-			if previdx > curidx:
-				previdx -= cornerCnt
-			return curidx - previdx
 
 		for s in shapes:
 			s = shapely.geometry.polygon.orient(s,1)
@@ -1007,7 +1003,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
 					# check if t-bone processing required
 					# if no inside corners then nothing to do
 					if isTBone and len(insideCorners) > 0:
-						print(cornerCnt, len(insideCorners))
+						#print(cornerCnt, len(insideCorners))
 						# process all of the inside corners
 						for i, corner in enumerate(insideCorners):
 							pos, v1, v2, a, idx = corner
@@ -1015,32 +1011,46 @@ class CamCurveOvercutsB(bpy.types.Operator):
 							# if prev corner is outside corner
 							# calc index distance between current corner and prev
 							prevCorner = getCorner(i, -1)
-							if getPrevDelta(idx, prevCorner[IDX]) == 1:
-								# make sure there is an outside corner 
-								if getPrevDelta(idx, getCorner(i, -2)[IDX]) > 2:
+							#print('first:', i, idx, prevCorner[IDX])
+							if getCornerDelta(prevCorner[IDX], idx) == 1:
+								# make sure there is an outside corner
+								#print(getCornerDelta(getCorner(i, -2)[IDX], idx))
+								if getCornerDelta(getCorner(i, -2)[IDX], idx) > 2:
 									setOtherEdge(v1, v2, a)
+									#print('first won')
 									continue
+									
 							nextCorner = getCorner(i, 1)
-							if getNextDelta(idx, nextCorner[IDX]) == 1:
+							#print('second:', i, idx, nextCorner[IDX])
+							if getCornerDelta(idx, nextCorner[IDX]) == 1:
 								# make sure there is an outside corner 
-								if getNextDelta(idx, getCorner(i, 2)[IDX]) > 2:
+								#print(getCornerDelta(idx, getCorner(i, 2)[IDX]))
+								if getCornerDelta(idx, getCorner(i, 2)[IDX]) > 2:
+									#print('second won')
 									setOtherEdge(-v2, -v1, a)
 									continue
 							
-							if getPrevDelta(idx, prevCorner[IDX]) == 3:
-								# should check if they share the same edge
-								# for now assume they do
-								setOtherEdge(v1, v2, a)
-								continue
-								
-							if getNextDelta(idx, nextCorner[IDX]) == 3:
-								# should check if they share the same edge
-								# for now assume they do
-								setOtherEdge(-v2, -v1, a)
-								continue
+							#print('third')
+							if getCornerDelta(prevCorner[IDX], idx) == 3:
+								# check if they share the same edge
+								a1 = v1.angle_signed(prevCorner[V2])*180.0/math.pi
+								#print('third won', a1)
+								if a1 < -135 or a1 > 135:
+									setOtherEdge(-v2, -v1, a)
+									continue
 							
+							#print('fourth')
+							if getCornerDelta(idx, nextCorner[IDX]) == 3:
+								# check if they share the same edge
+								a1 = v2.angle_signed(nextCorner[V1])*180.0/math.pi
+								#print('fourth won', a1)
+								if a1 < -135 or a1 > 135:
+									setOtherEdge(v1, v2, a)
+									continue
+							
+							#print('***No Win***')
 							# the default if no other rules pass	
-							setOtherEdge(v1, v2, a)
+							setCenterOffset(a)
 								
 							
 						
