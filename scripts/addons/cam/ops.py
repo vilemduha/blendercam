@@ -838,6 +838,231 @@ class CamCurveOvercuts(bpy.types.Operator):
 		#o=utils.shapelyToCurve('overcuts',overcuts,0)
 		return {'FINISHED'}	
 
+#Overcut type B
+class CamCurveOvercutsB(bpy.types.Operator):
+	'''Adds overcuts for slots'''
+	bl_idname = "object.curve_overcuts_b"
+	bl_label = "Add Overcuts-B"
+	bl_options = {'REGISTER', 'UNDO'}
+	
+	
+	diameter = bpy.props.FloatProperty(name="Tool diameter", default=.003, description='Tool bit diameter used in cut operation', min=0, max=100,precision=4, unit="LENGTH")
+	style = bpy.props.EnumProperty(
+				name="style",
+				items=(('OPEDGE', 'opposite edge', 'place corner overcuts on opposite edges'),
+					('DOGBONE', 'Dog-bone / Corner Point', 'place overcuts at center of corners'),
+					('TBONE', 'T-bone', 'place corner overcuts on the same edge')),
+				default='DOGBONE',
+				description='style of overcut to use')
+	threshold = bpy.props.FloatProperty(name="Max Inside Angle", default=math.pi/2, min=-3.14, max=3.14, description='The maximum angle to be considered as an inside corner', precision=4, subtype="ANGLE" , unit="ROTATION")
+	do_outer = bpy.props.BoolProperty(name="Include outer curve", description='Include the outer curve if there are curves inside', default=True)
+	do_invert = bpy.props.BoolProperty(name="Invert", description='invert overcut operation on all curves', default=True)
+	otherEdge = bpy.props.BoolProperty(name="other edge", description='change to the other edge for the overcut to be on', default=False)
+
+	@classmethod
+	def poll(cls, context):
+		return context.active_object is not None and context.active_object.type=='CURVE'
+
+	def execute(self, context):
+		o1 = bpy.context.active_object
+		shapes = utils.curveToShapely(o1)
+		negative_overcuts = []
+		positive_overcuts = []
+		# count all the corners including inside and out
+		cornerCnt = 0
+		# a list of tuples for defining the inside corner 
+		# tuple is: (pos, v1, v2, angle, allCorners list index)
+		insideCorners = []
+		diameter = self.diameter * 1.001
+		radius = diameter / 2
+		anglethreshold = math.pi - self.threshold
+		centerv = Vector((0,0))
+		extendedv = Vector((0,0))
+		pos = Vector((0,0))
+		sign = -1 if self.do_invert else 1
+		isTBone = self.style == 'TBONE'
+		# indexes in insideCorner tuple
+		POS, V1, V2, A, IDX = range(5)
+		
+		def addOvercut(a):
+			nonlocal pos, centerv, radius, extendedv, sign, negative_overcuts, positive_overcuts
+			# move the overcut shape center position 1 radius in direction v
+			pos -= centerv * radius
+			if abs(a) < math.pi/2:
+				shape = utils.Circle(radius, 64)
+				shape = shapely.affinity.translate(shape, pos.x, pos.y)
+			else: # elongate overcut circle to make sure tool bit can fit into slot
+				p1 = pos + (extendedv * radius)
+				l = shapely.geometry.LineString((pos, p1))
+				shape = l.buffer(radius, resolution = 64)
+			
+			if sign>0:
+				negative_overcuts.append(shape)
+			else:	
+				positive_overcuts.append(shape)
+
+
+		def setOtherEdge(v1, v2, a):
+			nonlocal centerv, extendedv
+			if self.otherEdge:
+				centerv = v1
+				extendedv = v2
+			else:
+				centerv = -v2
+				extendedv = -v1
+			addOvercut(a)
+				
+		def setCenterOffset(a):
+			nonlocal centerv, extendedv, sign
+			centerv = v1 - v2
+			centerv.normalize()
+			extendedv = centerv * math.tan(a/2) * -sign
+			addOvercut(a)
+			
+			
+		def getCorner(idx, offset):
+			nonlocal insideCorners
+			idx += offset
+			if idx >= len(insideCorners):
+				idx -= len(insideCorners)
+			return insideCorners[idx]
+			
+		def getCornerDelta(curidx, nextidx):
+			nonlocal cornerCnt
+			delta = nextidx - curidx
+			if delta < 0:
+				delta += cornerCnt
+			return delta
+			
+
+		for s in shapes:
+			s = shapely.geometry.polygon.orient(s,1)
+			loops = [s.boundary] if s.boundary.type == 'LineString'	else s.boundary
+			outercurve = self.do_outer or len(loops)==1
+			for ci,c in enumerate(loops):
+				if ci>0 or outercurve:
+					if isTBone:
+						cornerCnt = 0
+						insideCorners = []
+						
+					for i,co in enumerate(c.coords):
+						i1 = i-1
+						if i1==-1:
+							i1 = -2
+						i2 = i+1
+						if i2 == len(c.coords):
+							i2 = 0
+							
+						v1 = Vector(co).xy - Vector(c.coords[i1]).xy
+						v2 = Vector(c.coords[i2]).xy - Vector(co).xy
+
+						if not v1.length==0 and not v2.length == 0:
+							a = v1.angle_signed(v2)
+							insideCornerFound = False
+							outsideCornerFound = False
+							if a<-anglethreshold:
+								if sign<0:
+									insideCornerFound = True
+								else:
+									outsideCornerFound = True
+							elif a>anglethreshold:
+								if sign>0:
+									insideCornerFound = True
+								else:
+									outsideCornerFound = True
+									
+							
+							if insideCornerFound:
+								# an inside corner with an overcut has been found
+								# which means a new side has been found
+								pos = Vector((co[0],co[1]))
+								v1.normalize()
+								v2.normalize()
+								# figure out which direction vector to use
+								# v is the main direction vector to move the overcut shape along
+								# ev is the direction vector used to elongate the overcut shape
+								if self.style != 'DOGBONE':
+									# t-bone and opposite edge styles get treated nearly the same
+									if isTBone:
+										cornerCnt += 1
+										#insideCorner tuplet: (pos, v1, v2, angle, corner index)
+										insideCorners.append((pos, v1, v2, a, cornerCnt-1))
+										#processing of corners for T-Bone are done after all points are processed
+										continue
+									
+									setOtherEdge(v1, v2, a)
+										
+								else: # DOGBONE style
+									setCenterOffset(a)
+									
+								
+							elif isTBone and outsideCornerFound:
+								# add an outside corner to the list
+								cornerCnt += 1	
+
+					# check if t-bone processing required
+					# if no inside corners then nothing to do
+					if isTBone and len(insideCorners) > 0:
+						#print(cornerCnt, len(insideCorners))
+						# process all of the inside corners
+						for i, corner in enumerate(insideCorners):
+							pos, v1, v2, a, idx = corner
+							# figure out which side of the corner to do overcut
+							# if prev corner is outside corner
+							# calc index distance between current corner and prev
+							prevCorner = getCorner(i, -1)
+							#print('first:', i, idx, prevCorner[IDX])
+							if getCornerDelta(prevCorner[IDX], idx) == 1:
+								# make sure there is an outside corner
+								#print(getCornerDelta(getCorner(i, -2)[IDX], idx))
+								if getCornerDelta(getCorner(i, -2)[IDX], idx) > 2:
+									setOtherEdge(v1, v2, a)
+									#print('first won')
+									continue
+									
+							nextCorner = getCorner(i, 1)
+							#print('second:', i, idx, nextCorner[IDX])
+							if getCornerDelta(idx, nextCorner[IDX]) == 1:
+								# make sure there is an outside corner 
+								#print(getCornerDelta(idx, getCorner(i, 2)[IDX]))
+								if getCornerDelta(idx, getCorner(i, 2)[IDX]) > 2:
+									#print('second won')
+									setOtherEdge(-v2, -v1, a)
+									continue
+							
+							#print('third')
+							if getCornerDelta(prevCorner[IDX], idx) == 3:
+								# check if they share the same edge
+								a1 = v1.angle_signed(prevCorner[V2])*180.0/math.pi
+								#print('third won', a1)
+								if a1 < -135 or a1 > 135:
+									setOtherEdge(-v2, -v1, a)
+									continue
+							
+							#print('fourth')
+							if getCornerDelta(idx, nextCorner[IDX]) == 3:
+								# check if they share the same edge
+								a1 = v2.angle_signed(nextCorner[V1])*180.0/math.pi
+								#print('fourth won', a1)
+								if a1 < -135 or a1 > 135:
+									setOtherEdge(v1, v2, a)
+									continue
+							
+							#print('***No Win***')
+							# the default if no other rules pass	
+							setCenterOffset(a)
+								
+							
+						
+						
+		negative_overcuts = shapely.ops.unary_union(negative_overcuts)
+		positive_overcuts = shapely.ops.unary_union(positive_overcuts)
+		fs = shapely.ops.unary_union(shapes)
+		fs = fs.union(positive_overcuts)
+		fs = fs.difference(negative_overcuts)
+		o=utils.shapelyToCurve(o1.name+'_overcuts',fs,o1.location.z)
+		return {'FINISHED'}	
+
 		
 class CamCurveRemoveDoubles(bpy.types.Operator):
 	'''curve remove doubles - warning, removes beziers!'''

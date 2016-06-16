@@ -748,7 +748,7 @@ class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
 	bl_label = "Blender CAM"
 				
 def get_panels():#convenience function for bot register and unregister functions
-	types = bpy.types
+	#types = bpy.types
 	return (
 	ui.CAM_UL_operations,
 	#ui.CAM_UL_orientations,
@@ -808,6 +808,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ops.CamObjectSilhouete,
 	ops.CamCurveIntarsion,
 	ops.CamCurveOvercuts,
+	ops.CamCurveOvercutsB,
 	ops.CamCurveRemoveDoubles,
 	ops.CamMeshGetPockets,
 	
