@@ -1912,6 +1912,10 @@ def addMachineAreaObject():
 	if s.objects.get('CAM_machine')!=None:
 	   o=s.objects['CAM_machine']
 	else:
+		oldunits = s.unit_settings.system
+		# need to be in metric units when adding machine mesh object
+		# in order for location to work properly
+		s.unit_settings.system = 'METRIC'
 		bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
 		o=bpy.context.active_object
 		o.name='CAM_machine'
@@ -1932,6 +1936,7 @@ def addMachineAreaObject():
 		o.hide_render = True
 		o.hide_select = True
 		o.select=False
+		s.unit_settings.system = oldunits
 	#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
 	   
 	o.dimensions=bpy.context.scene.cam_machine.working_area
