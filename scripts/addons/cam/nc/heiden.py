@@ -72,7 +72,7 @@ class Creator(nc.Creator):
 	############################################################################
 	##	Codes
 
-	def SPACE(self): return(" ")
+	def SPACE(self): return(' ')
 	def FORMAT_FEEDRATE(self): return('%.2f')
 	def FEEDRATE(self): return((self.SPACE() + 'F'))
 	def FORMAT_ANG(self): return('%.1f')
@@ -91,7 +91,7 @@ class Creator(nc.Creator):
 	def STOP(self): return('M00')
 
 	def IMPERIAL(self): return('G20')
-	def METRIC(self): return('G21')
+	def METRIC(self): return('MM')
 	def ABSOLUTE(self): return('G90')
 	def INCREMENTAL(self): return('G91')
 	def SET_TEMPORARY_COORDINATE_SYSTEM(self): return('G92')
@@ -102,7 +102,7 @@ class Creator(nc.Creator):
 	def PLANE_XZ(self): return('18')
 	def PLANE_YZ(self): return('19')
 
-	def TOOL(self): return('T%i' + self.SPACE() + 'M06')
+	def TOOL(self): return('TOOL CALL %i' + self.SPACE() + 'M06')
 	def TOOL_DEFINITION(self): return('G10' + self.SPACE() + 'L1')
 
 	def WORKPLANE(self): return('G%i')
@@ -183,7 +183,9 @@ class Creator(nc.Creator):
 		#1 BEGIN PGM 0011 MM
 		self.write_blocknum()
 		self.program_id = id
-		self.write(self.SPACE() + ('BEGIN PGM %i MM' % id))
+		self.write(self.SPACE() + ('BEGIN PGM %i' % id))
+		self.write(self.SPACE())
+		self.write(self.METRIC())
 		self.write('\n')
 
 	def program_stop(self, optional=False):
@@ -198,7 +200,9 @@ class Creator(nc.Creator):
 
 	def program_end(self):
 		self.write_blocknum()
-		self.write(self.SPACE() + ('END PGM %i MM' % self.program_id) + '\n')
+		self.write(self.SPACE() + ('END PGM %i ' % self.program_id))
+		self.write(self.METRIC())
+		self.write('\n')
 
 	def flush_nc(self):
 		if len(self.g_list) == 0 and len(self.m) == 0: return
@@ -226,11 +230,11 @@ class Creator(nc.Creator):
 	##	Settings
 	
 	def imperial(self):
-		self.g_list.append(self.IMPERIAL())
+		#self.g_list.append(self.IMPERIAL())
 		self.fmt.number_of_decimal_places = 4
 
 	def metric(self):
-		self.g_list.append(self.METRIC())
+		#self.g_list.append(self.METRIC())
 		self.fmt.number_of_decimal_places = 3
 
 	def absolute(self):
@@ -246,9 +250,10 @@ class Creator(nc.Creator):
 		else : self.g_list.append(self.POLAR_OFF())
 
 	def set_plane(self, plane):
-		if (plane == 0) : self.g_plane.set(self.PLANE_XY())
-		elif (plane == 1) : self.g_plane.set(self.PLANE_XZ())
-		elif (plane == 2) : self.g_plane.set(self.PLANE_YZ())
+		#if (plane == 0) : self.g_plane.set(self.PLANE_XY())
+		#elif (plane == 1) : self.g_plane.set(self.PLANE_XZ())
+		#elif (plane == 2) : self.g_plane.set(self.PLANE_YZ())
+		pass
 
 	def set_temporary_origin(self, x=None, y=None, z=None, a=None, b=None, c=None):
 		self.write_blocknum()
