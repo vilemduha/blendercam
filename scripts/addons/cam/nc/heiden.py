@@ -72,7 +72,7 @@ class Creator(nc.Creator):
 	############################################################################
 	##	Codes
 
-	def SPACE(self): return('')
+	def SPACE(self): return(" ")
 	def FORMAT_FEEDRATE(self): return('%.2f')
 	def FEEDRATE(self): return((self.SPACE() + 'F'))
 	def FORMAT_ANG(self): return('%.1f')
@@ -117,10 +117,10 @@ class Creator(nc.Creator):
 	def GEAR(self): return('M%i')
 	def GEAR_BASE(self): return(37)
 
-	def RAPID(self): return('G00')
-	def FEED(self): return('G01')
-	def ARC_CW(self): return('G02')
-	def ARC_CCW(self): return('G03')
+	def RAPID(self): return('L')
+	def FEED(self): return('L')
+	def ARC_CW(self): return('DR-')
+	def ARC_CCW(self): return('DR+')
 	def DWELL(self): return('G04')
 	def DRILL(self): return('G81')
 	def DRILL_WITH_DWELL(self, format, dwell): return('G82' + self.SPACE() + (format.string(dwell)))
@@ -137,9 +137,9 @@ class Creator(nc.Creator):
 	def A(self): return('A')
 	def B(self): return('B')
 	def C(self): return('C')
-	def CENTRE_X(self): return('I')
-	def CENTRE_Y(self): return('J')
-	def CENTRE_Z(self): return('K')
+	def CENTRE_X(self): return('X')
+	def CENTRE_Y(self): return('Y')
+	def CENTRE_Z(self): return('Z')
 	def RADIUS(self): return('R')
 	def TIME(self): return('P')
 
@@ -170,6 +170,7 @@ class Creator(nc.Creator):
 
 	def write_blocknum(self):
 		self.write(self.BLOCK() % self.n)
+		self.write(self.SPACE())
 		self.n += 1
 		
 	def write_spindle(self):
