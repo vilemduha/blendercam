@@ -34,7 +34,6 @@ class Creator(iso.Creator):
         self.shift_y = 0.0
         self.shift_z = 0.0
         
-        self.m_codes_on_their_own_line = True
 
     ############################################################################
     ##  Codes
@@ -43,11 +42,12 @@ class Creator(iso.Creator):
     def NEW_LINE(self): return('\n')
     
     def BLOCK(self): return('%i')
+    def COMMENT(self,comment): return( (';%s' % comment ) )
     
     def BEGIN_PGM(self): return('BEGIN PGM %i')
     def END_PGM(self): return('END PGM %i')
     
-    def TOOL(self): return('TOOL CALL %i')
+    def TOOL(self): return('TOOL CALL %i M06')
     
     def METRIC(self): return('MM')
     
@@ -60,9 +60,6 @@ class Creator(iso.Creator):
     def ARC_CW(self): return('DR-')
     def ARC_CCW(self): return('DR+')
     
-    def SPINDLE_CW(self): return('M03')
-    def SPINDLE_CCW(self): return('M04')
-    
     def X(self): return('X')
     def Y(self): return('Y')
     def Z(self): return('Z')
@@ -74,6 +71,12 @@ class Creator(iso.Creator):
         self.write(self.BLOCK() % self.n)
         
         self.n += 1
+        
+    def write_spindle(self):
+        if self.s.str:
+            self.write('\n' if self.m_codes_on_their_own_line else '')
+        self.s.write(self)
+        self.write(self.NEW_LINE())
     
     ############################################################################
     ##  Programs
@@ -122,15 +125,6 @@ class Creator(iso.Creator):
         self.write(self.TOOL() % self.t)
     
     ############################################################################
-    ##  Rates + Modes
-
-    def spindle(self, s, clockwise):
-        if clockwise == True:
-            self.s.set(s, self.SPINDLE_CW(), self.SPINDLE_CCW())
-        else:
-            self.s.set(s, self.SPINDLE_CCW(), self.SPINDLE_CW())
-    
-    ############################################################################
     ##  Moves
 
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None ):
@@ -168,7 +162,6 @@ class Creator(iso.Creator):
             
         self.write_spindle()
         self.write_misc()
-        self.write(self.NEW_LINE())
         
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
         
@@ -208,6 +201,10 @@ class Creator(iso.Creator):
         self.write_feedrate()
         self.write_spindle()
         self.write_misc()
-        self.write(self.NEW_LINE())
-        
+
+    ############################################################################
+    ##  Misc
+
+    def comment(self, text):
+        self.write((self.COMMENT(text) + '\n')) 
 nc.creator = Creator()
