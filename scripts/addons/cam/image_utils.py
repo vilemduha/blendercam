@@ -715,7 +715,7 @@ def generateSimulationImage(operations,limits):
 			totverts = len(shapek.data)
 			for  i,d in enumerate(shapek.data):
 				if d.co.y>normal_load:
-					d.co.z=scale_graph*max(0.1,normal_load/d.co.y)#original method was : max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
+					d.co.z=scale_graph*max(0.3,normal_load/d.co.y)#original method was : max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
 				else:
 					d.co.z=scale_graph*1
 				if i<totverts-1:
