@@ -549,7 +549,7 @@ class camOperation(bpy.types.PropertyGroup):
 	bridges_width = bpy.props.FloatProperty(name = 'width of bridges', default=0.002, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	bridges_height = bpy.props.FloatProperty(name = 'height of bridges', description="Height from the bottom of the cutting operation", default=0.0005, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	bridges_group_name = bpy.props.StringProperty(name='Bridges Group', description='Group of curves used as bridges', update=operationValid)
-	use_bridge_modifiers = BoolProperty(name = "use bridge modifiers", description = "include bridge curve modifiers using render level when calculating operation, does not effect original bridge data", default = False, update=updateBridges)
+	use_bridge_modifiers = BoolProperty(name = "use bridge modifiers", description = "include bridge curve modifiers using render level when calculating operation, does not effect original bridge data", default = True, update=updateBridges)
 
 	'''commented this - auto bridges will be generated, but not as a setting of the operation
 	bridges_placement = bpy.props.EnumProperty(name='Bridge placement',
@@ -564,7 +564,7 @@ class camOperation(bpy.types.PropertyGroup):
 	bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
 	bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	'''
-	use_modifiers = BoolProperty(name = "use mesh modifiers", description = "include mesh modifiers using render level when calculating operation, does not effect original mesh", default = False, update=operationValid)
+	use_modifiers = BoolProperty(name = "use mesh modifiers", description = "include mesh modifiers using render level when calculating operation, does not effect original mesh", default = True, update=operationValid)
 	#optimisation panel
 	
 	#material settings
