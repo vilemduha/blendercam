@@ -47,7 +47,7 @@ class Creator(iso.Creator):
     def BEGIN_PGM(self): return('BEGIN PGM %i')
     def END_PGM(self): return('END PGM %i')
     
-    def TOOL(self): return('TOOL CALL %i M06')
+    def TOOL(self): return('TOOL CALL %i')
     
     def METRIC(self): return('MM')
     
@@ -69,12 +69,9 @@ class Creator(iso.Creator):
         
     def write_blocknum(self):
         self.write(self.BLOCK() % self.n)
-        
         self.n += 1
         
     def write_spindle(self):
-        if self.s.str:
-            self.write('\n' if self.m_codes_on_their_own_line else '')
         self.s.write(self)
         self.write(self.NEW_LINE())
     
