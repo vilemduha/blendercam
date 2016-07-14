@@ -147,7 +147,7 @@ def UVobs(obs,set):
 	s.objects.active=uvobs[0]
 	
 	bpy.ops.object.material_slot_add()
-	mat=bpy.data.materials.new('FunPackMaterial')
+	mat=bpy.data.materials.new('GPackMaterial')
 	
 		
 	uvobs[0].material_slots[0].material=mat
@@ -165,7 +165,7 @@ def doGameUV(context):
 	obs=bpy.context.selected_objects
 	activeOb=bpy.context.object
 	origscene=bpy.context.scene
-	import_scene('FunPack')
+	import_scene('GPack')
 	
 	
 	set=bpy.context.scene.gpacker_settings
@@ -180,15 +180,15 @@ def doGameUV(context):
 		ob.select=True
 		
 	bpy.ops.group.create()
-	bpy.ops.object.make_links_scene(scene='FunPack')
+	bpy.ops.object.make_links_scene(scene='GPack')
 	bpy.ops.object.delete(use_global=False)
-	bpy.context.window.screen.scene = bpy.data.scenes['FunPack']
+	bpy.context.window.screen.scene = bpy.data.scenes['GPack']
 	
 	bpy.ops.view3d.viewnumpad(type='CAMERA')
 	bpy.context.space_data.viewport_shade = 'MATERIAL'
 	#bpy.ops.view3d.zoom_camera_1_to_1()
 	#bpy.context.scene.update()
-	for ob in bpy.data.scenes['FunPack'].objects:
+	for ob in bpy.data.scenes['GPack'].objects:
 		if ob.game.properties.get('startconditions')!=None:
 			ob.game.properties['startconditions'].value = set.startConditions
 			ob.game.properties['doobjects'].value = False
@@ -231,7 +231,7 @@ def doGameUV(context):
 			
 	
 	bpy.context.window.screen.scene = origscene
-	bpy.data.scenes.remove(bpy.data.scenes['FunPack'])
+	bpy.data.scenes.remove(bpy.data.scenes['GPack'])
 	activate(activeOb)
 	for ob in obs:
 		ob.select=True
@@ -424,7 +424,7 @@ def doGameObs(context):
 	#getIslands(bpy.context.active_object)
 	obs=bpy.context.selected_objects
 	origscene=bpy.context.scene
-	import_scene('FunPack')
+	import_scene('GPack')
 	set=bpy.context.scene.gpacker_settings
 	
 	packobs=prepareCurves(obs,set)
@@ -437,14 +437,14 @@ def doGameObs(context):
 	bpy.ops.group.create()
 	print('done')
 	
-	bpy.ops.object.make_links_scene(scene='FunPack')
+	bpy.ops.object.make_links_scene(scene='GPack')
 	bpy.ops.object.delete(use_global=False)
-	bpy.context.window.screen.scene = bpy.data.scenes['FunPack']
+	bpy.context.window.screen.scene = bpy.data.scenes['GPack']
 	
 	bpy.ops.view3d.viewnumpad(type='CAMERA')
 	bpy.context.space_data.viewport_shade = 'MATERIAL'
 	#pass data to game:
-	for ob in bpy.data.scenes['FunPack'].objects:
+	for ob in bpy.data.scenes['GPack'].objects:
 		if ob.game.properties.get('startconditions')!=None:
 			ob.game.properties['startconditions'].value = set.startConditions
 			ob.game.properties['doobjects'].value = True
@@ -467,7 +467,7 @@ def doGameObs(context):
 		for s in bpy.data.scenes:
 			s.gpacker_settings.apply=False
 	bpy.context.window.screen.scene = origscene
-	bpy.data.scenes.remove(bpy.data.scenes['FunPack'])
+	bpy.data.scenes.remove(bpy.data.scenes['GPack'])
 	for ob in obs:
 		ob.select=True
 
@@ -479,9 +479,9 @@ def import_scene(obname):
 	opath = "//data.blend\\Scene\\" + obname
 	s = os.sep
 	for p in bpy.utils.script_paths():
-		fname= p + '%saddons%sFunPack%spack_scene.blend' % (s,s,s)
+		fname= p + '%saddons%sGPack%spack_scene.blend' % (s,s,s)
 		dpath = p + \
-			'%saddons%sFunPack%spack_scene.blend\\Scene\\' % (s, s, s)
+			'%saddons%sGPack%spack_scene.blend\\Scene\\' % (s, s, s)
 		if os.path.isfile(fname):
 			break
 	# DEBUG
