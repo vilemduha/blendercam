@@ -56,6 +56,8 @@ bl_info = {
 PRECISION=5
 
 
+was_hidden_dict = {}
+
 def updateMachine(self,context):
 	print('update machine ')
 	utils.addMachineAreaObject()
@@ -67,26 +69,35 @@ def updateMaterial(self,context):
 def updateOperation(self, context):
 	scene = context.scene
 	ao = scene.cam_operations[scene.cam_active_operation]
+
+	if ao.hide_all_others == True:
+		for _ao in scene.cam_operations:
+			if _ao.path_object_name in bpy.data.objects:
+				other_obj = bpy.data.objects[_ao.path_object_name]
+				current_obj = bpy.data.objects[ao.path_object_name]
+				if other_obj != current_obj:
+					other_obj.hide = True
+					other_obj.select = False
+	else:
+		for path_obj_name in was_hidden_dict:
+			print(was_hidden_dict)
+			if was_hidden_dict[path_obj_name] == True:
+				# Find object and make it hidde, then reset 'hidden' flag
+				obj = bpy.data.objects[path_obj_name]
+				obj.hide = True
+				obj.select = False
+				was_hidden_dict[path_obj_name] = False
+
 	# try highlighting the object in the 3d view and make it active
 	bpy.ops.object.select_all(action='DESELECT')
-	if ao.geometry_source=='OBJECT':
-		try:
-			ob = bpy.data.objects[ao.object_name]
-			simple.activate(ob)
-		except:
-			pass
-	elif ao.geometry_source=='GROUP':
-		try:
-			group = bpy.data.groups[ao.group_name]
-			for obj in group.objects:
-				obj.select = True
-		except:
-			pass
-
 	# highlight the cutting path if it exists
 	try:
 		ob = bpy.data.objects[ao.path_object_name]
 		ob.select = True
+		# Show object if, it's was hidden
+		if ob.hide == True:
+			ob.hide = False
+			was_hidden_dict[ao.path_object_name] = True
 	except:
 		pass
 		
@@ -337,6 +348,11 @@ class camOperation(bpy.types.PropertyGroup):
 	name = bpy.props.StringProperty(name="Operation Name", default="Operation", update = updateRest)
 	filename = bpy.props.StringProperty(name="File name", default="Operation", update = updateRest)
 	auto_export = bpy.props.BoolProperty(name="Auto export",description="export files immediately after path calculation", default=True)
+	hide_all_others = bpy.props.BoolProperty(
+		name="Hide all others",
+		description="Hide all other tool pathes except toolpath"
+			    " assotiated with selected CAM operation",
+		default=False)
 	#group = bpy.props.StringProperty(name='Object group', description='group of objects which will be included in this operation')
 	object_name = bpy.props.StringProperty(name='Object', description='object handled by this operation', update=updateOperationValid)
 	group_name = bpy.props.StringProperty(name='Group', description='Object group handled by this operation', update=updateOperationValid)
