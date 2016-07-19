@@ -23,6 +23,7 @@
 
 import bpy
 import subprocess,os, sys, threading
+import cam
 from cam import utils, pack,polygon_utils_cam,chunk,simple
 from bpy.props import *
 import shapely
@@ -607,7 +608,11 @@ class CamOperationRemove(bpy.types.Operator):
 			bpy.ops.object.delete(True)
 		except:
 			pass
-		
+
+		ao = scene.cam_operations[scene.cam_active_operation]
+		if ao.path_object_name in cam.was_hidden_dict:
+			del cam.was_hidden_dict[ao.path_object_name]
+
 		scene.cam_operations.remove(scene.cam_active_operation)
 		if scene.cam_active_operation>0:
 			scene.cam_active_operation-=1
