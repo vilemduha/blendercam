@@ -115,6 +115,7 @@ class machineSettings(bpy.types.PropertyGroup):
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	post_processor = EnumProperty(name='Post processor',
 		items=(('ISO', 'Iso', 'exports standardized gcode ISO 6983 (RS-274)'),
+			('FADAL', 'Fadal ISO', 'exports standardized gcode ISO 6983 (RS-274) with trailing zeros'),
 			('MACH3', 'Mach3', 'default mach3'),
 			('EMC', 'LinuxCNC - EMC2', 'Linux based CNC control software - formally EMC2'),
 			('GRBL', 'grbl', 'optimized gcode for grbl firmware on Arduino with cnc shield'),
