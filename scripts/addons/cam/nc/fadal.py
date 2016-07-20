@@ -1,20 +1,20 @@
 ################################################################################
-# iso.py
+# fadal.py
 #
-# Simple FADAL ISO
+# Fadal ISO NC code creator
 #
-# TurBoss, 2016-06-19
+# TurBoss, 19/06/2016
 
 from . import nc
 from . import iso
+from .format import Format
+from .format import *
 
 class Creator(iso.Creator):
 	def __init__(self): 
 		iso.Creator.__init__(self) 
 		
-		self.fmt = Format(add_leading_zeros = 1)
-	
+		self.fmt = Format(add_trailing_zeros = True)
+
 	def SPACE_STR(self): return ' '
-
-
 nc.creator = Creator()
