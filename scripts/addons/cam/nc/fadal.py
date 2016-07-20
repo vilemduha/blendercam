@@ -20,9 +20,6 @@ class Creator(iso.Creator):
 		# internal variables
 		
 		self.fmt = Format(add_trailing_zeros = True)
-		self.output_block_numbers = True
-		self.start_block_number = 0
-		self.block_number_increment = 1
 		
 	############################################################################
 	##  Codes
