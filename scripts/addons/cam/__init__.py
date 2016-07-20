@@ -98,6 +98,7 @@ def updateOperation(self, context):
 		if ob.hide == True:
 			ob.hide = False
 			was_hidden_dict[ao.path_object_name] = True
+		bpy.context.scene.objects.active = ob
 	except:
 		pass
 		
