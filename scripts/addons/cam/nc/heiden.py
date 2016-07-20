@@ -47,7 +47,7 @@ class Creator(iso.Creator):
     def BEGIN_PGM(self): return('BEGIN PGM %i')
     def END_PGM(self): return('END PGM %i')
     
-    def TOOL(self): return('TOOL CALL %i')
+    def TOOL(self): return('TOOL CALL %i Z')
     
     def METRIC(self): return('MM')
     
