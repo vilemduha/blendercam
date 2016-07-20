@@ -4,6 +4,8 @@
 # Fadal ISO NC code creator
 #
 # TurBoss, 19/06/2016
+#
+################################################################################
 
 import math
 from . import nc
@@ -26,7 +28,7 @@ class Creator(iso.Creator):
 	##  Codes
 	
 	def SPACE_STR(self): return ' '
-		  
+	
 	############################################################################
 	##  Programs
 
