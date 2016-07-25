@@ -1687,6 +1687,7 @@ def getOperationSilhouete(operation):
 			
 		
 			
+		if (stype == 'OBJECTS' and totfaces>200000) or stype=='IMAGE':
 			print('image method')
 			samples = renderSampleImage(operation)
 			if stype=='OBJECTS':
