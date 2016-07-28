@@ -949,7 +949,7 @@ def chunksToMesh(chunks,o):
 		#print(chunks)
 		#print (ch)
 		if len(ch.points)>0:#TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
-			print(len(ch.points))
+			#print(len(ch.points))
 			nverts=[]
 			if o.optimize:
 				ch=optimizeChunk(ch,o)
@@ -1572,7 +1572,7 @@ def sortChunks(chunks,o):
 			sortedchunks.append(ch)
 			lastch = ch
 			pos = lastch.points[-1]
-		print(i, len(chunks))
+		#print(i, len(chunks))
 		# experimental fix for infinite loop problem
 		#else:
 			# THIS PROBLEM WASN'T HERE AT ALL. but keeping it here, it might fix the problems somwhere else:)

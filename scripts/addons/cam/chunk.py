@@ -630,7 +630,7 @@ def parentChildDist(parents, children,o, distance= None):
 	
 	for child in children:
 		for parent in parents:
-			print(len(children),len(parents))
+			#print(len(children),len(parents))
 			isrelation=False
 			if parent!=child:
 				if not parent.poly.is_empty and not child.poly.is_empty:

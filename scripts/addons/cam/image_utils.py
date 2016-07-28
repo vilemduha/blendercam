@@ -227,7 +227,7 @@ def offsetArea(o,samples):
 		
 		if o.inverse:
 			sourceArray=-sourceArray+minz
-			
+		print(o.offset_image.shape)
 		comparearea=o.offset_image[m: width-cwidth+m, m:height-cwidth+m]
 		#i=0  
 		for x in range(0,cwidth):#cwidth):
@@ -238,8 +238,22 @@ def offsetArea(o,samples):
 				if cutterArray[x,y]>-10:
 					#i+=1
 					#progress(i)
-					comparearea=numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea)
-		
+					#winner
+					numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea, comparearea)
+					#contest of performance 
+					'''
+					if bpy.app.debug_value==0 :#original
+						comparearea=numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea)
+					elif bpy.app.debug_value==1:
+						narea = numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea)
+						comparearea = narea
+					elif bpy.app.debug_value==3:
+						numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea, comparearea)
+						'''
+						
+						
+						
+						
 		o.offset_image[m: width-cwidth+m, m:height-cwidth+m]=comparearea
 		#progress('offseting done')
 		
@@ -1493,13 +1507,17 @@ def getSampleImage(s,sarray,minz):
 	else:
 		#return(sarray[int(x),int(y)])
 		minx=floor(x)
-		maxx=ceil(x)
-		if maxx==minx:
-			maxx+=1
+		maxx = minx+1
+		#maxx=ceil(x)
+		#if maxx==minx:
+		#	maxx+=1
 		miny=floor(y)
-		maxy=ceil(y)
-		if maxy==miny:
-			maxy+=1
+		maxy = miny+1
+		#maxy=ceil(y)
+		#if maxy==miny:
+		#	maxy+=1
+		#if maxx-1!=minx or maxy-1!=miny:
+		#	print('not right')
 		
 		'''
 		s1a=sarray[minx,miny]#
@@ -1507,11 +1525,19 @@ def getSampleImage(s,sarray,minz):
 		s1b=sarray[minx,maxy]
 		s2b=sarray[maxx,maxy]
 		'''
-		s1a=sarray.item(minx,miny)#
+		#if bpy.app.debug_value == 0:
+		s1a=sarray.item(minx,miny)#most optimal access to array so far
 		s2a=sarray.item(maxx,miny)
 		s1b=sarray.item(minx,maxy)
 		s2b=sarray.item(maxx,maxy)
-		
+		#elif 0:#bpy.app.debug_value >0:
+		#	sar=sarray[minx:maxx+1,miny:maxy]
+		#	s1a=sar.item(0,0)
+		#	s2a=sar.item(1,0)
+		#	s1b=sar.item(0,1)
+		#	s2b=sar.item(1,1)
+		#elif bpy.app.debug_value >0:
+		#	s1a,s2a,s1b,s2b=sarray[minx:maxx+1,miny:maxy+1]
 		#if s1a==minz and s2a==minz and s1b==minz and s2b==minz:
 		#  return
 		'''
