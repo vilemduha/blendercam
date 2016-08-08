@@ -260,7 +260,8 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if not chain.computing:
 					if chain.valid:
 						pass
-						layout.operator("object.calculate_cam_paths_chain", text="Export chain gcode")
+						layout.operator("object.calculate_cam_paths_chain", text="Calculate chain paths")
+						layout.operator("object.cam_export_paths_chain", text="Export chain gcode")
 						#layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
 						layout.operator("object.cam_simulate_chain", text="Simulate this chain")
 					else:
@@ -355,6 +356,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 				if use_experimental and ao.geometry_source in ['OBJECT', 'GROUP']:
 					layout.prop(ao, 'use_modifiers')
 				layout.prop(ao, 'hide_all_others')
+				
 
 									 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):

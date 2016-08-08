@@ -7,7 +7,6 @@ config/bookmarks.txt
 /scripts/presets/
 /scripts/templates_osl/
 /scripts/templates_py/
-/scripts/addons/
 /scripts/addons_contrib/
 *.spi1d
 *.pyc

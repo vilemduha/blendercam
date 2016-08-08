@@ -298,12 +298,40 @@ class PathsChain(bpy.types.Operator):
 		chain=s.cam_chains[s.cam_active_chain]
 		chainops=getChainOperations(chain)
 		meshes=[]
+		
+		#if len(chainops)<4:
+		for i in range(0,len(chainops)):
+			s.cam_active_operation = s.cam_operations.find(chainops[i].name)
+			bpy.ops.object.calculate_cam_path()
+			
 		for o in chainops:
 			#bpy.ops.object.calculate_cam_paths_background()
 			meshes.append(bpy.data.objects[o.path_object_name].data)
 		utils.exportGcodePath(chain.filename,meshes,chainops)
 		return {'FINISHED'}
-	
+
+class PathExportChain(bpy.types.Operator):
+	'''calculate a chain and export the gcode alltogether. '''
+	bl_idname = "object.cam_export_paths_chain"
+	bl_label = "Export CAM paths in current chain as gcode"
+	bl_options = {'REGISTER', 'UNDO'}
+
+	def execute(self, context):
+		import bpy
+		s=bpy.context.scene
+		
+		chain=s.cam_chains[s.cam_active_chain]
+		chainops=getChainOperations(chain)
+		meshes=[]
+		
+		#if len(chainops)<4:
+		
+		for o in chainops:
+			#bpy.ops.object.calculate_cam_paths_background()
+			meshes.append(bpy.data.objects[o.path_object_name].data)
+		utils.exportGcodePath(chain.filename,meshes,chainops)
+		return {'FINISHED'}
+		
 		
 class PathExport(bpy.types.Operator):
 	'''Export gcode. Can be used only when the path object is present'''
