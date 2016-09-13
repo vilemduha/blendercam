@@ -69,6 +69,7 @@ def updateMaterial(self,context):
 def updateOperation(self, context):
 	scene = context.scene
 	ao = scene.cam_operations[scene.cam_active_operation]
+	
 	if ao.hide_all_others == True:
 		for _ao in scene.cam_operations:
 			if _ao.path_object_name in bpy.data.objects:
@@ -86,6 +87,7 @@ def updateOperation(self, context):
 				obj.hide = True
 				obj.select = False
 				was_hidden_dict[path_obj_name] = False
+	
 	# try highlighting the object in the 3d view and make it active
 	bpy.ops.object.select_all(action='DESELECT')
 	# highlight the cutting path if it exists

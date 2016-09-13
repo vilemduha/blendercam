@@ -1,8 +1,8 @@
 bl_info = {
 	"name": "G - Pack",
 	"author": "Velem Novak",
-	"version": (0, 1, 0),
-	"blender": (2, 70, 0),
+	"version": (0, 2, 0),
+	"blender": (2, 77, 0),
 	"location": "Object > G-Pack",
 	"description": "UV packing game",
 	"warning": "",
@@ -15,8 +15,8 @@ import bpy
 import math, random, os
 import mathutils
 from mathutils import *
-
-PRECISION=0.00000000001
+import bmesh
+PRECISION=0.0000000001
 
 
 
@@ -45,6 +45,41 @@ def createMeshFromData(name, verts, faces):
 	me.update()	
 	return ob
 
+def getIslands(me):
+	
+	bm = bmesh.from_edit_mesh(me)
+	for f in bm.faces:
+		f.select=False
+	all=False
+	done={}
+	islands=[]
+	while not len(done)>=len(bm.faces):
+		island=[]
+		for i,p in enumerate(bm.faces):
+				
+			if done.get(i) == None:
+				p.select=True
+				done[i]=True
+				island.append(p.index)
+				break
+		nf = [p]
+		while len(nf)>0:
+			selected_faces = nf
+			nf = []
+			
+			for f in selected_faces:
+				for edge in f.edges:
+					if edge.seam==False:
+						linkede = edge.link_faces
+						for face in linkede:
+							if not face.select and done.get(face.index)==None:
+								done[face.index]=True
+								nf.append(face)
+								face.select=True
+								island.append(face.index)
+		islands.append(island)
+	return islands
+	#print(islands)
 
 def GameDropOb(ob,margin,enablerotation):
 		
@@ -78,68 +113,95 @@ def UVobs(obs,set):
 	zoffset=0
 	for ob in obs:
 		activate(ob)
-		#ob = bpy.context.object
+		
 		bpy.ops.object.editmode_toggle()
 		if set.startConditions=='NEW':
 			bpy.ops.uv.pack_islands(margin=0.01)
+		#print('a')
+		islands = getIslands(ob.data)
+		#print('b')
 		bpy.ops.object.editmode_toggle()
 		
 		
-		out_verts=[]
-		out_faces=[]
-		store_coords=[]
-		for face in ob.data.polygons:
-			oface=[]   
-			for vert, loop in zip(face.vertices, face.loop_indices):
-				coord = ob.data.vertices[vert].normal
-				normal = ob.data.vertices[vert].co
-				uv = ob.data.uv_layers.active.data[loop].uv 
-				if set.startConditions=='NEW':
-					uv.y+=zoffset#we shift the uv to not collide when packing more objects
-				out_verts.append((uv.x,0,uv.y))
-				
-				oface.append(loop)
-			#print(oface)
-			out_faces.append(oface)
 		
-		
-		uvob = createMeshFromData(ob.name + 'UVObj', out_verts, out_faces)
-		#print('d')
-		
-		activate(uvob)
-		
-		bpy.ops.mesh.uv_texture_add()
-		print(uvob.name)
-		print(bpy.context.active_object.name)
-		activate(uvob)
-		for face in ob.data.polygons:
-			oface=[]   
-			for vert, loop in zip(face.vertices, face.loop_indices):
-				
-				uvob.data.uv_layers.active.data[loop].uv  = ob.data.uv_layers.active.data[loop].uv 
-				
+		for iidx,island in enumerate(islands):
+			out_verts=[]
+			out_faces=[]
 			
-		
-		bpy.ops.object.editmode_toggle()
-		bpy.ops.mesh.remove_doubles()
-		bpy.ops.object.editmode_toggle()
-		bpy.ops.object.modifier_add(type='SOLIDIFY')
-		bpy.context.object.modifiers["Solidify"].thickness = min(0.1, min(uvob.dimensions.x,uvob.dimensions.y)) #0.1
-		bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Solidify")
-		uvob['source']=ob.name
-		bpy.ops.object.editmode_toggle()
-		bpy.ops.mesh.separate(type='LOOSE')
-		bpy.ops.object.editmode_toggle()
-		
-		
-		uvobs.extend(bpy.context.selected_objects)
-		
-		#for ob in bpy.context.selected_objects:
-			#ob.location.z+=zoffset
-			#print(zoffset)
-		bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS')
-		zoffset+=1
-		
+			print(iidx,len(islands))
+			vertidx=0
+			
+			vertindices= {}
+			loops=[]
+			for fi in island:
+				face = ob.data.polygons[fi]
+				oface=[]   
+				
+				for vert, loop in zip(face.vertices, face.loop_indices):
+					uv = ob.data.uv_layers.active.data[loop].uv.copy()
+					
+					'''
+					if vertindices.get(vert) == None:
+						
+						vertindices[vert]=vertidx
+						nvertindex = vertidx
+						out_verts.append((uv.x,0,uv.y))
+						vertidx+=1
+						
+					
+					nvertindex = vertindices[vert]
+					
+					#print(vert,nvertindex, vertindices)
+					#print()
+					oface.append(nvertindex)
+					'''
+					loops.append(loop)
+					out_verts.append((uv.x,0,uv.y))
+					oface.append(vertidx)
+					vertidx+=1
+				#print(oface)
+				out_faces.append(oface)
+			#print(out_verts,out_faces)
+			uvob = createMeshFromData(ob.name + 'UVObj', out_verts, out_faces)
+			
+			activate(uvob)
+			bpy.ops.mesh.uv_texture_add()
+			#print(uvob.name)
+			#print(bpy.context.active_object.name)
+			activate(uvob)
+			vertidx = 0
+			for fi in island:
+				face = ob.data.polygons[fi]
+				oface=[]   
+				for vert, loop in zip(face.vertices, face.loop_indices):
+					uvob.data.uv_layers.active.data[vertidx].uv  = (loops[vertidx],0)#ob.data.uv_layers.active.data[loop].uv 
+					
+					#print('loop',loops[vertidx])
+					vertidx+=1
+					
+			print(uvob.name)
+			bpy.ops.object.editmode_toggle()
+			bpy.ops.mesh.remove_doubles(threshold = 0.0000001)
+
+			print('d')
+
+			bpy.ops.object.editmode_toggle()
+			bpy.ops.object.modifier_add(type='SOLIDIFY')
+			bpy.context.object.modifiers["Solidify"].thickness = min(0.3, min(uvob.dimensions.x,uvob.dimensions.y)) #0.1
+			
+			bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Solidify")
+			print('e')
+			
+			uvob['source']=ob.name
+			uvob['island']=iidx
+			uvob['islandindices']=island
+			if set.startConditions=='NEW':
+				uvob.location.z+=zoffset#we shift the uv to not collide when packing more objects
+			uvobs.append(uvob)
+			bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS')
+			zoffset+=uvob.dimensions.z+0.005
+	#fal
+	print('c')	
 	for ob in uvobs:
 		ob.select=True
 		
@@ -201,7 +263,7 @@ def doGameUV(context):
 	if set.apply==True:
 		print('after game')
 		#reassign UV's
-		fdict={}
+		
 		bpy.context.scene.update()
 		#get size object
 		for ob in bpy.context.scene.objects:
@@ -209,29 +271,35 @@ def doGameUV(context):
 				scale=ob.location.z+1
 		for uvob in uvobs:
 			uvobmat=uvob.matrix_world
+			ob=bpy.data.objects[uvob['source']]
 			
-			for face1 in uvob.data.polygons:
-				for vert1, loop1 in zip(face1.vertices, face1.loop_indices):
-					uvtrans=uvob.data.uv_layers.active.data[loop1].uv
-					
+			assigns=[]
+			
+			for uvfi,fi in enumerate(uvob['islandindices']):
+				face = ob.data.polygons[fi]
+				uvface = uvob.data.polygons[uvfi]
+				
+				for vert1, loop1 in zip(uvface.vertices, uvface.loop_indices):
 					co=uvobmat*uvob.data.vertices[vert1].co/scale
-					fdict[int(uvtrans.x/PRECISION),int(uvtrans.y/PRECISION)]=(co.x,co.z)
+					
+					idxuv = int(uvob.data.uv_layers.active.data[loop1].uv.x)
+					print(idxuv)
+					uv=ob.data.uv_layers.active.data[idxuv].uv 
+					uv.x = co.x
+					uv.y = co.z
+					
+
+		
 		#print(fdict)
 		assigns=[]
-		for ob in obs:
-			for face in ob.data.polygons:
-				for vert, loop in zip(face.vertices, face.loop_indices):
-					uv=ob.data.uv_layers.active.data[loop].uv 	
-					nuv = fdict[int(uv.x/PRECISION),int(uv.y/PRECISION)]
-					uv.x=nuv[0]
-					uv.y=nuv[1]
-					#assigns.append((uv,nuv))
+		
 		
 		print(len(assigns))
 			
 	
 	bpy.context.window.screen.scene = origscene
 	bpy.data.scenes.remove(bpy.data.scenes['GPack'])
+	bpy.data.texts.remove(bpy.data.texts['root'])
 	activate(activeOb)
 	for ob in obs:
 		ob.select=True
@@ -543,7 +611,7 @@ class GPackSettings(bpy.types.PropertyGroup):
 		default='TWEAK')
 	xsize =  bpy.props.FloatProperty(name="X-sheet-size",description="", default=1)
 	ysize =  bpy.props.FloatProperty(name="Y-size",description="", default=1)
-	initialmargin =  bpy.props.FloatProperty(name="initial margin",description="", default=0.001)
+	initialmargin =  bpy.props.FloatProperty(name="initial margin",description="", default=0.003)
 	enablerotation =  bpy.props.BoolProperty(name="rotation",description="", default=True)
 
 class GPackCurvesPanel(bpy.types.Panel):
