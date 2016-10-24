@@ -123,7 +123,7 @@ def UVobs(obs,set):
 		bpy.ops.object.editmode_toggle()
 		
 		
-		
+		print(len(islands)
 		for iidx,island in enumerate(islands):
 			out_verts=[]
 			out_faces=[]
@@ -183,14 +183,14 @@ def UVobs(obs,set):
 			bpy.ops.object.editmode_toggle()
 			bpy.ops.mesh.remove_doubles(threshold = 0.0000001)
 
-			print('d')
+			#print('d')
 
 			bpy.ops.object.editmode_toggle()
 			bpy.ops.object.modifier_add(type='SOLIDIFY')
 			bpy.context.object.modifiers["Solidify"].thickness = min(0.3, min(uvob.dimensions.x,uvob.dimensions.y)) #0.1
 			
 			bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Solidify")
-			print('e')
+			#print('e')
 			
 			uvob['source']=ob.name
 			uvob['island']=iidx
@@ -298,7 +298,7 @@ def doGameUV(context):
 			
 	
 	bpy.context.window.screen.scene = origscene
-	bpy.data.scenes.remove(bpy.data.scenes['GPack'])
+	bpy.data.scenes.remove(bpy.data.scenes['GPack'], do_unlink = True)
 	bpy.data.texts.remove(bpy.data.texts['root'])
 	activate(activeOb)
 	for ob in obs:
