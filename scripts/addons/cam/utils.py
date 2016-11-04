@@ -2676,7 +2676,15 @@ def strategy_medial_axis( o ):
 	slope=math.tan(math.pi*(90-angle/2)/180)
 	if o.cutter_type=='VCARVE':
 		angle = o.cutter_tip_angle
-		maxdepth = - math.tan(math.pi*(90-angle/2)/180) * o.cutter_diameter/2
+		#start the max depth calc from the "start depth" of the operation.
+		maxdepth = o.maxz - math.tan(math.pi*(90-angle/2)/180) * o.cutter_diameter/2
+		#don't cut any deeper than the "end depth" of the operation.
+		if maxdepth<o.minz:
+			maxdepth=o.minz
+			#the effective cutter diameter can be reduced from it's max since we will be cutting shallower than the original maxdepth
+			#without this, the curve is calculated as if the diameter was at the original maxdepth and we get the bit 
+			#pulling away from the desired cut surface
+			o.cutter_diameter = (maxdepth - o.maxz) / ( - math.tan(math.pi*(90-angle/2)/180) ) * 2
 	elif o.cutter_type=='BALLNOSE' or o.cutter_type=='BALL':
 		#angle = o.cutter_tip_angle
 		maxdepth = o.cutter_diameter/2
@@ -2740,7 +2748,8 @@ def strategy_medial_axis( o ):
 			else:
 				vertr.append((False,newIdx))
 				if o.cutter_type == 'VCARVE':
-					z=-mpoly_boundary.distance(sgeometry.Point(p))*slope
+					#start the z depth calc from the "start depth" of the operation.
+					z = o.maxz - mpoly.boundary.distance(sgeometry.Point(p))*slope
 					if z<maxdepth:
 						z=maxdepth
 				elif o.cutter_type == 'BALL' or o.cutter_type == 'BALLNOSE':
