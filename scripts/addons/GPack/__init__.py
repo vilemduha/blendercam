@@ -123,7 +123,7 @@ def UVobs(obs,set):
 		bpy.ops.object.editmode_toggle()
 		
 		
-		print(len(islands)
+		print(len(islands))
 		for iidx,island in enumerate(islands):
 			out_verts=[]
 			out_faces=[]
