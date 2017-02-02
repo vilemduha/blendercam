@@ -4,8 +4,6 @@ import tempfile
 import pyocl
 import camvtk
 
-print(os.path.join(tempfile.gettempdir(), "model0.stl"))
-
 stl = camvtk.STLSurf(os.path.join(tempfile.gettempdir(), "model0.stl"))
 stl_polydata = stl.src.GetOutput()
 stl_surf = ocl.STLSurf()
@@ -24,7 +22,7 @@ elif op_cutter_type == 'BALLNOSE':
 elif op_cutter_type == 'VCARVE':
 	cutter = ocl.ConeCutter( op_cutter_diameter*1000, 1, cutter_length)
 else:
-	print "Cutter unsupported: " + op_cutter_type + '\n'
+	print("Cutter unsupported: {0}\n".format(op_cutter_type))
 	quit()
 #add BullCutter
 bdc = ocl.BatchDropCutter()
