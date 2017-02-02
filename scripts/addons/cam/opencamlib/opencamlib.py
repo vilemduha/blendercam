@@ -89,7 +89,6 @@ def exportModelsToSTL(operation):
 		collision_object = bpy.context.scene.objects.active
 		#bpy.context.scene.objects.selected = collision_object
 		file_name = os.path.join(tempfile.gettempdir(),"model{0}.stl".format(str(file_number)))
-		print(file_name)
 		bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 		bpy.ops.transform.resize(value=(OCL_SCALE, OCL_SCALE, OCL_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
 		bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
