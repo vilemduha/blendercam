@@ -104,7 +104,7 @@ class Creator(nc.Creator):
 	############################################################################
 	##  Codes
 
-	def SPACE_STR(self): return ''
+	def SPACE_STR(self): return ' '
 	def SPACE(self):
 		if self.start_of_line == True:
 			self.start_of_line = False            
