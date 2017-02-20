@@ -1080,6 +1080,8 @@ def exportGcodePath(filename,vertslist,operations):
 	extension='.tap'
 	if m.post_processor=='ISO':
 		from .nc import iso as postprocessor
+	if m.post_processor=='FADAL':
+		from .nc import fadal as postprocessor
 	if m.post_processor=='MACH3':
 		from .nc import mach3 as postprocessor
 	elif m.post_processor=='EMC':
