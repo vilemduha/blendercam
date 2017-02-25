@@ -227,7 +227,7 @@ def offsetArea(o,samples):
 		
 		if o.inverse:
 			sourceArray=-sourceArray+minz
-			
+		print(o.offset_image.shape)
 		comparearea=o.offset_image[m: width-cwidth+m, m:height-cwidth+m]
 		#i=0  
 		for x in range(0,cwidth):#cwidth):
@@ -238,8 +238,22 @@ def offsetArea(o,samples):
 				if cutterArray[x,y]>-10:
 					#i+=1
 					#progress(i)
-					comparearea=numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea)
-		
+					#winner
+					numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea, comparearea)
+					#contest of performance 
+					'''
+					if bpy.app.debug_value==0 :#original
+						comparearea=numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea)
+					elif bpy.app.debug_value==1:
+						narea = numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea)
+						comparearea = narea
+					elif bpy.app.debug_value==3:
+						numpy.maximum(sourceArray[  x : width-cwidth+x ,y : height-cwidth+y]+cutterArray[x,y],comparearea, comparearea)
+						'''
+						
+						
+						
+						
 		o.offset_image[m: width-cwidth+m, m:height-cwidth+m]=comparearea
 		#progress('offseting done')
 		
@@ -566,6 +580,8 @@ def generateSimulationImage(operations,limits):
 		
 		if o.do_simulation_feedrate:
 			kname = 'feedrates'
+			m.use_customdata_edge_crease = True
+
 			if m.shape_keys == None or 	m.shape_keys.key_blocks.find(kname)==-1:
 				ob.shape_key_add()
 				if len(m.shape_keys.key_blocks)==1:
@@ -589,7 +605,7 @@ def generateSimulationImage(operations,limits):
 		#cb=cutterArray<-1
 		#cutterArray[cb]=1
 		cutterArray=-cutterArray
-		m=int(cutterArray.shape[0]/2)
+		mid=int(cutterArray.shape[0]/2)
 		size=cutterArray.shape[0]
 		#print(si.shape)
 		#for ch in chunks:
@@ -602,9 +618,9 @@ def generateSimulationImage(operations,limits):
 		ys=0
 		
 		for i,vert in enumerate(verts):
-			#if perc!=int(100*i/vtotal):
-				#perc=int(100*i/vtotal)
-				#progress('simulation',perc)
+			if perc!=int(100*i/vtotal):
+				perc=int(100*i/vtotal)
+				progress('simulation',perc)
 			#progress('simulation ',int(100*i/l))
 			
 			
@@ -626,8 +642,8 @@ def generateSimulationImage(operations,limits):
 						lastxs=xs
 						lastys=ys
 						while v.length<l:
-							xs=int((lasts.x+v.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-m
-							ys=int((lasts.y+v.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-m
+							xs=int((lasts.x+v.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-middle
+							ys=int((lasts.y+v.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-middle
 							z=lasts.z+v.z
 							#print(z)
 							if lastxs!=xs or lastys!=ys:
@@ -642,8 +658,8 @@ def generateSimulationImage(operations,limits):
 							v.length+=simulation_detail
 				
 					
-					xs=int((s.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-m
-					ys=int((s.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-m
+					xs=int((s.x-minx)/simulation_detail+borderwidth+simulation_detail/2)#-middle
+					ys=int((s.y-miny)/simulation_detail+borderwidth+simulation_detail/2)#-middle
 					volume_partial = simCutterSpot(xs,ys,s.z,cutterArray,si, o.do_simulation_feedrate)
 				if o.do_simulation_feedrate:#compute volumes and write data into shapekey.
 					volume+=volume_partial
@@ -660,7 +676,6 @@ def generateSimulationImage(operations,limits):
 						shapek.data[i].co.y=shapek.data[i-1].co.y
 					shapek.data[i].co.x = shapek.data[i-1].co.x + l*0.04
 					shapek.data[i].co.z = 0
-										
 				lasts=s
 			
 			
@@ -708,11 +723,18 @@ def generateSimulationImage(operations,limits):
 			normal_load = total_load/len(shapek.data)
 			
 			thres=0.5
+			
+			scale_graph=0.05 #warning this has to be same as in export in utils!!!!
+			
+			totverts = len(shapek.data)
 			for  i,d in enumerate(shapek.data):
-				if d.co.y>max_load*thres:
-					d.co.z=max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
+				if d.co.y>normal_load:
+					d.co.z=scale_graph*max(0.3,normal_load/d.co.y)#original method was : max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
 				else:
-					d.co.z=1
+					d.co.z=scale_graph*1
+				if i<totverts-1:
+					m.edges[i].crease = d.co.y/(normal_load*4)
+
 				#d.co.z*=0.01#debug
 				
 	o=operations[0]
@@ -1485,13 +1507,17 @@ def getSampleImage(s,sarray,minz):
 	else:
 		#return(sarray[int(x),int(y)])
 		minx=floor(x)
-		maxx=ceil(x)
-		if maxx==minx:
-			maxx+=1
+		maxx = minx+1
+		#maxx=ceil(x)
+		#if maxx==minx:
+		#	maxx+=1
 		miny=floor(y)
-		maxy=ceil(y)
-		if maxy==miny:
-			maxy+=1
+		maxy = miny+1
+		#maxy=ceil(y)
+		#if maxy==miny:
+		#	maxy+=1
+		#if maxx-1!=minx or maxy-1!=miny:
+		#	print('not right')
 		
 		'''
 		s1a=sarray[minx,miny]#
@@ -1499,11 +1525,19 @@ def getSampleImage(s,sarray,minz):
 		s1b=sarray[minx,maxy]
 		s2b=sarray[maxx,maxy]
 		'''
-		s1a=sarray.item(minx,miny)#
+		#if bpy.app.debug_value == 0:
+		s1a=sarray.item(minx,miny)#most optimal access to array so far
 		s2a=sarray.item(maxx,miny)
 		s1b=sarray.item(minx,maxy)
 		s2b=sarray.item(maxx,maxy)
-		
+		#elif 0:#bpy.app.debug_value >0:
+		#	sar=sarray[minx:maxx+1,miny:maxy]
+		#	s1a=sar.item(0,0)
+		#	s2a=sar.item(1,0)
+		#	s1b=sar.item(0,1)
+		#	s2b=sar.item(1,1)
+		#elif bpy.app.debug_value >0:
+		#	s1a,s2a,s1b,s2b=sarray[minx:maxx+1,miny:maxy+1]
 		#if s1a==minz and s2a==minz and s1b==minz and s2b==minz:
 		#  return
 		'''

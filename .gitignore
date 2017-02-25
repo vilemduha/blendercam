@@ -7,7 +7,6 @@ config/bookmarks.txt
 /scripts/presets/
 /scripts/templates_osl/
 /scripts/templates_py/
-/scripts/addons/
 /scripts/addons_contrib/
 *.spi1d
 *.pyc
@@ -17,3 +16,6 @@ config/bookmarks.txt
 config/recent-files.txt
 scripts/addons_contrib/add_mesh_rocks/add_mesh_rocks.xml
 scripts/addons_contrib/online_mat_lib/material-library/bundled/cycles/wood/rough_pine.bcm
+acp
+syncWithUpstream
+forceSyncWithUpstream

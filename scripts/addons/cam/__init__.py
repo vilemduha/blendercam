@@ -56,6 +56,8 @@ bl_info = {
 PRECISION=5
 
 
+was_hidden_dict = {}
+
 def updateMachine(self,context):
 	print('update machine ')
 	utils.addMachineAreaObject()
@@ -63,8 +65,46 @@ def updateMachine(self,context):
 def updateMaterial(self,context):
 	print('update material')
 	utils.addMaterialAreaObject()
-
-
+	
+def updateOperation(self, context):
+	scene = context.scene
+	ao = scene.cam_operations[scene.cam_active_operation]
+	
+	if ao.hide_all_others == True:
+		for _ao in scene.cam_operations:
+			if _ao.path_object_name in bpy.data.objects:
+				other_obj = bpy.data.objects[_ao.path_object_name]
+				current_obj = bpy.data.objects[ao.path_object_name]
+				if other_obj != current_obj:
+					other_obj.hide = True
+					other_obj.select = False
+	else:
+		for path_obj_name in was_hidden_dict:
+			print(was_hidden_dict)
+			if was_hidden_dict[path_obj_name] == True:
+				# Find object and make it hidde, then reset 'hidden' flag
+				obj = bpy.data.objects[path_obj_name]
+				obj.hide = True
+				obj.select = False
+				was_hidden_dict[path_obj_name] = False
+	
+	# try highlighting the object in the 3d view and make it active
+	bpy.ops.object.select_all(action='DESELECT')
+	# highlight the cutting path if it exists
+	try:
+		ob = bpy.data.objects[ao.path_object_name]
+		ob.select = True
+		# Show object if, it's was hidden
+		if ob.hide == True:
+			ob.hide = False
+			was_hidden_dict[ao.path_object_name] = True
+		bpy.context.scene.objects.active = ob
+	except:
+		pass
+		
+	
+	
+	
 class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
     # when defining this in a submodule of a python package.
@@ -114,10 +154,10 @@ class machineSettings(bpy.types.PropertyGroup):
 	feedrate_max=bpy.props.FloatProperty(name="Feedrate maximum /min", default=2, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
 	feedrate_default=bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,precision=PRECISION, unit='LENGTH')
 	#UNSUPPORTED:
-	spindle_min=bpy.props.FloatProperty(name="#Spindlespeed minimum /min", default=5000, min=0.00001, max=320000,precision=1)
-	spindle_max=bpy.props.FloatProperty(name="#Spindlespeed maximum /min", default=30000, min=0.00001, max=320000,precision=1)
-	spindle_default=bpy.props.FloatProperty(name="#Spindlespeed default /min", default=15000, min=0.00001, max=320000,precision=1)
-	spindle_start_time = bpy.props.FloatProperty(name="Spindle start delay ", description = 'Wait for the spindle to start spinning before starting the feeds , in seconds', default=0, min=0.0000, max=320000,precision=1)
+	spindle_min=bpy.props.FloatProperty(name="Spindle speed minimum RPM", default=5000, min=0.00001, max=320000,precision=1)
+	spindle_max=bpy.props.FloatProperty(name="Spindle speed maximum RPM", default=30000, min=0.00001, max=320000,precision=1)
+	spindle_default=bpy.props.FloatProperty(name="Spindle speed default RPM", default=15000, min=0.00001, max=320000,precision=1)
+	spindle_start_time = bpy.props.FloatProperty(name="Spindle start delay seconds", description = 'Wait for the spindle to start spinning before starting the feeds , in seconds', default=0, min=0.0000, max=320000,precision=1)
 	
 	axis4 = bpy.props.BoolProperty(name="#4th axis",description="Machine has 4th axis", default=0)
 	axis5 = bpy.props.BoolProperty(name="#5th axis",description="Machine has 5th axis", default=0)
@@ -134,6 +174,21 @@ class machineSettings(bpy.types.PropertyGroup):
 	'''
 	collet_size=bpy.props.FloatProperty(name="#Collet size", description="Collet size for collision detection",default=33, min=0.00001, max=320000,precision=PRECISION , unit="LENGTH")
 	#exporter_start = bpy.props.StringProperty(name="exporter start", default="%")
+
+    #post processor options
+
+	output_block_numbers =  BoolProperty(name = "output block numbers", description = "output block numbers ie N10 at start of line", default = False)
+
+	start_block_number =  IntProperty(name = "start block number", description = "the starting block number ie 10", default = 10)
+
+	block_number_increment =  IntProperty(name = "block number increment", description = "how much the block number should increment for the next line", default = 10)
+
+	output_tool_definitions =  BoolProperty(name = "output tool definitions", description = "output tool definitions", default = True)
+	
+	output_tool_change =  BoolProperty(name = "output tool change commands", description = "output tool change commands ie: Tn M06", default = True)
+
+	output_g43_on_tool_change = BoolProperty(name = "output G43 on tool change", description = "output G43 on tool change line", default = False)
+
 
 class PackObjectsSettings(bpy.types.PropertyGroup):
 	'''stores all data for machines'''
@@ -159,30 +214,35 @@ def operationValid(self,context):
 	o=self
 	o.changed=True
 	o.valid=True
+	invalidmsg = "Operation has no valid data input\n"
 	o.warnings=""
 	o=bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
 	if o.geometry_source=='OBJECT':
 		if not o.object_name in bpy.data.objects :
 			o.valid=False;
-			o.warnings="Operation has no valid data input"
+			o.warnings= invalidmsg
 	if o.geometry_source=='GROUP':
 		if not o.group_name in bpy.data.groups:
 			o.valid=False;
-			o.warnings="Operation has no valid data input"
+			o.warnings=invalidmsg
 		elif len(bpy.data.groups[o.group_name].objects)==0: 
 			o.valid=False;
-			o.warnings="Operation has no valid data input"
+			o.warnings=invalidmsg
 		
 	if o.geometry_source=='IMAGE':
 		if not o.source_image_name in bpy.data.images:
 			o.valid=False
-			o.warnings="Operation has no valid data input"
+			o.warnings=invalidmsg
 
 		o.use_exact=False
 	o.update_offsetimage_tag=True
 	o.update_zbufferimage_tag=True
 	print('validity ')
 	#print(o.valid)
+	
+def updateOperationValid(self, context):
+	operationValid(self, context)
+	updateOperation(self, context)
 	
 #Update functions start here
 def updateChipload(self,context):
@@ -249,6 +309,7 @@ def updateExact(o,context):
 def updateOpencamlib(o,context):
 	print('update opencamlib ')
 	o.changed=True
+	
 def updateBridges(o,context):
 	print('update bridges ')
 	o.changed=True
@@ -288,9 +349,14 @@ class camOperation(bpy.types.PropertyGroup):
 	name = bpy.props.StringProperty(name="Operation Name", default="Operation", update = updateRest)
 	filename = bpy.props.StringProperty(name="File name", default="Operation", update = updateRest)
 	auto_export = bpy.props.BoolProperty(name="Auto export",description="export files immediately after path calculation", default=True)
+	hide_all_others = bpy.props.BoolProperty(
+		name="Hide all others",
+		description="Hide all other tool pathes except toolpath"
+			    " assotiated with selected CAM operation",
+		default=False)
 	#group = bpy.props.StringProperty(name='Object group', description='group of objects which will be included in this operation')
-	object_name = bpy.props.StringProperty(name='Object', description='object handled by this operation', update=operationValid)
-	group_name = bpy.props.StringProperty(name='Group', description='Object group handled by this operation', update=operationValid)
+	object_name = bpy.props.StringProperty(name='Object', description='object handled by this operation', update=updateOperationValid)
+	group_name = bpy.props.StringProperty(name='Group', description='Object group handled by this operation', update=updateOperationValid)
 	curve_object = bpy.props.StringProperty(name='Curve source', description='curve which will be sampled along the 3d object', update=operationValid)
 	curve_object1 = bpy.props.StringProperty(name='Curve target', description='curve which will serve as attractor for the cutter when the cutter follows the curve', update=operationValid)
 	source_image_name = bpy.props.StringProperty(name='image_source', description='image source', update=operationValid)
@@ -298,7 +364,7 @@ class camOperation(bpy.types.PropertyGroup):
 		items=(
 			('OBJECT','object', 'a'),('GROUP','Group of objects', 'a'),('IMAGE','Image', 'a')),
 		description='Geometry source',
-		default='OBJECT', update=operationValid)
+		default='OBJECT', update=updateOperationValid)
 	cutter_type = EnumProperty(name='Cutter',
 		items=(
 			('END', 'End', 'end - flat cutter'),
@@ -500,6 +566,7 @@ class camOperation(bpy.types.PropertyGroup):
 	bridges_width = bpy.props.FloatProperty(name = 'width of bridges', default=0.002, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	bridges_height = bpy.props.FloatProperty(name = 'height of bridges', description="Height from the bottom of the cutting operation", default=0.0005, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	bridges_group_name = bpy.props.StringProperty(name='Bridges Group', description='Group of curves used as bridges', update=operationValid)
+	use_bridge_modifiers = BoolProperty(name = "use bridge modifiers", description = "include bridge curve modifiers using render level when calculating operation, does not effect original bridge data", default = True, update=updateBridges)
 
 	'''commented this - auto bridges will be generated, but not as a setting of the operation
 	bridges_placement = bpy.props.EnumProperty(name='Bridge placement',
@@ -514,8 +581,7 @@ class camOperation(bpy.types.PropertyGroup):
 	bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
 	bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
 	'''
-	group_name = bpy.props.StringProperty(name='Group', description='Object group handled by this operation', update=operationValid)
-
+	use_modifiers = BoolProperty(name = "use mesh modifiers", description = "include mesh modifiers using render level when calculating operation, does not effect original mesh", default = True, update=operationValid)
 	#optimisation panel
 	
 	#material settings
@@ -527,6 +593,17 @@ class camOperation(bpy.types.PropertyGroup):
 	max = bpy.props.FloatVectorProperty(name = 'Operation maximum', default=(0,0,0), unit='LENGTH', precision=PRECISION,subtype="XYZ")
 	warnings = bpy.props.StringProperty(name='warnings', description='warnings', default='', update = updateRest)
 	chipload = bpy.props.FloatProperty(name="chipload",description="Calculated chipload", default=0.0, unit='LENGTH', precision=10)
+
+	#g-code options for operation
+	output_header =  BoolProperty(name = "output g-code header", description = "output user defined g-code command header at start of operation", default = False)
+
+	gcode_header =  StringProperty(name = "g-code header", description = "g-code commands at start of operation. Use ; for line breaks", default = "G53 G0")
+
+	output_trailer =  BoolProperty(name = "output g-code trailer", description = "output user defined g-code command trailer at end of operation", default = False)
+
+	gcode_trailer =  StringProperty(name = "g-code trailer", description = "g-code commands at end of operation. Use ; for line breaks", default = "M02")
+	
+		
 	#internal properties
 	###########################################
 	#testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
@@ -643,7 +720,8 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 			and prop!='name_property'):
 				d.append(prop)
 	'''
-	preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth', 'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material_size', 'o.material_radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact','o.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height', 'o.source_image_crop_start_x', 'o.movement_insideout', 'o.spindle_rotation_direction', 'o.skin', 'o.source_image_crop_start_y', 'o.movement_type', 'o.source_image_crop', 'o.limit_curve', 'o.spindle_rpm', 'o.ambient_behaviour', 'o.cutter_type', 'o.source_image_scale_z', 'o.cutter_diameter', 'o.source_image_size_x', 'o.curve_object', 'o.curve_object1', 'o.cutter_flutes', 'o.ambient_radius', 'o.simulation_detail', 'o.update_offsetimage_tag', 'o.dist_between_paths', 'o.max', 'o.min', 'o.pixsize', 'o.slice_detail', 'o.parallel_step_back', 'o.drill_type', 'o.source_image_name', 'o.dont_merge', 'o.update_silhouete_tag', 'o.material_origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.circle_detail', 'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle', 'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source', 'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.warnings', 'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length']
+	preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth', 'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material_size', 'o.material_radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact','o.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height', 'o.source_image_crop_start_x', 'o.movement_insideout', 'o.spindle_rotation_direction', 'o.skin', 'o.source_image_crop_start_y', 'o.movement_type', 'o.source_image_crop', 'o.limit_curve', 'o.spindle_rpm', 'o.ambient_behaviour', 'o.cutter_type', 'o.source_image_scale_z', 'o.cutter_diameter', 'o.source_image_size_x', 'o.curve_object', 'o.curve_object1', 'o.cutter_flutes', 'o.ambient_radius', 'o.simulation_detail', 'o.update_offsetimage_tag', 'o.dist_between_paths', 'o.max', 'o.min', 'o.pixsize', 'o.slice_detail', 'o.parallel_step_back', 'o.drill_type', 'o.source_image_name', 'o.dont_merge', 'o.update_silhouete_tag', 'o.material_origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.circle_detail', 'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle', 'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source', 'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.warnings', 'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
+	'o.output_header', 'o.gcode_header', 'o.output_trailer', 'o.gcode_trailer', 'o.use_modifiers']
 
 	preset_subdir = "cam_operations"   
 	 
@@ -674,6 +752,10 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 		"d.axis4",
 		"d.axis5",
 		"d.collet_size",
+		"d.output_tool_change",
+		"d.output_block_numbers",
+		"d.output_tool_definitions",
+		"d.output_g43_on_tool_change",
 	]
 
 	preset_subdir = "cam_machines"
@@ -683,7 +765,7 @@ class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
 	bl_label = "Blender CAM"
 				
 def get_panels():#convenience function for bot register and unregister functions
-	types = bpy.types
+	#types = bpy.types
 	return (
 	ui.CAM_UL_operations,
 	#ui.CAM_UL_orientations,
@@ -704,6 +786,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ui.CAM_MOVEMENT_Panel,
 	ui.CAM_FEEDRATE_Panel,
 	ui.CAM_CUTTER_Panel,
+	ui.CAM_GCODE_Panel,
 	ui.CAM_MACHINE_Panel,
 	ui.CAM_PACK_Panel,
 	ui.CAM_SLICE_Panel,
@@ -713,6 +796,7 @@ def get_panels():#convenience function for bot register and unregister functions
 	ops.KillPathsBackground,
 	ops.CalculatePath,
 	ops.PathsChain,
+	ops.PathExportChain,
 	ops.PathsAll,
 	ops.PathExport,
 	ops.CAMPositionObject,
@@ -742,7 +826,9 @@ def get_panels():#convenience function for bot register and unregister functions
 	ops.CamObjectSilhouete,
 	ops.CamCurveIntarsion,
 	ops.CamCurveOvercuts,
+	ops.CamCurveOvercutsB,
 	ops.CamCurveRemoveDoubles,
+	ops.CamMeshGetPockets,
 	
 	
 	
@@ -885,7 +971,7 @@ def register():
 
 	s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
 	
-	s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation")
+	s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation", update=updateOperation)
 	s.cam_machine = bpy.props.PointerProperty(type=machineSettings)
 	
 	s.cam_text= bpy.props.StringProperty()
