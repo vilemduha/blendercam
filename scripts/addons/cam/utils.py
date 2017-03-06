@@ -1085,6 +1085,9 @@ def exportGcodePath(filename,vertslist,operations):
 	elif m.post_processor=='EMC':
 		extension = '.ngc'
 		from .nc import emc2b as postprocessor
+	elif m.post_processor=='FADAL':
+		extension = '.tap'
+		from .nc import fadal as postprocessor
 	elif m.post_processor=='GRBL':
 		extension = '.ngc'
 		from .nc import grbl as postprocessor
