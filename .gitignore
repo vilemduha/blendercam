@@ -19,3 +19,5 @@ scripts/addons_contrib/online_mat_lib/material-library/bundled/cycles/wood/rough
 acp
 syncWithUpstream
 forceSyncWithUpstream
+
+\.idea/
