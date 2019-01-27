@@ -7,7 +7,7 @@ from subprocess import call
 from cam.collision import BULLET_SCALE
 from cam import simple
 from cam.chunk import camPathChunk
-from cam.simple import * 
+from cam.simple import *
 from shapely import geometry as sgeometry
 
 OCL_SCALE = 1000
@@ -86,8 +86,8 @@ def exportModelsToSTL(operation):
 	for collision_object in operation.objects:
 		activate( collision_object )
 		bpy.ops.object.duplicate( linked=False )
-		collision_object = bpy.context.scene.objects.active
-		#bpy.context.scene.objects.selected = collision_object
+		# collision_object = bpy.context.scene.objects.active
+		# bpy.context.scene.objects.selected = collision_object
 		file_name = os.path.join(tempfile.gettempdir(),"model{0}.stl".format(str(file_number)))
 		bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 		bpy.ops.transform.resize(value=(OCL_SCALE, OCL_SCALE, OCL_SCALE), constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
@@ -95,7 +95,7 @@ def exportModelsToSTL(operation):
 		bpy.ops.export_mesh.stl(check_existing=True, filepath=file_name, filter_glob="*.stl", use_selection=True, ascii=False, use_mesh_modifiers=True, axis_forward='Y', axis_up='Z', global_scale=1.0)
 		bpy.ops.object.delete()
 		file_number += 1
-	
+
 def oclSamplePoints(operation, points):
 	print(os.path.join(tempfile.gettempdir(), "oclSamplePoints\n"))
 	operationSettingsToCSV(operation)

@@ -24,6 +24,7 @@ elif op_cutter_type == 'VCARVE':
 else:
 	print("Cutter unsupported: {0}\n".format(op_cutter_type))
 	quit()
+
 #add BullCutter
 bdc = ocl.BatchDropCutter()
 bdc.setSTL(stl_surf)
@@ -34,14 +35,13 @@ for text_line in csv_file:
 	sample_point = [ float(coord) for coord in text_line.split() ]
 	bdc.appendPoint( ocl.CLPoint( sample_point[0]*1000, sample_point[1]*1000, op_minz * 1000 ) )
 csv_file.close()
-	
+
 bdc.run()
 
 cl_points = bdc.getCLPoints()
 
-csv_file = open(os.path.join(tempfile.gettempdir(), 'ocl_chunk_samples.txt'), 'w')
-for point in cl_points:
-	csv_file.write( str(point.z) + '\n' )
-csv_file.close()
-	
+with open(os.path.join(tempfile.gettempdir(), 'ocl_chunk_samples.txt'), 'w') as csv_file:
+	for point in cl_points:
+		csv_file.write( str(point.z) + '\n' )
+
 

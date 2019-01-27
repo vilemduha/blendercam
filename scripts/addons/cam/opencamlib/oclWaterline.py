@@ -1,7 +1,7 @@
 import ocl
 import tempfile
 import camvtk
-		
+
 stl = camvtk.STLSurf(tempfile.gettempdir()+"/model0.stl")
 stl_polydata = stl.src.GetOutput()
 stl_surf = ocl.STLSurf()
@@ -20,7 +20,7 @@ elif op_cutter_type == 'BALLNOSE':
 elif op_cutter_type == 'VCARVE':
 	cutter = ocl.ConeCutter( op_cutter_diameter*1000, 1, cutter_length)
 else:
-	print "Cutter unsupported: " + op_cutter_type + '\n'
+	print("Cutter unsupported: " + op_cutter_type + '\n')
 	quit()
 wl_height_file = open( tempfile.gettempdir()+'/ocl_wl_heights.txt', 'r' )
 waterline_heights = []
