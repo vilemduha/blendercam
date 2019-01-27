@@ -379,8 +379,11 @@ class CAMSimulate(bpy.types.Operator):
         # if operation.geometry_source=='OBJECT' and operation.object_name in bpy.data.objects and #bpy.data.objects[operation.object_name].type=='CURVE':
         #	print('simulation of curve operations is not available')
         #	return {'FINISHED'}
-        if operation.name in bpy.data.objects:
-            utils.doSimulation(operation.name, [operation])
+
+        operation_name = "cam_path_{}".format(operation.name)
+
+        if operation_name in bpy.data.objects:
+            utils.doSimulation(operation_name, [operation])
         else:
             print('no computed path to simulate')
             return {'FINISHED'}

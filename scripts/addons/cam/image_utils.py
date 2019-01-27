@@ -582,7 +582,7 @@ def generateSimulationImage(operations, limits):
     si.fill(maxz)
 
     for o in operations:
-        ob = bpy.data.objects[o.path_object_name]
+        ob = bpy.data.objects["cam_path_{}".format(o.name)]
         m = ob.data
         verts = m.vertices
 
@@ -590,7 +590,7 @@ def generateSimulationImage(operations, limits):
             kname = 'feedrates'
             m.use_customdata_edge_crease = True
 
-            if m.shape_keys == None or m.shape_keys.key_blocks.find(kname) == -1:
+            if m.shape_keys is None or m.shape_keys.key_blocks.find(kname) == -1:
                 ob.shape_key_add()
                 if len(m.shape_keys.key_blocks) == 1:
                     ob.shape_key_add()
