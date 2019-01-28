@@ -20,6 +20,7 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # blender operators definitions are in this file. They mostly call the functions from utils.py
+from pprint import pprint
 
 import bpy
 import subprocess, os, sys, threading
@@ -234,7 +235,6 @@ class PathsAll(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        import bpy
         i = 0
         for o in bpy.context.scene.cam_operations:
             bpy.context.scene.cam_active_operation = i
@@ -300,7 +300,6 @@ class PathsChain(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        import bpy
         s = bpy.context.scene
 
         chain = s.cam_chains[s.cam_active_chain]
@@ -326,7 +325,6 @@ class PathExportChain(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        import bpy
         s = bpy.context.scene
 
         chain = s.cam_chains[s.cam_active_chain]
@@ -350,9 +348,6 @@ class PathExport(bpy.types.Operator):
 
     def execute(self, context):
 
-        print("EXECUTE")
-
-        import bpy
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
 

@@ -412,13 +412,13 @@ class camOperation(bpy.types.PropertyGroup):
                                           update=updateOperationValid)
     group_name: bpy.props.StringProperty(name='Group', description='Object group handled by this operation',
                                          update=updateOperationValid)
-    curve_object = bpy.props.StringProperty(name='Curve source',
+    curve_object: bpy.props.StringProperty(name='Curve source',
                                             description='curve which will be sampled along the 3d object',
                                             update=operationValid)
-    curve_object1 = bpy.props.StringProperty(name='Curve target',
+    curve_object1: bpy.props.StringProperty(name='Curve target',
                                              description='curve which will serve as attractor for the cutter when the cutter follows the curve',
                                              update=operationValid)
-    source_image_name = bpy.props.StringProperty(name='image_source', description='image source', update=operationValid)
+    source_image_name: bpy.props.StringProperty(name='image_source', description='image source', update=operationValid)
     geometry_source: EnumProperty(name='Source of data',
                                   items=(
                                       ('OBJECT', 'object', 'a'), ('GROUP', 'Group of objects', 'a'),
