@@ -593,7 +593,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
     t = time.time()
     print('sampling paths')
 
-    totlen = 0;  # total length of all chunks, to estimate sampling time.
+    totlen = 0  # total length of all chunks, to estimate sampling time.
     for chs in pathSamples:
         totlen += len(chs.startpoints)
     layerchunks = []
@@ -776,14 +776,14 @@ def sampleChunksNAxis(o, pathSamples, layers):
                         ch.endpoints.append(endp)
                     # terminatechunk=True
                     '''
-					if terminatechunk:
-						#print(ch.points)
-						if len(ch.points)>0:
-							if len(ch.points)>0: 
-								layerchunks[i].append(ch)
-								thisrunchunks[i].append(ch)
-								layeractivechunks[i]=camPathChunk([])
-					'''
+                    if terminatechunk:
+                        #print(ch.points)
+                        if len(ch.points)>0:
+                            if len(ch.points)>0: 
+                                layerchunks[i].append(ch)
+                                thisrunchunks[i].append(ch)
+                                layeractivechunks[i]=camPathChunk([])
+                    '''
             # else:
             #	terminatechunk=True
             lastsample = newsample
@@ -807,12 +807,12 @@ def sampleChunksNAxis(o, pathSamples, layers):
 
     progress('checking relations between paths')
     '''#this algorithm should also work for n-axis, but now is "sleeping"
-	if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
-		if len(layers)>1:# sorting help so that upper layers go first always
-			for i in range(0,len(layers)-1):
-				#print('layerstuff parenting')
-				parentChild(layerchunks[i+1],layerchunks[i],o)
-	'''
+    if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
+        if len(layers)>1:# sorting help so that upper layers go first always
+            for i in range(0,len(layers)-1):
+                #print('layerstuff parenting')
+                parentChild(layerchunks[i+1],layerchunks[i],o)
+    '''
     chunks = []
     for i, l in enumerate(layers):
         chunks.extend(layerchunks[i])
@@ -1688,8 +1688,8 @@ def cutloops(csource, parentloop, loops):
 
 def getOperationSilhouete(operation):
     '''gets silhouete for the operation
-		uses image thresholding for everything except curves.
-	'''
+        uses image thresholding for everything except curves.
+    '''
     if operation.update_silhouete_tag:
         image = None
         objects = None
@@ -2219,8 +2219,8 @@ def useBridges(ch, o):
 
 def getLayers(operation, startdepth, enddepth):
     '''returns a list of layers bounded by startdepth and enddepth
-	   uses operation.stepdown to determine number of layers.
-	'''
+       uses operation.stepdown to determine number of layers.
+    '''
     if operation.use_layers:
         layers = []
         n = math.ceil((startdepth - enddepth) / operation.stepdown)
@@ -2372,21 +2372,21 @@ def strategy_proj_curve(s, o):
         o.warnings = o.warnings + 'Projection target and source have to be curve objects!\n '
         return
     '''	#mesh method is highly unstable, I don't like itwould be there at all.... better to use curves.
-	if targetCurve.type=='MESH':
-		
-		c=targetCurve
-		for ch in pathSamples:
-			ch.depth=0
-			for i,s in enumerate(ch.points):
-				np=c.closest_point_on_mesh(s)
-				ch.startpoints.append(Vector(s))
-				ch.endpoints.append(np[0])
-				ch.rotations.append((0,0,0))
-				vect = np[0]-Vector(s)
-				
-				ch.depth=min(ch.depth,-vect.length)
-	else:
-	'''
+    if targetCurve.type=='MESH':
+        
+        c=targetCurve
+        for ch in pathSamples:
+            ch.depth=0
+            for i,s in enumerate(ch.points):
+                np=c.closest_point_on_mesh(s)
+                ch.startpoints.append(Vector(s))
+                ch.endpoints.append(np[0])
+                ch.rotations.append((0,0,0))
+                vect = np[0]-Vector(s)
+                
+                ch.depth=min(ch.depth,-vect.length)
+    else:
+    '''
     if 1:
         extend_up = 0.1
         extend_down = 0.04
@@ -2839,25 +2839,25 @@ def strategy_medial_axis(o):
 
         # Create new mesh structure
         '''
-		print("Create mesh...")
-		voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
-		
-		
-				
-		voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
-		
-		voronoiDiagram.update(calc_edges=True) #Update mesh with new data
-		#create an object with that mesh
-		voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
-		#place object
-		#bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
-		
-		#update scene
-		bpy.context.scene.objects.link(voronoiObj) #Link object to scene
-		bpy.context.scene.objects.active = voronoiObj
-		voronoiObj.select = True
-		
-		'''
+        print("Create mesh...")
+        voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
+        
+        
+                
+        voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
+        
+        voronoiDiagram.update(calc_edges=True) #Update mesh with new data
+        #create an object with that mesh
+        voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
+        #place object
+        #bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
+        
+        #update scene
+        bpy.context.scene.objects.link(voronoiObj) #Link object to scene
+        bpy.context.scene.objects.active = voronoiObj
+        voronoiObj.select = True
+        
+        '''
     # bpy.ops.object.convert(target='CURVE')
     oi = 0
     for ob in o.objects:
@@ -3142,23 +3142,23 @@ def getPath3axis(context, operation):
             # print(poly)
             # print(len(lastslice))
             '''
-			if len(lastislice)>0:
-				i=numpy.logical_xor(lastislice , islice)
-				
-				n=0
-				while i.sum()>0 and n<10000:
-					i=outlineImageBinary(o,o.dist_between_paths,i,False)
-					polys=imageToShapely(o,i)
-					for poly in polys:
-						chunks.extend(polyToChunks(poly,z))
-					n+=1
-			
-		
-					#restpoly=outlinePoly(restpoly,o.dist_between_paths,oo.circle_detail,o.optimize,o.optimize_threshold,,False)
-					#chunks.extend(polyToChunks(restpoly,z))
-					
-			lastislice=islice
-			'''
+            if len(lastislice)>0:
+                i=numpy.logical_xor(lastislice , islice)
+                
+                n=0
+                while i.sum()>0 and n<10000:
+                    i=outlineImageBinary(o,o.dist_between_paths,i,False)
+                    polys=imageToShapely(o,i)
+                    for poly in polys:
+                        chunks.extend(polyToChunks(poly,z))
+                    n+=1
+            
+        
+                    #restpoly=outlinePoly(restpoly,o.dist_between_paths,oo.circle_detail,o.optimize,o.optimize_threshold,,False)
+                    #chunks.extend(polyToChunks(restpoly,z))
+                    
+            lastislice=islice
+            '''
 
             # if bpy.app.debug_value==1:
             if (o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW') or (
@@ -3175,16 +3175,16 @@ def getPath3axis(context, operation):
         if topdown:
             chunks.reverse()
             '''
-			chi=0
-			if len(chunks)>2:
-				while chi<len(chunks)-2:
-					d=dist2d((chunks[chi][-1][0],chunks[chi][-1][1]),(chunks[chi+1][0][0],chunks[chi+1][0][1]))
-					if chunks[chi][0][2]>=chunks[chi+1][0][2] and d<o.dist_between_paths*2:
-						chunks[chi].extend(chunks[chi+1])
-						chunks.remove(chunks[chi+1])
-						chi=chi-1
-					chi+=1
-			'''
+            chi=0
+            if len(chunks)>2:
+                while chi<len(chunks)-2:
+                    d=dist2d((chunks[chi][-1][0],chunks[chi][-1][1]),(chunks[chi+1][0][0],chunks[chi+1][0][1]))
+                    if chunks[chi][0][2]>=chunks[chi+1][0][2] and d<o.dist_between_paths*2:
+                        chunks[chi].extend(chunks[chi+1])
+                        chunks.remove(chunks[chi+1])
+                        chi=chi-1
+                    chi+=1
+            '''
         print(time.time() - tw)
         chunksToMesh(chunks, o)
 
@@ -3205,7 +3205,7 @@ class Point:
 
 def unique(L):
     """Return a list of unhashable elements in s, but without duplicates.
-	[[1, 2], [2, 3], [1, 2]] >>> [[1, 2], [2, 3]]"""
+    [[1, 2], [2, 3], [1, 2]] >>> [[1, 2], [2, 3]]"""
     # For unhashable objects, you can sort the sequence and then scan from the end of the list, deleting duplicates as you go
     nDupli = 0
     nZcolinear = 0
@@ -3280,18 +3280,18 @@ def prepareIndexed(o):
 
         bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
     '''
-	rot=ori.matrix_world.inverted()
-	#rot.x=-rot.x
-	#rot.y=-rot.y
-	#rot.z=-rot.z
-	rotationaxes = rotTo2axes(ori.rotation_euler,'CA')
-	
-	#bpy.context.space_data.pivot_point = 'CURSOR'
-	#bpy.context.space_data.pivot_point = 'CURSOR'
-
-	for ob in o.objects:
-		ob.rotation_euler.rotate(rot)
-	'''
+    rot=ori.matrix_world.inverted()
+    #rot.x=-rot.x
+    #rot.y=-rot.y
+    #rot.z=-rot.z
+    rotationaxes = rotTo2axes(ori.rotation_euler,'CA')
+    
+    #bpy.context.space_data.pivot_point = 'CURSOR'
+    #bpy.context.space_data.pivot_point = 'CURSOR'
+    
+    for ob in o.objects:
+        ob.rotation_euler.rotate(rot)
+    '''
 
 
 def cleanupIndexed(operation):
@@ -3348,20 +3348,22 @@ def rotTo2axes(e, axescombination):
         print('angles', cangle, bangle)
 
         return (cangle, bangle)
+
     '''
-	v2d=((v[a[0]],v[a[1]]))
-	angle1=a1base.angle(v2d)#C for ca
-	print(angle1)
-	if axescombination[0]=='C':
-		e1=Vector((0,0,-angle1))
-	elif axescombination[0]=='A':#TODO: finish this after prototyping stage
-		pass;
-	v.rotate(e1)
-	vbase=Vector(0,1,0)
-	bangle=v.angle(vzbase)
-	print(v)
-	print(bangle)
-	'''
+    v2d=((v[a[0]],v[a[1]]))
+    angle1=a1base.angle(v2d)#C for ca
+    print(angle1)
+    if axescombination[0]=='C':
+        e1=Vector((0,0,-angle1))
+    elif axescombination[0]=='A':#TODO: finish this after prototyping stage
+        pass;
+    v.rotate(e1)
+    vbase=Vector(0,1,0)
+    bangle=v.angle(vzbase)
+    print(v)
+    print(bangle)
+    '''
+
     return (angle1, angle2)
 
 

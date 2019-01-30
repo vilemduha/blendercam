@@ -150,7 +150,7 @@ class PathsBackground(bpy.types.Operator):
             scriptpath = p + os.sep + 'addons' + os.sep + 'cam' + os.sep + 'backgroundop.py'
             print(scriptpath)
             if os.path.isfile(scriptpath):
-                break;
+                break
         proc = subprocess.Popen([bpath, '-b', fpath, '-P', scriptpath, '--', '-o=' + str(s.cam_active_operation)],
                                 bufsize=1, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
@@ -174,7 +174,7 @@ class KillPathsBackground(bpy.types.Operator):
 
     # @classmethod
     # def poll(cls, context):
-    #	return context.active_object is not None
+    #     return context.active_object is not None
 
     def execute(self, context):
         s = bpy.context.scene
