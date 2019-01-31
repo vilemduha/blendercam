@@ -210,6 +210,12 @@ class CalculatePath(bpy.types.Operator):
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
 
+        bpy.ops.object.select_all(action='DESELECT')
+        path = bpy.data.objects.get('cam_path_{}'.format(o.name))
+        if path:
+            path.select_set(True)
+            bpy.ops.object.delete()
+
         if not o.valid:
             self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
             print("Operation can't be performed, see warnings for info")
@@ -222,6 +228,8 @@ class CalculatePath(bpy.types.Operator):
 
         if o.use_layers:
             o.parallel_step_back = False
+
+
 
         utils.getPath(context, o)
 

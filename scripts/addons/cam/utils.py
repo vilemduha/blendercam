@@ -349,6 +349,7 @@ def sampleChunks(o, pathSamples, layers):
         else:
             if o.update_bullet_collision_tag:
                 prepareBulletCollision(o)
+
                 o.update_bullet_collision_tag = False
             # print (o.ambient)
             cutter = o.cutter_shape
@@ -535,7 +536,7 @@ def sampleChunks(o, pathSamples, layers):
                 layeractivechunks[i] = camPathChunk([])
 
             # PARENTING
-            if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL'):
+            if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL':
                 timingstart(sortingtime)
                 parentChildDist(thisrunchunks[i], lastrunchunks[i], o)
                 timingadd(sortingtime)
@@ -546,7 +547,7 @@ def sampleChunks(o, pathSamples, layers):
     progress('checking relations between paths')
     timingstart(sortingtime)
 
-    if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL'):
+    if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL':
         if len(layers) > 1:  # sorting help so that upper layers go first always
             for i in range(0, len(layers) - 1):
                 parents = []
@@ -926,6 +927,7 @@ def chunksToMesh(chunks, o):
     verts = []
 
     free_movement_height = o.free_movement_height  # o.max.z +
+
 
     if o.machine_axes == '3':
         if m.use_position_definitions:
@@ -2956,8 +2958,10 @@ def getPath3axis(context, operation):
         chunks = []
         layers = getLayers(o, o.maxz, o.min.z)
 
+        print("SAMPLE", o.name)
         chunks.extend(sampleChunks(o, pathSamples, layers))
-        if (o.strategy == 'PENCIL'):  # and bpy.app.debug_value==-3:
+        print("SAMPLE OK")
+        if o.strategy == 'PENCIL':  # and bpy.app.debug_value==-3:
             chunks = chunksCoherency(chunks)
             print('coherency check')
 
@@ -2975,8 +2979,8 @@ def getPath3axis(context, operation):
                 for vi in range(0, len(ch.points)):
                     ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
         if o.use_bridges:
-            for chunk in chunks:
-                useBridges(chunk, o)
+            for bridge_chunk in chunks:
+                useBridges(bridge_chunk, o)
         chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and o.use_opencamlib:
@@ -3026,14 +3030,14 @@ def getPath3axis(context, operation):
             islice = o.offset_image > z
             slicepolys = imageToShapely(o, islice, with_border=True)
             # for pviz in slicepolys:
-            #	polyToMesh('slice',pviz,z)
+            #    polyToMesh('slice',pviz,z)
             poly = spolygon.Polygon()  # polygversion
             lastchunks = []
             # imagechunks=imageToChunks(o,islice)
             # for ch in imagechunks:
-            #	slicechunks.append(camPathChunk([]))
-            #	for s in ch.points:
-            #	 slicechunks[-1].points.append((s[0],s[1],z))
+            #    slicechunks.append(camPathChunk([]))
+            #    for s in ch.points:
+            #    slicechunks[-1].points.append((s[0],s[1],z))
 
             # print('found polys',layerstepinc,len(slicepolys))
             for p in slicepolys:
@@ -3045,7 +3049,7 @@ def getPath3axis(context, operation):
                 nchunks = limitChunks(nchunks, o, force=True)
                 # print('chunksnum',len(nchunks))
                 # if len(nchunks)>0:
-                #	print('chunkpoints',len(nchunks[0].points))
+                #    print('chunkpoints',len(nchunks[0].points))
                 # print()
                 lastchunks.extend(nchunks)
                 slicechunks.extend(nchunks)
@@ -3066,6 +3070,7 @@ def getPath3axis(context, operation):
                 # fill top slice for normal and first for inverse, fill between polys
                 if not lastslice.is_empty or (o.inverse and not poly.is_empty and slicesfilled == 1):
                     # offs=False
+                    restpoly = None
                     if not lastslice.is_empty:  # between polys
                         if o.inverse:
                             restpoly = poly.difference(lastslice)
@@ -3435,17 +3440,17 @@ def reload_paths(o):
     d = pickle.load(f)
     f.close()
     '''
-	passed=False
-	while not passed:
-		try:
-			f=open(picklepath,'rb')
-			d=pickle.load(f)
-			f.close()
-			passed=True
-		except:
-			print('sleep')
-			time.sleep(1)
-	'''
+    passed=False
+    while not passed:
+        try:
+            f=open(picklepath,'rb')
+            d=pickle.load(f)
+            f.close()
+            passed=True
+        except:
+            print('sleep')
+            time.sleep(1)
+    '''
     o.warnings = d['warnings']
     o.duration = d['duration']
     verts = d['path']

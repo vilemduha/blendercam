@@ -87,8 +87,8 @@ def activate(o):
     '''makes an object active, used many times in blender'''
     s = bpy.context.scene
     bpy.ops.object.select_all(action='DESELECT')
-    o.select_set(state=True, view_layer=None)
-    s.objects[o.name].select_set(state=True, view_layer=None)
+    o.select_set(True)
+    s.objects[o.name].select_set(True)
 
 
 def dist2d(v1, v2):

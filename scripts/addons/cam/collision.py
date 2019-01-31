@@ -157,7 +157,8 @@ def prepareBulletCollision(o):
             bpy.ops.rigidbody.object_remove()
 
     for collisionob in o.objects:
-        activate(collisionob)
+        bpy.context.view_layer.objects.active = collisionob
+        collisionob.select_set(state=True)
         bpy.ops.object.duplicate(linked=False)
         collisionob = bpy.context.active_object
         if collisionob.type == 'CURVE' or collisionob.type == 'FONT':  # support for curve objects collision
