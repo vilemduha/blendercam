@@ -975,6 +975,7 @@ def meshFromCurve(o, use_modifiers=False):
     activate(o)
     bpy.ops.object.duplicate()
     # bpy.ops.group.objects_remove_all()
+
     bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 
     co = bpy.context.active_object

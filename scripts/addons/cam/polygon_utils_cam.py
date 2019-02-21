@@ -159,7 +159,7 @@ def shapelyToCurve(name, p, z):
 
     objectdata = bpy.data.objects.new(name, curvedata)
     objectdata.location = (0, 0, 0)  # object origin
-    bpy.context.scene.objects.link(objectdata)
+    bpy.context.collection.objects.link(objectdata)
 
     for c in seq:
         polyline = curvedata.splines.new('POLY')
@@ -168,11 +168,13 @@ def shapelyToCurve(name, p, z):
             x, y = c[num][0], c[num][1]
 
             polyline.points[num].co = (x, y, z, w)
-    objectdata.select = True
-    bpy.context.scene.objects.active = objectdata
+
+    bpy.context.view_layer.objects.active = objectdata
+    objectdata.select_set(state=True)
+
     for c in objectdata.data.splines:
         c.use_cyclic_u = True
-    objectdata.data.show_handles = False
-    objectdata.data.show_normal_face = False
+    # objectdata.data.show_handles = False
+    # objectdata.data.show_normal_face = False
 
     return objectdata  # bpy.context.active_object

@@ -805,11 +805,11 @@ class CamCurveIntarsion(bpy.types.Operator):
         o2 = bpy.context.active_object
         utils.silhoueteOffset(context, -self.diameter / 2)
         o3 = bpy.context.active_object
-        o1.select = True
-        o2.select = True
-        o3.select = False
+        o1.select_set(state=True)
+        o2.select_set(state=True)
+        o3.select_set(state=False)
         bpy.ops.object.delete(use_global=False)
-        o3.select = True
+        o3.select_set(state=True)
         return {'FINISHED'}
 
 
@@ -1142,7 +1142,7 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
     def execute(self, context):
         obs = bpy.context.selected_objects
         for ob in obs:
-            bpy.context.scene.objects.active = ob
+            bpy.context.view_layer.objects.active = ob
 
             mode = False
             if bpy.context.mode == 'EDIT_CURVE':
@@ -1155,7 +1155,7 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
             bpy.ops.object.editmode_toggle()
             bpy.ops.object.convert(target='CURVE')
             a = bpy.context.active_object
-            a.data.show_normal_face = False
+            # a.data.show_normal_face = False
             if mode:
                 bpy.ops.object.editmode_toggle()
 
