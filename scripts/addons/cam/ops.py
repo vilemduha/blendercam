@@ -213,7 +213,7 @@ class CalculatePath(bpy.types.Operator):
         bpy.ops.object.select_all(action='DESELECT')
         path = bpy.data.objects.get('cam_path_{}'.format(o.name))
         if path:
-            path.select_set(True)
+            path.select_set(state=True)
             bpy.ops.object.delete()
 
         if not o.valid:
