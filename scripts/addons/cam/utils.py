@@ -1406,7 +1406,7 @@ def curveToShapely(cob, use_modifiers=False):
 # FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
 
 def silhoueteOffset(context, offset):
-    bpy.context.scene.cursor_location = (0, 0, 0)
+    bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
     if ob.type == 'CURVE' or ob.type == 'FONT':
         silhs = curveToShapely(ob)
@@ -1422,7 +1422,7 @@ def silhoueteOffset(context, offset):
 
 
 def polygonBoolean(context, boolean_type):
-    bpy.context.scene.cursor_location = (0, 0, 0)
+    bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
     obs = []
     for ob1 in bpy.context.selected_objects:
