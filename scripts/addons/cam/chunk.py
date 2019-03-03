@@ -979,7 +979,7 @@ def meshFromCurve(o, use_modifiers=False):
     bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 
     co = bpy.context.active_object
-    print(co.name)
+
     if co.type == 'FONT':  # support for text objects is only and only here, just convert them to curves.
         bpy.ops.object.convert(target='CURVE', keep_original=False)
     co.data.dimensions = '3D'
