@@ -165,7 +165,7 @@ def packCurves():
                 pf[3].location.z = pf[4]
                 pf[3].rotation_euler.z = best[2]
 
-                pf[3].select = True
+                pf[3].select_set(state=True)
 
                 # print(mindist)
                 mindist = mindist - 0.5 * (xmax - xmin)
@@ -207,13 +207,13 @@ def packCurves():
                 if direction == 'Y':
                     x += shift
                     mindist = y
-                    if (xmax + shift > sheetsizex):
+                    if xmax + shift > sheetsizex:
                         x = x - xmin
                         y += shift
                 if direction == 'X':
                     y += shift
                     mindist = x
-                    if (ymax + shift > sheetsizey):
+                    if ymax + shift > sheetsizey:
                         y = y - ymin
                         x += shift
                 if rotate: rot += rotchange
