@@ -228,6 +228,8 @@ def getBounds(o):
             o.max.z = max(o.maxz, maxz)
 
             if o.minz_from_ob:
+                if minz == 10000000:
+                    minz = 0
                 o.min.z = minz
                 o.minz = o.min.z
             else:
