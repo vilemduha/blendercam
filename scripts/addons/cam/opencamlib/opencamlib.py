@@ -17,7 +17,7 @@ PYTHON_BIN = None
 if os.name == "nt":
     PYTHON_BIN = "python"
 elif os.name == "posix":
-    PYTHON_BIN = "python2.7"
+    PYTHON_BIN = "python"
 
 
 def operationSettingsToCSV(operation):
