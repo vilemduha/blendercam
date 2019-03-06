@@ -2062,7 +2062,7 @@ def addBridge(x, y, rot, sizex, sizey):
 
     bpy.ops.object.editmode_toggle()
     bpy.ops.transform.translate(value=(0, sizey / 2, 0), constraint_axis=(False, True, False),
-                                constraint_orientation='GLOBAL', mirror=False, proportional='DISABLED',
+                                orient_type='GLOBAL', mirror=False, proportional='DISABLED',
                                 proportional_edit_falloff='SMOOTH', proportional_size=1)
     bpy.ops.object.editmode_toggle()
     bpy.ops.object.convert(target='CURVE')
@@ -2646,7 +2646,7 @@ def strategy_drill(o):
         bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                       TRANSFORM_OT_translate={"value": (0, 0, 0),
                                                               "constraint_axis": (False, False, False),
-                                                              "constraint_orientation": 'GLOBAL', "mirror": False,
+                                                              "orient_type": 'GLOBAL', "mirror": False,
                                                               "proportional": 'DISABLED',
                                                               "proportional_edit_falloff": 'SMOOTH',
                                                               "proportional_size": 1, "snap": False,

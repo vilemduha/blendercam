@@ -183,7 +183,7 @@ def prepareBulletCollision(o):
         collisionob.rigid_body.kinematic = True  # this fixed a serious bug and gave big speedup, rbs could move since they are now active...
         collisionob.rigid_body.collision_margin = o.skin * BULLET_SCALE
         bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE),
-                                 constraint_axis=(False, False, False), constraint_orientation='GLOBAL', mirror=False,
+                                 constraint_axis=(False, False, False), orient_type='GLOBAL', mirror=False,
                                  proportional='DISABLED', proportional_edit_falloff='SMOOTH', proportional_size=1,
                                  snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False,
                                  snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
@@ -198,7 +198,7 @@ def prepareBulletCollision(o):
         for ob in bpy.data.objects['machine'].objects:
             activate(ob)
             bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE),
-                                     constraint_axis=(False, False, False), constraint_orientation='GLOBAL',
+                                     constraint_axis=(False, False, False), orient_type='GLOBAL',
                                      mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH',
                                      proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0),
                                      snap_align=False, snap_normal=(0, 0, 0), texture_space=False,
@@ -224,7 +224,7 @@ def cleanupBulletCollision(o):
         for ob in bpy.data.objects['machine'].objects:
             activate(ob)
             bpy.ops.transform.resize(value=(1.0 / BULLET_SCALE, 1.0 / BULLET_SCALE, 1.0 / BULLET_SCALE),
-                                     constraint_axis=(False, False, False), constraint_orientation='GLOBAL',
+                                     constraint_axis=(False, False, False), orient_type='GLOBAL',
                                      mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH',
                                      proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0),
                                      snap_align=False, snap_normal=(0, 0, 0), texture_space=False,
