@@ -20,6 +20,7 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # blender operators definitions are in this file. They mostly call the functions from utils.py
+from pprint import pprint
 
 import bpy
 import subprocess, os, sys, threading
@@ -149,7 +150,7 @@ class PathsBackground(bpy.types.Operator):
             scriptpath = p + os.sep + 'addons' + os.sep + 'cam' + os.sep + 'backgroundop.py'
             print(scriptpath)
             if os.path.isfile(scriptpath):
-                break;
+                break
         proc = subprocess.Popen([bpath, '-b', fpath, '-P', scriptpath, '--', '-o=' + str(s.cam_active_operation)],
                                 bufsize=1, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
@@ -173,7 +174,7 @@ class KillPathsBackground(bpy.types.Operator):
 
     # @classmethod
     # def poll(cls, context):
-    #	return context.active_object is not None
+    #     return context.active_object is not None
 
     def execute(self, context):
         s = bpy.context.scene
@@ -209,6 +210,12 @@ class CalculatePath(bpy.types.Operator):
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
 
+        bpy.ops.object.select_all(action='DESELECT')
+        path = bpy.data.objects.get('cam_path_{}'.format(o.name))
+        if path:
+            path.select_set(state=True)
+            bpy.ops.object.delete()
+
         if not o.valid:
             self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
             print("Operation can't be performed, see warnings for info")
@@ -222,6 +229,8 @@ class CalculatePath(bpy.types.Operator):
         if o.use_layers:
             o.parallel_step_back = False
 
+
+
         utils.getPath(context, o)
 
         return {'FINISHED'}
@@ -234,7 +243,6 @@ class PathsAll(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        import bpy
         i = 0
         for o in bpy.context.scene.cam_operations:
             bpy.context.scene.cam_active_operation = i
@@ -300,7 +308,6 @@ class PathsChain(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        import bpy
         s = bpy.context.scene
 
         chain = s.cam_chains[s.cam_active_chain]
@@ -314,7 +321,7 @@ class PathsChain(bpy.types.Operator):
 
         for o in chainops:
             # bpy.ops.object.calculate_cam_paths_background()
-            meshes.append(bpy.data.objects[o.name].data)
+            meshes.append(bpy.data.objects["cam_path_{}".format(o.name)].data)
         utils.exportGcodePath(chain.filename, meshes, chainops)
         return {'FINISHED'}
 
@@ -326,7 +333,6 @@ class PathExportChain(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        import bpy
         s = bpy.context.scene
 
         chain = s.cam_chains[s.cam_active_chain]
@@ -337,7 +343,7 @@ class PathExportChain(bpy.types.Operator):
 
         for o in chainops:
             # bpy.ops.object.calculate_cam_paths_background()
-            meshes.append(bpy.data.objects[o.name].data)
+            meshes.append(bpy.data.objects["cam_path_{}".format(o.name)].data)
         utils.exportGcodePath(chain.filename, meshes, chainops)
         return {'FINISHED'}
 
@@ -350,9 +356,6 @@ class PathExport(bpy.types.Operator):
 
     def execute(self, context):
 
-        print("EXECUTE")
-
-        import bpy
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
 
@@ -802,11 +805,11 @@ class CamCurveIntarsion(bpy.types.Operator):
         o2 = bpy.context.active_object
         utils.silhoueteOffset(context, -self.diameter / 2)
         o3 = bpy.context.active_object
-        o1.select = True
-        o2.select = True
-        o3.select = False
+        o1.select_set(state=True)
+        o2.select_set(state=True)
+        o3.select_set(state=False)
         bpy.ops.object.delete(use_global=False)
-        o3.select = True
+        o3.select_set(state=True)
         return {'FINISHED'}
 
 
@@ -1139,7 +1142,7 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
     def execute(self, context):
         obs = bpy.context.selected_objects
         for ob in obs:
-            bpy.context.scene.objects.active = ob
+            bpy.context.view_layer.objects.active = ob
 
             mode = False
             if bpy.context.mode == 'EDIT_CURVE':
@@ -1152,7 +1155,7 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
             bpy.ops.object.editmode_toggle()
             bpy.ops.object.convert(target='CURVE')
             a = bpy.context.active_object
-            a.data.show_normal_face = False
+            # a.data.show_normal_face = False
             if mode:
                 bpy.ops.object.editmode_toggle()
 

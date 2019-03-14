@@ -87,8 +87,9 @@ def activate(o):
     '''makes an object active, used many times in blender'''
     s = bpy.context.scene
     bpy.ops.object.select_all(action='DESELECT')
-    o.select_set(state=True, view_layer=None)
-    s.objects[o.name].select_set(state=True, view_layer=None)
+    o.select_set(state=True)
+    s.objects[o.name].select_set(state=True)
+    bpy.context.view_layer.objects.active = o
 
 
 def dist2d(v1, v2):
@@ -107,7 +108,7 @@ def dupliob(o, pos):
     activate(o)
     bpy.ops.object.duplicate()
     s = 1.0 / BULLET_SCALE
-    bpy.ops.transform.resize(value=(s, s, s), constraint_axis=(False, False, False), constraint_orientation='GLOBAL',
+    bpy.ops.transform.resize(value=(s, s, s), constraint_axis=(False, False, False), orient_type='GLOBAL',
                              mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH',
                              proportional_size=1)
     o = bpy.context.active_object

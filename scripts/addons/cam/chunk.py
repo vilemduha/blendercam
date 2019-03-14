@@ -947,18 +947,23 @@ def meshFromCurveToChunk(object):
 def makeVisible(o):
     storage = [True, []]
 
-    if not o.hide:
+    if not o.visible_get():
         storage[0] = False
+
+    cam_collection = D.collections.new("cam")
+    C.scene.collection.children.link(cam_collection)
+    cam_collection.objects.link(C.object)
 
     for i in range(0, 20):
         storage[1].append(o.layers[i])
 
         o.layers[i] = bpy.context.scene.layers[i]
+
     return storage
 
 
 def restoreVisibility(o, storage):
-    o.hide = storage[0]
+    o.hide_viewport = storage[0]
     # print(storage)
     for i in range(0, 20):
         o.layers[i] = storage[1][i]
@@ -966,15 +971,15 @@ def restoreVisibility(o, storage):
 
 def meshFromCurve(o, use_modifiers=False):
     # print(o.name,o)
-    storage = makeVisible(
-        o)  # this is here because all of this doesn't work when object is not visible or on current layer
+    # storage = makeVisible(o)   # this is here because all of this doesn't work when object is not visible or on current layer
     activate(o)
     bpy.ops.object.duplicate()
-    bpy.ops.group.objects_remove_all()
+    # bpy.ops.group.objects_remove_all()
+
     bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 
     co = bpy.context.active_object
-    print(co.name)
+
     if co.type == 'FONT':  # support for text objects is only and only here, just convert them to curves.
         bpy.ops.object.convert(target='CURVE', keep_original=False)
     co.data.dimensions = '3D'
@@ -999,7 +1004,7 @@ def meshFromCurve(o, use_modifiers=False):
     except:
         pass
 
-    restoreVisibility(o, storage)
+    # restoreVisibility(o, storage)
     return bpy.context.active_object
 
 
@@ -1011,7 +1016,9 @@ def curveToChunks(o, use_modifiers=False):
 
     co = bpy.context.active_object
 
-    bpy.context.scene.objects.unlink(co)
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.data.objects[co.name].select_set(True)
+    bpy.ops.object.delete()
 
     return chunks
 
