@@ -229,8 +229,6 @@ class CalculatePath(bpy.types.Operator):
         if o.use_layers:
             o.parallel_step_back = False
 
-
-
         utils.getPath(context, o)
 
         return {'FINISHED'}
