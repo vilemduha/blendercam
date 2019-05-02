@@ -128,6 +128,7 @@ class machineSettings(bpy.types.PropertyGroup):
                                  items=(('ISO', 'Iso', 'exports standardized gcode ISO 6983 (RS-274)'),
                                         ('MACH3', 'Mach3', 'default mach3'),
                                         ('EMC', 'LinuxCNC - EMC2', 'Linux based CNC control software - formally EMC2'),
+                                        ('FADAL', 'Fadal', 'Fadal VMC'),
                                         ('GRBL', 'grbl',
                                          'optimized gcode for grbl firmware on Arduino with cnc shield'),
                                         ('HEIDENHAIN', 'Heidenhain', 'heidenhain'),
