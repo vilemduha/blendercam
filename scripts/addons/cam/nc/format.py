@@ -14,12 +14,12 @@ class Format:
         if number == None:
             return 'None'
         f = float(number) * math.pow(10, self.number_of_decimal_places)
-        s = str(f)
+        s = format(f, 'f')
         
         if self.round_down == False:
             if f < 0: f = f - .5
             else: f = f + .5
-            s = str(number)
+            s = format(float(number), 'f')
             
         if math.fabs(f) < 1.0:
             s = '0'
