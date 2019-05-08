@@ -30,11 +30,11 @@ def addTestCurve(loc):
     bpy.ops.object.editmode_toggle()
     bpy.ops.curve.duplicate()
     bpy.ops.transform.resize(value=(0.5, 0.5, 0.5), constraint_axis=(False, False, False),
-                             orient_type='GLOBAL', mirror=False, proportional='DISABLED',
+                             orient_type='GLOBAL', mirror=False, use_proportional_edit=False,
                              proportional_edit_falloff='SMOOTH', proportional_size=1)
     bpy.ops.curve.duplicate()
     bpy.ops.transform.resize(value=(0.5, 0.5, 0.5), constraint_axis=(False, False, False),
-                             orient_type='GLOBAL', mirror=False, proportional='DISABLED',
+                             orient_type='GLOBAL', mirror=False, use_proportional_edit=False,
                              proportional_edit_falloff='SMOOTH', proportional_size=1)
     bpy.ops.object.editmode_toggle()
 

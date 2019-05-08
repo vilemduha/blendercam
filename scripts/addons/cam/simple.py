@@ -109,7 +109,7 @@ def dupliob(o, pos):
     bpy.ops.object.duplicate()
     s = 1.0 / BULLET_SCALE
     bpy.ops.transform.resize(value=(s, s, s), constraint_axis=(False, False, False), orient_type='GLOBAL',
-                             mirror=False, proportional='DISABLED', proportional_edit_falloff='SMOOTH',
+                             mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH',
                              proportional_size=1)
     o = bpy.context.active_object
     bpy.ops.rigidbody.object_remove()
