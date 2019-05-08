@@ -92,7 +92,7 @@ def exportModelsToSTL(operation):
         file_name = os.path.join(tempfile.gettempdir(), "model{0}.stl".format(str(file_number)))
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         bpy.ops.transform.resize(value=(OCL_SCALE, OCL_SCALE, OCL_SCALE), constraint_axis=(False, False, False),
-                                 orient_type='GLOBAL', mirror=False, proportional='DISABLED',
+                                 orient_type='GLOBAL', mirror=False, use_proportional_edit=False,
                                  proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False,
                                  snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0),
                                  texture_space=False, release_confirm=False)
