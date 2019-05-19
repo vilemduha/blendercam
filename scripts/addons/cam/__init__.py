@@ -132,6 +132,7 @@ class machineSettings(bpy.types.PropertyGroup):
                                         ('GRBL', 'grbl',
                                          'optimized gcode for grbl firmware on Arduino with cnc shield'),
                                         ('HEIDENHAIN', 'Heidenhain', 'heidenhain'),
+                                        ('HEIDENHAIN530', 'Heidenhain530', 'heidenhain530'),
                                         ('TNC151', 'Heidenhain TNC151',
                                          'Post Processor for the Heidenhain TNC151 machine'),
                                         ('SIEGKX1', 'Sieg KX1', 'Sieg KX1'),
