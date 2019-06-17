@@ -83,7 +83,9 @@ def getBoundsWorldspace(obs, use_modifiers=False):
         mw = ob.matrix_world
         if ob.type == 'MESH':
             if use_modifiers:
-                mesh = ob.to_mesh(bpy.context.depsgraph, True, calc_undeformed=False)
+                depsgraph = bpy.context.evaluated_depsgraph_get()
+                mesh_owner = ob.evaluated_get(depsgraph)
+                mesh = mesh_owner.to_mesh()
             else:
                 mesh = ob.data
 
@@ -98,7 +100,7 @@ def getBoundsWorldspace(obs, use_modifiers=False):
                 maxz = max(maxz, worldCoord.z)
 
             if use_modifiers:
-                bpy.data.meshes.remove(mesh)
+                mesh_owner.to_mesh_clear()
 
         elif ob.type == "FONT":
             activate(ob)

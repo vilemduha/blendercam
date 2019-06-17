@@ -43,7 +43,7 @@ def getCutterBullet(o):
     if type == 'END':
         bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius=BULLET_SCALE * o.cutter_diameter / 2,
                                             depth=BULLET_SCALE * o.cutter_diameter, end_fill_type='NGON',
-                                            view_align=False, enter_editmode=False, location=CUTTER_OFFSET,
+                                            align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
                                             rotation=(0, 0, 0))
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
@@ -52,14 +52,14 @@ def getCutterBullet(o):
         if o.strategy != 'PROJECTED_CURVE' or type == 'BALL':  # only sphere, good for 3 axis and real ball cutters for undercuts and projected curve
 
             bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=BULLET_SCALE * o.cutter_diameter / 2,
-                                                  view_align=False, enter_editmode=False, location=CUTTER_OFFSET,
+                                                  align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
                                                   rotation=(0, 0, 0))
             bpy.ops.rigidbody.object_add(type='ACTIVE')
             cutter = bpy.context.active_object
             cutter.rigid_body.collision_shape = 'SPHERE'
         else:  # ballnose ending used mainly when projecting from sides. the actual collision shape is capsule in this case.
             bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, raius=BULLET_SCALE * o.cutter_diameter / 2,
-                                                  view_align=False, enter_editmode=False, location=CUTTER_OFFSET,
+                                                  align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
                                                   rotation=(0, 0, 0))
             bpy.ops.rigidbody.object_add(type='ACTIVE')
             cutter = bpy.context.active_object
@@ -73,7 +73,7 @@ def getCutterBullet(o):
         s = math.tan(math.pi * (90 - angle / 2) / 180) / 2
         bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=0,
                                         depth=BULLET_SCALE * o.cutter_diameter * s, end_fill_type='NGON',
-                                        view_align=False, enter_editmode=False, location=CUTTER_OFFSET,
+                                        align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
                                         rotation=(math.pi, 0, 0))
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
@@ -168,10 +168,15 @@ def prepareBulletCollision(o):
             bpy.ops.object.convert(target='MESH', keep_original=False)
 
         if o.use_modifiers:
-            newmesh = collisionob.to_mesh(bpy.context.depsgraph, True, calc_undeformed=False)
+            depsgraph = bpy.context.evaluated_depsgraph_get()
+            mesh_owner = collisionob.evaluated_get(depsgraph)
+            newmesh = mesh_owner.to_mesh()
+
             oldmesh = collisionob.data
             collisionob.modifiers.clear()
-            collisionob.data = newmesh
+            collisionob.data = bpy.data.meshes.new_from_object(mesh_owner.evaluated_get(depsgraph),
+                                                               preserve_all_data_layers=True,
+                                                               depsgraph=depsgraph)
             bpy.data.meshes.remove(oldmesh)
 
         # subdivide long edges here:
