@@ -1132,6 +1132,9 @@ def exportGcodePath(filename, vertslist, operations):
     elif m.post_processor == 'EMC':
         extension = '.ngc'
         from .nc import emc2b as postprocessor
+    elif m.post_processor == 'FADAL':
+        extension = '.tap'
+        from .nc import fadal as postprocessor
     elif m.post_processor == 'GRBL':
         extension = '.ngc'
         from .nc import grbl as postprocessor
@@ -1140,6 +1143,9 @@ def exportGcodePath(filename, vertslist, operations):
     elif m.post_processor == 'HEIDENHAIN':
         extension = '.H'
         from .nc import heiden as postprocessor
+    elif m.post_processor == 'HEIDENHAIN530':
+        extension = '.H'
+        from .nc import heiden530 as postprocessor
     elif m.post_processor == 'TNC151':
         from .nc import tnc151 as postprocessor
     elif m.post_processor == 'SIEGKX1':
