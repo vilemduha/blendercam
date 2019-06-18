@@ -26,7 +26,7 @@ from cam.simple import *
 
 
 def addTestCurve(loc):
-    bpy.ops.curve.primitive_bezier_circle_add(radius=.05, view_align=False, enter_editmode=False, location=loc)
+    bpy.ops.curve.primitive_bezier_circle_add(radius=.05, align='WORLD', enter_editmode=False, location=loc)
     bpy.ops.object.editmode_toggle()
     bpy.ops.curve.duplicate()
     bpy.ops.transform.resize(value=(0.5, 0.5, 0.5), constraint_axis=(False, False, False),
@@ -40,12 +40,12 @@ def addTestCurve(loc):
 
 
 def addTestMesh(loc):
-    bpy.ops.mesh.primitive_monkey_add(radius=.01, view_align=False, enter_editmode=False, location=loc)
+    bpy.ops.mesh.primitive_monkey_add(radius=.01, align='WORLD', enter_editmode=False, location=loc)
     bpy.ops.transform.rotate(value=-1.5708, axis=(1, 0, 0), constraint_axis=(True, False, False),
                              orient_type='GLOBAL')
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
     bpy.ops.object.editmode_toggle()
-    bpy.ops.mesh.primitive_plane_add(radius=1, view_align=False, enter_editmode=False, location=loc)
+    bpy.ops.mesh.primitive_plane_add(radius=1, align='WORLD', enter_editmode=False, location=loc)
     bpy.ops.transform.resize(value=(0.01, 0.01, 0.01), constraint_axis=(False, False, False),
                              orient_type='GLOBAL')
     bpy.ops.transform.translate(value=(-0.01, 0, 0), constraint_axis=(True, False, False),
