@@ -1681,7 +1681,7 @@ def renderSampleImage(o):
             # camera settings
             camera = s.camera
             if camera == None:
-                bpy.ops.object.camera_add(view_align=False, enter_editmode=False, location=(0, 0, 0),
+                bpy.ops.object.camera_add(align='WORLD', enter_editmode=False, location=(0, 0, 0),
                                           rotation=(0, 0, 0))
                 camera = bpy.context.active_object
                 bpy.context.scene.camera = camera
