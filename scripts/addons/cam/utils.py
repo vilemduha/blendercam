@@ -861,7 +861,7 @@ def createSimulationObject(name, operations, i):
     if oname in bpy.data.objects:
         ob = bpy.data.objects[oname]
     else:
-        bpy.ops.mesh.primitive_plane_add(view_align=False, enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_plane_add(align='WORLD', enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0))
         ob = bpy.context.active_object
         ob.name = oname
 
@@ -1920,7 +1920,7 @@ def addOrientationObject(o):
     name = o.name + ' orientation'
     s = bpy.context.scene
     if s.objects.find(name) == -1:
-        bpy.ops.object.empty_add(type='ARROWS', view_align=False, location=(0, 0, 0))
+        bpy.ops.object.empty_add(type='ARROWS', align='WORLD', location=(0, 0, 0))
 
         ob = bpy.context.active_object
         ob.empty_draw_size = 0.05
@@ -1981,7 +1981,7 @@ def addMachineAreaObject():
         # need to be in metric units when adding machine mesh object
         # in order for location to work properly
         s.unit_settings.system = 'METRIC'
-        bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
         o = bpy.context.active_object
         o.name = 'CAM_machine'
         o.data.name = 'CAM_machine'
@@ -1995,7 +1995,7 @@ def addMachineAreaObject():
                                fractal_along_normal=0, seed=0)
         bpy.ops.mesh.select_nth(nth=2, offset=0)
         bpy.ops.mesh.delete(type='EDGE')
-        bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
 
         bpy.ops.object.editmode_toggle()
         addTranspMat(o, "violet_transparent", (0.800000, 0.530886, 0.725165), 0.1)
@@ -2023,7 +2023,7 @@ def addMaterialAreaObject():
     if s.objects.get('CAM_material') is not None:
         o = s.objects['CAM_material']
     else:
-        bpy.ops.mesh.primitive_cube_add(view_align=False, enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
         o = bpy.context.active_object
         o.name = 'CAM_material'
         o.data.name = 'CAM_material'
@@ -2049,7 +2049,7 @@ def addMaterialAreaObject():
 def getContainer():
     s = bpy.context.scene
     if s.objects.get('CAM_OBJECTS') == None:
-        bpy.ops.object.empty_add(type='PLAIN_AXES', view_align=False)
+        bpy.ops.object.empty_add(type='PLAIN_AXES', align='WORLD')
         container = bpy.context.active_object
         container.name = 'CAM_OBJECTS'
         container.location = [0, 0, 0]
@@ -2061,7 +2061,7 @@ def getContainer():
 
 
 def addBridge(x, y, rot, sizex, sizey):
-    bpy.ops.mesh.primitive_plane_add(radius=sizey, view_align=False, enter_editmode=False, location=(0, 0, 0))
+    bpy.ops.mesh.primitive_plane_add(radius=sizey, align='WORLD', enter_editmode=False, location=(0, 0, 0))
     b = bpy.context.active_object
     b.name = 'bridge'
     # b.show_name=True

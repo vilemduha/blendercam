@@ -187,7 +187,7 @@ def oclGetWaterline(operation, chunks):
     operationSettingsToCSV(operation)
     exportModelsToSTL(operation)
     if os.path.isdir(os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib")):
-        call([os.path.join(PYTHON_BIN, bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "oclWaterline.py")])
+        call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "oclWaterline.py")])
     else:
         call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "oclWaterline.py")])
     waterlineChunksFromCSV(operation, chunks)
