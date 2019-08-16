@@ -1092,7 +1092,7 @@ def chunksToMesh(chunks, o):
     o.path_object_name = oname
 
     # parent the path object to source object if object mode
-    if o.geometry_source == 'OBJECT':
+    if (o.geometry_source == 'OBJECT') and (o.parent_path_to_object):
         activate(o.objects[0])
         ob.select_set(state=True, view_layer=None)
         bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)

@@ -409,6 +409,10 @@ class camOperation(bpy.types.PropertyGroup):
         description="Hide all other tool pathes except toolpath"
                     " assotiated with selected CAM operation",
         default=False)
+    parent_path_to_object: bpy.props.BoolProperty(
+        name="Parent path to object",
+        description="Parent generated CAM path to source object",
+        default=False)
     # group = bpy.props.StringProperty(name='Object group', description='group of objects which will be included in this operation')
     object_name: bpy.props.StringProperty(name='Object', description='object handled by this operation',
                                           update=updateOperationValid)
