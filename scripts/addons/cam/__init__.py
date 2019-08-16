@@ -833,7 +833,7 @@ class camOperation(bpy.types.PropertyGroup):
     operation_limit = sgeometry.Polygon()
     borderwidth = 50
     object = None
-    path_object_name = bpy.props.StringProperty(name='Path object', description='actual cnc path')
+    path_object_name: bpy.props.StringProperty(name='Path object', description='actual cnc path')
 
     # update and tags and related
 
