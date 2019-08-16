@@ -37,7 +37,7 @@ def getSlices(ob, slice_distance):
     maxzt = -100000000000000000000000000
     minzt = 1000000000000000000000000000
     # progress('slicing object')
-    m = ob.to_mesh(bpy.context.depsgraph, True, calc_undeformed=False)
+    m = ob.to_mesh(preserve_all_data_layers=True, depsgraph=bpy.context.evaluated_depsgraph_get())
     # d={}#!
     for p in m.polygons:
         # a=i*50+12

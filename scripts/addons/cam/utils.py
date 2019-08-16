@@ -112,7 +112,7 @@ def getBoundsWorldspace(obs, use_modifiers=False):
             bpy.ops.object.convert(target='MESH', keep_original=False)
 
             if use_modifiers:
-                mesh = co.to_mesh(bpy.context.depsgraph, True, calc_undeformed=False)
+                mesh = co.to_mesh(preserve_all_data_layers=True, depsgraph=bpy.context.evaluated_depsgraph_get())
             else:
                 mesh = co.data
 
@@ -1092,7 +1092,7 @@ def chunksToMesh(chunks, o):
     o.path_object_name = oname
 
     # parent the path object to source object if object mode
-    if o.geometry_source == 'OBJECT':
+    if (o.geometry_source == 'OBJECT') and (o.parent_path_to_object):
         activate(o.objects[0])
         ob.select_set(state=True, view_layer=None)
         bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
@@ -1788,7 +1788,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             for ob in objects:
 
                 if use_modifiers:
-                    m = ob.to_mesh(bpy.context.depsgraph, True, calc_undeformed=False)
+                    m = ob.to_mesh(preserve_all_data_layers=True, depsgraph=bpy.context.evaluated_depsgraph_get())
                 else:
                     m = ob.data
                 mw = ob.matrix_world

@@ -359,6 +359,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if use_experimental and ao.geometry_source in ['OBJECT', 'GROUP']:
                     layout.prop(ao, 'use_modifiers')
                 layout.prop(ao, 'hide_all_others')
+                layout.prop(ao, 'parent_path_to_object')
 
 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):

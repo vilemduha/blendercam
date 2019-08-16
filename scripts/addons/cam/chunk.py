@@ -990,7 +990,8 @@ def meshFromCurve(o, use_modifiers=False):
     bpy.ops.object.convert(target='MESH', keep_original=False)
 
     if use_modifiers:
-        newmesh = co.to_mesh(bpy.context.depsgraph, True, calc_undeformed=False)
+        eval_object = co.evaluated_get(bpy.context.evaluated_depsgraph_get())
+        newmesh = bpy.data.meshes.new_from_object(eval_object)
         oldmesh = co.data
         co.modifiers.clear()
         co.data = newmesh
