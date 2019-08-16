@@ -112,7 +112,7 @@ def getBoundsWorldspace(obs, use_modifiers=False):
             bpy.ops.object.convert(target='MESH', keep_original=False)
 
             if use_modifiers:
-                mesh = co.to_mesh(bpy.context.depsgraph, True, calc_undeformed=False)
+                mesh = co.to_mesh(preserve_all_data_layers=True, depsgraph=bpy.context.evaluated_depsgraph_get())
             else:
                 mesh = co.data
 
@@ -1788,7 +1788,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             for ob in objects:
 
                 if use_modifiers:
-                    m = ob.to_mesh(bpy.context.depsgraph, True, calc_undeformed=False)
+                    m = ob.to_mesh(preserve_all_data_layers=True, depsgraph=bpy.context.evaluated_depsgraph_get())
                 else:
                     m = ob.data
                 mw = ob.matrix_world
