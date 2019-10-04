@@ -872,7 +872,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
 	COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
 	#def draw_header(self, context):
-	#   self.layout.menu("CAM_CUTTER_presets", text="CAM Cutter")
+	#   self.layout.menu("CAM_CUTTER_MT_presets", text="CAM Cutter")
 	@classmethod
 	def poll(cls, context):
 		rd = context.scene.render

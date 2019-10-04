@@ -50,7 +50,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     def draw_header(self, context):
-        self.layout.menu("CAM_CUTTER_presets", text="CAM Cutter")
+        self.layout.menu("CAM_CUTTER_MT_presets", text="CAM Cutter")
 
     def draw(self, context):
         layout = self.layout
@@ -61,7 +61,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
             if ao:
                 # cutter preset
                 row = layout.row(align=True)
-                row.menu("CAM_CUTTER_presets", text=bpy.types.CAM_CUTTER_presets.bl_label)
+                row.menu("CAM_CUTTER_MT_presets", text=bpy.types.CAM_CUTTER_MT_presets.bl_label)
                 row.operator("render.cam_preset_cutter_add", text="", icon='ADD')
                 row.operator("render.cam_preset_cutter_add", text="", icon='REMOVE').remove_active = True
                 layout.prop(ao, 'cutter_id')
@@ -90,7 +90,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     def draw_header(self, context):
-        self.layout.menu("CAM_MACHINE_presets", text="CAM Machine")
+        self.layout.menu("CAM_MACHINE_MT_presets", text="CAM Machine")
 
     def draw(self, context):
         layout = self.layout
@@ -104,7 +104,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 
             # machine preset
             row = layout.row(align=True)
-            row.menu("CAM_MACHINE_presets", text=bpy.types.CAM_MACHINE_presets.bl_label)
+            row.menu("CAM_MACHINE_MT_presets", text=bpy.types.CAM_MACHINE_MT_presets.bl_label)
             row.operator("render.cam_preset_machine_add", text="", icon='ADD')
             row.operator("render.cam_preset_machine_add", text="", icon='REMOVE').remove_active = True
             # layout.prop(ao,'name')
@@ -306,7 +306,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
             ao = scene.cam_operations[scene.cam_active_operation]
 
             row = layout.row(align=True)
-            row.menu("CAM_OPERATION_presets", text=bpy.types.CAM_OPERATION_presets.bl_label)
+            row.menu("CAM_OPERATION_MT_presets", text=bpy.types.CAM_OPERATION_MT_presets.bl_label)
             row.operator("render.cam_preset_operation_add", text="", icon='ADD')
             row.operator("render.cam_preset_operation_add", text="", icon='REMOVE').remove_active = True
 

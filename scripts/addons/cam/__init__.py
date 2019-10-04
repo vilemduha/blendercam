@@ -889,14 +889,14 @@ def check_operations_on_load(context):
             o.computing = False
 
 
-class CAM_CUTTER_presets(Menu):
+class CAM_CUTTER_MT_presets(Menu):
     bl_label = "Cutter presets"
     preset_subdir = "cam_cutters"
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset
 
 
-class CAM_MACHINE_presets(Menu):
+class CAM_MACHINE_MT_presets(Menu):
     bl_label = "Machine presets"
     preset_subdir = "cam_machines"
     preset_operator = "script.execute_preset"
@@ -907,7 +907,7 @@ class AddPresetCamCutter(bl_operators.presets.AddPresetBase, Operator):
     '''Add a Cutter Preset'''
     bl_idname = "render.cam_preset_cutter_add"
     bl_label = "Add Cutter Preset"
-    preset_menu = "CAM_CUTTER_presets"
+    preset_menu = "CAM_CUTTER_MT_presets"
 
     preset_defines = [
         "d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"
@@ -926,7 +926,7 @@ class AddPresetCamCutter(bl_operators.presets.AddPresetBase, Operator):
     preset_subdir = "cam_cutters"
 
 
-class CAM_OPERATION_presets(Menu):
+class CAM_OPERATION_MT_presets(Menu):
     bl_label = "Operation presets"
     preset_subdir = "cam_operations"
     preset_operator = "script.execute_preset"
@@ -937,7 +937,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
     '''Add an Operation Preset'''
     bl_idname = "render.cam_preset_operation_add"
     bl_label = "Add Operation Preset"
-    preset_menu = "CAM_OPERATION_presets"
+    preset_menu = "CAM_OPERATION_MT_presets"
 
     preset_defines = [
         "o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"
@@ -982,7 +982,7 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
     '''Add a Cam Machine Preset'''
     bl_idname = "render.cam_preset_machine_add"
     bl_label = "Add Machine Preset"
-    preset_menu = "CAM_MACHINE_presets"
+    preset_menu = "CAM_MACHINE_MT_presets"
 
     preset_defines = [
         "d = bpy.context.scene.cam_machine",
@@ -1085,9 +1085,9 @@ def get_panels():  # convenience function for bot register and unregister functi
         ops.CamCurveRemoveDoubles,
         ops.CamMeshGetPockets,
 
-        CAM_CUTTER_presets,
-        CAM_OPERATION_presets,
-        CAM_MACHINE_presets,
+        CAM_CUTTER_MT_presets,
+        CAM_OPERATION_MT_presets,
+        CAM_MACHINE_MT_presets,
         AddPresetCamCutter,
         AddPresetCamOperation,
         AddPresetCamMachine,
@@ -1276,9 +1276,9 @@ classes = [
     ops.CamCurveRemoveDoubles,
     ops.CamMeshGetPockets,
 
-    CAM_CUTTER_presets,
-    CAM_OPERATION_presets,
-    CAM_MACHINE_presets,
+    CAM_CUTTER_MT_presets,
+    CAM_OPERATION_MT_presets,
+    CAM_MACHINE_MT_presets,
     AddPresetCamCutter,
     AddPresetCamOperation,
     AddPresetCamMachine,
