@@ -94,7 +94,7 @@ def activate(o):
 
 def dist2d(v1, v2):
     '''distance between two points in 2d'''
-    return math.sqrt((v1[0] - v2[0]) * (v1[0] - v2[0]) + (v1[1] - v2[1]) * (v1[1] - v2[1]))
+    return math.hypot((v1[0] - v2[0]), (v1[1] - v2[1]))
 
 
 def delob(ob):
