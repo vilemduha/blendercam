@@ -15,7 +15,7 @@ OCL_SCALE = 1000
 PYTHON_BIN = None
 
 if os.name == "nt":
-    PYTHON_BIN = "python"
+    PYTHON_BIN = "python.exe"
 elif os.name == "posix":
     PYTHON_BIN = "python"
 
