@@ -512,7 +512,7 @@ def register():
 	
 	bpy.types.Scene.print3d_settings=PointerProperty(type=PrintSettings)
 	
-	bpy.app.handlers.scene_update_pre.append(timer_update_print3d)
+	# bpy.app.handlers.scene_update_pre.append(timer_update_print3d)
 	
 	
 	#bpy.types.INFO_HT_header.append(header_info_print3d)
@@ -521,7 +521,7 @@ def unregister():
 	bpy.utils.unregister_module(__name__)
 	del bpy.types.Scene.print3d_settings
 	
-	bpy.app.handlers.scene_update_pre.remove(timer_update_print3d)
+	# bpy.app.handlers.scene_update_pre.remove(timer_update_print3d)
 	#bpy.types.INFO_HT_header.remove(header_info_print3d)
 
 #if __name__ == "__main__":

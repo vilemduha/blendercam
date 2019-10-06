@@ -1325,5 +1325,5 @@ def unregister():
 
     del s.cam_active_operation
     del s.cam_machine
-    bpy.app.handlers.scene_update_pre.remove(ops.timer_update)
+    # bpy.app.handlers.scene_update_pre.remove(ops.timer_update)
 # bpy.types.INFO_HT_header.remove(header_info)
