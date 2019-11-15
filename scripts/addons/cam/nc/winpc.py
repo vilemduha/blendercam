@@ -15,21 +15,21 @@ class Creator(iso_modal.Creator):
         self.start_of_line = True
 
     def SPACE_STR(self): return ' '
-	
+
     def TOOL(self): return('T%i' + self.SPACE() )
-	
-        
+
+
 ############################################################################
-## Internal 
+## Internal
     def write_spindle(self): return ''
-		
+
 ############################################################################
-## Programs 
+## Programs
 
     def program_begin(self, id, comment):
         if (self.useCrc == False):
             self.write( ('(Created with win-pc post processor ' + str(now.strftime("%Y/%m/%d %H:%M")) + ')' + '\n') )
-        else:  
+        else:
             self.write( ('(Created with win-pc Cutter Radius Compensation post processor ' + str(now.strftime("%Y/%m/%d %H:%M")) + ')' + '\n') )
         #self.rapid( x=0.0, y=0.0, z=30.0 )
 
@@ -83,7 +83,7 @@ class Creator(iso_modal.Creator):
         else:
             # not much, if any horizontal component, so use the vertical feed rate
             self.f.set(self.fh)
-			
+
 
 ############################################################################
 ## Probe routines

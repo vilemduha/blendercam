@@ -20,26 +20,26 @@ class Creator(iso_modal.Creator):
         self.n = 1
         self.waiting_t = None
         self.waiting_for_program_begin = False
-        
+
     ######## Codes
-    
+
     def SPACE(self): return(' ')
     def TOOL(self): return('T%i')
-    
+
     ######## Overridden functions
 
     def write_blocknum(self):
         self.write(self.BLOCK() % self.n)
         self.n += 1
-        
+
     def program_begin(self, id, name=''):
         self.waiting_for_program_begin = True
-        
+
     def write_waiting_program_begin(self):
         if self.waiting_for_program_begin == True:
             self.write('% 123')
             self.waiting_for_program_begin = False
-            
+
     def imperial(self):
         self.write_waiting_program_begin()
         self.write(' G70\n')
@@ -57,19 +57,19 @@ class Creator(iso_modal.Creator):
 
     # no comments wanted
     def comment(self, text):
-        pass 
-    
+        pass
+
     def spindle(self, s, clockwise):
         iso_modal.Creator.spindle(self, s, clockwise)
         self.write_waiting_tool_change()
-         
+
     def tool_change(self, id):
         self.waiting_t = id
-        
+
     def write_waiting_tool_change(self):
         if self.waiting_t:
             if len(self.g_list) > 0:
-                self.write_blocknum()            
+                self.write_blocknum()
                 for g in self.g_list:
                     self.write(self.SPACE() + g)
                 self.g_list = []
@@ -82,7 +82,7 @@ class Creator(iso_modal.Creator):
             self.write('\n')
             self.t = self.waiting_t
             self.waiting_t = None
-        
+
     def workplane(self, id):
         pass
 ################################################################################

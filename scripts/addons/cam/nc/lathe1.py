@@ -78,10 +78,10 @@ class CreatorIso(nc.Creator):
         self.write('\n')
 
     def program_stop(self, optional=False):
-        if (optional) : 
+        if (optional) :
             self.write(iso.codes.STOP_OPTIONAL() + '\n')
             self.prev_g0123 = ''
-        else : 
+        else :
             self.write(iso.codes.STOP() + '\n')
             self.prev_g0123 = ''
 
@@ -97,7 +97,7 @@ class CreatorIso(nc.Creator):
 
     ############################################################################
     ##  Subprograms
-    
+
     def sub_begin(self, id, name=''):
         self.write((iso.codes.PROGRAM() % id) + iso.codes.SPACE() + (iso.codes.COMMENT(name)))
         self.write('\n')
@@ -110,7 +110,7 @@ class CreatorIso(nc.Creator):
 
     ############################################################################
     ##  Settings
-    
+
     def imperial(self):
         self.g += iso.codes.IMPERIAL()
         self.fmt = iso.codes.FORMAT_IN()
@@ -168,7 +168,7 @@ class CreatorIso(nc.Creator):
 
     ############################################################################
     ##  Datums
-    
+
     def datum_shift(self, x=None, y=None, z=None, a=None, b=None, c=None):
         pass
 
@@ -182,7 +182,7 @@ class CreatorIso(nc.Creator):
             self.g += iso.codes.WORKPLANE() % (id + iso.codes.WORKPLANE_BASE())
         if ((id >= 7) and (id <= 9)):
             self.g += ((iso.codes.WORKPLANE() % (6 + iso.codes.WORKPLANE_BASE())) + ('.%i' % (id - 6)))
-        
+
 
     ############################################################################
     ##  Rates + Modes
@@ -346,7 +346,7 @@ class CreatorIso(nc.Creator):
         if (z != None):
             if (self.fmt % z) != (self.fmt % self.z):
                 return False
-            
+
         return True
 
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
@@ -425,7 +425,7 @@ class CreatorIso(nc.Creator):
 
     ############################################################################
     ##  CRC
-    
+
     def use_CRC(self):
         return self.useCrc
 
@@ -457,9 +457,9 @@ class CreatorIso(nc.Creator):
         self.write(iso.codes.END_CANNED_CYCLE() + '\n')
         self.prev_drill = ''
         self.prev_g0123 = ''
-        self.prev_z = ''   
-        self.prev_f = '' 
-        self.prev_retract = ''    
+        self.prev_z = ''
+        self.prev_f = ''
+        self.prev_retract = ''
     ############################################################################
     ##  Misc
 
@@ -469,7 +469,7 @@ class CreatorIso(nc.Creator):
     def insert(self, text):
         pass
 
-    def block_delete(self, on=False):        
+    def block_delete(self, on=False):
         pass
 
     def variable(self, id):

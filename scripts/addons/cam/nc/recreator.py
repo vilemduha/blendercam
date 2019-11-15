@@ -15,7 +15,7 @@ class Redirector(nc.Creator):
         if original.y != None: self.y = original.y * units
         if original.z != None: self.z = original.z * units
         self.imperial = False
-        
+
     def cut_path(self):
         pass
 
@@ -23,19 +23,19 @@ class Redirector(nc.Creator):
     ##  Programs
     def write(self, s):
         self.original.write(s)
-        
+
     def output_fixture(self):
         self.original.output_fixture()
-        
+
     def increment_fixture(self):
         self.original.increment_fixture()
 
     def get_fixture(self):
         return self.original.get_fixture()
-    
+
     def set_fixture(self, fixture):
         self.original.set_fixture(fixture)
-        
+
     def program_begin(self, id, name=''):
         self.cut_path()
         self.original.program_begin(id, name)
@@ -54,7 +54,7 @@ class Redirector(nc.Creator):
 
     ############################################################################
     ##  Subprograms
-    
+
     def sub_begin(self, id, name=None):
         self.cut_path()
         self.original.sub_begin(id, name)
@@ -66,16 +66,16 @@ class Redirector(nc.Creator):
     def sub_end(self):
         self.cut_path()
         self.original.sub_end()
-        
+
     def disable_output(self):
         self.original.disable_output()
-        
+
     def enable_output(self):
         self.original.enable_output()
 
     ############################################################################
     ##  Settings
-    
+
     def imperial(self):
         self.cut_path()
         self.imperial = True
@@ -175,13 +175,13 @@ class Redirector(nc.Creator):
         if x != None: self.x = x * units
         if y != None: self.y = y * units
         if z != None: self.z = z * units
-        
+
     def cut_path(self):
         pass
-    
+
     def z2(self, z):
         return z
-    
+
     def feed(self, x=None, y=None, z=None, a = None, b = None, c = None):
         px = self.x
         py = self.y
@@ -198,7 +198,7 @@ class Redirector(nc.Creator):
             self.cut_path()
             self.original.feed(self.x/units, self.y/units, self.z2(self.z)/units)
             return
-        
+
     def arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, ccw = True):
         if self.x == None or self.y == None or self.z == None:
             raise "first attached move can't be an arc"
@@ -247,10 +247,10 @@ class Redirector(nc.Creator):
     def pattern(self):
         self.cut_path()
         self.original.pattern()
-        
+
     def pattern_uses_subroutine(self):
         return self.original.pattern_uses_subroutine()
-        
+
     def pocket(self):
         self.cut_path()
         self.original.pocket()
@@ -280,7 +280,7 @@ class Redirector(nc.Creator):
 
     def end_canned_cycle(self):
         self.original.end_canned_cycle()
-        
+
     ############################################################################
     ##  Misc
 
@@ -295,6 +295,6 @@ class Redirector(nc.Creator):
     def variable_set(self, id, value):
         self.cut_path()
         self.original.variable_set(id, value)
-        
+
     def set_ocl_cutter(self, cutter):
         self.original.set_ocl_cutter(cutter)

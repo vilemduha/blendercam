@@ -35,7 +35,7 @@ class Creator(nc.Creator):
         self.x = 0
         self.y = 0
         self.z = 500
-	
+
 	self.x1=0
 	self.x2=0
 	self.y1=0
@@ -87,7 +87,7 @@ class Creator(nc.Creator):
         #if (optional) : self.write(iso.STOP_OPTIONAL + '\n')
         #else : self.write(iso.STOP + '\n')
 	self.write("// stop programu v jazyku REZ\n")
-  
+
     def program_end(self):
         #self.write_blocknum()
         #self.write(iso.PROGRAM_END + '\n')
@@ -105,7 +105,7 @@ class Creator(nc.Creator):
 
     ############################################################################
     ##  Subprograms
-    
+
     def sub_begin(self, id, name=''):
         #self.write((iso.PROGRAM % id) + iso.SPACE + (iso.COMMENT % name))
         #self.write('\n')
@@ -123,7 +123,7 @@ class Creator(nc.Creator):
 	pass
     ############################################################################
     ##  Settings
-    
+
     def imperial(self):
         #self.g += iso.IMPERIAL
         #self.fmt = iso.FORMAT_IN
@@ -175,7 +175,7 @@ class Creator(nc.Creator):
 
     ############################################################################
     ##  Datums
-    
+
     def datum_shift(self, x=None, y=None, z=None, a=None, b=None, c=None):
         pass
 
@@ -283,7 +283,7 @@ class Creator(nc.Creator):
 	self.y=y
 
     def feed(self, x=0.0000, y=0.0000, z=0.0000,how=False):
-        if self.same_xyz(x, y, z): 
+        if self.same_xyz(x, y, z):
 	  return
         if (x == None):
 	  if (y == None):
@@ -332,7 +332,7 @@ class Creator(nc.Creator):
         if (z != None):
             if (self.fmt % z) != (self.fmt % self.z):
                 return False
-            
+
         return True
 
     def arc(self, cw, x=0.0000, y=0.0000, z=0.0000, i=0.0000, j=0.0000, k=0.0000, r=0.0000):
@@ -375,10 +375,10 @@ class Creator(nc.Creator):
 	#self.write(('%f' %x) )
 	self.write(' , ')
 	self.write((' %.4f' %(self.y + j)))
-	
+
 	self.write(' , ')
 	angle=0.0000
-	
+
 	self.x1=-i
 	self.y1=-j
 	self.x2=x-(self.x+i)
@@ -388,14 +388,14 @@ class Creator(nc.Creator):
 	dy=self.y1*self.y2
 	ssucin=dx+dy
 	r=math.sqrt((i*i)+(j*j))
-	
+
 	#dx=i*(x-(self.x + i))
 	#dy=j*(y-(self.y + j))
 	#ssucin=dx+dy
 	#r=math.sqrt((i*i)+(j*j))
 	ratio=ssucin/(r*r)
 	angle= math.acos(ratio) * 180 / math.pi
-	print 'angle' 
+	print 'angle'
 	print angle
 #	while(angle>=90.0001):
 #	  if(cw): self.write((' -90.0000\n' ))
@@ -407,9 +407,9 @@ class Creator(nc.Creator):
 #	  self.write((' %.4f' %(  self.y + j)))
 #	  self.write(' , ')
 #	  angle-=90
-	if(cw): self.write((' %.4f' %(-angle))) 
+	if(cw): self.write((' %.4f' %(-angle)))
 	else: self.write((' %.4f' %(angle)))
-	
+
 
 	#self.write((', %.4f' % ))
 	self.write('\n')
@@ -426,7 +426,7 @@ class Creator(nc.Creator):
 	self.write(' ')
 	self.write( (' %f' %self.y))
 	self.write('\n')
-	
+
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         self.arc(True, x, y, z, i, j, k, r)
 

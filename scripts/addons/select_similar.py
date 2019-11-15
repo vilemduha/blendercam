@@ -8,7 +8,7 @@ bl_info = {
     "warning": "",
     "wiki_url": "",
     "category": "Add Mesh"}
-  
+
 import bpy
 from bpy.props import *
 prec=0.001;
@@ -21,7 +21,7 @@ def precc3(v1,v2,prec):
 condition = 'VERTEX_COLOR';
 
 def compare(o,o1, rules):
-    
+
     return 0;
 
 def compareColor(col1,col2,threshold):
@@ -35,20 +35,20 @@ def selectSimilarObject(condition,threshold):
     if condition =='MATERIAL_COLOR':
         if len(ao.material_slots)>0:
             m=ao.material_slots[0].material.diffuse_color
-            
+
             for o in bpy.context.scene.objects:
                 #print (o.material_slots)
                 if len(o.material_slots)>0 and o.material_slots[0].material!=None:
                     #print (precc3(m,o.material_slots[0].material.diffuse_color,prec))
                     if precc3(m,o.material_slots[0].material.diffuse_color,prec):
                         o.select=1;
-               
+
     if condition =='DIMENSIONS':
-        d = ao.dimensions   
+        d = ao.dimensions
         for o in bpy.context.scene.objects:
             if o.dimensions.x-prec<d.x<o.dimensions.x+prec and o.dimensions.y-prec<d.y<o.dimensions.y+prec and o.dimensions.z-prec<d.z<o.dimensions.z+prec:
                 o.select=1
-         
+
     if condition == 'VERTEX_COUNT':
         # select similar num of verts
         n=len(ao.data.vertices);
@@ -56,8 +56,8 @@ def selectSimilarObject(condition,threshold):
             if o.type == 'MESH':
                 if len(o.data.vertices)==n:# and o.material_slots[0].material == mat:
                     o.select=1
-                    
-def selectSimilarMesh(condition,threshold):   
+
+def selectSimilarMesh(condition,threshold):
     bpy.ops.object.editmode_toggle()
     print(condition,threshold)
     if condition == 'VERTEX_COLOR':
@@ -73,13 +73,13 @@ def selectSimilarMesh(condition,threshold):
             for li in range(0,len(m.loops)):
                 l=m.loops[li]
                 v=m.vertices[l.vertex_index]
-                
+
                 color1 = m.vertex_colors['Col'].data[li].color
                 if compareColor(color, color1, threshold):
                     v.select=True
     bpy.ops.object.editmode_toggle()
-                    
-                
+
+
 class SelectSimilarObject(bpy.types.Operator):
     """Select similar objects"""
     bl_idname = "object.select_similar_addon"
@@ -102,14 +102,14 @@ class SelectSimilarObject(bpy.types.Operator):
             min=0.000001, max=100.0,
             default=0.1,
             )
-  
-    conditions=[]    
+
+    conditions=[]
     def execute(self, context):
 
         selectSimilarObject(self.condition,self.threshold)
 
         return {'FINISHED'}
-    
+
 class SelectSimilarMesh(bpy.types.Operator):
     """Select similar elements"""
     bl_idname = "mesh.select_similar_addon"
@@ -131,15 +131,15 @@ class SelectSimilarMesh(bpy.types.Operator):
             min=0.000001, max=100.0,
             default=0.1,
             )
-  
-    conditions=[]    
+
+    conditions=[]
     #view_align = BoolProperty(
     #        name="Align to View",
     #        default=False,
     #        )
     # generic transform props
-    
-   
+
+
 
     def execute(self, context):
 

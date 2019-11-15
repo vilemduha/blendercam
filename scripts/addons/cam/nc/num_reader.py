@@ -45,7 +45,7 @@ class NumReader(nc.Parser):
             self.parse_word = ""
             self.line_index = 0
             self.line_length = len(self.line)
-                    
+
             while self.line_index < self.line_length:
                 c = self.line[self.line_index]
                 self.parse_word += c
@@ -53,7 +53,7 @@ class NumReader(nc.Parser):
                 self.ParseFromFirstLetter(c)
 
                 self.line_index = self.line_index + 1
- 
+
             self.add_text(self.parse_word, None)
 
             self.end_ncblock()

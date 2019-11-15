@@ -51,7 +51,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         self.write((maker.codes.EXTRUDER_TEMP('0')))
         self.write((maker.codes.BUILD_BED_TEMP('0')))
         self.write((maker.codes.STEPPERS_OFF()))
-        
+
 ################################################################################
 # general
     def write_blocknum(self):
@@ -59,43 +59,43 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
 
     def set_plane(self, plane):
          pass
-          
+
     def workplane(self, id):
         pass
-        
+
     def spindle(self, s, clockwise):
         pass
 ################################################################################
 # Extruder Control
-        
+
     def extruder_on(self):
          self.write((maker.codes.EXTRUDER_ON()) + ('\n'))
-        
+
     def extruder_off(self):
          self.write((maker.codes.EXTRUDER_OFF()) + ('\n'))
-        
+
     def set_extruder_flowrate(self, flowrate):
          self.write((maker.codes.EXTRUDER_SPEED_PWM(flowrate)) + ('\n'))
 
     def extruder_temp(self, temp):
          self.write((maker.codes.EXTRUDER_TEMP(temp)) + ('\n'))
-   
+
 ################################################################################
 # Build Environment Control
     def build_bed_temp(self, temp):
          self.write((maker.codes.BUILD_BED_TEMP(temp)) + ('\n'))
-        
+
     def chamber_temp(self, temp):
-         self.write((maker.codes.CHAMBER_TEMP(temp)) + ('\n'))   
-         
+         self.write((maker.codes.CHAMBER_TEMP(temp)) + ('\n'))
+
 ################################################################################
 # Fan Control
     def fan_on(self):
          self.write((maker.codes.FAN_ON()) + ('\n'))
-        
+
     def fan_off(self):
          self.write((maker.codes.FAN_OFF()) + ('\n'))
-        
+
 ################################################################################
 # Custom routines
 
@@ -115,7 +115,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
      #	self.write_blocknum()
      #  self.write((maker.codes.TOOL() % id) + '\n')
      #  self.t = id
-    
+
     def tool_defn(self, id, name='', params=None):
 	pass
 ############################################################################
@@ -231,7 +231,7 @@ class CreatorMakerbotHBP(iso_modal.CreatorIsoModal):
         if (z != None):
             if (self.fmt % z) != (self.fmt % self.z):
                 return False
-            
+
         return True
 
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
