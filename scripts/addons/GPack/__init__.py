@@ -42,11 +42,11 @@ def createMeshFromData(name, verts, faces):
 	# Create mesh from given verts, faces.
 	me.from_pydata(verts, [], faces)
 	# Update mesh with new data
-	me.update()	
+	me.update()
 	return ob
 
 def getIslands(me):
-	
+
 	bm = bmesh.from_edit_mesh(me)
 	for f in bm.faces:
 		f.select=False
@@ -56,7 +56,7 @@ def getIslands(me):
 	while not len(done)>=len(bm.faces):
 		island=[]
 		for i,p in enumerate(bm.faces):
-				
+
 			if done.get(i) == None:
 				p.select=True
 				done[i]=True
@@ -66,7 +66,7 @@ def getIslands(me):
 		while len(nf)>0:
 			selected_faces = nf
 			nf = []
-			
+
 			for f in selected_faces:
 				for edge in f.edges:
 					if edge.seam==False:
@@ -82,7 +82,7 @@ def getIslands(me):
 	#print(islands)
 
 def GameDropOb(ob,margin,enablerotation):
-		
+
 	activate(ob)
 	#ob.rotation_euler.x=math.pi/2
 	#bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
@@ -107,13 +107,13 @@ def GameDropOb(ob,margin,enablerotation):
 
 	bpy.ops.object.game_property_new(name="island")
 
-		
+
 def UVobs(obs,set):
 	uvobs=[]
 	zoffset=0
 	for ob in obs:
 		activate(ob)
-		
+
 		bpy.ops.object.editmode_toggle()
 		if set.startConditions=='NEW':
 			bpy.ops.uv.pack_islands(margin=0.01)
@@ -121,36 +121,36 @@ def UVobs(obs,set):
 		islands = getIslands(ob.data)
 		#print('b')
 		bpy.ops.object.editmode_toggle()
-		
-		
+
+
 		print(len(islands)
 		for iidx,island in enumerate(islands):
 			out_verts=[]
 			out_faces=[]
-			
+
 			print(iidx,len(islands))
 			vertidx=0
-			
+
 			vertindices= {}
 			loops=[]
 			for fi in island:
 				face = ob.data.polygons[fi]
-				oface=[]   
-				
+				oface=[]
+
 				for vert, loop in zip(face.vertices, face.loop_indices):
 					uv = ob.data.uv_layers.active.data[loop].uv.copy()
-					
+
 					'''
 					if vertindices.get(vert) == None:
-						
+
 						vertindices[vert]=vertidx
 						nvertindex = vertidx
 						out_verts.append((uv.x,0,uv.y))
 						vertidx+=1
-						
-					
+
+
 					nvertindex = vertindices[vert]
-					
+
 					#print(vert,nvertindex, vertindices)
 					#print()
 					oface.append(nvertindex)
@@ -163,7 +163,7 @@ def UVobs(obs,set):
 				out_faces.append(oface)
 			#print(out_verts,out_faces)
 			uvob = createMeshFromData(ob.name + 'UVObj', out_verts, out_faces)
-			
+
 			activate(uvob)
 			bpy.ops.mesh.uv_texture_add()
 			#print(uvob.name)
@@ -172,13 +172,13 @@ def UVobs(obs,set):
 			vertidx = 0
 			for fi in island:
 				face = ob.data.polygons[fi]
-				oface=[]   
+				oface=[]
 				for vert, loop in zip(face.vertices, face.loop_indices):
-					uvob.data.uv_layers.active.data[vertidx].uv  = (loops[vertidx],0)#ob.data.uv_layers.active.data[loop].uv 
-					
+					uvob.data.uv_layers.active.data[vertidx].uv  = (loops[vertidx],0)#ob.data.uv_layers.active.data[loop].uv
+
 					#print('loop',loops[vertidx])
 					vertidx+=1
-					
+
 			print(uvob.name)
 			bpy.ops.object.editmode_toggle()
 			bpy.ops.mesh.remove_doubles(threshold = 0.0000001)
@@ -188,10 +188,10 @@ def UVobs(obs,set):
 			bpy.ops.object.editmode_toggle()
 			bpy.ops.object.modifier_add(type='SOLIDIFY')
 			bpy.context.object.modifiers["Solidify"].thickness = min(0.3, min(uvob.dimensions.x,uvob.dimensions.y)) #0.1
-			
+
 			bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Solidify")
 			#print('e')
-			
+
 			uvob['source']=ob.name
 			uvob['island']=iidx
 			uvob['islandindices']=island
@@ -201,17 +201,17 @@ def UVobs(obs,set):
 			bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS')
 			zoffset+=uvob.dimensions.z+0.005
 	#fal
-	print('c')	
+	print('c')
 	for ob in uvobs:
 		ob.select=True
-		
+
 	s=bpy.context.scene
 	s.objects.active=uvobs[0]
-	
+
 	bpy.ops.object.material_slot_add()
 	mat=bpy.data.materials.new('GPackMaterial')
-	
-		
+
+
 	uvobs[0].material_slots[0].material=mat
 	mat.use_object_color = True
 	for ob in uvobs:
@@ -222,30 +222,30 @@ def UVobs(obs,set):
 	return uvobs
 
 def doGameUV(context):
-	
+
 	#getIslands(bpy.context.active_object)
 	obs=bpy.context.selected_objects
 	activeOb=bpy.context.object
 	origscene=bpy.context.scene
 	import_scene('GPack')
-	
-	
+
+
 	set=bpy.context.scene.gpacker_settings
-	
+
 	uvobs = UVobs(obs,set)
-			
+
 	for ob in uvobs:
 		GameDropOb(ob,set.initialmargin, set.enablerotation)
-	
+
 	bpy.ops.object.select_all(action='DESELECT')
 	for ob in uvobs:
 		ob.select=True
-		
+
 	bpy.ops.group.create()
 	bpy.ops.object.make_links_scene(scene='GPack')
 	bpy.ops.object.delete(use_global=False)
 	bpy.context.window.screen.scene = bpy.data.scenes['GPack']
-	
+
 	bpy.ops.view3d.viewnumpad(type='CAMERA')
 	bpy.context.space_data.viewport_shade = 'MATERIAL'
 	#bpy.ops.view3d.zoom_camera_1_to_1()
@@ -256,14 +256,14 @@ def doGameUV(context):
 			ob.game.properties['doobjects'].value = False
 			ob.game.properties['xsize'].value = set.xsize
 			ob.game.properties['ysize'].value = set.ysize
-			
+
 	#PLAY THE GAME!
 	bpy.ops.view3d.game_start()
-	
+
 	if set.apply==True:
 		print('after game')
 		#reassign UV's
-		
+
 		bpy.context.scene.update()
 		#get size object
 		for ob in bpy.context.scene.objects:
@@ -272,31 +272,31 @@ def doGameUV(context):
 		for uvob in uvobs:
 			uvobmat=uvob.matrix_world
 			ob=bpy.data.objects[uvob['source']]
-			
+
 			assigns=[]
-			
+
 			for uvfi,fi in enumerate(uvob['islandindices']):
 				face = ob.data.polygons[fi]
 				uvface = uvob.data.polygons[uvfi]
-				
+
 				for vert1, loop1 in zip(uvface.vertices, uvface.loop_indices):
 					co=uvobmat*uvob.data.vertices[vert1].co/scale
-					
+
 					idxuv = int(uvob.data.uv_layers.active.data[loop1].uv.x)
 					print(idxuv)
-					uv=ob.data.uv_layers.active.data[idxuv].uv 
+					uv=ob.data.uv_layers.active.data[idxuv].uv
 					uv.x = co.x
 					uv.y = co.z
-					
 
-		
+
+
 		#print(fdict)
 		assigns=[]
-		
-		
+
+
 		print(len(assigns))
-			
-	
+
+
 	bpy.context.window.screen.scene = origscene
 	bpy.data.scenes.remove(bpy.data.scenes['GPack'], do_unlink = True)
 	bpy.data.texts.remove(bpy.data.texts['root'])
@@ -305,17 +305,17 @@ def doGameUV(context):
 		ob.select=True
 
 #packing of curves
-								
+
 def getBoundsWorldspace(ob):
 	#progress('getting bounds of object(s)')
-	
-		
+
+
 	maxx=maxy=maxz=-10000000
 	minx=miny=minz=10000000
-	
+
 	bb=ob.bound_box
 	mw=ob.matrix_world
-	
+
 	for coord in bb:
 		#this can work badly with some imported curves, don't know why...
 		#worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
@@ -326,31 +326,31 @@ def getBoundsWorldspace(ob):
 		maxx=max(maxx,worldCoord.x)
 		maxy=max(maxy,worldCoord.y)
 		maxz=max(maxz,worldCoord.z)
-			
+
 	#progress(time.time()-t)
 	return minx,miny,minz,maxx,maxy,maxz
 
 def getBoundsSpline(s):
 	#progress('getting bounds of object(s)')
-	
-		
+
+
 	maxx=maxy=maxz=-10000000
 	minx=miny=minz=10000000
-	
-	
-	
-	
+
+
+
+
 	for p in s.points:
 		#this can work badly with some imported curves, don't know why...
 		#worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))
-		
+
 		minx=min(minx,p.co.x)
 		miny=min(miny,p.co.y)
 		minz=min(minz,p.co.z)
 		maxx=max(maxx,p.co.x)
 		maxy=max(maxy,p.co.y)
 		maxz=max(maxz,p.co.z)
-	for p in s.bezier_points:	
+	for p in s.bezier_points:
 		minx=min(minx,p.co.x)
 		miny=min(miny,p.co.y)
 		minz=min(minz,p.co.z)
@@ -372,7 +372,7 @@ def getInstances(obs):
 			instanceindices.append(counti)
 			dataindices.append(counti)
 			#dataindex+=1
-			
+
 		else:
 			i = data.index(ob.data)
 			#print(i);
@@ -381,23 +381,23 @@ def getInstances(obs):
 	print('number of original shapes',str(len(data)))
 	print(instanceindices)
 	return instanceindices
-	
+
 def prepareCurves(obs, set):
 	packobs=[]
 	zoffset=0
 	instanceindices=getInstances(obs)
 	instanceindex=0
 	e=mathutils.Euler((math.pi/2,0,0))
-	
+
 	for ob in obs:
-		
+
 		if ob.type=='CURVE':
-		
+
 			oldloc=ob.location.copy()
-			
+
 			if instanceindices[instanceindex]==instanceindex:
-				
-			
+
+
 				activate(ob)
 				bpy.ops.object.duplicate()
 				packob=bpy.context.active_object
@@ -425,7 +425,7 @@ def prepareCurves(obs, set):
 						c.dimensions = '3D'
 						bpy.ops.object.convert(target='MESH')
 						bpy.ops.object.convert(target='CURVE')
-					
+
 					bpy.ops.curve.simplify(error = 0.001)
 					#delete packob here?
 					bpy.context.scene.objects.unlink(packob)
@@ -433,20 +433,20 @@ def prepareCurves(obs, set):
 					activate(packob)
 					for s in packob.data.splines:
 						s.use_cyclic_u=True
-						
+
 					if min(maxx-minx,maxy-miny)<0.1:
 						thickness=min(maxx-minx,maxy-miny)
 				packob.data.dimensions = '2D'
-				
-				
+
+
 				bpy.context.active_object.rotation_euler.rotate(e)
 				#packob.rotation_euler=(math.pi/2,0,0)
-				
-				
+
+
 				#bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS')
 				newloc=packob.location.copy()
 				#print(newloc-oldloc)
-				
+
 				bpy.ops.object.convert(target='MESH')
 				activate(packob)
 				bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -459,15 +459,15 @@ def prepareCurves(obs, set):
 			else:
 				print(instanceindex)
 				source_packob=packobs[instanceindices[instanceindex]][0]
-				
+
 				activate(source_packob)
 				bpy.ops.object.duplicate(linked=True)
 				packob=bpy.context.active_object
-				
+
 				packob.rotation_euler=(math.pi/2,-ob.rotation_euler.z,0)
 				#packob.rotation_euler.rotate()
 				#packob.rotation_euler.rotate(e)
-				
+
 			packob['source']=ob.name
 			if set.startConditions=='TWEAK' or set.startConditions=='FIXED':
 				packob.location=(oldloc.x,0,oldloc.y)
@@ -487,14 +487,14 @@ def prepareCurves(obs, set):
 		instanceindex+=1
 	return packobs
 
-	
+
 def doGameObs(context):
 	#getIslands(bpy.context.active_object)
 	obs=bpy.context.selected_objects
 	origscene=bpy.context.scene
 	import_scene('GPack')
 	set=bpy.context.scene.gpacker_settings
-	
+
 	packobs=prepareCurves(obs,set)
 	gobs=[]
 	for data in packobs:
@@ -504,11 +504,11 @@ def doGameObs(context):
 			data[0].select=True
 	bpy.ops.group.create()
 	print('done')
-	
+
 	bpy.ops.object.make_links_scene(scene='GPack')
 	bpy.ops.object.delete(use_global=False)
 	bpy.context.window.screen.scene = bpy.data.scenes['GPack']
-	
+
 	bpy.ops.view3d.viewnumpad(type='CAMERA')
 	bpy.context.space_data.viewport_shade = 'MATERIAL'
 	#pass data to game:
@@ -518,19 +518,19 @@ def doGameObs(context):
 			ob.game.properties['doobjects'].value = True
 			ob.game.properties['xsize'].value = set.xsize
 			ob.game.properties['ysize'].value = set.ysize
-	
+
 	bpy.ops.view3d.game_start()
 	for s in bpy.data.scenes:
 		s.gpacker_settings.doobjects=False
 	print('repack')
-	
+
 	if set.apply:
 		for data in packobs:
 			print(data[0].location,data[1].location)
 			data[1].location.x=data[0].location.x
 			data[1].location.y=data[0].location.z
 			data[1].rotation_euler.z=-data[0].rotation_euler.y
-			
+
 			#bpy.context.scene.objects.unlink(data[0])
 		for s in bpy.data.scenes:
 			s.gpacker_settings.apply=False
@@ -539,7 +539,7 @@ def doGameObs(context):
 	for ob in obs:
 		ob.select=True
 
-	
+
 #####################################################################
 # Import Functions
 
@@ -567,7 +567,7 @@ def import_scene(obname):
 		   )
 	print(result)
 
-	
+
 import bpy
 
 
@@ -596,16 +596,16 @@ class GPackCurvesOperator(bpy.types.Operator):
 	def execute(self, context):
 		doGameObs(context)
 		return {'FINISHED'}
-		
+
 
 class GPackSettings(bpy.types.PropertyGroup):
 
-	
+
 	#lpgroup =   bpy.props.StringProperty(name="low poly group", default="")
 	#hpgroup =   bpy.props.StringProperty(name="high poly group", default="")
 	apply =  bpy.props.BoolProperty(name="apply",description="", default=False)
 	doobjects =  bpy.props.BoolProperty(name="doobjects",description="", default=False)
-	
+
 	startConditions = bpy.props.EnumProperty(name='start state', items=(('NEW','Drop All','all parts are dropped into the layout'),('FIXED','Fixed','All objects are still in beginning, just tweak the extra additions'),('TWEAK','Tweak','start from current state, position objects before to drop properly')),
 		description='start conditions',
 		default='TWEAK')
@@ -620,10 +620,10 @@ class GPackCurvesPanel(bpy.types.Panel):
 	bl_region_type = 'TOOLS'
 	bl_label = "Gravity Packer"
 	bl_idname = "WORLD_PT_GPACKER"
-	
+
 	bl_context = "objectmode"
 	bl_options = {'DEFAULT_CLOSED'}
-	bl_category = "Tools"	
+	bl_category = "Tools"
 
 	def draw(self, context):
 		layout = self.layout
@@ -636,15 +636,15 @@ class GPackCurvesPanel(bpy.types.Panel):
 		layout.operator("object.gpack_uv")
 		#layout.prop_search(s, "lpgroup", bpy.data, "groups")
 		#layout.prop_search(s, "hpgroup", bpy.data, "groups")
-		
+
 		layout.prop(s,'startConditions')
 		layout.prop(s,'xsize')
 		layout.prop(s,'ysize')
 		layout.prop(s,'initialmargin')
 		layout.prop(s,'enablerotation')
-		
-		
-		#layout.prop(s,'pass_combined')		
+
+
+		#layout.prop(s,'pass_combined')
 '''	# separate UV's????
 class GPackUVPanel(bpy.types.Panel):
 	"""Creates a Panel in the Object properties window"""
@@ -653,8 +653,8 @@ class GPackUVPanel(bpy.types.Panel):
 	bl_space_type = 'PROPERTIES'
 	bl_region_type = 'WINDOW'
 	bl_context = "object"
-	
-	
+
+
 	def draw(self, context):
 		layout = self.layout
 
@@ -665,14 +665,14 @@ class GPackUVPanel(bpy.types.Panel):
 		layout.operator("object.gpack_uv")
 		#layout.prop_search(s, "lpgroup", bpy.data, "groups")
 		#layout.prop_search(s, "hpgroup", bpy.data, "groups")
-		
+
 		layout.prop(s,'startConditions')
 		layout.prop(s,'xsize')
 		layout.prop(s,'ysize')
 		layout.prop(s,'initialmargin')
-		
-		
-		#layout.prop(s,'pass_combined')		
+
+
+		#layout.prop(s,'pass_combined')
 '''
 def register():
 	s = bpy.types.Scene

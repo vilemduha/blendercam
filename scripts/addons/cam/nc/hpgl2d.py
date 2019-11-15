@@ -9,7 +9,7 @@ import math
 
 class Creator(nc.Creator):
     def __init__(self):
-        nc.Creator.__init__(self) 
+        nc.Creator.__init__(self)
         self.x = int(0)
         self.y = int(0) # these are in machine units, like 0.01mm or maybe 0.25mm
         self.metric() # set self.units_to_mc_units
@@ -40,7 +40,7 @@ class Creator(nc.Creator):
         self.write('PW0.349,7;\n')
         self.write('PW0.349,8;\n')
         self.write('SP1;\n')
-        
+
     def program_end(self):
         self.write('SP0;\n')
 
@@ -60,7 +60,7 @@ class Creator(nc.Creator):
         if y != None:
             machine_y = self.closest_int(y * self.units_to_mc_units)
         return machine_x, machine_y
-        
+
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
         # ignore the z, any rapid will be assumed to be done with the pen up
         mx, my = self.get_machine_x_y(x, y)
@@ -68,7 +68,7 @@ class Creator(nc.Creator):
             self.write(('PU%i' % mx) + (' %i;\n' % my))
             self.x = mx
             self.y = my
-            
+
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
         # ignore the z, any feed will be assumed to be done with the pen down
         mx, my = self.get_machine_x_y(x, y)
@@ -76,7 +76,7 @@ class Creator(nc.Creator):
             self.write(('PD%i' % mx) + (' %i;\n' % my))
             self.x = mx
             self.y = my
-            
+
     def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         mx, my = self.get_machine_x_y(x, y)
         if mx != self.x or my != self.y:
@@ -99,7 +99,7 @@ class Creator(nc.Creator):
             mcx, mcy = self.get_machine_x_y(cx, cy)
 
             self.write(('AA%i' % mcx) + (',%i' % mcy) + (',%d;\n' % (a * 180 / math.pi)))
-            
+
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         self.arc(True, x, y, z, i, j, k, r)
 

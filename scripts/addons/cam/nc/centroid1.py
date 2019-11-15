@@ -2,7 +2,7 @@
 # centroid1.py
 #
 # Post Processor for the centroid M40 machine
-# 
+#
 #
 # Dan Falck, 7th March 2010
 
@@ -18,7 +18,7 @@ now = datetime.datetime.now()
 
 ################################################################################
 class Creator(iso_modal.Creator):
-    
+
     def __init__(self):
         iso_modal.Creator.__init__(self)
 
@@ -39,17 +39,17 @@ class Creator(iso_modal.Creator):
     #    self.useCrc = False
 
 ################################################################################
-# general 
+# general
 
     def comment(self, text):
-        self.write(';' + text +'\n')  
+        self.write(';' + text +'\n')
     def write_blocknum(self):
-        pass 
+        pass
 
 ################################################################################
 # settings for absolute or incremental mode
     def absolute(self):
-        self.write(self.ABSOLUTE()+'\n')        
+        self.write(self.ABSOLUTE()+'\n')
         self.absolute_flag = True
 
     def incremental(self):
@@ -68,7 +68,7 @@ class Creator(iso_modal.Creator):
     def program_begin(self, id, name=''):
         self.write(';time:'+str(now)+'\n')
         self.write('G17 G20 G80 G40 G90\n')
-        
+
 
     def program_end(self):
         self.write('M05\n')
@@ -79,9 +79,9 @@ class Creator(iso_modal.Creator):
 
     def program_stop(self, optional=False):
         self.write_blocknum()
-        if (optional) : 
+        if (optional) :
             self.write(self.STOP_OPTIONAL() + '\n')
-        else : 
+        else :
             self.write('M05\n')
             self.write('M25\n')
             self.write(self.STOP() + '\n')
@@ -95,7 +95,7 @@ class Creator(iso_modal.Creator):
             self.g_list.append(self.WORKPLANE() % (id + self.WORKPLANE_BASE()))
         if ((id >= 7) and (id <= 9)):
             self.g_list.append(((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + ('.%i' % (id - 6))))
-        self.prev_g0123 = ''            
+        self.prev_g0123 = ''
 
 ################################################################################
 # clearance plane
@@ -106,13 +106,13 @@ class Creator(iso_modal.Creator):
 # return to home
     def rapid_home(self, x=None, y=None, z=None, a=None, b=None, c=None):
         """Rapid relative to home position"""
-        self.write('M05\n')              
+        self.write('M05\n')
         self.write('M25\n')
         self.write(self.RAPID())
         self.write(self.X() + (self.fmt % x))
         self.write(self.Y() + (self.fmt % y))
-        self.write('\n')                     
-                     
+        self.write('\n')
+
 ################################################################################
 # tool info
     def tool_change(self, id):
@@ -139,17 +139,17 @@ class Creator(iso_modal.Creator):
 
 
     def spindle(self, s, clockwise):
-        if s < 0: 
+        if s < 0:
             clockwise = not clockwise
             s = abs(s)
-        
+
         self.s = self.SPINDLE(self.FORMAT_ANG(), s)
         if clockwise:
            #self.s =  self.SPINDLE_CW() + self.s
-            self.s =  self.SPINDLE_CW()                
+            self.s =  self.SPINDLE_CW()
             self.write(self.s +  '\n')
             self.write('G04 P2.0 \n')
-                
+
         else:
             self.s =  self.SPINDLE_CCW() + self.s
 
@@ -158,11 +158,11 @@ class Creator(iso_modal.Creator):
         self.write(self.SPACE() + self.END_CANNED_CYCLE() + '\n')
         self.prev_drill = ''
         self.prev_g0123 = ''
-        self.prev_z = ''   
-        self.prev_f = '' 
-        self.prev_retract = '' 
+        self.prev_z = ''
+        self.prev_f = ''
+        self.prev_retract = ''
         self.write('M05\n')
-        self.write('M25\n') 
+        self.write('M25\n')
         self.write('G00 X-1.0 Y1.0\n')
 
 nc.creator = Creator()

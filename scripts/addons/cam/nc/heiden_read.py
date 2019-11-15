@@ -28,7 +28,7 @@ class Parser(nc.Parser):
         self.olda = 0
         self.oldb = 0
         self.oldc = 0
-        
+
     def ParseTool(self, word):
         # parse the first numeric parameter that comes after 'tool call'
         try:
@@ -45,10 +45,10 @@ class Parser(nc.Parser):
                         self.col = 'tool no'
         except:
             pass
-        
+
     def change_tool(self, t):
         pass
-       
+
     def ParseWord(self, word):
         try:
             if (word[0] == 'A' or word[0] == 'a'):
@@ -93,19 +93,19 @@ class Parser(nc.Parser):
                 self.t = eval(word[1:])
         except:
             pass
-        
+
     def Parsey(self, name):
         self.files_open(name)
-        
+
         for_full_machine_sim = True # to do, make derived class to do this
         #for_full_machine_sim = False
-        
+
         self.f = None
         self.arc = 0
         self.rapid = True
-        
+
         while (self.readline()):
-            
+
             self.a = None
             self.b = None
             self.c = None
@@ -124,7 +124,7 @@ class Parser(nc.Parser):
 
             self.move = False
             self.no_move = False
-            
+
             words = self.pattern_tool.findall(self.line)
             for word in words:
                 self.ParseTool(word)
@@ -145,7 +145,7 @@ class Parser(nc.Parser):
                 if self.a != None: self.olda = self.a
                 if self.b != None: self.oldb = self.b
                 if self.c != None: self.oldc = self.c
-                
+
             elif (self.t):
                 self.change_tool(self.t)
 

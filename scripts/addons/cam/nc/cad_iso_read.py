@@ -7,7 +7,7 @@
 
 """ use this script to backplot nc files to *.scr file for autocad,bricscad,
     draftsight,progecad,ares commander, etc....
-    usage: python cad_iso_read.py temp.nc temp.scr 
+    usage: python cad_iso_read.py temp.nc temp.scr
 """
 
 
@@ -29,7 +29,7 @@ class Parser(nc.Parser):
          #  followed by a possible deimcal, or a letter followed by # with a decimal . deimcal
         # add your character here > [(!;] for comments char
         # then look for the 'comment' function towards the end of the file and add another elif
-        
+
     def ParseWord(self, word):
         if (word[0] == 'A' or word[0] == 'a'):
             self.col = "axis"
@@ -64,7 +64,7 @@ class Parser(nc.Parser):
             self.col = "feed"
             self.arc = +1
         elif (word == 'G10' or word == 'g10'):
-            self.no_move = True		            
+            self.no_move = True
         elif (word == 'L1' or word == 'l1'):
             self.no_move = True
         elif (word == 'G61.1' or word == 'g61.1' or word == 'G61' or word == 'g61' or word == 'G64' or word == 'g64'):
@@ -152,19 +152,19 @@ class Parser(nc.Parser):
 
     def Parse(self, name, oname=None):
         self.files_open(name,oname)
-        
+
         #self.begin_ncblock()
         #self.begin_path(None)
         #self.add_line(z=500)
         #self.end_path()
         #self.end_ncblock()
-        
+
         self.path_col = None
         self.f = None
         self.arc = 0
 
         while (self.readline()):
-            
+
             self.a = None
             self.b = None
             self.c = None
@@ -207,7 +207,7 @@ class Parser(nc.Parser):
             else:
                 if (self.move and not self.no_move):
                     self.begin_path(self.path_col)
-                    if (self.arc==-1): 
+                    if (self.arc==-1):
                         self.add_arc(self.x, self.y, self.z, self.i, self.j, self.k, self.r, self.arc)
                     elif (self.arc==1):
                         #self.add_arc(x, y, z, i, j, k, -r, arc) #if you want to use arcs with R values uncomment the first part of this line and comment the next one

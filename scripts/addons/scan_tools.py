@@ -22,7 +22,7 @@ def floor(self,context, event, ray_max=100000.0):
 	region = context.region
 	rv3d = context.region_data
 	coord = event.mouse_region_x, event.mouse_region_y
-	
+
 
 	# get the ray from the viewport and mouse
 	view_vector = view3d_utils.region_2d_to_vector_3d(region, rv3d, coord)
@@ -30,7 +30,7 @@ def floor(self,context, event, ray_max=100000.0):
 	ray_target = ray_origin + (view_vector * ray_max)
 
 
-	
+
 	def obj_ray_cast(obj, matrix):
 		"""Wrapper for ray casting that moves the ray into object space"""
 
@@ -63,20 +63,20 @@ def floor(self,context, event, ray_max=100000.0):
 			self.hits.append(hit)
 			print(len(self.hits))
 			#if len(self.hits)==1:
-			#	
+			#
 			n=mathutils.Vector((0,0,0))
 			if len(self.hits)>=3:
 				for a in range(0,len(self.hits)-2):
 					v1=matrix * self.hits[a]
 					v2=matrix * self.hits[a+1]
 					v3=matrix * self.hits[a+2]
-					
+
 					ntri=mathutils.geometry.normal(v1,v2,v3)
 					n+=ntri
 				up=mathutils.Vector((0,0,1))
 				r=n.rotation_difference(up)#.to_euler()
 				print(n,r)
-				
+
 				print(obj.rotation_quaternion)
 				print(matrix)
 				#print(r)
@@ -91,8 +91,8 @@ def floor(self,context, event, ray_max=100000.0):
 				#obj.update()
 				matrix = obj.matrix_world.copy()
 				print(matrix)
-				
-				
+
+
 				bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
 				return True
 	return False
@@ -105,7 +105,7 @@ class ObjectFloor(bpy.types.Operator):
 	@classmethod
 	def poll(cls, context):
 		return context.active_object is not None
-	
+
 	def modal(self, context, event):
 		#self.report({'OPERATOR'}, "Select 3 or more points on the floor, Esc exits")
 		if event.type in {'MIDDLEMOUSE', 'WHEELUPMOUSE', 'WHEELDOWNMOUSE'}:
@@ -139,7 +139,7 @@ def removeFloor(context,threshold):
 	matrix = ob.matrix_world.copy()
 	sel=0
 	bpy.ops.object.editmode_toggle()
-	
+
 	bpy.ops.mesh.select_all(action='DESELECT')
 	bpy.ops.object.editmode_toggle()
 	for vert in m.vertices:
@@ -159,14 +159,14 @@ def removeFloor(context,threshold):
 	bpy.ops.mesh.delete(type='VERT')
 	bpy.ops.object.editmode_toggle()
 
- 
+
 
 class RemoveFloor(bpy.types.Operator):
 	"""Remove floor (distance from XY plane in world coordinates) on aligned mesh"""
 	bl_idname = "object.remove_floor"
 	bl_label = "Remove Floor"
 	bl_options = {'REGISTER', 'UNDO'}
-	
+
 	threshold = bpy.props.FloatProperty(
 			name="threshold",
 			description="Distance in world units from axis plane",
@@ -198,7 +198,7 @@ def makeLOD(context):
 	par=bpy.context.active_object
 	par.hide_render=True
 	if parent!=None:
-		par.parent	
+		par.parent
 
 
 class MakeLOD(bpy.types.Operator):
@@ -206,7 +206,7 @@ class MakeLOD(bpy.types.Operator):
 	bl_idname = "object.make_lod"
 	bl_label = "make LOD"
 	bl_options = {'REGISTER', 'UNDO'}
-	
+
 	@classmethod
 	def poll(cls, context):
 		return context.active_object is not None
@@ -214,13 +214,13 @@ class MakeLOD(bpy.types.Operator):
 	def execute(self, context):
 		makeLOD(context)
 		return {'FINISHED'}
-		
+
 class ReconstructmeTransform(bpy.types.Operator):
 	"""Transform import from reconstructme to blender axes/scale"""
 	bl_idname = "object.reconstructme_trans"
 	bl_label = "Reconstructme transform"
 	bl_options = {'REGISTER', 'UNDO'}
-	
+
 	@classmethod
 	def poll(cls, context):
 		return context.active_object is not None
@@ -228,7 +228,7 @@ class ReconstructmeTransform(bpy.types.Operator):
 	def execute(self, context):
 		reconstructmTransform(context)
 		return {'FINISHED'}
-		
+
 def reconstructmTransform(context):
 	ob=bpy.context.active_object
 	ob.scale=(0.001,0.001,0.001)
@@ -242,15 +242,15 @@ class RemoveSmallParts(bpy.types.Operator):
 	bl_idname = "object.remove_small_parts"
 	bl_label = "Remove small parts"
 	bl_options = {'REGISTER', 'UNDO'}
-	
+
 	@classmethod
 	def poll(cls, context):
 		return context.active_object is not None
 
 	def execute(self, context):
 		removeSmallParts(context)
-		return {'FINISHED'}	
-	
+		return {'FINISHED'}
+
 def removeSmallParts(context):
 	actob=bpy.context.active_object
 	bpy.ops.object.editmode_toggle()
@@ -293,7 +293,7 @@ class VIEW3D_PT_tools_scantools(bpy.types.Panel):
 		layout.operator("object.remove_floor")
 		layout.operator("object.remove_small_parts")
 		layout.operator("object.make_lod")
-		
+
 def register():
 	bpy.utils.register_class(ObjectFloor)
 	bpy.utils.register_class(RemoveFloor)

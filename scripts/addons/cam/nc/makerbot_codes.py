@@ -9,7 +9,7 @@
 
 class Codes():
 	def SPACE(self): return(' ')
-	def FORMAT_FEEDRATE(self): return('%.2f') 
+	def FORMAT_FEEDRATE(self): return('%.2f')
 	def FORMAT_IN(self): return('%.5f')
 	def FORMAT_MM(self): return('%.3f')
 	def FORMAT_ANG(self): return('%.1f')
@@ -91,27 +91,27 @@ class Codes():
 	def MACHINE_COORDINATES(self): return('G53' + self.SPACE())
 
 	def EXTRUDER_ON (self): return('M101') #deprecated
-	def EXTRUDER_OFF (self): return('M103') 
-	def EXTRUDER_TEMP (self, degree_celsius): return('M104 S' + '%s' % degree_celsius) 
-	def EXTRUDER_TEMP_WAIT (self, degree_celsius): return('M109 S' + '%s' % degree_celsius) 
+	def EXTRUDER_OFF (self): return('M103')
+	def EXTRUDER_TEMP (self, degree_celsius): return('M104 S' + '%s' % degree_celsius)
+	def EXTRUDER_TEMP_WAIT (self, degree_celsius): return('M109 S' + '%s' % degree_celsius)
 	def READ_EXTRUDER_TEMP (self): return('M105')
 	def EXTRUDER_SPEED_PWM (self, speed_in_PWM): return('M108 S'  + '%s' % speed_in_PWM) #deprecated
  	def EXTRUDER_SPEED_RPM (self, speed_in_RPM): return('M108 P'  + '%s' % speed_in_RPM) #deprecated
- 	
- 	def STEPPERS_OFF(self): return(self.SPACE() + 'M118') 
+
+ 	def STEPPERS_OFF(self): return(self.SPACE() + 'M118')
 
 	def ALL_WAIT (self): return(self.SPACE() + 'M116')  # Wait for all temperature and slow-changing variables to reach set values
 
-	def FAN_ON (self): return(self.SPACE() + 'M106') 
+	def FAN_ON (self): return(self.SPACE() + 'M106')
 	def FAN_OFF (self): return(self.SPACE() + 'M107')
 
-	def VALVE_OPEN (self, delay): return(self.SPACE() + ('M126 P' + '%' % delay) ) 
-	def VALVE_CLOSE (self, delay): return(self.SPACE() + ('M127 P' + '%' % delay) )  
+	def VALVE_OPEN (self, delay): return(self.SPACE() + ('M126 P' + '%' % delay) )
+	def VALVE_CLOSE (self, delay): return(self.SPACE() + ('M127 P' + '%' % delay) )
 
-	def BUILD_BED_TEMP (self, degree_celsius): return('M140 S' + '%s' % degree_celsius) 
-	def BED_HOLDING_PRESSURE (self, pressure): return('M142 S' + '%s' % pressure) 
+	def BUILD_BED_TEMP (self, degree_celsius): return('M140 S' + '%s' % degree_celsius)
+	def BED_HOLDING_PRESSURE (self, pressure): return('M142 S' + '%s' % pressure)
 
-	def CHAMBER_TEMP (self, degree_celsius): return('M141 S' + '%s' % degree_celsius) 
+	def CHAMBER_TEMP (self, degree_celsius): return('M141 S' + '%s' % degree_celsius)
 
 #The following codes are listed on the reprap wiki page at http://reprap.org/wiki/Mendel_User_Manual:_RepRapGCodes but require more study.
 #

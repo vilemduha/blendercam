@@ -26,7 +26,7 @@ class Parser(nc.Parser):
          #  followed by a possible deimcal, or a letter followed by # with a decimal . deimcal
         # add your character here > [(!;] for comments char
         # then look for the 'comment' function towards the end of the file and add another elif
-        
+
     def ParseWord(self, word):
         if (word[0] == 'A' or word[0] == 'a'):
             self.col = "axis"

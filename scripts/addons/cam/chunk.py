@@ -525,7 +525,7 @@ def optimizeChunk(chunk, operation):
             #v1=Vector()
             #v2=Vector()
             if compare(chunk.points[vi-1],chunk.points[vi+1],chunk.points[vi],operation.optimize_threshold):
-                
+
                 chunk.pop(vi)
         '''
         protect_vertical = operation.protect_vertical and operation.machine_axes == '3'
@@ -555,8 +555,8 @@ def optimizeChunk(chunk, operation):
         '''
         if:#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right? or does it?
             #print('verticality test')
-            
-            
+
+
             for vi in range(len(chunk.points)-1,0,-1):
                 v1=chunk.points[vi]
                 v2=chunk.points[vi-1]
@@ -565,8 +565,8 @@ def optimizeChunk(chunk, operation):
                     chunk.points[vi]=v1c
                 elif v2c!=v2:
                     chunk.points[vi-1]=v2c
-                
-                
+
+
             #print(vcorrected)
         '''
     return chunk
@@ -676,14 +676,14 @@ def parentChildDist(parents, children,o, distance= None):
 			dlim=dlim*2
 	else:
 		dlim = distance
-		
+
 	for child in children:
 		for parent in parents:
 			isrelation=False
 			if parent!=child:
 				for v in child.points:
 					for v1 in parent.points:
-						
+
 						if dist2d(v,v1)<dlim:
 							isrelation=True
 							break
