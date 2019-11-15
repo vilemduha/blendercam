@@ -34,7 +34,7 @@ class Parser(num_reader.NumReader):
                 self.up = up
                 self.x = int(x)
                 self.y = int(y)
-    
+
     def ParseAA(self):
         self.line_index = self.line_index + 1
         cx = self.get_number()
@@ -60,7 +60,7 @@ class Parser(num_reader.NumReader):
 
                     ex = int(cx) + radius * math.cos(end_angle)
                     ey = int(cy) + radius * math.sin(end_angle)
-                    
+
                     if int(a) > 0: d = 1
                     else: d = -1
 
@@ -69,7 +69,7 @@ class Parser(num_reader.NumReader):
                     self.up = False
                     self.x = int(ex)
                     self.y = int(ey)
-    
+
     def ParseFromFirstLetter(self, c):
         if c == 'P':
             self.line_index = self.line_index + 1

@@ -17,7 +17,7 @@ class Creator(iso_modal.Creator):
         iso_modal.Creator.__init__(self)
         self.output_tool_definitions = False
 
-            
+
 ################################################################################
 
 nc.creator = Creator()

@@ -40,10 +40,10 @@
 #		- a list of point objects (which must have x and y fields).
 #		- x and y buffer values which are the expansion percentages of the bounding box rectangle including all input points.
 #		Returns :
-#		- With default options : 
+#		- With default options :
 #		  A list of 2-tuples, representing the two points of each Voronoi diagram edge.
 #		  Each point contains 2-tuples which are the x,y coordinates of point.
-#		  if formatOutput is True, returns : 
+#		  if formatOutput is True, returns :
 #				- a list of 2-tuples, which are the x,y coordinates of the Voronoi diagram vertices.
 #				- and a list of 2-tuples (v1, v2) representing edges of the Voronoi diagram.
 #				  v1 and v2 are the indices of the vertices at the end of the edge.
@@ -51,7 +51,7 @@
 #		  A dictionary of polygons, keys are the indices of the input points,
 #		  values contains n-tuples representing the n points of each Voronoi diagram polygon.
 #		  Each point contains 2-tuples which are the x,y coordinates of point.
-#		  if formatOutput is True, returns : 
+#		  if formatOutput is True, returns :
 #				- A list of 2-tuples, which are the x,y coordinates of the Voronoi diagram vertices.
 #				- and a dictionary of input points indices. Values contains n-tuples representing the n points of each Voronoi diagram polygon.
 #				  Each tuple contains the vertex indices of the polygon vertices.

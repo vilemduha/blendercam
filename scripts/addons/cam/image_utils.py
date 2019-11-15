@@ -278,8 +278,8 @@ def outlineImageBinary(o,radius,i,offset):
 	h=len(i[0])
 	oar=i.copy()
 	#oar.fill(-10000000)
-	
-	ar = i[:,:-1] != i[:,1:] 
+
+	ar = i[:,:-1] != i[:,1:]
 	indices1=ar.nonzero()
 	if offset:
 		dofunc=numpy.logical_or
@@ -294,7 +294,7 @@ def outlineImageBinary(o,radius,i,offset):
 		if a>r and b>r and a<w-r and b<h-r:
 			#progress(oar.shape,c.shape)
 			oar[a-r:a+r,b-r:b+r]=dofunc(oar[a-r:a+r,b-r:b+r],c)
-		
+
 	ar=i[:-1,:]!=i[1:,:]
 	indices2=ar.nonzero()
 	for id in range(0,len(indices2[0])):
@@ -946,7 +946,7 @@ def crazyStrokeImage(
                     testvect.y = maxary - r
 
                 '''
-				if testlength>10:#weird test 
+				if testlength>10:#weird test
 					indices1=ar.nonzero()
 					nchunk.append(indices1[0])
 					lastvec=Vector((1,0,0))
@@ -1217,7 +1217,7 @@ def crazyStrokeImageBinary(o, ar,
                     testvect.y = maxary - r
 
                 '''
-				if testlength>10:#weird test 
+				if testlength>10:#weird test
 					indices1=ar.nonzero()
 					nchunk.append(indices1[0])
 					lastvec=Vector((1,0,0))
@@ -1580,7 +1580,7 @@ def getSampleImage(s, sarray, minz):
 				s1b=s2b
 			if s2b<-10:
 				s2b=s1b
-	
+
 			sa=s1a*(maxx-x)+s2a*(x-minx)
 			sb=s1b*(maxx-x)+s2b*(x-minx)
 			if sa<-10:
@@ -1589,7 +1589,7 @@ def getSampleImage(s, sarray, minz):
 				sb=sa
 			z=sa*(maxy-y)+sb*(y-miny)
 			return z
-			
+
 		else:
 		'''
         sa = s1a * (maxx - x) + s2a * (x - minx)

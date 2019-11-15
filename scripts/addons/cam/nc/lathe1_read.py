@@ -24,19 +24,19 @@ class Parser(nc.Parser):
 
     def Parse(self, name, oname=None):
         self.files_open(name,oname)
-        
+
         #self.begin_ncblock()
         #self.begin_path(None)
         #self.add_line(z=500)
         #self.end_path()
         #self.end_ncblock()
-        
+
         path_col = None
         f = None
         arc = 0
         uw  = 0
         while (self.readline()):
-            
+
             a = None
             b = None
             c = None
@@ -98,7 +98,7 @@ class Parser(nc.Parser):
                     col = "feed"
                     arc = +1
                 elif (word == 'G10' or word == 'g10'):
-                    no_move = True		            
+                    no_move = True
                 elif (word == 'L1' or word == 'l1'):
                     no_move = True
                 elif (word == 'G20' or word == 'G70'):
@@ -208,7 +208,7 @@ class Parser(nc.Parser):
             else:
                 if (move and not no_move):
                     self.begin_path(path_col)
-                    if (arc==-1): 
+                    if (arc==-1):
                         self.add_arc(x, y, z, i, j, k, r, arc)
                     elif (arc==1):
                         #self.add_arc(x, y, z, i, j, k, -r, arc) #if you want to use arcs with R values uncomment the first part of this line and comment the next one

@@ -10,13 +10,13 @@ import math
 
 ################################################################################
 class Parser(nc.Parser):
-     
+
 
     def __init__(self, writer):
         nc.Parser.__init__(self, writer)
 
         #self.pattern_main = re.compile('(\s+|\w(?:[+])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+])?\d*(?:\.\d*)?)')
-	
+
 	#rada
 	self.pattern_main = re.compile(r'(\s+|,|-?\w\+?\d*(?:\.\d*)?|\w#\d+|\(.*?\)|#\d+=\+?\d*(?:\.\d*)?)')
 	#self.pattern_main = re.compile('\s+\w')
@@ -50,7 +50,7 @@ class Parser(nc.Parser):
 	self.dx=0
 	self.angle=0
 	self.SPACE = ' '
- 
+
     def add_text(self, s, col=None):
         s.replace('&', '&amp;')
         s.replace('"', '&quot;')
@@ -73,18 +73,18 @@ class Parser(nc.Parser):
             arc = 0;
             path_col = None
 	    col=None
-	    if(self.line[0]=='C'): col = "axis" 
+	    if(self.line[0]=='C'): col = "axis"
 	    if(self.line[0]=='M' and self.line[1]=='A'): col = "feed"
 	    if (self.line[0] == "/" and self.line[1] == "/") : col = "comment"
-	    
+
 	    if (self.FS==1 and not (self.line[0]=='S' and self.line[1]=='S') and col=="feed" ): col="rapid"
-	    self.add_text(self.line, col) 
+	    self.add_text(self.line, col)
             #words = self.pattern_main.findall(self.line)
             words=self.line.split()
-	    #print self.line 
+	    #print self.line
 	    #print ' AAAA '
 	    words[0]=words[0]+self.SPACE
-	    print words 
+	    print words
 	    for word in words:
                 col = None
 		#if (word[0] == 'A' or word[0] == 'a'):
@@ -94,7 +94,7 @@ class Parser(nc.Parser):
                 #elif (word[0] == 'B' or word[0] == 'b'):
                 #   col = "axis"
                 #   self.b = eval(word[1:])
-                 
+
 		#   move = True
                 if (word == ('C'+self.SPACE)):
                     #print words
@@ -102,7 +102,7 @@ class Parser(nc.Parser):
 		    self.startx=self.x
 		    self.starty=self.y
 		    words[0]=words[0]+self.SPACE
-		    words[2]=self.SPACE+words[2]+self.SPACE 
+		    words[2]=self.SPACE+words[2]+self.SPACE
 		    words[4]=self.SPACE+words[4]+self.SPACE
 
 		    #print 'x,y'
@@ -142,14 +142,14 @@ class Parser(nc.Parser):
 		    #print 'angles'
 		    #print angle
 		    #if (i<0 and j<0): angle=180+angle
-		    #if (i<0 and j>0): angle=180-angle  
+		    #if (i<0 and j>0): angle=180-angle
 		    #if (j>0): angle=-angle
 		    #print ('reverzacia')
 		    #angle= angle+ eval(words[8])
 		    #print angle
-		    self.angle=+ angle+ eval(words[5]) 
+		    self.angle=+ angle+ eval(words[5])
 		    #print self.angle
-		    #if(angle>180): angle=360-angle 
+		    #if(angle>180): angle=360-angle
 		    angle=self.angle*math.pi/180
 		    #print eval(words[8])
 		    self.endx=eval(words[1])+(r*math.cos(angle))
@@ -266,10 +266,10 @@ class Parser(nc.Parser):
 		elif (words[0] == ("//"+self.SPACE)) : col = "comment"
                 elif (words[0] == ("/*"+self.SPACE)) : col = "comment"
 		#self.add_text(word, col)
-		
+
             if (move):
                 self.begin_path(path_col)
-                if (arc) : 
+                if (arc) :
 		  #self.add_arc(self.x, self.y, 0.0000, self.i, self.j, 0.0000, arc)
 		  #self.add_arc(self.i, self.j, 0.0000, eval(words[2])-self.x, eval(words[5])-self.y, 0.0000, arc)
 		  #print ''
@@ -278,11 +278,11 @@ class Parser(nc.Parser):
 		  #self.add_arc(self.endx, self.endy, 0.0000, eval(words[1])-self.startx, eval(words[3])-self.starty, 0.0000, arc)
 		  print arc
 		  self.add_arc(self.endx, self.endy, 0.0000,eval(words[1])-self.startx, eval(words[3])-self.starty, 0.0000,0.0000, arc)
-		
+
 		  #self.add_arc(self.x, self.y, 0.0000, self.i, self.j, 0.0000, arc)
 		  #self.x=self.i
 		  #self.y=self.j
-                else     : 
+                else     :
 		  self.add_line(self.x, self.y)
 		self.end_path()
 

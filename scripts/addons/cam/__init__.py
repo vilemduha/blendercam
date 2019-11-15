@@ -779,7 +779,7 @@ class camOperation(bpy.types.PropertyGroup):
         description='Bridge placement',
         default='AUTO',
         update = updateStrategy)
-    
+
     bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
     bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
     '''
@@ -947,7 +947,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 
     d=[]
     for prop in d1:
-        if (prop[:2]!='__' 
+        if (prop[:2]!='__'
             and prop!='bl_rna'
             and prop!='translation_context'
             and prop!='base'

@@ -245,7 +245,7 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
         # col.separator()
         # col.operator("scene.cam_operation_move", icon='TRIA_UP', text="").direction = 'UP'
         # col.operator("scene.cam_operation_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
-        # row = layout.row() 
+        # row = layout.row()
 
         if len(scene.cam_chains) > 0:
             chain = scene.cam_chains[scene.cam_active_chain]
@@ -299,7 +299,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
         col.separator()
         col.operator("scene.cam_operation_move", icon='TRIA_UP', text="").direction = 'UP'
         col.operator("scene.cam_operation_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
-        # row = layout.row() 
+        # row = layout.row()
 
         if len(scene.cam_operations) > 0:
             use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
@@ -430,7 +430,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     # if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
                     '''
                     o=bpy.data.objects[ao.object_name]
-                    
+
                     if o.type=='MESH' and (ao.strategy=='DRILL'):
                         layout.label(text='Not supported for meshes')
                         return
@@ -500,7 +500,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
 
             # elif ao.strategy=='SLICES':
-            #	layout.prop(ao,'slice_detail')	
+            #	layout.prop(ao,'slice_detail')
             # first attempt to draw object list for orientations:
             # layout.operator("object.cam_pack_objects")
             # layout.operator("scene.cam_orientation_add")

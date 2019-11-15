@@ -812,7 +812,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
                     if terminatechunk:
                         #print(ch.points)
                         if len(ch.points)>0:
-                            if len(ch.points)>0: 
+                            if len(ch.points)>0:
                                 layerchunks[i].append(ch)
                                 thisrunchunks[i].append(ch)
                                 layeractivechunks[i]=camPathChunk([])
@@ -2413,7 +2413,7 @@ def strategy_proj_curve(s, o):
         return
     '''	#mesh method is highly unstable, I don't like itwould be there at all.... better to use curves.
     if targetCurve.type=='MESH':
-        
+
         c=targetCurve
         for ch in pathSamples:
             ch.depth=0
@@ -2423,7 +2423,7 @@ def strategy_proj_curve(s, o):
                 ch.endpoints.append(np[0])
                 ch.rotations.append((0,0,0))
                 vect = np[0]-Vector(s)
-                
+
                 ch.depth=min(ch.depth,-vect.length)
     else:
     '''
@@ -2881,22 +2881,22 @@ def strategy_medial_axis(o):
         '''
         print("Create mesh...")
         voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
-        
-        
-                
+
+
+
         voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
-        
+
         voronoiDiagram.update(calc_edges=True) #Update mesh with new data
         #create an object with that mesh
         voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
         #place object
         #bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
-        
+
         #update scene
         bpy.context.scene.objects.link(voronoiObj) #Link object to scene
         bpy.context.scene.objects.active = voronoiObj
         voronoiObj.select = True
-        
+
         '''
     # bpy.ops.object.convert(target='CURVE')
     oi = 0
@@ -3187,7 +3187,7 @@ def getPath3axis(context, operation):
             '''
             if len(lastislice)>0:
                 i=numpy.logical_xor(lastislice , islice)
-                
+
                 n=0
                 while i.sum()>0 and n<10000:
                     i=outlineImageBinary(o,o.dist_between_paths,i,False)
@@ -3195,11 +3195,11 @@ def getPath3axis(context, operation):
                     for poly in polys:
                         chunks.extend(polyToChunks(poly,z))
                     n+=1
-            
-        
+
+
                     #restpoly=outlinePoly(restpoly,o.dist_between_paths,oo.circle_detail,o.optimize,o.optimize_threshold,,False)
                     #chunks.extend(polyToChunks(restpoly,z))
-                    
+
             lastislice=islice
             '''
 
@@ -3328,10 +3328,10 @@ def prepareIndexed(o):
     #rot.y=-rot.y
     #rot.z=-rot.z
     rotationaxes = rotTo2axes(ori.rotation_euler,'CA')
-    
+
     #bpy.context.space_data.pivot_point = 'CURSOR'
     #bpy.context.space_data.pivot_point = 'CURSOR'
-    
+
     for ob in o.objects:
         ob.rotation_euler.rotate(rot)
     '''

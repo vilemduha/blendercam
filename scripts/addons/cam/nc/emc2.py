@@ -3,8 +3,8 @@ from . import iso
 import math
 
 class Creator(iso.Creator):
-	def __init__(self): 
-		iso.Creator.__init__(self) 
+	def __init__(self):
+		iso.Creator.__init__(self)
 
 	def SPACE(self): return('')
 	def TAP(self): return('G33.1')
@@ -18,7 +18,7 @@ class Creator(iso.Creator):
 
  ############################################################################
     ##  Settings
-    
+
 	def imperial(self):
             self.write( self.IMPERIAL() + '\t (Imperial Values)\n')
             self.fmt.number_of_decimal_places = 4
@@ -36,15 +36,15 @@ class Creator(iso.Creator):
 	def polar(self, on=True):
 		if (on) :
 			self.write(self.POLAR_ON() + '\t (Polar ON)\n' )
-		else : 
+		else :
 			self.write(self.POLAR_OFF() + '\t (Polar OFF)\n' )
 
 	def set_plane(self, plane):
-		if (plane == 0) : 
+		if (plane == 0) :
 			self.write(self.PLANE_XY() + '\t (Select XY Plane)\n')
 		elif (plane == 1) :
 			self.write(self.PLANE_XZ() + '\t (Select XZ Plane)\n')
-		elif (plane == 2) : 
+		elif (plane == 2) :
 			self.write(self.PLANE_YZ() + '\t (Select YZ Plane)\n')
 
 
@@ -177,15 +177,15 @@ class Creator(iso.Creator):
 
 		if (xml_file_name != None):
 			self.write('(LOGCLOSE)\n')
-			
+
 	def open_log_file(self, xml_file_name=None ):
 		self.write('(LOGOPEN,')
 		self.write(xml_file_name)
 		self.write(')\n')
-			
+
 	def close_log_file(self):
 		self.write('(LOGCLOSE)\n')
-			
+
 	def log_coordinate(self, x=None, y=None, z=None):
 		if ((x != None) or (y != None) or (z != None)):
 			self.write('(LOG,<POINT>)\n')
@@ -207,7 +207,7 @@ class Creator(iso.Creator):
 
 	def log_message(self, message=None ):
 		self.write('(LOG,' + message + ')\n')
-		
+
 	def start_CRC(self, left = True, radius = 0.0):
 		if self.t == None:
 			raise "No tool specified for start_CRC()"
@@ -221,11 +221,11 @@ class Creator(iso.Creator):
 		self.write_preps()
 		self.write_misc()
 		self.write('\t (end cutter radius compensation)\n')
-		
-	
-	
+
+
+
 
 	def tool_defn(self, id, name='', params=None):
 		pass
-			
+
 nc.creator = Creator()
