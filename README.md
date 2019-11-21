@@ -1,4 +1,4 @@
-![BlenderCAM](http://github.com/blendercam/blendercam/static/logo.png)
+![BlenderCAM](./static/logo.png)
 
 # BlenderCam - CNC path addon
 
@@ -6,11 +6,10 @@ Blender CAM is an open source solution for artistic CAM - Computer aided machini
 Blender CAM is an extension for the free open-source Blender 3d package.
 
 It has been used for many milling projects, and is actively developed.
-If you are a developer who would like to help, fork and open pullrequests
+If you are a developer who would like to help, fork and open pull requests
 
 
-[![Chat on Matrix ][matrix-badge]](https://riot.im/app/#/room/#blendercam:matrix.org)
-
+[![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org)
 
 ## Installation and Usage
 
@@ -20,16 +19,16 @@ See the [Wiki](https://github.com/vilemduha/blendercam/wiki).
 ## Resources
 
 * [Development](https://github.com/blendercam/blendercam)
-* [Documentation]https://github.com/vilemduha/blendercam/wiki)
+* [Documentation](https://github.com/vilemduha/blendercam/wiki)
 * [Freenode IRC](http://webchat.freenode.net/?channels=%23blendercam) (#blendercam)
 * [The Matrix](https://riot.im/app/#/room/#blendercam:matrix.org) (#blendercam:matrix.org)
 * [Issue Tracker](https://github.com/blendercam/blendercam/issues)
 
 
-## Dependancies
+## Dependencies
 
 * Blender 2.80
-* Python 2.7 & OpenCamLib (optiona)
+* Python 2.7 & OpenCamLib (optional)
 
 
 ## DISCLAIMER
