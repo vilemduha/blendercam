@@ -18,7 +18,7 @@ class Parser:
         self.absolute_flag = True
         self.drillz = None
         self.need_m6_for_t_change = True
-        
+
     def __del__(self):
         self.file_in.close()
 
@@ -56,10 +56,10 @@ class Parser:
 
     def absolute(self):
         self.absolute_flag = True
-        
+
     def Parse(self, name):
         self.file_in = open(name, 'r')
-        
+
         self.path_col = None
         self.f = None
         self.arc = 0
@@ -148,7 +148,7 @@ class Parser:
                                 i = c.x
                                 j = c.y
                                 global count
-                                
+
                                 if count == 0 and x > 47:
                                     print 'x = ', x
                                     print 'p0 = ', p0.x, ', ', p0.y, '   p1 = ', p1.x, ', ', p1.y
@@ -170,4 +170,4 @@ class Parser:
 
             self.writer.end_ncblock()
 
-        
+

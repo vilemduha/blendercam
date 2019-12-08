@@ -28,12 +28,12 @@ class Creator:
 
 	############################################################################
 	##	Internals
-		
+
 	def file_open(self, name):
 		#self.buffer=[]
 		self.file = open(name, 'w')
 		self.filename = name
-		
+
 	def file_close(self):
 		#self.file.write(''.join(self.buffer))
 		#self.buffer=[]
@@ -45,7 +45,7 @@ class Creator:
 		#if len(self.buffer)>100000:
 		#	self.file.write(''.join(self.buffer))
 		#	self.buffer=[]
-			
+
 	def writem(self, a):
 		self.file.write(''.join(a))
 		#self.buffer.extend(a)
@@ -73,7 +73,7 @@ class Creator:
 
 	############################################################################
 	##	Subprograms
-	
+
 	def sub_begin(self, id, name=''):
 		"""Begin a subprogram"""
 		pass
@@ -88,7 +88,7 @@ class Creator:
 
 	############################################################################
 	##	Settings
-	
+
 	def imperial(self):
 		"""Set imperial units"""
 		pass
@@ -120,10 +120,10 @@ class Creator:
 	def remove_temporary_origin(self):
 		"""Remote temporary origin G92.1"""
 		pass
- 
+
 	############################################################################
 	##	Tools
-	
+
 	def tool_change(self, id):
 		"""Change the tool"""
 		pass
@@ -145,7 +145,7 @@ class Creator:
 
 	############################################################################
 	##	Datums
-	
+
 	def datum_shift(self, x=None, y=None, z=None, a=None, b=None, c=None):
 		"""Shift the datum"""
 		pass
@@ -192,7 +192,7 @@ class Creator:
 
 	############################################################################
 	##	Rates + Modes
-	
+
 	def feedrate(self, f):
 		"""Set the feedrate"""
 		pass
@@ -215,7 +215,7 @@ class Creator:
 
 	############################################################################
 	##	Moves
-	
+
 	def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
 		"""Rapid move"""
 		pass
@@ -250,11 +250,11 @@ class Creator:
 
 	############################################################################
 	##	Cutter radius compensation
-	
+
 	def use_CRC(self):
 		"""CRC"""
 		return False
-		
+
 	############################################################################
 	##	Cycles
 
@@ -410,7 +410,7 @@ creator = Creator()
 
 def write(s):
 	creator.write(s)
-	
+
 def output(filename):
 	creator.file_open(filename)
 
@@ -470,7 +470,7 @@ def set_temporary_origin(x=None, y=None, z=None, a=None, b=None, c=None):
 
 def remove_temporary_origin():
 	creator.remove_temporary_origin()
- 
+
 ############################################################################
 ##	Tools
 
@@ -511,25 +511,25 @@ def clearanceplane(z=None):
 
 def matrix(a1=None,b1=None,c1=None,a2=None,b2=None,c2=None,a3=None,b3=None,c3=None):
 	creator.matrix(a1,b1,c1,a2,b2,c2,a3,b3,c3)
-	
+
 def translate(x=None,y=None,z=None):
 	creator.translate(x,y,z)
-	
+
 def rotate(xyrot=None,yzrot=None,zxrot=None,angle=None):
 	creator.rotate(xyrot,yzrot,zxrot,angle)
-	
+
 def scale(k=None):
 	creator.scale(k)
-	
+
 def matrix_product(matrix1=None,matrix2=None):
 	creator.matrix_product(matrix1,matrix2)
-	
+
 def mirror_plane(plane1=None,plane2=None,plane3=None):
 	creator.mirror_plane(plane1,plane2,plane3)
-   
+
 def mirror_line(line=None):
 	creator.mirror_line(line)
-	
+
 
 
 ############################################################################
@@ -573,7 +573,7 @@ def rapid_home(x=None, y=None, z=None, a=None, b=None, c=None):
 
 def rapid_unhome():
 	creator.rapid_unhome()
-	
+
 def set_machine_coordinates():
 	creator.set_machine_coordinates()
 
@@ -636,7 +636,7 @@ def insert(text):
 	creator.insert(text)
 
 def block_delete(on=False):
-	creator.block_delete(on)   
+	creator.block_delete(on)
 
 def variable(id):
 	creator.variable(id)
@@ -691,7 +691,7 @@ def extruder_off():
 
 def set_extruder_flowrate(flowrate):
 	creator.set_extruder_flowrate(flowrate)
-	
+
 def extruder_temp(temp=None):
 	creator.extruder_temp(temp)
 

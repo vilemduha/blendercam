@@ -14,22 +14,22 @@ class Format:
         if number == None:
             return 'None'
         f = float(number) * math.pow(10, self.number_of_decimal_places)
-        s = str(f)
-        
+        s = format(f, 'f')
+
         if self.round_down == False:
             if f < 0: f = f - .5
             else: f = f + .5
-            s = str(number)
-            
+            s = format(float(number), 'f')
+
         if math.fabs(f) < 1.0:
             s = '0'
-            
+
         minus = False
         if s[0] == '-':
             minus = True
             if self.no_minus:
                 s = s[1:]
-        
+
         dot = s.find('.')
         if dot == -1:
             before_dp = s
@@ -37,14 +37,14 @@ class Format:
         else:
             before_dp = s[0:dot]
             after_dp = s[dot + 1: dot + 1 + self.number_of_decimal_places]
-        
+
         before_dp = before_dp.zfill(self.add_leading_zeros)
         if self.add_trailing_zeros:
             for i in range(0, self.number_of_decimal_places - len(after_dp)):
                 after_dp += '0'
         else:
             after_dp = after_dp.rstrip('0')
-                 
+
         s = ''
 
         if minus == False:
@@ -54,9 +54,9 @@ class Format:
         if len(after_dp):
             if self.dp_wanted: s += '.'
             s += after_dp
-            
+
         return s
-    
+
 class Address:
     def __init__(self, text, fmt = Format(), modal = True):
         self.text = text
@@ -64,26 +64,26 @@ class Address:
         self.modal = modal
         self.str = None
         self.previous = None
-        
+
     def set(self, number):
         self.str = self.text + self.fmt.string(number)
-        
+
     def write(self, writer):
         if self.str == None: return ''
         if self.modal:
             if self.str != self.previous:
                 writer.write(writer.SPACE() + self.str)
-                self.previous = self.str            
+                self.previous = self.str
         else:
             writer.write(writer.SPACE() + self.str)
         self.str = None
-    
+
 class AddressPlusMinus(Address):
     def __init__(self, text, fmt = Format(), modal = True):
         Address.__init__(self, text, fmt, modal)
         self.str2 = None
         self.previous2 = None
-        
+
     def set(self, number, text_plus, text_minus):
         Address.set(self, number)
         if float(number) > 0.0:
@@ -97,7 +97,7 @@ class AddressPlusMinus(Address):
         if self.modal:
             if self.str2 != self.previous2:
                 writer.write(writer.SPACE() + self.str2)
-                self.previous2 = self.str2            
+                self.previous2 = self.str2
         else:
             writer.write(writer.SPACE() + self.str2)
         self.str2 = None

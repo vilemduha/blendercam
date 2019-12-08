@@ -15,23 +15,23 @@ class Creator(iso_modal.Creator):
 		self.start_of_line = True
 		self.output_block_numbers = False
 		self.output_tool_definitions = False
-				
+
 	def PROGRAM_END(self):	return ' '
 	#optimize
 	def RAPID(self): return('G0')
 	def FEED(self): return('G1')
-		
+
 ############################################################################
-## Begin Program 
+## Begin Program
 
 
 	def program_begin(self, id, comment):
 		if (self.useCrc == False):
 			self.write( ('(Created with grbl post processor ' + str(now.strftime("%Y/%m/%d %H:%M")) + ')' + '\n') )
-		else:  
+		else:
 			self.write( ('(Created with grbl Cutter Radius Compensation post processor ' + str(now.strftime("%Y/%m/%d %H:%M")) + ')' + '\n') )
 
-	
+
 
 
 ############################################################################
@@ -42,7 +42,7 @@ class Creator(iso_modal.Creator):
 
 	def tool_change(self, id):
 		pass
-		
+
 
 # This is the coordinate system we're using.  G54->G59, G59.1, G59.2, G59.3
 # These are selected by values from 1 to 9 inclusive.

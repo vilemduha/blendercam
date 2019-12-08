@@ -1,7 +1,7 @@
 # Preliminary backplot support for autocad clone applications
 # This code modified from iso_read.py and emc2_read.py distriuted with HeeksCAD as of Sep 2010
 # Dan Falck 2011/01/06
-# 
+#
 
 """ use this script to backplot nc files to *.scr file for autocad,bricscad,
     draftsight,progecad,ares commander, etc....
@@ -16,9 +16,9 @@ import sys
 # Override some iso parser methods to interpret arc centers as relative to origin, not relative to start of arc.
 
 #def write_layer(name,number):
-    #FILE.write('-LAYER New %s%s \n' %(name,number))      
+    #FILE.write('-LAYER New %s%s \n' %(name,number))
     #FILE.write('-LAYER Set %s%s \n' %(name,number))
- 
+
 
 class CAD_backplot(iso.Parser):
 
@@ -27,25 +27,25 @@ class CAD_backplot(iso.Parser):
 
     def Parse(self, name, oname=None):
         self.files_open(name,oname)
-        
+
         #self.begin_ncblock()
         #self.begin_path(None)
         #self.add_line(z=500)
         #self.end_path()
         #self.end_ncblock()
-        
+
         path_col = None
         f = None
         arc = 0
 
         # Storage for tool position history of last block processed to properly convert absolute arc centers
-        
+
         oldx = -1.0
         oldy = 0.0
         oldz = 0.0
         movelist = []
         while (self.readline()):
-        # self.readline returns false if the line is empty - the parsing stops if the line is empty.   
+        # self.readline returns false if the line is empty - the parsing stops if the line is empty.
             a = None
             b = None
             c = None
@@ -113,7 +113,7 @@ class CAD_backplot(iso.Parser):
                     col = "feed"
                     arc = +1
                 elif (word == 'G10' or word == 'g10'):
-                    no_move = True                  
+                    no_move = True
                 elif (word == 'L1' or word == 'l1'):
                     no_move = True
                 elif (word == 'G20' or word == 'G70'):
@@ -122,7 +122,7 @@ class CAD_backplot(iso.Parser):
                 elif (word == 'G21' or word == 'G71'):
                     col = "prep"
                     self.set_mode(units=1.0)
-                # Note: Anilam has very non standard params for drill cycles.  Not Yet implemented!    
+                # Note: Anilam has very non standard params for drill cycles.  Not Yet implemented!
                 elif (word == 'G81' or word == 'g81'):
                     drill = True
                     no_move = True
@@ -172,9 +172,9 @@ class CAD_backplot(iso.Parser):
                     move = True
                 elif (word[0] == 'T') :
                     col = "tool"
-                    self.set_tool( eval(word[1:]) ) 
-                    tool =  eval(word[1:]) 
-                 
+                    self.set_tool( eval(word[1:]) )
+                    tool =  eval(word[1:])
+
                 elif (word[0] == 'X' or word[0] == 'x'):
                     col = "axis"
                     x = eval(word[1:])
@@ -194,7 +194,7 @@ class CAD_backplot(iso.Parser):
                 elif (word[0] == ':') : col = "blocknum"
                 elif (ord(word[0]) <= 32) : cdata = True
                 #self.add_text(word, col, cdata)
-                
+
             if (drill):
                 self.begin_path("rapid")
                 self.add_line(x, y, r)
@@ -209,7 +209,7 @@ class CAD_backplot(iso.Parser):
                 self.end_path()
             #elif (tool):
                 #write_layer('T',tool)
-                
+
 
             else:
                 if (move and not no_move):
@@ -223,7 +223,7 @@ class CAD_backplot(iso.Parser):
                         #FILE.write('-color Green\n')
 
                     if (arc) :
-                        
+
                         z = oldz
                         if (x != None) and (oldx != None) and (i != None): iout = i
                         if (y != None) and (oldy != None) and (j != None): jout = j
@@ -234,24 +234,24 @@ class CAD_backplot(iso.Parser):
                             ##FILE.write('c\n')
                             ##FILE.write('%s,%s,%s\n' %(oldx+i,oldy+j,oldz))
                             ##FILE.write('%s,%s,%s\n' %(oldx,oldy,z))
-                           
+
                         #else:
                             ##FILE.write('arc %s,%s,%s\n' %(oldx,oldy,z))
                             ##FILE.write('c\n')
                             ##FILE.write('%s,%s,%s\n' %(oldx+i,oldy+j,oldz))
                             ##FILE.write('%s,%s,%s\n' %(x,y,z))
 
-                    else: 
-                        
+                    else:
+
                         self.add_line(x, y, z, a, b, c)
-                        if (x == None) : x = oldx 
-                        if (y == None) : y = oldy 
+                        if (x == None) : x = oldx
+                        if (y == None) : y = oldy
                         if (z == None) : z = oldz
                         scr_line = ('line %s,%s,%s %s,%s,%s \n' %(oldx,oldy,oldz,x,y,z))
                         #print scr_line
-                        
+
                         ##FILE.write(scr_line)
-                        
+
                     self.end_path()
             if (x != None) : oldx = x
             if (y != None) : oldy = y
@@ -265,8 +265,8 @@ class CAD_backplot(iso.Parser):
         self.files_close()
         #FILE.write('\n')
         #FILE.close()
-        
-################################################################################    
+
+################################################################################
 if __name__ == '__main__':
     parser = CAD_backplot()
     if len(sys.argv)>2:

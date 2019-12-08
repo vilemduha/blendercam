@@ -2,15 +2,15 @@ from . import nc
 from . import iso
 
 class Creator(iso.Creator):
-	def __init__(self): 
-		iso.Creator.__init__(self) 
-		
+	def __init__(self):
+		iso.Creator.__init__(self)
+
 	def SPACE_STR(self): return(' ')
-	
+
 	def COMMENT(self, comment): return('')
-	
+
 	def PROGRAM(self): return(None)
-	
+
 	def FORMAT_DWELL(self): return( self.SPACE() + self.DWELL() + ' X%f')
 	def SPINDLE_OFF(self): return('M05\n')
 	#optimize
@@ -25,7 +25,7 @@ class Creator(iso.Creator):
 	def PLANE_XZ(self): return('18\n')
 	def PLANE_YZ(self): return('19\n')
 	'''
-	
+
 	def dwell(self, t):
 		pass;
 		'''
@@ -44,10 +44,10 @@ class Creator(iso.Creator):
 		#self.write('\n')
 		#self.flush_nc()
 		#self.t = id
-		
 
-		
+
+
 	def PROGRAM_END(self): return( self.SPACE() + self.SPINDLE_OFF() + self.SPACE() + 'M30')
-		
+
 
 nc.creator = Creator()

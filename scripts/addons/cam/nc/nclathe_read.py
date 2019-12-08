@@ -66,7 +66,7 @@ class Parser:
 
     def set_tool(self, number=None):
         self.file_out.write('\t\t<tool')
-        if (number != None) : 
+        if (number != None) :
 		self.file_out.write(' number="'+str(number)+'"')
         	self.file_out.write(' />\n')
 
@@ -131,7 +131,7 @@ class Parser:
             if self.absolute_flag: self.currentz = z
             else: self.currentz = self.currentz + z
             self.file_out.write(' x="%.6f"' % self.currentz)
-        
+
         #if (j != None) : self.file_out.write(' i="%.6f"' % j)
         #if (i != None) : self.file_out.write(' j="%.6f"' % i)
         #if (k != None) : self.file_out.write(' k="%.6f"' % k)
@@ -143,9 +143,9 @@ class Parser:
         if (r != None) : self.file_out.write(' r="%.6f"' % r)
         if (d != None) : self.file_out.write(' d="%i"' % d)
         self.file_out.write(' />\n')
-        
+
     def incremental(self):
         self.absolute_flag = False
-        
+
     def absolute(self):
         self.absolute_flag = True

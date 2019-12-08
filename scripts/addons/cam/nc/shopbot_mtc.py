@@ -48,7 +48,7 @@ class Creator(nc.Creator):
 	def SPACE(self): return('')
 	def COMMENT(self,comment): return( '\' %s' % comment  )
 	def TOOL(self): return('T%i' + self.SPACE() + 'M06')
-		
+
 	############################################################################
 	##	Internals
 
@@ -82,11 +82,11 @@ class Creator(nc.Creator):
 
 	############################################################################
 	##	Subprograms
-	
+
 
 	############################################################################
 	##	Settings
-	
+
 	def imperial(self):
 		self.fmt.number_of_decimal_places = 4
 		self.unitscale = 0.0254
@@ -110,7 +110,7 @@ class Creator(nc.Creator):
 
 	############################################################################
 	##	new graphics origin- make a new coordinate system and snap it onto the geometry
-	##	the toolpath generated should be translated 
+	##	the toolpath generated should be translated
 
 
 	############################################################################
@@ -130,7 +130,7 @@ class Creator(nc.Creator):
 
 	############################################################################
 	##	Datums
-	
+
 
 	############################################################################
 	##	Rates + Modes
@@ -202,7 +202,7 @@ class Creator(nc.Creator):
 
 	############################################################################
 	##	CRC
-	
+
 
 	############################################################################
 	##	Cycles

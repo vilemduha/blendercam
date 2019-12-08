@@ -35,10 +35,10 @@ class HxmlWriter:
         self.file_out.write('\t\t<mode')
         if (units != None) : self.file_out.write(' units="'+str(units)+'"')
         self.file_out.write(' />\n')
-        
+
     def metric(self):
         self.set_mode(units = 1.0)
-        
+
     def imperial(self):
         self.set_mode(units = 25.4)
 
@@ -48,12 +48,12 @@ class HxmlWriter:
 
     def end_path(self):
         self.file_out.write('\t\t</path>\n')
-        
+
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None, machine_coordinates=None):
         self.begin_path("rapid")
         self.add_line(x, y, z, a, b, c)
         self.end_path()
-        
+
     def feed(self, x=None, y=None, z=None):
         self.begin_path("feed")
         self.add_line(x, y, z)
@@ -68,16 +68,16 @@ class HxmlWriter:
         self.begin_path("feed")
         self.add_arc(x, y, z, i, j, k, r, 1)
         self.end_path()
-        
+
     def tool_change(self, id):
         self.file_out.write('\t\t<tool')
-        if (id != None) : 
+        if (id != None) :
             self.file_out.write(' number="'+str(id)+'"')
             self.file_out.write(' />\n')
-            
+
     def spindle(self, s, clockwise):
         pass
-    
+
     def feedrate(self, f):
         pass
 
@@ -96,7 +96,7 @@ class HxmlWriter:
         if x != None: self.oldx = x
         if y != None: self.oldy = y
         if z != None: self.oldz = z
-        
+
     def add_arc(self, x, y, z, i, j, k, r = None, d = None):
         self.file_out.write('\t\t\t<arc')
         if (x != None) :
