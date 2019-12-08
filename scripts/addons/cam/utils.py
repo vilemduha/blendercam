@@ -2061,7 +2061,7 @@ def getContainer():
 
 
 def addBridge(x, y, rot, sizex, sizey):
-    bpy.ops.mesh.primitive_plane_add(radius=sizey, align='WORLD', enter_editmode=False, location=(0, 0, 0))
+    bpy.ops.mesh.primitive_plane_add(size=sizey*2, calc_uvs=True, enter_editmode=False, align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0))
     b = bpy.context.active_object
     b.name = 'bridge'
     # b.show_name=True
@@ -2086,12 +2086,13 @@ def addAutoBridges(o):
     # if not o.onlycurves:
     #	o.warnings+=('not curves')
     #	return;
-    bridgegroupname = o.bridges_group_name
-    if bridgegroupname == '' or bpy.data.groups.get(bridgegroupname) == None:
-        bridgegroupname = 'bridges_' + o.name
-        bpy.data.groups.new(bridgegroupname)
-    g = bpy.data.groups[bridgegroupname]
-    o.bridges_group_name = bridgegroupname
+    bridgecollectionname = o.bridges_collection_name
+    if bridgecollectionname == '' or bpy.data.collections.get(bridgecollectionname) == None:
+        bridgecollectionname = 'bridges_' + o.name
+        bpy.data.collections.new(bridgecollectionname)
+        bpy.context.collection.children.link(bpy.data.collections[bridgecollectionname])
+    g = bpy.data.collections[bridgecollectionname]
+    o.bridges_collection_name = bridgecollectionname
     for ob in o.objects:
 
         if ob.type == 'CURVE' or ob.type == 'TEXT':
@@ -2104,34 +2105,42 @@ def addAutoBridges(o):
             minx, miny, maxx, maxy = c.bounds
             d1 = c.project(sgeometry.Point(maxx + 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            g.objects.link(addBridge(p.x, p.y, -pi / 2, o.bridges_width, o.cutter_diameter * 1))
+            bo = addBridge(p.x, p.y, -pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            g.objects.link(bo)
+            bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point(minx - 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            g.objects.link(addBridge(p.x, p.y, pi / 2, o.bridges_width, o.cutter_diameter * 1))
+            bo = addBridge(p.x, p.y, pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            g.objects.link(bo)
+            bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, maxy + 1000))
             p = c.interpolate(d1)
-            g.objects.link(addBridge(p.x, p.y, 0, o.bridges_width, o.cutter_diameter * 1))
+            bo = addBridge(p.x, p.y, 0, o.bridges_width, o.cutter_diameter * 1)
+            g.objects.link(bo)
+            bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, miny - 1000))
             p = c.interpolate(d1)
-            g.objects.link(addBridge(p.x, p.y, pi, o.bridges_width, o.cutter_diameter * 1))
+            bo = addBridge(p.x, p.y, pi, o.bridges_width, o.cutter_diameter * 1)
+            g.objects.link(bo)
+            bpy.context.collection.objects.unlink(bo)
 
 
 def getBridgesPoly(o):
     if not hasattr(o, 'bridgespolyorig'):
-        bridgegroupname = o.bridges_group_name
-        bridgegroup = bpy.data.groups[bridgegroupname]
+        bridgecollectionname = o.bridges_collection_name
+        bridgecollection = bpy.data.collections[bridgecollectionname]
         shapes = []
         bpy.ops.object.select_all(action='DESELECT')
 
-        for ob in bridgegroup.objects:
+        for ob in bridgecollection.objects:
             if ob.type == 'CURVE':
-                ob.select = True
-        bpy.context.scene.objects.active = ob
+                ob.select_set(state=True)
+        bpy.context.view_layer.objects.active = ob
         bpy.ops.object.duplicate();
         bpy.ops.object.join()
         ob = bpy.context.active_object
         shapes.extend(curveToShapely(ob, o.use_bridge_modifiers))
-        ob.select = True
+        ob.select_set(state=True)
         bpy.ops.object.delete(use_global=False)
         bridgespoly = sops.unary_union(shapes)
 
@@ -2144,9 +2153,9 @@ def getBridgesPoly(o):
 
 def useBridges(ch, o):
     '''this adds bridges to chunks, takes the bridge-objects group and uses the curves inside it as bridges.'''
-    bridgegroupname = o.bridges_group_name
-    bridgegroup = bpy.data.groups[bridgegroupname]
-    if len(bridgegroup.objects) > 0:
+    bridgecollectionname = o.bridges_collection_name
+    bridgecollection = bpy.data.collections[bridgecollectionname]
+    if len(bridgecollection.objects) > 0:
 
         # get bridgepoly
         getBridgesPoly(o)

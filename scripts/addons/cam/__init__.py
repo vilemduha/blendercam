@@ -764,7 +764,7 @@ class camOperation(bpy.types.PropertyGroup):
     bridges_height: bpy.props.FloatProperty(name='height of bridges',
                                             description="Height from the bottom of the cutting operation",
                                             default=0.0005, unit='LENGTH', precision=PRECISION, update=updateBridges)
-    bridges_group_name: bpy.props.StringProperty(name='Bridges Group', description='Group of curves used as bridges',
+    bridges_collection_name: bpy.props.StringProperty(name='Bridges Group', description='Group of curves used as bridges',
                                                  update=operationValid)
     use_bridge_modifiers: BoolProperty(name="use bridge modifiers",
                                        description="include bridge curve modifiers using render level when calculating operation, does not effect original bridge data",
