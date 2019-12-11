@@ -491,9 +491,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.prop(ao, 'bridges_width')
                         layout.prop(ao, 'bridges_height')
 
-                        layout.prop_search(ao, "bridges_group_name", bpy.data, "groups")
+                        layout.prop_search(ao, "bridges_collection_name", bpy.data, "collections")
                         layout.prop(ao, 'use_bridge_modifiers')
-                    # layout.prop(ao,'bridges_group_name')
                     # if ao.bridges_placement == 'AUTO':
                     #	layout.prop(ao,'bridges_per_curve')
                     #	layout.prop(ao,'bridges_max_distance')
