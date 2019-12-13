@@ -2009,7 +2009,7 @@ def addMachineAreaObject():
 
     o.dimensions = bpy.context.scene.cam_machine.working_area
     if ao is not None:
-        activate(ao)
+        ao.select_set(True)
     # else:
     #     bpy.context.scene.objects.active = None
 
@@ -2043,7 +2043,7 @@ def addMaterialAreaObject():
     operation.max.x - operation.min.x, operation.max.y - operation.min.y, operation.max.z - operation.min.z)
     o.location = (operation.min.x, operation.min.y, operation.max.z)
     if ao is not None:
-        activate(ao)
+        ao.select_set(True)
     # else:
     #     bpy.context.scene.objects.active = None
 
