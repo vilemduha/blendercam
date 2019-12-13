@@ -1998,7 +1998,8 @@ def addMachineAreaObject():
         bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
 
         bpy.ops.object.editmode_toggle()
-        addTranspMat(o, "violet_transparent", (0.800000, 0.530886, 0.725165), 0.1)
+        # addTranspMat(o, "violet_transparent", (0.800000, 0.530886, 0.725165), 0.1)
+        o.display_type = 'BOUNDS'
         o.hide_render = True
         o.hide_select = True
         # o.select = False
@@ -2029,7 +2030,8 @@ def addMaterialAreaObject():
         o.data.name = 'CAM_material'
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 
-        addTranspMat(o, 'blue_transparent', (0.458695, 0.794658, 0.8), 0.1)
+        # addTranspMat(o, 'blue_transparent', (0.458695, 0.794658, 0.8), 0.1)
+        o.display_type = 'BOUNDS'
         o.hide_render = True
         o.hide_select = True
         o.select_set(state=True, view_layer=None)
