@@ -196,13 +196,13 @@ def getOperationSources(o):
         # bpy.ops.object.select_all(action='DESELECT')
         ob = bpy.data.objects[o.object_name]
         o.objects = [ob]
-    elif o.geometry_source == 'GROUP':
-        group = bpy.data.groups[o.group_name]
-        o.objects = group.objects
+    elif o.geometry_source == 'COLLECTION':
+        collection = bpy.data.collections[o.collection_name]
+        o.objects = collection.objects
     elif o.geometry_source == 'IMAGE':
         o.use_exact = False
 
-    if o.geometry_source == 'OBJECT' or o.geometry_source == 'GROUP':
+    if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
         o.onlycurves = True
         for ob in o.objects:
             if ob.type == 'MESH':
@@ -237,8 +237,8 @@ def getChangeData(o):
     obs = []
     if o.geometry_source == 'OBJECT':
         obs = [bpy.data.objects[o.object_name]]
-    elif o.geometry_source == 'GROUP':
-        obs = bpy.data.groups[o.group_name].objects
+    elif o.geometry_source == 'COLLECTION':
+        obs = bpy.data.collections[o.collection_name].objects
     for ob in obs:
         changedata += str(ob.location)
         changedata += str(ob.rotation_euler)
@@ -249,7 +249,7 @@ def getChangeData(o):
 
 def getBounds(o):
     # print('kolikrat sem rpijde')
-    if o.geometry_source == 'OBJECT' or o.geometry_source == 'GROUP':
+    if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
         if o.material_from_model:
             minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
 
@@ -1733,7 +1733,7 @@ def getOperationSilhouete(operation):
     if operation.update_silhouete_tag:
         image = None
         objects = None
-        if operation.geometry_source == 'OBJECT' or operation.geometry_source == 'GROUP':
+        if operation.geometry_source == 'OBJECT' or operation.geometry_source == 'COLLECTION':
             if operation.onlycurves == False:
                 stype = 'OBJECTS'
             else:
@@ -2152,7 +2152,7 @@ def getBridgesPoly(o):
 
 
 def useBridges(ch, o):
-    '''this adds bridges to chunks, takes the bridge-objects group and uses the curves inside it as bridges.'''
+    '''this adds bridges to chunks, takes the bridge-objects collection and uses the curves inside it as bridges.'''
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
@@ -2670,7 +2670,7 @@ def strategy_drill(o):
                                                               "snap_target": 'CLOSEST', "snap_point": (0, 0, 0),
                                                               "snap_align": False, "snap_normal": (0, 0, 0),
                                                               "texture_space": False, "release_confirm": False})
-        bpy.ops.group.objects_remove_all()
+        #bpy.ops.collection.objects_remove_all()
         bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 
         ob = bpy.context.active_object

@@ -147,6 +147,7 @@ def prepareBulletCollision(o):
     progress('preparing collisions')
 
     print(o.name)
+    active_collection = bpy.context.view_layer.active_layer_collection.collection
     t = time.time()
     s = bpy.context.scene
     s.gravity = (0, 0, 0)
@@ -194,6 +195,9 @@ def prepareBulletCollision(o):
                                  snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
         collisionob.location = collisionob.location * BULLET_SCALE
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        bpy.context.view_layer.objects.active = collisionob
+        active_collection.objects.unlink(collisionob)
+        #bpy.ops.collection.objects_remove(collection=active_collection_name)
 
 
     getCutterBullet(o)

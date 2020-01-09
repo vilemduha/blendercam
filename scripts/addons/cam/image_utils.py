@@ -1615,7 +1615,7 @@ def renderSampleImage(o):
     progress('getting zbuffer')
     # print(o.zbuffer_image)
 
-    if o.geometry_source == 'OBJECT' or o.geometry_source == 'GROUP':
+    if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
         pixsize = o.pixsize
 
         sx = o.max.x - o.min.x

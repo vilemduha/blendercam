@@ -259,11 +259,11 @@ def operationValid(self, context):
         if not o.object_name in bpy.data.objects:
             o.valid = False;
             o.warnings = invalidmsg
-    if o.geometry_source == 'GROUP':
-        if not o.group_name in bpy.data.groups:
+    if o.geometry_source == 'COLLECTION':
+        if not o.collection_name in bpy.data.collections:
             o.valid = False;
             o.warnings = invalidmsg
-        elif len(bpy.data.groups[o.group_name].objects) == 0:
+        elif len(bpy.data.collections[o.collection_name].objects) == 0:
             o.valid = False;
             o.warnings = invalidmsg
 
@@ -413,10 +413,9 @@ class camOperation(bpy.types.PropertyGroup):
         name="Parent path to object",
         description="Parent generated CAM path to source object",
         default=False)
-    # group = bpy.props.StringProperty(name='Object group', description='group of objects which will be included in this operation')
     object_name: bpy.props.StringProperty(name='Object', description='object handled by this operation',
                                           update=updateOperationValid)
-    group_name: bpy.props.StringProperty(name='Group', description='Object group handled by this operation',
+    collection_name: bpy.props.StringProperty(name='Collection', description='Object collection handled by this operation',
                                          update=updateOperationValid)
     curve_object: bpy.props.StringProperty(name='Curve source',
                                             description='curve which will be sampled along the 3d object',
@@ -427,7 +426,7 @@ class camOperation(bpy.types.PropertyGroup):
     source_image_name: bpy.props.StringProperty(name='image_source', description='image source', update=operationValid)
     geometry_source: EnumProperty(name='Source of data',
                                   items=(
-                                      ('OBJECT', 'object', 'a'), ('GROUP', 'Group of objects', 'a'),
+                                      ('OBJECT', 'object', 'a'), ('COLLECTION', 'Collection of objects', 'a'),
                                       ('IMAGE', 'Image', 'a')),
                                   description='Geometry source',
                                   default='OBJECT', update=updateOperationValid)
@@ -522,7 +521,6 @@ class camOperation(bpy.types.PropertyGroup):
     cut_type: EnumProperty(name='Cut',
                            items=(('OUTSIDE', 'Outside', 'a'), ('INSIDE', 'Inside', 'a'), ('ONLINE', 'On line', 'a')),
                            description='Type of cutter used', default='OUTSIDE', update=updateRest)
-    # render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
     outlines_count: bpy.props.IntProperty(name="Outlines count`EXPERIMENTAL", description="Outlines count", default=1,
                                           min=1, max=32, update=updateCutout)
 
@@ -764,7 +762,7 @@ class camOperation(bpy.types.PropertyGroup):
     bridges_height: bpy.props.FloatProperty(name='height of bridges',
                                             description="Height from the bottom of the cutting operation",
                                             default=0.0005, unit='LENGTH', precision=PRECISION, update=updateBridges)
-    bridges_collection_name: bpy.props.StringProperty(name='Bridges Group', description='Group of curves used as bridges',
+    bridges_collection_name: bpy.props.StringProperty(name='Bridges Collection', description='Collection of curves used as bridges',
                                                  update=operationValid)
     use_bridge_modifiers: BoolProperty(name="use bridge modifiers",
                                        description="include bridge curve modifiers using render level when calculating operation, does not effect original bridge data",

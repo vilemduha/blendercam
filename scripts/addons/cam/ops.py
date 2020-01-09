@@ -734,7 +734,7 @@ class CamOrientationAdd(bpy.types.Operator):
         oriob.empty_draw_size = 0.02  # 2 cm
 
         simple.addToGroup(oriob, gname)
-        oriob.name = 'ori_' + o.name + '.' + str(len(bpy.data.groups[gname].objects)).zfill(3)
+        oriob.name = 'ori_' + o.name + '.' + str(len(bpy.data.collections[gname].objects)).zfill(3)
 
         return {'FINISHED'}
 
@@ -1247,7 +1247,7 @@ class CamMeshGetPockets(bpy.types.Operator):
             # if the user decides to change the horizontal threshold property
             for obj in cobs:
                 obj.select = True
-            bpy.ops.group.create(name="multi level pocket ")
+            bpy.ops.collection.create(name="multi level pocket ")
 
         return {'FINISHED'}
 
