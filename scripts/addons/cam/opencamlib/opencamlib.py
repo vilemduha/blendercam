@@ -24,6 +24,8 @@ def operationSettingsToCSV(operation):
     with open(os.path.join(tempfile.gettempdir(), 'ocl_settings.txt'), 'w') as csv_file:
         csv_file.write("{}\n".format(operation.cutter_type))
         csv_file.write("{}\n".format(operation.cutter_diameter))
+        if operation.cutter_type == "VCARVE":
+            csv_file.write("{}\n".format(operation.cutter_tip_angle))
         csv_file.write("{}\n".format(operation.minz))
 
 
