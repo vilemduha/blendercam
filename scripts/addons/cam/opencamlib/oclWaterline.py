@@ -6,11 +6,13 @@ stl = camvtk.STLSurf(tempfile.gettempdir() + "/model0.stl")
 stl_polydata = stl.src.GetOutput()
 stl_surf = ocl.STLSurf()
 camvtk.vtkPolyData2OCLSTL(stl_polydata, stl_surf)
-csv_file = open(tempfile.gettempdir() + '/ocl_settings.txt', 'r')
-op_cutter_type = csv_file.readline().split()[0]
-op_cutter_diameter = float(csv_file.readline())
-op_minz = float(csv_file.readline())
-csv_file.close();
+
+with open(tempfile.gettempdir() + '/ocl_settings.txt', 'r') as csv_file:
+    op_cutter_type = csv_file.readline().split()[0]
+    op_cutter_diameter = float(csv_file.readline())
+    if op_cutter_type == "VCARVE":
+        op_cutter_tip_angle = float(csv_file.readline())
+    op_minz = float(csv_file.readline())
 
 cutter_length = 150
 if op_cutter_type == 'END':
@@ -18,7 +20,7 @@ if op_cutter_type == 'END':
 elif op_cutter_type == 'BALLNOSE':
     cutter = ocl.BallCutter(op_cutter_diameter * 1000, cutter_length)
 elif op_cutter_type == 'VCARVE':
-    cutter = ocl.ConeCutter(op_cutter_diameter * 1000, 1, cutter_length)
+    cutter = ocl.ConeCutter(op_cutter_diameter * 1000, op_cutter_tip_angle, cutter_length)
 else:
     print("Cutter unsupported: " + op_cutter_type + '\n')
     quit()
