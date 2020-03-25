@@ -37,17 +37,17 @@ def pointSamplesFromCSV(points, samples):
         point[2] = samples[index].z / OCL_SCALE
     # print(str(point[2]))
 
-
-def chunkPointsToCSV(operation, chunks):
-    with open(os.path.join(tempfile.gettempdir(), 'ocl_chunks.txt'), 'w')as csv_file:
-        for ch in chunks:
-            p_index = 0
-            for point in ch.points:
-                if operation.ambient.contains(sgeometry.Point(point[0], point[1])):
-                    csv_file.write("{} {}\n".format(point[0], point[1]))
-                else:
-                    ch.points[p_index] = (point[0], point[1], 2)
-                p_index += 1
+#
+# def chunkPointsToCSV(operation, chunks):
+#     with open(os.path.join(tempfile.gettempdir(), 'ocl_chunks.txt'), 'w')as csv_file:
+#         for ch in chunks:
+#             p_index = 0
+#             for point in ch.points:
+#                 if operation.ambient.contains(sgeometry.Point(point[0], point[1])):
+#                     csv_file.write("{} {}\n".format(point[0], point[1]))
+#                 else:
+#                     ch.points[p_index] = (point[0], point[1], 2)
+#                 p_index += 1
 
 
 def chunkPointSamplesFromCSV(chunks, samples):
@@ -63,12 +63,12 @@ def chunkPointSamplesFromCSV(chunks, samples):
                 ch.points[p_index] = (point[0], point[1], 1)
             p_index += 1
 
-
-def resampleChunkPointsToCSV(operation, chunks_to_resample):
-    with open(os.path.join(tempfile.gettempdir(), 'ocl_chunks.txt'), 'w') as csv_file:
-        for chunk, i_start, i_length in chunks_to_resample:
-            for p_index in range(i_start, i_start + i_length):
-                csv_file.write("{} {}\n".format(chunk.points[p_index][0], chunk.points[p_index][1]))
+#
+# def resampleChunkPointsToCSV(operation, chunks_to_resample):
+#     with open(os.path.join(tempfile.gettempdir(), 'ocl_chunks.txt'), 'w') as csv_file:
+#         for chunk, i_start, i_length in chunks_to_resample:
+#             for p_index in range(i_start, i_start + i_length):
+#                 csv_file.write("{} {}\n".format(chunk.points[p_index][0], chunk.points[p_index][1]))
 
 
 def chunkPointsResampleFromCSV(chunks, chunks_to_resample):
