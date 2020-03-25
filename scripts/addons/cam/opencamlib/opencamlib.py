@@ -16,26 +16,25 @@ OCL_SCALE = 1000
 
 PYTHON_BIN = None
 
+#
+# def operationSettingsToCSV(operation):
+#     with open(os.path.join(tempfile.gettempdir(), 'ocl_settings.txt'), 'w') as csv_file:
+#         csv_file.write("{}\n".format(operation.cutter_type))
+#         csv_file.write("{}\n".format(operation.cutter_diameter))
+#         if operation.cutter_type == "VCARVE":
+#             csv_file.write("{}\n".format(operation.cutter_tip_angle))
+#         csv_file.write("{}\n".format(operation.minz))
 
-def operationSettingsToCSV(operation):
-    with open(os.path.join(tempfile.gettempdir(), 'ocl_settings.txt'), 'w') as csv_file:
-        csv_file.write("{}\n".format(operation.cutter_type))
-        csv_file.write("{}\n".format(operation.cutter_diameter))
-        if operation.cutter_type == "VCARVE":
-            csv_file.write("{}\n".format(operation.cutter_tip_angle))
-        csv_file.write("{}\n".format(operation.minz))
+#
+# def pointsToCSV(operation, points):
+#     with open(os.path.join(tempfile.gettempdir(), 'ocl_chunks.txt'), 'w') as csv_file:
+#         for point in points:
+#             csv_file.write("{} {}\n".format(point[0], point[1]))
 
 
-def pointsToCSV(operation, points):
-    with open(os.path.join(tempfile.gettempdir(), 'ocl_chunks.txt'), 'w') as csv_file:
-        for point in points:
-            csv_file.write("{} {}\n".format(point[0], point[1]))
-
-
-def pointSamplesFromCSV(points):
-    with open(os.path.join(tempfile.gettempdir(), 'ocl_chunk_samples.txt'), 'r') as csv_file:
-        for point in points:
-            point[2] = float(csv_file.readline()) / OCL_SCALE
+def pointSamplesFromCSV(points, samples):
+    for index, point in enumerate(points):
+        point[2] = samples[index].z / OCL_SCALE
     # print(str(point[2]))
 
 
@@ -111,8 +110,8 @@ def oclSamplePoints(operation, points):
 
     exportModelsToSTL(operation)
 
-    ocl_sample(operation, points)
-    pointSamplesFromCSV(points)
+    samples = ocl_sample(operation, points)
+    pointSamplesFromCSV(points, samples)
 
 
 def oclSample(operation, chunks):
