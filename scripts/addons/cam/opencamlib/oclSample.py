@@ -22,9 +22,7 @@ def vtkPolyData2OCLSTL(vtkPolyData, oclSTL):
                  ocl.Point(0.0, 0.0, 0.0)]
         for pointId in range(0, points.GetNumberOfPoints()):
             vertex = points.GetPoint(pointId)
-            print("vertex", vertex)
             p = ocl.Point(vertex[0], vertex[1], vertex[2])
-            print(pointId)
             plist[pointId] = p
         i += 1
         t = ocl.Triangle(plist[0], plist[1], plist[2])
