@@ -9,7 +9,7 @@ bl_info = {
 	"name": "Bas relief",
 	"author": "Vilem Novak",
 	"version": (0, 1, 0),
-	"blender": (2, 6, 9),
+	"blender": (2, 80, 0),
 	"location": "Properties > render",
 	"description": "Converts zbuffer image to bas relief.",
 	"warning": "there is no warranty. needs Numpy library installed in blende python directory.",
@@ -39,7 +39,7 @@ def copy_compbuf_data(inbuf, outbuf):
 
 def restrictbuf( inbuf, outbuf ):#scale down array....
 
-	inx = inbuf.shape[0];
+	inx = inbuf.shape[0]
 	iny = inbuf.shape[1]
 
 	outx = outbuf.shape[0]
@@ -106,15 +106,15 @@ def restrictbuf( inbuf, outbuf ):#scale down array....
 
 			sx = dx/2-0.5
 			for x in range(0,outx):
-				pixVal = 0;
-				w = 0;
+				pixVal = 0
+				w = 0
 
 				#
 				for ix in range(max( 0, ceil(sx-dx*filterSize)),min( floor( sx+dx*filterSize ), inx-1)+1):
 					for iy in range(max( 0, ceil( sy-dx*filterSize ) ),min( floor( sy+dx*filterSize), iny-1)+1):
-						pixVal += inbuf[ix,iy];
-						w += 1;
-				outbuf[x ,y] = pixVal/w;
+						pixVal += inbuf[ix,iy]
+						w += 1
+				outbuf[x ,y] = pixVal/w
 
 				sx+=dx
 			sy+=dy
@@ -130,7 +130,7 @@ def prolongate( inbuf, outbuf ):
 	dx=inx/outx
 	dy=iny/outy
 
-	filterSize = 1;
+	filterSize = 1
 	xfiltersize=dx*filterSize
 	#outx[:]=
 
@@ -181,42 +181,42 @@ def prolongate( inbuf, outbuf ):
 		for y in range(0,outy):
 			sx=-dx/2
 			for x in range(0,outx):
-				pixVal = 0;
-				weight = 0;
+				pixVal = 0
+				weight = 0
 
 				for ix in range(max( 0, ceil( sx-filterSize ) ),min( floor(sx+filterSize), inx-1 )+1):
 					for iy in range(max( 0, ceil( sy-filterSize ) ),min( floor( sy+filterSize), iny-1 )+1):
-						fx = abs( sx - ix );
-						fy = abs( sy - iy );
+						fx = abs( sx - ix )
+						fy = abs( sy - iy )
 
-						fval = (1-fx)*(1-fy);
+						fval = (1-fx)*(1-fy)
 
-						pixVal += inbuf[ix,iy] * fval;
-						weight += fval;
+						pixVal += inbuf[ix,iy] * fval
+						weight += fval
 				#if weight==0:
 				#	print('error' )
-				#	return;
+				#	return
 				outbuf[x,y]=pixVal/weight
 				sx+=dx
 			sy+=dy
 
 def idx(r,c,cols):
 
-	return r*cols+c+1;
+	return r*cols+c+1
 
 
 ## smooth u using f at level
 def smooth( U, F , linbcgiterations, planar):
 
-	iter=0;
-	err=0;
+	iter=0
+	err=0
 
-	rows = U.shape[1];
-	cols = U.shape[0];
+	rows = U.shape[1]
+	cols = U.shape[0]
 
 	n = U.size
 
-	linbcg( n, F, U, 2, 0.001, linbcgiterations, iter, err , rows, cols, planar);
+	linbcg( n, F, U, 2, 0.001, linbcgiterations, iter, err , rows, cols, planar)
 
 
 
@@ -226,10 +226,10 @@ def calculate_defect( D, U, F ):
 	sx = F.shape[0]
 	sy = F.shape[1]
 
-	h = 1.0/sqrt(sx*sy*1.0);
-	h2i = 1.0/(h*h);
+	h = 1.0/sqrt(sx*sy*1.0)
+	h2i = 1.0/(h*h)
 
-	h2i = 1;
+	h2i = 1
 	D[1:-1,1:-1]=F[1:-1,1:-1] - U[:-2,1:-1] - U[2:,1:-1] - U[1:-1, :-2] - U[1:-1,2:] + 4*U[1:-1,1:-1]
 	#sides
 	D[1:-1,0]=F[1:-1,0] - U[:-2,0] - U[2:,0] - U[1:-1, 1] + 3*U[1:-1,0]
@@ -267,16 +267,16 @@ def solve_pde_multigrid( F, U , vcycleiterations, linbcgiterations, smoothiterat
 	xmax = F.shape[0]
 	ymax = F.shape[1]
 
-	#int i;  # index for simple loops
-	#int k;  # index for iterating through levels
-	#int k2; # index for iterating through levels in V-cycles
+	#int i  # index for simple loops
+	#int k  # index for iterating through levels
+	#int k2 # index for iterating through levels in V-cycles
 
 	## 1. restrict f to coarse-grid (by the way count the number of levels)
 	##  k=0: fine-grid = f
 	##  k=levels: coarsest-grid
-	#pix = CB_VAL;#what is this>???
-	#int cycle;
-	#int sx, sy;
+	#pix = CB_VAL#what is this>???
+	#int cycle
+	#int sx, sy
 
 	RHS=[]
 	IU=[]
@@ -287,37 +287,37 @@ def solve_pde_multigrid( F, U , vcycleiterations, linbcgiterations, smoothiterat
 		IU.append(None)
 		VF.append(None)
 		PLANAR.append(None)
-	VF[0] = numpy.zeros((xmax,ymax), dtype=numpy.float);
+	VF[0] = numpy.zeros((xmax,ymax), dtype=numpy.float)
 	#numpy.fill(pix)!? TODO
 
 	RHS[0] = F.copy()
 	IU[0] = U.copy()
 	PLANAR[0] = planar.copy()
 
-	sx=xmax;
-	sy=ymax;
+	sx=xmax
+	sy=ymax
 	#print(planar)
 	for k in range(0,levels):
 		# calculate size of next level
-		sx=sx/2;
-		sy=sy/2;
-		PLANAR[k+1] = numpy.zeros((sx,sy), dtype=numpy.float);
-		RHS[k+1] = numpy.zeros((sx,sy), dtype=numpy.float);
-		IU[k+1] = numpy.zeros((sx,sy), dtype=numpy.float);
-		VF[k+1] = numpy.zeros((sx,sy), dtype=numpy.float);
+		sx=int(sx/2)
+		sy=int(sy/2)
+		PLANAR[k+1] = numpy.zeros((sx,sy), dtype=numpy.float)
+		RHS[k+1] = numpy.zeros((sx,sy), dtype=numpy.float)
+		IU[k+1] = numpy.zeros((sx,sy), dtype=numpy.float)
+		VF[k+1] = numpy.zeros((sx,sy), dtype=numpy.float)
 
 		# restrict from level k to level k+1 (coarser-grid)
 		restrictbuf(PLANAR[k], PLANAR[k+1])
 		PLANAR[k+1]=PLANAR[k+1]>0
 		#numpytoimage(PLANAR[k+1],'planar')
 		#print(PLANAR[k+1])
-		restrictbuf( RHS[k], RHS[k+1] );
+		restrictbuf( RHS[k], RHS[k+1] )
 		#numpytoimage(RHS[k+1],'rhs')
 
 
 
 	# 2. find exact sollution at the coarsest-grid (k=levels)
-	IU[levels].fill(0.0);#this was replaced to easify code. exact_sollution( RHS[levels], IU[levels] );
+	IU[levels].fill(0.0)#this was replaced to easify code. exact_sollution( RHS[levels], IU[levels] )
 
 	# 3. nested iterations
 
@@ -326,11 +326,11 @@ def solve_pde_multigrid( F, U , vcycleiterations, linbcgiterations, smoothiterat
 
 		# 4. interpolate sollution from last coarse-grid to finer-grid
 		# interpolate from level k+1 to level k (finer-grid)
-		prolongate( IU[k+1], IU[k] );
+		prolongate( IU[k+1], IU[k] )
 		#print('k',k)
 		# 4.1. first target function is the equation target function
 		#	(following target functions are the defect)
-		copy_compbuf_data( RHS[k], VF[k] );
+		copy_compbuf_data( RHS[k], VF[k] )
 
 		#print('lanar ')
 
@@ -363,16 +363,16 @@ def solve_pde_multigrid( F, U , vcycleiterations, linbcgiterations, smoothiterat
 
 				#	VF[k2][PLANAR[k2]]=0.0
 				#	print(IU[0])
-				calculate_defect( D, IU[k2], VF[k2] );
+				calculate_defect( D, IU[k2], VF[k2] )
 
 				# 9. restrict deffect as target function for next coarser-grid
 				#  def -> f[k2+1]
-				restrictbuf( D, VF[k2+1] );
+				restrictbuf( D, VF[k2+1] )
 
 			# 10. solve on coarsest-grid (target function is the deffect)
 			#   iu[levels] should contain sollution for
 			#   the f[levels] - last deffect, iu will now be the correction
-			IU[levels].fill(0.0)#exact_sollution(VF[levels], IU[levels] );
+			IU[levels].fill(0.0)#exact_sollution(VF[levels], IU[levels] )
 
 			# 11. upward stroke of V
 			for k2 in range(levels-1,k-1,-1):
@@ -380,16 +380,16 @@ def solve_pde_multigrid( F, U , vcycleiterations, linbcgiterations, smoothiterat
 				# 12. interpolate correction from last coarser-grid to finer-grid
 				#   iu[k2+1] -> cor
 				C = numpy.zeros_like(IU[k2])
-				prolongate( IU[k2+1], C );
+				prolongate( IU[k2+1], C )
 
 
 				# 13. add interpolated correction to initial sollution at level k2
-				add_correction( IU[k2], C );
+				add_correction( IU[k2], C )
 
 				# 14. post-smoothing of current sollution using target function
 				for i in range(0, smoothiterations):
 
-					smooth( IU[k2], VF[k2] ,linbcgiterations,PLANAR[k2]);
+					smooth( IU[k2], VF[k2] ,linbcgiterations,PLANAR[k2])
 
 
 				if useplanar and k2==0:
@@ -427,7 +427,7 @@ def snrm(n, sx, itol):
 	if (itol <= 3):
 		temp=sx*sx
 		ans=temp.sum()
-		return sqrt(ans);
+		return sqrt(ans)
 	else:
 		temp=numpy.abs(sx)
 		return temp.max()
@@ -445,37 +445,37 @@ def linbcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
 	z=numpy.zeros((cols,rows))
 	zz=numpy.zeros((cols,rows))
 
-	iter=0;
-	atimes(x,r);
+	iter=0
+	atimes(x,r)
 	r[:]=b-r
 	rr[:]=r
 
-	atimes(r,rr);	  # minimum residual
+	atimes(r,rr)	  # minimum residual
 
-	znrm=1.0;
+	znrm=1.0
 
 	if (itol == 1):
-		bnrm=snrm(n,b,itol);
+		bnrm=snrm(n,b,itol)
 
 	elif (itol == 2):
 		asolve(b,z)
 		bnrm=snrm(n,z,itol)
 
 	elif (itol == 3 or itol == 4):
-		asolve(b,z);
-		bnrm=snrm(n,z,itol);
-		asolve(r,z);
-		znrm=snrm(n,z,itol);
+		asolve(b,z)
+		bnrm=snrm(n,z,itol)
+		asolve(r,z)
+		znrm=snrm(n,z,itol)
 	else:
-		printf("illegal itol in linbcg");
+		printf("illegal itol in linbcg")
 
-	asolve(r,z);
+	asolve(r,z)
 
 	while (iter <= itmax):
 		#print('linbcg iteration:', str(iter))
 		iter+=1
-		zm1nrm=znrm;
-		asolve(rr,zz);
+		zm1nrm=znrm
+		asolve(rr,zz)
 
 		bknum=0.0
 
@@ -488,15 +488,15 @@ def linbcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
 			pp[:]=zz
 
 		else:
-			bk=bknum/bkden;
+			bk=bknum/bkden
 			p=bk*p+z
 			pp=bk*pp+zz
-		bkden=bknum;
-		atimes(p,z);
+		bkden=bknum
+		atimes(p,z)
 		temp=z*pp
 		akden = temp.sum()
-		ak=bknum/akden;
-		atimes(pp,zz);
+		ak=bknum/akden
+		atimes(pp,zz)
 
 		x+=ak*p
 		r-= ak*z
@@ -505,25 +505,25 @@ def linbcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
 		asolve(r,z)
 
 		if (itol == 1 or itol == 2):
-			znrm=1.0;
-			err=snrm(n,r,itol)/bnrm;
+			znrm=1.0
+			err=snrm(n,r,itol)/bnrm
 		elif (itol == 3 or itol == 4):
-			znrm=snrm(n,z,itol);
+			znrm=snrm(n,z,itol)
 			if (abs(zm1nrm-znrm) > EPS*znrm):
-				dxnrm=abs(ak)*snrm(n,p,itol);
-				err=znrm/abs(zm1nrm-znrm)*dxnrm;
+				dxnrm=abs(ak)*snrm(n,p,itol)
+				err=znrm/abs(zm1nrm-znrm)*dxnrm
 			else:
-				err=znrm/bnrm;
-				continue;
-			xnrm=snrm(n,x,itol);
+				err=znrm/bnrm
+				continue
+			xnrm=snrm(n,x,itol)
 
 			if (err <= 0.5*xnrm):
-				err /= xnrm;
+				err /= xnrm
 			else:
-				err=znrm/bnrm;
-				continue;
+				err=znrm/bnrm
+				continue
 		if (err <= tol):
-			break;
+			break
 	#if PLANAR_CONST and planar.shape==rr.shape:
 	#	x[planar]=0.0
 
@@ -738,22 +738,23 @@ def relief(br):
 
 	#detect and also recover silhouettes:
 	silhxpos=gx>silh_thres
-	gx=gx*(-silhxpos)+recover_silh*(silhxpos*silh_thres*silh_scale)*sqrarx
+	print("*** silhxpos is %s" %silhxpos)
+	gx=gx*(~silhxpos)+recover_silh*(silhxpos*silh_thres*silh_scale)*sqrarx
 	silhxneg=gx<-silh_thres
-	gx=gx*(-silhxneg)-recover_silh*(silhxneg*silh_thres*silh_scale)*sqrarx
+	gx=gx*(~silhxneg)-recover_silh*(silhxneg*silh_thres*silh_scale)*sqrarx
 	silhx=numpy.logical_or(silhxpos,silhxneg)
-	gx=gx*silhx+(1.0/a*numpy.log(1.+a*(gx)))*(-silhx)#attenuate
+	gx=gx*silhx+(1.0/a*numpy.log(1.+a*(gx)))*(~silhx)#attenuate
 
 	#if br.fade_distant_objects:
 	#	gx*=(nar)
 	#	gy*=(nar)
 
 	silhypos=gy>silh_thres
-	gy=gy*(-silhypos)+recover_silh*(silhypos*silh_thres*silh_scale)*sqrary
+	gy=gy*(~silhypos)+recover_silh*(silhypos*silh_thres*silh_scale)*sqrary
 	silhyneg=gy<-silh_thres
-	gy=gy*(-silhyneg)-recover_silh*(silhyneg*silh_thres*silh_scale)*sqrary
+	gy=gy*(~silhyneg)-recover_silh*(silhyneg*silh_thres*silh_scale)*sqrary
 	silhy=numpy.logical_or(silhypos,silhyneg)#both silh
-	gy=gy*silhy+(1.0/a*numpy.log(1.+a*(gy)))*(-silhy)#attenuate
+	gy=gy*silhy+(1.0/a*numpy.log(1.+a*(gy)))*(~silhy)#attenuate
 
 	#now scale slopes...
 	if br.gradient_scaling_mask_use:
@@ -775,7 +776,7 @@ def relief(br):
 	if br.detail_enhancement_use:# fourier stuff here!disabled by now
 		print("detail enhancement")
 		rows,cols=gx.shape
-		crow,ccol = rows/2, cols/2
+		crow,ccol = int(rows/2), int(cols/2)
 		#dist=int(br.detail_enhancement_freq*gx.shape[0]/(2))
 		#bandwidth=.1
 		#dist=
@@ -819,12 +820,12 @@ def relief(br):
 	mins = min(nar.shape[0],nar.shape[1])
 	while (mins>=MINS):
 		levels+=1
-		mins = mins/2;
+		mins = mins/2
 
 
 	target=numpy.zeros_like(divg)
 
-	solve_pde_multigrid( divg, target ,vcycleiterations, linbcgiterations, smoothiterations, mins, levels, useplanar, planar);
+	solve_pde_multigrid( divg, target ,vcycleiterations, linbcgiterations, smoothiterations, mins, levels, useplanar, planar)
 
 	tonemap(target)
 
@@ -836,29 +837,29 @@ def relief(br):
 
 
 class BasReliefsettings(bpy.types.PropertyGroup):
-	source_image_name = bpy.props.StringProperty(name='Image source', description='image source')
-	output_image_name = bpy.props.StringProperty(name='Image target', description='image output name')
-	silhouette_threshold = FloatProperty(name="Silhouette threshold", description="Silhouette threshold", min=0.000001, max=1.0, default=0.003, precision=PRECISION)
-	recover_silhouettes = bpy.props.BoolProperty(name="Recover silhouettes",description="", default=True)
-	silhouette_scale = FloatProperty(name="Silhouette scale", description="Silhouette scale", min=0.000001, max=5.0, default=0.3, precision=PRECISION)
-	silhouette_exponent = bpy.props.IntProperty(name="Silhouette square exponent", description="If lower, true depht distances between objects will be more visibe in the relief", default=3, min=0, max=5)
-	attenuation = FloatProperty(name="Gradient attenuation", description="Gradient attenuation", min=0.000001, max=100.0, default=1.0, precision=PRECISION)
-	min_gridsize = bpy.props.IntProperty(name="Minimum grid size", default=16, min=2, max=512)
-	smooth_iterations=bpy.props.IntProperty(name="Smooth iterations", default=1, min=1, max=64)
-	vcycle_iterations=bpy.props.IntProperty(name="V-cycle iterations",description="set up higher for plananr constraint", default=2, min=1, max=128)
-	linbcg_iterations = bpy.props.IntProperty(name="Linbcg iterations",description="set lower for flatter relief, and when using planar constraint", default=5, min=1, max=64)
-	use_planar=bpy.props.BoolProperty(name="Use planar constraint",description="", default=False)
-	gradient_scaling_mask_use=bpy.props.BoolProperty(name="Scale gradients with mask",description="", default=False)
+	source_image_name: bpy.props.StringProperty(name='Image source', description='image source')
+	output_image_name: bpy.props.StringProperty(name='Image target', description='image output name')
+	silhouette_threshold: FloatProperty(name="Silhouette threshold", description="Silhouette threshold", min=0.000001, max=1.0, default=0.003, precision=PRECISION)
+	recover_silhouettes: bpy.props.BoolProperty(name="Recover silhouettes",description="", default=True)
+	silhouette_scale: FloatProperty(name="Silhouette scale", description="Silhouette scale", min=0.000001, max=5.0, default=0.3, precision=PRECISION)
+	silhouette_exponent: bpy.props.IntProperty(name="Silhouette square exponent", description="If lower, true depht distances between objects will be more visibe in the relief", default=3, min=0, max=5)
+	attenuation: FloatProperty(name="Gradient attenuation", description="Gradient attenuation", min=0.000001, max=100.0, default=1.0, precision=PRECISION)
+	min_gridsize: bpy.props.IntProperty(name="Minimum grid size", default=16, min=2, max=512)
+	smooth_iterations: bpy.props.IntProperty(name="Smooth iterations", default=1, min=1, max=64)
+	vcycle_iterations: bpy.props.IntProperty(name="V-cycle iterations",description="set up higher for plananr constraint", default=2, min=1, max=128)
+	linbcg_iterations: bpy.props.IntProperty(name="Linbcg iterations",description="set lower for flatter relief, and when using planar constraint", default=5, min=1, max=64)
+	use_planar: bpy.props.BoolProperty(name="Use planar constraint",description="", default=False)
+	gradient_scaling_mask_use: bpy.props.BoolProperty(name="Scale gradients with mask",description="", default=False)
 
 
-	gradient_scaling_mask_name = bpy.props.StringProperty(name='Scaling mask name', description='mask name')
-	scale_down_before_use=bpy.props.BoolProperty(name="Scale down image before processing",description="", default=False)
-	scale_down_before = FloatProperty(name="Image scale", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
-	detail_enhancement_use=bpy.props.BoolProperty(name="Enhance details ",description="enhance details by frequency analysis", default=False)
+	gradient_scaling_mask_name: bpy.props.StringProperty(name='Scaling mask name', description='mask name')
+	scale_down_before_use: bpy.props.BoolProperty(name="Scale down image before processing",description="", default=False)
+	scale_down_before: FloatProperty(name="Image scale", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
+	detail_enhancement_use: bpy.props.BoolProperty(name="Enhance details ",description="enhance details by frequency analysis", default=False)
 	#detail_enhancement_freq=FloatProperty(name="frequency limit", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
-	detail_enhancement_amount=FloatProperty(name="amount", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
+	detail_enhancement_amount: FloatProperty(name="amount", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
 
-	advanced = bpy.props.BoolProperty(name="Advanced options",description="show advanced options", default=True)
+	advanced: bpy.props.BoolProperty(name="Advanced options",description="show advanced options", default=True)
 
 class BASRELIEF_Panel(bpy.types.Panel):
 	"""Bas relief panel"""
