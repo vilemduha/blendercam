@@ -2348,8 +2348,14 @@ def strategy_cutout(o):
     extendorder = []
     if o.first_down:  # each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
         for chunk in chunksFromCurve:
+            dir_switch = False # needed to avoid unnecessary lifting of cutter with open chunks and movement set to "MEANDER"
             for layer in layers:
-                extendorder.append([chunk.copy(), layer])
+                chunk_copy = chunk.copy()
+                if dir_switch:
+                    chunk_copy.points.reverse()
+                extendorder.append([chunk_copy, layer])
+                if (not chunk.closed) and o.movement_type == "MEANDER":
+                    dir_switch = not dir_switch
     else:
         for layer in layers:
             for chunk in chunksFromCurve:
