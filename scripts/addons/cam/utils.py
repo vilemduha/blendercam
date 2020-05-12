@@ -3283,7 +3283,7 @@ def checkEqual(lst):
 
 
 def getPath4axis(context, operation):
-    t = time.clock()
+    t = time.process_time()
     s = bpy.context.scene
     o = operation
     getBounds(o)
@@ -3422,7 +3422,7 @@ def rotTo2axes(e, axescombination):
 
 
 def getPath(context, operation):  # should do all path calculations.
-    t = time.clock()
+    t = time.process_time()
     # print('ahoj0')
     if shapely.speedups.available:
         shapely.speedups.enable()
@@ -3470,7 +3470,7 @@ def getPath(context, operation):  # should do all path calculations.
         exportGcodePath(operation.filename, [p.data], [operation])
 
     operation.changed = False
-    t1 = time.clock() - t
+    t1 = time.process_time() - t
     progress('total time', t1)
 
 
