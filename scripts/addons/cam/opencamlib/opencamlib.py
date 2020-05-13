@@ -1,6 +1,7 @@
 # used by OpenCAMLib sampling
 
 import bpy
+import ocl
 import os
 import tempfile
 from subprocess import call
@@ -9,6 +10,7 @@ from cam import simple
 from cam.chunk import camPathChunk
 from cam.simple import *
 from shapely import geometry as sgeometry
+from .oclSample import get_oclSTL
 
 from cam.opencamlib.oclSample import ocl_sample
 
@@ -164,12 +166,6 @@ def oclWaterlineLayerHeights(operation):
     return layers
 
 
-def oclWaterlineHeightsToCSV(operation):
-    layers = oclWaterlineLayerHeights(operation)
-    with open(os.path.join(tempfile.gettempdir(), 'ocl_wl_heights.txt'), 'w') as csv_file:
-        for layer in layers:
-            csv_file.write("{}\n".format(layer * 1000))
-
 
 def waterlineChunksFromCSV(operation, chunks):
     layers = oclWaterlineLayerHeights(operation)
@@ -197,13 +193,45 @@ def oclGetMedialAxis(operation, chunks):
 
 
 def oclGetWaterline(operation, chunks):
-    oclWaterlineHeightsToCSV(operation)
-    operationSettingsToCSV(operation)
-    exportModelsToSTL(operation)
-    if os.path.isdir(os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib")):
-        call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "oclWaterline.py")])
+    layers = oclWaterlineLayerHeights(operation)
+    oclSTL = get_oclSTL(operation)
+
+    op_cutter_type = operation.cutter_type
+    op_cutter_diameter = operation.cutter_diameter
+    op_minz = operation.minz
+    if op_cutter_type == "VCARVE":
+        op_cutter_tip_angle = operation['cutter_tip_angle']
+
+    cutter = None
+    cutter_length = 150 #TODO: automatically determine necessary cutter length depending on object size
+
+    if op_cutter_type == 'END':
+        cutter = ocl.CylCutter(op_cutter_diameter * 1000, cutter_length)
+    elif op_cutter_type == 'BALLNOSE':
+        cutter = ocl.BallCutter(op_cutter_diameter * 1000, cutter_length)
+    elif op_cutter_type == 'VCARVE':
+        cutter = ocl.ConeCutter(op_cutter_diameter * 1000, op_cutter_tip_angle, cutter_length)
     else:
-        call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "oclWaterline.py")])
-    waterlineChunksFromCSV(operation, chunks)
+        print("Cutter unsupported: {0}\n".format(op_cutter_type))
+        quit()
+
+
+    waterline = ocl.Waterline()
+    waterline.setSTL(oclSTL)
+    waterline.setCutter(cutter)
+    waterline.setSampling(0.1)#TODO: add sampling setting to UI
+    for height in layers:
+        print(str(height) + '\n')
+        waterline.reset()
+        waterline.setZ(height * OCL_SCALE)
+        waterline.run2()
+        wl_loops = waterline.getLoops()
+        for l in wl_loops:
+            chunks.append(camPathChunk(inpoints=[]))
+            for p in l:
+                chunks[-1].points.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
+            chunks[-1].points.append(chunks[-1].points[0])
+            chunks[-1].closed = True
+            chunks[-1].poly = sgeometry.Polygon(chunks[-1].points)
 
 # def oclFillMedialAxis(operation):
