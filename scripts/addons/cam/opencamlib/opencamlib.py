@@ -108,7 +108,7 @@ def exportModelsToSTL(operation):
 
 def oclSamplePoints(operation, points):
 
-    exportModelsToSTL(operation)
+    #exportModelsToSTL(operation)
 
     samples = ocl_sample(operation, points)
     pointSamplesFromCSV(points, samples)
@@ -116,7 +116,7 @@ def oclSamplePoints(operation, points):
 
 def oclSample(operation, chunks):
 
-    exportModelsToSTL(operation)
+    #exportModelsToSTL(operation)
 
     samples = ocl_sample(operation, chunks)
     chunkPointSamplesFromCSV(chunks, samples)

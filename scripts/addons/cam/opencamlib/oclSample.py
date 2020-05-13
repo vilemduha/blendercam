@@ -22,6 +22,7 @@ def get_oclSTL(operation):
                 t = ocl.Triangle(ocl.Point(face[0][0]*OCL_SCALE, face[0][1]*OCL_SCALE, face[0][2]*OCL_SCALE),
                         ocl.Point(face[1][0]*OCL_SCALE, face[1][1]*OCL_SCALE, face[1][2]*OCL_SCALE),
                         ocl.Point(face[2][0]*OCL_SCALE, face[2][1]*OCL_SCALE, face[2][2]*OCL_SCALE))
+                oclSTL.addTriangle(t)
 
         # FIXME needs to work with collections
     return oclSTL
