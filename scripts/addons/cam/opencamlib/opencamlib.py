@@ -12,7 +12,7 @@ from shapely import geometry as sgeometry
 
 from cam.opencamlib.oclSample import ocl_sample
 
-OCL_SCALE = 1000
+OCL_SCALE = 1000.0
 
 PYTHON_BIN = None
 
@@ -52,16 +52,18 @@ def pointSamplesFromCSV(points, samples):
 
 def chunkPointSamplesFromCSV(chunks, samples):
 
+    s_index = 0
     for ch in chunks:
         p_index = 0
         for point in ch.points:
             if len(point) == 2 or point[2] != 2:
-                z_sample = samples[p_index].z / OCL_SCALE
+                z_sample = samples[s_index].z / OCL_SCALE
                 ch.points[p_index] = (point[0], point[1], z_sample)
             # print(str(point[2]))
             else:
                 ch.points[p_index] = (point[0], point[1], 1)
             p_index += 1
+            s_index += 1
 
 #
 # def resampleChunkPointsToCSV(operation, chunks_to_resample):
@@ -71,18 +73,20 @@ def chunkPointSamplesFromCSV(chunks, samples):
 #                 csv_file.write("{} {}\n".format(chunk.points[p_index][0], chunk.points[p_index][1]))
 
 
-def chunkPointsResampleFromCSV(chunks, chunks_to_resample):
+def chunkPointsResampleFromCSV(chunks, samples):
 
+    s_index = 0
     for ch in chunks:
         p_index = 0
         for point in ch.points:
             if len(point) == 2 or point[2] != 2:
-                z_sample = chunks_to_resample[p_index].z / OCL_SCALE
+                z_sample = samples[s_index].z / OCL_SCALE
                 ch.points[p_index] = (point[0], point[1], z_sample)
             # print(str(point[2]))
             else:
                 ch.points[p_index] = (point[0], point[1], 1)
             p_index += 1
+            s_index += 1
 
 
 def exportModelsToSTL(operation):
@@ -123,6 +127,21 @@ def oclSample(operation, chunks):
 
 
 def oclResampleChunks(operation, chunks_to_resample):
+    #tmp_chunks = list()
+    #tmp_chunks.append(camPathChunk(list()))
+
+    #for chunk, i_start, i_length in chunks_to_resample:
+        #for p_index in range(i_start, i_start + i_length):
+            #tmp_chunks[0].append(Vector((chunk.points[p_index][0], chunk.points[p_index][1], chunk.points[p_index][2])))
+    
+    #samples = ocl_sample(operation, tmp_chunks)
+    
+    #sample_index = 0
+    #for chunk, i_start, i_length in chunks_to_resample:
+        #for p_index in range(i_start, i_start + i_length):
+            #z = samples[sample_index].z
+            #if z > chunk.points[p_index][2]:
+                #chunk.points[p_index][2] = z / OCL_SCALE
 
     chunks = list()
     for chunks_data in chunks_to_resample:
