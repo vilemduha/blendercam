@@ -1552,7 +1552,6 @@ def connectChunksLow(chunks, o):
                     # print('addbetwee')
                     between = samplePathLow(o, lastch, ch,
                                             False)  # other paths either dont use sampling or are sorted before it.
-
                 if o.use_opencamlib and o.use_exact and (
                         o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'PENCIL'):
                     chunks_to_resample.append(

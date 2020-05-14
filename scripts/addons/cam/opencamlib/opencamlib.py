@@ -18,42 +18,11 @@ OCL_SCALE = 1000.0
 
 PYTHON_BIN = None
 
-#
-# def operationSettingsToCSV(operation):
-#     with open(os.path.join(tempfile.gettempdir(), 'ocl_settings.txt'), 'w') as csv_file:
-#         csv_file.write("{}\n".format(operation.cutter_type))
-#         csv_file.write("{}\n".format(operation.cutter_diameter))
-#         if operation.cutter_type == "VCARVE":
-#             csv_file.write("{}\n".format(operation.cutter_tip_angle))
-#         csv_file.write("{}\n".format(operation.minz))
-
-#
-# def pointsToCSV(operation, points):
-#     with open(os.path.join(tempfile.gettempdir(), 'ocl_chunks.txt'), 'w') as csv_file:
-#         for point in points:
-#             csv_file.write("{} {}\n".format(point[0], point[1]))
-
-
-def pointSamplesFromCSV(points, samples):
+def pointSamplesFromOCL(points, samples):
     for index, point in enumerate(points):
         point[2] = samples[index].z / OCL_SCALE
-    # print(str(point[2]))
 
-#
-# def chunkPointsToCSV(operation, chunks):
-#     with open(os.path.join(tempfile.gettempdir(), 'ocl_chunks.txt'), 'w')as csv_file:
-#         for ch in chunks:
-#             p_index = 0
-#             for point in ch.points:
-#                 if operation.ambient.contains(sgeometry.Point(point[0], point[1])):
-#                     csv_file.write("{} {}\n".format(point[0], point[1]))
-#                 else:
-#                     ch.points[p_index] = (point[0], point[1], 2)
-#                 p_index += 1
-
-
-def chunkPointSamplesFromCSV(chunks, samples):
-
+def chunkPointSamplesFromOCL(chunks, samples):
     s_index = 0
     for ch in chunks:
         p_index = 0
@@ -67,16 +36,7 @@ def chunkPointSamplesFromCSV(chunks, samples):
             p_index += 1
             s_index += 1
 
-#
-# def resampleChunkPointsToCSV(operation, chunks_to_resample):
-#     with open(os.path.join(tempfile.gettempdir(), 'ocl_chunks.txt'), 'w') as csv_file:
-#         for chunk, i_start, i_length in chunks_to_resample:
-#             for p_index in range(i_start, i_start + i_length):
-#                 csv_file.write("{} {}\n".format(chunk.points[p_index][0], chunk.points[p_index][1]))
-
-
-def chunkPointsResampleFromCSV(chunks, samples):
-
+def chunkPointsResampleFromOCL(chunks, samples):
     s_index = 0
     for ch in chunks:
         p_index = 0
@@ -113,44 +73,32 @@ def exportModelsToSTL(operation):
 
 
 def oclSamplePoints(operation, points):
-
-    #exportModelsToSTL(operation)
-
     samples = ocl_sample(operation, points)
-    pointSamplesFromCSV(points, samples)
+    pointSamplesFromOCL(points, samples)
 
 
 def oclSample(operation, chunks):
-
-    #exportModelsToSTL(operation)
-
     samples = ocl_sample(operation, chunks)
-    chunkPointSamplesFromCSV(chunks, samples)
+    chunkPointSamplesFromOCL(chunks, samples)
 
 
 def oclResampleChunks(operation, chunks_to_resample):
-    #tmp_chunks = list()
-    #tmp_chunks.append(camPathChunk(list()))
+    tmp_chunks = list()
+    tmp_chunks.append(camPathChunk(inpoints=[]))
+    for chunk, i_start, i_length in chunks_to_resample:
+        for p_index in range(i_start, i_start + i_length):
+            tmp_chunks[0].append(chunk.points[p_index])
+ 
 
-    #for chunk, i_start, i_length in chunks_to_resample:
-        #for p_index in range(i_start, i_start + i_length):
-            #tmp_chunks[0].append(Vector((chunk.points[p_index][0], chunk.points[p_index][1], chunk.points[p_index][2])))
-    
-    #samples = ocl_sample(operation, tmp_chunks)
-    
-    #sample_index = 0
-    #for chunk, i_start, i_length in chunks_to_resample:
-        #for p_index in range(i_start, i_start + i_length):
-            #z = samples[sample_index].z
-            #if z > chunk.points[p_index][2]:
-                #chunk.points[p_index][2] = z / OCL_SCALE
+    samples = ocl_sample(operation, tmp_chunks)
 
-    chunks = list()
-    for chunks_data in chunks_to_resample:
-        chunks.append(chunks_data[0])
-
-    samples = ocl_sample(operation, chunks)
-    chunkPointsResampleFromCSV(chunks, samples)
+    sample_index = 0
+    for chunk, i_start, i_length in chunks_to_resample:
+        for p_index in range(i_start, i_start + i_length):
+            z = samples[sample_index].z / OCL_SCALE
+            sample_index += 1
+            if z > chunk.points[p_index][2]:
+                chunk.points[p_index][2] = z
 
 
 def oclWaterlineLayerHeights(operation):
@@ -167,7 +115,7 @@ def oclWaterlineLayerHeights(operation):
 
 
 
-def waterlineChunksFromCSV(operation, chunks):
+def waterlineChunksFromOCL(operation, chunks):
     layers = oclWaterlineLayerHeights(operation)
     wl_index = 0
     for layer in layers:
@@ -185,11 +133,11 @@ def waterlineChunksFromCSV(operation, chunks):
 
 
 def oclGetMedialAxis(operation, chunks):
-    oclWaterlineHeightsToCSV(operation)
-    operationSettingsToCSV(operation)
-    curvesToCSV(operation)
+    oclWaterlineHeightsToOCL(operation)
+    operationSettingsToOCL(operation)
+    curvesToOCL(operation)
     call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "ocl.py")])
-    waterlineChunksFromCSV(operation, chunks)
+    waterlineChunksFromOCL(operation, chunks)
 
 
 def oclGetWaterline(operation, chunks):
@@ -230,7 +178,7 @@ def oclGetWaterline(operation, chunks):
             chunks.append(camPathChunk(inpoints=[]))
             for p in l:
                 chunks[-1].points.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
-            chunks[-1].points.append(chunks[-1].points[0])
+            chunks[-1].append(chunks[-1].points[0])
             chunks[-1].closed = True
             chunks[-1].poly = sgeometry.Polygon(chunks[-1].points)
 
