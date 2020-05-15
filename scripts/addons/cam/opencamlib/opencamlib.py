@@ -113,25 +113,6 @@ def oclWaterlineLayerHeights(operation):
     layers.append(l_last)
     return layers
 
-
-
-def waterlineChunksFromOCL(operation, chunks):
-    layers = oclWaterlineLayerHeights(operation)
-    wl_index = 0
-    for layer in layers:
-        csv_file = open(os.path.join(tempfile.gettempdir(), 'oclWaterline') + str(wl_index) + '.txt', 'r')
-        print(str(wl_index) + "\n")
-        for line in csv_file:
-            if line[0] == 'l':
-                chunks.append(camPathChunk(inpoints=[]))
-            else:
-                point = [float(coord) / OCL_SCALE for coord in line.split()]
-                chunks[-1].points.append((point[0], point[1], point[2]))
-        wl_index += 1
-        csv_file.close()
-    chunks.append(camPathChunk(inpoints=[]))
-
-
 def oclGetMedialAxis(operation, chunks):
     oclWaterlineHeightsToOCL(operation)
     operationSettingsToOCL(operation)
