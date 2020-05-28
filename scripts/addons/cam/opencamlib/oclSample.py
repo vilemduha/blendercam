@@ -1,7 +1,13 @@
 import os
-import ocl
+try:
+    import ocl
+except ImportError:
+    pass
 import tempfile
-import camvtk
+try:
+    import camvtk
+except ImportError:
+    pass
 import bpy
 from io_mesh_stl import blender_utils
 import mathutils

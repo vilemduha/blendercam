@@ -1,7 +1,10 @@
 # used by OpenCAMLib sampling
 
 import bpy
-import ocl
+try:
+    import ocl
+except ImportError:
+    pass
 import os
 import tempfile
 from subprocess import call
