@@ -1194,7 +1194,7 @@ class CamMeshGetPockets(bpy.types.Operator):
                 bpy.ops.object.editmode_toggle()
                 i = 0
                 for face in mesh.polygons:
-                    n = mw * face.normal
+                    n = mw @ face.normal
                     if n.z > self.threshold:
                         face.select = True
                         z = (mw * mesh.vertices[face.vertices[0]].co).z
