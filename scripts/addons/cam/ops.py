@@ -1194,10 +1194,13 @@ class CamMeshGetPockets(bpy.types.Operator):
                 bpy.ops.object.editmode_toggle()
                 i = 0
                 for face in mesh.polygons:
-                    n = mw @ face.normal
+                    #n = mw @ face.normal
+                    n = face.normal.to_4d()
+                    n.w = 0
+                    n = (mw @ n).to_3d().normalized()
                     if n.z > self.threshold:
                         face.select = True
-                        z = (mw * mesh.vertices[face.vertices[0]].co).z
+                        z = (mw @ mesh.vertices[face.vertices[0]].co).z
                         if z < self.zlimit:
                             if pockets.get(z) == None:
                                 pockets[z] = [i]
@@ -1229,15 +1232,15 @@ class CamMeshGetPockets(bpy.types.Operator):
 
                     bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='FACE')
                     bpy.ops.object.editmode_toggle()
-                    ao.select = False
-                    s.objects.active = bpy.context.selected_objects[0]
-                    cobs.append(s.objects.active)
+                    ao.select_set(state=False)
+                    bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
+                    cobs.append(bpy.context.selected_objects[0])
                     bpy.ops.object.convert(target='CURVE')
                     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
 
-                    bpy.context.selected_objects[0].select = False
-                    ao.select = True
-                    s.objects.active = ao
+                    bpy.context.selected_objects[0].select_set(False)
+                    ao.select_set(state=True)
+                    bpy.context.view_layer.objects.active = ao
             # bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE')
 
             # turn off selection of all objects in 3d view
@@ -1245,9 +1248,10 @@ class CamMeshGetPockets(bpy.types.Operator):
             # make new curves more visible by making them selected in the 3d view
             # This also allows the active object to still work with the operator
             # if the user decides to change the horizontal threshold property
+            col = bpy.data.collections.new('multi level pocket ')
+            s.collection.children.link(col)
             for obj in cobs:
-                obj.select = True
-            bpy.ops.collection.create(name="multi level pocket ")
+                col.objects.link(obj)
 
         return {'FINISHED'}
 
