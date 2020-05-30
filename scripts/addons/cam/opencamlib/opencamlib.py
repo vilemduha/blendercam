@@ -138,11 +138,11 @@ def oclGetWaterline(operation, chunks):
     cutter_length = 150 #TODO: automatically determine necessary cutter length depending on object size
 
     if op_cutter_type == 'END':
-        cutter = ocl.CylCutter(op_cutter_diameter * 1000, cutter_length)
+        cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'BALLNOSE':
-        cutter = ocl.BallCutter(op_cutter_diameter * 1000, cutter_length)
+        cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'VCARVE':
-        cutter = ocl.ConeCutter(op_cutter_diameter * 1000, op_cutter_tip_angle, cutter_length)
+        cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length)
     else:
         print("Cutter unsupported: {0}\n".format(op_cutter_type))
         quit()

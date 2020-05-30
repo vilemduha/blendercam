@@ -25,9 +25,9 @@ def get_oclSTL(operation):
             global_matrix = mathutils.Matrix.Identity(4)
             faces = blender_utils.faces_from_mesh(collision_object, global_matrix, operation.use_modifiers)
             for face in faces:
-                t = ocl.Triangle(ocl.Point(face[0][0]*OCL_SCALE, face[0][1]*OCL_SCALE, face[0][2]*OCL_SCALE),
-                        ocl.Point(face[1][0]*OCL_SCALE, face[1][1]*OCL_SCALE, face[1][2]*OCL_SCALE),
-                        ocl.Point(face[2][0]*OCL_SCALE, face[2][1]*OCL_SCALE, face[2][2]*OCL_SCALE))
+                t = ocl.Triangle(ocl.Point(face[0][0]*OCL_SCALE, face[0][1]*OCL_SCALE, (face[0][2]+operation.skin)*OCL_SCALE),
+                        ocl.Point(face[1][0]*OCL_SCALE, face[1][1]*OCL_SCALE, (face[1][2]+operation.skin)*OCL_SCALE),
+                        ocl.Point(face[2][0]*OCL_SCALE, face[2][1]*OCL_SCALE, (face[2][2]+operation.skin)*OCL_SCALE))
                 oclSTL.addTriangle(t)
 
         # FIXME needs to work with collections
@@ -48,11 +48,11 @@ def ocl_sample(operation, chunks):
     cutter_length = 5
 
     if op_cutter_type == 'END':
-        cutter = ocl.CylCutter(op_cutter_diameter * 1000, cutter_length)
+        cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'BALLNOSE':
-        cutter = ocl.BallCutter(op_cutter_diameter * 1000, cutter_length)
+        cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'VCARVE':
-        cutter = ocl.ConeCutter(op_cutter_diameter * 1000, op_cutter_tip_angle, cutter_length)
+        cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length)
     else:
         print("Cutter unsupported: {0}\n".format(op_cutter_type))
         quit()
