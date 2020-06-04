@@ -1564,7 +1564,7 @@ def connectChunksLow(chunks, o):
             lastch = ch
             pos = lastch.points[-1]
 
-    if o.use_opencamlib and o.use_exact:
+    if o.use_opencamlib and o.use_exact and o.strategy != 'CUTOUT' and  o.strategy != 'POCKET':
         oclResampleChunks(o, chunks_to_resample)
 
     return connectedchunks
