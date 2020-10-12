@@ -231,7 +231,7 @@ def checkMemoryLimit(o):
 # print(ratio)
 
 def getChangeData(o):
-    '''this is a function to check if object props have changed, to see if image updates are needed in the image based method'''
+    """this is a function to check if object props have changed, to see if image updates are needed in the image based method"""
     s = bpy.context.scene
     changedata = ''
     obs = []
@@ -808,15 +808,15 @@ def sampleChunksNAxis(o, pathSamples, layers):
                         ch.startpoints.append(startp)
                         ch.endpoints.append(endp)
                     # terminatechunk=True
-                    '''
-                    if terminatechunk:
-                        #print(ch.points)
-                        if len(ch.points)>0:
-                            if len(ch.points)>0:
-                                layerchunks[i].append(ch)
-                                thisrunchunks[i].append(ch)
-                                layeractivechunks[i]=camPathChunk([])
-                    '''
+
+                    # if terminatechunk:
+                    #     #print(ch.points)
+                    #     if len(ch.points)>0:
+                    #         if len(ch.points)>0:
+                    #             layerchunks[i].append(ch)
+                    #             thisrunchunks[i].append(ch)
+                    #             layeractivechunks[i]=camPathChunk([])
+
             # else:
             #	terminatechunk=True
             lastsample = newsample
@@ -839,13 +839,13 @@ def sampleChunksNAxis(o, pathSamples, layers):
     # print(len(layerchunks[i]))
 
     progress('checking relations between paths')
-    '''#this algorithm should also work for n-axis, but now is "sleeping"
+    """#this algorithm should also work for n-axis, but now is "sleeping"
     if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
         if len(layers)>1:# sorting help so that upper layers go first always
             for i in range(0,len(layers)-1):
                 #print('layerstuff parenting')
                 parentChild(layerchunks[i+1],layerchunks[i],o)
-    '''
+    """
     chunks = []
     for i, l in enumerate(layers):
         chunks.extend(layerchunks[i])
@@ -909,7 +909,7 @@ def createSimulationObject(name, operations, i):
 
 
 def doSimulation(name, operations):
-    '''perform simulation of operations. Currently only for 3 axis'''
+    """perform simulation of operations. Currently only for 3 axis"""
     for o in operations:
         getOperationSources(o)
     limits = getBoundsMultiple(
@@ -952,7 +952,7 @@ def extendChunks5axis(chunks, o):
 
 
 def chunksToMesh(chunks, o):
-    '''convert sampled chunks to path, optimization of paths'''
+    """convert sampled chunks to path, optimization of paths"""
     t = time.time()
     s = bpy.context.scene
     m = s.cam_machine
@@ -1101,7 +1101,7 @@ def chunksToMesh(chunks, o):
 
 
 def exportGcodePath(filename, vertslist, operations):
-    '''exports gcode with the heeks nc adopted library.'''
+    """exports gcode with the heeks nc adopted library."""
     print("EXPORT")
     progress('exporting gcode file')
     t = time.time()
@@ -1518,7 +1518,7 @@ def overlaps(bb1, bb2):  # true if bb1 is child of bb2
 
 
 def connectChunksLow(chunks, o):
-    ''' connects chunks that are close to each other without lifting, sampling them 'low' '''
+    """ connects chunks that are close to each other without lifting, sampling them 'low' """
     if not o.stay_low or (o.strategy == 'CARVE' and o.carve_depth > 0):
         return chunks
 
@@ -1726,9 +1726,9 @@ def cutloops(csource, parentloop, loops):
 
 
 def getOperationSilhouete(operation):
-    '''gets silhouete for the operation
+    """gets silhouete for the operation
         uses image thresholding for everything except curves.
-    '''
+    """
     if operation.update_silhouete_tag:
         image = None
         objects = None
@@ -1915,7 +1915,7 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
 
 
 def addOrientationObject(o):
-    '''the orientation object should be used to set up orientations of the object for 4 and 5 axis milling.'''
+    """the orientation object should be used to set up orientations of the object for 4 and 5 axis milling."""
     name = o.name + ' orientation'
     s = bpy.context.scene
     if s.objects.find(name) == -1:
@@ -2082,7 +2082,7 @@ def addBridge(x, y, rot, sizex, sizey):
 
 
 def addAutoBridges(o):
-    '''attempt to add auto bridges as set of curves'''
+    """attempt to add auto bridges as set of curves"""
     getOperationSources(o)
     # if not o.onlycurves:
     #	o.warnings+=('not curves')
@@ -2153,7 +2153,7 @@ def getBridgesPoly(o):
 
 
 def useBridges(ch, o):
-    '''this adds bridges to chunks, takes the bridge-objects collection and uses the curves inside it as bridges.'''
+    """this adds bridges to chunks, takes the bridge-objects collection and uses the curves inside it as bridges."""
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
@@ -2268,9 +2268,9 @@ def useBridges(ch, o):
 
 
 def getLayers(operation, startdepth, enddepth):
-    '''returns a list of layers bounded by startdepth and enddepth
+    """returns a list of layers bounded by startdepth and enddepth
        uses operation.stepdown to determine number of layers.
-    '''
+    """
     if operation.use_layers:
         layers = []
         n = math.ceil((startdepth - enddepth) / operation.stepdown)
@@ -2427,22 +2427,22 @@ def strategy_proj_curve(s, o):
     if targetCurve.type != 'CURVE':
         o.warnings = o.warnings + 'Projection target and source have to be curve objects!\n '
         return
-    '''	#mesh method is highly unstable, I don't like itwould be there at all.... better to use curves.
-    if targetCurve.type=='MESH':
+    # mesh method is highly unstable, I don't like itwould be there at all.... better to use curves.
+    # if targetCurve.type=='MESH':
+    #
+    #     c=targetCurve
+    #     for ch in pathSamples:
+    #         ch.depth=0
+    #         for i,s in enumerate(ch.points):
+    #             np=c.closest_point_on_mesh(s)
+    #             ch.startpoints.append(Vector(s))
+    #             ch.endpoints.append(np[0])
+    #             ch.rotations.append((0,0,0))
+    #             vect = np[0]-Vector(s)
+    #
+    #             ch.depth=min(ch.depth,-vect.length)
+    # else:
 
-        c=targetCurve
-        for ch in pathSamples:
-            ch.depth=0
-            for i,s in enumerate(ch.points):
-                np=c.closest_point_on_mesh(s)
-                ch.startpoints.append(Vector(s))
-                ch.endpoints.append(np[0])
-                ch.rotations.append((0,0,0))
-                vect = np[0]-Vector(s)
-
-                ch.depth=min(ch.depth,-vect.length)
-    else:
-    '''
     if 1:
         extend_up = 0.1
         extend_down = 0.04
@@ -2894,26 +2894,26 @@ def strategy_medial_axis(o):
         # while len(filteredEdgs)>0:
 
         # Create new mesh structure
-        '''
-        print("Create mesh...")
-        voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
+
+        # print("Create mesh...")
+        # voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
+        #
+        #
+        #
+        # voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
+        #
+        # voronoiDiagram.update(calc_edges=True) #Update mesh with new data
+        # #create an object with that mesh
+        # voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
+        # #place object
+        # #bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
+        #
+        # #update scene
+        # bpy.context.scene.objects.link(voronoiObj) #Link object to scene
+        # bpy.context.scene.objects.active = voronoiObj
+        # voronoiObj.select = True
 
 
-
-        voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
-
-        voronoiDiagram.update(calc_edges=True) #Update mesh with new data
-        #create an object with that mesh
-        voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
-        #place object
-        #bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
-
-        #update scene
-        bpy.context.scene.objects.link(voronoiObj) #Link object to scene
-        bpy.context.scene.objects.active = voronoiObj
-        voronoiObj.select = True
-
-        '''
     # bpy.ops.object.convert(target='CURVE')
     oi = 0
     for ob in o.objects:
@@ -3115,7 +3115,7 @@ def getPath3axis(context, operation):
 
             #
             # print(len(lastslice))
-            # '''
+            # """
             if o.waterline_fill:
                 layerstart = min(o.maxz, z + o.slice_detail)  #
                 layerend = max(o.min.z, z - o.slice_detail)  #
@@ -3161,7 +3161,7 @@ def getPath3axis(context, operation):
                         i += 1
                 # print(i)
                 i = 0
-                # '''
+                # """
                 #####################################
                 # fill layers and last slice, last slice with inverse is not working yet - inverse millings end now always on 0 so filling ambient does have no sense.
                 if (slicesfilled > 0 and layerstepinc == layerstep) or (
@@ -3193,31 +3193,30 @@ def getPath3axis(context, operation):
                         restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.circle_detail)
                         i += 1
 
-                # '''
+                # """
                 percent = int(h / nslices * 100)
                 progress('waterline layers ', percent)
                 lastslice = poly
 
             # print(poly)
             # print(len(lastslice))
-            '''
-            if len(lastislice)>0:
-                i=numpy.logical_xor(lastislice , islice)
 
-                n=0
-                while i.sum()>0 and n<10000:
-                    i=outlineImageBinary(o,o.dist_between_paths,i,False)
-                    polys=imageToShapely(o,i)
-                    for poly in polys:
-                        chunks.extend(polyToChunks(poly,z))
-                    n+=1
-
-
-                    #restpoly=outlinePoly(restpoly,o.dist_between_paths,oo.circle_detail,o.optimize,o.optimize_threshold,,False)
-                    #chunks.extend(polyToChunks(restpoly,z))
-
-            lastislice=islice
-            '''
+            # if len(lastislice)>0:
+            #     i=numpy.logical_xor(lastislice , islice)
+            #
+            #     n=0
+            #     while i.sum()>0 and n<10000:
+            #         i=outlineImageBinary(o,o.dist_between_paths,i,False)
+            #         polys=imageToShapely(o,i)
+            #         for poly in polys:
+            #             chunks.extend(polyToChunks(poly,z))
+            #         n+=1
+            #
+            #
+            #         #restpoly=outlinePoly(restpoly,o.dist_between_paths,oo.circle_detail,o.optimize,o.optimize_threshold,,False)
+            #         #chunks.extend(polyToChunks(restpoly,z))
+            #
+            # lastislice=islice
 
             # if bpy.app.debug_value==1:
             if (o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW') or (
@@ -3233,17 +3232,17 @@ def getPath3axis(context, operation):
         # chunks=sortChunks(chunks,o)
         if topdown:
             chunks.reverse()
-            '''
-            chi=0
-            if len(chunks)>2:
-                while chi<len(chunks)-2:
-                    d=dist2d((chunks[chi][-1][0],chunks[chi][-1][1]),(chunks[chi+1][0][0],chunks[chi+1][0][1]))
-                    if chunks[chi][0][2]>=chunks[chi+1][0][2] and d<o.dist_between_paths*2:
-                        chunks[chi].extend(chunks[chi+1])
-                        chunks.remove(chunks[chi+1])
-                        chi=chi-1
-                    chi+=1
-            '''
+
+            # chi=0
+            # if len(chunks)>2:
+            #     while chi<len(chunks)-2:
+            #         d=dist2d((chunks[chi][-1][0],chunks[chi][-1][1]),(chunks[chi+1][0][0],chunks[chi+1][0][1]))
+            #         if chunks[chi][0][2]>=chunks[chi+1][0][2] and d<o.dist_between_paths*2:
+            #             chunks[chi].extend(chunks[chi+1])
+            #             chunks.remove(chunks[chi+1])
+            #             chi=chi-1
+            #         chi+=1
+
         print(time.time() - tw)
         chunksToMesh(chunks, o)
 
@@ -3338,19 +3337,18 @@ def prepareIndexed(o):
         activate(ob)
 
         bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
-    '''
-    rot=ori.matrix_world.inverted()
-    #rot.x=-rot.x
-    #rot.y=-rot.y
-    #rot.z=-rot.z
-    rotationaxes = rotTo2axes(ori.rotation_euler,'CA')
 
-    #bpy.context.space_data.pivot_point = 'CURSOR'
-    #bpy.context.space_data.pivot_point = 'CURSOR'
-
-    for ob in o.objects:
-        ob.rotation_euler.rotate(rot)
-    '''
+    # rot=ori.matrix_world.inverted()
+    # #rot.x=-rot.x
+    # #rot.y=-rot.y
+    # #rot.z=-rot.z
+    # rotationaxes = rotTo2axes(ori.rotation_euler,'CA')
+    #
+    # #bpy.context.space_data.pivot_point = 'CURSOR'
+    # #bpy.context.space_data.pivot_point = 'CURSOR'
+    #
+    # for ob in o.objects:
+    #     ob.rotation_euler.rotate(rot)
 
 
 def cleanupIndexed(operation):
@@ -3373,9 +3371,9 @@ def cleanupIndexed(operation):
 
 
 def rotTo2axes(e, axescombination):
-    '''converts an orientation object rotation to rotation defined by 2 rotational axes on the machine - for indexed machining.
+    """converts an orientation object rotation to rotation defined by 2 rotational axes on the machine - for indexed machining.
     attempting to do this for all axes combinations.
-    '''
+    """
     v = Vector((0, 0, 1))
     v.rotate(e)
     # if axes
@@ -3408,20 +3406,18 @@ def rotTo2axes(e, axescombination):
 
         return (cangle, bangle)
 
-    '''
-    v2d=((v[a[0]],v[a[1]]))
-    angle1=a1base.angle(v2d)#C for ca
-    print(angle1)
-    if axescombination[0]=='C':
-        e1=Vector((0,0,-angle1))
-    elif axescombination[0]=='A':#TODO: finish this after prototyping stage
-        pass;
-    v.rotate(e1)
-    vbase=Vector(0,1,0)
-    bangle=v.angle(vzbase)
-    print(v)
-    print(bangle)
-    '''
+    # v2d=((v[a[0]],v[a[1]]))
+    # angle1=a1base.angle(v2d)#C for ca
+    # print(angle1)
+    # if axescombination[0]=='C':
+    #     e1=Vector((0,0,-angle1))
+    # elif axescombination[0]=='A':#TODO: finish this after prototyping stage
+    #     pass;
+    # v.rotate(e1)
+    # vbase=Vector(0,1,0)
+    # bangle=v.angle(vzbase)
+    # print(v)
+    # print(bangle)
 
     return (angle1, angle2)
 
@@ -3493,18 +3489,18 @@ def reload_paths(o):
     f = open(picklepath, 'rb')
     d = pickle.load(f)
     f.close()
-    '''
-    passed=False
-    while not passed:
-        try:
-            f=open(picklepath,'rb')
-            d=pickle.load(f)
-            f.close()
-            passed=True
-        except:
-            print('sleep')
-            time.sleep(1)
-    '''
+
+    # passed=False
+    # while not passed:
+    #     try:
+    #         f=open(picklepath,'rb')
+    #         d=pickle.load(f)
+    #         f.close()
+    #         passed=True
+    #     except:
+    #         print('sleep')
+    #         time.sleep(1)
+
     o.warnings = d['warnings']
     o.duration = d['duration']
     verts = d['path']

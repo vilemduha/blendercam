@@ -183,14 +183,14 @@ def packCurves():
                 print(best[0], best[1])
                 # print(len(ptrans.exterior))
                 # npoly=allpoly.union(ptrans)
-                '''
-                for ci in range(0,len(allpoly)):
-                    cminx,cmaxx,cminy,cmaxy=allpoly.boundingBox(ci)
-                    if direction=='X' and cmaxx>mindist-.1:
-                            npoly.addContour(allpoly[ci])
-                    if direction=='Y' and cmaxy>mindist-.1:
-                            npoly.addContour(allpoly[ci])
-                '''
+
+                # for ci in range(0,len(allpoly)):
+                #     cminx,cmaxx,cminy,cmaxy=allpoly.boundingBox(ci)
+                #     if direction=='X' and cmaxx>mindist-.1:
+                #             npoly.addContour(allpoly[ci])
+                #     if direction=='Y' and cmaxy>mindist-.1:
+                #             npoly.addContour(allpoly[ci])
+
                 # allpoly=npoly
                 placedpolys.append(ptrans)
                 allpoly = prepared.prep(sgeometry.MultiPolygon(placedpolys))

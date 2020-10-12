@@ -242,18 +242,16 @@ def calculate_defect( D, U, F ):
 	D[-1,0]=F[-1,0] - U[-2,0] - U[-1,1] + 2*U[-1,0]
 	D[-1,-1]=F[-1,-1] - U[-2,-1] - U[-1,-2] + 2*U[-1,-1]
 
-	'''
-	for y in range(0,sy):
-		for x in range(0,sx):
-
-			w = max(0,x-1)
-			n = max(0,y-1)
-			e = min(sx, x+1)
-			s = min(sy, y+1)
-
-
-			D[x,y] = F[x,y] -( U[e,y] + U[w,y] + U[x,n]	+ U[x,s] - 4.0*U[x,y])
-	'''
+	# for y in range(0,sy):
+	# 	for x in range(0,sx):
+	#
+	# 		w = max(0,x-1)
+	# 		n = max(0,y-1)
+	# 		e = min(sx, x+1)
+	# 		s = min(sy, y+1)
+	#
+	#
+	# 		D[x,y] = F[x,y] -( U[e,y] + U[w,y] + U[x,n]	+ U[x,s] - 4.0*U[x,y])
 
 def add_correction( U, C ):
 	U+=C
@@ -467,7 +465,7 @@ def linbcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
 		asolve(r,z)
 		znrm=snrm(n,z,itol)
 	else:
-		printf("illegal itol in linbcg")
+		print("illegal itol in linbcg")
 
 	asolve(r,z)
 
@@ -930,7 +928,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
 		#	layout.prop(br,'scale_down_before')
 
 class DoBasRelief(bpy.types.Operator):
-	'''calculate Bas relief'''
+	"""calculate Bas relief"""
 	bl_idname = "scene.calculate_bas_relief"
 	bl_label = "calculate Bas relief"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -948,7 +946,7 @@ class DoBasRelief(bpy.types.Operator):
 		return {'FINISHED'}
 
 class ProblemAreas(bpy.types.Operator):
-	'''find Bas relief Problem areas'''
+	"""find Bas relief Problem areas"""
 	bl_idname = "scene.problemareas_bas_relief"
 	bl_label = "problem areas Bas relief"
 	bl_options = {'REGISTER', 'UNDO'}

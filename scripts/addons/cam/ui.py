@@ -428,16 +428,16 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'movement_insideout')
 
                     # if ao.geometry_source=='OBJECT' or ao.geometry_source=='COLLECTION':
-                    '''
-                    o=bpy.data.objects[ao.object_name]
 
-                    if o.type=='MESH' and (ao.strategy=='DRILL'):
-                        layout.label(text='Not supported for meshes')
-                        return
-                    '''
+                    # o=bpy.data.objects[ao.object_name]
+                    #
+                    # if o.type=='MESH' and (ao.strategy=='DRILL'):
+                    #     layout.label(text='Not supported for meshes')
+                    #     return
+
                 # elif o.type=='CURVE' and (ao.strategy!='CARVE' and ao.strategy!='POCKET' and ao.strategy!='DRILL' and ao.strategy!='CUTOUT'):
-                #	 layout.label(text='Not supported for curves')
-                #	 return
+                #   layout.label(text='Not supported for curves')
+                #   return
 
                 if ao.strategy == 'CUTOUT':
                     layout.prop(ao, 'cut_type')
