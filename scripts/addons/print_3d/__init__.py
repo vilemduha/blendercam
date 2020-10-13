@@ -39,7 +39,7 @@ import bgl, blf
 PRECISION=7
 
 class PrintSettings(bpy.types.PropertyGroup):
-	'''stores all data for machines'''
+	"""stores all data for machines"""
 	#name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 	slicer = EnumProperty(name='System',
 		items=(('CURA','Cura','the default slicer'),('INTERNAL','Internal (not existing)','experimental code')),
@@ -93,51 +93,49 @@ class PrintSettings(bpy.types.PropertyGroup):
 		items=(('STANDARD','Standard user',"Everybody, if you really don't want to mess with how things work"),('DEVELOPER','Developer','If you want to improve how things work and understand what you are doing')),
 		description='Interface type',
 		default='DEVELOPER')
-	mm=0.001
+	mm = 0.001
 
+	# layerThickness=bpy.props.FloatProperty(name="layerThickness", description="layerThickness", default=0.1 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# initialLayerThickness=bpy.props.FloatProperty(name="initialLayerThickness", description="initialLayerThickness", default=0.15 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# filamentDiameter=bpy.props.FloatProperty(name="filamentDiameter", description="filamentDiameter", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# filamentFlow=bpy.props.FloatProperty(name="filamentFlow", description="filamentFlow", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# extrusionWidth=bpy.props.FloatProperty(name="extrusionWidth", description="extrusionWidth", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# insetCount=bpy.props.IntProperty(name="insetCount", description="insetCount", default=1, min=0, max=1000)
+	# downSkinCount=bpy.props.FloatProperty(name="downSkinCount", description="downSkinCount", default=1, min=0.00001, max=320000,precision=PRECISION)
+	# upSkinCount=bpy.props.FloatProperty(name="upSkinCount", description="upSkinCount", default=1, min=0.00001, max=320000,precision=PRECISION)
+	# infillOverlap=bpy.props.FloatProperty(name="infillOverlap", description="infillOverlap", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# initialSpeedupLayers=bpy.props.FloatProperty(name="initialSpeedupLayers", description="initialSpeedupLayers", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# initialLayerSpeed=bpy.props.FloatProperty(name="initialLayerSpeed", description="initialLayerSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# printSpeed=bpy.props.FloatProperty(name="printSpeed", description="printSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# infillSpeed=bpy.props.FloatProperty(name="infillSpeed", description="infillSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# moveSpeed=bpy.props.FloatProperty(name="moveSpeed", description="moveSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# fanSpeedMin=bpy.props.FloatProperty(name="fanSpeedMin", description="fanSpeedMin", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# fanSpeedMax=bpy.props.FloatProperty(name="fanSpeedMax", description="fanSpeedMax", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# supportAngle=bpy.props.FloatProperty(name="supportAngle", description="supportAngle", default=0.4 , min=0.00000, max=3.141926,precision=PRECISION,subtype="ANGLE",)
+	# supportEverywhere=bpy.props.BoolProperty(name="supportEverywhere", description="supportEverywhere", default=0)
+	# supportLineDistance=bpy.props.FloatProperty(name="supportLineDistance", description="supportLineDistance", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# supportXYDistance=bpy.props.FloatProperty(name="supportXYDistance", description="supportXYDistance", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# supportZDistance=bpy.props.FloatProperty(name="supportZDistance", description="supportZDistance", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# supportExtruder=bpy.props.FloatProperty(name="supportExtruder", description="supportExtruder", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# retractionAmount=bpy.props.FloatProperty(name="retractionAmount", description="retractionAmount", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# retractionSpeed=bpy.props.FloatProperty(name="retractionSpeed", description="retractionSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# retractionMinimalDistance=bpy.props.FloatProperty(name="retractionMinimalDistance", description="retractionMinimalDistance", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# retractionAmountExtruderSwitch=bpy.props.FloatProperty(name="retractionAmountExtruderSwitch", description="retractionAmountExtruderSwitch", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# minimalExtrusionBeforeRetraction=bpy.props.FloatProperty(name="minimalExtrusionBeforeRetraction", description="minimalExtrusionBeforeRetraction", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# enableCombing=bpy.props.BoolProperty(name="enableCombing", description="enableCombing", default=0)
+	# multiVolumeOverlap=bpy.props.FloatProperty(name="multiVolumeOverlap", description="multiVolumeOverlap", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# objectSink=bpy.props.FloatProperty(name="objectSink", description="objectSink", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# minimalLayerTime=bpy.props.FloatProperty(name="minimalLayerTime", description="minimalLayerTime", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# minimalFeedrate=bpy.props.FloatProperty(name="minimalFeedrate", description="minimalFeedrate", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
+	# coolHeadLift=bpy.props.BoolProperty(name="coolHeadLift", description="coolHeadLift", default=0)
+	#
+	# startCode=	 bpy.props.StringProperty(name='LimitstartCodecurve', description='startCode')
+	# endCode=   bpy.props.StringProperty(name='endCode', description='endCode')
+	#
+	# fixHorrible=bpy.props.BoolProperty(name="fixHorrible", description="fixHorrible", default=0)
+	#
+	# propnames = ["layerThickness","initialLayerThickness","filamentDiameter","filamentFlow","extrusionWidth","insetCount","downSkinCount","upSkinCount","infillOverlap","initialSpeedupLayers","initialLayerSpeed","printSpeed","infillSpeed","printSpeed","moveSpeed","fanSpeedMin","fanSpeedMax","supportAngle","supportEverywhere","supportLineDistance","supportXYDistance","supportZDistance","supportExtruder","retractionAmount","retractionSpeed","retractionMinimalDistance","retractionAmountExtruderSwitch","minimalExtrusionBeforeRetraction","enableCombing","multiVolumeOverlap","objectSink","minimalLayerTime","minimalFeedrate","coolHeadLift","startCode","endCode","fixHorrible"]
 
-	'''
-	layerThickness=bpy.props.FloatProperty(name="layerThickness", description="layerThickness", default=0.1 * mm, min=0.00001, max=320000,precision=PRECISION)
-	initialLayerThickness=bpy.props.FloatProperty(name="initialLayerThickness", description="initialLayerThickness", default=0.15 * mm, min=0.00001, max=320000,precision=PRECISION)
-	filamentDiameter=bpy.props.FloatProperty(name="filamentDiameter", description="filamentDiameter", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	filamentFlow=bpy.props.FloatProperty(name="filamentFlow", description="filamentFlow", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	extrusionWidth=bpy.props.FloatProperty(name="extrusionWidth", description="extrusionWidth", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	insetCount=bpy.props.IntProperty(name="insetCount", description="insetCount", default=1, min=0, max=1000)
-	downSkinCount=bpy.props.FloatProperty(name="downSkinCount", description="downSkinCount", default=1, min=0.00001, max=320000,precision=PRECISION)
-	upSkinCount=bpy.props.FloatProperty(name="upSkinCount", description="upSkinCount", default=1, min=0.00001, max=320000,precision=PRECISION)
-	infillOverlap=bpy.props.FloatProperty(name="infillOverlap", description="infillOverlap", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	initialSpeedupLayers=bpy.props.FloatProperty(name="initialSpeedupLayers", description="initialSpeedupLayers", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	initialLayerSpeed=bpy.props.FloatProperty(name="initialLayerSpeed", description="initialLayerSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	printSpeed=bpy.props.FloatProperty(name="printSpeed", description="printSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	infillSpeed=bpy.props.FloatProperty(name="infillSpeed", description="infillSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	moveSpeed=bpy.props.FloatProperty(name="moveSpeed", description="moveSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	fanSpeedMin=bpy.props.FloatProperty(name="fanSpeedMin", description="fanSpeedMin", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	fanSpeedMax=bpy.props.FloatProperty(name="fanSpeedMax", description="fanSpeedMax", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	supportAngle=bpy.props.FloatProperty(name="supportAngle", description="supportAngle", default=0.4 , min=0.00000, max=3.141926,precision=PRECISION,subtype="ANGLE",)
-	supportEverywhere=bpy.props.BoolProperty(name="supportEverywhere", description="supportEverywhere", default=0)
-	supportLineDistance=bpy.props.FloatProperty(name="supportLineDistance", description="supportLineDistance", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	supportXYDistance=bpy.props.FloatProperty(name="supportXYDistance", description="supportXYDistance", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	supportZDistance=bpy.props.FloatProperty(name="supportZDistance", description="supportZDistance", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	supportExtruder=bpy.props.FloatProperty(name="supportExtruder", description="supportExtruder", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	retractionAmount=bpy.props.FloatProperty(name="retractionAmount", description="retractionAmount", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	retractionSpeed=bpy.props.FloatProperty(name="retractionSpeed", description="retractionSpeed", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	retractionMinimalDistance=bpy.props.FloatProperty(name="retractionMinimalDistance", description="retractionMinimalDistance", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	retractionAmountExtruderSwitch=bpy.props.FloatProperty(name="retractionAmountExtruderSwitch", description="retractionAmountExtruderSwitch", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	minimalExtrusionBeforeRetraction=bpy.props.FloatProperty(name="minimalExtrusionBeforeRetraction", description="minimalExtrusionBeforeRetraction", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	enableCombing=bpy.props.BoolProperty(name="enableCombing", description="enableCombing", default=0)
-	multiVolumeOverlap=bpy.props.FloatProperty(name="multiVolumeOverlap", description="multiVolumeOverlap", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	objectSink=bpy.props.FloatProperty(name="objectSink", description="objectSink", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	minimalLayerTime=bpy.props.FloatProperty(name="minimalLayerTime", description="minimalLayerTime", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	minimalFeedrate=bpy.props.FloatProperty(name="minimalFeedrate", description="minimalFeedrate", default=0.4 * mm, min=0.00001, max=320000,precision=PRECISION)
-	coolHeadLift=bpy.props.BoolProperty(name="coolHeadLift", description="coolHeadLift", default=0)
-
-	startCode=	 bpy.props.StringProperty(name='LimitstartCodecurve', description='startCode')
-	endCode=   bpy.props.StringProperty(name='endCode', description='endCode')
-
-	fixHorrible=bpy.props.BoolProperty(name="fixHorrible", description="fixHorrible", default=0)
-
-	propnames = ["layerThickness","initialLayerThickness","filamentDiameter","filamentFlow","extrusionWidth","insetCount","downSkinCount","upSkinCount","infillOverlap","initialSpeedupLayers","initialLayerSpeed","printSpeed","infillSpeed","printSpeed","moveSpeed","fanSpeedMin","fanSpeedMax","supportAngle","supportEverywhere","supportLineDistance","supportXYDistance","supportZDistance","supportExtruder","retractionAmount","retractionSpeed","retractionMinimalDistance","retractionAmountExtruderSwitch","minimalExtrusionBeforeRetraction","enableCombing","multiVolumeOverlap","objectSink","minimalLayerTime","minimalFeedrate","coolHeadLift","startCode","endCode","fixHorrible"]
-	'''
 
 class threadComPrint3d:#object passed to threads to read background process stdout info
 	def __init__(self,ob,proc):
@@ -148,7 +146,7 @@ class threadComPrint3d:#object passed to threads to read background process stdo
 		self.progress=0
 
 def threadread_print3d( tcom):
-	'''reads stdout of background process, done this way to have it non-blocking'''
+	"""reads stdout of background process, done this way to have it non-blocking"""
 	#print(tcom.proc)
 	#if tcom.proc!=None:
 	inline = tcom.proc.stdout.readline()
@@ -168,15 +166,14 @@ def threadread_print3d( tcom):
 
 
 
-"""
-def header_info_print3d(self, context):
-	'''writes background operations data to header'''
-	s=bpy.context.scene
-	self.layout.label(s.print3d_text)
-"""
+# def header_info_print3d(self, context):
+# 	"""writes background operations data to header"""
+# 	s=bpy.context.scene
+# 	self.layout.label(s.print3d_text)
+
 @bpy.app.handlers.persistent
 def timer_update_print3d(context):
-	'''monitoring of background processes'''
+	"""monitoring of background processes"""
 	text=''
 	s=bpy.context.scene
 
@@ -326,7 +323,7 @@ def tweakCuraPreferences(enginepath,printer):
 	return printerindex
 
 class Print3d(bpy.types.Operator):
-	'''send object to 3d printer'''
+	"""send object to 3d printer"""
 	bl_idname = "object.print3d"
 	bl_label = "Print object in 3d"
 	bl_options = {'REGISTER', 'UNDO'}
@@ -362,7 +359,7 @@ class Print3d(bpy.types.Operator):
 		ob=bpy.context.active_object
 
 
-		'''
+		"""
 		#this was first try - using the slicer directly.
 		if settings.slicer=='CURA':
 			fpath=bpy.data.filepath+'_'+ob.name+'.stl'
@@ -402,7 +399,7 @@ class Print3d(bpy.types.Operator):
 			print(s)
 			print('gcode file exported:')
 			print(gcodepath)
-		'''
+		"""
 		#second try - use cura command line options, with .ini files.
 		if settings.slicer=='CURA':
 

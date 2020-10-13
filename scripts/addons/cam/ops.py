@@ -44,7 +44,7 @@ class threadCom:  # object passed to threads to read background process stdout i
 
 
 def threadread(tcom):
-    '''reads stdout of background process, done this way to have it non-blocking'''
+    """reads stdout of background process, done this way to have it non-blocking"""
     inline = tcom.proc.stdout.readline()
     inline = str(inline)
     s = inline.find('progress{')
@@ -54,7 +54,7 @@ def threadread(tcom):
 
 
 class CAMPositionObject(bpy.types.Operator):
-    '''position object for CAM operation. Tests object bounds and places them so the object is aligned to be positive from x and y and negative from z.'''
+    """position object for CAM operation. Tests object bounds and places them so the object is aligned to be positive from x and y and negative from z."""
     bl_idname = "object.cam_position"
     bl_label = "position object for CAM operation"
     bl_options = {'REGISTER', 'UNDO'}
@@ -76,7 +76,7 @@ class CAMPositionObject(bpy.types.Operator):
 
 @bpy.app.handlers.persistent
 def timer_update(context):
-    '''monitoring of background processes'''
+    """monitoring of background processes"""
     text = ''
     s = bpy.context.scene
     if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__, 'cam_processes'):
@@ -123,7 +123,7 @@ def timer_update(context):
 #			area.tag_redraw()
 
 class PathsBackground(bpy.types.Operator):
-    '''calculate CAM paths in background. File has to be saved before.'''
+    """calculate CAM paths in background. File has to be saved before."""
     bl_idname = "object.calculate_cam_paths_background"
     bl_label = "Calculate CAM paths in background"
     bl_options = {'REGISTER', 'UNDO'}
@@ -165,7 +165,7 @@ class PathsBackground(bpy.types.Operator):
 
 
 class KillPathsBackground(bpy.types.Operator):
-    '''Remove CAM path processes in background.'''
+    """Remove CAM path processes in background."""
     bl_idname = "object.kill_calculate_cam_paths_background"
     bl_label = "Kill background computation of an operation"
     bl_options = {'REGISTER', 'UNDO'}
@@ -196,7 +196,7 @@ class KillPathsBackground(bpy.types.Operator):
 
 
 class CalculatePath(bpy.types.Operator):
-    '''calculate CAM paths'''
+    """calculate CAM paths"""
     bl_idname = "object.calculate_cam_path"
     bl_label = "Calculate CAM paths"
     bl_options = {'REGISTER', 'UNDO'}
@@ -237,7 +237,7 @@ class CalculatePath(bpy.types.Operator):
 
 
 class PathsAll(bpy.types.Operator):
-    '''calculate all CAM paths'''
+    """calculate all CAM paths"""
     bl_idname = "object.calculate_cam_paths_all"
     bl_label = "Calculate all CAM paths"
     bl_options = {'REGISTER', 'UNDO'}
@@ -259,7 +259,7 @@ class PathsAll(bpy.types.Operator):
 
 
 class CamPackObjects(bpy.types.Operator):
-    '''calculate all CAM paths'''
+    """calculate all CAM paths"""
     bl_idname = "object.cam_pack_objects"
     bl_label = "Pack curves on sheet"
     bl_options = {'REGISTER', 'UNDO'}
@@ -275,7 +275,7 @@ class CamPackObjects(bpy.types.Operator):
 
 
 class CamSliceObjects(bpy.types.Operator):
-    '''Slice a mesh object horizontally'''
+    """Slice a mesh object horizontally"""
     # warning, this is a separate and neglected feature, it's a mess - by now it just slices up the object.
     bl_idname = "object.cam_slice_objects"
     bl_label = "Slice object - usefull for lasercut puzzles e.t.c."
@@ -292,7 +292,7 @@ class CamSliceObjects(bpy.types.Operator):
 
 
 def getChainOperations(chain):
-    '''return chain operations, currently chain object can't store operations directly due to blender limitations'''
+    """return chain operations, currently chain object can't store operations directly due to blender limitations"""
     chop = []
     for cho in chain.operations:
         for so in bpy.context.scene.cam_operations:
@@ -302,7 +302,7 @@ def getChainOperations(chain):
 
 
 class PathsChain(bpy.types.Operator):
-    '''calculate a chain and export the gcode alltogether. '''
+    """calculate a chain and export the gcode alltogether. """
     bl_idname = "object.calculate_cam_paths_chain"
     bl_label = "Calculate CAM paths in current chain and export chain gcode"
     bl_options = {'REGISTER', 'UNDO'}
@@ -327,7 +327,7 @@ class PathsChain(bpy.types.Operator):
 
 
 class PathExportChain(bpy.types.Operator):
-    '''calculate a chain and export the gcode alltogether. '''
+    """calculate a chain and export the gcode alltogether. """
     bl_idname = "object.cam_export_paths_chain"
     bl_label = "Export CAM paths in current chain as gcode"
     bl_options = {'REGISTER', 'UNDO'}
@@ -349,7 +349,7 @@ class PathExportChain(bpy.types.Operator):
 
 
 class PathExport(bpy.types.Operator):
-    '''Export gcode. Can be used only when the path object is present'''
+    """Export gcode. Can be used only when the path object is present"""
     bl_idname = "object.cam_export"
     bl_label = "Export operation gcode"
     bl_options = {'REGISTER', 'UNDO'}
@@ -366,8 +366,8 @@ class PathExport(bpy.types.Operator):
 
 
 class CAMSimulate(bpy.types.Operator):
-    '''simulate CAM operation
-    this is performed by: creating an image, painting Z depth of the brush substractively. Works only for some operations, can not be used for 4-5 axis.'''
+    """simulate CAM operation
+    this is performed by: creating an image, painting Z depth of the brush substractively. Works only for some operations, can not be used for 4-5 axis."""
     bl_idname = "object.cam_simulate"
     bl_label = "CAM simulation"
     bl_options = {'REGISTER', 'UNDO'}
@@ -398,7 +398,7 @@ class CAMSimulate(bpy.types.Operator):
 
 
 class CAMSimulateChain(bpy.types.Operator):
-    '''simulate CAM chain, compared to single op simulation just writes into one image and thus enables to see how ops work together.'''
+    """simulate CAM chain, compared to single op simulation just writes into one image and thus enables to see how ops work together."""
     bl_idname = "object.cam_simulate_chain"
     bl_label = "CAM simulation"
     bl_options = {'REGISTER', 'UNDO'}
@@ -428,7 +428,7 @@ class CAMSimulateChain(bpy.types.Operator):
 
 
 class CamChainAdd(bpy.types.Operator):
-    '''Add new CAM chain'''
+    """Add new CAM chain"""
     bl_idname = "scene.cam_chain_add"
     bl_label = "Add new CAM chain"
     bl_options = {'REGISTER', 'UNDO'}
@@ -451,7 +451,7 @@ class CamChainAdd(bpy.types.Operator):
 
 
 class CamChainRemove(bpy.types.Operator):
-    '''Remove  CAM chain'''
+    """Remove  CAM chain"""
     bl_idname = "scene.cam_chain_remove"
     bl_label = "Remove CAM chain"
     bl_options = {'REGISTER', 'UNDO'}
@@ -469,7 +469,7 @@ class CamChainRemove(bpy.types.Operator):
 
 
 class CamChainOperationAdd(bpy.types.Operator):
-    '''Add operation to chain'''
+    """Add operation to chain"""
     bl_idname = "scene.cam_chain_operation_add"
     bl_label = "Add operation to chain"
     bl_options = {'REGISTER', 'UNDO'}
@@ -490,7 +490,7 @@ class CamChainOperationAdd(bpy.types.Operator):
 
 
 class CamChainOperationUp(bpy.types.Operator):
-    '''Add operation to chain'''
+    """Add operation to chain"""
     bl_idname = "scene.cam_chain_operation_up"
     bl_label = "Add operation to chain"
     bl_options = {'REGISTER', 'UNDO'}
@@ -510,7 +510,7 @@ class CamChainOperationUp(bpy.types.Operator):
 
 
 class CamChainOperationDown(bpy.types.Operator):
-    '''Add operation to chain'''
+    """Add operation to chain"""
     bl_idname = "scene.cam_chain_operation_down"
     bl_label = "Add operation to chain"
     bl_options = {'REGISTER', 'UNDO'}
@@ -530,7 +530,7 @@ class CamChainOperationDown(bpy.types.Operator):
 
 
 class CamChainOperationRemove(bpy.types.Operator):
-    '''Remove operation from chain'''
+    """Remove operation from chain"""
     bl_idname = "scene.cam_chain_operation_remove"
     bl_label = "Remove operation from chain"
     bl_options = {'REGISTER', 'UNDO'}
@@ -553,7 +553,7 @@ class CamChainOperationRemove(bpy.types.Operator):
 
 
 def fixUnits():
-    '''Sets up units for blender CAM'''
+    """Sets up units for blender CAM"""
     s = bpy.context.scene
     # dhull: leave unit settings alone - may also need to comment out scale_length below
     # if s.unit_settings.system=='NONE':#metric is hereby default
@@ -565,7 +565,7 @@ def fixUnits():
 
 
 class CamOperationAdd(bpy.types.Operator):
-    '''Add new CAM operation'''
+    """Add new CAM operation"""
     bl_idname = "scene.cam_operation_add"
     bl_label = "Add new CAM operation"
     bl_options = {'REGISTER', 'UNDO'}
@@ -600,7 +600,7 @@ class CamOperationAdd(bpy.types.Operator):
 
 
 class CamOperationCopy(bpy.types.Operator):
-    '''Copy CAM operation'''
+    """Copy CAM operation"""
     bl_idname = "scene.cam_operation_copy"
     bl_label = "Copy active CAM operation"
     bl_options = {'REGISTER', 'UNDO'}
@@ -648,7 +648,7 @@ class CamOperationCopy(bpy.types.Operator):
 
 
 class CamOperationRemove(bpy.types.Operator):
-    '''Remove CAM operation'''
+    """Remove CAM operation"""
     bl_idname = "scene.cam_operation_remove"
     bl_label = "Remove CAM operation"
     bl_options = {'REGISTER', 'UNDO'}
@@ -681,7 +681,7 @@ class CamOperationRemove(bpy.types.Operator):
 
 # move cam operation in the list up or down
 class CamOperationMove(bpy.types.Operator):
-    '''Move CAM operation'''
+    """Move CAM operation"""
     bl_idname = "scene.cam_operation_move"
     bl_label = "Move CAM operation in list"
     bl_options = {'REGISTER', 'UNDO'}
@@ -713,7 +713,7 @@ class CamOperationMove(bpy.types.Operator):
 
 
 class CamOrientationAdd(bpy.types.Operator):
-    '''Add orientation to cam operation, for multiaxis operations'''
+    """Add orientation to cam operation, for multiaxis operations"""
     bl_idname = "scene.cam_orientation_add"
     bl_label = "Add orientation"
     bl_options = {'REGISTER', 'UNDO'}
@@ -740,7 +740,7 @@ class CamOrientationAdd(bpy.types.Operator):
 
 
 class CamBridgesAdd(bpy.types.Operator):
-    '''Add bridge objects to curve'''
+    """Add bridge objects to curve"""
     bl_idname = "scene.cam_bridges_add"
     bl_label = "Add bridges"
     bl_options = {'REGISTER', 'UNDO'}
@@ -760,7 +760,7 @@ class CamBridgesAdd(bpy.types.Operator):
 
 # boolean operations for curve objects
 class CamCurveBoolean(bpy.types.Operator):
-    '''perform Boolean operation on two or more curves'''
+    """perform Boolean operation on two or more curves"""
     bl_idname = "object.curve_boolean"
     bl_label = "Curve Boolean"
     bl_options = {'REGISTER', 'UNDO'}
@@ -786,7 +786,7 @@ class CamCurveBoolean(bpy.types.Operator):
 
 # intarsion or joints
 class CamCurveIntarsion(bpy.types.Operator):
-    '''makes curve cuttable both inside and outside, for intarsion and joints'''
+    """makes curve cuttable both inside and outside, for intarsion and joints"""
     bl_idname = "object.curve_intarsion"
     bl_label = "Intarsion"
     bl_options = {'REGISTER', 'UNDO'}
@@ -815,7 +815,7 @@ class CamCurveIntarsion(bpy.types.Operator):
 
 # intarsion or joints
 class CamCurveOvercuts(bpy.types.Operator):
-    '''Adds overcuts for slots'''
+    """Adds overcuts for slots"""
     bl_idname = "object.curve_overcuts"
     bl_label = "Add Overcuts"
     bl_options = {'REGISTER', 'UNDO'}
@@ -906,7 +906,7 @@ class CamCurveOvercuts(bpy.types.Operator):
 
 # Overcut type B
 class CamCurveOvercutsB(bpy.types.Operator):
-    '''Adds overcuts for slots'''
+    """Adds overcuts for slots"""
     bl_idname = "object.curve_overcuts_b"
     bl_label = "Add Overcuts-B"
     bl_options = {'REGISTER', 'UNDO'}
@@ -1130,7 +1130,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
 
 
 class CamCurveRemoveDoubles(bpy.types.Operator):
-    '''curve remove doubles - warning, removes beziers!'''
+    """curve remove doubles - warning, removes beziers!"""
     bl_idname = "object.curve_remove_doubles"
     bl_label = "C-Remove doubles"
     bl_options = {'REGISTER', 'UNDO'}
@@ -1163,7 +1163,7 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
 
 
 class CamMeshGetPockets(bpy.types.Operator):
-    '''Detect pockets in a mesh and extract them as curves'''
+    """Detect pockets in a mesh and extract them as curves"""
     bl_idname = "object.mesh_get_pockets"
     bl_label = "Get pocket surfaces"
     bl_options = {'REGISTER', 'UNDO'}
@@ -1258,7 +1258,7 @@ class CamMeshGetPockets(bpy.types.Operator):
 
 # this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
 class CamOffsetSilhouete(bpy.types.Operator):
-    '''Curve offset operation '''
+    """Curve offset operation """
     bl_idname = "object.silhouete_offset"
     bl_label = "Silhouete offset"
     bl_options = {'REGISTER', 'UNDO'}
@@ -1277,7 +1277,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
 
 # Finds object silhouette, usefull for meshes, since with curves it's not needed.
 class CamObjectSilhouete(bpy.types.Operator):
-    '''Object silhouete '''
+    """Object silhouete """
     bl_idname = "object.silhouete"
     bl_label = "Object silhouete"
     bl_options = {'REGISTER', 'UNDO'}

@@ -25,7 +25,7 @@ import bpy
 
 
 def getSlices(ob, slice_distance):
-    '''function for slicing a mesh. It is now not used, but can be used for e.g. lasercutting from sheets a 3d model in the future.'''
+    """function for slicing a mesh. It is now not used, but can be used for e.g. lasercutting from sheets a 3d model in the future."""
 
     layer_thickness = slice_distance
     edges = []

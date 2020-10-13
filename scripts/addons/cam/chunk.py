@@ -519,15 +519,15 @@ def optimizeChunk(chunk, operation):
             naxispoints = True
         # if len(chunk.rotations)>0:
 
-        '''this was replaced by append. Pop method was much much slower! still testing however.
-        for vi in range(len(chunk.points)-2,0,-1):
-            #vmiddle=Vector()
-            #v1=Vector()
-            #v2=Vector()
-            if compare(chunk.points[vi-1],chunk.points[vi+1],chunk.points[vi],operation.optimize_threshold):
+        # his was replaced by append. Pop method was much much slower! still testing however.
+        # for vi in range(len(chunk.points)-2,0,-1):
+        #     #vmiddle=Vector()
+        #     #v1=Vector()
+        #     #v2=Vector()
+        #     if compare(chunk.points[vi-1],chunk.points[vi+1],chunk.points[vi],operation.optimize_threshold):
+        #
+        #         chunk.pop(vi)
 
-                chunk.pop(vi)
-        '''
         protect_vertical = operation.protect_vertical and operation.machine_axes == '3'
         for vi in range(0, len(points) - 1):
             # vmiddle=Vector()
@@ -552,23 +552,23 @@ def optimizeChunk(chunk, operation):
         else:
             chunk.points.append(points[-1])
         # =True
-        '''
-        if:#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right? or does it?
-            #print('verticality test')
 
+        # if:#protect vertical surfaces so far only for 3 axes..doesn't have now much logic for n axes, right? or does it?
+        #     #print('verticality test')
+        #
+        #
+        #     for vi in range(len(chunk.points)-1,0,-1):
+        #         v1=chunk.points[vi]
+        #         v2=chunk.points[vi-1]
+        #         v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
+        #         if v1c!=v1:
+        #             chunk.points[vi]=v1c
+        #         elif v2c!=v2:
+        #             chunk.points[vi-1]=v2c
+        #
+        #
+        #     #print(vcorrected)
 
-            for vi in range(len(chunk.points)-1,0,-1):
-                v1=chunk.points[vi]
-                v2=chunk.points[vi-1]
-                v1c,v2c=isVerticalLimit(v1,v2,operation.protect_vertical_limit)
-                if v1c!=v1:
-                    chunk.points[vi]=v1c
-                elif v2c!=v2:
-                    chunk.points[vi-1]=v2c
-
-
-            #print(vcorrected)
-        '''
     return chunk
 
 
@@ -666,34 +666,32 @@ def parentChildDist(parents, children, o, distance=None):
 
 # print('distance done')
 
-'''
-def parentChildDist(parents, children,o, distance= None):
-	#parenting based on distance between chunks
-	#hierarchy works like this: - children get milled first.
-	if distance==None:
-		dlim=o.dist_between_paths*2
-		if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and o.parallel_step_back:
-			dlim=dlim*2
-	else:
-		dlim = distance
-
-	for child in children:
-		for parent in parents:
-			isrelation=False
-			if parent!=child:
-				for v in child.points:
-					for v1 in parent.points:
-
-						if dist2d(v,v1)<dlim:
-							isrelation=True
-							break
-					if isrelation:
-						break
-				if isrelation:
-					#print('truelink',dist2d(v,v1))
-					parent.children.append(child)
-					child.parents.append(parent)
-'''
+# def parentChildDist(parents, children,o, distance= None):
+# 	#parenting based on distance between chunks
+# 	#hierarchy works like this: - children get milled first.
+# 	if distance==None:
+# 		dlim=o.dist_between_paths*2
+# 		if (o.strategy=='PARALLEL' or o.strategy=='CROSS') and o.parallel_step_back:
+# 			dlim=dlim*2
+# 	else:
+# 		dlim = distance
+#
+# 	for child in children:
+# 		for parent in parents:
+# 			isrelation=False
+# 			if parent!=child:
+# 				for v in child.points:
+# 					for v1 in parent.points:
+#
+# 						if dist2d(v,v1)<dlim:
+# 							isrelation=True
+# 							break
+# 					if isrelation:
+# 						break
+# 				if isrelation:
+# 					#print('truelink',dist2d(v,v1))
+# 					parent.children.append(child)
+# 					child.parents.append(parent)
 
 
 def parentChild(parents, children, o):
@@ -1068,7 +1066,7 @@ def chunkToShapely(chunk):
 
 
 def chunksRefine(chunks, o):
-    '''add extra points in between for chunks'''
+    """add extra points in between for chunks"""
     for ch in chunks:
         # print('before',len(ch))
         newchunk = []
@@ -1104,7 +1102,7 @@ def chunksRefine(chunks, o):
 
 
 def chunksRefineThreshold(chunks, distance, limitdistance):
-    '''add extra points in between for chunks. For medial axis strategy only !'''
+    """add extra points in between for chunks. For medial axis strategy only !"""
     for ch in chunks:
         # print('before',len(ch))
         newchunk = []

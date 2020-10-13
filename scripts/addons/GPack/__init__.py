@@ -123,7 +123,7 @@ def UVobs(obs,set):
 		bpy.ops.object.editmode_toggle()
 
 
-		print(len(islands)
+		print(len(islands))
 		for iidx,island in enumerate(islands):
 			out_verts=[]
 			out_faces=[]
@@ -140,21 +140,20 @@ def UVobs(obs,set):
 				for vert, loop in zip(face.vertices, face.loop_indices):
 					uv = ob.data.uv_layers.active.data[loop].uv.copy()
 
-					'''
-					if vertindices.get(vert) == None:
+					# if vertindices.get(vert) == None:
+					#
+					# 	vertindices[vert]=vertidx
+					# 	nvertindex = vertidx
+					# 	out_verts.append((uv.x,0,uv.y))
+					# 	vertidx+=1
+					#
+					#
+					# nvertindex = vertindices[vert]
+					#
+					# #print(vert,nvertindex, vertindices)
+					# #print()
+					# oface.append(nvertindex)
 
-						vertindices[vert]=vertidx
-						nvertindex = vertidx
-						out_verts.append((uv.x,0,uv.y))
-						vertidx+=1
-
-
-					nvertindex = vertindices[vert]
-
-					#print(vert,nvertindex, vertindices)
-					#print()
-					oface.append(nvertindex)
-					'''
 					loops.append(loop)
 					out_verts.append((uv.x,0,uv.y))
 					oface.append(vertidx)
@@ -643,37 +642,37 @@ class GPackCurvesPanel(bpy.types.Panel):
 		layout.prop(s,'initialmargin')
 		layout.prop(s,'enablerotation')
 
-
 		#layout.prop(s,'pass_combined')
-'''	# separate UV's????
-class GPackUVPanel(bpy.types.Panel):
-	"""Creates a Panel in the Object properties window"""
-	bl_label = "Gravity Packer"
-	bl_idname = "WORLD_PT_GPACKER"
-	bl_space_type = 'PROPERTIES'
-	bl_region_type = 'WINDOW'
-	bl_context = "object"
 
+# separate UV's????
+# class GPackUVPanel(bpy.types.Panel):
+# 	'''Creates a Panel in the Object properties window"""
+# 	bl_label = "Gravity Packer"
+# 	bl_idname = "WORLD_PT_GPACKER"
+# 	bl_space_type = 'PROPERTIES'
+# 	bl_region_type = 'WINDOW'
+# 	bl_context = "object"
+#
+#
+# 	def draw(self, context):
+# 		layout = self.layout
+#
+# 		obj = bpy.context.active_object
+# 		#s=bpy.context.scene
+# 		s=bpy.context.scene.gpacker_settings
+# 		row = layout.row()
+# 		layout.operator("object.gpack_uv")
+# 		#layout.prop_search(s, "lpgroup", bpy.data, "groups")
+# 		#layout.prop_search(s, "hpgroup", bpy.data, "groups")
+#
+# 		layout.prop(s,'startConditions')
+# 		layout.prop(s,'xsize')
+# 		layout.prop(s,'ysize')
+# 		layout.prop(s,'initialmargin')
+#
+#
+# 		#layout.prop(s,'pass_combined')
 
-	def draw(self, context):
-		layout = self.layout
-
-		obj = bpy.context.active_object
-		#s=bpy.context.scene
-		s=bpy.context.scene.gpacker_settings
-		row = layout.row()
-		layout.operator("object.gpack_uv")
-		#layout.prop_search(s, "lpgroup", bpy.data, "groups")
-		#layout.prop_search(s, "hpgroup", bpy.data, "groups")
-
-		layout.prop(s,'startConditions')
-		layout.prop(s,'xsize')
-		layout.prop(s,'ysize')
-		layout.prop(s,'initialmargin')
-
-
-		#layout.prop(s,'pass_combined')
-'''
 def register():
 	s = bpy.types.Scene
 	bpy.utils.register_class(GPackUVOperator)
