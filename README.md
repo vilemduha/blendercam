@@ -27,8 +27,8 @@ See the [Wiki](https://github.com/vilemduha/blendercam/wiki).
 
 ## Dependencies
 
-* Blender 2.80
-* Python 2.7 & OpenCamLib (optional)
+* Blender 2.80 or 2.90
+* OpenCamLib (optional)
 
 
 ## DISCLAIMER
