@@ -1640,8 +1640,8 @@ def renderSampleImage(o):
             n1 = n.nodes.new('CompositorNodeRLayers')
             n2 = n.nodes.new('CompositorNodeViewer')
             n3 = n.nodes.new('CompositorNodeComposite')
-            n.links.new(n1.outputs['Z'], n2.inputs['Image'])
-            n.links.new(n1.outputs['Z'], n3.inputs['Image'])
+            n.links.new(n1.outputs['Depth'], n2.inputs['Image'])
+            n.links.new(n1.outputs['Depth'], n3.inputs['Image'])
             n.nodes.active = n2
             ###################
 
@@ -1658,10 +1658,10 @@ def renderSampleImage(o):
             r.tile_y = 1024  # ceil(resy/1024)
             r.resolution_percentage = 100
 
-            r.engine = 'BLENDER_RENDER'
-            r.use_antialiasing = False
-            r.use_raytrace = False
-            r.use_shadows = False
+            r.engine = 'BLENDER_EEVEE'
+            #r.use_antialiasing = False
+            #r.use_raytrace = False
+            #r.use_shadows = False
             ff = r.image_settings.file_format
             cm = r.image_settings.color_mode
             r.image_settings.file_format = 'OPEN_EXR'

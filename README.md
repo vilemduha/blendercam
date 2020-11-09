@@ -18,7 +18,7 @@ See the [Wiki](https://github.com/vilemduha/blendercam/wiki).
 
 ## Resources
 
-* [Development](https://github.com/blendercam/blendercam)
+* [Development](https://github.com/vilemduha/blendercam)
 * [Documentation](https://github.com/vilemduha/blendercam/wiki)
 * [Freenode IRC](http://webchat.freenode.net/?channels=%23blendercam) (#blendercam)
 * [The Matrix](https://riot.im/app/#/room/#blendercam:matrix.org) (#blendercam:matrix.org)
@@ -27,8 +27,8 @@ See the [Wiki](https://github.com/vilemduha/blendercam/wiki).
 
 ## Dependencies
 
-* Blender 2.80
-* Python 2.7 & OpenCamLib (optional)
+* Blender 2.80 or 2.90
+* OpenCamLib (optional)
 
 
 ## DISCLAIMER
