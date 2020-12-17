@@ -672,6 +672,16 @@ def buildMesh(mesh_z,br):
         print("decimated")
         print("faces:" + str(len(ob.data.polygons)))
         print("vertices:" + str(len(ob.data.vertices)))
+ 
+def renderScene():
+    bpy.context.scene.render.engine = 'CYCLES'
+    scene = bpy.context.scene
+# Set render resolution
+    scene.render.resolution_x = 640
+    scene.render.resolution_y = 320
+    scene.render.resolution_percentage = 100	
+    bpy.ops.render.render(animation=False, write_still=False, use_viewport=True, layer="", scene="")
+    bpy.context.scene.render.engine = 'BLENDERCAM_RENDER'
     
     
 def problemAreas(br):
@@ -1023,6 +1033,7 @@ class DoBasRelief(bpy.types.Operator):
 	def execute(self, context):
 		s=bpy.context.scene
 		br=s.basreliefsettings
+		renderScene()
 		relief(br)
 		return {'FINISHED'}
 
@@ -1069,10 +1080,3 @@ if __name__ == "__main__":
 	register()
 #inputimage=bpy.data.images['testbuffer512.exr']
 #relief(inputimage)
-
-
-
-
-
-
-
