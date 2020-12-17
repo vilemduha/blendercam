@@ -1,4 +1,4 @@
-import bpy,bmesh,time
+import bpy,time
 import numpy
 import math
 import re
