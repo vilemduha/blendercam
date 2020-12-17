@@ -1,6 +1,7 @@
-import bpy,time
+import bpy,bmesh,time
 import numpy
 import math
+import re
 from math import *
 from bpy.props import *
 
@@ -544,7 +545,7 @@ def numpysave(a,iname):
 
 def numpytoimage(a,iname):
 	t=time.time()
-	print('numpy to image')
+	print('numpy to image - here')
 	t=time.time()
 	print(a.shape[0],a.shape[1])
 	foundimage=False
@@ -600,10 +601,84 @@ def tonemap(i):
 	minheight=i.min()
 	i[:]=((i-minheight))/(maxheight-minheight)
 
+def vert(column, row, z,XYscaling,Zscaling):
+    """ Create a single vert """
+    return column * XYscaling, row * XYscaling, z * Zscaling
+
+def buildMesh(mesh_z,br):
+    global rows
+    global size   
+    scale=0.001
+    scalez=0.05
+    decimateRatio= br.decimate_ratio #get variable from interactive table
+    bpy.ops.object.select_all(action='DESELECT')
+    for object in bpy.data.objects:
+        if re.search("BasReliefMesh",str(object)):
+            bpy.data.objects.remove(object)
+            print("old basrelief removed")
+        
+  
+      
+    print("Building mesh")
+    numY = mesh_z.shape[1]
+    numX = mesh_z.shape[0]
+    print(numX,numY)
+    
+    verts = list()
+    faces = list()
+    
+    for i, row in enumerate(mesh_z):
+        for j, col in enumerate(row):
+            verts.append(vert(i, j, col,scale,scalez))
+
+    count = 0
+    for i in range (0, numY *(numX-1)):
+        if count < numY-1:
+            A = i  # the first vertex
+            B = i+1  # the second vertex
+            C = (i+numY)+1 # the third vertex
+            D = (i+numY) # the fourth vertex
+ 
+            face = (A,B,C,D)
+            faces.append(face)
+            count = count + 1
+        else:
+         count = 0
+
+    # Create Mesh Datablock
+    mesh = bpy.data.meshes.new("displacement")
+    mesh.from_pydata(verts, [], faces)
+
+    mesh.update()
+
+    # make object from mesh
+    new_object = bpy.data.objects.new('BasReliefMesh', mesh)
+    scene = bpy.context.scene
+    scene.collection.objects.link(new_object)
+
+    #mesh object is made - preparing to decimate.
+    ob=bpy.data.objects['BasReliefMesh']
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    print("faces:" + str(len(ob.data.polygons)))
+    print("vertices:" + str(len(ob.data.vertices)))
+    if decimateRatio > 0.95:
+        print("skipping decimate ratio > 0.95")
+    else:
+        m =  ob.modifiers.new(name="Foo", type='DECIMATE')
+        m.ratio=decimateRatio
+        print("decimating with ratio:"+str(decimateRatio))
+        bpy.ops.object.modifier_apply({"object" : ob}, modifier=m.name)
+        print("decimated")
+        print("faces:" + str(len(ob.data.polygons)))
+        print("vertices:" + str(len(ob.data.vertices)))
+    
+    
 def problemAreas(br):
 	t=time.time()
 
 	i=bpy.data.images[br.source_image_name]
+	i=bpy.data.images["Viewer Node"]
 	silh_thres=br.silhouette_threshold
 	recover_silh=br.recover_silhouettes
 	silh_scale=br.silhouette_scale
@@ -689,6 +764,7 @@ def relief(br):
 	t=time.time()
 
 	i=bpy.data.images[br.source_image_name]
+	i=bpy.data.images["Viewer Node"]
 	silh_thres=br.silhouette_threshold
 	recover_silh=br.recover_silhouettes
 	silh_scale=br.silhouette_scale
@@ -826,9 +902,11 @@ def relief(br):
 	solve_pde_multigrid( divg, target ,vcycleiterations, linbcgiterations, smoothiterations, mins, levels, useplanar, planar)
 
 	tonemap(target)
+	
+	buildMesh(target,br)
 
-	ipath=bpy.path.abspath(i.filepath)[:-len(bpy.path.basename(i.filepath))]+br.output_image_name+'.exr'
-	numpysave(target,ipath)
+#	ipath=bpy.path.abspath(i.filepath)[:-len(bpy.path.basename(i.filepath))]+br.output_image_name+'.exr'
+#	numpysave(target,ipath)
 	t=time.time()-t
 	print('total time:'+ str(t)+'\n')
 	#numpytoimage(target,br.output_image_name)
@@ -836,7 +914,7 @@ def relief(br):
 
 class BasReliefsettings(bpy.types.PropertyGroup):
 	source_image_name: bpy.props.StringProperty(name='Image source', description='image source')
-	output_image_name: bpy.props.StringProperty(name='Image target', description='image output name')
+#	output_image_name: bpy.props.StringProperty(name='Image target', description='image output name')
 	silhouette_threshold: FloatProperty(name="Silhouette threshold", description="Silhouette threshold", min=0.000001, max=1.0, default=0.003, precision=PRECISION)
 	recover_silhouettes: bpy.props.BoolProperty(name="Recover silhouettes",description="", default=True)
 	silhouette_scale: FloatProperty(name="Silhouette scale", description="Silhouette scale", min=0.000001, max=5.0, default=0.3, precision=PRECISION)
@@ -848,6 +926,8 @@ class BasReliefsettings(bpy.types.PropertyGroup):
 	linbcg_iterations: bpy.props.IntProperty(name="Linbcg iterations",description="set lower for flatter relief, and when using planar constraint", default=5, min=1, max=64)
 	use_planar: bpy.props.BoolProperty(name="Use planar constraint",description="", default=False)
 	gradient_scaling_mask_use: bpy.props.BoolProperty(name="Scale gradients with mask",description="", default=False)
+	decimate_ratio: FloatProperty(name="Decimate Ratio", description="Simplyfy the mesh using the Decimate modifier.  The lower the value the more simplyfied", min=0.01, max=1.0, default=0.1, precision=PRECISION)
+
 
 
 	gradient_scaling_mask_name: bpy.props.StringProperty(name='Scaling mask name', description='mask name')
@@ -889,7 +969,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
 		layout.operator("scene.calculate_bas_relief", text="Calculate relief")
 		layout.prop(br,'advanced')
 		layout.prop_search(br,'source_image_name', bpy.data, "images")
-		layout.prop(br,'output_image_name')
+#		layout.prop(br,'output_image_name')
 
 
 		layout.prop(br,'silhouette_threshold')
@@ -906,6 +986,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
 		layout.prop(br,'vcycle_iterations')
 		layout.prop(br,'linbcg_iterations')
 		layout.prop(br,'use_planar')
+		layout.prop(br,'decimate_ratio')
 
 
 		layout.prop(br,'gradient_scaling_mask_use')
