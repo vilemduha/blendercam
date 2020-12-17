@@ -933,6 +933,11 @@ def relief(br):
 class BasReliefsettings(bpy.types.PropertyGroup):
 	source_image_name: bpy.props.StringProperty(name='Image source', description='image source')
 #	output_image_name: bpy.props.StringProperty(name='Image target', description='image output name')
+	bit_diameter: FloatProperty(name="Diameter of ball end in mm", description="Diameter of bit which will be used for carving", min=0.01, max=50.0, default=3.175, precision=PRECISION)
+	pass_per_radius: bpy.props.IntProperty(name="Passes per radius", description="Amount of passes per radius\n(more passes, more mesh precision)",default=2, min=1, max=10)
+	widthmm: bpy.props.IntProperty(name="Desired width in mm", default=200, min=5, max=4000)
+	heightmm: bpy.props.IntProperty(name="desired height in mm", default=150, min=5, max=4000)
+
 	silhouette_threshold: FloatProperty(name="Silhouette threshold", description="Silhouette threshold", min=0.000001, max=1.0, default=0.003, precision=PRECISION)
 	recover_silhouettes: bpy.props.BoolProperty(name="Recover silhouettes",description="", default=True)
 	silhouette_scale: FloatProperty(name="Silhouette scale", description="Silhouette scale", min=0.000001, max=5.0, default=0.3, precision=PRECISION)
@@ -945,7 +950,6 @@ class BasReliefsettings(bpy.types.PropertyGroup):
 	use_planar: bpy.props.BoolProperty(name="Use planar constraint",description="", default=False)
 	gradient_scaling_mask_use: bpy.props.BoolProperty(name="Scale gradients with mask",description="", default=False)
 	decimate_ratio: FloatProperty(name="Decimate Ratio", description="Simplyfy the mesh using the Decimate modifier.  The lower the value the more simplyfied", min=0.01, max=1.0, default=0.1, precision=PRECISION)
-
 
 
 	gradient_scaling_mask_name: bpy.props.StringProperty(name='Scaling mask name', description='mask name')
@@ -989,7 +993,10 @@ class BASRELIEF_Panel(bpy.types.Panel):
 		layout.prop_search(br,'source_image_name', bpy.data, "images")
 #		layout.prop(br,'output_image_name')
 
-
+		layout.prop(br,'bit_diameter')
+		layout.prop(br,'pass_per_radius')
+		layout.prop(br,'widthmm')
+		layout.prop(br,'heightmm')
 		layout.prop(br,'silhouette_threshold')
 		layout.prop(br,'recover_silhouettes')
 		if br.recover_silhouettes:
@@ -1041,7 +1048,9 @@ class DoBasRelief(bpy.types.Operator):
 	def execute(self, context):
 		s=bpy.context.scene
 		br=s.basreliefsettings
-		renderScene(400,300,2,3)
+		
+		renderScene(br.widthmm,br.heightmm,br.bit_diameter,br.pass_per_radius)
+		
 		relief(br)
 		return {'FINISHED'}
 
