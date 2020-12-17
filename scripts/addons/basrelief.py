@@ -608,8 +608,8 @@ def vert(column, row, z,XYscaling,Zscaling):
 def buildMesh(mesh_z,br):
     global rows
     global size   
-    scale=0.001
-    scalez=0.05
+    scale=1
+    scalez=1
     decimateRatio= br.decimate_ratio #get variable from interactive table
     bpy.ops.object.select_all(action='DESELECT')
     for object in bpy.data.objects:
@@ -660,6 +660,9 @@ def buildMesh(mesh_z,br):
     ob=bpy.data.objects['BasReliefMesh']
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
+    
+    bpy.context.active_object.dimensions= (br.widthmm/1000,br.heightmm/1000,br.thicknessmm/1000)
+
     print("faces:" + str(len(ob.data.polygons)))
     print("vertices:" + str(len(ob.data.vertices)))
     if decimateRatio > 0.95:
@@ -936,7 +939,8 @@ class BasReliefsettings(bpy.types.PropertyGroup):
 	bit_diameter: FloatProperty(name="Diameter of ball end in mm", description="Diameter of bit which will be used for carving", min=0.01, max=50.0, default=3.175, precision=PRECISION)
 	pass_per_radius: bpy.props.IntProperty(name="Passes per radius", description="Amount of passes per radius\n(more passes, more mesh precision)",default=2, min=1, max=10)
 	widthmm: bpy.props.IntProperty(name="Desired width in mm", default=200, min=5, max=4000)
-	heightmm: bpy.props.IntProperty(name="desired height in mm", default=150, min=5, max=4000)
+	heightmm: bpy.props.IntProperty(name="Desired height in mm", default=150, min=5, max=4000)
+	thicknessmm: bpy.props.IntProperty(name="Thickness in mm", default=15, min=5, max=100)
 
 	silhouette_threshold: FloatProperty(name="Silhouette threshold", description="Silhouette threshold", min=0.000001, max=1.0, default=0.003, precision=PRECISION)
 	recover_silhouettes: bpy.props.BoolProperty(name="Recover silhouettes",description="", default=True)
@@ -997,6 +1001,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
 		layout.prop(br,'pass_per_radius')
 		layout.prop(br,'widthmm')
 		layout.prop(br,'heightmm')
+		layout.prop(br,'thicknessmm')
 		layout.prop(br,'silhouette_threshold')
 		layout.prop(br,'recover_silhouettes')
 		if br.recover_silhouettes:
@@ -1095,5 +1100,4 @@ def unregister():
 
 if __name__ == "__main__":
 	register()
-#inputimage=bpy.data.images['testbuffer512.exr']
-#relief(inputimage)
+
