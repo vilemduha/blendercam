@@ -660,8 +660,10 @@ def buildMesh(mesh_z,br):
     ob=bpy.data.objects['BasReliefMesh']
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
-    
+    jx=float(br.justifyx)
     bpy.context.active_object.dimensions= (br.widthmm/1000,br.heightmm/1000,br.thicknessmm/1000)
+    bpy.context.active_object.location= (jx*br.widthmm/1000,float(br.justifyy)*br.heightmm/1000,float(br.justifyz)*br.thicknessmm/1000)
+
 
     print("faces:" + str(len(ob.data.polygons)))
     print("vertices:" + str(len(ob.data.vertices)))
@@ -941,7 +943,11 @@ class BasReliefsettings(bpy.types.PropertyGroup):
 	widthmm: bpy.props.IntProperty(name="Desired width in mm", default=200, min=5, max=4000)
 	heightmm: bpy.props.IntProperty(name="Desired height in mm", default=150, min=5, max=4000)
 	thicknessmm: bpy.props.IntProperty(name="Thickness in mm", default=15, min=5, max=100)
-
+	
+	justifyx: bpy.props.EnumProperty(name="X",items=[('1', 'Left','', 0),('-0.5', 'Centered','', 1),('-1', 'Right','', 2)],default='-1')
+	justifyy: bpy.props.EnumProperty(name="Y",items=[('1', 'Bottom','', 0),('-0.5', 'Centered','', 2),('-1', 'Top','', 1),],default='-1')
+	justifyz: bpy.props.EnumProperty(name="Z",items=[('-1', 'Below 0','', 0),('-0.5', 'Centered','', 2),('1', 'Above 0','', 1),],default='-1')
+     
 	silhouette_threshold: FloatProperty(name="Silhouette threshold", description="Silhouette threshold", min=0.000001, max=1.0, default=0.003, precision=PRECISION)
 	recover_silhouettes: bpy.props.BoolProperty(name="Recover silhouettes",description="", default=True)
 	silhouette_scale: FloatProperty(name="Silhouette scale", description="Silhouette scale", min=0.000001, max=5.0, default=0.3, precision=PRECISION)
@@ -996,12 +1002,19 @@ class BASRELIEF_Panel(bpy.types.Panel):
 		layout.prop(br,'advanced')
 		layout.prop_search(br,'source_image_name', bpy.data, "images")
 #		layout.prop(br,'output_image_name')
-
+		layout.label(text="Project parameters")
 		layout.prop(br,'bit_diameter')
 		layout.prop(br,'pass_per_radius')
 		layout.prop(br,'widthmm')
 		layout.prop(br,'heightmm')
 		layout.prop(br,'thicknessmm')
+		
+		layout.label(text="Justification")
+		layout.prop(br,'justifyx')
+		layout.prop(br,'justifyy')
+		layout.prop(br,'justifyz')
+		
+		layout.label(text="Silhouette")
 		layout.prop(br,'silhouette_threshold')
 		layout.prop(br,'recover_silhouettes')
 		if br.recover_silhouettes:
@@ -1100,4 +1113,3 @@ def unregister():
 
 if __name__ == "__main__":
 	register()
-
