@@ -660,9 +660,8 @@ def buildMesh(mesh_z,br):
     ob=bpy.data.objects['BasReliefMesh']
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
-    jx=float(br.justifyx)
     bpy.context.active_object.dimensions= (br.widthmm/1000,br.heightmm/1000,br.thicknessmm/1000)
-    bpy.context.active_object.location= (jx*br.widthmm/1000,float(br.justifyy)*br.heightmm/1000,float(br.justifyz)*br.thicknessmm/1000)
+    bpy.context.active_object.location= (float(br.justifyx)*br.widthmm/1000,float(br.justifyy)*br.heightmm/1000,float(br.justifyz)*br.thicknessmm/1000)
 
 
     print("faces:" + str(len(ob.data.polygons)))
