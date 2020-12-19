@@ -122,7 +122,7 @@ class CamAddonPreferences(AddonPreferences):
 
 
 class machineSettings(bpy.types.PropertyGroup):
-    '''stores all data for machines'''
+    """stores all data for machines"""
     # name = bpy.props.StringProperty(name="Machine Name", default="Machine")
     post_processor: EnumProperty(name='Post processor',
                                  items=(('ISO', 'Iso', 'exports standardized gcode ISO 6983 (RS-274)'),
@@ -186,14 +186,15 @@ class machineSettings(bpy.types.PropertyGroup):
     split_limit: IntProperty(name="Operations per file",
                              description="Split files with larger number of operations than this", min=1000,
                              max=20000000, default=800000)
-    '''rotary_axis1 = EnumProperty(name='Axis 1',
-        items=(
-            ('X', 'X', 'x'),
-            ('Y', 'Y', 'y'),
-            ('Z', 'Z', 'z')),
-        description='Number 1 rotational axis',
-        default='X', update = updateOffsetImage)
-    '''
+
+    # rotary_axis1 = EnumProperty(name='Axis 1',
+    #     items=(
+    #         ('X', 'X', 'x'),
+    #         ('Y', 'Y', 'y'),
+    #         ('Z', 'Z', 'z')),
+    #     description='Number 1 rotational axis',
+    #     default='X', update = updateOffsetImage)
+
     collet_size: bpy.props.FloatProperty(name="#Collet size", description="Collet size for collision detection",
                                          default=33, min=0.00001, max=320000, precision=PRECISION, unit="LENGTH")
     # exporter_start = bpy.props.StringProperty(name="exporter start", default="%")
@@ -221,7 +222,7 @@ class machineSettings(bpy.types.PropertyGroup):
 
 
 class PackObjectsSettings(bpy.types.PropertyGroup):
-    '''stores all data for machines'''
+    """stores all data for machines"""
     # name = bpy.props.StringProperty(name="Machine Name", default="Machine")
     sheet_fill_direction: EnumProperty(name='Fill direction',
                                        items=(('X', 'X', 'Fills sheet in X axis direction'),
@@ -239,7 +240,7 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
 
 
 class SliceObjectsSettings(bpy.types.PropertyGroup):
-    '''stores all data for machines'''
+    """stores all data for machines"""
     # name = bpy.props.StringProperty(name="Machine Name", default="Machine")
 
     slice_distance: FloatProperty(name="Slicing distance",
@@ -259,11 +260,11 @@ def operationValid(self, context):
         if not o.object_name in bpy.data.objects:
             o.valid = False;
             o.warnings = invalidmsg
-    if o.geometry_source == 'GROUP':
-        if not o.group_name in bpy.data.groups:
+    if o.geometry_source == 'COLLECTION':
+        if not o.collection_name in bpy.data.collections:
             o.valid = False;
             o.warnings = invalidmsg
-        elif len(bpy.data.groups[o.group_name].objects) == 0:
+        elif len(bpy.data.collections[o.collection_name].objects) == 0:
             o.valid = False;
             o.warnings = invalidmsg
 
@@ -287,7 +288,7 @@ def updateOperationValid(self, context):
 
 # Update functions start here
 def updateChipload(self, context):
-    '''this is very simple computation of chip size, could be very much improved'''
+    """this is very simple computation of chip size, could be very much improved"""
     print('update chipload ')
     o = self;
     # self.changed=True
@@ -305,7 +306,7 @@ def updateChipload(self, context):
 
 
 def updateOffsetImage(self, context):
-    '''refresh offset image tag for rerendering'''
+    """refresh offset image tag for rerendering"""
     updateChipload(self, context)
     print('update offset')
     self.changed = True
@@ -313,7 +314,7 @@ def updateOffsetImage(self, context):
 
 
 def updateZbufferImage(self, context):
-    '''changes tags so offset and zbuffer images get updated on calculation time.'''
+    """changes tags so offset and zbuffer images get updated on calculation time."""
     # print('updatezbuf')
     # print(self,context)
     self.changed = True
@@ -325,7 +326,7 @@ def updateZbufferImage(self, context):
 # utils.checkMemoryLimit(self)
 
 def updateStrategy(o, context):
-    ''''''
+    """"""
     o.changed = True
     print('update strategy')
     if o.machine_axes == '5' or (
@@ -413,10 +414,9 @@ class camOperation(bpy.types.PropertyGroup):
         name="Parent path to object",
         description="Parent generated CAM path to source object",
         default=False)
-    # group = bpy.props.StringProperty(name='Object group', description='group of objects which will be included in this operation')
     object_name: bpy.props.StringProperty(name='Object', description='object handled by this operation',
                                           update=updateOperationValid)
-    group_name: bpy.props.StringProperty(name='Group', description='Object group handled by this operation',
+    collection_name: bpy.props.StringProperty(name='Collection', description='Object collection handled by this operation',
                                          update=updateOperationValid)
     curve_object: bpy.props.StringProperty(name='Curve source',
                                             description='curve which will be sampled along the 3d object',
@@ -427,7 +427,7 @@ class camOperation(bpy.types.PropertyGroup):
     source_image_name: bpy.props.StringProperty(name='image_source', description='image source', update=operationValid)
     geometry_source: EnumProperty(name='Source of data',
                                   items=(
-                                      ('OBJECT', 'object', 'a'), ('GROUP', 'Group of objects', 'a'),
+                                      ('OBJECT', 'object', 'a'), ('COLLECTION', 'Collection of objects', 'a'),
                                       ('IMAGE', 'Image', 'a')),
                                   description='Geometry source',
                                   default='OBJECT', update=updateOperationValid)
@@ -522,7 +522,6 @@ class camOperation(bpy.types.PropertyGroup):
     cut_type: EnumProperty(name='Cut',
                            items=(('OUTSIDE', 'Outside', 'a'), ('INSIDE', 'Inside', 'a'), ('ONLINE', 'On line', 'a')),
                            description='Type of cutter used', default='OUTSIDE', update=updateRest)
-    # render_all = bpy.props.BoolProperty(name="Use all geometry",description="use also other objects in the scene", default=True)#replaced with groups support
     outlines_count: bpy.props.IntProperty(name="Outlines count`EXPERIMENTAL", description="Outlines count", default=1,
                                           min=1, max=32, update=updateCutout)
 
@@ -694,8 +693,8 @@ class camOperation(bpy.types.PropertyGroup):
                                              description='Spindle rotation direction', default='CW', update=updateRest)
     free_movement_height: bpy.props.FloatProperty(name="Free movement height", default=0.01, min=0.0000, max=32,
                                                    precision=PRECISION, unit="LENGTH", update=updateRest)
-    G64: bpy.props.FloatProperty(name="G64 Path Control", description="Path control mode with Optional Tolerance\na 0 value will omit the path control", default=0.000015, min=0.0000, max=0.0005,
-                                                   precision=PRECISION, unit="LENGTH", update=updateRest)
+    G64: bpy.props.FloatProperty(name="Path Control Mode with Optional Tolerance", default=0.01, min=0.0000, max=0.5,
+                                                   precision=PRECISION, unit="LENGTH", update=updateRest)                                                   
     movement_insideout: EnumProperty(name='Direction',
                                      items=(('INSIDEOUT', 'Inside out', 'a'), ('OUTSIDEIN', 'Outside in', 'a')),
                                      description='approach to the piece', default='INSIDEOUT', update=updateRest)
@@ -766,25 +765,25 @@ class camOperation(bpy.types.PropertyGroup):
     bridges_height: bpy.props.FloatProperty(name='height of bridges',
                                             description="Height from the bottom of the cutting operation",
                                             default=0.0005, unit='LENGTH', precision=PRECISION, update=updateBridges)
-    bridges_group_name: bpy.props.StringProperty(name='Bridges Group', description='Group of curves used as bridges',
+    bridges_collection_name: bpy.props.StringProperty(name='Bridges Collection', description='Collection of curves used as bridges',
                                                  update=operationValid)
     use_bridge_modifiers: BoolProperty(name="use bridge modifiers",
                                        description="include bridge curve modifiers using render level when calculating operation, does not effect original bridge data",
                                        default=True, update=updateBridges)
 
-    '''commented this - auto bridges will be generated, but not as a setting of the operation
-    bridges_placement = bpy.props.EnumProperty(name='Bridge placement',
-        items=(
-            ('AUTO','Automatic', 'Automatic bridges with a set distance'),
-            ('MANUAL','Manual', 'Manual placement of bridges'),
-            ),
-        description='Bridge placement',
-        default='AUTO',
-        update = updateStrategy)
-    
-    bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
-    bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
-    '''
+    # commented this - auto bridges will be generated, but not as a setting of the operation
+    # bridges_placement = bpy.props.EnumProperty(name='Bridge placement',
+    #     items=(
+    #         ('AUTO','Automatic', 'Automatic bridges with a set distance'),
+    #         ('MANUAL','Manual', 'Manual placement of bridges'),
+    #         ),
+    #     description='Bridge placement',
+    #     default='AUTO',
+    #     update = updateStrategy)
+    #
+    # bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
+    # bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
+
     use_modifiers: BoolProperty(name="use mesh modifiers",
                                 description="include mesh modifiers using render level when calculating operation, does not effect original mesh",
                                 default=True, update=operationValid)
@@ -884,21 +883,21 @@ class camChain(bpy.types.PropertyGroup):  # chain is just a set of operations wh
 
 @bpy.app.handlers.persistent
 def check_operations_on_load(context):
-    '''checks any broken computations on load and reset them.'''
+    """checks any broken computations on load and reset them."""
     s = bpy.context.scene
     for o in s.cam_operations:
         if o.computing:
             o.computing = False
 
 
-class CAM_CUTTER_presets(Menu):
+class CAM_CUTTER_MT_presets(Menu):
     bl_label = "Cutter presets"
     preset_subdir = "cam_cutters"
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset
 
 
-class CAM_MACHINE_presets(Menu):
+class CAM_MACHINE_MT_presets(Menu):
     bl_label = "Machine presets"
     preset_subdir = "cam_machines"
     preset_operator = "script.execute_preset"
@@ -906,10 +905,10 @@ class CAM_MACHINE_presets(Menu):
 
 
 class AddPresetCamCutter(bl_operators.presets.AddPresetBase, Operator):
-    '''Add a Cutter Preset'''
+    """Add a Cutter Preset"""
     bl_idname = "render.cam_preset_cutter_add"
     bl_label = "Add Cutter Preset"
-    preset_menu = "CAM_CUTTER_presets"
+    preset_menu = "CAM_CUTTER_MT_presets"
 
     preset_defines = [
         "d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"
@@ -928,7 +927,7 @@ class AddPresetCamCutter(bl_operators.presets.AddPresetBase, Operator):
     preset_subdir = "cam_cutters"
 
 
-class CAM_OPERATION_presets(Menu):
+class CAM_OPERATION_MT_presets(Menu):
     bl_label = "Operation presets"
     preset_subdir = "cam_operations"
     preset_operator = "script.execute_preset"
@@ -936,29 +935,29 @@ class CAM_OPERATION_presets(Menu):
 
 
 class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
-    '''Add an Operation Preset'''
+    """Add an Operation Preset"""
     bl_idname = "render.cam_preset_operation_add"
     bl_label = "Add Operation Preset"
-    preset_menu = "CAM_OPERATION_presets"
+    preset_menu = "CAM_OPERATION_MT_presets"
 
     preset_defines = [
         "o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"
     ]
-    '''
-    d1=dir(bpy.types.machineSettings.bl_rna)
 
-    d=[]
-    for prop in d1:
-        if (prop[:2]!='__' 
-            and prop!='bl_rna'
-            and prop!='translation_context'
-            and prop!='base'
-            and prop!='description'
-            and prop!='identifier'
-            and prop!='name'
-            and prop!='name_property'):
-                d.append(prop)
-    '''
+    # d1=dir(bpy.types.machineSettings.bl_rna)
+    #
+    # d=[]
+    # for prop in d1:
+    #     if (prop[:2]!='__'
+    #         and prop!='bl_rna'
+    #         and prop!='translation_context'
+    #         and prop!='base'
+    #         and prop!='description'
+    #         and prop!='identifier'
+    #         and prop!='name'
+    #         and prop!='name_property'):
+    #             d.append(prop)
+
     preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material_size',
                      'o.material_radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact',
@@ -981,10 +980,10 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 
 
 class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
-    '''Add a Cam Machine Preset'''
+    """Add a Cam Machine Preset"""
     bl_idname = "render.cam_preset_machine_add"
     bl_label = "Add Machine Preset"
-    preset_menu = "CAM_MACHINE_presets"
+    preset_menu = "CAM_MACHINE_MT_presets"
 
     preset_defines = [
         "d = bpy.context.scene.cam_machine",
@@ -1087,9 +1086,9 @@ def get_panels():  # convenience function for bot register and unregister functi
         ops.CamCurveRemoveDoubles,
         ops.CamMeshGetPockets,
 
-        CAM_CUTTER_presets,
-        CAM_OPERATION_presets,
-        CAM_MACHINE_presets,
+        CAM_CUTTER_MT_presets,
+        CAM_OPERATION_MT_presets,
+        CAM_MACHINE_MT_presets,
         AddPresetCamCutter,
         AddPresetCamOperation,
         AddPresetCamMachine,
@@ -1103,7 +1102,7 @@ def get_panels():  # convenience function for bot register and unregister functi
 
 
 def compatible_panels():
-    '''gets panels that are for blender internal, but are compatible with blender CAM'''
+    """gets panels that are for blender internal, but are compatible with blender CAM"""
     t = bpy.types
     return (
         # textures
@@ -1278,9 +1277,9 @@ classes = [
     ops.CamCurveRemoveDoubles,
     ops.CamMeshGetPockets,
 
-    CAM_CUTTER_presets,
-    CAM_OPERATION_presets,
-    CAM_MACHINE_presets,
+    CAM_CUTTER_MT_presets,
+    CAM_OPERATION_MT_presets,
+    CAM_MACHINE_MT_presets,
     AddPresetCamCutter,
     AddPresetCamOperation,
     AddPresetCamMachine,
@@ -1327,4 +1326,4 @@ def unregister():
 
     del s.cam_active_operation
     del s.cam_machine
-    bpy.app.handlers.scene_update_pre.remove(ops.timer_update)
+  
