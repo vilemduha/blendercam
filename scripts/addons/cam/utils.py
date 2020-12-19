@@ -1233,9 +1233,8 @@ def exportGcodePath(filename, vertslist, operations):
 
         free_movement_height = o.free_movement_height  # o.max.z+
         if o.G64>0:
-            c.set_path_control_mode(2, round(o.G64,5), 0 )
+            c.set_path_control_mode(2, round(o.G64,5), 0 )        
 
-        
         mesh = vertslist[i]
         verts = mesh.vertices[:]
         if o.machine_axes != '3':
@@ -1262,11 +1261,11 @@ def exportGcodePath(filename, vertslist, operations):
         c.spindle(o.spindle_rpm, spdir_clockwise)
         c.write_spindle()
         c.flush_nc()
-
+        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)
         c.flush_nc()
-        c.rapid(z=free_movement_height*1000)
+
         # dhull c.feedrate(unitcorr*o.feedrate)
 
         # commands=[]
@@ -1285,10 +1284,10 @@ def exportGcodePath(filename, vertslist, operations):
 
         if m.use_position_definitions:  # dhull
             last = Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
-        else:
-            if i < 1:
-                last = Vector((0.0, 0.0,
-                               free_movement_height))  # nonsense values so first step of the operation gets written for sure
+#		removed by pppalain 2020/12
+#       else:
+#           if i < 1:
+#                last = Vector((0.0, 0.0, free_movement_height))  # nonsense values so first step of the operation gets written for sure
         lastrot = Euler((0, 0, 0))
         duration = 0.0
         f = 0.1123456  # nonsense value, so first feedrate always gets written
