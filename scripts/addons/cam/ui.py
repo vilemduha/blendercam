@@ -50,7 +50,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     def draw_header(self, context):
-        self.layout.menu("CAM_CUTTER_presets", text="CAM Cutter")
+        self.layout.menu("CAM_CUTTER_MT_presets", text="CAM Cutter")
 
     def draw(self, context):
         layout = self.layout
@@ -61,7 +61,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
             if ao:
                 # cutter preset
                 row = layout.row(align=True)
-                row.menu("CAM_CUTTER_presets", text=bpy.types.CAM_CUTTER_presets.bl_label)
+                row.menu("CAM_CUTTER_MT_presets", text=bpy.types.CAM_CUTTER_MT_presets.bl_label)
                 row.operator("render.cam_preset_cutter_add", text="", icon='ADD')
                 row.operator("render.cam_preset_cutter_add", text="", icon='REMOVE').remove_active = True
                 layout.prop(ao, 'cutter_id')
@@ -90,7 +90,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     def draw_header(self, context):
-        self.layout.menu("CAM_MACHINE_presets", text="CAM Machine")
+        self.layout.menu("CAM_MACHINE_MT_presets", text="CAM Machine")
 
     def draw(self, context):
         layout = self.layout
@@ -104,7 +104,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
 
             # machine preset
             row = layout.row(align=True)
-            row.menu("CAM_MACHINE_presets", text=bpy.types.CAM_MACHINE_presets.bl_label)
+            row.menu("CAM_MACHINE_MT_presets", text=bpy.types.CAM_MACHINE_MT_presets.bl_label)
             row.operator("render.cam_preset_machine_add", text="", icon='ADD')
             row.operator("render.cam_preset_machine_add", text="", icon='REMOVE').remove_active = True
             # layout.prop(ao,'name')
@@ -163,7 +163,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
             if ao:
                 # label(text='dir(layout))
                 layout.template_running_jobs()
-                if ao.geometry_source in ['OBJECT', 'GROUP']:
+                if ao.geometry_source in ['OBJECT', 'COLLECTION']:
                     row = layout.row(align=True)
                     layout.prop(ao, 'material_from_model')
 
@@ -241,11 +241,11 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
         col.operator("scene.cam_chain_add", icon='ADD', text="")
         # col.operator("scene.cam_operation_copy", icon='COPYDOWN', text="")
         col.operator("scene.cam_chain_remove", icon='REMOVE', text="")
-        # if group:
+        # if collection:
         # col.separator()
         # col.operator("scene.cam_operation_move", icon='TRIA_UP', text="").direction = 'UP'
         # col.operator("scene.cam_operation_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
-        # row = layout.row() 
+        # row = layout.row()
 
         if len(scene.cam_chains) > 0:
             chain = scene.cam_chains[scene.cam_active_chain]
@@ -295,18 +295,18 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
         col.operator("scene.cam_operation_add", icon='ADD', text="")
         col.operator("scene.cam_operation_copy", icon='COPYDOWN', text="")
         col.operator("scene.cam_operation_remove", icon='REMOVE', text="")
-        # if group:
+        # if collection:
         col.separator()
         col.operator("scene.cam_operation_move", icon='TRIA_UP', text="").direction = 'UP'
         col.operator("scene.cam_operation_move", icon='TRIA_DOWN', text="").direction = 'DOWN'
-        # row = layout.row() 
+        # row = layout.row()
 
         if len(scene.cam_operations) > 0:
             use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
             ao = scene.cam_operations[scene.cam_active_operation]
 
             row = layout.row(align=True)
-            row.menu("CAM_OPERATION_presets", text=bpy.types.CAM_OPERATION_presets.bl_label)
+            row.menu("CAM_OPERATION_MT_presets", text=bpy.types.CAM_OPERATION_MT_presets.bl_label)
             row.operator("render.cam_preset_operation_add", text="", icon='ADD')
             row.operator("render.cam_preset_operation_add", text="", icon='REMOVE').remove_active = True
 
@@ -341,22 +341,22 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if not ao.strategy == 'CURVE':
                     if ao.geometry_source == 'OBJECT':
                         layout.prop_search(ao, "object_name", bpy.data, "objects")
-                    elif ao.geometry_source == 'GROUP':
-                        layout.prop_search(ao, "group_name", bpy.data, "groups")
+                    elif ao.geometry_source == 'COLLECTION':
+                        layout.prop_search(ao, "collection_name", bpy.data, "collections")
                     else:
                         layout.prop_search(ao, "source_image_name", bpy.data, "images")
                 else:
                     if ao.geometry_source == 'OBJECT':
                         layout.prop_search(ao, "object_name", bpy.data, "objects")
-                    elif ao.geometry_source == 'GROUP':
-                        layout.prop_search(ao, "group_name", bpy.data, "groups")
+                    elif ao.geometry_source == 'COLLECTION':
+                        layout.prop_search(ao, "collection_name", bpy.data, "collections")
 
                 if ao.strategy in ['CARVE', 'PROJECTED_CURVE']:
                     layout.prop_search(ao, "curve_object", bpy.data, "objects")
                     if ao.strategy == 'PROJECTED_CURVE':
                         layout.prop_search(ao, "curve_object1", bpy.data, "objects")
 
-                if use_experimental and ao.geometry_source in ['OBJECT', 'GROUP']:
+                if use_experimental and ao.geometry_source in ['OBJECT', 'COLLECTION']:
                     layout.prop(ao, 'use_modifiers')
                 layout.prop(ao, 'hide_all_others')
                 layout.prop(ao, 'parent_path_to_object')
@@ -427,17 +427,17 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'OUTLINEFILL']:
                     layout.prop(ao, 'movement_insideout')
 
-                    # if ao.geometry_source=='OBJECT' or ao.geometry_source=='GROUP':
-                    '''
-                    o=bpy.data.objects[ao.object_name]
-                    
-                    if o.type=='MESH' and (ao.strategy=='DRILL'):
-                        layout.label(text='Not supported for meshes')
-                        return
-                    '''
+                    # if ao.geometry_source=='OBJECT' or ao.geometry_source=='COLLECTION':
+
+                    # o=bpy.data.objects[ao.object_name]
+                    #
+                    # if o.type=='MESH' and (ao.strategy=='DRILL'):
+                    #     layout.label(text='Not supported for meshes')
+                    #     return
+
                 # elif o.type=='CURVE' and (ao.strategy!='CARVE' and ao.strategy!='POCKET' and ao.strategy!='DRILL' and ao.strategy!='CUTOUT'):
-                #	 layout.label(text='Not supported for curves')
-                #	 return
+                #   layout.label(text='Not supported for curves')
+                #   return
 
                 if ao.strategy == 'CUTOUT':
                     layout.prop(ao, 'cut_type')
@@ -491,16 +491,15 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.prop(ao, 'bridges_width')
                         layout.prop(ao, 'bridges_height')
 
-                        layout.prop_search(ao, "bridges_group_name", bpy.data, "groups")
+                        layout.prop_search(ao, "bridges_collection_name", bpy.data, "collections")
                         layout.prop(ao, 'use_bridge_modifiers')
-                    # layout.prop(ao,'bridges_group_name')
                     # if ao.bridges_placement == 'AUTO':
                     #	layout.prop(ao,'bridges_per_curve')
                     #	layout.prop(ao,'bridges_max_distance')
                     layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
 
             # elif ao.strategy=='SLICES':
-            #	layout.prop(ao,'slice_detail')	
+            #	layout.prop(ao,'slice_detail')
             # first attempt to draw object list for orientations:
             # layout.operator("object.cam_pack_objects")
             # layout.operator("scene.cam_orientation_add")
@@ -508,12 +507,12 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 
             layout.prop(ao, 'skin')
 
-            # if gname in bpy.data.groups:
+            # if gname in bpy.data.collections:
             #	layout.label(text='orientations')
-            #	group=bpy.data.groups[ao.name+'_orientations']
-            #	layout.template_list("CAM_UL_orientations", '', group, "objects", ao, 'active_orientation')
-            #	layout.prop(group.objects[ao.active_orientation],'location')
-            #	layout.prop(group.objects[ao.active_orientation],'rotation_euler')
+            #	collection=bpy.data.collections[ao.name+'_orientations']
+            #	layout.template_list("CAM_UL_orientations", '', collection, "objects", ao, 'active_orientation')
+            #	layout.prop(collection.objects[ao.active_orientation],'location')
+            #	layout.prop(collection.objects[ao.active_orientation],'rotation_euler')
             if ao.machine_axes == '3':
                 layout.prop(ao, 'array')
                 if ao.array:
@@ -548,7 +547,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 layout.prop(ao, 'spindle_rotation_direction')
                 layout.prop(ao, 'free_movement_height')
-                layout.prop(ao, 'G64')
+                layout.prop(ao, 'G64')                
                 if ao.strategy == 'PARALLEL' or ao.strategy == 'CROSS':
                     if not ao.ramp:
                         layout.prop(ao, 'parallel_step_back')
@@ -625,8 +624,8 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 layout.prop(ao, 'optimize')
                 if ao.optimize:
                     layout.prop(ao, 'optimize_threshold')
-                if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'GROUP':
-                    exclude_exact = ao.strategy in ['WATERLINE', 'POCKET', 'CUTOUT', 'DRILL', 'PENCIL']
+                if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
+                    exclude_exact = ao.strategy in [ 'POCKET', 'CUTOUT', 'DRILL', 'PENCIL']
                     if not exclude_exact:
                         layout.prop(ao, 'use_exact')
                         if ao.use_exact:
@@ -645,8 +644,6 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 layout.prop(ao, 'simulation_detail')
                 layout.prop(ao, 'circle_detail')
                 layout.prop(ao, 'use_opencamlib')
-        # if not ao.use_exact:#this will be replaced with groups of objects.
-        # layout.prop(ao,'render_all')# replaced with groups support
 
 
 class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -675,7 +672,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'ambient_radius')
 
                 layout.prop(ao, 'maxz')  # experimental
-                if ao.geometry_source in ['OBJECT', 'GROUP']:
+                if ao.geometry_source in ['OBJECT', 'COLLECTION']:
                     layout.prop(ao, 'minz_from_ob')
                     if not ao.minz_from_ob:
                         layout.prop(ao, 'minz')
