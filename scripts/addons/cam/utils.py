@@ -1232,7 +1232,10 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
         free_movement_height = o.free_movement_height  # o.max.z+
+        if o.G64>0:
+            c.set_path_control_mode(2, round(o.G64,5), 0 )
 
+        
         mesh = vertslist[i]
         verts = mesh.vertices[:]
         if o.machine_axes != '3':
@@ -1263,7 +1266,7 @@ def exportGcodePath(filename, vertslist, operations):
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)
         c.flush_nc()
-
+        c.rapid(z=free_movement_height*1000)
         # dhull c.feedrate(unitcorr*o.feedrate)
 
         # commands=[]
