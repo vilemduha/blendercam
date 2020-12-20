@@ -482,6 +482,14 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'dist_along_paths')
                     if ao.strategy == 'PARALLEL' or ao.strategy == 'CROSS':
                         layout.prop(ao, 'parallel_angle')
+                        layout.prop(ao,'enable_A')
+                        if ao.enable_A:
+                            layout.prop(ao,'rotation_A')
+
+                        layout.prop(ao,'enable_B')
+                        if ao.enable_B:
+                            layout.prop(ao,'rotation_B')
+                            
 
                     layout.prop(ao, 'inverse')
                 if ao.strategy not in ['POCKET', 'DRILL', 'CURVE', 'MEDIAL_AXIS']:
