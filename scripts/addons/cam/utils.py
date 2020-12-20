@@ -1257,13 +1257,22 @@ def exportGcodePath(filename, vertslist, operations):
             c.flush_nc()
 
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
-
-        c.spindle(o.spindle_rpm, spdir_clockwise)
+        c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
         c.write_spindle()
         c.flush_nc()
-        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
+        c.write('\n')
+
         if m.spindle_start_time > 0:
-            c.dwell(m.spindle_start_time)
+            c.dwell(m.spindle_start_time)       
+        
+        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
+        if o.enable_A:
+            c.rapid(a=o.rotation_A*180/math.pi)
+           
+        if o.enable_B:    
+            c.rapid(b=o.rotation_B*180/math.pi)
+
+        c.write('\n')
         c.flush_nc()
 
         # dhull c.feedrate(unitcorr*o.feedrate)
