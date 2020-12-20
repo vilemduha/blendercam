@@ -341,6 +341,14 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if not ao.strategy == 'CURVE':
                     if ao.geometry_source == 'OBJECT':
                         layout.prop_search(ao, "object_name", bpy.data, "objects")
+                        if ao.enable_A:
+                            layout.prop(ao,'rotation_A')
+                        if ao.enable_B:
+                            layout.prop(ao,'rotation_B')
+                        ob=bpy.data.objects[ao.object_name]
+                        ob.select_set(True)
+                        bpy.context.view_layer.objects.active = ob
+                        bpy.context.active_object.rotation_euler = (ao.rotation_A,ao.rotation_B,0)
                     elif ao.geometry_source == 'COLLECTION':
                         layout.prop_search(ao, "collection_name", bpy.data, "collections")
                     else:
@@ -441,6 +449,13 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 if ao.strategy == 'CUTOUT':
                     layout.prop(ao, 'cut_type')
+                    layout.prop(ao,'enable_A')
+                    if ao.enable_A:
+                        layout.prop(ao,'rotation_A')
+
+                    layout.prop(ao,'enable_B')
+                    if ao.enable_B:
+                            layout.prop(ao,'rotation_B')                    
                     # layout.prop(ao,'dist_between_paths')
                     if use_experimental:
                         layout.prop(ao, 'outlines_count')
@@ -474,9 +489,24 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'dist_along_paths')
                 elif ao.strategy == 'DRILL':
                     layout.prop(ao, 'drill_type')
+                    layout.prop(ao,'enable_A')
+                    if ao.enable_A:
+                        layout.prop(ao,'rotation_A')
+
+                    layout.prop(ao,'enable_B')
+                    if ao.enable_B:
+                        layout.prop(ao,'rotation_B')
+                                                
                 elif ao.strategy == 'POCKET':
                     layout.prop(ao, 'pocket_option')
                     layout.prop(ao, 'dist_between_paths')
+                    layout.prop(ao,'enable_A')
+                    if ao.enable_A:
+                        layout.prop(ao,'rotation_A')
+
+                    layout.prop(ao,'enable_B')
+                    if ao.enable_B:
+                        layout.prop(ao,'rotation_B')                    
                 else:
                     layout.prop(ao, 'dist_between_paths')
                     layout.prop(ao, 'dist_along_paths')
