@@ -546,6 +546,14 @@ class camOperation(bpy.types.PropertyGroup):
                                                precision=PRECISION, unit="LENGTH", update=updateRest)
     parallel_angle: bpy.props.FloatProperty(name="Angle of paths", default=0, min=-360, max=360, precision=0,
                                              subtype="ANGLE", unit="ROTATION", update=updateRest)
+    rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0,
+                                             subtype="ANGLE", unit="ROTATION", update=updateRest)
+    enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False, update=updateRest)
+
+    rotation_B: bpy.props.FloatProperty(name="B axis angle", description="Rotate B axis\nto specified angle",default=0, min=-360, max=360, precision=0,
+                                             subtype="ANGLE", unit="ROTATION", update=updateRest)
+    enable_B: bpy.props.BoolProperty(name="Enable B axis", description="Rotate B axis", default=False, update=updateRest)
+                                             
 
     # carve only
     carve_depth: bpy.props.FloatProperty(name="Carve depth", default=0.001, min=-.100, max=32, precision=PRECISION,
@@ -1326,4 +1334,5 @@ def unregister():
 
     del s.cam_active_operation
     del s.cam_machine
-  
+    # bpy.app.handlers.scene_update_pre.remove(ops.timer_update)
+# bpy.types.INFO_HT_header.remove(header_info)
