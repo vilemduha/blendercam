@@ -196,6 +196,10 @@ def getOperationSources(o):
         # bpy.ops.object.select_all(action='DESELECT')
         ob = bpy.data.objects[o.object_name]
         o.objects = [ob]
+        ob.select_set(True)
+        bpy.context.view_layer.objects.active = ob
+        bpy.context.active_object.rotation_euler = (o.rotation_A,o.rotation_B,0)
+
     elif o.geometry_source == 'COLLECTION':
         collection = bpy.data.collections[o.collection_name]
         o.objects = collection.objects
@@ -1265,12 +1269,19 @@ def exportGcodePath(filename, vertslist, operations):
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)       
         
-        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
+#        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
+        fmh=round(free_movement_height*1000,2)
+        c.write('G00 Z'+str(fmh)+'\n')
         if o.enable_A:
+            if o.rotation_A==0:
+                 o.rotation_A=0.0001
             c.rapid(a=o.rotation_A*180/math.pi)
-           
+
+          
         if o.enable_B:    
-            c.rapid(b=o.rotation_B*180/math.pi)
+            if o.rotation_B==0:
+                 o.rotation_B=0.0001
+            c.rapid(a=o.rotation_B*180/math.pi)
 
         c.write('\n')
         c.flush_nc()
