@@ -1236,8 +1236,8 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
         free_movement_height = o.free_movement_height  # o.max.z+
-        if o.G64>0:
-            c.set_path_control_mode(2, round(o.G64,5), 0 )        
+        if o.useG64:
+            c.set_path_control_mode(2, round(o.G64*1000,5), 0 )        
 
         mesh = vertslist[i]
         verts = mesh.vertices[:]
