@@ -546,6 +546,8 @@ class camOperation(bpy.types.PropertyGroup):
                                                precision=PRECISION, unit="LENGTH", update=updateRest)
     parallel_angle: bpy.props.FloatProperty(name="Angle of paths", default=0, min=-360, max=360, precision=0,
                                              subtype="ANGLE", unit="ROTATION", update=updateRest)
+    show_rotation: bpy.props.BoolProperty(name="Show Rotations", description="Display rotations", default=False, update=updateRest)
+		
     rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0,
                                              subtype="ANGLE", unit="ROTATION", update=updateRest)
     enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False, update=updateRest)
@@ -701,6 +703,8 @@ class camOperation(bpy.types.PropertyGroup):
                                              description='Spindle rotation direction', default='CW', update=updateRest)
     free_movement_height: bpy.props.FloatProperty(name="Free movement height", default=0.01, min=0.0000, max=32,
                                                    precision=PRECISION, unit="LENGTH", update=updateRest)
+    useG64: bpy.props.BoolProperty(name="G64 trajectory",
+                                               description='Use only if your machie supports G64 code.  LinuxCNC and Mach3 do', default=False, update=updateRest)
     G64: bpy.props.FloatProperty(name="Path Control Mode with Optional Tolerance", default=0.01, min=0.0000, max=0.5,
                                                    precision=PRECISION, unit="LENGTH", update=updateRest)                                                   
     movement_insideout: EnumProperty(name='Direction',
