@@ -345,10 +345,16 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                             layout.prop(ao,'rotation_A')
                         if ao.enable_B:
                             layout.prop(ao,'rotation_B')
-                        ob=bpy.data.objects[ao.object_name]
-                        ob.select_set(True)
-                        bpy.context.view_layer.objects.active = ob
-                        bpy.context.active_object.rotation_euler = (ao.rotation_A,ao.rotation_B,0)
+                        if (ao.enable_B or ao.enable_A): 
+                            layout.prop(ao,'show_rotation')
+                            ob=bpy.data.objects[ao.object_name]
+                        if ao.show_rotation:
+                            ob.select_set(True)
+                            bpy.context.view_layer.objects.active = ob
+                            bpy.context.active_object.rotation_euler = (ao.rotation_A,ao.rotation_B,0)
+                            ao.show_rotation=False
+                            ob.select_set(False)
+                            
                     elif ao.geometry_source == 'COLLECTION':
                         layout.prop_search(ao, "collection_name", bpy.data, "collections")
                     else:
@@ -585,7 +591,9 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 layout.prop(ao, 'spindle_rotation_direction')
                 layout.prop(ao, 'free_movement_height')
-                layout.prop(ao, 'G64')                
+                layout.prop(ao,'useG64')
+                if ao.useG64:
+                    layout.prop(ao, 'G64')                
                 if ao.strategy == 'PARALLEL' or ao.strategy == 'CROSS':
                     if not ao.ramp:
                         layout.prop(ao, 'parallel_step_back')
