@@ -546,8 +546,10 @@ class camOperation(bpy.types.PropertyGroup):
                                                precision=PRECISION, unit="LENGTH", update=updateRest)
     parallel_angle: bpy.props.FloatProperty(name="Angle of paths", default=0, min=-360, max=360, precision=0,
                                              subtype="ANGLE", unit="ROTATION", update=updateRest)
-    show_rotation: bpy.props.BoolProperty(name="Show Rotations", description="Display rotations", default=False, update=updateRest)
+    old_rotation_A: bpy.props.FloatProperty(name="A axis angle", description="old value of Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION", update=updateRest)
 		
+    old_rotation_B: bpy.props.FloatProperty(name="A axis angle", description="old value of Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION", update=updateRest)
+
     rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0,
                                              subtype="ANGLE", unit="ROTATION", update=updateRest)
     enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False, update=updateRest)
@@ -1338,5 +1340,3 @@ def unregister():
 
     del s.cam_active_operation
     del s.cam_machine
-    # bpy.app.handlers.scene_update_pre.remove(ops.timer_update)
-# bpy.types.INFO_HT_header.remove(header_info)
