@@ -11,6 +11,7 @@ except ImportError:
 import bpy
 from io_mesh_stl import blender_utils
 import mathutils
+import math
 from cam.simple import activate
 
 OCL_SCALE = 1000.0
@@ -53,6 +54,10 @@ def ocl_sample(operation, chunks):
         cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'VCARVE':
         cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length)
+    elif op_cutter_type =='BALLCONE':
+        angle= math.degrees(math.atan((op_cutter_diameter/2)-operation.ball_radius)/(operation.ball_cone_flute-operation.ball_radius))
+        print("BallCone angle:"+str(angle))
+        cutter = ocl.ConeCutter((operation.ball_radius+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, angle)
     else:
         print("Cutter unsupported: {0}\n".format(op_cutter_type))
         quit()
