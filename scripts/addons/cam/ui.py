@@ -68,6 +68,11 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                 layout.prop(ao, 'cutter_type')
                 if ao.cutter_type == 'VCARVE':
                     layout.prop(ao, 'cutter_tip_angle')
+                if ao.cutter_type == 'BALLCONE':
+                   layout.prop(ao,'ball_radius')
+                   layout.prop(ao,'ball_cone_flute')
+                   layout.label(text='Cutter diameter = shank diameter')
+                                      
                 if ao.cutter_type == 'CUSTOM':
                     if ao.use_exact:
                         layout.label(text='Warning - only convex shapes are supported. ', icon='COLOR_RED')
