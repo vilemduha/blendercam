@@ -437,6 +437,7 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
                                   ('VCARVE', 'V-carve', 'v carve cutter'),
                                   ('BALL', 'Sphere', 'Sphere cutter'),
+                                  ('BALLCONE', 'Ballcone', 'Ball with a Cone Parallel - X'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
                               description='Type of cutter used',
                               default='END', update=updateZbufferImage)
@@ -537,7 +538,15 @@ class camOperation(bpy.types.PropertyGroup):
                                 update=updateChipload)
     cutter_tip_angle: FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0,
                                      max=180.0, default=60.0, precision=PRECISION, update=updateOffsetImage)
+    ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
+                                     max=25.0, default=1, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+    ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
+                                     max=150.0, default=30.5, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+#    shank_diameter: FloatProperty(name="Shank Diameter", description="Diameter at the top of cutter", min=0.0,
+#                                     max=25.0, default=3.175, precision=PRECISION, unit="LENGTH",update=updateOffsetImage)
+
     cutter_description: StringProperty(name="Tool Description", default="", update=updateOffsetImage)
+    
 
     # steps
     dist_between_paths: bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,
