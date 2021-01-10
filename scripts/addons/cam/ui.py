@@ -596,6 +596,9 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 layout.prop(ao, 'spindle_rotation_direction')
                 layout.prop(ao, 'free_movement_height')
+                if ao.maxz > ao.free_movement_height: 
+                    layout.label(text='Depth start > Free movement')
+                    layout.label(text='POSSIBLE COLLISION')
                 layout.prop(ao,'useG64')
                 if ao.useG64:
                     layout.prop(ao, 'G64')                
@@ -723,7 +726,11 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'ambient_radius')
 
                 layout.prop(ao, 'maxz')  # experimental
-                if ao.geometry_source in ['OBJECT', 'COLLECTION']:
+                if ao.maxz > ao.free_movement_height: 
+                    layout.prop(ao, 'free_movement_height')
+                    layout.label(text='Depth start > Free movement')
+                    layout.label(text='POSSIBLE COLLISION')
+                if ao.geometry_source in ['OBJECT', 'COLLECTION']:                    
                     layout.prop(ao, 'minz_from_ob')
                     if not ao.minz_from_ob:
                         layout.prop(ao, 'minz')
