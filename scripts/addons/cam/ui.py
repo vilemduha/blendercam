@@ -348,6 +348,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.prop_search(ao, "object_name", bpy.data, "objects")
                         if ao.enable_A:
                             layout.prop(ao,'rotation_A')
+                            
                         if ao.enable_B:
                             layout.prop(ao,'rotation_B')
                         if ao.old_rotation_A != ao.rotation_A or ao.old_rotation_B != ao.rotation_B:
@@ -356,7 +357,10 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                             ob=bpy.data.objects[ao.object_name]
                             ob.select_set(True)
                             bpy.context.view_layer.objects.active = ob
-                            bpy.context.active_object.rotation_euler = (ao.rotation_A,ao.rotation_B,0)
+                            if ao.A_along_x :
+                                bpy.context.active_object.rotation_euler = (ao.rotation_A,ao.rotation_B,0)
+                            else :
+                                bpy.context.active_object.rotation_euler = (ao.rotation_B,ao.rotation_A,0)
 
 
                             
@@ -463,10 +467,17 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao,'enable_A')
                     if ao.enable_A:
                         layout.prop(ao,'rotation_A')
+                        layout.prop(ao,'A_along_x')
+                        if ao.A_along_x : 
+                            layout.label(text='A || X - B || Y')
+                        else:
+                            layout.label(text='A || Y - B ||X')
+           
 
                     layout.prop(ao,'enable_B')
                     if ao.enable_B:
-                            layout.prop(ao,'rotation_B')                    
+                        layout.prop(ao,'rotation_B')                    
+
                     # layout.prop(ao,'dist_between_paths')
                     if use_experimental:
                         layout.prop(ao, 'outlines_count')
@@ -503,10 +514,14 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao,'enable_A')
                     if ao.enable_A:
                         layout.prop(ao,'rotation_A')
-
+                        layout.prop(ao,'A_along_x')
+                        if ao.A_along_x : 
+                            layout.label(text='A || X - B || Y')
+                        else:
+                            layout.label(text='A || Y - B ||X')
                     layout.prop(ao,'enable_B')
                     if ao.enable_B:
-                        layout.prop(ao,'rotation_B')
+                        layout.prop(ao,'rotation_B') 
                                                 
                 elif ao.strategy == 'POCKET':
                     layout.prop(ao, 'pocket_option')
@@ -514,22 +529,30 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao,'enable_A')
                     if ao.enable_A:
                         layout.prop(ao,'rotation_A')
-
+                        layout.prop(ao,'A_along_x')
+                        if ao.A_along_x : 
+                            layout.label(text='A || X - B || Y')
+                        else:
+                            layout.label(text='A || Y - B ||X')
                     layout.prop(ao,'enable_B')
                     if ao.enable_B:
-                        layout.prop(ao,'rotation_B')                    
+                        layout.prop(ao,'rotation_B') 
                 else:
                     layout.prop(ao, 'dist_between_paths')
                     layout.prop(ao, 'dist_along_paths')
                     if ao.strategy == 'PARALLEL' or ao.strategy == 'CROSS':
                         layout.prop(ao, 'parallel_angle')
                         layout.prop(ao,'enable_A')
-                        if ao.enable_A:
-                            layout.prop(ao,'rotation_A')
-
-                        layout.prop(ao,'enable_B')
-                        if ao.enable_B:
-                            layout.prop(ao,'rotation_B')
+                    if ao.enable_A:
+                        layout.prop(ao,'rotation_A')
+                        layout.prop(ao,'A_along_x')
+                        if ao.A_along_x : 
+                            layout.label(text='A || X - B || Y')
+                        else:
+                            layout.label(text='A || Y - B ||X')
+                    layout.prop(ao,'enable_B')
+                    if ao.enable_B:
+                        layout.prop(ao,'rotation_B') 
                             
 
                     layout.prop(ao, 'inverse')
