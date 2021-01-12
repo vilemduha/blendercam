@@ -437,6 +437,7 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
                                   ('VCARVE', 'V-carve', 'v carve cutter'),
                                   ('BALL', 'Sphere', 'Sphere cutter'),
+                                  ('BALLCONE', 'Ballcone', 'Ball with a Cone Parallel - X'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
                               description='Type of cutter used',
                               default='END', update=updateZbufferImage)
@@ -537,7 +538,15 @@ class camOperation(bpy.types.PropertyGroup):
                                 update=updateChipload)
     cutter_tip_angle: FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0,
                                      max=180.0, default=60.0, precision=PRECISION, update=updateOffsetImage)
+    ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
+                                     max=25.0, default=1, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+    ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
+                                     max=150.0, default=30.5, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+#    shank_diameter: FloatProperty(name="Shank Diameter", description="Diameter at the top of cutter", min=0.0,
+#                                     max=25.0, default=3.175, precision=PRECISION, unit="LENGTH",update=updateOffsetImage)
+
     cutter_description: StringProperty(name="Tool Description", default="", update=updateOffsetImage)
+    
 
     # steps
     dist_between_paths: bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,
@@ -546,6 +555,19 @@ class camOperation(bpy.types.PropertyGroup):
                                                precision=PRECISION, unit="LENGTH", update=updateRest)
     parallel_angle: bpy.props.FloatProperty(name="Angle of paths", default=0, min=-360, max=360, precision=0,
                                              subtype="ANGLE", unit="ROTATION", update=updateRest)
+    old_rotation_A: bpy.props.FloatProperty(name="A axis angle", description="old value of Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION", update=updateRest)
+		
+    old_rotation_B: bpy.props.FloatProperty(name="A axis angle", description="old value of Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION", update=updateRest)
+
+    rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0,
+                                             subtype="ANGLE", unit="ROTATION", update=updateRest)
+    enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False, update=updateRest)
+    A_along_x: bpy.props.BoolProperty(name="A Along X ", description="A Parallel to X", default=True, update=updateRest)
+
+    rotation_B: bpy.props.FloatProperty(name="B axis angle", description="Rotate B axis\nto specified angle",default=0, min=-360, max=360, precision=0,
+                                             subtype="ANGLE", unit="ROTATION", update=updateRest)
+    enable_B: bpy.props.BoolProperty(name="Enable B axis", description="Rotate B axis", default=False, update=updateRest)
+                                             
 
     # carve only
     carve_depth: bpy.props.FloatProperty(name="Carve depth", default=0.001, min=-.100, max=32, precision=PRECISION,
@@ -693,6 +715,10 @@ class camOperation(bpy.types.PropertyGroup):
                                              description='Spindle rotation direction', default='CW', update=updateRest)
     free_movement_height: bpy.props.FloatProperty(name="Free movement height", default=0.01, min=0.0000, max=32,
                                                    precision=PRECISION, unit="LENGTH", update=updateRest)
+    useG64: bpy.props.BoolProperty(name="G64 trajectory",
+                                               description='Use only if your machie supports G64 code.  LinuxCNC and Mach3 do', default=False, update=updateRest)
+    G64: bpy.props.FloatProperty(name="Path Control Mode with Optional Tolerance", default=0.01, min=0.0000, max=0.5,
+                                                   precision=PRECISION, unit="LENGTH", update=updateRest)                                                   
     movement_insideout: EnumProperty(name='Direction',
                                      items=(('INSIDEOUT', 'Inside out', 'a'), ('OUTSIDEIN', 'Outside in', 'a')),
                                      description='approach to the piece', default='INSIDEOUT', update=updateRest)
@@ -1324,5 +1350,3 @@ def unregister():
 
     del s.cam_active_operation
     del s.cam_machine
-    # bpy.app.handlers.scene_update_pre.remove(ops.timer_update)
-# bpy.types.INFO_HT_header.remove(header_info)

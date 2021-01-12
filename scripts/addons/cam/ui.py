@@ -68,6 +68,11 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                 layout.prop(ao, 'cutter_type')
                 if ao.cutter_type == 'VCARVE':
                     layout.prop(ao, 'cutter_tip_angle')
+                if ao.cutter_type == 'BALLCONE':
+                   layout.prop(ao,'ball_radius')
+                   layout.prop(ao,'ball_cone_flute')
+                   layout.label(text='Cutter diameter = shank diameter')
+                                      
                 if ao.cutter_type == 'CUSTOM':
                     if ao.use_exact:
                         layout.label(text='Warning - only convex shapes are supported. ', icon='COLOR_RED')
@@ -341,6 +346,24 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if not ao.strategy == 'CURVE':
                     if ao.geometry_source == 'OBJECT':
                         layout.prop_search(ao, "object_name", bpy.data, "objects")
+                        if ao.enable_A:
+                            layout.prop(ao,'rotation_A')
+                            
+                        if ao.enable_B:
+                            layout.prop(ao,'rotation_B')
+                        if ao.old_rotation_A != ao.rotation_A or ao.old_rotation_B != ao.rotation_B:
+                            ao.old_rotation_A = ao.rotation_A
+                            ao.old_rotation_A = ao.rotation_A
+                            ob=bpy.data.objects[ao.object_name]
+                            ob.select_set(True)
+                            bpy.context.view_layer.objects.active = ob
+                            if ao.A_along_x :
+                                bpy.context.active_object.rotation_euler = (ao.rotation_A,ao.rotation_B,0)
+                            else :
+                                bpy.context.active_object.rotation_euler = (ao.rotation_B,ao.rotation_A,0)
+
+
+                            
                     elif ao.geometry_source == 'COLLECTION':
                         layout.prop_search(ao, "collection_name", bpy.data, "collections")
                     else:
@@ -441,6 +464,20 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 if ao.strategy == 'CUTOUT':
                     layout.prop(ao, 'cut_type')
+                    layout.prop(ao,'enable_A')
+                    if ao.enable_A:
+                        layout.prop(ao,'rotation_A')
+                        layout.prop(ao,'A_along_x')
+                        if ao.A_along_x : 
+                            layout.label(text='A || X - B || Y')
+                        else:
+                            layout.label(text='A || Y - B ||X')
+           
+
+                    layout.prop(ao,'enable_B')
+                    if ao.enable_B:
+                        layout.prop(ao,'rotation_B')                    
+
                     # layout.prop(ao,'dist_between_paths')
                     if use_experimental:
                         layout.prop(ao, 'outlines_count')
@@ -474,14 +511,49 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'dist_along_paths')
                 elif ao.strategy == 'DRILL':
                     layout.prop(ao, 'drill_type')
+                    layout.prop(ao,'enable_A')
+                    if ao.enable_A:
+                        layout.prop(ao,'rotation_A')
+                        layout.prop(ao,'A_along_x')
+                        if ao.A_along_x : 
+                            layout.label(text='A || X - B || Y')
+                        else:
+                            layout.label(text='A || Y - B ||X')
+                    layout.prop(ao,'enable_B')
+                    if ao.enable_B:
+                        layout.prop(ao,'rotation_B') 
+                                                
                 elif ao.strategy == 'POCKET':
                     layout.prop(ao, 'pocket_option')
                     layout.prop(ao, 'dist_between_paths')
+                    layout.prop(ao,'enable_A')
+                    if ao.enable_A:
+                        layout.prop(ao,'rotation_A')
+                        layout.prop(ao,'A_along_x')
+                        if ao.A_along_x : 
+                            layout.label(text='A || X - B || Y')
+                        else:
+                            layout.label(text='A || Y - B ||X')
+                    layout.prop(ao,'enable_B')
+                    if ao.enable_B:
+                        layout.prop(ao,'rotation_B') 
                 else:
                     layout.prop(ao, 'dist_between_paths')
                     layout.prop(ao, 'dist_along_paths')
                     if ao.strategy == 'PARALLEL' or ao.strategy == 'CROSS':
                         layout.prop(ao, 'parallel_angle')
+                        layout.prop(ao,'enable_A')
+                    if ao.enable_A:
+                        layout.prop(ao,'rotation_A')
+                        layout.prop(ao,'A_along_x')
+                        if ao.A_along_x : 
+                            layout.label(text='A || X - B || Y')
+                        else:
+                            layout.label(text='A || Y - B ||X')
+                    layout.prop(ao,'enable_B')
+                    if ao.enable_B:
+                        layout.prop(ao,'rotation_B') 
+                            
 
                     layout.prop(ao, 'inverse')
                 if ao.strategy not in ['POCKET', 'DRILL', 'CURVE', 'MEDIAL_AXIS']:
@@ -547,6 +619,12 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 layout.prop(ao, 'spindle_rotation_direction')
                 layout.prop(ao, 'free_movement_height')
+                if ao.maxz > ao.free_movement_height: 
+                    layout.label(text='Depth start > Free movement')
+                    layout.label(text='POSSIBLE COLLISION')
+                layout.prop(ao,'useG64')
+                if ao.useG64:
+                    layout.prop(ao, 'G64')                
                 if ao.strategy == 'PARALLEL' or ao.strategy == 'CROSS':
                     if not ao.ramp:
                         layout.prop(ao, 'parallel_step_back')
@@ -671,7 +749,11 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'ambient_radius')
 
                 layout.prop(ao, 'maxz')  # experimental
-                if ao.geometry_source in ['OBJECT', 'COLLECTION']:
+                if ao.maxz > ao.free_movement_height: 
+                    layout.prop(ao, 'free_movement_height')
+                    layout.label(text='Depth start > Free movement')
+                    layout.label(text='POSSIBLE COLLISION')
+                if ao.geometry_source in ['OBJECT', 'COLLECTION']:                    
                     layout.prop(ao, 'minz_from_ob')
                     if not ao.minz_from_ob:
                         layout.prop(ao, 'minz')

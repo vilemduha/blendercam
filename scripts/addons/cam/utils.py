@@ -196,6 +196,10 @@ def getOperationSources(o):
         # bpy.ops.object.select_all(action='DESELECT')
         ob = bpy.data.objects[o.object_name]
         o.objects = [ob]
+        ob.select_set(True)
+        bpy.context.view_layer.objects.active = ob
+        bpy.context.active_object.rotation_euler = (o.rotation_A,o.rotation_B,0)
+
     elif o.geometry_source == 'COLLECTION':
         collection = bpy.data.collections[o.collection_name]
         o.objects = collection.objects
@@ -1232,6 +1236,8 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
         free_movement_height = o.free_movement_height  # o.max.z+
+        if o.useG64:
+            c.set_path_control_mode(2, round(o.G64*1000,5), 0 )        
 
         mesh = vertslist[i]
         verts = mesh.vertices[:]
@@ -1255,13 +1261,29 @@ def exportGcodePath(filename, vertslist, operations):
             c.flush_nc()
 
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
-
-        c.spindle(o.spindle_rpm, spdir_clockwise)
+        c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
         c.write_spindle()
         c.flush_nc()
+        c.write('\n')
 
         if m.spindle_start_time > 0:
-            c.dwell(m.spindle_start_time)
+            c.dwell(m.spindle_start_time)       
+        
+#        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
+        fmh=round(free_movement_height*1000,2)
+        c.write('G00 Z'+str(fmh)+'\n')
+        if o.enable_A:
+            if o.rotation_A==0:
+                 o.rotation_A=0.0001
+            c.rapid(a=o.rotation_A*180/math.pi)
+
+          
+        if o.enable_B:    
+            if o.rotation_B==0:
+                 o.rotation_B=0.0001
+            c.rapid(a=o.rotation_B*180/math.pi)
+
+        c.write('\n')
         c.flush_nc()
 
         # dhull c.feedrate(unitcorr*o.feedrate)
@@ -1282,10 +1304,10 @@ def exportGcodePath(filename, vertslist, operations):
 
         if m.use_position_definitions:  # dhull
             last = Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
-        else:
-            if i < 1:
-                last = Vector((0.0, 0.0,
-                               free_movement_height))  # nonsense values so first step of the operation gets written for sure
+#		removed by pppalain 2020/12
+#       else:
+#           if i < 1:
+#                last = Vector((0.0, 0.0, free_movement_height))  # nonsense values so first step of the operation gets written for sure
         lastrot = Euler((0, 0, 0))
         duration = 0.0
         f = 0.1123456  # nonsense value, so first feedrate always gets written
