@@ -2395,9 +2395,7 @@ def strategy_cutout(o):
     if o.use_bridges:  # add bridges to chunks
         # bridges=getBridges(p,o)
         print('using bridges')
-        print("bridge height:"+ str(o.bridges_height))
-        print("min Z:"+ str(o.min.z))
-     
+      
         bridgeheight=min(o.max.z, o.min.z + abs(o.bridges_height))
 
         for chl in extendorder:
