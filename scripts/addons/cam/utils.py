@@ -67,9 +67,23 @@ SHAPELY = True
 def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
     minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace([ob], operation.use_modifiers)
-    ob.location.x -= minx
-    ob.location.y -= miny
-    ob.location.z -= maxz
+    totx=maxx-minx
+    toty=maxy-miny
+
+    print(st)
+    if operation.material_center_x:
+        ob.location.x -= minx +totx/2
+    else:
+        ob.location.x -= minx
+        
+    if operation.material_center_y:
+        ob.location.y -= miny +toty/2
+    else:
+        ob.location.y -= miny
+    if operation.material_Z_below:
+ 	    ob.location.z -= maxz
+    else:
+        ob.location.z -= minz  	    
 
 
 def getBoundsWorldspace(obs, use_modifiers=False):
