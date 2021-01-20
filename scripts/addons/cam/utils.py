@@ -70,7 +70,6 @@ def positionObject(operation):
     totx=maxx-minx
     toty=maxy-miny
 
-    print(st)
     if operation.material_center_x:
         ob.location.x -= minx +totx/2
     else:
