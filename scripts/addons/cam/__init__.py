@@ -822,8 +822,10 @@ class camOperation(bpy.types.PropertyGroup):
                                                           default=0.0, unit='LENGTH', precision=PRECISION,
                                                           update=updateMaterial)
     material_center_x: bpy.props.BoolProperty(name="Center with X axis", description="Position model centered on X", default=False, update=updateMaterial)                                                          
-    material_center_y: bpy.props.BoolProperty(name="Center with Y axis", description="Position model centered on Y", default=False, update=updateMaterial)                                                          
-    material_Z_below: bpy.props.BoolProperty(name="Z below 0", description="Position below Zero", default=True, update=updateMaterial)                                                          
+    material_center_y: bpy.props.BoolProperty(name="Center with Y axis", description="Position model centered on Y", default=False, update=updateMaterial)   
+
+                                                       
+    material_Z_below: bpy.props.EnumProperty(name="Z placement", items=(('ABOVE', 'above', 'Place objec above 0'),('BELOW', 'below', 'Place object below 0'),('CENTERED','centered','Place object centered on 0')),description="Position below Zero", default='BELOW', update=updateMaterial)                                                          
 
     material_origin: bpy.props.FloatVectorProperty(name='Material origin', default=(0, 0, 0), unit='LENGTH',
                                                    precision=PRECISION, subtype="XYZ", update=updateMaterial)
