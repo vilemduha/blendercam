@@ -69,6 +69,7 @@ def positionObject(operation):
     minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace([ob], operation.use_modifiers)
     totx=maxx-minx
     toty=maxy-miny
+    totz=maxz-minz
 
     if operation.material_center_x:
         ob.location.x -= minx +totx/2
@@ -79,10 +80,12 @@ def positionObject(operation):
         ob.location.y -= miny +toty/2
     else:
         ob.location.y -= miny
-    if operation.material_Z_below:
+    if operation.material_Z_below == 'BELOW':
  	    ob.location.z -= maxz
-    else:
+    elif operation.material_Z_below == 'ABOVE':
         ob.location.z -= minz  	    
+    elif operation.material_Z_below == 'CENTERED':
+        ob.location.z -= minz +totz/2 	    
 
 
 def getBoundsWorldspace(obs, use_modifiers=False):
