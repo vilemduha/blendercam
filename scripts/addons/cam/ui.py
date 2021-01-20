@@ -178,6 +178,9 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.prop(ao, 'material_origin')
                         layout.prop(ao, 'material_size')
 
+                    layout.prop(ao, 'material_center_x')    
+                    layout.prop(ao, 'material_center_y') 
+                    layout.prop(ao, 'material_Z_below') 
                     layout.operator("object.cam_position", text="Position object")
                 else:
                     layout.label(text='Estimated from image')
