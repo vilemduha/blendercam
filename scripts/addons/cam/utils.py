@@ -80,12 +80,14 @@ def positionObject(operation):
         ob.location.y -= miny +toty/2
     else:
         ob.location.y -= miny
-    if operation.material_Z_below == 'BELOW':
+        
+    if operation.material_Z== 'BELOW':
  	    ob.location.z -= maxz
-    elif operation.material_Z_below == 'ABOVE':
+    elif operation.material_Z == 'ABOVE':
         ob.location.z -= minz  	    
-    elif operation.material_Z_below == 'CENTERED':
-        ob.location.z -= minz +totz/2 	    
+    elif operation.material_Z == 'CENTERED':
+        ob.location.z -= minz +totz/2 	  
+    addMaterialAreaObject()  
 
 
 def getBoundsWorldspace(obs, use_modifiers=False):
