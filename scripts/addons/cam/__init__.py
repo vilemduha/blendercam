@@ -352,12 +352,17 @@ def updateExact(o, context):
     o.update_offsetimage_tag = True
     if o.use_exact and (o.strategy == 'WATERLINE' or o.strategy == 'POCKET' or o.inverse):
         o.use_exact = False
+        o.use_opencamlib=False
+        print('waterline and pocket cannot use exact mode')
 
 
 def updateOpencamlib(o, context):
     print('update opencamlib ')
     o.changed = True
-
+    if o.use_opencamlib and (o.strategy == 'WATERLINE'):
+        o.use_exact = False
+        o.use_opencamlib=False
+        print('waterline and pocket cannot use opencamlib')
 
 def updateBridges(o, context):
     print('update bridges ')
@@ -825,7 +830,7 @@ class camOperation(bpy.types.PropertyGroup):
     material_center_y: bpy.props.BoolProperty(name="Center with Y axis", description="Position model centered on Y", default=False, update=updateMaterial)   
 
                                                        
-    material_Z_below: bpy.props.EnumProperty(name="Z placement", items=(('ABOVE', 'above', 'Place objec above 0'),('BELOW', 'below', 'Place object below 0'),('CENTERED','centered','Place object centered on 0')),description="Position below Zero", default='BELOW', update=updateMaterial)                                                          
+    material_Z: bpy.props.EnumProperty(name="Z placement", items=(('ABOVE', 'Above', 'Place objec above 0'),('BELOW', 'Below', 'Place object below 0'),('CENTERED','Centered','Place object centered on 0')),description="Position below Zero", default='BELOW', update=updateMaterial)                                                          
 
     material_origin: bpy.props.FloatVectorProperty(name='Material origin', default=(0, 0, 0), unit='LENGTH',
                                                    precision=PRECISION, subtype="XYZ", update=updateMaterial)
