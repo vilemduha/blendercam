@@ -180,7 +180,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                     layout.prop(ao, 'material_center_x')    
                     layout.prop(ao, 'material_center_y') 
-                    layout.prop(ao, 'material_Z_below') 
+                    layout.prop(ao, 'material_Z') 
                     layout.operator("object.cam_position", text="Position object")
                 else:
                     layout.label(text='Estimated from image')
@@ -705,8 +705,9 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.optimize:
                     layout.prop(ao, 'optimize_threshold')
                 if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
-                    exclude_exact = ao.strategy in [ 'POCKET', 'CUTOUT', 'DRILL', 'PENCIL']
+                    exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE','CUTOUT', 'DRILL', 'PENCIL']
                     if not exclude_exact:
+                        layout.prop(ao, 'use_opencamlib')
                         layout.prop(ao, 'use_exact')
                         if ao.use_exact:
                             layout.prop(ao, 'exact_subdivide_edges')
@@ -723,7 +724,6 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 layout.prop(ao, 'simulation_detail')
                 layout.prop(ao, 'circle_detail')
-                layout.prop(ao, 'use_opencamlib')
 
 
 class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
