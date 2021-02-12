@@ -3100,16 +3100,17 @@ def getPath3axis(context, operation):
         prepareArea(o)
         layerstep = 1000000000
         if o.use_layers:
-            layerstep = math.floor(o.stepdown / o.slice_detail)
+#            layerstep = math.floor(o.stepdown / o.slice_detail)
+            layerstep=1
             if layerstep == 0:
                 layerstep = 1
 
         # for projection of filled areas
-        layerstart = 0  #
+        layerstart = o.max.z  #
         layerend = o.min.z  #
         layers = [[layerstart, layerend]]
         #######################
-        nslices = ceil(abs(o.minz / o.slice_detail))
+        nslices = ceil(abs(o.minz / o.stepdown))
         lastislice = numpy.array([])
         lastslice = spolygon.Polygon()  # polyversion
         layerstepinc = 0
@@ -3120,7 +3121,7 @@ def getPath3axis(context, operation):
         for h in range(0, nslices):
             layerstepinc += 1
             slicechunks = []
-            z = o.minz + h * o.slice_detail
+            z = o.minz + h * o.stepdown
             if h == 0:
                 z += 0.0000001  # if people do mill flat areas, this helps to reach those... otherwise first layer would actually be one slicelevel above min z.
             # print(z)
@@ -3161,8 +3162,8 @@ def getPath3axis(context, operation):
             # print(len(lastslice))
             # """
             if o.waterline_fill:
-                layerstart = min(o.maxz, z + o.slice_detail)  #
-                layerend = max(o.min.z, z - o.slice_detail)  #
+                layerstart = min(o.maxz, z + o.stepdown)  #
+                layerend = max(o.min.z, z - o.stepdown)  #
                 layers = [[layerstart, layerend]]
                 #####################################
                 # fill top slice for normal and first for inverse, fill between polys
