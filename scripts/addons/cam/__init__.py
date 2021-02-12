@@ -372,10 +372,13 @@ def updateBridges(o, context):
 # utils.setupBridges(o)
 
 def updateRest(o, context):
-    # print('update rest ')
+    print('update rest ')
     # if o.use_layers:
-    # o.parallel_step_back = False
     o.changed = True
+    if (o.strategy == 'WATERLINE'):
+        o.use_layers = True
+        #o.waterline_fill = True
+
 
 
 def getStrategyList(scene, context):
@@ -394,7 +397,7 @@ def getStrategyList(scene, context):
         ('CARVE', 'Carve', 'Pocket operation')
     ]
     if use_experimental:
-        items.extend([('WATERLINE', 'Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
+        items.extend([('WATERLINE', 'Waterline - Roughing below zero', 'Waterline paths - constant z must be below zero'),
                       ('CURVE', 'Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
                       ('PENCIL', 'Pencil - EXPERIMENTAL',
                        'Pencil operation - detects negative corners in the model and mills only those.'),
@@ -583,13 +586,13 @@ class camOperation(bpy.types.PropertyGroup):
         ('ALL_POINTS', 'All points in curve', 'a')), description='Strategy to detect holes to drill',
                               default='MIDDLE_SYMETRIC', update=updateRest)
     # waterline only
-    slice_detail: bpy.props.FloatProperty(name="Distance betwen slices", default=0.001, min=0.00001, max=32,
-                                           precision=PRECISION, unit="LENGTH", update=updateRest)
+    #slice_detail: bpy.props.FloatProperty(name="Distance betwen slices", default=0.001, min=0.00001, max=32, precision=PRECISION, unit="LENGTH", update=updateRest)
+    
     waterline_fill: bpy.props.BoolProperty(name="Fill areas between slices",
                                             description="Fill areas between slices in waterline mode", default=True,
                                             update=updateRest)
-    waterline_project: bpy.props.BoolProperty(name="Project paths",
-                                               description="Project paths in areas between slices", default=True,
+    waterline_project: bpy.props.BoolProperty(name="Project paths - not recomended",
+                                               description="Project paths in areas between slices", default=False,
                                                update=updateRest)
 
     # movement and ramps
