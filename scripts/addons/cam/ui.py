@@ -489,12 +489,15 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                             layout.prop(ao, 'movement_insideout')
                     layout.prop(ao, 'dont_merge')
                 elif ao.strategy == 'WATERLINE':
-                    layout.prop(ao, 'slice_detail')
-                    layout.prop(ao, 'waterline_fill')
+                    #layout.prop(ao, 'waterline_fill')
                     if ao.waterline_fill:
+                        layout.label(text="Waterline roughing strategy")
+                        layout.label(text="needs a skin margin")
+                        layout.prop(ao, 'skin')
                         layout.prop(ao, 'dist_between_paths')
+                        layout.prop(ao, 'stepdown')
                         layout.prop(ao, 'waterline_project')
-                    layout.prop(ao, 'inverse')
+#                    layout.prop(ao, 'inverse')
                 elif ao.strategy == 'CARVE':
                     layout.prop(ao, 'carve_depth')
                     layout.prop(ao, 'dist_along_paths')
@@ -705,7 +708,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.optimize:
                     layout.prop(ao, 'optimize_threshold')
                 if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
-                    exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE','CUTOUT', 'DRILL', 'PENCIL']
+                    exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL']
                     if not exclude_exact:
                         layout.prop(ao, 'use_opencamlib')
                         layout.prop(ao, 'use_exact')
