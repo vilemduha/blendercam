@@ -326,7 +326,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                         if ao.name is not None:
                             name = "cam_path_{}".format(ao.name)
                             if scene.objects.get(name) is not None:
-                                layout.operator("object.cam_export", text="Export modified Gcode ")
+                                layout.operator("object.cam_export", text="Export Gcode ")
                         layout.operator("object.cam_simulate", text="Simulate this operation")
 
 
