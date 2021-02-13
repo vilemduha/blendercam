@@ -272,7 +272,7 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if not chain.computing:
                     if chain.valid:
                         pass
-                        layout.operator("object.calculate_cam_paths_chain", text="Calculate chain paths")
+                        layout.operator("object.calculate_cam_paths_chain", text="Calculate chain paths & Export Gcode")
                         layout.operator("object.cam_export_paths_chain", text="Export chain gcode")
                         # layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
                         layout.operator("object.cam_simulate_chain", text="Simulate this chain")
@@ -321,12 +321,12 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
             if ao:
                 if not ao.computing:
                     if ao.valid:
-                        layout.operator("object.calculate_cam_path", text="Calculate path")
+                        layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
                         layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
                         if ao.name is not None:
                             name = "cam_path_{}".format(ao.name)
                             if scene.objects.get(name) is not None:
-                                layout.operator("object.cam_export", text="Export gcode")
+                                layout.operator("object.cam_export", text="Export modified Gcode ")
                         layout.operator("object.cam_simulate", text="Simulate this operation")
 
 
@@ -501,20 +501,22 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                 elif ao.strategy == 'CARVE':
                     layout.prop(ao, 'carve_depth')
                     layout.prop(ao, 'dist_along_paths')
-                elif ao.strategy == 'PENCIL':
-                    layout.prop(ao, 'dist_along_paths')
-                    layout.prop(ao, 'pencil_threshold')
+#remove pencil strategy because it is not finished or working
+#                elif ao.strategy == 'PENCIL':
+#                    layout.prop(ao, 'dist_along_paths')
+#                    layout.prop(ao, 'pencil_threshold')
                 elif ao.strategy == 'MEDIAL_AXIS':
                     layout.prop(ao, 'medial_axis_threshold')
                     layout.prop(ao, 'medial_axis_subdivision')
-                elif ao.strategy == 'CRAZY':
-                    layout.prop(ao, 'crazy_threshold1')
-                    layout.prop(ao, 'crazy_threshold5')
-                    layout.prop(ao, 'crazy_threshold2')
-                    layout.prop(ao, 'crazy_threshold3')
-                    layout.prop(ao, 'crazy_threshold4')
-                    layout.prop(ao, 'dist_between_paths')
-                    layout.prop(ao, 'dist_along_paths')
+ #remove crazy strategy because no one knows what it does.
+ #               elif ao.strategy == 'CRAZY':
+ #                   layout.prop(ao, 'crazy_threshold1')
+ #                   layout.prop(ao, 'crazy_threshold5')
+ #                   layout.prop(ao, 'crazy_threshold2')
+ #                   layout.prop(ao, 'crazy_threshold3')
+ #                   layout.prop(ao, 'crazy_threshold4')
+ #                   layout.prop(ao, 'dist_between_paths')
+ #                   layout.prop(ao, 'dist_along_paths')
                 elif ao.strategy == 'DRILL':
                     layout.prop(ao, 'drill_type')
                     layout.prop(ao,'enable_A')
