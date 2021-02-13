@@ -400,7 +400,7 @@ def getStrategyList(scene, context):
         ('CIRCLES', 'Circles', 'Circles path'),
         ('OUTLINEFILL', 'Outline Fill',
          'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
-        ('CARVE', 'Carve', 'Pocket operation'),
+        ('CARVE', 'Project curve to surface', 'Engrave the curve path to surface'),
         ('WATERLINE', 'Waterline - Roughing -below zero', 'Waterline paths - constant z below zero')
         
     ]
