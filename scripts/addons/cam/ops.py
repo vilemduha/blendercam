@@ -886,7 +886,7 @@ class CamCurveOvercuts(bpy.types.Operator):
                                     shape = l.buffer(diameter / 2, resolution=64)
 
                                 if sign > 0:
-                                    negative_overcuts.append(shape)
+                                    negative_overcuts.apppend(shape)
                                 else:
                                     positive_overcuts.append(shape)
 
