@@ -57,7 +57,7 @@ def ocl_sample(operation, chunks):
     elif op_cutter_type =='BALLCONE':
         angle= math.degrees(math.atan((op_cutter_diameter/2)-operation.ball_radius)/(operation.ball_cone_flute-operation.ball_radius))
         print("BallCone angle:"+str(angle))
-        cutter = ocl.ConeCutter((operation.ball_radius+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, angle)
+        cutter = ocl.BallConeCutter((operation.ball_radius+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, math.radians(angle))
     else:
         print("Cutter unsupported: {0}\n".format(op_cutter_type))
         quit()
