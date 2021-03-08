@@ -66,11 +66,14 @@ SHAPELY = True
 
 def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
+    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob   
+
     minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace([ob], operation.use_modifiers)
     totx=maxx-minx
     toty=maxy-miny
     totz=maxz-minz
-
     if operation.material_center_x:
         ob.location.x -= minx +totx/2
     else:
@@ -87,7 +90,7 @@ def positionObject(operation):
         ob.location.z -= minz  	    
     elif operation.material_Z == 'CENTERED':
         ob.location.z -= minz +totz/2 	  
-    addMaterialAreaObject()  
+    #addMaterialAreaObject()  
 
 
 def getBoundsWorldspace(obs, use_modifiers=False):
@@ -216,7 +219,20 @@ def getOperationSources(o):
         o.objects = [ob]
         ob.select_set(True)
         bpy.context.view_layer.objects.active = ob
-        bpy.context.active_object.rotation_euler = (o.rotation_A,o.rotation_B,0)
+        if o.enable_B or o.enable_A:
+            if o.old_rotation_A != o.rotation_A or o.old_rotation_B != o.rotation_B:
+                o.old_rotation_A = o.rotation_A
+                o.old_rotation_B = o.rotation_B
+                ob=bpy.data.objects[o.object_name]
+                ob.select_set(True)
+                bpy.context.view_layer.objects.active = ob
+                if o.A_along_x : #A parallel with X
+                    bpy.context.active_object.rotation_euler.x = o.rotation_A
+                    bpy.context.active_object.rotation_euler.y = o.rotation_B
+                else :  #A parallel with Y
+                    bpy.context.active_object.rotation_euler.x = o.rotation_B
+                    bpy.context.active_object.rotation_euler.y = o.rotation_A
+
 
     elif o.geometry_source == 'COLLECTION':
         collection = bpy.data.collections[o.collection_name]
@@ -3100,8 +3116,7 @@ def getPath3axis(context, operation):
         prepareArea(o)
         layerstep = 1000000000
         if o.use_layers:
-#            layerstep = math.floor(o.stepdown / o.slice_detail)
-            layerstep=1
+            layerstep = math.floor(o.stepdown / o.slice_detail)
             if layerstep == 0:
                 layerstep = 1
 
@@ -3110,7 +3125,7 @@ def getPath3axis(context, operation):
         layerend = o.min.z  #
         layers = [[layerstart, layerend]]
         #######################
-        nslices = ceil(abs(o.minz / o.stepdown))
+        nslices = ceil(abs(o.minz / o.slice_detail))
         lastislice = numpy.array([])
         lastslice = spolygon.Polygon()  # polyversion
         layerstepinc = 0
@@ -3121,7 +3136,7 @@ def getPath3axis(context, operation):
         for h in range(0, nslices):
             layerstepinc += 1
             slicechunks = []
-            z = o.minz + h * o.stepdown
+            z = o.minz + h * o.slice_detail
             if h == 0:
                 z += 0.0000001  # if people do mill flat areas, this helps to reach those... otherwise first layer would actually be one slicelevel above min z.
             # print(z)
@@ -3162,8 +3177,8 @@ def getPath3axis(context, operation):
             # print(len(lastslice))
             # """
             if o.waterline_fill:
-                layerstart = min(o.maxz, z + o.stepdown)  #
-                layerend = max(o.min.z, z - o.stepdown)  #
+                layerstart = min(o.maxz, z + o.slice_detail)  #
+                layerend = max(o.min.z, z - o.slice_detail)  #
                 layers = [[layerstart, layerend]]
                 #####################################
                 # fill top slice for normal and first for inverse, fill between polys
