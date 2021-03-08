@@ -322,7 +322,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if not ao.computing:
                     if ao.valid:
                         layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
-                        layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
+                        #layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
                         if ao.name is not None:
                             name = "cam_path_{}".format(ao.name)
                             if scene.objects.get(name) is not None:
@@ -344,27 +344,29 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 sub.prop(ao, 'name')
                 sub.prop(ao, 'filename')
 
-                layout.prop(ao, 'auto_export')
+                #layout.prop(ao, 'auto_export')
                 layout.prop(ao, 'geometry_source')
                 if not ao.strategy == 'CURVE':
                     if ao.geometry_source == 'OBJECT':
                         layout.prop_search(ao, "object_name", bpy.data, "objects")
                         if ao.enable_A:
                             layout.prop(ao,'rotation_A')
-                            
                         if ao.enable_B:
                             layout.prop(ao,'rotation_B')
-                        if ao.old_rotation_A != ao.rotation_A or ao.old_rotation_B != ao.rotation_B:
-                            ao.old_rotation_A = ao.rotation_A
-                            ao.old_rotation_A = ao.rotation_A
-                            ob=bpy.data.objects[ao.object_name]
-                            ob.select_set(True)
-                            bpy.context.view_layer.objects.active = ob
-                            if ao.A_along_x :
-                                bpy.context.active_object.rotation_euler = (ao.rotation_A,ao.rotation_B,0)
-                            else :
-                                bpy.context.active_object.rotation_euler = (ao.rotation_B,ao.rotation_A,0)
-
+                        if ao.enable_B or ao.enable_A:
+                            if ao.old_rotation_A != ao.rotation_A or ao.old_rotation_B != ao.rotation_B:
+                                ao.old_rotation_A = ao.rotation_A
+                                ao.old_rotation_B = ao.rotation_B
+                                ob=bpy.data.objects[ao.object_name]
+                                ob.select_set(True)
+                                bpy.context.view_layer.objects.active = ob
+                                if ao.A_along_x : #A parallel with X
+                                    bpy.context.active_object.rotation_euler.x = ao.rotation_A
+                                    bpy.context.active_object.rotation_euler.y = ao.rotation_B
+                                else :  #A parallel with Y
+                                    bpy.context.active_object.rotation_euler.x = ao.rotation_B
+                                    bpy.context.active_object.rotation_euler.y = ao.rotation_A
+                            
 
                             
                     elif ao.geometry_source == 'COLLECTION':
