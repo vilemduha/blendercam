@@ -352,25 +352,34 @@ def updateExact(o, context):
     o.update_offsetimage_tag = True
     if o.use_exact and (o.strategy == 'WATERLINE' or o.strategy == 'POCKET' or o.inverse):
         o.use_exact = False
+        o.use_opencamlib=False
+        print('waterline and pocket cannot use exact mode')
 
 
 def updateOpencamlib(o, context):
     print('update opencamlib ')
     o.changed = True
-
+    if o.use_opencamlib and (o.strategy == 'WATERLINE'):
+        o.use_exact = False
+        o.use_opencamlib=False
+        print('waterline and pocket cannot use opencamlib')
 
 def updateBridges(o, context):
     print('update bridges ')
     o.changed = True
 
-
-# utils.setupBridges(o)
-
-def updateRest(o, context):
-    # print('update rest ')
-    # if o.use_layers:
+#def updateRest(o, context):
+#    print('update rest ')
+#    # if o.use_layers:
     # o.parallel_step_back = False
+#    o.changed = True
+    
+def updateRest(o, context):
+    print('update rest ')
+    # if o.use_layers:
     o.changed = True
+    if (o.strategy == 'WATERLINE'):
+        o.use_layers = True    
 
 
 def getStrategyList(scene, context):
@@ -386,18 +395,19 @@ def getStrategyList(scene, context):
         ('CIRCLES', 'Circles', 'Circles path'),
         ('OUTLINEFILL', 'Outline Fill',
          'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
-        ('CARVE', 'Carve', 'Pocket operation')
+        ('CARVE', 'Project curve to surface', 'Engrave the curve path to surface'),
+        ('WATERLINE', 'Waterline - Roughing -below zero', 'Waterline paths - constant z below zero')
+        
     ]
     if use_experimental:
-        items.extend([('WATERLINE', 'Waterline - EXPERIMENTAL', 'Waterline paths - constant z'),
-                      ('CURVE', 'Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
-                      ('PENCIL', 'Pencil - EXPERIMENTAL',
-                       'Pencil operation - detects negative corners in the model and mills only those.'),
-                      ('CRAZY', 'Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
+        items.extend([('CURVE', 'Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
                       ('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
                        'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke '),
                       ('PROJECTED_CURVE', 'Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')])
     return items
+
+#('PENCIL', 'Pencil - EXPERIMENTAL','Pencil operation - detects negative corners in the model and mills only those.'),
+#('CRAZY', 'Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
 
 
 class camOperation(bpy.types.PropertyGroup):
@@ -559,6 +569,7 @@ class camOperation(bpy.types.PropertyGroup):
 		
     old_rotation_B: bpy.props.FloatProperty(name="A axis angle", description="old value of Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION", update=updateRest)
 
+
     rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0,
                                              subtype="ANGLE", unit="ROTATION", update=updateRest)
     enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False, update=updateRest)
@@ -583,7 +594,7 @@ class camOperation(bpy.types.PropertyGroup):
     waterline_fill: bpy.props.BoolProperty(name="Fill areas between slices",
                                             description="Fill areas between slices in waterline mode", default=True,
                                             update=updateRest)
-    waterline_project: bpy.props.BoolProperty(name="Project paths",
+    waterline_project: bpy.props.BoolProperty(name="Project paths - not recomended",
                                                description="Project paths in areas between slices", default=True,
                                                update=updateRest)
 
@@ -821,6 +832,12 @@ class camOperation(bpy.types.PropertyGroup):
                                                           description="How much to add to model size on all sides",
                                                           default=0.0, unit='LENGTH', precision=PRECISION,
                                                           update=updateMaterial)
+    material_center_x: bpy.props.BoolProperty(name="Center with X axis", description="Position model centered on X", default=False, update=updateMaterial)                                                          
+    material_center_y: bpy.props.BoolProperty(name="Center with Y axis", description="Position model centered on Y", default=False, update=updateMaterial)   
+
+                                                       
+    material_Z: bpy.props.EnumProperty(name="Z placement", items=(('ABOVE', 'Above', 'Place objec above 0'),('BELOW', 'Below', 'Place object below 0'),('CENTERED','Centered','Place object centered on 0')),description="Position below Zero", default='BELOW', update=updateMaterial)                                                          
+
     material_origin: bpy.props.FloatVectorProperty(name='Material origin', default=(0, 0, 0), unit='LENGTH',
                                                    precision=PRECISION, subtype="XYZ", update=updateMaterial)
     material_size: bpy.props.FloatVectorProperty(name='Material size', default=(0.200, 0.200, 0.100), unit='LENGTH',

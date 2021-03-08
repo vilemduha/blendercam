@@ -178,6 +178,9 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.prop(ao, 'material_origin')
                         layout.prop(ao, 'material_size')
 
+                    layout.prop(ao, 'material_center_x')    
+                    layout.prop(ao, 'material_center_y') 
+                    layout.prop(ao, 'material_Z') 
                     layout.operator("object.cam_position", text="Position object")
                 else:
                     layout.label(text='Estimated from image')
@@ -269,7 +272,7 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if not chain.computing:
                     if chain.valid:
                         pass
-                        layout.operator("object.calculate_cam_paths_chain", text="Calculate chain paths")
+                        layout.operator("object.calculate_cam_paths_chain", text="Calculate chain paths & Export Gcode")
                         layout.operator("object.cam_export_paths_chain", text="Export chain gcode")
                         # layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
                         layout.operator("object.cam_simulate_chain", text="Simulate this chain")
@@ -318,12 +321,12 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
             if ao:
                 if not ao.computing:
                     if ao.valid:
-                        layout.operator("object.calculate_cam_path", text="Calculate path")
-                        layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
+                        layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
+                        #layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
                         if ao.name is not None:
                             name = "cam_path_{}".format(ao.name)
                             if scene.objects.get(name) is not None:
-                                layout.operator("object.cam_export", text="Export gcode")
+                                layout.operator("object.cam_export", text="Export Gcode ")
                         layout.operator("object.cam_simulate", text="Simulate this operation")
 
 
@@ -341,27 +344,29 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 sub.prop(ao, 'name')
                 sub.prop(ao, 'filename')
 
-                layout.prop(ao, 'auto_export')
+                #layout.prop(ao, 'auto_export')
                 layout.prop(ao, 'geometry_source')
                 if not ao.strategy == 'CURVE':
                     if ao.geometry_source == 'OBJECT':
                         layout.prop_search(ao, "object_name", bpy.data, "objects")
                         if ao.enable_A:
                             layout.prop(ao,'rotation_A')
-                            
                         if ao.enable_B:
                             layout.prop(ao,'rotation_B')
-                        if ao.old_rotation_A != ao.rotation_A or ao.old_rotation_B != ao.rotation_B:
-                            ao.old_rotation_A = ao.rotation_A
-                            ao.old_rotation_A = ao.rotation_A
-                            ob=bpy.data.objects[ao.object_name]
-                            ob.select_set(True)
-                            bpy.context.view_layer.objects.active = ob
-                            if ao.A_along_x :
-                                bpy.context.active_object.rotation_euler = (ao.rotation_A,ao.rotation_B,0)
-                            else :
-                                bpy.context.active_object.rotation_euler = (ao.rotation_B,ao.rotation_A,0)
-
+                        if ao.enable_B or ao.enable_A:
+                            if ao.old_rotation_A != ao.rotation_A or ao.old_rotation_B != ao.rotation_B:
+                                ao.old_rotation_A = ao.rotation_A
+                                ao.old_rotation_B = ao.rotation_B
+                                ob=bpy.data.objects[ao.object_name]
+                                ob.select_set(True)
+                                bpy.context.view_layer.objects.active = ob
+                                if ao.A_along_x : #A parallel with X
+                                    bpy.context.active_object.rotation_euler.x = ao.rotation_A
+                                    bpy.context.active_object.rotation_euler.y = ao.rotation_B
+                                else :  #A parallel with Y
+                                    bpy.context.active_object.rotation_euler.x = ao.rotation_B
+                                    bpy.context.active_object.rotation_euler.y = ao.rotation_A
+                            
 
                             
                     elif ao.geometry_source == 'COLLECTION':
@@ -486,29 +491,34 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                             layout.prop(ao, 'movement_insideout')
                     layout.prop(ao, 'dont_merge')
                 elif ao.strategy == 'WATERLINE':
-                    layout.prop(ao, 'slice_detail')
-                    layout.prop(ao, 'waterline_fill')
+                    #layout.prop(ao, 'waterline_fill')
                     if ao.waterline_fill:
+                        layout.label(text="Waterline roughing strategy")
+                        layout.label(text="needs a skin margin")
+                        layout.prop(ao, 'skin')
                         layout.prop(ao, 'dist_between_paths')
+                        layout.prop(ao, 'stepdown')
                         layout.prop(ao, 'waterline_project')
-                    layout.prop(ao, 'inverse')
+#                    layout.prop(ao, 'inverse')
                 elif ao.strategy == 'CARVE':
                     layout.prop(ao, 'carve_depth')
                     layout.prop(ao, 'dist_along_paths')
-                elif ao.strategy == 'PENCIL':
-                    layout.prop(ao, 'dist_along_paths')
-                    layout.prop(ao, 'pencil_threshold')
+#remove pencil strategy because it is not finished or working
+#                elif ao.strategy == 'PENCIL':
+#                    layout.prop(ao, 'dist_along_paths')
+#                    layout.prop(ao, 'pencil_threshold')
                 elif ao.strategy == 'MEDIAL_AXIS':
                     layout.prop(ao, 'medial_axis_threshold')
                     layout.prop(ao, 'medial_axis_subdivision')
-                elif ao.strategy == 'CRAZY':
-                    layout.prop(ao, 'crazy_threshold1')
-                    layout.prop(ao, 'crazy_threshold5')
-                    layout.prop(ao, 'crazy_threshold2')
-                    layout.prop(ao, 'crazy_threshold3')
-                    layout.prop(ao, 'crazy_threshold4')
-                    layout.prop(ao, 'dist_between_paths')
-                    layout.prop(ao, 'dist_along_paths')
+ #remove crazy strategy because no one knows what it does.
+ #               elif ao.strategy == 'CRAZY':
+ #                   layout.prop(ao, 'crazy_threshold1')
+ #                   layout.prop(ao, 'crazy_threshold5')
+ #                   layout.prop(ao, 'crazy_threshold2')
+ #                   layout.prop(ao, 'crazy_threshold3')
+ #                   layout.prop(ao, 'crazy_threshold4')
+ #                   layout.prop(ao, 'dist_between_paths')
+ #                   layout.prop(ao, 'dist_along_paths')
                 elif ao.strategy == 'DRILL':
                     layout.prop(ao, 'drill_type')
                     layout.prop(ao,'enable_A')
@@ -702,8 +712,9 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.optimize:
                     layout.prop(ao, 'optimize_threshold')
                 if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
-                    exclude_exact = ao.strategy in [ 'POCKET', 'CUTOUT', 'DRILL', 'PENCIL']
+                    exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL']
                     if not exclude_exact:
+                        layout.prop(ao, 'use_opencamlib')
                         layout.prop(ao, 'use_exact')
                         if ao.use_exact:
                             layout.prop(ao, 'exact_subdivide_edges')
@@ -720,7 +731,6 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 layout.prop(ao, 'simulation_detail')
                 layout.prop(ao, 'circle_detail')
-                layout.prop(ao, 'use_opencamlib')
 
 
 class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):

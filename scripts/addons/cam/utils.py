@@ -67,9 +67,27 @@ SHAPELY = True
 def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
     minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace([ob], operation.use_modifiers)
-    ob.location.x -= minx
-    ob.location.y -= miny
-    ob.location.z -= maxz
+    totx=maxx-minx
+    toty=maxy-miny
+    totz=maxz-minz
+
+    if operation.material_center_x:
+        ob.location.x -= minx +totx/2
+    else:
+        ob.location.x -= minx
+        
+    if operation.material_center_y:
+        ob.location.y -= miny +toty/2
+    else:
+        ob.location.y -= miny
+        
+    if operation.material_Z== 'BELOW':
+ 	    ob.location.z -= maxz
+    elif operation.material_Z == 'ABOVE':
+        ob.location.z -= minz  	    
+    elif operation.material_Z == 'CENTERED':
+        ob.location.z -= minz +totz/2 	  
+    addMaterialAreaObject()  
 
 
 def getBoundsWorldspace(obs, use_modifiers=False):
@@ -2184,7 +2202,9 @@ def useBridges(ch, o):
         getBridgesPoly(o)
 
         ####
-        bridgeheight = min(0, o.min.z + o.bridges_height)
+
+        bridgeheight=min(o.max.z, o.min.z + abs(o.bridges_height))
+
         vi = 0
         # shapelyToCurve('test',bridgespoly,0)
         newpoints = []
@@ -2393,7 +2413,9 @@ def strategy_cutout(o):
     if o.use_bridges:  # add bridges to chunks
         # bridges=getBridges(p,o)
         print('using bridges')
-        bridgeheight = min(0, o.min.z + o.bridges_height)
+      
+        bridgeheight=min(o.max.z, o.min.z + abs(o.bridges_height))
+
         for chl in extendorder:
             chunk = chl[0]
             layer = chl[1]
@@ -3078,16 +3100,17 @@ def getPath3axis(context, operation):
         prepareArea(o)
         layerstep = 1000000000
         if o.use_layers:
-            layerstep = math.floor(o.stepdown / o.slice_detail)
+#            layerstep = math.floor(o.stepdown / o.slice_detail)
+            layerstep=1
             if layerstep == 0:
                 layerstep = 1
 
         # for projection of filled areas
-        layerstart = 0  #
+        layerstart = o.max.z  #
         layerend = o.min.z  #
         layers = [[layerstart, layerend]]
         #######################
-        nslices = ceil(abs(o.minz / o.slice_detail))
+        nslices = ceil(abs(o.minz / o.stepdown))
         lastislice = numpy.array([])
         lastslice = spolygon.Polygon()  # polyversion
         layerstepinc = 0
@@ -3098,7 +3121,7 @@ def getPath3axis(context, operation):
         for h in range(0, nslices):
             layerstepinc += 1
             slicechunks = []
-            z = o.minz + h * o.slice_detail
+            z = o.minz + h * o.stepdown
             if h == 0:
                 z += 0.0000001  # if people do mill flat areas, this helps to reach those... otherwise first layer would actually be one slicelevel above min z.
             # print(z)
@@ -3139,8 +3162,8 @@ def getPath3axis(context, operation):
             # print(len(lastslice))
             # """
             if o.waterline_fill:
-                layerstart = min(o.maxz, z + o.slice_detail)  #
-                layerend = max(o.min.z, z - o.slice_detail)  #
+                layerstart = min(o.maxz, z + o.stepdown)  #
+                layerend = max(o.min.z, z - o.stepdown)  #
                 layers = [[layerstart, layerend]]
                 #####################################
                 # fill top slice for normal and first for inverse, fill between polys
