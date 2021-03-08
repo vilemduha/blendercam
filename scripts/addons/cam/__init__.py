@@ -368,11 +368,6 @@ def updateBridges(o, context):
     print('update bridges ')
     o.changed = True
 
-
-
-
-
-
 #def updateRest(o, context):
 #    print('update rest ')
 #    # if o.use_layers:
@@ -573,6 +568,7 @@ class camOperation(bpy.types.PropertyGroup):
     old_rotation_A: bpy.props.FloatProperty(name="A axis angle", description="old value of Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION", update=updateRest)
 		
     old_rotation_B: bpy.props.FloatProperty(name="A axis angle", description="old value of Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION", update=updateRest)
+
 
     rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle",default=0, min=-360, max=360, precision=0,
                                              subtype="ANGLE", unit="ROTATION", update=updateRest)
