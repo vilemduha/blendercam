@@ -227,11 +227,15 @@ def getOperationSources(o):
                 ob.select_set(True)
                 bpy.context.view_layer.objects.active = ob
                 if o.A_along_x : #A parallel with X
-                    bpy.context.active_object.rotation_euler.x = o.rotation_A
-                    bpy.context.active_object.rotation_euler.y = o.rotation_B
+                    if o.enable_A:
+                        bpy.context.active_object.rotation_euler.x = o.rotation_A
+                    if o.enable_B:
+                        bpy.context.active_object.rotation_euler.y = o.rotation_B
                 else :  #A parallel with Y
-                    bpy.context.active_object.rotation_euler.x = o.rotation_B
-                    bpy.context.active_object.rotation_euler.y = o.rotation_A
+                    if o.enable_A:
+                        bpy.context.active_object.rotation_euler.y = o.rotation_A
+                    if o.enable_B:
+                        bpy.context.active_object.rotation_euler.x = o.rotation_B
 
 
     elif o.geometry_source == 'COLLECTION':
