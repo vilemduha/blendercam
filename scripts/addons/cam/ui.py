@@ -666,7 +666,10 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
                 layout.prop(ao, 'stay_low')
                 if ao.stay_low:
                     layout.prop(ao, 'merge_dist')
-                layout.prop(ao, 'protect_vertical')
+                if ao.cutter_type == 'BALLCONE' :
+                    protect_vertical = False 
+                else:
+                    layout.prop(ao, 'protect_vertical')
                 if ao.protect_vertical:
                     layout.prop(ao, 'protect_vertical_limit')
 
