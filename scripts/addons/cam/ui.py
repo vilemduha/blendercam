@@ -361,12 +361,15 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                                 ob.select_set(True)
                                 bpy.context.view_layer.objects.active = ob
                                 if ao.A_along_x : #A parallel with X
-                                    bpy.context.active_object.rotation_euler.x = ao.rotation_A
-                                    bpy.context.active_object.rotation_euler.y = ao.rotation_B
+                                    if ao.enable_A:
+                                        bpy.context.active_object.rotation_euler.x = ao.rotation_A
+                                    if ao.enable_B:
+                                        bpy.context.active_object.rotation_euler.y = ao.rotation_B
                                 else :  #A parallel with Y
-                                    bpy.context.active_object.rotation_euler.x = ao.rotation_B
-                                    bpy.context.active_object.rotation_euler.y = ao.rotation_A
-                            
+                                    if ao.enable_A:
+                                        bpy.context.active_object.rotation_euler.y = ao.rotation_A
+                                    if ao.enable_B:
+                                        bpy.context.active_object.rotation_euler.x = ao.rotation_B
 
                             
                     elif ao.geometry_source == 'COLLECTION':
