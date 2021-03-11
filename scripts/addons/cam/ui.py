@@ -361,12 +361,15 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                                 ob.select_set(True)
                                 bpy.context.view_layer.objects.active = ob
                                 if ao.A_along_x : #A parallel with X
-                                    bpy.context.active_object.rotation_euler.x = ao.rotation_A
-                                    bpy.context.active_object.rotation_euler.y = ao.rotation_B
+                                    if ao.enable_A:
+                                        bpy.context.active_object.rotation_euler.x = ao.rotation_A
+                                    if ao.enable_B:
+                                        bpy.context.active_object.rotation_euler.y = ao.rotation_B
                                 else :  #A parallel with Y
-                                    bpy.context.active_object.rotation_euler.x = ao.rotation_B
-                                    bpy.context.active_object.rotation_euler.y = ao.rotation_A
-                            
+                                    if ao.enable_A:
+                                        bpy.context.active_object.rotation_euler.y = ao.rotation_A
+                                    if ao.enable_B:
+                                        bpy.context.active_object.rotation_euler.x = ao.rotation_B
 
                             
                     elif ao.geometry_source == 'COLLECTION':
@@ -663,7 +666,10 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
                 layout.prop(ao, 'stay_low')
                 if ao.stay_low:
                     layout.prop(ao, 'merge_dist')
-                layout.prop(ao, 'protect_vertical')
+                if ao.cutter_type == 'BALLCONE' :
+                    protect_vertical = False 
+                else:
+                    layout.prop(ao, 'protect_vertical')
                 if ao.protect_vertical:
                     layout.prop(ao, 'protect_vertical_limit')
 
