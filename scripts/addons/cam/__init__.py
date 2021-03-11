@@ -549,9 +549,9 @@ class camOperation(bpy.types.PropertyGroup):
     cutter_tip_angle: FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0,
                                      max=180.0, default=60.0, precision=PRECISION, update=updateOffsetImage)
     ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
-                                     max=25.0, default=1, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+                                     max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
     ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
-                                     max=150.0, default=30.5, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+                                     max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
 #    shank_diameter: FloatProperty(name="Shank Diameter", description="Diameter at the top of cutter", min=0.0,
 #                                     max=25.0, default=3.175, precision=PRECISION, unit="LENGTH",update=updateOffsetImage)
 
@@ -728,7 +728,7 @@ class camOperation(bpy.types.PropertyGroup):
                                                    precision=PRECISION, unit="LENGTH", update=updateRest)
     useG64: bpy.props.BoolProperty(name="G64 trajectory",
                                                description='Use only if your machie supports G64 code.  LinuxCNC and Mach3 do', default=False, update=updateRest)
-    G64: bpy.props.FloatProperty(name="Path Control Mode with Optional Tolerance", default=0.01, min=0.0000, max=0.5,
+    G64: bpy.props.FloatProperty(name="Path Control Mode with Optional Tolerance", default=0.0001, min=0.0000, max=0.005,
                                                    precision=PRECISION, unit="LENGTH", update=updateRest)                                                   
     movement_insideout: EnumProperty(name='Direction',
                                      items=(('INSIDEOUT', 'Inside out', 'a'), ('OUTSIDEIN', 'Outside in', 'a')),
