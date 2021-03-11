@@ -2563,22 +2563,25 @@ def strategy_pocket(o):
         print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
         print("pnew")
-        if o.dist_between_paths > o.cutter_diameter / 2.0:
-            prest = prest.difference(pnew.boundary.buffer(o.cutter_diameter / 2, o.circle_detail))
-            if not (pnew.contains(prest)):
-                prest = shapelyToMultipolygon(prest)
-                fine = []
-                go = []
-                for p1 in prest:
-                    if pnew.contains(p1):
-                        fine.append(p1)
-                    else:
-                        go.append(p1)
-                if len(go) > 0:
-                    for p1 in go:
-                        nchunks1 = shapelyToChunks(p1, o.min.z)
-                        nchunks.extend(nchunks1)
-                        prest = sgeometry.MultiPolygon(fine)
+        
+# caused a bad slow down 
+#        if o.dist_between_paths > o.cutter_diameter / 2.0:
+#            prest = prest.difference(pnew.boundary.buffer(o.cutter_diameter / 2, o.circle_detail))
+#            if not (pnew.contains(prest)):
+#                prest = shapelyToMultipolygon(prest)
+#                fine = []
+#                go = []
+#                for p1 in prest:
+#                    if pnew.contains(p1):
+#                        fine.append(p1)
+#                    else:
+#                        go.append(p1)
+#                if len(go) > 0:
+#                    for p1 in go:
+#                        nchunks1 = shapelyToChunks(p1, o.min.z)
+#                        nchunks.extend(nchunks1)
+#                        prest = sgeometry.MultiPolygon(fine)
+
         nchunks = limitChunks(nchunks, o)
         chunksFromCurve.extend(nchunks)
         print(i)
