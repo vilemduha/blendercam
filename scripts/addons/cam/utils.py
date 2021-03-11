@@ -2550,6 +2550,7 @@ def strategy_pocket(o):
     print('operation: pocket')
     p = getObjectOutline(o.cutter_diameter / 2, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
+    print("approximative:" + str(approxn))
     i = 0
     chunks = []
     chunksFromCurve = []
@@ -2557,17 +2558,14 @@ def strategy_pocket(o):
     centers = None
     firstoutline = p  # for testing in the end.
     prest = p.buffer(-o.cutter_diameter / 2, o.circle_detail)
-    # shapelyToCurve('testik',p,0)
     while not p.is_empty:
         nchunks = shapelyToChunks(p, o.min.z)
-
+        print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
-
+        print("pnew")
         if o.dist_between_paths > o.cutter_diameter / 2.0:
             prest = prest.difference(pnew.boundary.buffer(o.cutter_diameter / 2, o.circle_detail))
             if not (pnew.contains(prest)):
-                # shapelyToCurve('cesta',pnew,0)
-                # shapelyToCurve('problemas',prest,0)
                 prest = shapelyToMultipolygon(prest)
                 fine = []
                 go = []
@@ -2581,12 +2579,10 @@ def strategy_pocket(o):
                         nchunks1 = shapelyToChunks(p1, o.min.z)
                         nchunks.extend(nchunks1)
                         prest = sgeometry.MultiPolygon(fine)
-
         nchunks = limitChunks(nchunks, o)
         chunksFromCurve.extend(nchunks)
         print(i)
         parentChildDist(lastchunks, nchunks, o)
-        # print('parented')
         lastchunks = nchunks
 
         percent = int(i / approxn * 100)
