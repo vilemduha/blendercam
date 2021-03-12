@@ -1299,17 +1299,19 @@ def exportGcodePath(filename, vertslist, operations):
             c.flush_nc()
 
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
-        c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
-        c.write_spindle()
-        c.flush_nc()
-        c.write('\n')
+        if o.cutter_type != 'LASER':
+            c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
+            c.write_spindle()
+            c.flush_nc()
+            c.write('\n')
 
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)       
         
 #        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
         fmh=round(free_movement_height*1000,2)
-        c.write('G00 Z'+str(fmh)+'\n')
+        if o.cutter_type != 'LASER':
+            c.write('G00 Z'+str(fmh)+'\n')
         if o.enable_A:
             if o.rotation_A==0:
                  o.rotation_A=0.0001
@@ -1357,6 +1359,7 @@ def exportGcodePath(filename, vertslist, operations):
         scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
 
         # print('2')
+        laser=True
         for vi, vert in enumerate(verts):
             # skip the first vertex if this is a chained operation
             # ie: outputting more than one operation
@@ -1417,7 +1420,15 @@ def exportGcodePath(filename, vertslist, operations):
                     c.feedrate(f)
 
                 if o.machine_axes == '3':
-                    c.feed(x=vx, y=vy, z=vz)
+                    if o.cutter_type == 'LASER':
+						
+                        if laser != True:
+                            c.write("(*************dwell->laser on)\n")
+                            c.write("G04 P"+str(round(o.Laser_delay,2))+"\n")
+                            c.write(o.Laser_on+'\n')
+                            laser = True
+                    else:  											
+                        c.feed(x=vx, y=vy, z=vz)                
                 else:
 
                     # print('plungef',ra,rb)
@@ -1430,7 +1441,15 @@ def exportGcodePath(filename, vertslist, operations):
                     c.feedrate(f)
 
                 if o.machine_axes == '3':
-                    c.rapid(x=vx, y=vy, z=vz)
+                    if o.cutter_type == 'LASER':
+                        if laser:
+                            c.write("(**************laser off)\n")						
+                            c.write(o.Laser_off+'\n')
+                            laser=False
+                        c.rapid(x=vx, y=vy)
+                    else:  											
+                        c.feed(x=vx, y=vy, z=vz)                
+                        c.rapid(x=vx, y=vy, z=vz)
                 else:
                     # print('rapidf',ra,rb)
                     c.rapid(x=vx, y=vy, z=vz, a=ra, b=rb)
