@@ -535,7 +535,7 @@ def getPath3axis(context, operation):
             # for ob in o.objects:
             ob = bpy.data.objects[o.curve_object]
             pathSamples.extend(curveToChunks(ob))
-            pathSamples = sortChunks(pathSamples, o)  # sort before sampling
+            pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)
         elif o.strategy == 'PENCIL':
             prepareArea(o)
@@ -545,7 +545,7 @@ def getPath3axis(context, operation):
             #	for i,p in enumerate(ch.points):
             #	 ch.points[i]=(p[0],p[1],0)
             pathSamples = limitChunks(pathSamples, o)
-            pathSamples = sortChunks(pathSamples, o)  # sort before sampling
+            pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
         elif o.strategy == 'CRAZY':
             prepareArea(o)
 
@@ -556,7 +556,7 @@ def getPath3axis(context, operation):
 
             pathSamples = crazyStrokeImageBinary(o, millarea, avoidarea)
             #####
-            pathSamples = sortChunks(pathSamples, o)
+            pathSamples = utils.sortChunks(pathSamples, o)
             pathSamples = chunksRefine(pathSamples, o)
 
         else:
@@ -567,7 +567,7 @@ def getPath3axis(context, operation):
             pathSamples = getPathPattern(o)
 
             if o.strategy == 'OUTLINEFILL':
-                pathSamples = sortChunks(pathSamples,
+                pathSamples = utils.sortChunks(pathSamples,
                                          o)  # have to be sorted once before, because of the parenting inside of samplechunks
             # chunksToMesh(pathSamples,o)#for testing pattern script
             # return
@@ -580,7 +580,7 @@ def getPath3axis(context, operation):
         layers = strategy.getLayers(o, o.maxz, o.min.z)
 
         print("SAMPLE", o.name)
-        chunks.extend(sampleChunks(o, pathSamples, layers))
+        chunks.extend(utils.sampleChunks(o, pathSamples, layers))
         print("SAMPLE OK")
         if o.strategy == 'PENCIL':  # and bpy.app.debug_value==-3:
             chunks = chunksCoherency(chunks)
@@ -588,7 +588,7 @@ def getPath3axis(context, operation):
 
         if o.strategy in ['PARALLEL', 'CROSS', 'PENCIL', 'OUTLINEFILL']:  # and not o.parallel_step_back:
             print('sorting')
-            chunks = sortChunks(chunks, o)
+            chunks = utils.sortChunks(chunks, o)
             if o.strategy == 'OUTLINEFILL':
                 chunks = connectChunksLow(chunks, o)
         if o.ramp:
@@ -602,7 +602,7 @@ def getPath3axis(context, operation):
         if o.use_bridges:
             for bridge_chunk in chunks:
                 useBridges(bridge_chunk, o)
-        chunksToMesh(chunks, o)
+        strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and o.use_opencamlib:
         getAmbient(o)
@@ -613,7 +613,7 @@ def getPath3axis(context, operation):
                 o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW'):
             for ch in chunks:
                 ch.points.reverse()
-        chunksToMesh(chunks, o)
+        strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and not o.use_opencamlib:
         topdown = True
@@ -715,7 +715,7 @@ def getPath3axis(context, operation):
                         # project paths TODO: path projection during waterline is not working
                         if o.waterline_project:
                             nchunks = chunksRefine(nchunks, o)
-                            nchunks = sampleChunks(o, nchunks, layers)
+                            nchunks = utils.sampleChunks(o, nchunks, layers)
 
                         nchunks = limitChunks(nchunks, o, force=True)
                         #########################
@@ -790,7 +790,7 @@ def getPath3axis(context, operation):
                     o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CW'):
                 for chunk in slicechunks:
                     chunk.points.reverse()
-            slicechunks = sortChunks(slicechunks, o)
+            slicechunks = utils.sortChunks(slicechunks, o)
             if topdown:
                 slicechunks.reverse()
             # project chunks in between
@@ -811,7 +811,7 @@ def getPath3axis(context, operation):
             #         chi+=1
 
         print(time.time() - tw)
-        chunksToMesh(chunks, o)
+        strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'DRILL':
         strategy.drill(o)
@@ -832,8 +832,8 @@ def getPath4axis(context, operation):
 
         layers = strategy.getLayers(o, 0, depth)
 
-        chunks.extend(sampleChunksNAxis(o, pathSamples, layers))
-        chunksToMesh(chunks, o)
+        chunks.extend(utils.sampleChunksNAxis(o, pathSamples, layers))
+        strategy.chunksToMesh(chunks, o)
        
 
 
