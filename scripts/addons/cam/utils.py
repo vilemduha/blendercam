@@ -1297,22 +1297,21 @@ def exportGcodePath(filename, vertslist, operations):
             strInUnits(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes))
             c.tool_change(o.cutter_id)
             c.flush_nc()
-        if o.cutter_type != "LASER":
-            last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
+
+        last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
+        if o.cutter_type != 'LASER':
             c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
             c.write_spindle()
             c.flush_nc()
             c.write('\n')
-            if m.spindle_start_time > 0:
-                c.dwell(m.spindle_start_time)       
+
+        if m.spindle_start_time > 0:
+            c.dwell(m.spindle_start_time)       
         
 #        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
         fmh=round(free_movement_height*1000,2)
-        if o.cutter_type == "LASER":
-            c.write(o.Laser_off+'\n')
-        else:
+        if o.cutter_type != 'LASER':
             c.write('G00 Z'+str(fmh)+'\n')
-            
         if o.enable_A:
             if o.rotation_A==0:
                  o.rotation_A=0.0001
@@ -1360,6 +1359,7 @@ def exportGcodePath(filename, vertslist, operations):
         scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
 
         # print('2')
+        laser=True
         for vi, vert in enumerate(verts):
             # skip the first vertex if this is a chained operation
             # ie: outputting more than one operation
@@ -1421,12 +1421,14 @@ def exportGcodePath(filename, vertslist, operations):
 
                 if o.machine_axes == '3':
                     if o.cutter_type == 'LASER':
-                        c.write(o.Laser_off+'\n')
-                        x=vx
-                        y=vy
-                        z=vz 
+						
+                        if laser != True:
+                            c.write("(*************dwell->laser on)\n")
+                            c.write("G04 P"+str(round(o.Laser_delay,2))+"\n")
+                            c.write(o.Laser_on+'\n')
+                            laser = True
                     else:  											
-                        c.feed(x=vx, y=vy, z=vz)
+                        c.feed(x=vx, y=vy, z=vz)                
                 else:
 
                     # print('plungef',ra,rb)
@@ -1440,12 +1442,14 @@ def exportGcodePath(filename, vertslist, operations):
 
                 if o.machine_axes == '3':
                     if o.cutter_type == 'LASER':
-                        c.write(o.Laser_off+'\n')
-                        x=vx
-                        y=vy
-                        z=vz 
+                        if laser:
+                            c.write("(**************laser off)\n")						
+                            c.write(o.Laser_off+'\n')
+                            laser=False
+                        c.rapid(x=vx, y=vy)
                     else:  											
-                        c.feed(x=vx, y=vy, z=vz)
+                        c.feed(x=vx, y=vy, z=vz)                
+                        c.rapid(x=vx, y=vy, z=vz)
                 else:
                     # print('rapidf',ra,rb)
                     c.rapid(x=vx, y=vy, z=vz, a=ra, b=rb)
@@ -1501,13 +1505,10 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
     o.duration = duration * unitcorr
-    # print('duration')
-    # print(o.duration)
 
     c.program_end()
     c.file_close()
     print(time.time() - t)
-
 
 def curveToShapely(cob, use_modifiers=False):
     chunks = curveToChunks(cob, use_modifiers)
