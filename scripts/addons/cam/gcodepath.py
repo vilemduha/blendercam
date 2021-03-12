@@ -541,7 +541,7 @@ def getPath3axis(context, operation):
             pathSamples = chunksRefine(pathSamples, o)
         elif o.strategy == 'PENCIL':
             prepareArea(o)
-            getAmbient(o)
+            utils.getAmbient(o)
             pathSamples = getOffsetImageCavities(o, o.offset_image)
             # for ch in pathSamples:
             #	for i,p in enumerate(ch.points):
@@ -607,7 +607,7 @@ def getPath3axis(context, operation):
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and o.use_opencamlib:
-        getAmbient(o)
+        utils.getAmbient(o)
         chunks = []
         oclGetWaterline(o, chunks)
         chunks = limitChunks(chunks, o)
@@ -640,7 +640,7 @@ def getPath3axis(context, operation):
         layerstepinc = 0
 
         slicesfilled = 0
-        getAmbient(o)
+        utils.getAmbient(o)
         # polyToMesh(o.ambient,0)
         for h in range(0, nslices):
             layerstepinc += 1
