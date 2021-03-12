@@ -1299,19 +1299,17 @@ def exportGcodePath(filename, vertslist, operations):
             c.flush_nc()
 
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
-        if o.cutter_type != 'LASER':
-            c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
-            c.write_spindle()
-            c.flush_nc()
-            c.write('\n')
+        c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
+        c.write_spindle()
+        c.flush_nc()
+        c.write('\n')
 
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)       
         
 #        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
         fmh=round(free_movement_height*1000,2)
-        if o.cutter_type != 'LASER':
-            c.write('G00 Z'+str(fmh)+'\n')
+        c.write('G00 Z'+str(fmh)+'\n')
         if o.enable_A:
             if o.rotation_A==0:
                  o.rotation_A=0.0001
@@ -1359,7 +1357,6 @@ def exportGcodePath(filename, vertslist, operations):
         scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
 
         # print('2')
-        laser=True
         for vi, vert in enumerate(verts):
             # skip the first vertex if this is a chained operation
             # ie: outputting more than one operation
@@ -1420,15 +1417,7 @@ def exportGcodePath(filename, vertslist, operations):
                     c.feedrate(f)
 
                 if o.machine_axes == '3':
-                    if o.cutter_type == 'LASER':
-						
-                        if laser != True:
-                            c.write("(*************dwell->laser on)\n")
-                            c.write("G04 P"+str(round(o.Laser_delay,2))+"\n")
-                            c.write(o.Laser_on+'\n')
-                            laser = True
-                    else:  											
-                        c.feed(x=vx, y=vy, z=vz)                
+                    c.feed(x=vx, y=vy, z=vz)
                 else:
 
                     # print('plungef',ra,rb)
@@ -1441,15 +1430,7 @@ def exportGcodePath(filename, vertslist, operations):
                     c.feedrate(f)
 
                 if o.machine_axes == '3':
-                    if o.cutter_type == 'LASER':
-                        if laser:
-                            c.write("(**************laser off)\n")						
-                            c.write(o.Laser_off+'\n')
-                            laser=False
-                        c.rapid(x=vx, y=vy)
-                    else:  											
-                        c.feed(x=vx, y=vy, z=vz)                
-                        c.rapid(x=vx, y=vy, z=vz)
+                    c.rapid(x=vx, y=vy, z=vz)
                 else:
                     # print('rapidf',ra,rb)
                     c.rapid(x=vx, y=vy, z=vz, a=ra, b=rb)
@@ -1505,10 +1486,13 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
     o.duration = duration * unitcorr
+    # print('duration')
+    # print(o.duration)
 
     c.program_end()
     c.file_close()
     print(time.time() - t)
+
 
 def curveToShapely(cob, use_modifiers=False):
     chunks = curveToChunks(cob, use_modifiers)
@@ -2566,7 +2550,6 @@ def strategy_pocket(o):
     print('operation: pocket')
     p = getObjectOutline(o.cutter_diameter / 2, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
-    print("approximative:" + str(approxn))
     i = 0
     chunks = []
     chunksFromCurve = []
@@ -2574,34 +2557,36 @@ def strategy_pocket(o):
     centers = None
     firstoutline = p  # for testing in the end.
     prest = p.buffer(-o.cutter_diameter / 2, o.circle_detail)
+    # shapelyToCurve('testik',p,0)
     while not p.is_empty:
         nchunks = shapelyToChunks(p, o.min.z)
-        print("nchunks")
+
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
-        print("pnew")
-        
-# caused a bad slow down 
-#        if o.dist_between_paths > o.cutter_diameter / 2.0:
-#            prest = prest.difference(pnew.boundary.buffer(o.cutter_diameter / 2, o.circle_detail))
-#            if not (pnew.contains(prest)):
-#                prest = shapelyToMultipolygon(prest)
-#                fine = []
-#                go = []
-#                for p1 in prest:
-#                    if pnew.contains(p1):
-#                        fine.append(p1)
-#                    else:
-#                        go.append(p1)
-#                if len(go) > 0:
-#                    for p1 in go:
-#                        nchunks1 = shapelyToChunks(p1, o.min.z)
-#                        nchunks.extend(nchunks1)
-#                        prest = sgeometry.MultiPolygon(fine)
+
+        if o.dist_between_paths > o.cutter_diameter / 2.0:
+            prest = prest.difference(pnew.boundary.buffer(o.cutter_diameter / 2, o.circle_detail))
+            if not (pnew.contains(prest)):
+                # shapelyToCurve('cesta',pnew,0)
+                # shapelyToCurve('problemas',prest,0)
+                prest = shapelyToMultipolygon(prest)
+                fine = []
+                go = []
+                for p1 in prest:
+                    if pnew.contains(p1):
+                        fine.append(p1)
+                    else:
+                        go.append(p1)
+                if len(go) > 0:
+                    for p1 in go:
+                        nchunks1 = shapelyToChunks(p1, o.min.z)
+                        nchunks.extend(nchunks1)
+                        prest = sgeometry.MultiPolygon(fine)
 
         nchunks = limitChunks(nchunks, o)
         chunksFromCurve.extend(nchunks)
         print(i)
         parentChildDist(lastchunks, nchunks, o)
+        # print('parented')
         lastchunks = nchunks
 
         percent = int(i / approxn * 100)
