@@ -577,7 +577,7 @@ def getPath3axis(context, operation):
         # print (minz)
 
         chunks = []
-        layers = getLayers(o, o.maxz, o.min.z)
+        layers = strategy.getLayers(o, o.maxz, o.min.z)
 
         print("SAMPLE", o.name)
         chunks.extend(sampleChunks(o, pathSamples, layers))
@@ -830,7 +830,7 @@ def getPath4axis(context, operation):
         depth = pathSamples[0].depth
         chunks = []
 
-        layers = getLayers(o, 0, depth)
+        layers = strategy.getLayers(o, 0, depth)
 
         chunks.extend(sampleChunksNAxis(o, pathSamples, layers))
         chunksToMesh(chunks, o)
