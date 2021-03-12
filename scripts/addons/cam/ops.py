@@ -25,7 +25,7 @@ from pprint import pprint
 import bpy
 import subprocess, os, sys, threading
 import cam
-from cam import utils, pack, polygon_utils_cam, chunk, simple
+from cam import utils, pack, polygon_utils_cam, chunk, simple,gcodepath
 from bpy.props import *
 import shapely
 
@@ -231,7 +231,7 @@ class CalculatePath(bpy.types.Operator):
 
 
 
-        utils.getPath(context, o)
+        gcodepath.getPath(context, o)
 
         return {'FINISHED'}
 
@@ -322,7 +322,7 @@ class PathsChain(bpy.types.Operator):
         for o in chainops:
             # bpy.ops.object.calculate_cam_paths_background()
             meshes.append(bpy.data.objects["cam_path_{}".format(o.name)].data)
-        utils.exportGcodePath(chain.filename, meshes, chainops)
+        gcodepath.exportGcodePath(chain.filename, meshes, chainops)
         return {'FINISHED'}
 
 
