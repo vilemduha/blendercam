@@ -379,8 +379,8 @@ def updateBridges(o, context):
 def updateRest(o, context):
     print('update rest ')
     o.changed = True
-    if (o.strategy == 'WATERLINE'):
-        o.use_layers = True    
+#    if (o.strategy == 'WATERLINE'):
+#        o.use_layers = True    
 
 
 def getStrategyList(scene, context):
