@@ -564,7 +564,7 @@ def getPath3axis(context, operation):
         else:
             print("PARALLEL")
             if o.strategy == 'OUTLINEFILL':
-                getOperationSilhouete(o)
+                utils.getOperationSilhouete(o)
 
             pathSamples = getPathPattern(o)
 
