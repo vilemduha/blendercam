@@ -574,7 +574,7 @@ def getPath3axis(context, operation):
             # chunksToMesh(pathSamples,o)#for testing pattern script
             # return
             if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
-                pathSamples = connectChunksLow(pathSamples, o)
+                pathSamples = utils.connectChunksLow(pathSamples, o)
 
         # print (minz)
 
@@ -592,7 +592,7 @@ def getPath3axis(context, operation):
             print('sorting')
             chunks = utils.sortChunks(chunks, o)
             if o.strategy == 'OUTLINEFILL':
-                chunks = connectChunksLow(chunks, o)
+                chunks = utils.connectChunksLow(chunks, o)
         if o.ramp:
             for ch in chunks:
                 ch.rampZigZag(ch.zstart, ch.points[0][2], o)
