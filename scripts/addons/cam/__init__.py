@@ -165,6 +165,8 @@ class machineSettings(bpy.types.PropertyGroup):
                                           precision=PRECISION, unit='LENGTH')
     feedrate_default: bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,
                                               precision=PRECISION, unit='LENGTH')
+
+                                                  
     # UNSUPPORTED:
 
     spindle_min: bpy.props.FloatProperty(name="Spindle speed minimum RPM", default=5000, min=0.00001, max=320000,
@@ -376,7 +378,6 @@ def updateBridges(o, context):
     
 def updateRest(o, context):
     print('update rest ')
-    # if o.use_layers:
     o.changed = True
     if (o.strategy == 'WATERLINE'):
         o.use_layers = True    
@@ -445,9 +446,11 @@ class camOperation(bpy.types.PropertyGroup):
                               items=(
                                   ('END', 'End', 'end - flat cutter'),
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
+                                  ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
                                   ('VCARVE', 'V-carve', 'v carve cutter'),
                                   ('BALL', 'Sphere', 'Sphere cutter'),
                                   ('BALLCONE', 'Ballcone', 'Ball with a Cone Parallel - X'),
+                                  ('LASER', 'Laser', 'Laser cutter'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
                               description='Type of cutter used',
                               default='END', update=updateZbufferImage)
@@ -554,9 +557,15 @@ class camOperation(bpy.types.PropertyGroup):
                                      max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
 #    shank_diameter: FloatProperty(name="Shank Diameter", description="Diameter at the top of cutter", min=0.0,
 #                                     max=25.0, default=3.175, precision=PRECISION, unit="LENGTH",update=updateOffsetImage)
+    bull_corner_radius: FloatProperty(name="Bull Corner Radius", description="Radius tool bit corner", min=0.0,
+                                     max=0.035, default=0.005, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
 
     cutter_description: StringProperty(name="Tool Description", default="", update=updateOffsetImage)
     
+    Laser_on: bpy.props.StringProperty(name="Laser ON string", default="M68 E0 Q100")
+    Laser_off: bpy.props.StringProperty(name="Laser OFF string", default="M68 E0 Q0")
+    Laser_cmd: bpy.props.StringProperty(name="Laser command", default="M68 E0 Q")    
+    Laser_delay: bpy.props.FloatProperty(name="Laser ON Delay", description="time after fast move to turn on laser and let machine stabilize", default=0.2)    
 
     # steps
     dist_between_paths: bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,
