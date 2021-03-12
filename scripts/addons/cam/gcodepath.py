@@ -57,7 +57,7 @@ from cam.nc import nc
 from cam.nc import iso
 
 
-def exportGcodePath_laser(filename, vertslist, operations):
+def exportGcodePath(filename, vertslist, operations):
     """exports gcode with the heeks nc adopted library."""
     print("EXPORT")
     progress('exporting gcode file')
@@ -336,7 +336,6 @@ def exportGcodePath_laser(filename, vertslist, operations):
 
                 if o.machine_axes == '3':
                     if o.cutter_type == 'LASER':
-						
                         if laser != True:
                             c.write("(*************dwell->laser on)\n")
                             c.write("G04 P"+str(round(o.Laser_delay,2))+"\n")
@@ -355,6 +354,9 @@ def exportGcodePath_laser(filename, vertslist, operations):
                     f = freefeedrate
                     c.feedrate(f)
 
+#                if o.machine_axes == '3':
+#                    c.rapid(x=vx, y=vy, z=vz)
+                    
                 if o.machine_axes == '3':
                     if o.cutter_type == 'LASER':
                         if laser:
@@ -363,7 +365,6 @@ def exportGcodePath_laser(filename, vertslist, operations):
                             laser=False
                         c.rapid(x=vx, y=vy)
                     else:  											
-                        c.feed(x=vx, y=vy, z=vz)                
                         c.rapid(x=vx, y=vy, z=vz)
                 else:
                     # print('rapidf',ra,rb)
@@ -425,356 +426,6 @@ def exportGcodePath_laser(filename, vertslist, operations):
     c.file_close()
     print(time.time() - t)
 
-def exportGcodePath(filename, vertslist, operations):
-    """exports gcode with the heeks nc adopted library."""
-    print("EXPORT")
-    progress('exporting gcode file')
-    t = time.time()
-    s = bpy.context.scene
-    m = s.cam_machine
-
-    # find out how many files will be done:
-
-    split = False
-
-    totops = 0
-    findex = 0
-    if m.eval_splitting:  # detect whether splitting will happen
-        for mesh in vertslist:
-            totops += len(mesh.vertices)
-        print(totops)
-        if totops > m.split_limit:
-            split = True
-            filesnum = ceil(totops / m.split_limit)
-            print('file will be separated into %i files' % filesnum)
-    print('1')
-
-    basefilename = bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))] + safeFileName(filename)
-
-    extension = '.tap'
-    if m.post_processor == 'ISO':
-        from .nc import iso as postprocessor
-    if m.post_processor == 'MACH3':
-        from .nc import mach3 as postprocessor
-    elif m.post_processor == 'EMC':
-        extension = '.ngc'
-        from .nc import emc2b as postprocessor
-    elif m.post_processor == 'FADAL':
-        extension = '.tap'
-        from .nc import fadal as postprocessor
-    elif m.post_processor == 'GRBL':
-        extension = '.ngc'
-        from .nc import grbl as postprocessor
-    elif m.post_processor == 'HM50':
-        from .nc import hm50 as postprocessor
-    elif m.post_processor == 'HEIDENHAIN':
-        extension = '.H'
-        from .nc import heiden as postprocessor
-    elif m.post_processor == 'HEIDENHAIN530':
-        extension = '.H'
-        from .nc import heiden530 as postprocessor
-    elif m.post_processor == 'TNC151':
-        from .nc import tnc151 as postprocessor
-    elif m.post_processor == 'SIEGKX1':
-        from .nc import siegkx1 as postprocessor
-    elif m.post_processor == 'CENTROID':
-        from .nc import centroid1 as postprocessor
-    elif m.post_processor == 'ANILAM':
-        from .nc import anilam_crusader_m as postprocessor
-    elif m.post_processor == 'GRAVOS':
-        extension = '.nc'
-        from .nc import gravos as postprocessor
-    elif m.post_processor == 'WIN-PC':
-        extension = '.din'
-        from .nc import winpc as postprocessor
-    elif m.post_processor == 'SHOPBOT MTC':
-        extension = '.sbp'
-        from .nc import shopbot_mtc as postprocessor
-    elif m.post_processor == 'LYNX_OTTER_O':
-        extension = '.nc'
-        from .nc import lynx_otter_o as postprocessor
-
-    if s.unit_settings.system == 'METRIC':
-        unitcorr = 1000.0
-    elif s.unit_settings.system == 'IMPERIAL':
-        unitcorr = 1 / 0.0254;
-    else:
-        unitcorr = 1;
-    rotcorr = 180.0 / pi
-
-    use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
-
-    def startNewFile():
-        fileindex = ''
-        if split:
-            fileindex = '_' + str(findex)
-        filename = basefilename + fileindex + extension
-        c = postprocessor.Creator()
-
-        # process user overrides for post processor settings
-
-        if use_experimental and isinstance(c, iso.Creator):
-            c.output_block_numbers = m.output_block_numbers
-            c.start_block_number = m.start_block_number
-            c.block_number_increment = m.block_number_increment
-            c.output_tool_definitions = m.output_tool_definitions
-            c.output_tool_change = m.output_tool_change
-            c.output_g43_on_tool_change_line = m.output_g43_on_tool_change
-
-        c.file_open(filename)
-
-        # unit system correction
-        ###############
-        if s.unit_settings.system == 'METRIC':
-            c.metric()
-        elif s.unit_settings.system == 'IMPERIAL':
-            c.imperial()
-
-        # start program
-        c.program_begin(0, filename)
-        c.flush_nc()
-        c.comment('G-code generated with BlenderCAM and NC library')
-        # absolute coordinates
-        c.absolute()
-
-        # work-plane, by now always xy,
-        c.set_plane(0)
-        c.flush_nc()
-
-        return c
-
-    c = startNewFile()
-    last_cutter = None;  # [o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
-
-    processedops = 0
-    last = Vector((0, 0, 0))
-
-    for i, o in enumerate(operations):
-
-        if use_experimental and o.output_header:
-            lines = o.gcode_header.split(';')
-            for aline in lines:
-                c.write(aline + '\n')
-
-        free_movement_height = o.free_movement_height  # o.max.z+
-        if o.useG64:
-            c.set_path_control_mode(2, round(o.G64*1000,5), 0 )        
-
-        mesh = vertslist[i]
-        verts = mesh.vertices[:]
-        if o.machine_axes != '3':
-            rots = mesh.shape_keys.key_blocks['rotations'].data
-
-        # spindle rpm and direction
-        ###############
-        if o.spindle_rotation_direction == 'CW':
-            spdir_clockwise = True
-        else:
-            spdir_clockwise = False
-
-        # write tool, not working yet probably
-        # print (last_cutter)
-        if ((not use_experimental) or m.output_tool_change) and last_cutter != [o.cutter_id, o.cutter_diameter,
-                                                                                o.cutter_type, o.cutter_flutes]:
-            c.comment('Tool change - D = %s type %s flutes %s' % (
-            strInUnits(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes))
-            c.tool_change(o.cutter_id)
-            c.flush_nc()
-
-        last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
-        c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
-        c.write_spindle()
-        c.flush_nc()
-        c.write('\n')
-
-        if m.spindle_start_time > 0:
-            c.dwell(m.spindle_start_time)       
-        
-#        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
-        fmh=round(free_movement_height*1000,2)
-        c.write('G00 Z'+str(fmh)+'\n')
-        if o.enable_A:
-            if o.rotation_A==0:
-                 o.rotation_A=0.0001
-            c.rapid(a=o.rotation_A*180/math.pi)
-
-          
-        if o.enable_B:    
-            if o.rotation_B==0:
-                 o.rotation_B=0.0001
-            c.rapid(a=o.rotation_B*180/math.pi)
-
-        c.write('\n')
-        c.flush_nc()
-
-        # dhull c.feedrate(unitcorr*o.feedrate)
-
-        # commands=[]
-        m = bpy.context.scene.cam_machine
-
-        millfeedrate = min(o.feedrate, m.feedrate_max)
-
-        millfeedrate = unitcorr * max(millfeedrate, m.feedrate_min)
-        plungefeedrate = millfeedrate * o.plunge_feedrate / 100
-        freefeedrate = m.feedrate_max * unitcorr
-        fadjust = False
-        if o.do_simulation_feedrate and mesh.shape_keys != None and mesh.shape_keys.key_blocks.find('feedrates') != -1:
-            shapek = mesh.shape_keys.key_blocks['feedrates']
-
-            fadjust = True
-
-        if m.use_position_definitions:  # dhull
-            last = Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
-#		removed by pppalain 2020/12
-#       else:
-#           if i < 1:
-#                last = Vector((0.0, 0.0, free_movement_height))  # nonsense values so first step of the operation gets written for sure
-        lastrot = Euler((0, 0, 0))
-        duration = 0.0
-        f = 0.1123456  # nonsense value, so first feedrate always gets written
-        fadjustval = 1  # if simulation load data is Not present
-
-        downvector = Vector((0, 0, -1))
-        plungelimit = (pi / 2 - o.plunge_angle)
-
-        scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
-
-        # print('2')
-        for vi, vert in enumerate(verts):
-            # skip the first vertex if this is a chained operation
-            # ie: outputting more than one operation
-            # otherwise the machine gets sent back to 0,0 for each operation which is unecessary
-            if i > 0 and vi == 0:
-                continue
-            v = vert.co
-            if o.machine_axes != '3':
-                v = v.copy()  # we rotate it so we need to copy the vector
-                r = Euler(rots[vi].co)
-                # conversion to N-axis coordinates
-                # this seems to work correctly for 4 axis.
-                rcompensate = r.copy()
-                rcompensate.x = -r.x
-                rcompensate.y = -r.y
-                rcompensate.z = -r.z
-                v.rotate(rcompensate)
-
-                if r.x == lastrot.x:
-                    ra = None;
-                # print(r.x,lastrot.x)
-                else:
-
-                    ra = r.x * rotcorr
-                # print(ra,'RA')
-                # ra=r.x*rotcorr
-                if r.y == lastrot.y:
-                    rb = None;
-                else:
-                    rb = r.y * rotcorr
-            # rb=r.y*rotcorr
-            # print (	ra,rb)
-
-            if vi > 0 and v.x == last.x:
-                vx = None;
-            else:
-                vx = v.x * unitcorr
-            if vi > 0 and v.y == last.y:
-                vy = None;
-            else:
-                vy = v.y * unitcorr
-            if vi > 0 and v.z == last.z:
-                vz = None;
-            else:
-                vz = v.z * unitcorr
-
-            if fadjust:
-                fadjustval = shapek.data[vi].co.z / scale_graph
-
-            # v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)
-            vect = v - last
-            l = vect.length
-            if vi > 0 and l > 0 and downvector.angle(vect) < plungelimit:
-                # print('plunge')
-                # print(vect)
-                if f != plungefeedrate or (fadjust and fadjustval != 1):
-                    f = plungefeedrate * fadjustval
-                    c.feedrate(f)
-
-                if o.machine_axes == '3':
-                    c.feed(x=vx, y=vy, z=vz)
-                else:
-
-                    # print('plungef',ra,rb)
-                    c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
-
-            elif v.z >= free_movement_height or vi == 0:  # v.z==last.z==free_movement_height or vi==0
-
-                if f != freefeedrate:
-                    f = freefeedrate
-                    c.feedrate(f)
-
-                if o.machine_axes == '3':
-                    c.rapid(x=vx, y=vy, z=vz)
-                else:
-                    # print('rapidf',ra,rb)
-                    c.rapid(x=vx, y=vy, z=vz, a=ra, b=rb)
-            # gcommand='{RAPID}'
-
-            else:
-
-                if f != millfeedrate or (fadjust and fadjustval != 1):
-                    f = millfeedrate * fadjustval
-                    c.feedrate(f)
-
-                if o.machine_axes == '3':
-                    c.feed(x=vx, y=vy, z=vz)
-                else:
-                    # print('normalf',ra,rb)
-                    c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
-
-            duration += vect.length / f
-            # print(duration)
-            last = v
-            if o.machine_axes != '3':
-                lastrot = r
-
-            processedops += 1
-            if split and processedops > m.split_limit:
-                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_movement_height * unitcorr)
-                # @v=(ch.points[-1][0],ch.points[-1][1],free_movement_height)
-                findex += 1
-                c.file_close()
-                c = startNewFile()
-                c.flush_nc()
-                c.comment('Tool change - D = %s type %s flutes %s' % (
-                strInUnits(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes))
-                c.tool_change(o.cutter_id)
-                c.spindle(o.spindle_rpm, spdir_clockwise)
-                c.write_spindle()
-                c.flush_nc()
-
-                if m.spindle_start_time > 0:
-                    c.dwell(m.spindle_start_time)
-                    c.flush_nc()
-
-                c.feedrate(unitcorr * o.feedrate)
-                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_movement_height * unitcorr)
-                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=last.z * unitcorr)
-                processedops = 0
-
-        c.feedrate(unitcorr * o.feedrate)
-
-        if use_experimental and o.output_trailer:
-            lines = o.gcode_trailer.split(';')
-            for aline in lines:
-                c.write(aline + '\n')
-
-    o.duration = duration * unitcorr
-    # print('duration')
-    # print(o.duration)
-
-    c.program_end()
-    c.file_close()
-    print(time.time() - t)
     
 def getPath(context, operation):  # should do all path calculations.
     t = time.process_time()
@@ -1185,6 +836,4 @@ def getPath4axis(context, operation):
 
         chunks.extend(utils.sampleChunksNAxis(o, pathSamples, layers))
         strategy.chunksToMesh(chunks, o)
-       
-
-
+ 
