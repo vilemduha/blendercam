@@ -90,6 +90,16 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                    EngagementDisplay(ao,layout)
                    layout.prop(ao,'ball_cone_flute')
                    layout.label(text='Cutter diameter = shank diameter')
+                if ao.cutter_type == 'BULLNOSE':
+                   layout.prop(ao,'bull_corner_radius')
+                   EngagementDisplay(ao,layout)
+                   layout.label(text='Cutter diameter = shank diameter')
+               
+                if ao.cutter_type == 'LASER':
+                   layout.prop(ao,'Laser_on')
+                   layout.prop(ao,'Laser_off')
+                   layout.prop(ao,'Laser_cmd')
+                   layout.prop(ao,'Laser_delay')
                                       
                 if ao.cutter_type == 'CUSTOM':
                     if ao.use_exact:
@@ -102,7 +112,8 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                 layout.prop(ao, 'cutter_diameter')
                 if ao.strategy == "POCKET" or ao.strategy == "PARALLEL" or ao.strategy == "CROSS" or ao.strategy == "WATERLINE": 
                     EngagementDisplay(ao,layout)                    
-                layout.prop(ao, 'cutter_flutes')
+                if ao.cutter_type != "LASER" :
+                    layout.prop(ao, 'cutter_flutes')
                 layout.prop(ao, 'cutter_description')
 
 
