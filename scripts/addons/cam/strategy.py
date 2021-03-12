@@ -241,7 +241,7 @@ def proj_curve(s, o):
 
     layers = getLayers(o, 0, ch.depth)
 
-    chunks.extend(sampleChunksNAxis(o, pathSamples, layers))
+    chunks.extend(utils.sampleChunksNAxis(o, pathSamples, layers))
     chunksToMesh(chunks, o)
 
 
@@ -554,7 +554,7 @@ def medial_axis(o):
             if ob.data.resolution_u < 64:
                 ob.data.resolution_u = 64
 
-    polys = getOperationSilhouete(o)
+    polys = utils.getOperationSilhouete(o)
     mpoly = sgeometry.asMultiPolygon(polys)
     mpoly_boundary = mpoly.boundary
     for poly in polys:
