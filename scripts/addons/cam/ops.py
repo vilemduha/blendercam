@@ -25,7 +25,7 @@ from pprint import pprint
 import bpy
 import subprocess, os, sys, threading
 import cam
-from cam import utils, pack, polygon_utils_cam, chunk, simple,gcodepath
+from cam import utils, pack, polygon_utils_cam, chunk, simple,gcodepath,bridges
 from bpy.props import *
 import shapely
 
@@ -754,7 +754,7 @@ class CamBridgesAdd(bpy.types.Operator):
         s = bpy.context.scene
         a = s.cam_active_operation
         o = s.cam_operations[a]
-        utils.addAutoBridges(o)
+        bridges.addAutoBridges(o)
         return {'FINISHED'}
 
 

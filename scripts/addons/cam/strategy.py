@@ -46,7 +46,7 @@ from cam.collision import *
 from cam import simple
 from cam.simple import *
 from cam import pattern
-from cam import utils
+from cam import utils,bridges
 from cam.pattern import *
 from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
@@ -156,7 +156,7 @@ def cutout(o):
             chunk = chl[0]
             layer = chl[1]
             if layer[1] < bridgeheight:
-                useBridges(chunk, o)
+                bridges.useBridges(chunk, o)
 
     if o.ramp:  # add ramps or simply add chunks
         for chl in extendorder:
