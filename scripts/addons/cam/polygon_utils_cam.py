@@ -20,14 +20,12 @@
 # ***** END GPL LICENCE BLOCK *****
 
 import math
-from math import *
 import mathutils
-from mathutils import *
+#from mathutils import *
 import curve_simplify
 
 import shapely
 from shapely.geometry import polygon as spolygon
-from shapely import ops
 from shapely import geometry as sgeometry
 
 SHAPELY = True
@@ -40,7 +38,7 @@ def Circle(r, np):
     c = []
     pi = math.pi
     v = mathutils.Vector((r, 0, 0))
-    e = mathutils.Euler((0, 0, 2.0 * pi / np))
+    e = mathutils.Euler((0, 0, 2.0 * math.pi / np))
     for a in range(0, np):
         c.append((v.x, v.y))
         v.rotate(e)
@@ -58,7 +56,7 @@ def shapelyRemoveDoubles(p, optimize_threshold):
 
         veclist = []
         for v in c:
-            veclist.append(Vector((v[0], v[1])))
+            veclist.append(mathutils.Vector((v[0], v[1])))
         # progress(len(veclist))
         s = curve_simplify.simplify_RDP(veclist, soptions)
         # progress(len(s))

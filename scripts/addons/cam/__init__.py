@@ -30,7 +30,7 @@ from bpy.types import Menu, Operator, UIList, AddonPreferences
 
 # from . import patterns
 # from . import chunk_operations
-from cam import ui, ops, utils, simple, polygon_utils_cam  # , post_processors
+from cam import ui, ops,curvecamtools, utils, simple, polygon_utils_cam  # , post_processors
 import numpy
 
 from shapely import geometry as sgeometry
@@ -1127,14 +1127,14 @@ def get_panels():  # convenience function for bot register and unregister functi
         ops.CamPackObjects,
         ops.CamSliceObjects,
         # other tools
-        ops.CamCurveBoolean,
-        ops.CamOffsetSilhouete,
-        ops.CamObjectSilhouete,
-        ops.CamCurveIntarsion,
-        ops.CamCurveOvercuts,
-        ops.CamCurveOvercutsB,
-        ops.CamCurveRemoveDoubles,
-        ops.CamMeshGetPockets,
+        curvecamtools.CamCurveBoolean,
+        curvecamtools.CamOffsetSilhouete,
+        curvecamtools.CamObjectSilhouete,
+        curvecamtools.CamCurveIntarsion,
+        curvecamtools.CamCurveOvercuts,
+        curvecamtools.CamCurveOvercutsB,
+        curvecamtools.CamCurveRemoveDoubles,
+        curvecamtools.CamMeshGetPockets,
 
         CAM_CUTTER_MT_presets,
         CAM_OPERATION_MT_presets,
@@ -1318,14 +1318,14 @@ classes = [
     ops.CamPackObjects,
     ops.CamSliceObjects,
     # other tools
-    ops.CamCurveBoolean,
-    ops.CamOffsetSilhouete,
-    ops.CamObjectSilhouete,
-    ops.CamCurveIntarsion,
-    ops.CamCurveOvercuts,
-    ops.CamCurveOvercutsB,
-    ops.CamCurveRemoveDoubles,
-    ops.CamMeshGetPockets,
+    curvecamtools.CamCurveBoolean,
+    curvecamtools.CamOffsetSilhouete,
+    curvecamtools.CamObjectSilhouete,
+    curvecamtools.CamCurveIntarsion,
+    curvecamtools.CamCurveOvercuts,
+    curvecamtools.CamCurveOvercutsB,
+    curvecamtools.CamCurveRemoveDoubles,
+    curvecamtools.CamMeshGetPockets,
 
     CAM_CUTTER_MT_presets,
     CAM_OPERATION_MT_presets,

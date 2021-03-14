@@ -28,32 +28,30 @@ import math
 from math import *
 from mathutils import *
 from bpy.props import *
-import bl_operators
-from bpy.types import Menu, Operator
-from bpy_extras import object_utils
-import curve_simplify
-import bmesh
 
 import numpy
-import random, sys, os
-import pickle
-import string
+
 from cam import chunk
 from cam.chunk import *
+
 from cam import collision
 from cam.collision import *
-# import multiprocessing
+
 from cam import simple
+from cam.simple import *
+
 from cam import utils
 from cam import strategy
-from cam.simple import *
+
 from cam import pattern
 from cam.pattern import *
+
 from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
+
 from cam import image_utils
 from cam.image_utils import *
-from cam.nc import nc
+
 from cam.nc import iso
 
 

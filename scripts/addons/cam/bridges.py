@@ -24,8 +24,8 @@ import bpy
 from bpy.props import *
 
 from cam import utils
-from cam import polygon_utils_cam
-from cam.polygon_utils_cam import *
+import mathutils
+import math
 
 from shapely import ops as sops
 from shapely import geometry as sgeometry
@@ -77,12 +77,12 @@ def addAutoBridges(o):
             minx, miny, maxx, maxy = c.bounds
             d1 = c.project(sgeometry.Point(maxx + 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, -pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, -math.pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point(minx - 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, math.pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, maxy + 1000))
@@ -92,7 +92,7 @@ def addAutoBridges(o):
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, miny - 1000))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, pi, o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, math.pi, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
 
@@ -150,8 +150,8 @@ def useBridges(ch, o):
             if vi + 1 < len(ch.points):
                 i2 = vi + 1
                 chp2 = ch.points[vi + 1]  # Vector(ch.points[vi+1])
-            v1 = Vector(chp1)
-            v2 = Vector(chp2)
+            v1 = mathutils.Vector(chp1)
+            v2 = mathutils.Vector(chp2)
             if v1.z < bridgeheight or v2.z < bridgeheight:
                 v = v2 - v1
                 # dist+=v.length
@@ -189,11 +189,11 @@ def useBridges(ch, o):
                 #	newpoints.append(chp1)
                 cpoints = []
                 if itpoint:
-                    cpoints = [Vector((intersections.x, intersections.y, intersections.z))]
+                    cpoints = [mathutils.Vector((intersections.x, intersections.y, intersections.z))]
                 elif itmpoint:
                     cpoints = []
                     for p in intersections:
-                        cpoints.append(Vector((p.x, p.y, p.z)))
+                        cpoints.append(mathutils.Vector((p.x, p.y, p.z)))
                 #####sort collisions here :(
                 ncpoints = []
                 while len(cpoints) > 0:

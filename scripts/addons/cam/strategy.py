@@ -19,49 +19,31 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py. All other libraries are called mostly from here.
+# here is the strategy functionality of Blender CAM. The functions here are called with operators defined in ops.py. All other libraries are called mostly from here.
 
 import bpy
+from bpy.props import *
 import time
-import mathutils
 import math
 from math import *
-from mathutils import *
-from bpy.props import *
-import bl_operators
-from bpy.types import Menu, Operator
 from bpy_extras import object_utils
-import curve_simplify
-import bmesh
-
-import numpy
-import random, sys, os
-import pickle
-import string
 from cam import chunk
 from cam.chunk import *
 from cam import collision
 from cam.collision import *
-# import multiprocessing
 from cam import simple
 from cam.simple import *
 from cam import pattern
-from cam import utils,bridges
 from cam.pattern import *
+from cam import utils,bridges
 from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
 from cam import image_utils
 from cam.image_utils import *
-from cam.nc import nc
-from cam.nc import iso
-from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
 
 from shapely.geometry import polygon as spolygon
-from shapely import ops as sops
 from shapely import geometry as sgeometry
-from shapely import affinity, prepared
-
-# from shapely.geometry import * not possible until Polygon libs gets out finally..
+from shapely import affinity
 SHAPELY = True
 
 
