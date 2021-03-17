@@ -30,6 +30,7 @@ from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges
 import shapely
 import mathutils
 import math
+import cam
 
 
 class threadCom:  # object passed to threads to read background process stdout info
