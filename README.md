@@ -27,8 +27,11 @@ See the [Wiki](https://github.com/vilemduha/blendercam/wiki).
 
 ## Dependencies
 
-* Blender 2.80 or 2.90
-* OpenCamLib (optional)
+* Blender 2.80 or 2.92
+* OpenCamLib (optional but highly recomended - required for ballcone and bullnose cutter support)
+* Recomended on Linux.
+* No instructions for Mac users (unknown if opencamlib works)
+* OpenCamlib can work on Windows but installation is tricky
 
 
 ## DISCLAIMER
