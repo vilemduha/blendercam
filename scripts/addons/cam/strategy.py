@@ -62,6 +62,7 @@ def cutout(o):
 
             if len(ch.points) > 2:
                 ch.poly = chunkToShapely(ch)
+
     # p.addContour(ch.poly)
     else:
         chunksFromCurve = []
@@ -103,8 +104,8 @@ def cutout(o):
             ch.points.reverse()
 
     layers = getLayers(o, o.maxz, o.min.z)
-
     extendorder = []
+
     if o.first_down:  # each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
         for chunk in chunksFromCurve:
             dir_switch = False # needed to avoid unnecessary lifting of cutter with open chunks and movement set to "MEANDER"
@@ -158,6 +159,40 @@ def cutout(o):
 
 
 def curve(o):
+    print('EXPERIMENTAL operation: curve')
+    
+    layers = getLayers(o, o.maxz, o.min.z)
+    extendorder = []
+    
+    pathSamples = []
+    utils.getOperationSources(o)
+    if not o.onlycurves:
+        o.warnings += 'at least one of assigned objects is not a curve\n'
+
+    for ob in o.objects:
+        pathSamples.extend(curveToChunks(ob))
+    pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
+    pathSamples = chunksRefine(pathSamples, o)
+
+    for layer in layers:
+        for ch in pathSamples:
+            extendorder.append([ch.copy(), layer])
+            
+    for chl in extendorder:  # Set Z for all chunks
+        chunk = chl[0]
+        layer = chl[1]
+        print(layer[1])
+        chunk.setZ(layer[1])
+
+    chunks = []
+    
+    for chl in extendorder:
+        chunks.append(chl[0])
+            
+
+    chunksToMesh(chunks, o)
+
+def old_curve(o):  ### should be depricated if the curve(o) is validated.
     print('operation: curve')
     pathSamples = []
     utils.getOperationSources(o)
@@ -174,6 +209,7 @@ def curve(o):
             ch.rampZigZag(ch.zstart, ch.points[0][2], o)
 
     chunksToMesh(pathSamples, o)
+
 
 
 def proj_curve(s, o):
