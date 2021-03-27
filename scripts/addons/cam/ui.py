@@ -500,8 +500,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                 #   layout.label(text='Not supported for curves')
                 #   return
 
-                if ao.strategy == 'CUTOUT':
-                    layout.prop(ao, 'cut_type')
+                if ao.strategy in ['CUTOUT','CURVE']:
+                    if ao.strategy=='CUTOUT':
+                        layout.prop(ao, 'cut_type')
                     layout.prop(ao,'enable_A')
                     if ao.enable_A:
                         layout.prop(ao,'rotation_A')
@@ -582,7 +583,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                             layout.label(text='A || Y - B ||X')
                     layout.prop(ao,'enable_B')
                     if ao.enable_B:
-                        layout.prop(ao,'rotation_B') 
+                        layout.prop(ao,'rotation_B')
+
+					         
                 else:
                     layout.prop(ao, 'dist_between_paths')
                     EngagementDisplay(ao,layout)
@@ -752,7 +755,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.optimize:
                     layout.prop(ao, 'optimize_threshold')
                 if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
-                    exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL']
+                    exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL','CURVE']
                     if not exclude_exact:
                         layout.prop(ao, 'use_opencamlib')
                         layout.prop(ao, 'use_exact')
