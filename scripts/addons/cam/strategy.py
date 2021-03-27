@@ -160,10 +160,10 @@ def cutout(o):
 def curve(o):
     print('operation: curve')
     pathSamples = []
-    getOperationSources(o)
+    utils.getOperationSources(o)
     if not o.onlycurves:
         o.warnings += 'at least one of assigned objects is not a curve\n'
-    # ob=bpy.data.objects[o.object_name]
+
     for ob in o.objects:
         pathSamples.extend(curveToChunks(ob))
     pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
