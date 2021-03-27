@@ -88,6 +88,10 @@ class camPathChunk:
         for i, p in enumerate(self.points):
             self.points[i] = (p[0], p[1], z)
 
+    def offsetZ(self, z):
+        for i, p in enumerate(self.points):
+            self.points[i] = (p[0], p[1], z+p[2])
+
     def isbelowZ(self, z):
         isbelow = False
         for p in (self.points):
