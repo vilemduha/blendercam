@@ -182,7 +182,7 @@ def curve(o):
         chunk = chl[0]
         layer = chl[1]
         print(layer[1])
-        chunk.setZ(layer[1])
+        chunk.offsetZ(o.maxz-o.minz+layer[1])
 
     chunks = []
     
