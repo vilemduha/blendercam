@@ -159,11 +159,12 @@ def cutout(o):
 
 
 def curve(o):
-    print('EXPERIMENTAL operation: curve')
+    print('operation: curve')
     
     layers = getLayers(o, o.maxz, o.min.z)
+    print(layers)
     extendorder = []
-    
+    chunks = []
     pathSamples = []
     utils.getOperationSources(o)
     if not o.onlycurves:
@@ -173,26 +174,32 @@ def curve(o):
         pathSamples.extend(curveToChunks(ob))
     pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
     pathSamples = chunksRefine(pathSamples, o)
-
-    for layer in layers:
-        for ch in pathSamples:
-            extendorder.append([ch.copy(), layer])
-            
-    for chl in extendorder:  # Set Z for all chunks
-        chunk = chl[0]
-        layer = chl[1]
-        print(layer[1])
-        chunk.offsetZ(o.maxz-o.minz+layer[1])
-
-    chunks = []
     
-    for chl in extendorder:
-        chunks.append(chl[0])
-            
+    if o.use_layers:
+        for layer in layers:
+            lheight=layer[0]-layer[1]
+			
+            for ch in pathSamples:
+                extendorder.append([ch.copy(), layer])
+        i=-1    
+        for chl in extendorder:  # Set offset Z for all chunks
+            chunk = chl[0]
+            layer = chl[1]
+            print(layer[1])
+            chunk.offsetZ(o.maxz+o.maxz-o.minz-i*lheight)
+            i=i+1
 
-    chunksToMesh(chunks, o)
+        chunks = []
+    
+        for chl in extendorder:
+            chunks.append(chl[0])
 
-def old_curve(o):  ### should be depricated if the curve(o) is validated.
+        chunksToMesh(chunks, o)
+
+    else:			#no layers, old curve
+        chunksToMesh(pathSamples, o)      
+          		
+def curve2(o):  ### should be depricated if the curve(o) is validated.
     print('operation: curve')
     pathSamples = []
     utils.getOperationSources(o)
