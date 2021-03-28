@@ -254,7 +254,7 @@ def getOperationSources(o):
 
 def getBounds(o):
     # print('kolikrat sem rpijde')
-    if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
+    if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION' or o.geometry_source == 'CURVE':
         if o.material_from_model:
             minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
 
@@ -1583,18 +1583,12 @@ def getContainer():
 
     return container
 
-
-
-
-
-
 # progress('finished')
 
 # tools for voroni graphs all copied from the delaunayVoronoi addon:
 class Point:
     def __init__(self, x, y, z):
         self.x, self.y, self.z = x, y, z
-
 
 def unique(L):
     """Return a list of unhashable elements in s, but without duplicates.

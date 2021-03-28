@@ -160,9 +160,10 @@ def cutout(o):
 
 def curve(o):
     print('operation: curve')
-    
-    layers = getLayers(o, o.maxz, o.min.z)
+
+    layers = getLayers(o, o.maxz, o.minz)
     print(layers)
+    
     extendorder = []
     chunks = []
     pathSamples = []
@@ -174,19 +175,24 @@ def curve(o):
         pathSamples.extend(curveToChunks(ob))
     pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
     pathSamples = chunksRefine(pathSamples, o)
-    
+
+
+
     if o.use_layers:
         for layer in layers:
             lheight=layer[0]-layer[1]
 			
             for ch in pathSamples:
                 extendorder.append([ch.copy(), layer])
-        i=-1    
+        i=1  
         for chl in extendorder:  # Set offset Z for all chunks
             chunk = chl[0]
             layer = chl[1]
             print(layer[1])
             chunk.offsetZ(o.maxz+o.maxz-o.minz-i*lheight)
+            chunk.clampZ(o.minz) #safety to not cut lower than minz 
+            chunk.clampmaxZ(o.free_movement_height ) #safety, not higher than free movement height	
+
             i=i+1
 
         chunks = []
@@ -197,6 +203,8 @@ def curve(o):
         chunksToMesh(chunks, o)
 
     else:			#no layers, old curve
+        for ch in pathSamples:
+            ch.clampZ(o.minz) #safety to not cut lower than minz    		
         chunksToMesh(pathSamples, o)      
           		
 def curve2(o):  ### should be depricated if the curve(o) is validated.
@@ -734,15 +742,17 @@ def getLayers(operation, startdepth, enddepth):
     if operation.use_layers:
         layers = []
         n = math.ceil((startdepth - enddepth) / operation.stepdown)
+        print("start " + str(startdepth) + " end " + str(enddepth) + " n " + str(n))
+
         layerstart = operation.maxz
         for x in range(0, n):
-            layerend = max(startdepth - ((x + 1) * operation.stepdown), enddepth)
+            layerend = round(max(startdepth - ((x + 1) * operation.stepdown), enddepth),6)
             if int(layerstart * 10 ** 8) != int(
                     layerend * 10 ** 8):  # it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
                 layers.append([layerstart, layerend])
             layerstart = layerend
     else:
-        layers = [[startdepth, enddepth]]
+        layers = [[math.round(startdepth,6), math.round(enddepth,6)]]
 
     return layers
 

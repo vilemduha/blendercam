@@ -104,6 +104,11 @@ class camPathChunk:
             if p[2] < z:
                 self.points[i] = (p[0], p[1], z)
 
+    def clampmaxZ(self, z):
+        for i, p in enumerate(self.points):
+            if p[2] > z:
+                self.points[i] = (p[0], p[1], z)
+
     def dist(self, pos, o):
         if self.closed:
             mind = 10000000
