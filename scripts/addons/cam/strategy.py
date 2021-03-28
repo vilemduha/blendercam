@@ -161,10 +161,8 @@ def cutout(o):
 def curve(o):
     print('operation: curve')
 
-    layers = getLayers(o, o.maxz, o.minz)
-    print(layers)
+
     
-    extendorder = []
     chunks = []
     pathSamples = []
     utils.getOperationSources(o)
@@ -179,17 +177,19 @@ def curve(o):
 
 
     if o.use_layers:
+        layers = getLayers(o, o.maxz, round(o.minz,6))
+        extendorder = []
         for layer in layers:
             lheight=layer[0]-layer[1]
-			
+
             for ch in pathSamples:
                 extendorder.append([ch.copy(), layer])
-        i=1  
+        i=0  
         for chl in extendorder:  # Set offset Z for all chunks
             chunk = chl[0]
             layer = chl[1]
-            print(layer[1])
-            chunk.offsetZ(o.maxz+o.maxz-o.minz-i*lheight)
+            print('layer:' +str(layer[1]))
+            chunk.offsetZ(o.maxz+o.maxz-o.minz+layer[1])
             chunk.clampZ(o.minz) #safety to not cut lower than minz 
             chunk.clampmaxZ(o.free_movement_height ) #safety, not higher than free movement height	
 
@@ -199,6 +199,9 @@ def curve(o):
     
         for chl in extendorder:
             chunks.append(chl[0])
+            
+ #       for ch in pathSamples:  
+ #           chunks.append(ch) #copy original path
 
         chunksToMesh(chunks, o)
 
@@ -752,7 +755,7 @@ def getLayers(operation, startdepth, enddepth):
                 layers.append([layerstart, layerend])
             layerstart = layerend
     else:
-        layers = [[math.round(startdepth,6), math.round(enddepth,6)]]
+        layers = [[round(startdepth,6), round(enddepth,6)]]
 
     return layers
 
