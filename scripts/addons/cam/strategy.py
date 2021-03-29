@@ -160,75 +160,46 @@ def cutout(o):
 
 def curve(o):
     print('operation: curve')
-
-
     
-    chunks = []
     pathSamples = []
     utils.getOperationSources(o)
     if not o.onlycurves:
         o.warnings += 'at least one of assigned objects is not a curve\n'
 
     for ob in o.objects:
-        pathSamples.extend(curveToChunks(ob))
+        pathSamples.extend(curveToChunks(ob))       # make the chunks from curve here
     pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
-    pathSamples = chunksRefine(pathSamples, o)
+    pathSamples = chunksRefine(pathSamples, o)      # simplify
 
 
-
+	# layers here
     if o.use_layers:
         layers = getLayers(o, o.maxz, round(o.minz,6))
         extendorder = []
+        chunks = []
         for layer in layers:
-            lheight=layer[0]-layer[1]
-
             for ch in pathSamples:
-                extendorder.append([ch.copy(), layer])
-        i=0  
-        for chl in extendorder:  # Set offset Z for all chunks
+                extendorder.append([ch.copy(), layer])  # include layer information to chunk list
+
+        for chl in extendorder:  # Set offset Z for all chunks according to the layer information, 
             chunk = chl[0]
             layer = chl[1]
-            print('layer:' +str(layer[1]))
-            chunk.offsetZ(o.maxz+o.maxz-o.minz+layer[1])
+            print('layer: ' +str(layer[1]))
+            chunk.offsetZ(o.maxz*2-o.minz+layer[1]) 
             chunk.clampZ(o.minz) #safety to not cut lower than minz 
             chunk.clampmaxZ(o.free_movement_height ) #safety, not higher than free movement height	
 
-            i=i+1
-
-        chunks = []
-    
-        for chl in extendorder:
+        for chl in extendorder:  #strip layer information from extendorder and transfer them to chunks
             chunks.append(chl[0])
             
- #       for ch in pathSamples:  
- #           chunks.append(ch) #copy original path
-
-        chunksToMesh(chunks, o)
+        chunksToMesh(chunks, o) #finish by converting to mesh
 
     else:			#no layers, old curve
         for ch in pathSamples:
-            ch.clampZ(o.minz) #safety to not cut lower than minz    		
+            ch.clampZ(o.minz) #safety to not cut lower than minz  
+            ch.clampmaxZ(o.free_movement_height )   #safety, not higher than free movement height			
         chunksToMesh(pathSamples, o)      
           		
-def curve2(o):  ### should be depricated if the curve(o) is validated.
-    print('operation: curve')
-    pathSamples = []
-    utils.getOperationSources(o)
-    if not o.onlycurves:
-        o.warnings += 'at least one of assigned objects is not a curve\n'
-
-    for ob in o.objects:
-        pathSamples.extend(curveToChunks(ob))
-    pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
-    pathSamples = chunksRefine(pathSamples, o)
-
-    if o.ramp:
-        for ch in pathSamples:
-            ch.rampZigZag(ch.zstart, ch.points[0][2], o)
-
-    chunksToMesh(pathSamples, o)
-
-
 
 def proj_curve(s, o):
     print('operation: projected curve')
