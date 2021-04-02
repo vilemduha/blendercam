@@ -582,6 +582,7 @@ class CamSineCurve(bpy.types.Operator):
 
 
 #    zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
+    axis: bpy.props.EnumProperty(name="displacement axis",items=(('XY', 'Y to displace X axis', 'Y constant; X sine displacement'),('YX', 'X to displace Y axis', 'X constant; Y sine displacement'),('ZX', 'X to displace Z axis', 'X constant; Y sine displacement'),('ZY', 'Y to displace Z axis', 'X constant; Y sine displacement')))
     amplitude: bpy.props.FloatProperty(name="Amplitude", default=.01, min=0, max=10, precision=4, unit="LENGTH")
     period: bpy.props.FloatProperty(name="Period", default=.5, min=0.001, max=100, precision=4, unit="LENGTH")
     shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
@@ -597,13 +598,19 @@ class CamSineCurve(bpy.types.Operator):
 
         zstring=str(round(self.offset,6)) + "+" + str(round(self.amplitude,6)) +"*sin((2*pi/" + str(round(self.period,6)) +")*(t+"+str(round(self.shift,6))+"))"
         print(zstring)
-        z=Expression(zstring,["t"])
-#        z=Expression(self.zstring,["t"])
-
-        z
+        e=Expression(zstring,["t"])  #make equation from string
         
+        #build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
-           return (t,0,z(t))
+           if self.axis == "XY":
+               c = (e(t),t,0)
+           elif self.axis == "YX":        
+               c = (t,e(t),0)
+           elif self.axis == "ZX":        
+               c = (t,0,e(t))               
+           elif self.axis == "ZY":        
+               c = (0,t,e(t))               
+           return c
             
         parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration)        
         
