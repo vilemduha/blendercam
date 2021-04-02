@@ -616,3 +616,42 @@ class CamSineCurve(bpy.types.Operator):
         
         return {'FINISHED'}
 
+class CamLissajousCurve(bpy.types.Operator):
+    """Object silhouete """
+    bl_idname = "object.lissajous"
+    bl_label = "Create Lissajous figure"
+    bl_options = {'REGISTER', 'UNDO'}
+
+
+
+    amplitude_A: bpy.props.FloatProperty(name="Amplitude A", default=.1, min=0, max=100, precision=4, unit="LENGTH")
+    amplitude_B: bpy.props.FloatProperty(name="Amplitude B", default=.1, min=0, max=100, precision=4, unit="LENGTH")
+    period_A: bpy.props.FloatProperty(name="Period A", default=1.1, min=0.001, max=100, precision=4, unit="LENGTH")
+    period_B: bpy.props.FloatProperty(name="Period B", default=1.0, min=0.001, max=100, precision=4, unit="LENGTH")
+    shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
+
+    iteration: bpy.props.IntProperty(name="iteration", default=500, min=50, max=10000)
+    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=100, precision=4, unit="LENGTH")
+    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-10.0, max=3, precision=4, unit="LENGTH")
+
+   
+    def execute(self, context):  
+        
+        #x=Asin(at+delta ),y=Bsin(bt)
+
+        xstring=str(round(self.amplitude_A,6)) +"*sin((2*pi/" + str(round(self.period_A,6)) +")*(t+"+str(round(self.shift,6))+"))"
+        ystring=str(round(self.amplitude_B,6)) +"*sin((2*pi/" + str(round(self.period_B,6)) +")*(t))"
+        print("x= "+str(xstring))
+        print("y= "+str(ystring))
+        x=Expression(xstring,["t"])  #make equation from string
+        y=Expression(ystring,["t"])  #make equation from string
+        
+        #build function to be passed to create parametric curve ()
+        def f(t, offset: float = 0.0):
+           c = (x(t),y(t),0)
+           return c
+            
+        parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration)        
+        
+        return {'FINISHED'}
+
