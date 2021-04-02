@@ -631,7 +631,7 @@ class CamLissajousCurve(bpy.types.Operator):
     shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
 
     iteration: bpy.props.IntProperty(name="iteration", default=500, min=50, max=10000)
-    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=100, precision=4, unit="LENGTH")
+    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=11, min=-3.0, max=1000000, precision=4, unit="LENGTH")
     mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-10.0, max=3, precision=4, unit="LENGTH")
 
    
