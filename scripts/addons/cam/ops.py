@@ -359,7 +359,7 @@ class PathExport(bpy.types.Operator):
 
         print("EXPORING", operation.filename, bpy.data.objects["cam_path_{}".format(operation.name)].data, operation)
 
-        utils.exportGcodePath(operation.filename, [bpy.data.objects["cam_path_{}".format(operation.name)].data], [operation])
+        gcodepath.exportGcodePath(operation.filename, [bpy.data.objects["cam_path_{}".format(operation.name)].data], [operation])
         return {'FINISHED'}
 
 
