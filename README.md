@@ -32,6 +32,7 @@ See the [Wiki](https://github.com/vilemduha/blendercam/wiki).
 * Recomended on Linux.
 * No instructions for Mac users (unknown if opencamlib works)
 * OpenCamlib can work on Windows but installation is tricky
+* Equation python module (~/Apps/blender-2.92/2.92/python/bin/pip3 install Equation)
 
 
 ## DISCLAIMER
