@@ -26,10 +26,12 @@ import bpy
 from bpy.props import *
 
 import subprocess, os, threading
-from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges
+from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges,parametric
+import cam 
 import shapely
 import mathutils
 import math
+from Equation import Expression
 
 # boolean operations for curve objects
 class CamCurveBoolean(bpy.types.Operator):
@@ -570,3 +572,40 @@ class CamObjectSilhouete(bpy.types.Operator):
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
         return {'FINISHED'}
+        
+
+class CamSineCurve(bpy.types.Operator):
+    """Object silhouete """
+    bl_idname = "object.sine"
+    bl_label = "Create Sine"
+    bl_options = {'REGISTER', 'UNDO'}
+
+
+#    zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
+    amplitude: bpy.props.FloatProperty(name="Amplitude", default=.01, min=0, max=10, precision=4, unit="LENGTH")
+    period: bpy.props.FloatProperty(name="Period", default=.5, min=0.001, max=100, precision=4, unit="LENGTH")
+    shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
+    offset: bpy.props.FloatProperty(name="offset", default=0, min=-1.0, max=1, precision=4, unit="LENGTH")
+    iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
+    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=3, precision=4, unit="LENGTH")
+    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
+
+   
+    def execute(self, context):  
+        
+        #z=Asin(B(x+C))+D
+
+        zstring=str(round(self.offset,6)) + "+" + str(round(self.amplitude,6)) +"*sin((2*pi/" + str(round(self.period,6)) +")*(t+"+str(round(self.shift,6))+"))"
+        print(zstring)
+        z=Expression(zstring,["t"])
+#        z=Expression(self.zstring,["t"])
+
+        z
+        
+        def f(t, offset: float = 0.0):
+           return (t,0,z(t))
+            
+        parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration)        
+        
+        return {'FINISHED'}
+

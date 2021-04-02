@@ -38,7 +38,7 @@ from bpy.app.handlers import persistent
 import subprocess, os, sys, threading
 import pickle
 
-# from .utils import *
+
 
 bl_info = {
     "name": "CAM - gcode generation tools",
@@ -1135,7 +1135,8 @@ def get_panels():  # convenience function for bot register and unregister functi
         curvecamtools.CamCurveOvercutsB,
         curvecamtools.CamCurveRemoveDoubles,
         curvecamtools.CamMeshGetPockets,
-
+        curvecamtools.CamSineCurve,
+        
         CAM_CUTTER_MT_presets,
         CAM_OPERATION_MT_presets,
         CAM_MACHINE_MT_presets,
@@ -1326,6 +1327,7 @@ classes = [
     curvecamtools.CamCurveOvercutsB,
     curvecamtools.CamCurveRemoveDoubles,
     curvecamtools.CamMeshGetPockets,
+    curvecamtools.CamSineCurve,
 
     CAM_CUTTER_MT_presets,
     CAM_OPERATION_MT_presets,
