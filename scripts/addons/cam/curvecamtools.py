@@ -682,8 +682,8 @@ class CamHypotrochoidCurve(bpy.types.Operator):
             xstring=str(Rmr) + "*cos(t)+"+ str(d)+"*cos("+str(Rmror)+"*t)"
             ystring=str(Rmr) + "*sin(t)+"+ str(d)+"*sin("+str(Rmror)+"*t)"
         else:
-            xstring=str(Rpr) + "*cos(t)-"+ str(d)+"*"+str(r)+"*cos("+str(Rpror)+"*t)"
-            ystring=str(Rpr) + "*sin(t)-"+ str(d)+"*"+str(r)+"*sin("+str(Rpror)+"*t)"
+            xstring=str(Rpr) + "*cos(t)-"+ str(d)+"*cos("+str(Rpror)+"*t)"
+            ystring=str(Rpr) + "*sin(t)-"+ str(d)+"*sin("+str(Rpror)+"*t)"
             			
         print("x= "+str(xstring))
         print("y= "+str(ystring))
