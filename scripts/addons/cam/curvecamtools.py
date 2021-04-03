@@ -576,7 +576,7 @@ class CamObjectSilhouete(bpy.types.Operator):
         
 
 class CamSineCurve(bpy.types.Operator):
-    """Object silhouete """
+    """Object silhouete """ #by Alain Pelletier april 2021
     bl_idname = "object.sine"
     bl_label = "Create Sine"
     bl_options = {'REGISTER', 'UNDO'}
@@ -618,7 +618,7 @@ class CamSineCurve(bpy.types.Operator):
         return {'FINISHED'}
 
 class CamLissajousCurve(bpy.types.Operator):
-    """Lissajous """
+    """Lissajous """ #by Alain Pelletier april 2021
     bl_idname = "object.lissajous"
     bl_label = "Create Lissajous figure"
     bl_options = {'REGISTER', 'UNDO'}
@@ -657,17 +657,15 @@ class CamLissajousCurve(bpy.types.Operator):
         return {'FINISHED'}
         
 class CamHypotrochoidCurve(bpy.types.Operator):
-    """hypotrochoid """
+    """hypotrochoid """  #by Alain Pelletier april 2021
     bl_idname = "object.hypotrochoid"
     bl_label = "Create Spirograph type figure"
     bl_options = {'REGISTER', 'UNDO'}
 
 
-
     R: bpy.props.FloatProperty(name="Big circle radius", default=0.25, min=0.001, max=100, precision=4, unit="LENGTH")
     r: bpy.props.FloatProperty(name="Small circle radius", default=0.18, min=0.0001, max=100, precision=4, unit="LENGTH")
     d: bpy.props.FloatProperty(name="distance from center of interior circle", default=0.15, min=0, max=100, precision=4, unit="LENGTH")
-#    iteration: bpy.props.IntProperty(name="iteration", default=500, min=50, max=10000)
 
    
     def execute(self, context):  
@@ -690,7 +688,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         
         #build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
-           c = (x(t),y(t),t)
+           c = (x(t),y(t),0)
            return c
             
         parametric.create_parametric_curve(f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=int(maxangle*10))        
