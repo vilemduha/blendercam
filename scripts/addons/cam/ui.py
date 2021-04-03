@@ -934,4 +934,6 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.sine")
         layout.operator("object.lissajous")
         layout.operator("object.hypotrochoid")
+        layout.operator("object.customcurve")
+        
 

@@ -576,10 +576,10 @@ class CamObjectSilhouete(bpy.types.Operator):
         
 
 class CamSineCurve(bpy.types.Operator):
-    """Object silhouete """ #by Alain Pelletier april 2021
+    """Object sine """ #by Alain Pelletier april 2021
     bl_idname = "object.sine"
     bl_label = "Create Sine"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
 
 #    zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
@@ -704,3 +704,39 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         parametric.create_parametric_curve(f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=iter)        
         
         return {'FINISHED'}
+        
+class CamCustomCurve(bpy.types.Operator):
+    """Object customCurve """ #by Alain Pelletier april 2021
+    bl_idname = "object.customcurve"
+    bl_label = "Create custom curve"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+
+    xstring: StringProperty(name="X equation", description="Equation x=F(t)", default="t" )
+    ystring: StringProperty(name="Y equation", description="Equation y=F(t)", default="0" )
+    zstring: StringProperty(name="Z equation", description="Equation z=F(t)", default="0.05*sin(2*pi*4*t)" )
+
+    iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
+    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=3, precision=4, unit="LENGTH")
+    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
+
+
+   
+    def execute(self, context):  
+        
+        print("x= "+ self.xstring)
+        print("y= "+ self.ystring)
+        print("z= "+ self.zstring)
+        ex=Expression(self.xstring,["t"])  #make equation from string
+        ey=Expression(self.ystring,["t"])  #make equation from string
+        ez=Expression(self.zstring,["t"])  #make equation from string
+        
+        #build function to be passed to create parametric curve ()
+        def f(t, offset: float = 0.0):
+           c = (ex(t),ey(t),ez(t))
+           return c
+            
+        parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration)        
+        
+        return {'FINISHED'}
+

@@ -1138,7 +1138,8 @@ def get_panels():  # convenience function for bot register and unregister functi
         curvecamtools.CamSineCurve,
         curvecamtools.CamLissajousCurve,
         curvecamtools.CamHypotrochoidCurve,             
-                
+        curvecamtools.CamCustomCurve,                 
+        
         CAM_CUTTER_MT_presets,
         CAM_OPERATION_MT_presets,
         CAM_MACHINE_MT_presets,
@@ -1332,6 +1333,7 @@ classes = [
     curvecamtools.CamSineCurve,
     curvecamtools.CamLissajousCurve,    
     curvecamtools.CamHypotrochoidCurve,  
+    curvecamtools.CamCustomCurve,  
     
     CAM_CUTTER_MT_presets,
     CAM_OPERATION_MT_presets,
