@@ -680,7 +680,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
 
         if self.typecurve == "hypo":
             xstring=str(Rmr) + "*cos(t)+"+ str(d)+"*cos("+str(Rmror)+"*t)"
-            ystring=str(Rmr) + "*sin(t)+"+ str(d)+"*sin("+str(Rmror)+"*t)"
+            ystring=str(Rmr) + "*sin(t)-"+ str(d)+"*sin("+str(Rmror)+"*t)"
         else:
             xstring=str(Rpr) + "*cos(t)-"+ str(d)+"*cos("+str(Rpror)+"*t)"
             ystring=str(Rpr) + "*sin(t)-"+ str(d)+"*sin("+str(Rpror)+"*t)"
