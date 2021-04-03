@@ -933,3 +933,5 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.mesh_get_pockets")
         layout.operator("object.sine")
         layout.operator("object.lissajous")
+        layout.operator("object.hypotrochoid")
+

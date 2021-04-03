@@ -32,6 +32,7 @@ import shapely
 import mathutils
 import math
 from Equation import Expression
+import numpy as np
 
 # boolean operations for curve objects
 class CamCurveBoolean(bpy.types.Operator):
@@ -617,7 +618,7 @@ class CamSineCurve(bpy.types.Operator):
         return {'FINISHED'}
 
 class CamLissajousCurve(bpy.types.Operator):
-    """Object silhouete """
+    """Lissajous """
     bl_idname = "object.lissajous"
     bl_label = "Create Lissajous figure"
     bl_options = {'REGISTER', 'UNDO'}
@@ -654,4 +655,44 @@ class CamLissajousCurve(bpy.types.Operator):
         parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration)        
         
         return {'FINISHED'}
+        
+class CamHypotrochoidCurve(bpy.types.Operator):
+    """hypotrochoid """
+    bl_idname = "object.hypotrochoid"
+    bl_label = "Create Spirograph type figure"
+    bl_options = {'REGISTER', 'UNDO'}
 
+
+
+    R: bpy.props.FloatProperty(name="Big circle radius", default=0.25, min=0.001, max=100, precision=4, unit="LENGTH")
+    r: bpy.props.FloatProperty(name="Small circle radius", default=0.18, min=0.0001, max=100, precision=4, unit="LENGTH")
+    d: bpy.props.FloatProperty(name="distance from center of interior circle", default=0.15, min=0, max=100, precision=4, unit="LENGTH")
+#    iteration: bpy.props.IntProperty(name="iteration", default=500, min=50, max=10000)
+
+   
+    def execute(self, context):  
+        r=round(self.r,6)
+        R=round(self.R,6)
+        d=round(self.d,6)
+        Rmr=round(R-r,6) #R-r
+        Rmror=round(Rmr/r,6) #(R-r)/r
+        maxangle=2*math.pi*np.lcm(round(self.R*1000),round(self.r*1000))/(R*1000)   
+
+        xstring=str(Rmr) + "*cos(t)+"+ str(d)+"*cos("+str(Rmror)+"*t)"
+        ystring=str(Rmr) + "*sin(t)+"+ str(d)+"*sin("+str(Rmror)+"*t)"
+        
+        print("x= "+str(xstring))
+        print("y= "+str(ystring))
+        print("maxangle "+str(maxangle))
+        
+        x=Expression(xstring,["t"])  #make equation from string
+        y=Expression(ystring,["t"])  #make equation from string
+        
+        #build function to be passed to create parametric curve ()
+        def f(t, offset: float = 0.0):
+           c = (x(t),y(t),t)
+           return c
+            
+        parametric.create_parametric_curve(f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=int(maxangle*10))        
+        
+        return {'FINISHED'}
