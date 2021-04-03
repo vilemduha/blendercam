@@ -621,7 +621,7 @@ class CamLissajousCurve(bpy.types.Operator):
     """Lissajous """ #by Alain Pelletier april 2021
     bl_idname = "object.lissajous"
     bl_label = "Create Lissajous figure"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
 
 
@@ -660,12 +660,12 @@ class CamHypotrochoidCurve(bpy.types.Operator):
     """hypotrochoid """  #by Alain Pelletier april 2021
     bl_idname = "object.hypotrochoid"
     bl_label = "Create Spirograph type figure"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-
+    typecurve: bpy.props.EnumProperty(name="type of curve",items=(('hypo', 'Hypotrochoid', 'inside ring'),('epi', 'Epicycloid', 'outside inner ring')))
     R: bpy.props.FloatProperty(name="Big circle radius", default=0.25, min=0.001, max=100, precision=4, unit="LENGTH")
     r: bpy.props.FloatProperty(name="Small circle radius", default=0.18, min=0.0001, max=100, precision=4, unit="LENGTH")
-    d: bpy.props.FloatProperty(name="distance from center of interior circle", default=0.15, min=0, max=100, precision=4, unit="LENGTH")
+    d: bpy.props.FloatProperty(name="distance from center of interior circle", default=0.050, min=0, max=100, precision=4, unit="LENGTH")
 
    
     def execute(self, context):  
@@ -673,12 +673,18 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         R=round(self.R,6)
         d=round(self.d,6)
         Rmr=round(R-r,6) #R-r
+        Rpr=round(R+r,6) #R +r
+        Rpror=round(Rpr/r,6) #(R+r)/r
         Rmror=round(Rmr/r,6) #(R-r)/r
         maxangle=2*math.pi*np.lcm(round(self.R*1000),round(self.r*1000))/(R*1000)   
 
-        xstring=str(Rmr) + "*cos(t)+"+ str(d)+"*cos("+str(Rmror)+"*t)"
-        ystring=str(Rmr) + "*sin(t)+"+ str(d)+"*sin("+str(Rmror)+"*t)"
-        
+        if self.typecurve == "hypo":
+            xstring=str(Rmr) + "*cos(t)+"+ str(d)+"*cos("+str(Rmror)+"*t)"
+            ystring=str(Rmr) + "*sin(t)+"+ str(d)+"*sin("+str(Rmror)+"*t)"
+        else:
+            xstring=str(Rpr) + "*cos(t)-"+ str(d)+"*"+str(r)+"*cos("+str(Rpror)+"*t)"
+            ystring=str(Rpr) + "*sin(t)-"+ str(d)+"*"+str(r)+"*sin("+str(Rpror)+"*t)"
+            			
         print("x= "+str(xstring))
         print("y= "+str(ystring))
         print("maxangle "+str(maxangle))
