@@ -25,20 +25,46 @@ import bpy
 
 #April 2020 Alain Pelletier
 def getSlices(ob,thickness):   
+	collection = bpy.data.collections.new("Slices")
+	bpy.context.scene.collection.children.link(collection)
 	print(ob.dimensions)
 	print(ob.location)
 	layeramt=int(ob.dimensions.z // thickness)
 	bpy.ops.object.mode_set(mode = 'OBJECT')
+
 	for layer in range(layeramt):
-		print("layer=",str(layer))
+		height=round(layer*thickness,6)
+		t=str(layer)+"-"+str(height*1000)
+		slicename="slice-"+t
+		tslicename="t-" + t
+
+		print(slicename)
+
+		bpy.ops.object.text_add()
+		textob = bpy.context.active_object
+		textob.data.size = 0.006
+		textob.data.body = t
+		textob.location=(0,0,0)
+		bpy.context.view_layer.objects.active.name = tslicename
+		bpy.ops.object.select_all(action='DESELECT')
+		
 		ob.select_set(True)
 		bpy.context.view_layer.objects.active = ob
 		bpy.ops.object.duplicate()
+		bpy.context.view_layer.objects.active.name = slicename
+		
+		obslice=bpy.context.view_layer.objects.active
+		collection.objects.link(obslice)
+
 		bpy.ops.object.mode_set(mode = 'EDIT')
 		bpy.ops.mesh.select_all(action='SELECT')
-		bpy.ops.mesh.bisect(plane_co=(0.0, 0.0, thickness*(layer)), plane_no=(0.0, 0.0, 1.0), use_fill=True, clear_inner=True, clear_outer=True)
+		bpy.ops.mesh.bisect(plane_co=(0.0, 0.0, height), plane_no=(0.0, 0.0, 1.0), use_fill=True, clear_inner=True, clear_outer=True)
 		bpy.ops.object.mode_set(mode = 'OBJECT')
+#		textob.parent=obslice
 		bpy.ops.object.select_all(action='DESELECT')
+
+
+
 	return(ob.dimensions.z // thickness)	
 
 def getSlices_old(ob,slice_distance):
