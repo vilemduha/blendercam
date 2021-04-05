@@ -1,4 +1,4 @@
-# blender CAM slice.py (c) 2012 Vilem Novak
+# blender CAM slice.py (c) 2021 Alain Pelletier
 #
 # ***** BEGIN GPL LICENSE BLOCK *****
 #
@@ -20,12 +20,11 @@
 # ***** END GPL LICENCE BLOCK *****
 
 #very simple slicing for 3d meshes, usefull for plywood cutting.
-from cam import chunk, polygon_utils_cam
+#completely rewritten April 2021
+
 import bpy
 
-#April 2020 Alain Pelletier
-
-def slicing(ob,height):
+def slicing(ob,height): #April 2020 Alain Pelletier
 	#let's slice things
 	bpy.ops.object.mode_set(mode = 'EDIT')		#force edit mode
 	bpy.ops.mesh.select_all(action='SELECT')	#select all vertices
@@ -39,7 +38,7 @@ def slicing(ob,height):
 	bpy.ops.object.convert(target='CURVE') 		#convert it to curve
 	bpy.ops.object.select_all(action='DESELECT')	#deselect everything
 
-def sliceObject(ob):   
+def sliceObject(ob):   #April 2020 Alain Pelletier
 	#setup the collections
 	thickness=bpy.context.scene.cam_slice.slice_distance
 	scollection = bpy.data.collections.new("Slices")
@@ -51,11 +50,9 @@ def sliceObject(ob):
 	print(ob.dimensions)
 	print(ob.location)
 
-	#calculate amount of layers needed
-	layeramt=int(ob.dimensions.z // thickness)
+	layeramt=int(ob.dimensions.z // thickness)	#calculate amount of layers needed
 	
-	#force object mode
-	bpy.ops.object.mode_set(mode = 'OBJECT')
+	bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
 
 	for layer in range(layeramt):
 		height=round(layer*thickness,6)		#height of current layer
@@ -80,8 +77,9 @@ def sliceObject(ob):
 		
 		obslice=bpy.context.view_layer.objects.active	#attribute active object to obslice
 		scollection.objects.link(obslice)				#link obslice to scollecton
-		slicing(obslice,height)
-	
+		
+		slicing(obslice,height)		#slice object at desired height
+	# select all curve slices
 	for obj in bpy.data.collections['Slices'].all_objects: obj.select_set(True)
 
 
