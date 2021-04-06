@@ -26,6 +26,7 @@ import bpy
 
 def slicing(ob,height): #April 2020 Alain Pelletier
 	#let's slice things
+	bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 	bpy.ops.object.mode_set(mode = 'EDIT')		#force edit mode
 	bpy.ops.mesh.select_all(action='SELECT')	#select all vertices
 	#actual slicing here

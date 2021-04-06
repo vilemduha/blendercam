@@ -89,7 +89,9 @@ def positionObject(operation):
     elif operation.material_Z == 'ABOVE':
         ob.location.z -= minz  	    
     elif operation.material_Z == 'CENTERED':
-        ob.location.z -= minz +totz/2 	  
+        ob.location.z -= minz +totz/2 	
+        
+    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)  
     #addMaterialAreaObject()  
 
 
