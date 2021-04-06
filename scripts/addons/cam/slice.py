@@ -70,6 +70,7 @@ def sliceObject(ob):   #April 2020 Alain Pelletier
 		textob.data.size = 0.006			#change size of object
 		textob.data.body = t				#text content
 		textob.location=(0,0,0)				#text location
+		textob.name = tslicename  #change the name of object
 		bpy.ops.object.select_all(action='DESELECT') #deselect everything
 		tcollection.objects.link(textob)	#add to text collection
 		
