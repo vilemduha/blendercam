@@ -36,6 +36,8 @@ def slicing(ob,height): #April 2020 Alain Pelletier
 	ob.location[2] = -1*height
 	bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 	bpy.ops.object.convert(target='CURVE') 		#convert it to curve
+	if bpy.context.active_object.type != 'CURVE':  #conversion failed because mesh was empty so delete mesh
+	    bpy.ops.object.delete(use_global=False, confirm=False)		
 	bpy.ops.object.select_all(action='DESELECT')	#deselect everything
 
 def sliceObject(ob):   #April 2020 Alain Pelletier
