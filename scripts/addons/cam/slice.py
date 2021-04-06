@@ -24,7 +24,7 @@
 
 import bpy
 
-def slicing(ob,height): #April 2020 Alain Pelletier
+def slicing2d(ob,height): #April 2020 Alain Pelletier
 	#let's slice things
 	bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 	bpy.ops.object.mode_set(mode = 'EDIT')		#force edit mode
@@ -41,13 +41,33 @@ def slicing(ob,height): #April 2020 Alain Pelletier
 	    bpy.ops.object.delete(use_global=False, confirm=False)		
 	bpy.ops.object.select_all(action='DESELECT')	#deselect everything
 
+def slicing3d(ob,start,end): #April 2020 Alain Pelletier
+	#let's slice things
+	bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+	bpy.ops.object.mode_set(mode = 'EDIT')		#force edit mode
+	bpy.ops.mesh.select_all(action='SELECT')	#select all vertices
+	#actual slicing here
+	bpy.ops.mesh.bisect(plane_co=(0.0, 0.0, start), plane_no=(0.0, 0.0, 1.0), use_fill=True, clear_inner=True, clear_outer=False) 
+	bpy.ops.mesh.select_all(action='SELECT')	#select all vertices which   
+	bpy.ops.mesh.bisect(plane_co=(0.0, 0.0, end), plane_no=(0.0, 0.0, 1.0), use_fill=True, clear_inner=False, clear_outer=True) 
+	#slicing done
+	bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
+	#bring all the slices to 0 level and reset location transform
+	ob.location[2] = -1*start
+	bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+
+	bpy.ops.object.select_all(action='DESELECT')	#deselect everything
+
 def sliceObject(ob):   #April 2020 Alain Pelletier
 	#setup the collections
 	thickness=bpy.context.scene.cam_slice.slice_distance
+	slice3d = bpy.context.scene.cam_slice.slice_3d
+	indexes = bpy.context.scene.cam_slice.indexes
 	scollection = bpy.data.collections.new("Slices")
-	tcollection = bpy.data.collections.new("Text")
 	bpy.context.scene.collection.children.link(scollection)
-	bpy.context.scene.collection.children.link(tcollection)
+	if indexes:
+		tcollection = bpy.data.collections.new("Text")
+		bpy.context.scene.collection.children.link(tcollection)
 
 	#show object information
 	print(ob.dimensions)
@@ -63,16 +83,17 @@ def sliceObject(ob):   #April 2020 Alain Pelletier
 		slicename="slice-"+t	#name for the current slice
 		tslicename="t-" + t		#name for the current slice text
 		print(slicename)
-
-		#text objects
-		bpy.ops.object.text_add()			#new text object
-		textob = bpy.context.active_object
-		textob.data.size = 0.006			#change size of object
-		textob.data.body = t				#text content
-		textob.location=(0,0,0)				#text location
-		textob.name = tslicename  #change the name of object
-		bpy.ops.object.select_all(action='DESELECT') #deselect everything
-		tcollection.objects.link(textob)	#add to text collection
+		
+		if indexes:
+			#text objects
+			bpy.ops.object.text_add()			#new text object
+			textob = bpy.context.active_object
+			textob.data.size = 0.006			#change size of object
+			textob.data.body = t				#text content
+			textob.location=(0,0,0)				#text location
+			textob.name = tslicename  #change the name of object
+			bpy.ops.object.select_all(action='DESELECT') #deselect everything
+			tcollection.objects.link(textob)	#add to text collection
 		
 		ob.select_set(True)					#select object to be sliced
 		bpy.context.view_layer.objects.active = ob #make object to be sliced active
@@ -81,8 +102,10 @@ def sliceObject(ob):   #April 2020 Alain Pelletier
 		
 		obslice=bpy.context.view_layer.objects.active	#attribute active object to obslice
 		scollection.objects.link(obslice)				#link obslice to scollecton
-		
-		slicing(obslice,height)		#slice object at desired height
+		if slice3d:
+			slicing3d(obslice,height,height+thickness)  #slice 3d at desired height and stop at desired height
+		else:
+			slicing2d(obslice,height)		#slice object at desired height
 	# select all curve slices
 	for obj in bpy.data.collections['Slices'].all_objects: obj.select_set(True)
 

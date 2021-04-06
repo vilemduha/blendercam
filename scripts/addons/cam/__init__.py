@@ -254,6 +254,7 @@ class SliceObjectsSettings(bpy.types.PropertyGroup):
     slice_distance: FloatProperty(name="Slicing distance",
                                   description="slices distance in z, should be most often thickness of plywood sheet.",
                                   min=0.001, max=10, default=0.005, precision=PRECISION, unit="LENGTH")
+    slice_3d: bpy.props.BoolProperty(name="3d slice", description="for 3d carving", default=False)
     indexes: bpy.props.BoolProperty(name="add indexes", description="adds index text of layer + index", default=True)
 
 

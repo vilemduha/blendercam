@@ -910,6 +910,7 @@ class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
 
         layout.operator("object.cam_slice_objects")
         layout.prop(settings, 'slice_distance')
+        layout.prop(settings,'slice_3d')
         layout.prop(settings, 'indexes')
 
 
