@@ -74,7 +74,9 @@ def sliceObject(ob):   #April 2020 Alain Pelletier
 	print(ob.location)
 
 	layeramt=int(ob.dimensions.z // thickness)	#calculate amount of layers needed
-	
+	if slice3d:	#add a layer if in 3d slice mode
+		layeramt+=1
+		
 	bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
 
 	for layer in range(layeramt):
