@@ -36,12 +36,6 @@ from mathutils import Vector
 # then chooses a starting location possibly inside the allready occupied area and moves and rotates the polygon out of the occupied area
 # if one or more positions are found where the poly doesn't overlap, it is placed and added to the occupied area - allpoly
 # this algorithm is very slow and STUPID, a collision algorithm would be much much faster...
-def translate(s, x, y):
-    ncoords = []
-    for p in s.exterior.coords:
-        ncoords.append((p[0] + x, p[1] + y))
-
-    return sgeometry.Polygon(ncoords)
 
 
 def srotate(s, r, x, y):
@@ -67,7 +61,9 @@ def packCurves():
     sheetsizey = packsettings.sheet_y
     direction = packsettings.sheet_fill_direction
     distance = packsettings.distance
+    tolerance =packsettings.tolerance
     rotate = packsettings.rotate
+    rotate_angle=packsettings.rotate_angle
 
     polyfield = []  # in this, position, rotation, and actual poly will be stored.
     for ob in bpy.context.selected_objects:
@@ -92,8 +88,8 @@ def packCurves():
     allpoly = prepared.prep(sgeometry.Polygon())  # main collision poly.
     # allpoly=sgeometry.Polygon()#main collision poly.
 
-    shift = 0.0015  # one milimeter by now.
-    rotchange = .3123456  # in radians
+    shift = tolerance  # one milimeter by now.
+    rotchange = rotate_angle  # in radians
 
     xmin, ymin, xmax, ymax = polyfield[0][2].bounds
     if direction == 'X':
@@ -118,7 +114,7 @@ def packCurves():
             x = -xmin
             y = mindist
 
-        iter = 0
+        itera = 0
         best = None
         hits = 0
         besthit = None
@@ -129,12 +125,9 @@ def packCurves():
             p = porig
 
             if rotate:
-                # ptrans=srotate(p,rot,0,0)
                 ptrans = affinity.rotate(p, rot, origin=rotcenter, use_radians=True)
-                # ptrans = translate(ptrans,x,y)
                 ptrans = affinity.translate(ptrans, x, y)
             else:
-                # ptrans = translate(p,x,y)
                 ptrans = affinity.translate(p, x, y)
             xmin, ymin, xmax, ymax = ptrans.bounds
             # print(iter,p.bounds)
@@ -158,7 +151,7 @@ def packCurves():
                         besthit = hits
 
             if hits >= 15 or (
-                    iter > 10000 and hits > 0):  # here was originally more, but 90% of best solutions are still 1
+                    itera > 20000 and hits > 0):  # here was originally more, but 90% of best solutions are still 1
                 placed = True
                 pf[3].location.x = best[0]
                 pf[3].location.y = best[1]
@@ -174,13 +167,11 @@ def packCurves():
 
                 # reset polygon to best position here:
                 ptrans = affinity.rotate(porig, best[2], rotcenter, use_radians=True)
-                # ptrans=srotate(porig,best[2],0,0)
                 ptrans = affinity.translate(ptrans, best[0], best[1])
-                # ptrans = translate(ptrans,best[0],best[1])
 
                 # polygon_utils_cam.polyToMesh(p,0.1)#debug visualisation
                 keep = []
-                print(best[0], best[1])
+                print(best[0], best[1],itera)
                 # print(len(ptrans.exterior))
                 # npoly=allpoly.union(ptrans)
 
@@ -202,7 +193,7 @@ def packCurves():
                 # for c in p:
                 #	allpoly.addContour(c)
                 # cleanup allpoly
-                print(iter, hits, besthit)
+                print(itera, hits, besthit)
             if not placed:
                 if direction == 'Y':
                     x += shift
@@ -217,7 +208,7 @@ def packCurves():
                         y = y - ymin
                         x += shift
                 if rotate: rot += rotchange
-            iter += 1
+            itera += 1
         i += 1
     t = time.time() - t
 

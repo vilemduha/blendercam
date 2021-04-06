@@ -889,7 +889,11 @@ class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):
         layout.prop(settings, 'sheet_x')
         layout.prop(settings, 'sheet_y')
         layout.prop(settings, 'distance')
+        layout.prop(settings, 'distance')
+        layout.prop(settings, 'tolerance')
         layout.prop(settings, 'rotate')
+        if settings.rotate:
+            layout.prop(settings, 'rotate_angle')			
 
 
 class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
