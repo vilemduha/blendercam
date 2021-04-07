@@ -41,6 +41,23 @@ class CAMButtonsPanel():
         rd = context.scene.render
         return rd.engine in cls.COMPAT_ENGINES
 
+# Displays percentage of the cutter which is engaged with the material
+# Displays a warning for engagements greater than 50%
+def EngagementDisplay(operat,layout):
+    ao=operat    
+
+    if ao.cutter_type == 'BALLCONE':
+        if ao.dist_between_paths > ao.ball_radius:                    
+            layout.label(text="CAUTION: CUTTER ENGAGEMENT")
+            layout.label(text="GREATER THAN 50%")
+        layout.label(text="Cutter engagement: " + str(round(100*ao.dist_between_paths/ao.ball_radius,1))+"%")	
+    else:
+        if ao.dist_between_paths > ao.cutter_diameter/2:
+            layout.label(text="CAUTION: CUTTER ENGAGEMENT")
+            layout.label(text="GREATER THAN 50%")
+        layout.label(text="Cutter Engagement: " + str(round(100*ao.dist_between_paths/ao.cutter_diameter,1))+"%")		
+
+
 
 class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM cutter panel"""
@@ -70,8 +87,19 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'cutter_tip_angle')
                 if ao.cutter_type == 'BALLCONE':
                    layout.prop(ao,'ball_radius')
+                   EngagementDisplay(ao,layout)
                    layout.prop(ao,'ball_cone_flute')
                    layout.label(text='Cutter diameter = shank diameter')
+                if ao.cutter_type == 'BULLNOSE':
+                   layout.prop(ao,'bull_corner_radius')
+                   EngagementDisplay(ao,layout)
+                   layout.label(text='Cutter diameter = shank diameter')
+               
+                if ao.cutter_type == 'LASER':
+                   layout.prop(ao,'Laser_on')
+                   layout.prop(ao,'Laser_off')
+                   layout.prop(ao,'Laser_cmd')
+                   layout.prop(ao,'Laser_delay')
                                       
                 if ao.cutter_type == 'CUSTOM':
                     if ao.use_exact:
@@ -82,8 +110,10 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop_search(ao, "cutter_object_name", bpy.data, "objects")
 
                 layout.prop(ao, 'cutter_diameter')
-                # layout.prop(ao,'cutter_length')
-                layout.prop(ao, 'cutter_flutes')
+                if ao.strategy == "POCKET" or ao.strategy == "PARALLEL" or ao.strategy == "CROSS" or ao.strategy == "WATERLINE": 
+                    EngagementDisplay(ao,layout)                    
+                if ao.cutter_type != "LASER" :
+                    layout.prop(ao, 'cutter_flutes')
                 layout.prop(ao, 'cutter_description')
 
 
@@ -470,8 +500,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                 #   layout.label(text='Not supported for curves')
                 #   return
 
-                if ao.strategy == 'CUTOUT':
-                    layout.prop(ao, 'cut_type')
+                if ao.strategy in ['CUTOUT','CURVE']:
+                    if ao.strategy=='CUTOUT':
+                        layout.prop(ao, 'cut_type')
                     layout.prop(ao,'enable_A')
                     if ao.enable_A:
                         layout.prop(ao,'rotation_A')
@@ -491,6 +522,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.prop(ao, 'outlines_count')
                         if ao.outlines_count > 1:
                             layout.prop(ao, 'dist_between_paths')
+                            EngagementDisplay(ao,layout)                    
                             layout.prop(ao, 'movement_insideout')
                     layout.prop(ao, 'dont_merge')
                 elif ao.strategy == 'WATERLINE':
@@ -500,6 +532,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.label(text="needs a skin margin")
                         layout.prop(ao, 'skin')
                         layout.prop(ao, 'dist_between_paths')
+                        EngagementDisplay(ao,layout)
                         layout.prop(ao, 'stepdown')
                         layout.prop(ao, 'waterline_project')
 #                    layout.prop(ao, 'inverse')
@@ -539,6 +572,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                 elif ao.strategy == 'POCKET':
                     layout.prop(ao, 'pocket_option')
                     layout.prop(ao, 'dist_between_paths')
+                    EngagementDisplay(ao,layout)
                     layout.prop(ao,'enable_A')
                     if ao.enable_A:
                         layout.prop(ao,'rotation_A')
@@ -549,9 +583,12 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                             layout.label(text='A || Y - B ||X')
                     layout.prop(ao,'enable_B')
                     if ao.enable_B:
-                        layout.prop(ao,'rotation_B') 
+                        layout.prop(ao,'rotation_B')
+
+					         
                 else:
                     layout.prop(ao, 'dist_between_paths')
+                    EngagementDisplay(ao,layout)
                     layout.prop(ao, 'dist_along_paths')
                     if ao.strategy == 'PARALLEL' or ao.strategy == 'CROSS':
                         layout.prop(ao, 'parallel_angle')
@@ -718,7 +755,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.optimize:
                     layout.prop(ao, 'optimize_threshold')
                 if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
-                    exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL']
+                    exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL','CURVE']
                     if not exclude_exact:
                         layout.prop(ao, 'use_opencamlib')
                         layout.prop(ao, 'use_exact')
@@ -770,7 +807,11 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.label(text='Depth start > Free movement')
                     layout.label(text='POSSIBLE COLLISION')
                 if ao.geometry_source in ['OBJECT', 'COLLECTION']:                    
+                    if ao.strategy == 'CURVE':
+                        layout.label(text="cannot use depth from object using CURVES")   
                     layout.prop(ao, 'minz_from_ob')
+
+                            						
                     if not ao.minz_from_ob:
                         layout.prop(ao, 'minz')
                 else:
@@ -848,7 +889,11 @@ class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):
         layout.prop(settings, 'sheet_x')
         layout.prop(settings, 'sheet_y')
         layout.prop(settings, 'distance')
+        layout.prop(settings, 'distance')
+        layout.prop(settings, 'tolerance')
         layout.prop(settings, 'rotate')
+        if settings.rotate:
+            layout.prop(settings, 'rotate_angle')			
 
 
 class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -865,6 +910,7 @@ class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
 
         layout.operator("object.cam_slice_objects")
         layout.prop(settings, 'slice_distance')
+        layout.prop(settings,'slice_3d')
         layout.prop(settings, 'indexes')
 
 
@@ -890,3 +936,9 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.silhouete_offset")
         layout.operator("object.curve_remove_doubles")
         layout.operator("object.mesh_get_pockets")
+        layout.operator("object.sine")
+        layout.operator("object.lissajous")
+        layout.operator("object.hypotrochoid")
+        layout.operator("object.customcurve")
+        
+

@@ -88,6 +88,10 @@ class camPathChunk:
         for i, p in enumerate(self.points):
             self.points[i] = (p[0], p[1], z)
 
+    def offsetZ(self, z):
+        for i, p in enumerate(self.points):
+            self.points[i] = (p[0], p[1], z+p[2])
+
     def isbelowZ(self, z):
         isbelow = False
         for p in (self.points):
@@ -98,6 +102,11 @@ class camPathChunk:
     def clampZ(self, z):
         for i, p in enumerate(self.points):
             if p[2] < z:
+                self.points[i] = (p[0], p[1], z)
+
+    def clampmaxZ(self, z):
+        for i, p in enumerate(self.points):
+            if p[2] > z:
                 self.points[i] = (p[0], p[1], z)
 
     def dist(self, pos, o):

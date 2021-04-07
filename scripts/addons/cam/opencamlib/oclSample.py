@@ -58,11 +58,12 @@ def ocl_sample(operation, chunks):
         angle= math.degrees(math.atan((op_cutter_diameter/2)-operation.ball_radius)/(operation.ball_cone_flute-operation.ball_radius))
         print("BallCone angle:"+str(angle))
         cutter = ocl.BallConeCutter((operation.ball_radius+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, math.radians(angle))
+    elif op_cutter_type =='BULLNOSE':
+        cutter = ocl.BullCutter((op_cutter_diameter + operation.skin * 2) * 1000,operaton.bull_corner_radius*1000, cutter_length)        
     else:
         print("Cutter unsupported: {0}\n".format(op_cutter_type))
         quit()
 
-    # add BullCutter
     bdc = ocl.BatchDropCutter()
     bdc.setSTL(oclSTL)
     bdc.setCutter(cutter)

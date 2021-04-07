@@ -30,7 +30,7 @@ from bpy.types import Menu, Operator, UIList, AddonPreferences
 
 # from . import patterns
 # from . import chunk_operations
-from cam import ui, ops, utils, simple, polygon_utils_cam  # , post_processors
+from cam import ui, ops,curvecamtools, utils, simple, polygon_utils_cam  # , post_processors
 import numpy
 
 from shapely import geometry as sgeometry
@@ -38,7 +38,7 @@ from bpy.app.handlers import persistent
 import subprocess, os, sys, threading
 import pickle
 
-# from .utils import *
+
 
 bl_info = {
     "name": "CAM - gcode generation tools",
@@ -165,6 +165,8 @@ class machineSettings(bpy.types.PropertyGroup):
                                           precision=PRECISION, unit='LENGTH')
     feedrate_default: bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,
                                               precision=PRECISION, unit='LENGTH')
+
+                                                  
     # UNSUPPORTED:
 
     spindle_min: bpy.props.FloatProperty(name="Spindle speed minimum RPM", default=5000, min=0.00001, max=320000,
@@ -236,7 +238,13 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
     distance: FloatProperty(name="Minimum distance",
                             description="minimum distance between objects(should be at least cutter diameter!)",
                             min=0.001, max=10, default=0.01, precision=PRECISION, unit="LENGTH")
+    tolerance: FloatProperty(name="Placement Tolerance",
+                            description="Tolerance for placement: smaller value slower placemant",
+                            min=0.001, max=0.02, default=0.005, precision=PRECISION, unit="LENGTH")                            
     rotate: bpy.props.BoolProperty(name="enable rotation", description="Enable rotation of elements", default=True)
+    rotate_angle: FloatProperty(name="Placement Angle rotation step", description="bigger rotation angle,faster placemant", default=0.19635*4, min=0.19635, max=math.pi, precision=5,
+                                             subtype="ANGLE", unit="ROTATION")
+                   
 
 
 class SliceObjectsSettings(bpy.types.PropertyGroup):
@@ -246,6 +254,7 @@ class SliceObjectsSettings(bpy.types.PropertyGroup):
     slice_distance: FloatProperty(name="Slicing distance",
                                   description="slices distance in z, should be most often thickness of plywood sheet.",
                                   min=0.001, max=10, default=0.005, precision=PRECISION, unit="LENGTH")
+    slice_3d: bpy.props.BoolProperty(name="3d slice", description="for 3d carving", default=False)
     indexes: bpy.props.BoolProperty(name="add indexes", description="adds index text of layer + index", default=True)
 
 
@@ -376,10 +385,9 @@ def updateBridges(o, context):
     
 def updateRest(o, context):
     print('update rest ')
-    # if o.use_layers:
     o.changed = True
-    if (o.strategy == 'WATERLINE'):
-        o.use_layers = True    
+#    if (o.strategy == 'WATERLINE'):
+#        o.use_layers = True    
 
 
 def getStrategyList(scene, context):
@@ -445,9 +453,11 @@ class camOperation(bpy.types.PropertyGroup):
                               items=(
                                   ('END', 'End', 'end - flat cutter'),
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
+                                  ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
                                   ('VCARVE', 'V-carve', 'v carve cutter'),
                                   ('BALL', 'Sphere', 'Sphere cutter'),
                                   ('BALLCONE', 'Ballcone', 'Ball with a Cone Parallel - X'),
+                                  ('LASER', 'Laser', 'Laser cutter'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
                               description='Type of cutter used',
                               default='END', update=updateZbufferImage)
@@ -549,14 +559,20 @@ class camOperation(bpy.types.PropertyGroup):
     cutter_tip_angle: FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0,
                                      max=180.0, default=60.0, precision=PRECISION, update=updateOffsetImage)
     ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
-                                     max=25.0, default=1, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+                                     max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
     ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
-                                     max=150.0, default=30.5, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+                                     max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
 #    shank_diameter: FloatProperty(name="Shank Diameter", description="Diameter at the top of cutter", min=0.0,
 #                                     max=25.0, default=3.175, precision=PRECISION, unit="LENGTH",update=updateOffsetImage)
+    bull_corner_radius: FloatProperty(name="Bull Corner Radius", description="Radius tool bit corner", min=0.0,
+                                     max=0.035, default=0.005, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
 
     cutter_description: StringProperty(name="Tool Description", default="", update=updateOffsetImage)
     
+    Laser_on: bpy.props.StringProperty(name="Laser ON string", default="M68 E0 Q100")
+    Laser_off: bpy.props.StringProperty(name="Laser OFF string", default="M68 E0 Q0")
+    Laser_cmd: bpy.props.StringProperty(name="Laser command", default="M68 E0 Q")    
+    Laser_delay: bpy.props.FloatProperty(name="Laser ON Delay", description="time after fast move to turn on laser and let machine stabilize", default=0.2)    
 
     # steps
     dist_between_paths: bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,
@@ -728,7 +744,7 @@ class camOperation(bpy.types.PropertyGroup):
                                                    precision=PRECISION, unit="LENGTH", update=updateRest)
     useG64: bpy.props.BoolProperty(name="G64 trajectory",
                                                description='Use only if your machie supports G64 code.  LinuxCNC and Mach3 do', default=False, update=updateRest)
-    G64: bpy.props.FloatProperty(name="Path Control Mode with Optional Tolerance", default=0.01, min=0.0000, max=0.5,
+    G64: bpy.props.FloatProperty(name="Path Control Mode with Optional Tolerance", default=0.0001, min=0.0000, max=0.005,
                                                    precision=PRECISION, unit="LENGTH", update=updateRest)                                                   
     movement_insideout: EnumProperty(name='Direction',
                                      items=(('INSIDEOUT', 'Inside out', 'a'), ('OUTSIDEIN', 'Outside in', 'a')),
@@ -1118,15 +1134,19 @@ def get_panels():  # convenience function for bot register and unregister functi
         ops.CamPackObjects,
         ops.CamSliceObjects,
         # other tools
-        ops.CamCurveBoolean,
-        ops.CamOffsetSilhouete,
-        ops.CamObjectSilhouete,
-        ops.CamCurveIntarsion,
-        ops.CamCurveOvercuts,
-        ops.CamCurveOvercutsB,
-        ops.CamCurveRemoveDoubles,
-        ops.CamMeshGetPockets,
-
+        curvecamtools.CamCurveBoolean,
+        curvecamtools.CamOffsetSilhouete,
+        curvecamtools.CamObjectSilhouete,
+        curvecamtools.CamCurveIntarsion,
+        curvecamtools.CamCurveOvercuts,
+        curvecamtools.CamCurveOvercutsB,
+        curvecamtools.CamCurveRemoveDoubles,
+        curvecamtools.CamMeshGetPockets,
+        curvecamtools.CamSineCurve,
+        curvecamtools.CamLissajousCurve,
+        curvecamtools.CamHypotrochoidCurve,             
+        curvecamtools.CamCustomCurve,                 
+        
         CAM_CUTTER_MT_presets,
         CAM_OPERATION_MT_presets,
         CAM_MACHINE_MT_presets,
@@ -1309,15 +1329,19 @@ classes = [
     ops.CamPackObjects,
     ops.CamSliceObjects,
     # other tools
-    ops.CamCurveBoolean,
-    ops.CamOffsetSilhouete,
-    ops.CamObjectSilhouete,
-    ops.CamCurveIntarsion,
-    ops.CamCurveOvercuts,
-    ops.CamCurveOvercutsB,
-    ops.CamCurveRemoveDoubles,
-    ops.CamMeshGetPockets,
-
+    curvecamtools.CamCurveBoolean,
+    curvecamtools.CamOffsetSilhouete,
+    curvecamtools.CamObjectSilhouete,
+    curvecamtools.CamCurveIntarsion,
+    curvecamtools.CamCurveOvercuts,
+    curvecamtools.CamCurveOvercutsB,
+    curvecamtools.CamCurveRemoveDoubles,
+    curvecamtools.CamMeshGetPockets,
+    curvecamtools.CamSineCurve,
+    curvecamtools.CamLissajousCurve,    
+    curvecamtools.CamHypotrochoidCurve,  
+    curvecamtools.CamCustomCurve,  
+    
     CAM_CUTTER_MT_presets,
     CAM_OPERATION_MT_presets,
     CAM_MACHINE_MT_presets,
