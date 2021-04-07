@@ -207,7 +207,7 @@ class CalculatePath(bpy.types.Operator):
         # getIslands(context.object)
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
-
+        bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
         bpy.ops.object.select_all(action='DESELECT')
         path = bpy.data.objects.get('cam_path_{}'.format(o.name))
         if path:
@@ -226,8 +226,6 @@ class CalculatePath(bpy.types.Operator):
 
         if o.use_layers:
             o.parallel_step_back = False
-
-
 
         gcodepath.getPath(context, o)
 
@@ -263,6 +261,7 @@ class CamPackObjects(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
+        bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode		
         obs = bpy.context.selected_objects
         pack.packCurves()
         # layout.
@@ -307,7 +306,7 @@ class PathsChain(bpy.types.Operator):
 
     def execute(self, context):
         s = bpy.context.scene
-
+        bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
         chain = s.cam_chains[s.cam_active_chain]
         chainops = getChainOperations(chain)
         meshes = []
