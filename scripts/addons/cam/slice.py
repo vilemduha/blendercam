@@ -23,6 +23,7 @@
 #completely rewritten April 2021
 
 import bpy
+from cam import utils
 
 def slicing2d(ob,height): #April 2020 Alain Pelletier
 	#let's slice things
@@ -63,6 +64,7 @@ def sliceObject(ob):   #April 2020 Alain Pelletier
 	thickness=bpy.context.scene.cam_slice.slice_distance
 	slice3d = bpy.context.scene.cam_slice.slice_3d
 	indexes = bpy.context.scene.cam_slice.indexes
+	above0 = bpy.context.scene.cam_slice.slice_above0
 	scollection = bpy.data.collections.new("Slices")
 	bpy.context.scene.collection.children.link(scollection)
 	if indexes:
@@ -73,14 +75,20 @@ def sliceObject(ob):   #April 2020 Alain Pelletier
 	print(ob.dimensions)
 	print(ob.location)
 
-	layeramt=int(ob.dimensions.z // thickness)	#calculate amount of layers needed
-	if slice3d:	#add a layer if in 3d slice mode
-		layeramt+=1
+	layeramt=1+int(ob.dimensions.z // thickness)	#calculate amount of layers needed
 		
 	bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
+	minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
+
+	start_height=minz
+	if above0 and minz < 0:
+		start_height=0
+
+	layeramt=1+int((maxz -start_height)// thickness)	#calculate amount of layers needed
+	
 
 	for layer in range(layeramt):
-		height=round(layer*thickness,6)		#height of current layer
+		height=round(layer*thickness,6)+start_height		#height of current layer
 		t=str(layer)+"-"+str(height*1000)
 		slicename="slice-"+t	#name for the current slice
 		tslicename="t-" + t		#name for the current slice text
