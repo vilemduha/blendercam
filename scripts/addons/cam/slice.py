@@ -48,7 +48,7 @@ def slicing3d(ob,start,end): #April 2020 Alain Pelletier
 	bpy.ops.object.mode_set(mode = 'EDIT')		#force edit mode
 	bpy.ops.mesh.select_all(action='SELECT')	#select all vertices
 	#actual slicing here
-	bpy.ops.mesh.bisect(plane_co=(0.0, 0.0, start), plane_no=(0.0, 0.0, 1.0), use_fill=True, clear_inner=True, clear_outer=False) 
+	bpy.ops.mesh.bisect(plane_co=(0.0, 0.0, start), plane_no=(0.0, 0.0, 1.0), use_fill=False, clear_inner=True, clear_outer=False) 
 	bpy.ops.mesh.select_all(action='SELECT')	#select all vertices which   
 	bpy.ops.mesh.bisect(plane_co=(0.0, 0.0, end), plane_no=(0.0, 0.0, 1.0), use_fill=True, clear_inner=False, clear_outer=True) 
 	#slicing done
@@ -88,10 +88,11 @@ def sliceObject(ob):   #April 2020 Alain Pelletier
 	
 
 	for layer in range(layeramt):
-		height=round(layer*thickness,6)+start_height		#height of current layer
+		height=round(layer*thickness,6)		#height of current layer
 		t=str(layer)+"-"+str(height*1000)
-		slicename="slice-"+t	#name for the current slice
-		tslicename="t-" + t		#name for the current slice text
+		slicename="slice_"+t	#name for the current slice
+		tslicename="t_" + t		#name for the current slice text
+		height+=start_height
 		print(slicename)
 		
 		if indexes:
