@@ -22,10 +22,8 @@
 
 import shapely
 from shapely.geometry import polygon as spolygon
-from shapely import ops
 from shapely import geometry as sgeometry
 from cam import polygon_utils_cam
-from cam import simple
 from cam.simple import *
 
 

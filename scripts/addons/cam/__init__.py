@@ -20,7 +20,6 @@
 # ***** END GPL LICENCE BLOCK *****
 
 import bpy, bgl, blf
-import mathutils
 import math, time
 from mathutils import *
 from bpy_extras.object_utils import object_data_add
@@ -28,9 +27,7 @@ from bpy.props import *
 import bl_operators
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 
-# from . import patterns
-# from . import chunk_operations
-from cam import ui, ops,curvecamtools, utils, simple, polygon_utils_cam  # , post_processors
+from cam import ui, ops,curvecamtools,curvecamequation, utils, simple, polygon_utils_cam  # , post_processors
 import numpy
 
 from shapely import geometry as sgeometry
@@ -1143,10 +1140,10 @@ def get_panels():  # convenience function for bot register and unregister functi
         curvecamtools.CamCurveOvercutsB,
         curvecamtools.CamCurveRemoveDoubles,
         curvecamtools.CamMeshGetPockets,
-        curvecamtools.CamSineCurve,
-        curvecamtools.CamLissajousCurve,
-        curvecamtools.CamHypotrochoidCurve,             
-        curvecamtools.CamCustomCurve,                 
+        curvecamequation.CamSineCurve,
+        curvecamequation.CamLissajousCurve,
+        curvecamequation.CamHypotrochoidCurve,             
+        curvecamequation.CamCustomCurve,                 
         
         CAM_CUTTER_MT_presets,
         CAM_OPERATION_MT_presets,
@@ -1338,10 +1335,10 @@ classes = [
     curvecamtools.CamCurveOvercutsB,
     curvecamtools.CamCurveRemoveDoubles,
     curvecamtools.CamMeshGetPockets,
-    curvecamtools.CamSineCurve,
-    curvecamtools.CamLissajousCurve,    
-    curvecamtools.CamHypotrochoidCurve,  
-    curvecamtools.CamCustomCurve,  
+    curvecamequation.CamSineCurve,
+    curvecamequation.CamLissajousCurve,    
+    curvecamequation.CamHypotrochoidCurve,  
+    curvecamequation.CamCustomCurve,  
     
     CAM_CUTTER_MT_presets,
     CAM_OPERATION_MT_presets,

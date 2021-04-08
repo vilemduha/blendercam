@@ -19,7 +19,7 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py. All other libraries are called mostly from here.
+# here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py.
 
 import bpy
 import time
