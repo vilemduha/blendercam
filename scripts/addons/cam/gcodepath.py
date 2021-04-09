@@ -54,6 +54,28 @@ from cam.image_utils import *
 
 from cam.nc import iso
 
+def slope(x1, y1, x2, y2):
+    if x2==x1:
+        m=round((y2-y1)/0.00000000000001,4)
+    else:
+        m=round((y2-y1)/(x2-x1),4)
+    return m
+
+def modslope(a,b):
+    hy=hypot(a.x-b.x,a.y-b.y)
+    if hy==0: hy=0.00000000000001
+    return round((b.z-a.z)/hy,4)
+
+def pointonline(a,b,c):
+    m1=slope(a.x,a.y,b.x,b.y)
+    m2=slope(a.x,a.y,c.x,c.y)
+    md1= modslope(a,b)
+    md2 =modslope(a, c)
+    if m1 != m2: return False
+    elif md1 != md2:
+        print("slope " + str(md1) + "m2 " + str(md2))
+        return False
+    else: return True
 
 def exportGcodePath(filename, vertslist, operations):
     """exports gcode with the heeks nc adopted library."""
@@ -188,7 +210,7 @@ def exportGcodePath(filename, vertslist, operations):
 
         free_movement_height = o.free_movement_height  # o.max.z+
         if o.useG64:
-            c.set_path_control_mode(2, round(o.G64*1000,5), 0 )        
+            c.set_path_control_mode(2, round(o.G64 * 1000, 5), 0)
 
         mesh = vertslist[i]
         verts = mesh.vertices[:]
@@ -207,7 +229,7 @@ def exportGcodePath(filename, vertslist, operations):
         if ((not use_experimental) or m.output_tool_change) and last_cutter != [o.cutter_id, o.cutter_diameter,
                                                                                 o.cutter_type, o.cutter_flutes]:
             c.comment('Tool change - D = %s type %s flutes %s' % (
-            strInUnits(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes))
+                strInUnits(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes))
             c.tool_change(o.cutter_id)
             c.flush_nc()
 
@@ -219,22 +241,21 @@ def exportGcodePath(filename, vertslist, operations):
             c.write('\n')
 
         if m.spindle_start_time > 0:
-            c.dwell(m.spindle_start_time)       
-        
-#        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
-        fmh=round(free_movement_height*1000,2)
-        if o.cutter_type != 'LASER':
-            c.write('G00 Z'+str(fmh)+'\n')
-        if o.enable_A:
-            if o.rotation_A==0:
-                 o.rotation_A=0.0001
-            c.rapid(a=o.rotation_A*180/math.pi)
+            c.dwell(m.spindle_start_time)
 
-          
-        if o.enable_B:    
-            if o.rotation_B==0:
-                 o.rotation_B=0.0001
-            c.rapid(a=o.rotation_B*180/math.pi)
+        #        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
+        fmh = round(free_movement_height * 1000, 2)
+        if o.cutter_type != 'LASER':
+            c.write('G00 Z' + str(fmh) + '\n')
+        if o.enable_A:
+            if o.rotation_A == 0:
+                o.rotation_A = 0.0001
+            c.rapid(a=o.rotation_A * 180 / math.pi)
+
+        if o.enable_B:
+            if o.rotation_B == 0:
+                o.rotation_B = 0.0001
+            c.rapid(a=o.rotation_B * 180 / math.pi)
 
         c.write('\n')
         c.flush_nc()
@@ -257,10 +278,10 @@ def exportGcodePath(filename, vertslist, operations):
 
         if m.use_position_definitions:  # dhull
             last = Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
-#		removed by pppalain 2020/12
-#       else:
-#           if i < 1:
-#                last = Vector((0.0, 0.0, free_movement_height))  # nonsense values so first step of the operation gets written for sure
+        #		removed by pppalain 2020/12
+        #       else:
+        #           if i < 1:
+        #                last = Vector((0.0, 0.0, free_movement_height))  # nonsense values so first step of the operation gets written for sure
         lastrot = Euler((0, 0, 0))
         duration = 0.0
         f = 0.1123456  # nonsense value, so first feedrate always gets written
@@ -272,7 +293,10 @@ def exportGcodePath(filename, vertslist, operations):
         scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
 
         # print('2')
-        laser=True
+        ii=0
+        offline=0
+        online=0
+        laser = True
         for vi, vert in enumerate(verts):
             # skip the first vertex if this is a chained operation
             # ie: outputting more than one operation
@@ -280,6 +304,26 @@ def exportGcodePath(filename, vertslist, operations):
             if i > 0 and vi == 0:
                 continue
             v = vert.co
+# point on line detection
+            nextv = v
+            #print("ii"+str(ii))
+            if ii==0:
+                firstv=v
+            elif ii==1:
+                middlev=v
+            else:
+                if pointonline(firstv,middlev,nextv):
+                    middlev=nextv
+                    online+=1
+                else:
+                    ii=0
+                    offline+=1
+                    firstv=nextv
+                #print(firstv, middlev, nextv)
+
+            print("online " + str(online) + "offline " + str(offline))
+            ii +=1
+# end of pointon line detection
             if o.machine_axes != '3':
                 v = v.copy()  # we rotate it so we need to copy the vector
                 r = Euler(rots[vi].co)
@@ -336,11 +380,11 @@ def exportGcodePath(filename, vertslist, operations):
                     if o.cutter_type == 'LASER':
                         if laser != True:
                             c.write("(*************dwell->laser on)\n")
-                            c.write("G04 P"+str(round(o.Laser_delay,2))+"\n")
-                            c.write(o.Laser_on+'\n')
+                            c.write("G04 P" + str(round(o.Laser_delay, 2)) + "\n")
+                            c.write(o.Laser_on + '\n')
                             laser = True
-                    else:  											
-                        c.feed(x=vx, y=vy, z=vz)                
+                    else:
+                        c.feed(x=vx, y=vy, z=vz)
                 else:
 
                     # print('plungef',ra,rb)
@@ -352,17 +396,17 @@ def exportGcodePath(filename, vertslist, operations):
                     f = freefeedrate
                     c.feedrate(f)
 
-#                if o.machine_axes == '3':
-#                    c.rapid(x=vx, y=vy, z=vz)
-                    
+                #                if o.machine_axes == '3':
+                #                    c.rapid(x=vx, y=vy, z=vz)
+
                 if o.machine_axes == '3':
                     if o.cutter_type == 'LASER':
                         if laser:
-                            c.write("(**************laser off)\n")						
-                            c.write(o.Laser_off+'\n')
-                            laser=False
+                            c.write("(**************laser off)\n")
+                            c.write(o.Laser_off + '\n')
+                            laser = False
                         c.rapid(x=vx, y=vy)
-                    else:  											
+                    else:
                         c.rapid(x=vx, y=vy, z=vz)
                 else:
                     # print('rapidf',ra,rb)
@@ -396,7 +440,7 @@ def exportGcodePath(filename, vertslist, operations):
                 c = startNewFile()
                 c.flush_nc()
                 c.comment('Tool change - D = %s type %s flutes %s' % (
-                strInUnits(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes))
+                    strInUnits(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes))
                 c.tool_change(o.cutter_id)
                 c.spindle(o.spindle_rpm, spdir_clockwise)
                 c.write_spindle()
@@ -424,7 +468,7 @@ def exportGcodePath(filename, vertslist, operations):
     c.file_close()
     print(time.time() - t)
 
-    
+
 def getPath(context, operation):  # should do all path calculations.
     t = time.process_time()
     # print('ahoj0')
@@ -476,7 +520,8 @@ def getPath(context, operation):  # should do all path calculations.
     operation.changed = False
     t1 = time.process_time() - t
     progress('total time', t1)
-    
+
+
 def getChangeData(o):
     """this is a function to check if object props have changed, to see if image updates are needed in the image based method"""
     s = bpy.context.scene
@@ -491,8 +536,9 @@ def getChangeData(o):
         changedata += str(ob.rotation_euler)
         changedata += str(ob.dimensions)
 
-    return changedata    
-    
+    return changedata
+
+
 def checkMemoryLimit(o):
     # utils.getBounds(o)
     sx = o.max.x - o.min.x
@@ -508,10 +554,10 @@ def checkMemoryLimit(o):
         o.warnings = o.warnings + 'sampling resolution had to be reduced!\n'
         print('changing sampling resolution to %f' % o.pixsize)
 
+
 # this is the main function.
 # FIXME: split strategies into separate file!
 def getPath3axis(context, operation):
-
     s = bpy.context.scene
     o = operation
     utils.getBounds(o)
@@ -568,7 +614,7 @@ def getPath3axis(context, operation):
 
             if o.strategy == 'OUTLINEFILL':
                 pathSamples = utils.sortChunks(pathSamples,
-                                         o)  # have to be sorted once before, because of the parenting inside of samplechunks
+                                               o)  # have to be sorted once before, because of the parenting inside of samplechunks
             # chunksToMesh(pathSamples,o)#for testing pattern script
             # return
             if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
@@ -818,7 +864,8 @@ def getPath3axis(context, operation):
 
     elif o.strategy == 'MEDIAL_AXIS':
         strateg.medial_axis(o)
-        
+
+
 def getPath4axis(context, operation):
     t = time.process_time()
     s = bpy.context.scene
@@ -834,4 +881,3 @@ def getPath4axis(context, operation):
 
         chunks.extend(utils.sampleChunksNAxis(o, pathSamples, layers))
         strategy.chunksToMesh(chunks, o)
- 
