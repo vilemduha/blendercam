@@ -417,6 +417,12 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                     if ao.strategy == 'PROJECTED_CURVE':
                         layout.prop_search(ao, "curve_object1", bpy.data, "objects")
 
+                layout.prop(ao,'remove_redundant_points')
+                if ao.remove_redundant_points:
+                    layout.label(text='Revise your Code before running!')
+                    layout.label(text='Quality will suffer if tolerance')
+                    layout.label(text='is high')
+                    layout.prop(ao,'simplify_tol')
                 if use_experimental and ao.geometry_source in ['OBJECT', 'COLLECTION']:
                     layout.prop(ao, 'use_modifiers')
                 layout.prop(ao, 'hide_all_others')

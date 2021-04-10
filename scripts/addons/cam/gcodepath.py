@@ -55,13 +55,13 @@ from cam.image_utils import *
 from cam.nc import iso
 
 
-def pointonline(a,b,c):
+def pointonline(a,b,c,tolerence):
     b=b-a  # convert to vector by subtracting origin
     c=c-a
     dot_pr = b.dot(c)  # b dot c
     norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
     angle=(numpy.rad2deg(numpy.arccos(dot_pr / norms))) # find angle between the two vectors
-    if angle > 0.08: return False
+    if angle > tolerence: return False
     else: return True
 
 def exportGcodePath(filename, vertslist, operations):
@@ -291,28 +291,22 @@ def exportGcodePath(filename, vertslist, operations):
             if i > 0 and vi == 0:
                 continue
             v = vert.co
-# point on line detection
-            nextv = v
-            #print("ii"+str(ii))
-            if ii==0:
-                firstv=v
-            elif ii==1:
-                middlev=v
-            else:
-                if pointonline(firstv, middlev, nextv):
-                    middlev=nextv
-                    online += 1
-                    continue
+# redundant point on line detection
+            if o.remove_redundant_points:
+                nextv = v
+                if ii==0: firstv=v  #only happens once
+                elif ii==1: middlev=v
                 else:
-                    ii=0
-                    offline+=1
-                    firstv=nextv
-                #print(firstv, middlev, nextv)
-
-            if online+offline >0:
-                print("online " + str(online) + " offline " + str(offline)+" "+ str(round(online/(offline+online)*100,1)) +"% removal")
-            ii +=1
-# end of point on line detection
+                    if pointonline(firstv, middlev, nextv,o.simplify_tol/1000):
+                        middlev=nextv
+                        online += 1
+                        continue
+                    else:  # create new start point with the last tested point
+                        ii=0
+                        offline+=1
+                        firstv=nextv
+                ii +=1
+# end of redundant point on line detection
             if o.machine_axes != '3':
                 v = v.copy()  # we rotate it so we need to copy the vector
                 r = Euler(rots[vi].co)
@@ -444,6 +438,9 @@ def exportGcodePath(filename, vertslist, operations):
                 c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=last.z * unitcorr)
                 processedops = 0
 
+        if o.remove_redundant_points:
+            print("online " + str(online) + " offline " + str(offline) + " " + str(
+                round(online / (offline + online) * 100, 1)) + "% removal")
         c.feedrate(unitcorr * o.feedrate)
 
         if use_experimental and o.output_trailer:

@@ -421,6 +421,12 @@ class camOperation(bpy.types.PropertyGroup):
     filename: bpy.props.StringProperty(name="File name", default="Operation", update=updateRest)
     auto_export: bpy.props.BoolProperty(name="Auto export",
                                         description="export files immediately after path calculation", default=True)
+    remove_redundant_points: bpy.props.BoolProperty(
+        name="Symplify Gcode",
+        description="Remove redundant points sharing the same angle"
+                    " as the start vector",
+        default=False)
+    simplify_tol: bpy.props.IntProperty(name="Tolerance", description='lower number means more precise', default=50, min=1, max=1000)
     hide_all_others: bpy.props.BoolProperty(
         name="Hide all others",
         description="Hide all other tool pathes except toolpath"
