@@ -56,25 +56,24 @@ from cam.nc import iso
 
 def slope(x1, y1, x2, y2):
     if x2==x1:
-        m=round((y2-y1)/0.00000000000001,4)
+        m=round((y2-y1)/0.00000000000001,2)
     else:
-        m=round((y2-y1)/(x2-x1),4)
+        m=round((y2-y1)/(x2-x1),2)
     return m
 
 def modslope(a,b):
-    hy=hypot(a.x-b.x,a.y-b.y)
-    if hy==0: hy=0.00000000000001
-    return round((b.z-a.z)/hy,4)
+    hy=round(hypot(a.x-b.x,a.y-b.y),6)
+    if hy==0: hy=0.00000000000001  # protect divide by 0
+    return round((b.z-a.z)/hy,1)
 
 def pointonline(a,b,c):
     m1=slope(a.x,a.y,b.x,b.y)
     m2=slope(a.x,a.y,c.x,c.y)
     md1= modslope(a,b)
     md2 =modslope(a, c)
+#    print("slope " + str(md1) + "m2 " + str(md2))
     if m1 != m2: return False
-    elif md1 != md2:
-        print("slope " + str(md1) + "m2 " + str(md2))
-        return False
+    elif md1 != md2: return False
     else: return True
 
 def exportGcodePath(filename, vertslist, operations):
@@ -312,18 +311,20 @@ def exportGcodePath(filename, vertslist, operations):
             elif ii==1:
                 middlev=v
             else:
-                if pointonline(firstv,middlev,nextv):
+                if pointonline(firstv, middlev, nextv):
                     middlev=nextv
-                    online+=1
+                    online += 1
+                    continue
                 else:
                     ii=0
                     offline+=1
                     firstv=nextv
                 #print(firstv, middlev, nextv)
 
-            print("online " + str(online) + "offline " + str(offline))
+            if online+offline >0:
+                print("online " + str(online) + " offline " + str(offline)+" "+ str(round(online/(offline+online)*100,1)) +"% removal")
             ii +=1
-# end of pointon line detection
+# end of point on line detection
             if o.machine_axes != '3':
                 v = v.copy()  # we rotate it so we need to copy the vector
                 r = Euler(rots[vi].co)
