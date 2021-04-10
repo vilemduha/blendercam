@@ -54,26 +54,14 @@ from cam.image_utils import *
 
 from cam.nc import iso
 
-def slope(x1, y1, x2, y2):
-    if x2==x1:
-        m=round((y2-y1)/0.00000000000001,2)
-    else:
-        m=round((y2-y1)/(x2-x1),2)
-    return m
-
-def modslope(a,b):
-    hy=round(hypot(a.x-b.x,a.y-b.y),6)
-    if hy==0: hy=0.00000000000001  # protect divide by 0
-    return round((b.z-a.z)/hy,1)
 
 def pointonline(a,b,c):
-    m1=slope(a.x,a.y,b.x,b.y)
-    m2=slope(a.x,a.y,c.x,c.y)
-    md1= modslope(a,b)
-    md2 =modslope(a, c)
-#    print("slope " + str(md1) + "m2 " + str(md2))
-    if m1 != m2: return False
-    elif md1 != md2: return False
+    b=b-a  # convert to vector by subtracting origin
+    c=c-a
+    dot_pr = b.dot(c)  # b dot c
+    norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
+    angle=(numpy.rad2deg(numpy.arccos(dot_pr / norms))) # find angle between the two vectors
+    if angle > 0.08: return False
     else: return True
 
 def exportGcodePath(filename, vertslist, operations):
