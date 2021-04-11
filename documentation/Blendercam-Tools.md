@@ -9,6 +9,7 @@ Blendercam has a number of curve operators that will modify selected curves to m
 * [Silhouette Offset](#silhouette-offset)
 * [C-Remove Doubles](#c-remove-doubles)
 * [Get pocket surfaces](#get-pocket-surfaces)
+* [Create custom curves](#create-curves-shapes)
 
 ## View Tool Shelf
 If the Tool Shelf is not visible on the left of the 3D view then use the short cut **T** or use the mouse to left button select the small **+** near the top left border of the 3D view.
@@ -115,7 +116,7 @@ The way the detection works is each face in the mesh is checked to see if it is 
 
 Operator option **z limit** controls which horizontal surfaces are considered a pocket.  If the horizontal surface z location is below the z limit then the surface is considered a pocket. Setting z limit to 0.0 (default setting) should work for most situations if mesh top is at z=0.0.
 
-## Create curves shapes 
+## Create Curves Shapes 
 This operators will create shapes directly from the panel. 
 
 ![Create Panel](images/createcurve.png)
