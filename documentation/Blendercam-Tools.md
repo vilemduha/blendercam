@@ -114,3 +114,21 @@ This operator will detect pockets in a mesh and extract them as curves.  The cur
 The way the detection works is each face in the mesh is checked to see if it is horizontal and facing up by checking the face normal.  There is an operator option called **horizontal threshold** that is used to determine if the face is horizontal.  A value closer to 1.0 means that the face normal must be almost vertical ie the face must be almost perfectly flat. A value closer to 0.0 means that the face does not have to be perfectly horizontal ie part of a curved surface.
 
 Operator option **z limit** controls which horizontal surfaces are considered a pocket.  If the horizontal surface z location is below the z limit then the surface is considered a pocket. Setting z limit to 0.0 (default setting) should work for most situations if mesh top is at z=0.0.
+
+## Create curves shapes 
+This operators will create shapes directly from the panel. 
+
+![Create Panel](images/createcurve.png)
+
+*create sine
+
+![Create Sine](images/createsine.png)
+
+*create lissajous figure
+![Create Lissajous](images/createlissajous.png)
+
+*create spirograph type figure
+![Create Spirograph](images/createspiro.png)
+
+*create custom curve
+![Create Custom](images/createcustum.png)
