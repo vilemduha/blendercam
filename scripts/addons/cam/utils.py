@@ -90,8 +90,9 @@ def positionObject(operation):
         ob.location.z -= minz  	    
     elif operation.material_Z == 'CENTERED':
         ob.location.z -= minz +totz/2 	
-        
-    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)  
+
+    if ob.type=='MESH':
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     #addMaterialAreaObject()  
 
 
