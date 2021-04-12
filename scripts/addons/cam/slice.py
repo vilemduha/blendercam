@@ -67,11 +67,12 @@ def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
 
 
 def sliceObject(ob):  # April 2020 Alain Pelletier
-    # setup the collections
+    # get variables from menu
     thickness = bpy.context.scene.cam_slice.slice_distance
     slice3d = bpy.context.scene.cam_slice.slice_3d
     indexes = bpy.context.scene.cam_slice.indexes
     above0 = bpy.context.scene.cam_slice.slice_above0
+    # setup the collections
     scollection = bpy.data.collections.new("Slices")
     bpy.context.scene.collection.children.link(scollection)
     if indexes:
@@ -101,16 +102,6 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         height += start_height
         print(slicename)
 
-        if indexes:
-            # text objects
-            bpy.ops.object.text_add()  # new text object
-            textob = bpy.context.active_object
-            textob.data.size = 0.006  # change size of object
-            textob.data.body = t  # text content
-            textob.location = (0, 0, 0)  # text location
-            textob.name = tslicename  # change the name of object
-            bpy.ops.object.select_all(action='DESELECT')  # deselect everything
-            tcollection.objects.link(textob)  # add to text collection
 
         ob.select_set(True)  # select object to be sliced
         bpy.context.view_layer.objects.active = ob  # make object to be sliced active
@@ -123,5 +114,18 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
             slicing3d(obslice, height, height + thickness)  # slice 3d at desired height and stop at desired height
         else:
             slicing2d(obslice, height)  # slice object at desired height
+
+        if indexes:
+            # text objects
+            bpy.ops.object.text_add()  # new text object
+            textob = bpy.context.active_object
+            textob.data.size = 0.006  # change size of object
+            textob.data.body = t  # text content
+            textob.location = (0, 0, 0)  # text location
+            textob.name = tslicename  # change the name of object
+            bpy.ops.object.select_all(action='DESELECT')  # deselect everything
+            tcollection.objects.link(textob)  # add to text collection
+            textob.parent = obslice  # make textob child of obslice
+
     # select all slices
     for obj in bpy.data.collections['Slices'].all_objects: obj.select_set(True)
