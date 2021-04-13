@@ -312,7 +312,7 @@ def pocket(o):
     chunksFromCurve = utils.sortChunks(chunksFromCurve, o)
 
     chunks = []
-    layers = getLayers(o, o.maxz, o.min.z)
+    layers = getLayers(o, o.maxz, o.minz)
 
     # print(layers)
     # print(chunksFromCurve)
@@ -498,7 +498,7 @@ def drill(o):
                 chunks.append(camPathChunk([(v.co.x + l.x, v.co.y + l.y, v.co.z + l.z)]))
         delob(ob)  # delete temporary object with applied transforms
 
-    layers = getLayers(o, o.maxz, o.min.z)
+    layers = getLayers(o, o.maxz, o.minz)
 
     chunklayers = []
     for layer in layers:
