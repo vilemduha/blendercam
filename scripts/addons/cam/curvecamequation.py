@@ -75,7 +75,7 @@ class CamSineCurve(bpy.types.Operator):
             return c
 
         for i in range(self.wave_amount):
-            angle_off=self.wave_angle_offset*i
+            angle_off=self.wave_angle_offset*self.period*i/(2*math.pi)
             parametric.create_parametric_curve(f, offset=self.wave_distance*i, min=self.mint, max=self.maxt, use_cubic=True,
                                            iterations=self.iteration, angle_offset=angle_off)
 
