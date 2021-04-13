@@ -104,7 +104,7 @@ def cutout(o):
         for ch in chunksFromCurve:
             ch.points.reverse()
 
-    layers = getLayers(o, o.maxz, o.min.z)
+    layers = getLayers(o, o.maxz, o.minz)
     extendorder = []
 
     if o.first_down:  # each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
