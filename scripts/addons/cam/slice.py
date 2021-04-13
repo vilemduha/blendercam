@@ -43,8 +43,9 @@ def slicing2d(ob, height):  # April 2020 Alain Pelletier
     bpy.ops.object.convert(target='CURVE')  # convert it to curve
     if bpy.context.active_object.type != 'CURVE':  # conversion failed because mesh was empty so delete mesh
         bpy.ops.object.delete(use_global=False, confirm=False)
+        return false
     bpy.ops.object.select_all(action='DESELECT')  # deselect everything
-
+    return true
 
 def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
     # let's slice things
@@ -102,7 +103,6 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         height += start_height
         print(slicename)
 
-
         ob.select_set(True)  # select object to be sliced
         bpy.context.view_layer.objects.active = ob  # make object to be sliced active
         bpy.ops.object.duplicate()  # make a copy of object to be sliced
@@ -113,9 +113,9 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         if slice3d:
             slicing3d(obslice, height, height + thickness)  # slice 3d at desired height and stop at desired height
         else:
-            slicing2d(obslice, height)  # slice object at desired height
+            slicesuccess=slicing2d(obslice, height)  # slice object at desired height
 
-        if indexes:
+        if indexes and slicesuccess:
             # text objects
             bpy.ops.object.text_add()  # new text object
             textob = bpy.context.active_object
