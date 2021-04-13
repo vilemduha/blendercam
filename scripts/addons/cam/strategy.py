@@ -104,7 +104,7 @@ def cutout(o):
         for ch in chunksFromCurve:
             ch.points.reverse()
 
-    layers = getLayers(o, o.maxz, o.minz)
+    layers = getLayers(o, o.maxz, checkminz(o))
     extendorder = []
 
     if o.first_down:  # each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
@@ -174,7 +174,7 @@ def curve(o):
 
     # layers here
     if o.use_layers:
-        layers = getLayers(o, o.maxz, round(o.minz,
+        layers = getLayers(o, o.maxz, round(checkminz(o),
                                             6))  # layers is a list of lists [[0.00,l1],[l1,l2],[l2,l3]] containg the start and end of each layer
         extendorder = []
         chunks = []
@@ -312,7 +312,7 @@ def pocket(o):
     chunksFromCurve = utils.sortChunks(chunksFromCurve, o)
 
     chunks = []
-    layers = getLayers(o, o.maxz, o.minz)
+    layers = getLayers(o, o.maxz, checkminz(o))
 
     # print(layers)
     # print(chunksFromCurve)
@@ -498,7 +498,7 @@ def drill(o):
                 chunks.append(camPathChunk([(v.co.x + l.x, v.co.y + l.y, v.co.z + l.z)]))
         delob(ob)  # delete temporary object with applied transforms
 
-    layers = getLayers(o, o.maxz, o.minz)
+    layers = getLayers(o, o.maxz, checkminz(o))
 
     chunklayers = []
     for layer in layers:
@@ -878,3 +878,9 @@ def chunksToMesh(chunks, o):
         bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
     else:
         ob.select_set(state=True, view_layer=None)
+
+def checkminz(o):
+    if o.minz_from_material:
+        return o.min.z
+    else:
+        return o.minz

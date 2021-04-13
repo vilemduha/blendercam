@@ -651,6 +651,8 @@ class camOperation(bpy.types.PropertyGroup):
 
     minz_from_ob: bpy.props.BoolProperty(name="Depth from object", description="Operation ending depth from object",
                                          default=True, update=updateRest)
+    minz_from_material: bpy.props.BoolProperty(name="Depth from material", description="Operation ending depth from material",
+                                         default=False, update=updateRest)
     minz: bpy.props.FloatProperty(name="Operation depth end", default=-0.01, min=-3, max=3, precision=PRECISION,
                                   unit="LENGTH",
                                   update=updateRest)  # this is input minz. True minimum z can be something else, depending on material e.t.c.

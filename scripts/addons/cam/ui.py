@@ -815,11 +815,13 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.geometry_source in ['OBJECT', 'COLLECTION']:                    
                     if ao.strategy == 'CURVE':
                         layout.label(text="cannot use depth from object using CURVES")   
-                    layout.prop(ao, 'minz_from_ob')
+                    if not ao.minz_from_material:
+                        layout.prop(ao, 'minz_from_ob')
 
                             						
                     if not ao.minz_from_ob:
-                        layout.prop(ao, 'minz')
+                        if not ao.minz_from_material: layout.prop(ao, 'minz')
+                        layout.prop(ao,'minz_from_material')
                 else:
                     layout.prop(ao, 'source_image_scale_z')
                     layout.prop(ao, 'source_image_size_x')
