@@ -49,6 +49,9 @@ class CamSineCurve(bpy.types.Operator):
     iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
     maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=3, precision=4, unit="LENGTH")
     mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
+    wave_distance: bpy.props.FloatProperty(name="distance between multiple waves", default=0.0, min=0.0, max=100, precision=4, unit="LENGTH")
+    wave_angle_offset: bpy.props.FloatProperty(name="angle offset for multiple waves", default=math.pi/2, min=-2*math.pi, max=2*math.pi, precision=4, unit="ROTATION")
+    wave_amount: bpy.props.IntProperty(name="amount of multiple waves", default=1, min=1, max=2000)
 
     def execute(self, context):
 
@@ -60,19 +63,21 @@ class CamSineCurve(bpy.types.Operator):
         e = Expression(zstring, ["t"])  # make equation from string
 
         # build function to be passed to create parametric curve ()
-        def f(t, offset: float = 0.0):
+        def f(t, offset: float = 0.0, angle_offset: float = 0.0):
             if self.axis == "XY":
-                c = (e(t), t, 0)
+                c = (e(t+angle_offset), t, offset)
             elif self.axis == "YX":
-                c = (t, e(t), 0)
+                c = (t, e(t+angle_offset), offset)
             elif self.axis == "ZX":
-                c = (t, 0, e(t))
+                c = (t, offset, e(t+angle_offset))
             elif self.axis == "ZY":
-                c = (0, t, e(t))
+                c = (offset, t, e(t+angle_offset))
             return c
 
-        parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True,
-                                           iterations=self.iteration)
+        for i in range(self.wave_amount):
+            angle_off=self.wave_angle_offset*i
+            parametric.create_parametric_curve(f, offset=self.wave_distance*i, min=self.mint, max=self.maxt, use_cubic=True,
+                                           iterations=self.iteration, angle_offset=angle_off)
 
         return {'FINISHED'}
 
