@@ -91,7 +91,7 @@ def positionObject(operation):
     elif operation.material_Z == 'CENTERED':
         ob.location.z -= minz +totz/2 	
 
-    if ob.type=='MESH':
+    if ob.type != 'CURVE':
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     #addMaterialAreaObject()  
 
@@ -258,24 +258,31 @@ def getOperationSources(o):
 def getBounds(o):
     # print('kolikrat sem rpijde')
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION' or o.geometry_source == 'CURVE':
+        print("valid geometry")
+        minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
+
+        if o.minz_from_ob:
+            if minz == 10000000:
+                minz = 0
+            print("minz" + str(minz))
+            o.min.z = minz
+            o.minz = o.min.z
+        else:
+            o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
+            print("notminzfromobj")
+
         if o.material_from_model:
-            minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
+            print("material_from_model")
 
             o.min.x = minx - o.material_radius_around_model
             o.min.y = miny - o.material_radius_around_model
             o.max.z = max(o.maxz, maxz)
 
-            if o.minz_from_ob:
-                if minz == 10000000:
-                    minz = 0
-                o.min.z = minz
-                o.minz = o.min.z
-            else:
-                o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
 
             o.max.x = maxx + o.material_radius_around_model
             o.max.y = maxy + o.material_radius_around_model
         else:
+            print("not material from model")
             o.min.x = o.material_origin.x
             o.min.y = o.material_origin.y
             o.min.z = o.material_origin.z - o.material_size.z
@@ -314,6 +321,7 @@ def getBounds(o):
         # o.max.z=min(o.min.z+m.working_area.z,o.max.z)
         o.warnings += 'Operation exceeds your machine limits\n'
 
+    print("getbounds() zmin="+str(o.minz)+" o.min.z="+str(o.min.z))
 
 # progress (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
 
