@@ -264,12 +264,12 @@ def getBounds(o):
         if o.minz_from_ob:
             if minz == 10000000:
                 minz = 0
-            print("minz" + str(minz))
+            print("minz from object:" + str(minz))
             o.min.z = minz
             o.minz = o.min.z
         else:
             o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
-            print("notminzfromobj")
+            print("not minz from object")
 
         if o.material_from_model:
             print("material_from_model")
@@ -320,8 +320,6 @@ def getBounds(o):
         # o.max.y=min(o.min.y+m.working_area.y,o.max.y)
         # o.max.z=min(o.min.z+m.working_area.z,o.max.z)
         o.warnings += 'Operation exceeds your machine limits\n'
-
-    print("getbounds() zmin="+str(o.minz)+" o.min.z="+str(o.min.z))
 
 # progress (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
 
