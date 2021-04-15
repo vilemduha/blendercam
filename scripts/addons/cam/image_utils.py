@@ -124,7 +124,9 @@ def getCutterArray(operation, pixsize):
                 vstart.y = (b + 0.5 - m) * ps * scale
                 vend.y = vstart.y
                 v = vend - vstart
-                c = cutob.ray_cast(vstart, v, v.length)
+#                c = cutob.ray_cast(vstart, v, v.length, distance=1.70141e+38)
+
+                c = cutob.ray_cast(vstart, v, distance=1.70141e+38)
                 # print(c)
                 if c[3] != -1:
                     z = -c[1][2] / scale
@@ -344,16 +346,18 @@ def getOffsetImageCavities(o, i):  # for pencil operation mainly
 
     ar = numpy.logical_or(vertical, horizontal)
 
-    if 0:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge, it has tons of spikes and simply is not better than the old one
+    if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge, it has tons of spikes and simply is not better than the old one
         iname = getCachePath(o) + '_pencilthres.exr'
         # numpysave(ar,iname)#save for comparison before
         chunks = imageEdgeSearch_online(o, ar, i)
         iname = getCachePath(o) + '_pencilthres_comp.exr'
+        print("new pencil strategy")
     # numpysave(ar,iname)#and after
     else:  # here is the old strategy with
         dilateAr(ar, 1)
         iname = getCachePath(o) + '_pencilthres.exr'
         # numpysave(ar,iname)#save for comparison before
+        print("old pencil strategy")
 
         chunks = imageToChunks(o, ar)
 
@@ -380,8 +384,8 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pixsize = o.pixsize
     edges = []
-
-    r = 3  # ceil((o.cutter_diameter/12)/o.pixsize)
+    r = 3
+    r = ceil((o.cutter_diameter/12)/o.pixsize) #was commented
     d = 2 * r
     coef = 0.75
     # sx=o.max.x-o.min.x
@@ -1745,6 +1749,8 @@ def renderSampleImage(o):
         neg = o.source_image_scale_z < 0
         if o.strategy == 'WATERLINE':  # waterline strategy needs image border to have ok ambient.
             a.fill(1 - neg)
+     
+
         else:  # other operations like parallel need to reach the border
             a.fill(neg)  #
         # 2*o.borderwidth
