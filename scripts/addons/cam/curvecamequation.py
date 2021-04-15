@@ -44,7 +44,8 @@ class CamSineCurve(bpy.types.Operator):
         ('ZY', 'Y to displace Z axis', 'X constant; Y sine displacement')),default='ZX')
     wave: bpy.props.EnumProperty(name="Wave", items=(
         ('sine', 'Sine Wave', 'Sine Wave'),
-        ('triangle', 'Triangle Wave', 'triangle wave')),default='sine')
+        ('triangle', 'Triangle Wave', 'triangle wave'),
+        ('cycloid', 'Cycloid', 'Sine wave rectification')),default='sine')
     amplitude: bpy.props.FloatProperty(name="Amplitude", default=.01, min=0, max=10, precision=4, unit="LENGTH")
     period: bpy.props.FloatProperty(name="Period", default=.5, min=0.001, max=100, precision=4, unit="LENGTH")
     shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
@@ -64,7 +65,10 @@ class CamSineCurve(bpy.types.Operator):
                 round(self.period, 6)) + ")*(t+" + str(round(self.shift, 6)) + "))"
         elif self.wave=='triangle':  #build triangle wave from fourier series
             m=self.amplitude*8/(math.pi**2)
-            zstring = str(m) + '*(' + triangle(30,self.period) +")"
+            zstring = str(round(self.offset, 6)) + "+" + str(m) + '*(' + triangle(30,self.period) +")"
+        elif self.wave == 'cycloid':
+            zstring = "abs("+str(round(self.offset, 6)) + "+" + str(round(self.amplitude, 6)) + "*sin((2*pi/" + str(
+                round(self.period, 6)) + ")*(t+" + str(round(self.shift, 6)) + ")))"
 
         print(zstring)
         e = Expression(zstring, ["t"])  # make equation from string
@@ -214,12 +218,11 @@ class CamCustomCurve(bpy.types.Operator):
 def triangle(i,T):
     s=""
     for n in range(i):
-        if n%2 != 0:
+        if n % 2 != 0:
             e = (n-1)/2
-            a = round(((-1)**e)/(n**2),8)
-            b = round(n*math.pi/(T/2),8)
+            a = round(((-1)**e)/(n**2), 8)
+            b = round(n*math.pi/(T/2), 8)
             if n > 1:
-                s+='+'
-            s+= str(a)+"*sin("+str(b)+"*t) "
-
-    return (s)
+                s += '+'
+            s += str(a)+"*sin("+str(b)+"*t) "
+    return s
