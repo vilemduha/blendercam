@@ -48,13 +48,14 @@ class CamSineCurve(bpy.types.Operator):
         ('cycloid', 'Cycloid', 'Sine wave rectification')),default='sine')
     amplitude: bpy.props.FloatProperty(name="Amplitude", default=.01, min=0, max=10, precision=4, unit="LENGTH")
     period: bpy.props.FloatProperty(name="Period", default=.5, min=0.001, max=100, precision=4, unit="LENGTH")
+    beatperiod: bpy.props.FloatProperty(name="Beat Period offset", default=0.0, min=0.0, max=100, precision=4, unit="LENGTH")
     shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
     offset: bpy.props.FloatProperty(name="offset", default=0, min=-1.0, max=1, precision=4, unit="LENGTH")
     iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
     maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=3, precision=4, unit="LENGTH")
     mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
     wave_distance: bpy.props.FloatProperty(name="distance between multiple waves", default=0.0, min=0.0, max=100, precision=4, unit="LENGTH")
-    wave_angle_offset: bpy.props.FloatProperty(name="angle offset for multiple waves", default=math.pi/2, min=-2*math.pi, max=2*math.pi, precision=4, unit="ROTATION")
+    wave_angle_offset: bpy.props.FloatProperty(name="angle offset for multiple waves", default=math.pi/2, min=-200*math.pi, max=200*math.pi, precision=4, unit="ROTATION")
     wave_amount: bpy.props.IntProperty(name="amount of multiple waves", default=1, min=1, max=2000)
 
     def execute(self, context):
@@ -63,12 +64,21 @@ class CamSineCurve(bpy.types.Operator):
         if self.wave=='sine':
             zstring = str(round(self.offset, 6)) + "+" + str(round(self.amplitude, 6)) + "*sin((2*pi/" + str(
                 round(self.period, 6)) + ")*(t+" + str(round(self.shift, 6)) + "))"
+            if self.beatperiod !=0:
+                zstring+= "+" + str(round(self.offset, 6)) + "+" + str(round(self.amplitude, 6)) + "*sin((2*pi/" + str(
+                    round(self.period+self.beatperiod, 6)) + ")*(t+" + str(round(self.shift, 6)) + "))"
         elif self.wave=='triangle':  #build triangle wave from fourier series
             m=self.amplitude*8/(math.pi**2)
-            zstring = str(round(self.offset, 6)) + "+" + str(m) + '*(' + triangle(30,self.period) +")"
+            zstring = str(round(self.offset, 6)) + "+" + str(m) + '*(' + triangle(50,self.period) +")"
+            if self.beatperiod !=0:
+                zstring += "+"+str(round(self.offset, 6)) + "+" + str(m) + '*(' + triangle(50, self.period+self.beatperiod) + ")"
         elif self.wave == 'cycloid':
             zstring = "abs("+str(round(self.offset, 6)) + "+" + str(round(self.amplitude, 6)) + "*sin((2*pi/" + str(
                 round(self.period, 6)) + ")*(t+" + str(round(self.shift, 6)) + ")))"
+            if self.beatperiod !=0:
+                zstring += "+ (" + str(round(self.offset, 6)) + "+" + str(
+                    round(self.amplitude, 6)) + "*sin((2*pi/" + str(
+                    round(self.period+self.beatperiod, 6)) + ")*(t+" + str(round(self.shift, 6)) + ")))"
 
         print(zstring)
         e = Expression(zstring, ["t"])  # make equation from string
