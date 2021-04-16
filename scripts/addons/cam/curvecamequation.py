@@ -64,11 +64,11 @@ class CamSineCurve(bpy.types.Operator):
         if self.wave=='sine':
             zstring = ssine(self.amplitude,self.period, dc_offset=self.offset,phase_shift=self.shift)
             if self.beatperiod !=0:
-                zstring+= ""
+                zstring+= "+"+ssine(self.amplitude,self.period+self.beatperiod, dc_offset=self.offset,phase_shift=self.shift)
         elif self.wave=='triangle':  #build triangle wave from fourier series
-            zstring = str(round(self.offset, 6)) + "+(" + str(triangle(50,self.period,self.amplitude))+")"
+            zstring = str(round(self.offset, 6)) + "+(" + str(triangle(80,self.period,self.amplitude))+")"
             if self.beatperiod !=0:
-                zstring += " "
+                zstring += '+' + str(triangle(80,self.period+self.beatperiod,self.amplitude))
         elif self.wave == 'cycloid':
             zstring = "abs("+str(round(self.offset, 6)) + "+" + str(round(self.amplitude, 6)) + "*sin((2*pi/" + str(
                 round(self.period, 6)) + ")*(t+" + str(round(self.shift, 6)) + ")))"
@@ -129,13 +129,13 @@ class CamLissajousCurve(bpy.types.Operator):
         if self.waveA =='sine':
             xstring = ssine(self.amplitude_A,self.period_A, phase_shift=self.shift)
         elif self.waveA == 'triangle':
-            xstring= str(triangle(60,self.period_A,self.amplitude_A))
+            xstring= str(triangle(100,self.period_A,self.amplitude_A))
 
         if self.waveB == 'sine':
             ystring = ssine(self.amplitude_B,self.period_B)
 
         elif self.waveB == 'triangle':
-            ystring = str(triangle(60, self.period_B, self.amplitude_B))
+            ystring = str(triangle(100, self.period_B, self.amplitude_B))
 
         print("x= " + str(xstring))
         print("y= " + str(ystring))
