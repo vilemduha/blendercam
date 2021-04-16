@@ -83,9 +83,9 @@ class CamSineCurve(bpy.types.Operator):
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0, angle_offset: float = 0.0):
             if self.axis == "XY":
-                c = (e(t+angle_offset), t, offset)
+                c = (e(t+angle_offset)+offset, t, 0)
             elif self.axis == "YX":
-                c = (t, e(t+angle_offset), offset)
+                c = (t, e(t+angle_offset)+offset, 0)
             elif self.axis == "ZX":
                 c = (t, offset, e(t+angle_offset))
             elif self.axis == "ZY":
