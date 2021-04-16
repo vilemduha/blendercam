@@ -62,16 +62,13 @@ class CamSineCurve(bpy.types.Operator):
 
         # z=Asin(B(x+C))+D
         if self.wave=='sine':
-            zstring = str(round(self.offset, 6)) + "+" + str(round(self.amplitude, 6)) + "*sin((2*pi/" + str(
-                round(self.period, 6)) + ")*(t+" + str(round(self.shift, 6)) + "))"
+            zstring = ssine(self.amplitude,self.period, dc_offset=self.offset,phase_shift=self.shift)
             if self.beatperiod !=0:
-                zstring+= "+" + str(round(self.offset, 6)) + "+" + str(round(self.amplitude, 6)) + "*sin((2*pi/" + str(
-                    round(self.period+self.beatperiod, 6)) + ")*(t+" + str(round(self.shift, 6)) + "))"
+                zstring+= ""
         elif self.wave=='triangle':  #build triangle wave from fourier series
-            m=self.amplitude*8/(math.pi**2)
-            zstring = str(round(self.offset, 6)) + "+" + str(m) + '*(' + triangle(50,self.period) +")"
+            zstring = str(round(self.offset, 6)) + "+(" + str(triangle(50,self.period,self.amplitude))+")"
             if self.beatperiod !=0:
-                zstring += "+"+str(round(self.offset, 6)) + "+" + str(m) + '*(' + triangle(50, self.period+self.beatperiod) + ")"
+                zstring += " "
         elif self.wave == 'cycloid':
             zstring = "abs("+str(round(self.offset, 6)) + "+" + str(round(self.amplitude, 6)) + "*sin((2*pi/" + str(
                 round(self.period, 6)) + ")*(t+" + str(round(self.shift, 6)) + ")))"
@@ -110,7 +107,14 @@ class CamLissajousCurve(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     amplitude_A: bpy.props.FloatProperty(name="Amplitude A", default=.1, min=0, max=100, precision=4, unit="LENGTH")
+    waveA: bpy.props.EnumProperty(name="Wave X", items=(
+        ('sine', 'Sine Wave', 'Sine Wave'),
+        ('triangle', 'Triangle Wave', 'triangle wave')),default='sine')
+
     amplitude_B: bpy.props.FloatProperty(name="Amplitude B", default=.1, min=0, max=100, precision=4, unit="LENGTH")
+    waveB: bpy.props.EnumProperty(name="Wave Y", items=(
+        ('sine', 'Sine Wave', 'Sine Wave'),
+        ('triangle', 'Triangle Wave', 'triangle wave')),default='sine')
     period_A: bpy.props.FloatProperty(name="Period A", default=1.1, min=0.001, max=100, precision=4, unit="LENGTH")
     period_B: bpy.props.FloatProperty(name="Period B", default=1.0, min=0.001, max=100, precision=4, unit="LENGTH")
     shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
@@ -122,9 +126,17 @@ class CamLissajousCurve(bpy.types.Operator):
     def execute(self, context):
         # x=Asin(at+delta ),y=Bsin(bt)
 
-        xstring = str(round(self.amplitude_A, 6)) + "*sin((2*pi/" + str(round(self.period_A, 6)) + ")*(t+" + str(
-            round(self.shift, 6)) + "))"
-        ystring = str(round(self.amplitude_B, 6)) + "*sin((2*pi/" + str(round(self.period_B, 6)) + ")*(t))"
+        if self.waveA =='sine':
+            xstring = ssine(self.amplitude_A,self.period_A, phase_shift=self.shift)
+        elif self.waveA == 'triangle':
+            xstring= str(triangle(60,self.period_A,self.amplitude_A))
+
+        if self.waveB == 'sine':
+            ystring = ssine(self.amplitude_B,self.period_B)
+
+        elif self.waveB == 'triangle':
+            ystring = str(triangle(60, self.period_B, self.amplitude_B))
+
         print("x= " + str(xstring))
         print("y= " + str(ystring))
         x = Expression(xstring, ["t"])  # make equation from string
@@ -225,8 +237,8 @@ class CamCustomCurve(bpy.types.Operator):
 
         return {'FINISHED'}
 
-def triangle(i,T):
-    s=""
+def triangle(i,T,A):
+    s=str(A*8/(math.pi**2))+'*('
     for n in range(i):
         if n % 2 != 0:
             e = (n-1)/2
@@ -235,4 +247,10 @@ def triangle(i,T):
             if n > 1:
                 s += '+'
             s += str(a)+"*sin("+str(b)+"*t) "
+    s+=')'
     return s
+
+
+def ssine(A,T,dc_offset=0, phase_shift=0):
+    return str(round(dc_offset, 6)) + "+" + str(round(A, 6)) + "*sin((2*pi/" + str(
+        round(T, 6)) + ")*(t+" + str(round(phase_shift, 6)) + "))"
