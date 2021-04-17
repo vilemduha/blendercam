@@ -411,9 +411,10 @@ class CAMSimulateChain(bpy.types.Operator):
         canSimulate = True
         for operation in chainops:
             if not operation.name in bpy.data.objects:
-                canSimulate = False
+                canSimulate = True  #force true
+            print("operation name " + str(operation.name))
         if canSimulate:
-            utils.doSimulation(chain.name, chainops)
+            simulation.doSimulation(chain.name, chainops)
         else:
             print('no computed path to simulate')
             return {'FINISHED'}
