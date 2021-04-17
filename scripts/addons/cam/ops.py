@@ -26,7 +26,7 @@ import bpy
 from bpy.props import *
 
 import subprocess, os, threading
-from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges
+from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges, simulation
 import shapely
 import mathutils
 import math
@@ -383,7 +383,7 @@ class CAMSimulate(bpy.types.Operator):
         operation_name = "cam_path_{}".format(operation.name)
 
         if operation_name in bpy.data.objects:
-            utils.doSimulation(operation_name, [operation])
+            simulation.doSimulation(operation_name, [operation])
         else:
             print('no computed path to simulate')
             return {'FINISHED'}
