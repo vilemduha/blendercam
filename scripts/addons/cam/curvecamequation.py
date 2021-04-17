@@ -62,20 +62,17 @@ class CamSineCurve(bpy.types.Operator):
 
         # z=Asin(B(x+C))+D
         if self.wave=='sine':
-            zstring = ssine(self.amplitude,self.period, dc_offset=self.offset,phase_shift=self.shift)
+            zstring = ssine(self.amplitude,self.period, dc_offset=self.offset, phase_shift=self.shift)
             if self.beatperiod !=0:
-                zstring+= "+"+ssine(self.amplitude,self.period+self.beatperiod, dc_offset=self.offset,phase_shift=self.shift)
+                zstring+= "+"+ssine(self.amplitude, self.period+self.beatperiod, dc_offset=self.offset, phase_shift=self.shift)
         elif self.wave=='triangle':  #build triangle wave from fourier series
             zstring = str(round(self.offset, 6)) + "+(" + str(triangle(80,self.period,self.amplitude))+")"
             if self.beatperiod !=0:
                 zstring += '+' + str(triangle(80,self.period+self.beatperiod,self.amplitude))
         elif self.wave == 'cycloid':
-            zstring = "abs("+str(round(self.offset, 6)) + "+" + str(round(self.amplitude, 6)) + "*sin((2*pi/" + str(
-                round(self.period, 6)) + ")*(t+" + str(round(self.shift, 6)) + ")))"
+            zstring = "abs("+ssine(self.amplitude,self.period, dc_offset=self.offset, phase_shift=self.shift)+")"
             if self.beatperiod !=0:
-                zstring += "+ (" + str(round(self.offset, 6)) + "+" + str(
-                    round(self.amplitude, 6)) + "*sin((2*pi/" + str(
-                    round(self.period+self.beatperiod, 6)) + ")*(t+" + str(round(self.shift, 6)) + ")))"
+                zstring += "+ abs(" + ssine(self.amplitude,self.period+self.beatperiod, dc_offset=self.offset, phase_shift=self.shift)+")"
 
         print(zstring)
         e = Expression(zstring, ["t"])  # make equation from string
@@ -166,6 +163,8 @@ class CamHypotrochoidCurve(bpy.types.Operator):
                                unit="LENGTH")
     d: bpy.props.FloatProperty(name="distance from center of interior circle", default=0.050, min=0, max=100,
                                precision=4, unit="LENGTH")
+    dip: bpy.props.FloatProperty(name="variable depth", default=0.00, min=-100, max=100,
+                               precision=4)
 
     def execute(self, context):
         r = round(self.r, 6)
@@ -175,7 +174,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         Rpr = round(R + r, 6)  # R +r
         Rpror = round(Rpr / r, 6)  # (R+r)/r
         Rmror = round(Rmr / r, 6)  # (R-r)/r
-        maxangle = 2 * math.pi * np.lcm(round(self.R * 1000), round(self.r * 1000)) / (R * 1000)
+        maxangle = 2 * math.pi * ((np.lcm(round(self.R * 1000), round(self.r * 1000)) / (R * 1000)))
 
         if self.typecurve == "hypo":
             xstring = str(Rmr) + "*cos(t)+" + str(d) + "*cos(" + str(Rmror) + "*t)"
@@ -184,16 +183,19 @@ class CamHypotrochoidCurve(bpy.types.Operator):
             xstring = str(Rpr) + "*cos(t)-" + str(d) + "*cos(" + str(Rpror) + "*t)"
             ystring = str(Rpr) + "*sin(t)-" + str(d) + "*sin(" + str(Rpror) + "*t)"
 
+        zstring = str(round(self.dip, 6)) + '*sqrt(((' + xstring + ')**2)+(('+ ystring + ')**2))'
+
         print("x= " + str(xstring))
         print("y= " + str(ystring))
+        print("z= " + str(zstring))
         print("maxangle " + str(maxangle))
 
         x = Expression(xstring, ["t"])  # make equation from string
         y = Expression(ystring, ["t"])  # make equation from string
-
+        z = Expression(zstring, ["t"])  # make equation from string
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
-            c = (x(t), y(t), 0)
+            c = (x(t), y(t), z(t))
             return c
 
         iter = int(maxangle * 10)
