@@ -45,7 +45,7 @@ class CamSineCurve(bpy.types.Operator):
     wave: bpy.props.EnumProperty(name="Wave", items=(
         ('sine', 'Sine Wave', 'Sine Wave'),
         ('triangle', 'Triangle Wave', 'triangle wave'),
-        ('cycloid', 'Cycloid', 'Sine wave rectification')),default='sine')
+        ('cycloid', 'Cycloid', 'Sine wave rectification'),('invcycloid', 'Inverse Cycloid', 'Sine wave rectification')),default='sine')
     amplitude: bpy.props.FloatProperty(name="Amplitude", default=.01, min=0, max=10, precision=4, unit="LENGTH")
     period: bpy.props.FloatProperty(name="Period", default=.5, min=0.001, max=100, precision=4, unit="LENGTH")
     beatperiod: bpy.props.FloatProperty(name="Beat Period offset", default=0.0, min=0.0, max=100, precision=4, unit="LENGTH")
@@ -71,8 +71,8 @@ class CamSineCurve(bpy.types.Operator):
                 zstring += '+' + str(triangle(80,self.period+self.beatperiod,self.amplitude))
         elif self.wave == 'cycloid':
             zstring = "abs("+ssine(self.amplitude,self.period, dc_offset=self.offset, phase_shift=self.shift)+")"
-            if self.beatperiod !=0:
-                zstring += "+ abs(" + ssine(self.amplitude,self.period+self.beatperiod, dc_offset=self.offset, phase_shift=self.shift)+")"
+        elif self.wave == 'invcycloid':
+            zstring = "-1*abs("+ssine(self.amplitude,self.period, dc_offset=self.offset, phase_shift=self.shift)+")"
 
         print(zstring)
         e = Expression(zstring, ["t"])  # make equation from string
@@ -163,9 +163,10 @@ class CamHypotrochoidCurve(bpy.types.Operator):
                                unit="LENGTH")
     d: bpy.props.FloatProperty(name="distance from center of interior circle", default=0.050, min=0, max=100,
                                precision=4, unit="LENGTH")
-    dip: bpy.props.FloatProperty(name="variable depth", default=0.00, min=-100, max=100,
+    dip: bpy.props.FloatProperty(name="variable depth from center", default=0.00, min=-100, max=100,
                                precision=4)
-
+#    dipexponent: bpy.props.FloatProperty(name="exponent for dip", default=0.00, min=-100, max=100,
+#                               precision=6)
     def execute(self, context):
         r = round(self.r, 6)
         R = round(self.R, 6)
@@ -183,7 +184,8 @@ class CamHypotrochoidCurve(bpy.types.Operator):
             xstring = str(Rpr) + "*cos(t)-" + str(d) + "*cos(" + str(Rpror) + "*t)"
             ystring = str(Rpr) + "*sin(t)-" + str(d) + "*sin(" + str(Rpror) + "*t)"
 
-        zstring = str(round(self.dip, 6)) + '*sqrt(((' + xstring + ')**2)+(('+ ystring + ')**2))'
+        zstring = '(' + str(round(self.dip, 6)) + '*(sqrt(((' + xstring + ')**2)+(('+ ystring + ')**2))))'
+
 
         print("x= " + str(xstring))
         print("y= " + str(ystring))
