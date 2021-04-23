@@ -32,6 +32,7 @@ from cam import simple
 from cam.simple import *
 from cam import chunk
 from cam.chunk import *
+from cam import simulation
 
 
 def getCircle(r, z):
@@ -146,7 +147,7 @@ def offsetArea(o, samples):
         o.offset_image.fill(-10)
 
         sourceArray = samples
-        cutterArray = getCutterArray(o, o.pixsize)
+        cutterArray = simulation.getCutterArray(o, o.pixsize)
 
         # progress('image size', sourceArray.shape)
 
@@ -464,7 +465,7 @@ def crazyPath(
     o.millimage = numpy.array((0.1), dtype=float)
     o.millimage.resize(resx, resy)
     o.millimage.fill(0)
-    o.cutterArray = -getCutterArray(o, o.simulation_detail)  # getting inverted cutter
+    o.cutterArray = -simulation.getCutterArray(o, o.simulation_detail)  # getting inverted cutter
     crazy = camPathChunk([(0, 0, 0)])
     testpos = (o.min.x, o.min.y, o.min.z)
 
