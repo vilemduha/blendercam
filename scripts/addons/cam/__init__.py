@@ -458,7 +458,6 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
                                   ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
                                   ('VCARVE', 'V-carve', 'v carve cutter'),
-                                  ('BALL', 'Sphere', 'Sphere cutter'),
                                   ('BALLCONE', 'Ballcone', 'Ball with a Cone Parallel - X'),
                                   ('LASER', 'Laser', 'Laser cutter'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
