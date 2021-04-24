@@ -207,7 +207,10 @@ class CalculatePath(bpy.types.Operator):
         # getIslands(context.object)
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
-        bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
+#        bpy.data.objects[o.object_name].select_set(True)
+        print(bpy.context.mode)
+        if bpy.context.mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
         bpy.ops.object.select_all(action='DESELECT')
         path = bpy.data.objects.get('cam_path_{}'.format(o.name))
         if path:
