@@ -66,7 +66,7 @@ SHAPELY = True
 
 def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
-    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob   
 
