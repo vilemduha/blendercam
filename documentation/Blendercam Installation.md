@@ -45,6 +45,9 @@ $ ./pip3 install Equation
 
 
 
+
+
+
 **Note:** if you are using a Blender with a bundled Python then shapely and numpy must be installed in the `site-packages` directory of the bundled python. For Blender 2.8 only Shapely is needed. To install it, open terminal, get to Blender directory and use PIP:
 
 `cd 2.80/python/bin/`
@@ -95,7 +98,7 @@ Now when ever blender is started, the external blendercam add-on will be enabled
 
 ## 4. (Optional) Install Opencamlib
 
-To install OpenCamLib, you can follow this link.
+To install OpenCamLib, you can follow [this link](./Opencamlib_Installation.md).
 
 [OpenCAMLib](https://github.com/aewallin/opencamlib) is an open source CAM library created by Anders Wallin. It offers high quality waterline generation and drop cutter sampling algorithms. For drop cutter algorithms it's more reliable than Bullet Physics (Blender's built-in collision detection library) and offers better performance (up to 30 times faster than regular algorithm on 24-core machine).
 
