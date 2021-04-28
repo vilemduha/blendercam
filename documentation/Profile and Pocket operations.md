@@ -50,8 +50,6 @@ or you can use "Object silhouete" from blendercam tool :
 
 for pads/pockets (some curves need to be modified in 'Edit Mode'):
 
-![[images/pocket.png|Pocket]]
-
 It's highly recommended to create roughing and finishing pass. For roughing pass add offset by altering cutter's diameter. For Profile operation, 'First Down' and 'Ramp In' options are recommended. 'First Down' helps avoid non-cutting moves and 'Ramp In' reduces cutter load by avoiding vertical plunge into material. For Pocket operation instead of 'Ramp In' try using 'Helix enter' option.
 
 
