@@ -1,7 +1,7 @@
 
 <center> 
 
-![BlenderCAM](images/logo.png)
+![BlenderCAM](documentation/images/logo.png)
 
 - - - 
 
@@ -27,7 +27,7 @@
 
 <br>
 
-![Blendercam](images/suzanne.png)
+![Blendercam](documentation/images/suzanne.png)
 
 
 </center>
@@ -45,11 +45,11 @@ It has been used for many milling projects, and is actively developed. If you ar
 
 BlenderCam is recommended with Linux. BlenderCam can work on Windows but the installation of a dependency (OpenCamlib) is tricky.
 
-* [BlenderCam Installation](./Blendercam_installation.md) 
-* [Getting started](./Getting_started.md)
-* [Panel descriptions](./Blendercam-Panel-Descriptions.md)
-* [Tools](./Blendercam-Tools.md)
-* [Example of using Profile and Pocket operations](./Profile_and_Pocket_operations.md)
+* [BlenderCam Installation](documentation/Blendercam_installation.md) 
+* [Getting started](documentation/Getting_started.md)
+* [Panel descriptions](documentation/Blendercam-Panel-Descriptions.md)
+* [Tools](documentation/Blendercam-Tools.md)
+* [Example of using Profile and Pocket operations](documentation/Profile_and_Pocket_operations.md)
 
 
 ## 👌 Features
