@@ -8,7 +8,7 @@
 
 ### An open source solution for artistic CAM with Blender 3D
 
-<p align="center">
+
 
 [![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org) 
 [![Chat on Freenode](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](http://webchat.freenode.net/?channels=%23blendercam)
@@ -18,12 +18,9 @@
 ![Size](https://img.shields.io/github/repo-size/vilemduha/blendercam)
 ![License](https://img.shields.io/github/license/vilemduha/blendercam)
 
-</p>
 <br>
-<p align="center">
 
 [About](#About) • [How to use](#How-to-use-(Wiki)) • [Features](#Features) • [Post-Processors](#Post-processors) • [Contributing](#Contributing) • [License](#Disclaimer) 
-</p>
 
 <br>
 
