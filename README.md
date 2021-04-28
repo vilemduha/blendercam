@@ -42,7 +42,7 @@ It has been used for many milling projects, and is actively developed. If you ar
 
 BlenderCam is recommended with Linux. BlenderCam can work on Windows but the installation of a dependency (OpenCamlib) is tricky.
 
-* [BlenderCam Installation](documentation/Blendercam%20installation.md) 
+* [BlenderCam Installation](documentation/Blendercam%20Installation.md) 
 * [Getting started](documentation/Getting%20started.md)
 * [Panel descriptions](documentation/Blendercam-Panel-Descriptions.md)
 * [Tools](documentation/Blendercam-Tools.md)
