@@ -37,7 +37,7 @@ First of all, change render engine to CAM to use the blender cam tool.
 
 * **Operation name** - Select this field to change the name of the currently selected operation.
 
-* **File name** - Name of the gcode file. The file extension used will be determined by the g-code post processor selected. See [Cam Machine panel](#cam-machine-panel) for setting post processor.
+* **File name** - Name of the gcode file. The file extension used will be determined by the g-code post processor selected. See [Cam Machine panel](Blendercam-Panel-Descriptions.md) for setting post processor.
 
 * **Auto export** - If enabled, the g-code will be automatically generate and saved to the file after the computation of the operation, in the same folder where you saved the project or blend file.
 

@@ -1,25 +1,14 @@
 # Installation
 
 ## Obtaining Blender
-Download portable version for linux64 2.83 or 2.92
-from a command line as user to download and extract blender
+You have to install Blender before as descripted [here](Blendercam%20Installation.md).
 
-```
-$ cd ~/
-$ mkdir Apps
-$ cd Apps
-$ wget https://ftp.nluug.nl/pub/graphics/blender/release/Blender2.92/blender-2.92.0-linux64.tar.xz
-$ tar xf blender-2.92.0-linux64.tar.xz
-$ cd blender-2.92.0-linux64/2.92/python/bin
-$ ./python3.7m -m ensurepip
-$ ./pip3 install shapely
-$ ./pip3 install vtk
-$ ./pip3 install Equation
-```
+---
+
 
 ## Obtaining OpenCamLib
 
-installing python and libboost-python headers
+Installing python and libboost-python headers
 
  
 ```
@@ -60,7 +49,7 @@ the python 3 version may depend on your system
 
 ## Installing OpenCamLib in Blender
 
-now we need to link some files to the blender python3.7 interpreter
+Now we need to link some files to the blender python3.7 interpreter
 
 
 Depending on your base system python files may be in other place
@@ -101,8 +90,6 @@ $ ln -s /home/blendercam/projects/opencamlib/src/lib/procmemory.py ~/Apps/blende
 $ ln -s /home/blendercam/projects/opencamlib/src/lib/camvtk.py ~/Apps/blender-2.92.0-linux64/2.92/python/lib/python3.7/site-packages/
 $ ln -s /home/blendercam/projects/opencamlib/src/lib/pyocl.py ~/Apps/blender-2.92.0-linux64/2.92/python/lib/python3.7/site-packages/
 ```
-## next steps can be found in this link
-https://github.com/vilemduha/blendercam/wiki/Using-Blendercam-from-github
 
 ## Tips
 ### OpenSuSE 15.1

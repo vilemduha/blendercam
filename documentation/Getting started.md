@@ -1,4 +1,4 @@
-This is a step-by-step tutorial on generating a toolpath with Blender CAM. For detailed description of panel options go [here](Blendercam-Panel-Descriptions).
+This is a step-by-step tutorial on generating a toolpath with Blender CAM. For detailed description of panel options go [here](Blendercam-Panel-Descriptions.md).
 
 
 
@@ -25,7 +25,7 @@ Setup machine parameters (postprocessor, maximum feed rate, work area, etc.) in 
 Add new operation in the render properties.
 ![New operation](images/newop.png)
 
-Choose Parallel (or Outline Fill, Circles, Spiral, Block, Cross) in the Strategy dialog. Waterline option works best when [OpenCAMLib](Using-BlenderCAM-with-OpenCAMLib) is installed and other operations require curve data source. See how to generate curves from mesh model [here](Machining-technical-parts-using-Profile-and-Pocket-operations).
+Choose Parallel (or Outline Fill, Circles, Spiral, Block, Cross) in the Strategy dialog. Waterline option works best when [OpenCAMLib](Opencamlib%20Installation.md) is installed and other operations require curve data source. See how to generate curves from mesh model [here](Profile%20and%20Pocket%20operations.md).
 
 ![Select operation](images/selectOperation.png)
 
@@ -51,7 +51,7 @@ Set "Distance between toolpaths" to desired value.
 
 "Distance along toolpaths" option determines accuracy. Lower values result in more accurate toolpath, but make computation slower and increase amount of resulting G-code.
 
-Select "Use exact mode" - it improves accuracy. If you have [OpenCAMLib](Using-BlenderCAM-with-OpenCAMLib) installed, also select "UseOpenCAMLib" - it impoves accuracy and speeds up the computing time. OpenCAMLib also enables high quality algorithm from calculating waterline toolpaths.
+Select "Use exact mode" - it improves accuracy. If you have [OpenCAMLib](Opencamlib%20Installation.md) installed, also select "UseOpenCAMLib" - it impoves accuracy and speeds up the computing time. OpenCAMLib also enables high quality algorithm from calculating waterline toolpaths.
 
 CAM Movement:
 
