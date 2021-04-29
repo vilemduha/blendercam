@@ -63,12 +63,15 @@ BlenderCam is recommended with Linux. BlenderCam can work on Windows but the ins
 | Stay low - option for movement       |         ✔️         |  
 | Material size setup  |         ✔️         |  
 | Simulation of 3d operations        |         ✔️         |  
-| Helix entry, arc retract, ramp down for some of the strategies.   |         ✔️         |  
+| Arc retract   |         ✔️         |  
+| Pack curves and slice model   |         ✔️         |  
 | Automatic bridges for cutout operation   |         ✔️         |  
 | Chain export and simulation  |         ✔️         |  
 | Background computing of the operations, so you can continue working   |         ✔️         |  
 
 ### Pending features
+* Helix entry and ramp down are experimental. 
+
 * Motion direction - classic, conventional, meander, are only partially supported
 
 * 4 and 5 axis milling
