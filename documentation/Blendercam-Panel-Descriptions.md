@@ -122,14 +122,6 @@ This panel will show any trouble found during the computation, estimated operati
   * **Overview of principles strategies**
 
   ![Strategy Overview](images/opOverview.png)
-
-* **Experimental Strategies**
-  * **Projected Curve**
-  * **Medial axis** For engraving various width shapes with a single stroke.  Works great for lettering, calligraphy and chip carving.  Use a v-bit, ball, or round nose cutter.
-  * **Crazy Path**
-  * **Pencil**
-  * **Curve to Path**
-  * **Waterline** constant z paths.
   
   ![waterline](https://cloud.githubusercontent.com/assets/648108/12060351/1316d53a-af44-11e5-8158-31c349a7a265.jpg)
 
