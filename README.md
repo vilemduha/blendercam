@@ -20,7 +20,7 @@
 
 <br>
 
-[About](#About) • [How to use](#-how-to-use-wiki) • [Features](#Features) • [Post-Processors](#Post-processors) • [Contributing](#Contributing) • [License](#Disclaimer) 
+[About](#About) • [How to use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contributing](#-contributing) • [License](#-disclaimer) 
 
 <br>
 
@@ -68,6 +68,10 @@ BlenderCam is recommended with Linux. BlenderCam can work on Windows but the ins
 | Chain export and simulation  |         ✔️         |  
 | Background computing of the operations, so you can continue working   |         ✔️         |  
 
+### Pending features
+* Motion direction - classic, conventional, meander, are only partially supported
+
+* 4 and 5 axis milling
 
 
 ## 💻 Post-processors
@@ -86,10 +90,6 @@ BlenderCam is recommended with Linux. BlenderCam can work on Windows but the ins
 * Lynx Otter o
 * ...
 
-
-## 🔬 Pending features
-* motion direction - classic, conventional, meander, are only partially supported
-* 4 and 5 axis milling
 
 ## 📒 Files organisation
 
