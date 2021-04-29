@@ -120,6 +120,7 @@ BlenderCAM has been used for many milling projects, and is actively developed.
 
 If you are a developer who would like to help, fork and open pull requests
 
+If you need help or want  to discuss about BlenderCam you can join the [Chat Room #BlenderCam:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org). 
 
 ## 🤕 DISCLAIMER
 
