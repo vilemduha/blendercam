@@ -24,7 +24,7 @@
 
 <br>
 
-![Blendercam](documentation/images/suzanne.png)
+![Blendercam](documentation/images/suzanne.gif)
 
 
 </center>
