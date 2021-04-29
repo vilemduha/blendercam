@@ -209,6 +209,8 @@ If not enabled then the Material origin and Material size are used in case when 
   * V-carve - width is the maximum width of the cone.
   * End
   * Sphere
+  * Ballcone 
+  * Bullnose
   * Custom - experimental
 
   ![custom cutter](images/cutCustom.png)
