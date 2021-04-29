@@ -20,7 +20,7 @@
 
 <br>
 
-[About](#About) • [How to use](#How-to-use-(Wiki)) • [Features](#Features) • [Post-Processors](#Post-processors) • [Contributing](#Contributing) • [License](#Disclaimer) 
+[About](#About) • [How to use](#-how-to-use-wiki) • [Features](#Features) • [Post-Processors](#Post-processors) • [Contributing](#Contributing) • [License](#Disclaimer) 
 
 <br>
 
