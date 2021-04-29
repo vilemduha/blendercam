@@ -66,8 +66,7 @@ BlenderCam is recommended with Linux. BlenderCam can work on Windows but the ins
 | Arc retract   |         ✔️         |  
 | Pack curves and slice model   |         ✔️         |  
 | Automatic bridges for cutout operation   |         ✔️         |  
-| Chain export and simulation  |         ✔️         |  
-| Background computing of the operations, so you can continue working   |         ✔️         |  
+| Chain export and simulation  |         ✔️         |   
 
 ### Pending features
 * Helix entry and ramp down are experimental. 
