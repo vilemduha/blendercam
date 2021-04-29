@@ -28,18 +28,14 @@ First of all, change render engine to CAM to use the blender cam tool.
 
 
 ## CAM operations Panel
-![CAM operations](images/opPanel.png)
+![CAM operations](images/opPanel2.png)
 * **Calculate path** - This calculates the operation which is currently selected in the cam operations list. The Button will stay selected until the calculation is completed.
-
-* **Calculate path in background** - It is important to save your file before using this function. It calculates the path, while you can continue working on setting up other operations.
 
 * **Simulate operation** - Works for 3 axis operations, but not for all. It creates a new object which shows the simulation - the subdivision of the object can be increased, and the resolution of the simulation also depends on simulation sampling raster detail, which is in the optimization panel
 
 * **Operation name** - Select this field to change the name of the currently selected operation.
 
 * **File name** - Name of the gcode file. The file extension used will be determined by the g-code post processor selected. See [Cam Machine panel](Blendercam-Panel-Descriptions.md) for setting post processor.
-
-* **Auto export** - If enabled, the g-code will be automatically generate and saved to the file after the computation of the operation, in the same folder where you saved the project or blend file.
 
 * **Source of data** - This can be either 1 object, a group of objects, or an image.
 
