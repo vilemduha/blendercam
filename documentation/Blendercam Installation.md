@@ -8,16 +8,15 @@ The easiest way to "install" is not to install but instead just tell Blender whe
 
 If you are using Arch Linux, you can just install `blendercam-git` from the AUR and skip to [Enable Blendercam add-on](#enable-blendercam-add-on). OpenCAMLib is also available as `opencamlib-git`.
 
-* [Dependencies](#dependencies)
-* [Get Blendercam source code](#get-blendercam-source-code)
-* [Setup Blender scripts alternate path](#setup-blender-scripts-alternate-file-path)
-* [Enable Blendercam add-on](#enable-blendercam-add-on)
-* [Enter CAM mode](#enter-cam-mode)
-* [(Optional) Install OpenCAMLib](#optional-install-opencamlib)
-* [Updating Blendercam](#updating-blendercam)
+* [1. Obtaining Blender](#-obtaining-blender)
+* [2. Get Blendercam source code](#-get-blendercam-source-code)
+* [3. Setup Blender scripts alternate path](#-setup-blender-scripts-alternate-file-path)
+* [4. Enable Blendercam add-on](#-enable-blendercam-add-on)
+* [5. (Optional) Install OpenCAMLib](#-optional-install-opencamlib)
+* [6. Updating Blendercam](#-updating-blendercam)
 
 
-## 0- Obtaining Blender
+## Obtaining Blender
 Blendercam is an addon of Blender. It works now with Blender version 2.83 and 2.92.
 You can download Blender portable version for linux64 2.83 or 2.92 and install dependencies from command lines.
 
@@ -57,7 +56,7 @@ $ ./pip3 install Equation
 `./python3.7m -m pip install shapely`
 
 
-## 1. Get Blendercam source code
+## Get Blendercam source code
 The first step is to get the source code from the github repository.
  1. Assuming that Git is installed on your machine, at the command prompt change into the directory where blendercam will be and then type:
  2. `git clone https://github.com/vilemnovak/blendercam.git` (Master branch is now upgraded to Blender 2.8, 2.8_BETA branch will soon be removed)
@@ -66,7 +65,7 @@ The first step is to get the source code from the github repository.
 
  3. git will make a subdirectory called `blendercam` in the current directory then download the most recent version of blendercam from github.
 
-## 2. Setup Blender scripts alternate file path
+## Setup Blender scripts alternate file path
 The second step is to tell blender to also search an alternate path for add-ons.  When blender starts up it will search its own paths for add-ons and will also search the alternate path that you add.  This way an external source add-on can be used in Blender.
 
  1. select **User Preferences** panel
@@ -81,7 +80,7 @@ The second step is to tell blender to also search an alternate path for add-ons.
  4. select **Save User Settings**
  5. restart Blender
 
-## 3. Enable Blendercam add-on
+## Enable Blendercam add-on
 The third step is to enable the Blendercam add-on.
 
 ![Enable Addon](images/addonInstall3.png)
@@ -96,9 +95,9 @@ The third step is to enable the Blendercam add-on.
 
 Now when ever blender is started, the external blendercam add-on will be enabled.
 
-## 4. (Optional) Install Opencamlib
+## (Optional) Install Opencamlib
 
-To install OpenCamLib, you can follow [this link](./Opencamlib_Installation.md).
+To install OpenCamLib, you can follow [this link](Opencamlib%20Installation.md).
 
 [OpenCAMLib](https://github.com/aewallin/opencamlib) is an open source CAM library created by Anders Wallin. It offers high quality waterline generation and drop cutter sampling algorithms. For drop cutter algorithms it's more reliable than Bullet Physics (Blender's built-in collision detection library) and offers better performance (up to 30 times faster than regular algorithm on 24-core machine).
 
@@ -109,7 +108,7 @@ To use OpenCAMLib waterlines, select "Show experimental features" in Blender Use
 For "parallel" strategy and other drop cutter sampling operations select both "Use exact mode" and "Use OpenCAMLib".
 
 
-## 5. Updating Blendercam
+## Updating Blendercam
 Every once in a while, maybe even daily, you will want to update your copy of Blendercam to match what is on Github.
  1. at the command line, change to the directory of blendercam
  2. tell git to pull all the latest changes from Github and update your copy
