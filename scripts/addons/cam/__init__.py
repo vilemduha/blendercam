@@ -20,7 +20,6 @@
 # ***** END GPL LICENCE BLOCK *****
 
 import bpy, bgl, blf
-import mathutils
 import math, time
 from mathutils import *
 from bpy_extras.object_utils import object_data_add
@@ -28,9 +27,7 @@ from bpy.props import *
 import bl_operators
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 
-# from . import patterns
-# from . import chunk_operations
-from cam import ui, ops,curvecamtools, utils, simple, polygon_utils_cam  # , post_processors
+from cam import ui, ops,curvecamtools,curvecamequation, utils, simple, polygon_utils_cam  # , post_processors
 import numpy
 
 from shapely import geometry as sgeometry
@@ -254,6 +251,7 @@ class SliceObjectsSettings(bpy.types.PropertyGroup):
     slice_distance: FloatProperty(name="Slicing distance",
                                   description="slices distance in z, should be most often thickness of plywood sheet.",
                                   min=0.001, max=10, default=0.005, precision=PRECISION, unit="LENGTH")
+    slice_above0: bpy.props.BoolProperty(name="Slice above 0", description="only slice model above 0", default=False)
     slice_3d: bpy.props.BoolProperty(name="3d slice", description="for 3d carving", default=False)
     indexes: bpy.props.BoolProperty(name="add indexes", description="adds index text of layer + index", default=True)
 
@@ -404,12 +402,11 @@ def getStrategyList(scene, context):
         ('OUTLINEFILL', 'Outline Fill',
          'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
         ('CARVE', 'Project curve to surface', 'Engrave the curve path to surface'),
-        ('WATERLINE', 'Waterline - Roughing -below zero', 'Waterline paths - constant z below zero')
-        
+        ('WATERLINE', 'Waterline - Roughing -below zero', 'Waterline paths - constant z below zero'),
+        ('CURVE', 'Curve to Path', 'Curve object gets converted directly to path')
     ]
     if use_experimental:
-        items.extend([('CURVE', 'Curve to Path - EXPERIMENTAL', 'Curve object gets converted directly to path'),
-                      ('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
+        items.extend([('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
                        'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke '),
                       ('PROJECTED_CURVE', 'Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')])
     return items
@@ -423,6 +420,12 @@ class camOperation(bpy.types.PropertyGroup):
     filename: bpy.props.StringProperty(name="File name", default="Operation", update=updateRest)
     auto_export: bpy.props.BoolProperty(name="Auto export",
                                         description="export files immediately after path calculation", default=True)
+    remove_redundant_points: bpy.props.BoolProperty(
+        name="Symplify Gcode",
+        description="Remove redundant points sharing the same angle"
+                    " as the start vector",
+        default=False)
+    simplify_tol: bpy.props.IntProperty(name="Tolerance", description='lower number means more precise', default=50, min=1, max=1000)
     hide_all_others: bpy.props.BoolProperty(
         name="Hide all others",
         description="Hide all other tool pathes except toolpath"
@@ -455,7 +458,6 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
                                   ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
                                   ('VCARVE', 'V-carve', 'v carve cutter'),
-                                  ('BALL', 'Sphere', 'Sphere cutter'),
                                   ('BALLCONE', 'Ballcone', 'Ball with a Cone Parallel - X'),
                                   ('LASER', 'Laser', 'Laser cutter'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
@@ -647,6 +649,8 @@ class camOperation(bpy.types.PropertyGroup):
 
     minz_from_ob: bpy.props.BoolProperty(name="Depth from object", description="Operation ending depth from object",
                                          default=True, update=updateRest)
+    minz_from_material: bpy.props.BoolProperty(name="Depth from material", description="Operation ending depth from material",
+                                         default=False, update=updateRest)
     minz: bpy.props.FloatProperty(name="Operation depth end", default=-0.01, min=-3, max=3, precision=PRECISION,
                                   unit="LENGTH",
                                   update=updateRest)  # this is input minz. True minimum z can be something else, depending on material e.t.c.
@@ -1142,10 +1146,10 @@ def get_panels():  # convenience function for bot register and unregister functi
         curvecamtools.CamCurveOvercutsB,
         curvecamtools.CamCurveRemoveDoubles,
         curvecamtools.CamMeshGetPockets,
-        curvecamtools.CamSineCurve,
-        curvecamtools.CamLissajousCurve,
-        curvecamtools.CamHypotrochoidCurve,             
-        curvecamtools.CamCustomCurve,                 
+        curvecamequation.CamSineCurve,
+        curvecamequation.CamLissajousCurve,
+        curvecamequation.CamHypotrochoidCurve,             
+        curvecamequation.CamCustomCurve,                 
         
         CAM_CUTTER_MT_presets,
         CAM_OPERATION_MT_presets,
@@ -1337,10 +1341,10 @@ classes = [
     curvecamtools.CamCurveOvercutsB,
     curvecamtools.CamCurveRemoveDoubles,
     curvecamtools.CamMeshGetPockets,
-    curvecamtools.CamSineCurve,
-    curvecamtools.CamLissajousCurve,    
-    curvecamtools.CamHypotrochoidCurve,  
-    curvecamtools.CamCustomCurve,  
+    curvecamequation.CamSineCurve,
+    curvecamequation.CamLissajousCurve,    
+    curvecamequation.CamHypotrochoidCurve,  
+    curvecamequation.CamCustomCurve,  
     
     CAM_CUTTER_MT_presets,
     CAM_OPERATION_MT_presets,
