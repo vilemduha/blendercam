@@ -8,6 +8,9 @@ The easiest way to "install" is not to install but instead just tell Blender whe
 
 If you are using Arch Linux, you can just install `blendercam-git` from the AUR and skip to [Enable Blendercam add-on](#enable-blendercam-add-on). OpenCAMLib is also available as `opencamlib-git`.
 
+
+![HowTo Video](images/HowToInstall.mp4)
+
 * [1. Obtaining Blender](#obtaining-blender)
 * [2. Get Blendercam source code](#get-blendercam-source-code)
 * [3. Setup Blender scripts alternate path](#setup-blender-scripts-alternate-file-path)
