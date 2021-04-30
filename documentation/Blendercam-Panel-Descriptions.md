@@ -207,6 +207,7 @@ If not enabled then the Material origin and Material size are used in case when 
   * Sphere
   * Ballcone 
   * Bullnose
+  * Laser
   * Custom - experimental
 
   ![custom cutter](images/cutCustom.png)
