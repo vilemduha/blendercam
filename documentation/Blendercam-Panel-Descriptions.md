@@ -201,17 +201,22 @@ If not enabled then the Material origin and Material size are used in case when 
 * **Cutters** - supported types are now following:
 
 ![CAM cutters](images/camCut2.png)
-  * Ballnose
-  * V-carve - width is the maximum width of the cone.
-  * End
-  * Sphere
-  * Ballcone 
-  * Bullnose
-  * Laser
-  * Custom - experimental
+
+
+
+| Cutters  |   |   |
+|----------|---|---|
+| End      | ![End](images/cut-end.jpg)  |   |
+| Ballnose | ![Ballnose](images/cut-ballnose.jpg)  |   |
+| Bullnose | ![Bullnose](images/cut-bullnose.jpg)  |   |
+| V-Carve  |  ![v-carve](images/cut-v-carve.jpg) |   |
+| Ballcone |  ![Ballcone](images/cut-ballcone.jpg) |   |
+| Laser    |  ![Laser](images/cut-laser.jpg) |   |
+| Custom   |  ![Custom](images/cut-custom.jpg) |   |
 
   ![custom cutter](images/cutCustom.png)
-    * Cutter object - a 3D object of your choice available in the drop down list.
+
+  * Cutter object - a 3D object of your choice available in the drop down list.
 
 * **Cutter diameter** - The exact diameter of the cutting tool.  This is used for calculating tool paths.  For a v-bit its the maximum diameter of the bit.
 * **Cutter flutes** - this parameter is used only for chipload computation.
