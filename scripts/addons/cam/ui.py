@@ -1007,30 +1007,6 @@ class OBJECT_PT_CustomPanel(bpy.types.Panel):
         col.operator("wm.gcode_import")
 
 
-def import_gcode(context, filepath):
-    print("running read_some_data...")
-
-    scene = context.scene
-    mytool = scene.import_gcode
-    import time
-    then = time.time()
-
-    parse = gcodeimportparser.GcodeParser()
-    model = parse.parseFile(filepath)
-
-    if mytool.subdivide:
-        model.subdivide(mytool.max_segment_size)
-    model.classifySegments()
-    if mytool.split_layers:
-        model.draw(split_layers=True)
-    else:
-        model.draw(split_layers=False)
-
-    now = time.time()
-    print("importing Gcode took ", round(now - then,1),"seconds")
-
-    return {'FINISHED'}
-
 class WM_OT_gcode_import(Operator, ImportHelper):
     """Import Gcode, travel lines don't get drawn"""
     bl_idname = "wm.gcode_import"  # important since its how bpy.ops.import_test.some_data is constructed
@@ -1047,4 +1023,4 @@ class WM_OT_gcode_import(Operator, ImportHelper):
 
     def execute(self, context):
         print(self.filepath)
-        return import_gcode(context, self.filepath)
+        return gcodeimportparser.import_gcode(context, self.filepath)

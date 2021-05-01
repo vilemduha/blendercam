@@ -26,6 +26,30 @@ import numpy as np
 np.set_printoptions(suppress=True) #suppress scientific notation in subdivide functions linspace
 
 
+def import_gcode(context, filepath):
+    print("running read_some_data...")
+
+    scene = context.scene
+    mytool = scene.import_gcode
+    import time
+    then = time.time()
+
+    parse = GcodeParser()
+    model = parse.parseFile(filepath)
+
+    if mytool.subdivide:
+        model.subdivide(mytool.max_segment_size)
+    model.classifySegments()
+    if mytool.split_layers:
+        model.draw(split_layers=True)
+    else:
+        model.draw(split_layers=False)
+
+    now = time.time()
+    print("importing Gcode took ", round(now - then,1),"seconds")
+
+    return {'FINISHED'}
+
 def segments_to_meshdata(segments):#edges only on extrusion
         segs = segments
         verts=[]
