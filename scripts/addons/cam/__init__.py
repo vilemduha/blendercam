@@ -1147,7 +1147,6 @@ def get_panels():  # convenience function for bot register and unregister functi
         curvecamtools.CamCurveOvercutsB,
         curvecamtools.CamCurveRemoveDoubles,
         curvecamtools.CamMeshGetPockets,
-        curvecamtools.CamImportGcode,
         curvecamequation.CamSineCurve,
         curvecamequation.CamLissajousCurve,
         curvecamequation.CamHypotrochoidCurve,             
