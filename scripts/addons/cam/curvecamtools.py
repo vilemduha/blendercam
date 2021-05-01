@@ -24,8 +24,10 @@
 
 import bpy
 from bpy.props import *
+from bpy.types import Operator
+from bpy_extras.io_utils import ImportHelper
 
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric
+from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser
 import shapely
 import mathutils
 import math
@@ -573,4 +575,9 @@ class CamObjectSilhouete(bpy.types.Operator):
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
         return {'FINISHED'}
+
+#---------------------------------------------------
+
+
+
 

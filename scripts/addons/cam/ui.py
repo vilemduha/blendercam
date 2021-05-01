@@ -20,7 +20,20 @@
 # ***** END GPL LICENCE BLOCK *****
 
 import bpy
-from bpy.types import UIList
+from bpy.types import UIList, Operator
+from bpy_extras.io_utils import ImportHelper
+from bpy.props import (StringProperty,
+                       BoolProperty,
+                       PointerProperty,
+                       FloatProperty,
+                       )
+
+from bpy.types import (Panel,
+                       Menu,
+                       Operator,
+                       PropertyGroup,
+                       )
+
 
 from cam import simple
 from cam.simple import *
@@ -815,13 +828,14 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.geometry_source in ['OBJECT', 'COLLECTION']:                    
                     if ao.strategy == 'CURVE':
                         layout.label(text="cannot use depth from object using CURVES")   
-                    if not ao.minz_from_material:
-                        layout.prop(ao, 'minz_from_ob')
+
 
                             						
                     if not ao.minz_from_ob:
                         if not ao.minz_from_material: layout.prop(ao, 'minz')
                         layout.prop(ao,'minz_from_material')
+                    if not ao.minz_from_material:
+                        layout.prop(ao, 'minz_from_ob')
                 else:
                     layout.prop(ao, 'source_image_scale_z')
                     layout.prop(ao, 'source_image_size_x')
@@ -949,5 +963,45 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.lissajous")
         layout.operator("object.hypotrochoid")
         layout.operator("object.customcurve")
-        
+
+
+    # ------------------------------------------------------------------------
+    #    Panel in Object Mode
+    # ------------------------------------------------------------------------
+
+class OBJECT_PT_CustomPanel(bpy.types.Panel):
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'TOOLS'
+    bl_context = "objectmode"
+    bl_label = "Import Gcode"
+    bl_idname = "object.importgcode"
+
+    bl_options = {'DEFAULT_CLOSED'}
+
+    @classmethod
+    def poll(cls, context):
+        return context.mode in {'OBJECT',
+                                'EDIT_MESH'}  # with this poll addon is visibly even when no object is selected
+
+
+    def draw(self, context):
+        layout = self.layout
+        scene = context.scene
+        mytool = scene.my_tool
+        layout.prop(mytool, 'output')
+        layout.prop(mytool, "split_layers")
+
+        layout.prop(mytool, "subdivide")
+        col = layout.column(align=True)
+        col = col.row(align=True)
+        col.split()
+        col.label(text="Segment length")
+
+        col.prop(mytool, "max_segment_size")
+        col.enabled = mytool.subdivide
+        col.separator()
+
+        col = layout.column()
+        col.scale_y = 2.0
+        col.operator("wm.gcode_import")
 

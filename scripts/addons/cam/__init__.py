@@ -1108,6 +1108,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         ui.CAM_PACK_Panel,
         ui.CAM_SLICE_Panel,
         ui.VIEW3D_PT_tools_curvetools,
+        ui.OBJECT_PT_CustomPanel,
 
         ops.PathsBackground,
         ops.KillPathsBackground,
@@ -1146,6 +1147,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         curvecamtools.CamCurveOvercutsB,
         curvecamtools.CamCurveRemoveDoubles,
         curvecamtools.CamMeshGetPockets,
+        curvecamtools.CamImportGcode,
         curvecamequation.CamSineCurve,
         curvecamequation.CamLissajousCurve,
         curvecamequation.CamHypotrochoidCurve,             
@@ -1303,6 +1305,7 @@ classes = [
     ui.CAM_PACK_Panel,
     ui.CAM_SLICE_Panel,
     ui.VIEW3D_PT_tools_curvetools,
+    ui.OBJECT_PT_CustomPanel,
 
     ops.PathsBackground,
     ops.KillPathsBackground,
