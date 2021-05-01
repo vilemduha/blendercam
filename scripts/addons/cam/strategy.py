@@ -267,9 +267,9 @@ def pocket(o):
     prest = p.buffer(-o.cutter_diameter / 2, o.circle_detail)
     while not p.is_empty:
         nchunks = shapelyToChunks(p, o.min.z)
-        print("nchunks")
+        #print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
-        print("pnew")
+        #print("pnew")
 
         # caused a bad slow down
         #        if o.dist_between_paths > o.cutter_diameter / 2.0:
@@ -291,7 +291,6 @@ def pocket(o):
 
         nchunks = limitChunks(nchunks, o)
         chunksFromCurve.extend(nchunks)
-        print(i)
         parentChildDist(lastchunks, nchunks, o)
         lastchunks = nchunks
 

@@ -1356,13 +1356,13 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
     i = 0
     # print(polygons, polygons.type)
     for p1 in polygons:  # sort by size before this???
-        print(p1.type, len(polygons))
+        #print(p1.type, len(polygons))
         i += 1
         if radius > 0:
             p1 = p1.buffer(radius * offset, resolution=o.circle_detail)
         outlines.append(p1)
 
-    print(outlines)
+    #print(outlines)
     if o.dont_merge:
         outline = sgeometry.MultiPolygon(outlines)
     # for ci in range(0,len(p)):
