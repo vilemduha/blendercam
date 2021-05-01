@@ -28,14 +28,10 @@ from bpy.props import (StringProperty,
                        FloatProperty,
                        )
 
-from bpy.types import (Panel,
-                       Menu,
-                       Operator,
-                       PropertyGroup,
-                       )
+from bpy.types import (Panel, Menu, Operator, PropertyGroup, )
 
 
-from cam import simple
+from cam import gcodeimportparser
 from cam.simple import *
 
 # EXPERIMENTAL=True#False
@@ -938,6 +934,8 @@ class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
 
 
 # panel containing all tools
+
+#
 class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
@@ -965,9 +963,12 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.customcurve")
 
 
+# Gcode import panel---------------------------------------------------------------
     # ------------------------------------------------------------------------
     #    Panel in Object Mode
     # ------------------------------------------------------------------------
+
+
 
 class OBJECT_PT_CustomPanel(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
@@ -987,21 +988,63 @@ class OBJECT_PT_CustomPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        mytool = scene.my_tool
-        layout.prop(mytool, 'output')
-        layout.prop(mytool, "split_layers")
+        isettings = scene.import_gcode
+        layout.prop(isettings, 'output')
+        layout.prop(isettings, "split_layers")
 
-        layout.prop(mytool, "subdivide")
+        layout.prop(isettings, "subdivide")
         col = layout.column(align=True)
         col = col.row(align=True)
         col.split()
         col.label(text="Segment length")
 
-        col.prop(mytool, "max_segment_size")
-        col.enabled = mytool.subdivide
+        col.prop(isettings, "max_segment_size")
+        col.enabled = isettings.subdivide
         col.separator()
 
         col = layout.column()
         col.scale_y = 2.0
         col.operator("wm.gcode_import")
 
+
+def import_gcode(context, filepath):
+    print("running read_some_data...")
+
+    scene = context.scene
+    mytool = scene.import_gcode
+    import time
+    then = time.time()
+
+    parse = gcodeimportparser.GcodeParser()
+    model = parse.parseFile(filepath)
+
+    if mytool.subdivide:
+        model.subdivide(mytool.max_segment_size)
+    model.classifySegments()
+    if mytool.split_layers:
+        model.draw(split_layers=True)
+    else:
+        model.draw(split_layers=False)
+
+    now = time.time()
+    print("importing Gcode took ", round(now - then,1),"seconds")
+
+    return {'FINISHED'}
+
+class WM_OT_gcode_import(Operator, ImportHelper):
+    """Import Gcode, travel lines don't get drawn"""
+    bl_idname = "wm.gcode_import"  # important since its how bpy.ops.import_test.some_data is constructed
+    bl_label = "Import Gcode"
+
+    # ImportHelper mixin class uses this
+    filename_ext = ".txt"
+
+    filter_glob: StringProperty(
+        default="*.*",
+        options={'HIDDEN'},
+        maxlen=255,  # Max internal buffer length, longer would be clamped.
+    )
+
+    def execute(self, context):
+        print(self.filepath)
+        return import_gcode(context, self.filepath)

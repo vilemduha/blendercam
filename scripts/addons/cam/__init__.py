@@ -255,6 +255,13 @@ class SliceObjectsSettings(bpy.types.PropertyGroup):
     slice_3d: bpy.props.BoolProperty(name="3d slice", description="for 3d carving", default=False)
     indexes: bpy.props.BoolProperty(name="add indexes", description="adds index text of layer + index", default=True)
 
+class import_settings(bpy.types.PropertyGroup):
+    split_layers: BoolProperty(name="Split Layers", description="Save every layer as single Objects in Collection", default = False )
+    subdivide: BoolProperty(name="Subdivide", description="Only Subdivide gcode segments that are bigger than 'Segment length' ", default = False)
+    output: bpy.props.EnumProperty(name="output type", items=(('mesh', 'Mesh', 'Make a mesh output'), ('curve', 'Curve', 'Make curve output')), default='curve')
+    max_segment_size: FloatProperty(name = "", description = "Only Segments bigger then this value get subdivided",
+        default = 0.001, min = 0.0001, max = 1.0, unit="LENGTH")
+
 
 def operationValid(self, context):
     o = self
@@ -1288,6 +1295,7 @@ classes = [
     camChain,
     machineSettings,
     CamAddonPreferences,
+    import_settings,
 
     ui.CAM_CHAINS_Panel,
     ui.CAM_OPERATIONS_Panel,
@@ -1305,6 +1313,7 @@ classes = [
     ui.CAM_SLICE_Panel,
     ui.VIEW3D_PT_tools_curvetools,
     ui.OBJECT_PT_CustomPanel,
+    ui.WM_OT_gcode_import,
 
     ops.PathsBackground,
     ops.KillPathsBackground,
@@ -1377,6 +1386,8 @@ def register():
                                                    update=updateOperation)
     s.cam_machine = bpy.props.PointerProperty(type=machineSettings)
 
+    bpy.types.Scene.import_gcode = bpy.props.PointerProperty(type=import_settings)
+
     s.cam_text = bpy.props.StringProperty()
     bpy.app.handlers.frame_change_pre.append(ops.timer_update)
     bpy.app.handlers.load_post.append(check_operations_on_load)
@@ -1397,3 +1408,5 @@ def unregister():
 
     del s.cam_active_operation
     del s.cam_machine
+
+
