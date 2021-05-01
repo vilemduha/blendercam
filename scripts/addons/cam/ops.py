@@ -26,7 +26,7 @@ import bpy
 from bpy.props import *
 
 import subprocess, os, threading
-from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges
+from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges, simulation
 import shapely
 import mathutils
 import math
@@ -207,7 +207,10 @@ class CalculatePath(bpy.types.Operator):
         # getIslands(context.object)
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
-        bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
+#        bpy.data.objects[o.object_name].select_set(True)
+        print(bpy.context.mode)
+        if bpy.context.mode != 'OBJECT':
+            bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
         bpy.ops.object.select_all(action='DESELECT')
         path = bpy.data.objects.get('cam_path_{}'.format(o.name))
         if path:
@@ -341,7 +344,7 @@ class PathExportChain(bpy.types.Operator):
         for o in chainops:
             # bpy.ops.object.calculate_cam_paths_background()
             meshes.append(bpy.data.objects["cam_path_{}".format(o.name)].data)
-        utils.exportGcodePath(chain.filename, meshes, chainops)
+        gcodepath.exportGcodePath(chain.filename, meshes, chainops)
         return {'FINISHED'}
 
 
@@ -383,7 +386,7 @@ class CAMSimulate(bpy.types.Operator):
         operation_name = "cam_path_{}".format(operation.name)
 
         if operation_name in bpy.data.objects:
-            utils.doSimulation(operation_name, [operation])
+            simulation.doSimulation(operation_name, [operation])
         else:
             print('no computed path to simulate')
             return {'FINISHED'}
@@ -411,9 +414,10 @@ class CAMSimulateChain(bpy.types.Operator):
         canSimulate = True
         for operation in chainops:
             if not operation.name in bpy.data.objects:
-                canSimulate = False
+                canSimulate = True  #force true
+            print("operation name " + str(operation.name))
         if canSimulate:
-            utils.doSimulation(chain.name, chainops)
+            simulation.doSimulation(chain.name, chainops)
         else:
             print('no computed path to simulate')
             return {'FINISHED'}

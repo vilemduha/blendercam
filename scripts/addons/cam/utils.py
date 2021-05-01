@@ -19,7 +19,7 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py. All other libraries are called mostly from here.
+# here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py.
 
 import bpy
 import time
@@ -66,7 +66,7 @@ SHAPELY = True
 
 def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
-    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob   
 
@@ -90,8 +90,9 @@ def positionObject(operation):
         ob.location.z -= minz  	    
     elif operation.material_Z == 'CENTERED':
         ob.location.z -= minz +totz/2 	
-        
-    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)  
+
+    if ob.type != 'CURVE':
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     #addMaterialAreaObject()  
 
 
@@ -257,24 +258,31 @@ def getOperationSources(o):
 def getBounds(o):
     # print('kolikrat sem rpijde')
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION' or o.geometry_source == 'CURVE':
+        print("valid geometry")
+        minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
+
+        if o.minz_from_ob:
+            if minz == 10000000:
+                minz = 0
+            print("minz from object:" + str(minz))
+            o.min.z = minz
+            o.minz = o.min.z
+        else:
+            o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
+            print("not minz from object")
+
         if o.material_from_model:
-            minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
+            print("material_from_model")
 
             o.min.x = minx - o.material_radius_around_model
             o.min.y = miny - o.material_radius_around_model
             o.max.z = max(o.maxz, maxz)
 
-            if o.minz_from_ob:
-                if minz == 10000000:
-                    minz = 0
-                o.min.z = minz
-                o.minz = o.min.z
-            else:
-                o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
 
             o.max.x = maxx + o.material_radius_around_model
             o.max.y = maxy + o.material_radius_around_model
         else:
+            print("not material from model")
             o.min.x = o.material_origin.x
             o.min.y = o.material_origin.y
             o.min.z = o.material_origin.z - o.material_size.z
@@ -312,7 +320,6 @@ def getBounds(o):
         # o.max.y=min(o.min.y+m.working_area.y,o.max.y)
         # o.max.z=min(o.min.z+m.working_area.z,o.max.z)
         o.warnings += 'Operation exceeds your machine limits\n'
-
 
 # progress (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
 
@@ -859,77 +866,6 @@ def sampleChunksNAxis(o, pathSamples, layers):
 
     return chunks
 
-
-def createSimulationObject(name, operations, i):
-    oname = 'csim_' + name
-
-    o = operations[0]
-
-    if oname in bpy.data.objects:
-        ob = bpy.data.objects[oname]
-    else:
-        bpy.ops.mesh.primitive_plane_add(align='WORLD', enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0))
-        ob = bpy.context.active_object
-        ob.name = oname
-
-        bpy.ops.object.modifier_add(type='SUBSURF')
-        ss = ob.modifiers[-1]
-        ss.subdivision_type = 'SIMPLE'
-        ss.levels = 5
-        ss.render_levels = 6
-        bpy.ops.object.modifier_add(type='SUBSURF')
-        ss = ob.modifiers[-1]
-        ss.subdivision_type = 'SIMPLE'
-        ss.levels = 3
-        ss.render_levels = 3
-        bpy.ops.object.modifier_add(type='DISPLACE')
-
-    ob.location = ((o.max.x + o.min.x) / 2, (o.max.y + o.min.y) / 2, o.min.z)
-    ob.scale.x = (o.max.x - o.min.x) / 2
-    ob.scale.y = (o.max.y - o.min.y) / 2
-    print(o.max.x, o.min.x)
-    print(o.max.y, o.min.y)
-    print('bounds')
-    disp = ob.modifiers[-1]
-    disp.direction = 'Z'
-    disp.texture_coords = 'LOCAL'
-    disp.mid_level = 0
-
-    if oname in bpy.data.textures:
-        t = bpy.data.textures[oname]
-
-        t.type = 'IMAGE'
-        disp.texture = t
-
-        t.image = i
-    else:
-        bpy.ops.texture.new()
-        for t in bpy.data.textures:
-            if t.name == 'Texture':
-                t.type = 'IMAGE'
-                t.name = oname
-                t = t.type_recast()
-                t.type = 'IMAGE'
-                t.image = i
-                disp.texture = t
-    ob.hide_render = True
-
-
-def doSimulation(name, operations):
-    """perform simulation of operations. Currently only for 3 axis"""
-    for o in operations:
-        getOperationSources(o)
-    limits = getBoundsMultiple(
-        operations)  # this is here because some background computed operations still didn't have bounds data
-    i = image_utils.generateSimulationImage(operations, limits)
-    cp = getCachePath(operations[0])[:-len(operations[0].name)] + name
-    iname = cp + '_sim.exr'
-
-    numpysave(i, iname)
-    i = bpy.data.images.load(iname)
-    createSimulationObject(name, operations, i)
-
-
 def extendChunks5axis(chunks, o):
     s = bpy.context.scene
     m = s.cam_machine
@@ -1420,13 +1356,13 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
     i = 0
     # print(polygons, polygons.type)
     for p1 in polygons:  # sort by size before this???
-        print(p1.type, len(polygons))
+        #print(p1.type, len(polygons))
         i += 1
         if radius > 0:
             p1 = p1.buffer(radius * offset, resolution=o.circle_detail)
         outlines.append(p1)
 
-    print(outlines)
+    #print(outlines)
     if o.dont_merge:
         outline = sgeometry.MultiPolygon(outlines)
     # for ci in range(0,len(p)):

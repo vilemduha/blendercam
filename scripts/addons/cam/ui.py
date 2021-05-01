@@ -417,6 +417,12 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                     if ao.strategy == 'PROJECTED_CURVE':
                         layout.prop_search(ao, "curve_object1", bpy.data, "objects")
 
+                layout.prop(ao,'remove_redundant_points')
+                if ao.remove_redundant_points:
+                    layout.label(text='Revise your Code before running!')
+                    layout.label(text='Quality will suffer if tolerance')
+                    layout.label(text='is high')
+                    layout.prop(ao,'simplify_tol')
                 if use_experimental and ao.geometry_source in ['OBJECT', 'COLLECTION']:
                     layout.prop(ao, 'use_modifiers')
                 layout.prop(ao, 'hide_all_others')
@@ -809,11 +815,13 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.geometry_source in ['OBJECT', 'COLLECTION']:                    
                     if ao.strategy == 'CURVE':
                         layout.label(text="cannot use depth from object using CURVES")   
-                    layout.prop(ao, 'minz_from_ob')
+                    if not ao.minz_from_material:
+                        layout.prop(ao, 'minz_from_ob')
 
                             						
                     if not ao.minz_from_ob:
-                        layout.prop(ao, 'minz')
+                        if not ao.minz_from_material: layout.prop(ao, 'minz')
+                        layout.prop(ao,'minz_from_material')
                 else:
                     layout.prop(ao, 'source_image_scale_z')
                     layout.prop(ao, 'source_image_size_x')
@@ -910,6 +918,7 @@ class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
 
         layout.operator("object.cam_slice_objects")
         layout.prop(settings, 'slice_distance')
+        layout.prop(settings,'slice_above0')
         layout.prop(settings,'slice_3d')
         layout.prop(settings, 'indexes')
 

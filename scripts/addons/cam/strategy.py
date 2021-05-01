@@ -1,4 +1,4 @@
-# blender CAM utils.py (c) 2012 Vilem Novak
+# blender CAM strategy.py (c) 2012 Vilem Novak
 #
 # ***** BEGIN GPL LICENSE BLOCK *****
 #
@@ -19,7 +19,7 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# here is the strategy functionality of Blender CAM. The functions here are called with operators defined in ops.py. All other libraries are called mostly from here.
+# here is the strategy functionality of Blender CAM. The functions here are called with operators defined in ops.py.
 
 import bpy
 from bpy.props import *
@@ -35,7 +35,7 @@ from cam import simple
 from cam.simple import *
 from cam import pattern
 from cam.pattern import *
-from cam import utils,bridges
+from cam import utils, bridges
 from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
 from cam import image_utils
@@ -44,6 +44,7 @@ from cam.image_utils import *
 from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
 from shapely import affinity
+
 SHAPELY = True
 
 
@@ -103,12 +104,12 @@ def cutout(o):
         for ch in chunksFromCurve:
             ch.points.reverse()
 
-    layers = getLayers(o, o.maxz, o.min.z)
+    layers = getLayers(o, o.maxz, checkminz(o))
     extendorder = []
 
     if o.first_down:  # each shape gets either cut all the way to bottom, or every shape gets cut 1 layer, then all again. has to create copies, because same chunks are worked with on more layers usually
         for chunk in chunksFromCurve:
-            dir_switch = False # needed to avoid unnecessary lifting of cutter with open chunks and movement set to "MEANDER"
+            dir_switch = False  # needed to avoid unnecessary lifting of cutter with open chunks and movement set to "MEANDER"
             for layer in layers:
                 chunk_copy = chunk.copy()
                 if dir_switch:
@@ -132,8 +133,8 @@ def cutout(o):
     if o.use_bridges:  # add bridges to chunks
         # bridges=getBridges(p,o)
         print('using bridges')
-      
-        bridgeheight=min(o.max.z, o.min.z + abs(o.bridges_height))
+
+        bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
 
         for chl in extendorder:
             chunk = chl[0]
@@ -160,21 +161,21 @@ def cutout(o):
 
 def curve(o):
     print('operation: curve')
-    
+
     pathSamples = []
     utils.getOperationSources(o)
     if not o.onlycurves:
         o.warnings += 'at least one of assigned objects is not a curve\n'
 
     for ob in o.objects:
-        pathSamples.extend(curveToChunks(ob))       # make the chunks from curve here
+        pathSamples.extend(curveToChunks(ob))  # make the chunks from curve here
     pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
-    pathSamples = chunksRefine(pathSamples, o)      # simplify
+    pathSamples = chunksRefine(pathSamples, o)  # simplify
 
-
-	# layers here
+    # layers here
     if o.use_layers:
-        layers = getLayers(o, o.maxz, round(o.minz,6))
+        layers = getLayers(o, o.maxz, round(checkminz(o),
+                                            6))  # layers is a list of lists [[0.00,l1],[l1,l2],[l2,l3]] containg the start and end of each layer
         extendorder = []
         chunks = []
         for layer in layers:
@@ -184,22 +185,22 @@ def curve(o):
         for chl in extendorder:  # Set offset Z for all chunks according to the layer information, 
             chunk = chl[0]
             layer = chl[1]
-            print('layer: ' +str(layer[1]))
-            chunk.offsetZ(o.maxz*2-o.minz+layer[1]) 
-            chunk.clampZ(o.minz) #safety to not cut lower than minz 
-            chunk.clampmaxZ(o.free_movement_height ) #safety, not higher than free movement height	
+            print('layer: ' + str(layer[1]))
+            chunk.offsetZ(o.maxz * 2 - o.minz + layer[1])
+            chunk.clampZ(o.minz)  # safety to not cut lower than minz
+            chunk.clampmaxZ(o.free_movement_height)  # safety, not higher than free movement height
 
-        for chl in extendorder:  #strip layer information from extendorder and transfer them to chunks
+        for chl in extendorder:  # strip layer information from extendorder and transfer them to chunks
             chunks.append(chl[0])
-            
-        chunksToMesh(chunks, o) #finish by converting to mesh
 
-    else:			#no layers, old curve
+        chunksToMesh(chunks, o)  # finish by converting to mesh
+
+    else:  # no layers, old curve
         for ch in pathSamples:
-            ch.clampZ(o.minz) #safety to not cut lower than minz  
-            ch.clampmaxZ(o.free_movement_height )   #safety, not higher than free movement height			
-        chunksToMesh(pathSamples, o)      
-          		
+            ch.clampZ(o.minz)  # safety to not cut lower than minz
+            ch.clampmaxZ(o.free_movement_height)  # safety, not higher than free movement height
+        chunksToMesh(pathSamples, o)
+
 
 def proj_curve(s, o):
     print('operation: projected curve')
@@ -266,31 +267,30 @@ def pocket(o):
     prest = p.buffer(-o.cutter_diameter / 2, o.circle_detail)
     while not p.is_empty:
         nchunks = shapelyToChunks(p, o.min.z)
-        print("nchunks")
+        #print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
-        print("pnew")
-        
-# caused a bad slow down 
-#        if o.dist_between_paths > o.cutter_diameter / 2.0:
-#            prest = prest.difference(pnew.boundary.buffer(o.cutter_diameter / 2, o.circle_detail))
-#            if not (pnew.contains(prest)):
-#                prest = shapelyToMultipolygon(prest)
-#                fine = []
-#                go = []
-#                for p1 in prest:
-#                    if pnew.contains(p1):
-#                        fine.append(p1)
-#                    else:
-#                        go.append(p1)
-#                if len(go) > 0:
-#                    for p1 in go:
-#                        nchunks1 = shapelyToChunks(p1, o.min.z)
-#                        nchunks.extend(nchunks1)
-#                        prest = sgeometry.MultiPolygon(fine)
+        #print("pnew")
+
+        # caused a bad slow down
+        #        if o.dist_between_paths > o.cutter_diameter / 2.0:
+        #            prest = prest.difference(pnew.boundary.buffer(o.cutter_diameter / 2, o.circle_detail))
+        #            if not (pnew.contains(prest)):
+        #                prest = shapelyToMultipolygon(prest)
+        #                fine = []
+        #                go = []
+        #                for p1 in prest:
+        #                    if pnew.contains(p1):
+        #                        fine.append(p1)
+        #                    else:
+        #                        go.append(p1)
+        #                if len(go) > 0:
+        #                    for p1 in go:
+        #                        nchunks1 = shapelyToChunks(p1, o.min.z)
+        #                        nchunks.extend(nchunks1)
+        #                        prest = sgeometry.MultiPolygon(fine)
 
         nchunks = limitChunks(nchunks, o)
         chunksFromCurve.extend(nchunks)
-        print(i)
         parentChildDist(lastchunks, nchunks, o)
         lastchunks = nchunks
 
@@ -311,7 +311,7 @@ def pocket(o):
     chunksFromCurve = utils.sortChunks(chunksFromCurve, o)
 
     chunks = []
-    layers = getLayers(o, o.maxz, o.min.z)
+    layers = getLayers(o, o.maxz, checkminz(o))
 
     # print(layers)
     # print(chunksFromCurve)
@@ -446,7 +446,7 @@ def drill(o):
                                                               "snap_target": 'CLOSEST', "snap_point": (0, 0, 0),
                                                               "snap_align": False, "snap_normal": (0, 0, 0),
                                                               "texture_space": False, "release_confirm": False})
-        #bpy.ops.collection.objects_remove_all()
+        # bpy.ops.collection.objects_remove_all()
         bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 
         ob = bpy.context.active_object
@@ -497,7 +497,7 @@ def drill(o):
                 chunks.append(camPathChunk([(v.co.x + l.x, v.co.y + l.y, v.co.z + l.z)]))
         delob(ob)  # delete temporary object with applied transforms
 
-    layers = getLayers(o, o.maxz, o.min.z)
+    layers = getLayers(o, o.maxz, checkminz(o))
 
     chunklayers = []
     for layer in layers:
@@ -682,7 +682,6 @@ def medial_axis(o):
         # bpy.context.scene.objects.active = voronoiObj
         # voronoiObj.select = True
 
-
     # bpy.ops.object.convert(target='CURVE')
     oi = 0
     for ob in o.objects:
@@ -708,7 +707,8 @@ def medial_axis(o):
         chunklayers = utils.sortChunks(chunklayers, o)
 
     chunksToMesh(chunklayers, o)
-    
+
+
 def getLayers(operation, startdepth, enddepth):
     """returns a list of layers bounded by startdepth and enddepth
        uses operation.stepdown to determine number of layers.
@@ -720,15 +720,16 @@ def getLayers(operation, startdepth, enddepth):
 
         layerstart = operation.maxz
         for x in range(0, n):
-            layerend = round(max(startdepth - ((x + 1) * operation.stepdown), enddepth),6)
+            layerend = round(max(startdepth - ((x + 1) * operation.stepdown), enddepth), 6)
             if int(layerstart * 10 ** 8) != int(
                     layerend * 10 ** 8):  # it was possible that with precise same end of operation, last layer was done 2x on exactly same level...
                 layers.append([layerstart, layerend])
             layerstart = layerend
     else:
-        layers = [[round(startdepth,6), round(enddepth,6)]]
+        layers = [[round(startdepth, 6), round(enddepth, 6)]]
 
     return layers
+
 
 def chunksToMesh(chunks, o):
     """convert sampled chunks to path, optimization of paths"""
@@ -738,7 +739,6 @@ def chunksToMesh(chunks, o):
     verts = []
 
     free_movement_height = o.free_movement_height  # o.max.z +
-
 
     if o.machine_axes == '3':
         if m.use_position_definitions:
@@ -878,3 +878,8 @@ def chunksToMesh(chunks, o):
     else:
         ob.select_set(state=True, view_layer=None)
 
+def checkminz(o):
+    if o.minz_from_material:
+        return o.min.z
+    else:
+        return o.minz

@@ -32,6 +32,7 @@ from cam import simple
 from cam.simple import *
 from cam import chunk
 from cam.chunk import *
+from cam import simulation
 
 
 def getCircle(r, z):
@@ -67,75 +68,6 @@ def getCircleBinary(r):
 
 
 # get cutters for the z-buffer image method
-def getCutterArray(operation, pixsize):
-    type = operation.cutter_type
-    # print('generating cutter')
-    r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
-    res = ceil((r * 2) / pixsize)
-    # if res%2==0:#compensation for half-pixels issue, which wasn't an issue, so commented out
-    # res+=1
-    # m=res/2
-    m = res / 2.0
-    car = numpy.array((0), dtype=float)
-    car.resize(res, res)
-    car.fill(-10)
-
-    v = mathutils.Vector((0, 0, 0))
-    ps = pixsize
-    if type == 'END':
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if (v.length <= r):
-                    car.itemset((a, b), 0)
-    elif type == 'BALL' or type == 'BALLNOSE':
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if (v.length <= r):
-                    z = sin(acos(v.length / r)) * r - r
-                    car.itemset((a, b), z)  # [a,b]=z
-
-    elif type == 'VCARVE':
-        angle = operation.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180)
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = (-v.length * s)
-                    car.itemset((a, b), z)
-    elif type == 'CUSTOM':
-        cutob = bpy.data.objects[operation.cutter_object_name]
-        scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
-        # print(cutob.scale)
-        vstart = Vector((0, 0, -10))
-        vend = Vector((0, 0, 10))
-        print('sampling custom cutter')
-        maxz = -1
-        for a in range(0, res):
-            vstart.x = (a + 0.5 - m) * ps * scale
-            vend.x = vstart.x
-
-            for b in range(0, res):
-                vstart.y = (b + 0.5 - m) * ps * scale
-                vend.y = vstart.y
-                v = vend - vstart
-                c = cutob.ray_cast(vstart, v, v.length)
-                # print(c)
-                if c[3] != -1:
-                    z = -c[1][2] / scale
-                    # print(c)
-                    if z > -9:
-                        # print(z)
-                        if z > maxz:
-                            maxz = z
-                        car.itemset((a, b), z)
-        car -= maxz
-    return car
 
 
 def numpysave(a, iname):
@@ -215,7 +147,7 @@ def offsetArea(o, samples):
         o.offset_image.fill(-10)
 
         sourceArray = samples
-        cutterArray = getCutterArray(o, o.pixsize)
+        cutterArray = simulation.getCutterArray(o, o.pixsize)
 
         # progress('image size', sourceArray.shape)
 
@@ -235,7 +167,7 @@ def offsetArea(o, samples):
         for x in range(0, cwidth):  # cwidth):
             text = "Offsetting depth " + str(int(x * 100 / cwidth))
             # o.operator.report({"INFO"}, text)
-            progress('offset ', int(x * 100 / cwidth))
+            simple.progress('offset ', int(x * 100 / cwidth))
             for y in range(0,
                            cwidth):  # TODO:OPTIMIZE THIS - this can run much faster when the areas won't be created each run????tests dont work now
                 if cutterArray[x, y] > -10:
@@ -258,7 +190,7 @@ def offsetArea(o, samples):
         o.offset_image[m: width - cwidth + m, m:height - cwidth + m] = comparearea
         # progress('offseting done')
 
-        progress('\ntime ' + str(time.time() - t))
+        simple.progress('\ntime ' + str(time.time() - t))
 
         o.update_offsetimage_tag = False
     # progress('doing offsetimage')
@@ -337,23 +269,25 @@ def dilateAr(ar, cycles):
 def getOffsetImageCavities(o, i):  # for pencil operation mainly
     """detects areas in the offset image which are 'cavities' - the curvature changes."""
     # i=numpy.logical_xor(lastislice , islice)
-    progress('detect corners in the offset image')
+    simple.progress('detect corners in the offset image')
     vertical = i[:-2, 1:-1] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[2:, 1:-1]
     horizontal = i[1:-1, :-2] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[1:-1, 2:]
     # if bpy.app.debug_value==2:
 
     ar = numpy.logical_or(vertical, horizontal)
 
-    if 0:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge, it has tons of spikes and simply is not better than the old one
-        iname = getCachePath(o) + '_pencilthres.exr'
+    if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge, it has tons of spikes and simply is not better than the old one
+        iname = simple.getCachePath(o) + '_pencilthres.exr'
         # numpysave(ar,iname)#save for comparison before
         chunks = imageEdgeSearch_online(o, ar, i)
-        iname = getCachePath(o) + '_pencilthres_comp.exr'
+        iname = simple.getCachePath(o) + '_pencilthres_comp.exr'
+        print("new pencil strategy")
     # numpysave(ar,iname)#and after
     else:  # here is the old strategy with
         dilateAr(ar, 1)
         iname = getCachePath(o) + '_pencilthres.exr'
         # numpysave(ar,iname)#save for comparison before
+        print("old pencil strategy")
 
         chunks = imageToChunks(o, ar)
 
@@ -380,8 +314,8 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pixsize = o.pixsize
     edges = []
-
-    r = 3  # ceil((o.cutter_diameter/12)/o.pixsize)
+    r = 3
+    r = ceil((o.cutter_diameter/12)/o.pixsize) #was commented
     d = 2 * r
     coef = 0.75
     # sx=o.max.x-o.min.x
@@ -415,7 +349,7 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
 
         if perc != int(100 - 100 * totpix / startpix):
             perc = int(100 - 100 * totpix / startpix)
-            progress('pencil path searching', perc)
+            simple.progress('pencil path searching', perc)
         # progress('simulation ',int(100*i/l))
         success = False
         testangulardistance = 0  # distance from initial direction in the list of direction
@@ -517,238 +451,6 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
     return chunks
 
 
-def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):
-    """simulates a cutter cutting into stock, taking away the volume, and optionally returning the volume that has been milled. This is now used for feedrate tweaking."""
-    # xs=int(xs)
-    # ys=int(ys)
-    m = int(cutterArray.shape[0] / 2)
-    size = cutterArray.shape[0]
-    if xs > m and xs < si.shape[0] - m and ys > m and ys < si.shape[1] - m:  # whole cutter in image there
-        if getvolume:
-            volarray = si[xs - m:xs - m + size, ys - m:ys - m + size].copy()
-        si[xs - m:xs - m + size, ys - m:ys - m + size] = numpy.minimum(si[xs - m:xs - m + size, ys - m:ys - m + size],
-                                                                       cutterArray + z)
-        if getvolume:
-            volarray = si[xs - m:xs - m + size, ys - m:ys - m + size] - volarray
-            vsum = abs(volarray.sum())
-            # print(vsum)
-            return vsum
-
-    elif xs > -m and xs < si.shape[0] + m and ys > -m and ys < si.shape[
-        1] + m:  # part of cutter in image, for extra large cutters
-
-        startx = max(0, xs - m)
-        starty = max(0, ys - m)
-        endx = min(si.shape[0], xs - m + size)
-        endy = min(si.shape[0], ys - m + size)
-        castartx = max(0, m - xs)
-        castarty = max(0, m - ys)
-        caendx = min(size, si.shape[0] - xs + m)
-        caendy = min(size, si.shape[1] - ys + m)
-        # print(startx,endx,starty,endy,castartx,caendx,castarty, caendy)
-        if getvolume:
-            volarray = si[startx:endx, starty:endy].copy()
-        si[startx:endx, starty:endy] = numpy.minimum(si[startx:endx, starty:endy],
-                                                     cutterArray[castartx:caendx, castarty:caendy] + z)
-        if getvolume:
-            volarray = si[startx:endx, starty:endy] - volarray
-            vsum = abs(volarray.sum())
-            # print(vsum)
-            return vsum
-
-    return 0
-
-
-def generateSimulationImage(operations, limits):
-    minx, miny, minz, maxx, maxy, maxz = limits
-    # print(minx,miny,minz,maxx,maxy,maxz)
-    sx = maxx - minx
-    sy = maxy - miny
-    t = time.time()
-    o = operations[0]  # getting sim detail and others from first op.
-    simulation_detail = o.simulation_detail
-    borderwidth = o.borderwidth
-    resx = ceil(sx / simulation_detail) + 2 * borderwidth
-    resy = ceil(sy / simulation_detail) + 2 * borderwidth
-    # resx=ceil(sx/o.pixsize)+2*o.borderwidth
-    # resy=ceil(sy/o.pixsize)+2*o.borderwidth
-    # create array in which simulation happens, similar to an image to be painted in.
-    si = numpy.array((0.1), dtype=float)
-    si.resize(resx, resy)
-    si.fill(maxz)
-
-    for o in operations:
-        ob = bpy.data.objects["cam_path_{}".format(o.name)]
-        m = ob.data
-        verts = m.vertices
-
-        if o.do_simulation_feedrate:
-            kname = 'feedrates'
-            m.use_customdata_edge_crease = True
-
-            if m.shape_keys is None or m.shape_keys.key_blocks.find(kname) == -1:
-                ob.shape_key_add()
-                if len(m.shape_keys.key_blocks) == 1:
-                    ob.shape_key_add()
-                shapek = m.shape_keys.key_blocks[-1]
-                shapek.name = kname
-            else:
-                shapek = m.shape_keys.key_blocks[kname]
-            shapek.data[0].co = (0.0, 0, 0)
-        # print(len(shapek.data))
-        # print(len(verts_rotations))
-
-        # for i,co in enumerate(verts_rotations):#TODO: optimize this. this is just rewritten too many times...
-        # print(r)
-        #	shapek.data[i].co=co
-
-        totalvolume = 0.0
-
-        cutterArray = getCutterArray(o, simulation_detail)
-        # cb=cutterArray<-1
-        # cutterArray[cb]=1
-        cutterArray = -cutterArray
-        mid = int(cutterArray.shape[0] / 2)
-        size = cutterArray.shape[0]
-        # print(si.shape)
-        # for ch in chunks:
-        lasts = verts[1].co
-        perc = -1
-        vtotal = len(verts)
-        dropped = 0
-
-        xs = 0
-        ys = 0
-
-        for i, vert in enumerate(verts):
-            if perc != int(100 * i / vtotal):
-                perc = int(100 * i / vtotal)
-                progress('simulation', perc)
-            # progress('simulation ',int(100*i/l))
-
-            if i > 0:
-                volume = 0
-                volume_partial = 0
-                s = vert.co
-                v = s - lasts
-
-                l = v.length
-                if (lasts.z < maxz or s.z < maxz) and not (
-                        v.x == 0 and v.y == 0 and v.z > 0):  # only simulate inside material, and exclude lift-ups
-                    if (
-                            v.x == 0 and v.y == 0 and v.z < 0):  # if the cutter goes straight down, we don't have to interpolate.
-                        pass;
-
-                    elif v.length > simulation_detail:  # and not :
-
-                        v.length = simulation_detail
-                        lastxs = xs
-                        lastys = ys
-                        while v.length < l:
-                            xs = int((
-                                                 lasts.x + v.x - minx) / simulation_detail + borderwidth + simulation_detail / 2)  # -middle
-                            ys = int((
-                                                 lasts.y + v.y - miny) / simulation_detail + borderwidth + simulation_detail / 2)  # -middle
-                            z = lasts.z + v.z
-                            # print(z)
-                            if lastxs != xs or lastys != ys:
-                                volume_partial = simCutterSpot(xs, ys, z, cutterArray, si, o.do_simulation_feedrate)
-                                if o.do_simulation_feedrate:
-                                    totalvolume += volume
-                                    volume += volume_partial
-                                lastxs = xs
-                                lastys = ys
-                            else:
-                                dropped += 1
-                            v.length += simulation_detail
-
-                    xs = int((s.x - minx) / simulation_detail + borderwidth + simulation_detail / 2)  # -middle
-                    ys = int((s.y - miny) / simulation_detail + borderwidth + simulation_detail / 2)  # -middle
-                    volume_partial = simCutterSpot(xs, ys, s.z, cutterArray, si, o.do_simulation_feedrate)
-                if o.do_simulation_feedrate:  # compute volumes and write data into shapekey.
-                    volume += volume_partial
-                    totalvolume += volume
-                    if l > 0:
-                        load = volume / l
-                    else:
-                        load = 0
-
-                    # this will show the shapekey as debugging graph and will use same data to estimate parts with heavy load
-                    if l != 0:
-                        shapek.data[i].co.y = (load) * 0.000002
-                    else:
-                        shapek.data[i].co.y = shapek.data[i - 1].co.y
-                    shapek.data[i].co.x = shapek.data[i - 1].co.x + l * 0.04
-                    shapek.data[i].co.z = 0
-                lasts = s
-
-        # print('dropped '+str(dropped))
-        if o.do_simulation_feedrate:  # smoothing ,but only backward!
-            xcoef = shapek.data[len(shapek.data) - 1].co.x / len(shapek.data)
-            for a in range(0, 10):
-                # print(shapek.data[-1].co)
-                nvals = []
-                val1 = 0  #
-                val2 = 0
-                w1 = 0  #
-                w2 = 0
-
-                for i, d in enumerate(shapek.data):
-                    val = d.co.y
-
-                    if i > 1:
-                        d1 = shapek.data[i - 1].co
-                        val1 = d1.y
-                        if d1.x - d.co.x != 0:
-                            w1 = 1 / (abs(d1.x - d.co.x) / xcoef)
-
-                    if i < len(shapek.data) - 1:
-                        d2 = shapek.data[i + 1].co
-                        val2 = d2.y
-                        if d2.x - d.co.x != 0:
-                            w2 = 1 / (abs(d2.x - d.co.x) / xcoef)
-
-                    # print(val,val1,val2,w1,w2)
-
-                    val = (val + val1 * w1 + val2 * w2) / (1.0 + w1 + w2)
-                    nvals.append(val)
-                for i, d in enumerate(shapek.data):
-                    d.co.y = nvals[i]
-
-            # apply mapping - convert the values to actual feedrates.
-            total_load = 0
-            max_load = 0
-            for i, d in enumerate(shapek.data):
-                total_load += d.co.y
-                max_load = max(max_load, d.co.y)
-            normal_load = total_load / len(shapek.data)
-
-            thres = 0.5
-
-            scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
-
-            totverts = len(shapek.data)
-            for i, d in enumerate(shapek.data):
-                if d.co.y > normal_load:
-                    d.co.z = scale_graph * max(0.3,
-                                               normal_load / d.co.y)  # original method was : max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
-                else:
-                    d.co.z = scale_graph * 1
-                if i < totverts - 1:
-                    m.edges[i].crease = d.co.y / (normal_load * 4)
-
-    # d.co.z*=0.01#debug
-
-    o = operations[0]
-    si = si[borderwidth:-borderwidth, borderwidth:-borderwidth]
-    si += -minz
-
-    # print(si.shape[0],si.shape[1])
-
-    # print('simulation done in %f seconds' % (time.time()-t))
-    return si
-
-
 def crazyPath(
         o):  # TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm. started another thing below.
     MAX_BEND = 0.1  # in radians...#TODO: support operation chains ;)
@@ -763,7 +465,7 @@ def crazyPath(
     o.millimage = numpy.array((0.1), dtype=float)
     o.millimage.resize(resx, resy)
     o.millimage.fill(0)
-    o.cutterArray = -getCutterArray(o, o.simulation_detail)  # getting inverted cutter
+    o.cutterArray = -simulation.getCutterArray(o, o.simulation_detail)  # getting inverted cutter
     crazy = camPathChunk([(0, 0, 0)])
     testpos = (o.min.x, o.min.y, o.min.z)
 
@@ -1604,7 +1306,7 @@ def getResolution(o):
 # that's because blender doesn't allow accessing pixels in render :(
 def renderSampleImage(o):
     t = time.time()
-    progress('getting zbuffer')
+    simple.progress('getting zbuffer')
     # print(o.zbuffer_image)
 
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
@@ -1613,8 +1315,8 @@ def renderSampleImage(o):
         sx = o.max.x - o.min.x
         sy = o.max.y - o.min.y
 
-        resx = ceil(sx / o.pixsize) + 2 * o.borderwidth
-        resy = ceil(sy / o.pixsize) + 2 * o.borderwidth
+        resx = math.ceil(sx / o.pixsize) + 2 * o.borderwidth
+        resy = math.ceil(sy / o.pixsize) + 2 * o.borderwidth
 
         if not o.update_zbufferimage_tag and len(o.zbuffer_image) == resx and len(o.zbuffer_image[
                                                                                       0]) == resy:  # if we call this accidentally in more functions, which currently happens...
@@ -1735,7 +1437,7 @@ def renderSampleImage(o):
         o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
 
         o.pixsize = o.source_image_size_x / i.size[0]
-        progress('pixel size in the image source', o.pixsize)
+        simple.progress('pixel size in the image source', o.pixsize)
 
         rawimage = imagetonumpy(i)
         maxa = numpy.max(rawimage)
@@ -1745,6 +1447,8 @@ def renderSampleImage(o):
         neg = o.source_image_scale_z < 0
         if o.strategy == 'WATERLINE':  # waterline strategy needs image border to have ok ambient.
             a.fill(1 - neg)
+     
+
         else:  # other operations like parallel need to reach the border
             a.fill(neg)  #
         # 2*o.borderwidth
@@ -1770,7 +1474,7 @@ def renderSampleImage(o):
         print('min image ', numpy.min(a))
         o.zbuffer_image = a
     # progress('got z buffer also with conversion in:')
-    progress(time.time() - t)
+    simple.progress(time.time() - t)
 
     # progress(a)
     o.update_zbufferimage_tag = False
@@ -1784,7 +1488,7 @@ def prepareArea(o):
     renderSampleImage(o)
     samples = o.zbuffer_image
 
-    iname = getCachePath(o) + '_off.exr'
+    iname = simple.getCachePath(o) + '_off.exr'
 
     if not o.update_offsetimage_tag:
         progress('loading offset image')

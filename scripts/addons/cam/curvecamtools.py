@@ -25,14 +25,13 @@
 import bpy
 from bpy.props import *
 
-import subprocess, os, threading
-from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges,parametric
-import cam 
+from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric
 import shapely
 import mathutils
 import math
 from Equation import Expression
 import numpy as np
+
 
 # boolean operations for curve objects
 class CamCurveBoolean(bpy.types.Operator):
@@ -41,11 +40,11 @@ class CamCurveBoolean(bpy.types.Operator):
     bl_label = "Curve Boolean"
     bl_options = {'REGISTER', 'UNDO'}
 
-    boolean_type: EnumProperty(name='type',
-                                items=(('UNION', 'Union', ''), ('DIFFERENCE', 'Difference', ''),
-                                       ('INTERSECT', 'Intersect', '')),
-                                description='boolean type',
-                                default='UNION')
+    boolean_type: bpy.props.EnumProperty(name='type',
+                                   items=(('UNION', 'Union', ''), ('DIFFERENCE', 'Difference', ''),
+                                          ('INTERSECT', 'Intersect', '')),
+                                   description='boolean type',
+                                   default='UNION')
 
     @classmethod
     def poll(cls, context):
@@ -98,7 +97,7 @@ class CamCurveOvercuts(bpy.types.Operator):
 
     diameter: bpy.props.FloatProperty(name="diameter", default=.003, min=0, max=100, precision=4, unit="LENGTH")
     threshold: bpy.props.FloatProperty(name="threshold", default=math.pi / 2 * .99, min=-3.14, max=3.14, precision=4,
-                                        subtype="ANGLE", unit="ROTATION")
+                                       subtype="ANGLE", unit="ROTATION")
     do_outer: bpy.props.BoolProperty(name="Outer polygons", default=True)
     invert: bpy.props.BoolProperty(name="Invert", default=False)
 
@@ -188,8 +187,8 @@ class CamCurveOvercutsB(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     diameter: bpy.props.FloatProperty(name="Tool diameter", default=.003,
-                                       description='Tool bit diameter used in cut operation', min=0, max=100,
-                                       precision=4, unit="LENGTH")
+                                      description='Tool bit diameter used in cut operation', min=0, max=100,
+                                      precision=4, unit="LENGTH")
     style: bpy.props.EnumProperty(
         name="style",
         items=(('OPEDGE', 'opposite edge', 'place corner overcuts on opposite edges'),
@@ -198,14 +197,14 @@ class CamCurveOvercutsB(bpy.types.Operator):
         default='DOGBONE',
         description='style of overcut to use')
     threshold: bpy.props.FloatProperty(name="Max Inside Angle", default=math.pi / 2, min=-3.14, max=3.14,
-                                        description='The maximum angle to be considered as an inside corner',
-                                        precision=4, subtype="ANGLE", unit="ROTATION")
+                                       description='The maximum angle to be considered as an inside corner',
+                                       precision=4, subtype="ANGLE", unit="ROTATION")
     do_outer: bpy.props.BoolProperty(name="Include outer curve",
-                                      description='Include the outer curve if there are curves inside', default=True)
+                                     description='Include the outer curve if there are curves inside', default=True)
     do_invert: bpy.props.BoolProperty(name="Invert", description='invert overcut operation on all curves',
-                                       default=True)
+                                      default=True)
     otherEdge: bpy.props.BoolProperty(name="other edge",
-                                       description='change to the other edge for the overcut to be on', default=False)
+                                      description='change to the other edge for the overcut to be on', default=False)
 
     @classmethod
     def poll(cls, context):
@@ -445,11 +444,11 @@ class CamMeshGetPockets(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     threshold: bpy.props.FloatProperty(name="horizontal threshold",
-                                        description="How horizontal the surface must be for a pocket: 1.0 perfectly flat, 0.0 is any orientation",
-                                        default=.99, min=0, max=1.0, precision=4)
+                                       description="How horizontal the surface must be for a pocket: 1.0 perfectly flat, 0.0 is any orientation",
+                                       default=.99, min=0, max=1.0, precision=4)
     zlimit: bpy.props.FloatProperty(name="z limit",
-                                     description="maximum z height considered for pocket operation, default is 0.0",
-                                     default=0.0, min=-1000.0, max=1000.0, precision=4, unit='LENGTH')
+                                    description="maximum z height considered for pocket operation, default is 0.0",
+                                    default=0.0, min=-1000.0, max=1000.0, precision=4, unit='LENGTH')
 
     @classmethod
     def poll(cls, context):
@@ -470,7 +469,7 @@ class CamMeshGetPockets(bpy.types.Operator):
                 bpy.ops.object.editmode_toggle()
                 i = 0
                 for face in mesh.polygons:
-                    #n = mw @ face.normal
+                    # n = mw @ face.normal
                     n = face.normal.to_4d()
                     n.w = 0
                     n = (mw @ n).to_3d().normalized()
@@ -544,7 +543,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and (
-                    context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
+                context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
         utils.silhoueteOffset(context, self.offset)
@@ -560,6 +559,7 @@ class CamObjectSilhouete(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
+        #        return context.active_object is not None and (context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
         return context.active_object is not None and (context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
@@ -572,171 +572,5 @@ class CamObjectSilhouete(bpy.types.Operator):
         # bpy.ops.object.convert(target='CURVE')
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
-        return {'FINISHED'}
-        
-
-class CamSineCurve(bpy.types.Operator):
-    """Object sine """ #by Alain Pelletier april 2021
-    bl_idname = "object.sine"
-    bl_label = "Create Sine"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
-
-
-#    zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
-    axis: bpy.props.EnumProperty(name="displacement axis",items=(('XY', 'Y to displace X axis', 'Y constant; X sine displacement'),('YX', 'X to displace Y axis', 'X constant; Y sine displacement'),('ZX', 'X to displace Z axis', 'X constant; Y sine displacement'),('ZY', 'Y to displace Z axis', 'X constant; Y sine displacement')))
-    amplitude: bpy.props.FloatProperty(name="Amplitude", default=.01, min=0, max=10, precision=4, unit="LENGTH")
-    period: bpy.props.FloatProperty(name="Period", default=.5, min=0.001, max=100, precision=4, unit="LENGTH")
-    shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
-    offset: bpy.props.FloatProperty(name="offset", default=0, min=-1.0, max=1, precision=4, unit="LENGTH")
-    iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
-    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=3, precision=4, unit="LENGTH")
-    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
-
-   
-    def execute(self, context):  
-        
-        #z=Asin(B(x+C))+D
-
-        zstring=str(round(self.offset,6)) + "+" + str(round(self.amplitude,6)) +"*sin((2*pi/" + str(round(self.period,6)) +")*(t+"+str(round(self.shift,6))+"))"
-        print(zstring)
-        e=Expression(zstring,["t"])  #make equation from string
-        
-        #build function to be passed to create parametric curve ()
-        def f(t, offset: float = 0.0):
-           if self.axis == "XY":
-               c = (e(t),t,0)
-           elif self.axis == "YX":        
-               c = (t,e(t),0)
-           elif self.axis == "ZX":        
-               c = (t,0,e(t))               
-           elif self.axis == "ZY":        
-               c = (0,t,e(t))               
-           return c
-            
-        parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration)        
-        
-        return {'FINISHED'}
-
-class CamLissajousCurve(bpy.types.Operator):
-    """Lissajous """ #by Alain Pelletier april 2021
-    bl_idname = "object.lissajous"
-    bl_label = "Create Lissajous figure"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
-
-
-
-    amplitude_A: bpy.props.FloatProperty(name="Amplitude A", default=.1, min=0, max=100, precision=4, unit="LENGTH")
-    amplitude_B: bpy.props.FloatProperty(name="Amplitude B", default=.1, min=0, max=100, precision=4, unit="LENGTH")
-    period_A: bpy.props.FloatProperty(name="Period A", default=1.1, min=0.001, max=100, precision=4, unit="LENGTH")
-    period_B: bpy.props.FloatProperty(name="Period B", default=1.0, min=0.001, max=100, precision=4, unit="LENGTH")
-    shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
-
-    iteration: bpy.props.IntProperty(name="iteration", default=500, min=50, max=10000)
-    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=11, min=-3.0, max=1000000, precision=4, unit="LENGTH")
-    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-10.0, max=3, precision=4, unit="LENGTH")
-
-   
-    def execute(self, context):  
-        
-        #x=Asin(at+delta ),y=Bsin(bt)
-
-        xstring=str(round(self.amplitude_A,6)) +"*sin((2*pi/" + str(round(self.period_A,6)) +")*(t+"+str(round(self.shift,6))+"))"
-        ystring=str(round(self.amplitude_B,6)) +"*sin((2*pi/" + str(round(self.period_B,6)) +")*(t))"
-        print("x= "+str(xstring))
-        print("y= "+str(ystring))
-        x=Expression(xstring,["t"])  #make equation from string
-        y=Expression(ystring,["t"])  #make equation from string
-        
-        #build function to be passed to create parametric curve ()
-        def f(t, offset: float = 0.0):
-           c = (x(t),y(t),0)
-           return c
-            
-        parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration)        
-        
-        return {'FINISHED'}
-        
-class CamHypotrochoidCurve(bpy.types.Operator):
-    """hypotrochoid """  #by Alain Pelletier april 2021
-    bl_idname = "object.hypotrochoid"
-    bl_label = "Create Spirograph type figure"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
-
-    typecurve: bpy.props.EnumProperty(name="type of curve",items=(('hypo', 'Hypotrochoid', 'inside ring'),('epi', 'Epicycloid', 'outside inner ring')))
-    R: bpy.props.FloatProperty(name="Big circle radius", default=0.25, min=0.001, max=100, precision=4, unit="LENGTH")
-    r: bpy.props.FloatProperty(name="Small circle radius", default=0.18, min=0.0001, max=100, precision=4, unit="LENGTH")
-    d: bpy.props.FloatProperty(name="distance from center of interior circle", default=0.050, min=0, max=100, precision=4, unit="LENGTH")
-
-   
-    def execute(self, context):  
-        r=round(self.r,6)
-        R=round(self.R,6)
-        d=round(self.d,6)
-        Rmr=round(R-r,6) #R-r
-        Rpr=round(R+r,6) #R +r
-        Rpror=round(Rpr/r,6) #(R+r)/r
-        Rmror=round(Rmr/r,6) #(R-r)/r
-        maxangle=2*math.pi*np.lcm(round(self.R*1000),round(self.r*1000))/(R*1000)   
-
-        if self.typecurve == "hypo":
-            xstring=str(Rmr) + "*cos(t)+"+ str(d)+"*cos("+str(Rmror)+"*t)"
-            ystring=str(Rmr) + "*sin(t)-"+ str(d)+"*sin("+str(Rmror)+"*t)"
-        else:
-            xstring=str(Rpr) + "*cos(t)-"+ str(d)+"*cos("+str(Rpror)+"*t)"
-            ystring=str(Rpr) + "*sin(t)-"+ str(d)+"*sin("+str(Rpror)+"*t)"
-            			
-        print("x= "+str(xstring))
-        print("y= "+str(ystring))
-        print("maxangle "+str(maxangle))
-        
-        x=Expression(xstring,["t"])  #make equation from string
-        y=Expression(ystring,["t"])  #make equation from string
-        
-        #build function to be passed to create parametric curve ()
-        def f(t, offset: float = 0.0):
-           c = (x(t),y(t),0)
-           return c
-            
-        iter=int(maxangle*10)  
-        if iter > 10000:  #do not calculate more than 10000 points
-            print("limiting calculatons to 10000 points")
-            iter=10000
-        parametric.create_parametric_curve(f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=iter)        
-        
-        return {'FINISHED'}
-        
-class CamCustomCurve(bpy.types.Operator):
-    """Object customCurve """ #by Alain Pelletier april 2021
-    bl_idname = "object.customcurve"
-    bl_label = "Create custom curve"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
-
-
-    xstring: StringProperty(name="X equation", description="Equation x=F(t)", default="t" )
-    ystring: StringProperty(name="Y equation", description="Equation y=F(t)", default="0" )
-    zstring: StringProperty(name="Z equation", description="Equation z=F(t)", default="0.05*sin(2*pi*4*t)" )
-
-    iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
-    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=3, precision=4, unit="LENGTH")
-    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
-
-
-   
-    def execute(self, context):  
-        
-        print("x= "+ self.xstring)
-        print("y= "+ self.ystring)
-        print("z= "+ self.zstring)
-        ex=Expression(self.xstring,["t"])  #make equation from string
-        ey=Expression(self.ystring,["t"])  #make equation from string
-        ez=Expression(self.zstring,["t"])  #make equation from string
-        
-        #build function to be passed to create parametric curve ()
-        def f(t, offset: float = 0.0):
-           c = (ex(t),ey(t),ez(t))
-           return c
-            
-        parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration)        
-        
         return {'FINISHED'}
 
