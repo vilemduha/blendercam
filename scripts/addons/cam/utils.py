@@ -915,7 +915,7 @@ def silhoueteOffset(context, offset):
     polys = []
     mp = shapely.ops.unary_union(silhs)
     mp = mp.buffer(offset, resolution=64)
-    shapelyToCurve('offset curve', mp, ob.location.z)
+    shapelyToCurve(ob.name +'_offset_'+str(round(offset,6)), mp, ob.location.z)
 
     return {'FINISHED'}
 
