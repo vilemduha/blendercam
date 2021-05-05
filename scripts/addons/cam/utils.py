@@ -28,37 +28,21 @@ import math
 from math import *
 from mathutils import *
 from bpy.props import *
-import bl_operators
-from bpy.types import Menu, Operator
 from bpy_extras import object_utils
-import curve_simplify
-import bmesh
 
-import numpy
-import random, sys, os
-import pickle
-import string
-from cam import chunk
+import sys, numpy,pickle
 from cam.chunk import *
-from cam import collision
 from cam.collision import *
-# import multiprocessing
-from cam import simple
 from cam.simple import *
-from cam import pattern
 from cam.pattern import *
-from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
-from cam import image_utils
 from cam.image_utils import *
-from cam.nc import nc
-from cam.nc import iso
+
 from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
 
 from shapely.geometry import polygon as spolygon
 from shapely import ops as sops
 from shapely import geometry as sgeometry
-from shapely import affinity, prepared
 
 # from shapely.geometry import * not possible until Polygon libs gets out finally..
 SHAPELY = True
@@ -904,7 +888,7 @@ def curveToShapely(cob, use_modifiers=False):
 # separate function in blender, so you can offset any curve.
 # FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
 
-def silhoueteOffset(context, offset):
+def silhoueteOffset(context, offset,style = 1,mitrelimit = 1.0):
     bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
     if ob.type == 'CURVE' or ob.type == 'FONT':
@@ -914,8 +898,10 @@ def silhoueteOffset(context, offset):
 
     polys = []
     mp = shapely.ops.unary_union(silhs)
-    mp = mp.buffer(offset, resolution=64)
-    shapelyToCurve(ob.name +'_offset_'+str(round(offset,6)), mp, ob.location.z)
+    print("offset attributes:")
+    print(offset,style)
+    mp = mp.buffer(offset, cap_style = 1, join_style=style, resolution=16, mitre_limit=mitrelimit)
+    shapelyToCurve(ob.name +'_offset_'+str(round(offset,5)), mp, ob.location.z)
 
     return {'FINISHED'}
 

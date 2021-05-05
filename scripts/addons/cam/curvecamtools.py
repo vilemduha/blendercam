@@ -541,6 +541,9 @@ class CamOffsetSilhouete(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     offset: bpy.props.FloatProperty(name="offset", default=.003, min=-100, max=100, precision=4, unit="LENGTH")
+    mitrelimit: bpy.props.FloatProperty(name="Mitre Limit", default=.003, min=0.0, max=20, precision=4, unit="LENGTH")
+    style:  bpy.props.EnumProperty(name="type of curve", items=(
+        ('1', 'Round', ''), ('2', 'Mitre', ''),('3','Bevel','')))
 
     @classmethod
     def poll(cls, context):
@@ -548,7 +551,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
                 context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
-        utils.silhoueteOffset(context, self.offset)
+        utils.silhoueteOffset(context, self.offset,int(self.style),self.mitrelimit)
         return {'FINISHED'}
 
 
