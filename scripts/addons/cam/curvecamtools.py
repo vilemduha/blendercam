@@ -538,7 +538,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
     """Curve offset operation """
     bl_idname = "object.silhouete_offset"
     bl_label = "Silhouete offset"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     offset: bpy.props.FloatProperty(name="offset", default=.003, min=-100, max=100, precision=4, unit="LENGTH")
     mitrelimit: bpy.props.FloatProperty(name="Mitre Limit", default=.003, min=0.0, max=20, precision=4, unit="LENGTH")
