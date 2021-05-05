@@ -1340,24 +1340,20 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
 
     outlines = []
     i = 0
-    # print(polygons, polygons.type)
+    if o.straight: join = 2
+    else: join = 1
     for p1 in polygons:  # sort by size before this???
         #print(p1.type, len(polygons))
         i += 1
         if radius > 0:
-            p1 = p1.buffer(radius * offset, resolution=o.circle_detail)
+            p1 = p1.buffer(radius * offset, resolution=o.circle_detail,join_style = join,mitre_limit=2)
         outlines.append(p1)
 
     #print(outlines)
     if o.dont_merge:
         outline = sgeometry.MultiPolygon(outlines)
-    # for ci in range(0,len(p)):
-    #	outline.addContour(p[ci],p.isHole(ci))
     else:
-        # print(p)
         outline = shapely.ops.unary_union(outlines)
-    # outline = sgeometry.MultiPolygon([outline])
-    # shapelyToCurve('oboutline',outline,0)
     return outline
 
 
