@@ -526,7 +526,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     if ao.strategy=='CUTOUT':
                         layout.prop(ao, 'cut_type')
                         layout.label(text = "Overshoot works best with curve")
-                        layout.label(text = "having duplicates removed")
+                        layout.label(text = "having C remove doubles")
                         layout.prop(ao, 'straight')
                     layout.prop(ao,'enable_A')
                     if ao.enable_A:
