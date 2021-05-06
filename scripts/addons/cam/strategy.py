@@ -50,7 +50,10 @@ SHAPELY = True
 
 ###########cutout strategy is completely here:
 def cutout(o):
-    # ob=bpy.context.active_object
+    if o.straight:
+        join = 2
+    else:
+        join = 1
     print('operation: cutout')
     offset = True
     if o.cut_type == 'ONLINE' and o.onlycurves == True:  # is separate to allow open curves :)
@@ -79,7 +82,7 @@ def cutout(o):
             if o.outlines_count > 1:
                 for i in range(1, o.outlines_count):
                     chunksFromCurve.extend(shapelyToChunks(p, -1))
-                    p = p.buffer(distance=o.dist_between_paths * offset, resolution=o.circle_detail)
+                    p = p.buffer(distance=o.dist_between_paths * offset, resolution=o.circle_detail, join_style = join,mitre_limit=2)
 
         chunksFromCurve.extend(shapelyToChunks(p, -1))
         if o.outlines_count > 1 and o.movement_insideout == 'OUTSIDEIN':
