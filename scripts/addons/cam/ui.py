@@ -109,6 +109,14 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                    layout.prop(ao,'Laser_off')
                    layout.prop(ao,'Laser_cmd')
                    layout.prop(ao,'Laser_delay')
+
+                if ao.cutter_type == 'PLASMA':
+                   layout.prop(ao,'Plasma_on')
+                   layout.prop(ao,'Plasma_off')
+                   layout.prop(ao,'Plasma_delay')
+                   layout.prop(ao,'Plasma_dwell')
+                   layout.prop(ao,'Plasma_lead_in')
+                   layout.prop(ao,'Plasma_lead_out')
                                       
                 if ao.cutter_type == 'CUSTOM':
                     if ao.use_exact:

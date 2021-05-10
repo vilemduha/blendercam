@@ -467,6 +467,7 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('VCARVE', 'V-carve', 'v carve cutter'),
                                   ('BALLCONE', 'Ballcone', 'Ball with a Cone Parallel - X'),
                                   ('LASER', 'Laser', 'Laser cutter'),
+                                  ('PLASMA', 'Plasma', 'Plasma cutter'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
                               description='Type of cutter used',
                               default='END', update=updateZbufferImage)
@@ -573,8 +574,6 @@ class camOperation(bpy.types.PropertyGroup):
                                      max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
     ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
                                      max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
-#    shank_diameter: FloatProperty(name="Shank Diameter", description="Diameter at the top of cutter", min=0.0,
-#                                     max=25.0, default=3.175, precision=PRECISION, unit="LENGTH",update=updateOffsetImage)
     bull_corner_radius: FloatProperty(name="Bull Corner Radius", description="Radius tool bit corner", min=0.0,
                                      max=0.035, default=0.005, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
 
@@ -584,6 +583,14 @@ class camOperation(bpy.types.PropertyGroup):
     Laser_off: bpy.props.StringProperty(name="Laser OFF string", default="M68 E0 Q0")
     Laser_cmd: bpy.props.StringProperty(name="Laser command", default="M68 E0 Q")    
     Laser_delay: bpy.props.FloatProperty(name="Laser ON Delay", description="time after fast move to turn on laser and let machine stabilize", default=0.2)    
+    Plasma_on: bpy.props.StringProperty(name="Plasma ON string", default="M03")
+    Plasma_off: bpy.props.StringProperty(name="Plasma OFF string", default="M05")
+    Plasma_delay: bpy.props.FloatProperty(name="Plasma ON Delay", description="time after fast move to turn on Plasma and let machine stabilize", default=0.1)
+    Plasma_dwell: bpy.props.FloatProperty(name="Plasma dwell time", description="Time to dwell and warm up the torch", default=0.0)
+    Plasma_lead_in:  bpy.props.FloatProperty(name="Lead in radius", description="Lead out radius for plasma to turn off",
+                                    min=0.00, max=1, default=0.003, precision=PRECISION, unit="LENGTH")
+    Plasma_lead_out:  bpy.props.FloatProperty(name="Lead out radius", description="Lead out radius for plasma to turn off",
+                                    min=0.00, max=1, default=0.003, precision=PRECISION, unit="LENGTH")
 
     # steps
     dist_between_paths: bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,
