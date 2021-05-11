@@ -151,7 +151,7 @@ def cutout(o):
                 chunk = chl[0]
                 layer = chl[1]
                 if chunk.closed:
-                    chunk.leadinContour(o.Plasma_lead_in,o)
+                    chunk.leadinContour(o)
 
     if o.ramp:  # add ramps or simply add chunks
         for chl in extendorder:

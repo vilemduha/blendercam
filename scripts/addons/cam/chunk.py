@@ -25,6 +25,7 @@ from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
 from cam import polygon_utils_cam
 from cam.simple import *
+import math
 
 
 class camPathChunk:
@@ -476,6 +477,35 @@ class camPathChunk:
 
 # def appendChunk(sorted,ch,o,pos)
 
+    def leadinContour(self, o):
+        radius=o.Plasma_lead_in
+        cutter_radius=o.cutter_diameter / 2  #cutter radius
+        ch = self
+        start = ch.points[0]
+        nextp = ch.points[1]
+        nextmstrt = nextp[1]-start[1]
+        if nextmstrt == 0:
+            nextmstrt = 0.0000000000000001
+
+        pangle = math.atan((start[0]-nextp[0])/(nextmstrt))  # perpendicular angle
+        print(start,nextp,pangle)
+        center_location = (start[0]+(radius)*math.cos(pangle), start[1]+(radius)*math.sin(pangle),0)
+        bpy.ops.curve.simple(align='WORLD', location=center_location, rotation=(0, 0, pangle+math.pi/2), Simple_Type='Arc',
+                             Simple_startangle=0, Simple_endangle=90, Simple_radius=radius, use_cyclic_u=False,
+                             edit_mode=False)
+        ob = bpy.context.active_object
+        chunk = camPathChunk([])
+
+        for i in range(10):
+            iangle=math.pi/2+i*(math.pi/2)/10
+            chunk.points.append((start[0]+(radius)*math.cos(pangle)+radius*math.cos(pangle+iangle),start[1]+(radius)*math.sin(pangle)+radius*math.sin(pangle+iangle), 0))
+        j = len(ch.points)
+        for i in range (j):
+            s = ch.points[i]
+            chunk.points.append((s[0], s[1], s[2]))
+
+        self.points = chunk.points
+
 def chunksCoherency(chunks):
     # checks chunks for their stability, for pencil path. it checks if the vectors direction doesn't jump too much too quickly, if this happens it splits the chunk on such places, too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often, but also means that some parts detected by cavity algorithm won't be milled
     nchunks = []
@@ -507,6 +537,8 @@ def setChunksZ(chunks, z):
         chunk.setZ(z)
         newchunks.append(chunk)
     return newchunks
+
+
 
 
 def optimizeChunk(chunk, operation):
