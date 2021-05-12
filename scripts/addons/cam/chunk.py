@@ -476,7 +476,7 @@ class camPathChunk:
 
 
 # def appendChunk(sorted,ch,o,pos)
-
+##  modify existing path to add lead in and lead out
     def leadContour(self, o):
         iradius=o.lead_in
         oradius=o.lead_out
@@ -488,23 +488,23 @@ class camPathChunk:
             nextmstrt = 0.0000000000000001
 
         pangle = math.atan((start[0]-nextp[0])/(nextmstrt))  # perpendicular angle
-        print(start,nextp,pangle)
-        chunk = camPathChunk([])
+        chunk = camPathChunk([])  ## create a new cutting path
 
-##        add arc in the begining
+##        add lead in arc in the begining
         if round(o.lead_in, 6) > 0.0:
-            for i in range(10):
-                iangle=math.pi/2+i*(math.pi/2)/10
-                chunk.points.append((start[0]+(iradius)*math.cos(pangle)+iradius*math.cos(pangle+iangle),start[1]+(iradius)*math.sin(pangle)+iradius*math.sin(pangle+iangle), 0))
+            for i in range(15):
+                iangle = math.pi / 2 + i * (math.pi / 2) / 15  ## calculate arc angles
+                chunk.points.append((start[0]+(iradius)*math.cos(pangle)+iradius*math.cos(pangle+iangle),start[1]+(iradius)*math.sin(pangle)+iradius*math.sin(pangle+iangle), start[2]))
 
 ##          glue rest of the path to the arc
         for i in range (len(ch.points)):
             chunk.points.append(ch.points[i])
 
+##      add lead out arc to the end
         if round(o.lead_out, 6) > 0.0:
-            for i in range(10):
-                iangle=math.pi/2+i*(math.pi/2)/10
-                chunk.points.append((start[0]+(oradius)*math.cos(pangle)+oradius*math.cos(math.pi/2+pangle+iangle),start[1]+(oradius)*math.sin(pangle)+oradius*math.sin(math.pi/2+pangle+iangle), 0))
+            for i in range(15):
+                iangle=math.pi/2+i*(math.pi/2)/15
+                chunk.points.append((start[0]+(oradius)*math.cos(pangle)+oradius*math.cos(math.pi/2+pangle+iangle),start[1]+(oradius)*math.sin(pangle)+oradius*math.sin(math.pi/2+pangle+iangle), start[2]))
 
 
         self.points = chunk.points
