@@ -145,13 +145,15 @@ def cutout(o):
             if layer[1] < bridgeheight:
                 bridges.useBridges(chunk, o)
 
-    if o.cutter_type == 'PLASMA':
-        if o.Plasma_lead_in > 0:
-            for chl in extendorder:
-                chunk = chl[0]
-                layer = chl[1]
-                if chunk.closed:
-                    chunk.leadinContour(o)
+## Lead in
+    if o.lead_in > 0.0 or o.lead_out > 0:
+        print("cutout leadin")
+        for chl in extendorder:
+            chunk = chl[0]
+            layer = chl[1]
+            if chunk.closed:
+                chunk.leadContour(o)
+
 
     if o.ramp:  # add ramps or simply add chunks
         for chl in extendorder:

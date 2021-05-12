@@ -477,32 +477,35 @@ class camPathChunk:
 
 # def appendChunk(sorted,ch,o,pos)
 
-    def leadinContour(self, o):
-        radius=o.Plasma_lead_in
-        cutter_radius=o.cutter_diameter / 2  #cutter radius
+    def leadContour(self, o):
+        iradius=o.lead_in
+        oradius=o.lead_out
         ch = self
         start = ch.points[0]
         nextp = ch.points[1]
         nextmstrt = nextp[1]-start[1]
-        if nextmstrt == 0:
+        if nextmstrt == 0.0:
             nextmstrt = 0.0000000000000001
 
         pangle = math.atan((start[0]-nextp[0])/(nextmstrt))  # perpendicular angle
         print(start,nextp,pangle)
-        center_location = (start[0]+(radius)*math.cos(pangle), start[1]+(radius)*math.sin(pangle),0)
-        bpy.ops.curve.simple(align='WORLD', location=center_location, rotation=(0, 0, pangle+math.pi/2), Simple_Type='Arc',
-                             Simple_startangle=0, Simple_endangle=90, Simple_radius=radius, use_cyclic_u=False,
-                             edit_mode=False)
-        ob = bpy.context.active_object
         chunk = camPathChunk([])
 
-        for i in range(10):
-            iangle=math.pi/2+i*(math.pi/2)/10
-            chunk.points.append((start[0]+(radius)*math.cos(pangle)+radius*math.cos(pangle+iangle),start[1]+(radius)*math.sin(pangle)+radius*math.sin(pangle+iangle), 0))
-        j = len(ch.points)
-        for i in range (j):
-            s = ch.points[i]
-            chunk.points.append((s[0], s[1], s[2]))
+##        add arc in the begining
+        if round(o.lead_in, 6) > 0.0:
+            for i in range(10):
+                iangle=math.pi/2+i*(math.pi/2)/10
+                chunk.points.append((start[0]+(iradius)*math.cos(pangle)+iradius*math.cos(pangle+iangle),start[1]+(iradius)*math.sin(pangle)+iradius*math.sin(pangle+iangle), 0))
+
+##          glue rest of the path to the arc
+        for i in range (len(ch.points)):
+            chunk.points.append(ch.points[i])
+
+        if round(o.lead_out, 6) > 0.0:
+            for i in range(10):
+                iangle=math.pi/2+i*(math.pi/2)/10
+                chunk.points.append((start[0]+(oradius)*math.cos(pangle)+oradius*math.cos(math.pi/2+pangle+iangle),start[1]+(oradius)*math.sin(pangle)+oradius*math.sin(math.pi/2+pangle+iangle), 0))
+
 
         self.points = chunk.points
 

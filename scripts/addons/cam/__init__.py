@@ -587,10 +587,6 @@ class camOperation(bpy.types.PropertyGroup):
     Plasma_off: bpy.props.StringProperty(name="Plasma OFF string", default="M05")
     Plasma_delay: bpy.props.FloatProperty(name="Plasma ON Delay", description="time after fast move to turn on Plasma and let machine stabilize", default=0.1)
     Plasma_dwell: bpy.props.FloatProperty(name="Plasma dwell time", description="Time to dwell and warm up the torch", default=0.0)
-    Plasma_lead_in:  bpy.props.FloatProperty(name="Lead in radius", description="Lead out radius for plasma to turn off",
-                                    min=0.00, max=1, default=0.003, precision=PRECISION, unit="LENGTH")
-    Plasma_lead_out:  bpy.props.FloatProperty(name="Lead out radius", description="Lead out radius for plasma to turn off",
-                                    min=0.00, max=1, default=0.003, precision=PRECISION, unit="LENGTH")
 
     # steps
     dist_between_paths: bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,
@@ -652,6 +648,11 @@ class camOperation(bpy.types.PropertyGroup):
                                             precision=1, subtype="ANGLE", unit="ROTATION", update=updateRest)
     helix_enter: bpy.props.BoolProperty(name="Helix enter - EXPERIMENTAL", description="Enter material in helix",
                                         default=False, update=updateRest)
+    lead_in:  bpy.props.FloatProperty(name="Lead in radius", description="Lead out radius for torch or laser to turn off",
+                                    min=0.00, max=1, default=0.0, precision=PRECISION, unit="LENGTH")
+    lead_out:  bpy.props.FloatProperty(name="Lead out radius", description="Lead out radius for torch or laser to turn off",
+                                    min=0.00, max=1, default=0.0, precision=PRECISION, unit="LENGTH")
+
     # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
     helix_diameter: bpy.props.FloatProperty(name='Helix diameter % of cutter D', default=90, min=10, max=100,
                                             precision=1, subtype='PERCENTAGE', update=updateRest)

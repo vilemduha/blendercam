@@ -115,8 +115,9 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                    layout.prop(ao,'Plasma_off')
                    layout.prop(ao,'Plasma_delay')
                    layout.prop(ao,'Plasma_dwell')
-                   layout.prop(ao,'Plasma_lead_in')
-                   layout.prop(ao,'Plasma_lead_out')
+                   layout.prop(ao,'lead_in')
+                   layout.prop(ao,'lead_out')
+
                                       
                 if ao.cutter_type == 'CUSTOM':
                     if ao.use_exact:
@@ -536,6 +537,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.label(text = "Overshoot works best with curve")
                         layout.label(text = "having C remove doubles")
                         layout.prop(ao, 'straight')
+                        layout.prop(ao, 'lead_in')
+                        layout.prop(ao, 'lead_out')
                     layout.prop(ao,'enable_A')
                     if ao.enable_A:
                         layout.prop(ao,'rotation_A')
