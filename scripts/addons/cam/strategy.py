@@ -145,12 +145,18 @@ def cutout(o):
             if layer[1] < bridgeheight:
                 bridges.useBridges(chunk, o)
 
-## Lead in
+    if o.profile_start > 0:
+        print("cutout change profile start")
+        for chl in extendorder:
+            chunk = chl[0]
+            if chunk.closed:
+                chunk.changePathStart(o)
+
+    ## Lead in
     if o.lead_in > 0.0 or o.lead_out > 0:
         print("cutout leadin")
         for chl in extendorder:
             chunk = chl[0]
-            layer = chl[1]
             if chunk.closed:
                 chunk.leadContour(o)
 

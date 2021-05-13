@@ -537,6 +537,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.label(text = "Overshoot works best with curve")
                         layout.label(text = "having C remove doubles")
                         layout.prop(ao, 'straight')
+                        layout.prop(ao, 'profile_start')
                         layout.label(text="Lead in / out not fully working")
                         layout.prop(ao, 'lead_in')
                         layout.prop(ao, 'lead_out')

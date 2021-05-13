@@ -475,8 +475,26 @@ class camPathChunk:
         self.points = chunk.points
 
 
-# def appendChunk(sorted,ch,o,pos)
-##  modify existing path to add lead in and lead out
+
+##  modify existing path start point
+    def changePathStart(self,o):
+        if o.profile_start > 0:
+            newstart=o.profile_start
+            ch = self
+            chunkamt=len(self.points)
+            newstart = newstart % chunkamt
+            chunk = camPathChunk([])  ## create a new cutting path
+            print("chunk amt",chunkamt,"new start",newstart)
+        ##          glue rest of the path to the arc
+            for i in range(chunkamt-newstart):
+                chunk.points.append(ch.points[i+newstart])
+
+            for i in range(newstart):
+                chunk.points.append(ch.points[i])
+
+        self.points = chunk.points
+
+    ##  modify existing path to add lead in and lead out
     def leadContour(self, o):
         iradius=o.lead_in
         oradius=o.lead_out

@@ -652,6 +652,8 @@ class camOperation(bpy.types.PropertyGroup):
                                     min=0.00, max=1, default=0.0, precision=PRECISION, unit="LENGTH")
     lead_out:  bpy.props.FloatProperty(name="Lead out radius", description="Lead out radius for torch or laser to turn off",
                                     min=0.00, max=1, default=0.0, precision=PRECISION, unit="LENGTH")
+    profile_start: bpy.props.IntProperty(name="Start point", description="Start point offset", min=0, default=0,
+                                update=updateRest)
 
     # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
     helix_diameter: bpy.props.FloatProperty(name='Helix diameter % of cutter D', default=90, min=10, max=100,
