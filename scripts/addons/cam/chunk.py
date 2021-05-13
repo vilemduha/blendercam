@@ -488,6 +488,7 @@ class camPathChunk:
             nextmstrt = 0.0000000000000001
 
         pangle = math.atan((start[0]-nextp[0])/(nextmstrt))  # perpendicular angle
+        print("perpendicular angle",pangle*180/math.pi)
         chunk = camPathChunk([])  ## create a new cutting path
 
 ##        add lead in arc in the begining
