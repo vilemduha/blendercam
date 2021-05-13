@@ -489,7 +489,7 @@ class camPathChunk:
             for i in range(chunkamt-newstart):
                 chunk.points.append(ch.points[i+newstart])
 
-            for i in range(newstart):
+            for i in range(newstart+1):
                 chunk.points.append(ch.points[i])
 
         self.points = chunk.points
