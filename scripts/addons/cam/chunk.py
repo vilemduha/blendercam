@@ -494,6 +494,36 @@ class camPathChunk:
 
         self.points = chunk.points
 
+    def breakPathForLeadinLeadout(self,o):
+        iradius = o.lead_in
+        oradius = o.lead_out
+        if iradius + oradius > 0:
+            ch = self
+            chunkamt=len(self.points)
+            chunk = camPathChunk([])  ## create a new cutting path
+        ##          glue rest of the path to the arc
+            for i in range(chunkamt-1):
+                bpoint=ch.point[i+1]
+                apoint=ch.point[i]
+                bmax = bpoint[0] - apoint[0]
+                bmay = bpoint[1] - apoint[1]
+                segmentLength = math.hypot(bmax, bmay)
+                if bmax != 0:
+                    slope = bmay / bmax
+                else:
+                    slope = 10000000000 * np.sign(bmay)
+
+                if segmentLength > (iradius + oradius):
+                    ### add point on the line here
+                    newpointx = 0  ## insert new point math here
+                    newpointy = 0  ## insert new point math here
+                    chunk.points.append(newpointx,newpointy)
+
+                chunk.points.append(ch.points[i])
+
+
+        self.points = chunk.points        
+        
     ##  modify existing path to add lead in and lead out
     def leadContour(self, o):
         iradius=o.lead_in
