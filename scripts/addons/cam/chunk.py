@@ -501,30 +501,38 @@ class camPathChunk:
         ch = self
         start = ch.points[0]
         nextp = ch.points[1]
-        nextmstrt = nextp[1]-start[1]
-        if nextmstrt == 0.0:
-            nextmstrt = 0.0000000000000001
-
-        pangle = math.atan((start[0]-nextp[0])/(nextmstrt))  # perpendicular angle
-        print("perpendicular angle",pangle*180/math.pi)
+        ox=start[0]
+        oy=start[1]
+        px=nextp[0]
+        py=nextp[1] 
+        qx = ox + oy - py
+        qy = oy + px - ox
+        dx = qx - ox
+        dy = qy - oy
+        la = math.sqrt(dx ** 2 + dy ** 2)
+        pvx = (iradius * dx)/la + ox
+        pvy = (iradius * dy)/la + oy
         chunk = camPathChunk([])  ## create a new cutting path
 
 ##        add lead in arc in the begining
         if round(o.lead_in, 6) > 0.0:
             for i in range(15):
-                iangle = math.pi / 2 + i * (math.pi / 2) / 15  ## calculate arc angles
-                chunk.points.append((start[0]+(iradius)*math.cos(pangle)+iradius*math.cos(pangle+iangle),start[1]+(iradius)*math.sin(pangle)+iradius*math.sin(pangle+iangle), start[2]))
-
+                iangle =-i*(math.pi/2)/15
+                rx = pvx + math.cos(iangle) * (ox - pvx) - math.sin(iangle) * (oy - pvy)
+                ry = pvy + math.sin(iangle) * (ox - pvx) + math.cos(iangle) * (oy - pvy)
+                chunk.points.insert(0,[rx , ry , start[2]])
+        
 ##          glue rest of the path to the arc
         for i in range (len(ch.points)):
             chunk.points.append(ch.points[i])
 
 ##      add lead out arc to the end
-        if round(o.lead_out, 6) > 0.0:
+        if round(o.lead_in, 6) > 0.0:
             for i in range(15):
-                iangle=math.pi/2+i*(math.pi/2)/15
-                chunk.points.append((start[0]+(oradius)*math.cos(pangle)+oradius*math.cos(math.pi/2+pangle+iangle),start[1]+(oradius)*math.sin(pangle)+oradius*math.sin(math.pi/2+pangle+iangle), start[2]))
-
+                iangle = i*(math.pi/2)/15
+                rx = pvx + math.cos(iangle) * (ox - pvx) - math.sin(iangle) * (oy - pvy)
+                ry = pvy + math.sin(iangle) * (ox - pvx) + math.cos(iangle) * (oy - pvy)
+                chunk.points.append([rx , ry , start[2]])
 
         self.points = chunk.points
 
