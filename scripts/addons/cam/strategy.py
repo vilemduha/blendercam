@@ -158,6 +158,7 @@ def cutout(o):
         for chl in extendorder:
             chunk = chl[0]
             if chunk.closed:
+                chunk.breakPathForLeadinLeadout(o)
                 chunk.leadContour(o)
 
 

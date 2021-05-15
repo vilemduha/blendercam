@@ -89,7 +89,7 @@ class camPathChunk:
 
     def offsetZ(self, z):
         for i, p in enumerate(self.points):
-            self.points[i] = (p[0], p[1], z+p[2])
+            self.points[i] = (p[0], p[1], z + p[2])
 
     def isbelowZ(self, z):
         isbelow = False
@@ -474,97 +474,94 @@ class camPathChunk:
                                                                        znew)))  # max value here is so that it doesn't go below surface in the case of 3d paths
         self.points = chunk.points
 
-
-
-##  modify existing path start point
-    def changePathStart(self,o):
+    ##  modify existing path start point
+    def changePathStart(self, o):
         if o.profile_start > 0:
-            newstart=o.profile_start
+            newstart = o.profile_start
             ch = self
-            chunkamt=len(self.points)
+            chunkamt = len(self.points)
             newstart = newstart % chunkamt
             chunk = camPathChunk([])  ## create a new cutting path
-            print("chunk amt",chunkamt,"new start",newstart)
-        ##          glue rest of the path to the arc
-            for i in range(chunkamt-newstart):
-                chunk.points.append(ch.points[i+newstart])
+            print("chunk amt", chunkamt, "new start", newstart)
+            ##          glue rest of the path to the arc
+            for i in range(chunkamt - newstart):
+                chunk.points.append(ch.points[i + newstart])
 
-            for i in range(newstart+1):
+            for i in range(newstart + 1):
                 chunk.points.append(ch.points[i])
 
         self.points = chunk.points
 
-    def breakPathForLeadinLeadout(self,o):
+    def breakPathForLeadinLeadout(self, o):
         iradius = o.lead_in
         oradius = o.lead_out
         if iradius + oradius > 0:
             ch = self
-            chunkamt=len(self.points)
+            chunkamt = len(self.points)
             chunk = camPathChunk([])  ## create a new cutting path
-        ##          glue rest of the path to the arc
-            for i in range(chunkamt-1):
-                bpoint=ch.point[i+1]
-                apoint=ch.point[i]
+            ##          glue rest of the path to the arc
+            for i in range(chunkamt - 1):
+                bpoint = ch.points[i + 1]
+                apoint = ch.points[i]
+                z=apoint[2]
                 bmax = bpoint[0] - apoint[0]
                 bmay = bpoint[1] - apoint[1]
                 segmentLength = math.hypot(bmax, bmay)
-                if bmax != 0:
-                    slope = bmay / bmax
-                else:
-                    slope = 10000000000 * np.sign(bmay)
 
-                if segmentLength > (iradius + oradius):
+                if segmentLength > 2 * max(iradius, oradius):
                     ### add point on the line here
-                    newpointx = 0  ## insert new point math here
-                    newpointy = 0  ## insert new point math here
-                    chunk.points.append(newpointx,newpointy)
+                    newpointx = (bpoint[0] + apoint[0])/2 ## insert new point math here (half way)
+                    newpointy = (bpoint[1] + apoint[1])/2  ## insert new point math here (half way)
+                    print("newpoint", apoint, bpoint, newpointx, newpointy)
+                    chunk.points.append([newpointx, newpointy,z])
 
                 chunk.points.append(ch.points[i])
 
+            self.points = chunk.points
 
-        self.points = chunk.points        
-        
-    ##  modify existing path to add lead in and lead out
+        ##  modify existing path to add lead in and lead out
+
     def leadContour(self, o):
-        iradius=o.lead_in
-        oradius=o.lead_out
+        iradius = o.lead_in
+        oradius = o.lead_out
         ch = self
         start = ch.points[0]
         nextp = ch.points[1]
-        ox=start[0]
-        oy=start[1]
-        px=nextp[0]
-        py=nextp[1] 
+        ox = start[0]
+        oy = start[1]
+        px = nextp[0]
+        py = nextp[1]
         qx = ox + oy - py
         qy = oy + px - ox
         dx = qx - ox
         dy = qy - oy
         la = math.sqrt(dx ** 2 + dy ** 2)
-        pvx = (iradius * dx)/la + ox
-        pvy = (iradius * dy)/la + oy
+        pvx = (iradius * dx) / la + ox
+        pvy = (iradius * dy) / la + oy
         chunk = camPathChunk([])  ## create a new cutting path
 
-##        add lead in arc in the begining
+        ##        add lead in arc in the begining
         if round(o.lead_in, 6) > 0.0:
             for i in range(15):
-                iangle =-i*(math.pi/2)/15
+                iangle = -i * (math.pi / 2) / 15
                 rx = pvx + math.cos(iangle) * (ox - pvx) - math.sin(iangle) * (oy - pvy)
                 ry = pvy + math.sin(iangle) * (ox - pvx) + math.cos(iangle) * (oy - pvy)
-                chunk.points.insert(0,[rx , ry , start[2]])
-        
-##          glue rest of the path to the arc
-        for i in range (len(ch.points)):
+                chunk.points.insert(0, [rx, ry, start[2]])
+
+        ##          glue rest of the path to the arc
+        for i in range(len(ch.points)):
             chunk.points.append(ch.points[i])
 
-##      add lead out arc to the end
+        ##      add lead out arc to the end
         if round(o.lead_in, 6) > 0.0:
             for i in range(15):
-                iangle = i*(math.pi/2)/15
+                iangle = i * (math.pi / 2) / 15
                 rx = pvx + math.cos(iangle) * (ox - pvx) - math.sin(iangle) * (oy - pvy)
                 ry = pvy + math.sin(iangle) * (ox - pvx) + math.cos(iangle) * (oy - pvy)
-                chunk.points.append([rx , ry , start[2]])
+                chunk.points.append([rx, ry, start[2]])
 
         self.points = chunk.points
+
 
 def chunksCoherency(chunks):
     # checks chunks for their stability, for pencil path. it checks if the vectors direction doesn't jump too much too quickly, if this happens it splits the chunk on such places, too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often, but also means that some parts detected by cavity algorithm won't be milled
@@ -597,8 +594,6 @@ def setChunksZ(chunks, z):
         chunk.setZ(z)
         newchunks.append(chunk)
     return newchunks
-
-
 
 
 def optimizeChunk(chunk, operation):
@@ -1010,7 +1005,7 @@ def meshFromCurveToChunk(object):
         else:
             chunk.points.append(co)
             if len(chunk.points) > 2 and (not (dk.isdisjoint([(vi, lastvi)])) or not (
-            dk.isdisjoint([(lastvi, vi)]))):  # this was looping chunks of length of only 2 points...
+                    dk.isdisjoint([(lastvi, vi)]))):  # this was looping chunks of length of only 2 points...
                 # print('itis')
 
                 chunk.closed = True
