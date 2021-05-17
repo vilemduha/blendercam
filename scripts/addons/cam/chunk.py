@@ -498,30 +498,29 @@ class camPathChunk:
         if iradius + oradius > 0:
             ch = self
             chunkamt = len(self.points)
-            chunk = camPathChunk([])  ## create a new cutting path
-            ##          glue rest of the path to the arc
+
             for i in range(chunkamt - 1):
                 bpoint = ch.points[i + 1]
                 apoint = ch.points[i]
-                z=apoint[2]
                 bmax = bpoint[0] - apoint[0]
                 bmay = bpoint[1] - apoint[1]
                 segmentLength = math.hypot(bmax, bmay)
 
-                if segmentLength > 2 * max(iradius, oradius):
+                if segmentLength > 2*max(iradius,oradius):  #  Be certain there is enough room for the leadin and leadiout
                     ### add point on the line here
-                    newpointx = (bpoint[0] + apoint[0])/2 ## insert new point math here (half way)
-                    newpointy = (bpoint[1] + apoint[1])/2  ## insert new point math here (half way)
-                    print("newpoint", apoint, bpoint, newpointx, newpointy)
-                    chunk.points.append([newpointx, newpointy,z])
+                    newpointx = (bpoint[0] + apoint[0]) / 2
+                    newpointy = (bpoint[1] + apoint[1]) / 2
+                    first_part = ch.points[:i + 1]
+                    sec_part = ch.points[i + 1:]
+                    sec_part.insert(0, [newpointx, newpointy, apoint[2]])
+                    sec_part.extend(first_part)
+                    self.points = sec_part         ##  modify existing path to add lead in and lead out
+                    break
 
-                chunk.points.append(ch.points[i])
 
-            self.points = chunk.points
-
-        ##  modify existing path to add lead in and lead out
 
     def leadContour(self, o):
+
         iradius = o.lead_in
         oradius = o.lead_out
         ch = self
