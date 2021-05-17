@@ -500,27 +500,28 @@ class camPathChunk:
             chunkamt = len(self.points)
 
             for i in range(chunkamt - 1):
-                bpoint = ch.points[i + 1]
                 apoint = ch.points[i]
+                bpoint = ch.points[i + 1]
                 bmax = bpoint[0] - apoint[0]
                 bmay = bpoint[1] - apoint[1]
-                segmentLength = math.hypot(bmax, bmay)
+                segmentLength = math.hypot(bmax, bmay)  #  find segment length
 
                 if segmentLength > 2*max(iradius,oradius):  #  Be certain there is enough room for the leadin and leadiout
                     ### add point on the line here
-                    newpointx = (bpoint[0] + apoint[0]) / 2
-                    newpointy = (bpoint[1] + apoint[1]) / 2
+                    newpointx = (bpoint[0] + apoint[0]) / 2     # average of the two x points to find center
+                    newpointy = (bpoint[1] + apoint[1]) / 2     # average of the two y points to find center
                     first_part = ch.points[:i + 1]
                     sec_part = ch.points[i + 1:]
                     sec_part.insert(0, [newpointx, newpointy, apoint[2]])
                     sec_part.extend(first_part)
-                    self.points = sec_part         ##  modify existing path to add lead in and lead out
+                    self.points = sec_part         ##  modify the object
                     break
 
 
 
     def leadContour(self, o):
-
+        print("child",self.children)
+        print("parent",self.parents)
         iradius = o.lead_in
         oradius = o.lead_out
         ch = self
