@@ -27,6 +27,19 @@ from cam import polygon_utils_cam
 from cam.simple import *
 import math
 
+def Rotate_pbyp(originp, p, ang): ## rotate point around another point with angle
+    ox , oy , oz = originp
+    px , py , oz = p
+    
+    if ang == abs(math.pi/2):
+        d = ang/abs(ang)
+        qx = ox + d*(oy - py)
+        qy = oy + d*(px - ox)
+    else:
+        qx = ox + math.cos(ang) * (px - ox) - math.sin(ang) * (py - oy)
+        qy = oy + math.sin(ang) * (px - ox) + math.cos(ang) * (py - oy)
+    rot_p =[qx , qy , oz]
+    return rot_p
 
 class camPathChunk:
     # parents=[]
@@ -492,6 +505,7 @@ class camPathChunk:
 
         self.points = chunk.points
 
+
     def breakPathForLeadinLeadout(self, o):
         iradius = o.lead_in
         oradius = o.lead_out
@@ -520,45 +534,28 @@ class camPathChunk:
 
 
     def leadContour(self, o):
-        perimeterDirection = 1  # 1 is clockwise, 0 is CCW
-        if o.spindle_rotation_direction  == 'CW':
-            if o.movement_type == 'CONVENTIONAL':
-                perimeterDirection = 0;
-
-        if self.parents != []:  #  if it is inside another parent
-            perimeterDirection ^= 1  # toggle with a bitwise XOR
-            print("has parent")
-
-        if perimeterDirection == 1:
-            print("path direction is Clockwise")
-        else:
-            print("path direcion is counterclockwise")
-
+        print("child",self.children)
+        print("parent",self.parents)
         iradius = o.lead_in
         oradius = o.lead_out
         ch = self
         start = ch.points[0]
         nextp = ch.points[1]
-        ox = start[0]
-        oy = start[1]
-        px = nextp[0]
-        py = nextp[1]
-        qx = ox + oy - py
-        qy = oy + px - ox
-        dx = qx - ox
-        dy = qy - oy
-        la = math.sqrt(dx ** 2 + dy ** 2)
-        pvx = (iradius * dx) / la + ox
-        pvy = (iradius * dy) / la + oy
+        rpoint = Rotate_pbyp(start,nextp,math.pi/2) 
+        dx = rpoint[0] - start[0]
+        dy = rpoint[1] - start[1]
+        la = math.hypot(dx, dy)
+        pvx = (iradius * dx) / la + start[0] ## arc center(x)
+        pvy = (iradius * dy) / la + start[1] ## arc center(y)
+        arc_c = [pvx , pvy , start[2]]
         chunk = camPathChunk([])  ## create a new cutting path
 
         ##        add lead in arc in the begining
         if round(o.lead_in, 6) > 0.0:
             for i in range(15):
                 iangle = -i * (math.pi / 2) / 15
-                rx = pvx + math.cos(iangle) * (ox - pvx) - math.sin(iangle) * (oy - pvy)
-                ry = pvy + math.sin(iangle) * (ox - pvx) + math.cos(iangle) * (oy - pvy)
-                chunk.points.insert(0, [rx, ry, start[2]])
+                arc_p = Rotate_pbyp(arc_c ,start , iangle)
+                chunk.points.insert(0, arc_p)
 
         ##          glue rest of the path to the arc
         for i in range(len(ch.points)):
@@ -568,9 +565,8 @@ class camPathChunk:
         if round(o.lead_in, 6) > 0.0:
             for i in range(15):
                 iangle = i * (math.pi / 2) / 15
-                rx = pvx + math.cos(iangle) * (ox - pvx) - math.sin(iangle) * (oy - pvy)
-                ry = pvy + math.sin(iangle) * (ox - pvx) + math.cos(iangle) * (oy - pvy)
-                chunk.points.append([rx, ry, start[2]])
+                arc_p = Rotate_pbyp(arc_c ,start , iangle)
+                chunk.points.append(arc_p)
 
         self.points = chunk.points
 
