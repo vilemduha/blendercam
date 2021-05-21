@@ -534,6 +534,19 @@ class camPathChunk:
 
 
     def leadContour(self, o):
+        perimeterDirection = 1  # 1 is clockwise, 0 is CCW
+        if o.spindle_rotation_direction  == 'CW':
+            if o.movement_type == 'CONVENTIONAL':
+                perimeterDirection = 0;
+
+        if self.parents != []:  #  if it is inside another parent
+            perimeterDirection ^= 1  # toggle with a bitwise XOR
+            print("has parent")
+
+        if perimeterDirection == 1:
+            print("path direction is Clockwise")
+        else:
+            print("path direcion is counterclockwise")
         print("child",self.children)
         print("parent",self.parents)
         iradius = o.lead_in
