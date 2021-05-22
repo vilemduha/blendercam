@@ -1207,7 +1207,7 @@ def getOperationSilhouete(operation):
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
             print('object method for retrieving silhouette')  #
-            operation.silhouete = getObjectSilhouete(stype, objects=operation.objects)
+            operation.silhouete = getObjectSilhouete(stype, objects=operation.objects, use_modifiers=operation.use_modifiers)
 
         operation.update_silhouete_tag = False
     return operation.silhouete
@@ -1232,9 +1232,9 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             print('shapely getting silhouette')
             polys = []
             for ob in objects:
-
                 if use_modifiers:
-                    m = ob.to_mesh(preserve_all_data_layers=True, depsgraph=bpy.context.evaluated_depsgraph_get())
+                    ob = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
+                    m = ob.to_mesh()
                 else:
                     m = ob.data
                 mw = ob.matrix_world
@@ -1268,9 +1268,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
                         # if id==923:
                         #	m.polygons[923].select
                         id += 1
-                if use_modifiers:
-                    bpy.data.meshes.remove(m)
-            # print(polys
+   
             if totfaces < 20000:
                 p = sops.unary_union(polys)
             else:
