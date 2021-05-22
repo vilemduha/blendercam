@@ -18,11 +18,20 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
-
+import sys
 import bpy
-from bpy.types import UIList
+from bpy.types import UIList, Operator
+from bpy_extras.io_utils import ImportHelper
+from bpy.props import (StringProperty,
+                       BoolProperty,
+                       PointerProperty,
+                       FloatProperty,
+                       )
 
-from cam import simple
+from bpy.types import (Panel, Menu, Operator, PropertyGroup, )
+
+
+from cam import gcodeimportparser
 from cam.simple import *
 
 # EXPERIMENTAL=True#False
@@ -100,6 +109,15 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                    layout.prop(ao,'Laser_off')
                    layout.prop(ao,'Laser_cmd')
                    layout.prop(ao,'Laser_delay')
+
+                if ao.cutter_type == 'PLASMA':
+                   layout.prop(ao,'Plasma_on')
+                   layout.prop(ao,'Plasma_off')
+                   layout.prop(ao,'Plasma_delay')
+                   layout.prop(ao,'Plasma_dwell')
+                   layout.prop(ao,'lead_in')
+                   layout.prop(ao,'lead_out')
+
                                       
                 if ao.cutter_type == 'CUSTOM':
                     if ao.use_exact:
@@ -440,6 +458,13 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
         layout = self.layout
         scene = bpy.context.scene
         row = layout.row()
+        oclpresent = "Opencamlib "
+        if "ocl" not in sys.modules:
+            oclpresent += "NOT "
+        oclpresent += "installed" \
+                      ""
+        layout.label(text=oclpresent)
+
         if len(scene.cam_operations) == 0:
             layout.label(text='Add operation first')
         if len(scene.cam_operations) > 0:
@@ -509,6 +534,13 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.strategy in ['CUTOUT','CURVE']:
                     if ao.strategy=='CUTOUT':
                         layout.prop(ao, 'cut_type')
+                        layout.label(text = "Overshoot works best with curve")
+                        layout.label(text = "having C remove doubles")
+                        layout.prop(ao, 'straight')
+                        layout.prop(ao, 'profile_start')
+                        layout.label(text="Lead in / out not fully working")
+                        layout.prop(ao, 'lead_in')
+                        layout.prop(ao, 'lead_out')
                     layout.prop(ao,'enable_A')
                     if ao.enable_A:
                         layout.prop(ao,'rotation_A')
@@ -763,10 +795,22 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
                     exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL','CURVE']
                     if not exclude_exact:
-                        layout.prop(ao, 'use_opencamlib')
-                        layout.prop(ao, 'use_exact')
+                        if "ocl" in sys.modules:
+                            layout.label(text="Opencamlib is available ")
+                        else:
+                            layout.label(text="Opencamlib is NOT available ")
+
+                        if ao.use_exact != True and 'ocl' in sys.modules:
+                            layout.prop(ao, 'use_opencamlib')
+                        if ao.use_opencamlib != True:
+                            layout.prop(ao, 'use_exact')
                         if ao.use_exact:
+                            if "ocl" in sys.modules:
+                                layout.label(text="Disable Exact Mode to enable opencamlib ")
                             layout.prop(ao, 'exact_subdivide_edges')
+                        if ao.use_opencamlib:
+                            layout.label(text="Disable Opencamlib to enable exact Exact Mode ")
+
                     if exclude_exact or not ao.use_exact:
                         layout.prop(ao, 'pixsize')
                         layout.prop(ao, 'imgres_limit')
@@ -815,13 +859,14 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.geometry_source in ['OBJECT', 'COLLECTION']:                    
                     if ao.strategy == 'CURVE':
                         layout.label(text="cannot use depth from object using CURVES")   
-                    if not ao.minz_from_material:
-                        layout.prop(ao, 'minz_from_ob')
+
 
                             						
                     if not ao.minz_from_ob:
                         if not ao.minz_from_material: layout.prop(ao, 'minz')
                         layout.prop(ao,'minz_from_material')
+                    if not ao.minz_from_material:
+                        layout.prop(ao, 'minz_from_ob')
                 else:
                     layout.prop(ao, 'source_image_scale_z')
                     layout.prop(ao, 'source_image_size_x')
@@ -924,6 +969,8 @@ class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
 
 
 # panel containing all tools
+
+#
 class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
@@ -949,5 +996,66 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.lissajous")
         layout.operator("object.hypotrochoid")
         layout.operator("object.customcurve")
-        
 
+
+# Gcode import panel---------------------------------------------------------------
+    # ------------------------------------------------------------------------
+    #    Panel in Object Mode
+    # ------------------------------------------------------------------------
+
+
+
+class OBJECT_PT_CustomPanel(bpy.types.Panel):
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'TOOLS'
+    bl_context = "objectmode"
+    bl_label = "Import Gcode"
+    bl_idname = "object.importgcode"
+
+    bl_options = {'DEFAULT_CLOSED'}
+
+    @classmethod
+    def poll(cls, context):
+        return context.mode in {'OBJECT',
+                                'EDIT_MESH'}  # with this poll addon is visibly even when no object is selected
+
+
+    def draw(self, context):
+        layout = self.layout
+        scene = context.scene
+        isettings = scene.import_gcode
+        layout.prop(isettings, 'output')
+        layout.prop(isettings, "split_layers")
+
+        layout.prop(isettings, "subdivide")
+        col = layout.column(align=True)
+        col = col.row(align=True)
+        col.split()
+        col.label(text="Segment length")
+
+        col.prop(isettings, "max_segment_size")
+        col.enabled = isettings.subdivide
+        col.separator()
+
+        col = layout.column()
+        col.scale_y = 2.0
+        col.operator("wm.gcode_import")
+
+
+class WM_OT_gcode_import(Operator, ImportHelper):
+    """Import Gcode, travel lines don't get drawn"""
+    bl_idname = "wm.gcode_import"  # important since its how bpy.ops.import_test.some_data is constructed
+    bl_label = "Import Gcode"
+
+    # ImportHelper mixin class uses this
+    filename_ext = ".txt"
+
+    filter_glob: StringProperty(
+        default="*.*",
+        options={'HIDDEN'},
+        maxlen=255,  # Max internal buffer length, longer would be clamped.
+    )
+
+    def execute(self, context):
+        print(self.filepath)
+        return gcodeimportparser.import_gcode(context, self.filepath)

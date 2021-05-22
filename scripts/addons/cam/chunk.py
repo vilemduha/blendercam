@@ -25,7 +25,21 @@ from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
 from cam import polygon_utils_cam
 from cam.simple import *
+import math
 
+def Rotate_pbyp(originp, p, ang): ## rotate point around another point with angle
+    ox , oy , oz = originp
+    px , py , oz = p
+    
+    if ang == abs(math.pi/2):
+        d = ang/abs(ang)
+        qx = ox + d*(oy - py)
+        qy = oy + d*(px - ox)
+    else:
+        qx = ox + math.cos(ang) * (px - ox) - math.sin(ang) * (py - oy)
+        qy = oy + math.sin(ang) * (px - ox) + math.cos(ang) * (py - oy)
+    rot_p =[qx , qy , oz]
+    return rot_p
 
 class camPathChunk:
     # parents=[]
@@ -88,7 +102,7 @@ class camPathChunk:
 
     def offsetZ(self, z):
         for i, p in enumerate(self.points):
-            self.points[i] = (p[0], p[1], z+p[2])
+            self.points[i] = (p[0], p[1], z + p[2])
 
     def isbelowZ(self, z):
         isbelow = False
@@ -473,8 +487,102 @@ class camPathChunk:
                                                                        znew)))  # max value here is so that it doesn't go below surface in the case of 3d paths
         self.points = chunk.points
 
+    ##  modify existing path start point
+    def changePathStart(self, o):
+        if o.profile_start > 0:
+            newstart = o.profile_start
+            ch = self
+            chunkamt = len(self.points)
+            newstart = newstart % chunkamt
+            chunk = camPathChunk([])  ## create a new cutting path
+            print("chunk amt", chunkamt, "new start", newstart)
+            ##          glue rest of the path to the arc
+            for i in range(chunkamt - newstart):
+                chunk.points.append(ch.points[i + newstart])
 
-# def appendChunk(sorted,ch,o,pos)
+            for i in range(newstart + 1):
+                chunk.points.append(ch.points[i])
+
+        self.points = chunk.points
+
+
+    def breakPathForLeadinLeadout(self, o):
+        iradius = o.lead_in
+        oradius = o.lead_out
+        if iradius + oradius > 0:
+            ch = self
+            chunkamt = len(self.points)
+
+            for i in range(chunkamt - 1):
+                apoint = ch.points[i]
+                bpoint = ch.points[i + 1]
+                bmax = bpoint[0] - apoint[0]
+                bmay = bpoint[1] - apoint[1]
+                segmentLength = math.hypot(bmax, bmay)  #  find segment length
+
+                if segmentLength > 2*max(iradius,oradius):  #  Be certain there is enough room for the leadin and leadiout
+                    ### add point on the line here
+                    newpointx = (bpoint[0] + apoint[0]) / 2     # average of the two x points to find center
+                    newpointy = (bpoint[1] + apoint[1]) / 2     # average of the two y points to find center
+                    first_part = ch.points[:i + 1]
+                    sec_part = ch.points[i + 1:]
+                    sec_part.insert(0, [newpointx, newpointy, apoint[2]])
+                    sec_part.extend(first_part)
+                    self.points = sec_part         ##  modify the object
+                    break
+
+
+
+    def leadContour(self, o):
+        perimeterDirection = 1  # 1 is clockwise, 0 is CCW
+        if o.spindle_rotation_direction  == 'CW':
+            if o.movement_type == 'CONVENTIONAL':
+                perimeterDirection = 0;
+
+        if self.parents != []:  #  if it is inside another parent
+            perimeterDirection ^= 1  # toggle with a bitwise XOR
+            print("has parent")
+
+        if perimeterDirection == 1:
+            print("path direction is Clockwise")
+        else:
+            print("path direcion is counterclockwise")
+        print("child",self.children)
+        print("parent",self.parents)
+        iradius = o.lead_in
+        oradius = o.lead_out
+        ch = self
+        start = ch.points[0]
+        nextp = ch.points[1]
+        rpoint = Rotate_pbyp(start,nextp,math.pi/2) 
+        dx = rpoint[0] - start[0]
+        dy = rpoint[1] - start[1]
+        la = math.hypot(dx, dy)
+        pvx = (iradius * dx) / la + start[0] ## arc center(x)
+        pvy = (iradius * dy) / la + start[1] ## arc center(y)
+        arc_c = [pvx , pvy , start[2]]
+        chunk = camPathChunk([])  ## create a new cutting path
+
+        ##        add lead in arc in the begining
+        if round(o.lead_in, 6) > 0.0:
+            for i in range(15):
+                iangle = -i * (math.pi / 2) / 15
+                arc_p = Rotate_pbyp(arc_c ,start , iangle)
+                chunk.points.insert(0, arc_p)
+
+        ##          glue rest of the path to the arc
+        for i in range(len(ch.points)):
+            chunk.points.append(ch.points[i])
+
+        ##      add lead out arc to the end
+        if round(o.lead_in, 6) > 0.0:
+            for i in range(15):
+                iangle = i * (math.pi / 2) / 15
+                arc_p = Rotate_pbyp(arc_c ,start , iangle)
+                chunk.points.append(arc_p)
+
+        self.points = chunk.points
+
 
 def chunksCoherency(chunks):
     # checks chunks for their stability, for pencil path. it checks if the vectors direction doesn't jump too much too quickly, if this happens it splits the chunk on such places, too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often, but also means that some parts detected by cavity algorithm won't be milled
@@ -918,7 +1026,7 @@ def meshFromCurveToChunk(object):
         else:
             chunk.points.append(co)
             if len(chunk.points) > 2 and (not (dk.isdisjoint([(vi, lastvi)])) or not (
-            dk.isdisjoint([(lastvi, vi)]))):  # this was looping chunks of length of only 2 points...
+                    dk.isdisjoint([(lastvi, vi)]))):  # this was looping chunks of length of only 2 points...
                 # print('itis')
 
                 chunk.closed = True

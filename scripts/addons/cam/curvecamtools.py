@@ -24,8 +24,10 @@
 
 import bpy
 from bpy.props import *
+from bpy.types import Operator
+from bpy_extras.io_utils import ImportHelper
 
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric
+from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser
 import shapely
 import mathutils
 import math
@@ -536,9 +538,12 @@ class CamOffsetSilhouete(bpy.types.Operator):
     """Curve offset operation """
     bl_idname = "object.silhouete_offset"
     bl_label = "Silhouete offset"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     offset: bpy.props.FloatProperty(name="offset", default=.003, min=-100, max=100, precision=4, unit="LENGTH")
+    mitrelimit: bpy.props.FloatProperty(name="Mitre Limit", default=.003, min=0.0, max=20, precision=4, unit="LENGTH")
+    style:  bpy.props.EnumProperty(name="type of curve", items=(
+        ('1', 'Round', ''), ('2', 'Mitre', ''),('3','Bevel','')))
 
     @classmethod
     def poll(cls, context):
@@ -546,7 +551,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
                 context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
-        utils.silhoueteOffset(context, self.offset)
+        utils.silhoueteOffset(context, self.offset,int(self.style),self.mitrelimit)
         return {'FINISHED'}
 
 
@@ -573,4 +578,9 @@ class CamObjectSilhouete(bpy.types.Operator):
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
         return {'FINISHED'}
+
+#---------------------------------------------------
+
+
+
 

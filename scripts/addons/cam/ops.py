@@ -24,6 +24,7 @@
 
 import bpy
 from bpy.props import *
+from bpy_extras.io_utils import ImportHelper
 
 import subprocess, os, threading
 from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges, simulation

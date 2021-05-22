@@ -50,7 +50,10 @@ SHAPELY = True
 
 ###########cutout strategy is completely here:
 def cutout(o):
-    # ob=bpy.context.active_object
+    if o.straight:
+        join = 2
+    else:
+        join = 1
     print('operation: cutout')
     offset = True
     if o.cut_type == 'ONLINE' and o.onlycurves == True:  # is separate to allow open curves :)
@@ -79,7 +82,7 @@ def cutout(o):
             if o.outlines_count > 1:
                 for i in range(1, o.outlines_count):
                     chunksFromCurve.extend(shapelyToChunks(p, -1))
-                    p = p.buffer(distance=o.dist_between_paths * offset, resolution=o.circle_detail)
+                    p = p.buffer(distance=o.dist_between_paths * offset, resolution=o.circle_detail, join_style = join,mitre_limit=2)
 
         chunksFromCurve.extend(shapelyToChunks(p, -1))
         if o.outlines_count > 1 and o.movement_insideout == 'OUTSIDEIN':
@@ -141,6 +144,23 @@ def cutout(o):
             layer = chl[1]
             if layer[1] < bridgeheight:
                 bridges.useBridges(chunk, o)
+
+    if o.profile_start > 0:
+        print("cutout change profile start")
+        for chl in extendorder:
+            chunk = chl[0]
+            if chunk.closed:
+                chunk.changePathStart(o)
+
+    ## Lead in
+    if o.lead_in > 0.0 or o.lead_out > 0:
+        print("cutout leadin")
+        for chl in extendorder:
+            chunk = chl[0]
+            if chunk.closed:
+                chunk.breakPathForLeadinLeadout(o)
+                chunk.leadContour(o)
+
 
     if o.ramp:  # add ramps or simply add chunks
         for chl in extendorder:

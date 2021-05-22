@@ -255,6 +255,13 @@ class SliceObjectsSettings(bpy.types.PropertyGroup):
     slice_3d: bpy.props.BoolProperty(name="3d slice", description="for 3d carving", default=False)
     indexes: bpy.props.BoolProperty(name="add indexes", description="adds index text of layer + index", default=True)
 
+class import_settings(bpy.types.PropertyGroup):
+    split_layers: BoolProperty(name="Split Layers", description="Save every layer as single Objects in Collection", default = False )
+    subdivide: BoolProperty(name="Subdivide", description="Only Subdivide gcode segments that are bigger than 'Segment length' ", default = False)
+    output: bpy.props.EnumProperty(name="output type", items=(('mesh', 'Mesh', 'Make a mesh output'), ('curve', 'Curve', 'Make curve output')), default='curve')
+    max_segment_size: FloatProperty(name = "", description = "Only Segments bigger then this value get subdivided",
+        default = 0.001, min = 0.0001, max = 1.0, unit="LENGTH")
+
 
 def operationValid(self, context):
     o = self
@@ -460,6 +467,7 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('VCARVE', 'V-carve', 'v carve cutter'),
                                   ('BALLCONE', 'Ballcone', 'Ball with a Cone Parallel - X'),
                                   ('LASER', 'Laser', 'Laser cutter'),
+                                  ('PLASMA', 'Plasma', 'Plasma cutter'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
                               description='Type of cutter used',
                               default='END', update=updateZbufferImage)
@@ -547,7 +555,9 @@ class camOperation(bpy.types.PropertyGroup):
                            description='Type of cutter used', default='OUTSIDE', update=updateRest)
     outlines_count: bpy.props.IntProperty(name="Outlines count`EXPERIMENTAL", description="Outlines count", default=1,
                                           min=1, max=32, update=updateCutout)
-
+    straight: bpy.props.BoolProperty(name="Overshoot Style",
+                                  description="Use overshoot cutout instead of conventional rounded",
+                                  default=False, update=updateRest)
     # cutter
     cutter_id: IntProperty(name="Tool number", description="For machines which support tool change based on tool id",
                            min=0, max=10000, default=1, update=updateRest)
@@ -564,8 +574,6 @@ class camOperation(bpy.types.PropertyGroup):
                                      max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
     ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
                                      max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
-#    shank_diameter: FloatProperty(name="Shank Diameter", description="Diameter at the top of cutter", min=0.0,
-#                                     max=25.0, default=3.175, precision=PRECISION, unit="LENGTH",update=updateOffsetImage)
     bull_corner_radius: FloatProperty(name="Bull Corner Radius", description="Radius tool bit corner", min=0.0,
                                      max=0.035, default=0.005, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
 
@@ -575,6 +583,10 @@ class camOperation(bpy.types.PropertyGroup):
     Laser_off: bpy.props.StringProperty(name="Laser OFF string", default="M68 E0 Q0")
     Laser_cmd: bpy.props.StringProperty(name="Laser command", default="M68 E0 Q")    
     Laser_delay: bpy.props.FloatProperty(name="Laser ON Delay", description="time after fast move to turn on laser and let machine stabilize", default=0.2)    
+    Plasma_on: bpy.props.StringProperty(name="Plasma ON string", default="M03")
+    Plasma_off: bpy.props.StringProperty(name="Plasma OFF string", default="M05")
+    Plasma_delay: bpy.props.FloatProperty(name="Plasma ON Delay", description="time after fast move to turn on Plasma and let machine stabilize", default=0.1)
+    Plasma_dwell: bpy.props.FloatProperty(name="Plasma dwell time", description="Time to dwell and warm up the torch", default=0.0)
 
     # steps
     dist_between_paths: bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,
@@ -636,6 +648,13 @@ class camOperation(bpy.types.PropertyGroup):
                                             precision=1, subtype="ANGLE", unit="ROTATION", update=updateRest)
     helix_enter: bpy.props.BoolProperty(name="Helix enter - EXPERIMENTAL", description="Enter material in helix",
                                         default=False, update=updateRest)
+    lead_in:  bpy.props.FloatProperty(name="Lead in radius", description="Lead out radius for torch or laser to turn off",
+                                    min=0.00, max=1, default=0.0, precision=PRECISION, unit="LENGTH")
+    lead_out:  bpy.props.FloatProperty(name="Lead out radius", description="Lead out radius for torch or laser to turn off",
+                                    min=0.00, max=1, default=0.0, precision=PRECISION, unit="LENGTH")
+    profile_start: bpy.props.IntProperty(name="Start point", description="Start point offset", min=0, default=0,
+                                update=updateRest)
+
     # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
     helix_diameter: bpy.props.FloatProperty(name='Helix diameter % of cutter D', default=90, min=10, max=100,
                                             precision=1, subtype='PERCENTAGE', update=updateRest)
@@ -1108,6 +1127,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         ui.CAM_PACK_Panel,
         ui.CAM_SLICE_Panel,
         ui.VIEW3D_PT_tools_curvetools,
+        ui.OBJECT_PT_CustomPanel,
 
         ops.PathsBackground,
         ops.KillPathsBackground,
@@ -1287,6 +1307,7 @@ classes = [
     camChain,
     machineSettings,
     CamAddonPreferences,
+    import_settings,
 
     ui.CAM_CHAINS_Panel,
     ui.CAM_OPERATIONS_Panel,
@@ -1303,6 +1324,8 @@ classes = [
     ui.CAM_PACK_Panel,
     ui.CAM_SLICE_Panel,
     ui.VIEW3D_PT_tools_curvetools,
+    ui.OBJECT_PT_CustomPanel,
+    ui.WM_OT_gcode_import,
 
     ops.PathsBackground,
     ops.KillPathsBackground,
@@ -1375,6 +1398,8 @@ def register():
                                                    update=updateOperation)
     s.cam_machine = bpy.props.PointerProperty(type=machineSettings)
 
+    bpy.types.Scene.import_gcode = bpy.props.PointerProperty(type=import_settings)
+
     s.cam_text = bpy.props.StringProperty()
     bpy.app.handlers.frame_change_pre.append(ops.timer_update)
     bpy.app.handlers.load_post.append(check_operations_on_load)
@@ -1395,3 +1420,5 @@ def unregister():
 
     del s.cam_active_operation
     del s.cam_machine
+
+
