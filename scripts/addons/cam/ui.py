@@ -795,21 +795,16 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
                     exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL','CURVE']
                     if not exclude_exact:
+                        if ao.use_exact != True:
+                            layout.prop(ao, 'use_exact')
+                            layout.label(text="Exact mode must be set for opencamlib to work ")
+
                         if "ocl" in sys.modules:
                             layout.label(text="Opencamlib is available ")
+                            layout.prop(ao, 'use_opencamlib')
                         else:
                             layout.label(text="Opencamlib is NOT available ")
-
-                        if ao.use_exact != True and 'ocl' in sys.modules:
-                            layout.prop(ao, 'use_opencamlib')
-                        if ao.use_opencamlib != True:
-                            layout.prop(ao, 'use_exact')
-                        if ao.use_exact:
-                            if "ocl" in sys.modules:
-                                layout.label(text="Disable Exact Mode to enable opencamlib ")
                             layout.prop(ao, 'exact_subdivide_edges')
-                        if ao.use_opencamlib:
-                            layout.label(text="Disable Opencamlib to enable exact Exact Mode ")
 
                     if exclude_exact or not ao.use_exact:
                         layout.prop(ao, 'pixsize')
