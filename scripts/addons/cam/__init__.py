@@ -410,7 +410,7 @@ def getStrategyList(scene, context):
          'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
         ('CARVE', 'Project curve to surface', 'Engrave the curve path to surface'),
         ('WATERLINE', 'Waterline - Roughing -below zero', 'Waterline paths - constant z below zero'),
-        ('CURVE', 'Curve to Path', 'Curve object gets converted directly to path'),('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
+        ('CURVE', 'Curve to Path', 'Curve object gets converted directly to path'),('MEDIAL_AXIS', 'Medial axis',
                        'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
     ]
  #   if use_experimental:
