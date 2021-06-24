@@ -24,7 +24,6 @@
 
 import bpy
 from cam import utils
-from setuptools.command.build_py import build_py
 
 
 def slicing2d(ob, height):  # April 2020 Alain Pelletier
