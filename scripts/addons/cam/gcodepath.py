@@ -864,7 +864,7 @@ def getPath3axis(context, operation):
         strategy.drill(o)
 
     elif o.strategy == 'MEDIAL_AXIS':
-        strateg.medial_axis(o)
+        strategy.medial_axis(o)
 
 
 def getPath4axis(context, operation):

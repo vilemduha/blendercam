@@ -36,6 +36,7 @@ from cam.simple import *
 from cam import pattern
 from cam.pattern import *
 from cam import utils, bridges
+from cam.utils import *
 from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
 from cam import image_utils
