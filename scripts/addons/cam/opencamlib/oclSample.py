@@ -4,11 +4,7 @@ try:
 except ImportError:
     pass
 import tempfile
-try:
-    import camvtk
-except ImportError:
-    pass
-import bpy
+
 from io_mesh_stl import blender_utils
 import mathutils
 import math
