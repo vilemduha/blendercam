@@ -1038,7 +1038,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
     #         and prop!='name_property'):
     #             d.append(prop)
 
-    preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth',
+    preset_values = ['o.use_layers', 'o.duration', 'o.name', 'o.filename', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material_size',
                      'o.material_radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact',
                      'o.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height',
