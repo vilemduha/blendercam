@@ -1038,7 +1038,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
     #         and prop!='name_property'):
     #             d.append(prop)
 
-    preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth',
+    preset_values = ['o.use_layers', 'o.duration', 'o.name', 'o.filename', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material_size',
                      'o.material_radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact',
                      'o.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height',
@@ -1052,7 +1052,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
                      'o.material_origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.circle_detail',
                      'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle',
                      'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source',
-                     'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.warnings',
+                     'o.optimize_threshold', 'o.first_down', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.warnings',
                      'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
                      'o.output_header', 'o.gcode_header', 'o.output_trailer', 'o.gcode_trailer', 'o.use_modifiers','o.minz_from_material','o.useG64',
                      'o.G64','o.enable_A','o.enable_B','o.A_along_x','o.rotation_A','o.rotation_B','o.straight']
