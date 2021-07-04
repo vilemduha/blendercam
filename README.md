@@ -6,7 +6,7 @@
 - - - 
 
 
-### An open source solution for artistic CAM with Blender 3.9
+### An open source solution for artistic CAM with Blender 3D
 
 
 
