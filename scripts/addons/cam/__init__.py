@@ -36,8 +36,6 @@ for mod in camModules:
         exec("importlib.reload("+modName+")")
     except:
         print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
-        
-from cam import curvecamequation
 
 import numpy
 
