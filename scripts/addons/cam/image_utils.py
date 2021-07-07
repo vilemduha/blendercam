@@ -28,12 +28,18 @@ import curve_simplify
 import mathutils
 from mathutils import *
 
-from cam import simple
-from cam.simple import *
-from cam import chunk
-from cam.chunk import *
-from cam import simulation
 
+import importlib
+camModules=["simple", "chunk", "simulation"]
+for mod in camModules:
+    try:
+    	__import__("cam."+mod)
+        importlib.reload(mod)
+    except:
+	print("SOMETHING AWFUL HAPPENED")
+        pass
+from cam.simple import *
+from cam.chunk import *
 
 def getCircle(r, z):
     car = numpy.array((0), dtype=float)

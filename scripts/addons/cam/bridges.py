@@ -23,7 +23,14 @@
 import bpy
 from bpy.props import *
 
+import importlib
 from cam import utils
+try:
+	importlib.reload(utils)
+except:
+	print("SOMETHING AWFUL HAPPENED")
+	pass
+
 import mathutils
 import math
 

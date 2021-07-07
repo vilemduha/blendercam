@@ -34,6 +34,7 @@ for mod in camModules:
         __import__("cam."+mod)
         importlib.reload(mod)
     except:
+    	print("SOMETHING AWFUL HAPPENED")
         pass
 
 import numpy

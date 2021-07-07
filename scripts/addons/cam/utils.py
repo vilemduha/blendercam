@@ -31,6 +31,16 @@ from bpy.props import *
 from bpy_extras import object_utils
 
 import sys, numpy,pickle
+
+import importlib
+camModules=["chunk", "collision", "simple", "pattern", "polygon_utils_cam", "image_utils", "opencamlib.opencamlib"]
+for mod in camModules:
+    try:
+        __import__("cam."+mod)
+        importlib.reload(mod)
+    except:
+	print("SOMETHING AWFUL HAPPENED")
+        pass
 from cam.chunk import *
 from cam.collision import *
 from cam.simple import *

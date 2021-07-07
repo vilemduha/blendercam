@@ -23,7 +23,13 @@
 # completely rewritten April 2021
 
 import bpy
+import importlib
 from cam import utils
+try:
+	importlib.reload(utils)
+except:
+	print("SOMETHING AWFUL HAPPENED")
+	pass
 
 
 def slicing2d(ob, height):  # April 2020 Alain Pelletier

@@ -23,8 +23,18 @@
 import shapely
 from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
-from cam import polygon_utils_cam
+
+import importlib
+camModules=["polygon_utils_cam", "simple"]
+for mod in camModules:
+    try:
+        __import__("cam."+mod)
+        importlib.reload(mod)
+    except:
+	print("SOMETHING AWFUL HAPPENED")
+        pass
 from cam.simple import *
+
 import math
 
 def Rotate_pbyp(originp, p, ang): ## rotate point around another point with angle

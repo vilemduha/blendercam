@@ -23,12 +23,20 @@ import time
 import mathutils
 from mathutils import *
 
-
+import importlib
 from cam import simple, chunk
 from cam.simple import *
 from cam.chunk import *
 from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
+try:
+	importlib.reload(simple)
+	importlib.reload(chunk)
+	importlib.reload(polygon_utils_cam)
+except:
+	print("SOMETHING AWFUL HAPPENED")
+	pass
+	
 import shapely
 from shapely import geometry as sgeometry
 import numpy

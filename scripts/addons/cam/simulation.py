@@ -26,12 +26,17 @@ import mathutils
 import math
 import time
 from bpy.props import *
-from cam import utils
 import numpy as np
 
-from cam import simple
-from cam import image_utils
-
+import importlib
+camModules=["utils", "simple", "image_utils"]
+for mod in camModules:
+    try:
+        __import__("cam."+mod)
+        importlib.reload(mod)
+    except:
+	print("SOMETHING AWFUL HAPPENED")
+        pass
 
 
 def createSimulationObject(name, operations, i):

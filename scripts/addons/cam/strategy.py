@@ -27,19 +27,22 @@ import time
 import math
 from math import *
 from bpy_extras import object_utils
-from cam import chunk
+
+import importlib
+camModules=["chunk", "collision", "simple", "pattern", "utils", "bridges", "polygon_utils_cam", "image_utils"]
+for mod in camModules:
+    try:
+        __import__("cam."+mod)
+        importlib.reload(mod)
+    except:
+	print("SOMETHING AWFUL HAPPENED")
+        pass
 from cam.chunk import *
-from cam import collision
 from cam.collision import *
-from cam import simple
 from cam.simple import *
-from cam import pattern
 from cam.pattern import *
-from cam import utils, bridges
 from cam.utils import *
-from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
-from cam import image_utils
 from cam.image_utils import *
 
 from shapely.geometry import polygon as spolygon

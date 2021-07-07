@@ -21,7 +21,16 @@
 
 import sys
 import bpy
-from cam import simple, utils
+
+import importlib
+camModules=["simple", "utils"]
+for mod in camModules:
+    try:
+        __import__("cam."+mod)
+        importlib.reload(mod)
+    except:
+	print("SOMETHING AWFUL HAPPENED")
+        pass
 from cam.simple import *
 
 

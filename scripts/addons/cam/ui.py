@@ -31,7 +31,15 @@ from bpy.props import (StringProperty,
 from bpy.types import (Panel, Menu, Operator, PropertyGroup, )
 
 
-from cam import gcodeimportparser
+import importlib
+camModules=["gcodeimportparser", "simple"]
+for mod in camModules:
+    try:
+        __import__("cam."+mod)
+        importlib.reload(mod)
+    except:
+	print("SOMETHING AWFUL HAPPENED")
+        pass
 from cam.simple import *
 
 # EXPERIMENTAL=True#False
