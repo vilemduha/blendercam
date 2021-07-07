@@ -28,8 +28,7 @@ from cam import utils
 try:
 	importlib.reload(utils)
 except:
-	print("SOMETHING AWFUL HAPPENED")
-	pass
+	print("PROBLEM RELOADING MODULE cam.utils AT "+__name__)
 
 
 def slicing2d(ob, height):  # April 2020 Alain Pelletier

@@ -35,11 +35,11 @@ import importlib
 camModules=["chunk", "collision", "simple", "utils", "strategy", "pattern", "polygon_utils_cam", "image_utils", "nc.iso"]
 for mod in camModules:
     try:
-    	__import__("cam."+mod)
-        importlib.reload(mod)
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
     except:
-	print("SOMETHING AWFUL HAPPENED")
-        pass
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
 from cam.chunk import *
 from cam.collision import *
 from cam.simple import *

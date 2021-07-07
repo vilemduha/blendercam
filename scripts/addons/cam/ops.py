@@ -30,14 +30,14 @@ import subprocess, os, threading
 
 import cam
 import importlib
-camModules=["utils", "pack", "polygon_utils_cam", "simple,gcodepath", "bridges", "simulation"]
+camModules=["utils", "pack", "polygon_utils_cam", "simple", "gcodepath", "bridges", "simulation"]
 for mod in camModules:
     try:
-        __import__("cam."+mod)
-        importlib.reload(mod)
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
     except:
-	print("SOMETHING AWFUL HAPPENED")
-        pass
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
 
 import shapely
 import mathutils

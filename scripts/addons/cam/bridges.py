@@ -28,8 +28,7 @@ from cam import utils
 try:
 	importlib.reload(utils)
 except:
-	print("SOMETHING AWFUL HAPPENED")
-	pass
+    print("PROBLEM RELOADING MODULE cam.utils AT "+__name__)
 
 import mathutils
 import math

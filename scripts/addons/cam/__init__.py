@@ -28,14 +28,16 @@ import bl_operators
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 
 import importlib
-camModules=["ui", "ops","curvecamtools","curvecamequation", "utils", "simple", "polygon_utils_cam"] # , post_processors
+camModules=["ui", "ops", "curvecamtools", "curvecamequation", "utils", "simple", "polygon_utils_cam"] # , post_processors
 for mod in camModules:
     try:
-        __import__("cam."+mod)
-        importlib.reload(mod)
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
     except:
-    	print("SOMETHING AWFUL HAPPENED")
-        pass
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
+        
+from cam import curvecamequation
 
 import numpy
 
