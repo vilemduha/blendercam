@@ -27,7 +27,15 @@ from bpy.props import *
 import bl_operators
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 
-from cam import ui, ops,curvecamtools,curvecamequation, utils, simple, polygon_utils_cam  # , post_processors
+import importlib
+camModules=["ui", "ops","curvecamtools","curvecamequation", "utils", "simple", "polygon_utils_cam"] # , post_processors
+for mod in camModules:
+    try:
+        __import__("cam."+mod)
+        importlib.reload(mod)
+    except:
+        pass
+
 import numpy
 
 from shapely import geometry as sgeometry
