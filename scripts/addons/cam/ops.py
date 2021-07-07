@@ -27,11 +27,22 @@ from bpy.props import *
 from bpy_extras.io_utils import ImportHelper
 
 import subprocess, os, threading
-from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges, simulation
+
+import cam
+import importlib
+camModules=["utils", "pack", "polygon_utils_cam", "simple", "gcodepath", "bridges", "simulation"]
+for mod in camModules:
+    try:
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
+    except:
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
+
 import shapely
 import mathutils
 import math
-import cam
+
 
 
 class threadCom:  # object passed to threads to read background process stdout info

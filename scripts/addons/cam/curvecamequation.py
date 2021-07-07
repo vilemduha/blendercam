@@ -24,7 +24,17 @@
 import bpy
 from bpy.props import *
 
-from cam import utils, parametric
+
+import importlib
+camModules=["utils", "parametric"]
+for mod in camModules:
+    try:
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
+    except:
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
+	
 import math
 from Equation import Expression
 import numpy as np

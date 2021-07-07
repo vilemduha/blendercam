@@ -31,6 +31,16 @@ from bpy.props import *
 from bpy_extras import object_utils
 
 import sys, numpy,pickle
+
+import importlib
+camModules=["chunk", "collision", "simple", "pattern", "polygon_utils_cam", "image_utils", "opencamlib.opencamlib"]
+for mod in camModules:
+    try:
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
+    except:
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
 from cam.chunk import *
 from cam.collision import *
 from cam.simple import *

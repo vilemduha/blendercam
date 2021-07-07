@@ -27,7 +27,16 @@ from bpy.props import *
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
 
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser
+import importlib
+camModules=["utils", "pack", "polygon_utils_cam", "simple", "gcodepath", "bridges", "parametric", "gcodeimportparser"]
+for mod in camModules:
+    try:
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
+    except:
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
+        
 import shapely
 import mathutils
 import math

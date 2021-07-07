@@ -31,28 +31,21 @@ from bpy.props import *
 
 import numpy
 
-from cam import chunk
+import importlib
+camModules=["chunk", "collision", "simple", "utils", "strategy", "pattern", "polygon_utils_cam", "image_utils", "nc.iso"]
+for mod in camModules:
+    try:
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
+    except:
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
 from cam.chunk import *
-
-from cam import collision
 from cam.collision import *
-
-from cam import simple
 from cam.simple import *
-
-from cam import utils
-from cam import strategy
-
-from cam import pattern
 from cam.pattern import *
-
-from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
-
-from cam import image_utils
 from cam.image_utils import *
-
-from cam.nc import iso
 
 
 def pointonline(a,b,c,tolerence):

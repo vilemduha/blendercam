@@ -20,7 +20,16 @@
 # ***** END GPL LICENCE BLOCK *****
 
 import bpy
-from cam import utils, simple, polygon_utils_cam
+import importlib
+camModules=["utils", "simple", "polygon_utils_cam"]
+for mod in camModules:
+    try:
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
+    except:
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
+
 import shapely
 from shapely import geometry as sgeometry
 from shapely import affinity, prepared
