@@ -423,9 +423,9 @@ def getStrategyList(scene, context):
         ('MEDIAL_AXIS', 'Medial axis',
          'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
     ]
-    if use_experimental:
-        items.extend([('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
-                       'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')]);
+ #   if use_experimental:
+ #       items.extend([('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
+ #                      'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')]);
  # ('PENCIL', 'Pencil - EXPERIMENTAL','Pencil operation - detects negative corners in the model and mills only those.'),
  # ('CRAZY', 'Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
  #                     ('PROJECTED_CURVE', 'Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')])
