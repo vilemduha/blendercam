@@ -243,6 +243,8 @@ class CalculatePath(bpy.types.Operator):
             o.parallel_step_back = False
 
         gcodepath.getPath(context, o)
+        coll = bpy.data.collections.get('RigidBodyWorld')
+        bpy.data.collections.remove(coll)
 
         return {'FINISHED'}
 
