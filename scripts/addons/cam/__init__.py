@@ -833,6 +833,9 @@ class camOperation(bpy.types.PropertyGroup):
                                               precision=PRECISION, update=updateRest)
     crazy_threshold4: bpy.props.FloatProperty(name="test angle step", default=0.05, min=0.00000001, max=100,
                                               precision=PRECISION, update=updateRest)
+    # Add pocket operation to medial axis
+    add_pocket_for_medial: bpy.props.BoolProperty(name="Add pocket operation", description="clean unremoved material after medial axis", default=True,
+                                        update=updateRest)
     ####
     medial_axis_threshold: bpy.props.FloatProperty(name="Long vector threshold", default=0.001, min=0.00000001,
                                                    max=100, precision=PRECISION, unit="LENGTH", update=updateRest)
