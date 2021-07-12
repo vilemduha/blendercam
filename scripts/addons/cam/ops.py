@@ -243,9 +243,8 @@ class CalculatePath(bpy.types.Operator):
             o.parallel_step_back = False
 
         gcodepath.getPath(context, o)
-        if o.use_exact and (o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'BLOCK' 
-        or o.strategy == 'SPIRAL' or o.strategy == 'CIRCLES' or o.strategy == 'OUTLINEFILL'):
-            coll = bpy.data.collections.get('RigidBodyWorld')
+        coll = bpy.data.collections.get('RigidBodyWorld')
+        if coll:
             bpy.data.collections.remove(coll)
 
         return {'FINISHED'}
