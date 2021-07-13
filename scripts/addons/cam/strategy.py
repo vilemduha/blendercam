@@ -44,6 +44,7 @@ from cam.pattern import *
 from cam.utils import *
 from cam.polygon_utils_cam import *
 from cam.image_utils import *
+import cam.ops
 from cam.ops import *
 
 from shapely.geometry import polygon as spolygon
@@ -584,6 +585,8 @@ def medial_axis(o):
     if o.add_pocket_for_medial:
         for ob in o.objects:
             utils.silhoueteOffset(ob, -new_cutter_diameter/2,1,0.3)
+
+    cam.ops.Add_Pocket(ob)
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
             resolutions_before.append(ob.data.resolution_u)

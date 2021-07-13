@@ -579,6 +579,22 @@ def fixUnits():
 
     s.unit_settings.scale_length = 1.0  # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.
 
+def Add_Pocket(self):
+        s = bpy.context.scene
+
+        
+
+        s.cam_operations.add()
+        o = s.cam_operations[-1]
+        s.cam_active_operation = len(s.cam_operations) - 1
+        o.name = 'pocket_for_medial_' + str(s.cam_active_operation + 1)
+        o.filename = o.name
+        o.strategy = 'POCKET'
+        ob = bpy.context.active_object
+        
+        o.object_name = ob.name
+        minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
+        o.minz = minz
 
 class CamOperationAdd(bpy.types.Operator):
     """Add new CAM operation"""
