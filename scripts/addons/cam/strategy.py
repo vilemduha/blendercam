@@ -44,6 +44,7 @@ from cam.pattern import *
 from cam.utils import *
 from cam.polygon_utils_cam import *
 from cam.image_utils import *
+from cam.ops import *
 
 from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
@@ -559,26 +560,30 @@ def medial_axis(o):
     gpoly = spolygon.Polygon()
     angle = o.cutter_tip_angle
     slope = math.tan(math.pi * (90 - angle / 2) / 180)
+    new_cutter_diameter = o.cutter_diameter
     if o.cutter_type == 'VCARVE':
         angle = o.cutter_tip_angle
         # start the max depth calc from the "start depth" of the operation.
-        maxdepth = o.maxz - math.tan(math.pi * (90 - angle / 2) / 180) * o.cutter_diameter / 2
+        maxdepth = o.maxz - slope * o.cutter_diameter / 2
         # don't cut any deeper than the "end depth" of the operation.
         if maxdepth < o.minz:
             maxdepth = o.minz
             # the effective cutter diameter can be reduced from it's max since we will be cutting shallower than the original maxdepth
             # without this, the curve is calculated as if the diameter was at the original maxdepth and we get the bit
             # pulling away from the desired cut surface
-            o.cutter_diameter = (maxdepth - o.maxz) / (- math.tan(math.pi * (90 - angle / 2) / 180)) * 2
+            new_cutter_diameter = (maxdepth - o.maxz) / (- slope) * 2
     elif o.cutter_type == 'BALLNOSE' or o.cutter_type == 'BALL':
         # angle = o.cutter_tip_angle
-        maxdepth = o.cutter_diameter / 2
+        maxdepth = new_cutter_diameter / 2
     else:
         o.warnings += 'Only Ballnose, Ball and V-carve cutters\n are supported'
         return
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
+    if o.add_pocket_for_medial:
+        for ob in o.objects:
+            utils.silhoueteOffset(ob, -new_cutter_diameter/2,1,0.3)
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
             resolutions_before.append(ob.data.resolution_u)
@@ -639,7 +644,7 @@ def medial_axis(o):
                         z = maxdepth
                 elif o.cutter_type == 'BALL' or o.cutter_type == 'BALLNOSE':
                     d = mpoly_boundary.distance(sgeometry.Point(p))
-                    r = o.cutter_diameter / 2.0
+                    r = new_cutter_diameter / 2.0
                     if d >= r:
                         z = -r
                     else:
@@ -670,7 +675,7 @@ def medial_axis(o):
                 ledges.append(sgeometry.LineString((filteredPts[vertr[e[0]][1]], filteredPts[vertr[e[1]][1]])))
         # print(ledges[-1].has_z)
 
-        bufpoly = poly.buffer(-o.cutter_diameter / 2, resolution=64)
+        bufpoly = poly.buffer(-new_cutter_diameter / 2, resolution=64)
 
         lines = shapely.ops.linemerge(ledges)
         # print(lines.type)
@@ -731,6 +736,8 @@ def medial_axis(o):
         chunklayers = utils.sortChunks(chunklayers, o)
 
     chunksToMesh(chunklayers, o)
+    
+
 
 
 def getLayers(operation, startdepth, enddepth):
