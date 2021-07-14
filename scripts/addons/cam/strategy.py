@@ -582,11 +582,10 @@ def medial_axis(o):
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
-    if o.add_pocket_for_medial:
-        for ob in o.objects:
-            utils.silhoueteOffset(ob, -new_cutter_diameter/2,1,0.3)
-
-    cam.ops.Add_Pocket(ob)
+    if  o.add_pocket_for_medial:
+        utils.silhoueteOffset(o.objects, -new_cutter_diameter/2,1,0.3)
+        o.add_pocket_for_medial = False
+       
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
             resolutions_before.append(ob.data.resolution_u)
@@ -739,6 +738,9 @@ def medial_axis(o):
         chunklayers = utils.sortChunks(chunklayers, o)
 
     chunksToMesh(chunklayers, o)
+    cam.ops.Add_Pocket(None)
+   
+    
     
 
 
