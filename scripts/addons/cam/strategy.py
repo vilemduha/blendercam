@@ -562,6 +562,7 @@ def medial_axis(o):
     angle = o.cutter_tip_angle
     slope = math.tan(math.pi * (90 - angle / 2) / 180)
     new_cutter_diameter = o.cutter_diameter
+    m_o_name = o.object_name
     if o.cutter_type == 'VCARVE':
         angle = o.cutter_tip_angle
         # start the max depth calc from the "start depth" of the operation.
@@ -582,9 +583,7 @@ def medial_axis(o):
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
-    if  o.add_pocket_for_medial:
-        utils.silhoueteOffset(o.objects, -new_cutter_diameter/2,1,0.3)
-        o.add_pocket_for_medial = False
+    
        
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
@@ -738,7 +737,13 @@ def medial_axis(o):
         chunklayers = utils.sortChunks(chunklayers, o)
 
     chunksToMesh(chunklayers, o)
-    cam.ops.Add_Pocket(None, maxdepth)
+# add pocket operation for medial if add pocket checked
+    if  o.add_pocket_for_medial:
+        o.add_pocket_for_medial = False
+        # export medial axis parameter to pocket op
+        cam.ops.Add_Pocket(None, maxdepth, m_o_name, new_cutter_diameter)
+        
+    
    
     
     
