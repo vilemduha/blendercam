@@ -738,7 +738,7 @@ def medial_axis(o):
         chunklayers = utils.sortChunks(chunklayers, o)
 
     chunksToMesh(chunklayers, o)
-    cam.ops.Add_Pocket(None)
+    cam.ops.Add_Pocket(None, maxdepth)
    
     
     
