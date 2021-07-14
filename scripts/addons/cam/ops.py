@@ -578,24 +578,28 @@ def fixUnits():
     s.unit_settings.system_rotation = 'DEGREES'
 
     s.unit_settings.scale_length = 1.0  # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.
-
-def Add_Pocket(self):
+# add pocket op for medial axis to clean unremoved material
+def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         s = bpy.context.scene
-
-        
-
+        ob=bpy.data.objects[sname]
+        ob.select_set(True)
+        bpy.context.view_layer.objects.active = ob
+        utils.silhoueteOffset(ob, -new_cutter_diameter/2,1,0.3)
+        p_ob = bpy.context.active_object
         s.cam_operations.add()
         o = s.cam_operations[-1]
+        o.object_name = p_ob.name
         s.cam_active_operation = len(s.cam_operations) - 1
         o.name = 'pocket_for_medial_' + str(s.cam_active_operation + 1)
         o.filename = o.name
         o.strategy = 'POCKET'
-        ob = bpy.context.active_object
+        o.use_layers = False
+        o.material_from_model =False
+        o.material_size[2] = -maxdepth
+        o.minz_from_ob = False
+        o.minz_from_material = True
         
-        o.object_name = ob.name
-        minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
-        o.minz = minz
-
+       
 class CamOperationAdd(bpy.types.Operator):
     """Add new CAM operation"""
     bl_idname = "scene.cam_operation_add"
