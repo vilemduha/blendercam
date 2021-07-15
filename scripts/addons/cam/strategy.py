@@ -25,6 +25,7 @@ import bpy
 from bpy.props import *
 import time
 import math
+import sys
 from math import *
 from bpy_extras import object_utils
 
@@ -574,7 +575,7 @@ def medial_axis(o):
             # without this, the curve is calculated as if the diameter was at the original maxdepth and we get the bit
             # pulling away from the desired cut surface
             new_cutter_diameter = (maxdepth - o.maxz) / (- slope) * 2
-    elif o.cutter_type == 'BALLNOSE' or o.cutter_type == 'BALL':
+    elif o.cutter_type == 'BALLNOSE':
         # angle = o.cutter_tip_angle
         maxdepth = new_cutter_diameter / 2
     else:
@@ -594,7 +595,10 @@ def medial_axis(o):
     polys = utils.getOperationSilhouete(o)
     mpoly = sgeometry.asMultiPolygon(polys)
     mpoly_boundary = mpoly.boundary
+    ipol=0
     for poly in polys:
+        ipol=ipol+1
+        print("polygon:",ipol)
         schunks = shapelyToChunks(poly, -1)
         schunks = chunksRefineThreshold(schunks, o.medial_axis_subdivision,
                                         o.medial_axis_threshold)  # chunksRefine(schunks,o)
@@ -633,7 +637,16 @@ def medial_axis(o):
         vertr = []
         filteredPts = []
         print('filter points')
+        ipts=0
         for p in pts:
+            ipts = ipts + 1
+            if ipts % 500 ==0:
+                sys.stdout.write('\r')
+                # the exact output you're looking for:
+                prog_message="points: " + str(ipts) + " / " + str(len(pts)) + " " + str(round(100*ipts/len(pts))) + "%"
+                sys.stdout.write(prog_message)
+                sys.stdout.flush()
+
             if not poly.contains(sgeometry.Point(p)):
                 vertr.append((True, -1))
             else:
