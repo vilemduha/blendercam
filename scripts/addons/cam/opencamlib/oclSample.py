@@ -51,7 +51,7 @@ def ocl_sample(operation, chunks):
     elif op_cutter_type == 'VCARVE':
         cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length)
     elif op_cutter_type ==' CYLCONE':
-        cutter = ocl.BallConeCutter((operation.cylcone_diameter/2+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, operation.cutter_tip_angle)
+        cutter = ocl.CylConeCutter((operation.cylcone_diameter/2+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, operation.cutter_tip_angle)
     elif op_cutter_type == 'BALLCONE':
         angle = math.degrees(math.atan((op_cutter_diameter / 2) - operation.ball_radius) / (
                     operation.ball_cone_flute - operation.ball_radius))
