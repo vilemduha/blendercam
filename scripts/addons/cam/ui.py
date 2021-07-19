@@ -107,6 +107,11 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                    EngagementDisplay(ao,layout)
                    layout.prop(ao,'ball_cone_flute')
                    layout.label(text='Cutter diameter = shank diameter')
+                if ao.cutter_type == 'CYLCONE':
+                   layout.prop(ao,'cylcone_diameter')
+                   EngagementDisplay(ao,layout)
+                   layout.prop(ao,'cutter_tip_angle')
+                   layout.label(text='Cutter diameter = shank diameter')
                 if ao.cutter_type == 'BULLNOSE':
                    layout.prop(ao,'bull_corner_radius')
                    EngagementDisplay(ao,layout)

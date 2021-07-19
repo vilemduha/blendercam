@@ -476,7 +476,8 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
                                   ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
                                   ('VCARVE', 'V-carve', 'v carve cutter'),
-                                  ('BALLCONE', 'Ballcone', 'Ball with a Cone Parallel - X'),
+                                  ('BALLCONE', 'Ballcone', 'Ball with a Cone for Parallel - X'),
+                                  ('CYLCONE', 'Cylinder cone', 'Cylinder end with a Cone for Parallel - X'),
                                   ('LASER', 'Laser', 'Laser cutter'),
                                   ('PLASMA', 'Plasma', 'Plasma cutter'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
@@ -573,6 +574,9 @@ class camOperation(bpy.types.PropertyGroup):
     cutter_id: IntProperty(name="Tool number", description="For machines which support tool change based on tool id",
                            min=0, max=10000, default=1, update=updateRest)
     cutter_diameter: FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius",
+                                    min=0.000001, max=10, default=0.003, precision=PRECISION, unit="LENGTH",
+                                    update=updateOffsetImage)
+    cylcone_diameter: FloatProperty(name="Bottom Diameter", description="Bottom diameter",
                                     min=0.000001, max=10, default=0.003, precision=PRECISION, unit="LENGTH",
                                     update=updateOffsetImage)
     cutter_length: FloatProperty(name="#Cutter length", description="#not supported#Cutter length", min=0.0, max=100.0,
