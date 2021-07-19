@@ -39,7 +39,7 @@ def ocl_sample(operation, chunks):
     op_cutter_diameter = operation.cutter_diameter
     op_minz = operation.minz
     if op_cutter_type == "VCARVE":
-        op_cutter_tip_angle = operation.cutter_tip_angle
+        op_cutter_tip_angle = operation['cutter_tip_angle']
 
     cutter = None
     cutter_length = 5
@@ -50,12 +50,16 @@ def ocl_sample(operation, chunks):
         cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'VCARVE':
         cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length)
-    elif op_cutter_type =='BALLCONE':
-        angle= math.degrees(math.atan((op_cutter_diameter/2)-operation.ball_radius)/(operation.ball_cone_flute-operation.ball_radius))
-        print("BallCone angle:"+str(angle))
-        cutter = ocl.BallConeCutter((operation.ball_radius+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, math.radians(angle))
+    elif op_cutter_type ==' CYLCONE':
+        cutter = ocl.BallConeCutter((operation.cylcone_diameter/2+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, operation.cutter_tip_angle)
+    elif op_cutter_type == 'BALLCONE':
+        angle = math.degrees(math.atan((op_cutter_diameter / 2) - operation.ball_radius) / (
+                    operation.ball_cone_flute - operation.ball_radius))
+        print("BallCone angle:" + str(angle))
+        cutter = ocl.BallConeCutter((operation.ball_radius + operation.skin) * 2000,
+                                    (op_cutter_diameter + operation.skin * 2) * 1000, math.radians(angle))
     elif op_cutter_type =='BULLNOSE':
-        cutter = ocl.BullCutter((op_cutter_diameter + operation.skin * 2) * 1000,operaton.bull_corner_radius*1000, cutter_length)        
+        cutter = ocl.BullCutter((op_cutter_diameter + operation.skin * 2) * 1000,operation.bull_corner_radius*1000, cutter_length)
     else:
         print("Cutter unsupported: {0}\n".format(op_cutter_type))
         quit()
