@@ -39,7 +39,7 @@ def ocl_sample(operation, chunks):
     op_cutter_diameter = operation.cutter_diameter
     op_minz = operation.minz
     if op_cutter_type == "VCARVE":
-        op_cutter_tip_angle = operation['cutter_tip_angle']
+        op_cutter_tip_angle = operation.cutter_tip_angle
 
     cutter = None
     cutter_length = 5
