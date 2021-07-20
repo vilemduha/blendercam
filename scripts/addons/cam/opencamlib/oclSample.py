@@ -39,10 +39,10 @@ def ocl_sample(operation, chunks):
     op_cutter_diameter = operation.cutter_diameter
     op_minz = operation.minz
     if op_cutter_type == "VCARVE":
-        op_cutter_tip_angle = operation['cutter_tip_angle']
+        op_cutter_tip_angle = operation.cutter_tip_angle
 
     cutter = None
-    cutter_length = 5
+    cutter_length = 10.0
 
     if op_cutter_type == 'END':
         cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
@@ -50,7 +50,7 @@ def ocl_sample(operation, chunks):
         cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'VCARVE':
         cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle/2, cutter_length)
-    elif op_cutter_type ==' CYLCONE':
+    elif op_cutter_type =='CYLCONE':
         cutter = ocl.CylConeCutter((operation.cylcone_diameter/2+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, operation.cutter_tip_angle)
     elif op_cutter_type == 'BALLCONE':
         angle = math.degrees(math.atan((op_cutter_diameter / 2) - operation.ball_radius) / (
