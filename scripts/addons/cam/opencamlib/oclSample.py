@@ -49,7 +49,7 @@ def ocl_sample(operation, chunks):
     elif op_cutter_type == 'BALLNOSE':
         cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'VCARVE':
-        cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length)
+        cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle/2, cutter_length)
     elif op_cutter_type ==' CYLCONE':
         cutter = ocl.CylConeCutter((operation.cylcone_diameter/2+operation.skin)*2000,(op_cutter_diameter + operation.skin * 2) * 1000, operation.cutter_tip_angle)
     elif op_cutter_type == 'BALLCONE':
