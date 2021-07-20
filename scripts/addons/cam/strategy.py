@@ -30,14 +30,15 @@ from math import *
 from bpy_extras import object_utils
 
 import importlib
-camModules=["chunk", "collision", "simple", "pattern", "utils", "bridges", "polygon_utils_cam", "image_utils"]
+
+camModules = ["chunk", "collision", "simple", "pattern", "utils", "bridges", "polygon_utils_cam", "image_utils"]
 for mod in camModules:
     try:
-        modName=mod.split(".")[-1]
-        exec(modName + "=importlib.import_module('cam."+ mod+"')")
-        exec("importlib.reload("+modName+")")
+        modName = mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam." + mod + "')")
+        exec("importlib.reload(" + modName + ")")
     except:
-        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
+        print("PROBLEM (RE)LOADING MODULE cam." + mod + " AT " + __name__)
 from cam.chunk import *
 from cam.collision import *
 from cam.simple import *
@@ -89,7 +90,8 @@ def cutout(o):
             if o.outlines_count > 1:
                 for i in range(1, o.outlines_count):
                     chunksFromCurve.extend(shapelyToChunks(p, -1))
-                    p = p.buffer(distance=o.dist_between_paths * offset, resolution=o.circle_detail, join_style = join,mitre_limit=2)
+                    p = p.buffer(distance=o.dist_between_paths * offset, resolution=o.circle_detail, join_style=join,
+                                 mitre_limit=2)
 
         chunksFromCurve.extend(shapelyToChunks(p, -1))
         if o.outlines_count > 1 and o.movement_insideout == 'OUTSIDEIN':
@@ -168,7 +170,6 @@ def cutout(o):
                 chunk.breakPathForLeadinLeadout(o)
                 chunk.leadContour(o)
 
-
     if o.ramp:  # add ramps or simply add chunks
         for chl in extendorder:
             chunk = chl[0]
@@ -209,7 +210,7 @@ def curve(o):
             for ch in pathSamples:
                 extendorder.append([ch.copy(), layer])  # include layer information to chunk list
 
-        for chl in extendorder:  # Set offset Z for all chunks according to the layer information, 
+        for chl in extendorder:  # Set offset Z for all chunks according to the layer information,
             chunk = chl[0]
             layer = chl[1]
             print('layer: ' + str(layer[1]))
@@ -294,9 +295,9 @@ def pocket(o):
     prest = p.buffer(-o.cutter_diameter / 2, o.circle_detail)
     while not p.is_empty:
         nchunks = shapelyToChunks(p, o.min.z)
-        #print("nchunks")
+        # print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
-        #print("pnew")
+        # print("pnew")
 
         # caused a bad slow down
         #        if o.dist_between_paths > o.cutter_diameter / 2.0:
@@ -561,7 +562,8 @@ def medial_axis(o):
 
     gpoly = spolygon.Polygon()
     angle = o.cutter_tip_angle
-    slope = math.tan(math.pi * (90 - angle / 2) / 180)
+    slope = math.tan(math.pi * (90 - angle / 2) / 180) #angle in degrees
+    slope = math.tan((math.pi2-angle)/2) #angle in radians
     new_cutter_diameter = o.cutter_diameter
     m_o_name = o.object_name
     if o.cutter_type == 'VCARVE':
@@ -584,21 +586,21 @@ def medial_axis(o):
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
-    
-       
+
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
             resolutions_before.append(ob.data.resolution_u)
-            if ob.data.resolution_u < 64:
-                ob.data.resolution_u = 64
+            if ob.data.resolution_u < 32:
+                ob.data.resolution_u = 32
+            ob.data.resolution_u = 16
 
     polys = utils.getOperationSilhouete(o)
     mpoly = sgeometry.asMultiPolygon(polys)
     mpoly_boundary = mpoly.boundary
-    ipol=0
+    ipol = 0
     for poly in polys:
-        ipol=ipol+1
-        print("polygon:",ipol)
+        ipol = ipol + 1
+        print("polygon:", ipol)
         schunks = shapelyToChunks(poly, -1)
         schunks = chunksRefineThreshold(schunks, o.medial_axis_subdivision,
                                         o.medial_axis_threshold)  # chunksRefine(schunks,o)
@@ -637,13 +639,14 @@ def medial_axis(o):
         vertr = []
         filteredPts = []
         print('filter points')
-        ipts=0
+        ipts = 0
         for p in pts:
             ipts = ipts + 1
-            if ipts % 500 ==0:
+            if ipts % 500 == 0:
                 sys.stdout.write('\r')
                 # the exact output you're looking for:
-                prog_message="points: " + str(ipts) + " / " + str(len(pts)) + " " + str(round(100*ipts/len(pts))) + "%"
+                prog_message = "points: " + str(ipts) + " / " + str(len(pts)) + " " + str(
+                    round(100 * ipts / len(pts))) + "%"
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
 
@@ -750,17 +753,11 @@ def medial_axis(o):
         chunklayers = utils.sortChunks(chunklayers, o)
 
     chunksToMesh(chunklayers, o)
-# add pocket operation for medial if add pocket checked
-    if  o.add_pocket_for_medial:
+    # add pocket operation for medial if add pocket checked
+    if o.add_pocket_for_medial:
         o.add_pocket_for_medial = False
         # export medial axis parameter to pocket op
         cam.ops.Add_Pocket(None, maxdepth, m_o_name, new_cutter_diameter)
-        
-    
-   
-    
-    
-
 
 
 def getLayers(operation, startdepth, enddepth):
@@ -931,6 +928,7 @@ def chunksToMesh(chunks, o):
         bpy.ops.object.parent_set(type='OBJECT', keep_transform=True)
     else:
         ob.select_set(state=True, view_layer=None)
+
 
 def checkminz(o):
     if o.minz_from_material:
