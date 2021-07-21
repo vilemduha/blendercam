@@ -562,7 +562,6 @@ def medial_axis(o):
 
     gpoly = spolygon.Polygon()
     angle = o.cutter_tip_angle
-    slope = math.tan(math.pi * (90 - angle / 2) / 180) #angle in degrees
     slope = math.tan((math.pi-angle)/2) #angle in radian
     new_cutter_diameter = o.cutter_diameter
     m_o_name = o.object_name

@@ -75,7 +75,7 @@ def getCutterBullet(o):
     elif type == 'VCARVE':
 
         angle = o.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  #angles in degrees
+#        s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  #angles in degrees
         s = math.tan((math.pi-angle)/2)/2 #angle in radians
 
         bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=0,
