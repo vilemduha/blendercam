@@ -330,7 +330,8 @@ def getCutterArray(operation, pixsize):
 
     elif type == 'VCARVE':
         angle = operation.cutter_tip_angle
-        s = math.tan((math.pi - angle) / 2)  # angle in radians
+        s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
+        #s = math.tan((math.pi - angle) / 2)  # angle in radians
         for a in range(0, res):
             v.x = (a + 0.5 - m) * ps
             for b in range(0, res):
