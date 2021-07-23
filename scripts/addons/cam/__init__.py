@@ -583,7 +583,7 @@ class camOperation(bpy.types.PropertyGroup):
                                   default=25.0, precision=PRECISION, unit="LENGTH", update=updateOffsetImage)
     cutter_flutes: IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2,
                                 update=updateChipload)
-    cutter_tip_angle: FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", subtype="ANGLE",min=0.0,
+    cutter_tip_angle: FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0,
                                      max=180.0, default=60.0, precision=PRECISION, update=updateOffsetImage)
     ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
                                      max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
