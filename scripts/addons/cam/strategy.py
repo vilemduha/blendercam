@@ -25,29 +25,22 @@ import bpy
 from bpy.props import *
 import time
 import math
-import sys
 from math import *
 from bpy_extras import object_utils
-
-import importlib
-
-camModules = ["chunk", "collision", "simple", "pattern", "utils", "bridges", "polygon_utils_cam", "image_utils"]
-for mod in camModules:
-    try:
-        modName = mod.split(".")[-1]
-        exec(modName + "=importlib.import_module('cam." + mod + "')")
-        exec("importlib.reload(" + modName + ")")
-    except:
-        print("PROBLEM (RE)LOADING MODULE cam." + mod + " AT " + __name__)
+from cam import chunk
 from cam.chunk import *
+from cam import collision
 from cam.collision import *
+from cam import simple
 from cam.simple import *
+from cam import pattern
 from cam.pattern import *
+from cam import utils, bridges
 from cam.utils import *
+from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
+from cam import image_utils
 from cam.image_utils import *
-import cam.ops
-from cam.ops import *
 
 from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry

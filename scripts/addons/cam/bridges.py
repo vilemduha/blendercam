@@ -23,13 +23,7 @@
 import bpy
 from bpy.props import *
 
-import importlib
 from cam import utils
-try:
-	importlib.reload(utils)
-except:
-    print("PROBLEM RELOADING MODULE cam.utils AT "+__name__)
-
 import mathutils
 import math
 
