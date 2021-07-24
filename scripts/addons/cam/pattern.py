@@ -23,19 +23,12 @@ import time
 import mathutils
 from mathutils import *
 
-import importlib
-camModules=["simple", "chunk", "polygon_utils_cam"]
-for mod in camModules:
-	try:
-		modName=mod.split(".")[-1]
-		exec(modName + "=importlib.import_module('cam."+ mod+"')")
-		exec("importlib.reload("+modName+")")
-	except:
-		print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
+
+from cam import simple, chunk
 from cam.simple import *
 from cam.chunk import *
+from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
-
 import shapely
 from shapely import geometry as sgeometry
 import numpy

@@ -31,15 +31,7 @@ from bpy.props import (StringProperty,
 from bpy.types import (Panel, Menu, Operator, PropertyGroup, )
 
 
-import importlib
-camModules=["gcodeimportparser", "simple"]
-for mod in camModules:
-    try:
-        modName=mod.split(".")[-1]
-        exec(modName + "=importlib.import_module('cam."+ mod+"')")
-        exec("importlib.reload("+modName+")")
-    except:
-        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
+from cam import gcodeimportparser, simple
 from cam.simple import *
 
 # EXPERIMENTAL=True#False

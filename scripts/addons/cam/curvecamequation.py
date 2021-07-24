@@ -24,21 +24,10 @@
 import bpy
 from bpy.props import *
 
-
-import importlib
-camModules=["utils", "parametric"]
-for mod in camModules:
-    try:
-        modName=mod.split(".")[-1]
-        exec(modName + "=importlib.import_module('cam."+ mod+"')")
-        exec("importlib.reload("+modName+")")
-    except:
-        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
-	
+from cam import utils, parametric
 import math
 from Equation import Expression
 import numpy as np
-
 
 class CamSineCurve(bpy.types.Operator):
     """Object sine """  # by Alain Pelletier april 2021
