@@ -1137,7 +1137,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         ui.CAM_PACK_Panel,
         ui.CAM_SLICE_Panel,
         ui.VIEW3D_PT_tools_curvetools,
-        ui.OBJECT_PT_CustomPanel,
+        ui.CustomPanel,
 
         ops.PathsBackground,
         ops.KillPathsBackground,
@@ -1334,7 +1334,7 @@ classes = [
     ui.CAM_PACK_Panel,
     ui.CAM_SLICE_Panel,
     ui.VIEW3D_PT_tools_curvetools,
-    ui.OBJECT_PT_CustomPanel,
+    ui.CustomPanel,
     ui.WM_OT_gcode_import,
 
     ops.PathsBackground,
