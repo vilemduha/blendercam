@@ -1006,12 +1006,12 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
 
 
 
-class OBJECT_PT_CustomPanel(bpy.types.Panel):
+class CustomPanel(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
     bl_label = "Import Gcode"
-    bl_idname = "object.importgcode"
+    bl_idname = "OBJECT_PT_importgcode"
 
     bl_options = {'DEFAULT_CLOSED'}
 

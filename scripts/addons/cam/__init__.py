@@ -27,16 +27,7 @@ from bpy.props import *
 import bl_operators
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 
-import importlib
-camModules=["ui", "ops", "curvecamtools", "curvecamequation", "utils", "simple", "polygon_utils_cam"] # , post_processors
-for mod in camModules:
-    try:
-        modName=mod.split(".")[-1]
-        exec(modName + "=importlib.import_module('cam."+ mod+"')")
-        exec("importlib.reload("+modName+")")
-    except:
-        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
-
+from cam import ui, ops,curvecamtools,curvecamequation, utils, simple, polygon_utils_cam  # , post_processors
 import numpy
 
 from shapely import geometry as sgeometry
@@ -1146,7 +1137,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         ui.CAM_PACK_Panel,
         ui.CAM_SLICE_Panel,
         ui.VIEW3D_PT_tools_curvetools,
-        ui.OBJECT_PT_CustomPanel,
+        ui.CustomPanel,
 
         ops.PathsBackground,
         ops.KillPathsBackground,
@@ -1343,7 +1334,7 @@ classes = [
     ui.CAM_PACK_Panel,
     ui.CAM_SLICE_Panel,
     ui.VIEW3D_PT_tools_curvetools,
-    ui.OBJECT_PT_CustomPanel,
+    ui.CustomPanel,
     ui.WM_OT_gcode_import,
 
     ops.PathsBackground,
