@@ -78,22 +78,28 @@ def getCutterBullet(o):
                                         depth=BULLET_SCALE * o.cutter_diameter * s, end_fill_type='NGON',
                                         align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
                                         rotation=(math.pi, 0, 0))
+        print("opcutterdiameter",o.cutter_diameter)
+        print("cutterdepth",o.cutter_diameter * s)                               
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
-        cutter.rigid_body.collision_shape = 'CYLCONE'
+        cutter.rigid_body.collision_shape = 'CONE'
     elif type == 'CYLCONE':
 
         angle = o.cutter_tip_angle
         s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  #angles in degrees
         #s = math.tan((math.pi-angle)/2)/2 #angle in radians
 
-        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=0,
-                                        depth=BULLET_SCALE * o.cutter_diameter * s, end_fill_type='NGON',
-                                        align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
+        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=BULLET_SCALE * o.cylcone_diameter / 2,
+                                        depth=BULLET_SCALE * (o.cutter_diameter - o.cylcone_diameter) * s, end_fill_type='NGON',
+                                        align='WORLD', enter_editmode=False, location = CUTTER_OFFSET,
                                         rotation=(math.pi, 0, 0))
+        print("slope",s)
+        print("opcutterdiameter",o.cutter_diameter)
+        print("opcylconediameter",o.cylcone_diameter)
+        print("cutterdepth",(o.cutter_diameter - o.cylcone_diameter) * s)
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
-        cutter.rigid_body.collision_shape = 'CYLCONE'
+        cutter.rigid_body.collision_shape = 'CONVEX_HULL'
     elif type == 'BALLCONE':
 
         angle = o.cutter_tip_angle
