@@ -77,9 +77,7 @@ def getCutterBullet(o):
         bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=0,
                                         depth=BULLET_SCALE * o.cutter_diameter * s, end_fill_type='NGON',
                                         align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
-                                        rotation=(math.pi, 0, 0))
-        print("opcutterdiameter",o.cutter_diameter)
-        print("cutterdepth",o.cutter_diameter * s)                               
+                                        rotation=(math.pi, 0, 0))                            
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CONE'
@@ -89,30 +87,35 @@ def getCutterBullet(o):
         s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  #angles in degrees
         #s = math.tan((math.pi-angle)/2)/2 #angle in radians
 
-        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=BULLET_SCALE * o.cylcone_diameter / 2,
-                                        depth=BULLET_SCALE * (o.cutter_diameter - o.cylcone_diameter) * s, end_fill_type='NGON',
+        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=BULLET_SCALE
+         * o.cylcone_diameter / 2, depth=BULLET_SCALE * (o.cutter_diameter - o.cylcone_diameter) * s, end_fill_type='NGON',
                                         align='WORLD', enter_editmode=False, location = CUTTER_OFFSET,
                                         rotation=(math.pi, 0, 0))
-        print("slope",s)
-        print("opcutterdiameter",o.cutter_diameter)
-        print("opcylconediameter",o.cylcone_diameter)
-        print("cutterdepth",(o.cutter_diameter - o.cylcone_diameter) * s)
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
     elif type == 'BALLCONE':
-
-        angle = o.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  #angles in degrees
-        #s = math.tan((math.pi-angle)/2)/2 #angle in radians
-
-        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=0,
-                                        depth=BULLET_SCALE * o.cutter_diameter * s, end_fill_type='NGON',
-                                        align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
-                                        rotation=(math.pi, 0, 0))
-        bpy.ops.rigidbody.object_add(type='ACTIVE')
+        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=o.cutter_diameter / 2, radius2=o.ball_radius,
+         depth = o.ball_cone_flute, end_fill_type='NGON',align='WORLD', enter_editmode=False,
+         location = (0, 0,  o.ball_cone_flute/2), rotation=(math.pi, 0, 0))
+        #bpy.ops.rigidbody.object_add(type='ACTIVE')
+        ob1 = bpy.context.active_object
+        bpy.ops.mesh.primitive_uv_sphere_add(radius= o.ball_radius, enter_editmode=False, align='WORLD',
+         location= (0, 0, 0), scale=(1, 1, 1))
+        #bpy.ops.rigidbody.object_add(type='ACTIVE')
+        ob2 = bpy.context.active_object
+        # add union boolean mod_bool =  bpy.data.objects[name_a].modifiers.new('my_bool_mod', 'BOOLEAN')
+        ob_bool = ob2.modifiers.new(type='BOOLEAN',name='booly')
+        ob_bool.object = ob1
+        ob_bool.operation = 'UNION'
+        bpy.ops.object.modifier_apply(modifier='booly')
         cutter = bpy.context.active_object
-        cutter.rigid_body.collision_shape = 'BALLCONE'
+        cutter.scale *= BULLET_SCALE
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
+        bpy.ops.rigidbody.object_add(type='ACTIVE')
+        cutter.location = CUTTER_OFFSET
+        cutter.rigid_body.collision_shape = 'CONVEX_HULL'
 
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[o.cutter_object_name]
