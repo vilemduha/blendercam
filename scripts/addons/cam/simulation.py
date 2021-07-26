@@ -334,7 +334,7 @@ def getCutterArray(operation, pixsize):
                     car.itemset((a, b), z)
     elif type == 'CYLCONE':
         angle = operation.cutter_tip_angle
-        cyl_r = operation.cylcone_diameter
+        cyl_r = operation.cylcone_diameter/2
         s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
         #s = math.tan((math.pi - angle) / 2)  # angle in radians
         for a in range(0, res):
