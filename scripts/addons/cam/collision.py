@@ -95,20 +95,42 @@ def getCutterBullet(o):
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
     elif type == 'BALLCONE':
-        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=o.cutter_diameter / 2, radius2=o.ball_radius,
-         depth = o.ball_cone_flute, end_fill_type='NGON',align='WORLD', enter_editmode=False,
-         location = (0, 0,  o.ball_cone_flute/2), rotation=(math.pi, 0, 0))
-        #bpy.ops.rigidbody.object_add(type='ACTIVE')
+        bpy.ops.mesh.primitive_cone_add(vertices=32,
+                                        radius1=o.cutter_diameter / 2,
+                                        radius2=o.ball_radius,
+                                        depth=o.ball_cone_flute,
+                                        end_fill_type='NGON',
+                                        align='WORLD',
+                                        enter_editmode=False,
+                                        location=(0, 0,  o.ball_cone_flute/2),
+                                        rotation=(math.pi, 0, 0))
+
+        # bpy.ops.rigidbody.object_add(type='ACTIVE')
+
         ob1 = bpy.context.active_object
-        bpy.ops.mesh.primitive_uv_sphere_add(radius= o.ball_radius, enter_editmode=False, align='WORLD',
-         location= (0, 0, 0), scale=(1, 1, 1))
-        #bpy.ops.rigidbody.object_add(type='ACTIVE')
+        ob1.name = "ConeTool"
+
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=o.ball_radius,
+                                             enter_editmode=False,
+                                             align='WORLD',
+                                             location=(0, 0, 0),
+                                             scale=(1, 1, 1))
+
+        # bpy.ops.rigidbody.object_add(type='ACTIVE')
+
         ob2 = bpy.context.active_object
+        ob2.name = "BallConeTool"
         # add union boolean mod_bool =  bpy.data.objects[name_a].modifiers.new('my_bool_mod', 'BOOLEAN')
-        ob_bool = ob2.modifiers.new(type='BOOLEAN',name='booly')
+        ob_bool = ob2.modifiers.new(type='BOOLEAN', name='booly')
         ob_bool.object = ob1
         ob_bool.operation = 'UNION'
         bpy.ops.object.modifier_apply(modifier='booly')
+
+        bpy.ops.object.select_all(action='DESELECT')
+        bpy.data.objects['ConeTool'].select_set(True)
+        bpy.ops.object.delete()
+        bpy.data.objects['BallConeTool'].select_set(True)
+
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
