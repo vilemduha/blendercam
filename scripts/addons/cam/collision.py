@@ -139,8 +139,6 @@ def getCutterBullet(o):
         cutter.location = CUTTER_OFFSET
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
 
-
-
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[o.cutter_object_name]
         activate(cutob)
