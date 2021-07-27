@@ -51,10 +51,10 @@ BlenderCam is recommended with Linux. BlenderCam can work on Windows but the ins
 
 ## 👌 Features
 
-|                            | Blender 2.92 and 2.80  
+|                            | Blender 2.93 and 2.80  
 | -------------------------- | :----------------: |
 | Several milling strategies for 2D and 3D          |         ✔️        | 
-| Cutter types: ball, flat, v-carve with various angles, user definable             |         ✔️         |  
+| Cutter types: ball, ballcone, endmill flat, v-carve with various angles, user definable             |         ✔️         |  
 | work with 3d data or depth images       |         ✔️         |  
 | Layers and skin for roughing. |         ✔️         |  
 | Inverse milling   |         ✔️         |  

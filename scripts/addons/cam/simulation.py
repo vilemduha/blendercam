@@ -32,8 +32,6 @@ import numpy as np
 from cam import simple
 from cam import image_utils
 
-
-
 def createSimulationObject(name, operations, i):
     oname = 'csim_' + name
 
@@ -325,7 +323,8 @@ def getCutterArray(operation, pixsize):
 
     elif type == 'VCARVE':
         angle = operation.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180)
+        s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
+        #s = math.tan((math.pi - angle) / 2)  # angle in radians
         for a in range(0, res):
             v.x = (a + 0.5 - m) * ps
             for b in range(0, res):
@@ -333,6 +332,32 @@ def getCutterArray(operation, pixsize):
                 if v.length <= r:
                     z = (-v.length * s)
                     car.itemset((a, b), z)
+    elif type == 'CYLCONE':
+        angle = operation.cutter_tip_angle
+        cyl_r = operation.cylcone_diameter/2
+        s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
+        #s = math.tan((math.pi - angle) / 2)  # angle in radians
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    z = (-(v.length - cyl_r) * s)
+                    car.itemset((a, b), z)
+    elif type == 'BALLCONE':
+        #angle = operation.cutter_tip_angle
+        ball_r = operation.ball_radius
+        cutter_r = operation.cutter_diameter / 2
+        cutter_l = operation.ball_cone_flute
+        #s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
+        #s = math.tan((math.pi - angle) / 2)  # angle in radians
+        #for a in range(0, res):
+        #    v.x = (a + 0.5 - m) * ps
+        #    for b in range(0, res):
+        #        v.y = (b + 0.5 - m) * ps
+        #        if v.length <= r:
+        #            z = (-(v.length ) * s)
+        #            car.itemset((a, b), z)
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[operation.cutter_object_name]
         scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #

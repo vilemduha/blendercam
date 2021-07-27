@@ -34,7 +34,6 @@ import math
 from Equation import Expression
 import numpy as np
 
-
 # boolean operations for curve objects
 class CamCurveBoolean(bpy.types.Operator):
     """perform Boolean operation on two or more curves"""

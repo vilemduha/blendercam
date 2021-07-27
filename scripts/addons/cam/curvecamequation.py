@@ -29,7 +29,6 @@ import math
 from Equation import Expression
 import numpy as np
 
-
 class CamSineCurve(bpy.types.Operator):
     """Object sine """  # by Alain Pelletier april 2021
     bl_idname = "object.sine"

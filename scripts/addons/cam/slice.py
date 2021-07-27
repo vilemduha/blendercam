@@ -23,7 +23,9 @@
 # completely rewritten April 2021
 
 import bpy
+
 from cam import utils
+
 
 
 def slicing2d(ob, height):  # April 2020 Alain Pelletier
@@ -42,9 +44,9 @@ def slicing2d(ob, height):  # April 2020 Alain Pelletier
     bpy.ops.object.convert(target='CURVE')  # convert it to curve
     if bpy.context.active_object.type != 'CURVE':  # conversion failed because mesh was empty so delete mesh
         bpy.ops.object.delete(use_global=False, confirm=False)
-        return false
+        return False
     bpy.ops.object.select_all(action='DESELECT')  # deselect everything
-    return true
+    return True
 
 def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
     # let's slice things

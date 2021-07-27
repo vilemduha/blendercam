@@ -31,7 +31,7 @@ from bpy.props import (StringProperty,
 from bpy.types import (Panel, Menu, Operator, PropertyGroup, )
 
 
-from cam import gcodeimportparser
+from cam import gcodeimportparser, simple
 from cam.simple import *
 
 # EXPERIMENTAL=True#False
@@ -98,6 +98,11 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                    layout.prop(ao,'ball_radius')
                    EngagementDisplay(ao,layout)
                    layout.prop(ao,'ball_cone_flute')
+                   layout.label(text='Cutter diameter = shank diameter')
+                if ao.cutter_type == 'CYLCONE':
+                   layout.prop(ao,'cylcone_diameter')
+                   EngagementDisplay(ao,layout)
+                   layout.prop(ao,'cutter_tip_angle')
                    layout.label(text='Cutter diameter = shank diameter')
                 if ao.cutter_type == 'BULLNOSE':
                    layout.prop(ao,'bull_corner_radius')
@@ -584,6 +589,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                 elif ao.strategy == 'MEDIAL_AXIS':
                     layout.prop(ao, 'medial_axis_threshold')
                     layout.prop(ao, 'medial_axis_subdivision')
+                    layout.prop(ao, 'add_pocket_for_medial')
  #remove crazy strategy because no one knows what it does.
  #               elif ao.strategy == 'CRAZY':
  #                   layout.prop(ao, 'crazy_threshold1')
@@ -793,7 +799,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.optimize:
                     layout.prop(ao, 'optimize_threshold')
                 if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
-                    exclude_exact = ao.strategy in [ 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL','CURVE']
+                    exclude_exact = ao.strategy in ['MEDIAL_AXIS', 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL','CURVE']
                     if not exclude_exact:
                         if ao.use_exact != True:
                             layout.prop(ao, 'use_exact')
@@ -1000,12 +1006,12 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
 
 
 
-class OBJECT_PT_CustomPanel(bpy.types.Panel):
+class CustomPanel(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
     bl_label = "Import Gcode"
-    bl_idname = "object.importgcode"
+    bl_idname = "OBJECT_PT_importgcode"
 
     bl_options = {'DEFAULT_CLOSED'}
 

@@ -55,6 +55,7 @@ from cam.image_utils import *
 from cam.nc import iso
 
 
+
 def pointonline(a,b,c,tolerence):
     b=b-a  # convert to vector by subtracting origin
     c=c-a

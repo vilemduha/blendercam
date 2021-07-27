@@ -27,7 +27,16 @@ from bpy.props import *
 import bl_operators
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 
-from cam import ui, ops,curvecamtools,curvecamequation, utils, simple, polygon_utils_cam  # , post_processors
+import importlib
+camModules=["ui", "ops", "curvecamtools", "curvecamequation", "utils", "simple", "polygon_utils_cam"] # , post_processors
+for mod in camModules:
+    try:
+        modName=mod.split(".")[-1]
+        exec(modName + "=importlib.import_module('cam."+ mod+"')")
+        exec("importlib.reload("+modName+")")
+    except:
+        print("PROBLEM (RE)LOADING MODULE cam."+mod+" AT "+__name__)
+
 import numpy
 
 from shapely import geometry as sgeometry
@@ -40,7 +49,7 @@ import pickle
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
-    "version": (0, 9, 0),
+    "version": (0, 9, 1),
     "blender": (2, 80, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
@@ -574,7 +583,7 @@ class camOperation(bpy.types.PropertyGroup):
                                   default=25.0, precision=PRECISION, unit="LENGTH", update=updateOffsetImage)
     cutter_flutes: IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2,
                                 update=updateChipload)
-    cutter_tip_angle: FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0,
+    cutter_tip_angle: FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", subtype="ANGLE",min=0.0,
                                      max=180.0, default=60.0, precision=PRECISION, update=updateOffsetImage)
     ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
                                      max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
@@ -1137,7 +1146,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         ui.CAM_PACK_Panel,
         ui.CAM_SLICE_Panel,
         ui.VIEW3D_PT_tools_curvetools,
-        ui.CustomPanel,
+        ui.OBJECT_PT_CustomPanel,
 
         ops.PathsBackground,
         ops.KillPathsBackground,
@@ -1334,7 +1343,7 @@ classes = [
     ui.CAM_PACK_Panel,
     ui.CAM_SLICE_Panel,
     ui.VIEW3D_PT_tools_curvetools,
-    ui.CustomPanel,
+    ui.OBJECT_PT_CustomPanel,
     ui.WM_OT_gcode_import,
 
     ops.PathsBackground,
