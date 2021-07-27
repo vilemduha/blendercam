@@ -358,8 +358,8 @@ def getCutterArray(operation, pixsize):
                 v.y = (b + 0.5 - m) * ps
                 if v.length <= r:
                     z = (-(v.length -ball_r ) * s)
-                    #if v.length <= ball_r:
-                      #z = math.sin(math.acos(v.length / ball_r)) * ball_r - ball_r 
+                    if v.length <= ball_r:
+                      z = math.sin(math.acos(v.length / ball_r)) * ball_r - ball_r 
                     car.itemset((a, b), z)
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[operation.cutter_object_name]
