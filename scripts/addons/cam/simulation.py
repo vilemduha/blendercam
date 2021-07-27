@@ -349,15 +349,18 @@ def getCutterArray(operation, pixsize):
         ball_r = operation.ball_radius
         cutter_r = operation.cutter_diameter / 2
         cutter_l = operation.ball_cone_flute
-        #s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
-        #s = math.tan((math.pi - angle) / 2)  # angle in radians
-        #for a in range(0, res):
-        #    v.x = (a + 0.5 - m) * ps
-        #    for b in range(0, res):
-        #        v.y = (b + 0.5 - m) * ps
-        #        if v.length <= r:
-        #            z = (-(v.length ) * s)
-        #            car.itemset((a, b), z)
+        s =   cutter_l/cutter_r
+
+        
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    z = (-(v.length -ball_r ) * s)
+                    #if v.length <= ball_r:
+                      #z = math.sin(math.acos(v.length / ball_r)) * ball_r - ball_r 
+                    car.itemset((a, b), z)
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[operation.cutter_object_name]
         scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
