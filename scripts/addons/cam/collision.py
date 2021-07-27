@@ -95,14 +95,15 @@ def getCutterBullet(o):
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
     elif type == 'BALLCONE':
+        conedepth = o.ball_cone_flute-o.ball_radius 
         bpy.ops.mesh.primitive_cone_add(vertices=32,
                                         radius1=o.cutter_diameter / 2,
                                         radius2=o.ball_radius,
-                                        depth=o.ball_cone_flute,
+                                        depth= conedepth,
                                         end_fill_type='NGON',
                                         align='WORLD',
                                         enter_editmode=False,
-                                        location=(0, 0,  o.ball_cone_flute/2),
+                                        location=(0, 0,  o.conedepth/2),
                                         rotation=(math.pi, 0, 0))
 
         # bpy.ops.rigidbody.object_add(type='ACTIVE')
