@@ -343,21 +343,31 @@ def getCutterArray(operation, pixsize):
                 v.y = (b + 0.5 - m) * ps
                 if v.length <= r:
                     z = (-(v.length - cyl_r) * s)
+                    if v.length <= cyl_r:
+                        z =0
                     car.itemset((a, b), z)
     elif type == 'BALLCONE':
-        #angle = operation.cutter_tip_angle
+        angle =math.radians(operation.cutter_tip_angle)/2
         ball_r = operation.ball_radius
         cutter_r = operation.cutter_diameter / 2
-        cutter_l = operation.ball_cone_flute
-        #s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
-        #s = math.tan((math.pi - angle) / 2)  # angle in radians
-        #for a in range(0, res):
-        #    v.x = (a + 0.5 - m) * ps
-        #    for b in range(0, res):
-        #        v.y = (b + 0.5 - m) * ps
-        #        if v.length <= r:
-        #            z = (-(v.length ) * s)
-        #            car.itemset((a, b), z)
+        conedepth = (cutter_r - ball_r)/math.tan(angle)
+        Ball_R = ball_r/math.cos(angle)
+        D_ofset = ball_r * math.tan(angle)
+        print("angle", operation.cutter_tip_angle/2)
+        print("conedepth", conedepth)
+        print("D_ofset", D_ofset)
+        print("Ball_R", Ball_R)
+        s = math.tan(math.pi/2-angle)
+        print("slope", s)
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= cutter_r:
+                    z = -(v.length - ball_r ) * s -Ball_R + D_ofset
+                    if v.length <= ball_r:
+                      z = math.sin(math.acos(v.length / Ball_R)) * Ball_R - Ball_R
+                    car.itemset((a, b), z)
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[operation.cutter_object_name]
         scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
