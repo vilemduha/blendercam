@@ -578,8 +578,8 @@ class camOperation(bpy.types.PropertyGroup):
                                      max=180.0, default=60.0, precision=PRECISION, update=updateOffsetImage)
     ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
                                      max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
-    ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
-                                     max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+    #ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
+    #                                 max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
     bull_corner_radius: FloatProperty(name="Bull Corner Radius", description="Radius tool bit corner", min=0.0,
                                      max=0.035, default=0.005, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
 

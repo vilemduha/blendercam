@@ -95,7 +95,10 @@ def getCutterBullet(o):
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
     elif type == 'BALLCONE':
-        conedepth = o.ball_cone_flute-o.ball_radius 
+        angle =math.radians(o.cutter_tip_angle)/2
+        conedepth = (o.cutter_diameter/2 - o.ball_radius)/math.tan(angle)
+        Ball_R = o.ball_radius/math.cos(angle)
+        D_ofset = o.ball_radius * math.tan(angle)
         bpy.ops.mesh.primitive_cone_add(vertices=32,
                                         radius1=o.cutter_diameter / 2,
                                         radius2=o.ball_radius,
@@ -103,7 +106,7 @@ def getCutterBullet(o):
                                         end_fill_type='NGON',
                                         align='WORLD',
                                         enter_editmode=False,
-                                        location=(0, 0,  o.conedepth/2),
+                                        location=(0, 0,conedepth/2 - D_ofset),
                                         rotation=(math.pi, 0, 0))
 
         # bpy.ops.rigidbody.object_add(type='ACTIVE')
@@ -111,7 +114,7 @@ def getCutterBullet(o):
         ob1 = bpy.context.active_object
         ob1.name = "ConeTool"
 
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=o.ball_radius,
+        bpy.ops.mesh.primitive_uv_sphere_add(radius = Ball_R,
                                              enter_editmode=False,
                                              align='WORLD',
                                              location=(0, 0, 0),
@@ -131,7 +134,7 @@ def getCutterBullet(o):
         bpy.data.objects['ConeTool'].select_set(True)
         bpy.ops.object.delete()
         bpy.data.objects['BallConeTool'].select_set(True)
-
+        bpy.ops.object.duplicate()
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
