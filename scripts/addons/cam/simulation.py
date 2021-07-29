@@ -353,12 +353,7 @@ def getCutterArray(operation, pixsize):
         conedepth = (cutter_r - ball_r)/math.tan(angle)
         Ball_R = ball_r/math.cos(angle)
         D_ofset = ball_r * math.tan(angle)
-        print("angle", operation.cutter_tip_angle/2)
-        print("conedepth", conedepth)
-        print("D_ofset", D_ofset)
-        print("Ball_R", Ball_R)
         s = math.tan(math.pi/2-angle)
-        print("slope", s)
         for a in range(0, res):
             v.x = (a + 0.5 - m) * ps
             for b in range(0, res):

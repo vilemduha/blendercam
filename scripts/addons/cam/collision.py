@@ -134,7 +134,6 @@ def getCutterBullet(o):
         bpy.data.objects['ConeTool'].select_set(True)
         bpy.ops.object.delete()
         bpy.data.objects['BallConeTool'].select_set(True)
-        bpy.ops.object.duplicate()
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
