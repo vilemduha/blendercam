@@ -35,12 +35,13 @@ from cam import simple
 from cam.simple import *
 from cam import pattern
 from cam.pattern import *
-from cam import utils, bridges
+from cam import utils, bridges,ops
 from cam.utils import *
 from cam import polygon_utils_cam
 from cam.polygon_utils_cam import *
 from cam import image_utils
 from cam.image_utils import *
+
 
 from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
@@ -750,7 +751,7 @@ def medial_axis(o):
     if o.add_pocket_for_medial:
         o.add_pocket_for_medial = False
         # export medial axis parameter to pocket op
-        cam.ops.Add_Pocket(None, maxdepth, m_o_name, new_cutter_diameter)
+        ops.Add_Pocket(None, maxdepth, m_o_name, new_cutter_diameter)
 
 
 def getLayers(operation, startdepth, enddepth):
