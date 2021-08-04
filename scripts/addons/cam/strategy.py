@@ -277,7 +277,15 @@ def proj_curve(s, o):
 
 def pocket(o):
     print('operation: pocket')
-    p = utils.getObjectOutline(o.cutter_diameter / 2, o, False)
+    max_depth = checkminz(o)
+    cutter_angle = math.radians(o.cutter_tip_angle/2)
+    if o.cutter_type == 'VCARVE':
+        cutter_diameter = -max_depth * math.tan(cutter_angle)
+    elif o.cutter_type == 'CYLCONE':
+        cutter_diameter = -max_depth * math.tan(cutter_angle) + o.cylcone_diameter/2
+    elif o.cutter_type == 'BALLCONE':
+        cutter_diameter = -max_depth * math.tan(cutter_angle) + o.ball_radius
+    p = utils.getObjectOutline(cutter_diameter, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
     print("approximative:" + str(approxn))
     i = 0
