@@ -279,6 +279,7 @@ def pocket(o):
     print('operation: pocket')
     max_depth = checkminz(o)
     cutter_angle = math.radians(o.cutter_tip_angle/2)
+    c_offset = o.cutter_diameter / 2
     if o.cutter_type == 'VCARVE':
         c_offset = -max_depth * math.tan(cutter_angle)
     elif o.cutter_type == 'CYLCONE':
