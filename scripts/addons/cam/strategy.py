@@ -53,6 +53,7 @@ SHAPELY = True
 ###########cutout strategy is completely here:
 def cutout(o):
     max_depth = checkminz(o)
+    m_o_name = o.object_name
     cutter_angle = math.radians(o.cutter_tip_angle/2)
     c_offset = o.cutter_diameter / 2
     if o.cutter_type == 'VCARVE':
@@ -190,6 +191,7 @@ def cutout(o):
             chunks.append(chl[0])
 
     chunksToMesh(chunks, o)
+    ops.Add_Pocket(None, max_depth, m_o_name, c_offset)
 
 
 def curve(o):

@@ -582,7 +582,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         o = s.cam_operations[-1]
         o.object_name = p_ob.name
         s.cam_active_operation = len(s.cam_operations) - 1
-        o.name = 'pocket_for_medial_' + str(s.cam_active_operation + 1)
+        o.name = 'pocket_' + str(s.cam_active_operation + 1)
         o.filename = o.name
         o.strategy = 'POCKET'
         o.use_layers = False
