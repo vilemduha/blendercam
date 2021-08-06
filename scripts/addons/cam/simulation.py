@@ -31,7 +31,6 @@ import numpy as np
 
 from cam import simple
 from cam import image_utils
-
 def createSimulationObject(name, operations, i):
     oname = 'csim_' + name
 
@@ -85,6 +84,7 @@ def createSimulationObject(name, operations, i):
                 t.image = i
                 disp.texture = t
     ob.hide_render = True
+    bpy.ops.object.shade_smooth()
 
 
 def doSimulation(name, operations):
