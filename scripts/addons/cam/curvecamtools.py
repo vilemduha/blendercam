@@ -65,29 +65,33 @@ class CamCurveIntarsion(bpy.types.Operator):
     """makes curve cuttable both inside and outside, for intarsion and joints"""
     bl_idname = "object.curve_intarsion"
     bl_label = "Intarsion"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     diameter: bpy.props.FloatProperty(name="cutter diameter", default=.001, min=0, max=100, precision=4, unit="LENGTH")
+    tolerance: bpy.props.FloatProperty(name="cutout Tolerance", default=.0001, min=0, max=0.005, precision=4, unit="LENGTH")
 
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
 
     def execute(self, context):
-        utils.silhoueteOffset(context, -self.diameter / 2)
+        diam = self.diameter * 1.05  #make the diameter 5% larger
+        utils.silhoueteOffset(context, -diam / 2)
         o1 = bpy.context.active_object
 
-        utils.silhoueteOffset(context, self.diameter)
+        utils.silhoueteOffset(context, diam)
         o2 = bpy.context.active_object
-        utils.silhoueteOffset(context, -self.diameter / 2)
+        utils.silhoueteOffset(context, -diam/ 2)
         o3 = bpy.context.active_object
         o1.select_set(state=True)
         o2.select_set(state=True)
         o3.select_set(state=False)
         bpy.ops.object.delete(use_global=False)
+        o3.name = "intarsion_pocket"
+        o4 = utils.silhoueteOffset(context, -self.tolerance / 2)
+        bpy.context.active_object.name = "intarsion_profile"
         o3.select_set(state=True)
         return {'FINISHED'}
-
 
 # intarsion or joints
 class CamCurveOvercuts(bpy.types.Operator):
