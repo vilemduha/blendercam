@@ -191,7 +191,17 @@ def cutout(o):
             chunks.append(chl[0])
 
     chunksToMesh(chunks, o)
-    ops.Add_Pocket(None, max_depth, m_o_name, c_offset)
+    ob=bpy.data.objects[o.object_name]
+    if o.cutter_type in ('VCARVE','CYLCONE','BALLCONE'):
+        if o.cut_type == 'INSIDE': 
+            ob.select_set(True)
+            bpy.context.view_layer.objects.active = ob
+            utils.silhoueteOffset(ob, -c_offset,1,0.3)
+        elif o.cut_type == 'OUTSIDE':
+            ob.select_set(True)
+            bpy.context.view_layer.objects.active = ob
+            utils.silhoueteOffset(ob, c_offset,1,0.3)
+        
 
 
 def curve(o):

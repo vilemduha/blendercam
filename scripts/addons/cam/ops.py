@@ -570,7 +570,7 @@ def fixUnits():
     s.unit_settings.system_rotation = 'DEGREES'
 
     s.unit_settings.scale_length = 1.0  # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.
-# add pocket op for medial axis to clean unremoved material
+# add pocket op for medial axis and profile cut inside to clean unremoved material
 def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         s = bpy.context.scene
         ob=bpy.data.objects[sname]
