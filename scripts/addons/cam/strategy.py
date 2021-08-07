@@ -462,7 +462,7 @@ def pocket(o):
                         ch.points.extend(rothelix)
 
         chunks.extend(lchunks)
-    if o.project_pocket_to_object == TRUE:
+    if o.project_pocket_to_object == True:
         return chunks
 
     if o.ramp:
