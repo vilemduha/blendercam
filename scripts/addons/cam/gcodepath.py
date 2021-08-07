@@ -573,7 +573,7 @@ def getPath3axis(context, operation):
     elif o.strategy == 'PROJECTED_CURVE':
         strategy.proj_curve(s, o)
 
-    elif o.strategy == 'POCKET' and o.project_pocket_to_object == FALSE:
+    elif o.strategy == 'POCKET' and o.project_pocket_to_object == False:
         strategy.pocket(o)
 
     elif o.strategy in ['PARALLEL', 'CROSS', 'BLOCK', 'SPIRAL', 'CIRCLES', 'OUTLINEFILL', 'CARVE', 'PENCIL', 'CRAZY', 'POCKET']:
@@ -581,12 +581,13 @@ def getPath3axis(context, operation):
         if o.strategy == 'CARVE' or o.strategy == 'POCKET':
             pathSamples = []
             # for ob in o.objects:
-            if o.strategy != pocket:
+            if o.strategy != 'POCKET':
                 ob = bpy.data.objects[o.curve_object]
                 pathSamples.extend(curveToChunks(ob))
             else:
                 pathSamples = strategy.pocket(o)
-                o.object_name = o.collision_object
+                o.object_name = o.project_object_name
+                print("collision ob name",o.object_name)
 
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)

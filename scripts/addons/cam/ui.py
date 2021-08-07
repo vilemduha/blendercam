@@ -615,8 +615,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                                                 
                 elif ao.strategy == 'POCKET':
                     layout.prop(ao, 'pocket_option')
-                    layout.prop(ao, 'projet_pocket_to_object')
-                    if ao.projet_pocket_to_object:
+                    layout.prop(ao, 'project_pocket_to_object')
+                    if ao.project_pocket_to_object:
                        layout.prop_search(ao, "project_object_name", bpy.data, "objects")
                     layout.prop(ao, 'dist_between_paths')
                     EngagementDisplay(ao,layout)
