@@ -581,8 +581,9 @@ def getPath3axis(context, operation):
         if o.strategy == 'CARVE':
             pathSamples = []
             # for ob in o.objects:
-            ob = bpy.data.objects[o.curve_object]
-            pathSamples.extend(curveToChunks(ob))
+#            ob = bpy.data.objects[o.curve_object]
+#            pathSamples.extend(curveToChunks(ob))
+            pathSamples=strategy.pocket(o)
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)
         elif o.strategy == 'PENCIL':
