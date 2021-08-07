@@ -52,6 +52,17 @@ SHAPELY = True
 
 ###########cutout strategy is completely here:
 def cutout(o):
+    max_depth = checkminz(o)
+    cutter_angle = math.radians(o.cutter_tip_angle/2)
+    c_offset = o.cutter_diameter / 2
+    if o.cutter_type == 'VCARVE':
+        c_offset = -max_depth * math.tan(cutter_angle)
+    elif o.cutter_type == 'CYLCONE':
+        c_offset = -max_depth * math.tan(cutter_angle) + o.cylcone_diameter/2
+    elif o.cutter_type == 'BALLCONE':
+        c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
+    if c_offset > o.cutter_diameter / 2:
+       c_offset = o.cutter_diameter / 2
     if o.straight:
         join = 2
     else:
@@ -80,7 +91,7 @@ def cutout(o):
             if o.cut_type == 'INSIDE':
                 offset = False
 
-            p = utils.getObjectOutline(o.cutter_diameter / 2, o, offset)
+            p = utils.getObjectOutline(c_offset, o, offset)
             if o.outlines_count > 1:
                 for i in range(1, o.outlines_count):
                     chunksFromCurve.extend(shapelyToChunks(p, -1))
@@ -183,7 +194,6 @@ def cutout(o):
 
 def curve(o):
     print('operation: curve')
-
     pathSamples = []
     utils.getOperationSources(o)
     if not o.onlycurves:
@@ -242,13 +252,11 @@ def proj_curve(s, o):
         extend_up = 0.1
         extend_down = 0.04
         tsamples = curveToChunks(targetCurve)
-#        tsamples = pocket(o)
         for chi, ch in enumerate(pathSamples):
             cht = tsamples[chi].points
             ch.depth = 0
             for i, s in enumerate(ch.points):
                 # move the points a bit
-                print("i=", i)
                 ep = Vector(cht[i])
                 sp = Vector(ch.points[i])
                 # extend startpoint
@@ -299,7 +307,7 @@ def pocket(o):
     lastchunks = []
     centers = None
     firstoutline = p  # for testing in the end.
-    prest = p.buffer(-o.cutter_diameter / 2, o.circle_detail)
+    prest = p.buffer(-c_offset, o.circle_detail)
     while not p.is_empty:
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
@@ -360,7 +368,7 @@ def pocket(o):
 
         ###########helix_enter first try here TODO: check if helix radius is not out of operation area.
         if o.helix_enter:
-            helix_radius = o.cutter_diameter * 0.5 * o.helix_diameter * 0.01  # 90 percent of cutter radius
+            helix_radius = c_offset * o.helix_diameter * 0.01  # 90 percent of cutter radius
             helix_circumference = helix_radius * pi * 2
 
             revheight = helix_circumference * tan(o.ramp_in_angle)
@@ -368,7 +376,7 @@ def pocket(o):
                 if chunksFromCurve[chi].children == []:
                     p = ch.points[0]  # TODO:intercept closest next point when it should stay low
                     # first thing to do is to check if helix enter can really enter.
-                    checkc = Circle(helix_radius + o.cutter_diameter / 2, o.circle_detail)
+                    checkc = Circle(helix_radius + c_offset, o.circle_detail)
                     checkc = affinity.translate(checkc, p[0], p[1])
                     covers = False
                     for poly in o.silhouete:
@@ -437,7 +445,7 @@ def pocket(o):
                     c = sgeometry.Polygon(c)
                     # print('çoutline')
                     # print(c)
-                    coutline = c.buffer(o.cutter_diameter / 2, o.circle_detail)
+                    coutline = c.buffer(c_offset, o.circle_detail)
                     # print(h)
                     # print('çoutline')
                     # print(coutline)
@@ -456,6 +464,7 @@ def pocket(o):
         chunks.extend(lchunks)
     if o.project_pocket_to_object == TRUE:
         return chunks
+
     if o.ramp:
         for ch in chunks:
             ch.rampZigZag(ch.zstart, ch.points[0][2], o)
@@ -943,3 +952,4 @@ def checkminz(o):
         return o.min.z
     else:
         return o.minz
+
