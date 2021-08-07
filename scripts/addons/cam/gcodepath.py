@@ -649,7 +649,7 @@ def getPath3axis(context, operation):
             for ch in chunks:
                 ch.rampZigZag(ch.zstart, ch.points[0][2], o)
         # print(chunks)
-        if o.strategy == 'CARVE':
+        if o.strategy == 'CARVE' or (o.strategy == 'POCKET' and o.project_pocket_to_object):
             for ch in chunks:
                 for vi in range(0, len(ch.points)):
                     ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
