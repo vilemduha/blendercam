@@ -585,7 +585,8 @@ def getPath3axis(context, operation):
                 ob = bpy.data.objects[o.curve_object]
                 pathSamples.extend(curveToChunks(ob))
             else:
-                pathSamples=strategy.pocket(o)
+                pathSamples = strategy.pocket(o)
+                o.object_name = o.collision_object
 
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)
