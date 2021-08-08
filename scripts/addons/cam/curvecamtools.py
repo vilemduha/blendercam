@@ -69,13 +69,20 @@ class CamCurveIntarsion(bpy.types.Operator):
 
     diameter: bpy.props.FloatProperty(name="cutter diameter", default=.001, min=0, max=100, precision=4, unit="LENGTH")
     tolerance: bpy.props.FloatProperty(name="cutout Tolerance", default=.0001, min=0, max=0.005, precision=4, unit="LENGTH")
+    backlight: bpy.props.FloatProperty(name="Backlight seat", default=0.000, min=0, max=0.010, precision=4, unit="LENGTH")
 
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
 
     def execute(self, context):
-        diam = self.diameter * 1.05  #make the diameter 5% larger
+        scene = bpy.context.scene
+
+#        for ob in scene.objects:
+#           if ob.name.startswith("intarsion_"):
+#                ob.delete()
+
+        diam = self.diameter * 1.05  + self.backlight * 2 #make the diameter 5% larger and compensate for backlight
         utils.silhoueteOffset(context, -diam / 2)
         o1 = bpy.context.active_object
 
@@ -88,8 +95,15 @@ class CamCurveIntarsion(bpy.types.Operator):
         o3.select_set(state=False)
         bpy.ops.object.delete(use_global=False)
         o3.name = "intarsion_pocket"
-        o4 = utils.silhoueteOffset(context, -self.tolerance / 2)
+
+        utils.silhoueteOffset(context, -self.tolerance / 2)  #  make smaller curve for material profile
+        o4 = bpy.context.active_object
         bpy.context.active_object.name = "intarsion_profile"
+
+        if self.backlight > 0.0:        #  Make a smaller curve for backlighting purposes
+            utils.silhoueteOffset(context, (-self.tolerance / 2)-self.backlight)
+            bpy.context.active_object.name = "intarsion_backlight"
+            o4.select_set(state=True)
         o3.select_set(state=True)
         return {'FINISHED'}
 
