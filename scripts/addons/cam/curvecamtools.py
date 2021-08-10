@@ -71,6 +71,9 @@ class CamCurveIntarsion(bpy.types.Operator):
     tolerance: bpy.props.FloatProperty(name="cutout Tolerance", default=.0001, min=0, max=0.005, precision=4, unit="LENGTH")
     backlight: bpy.props.FloatProperty(name="Backlight seat", default=0.000, min=0, max=0.010, precision=4, unit="LENGTH")
     perimeter_cut: bpy.props.FloatProperty(name="Perimeter cut offset", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
+    base_thickness:bpy.props.FloatProperty(name="Base material thickness", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
+    intarsion_thikcness:bpy.props.FloatProperty(name="Intarsion material thickness", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
+    backlight_depth_from_top:bpy.props.FloatProperty(name="Backlight well depth", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
 
     @classmethod
     def poll(cls, context):
@@ -93,7 +96,8 @@ class CamCurveIntarsion(bpy.types.Operator):
         #  Perimeter cut largen then intarsion pocket externally, optional
         if self.perimeter_cut > 0.0:
             utils.silhoueteOffset(context, self.perimeter_cut)
-            bpy.context.active_object.name = "intarsion_perimeter_profile"
+            bpy.context.active_object.name = "intarsion_perimeter"
+            bpy.context.object.location[2] = -self.base_thickness
             bpy.ops.object.select_all(action='DESELECT')  # deselect new curve
             for ob in selected:                           # select original curves
                 ob.select_set(True)
@@ -109,22 +113,26 @@ class CamCurveIntarsion(bpy.types.Operator):
         o2 = bpy.context.active_object
         utils.silhoueteOffset(context, -diam/ 2)
         o3 = bpy.context.active_object
-        o1.select_set(state=True)
-        o2.select_set(state=True)
-        o3.select_set(state=False)
+        o1.select_set(True)
+        o2.select_set(True)
+        o3.select_set(False)
         bpy.ops.object.delete(use_global=False)     # delete o1 and o2 temporary working curves
         o3.name = "intarsion_pocket"                # this is the pocket for intarsion
+        bpy.context.object.location[2] = -self.intarsion_thikcness
 
         #   intarsion profile is the inside piece of the intarsion
         utils.silhoueteOffset(context, -self.tolerance / 2)  #  make smaller curve for material profile
+        bpy.context.object.location[2] = self.intarsion_thikcness
         o4 = bpy.context.active_object
-        bpy.context.active_object.name = "intarsion_profile"
+        bpy.context.active_object.name = "intarsion_profil"
+        o4.select_set(False)
 
         if self.backlight > 0.0:        #  Make a smaller curve for backlighting purposes
             utils.silhoueteOffset(context, (-self.tolerance / 2)-self.backlight)
             bpy.context.active_object.name = "intarsion_backlight"
-            o4.select_set(state=True)
-        o3.select_set(state=True)
+            bpy.context.object.location[2] = -self.backlight_depth_from_top
+            o4.select_set(True)
+        o3.select_set(True)
         return {'FINISHED'}
 
 # intarsion or joints
