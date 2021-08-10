@@ -72,7 +72,7 @@ class CamCurveIntarsion(bpy.types.Operator):
     backlight: bpy.props.FloatProperty(name="Backlight seat", default=0.000, min=0, max=0.010, precision=4, unit="LENGTH")
     perimeter_cut: bpy.props.FloatProperty(name="Perimeter cut offset", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
     base_thickness:bpy.props.FloatProperty(name="Base material thickness", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
-    intarsion_thikcness:bpy.props.FloatProperty(name="Intarsion material thickness", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
+    intarsion_thickness:bpy.props.FloatProperty(name="Intarsion material thickness", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
     backlight_depth_from_top:bpy.props.FloatProperty(name="Backlight well depth", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
 
     @classmethod
@@ -118,11 +118,11 @@ class CamCurveIntarsion(bpy.types.Operator):
         o3.select_set(False)
         bpy.ops.object.delete(use_global=False)     # delete o1 and o2 temporary working curves
         o3.name = "intarsion_pocket"                # this is the pocket for intarsion
-        bpy.context.object.location[2] = -self.intarsion_thikcness
+        bpy.context.object.location[2] = -self.intarsion_thickness
 
         #   intarsion profile is the inside piece of the intarsion
         utils.silhoueteOffset(context, -self.tolerance / 2)  #  make smaller curve for material profile
-        bpy.context.object.location[2] = self.intarsion_thikcness
+        bpy.context.object.location[2] = self.intarsion_thickness
         o4 = bpy.context.active_object
         bpy.context.active_object.name = "intarsion_profil"
         o4.select_set(False)
@@ -130,7 +130,7 @@ class CamCurveIntarsion(bpy.types.Operator):
         if self.backlight > 0.0:        #  Make a smaller curve for backlighting purposes
             utils.silhoueteOffset(context, (-self.tolerance / 2)-self.backlight)
             bpy.context.active_object.name = "intarsion_backlight"
-            bpy.context.object.location[2] = -self.backlight_depth_from_top
+            bpy.context.object.location[2] = -self.backlight_depth_from_top-self.intarsion_thickness
             o4.select_set(True)
         o3.select_set(True)
         return {'FINISHED'}
