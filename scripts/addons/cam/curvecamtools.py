@@ -70,22 +70,41 @@ class CamCurveIntarsion(bpy.types.Operator):
     diameter: bpy.props.FloatProperty(name="cutter diameter", default=.001, min=0, max=100, precision=4, unit="LENGTH")
     tolerance: bpy.props.FloatProperty(name="cutout Tolerance", default=.0001, min=0, max=0.005, precision=4, unit="LENGTH")
     backlight: bpy.props.FloatProperty(name="Backlight seat", default=0.000, min=0, max=0.010, precision=4, unit="LENGTH")
+    perimeter_cut: bpy.props.FloatProperty(name="Perimeter cut offset", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
 
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
 
     def execute(self, context):
+        selected = context.selected_objects  # save original selected items
         scene = bpy.context.scene
 
-#        for ob in scene.objects:
-#           if ob.name.startswith("intarsion_"):
-#                ob.delete()
+        for ob in scene.objects:        # delete old intarsion curve calculations
+           if ob.name.startswith("intarsion_"):
+                ob.select_set(True)
+           else:
+                ob.select_set(False)
+        bpy.ops.object.delete()
+
+
+        for ob in selected: ob.select_set(True)     # select original curves
+
+        #  Perimeter cut largen then intarsion pocket externally, optional
+        if self.perimeter_cut > 0.0:
+            utils.silhoueteOffset(context, self.perimeter_cut)
+            bpy.context.active_object.name = "intarsion_perimeter_profile"
+            bpy.ops.object.select_all(action='DESELECT')  # deselect new curve
+            for ob in selected:                           # select original curves
+                ob.select_set(True)
+                context.view_layer.objects.active = ob    # make original curve active
+
+
 
         diam = self.diameter * 1.05  + self.backlight * 2 #make the diameter 5% larger and compensate for backlight
         utils.silhoueteOffset(context, -diam / 2)
-        o1 = bpy.context.active_object
 
+        o1 = bpy.context.active_object
         utils.silhoueteOffset(context, diam)
         o2 = bpy.context.active_object
         utils.silhoueteOffset(context, -diam/ 2)
@@ -93,9 +112,10 @@ class CamCurveIntarsion(bpy.types.Operator):
         o1.select_set(state=True)
         o2.select_set(state=True)
         o3.select_set(state=False)
-        bpy.ops.object.delete(use_global=False)
-        o3.name = "intarsion_pocket"
+        bpy.ops.object.delete(use_global=False)     # delete o1 and o2 temporary working curves
+        o3.name = "intarsion_pocket"                # this is the pocket for intarsion
 
+        #   intarsion profile is the inside piece of the intarsion
         utils.silhoueteOffset(context, -self.tolerance / 2)  #  make smaller curve for material profile
         o4 = bpy.context.active_object
         bpy.context.active_object.name = "intarsion_profile"
