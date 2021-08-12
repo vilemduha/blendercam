@@ -94,8 +94,11 @@ def doSimulation(name, operations):
     limits = utils.getBoundsMultiple(
         operations)  # this is here because some background computed operations still didn't have bounds data
     i = generateSimulationImage(operations, limits)
-    cp = simple.getCachePath(operations[0])[:-len(operations[0].name)] + name
+#    cp = simple.getCachePath(operations[0])[:-len(operations[0].name)] + name
+    cp = simple.getSimulationPath()+name
+    print('cp=',cp)
     iname = cp + '_sim.exr'
+
 
     image_utils.numpysave(i, iname)
     i = bpy.data.images.load(iname)

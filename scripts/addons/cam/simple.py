@@ -170,10 +170,17 @@ def getCachePath(o):
     fn = bpy.data.filepath
     l = len(bpy.path.basename(fn))
     bn = bpy.path.basename(fn)[:-6]
+    print('fn-l:',fn[:-l])
+    print('bn:',bn)
 
     iname = fn[:-l] + 'temp_cam' + os.sep + bn + '_' + o.name
     return iname
 
+def getSimulationPath():
+    fn = bpy.data.filepath
+    l = len(bpy.path.basename(fn))
+    iname = fn[:-l] + 'temp_cam' + os.sep
+    return iname
 
 def safeFileName(name):  # for export gcode
     valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
