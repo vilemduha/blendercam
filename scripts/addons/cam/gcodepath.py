@@ -40,6 +40,9 @@ from cam.collision import *
 from cam import simple
 from cam.simple import *
 
+from cam import bridges
+from cam.bridges import *
+
 from cam import utils
 from cam import strategy
 
