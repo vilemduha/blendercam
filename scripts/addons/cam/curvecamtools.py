@@ -20,7 +20,7 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # blender operators definitions are in this file. They mostly call the functions from utils.py
-#test2
+#test3
 
 import bpy
 from bpy.props import *
