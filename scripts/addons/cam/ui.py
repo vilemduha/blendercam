@@ -523,6 +523,10 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 if ao.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'OUTLINEFILL']:
                     layout.prop(ao, 'movement_insideout')
+                    if ao.strategy=='OUTLINEFILL':
+                        layout.prop(ao, 'project_pocket_to_object')
+                        if ao.project_pocket_to_object:
+                            layout.prop_search(ao, "project_curve_name", bpy.data, "objects")
 
                     # if ao.geometry_source=='OBJECT' or ao.geometry_source=='COLLECTION':
 
@@ -615,11 +619,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                                                 
                 elif ao.strategy == 'POCKET':
                     layout.prop(ao, 'pocket_option')
-                    layout.prop(ao, 'project_pocket_to_object')
-                    if ao.project_pocket_to_object:
-                        layout.prop_search(ao, "project_object_name", bpy.data, "objects")
-                        layout.prop(ao, 'carve_depth')
-                        layout.prop(ao, 'dist_along_paths')
                     layout.prop(ao, 'dist_between_paths')
                     EngagementDisplay(ao,layout)
                     layout.prop(ao,'enable_A')

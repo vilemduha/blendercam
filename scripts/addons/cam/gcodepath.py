@@ -576,22 +576,16 @@ def getPath3axis(context, operation):
     elif o.strategy == 'PROJECTED_CURVE':
         strategy.proj_curve(s, o)
 
-    elif o.strategy == 'POCKET' and o.project_pocket_to_object == False:
+    elif o.strategy == 'POCKET':
         strategy.pocket(o)
 
-    elif o.strategy in ['PARALLEL', 'CROSS', 'BLOCK', 'SPIRAL', 'CIRCLES', 'OUTLINEFILL', 'CARVE', 'PENCIL', 'CRAZY', 'POCKET']:
+    elif o.strategy in ['PARALLEL', 'CROSS', 'BLOCK', 'SPIRAL', 'CIRCLES', 'OUTLINEFILL', 'CARVE', 'PENCIL', 'CRAZY']:
 
-        if o.strategy == 'CARVE' or o.strategy == 'POCKET':
+        if o.strategy == 'CARVE':
             pathSamples = []
             # for ob in o.objects:
-            if o.strategy != 'POCKET':
-                ob = bpy.data.objects[o.curve_object]
-                pathSamples.extend(curveToChunks(ob))
-            else:
-                pathSamples = strategy.pocket(o)
-                o.object_name = o.project_object_name
-                print("collision ob name",o.object_name)
-
+            ob = bpy.data.objects[o.curve_object]
+            pathSamples.extend(curveToChunks(ob))
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)
         elif o.strategy == 'PENCIL':
@@ -624,10 +618,9 @@ def getPath3axis(context, operation):
             pathSamples = getPathPattern(o)
 
             if o.strategy == 'OUTLINEFILL':
-                pathSamples = utils.sortChunks(pathSamples,
-                                               o)  # have to be sorted once before, because of the parenting inside of samplechunks
+                pathSamples = utils.sortChunks(pathSamples, o)  # have to be sorted once before, because of the parenting inside of samplechunks
             # chunksToMesh(pathSamples,o)#for testing pattern script
-            # return
+            
             if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
                 pathSamples = utils.connectChunksLow(pathSamples, o)
 
@@ -652,7 +645,7 @@ def getPath3axis(context, operation):
             for ch in chunks:
                 ch.rampZigZag(ch.zstart, ch.points[0][2], o)
         # print(chunks)
-        if o.strategy == 'CARVE' or (o.strategy == 'POCKET' and o.project_pocket_to_object):
+        if o.strategy == 'CARVE':
             for ch in chunks:
                 for vi in range(0, len(ch.points)):
                     ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)

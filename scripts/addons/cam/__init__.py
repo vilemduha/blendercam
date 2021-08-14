@@ -446,9 +446,9 @@ class camOperation(bpy.types.PropertyGroup):
         default=False)
     object_name: bpy.props.StringProperty(name='Object', description='object handled by this operation',
                                           update=updateOperationValid)
-    project_object_name: bpy.props.StringProperty(name='project Object', description='object handled by this operation',
+    project_curve_name: bpy.props.StringProperty(name='project pocket curve', description='curve to pocket and project',
                                           update=updateOperationValid)
-    project_pocket_to_object: bpy.props.BoolProperty(name="Projet to object", description="Give pocket a 3d style", default=False,
+    project_pocket_to_object: bpy.props.BoolProperty(name="Projcet to object", description="Give pocket a 3d style", default=False,
                                         update=updateRest)
     collection_name: bpy.props.StringProperty(name='Collection', description='Object collection handled by this operation',
                                          update=updateOperationValid)
