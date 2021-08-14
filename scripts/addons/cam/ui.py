@@ -615,11 +615,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                                                 
                 elif ao.strategy == 'POCKET':
                     layout.prop(ao, 'pocket_option')
-                    layout.prop(ao, 'project_pocket_to_object')
-                    if ao.project_pocket_to_object:
-                        layout.prop_search(ao, "project_object_name", bpy.data, "objects")
-                        layout.prop(ao, 'carve_depth')
-                        layout.prop(ao, 'dist_along_paths')
                     layout.prop(ao, 'dist_between_paths')
                     EngagementDisplay(ao,layout)
                     layout.prop(ao,'enable_A')
@@ -804,9 +799,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.optimize:
                     layout.prop(ao, 'optimize_threshold')
                 if ao.geometry_source == 'OBJECT' or ao.geometry_source == 'COLLECTION':
-                    exclude_exact = ao.strategy in ['MEDIAL_AXIS',  'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL','CURVE']
-                    if ao.strategy == 'POCKET' and not ao.project_pocket_to_object:
-                        exclude_exact = True
+                    exclude_exact = ao.strategy in ['MEDIAL_AXIS', 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL','CURVE']
                     if not exclude_exact:
                         if ao.use_exact != True:
                             layout.prop(ao, 'use_exact')
