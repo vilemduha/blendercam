@@ -551,7 +551,9 @@ class camOperation(bpy.types.PropertyGroup):
     pocket_option: EnumProperty(name='Start Position', items=(
         ('INSIDE', 'Inside', 'a'), ('OUTSIDE', 'Outside', 'a'), ('MIDDLE', 'Middle', 'a')),
                                 description='Pocket starting position', default='MIDDLE', update=updateRest)
-
+    pocketToCurve:bpy.props.BoolProperty(name="Pocket to curve",
+                                  description="generates a curve instead of a path",
+                                  default=False, update=updateRest)
     # Cutout
     cut_type: EnumProperty(name='Cut',
                            items=(('OUTSIDE', 'Outside', 'a'), ('INSIDE', 'Inside', 'a'), ('ONLINE', 'On line', 'a')),

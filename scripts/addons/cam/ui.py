@@ -615,6 +615,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                                                 
                 elif ao.strategy == 'POCKET':
                     layout.prop(ao, 'pocket_option')
+                    layout.prop(ao, 'pocketToCurve')
                     layout.prop(ao, 'dist_between_paths')
                     EngagementDisplay(ao,layout)
                     layout.prop(ao,'enable_A')

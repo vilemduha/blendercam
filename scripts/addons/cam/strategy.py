@@ -287,6 +287,7 @@ def proj_curve(s, o):
 
 def pocket(o):
     print('operation: pocket')
+    scene = bpy.context.scene
     max_depth = checkminz(o)
     cutter_angle = math.radians(o.cutter_tip_angle/2)
     c_offset = o.cutter_diameter / 2
@@ -309,28 +310,12 @@ def pocket(o):
     firstoutline = p  # for testing in the end.
     prest = p.buffer(-c_offset, o.circle_detail)
     while not p.is_empty:
+        if (o.pocketToCurve):
+            polygon_utils_cam.shapelyToCurve('_3dpocket', p, 0.0)
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
         # print("pnew")
-
-        # caused a bad slow down
-        #        if o.dist_between_paths > o.cutter_diameter / 2.0:
-        #            prest = prest.difference(pnew.boundary.buffer(o.cutter_diameter / 2, o.circle_detail))
-        #            if not (pnew.contains(prest)):
-        #                prest = shapelyToMultipolygon(prest)
-        #                fine = []
-        #                go = []
-        #                for p1 in prest:
-        #                    if pnew.contains(p1):
-        #                        fine.append(p1)
-        #                    else:
-        #                        go.append(p1)
-        #                if len(go) > 0:
-        #                    for p1 in go:
-        #                        nchunks1 = shapelyToChunks(p1, o.min.z)
-        #                        nchunks.extend(nchunks1)
-        #                        prest = sgeometry.MultiPolygon(fine)
 
         nchunks = limitChunks(nchunks, o)
         chunksFromCurve.extend(nchunks)
@@ -470,7 +455,17 @@ def pocket(o):
     if o.first_down:
         chunks = utils.sortChunks(chunks, o)
 
-    chunksToMesh(chunks, o)
+
+    if(o.pocketToCurve):
+        for ob in scene.objects:  # delete old intarsion curve calculations
+            if ob.name.startswith("_3dpocket"):
+                ob.select_set(True)
+            else:
+                ob.select_set(False)
+        bpy.ops.object.join()
+        bpy.context.active_object.name = "3D_pocket"
+    else:
+        chunksToMesh(chunks, o)
 
 
 def drill(o):
