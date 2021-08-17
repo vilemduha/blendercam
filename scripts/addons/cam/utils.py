@@ -1656,7 +1656,7 @@ def rotTo2axes(e, axescombination):
 
 
 
-def reload_paths(o):
+def reload_pathss(o):
     oname = "cam_path_" + o.name
     s = bpy.context.scene
     # for o in s.objects:

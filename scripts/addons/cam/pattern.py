@@ -24,7 +24,7 @@ import mathutils
 from mathutils import *
 
 
-from cam import simple, chunk
+from cam import simple, chunk, utils
 from cam.simple import *
 from cam.chunk import *
 from cam import polygon_utils_cam
@@ -68,7 +68,7 @@ def getPathPatternParallel(o,angle):
 			#chunk=camPathChunk(defaultar.copy())
 			v=Vector((a*pathd,int(-dim/pathstep)*pathstep,0))
 			v.rotate(e)
-			v+=vm#shifting for the rotation, so pattern rotates around middle...
+			v+=vm	#shifting for the rotation, so pattern rotates around middle...
 			for b in range(int(-dim/pathstep),int(dim/pathstep)):
 				v+=dirvect
 
@@ -78,8 +78,6 @@ def getPathPatternParallel(o,angle):
 			if (reverse and o.movement_type=='MEANDER') or (o.movement_type=='CONVENTIONAL' and o.spindle_rotation_direction=='CW') or (o.movement_type=='CLIMB' and o.spindle_rotation_direction=='CCW') :
 				chunk.points.reverse()
 
-
-			#elif
 			if len(chunk.points)>0:
 				pathchunks.append(chunk)
 			if len(pathchunks)>1 and reverse and o.parallel_step_back and not o.use_layers:
@@ -159,7 +157,6 @@ def getPathPatternParallel(o,angle):
 	return pathchunks
 
 
-
 def getPathPattern(operation):
 	o=operation
 	t=time.time()
@@ -217,9 +214,6 @@ def getPathPattern(operation):
 			for a in range(floor(maxxp/pathstep),ceil(minxp/pathstep),-1):
 				x=a*pathstep
 				chunk.points.append((x,y,zlevel))
-
-
-
 
 			maxxp-=pathd
 			chunk.points.append((minxp,maxyp,zlevel))
@@ -381,6 +375,7 @@ def getPathPattern(operation):
 			while not p.is_empty:#:p.nPoints()>0:
 				p=p.buffer(-o.dist_between_paths,o.circle_detail)
 				if not p.is_empty:
+
 					nchunks=shapelyToChunks(p,zlevel)
 
 					if o.movement_insideout=='INSIDEOUT':
