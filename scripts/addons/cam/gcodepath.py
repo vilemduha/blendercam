@@ -584,7 +584,9 @@ def getPath3axis(context, operation):
         if o.strategy == 'CARVE':
             pathSamples = []
             # for ob in o.objects:
+
             ob = bpy.data.objects[o.curve_object]
+
             pathSamples.extend(curveToChunks(ob))
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)
@@ -592,9 +594,6 @@ def getPath3axis(context, operation):
             prepareArea(o)
             utils.getAmbient(o)
             pathSamples = getOffsetImageCavities(o, o.offset_image)
-            # for ch in pathSamples:
-            #	for i,p in enumerate(ch.points):
-            #	 ch.points[i]=(p[0],p[1],0)
             pathSamples = limitChunks(pathSamples, o)
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
         elif o.strategy == 'CRAZY':

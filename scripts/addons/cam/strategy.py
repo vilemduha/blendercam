@@ -288,6 +288,13 @@ def proj_curve(s, o):
 def pocket(o):
     print('operation: pocket')
     scene = bpy.context.scene
+    bpy.ops.object.select_all(action='DESELECT')
+    for ob in scene.objects:  # delete old 3D pocket
+        if ob.name.startswith("3D_poc"):
+            ob.select_set(True)
+            bpy.ops.object.delete()
+
+
     max_depth = checkminz(o)
     cutter_angle = math.radians(o.cutter_tip_angle/2)
     c_offset = o.cutter_diameter / 2
@@ -299,9 +306,12 @@ def pocket(o):
         c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
     if c_offset > o.cutter_diameter / 2:
        c_offset = o.cutter_diameter / 2
+
     p = utils.getObjectOutline(c_offset, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
     print("approximative:" + str(approxn))
+    print(o)
+
     i = 0
     chunks = []
     chunksFromCurve = []
@@ -310,7 +320,7 @@ def pocket(o):
     firstoutline = p  # for testing in the end.
     prest = p.buffer(-c_offset, o.circle_detail)
     while not p.is_empty:
-        if (o.pocketToCurve):
+        if o.pocketToCurve or o.carve_pocketCurveSource:
             polygon_utils_cam.shapelyToCurve('_3dpocket', p, 0.0)
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
@@ -334,16 +344,12 @@ def pocket(o):
         for ch in chunksFromCurve:
             ch.points.reverse()
 
-    # if bpy.app.debug_value==1:
 
     chunksFromCurve = utils.sortChunks(chunksFromCurve, o)
 
     chunks = []
     layers = getLayers(o, o.maxz, checkminz(o))
 
-    # print(layers)
-    # print(chunksFromCurve)
-    # print(len(chunksFromCurve))
     for l in layers:
         lchunks = setChunksZ(chunksFromCurve, l[1])
         if o.ramp:
@@ -455,8 +461,7 @@ def pocket(o):
     if o.first_down:
         chunks = utils.sortChunks(chunks, o)
 
-
-    if(o.pocketToCurve):
+    if o.pocketToCurve or o.carve_pocketCurveSource:
         for ob in scene.objects:  # delete old intarsion curve calculations
             if ob.name.startswith("_3dpocket"):
                 ob.select_set(True)

@@ -621,6 +621,7 @@ class camOperation(bpy.types.PropertyGroup):
     # carve only
     carve_depth: bpy.props.FloatProperty(name="Carve depth", default=0.001, min=-.100, max=32, precision=PRECISION,
                                           unit="LENGTH", update=updateRest)
+
     # drill only
     drill_type: EnumProperty(name='Holes on', items=(
         ('MIDDLE_SYMETRIC', 'Middle of symetric curves', 'a'), ('MIDDLE_ALL', 'Middle of all curve parts', 'a'),
