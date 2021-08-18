@@ -320,8 +320,9 @@ def pocket(o):
     firstoutline = p  # for testing in the end.
     prest = p.buffer(-c_offset, o.circle_detail)
     while not p.is_empty:
-        if o.pocketToCurve or o.carve_pocketCurveSource:
-            polygon_utils_cam.shapelyToCurve('_3dpocket', p, 0.0)
+        if o.pocketToCurve:
+            polygon_utils_cam.shapelyToCurve('_3dpocket', p, 0.0)  # make a curve starting with _3dpocket
+
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
@@ -461,16 +462,16 @@ def pocket(o):
     if o.first_down:
         chunks = utils.sortChunks(chunks, o)
 
-    if o.pocketToCurve or o.carve_pocketCurveSource:
-        for ob in scene.objects:  # delete old intarsion curve calculations
+    if o.pocketToCurve: # make curve instead of a path
+        for ob in scene.objects:  # join pocket curve calculations
             if ob.name.startswith("_3dpocket"):
                 ob.select_set(True)
             else:
                 ob.select_set(False)
         bpy.ops.object.join()
-        bpy.context.active_object.name = "3D_pocket"
+        bpy.context.active_object.name = "3D_pocket"  # rename curve to 3D_pocket
     else:
-        chunksToMesh(chunks, o)
+        chunksToMesh(chunks, o)  #  make normal pocket path
 
 
 def drill(o):
