@@ -55,12 +55,19 @@ def cutout(o):
     max_depth = checkminz(o)
     cutter_angle = math.radians(o.cutter_tip_angle/2)
     c_offset = o.cutter_diameter / 2     #cutter ofset
+    print("cuttertype:",o.cutter_type,"max_depth:",max_depth)
     if o.cutter_type == 'VCARVE':
         c_offset = -max_depth * math.tan(cutter_angle)
     elif o.cutter_type == 'CYLCONE':
         c_offset = -max_depth * math.tan(cutter_angle) + o.cylcone_diameter/2
     elif o.cutter_type == 'BALLCONE':
         c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
+    elif o.cutter_type == 'BALLNOSE':
+        r=o.cutter_diameter/2
+        print("cutter radius:",r)
+        if(-max_depth<r):
+            c_offset=math.sqrt((r)**2 - (r+max_depth)**2)
+            print("offset:",c_offset)
     if c_offset > o.cutter_diameter / 2:
        c_offset = o.cutter_diameter / 2
     if o.straight:
