@@ -725,33 +725,6 @@ def medial_axis(o):
             chunks.extend(shapelyToChunks(bufpoly, maxdepth))
         chunks.extend(shapelyToChunks(lines, 0))
 
-        # segments=[]
-        # processEdges=filteredEdgs.copy()
-        # chunk=camPathChunk([])
-        # chunk.points.append(filteredEdgs.pop())
-        # while len(filteredEdgs)>0:
-
-        # Create new mesh structure
-
-        # print("Create mesh...")
-        # voronoiDiagram = bpy.data.meshes.new("VoronoiDiagram") #create a new mesh
-        #
-        #
-        #
-        # voronoiDiagram.from_pydata(filteredPts, filteredEdgs, []) #Fill the mesh with triangles
-        #
-        # voronoiDiagram.update(calc_edges=True) #Update mesh with new data
-        # #create an object with that mesh
-        # voronoiObj = bpy.data.objects.new("VoronoiDiagram", voronoiDiagram)
-        # #place object
-        # #bpy.ops.view3d.snap_cursor_to_selected()#move 3d-cursor
-        #
-        # #update scene
-        # bpy.context.scene.objects.link(voronoiObj) #Link object to scene
-        # bpy.context.scene.objects.active = voronoiObj
-        # voronoiObj.select = True
-
-    # bpy.ops.object.convert(target='CURVE')
     oi = 0
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
@@ -778,7 +751,7 @@ def medial_axis(o):
     chunksToMesh(chunklayers, o)
     # add pocket operation for medial if add pocket checked
     if o.add_pocket_for_medial:
-        o.add_pocket_for_medial = False
+#        o.add_pocket_for_medial = False
         # export medial axis parameter to pocket op
         ops.Add_Pocket(None, maxdepth, m_o_name, new_cutter_diameter)
 
