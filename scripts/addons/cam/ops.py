@@ -582,7 +582,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
             ob.select_set(True)
             bpy.ops.object.delete()
 
-    for op in s.cam_operations:  # delete old medial pocket operation
+    for op in s.cam_operations:  # verify medial pocket operation exists
         if op.name == "MedialPocket":
             mpocket_exists = True
 
