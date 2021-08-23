@@ -576,22 +576,15 @@ def fixUnits():
 def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     bpy.ops.object.select_all(action='DESELECT')
     s = bpy.context.scene
-
+    mpocket_exists = False
     for ob in s.objects:  # delete old medial pocket
         if ob.name.startswith("medial_poc"):
             ob.select_set(True)
             bpy.ops.object.delete()
-    i = 0
-#    scene = context.scene
+
     for op in s.cam_operations:  # delete old medial pocket operation
-        print("cam operations:",op,'count',i)
-        if op.name.startswith("MedialP"):
-#            ao = scene.cam_operations[i]
- #           ob = bpy.data.objects[ao.name]
-  #          scene.objects.active = ob
-            s.cam_operations.remove(i)
-#            bpy.ops.object.delete(True)
-        i += 1
+        if op.name == "MedialPocket":
+            mpocket_exists = True
 
 
 
@@ -600,18 +593,20 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     bpy.context.view_layer.objects.active = ob
     utils.silhoueteOffset(ob, -new_cutter_diameter/2,1,0.3)
     bpy.context.active_object.name = 'medial_pocket'
-    s.cam_operations.add()
-    o = s.cam_operations[-1]
-    o.object_name = 'medial_pocket'
-    s.cam_active_operation = len(s.cam_operations) - 1
-    o.name = 'MedialPocket' # + str(s.cam_active_operation + 1)
-    o.filename = o.name
-    o.strategy = 'POCKET'
-    o.use_layers = False
-    o.material_from_model =False
-    o.material_size[2] = -maxdepth
-    o.minz_from_ob = False
-    o.minz_from_material = True
+
+    if mpocket_exists == False:     # create a pocket operation if it does not exist already
+        s.cam_operations.add()
+        o = s.cam_operations[-1]
+        o.object_name = 'medial_pocket'
+        s.cam_active_operation = len(s.cam_operations) - 1
+        o.name = 'MedialPocket' # + str(s.cam_active_operation + 1)
+        o.filename = o.name
+        o.strategy = 'POCKET'
+        o.use_layers = False
+        o.material_from_model =False
+        o.material_size[2] = -maxdepth
+        o.minz_from_ob = False
+        o.minz_from_material = True
         
        
 class CamOperationAdd(bpy.types.Operator):
