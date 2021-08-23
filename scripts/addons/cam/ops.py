@@ -570,15 +570,31 @@ def fixUnits():
     s.unit_settings.system_rotation = 'DEGREES'
 
     s.unit_settings.scale_length = 1.0  # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.
+
+
 # add pocket op for medial axis and profile cut inside to clean unremoved material
 def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     bpy.ops.object.select_all(action='DESELECT')
-    scene = bpy.context.scene
-    for ob in scene.objects:  # delete old medial pocket
+    s = bpy.context.scene
+
+    for ob in s.objects:  # delete old medial pocket
         if ob.name.startswith("medial_poc"):
             ob.select_set(True)
             bpy.ops.object.delete()
-    s = bpy.context.scene
+    i = 0
+#    scene = context.scene
+    for op in s.cam_operations:  # delete old medial pocket operation
+        print("cam operations:",op,'count',i)
+        if op.name.startswith("MedialP"):
+#            ao = scene.cam_operations[i]
+ #           ob = bpy.data.objects[ao.name]
+  #          scene.objects.active = ob
+            s.cam_operations.remove(i)
+#            bpy.ops.object.delete(True)
+        i += 1
+
+
+
     ob=bpy.data.objects[sname]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
@@ -588,7 +604,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     o = s.cam_operations[-1]
     o.object_name = 'medial_pocket'
     s.cam_active_operation = len(s.cam_operations) - 1
-    o.name = 'pocket_' + str(s.cam_active_operation + 1)
+    o.name = 'MedialPocket' # + str(s.cam_active_operation + 1)
     o.filename = o.name
     o.strategy = 'POCKET'
     o.use_layers = False
