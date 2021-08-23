@@ -67,7 +67,7 @@ class CamCurveIntarsion(bpy.types.Operator):
     bl_label = "Intarsion"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    diameter: bpy.props.FloatProperty(name="cutter diameter", default=.001, min=0, max=100, precision=4, unit="LENGTH")
+    diameter: bpy.props.FloatProperty(name="cutter diameter", default=.001, min=0, max=0.025, precision=4, unit="LENGTH")
     tolerance: bpy.props.FloatProperty(name="cutout Tolerance", default=.0001, min=0, max=0.005, precision=4, unit="LENGTH")
     backlight: bpy.props.FloatProperty(name="Backlight seat", default=0.000, min=0, max=0.010, precision=4, unit="LENGTH")
     perimeter_cut: bpy.props.FloatProperty(name="Perimeter cut offset", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
