@@ -115,17 +115,10 @@ def getBoundsWorldspace(obs, use_modifiers=False):
         elif ob.type == "FONT":
             activate(ob)
             bpy.ops.object.duplicate()
-
-            bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
-
             co = bpy.context.active_object
+            bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
             bpy.ops.object.convert(target='MESH', keep_original=False)
-
-            if use_modifiers:
-                mesh = co.to_mesh(preserve_all_data_layers=True, depsgraph=bpy.context.evaluated_depsgraph_get())
-            else:
-                mesh = co.data
-
+            mesh = co.data
             for c in mesh.vertices:
                 coord = c.co
                 worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
@@ -135,10 +128,8 @@ def getBoundsWorldspace(obs, use_modifiers=False):
                 maxx = max(maxx, worldCoord.x)
                 maxy = max(maxy, worldCoord.y)
                 maxz = max(maxz, worldCoord.z)
-
-            if use_modifiers:
-                bpy.data.meshes.remove(mesh)
             bpy.ops.object.delete()
+            bpy.ops.outliner.orphans_purge()
         else:
 
             # for coord in bb:
