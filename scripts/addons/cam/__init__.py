@@ -40,12 +40,12 @@ import pickle
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
-    "version": (0, 9, 0),
+    "version": (0, 9, 2),
     "blender": (2, 80, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
     "warning": "there is no warranty for the produced gcode by now",
-    "wiki_url": "blendercam.blogspot.com",
+    "wiki_url": "https://github.com/vilemduha/blendercam/wiki",
     "tracker_url": "",
     "category": "Scene"}
 

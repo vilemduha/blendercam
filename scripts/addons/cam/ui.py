@@ -437,8 +437,6 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 if ao.strategy in ['CARVE', 'PROJECTED_CURVE']:
                     layout.prop_search(ao, "curve_object", bpy.data, "objects")
-                    if ao.carve_pocketCurveSource:
-                        layout.prop(ao, 'dist_between_paths')
                     if ao.strategy == 'PROJECTED_CURVE':
                         layout.prop_search(ao, "curve_object1", bpy.data, "objects")
 
