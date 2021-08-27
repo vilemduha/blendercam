@@ -113,6 +113,8 @@ class CamLissajousCurve(bpy.types.Operator):
         ('triangle', 'Triangle Wave', 'triangle wave')),default='sine')
     period_A: bpy.props.FloatProperty(name="Period A", default=1.1, min=0.001, max=100, precision=4, unit="LENGTH")
     period_B: bpy.props.FloatProperty(name="Period B", default=1.0, min=0.001, max=100, precision=4, unit="LENGTH")
+    period_Z: bpy.props.FloatProperty(name="Period Z", default=1.0, min=0.001, max=100, precision=4, unit="LENGTH")
+    amplitude_Z: bpy.props.FloatProperty(name="Amplitude Z", default=0.0, min=0, max=100, precision=4, unit="LENGTH")
     shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
 
     iteration: bpy.props.IntProperty(name="iteration", default=500, min=50, max=10000)
@@ -133,14 +135,17 @@ class CamLissajousCurve(bpy.types.Operator):
         elif self.waveB == 'triangle':
             ystring = str(triangle(100, self.period_B, self.amplitude_B))
 
+        zstring = ssine(self.amplitude_Z, self.period_Z)
+
         print("x= " + str(xstring))
         print("y= " + str(ystring))
         x = Expression(xstring, ["t"])  # make equation from string
         y = Expression(ystring, ["t"])  # make equation from string
+        z = Expression(zstring,["t"])
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
-            c = (x(t), y(t), 0)
+            c = (x(t), y(t), z(t))
             return c
 
         parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True,
