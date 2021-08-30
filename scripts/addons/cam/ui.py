@@ -590,6 +590,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'medial_axis_threshold')
                     layout.prop(ao, 'medial_axis_subdivision')
                     layout.prop(ao, 'add_pocket_for_medial')
+                    layout.prop(ao,'add_mesh_for_medial')
  #remove crazy strategy because no one knows what it does.
  #               elif ao.strategy == 'CRAZY':
  #                   layout.prop(ao, 'crazy_threshold1')

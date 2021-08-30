@@ -295,11 +295,8 @@ def proj_curve(s, o):
 def pocket(o):
     print('operation: pocket')
     scene = bpy.context.scene
-    bpy.ops.object.select_all(action='DESELECT')
-    for ob in scene.objects:  # delete old 3D pocket
-        if ob.name.startswith("3D_poc"):
-            ob.select_set(True)
-            bpy.ops.object.delete()
+
+    simple.removeMultiple("3D_poc")
 
 
     max_depth = checkminz(o)
@@ -328,7 +325,7 @@ def pocket(o):
     prest = p.buffer(-c_offset, o.circle_detail)
     while not p.is_empty:
         if o.pocketToCurve:
-            polygon_utils_cam.shapelyToCurve('_3dpocket', p, 0.0)  # make a curve starting with _3dpocket
+            polygon_utils_cam.shapelyToCurve('3dpocket', p, 0.0)  # make a curve starting with _3dpocket
 
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
@@ -470,13 +467,8 @@ def pocket(o):
         chunks = utils.sortChunks(chunks, o)
 
     if o.pocketToCurve: # make curve instead of a path
-        for ob in scene.objects:  # join pocket curve calculations
-            if ob.name.startswith("_3dpocket"):
-                ob.select_set(True)
-            else:
-                ob.select_set(False)
-        bpy.ops.object.join()
-        bpy.context.active_object.name = "3D_pocket"  # rename curve to 3D_pocket
+        simple.joinMultiple("3dpocket")
+
     else:
         chunksToMesh(chunks, o)  #  make normal pocket path
 
@@ -577,7 +569,8 @@ def drill(o):
 
 def medial_axis(o):
     print('operation: Medial Axis')
-    print('doing highly experimental stuff')
+
+    simple.removeMultiple("medialMesh")
 
     from cam.voronoi import Site, computeVoronoiDiagram
 
@@ -613,9 +606,9 @@ def medial_axis(o):
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
             resolutions_before.append(ob.data.resolution_u)
-            if ob.data.resolution_u < 32:
-                ob.data.resolution_u = 32
-            ob.data.resolution_u = 16
+            if ob.data.resolution_u < 64:
+                ob.data.resolution_u = 64
+#            ob.data.resolution_u = 16
 
     polys = utils.getOperationSilhouete(o)
     mpoly = sgeometry.asMultiPolygon(polys)
@@ -656,7 +649,6 @@ def medial_axis(o):
 
         pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
 
-        #
         # pts=[[pt[0], pt[1], zPosition] for pt in pts]
         newIdx = 0
         vertr = []
@@ -725,6 +717,11 @@ def medial_axis(o):
             chunks.extend(shapelyToChunks(bufpoly, maxdepth))
         chunks.extend(shapelyToChunks(lines, 0))
 
+        # generate a mesh from the medial calculations
+        if o.add_mesh_for_medial:
+            polygon_utils_cam.shapelyToCurve('medialMesh', lines, 0.0)
+            bpy.ops.object.convert(target='MESH')
+
     oi = 0
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
@@ -747,6 +744,9 @@ def medial_axis(o):
 
     if o.first_down:
         chunklayers = utils.sortChunks(chunklayers, o)
+
+    if o.add_mesh_for_medial: # make curve instead of a path
+        simple.joinMultiple("medialMesh")
 
     chunksToMesh(chunklayers, o)
     # add pocket operation for medial if add pocket checked

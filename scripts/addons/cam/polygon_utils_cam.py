@@ -164,7 +164,6 @@ def shapelyToCurve(name, p, z):
         polyline.points.add(len(c) - 1)
         for num in range(len(c)):
             x, y = c[num][0], c[num][1]
-
             polyline.points[num].co = (x, y, z, w)
 
     bpy.context.view_layer.objects.active = objectdata

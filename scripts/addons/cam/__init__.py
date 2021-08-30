@@ -834,6 +834,9 @@ class camOperation(bpy.types.PropertyGroup):
     # Add pocket operation to medial axis
     add_pocket_for_medial: bpy.props.BoolProperty(name="Add pocket operation", description="clean unremoved material after medial axis", default=True,
                                         update=updateRest)
+
+    add_mesh_for_medial: bpy.props.BoolProperty(name="Add Medial mesh", description="Medial operation returns mesh for editing and further processing", default=False,
+                                        update=updateRest)
     ####
     medial_axis_threshold: bpy.props.FloatProperty(name="Long vector threshold", default=0.001, min=0.00000001,
                                                    max=100, precision=PRECISION, unit="LENGTH", update=updateRest)

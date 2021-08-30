@@ -195,3 +195,21 @@ def strInUnits(x, precision=5):
         return str(round(x * 1000 / 25.4, precision)) + "'' "
     else:
         return str(x)
+
+def joinMultiple(name):
+    scene = bpy.context.scene
+    for ob in scene.objects:  # join pocket curve calculations
+        if ob.name.startswith(name):
+            ob.select_set(True)
+        else:
+            ob.select_set(False)
+    bpy.ops.object.join()
+    bpy.context.active_object.name = name  # rename object
+
+def removeMultiple(name):
+    scene = bpy.context.scene
+    bpy.ops.object.select_all(action='DESELECT')
+    for ob in scene.objects:  # delete old 3D pocket
+        if ob.name.startswith(name):
+            ob.select_set(True)
+            bpy.ops.object.delete()
