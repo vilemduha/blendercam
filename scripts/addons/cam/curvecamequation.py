@@ -224,7 +224,7 @@ class CamCustomCurve(bpy.types.Operator):
     zstring: StringProperty(name="Z equation", description="Equation z=F(t)", default="0.05*sin(2*pi*4*t)")
 
     iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
-    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=3, precision=4, unit="LENGTH")
+    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=10, precision=4, unit="LENGTH")
     mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
 
     def execute(self, context):

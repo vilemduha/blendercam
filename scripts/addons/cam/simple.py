@@ -196,6 +196,7 @@ def strInUnits(x, precision=5):
     else:
         return str(x)
 
+# join multiple objects starting with 'name' renaming final object as 'name'
 def joinMultiple(name):
     scene = bpy.context.scene
     for ob in scene.objects:  # join pocket curve calculations
@@ -206,10 +207,11 @@ def joinMultiple(name):
     bpy.ops.object.join()
     bpy.context.active_object.name = name  # rename object
 
+# remove multiple objects starting with 'name'.... useful for fixed name operation
 def removeMultiple(name):
     scene = bpy.context.scene
     bpy.ops.object.select_all(action='DESELECT')
-    for ob in scene.objects:  # delete old 3D pocket
+    for ob in scene.objects:
         if ob.name.startswith(name):
             ob.select_set(True)
             bpy.ops.object.delete()
