@@ -29,6 +29,7 @@ from bpy_extras.io_utils import ImportHelper
 
 from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser
 import shapely
+from shapely.geometry import Point, LineString, Polygon
 import mathutils
 import math
 from Equation import Expression
@@ -83,13 +84,7 @@ class CamCurveIntarsion(bpy.types.Operator):
         selected = context.selected_objects  # save original selected items
         scene = bpy.context.scene
 
-        for ob in scene.objects:        # delete old intarsion curve calculations
-           if ob.name.startswith("intarsion_"):
-                ob.select_set(True)
-           else:
-                ob.select_set(False)
-        bpy.ops.object.delete()
-
+        simple.removeMultiple('intarsion_')
 
         for ob in selected: ob.select_set(True)     # select original curves
 
@@ -589,6 +584,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
     mitrelimit: bpy.props.FloatProperty(name="Mitre Limit", default=.003, min=0.0, max=20, precision=4, unit="LENGTH")
     style:  bpy.props.EnumProperty(name="type of curve", items=(
         ('1', 'Round', ''), ('2', 'Mitre', ''),('3','Bevel','')))
+    opencurve:  bpy.props.BoolProperty(name="Dialate open curve", default = False)
 
     @classmethod
     def poll(cls, context):
@@ -596,7 +592,30 @@ class CamOffsetSilhouete(bpy.types.Operator):
                 context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
-        utils.silhoueteOffset(context, self.offset,int(self.style),self.mitrelimit)
+        if self.opencurve:
+            bpy.ops.object.duplicate()
+            obj = context.active_object
+            bpy.ops.object.convert(target='MESH')
+            bpy.context.active_object.name = "temp_mesh"
+            coords = []
+            i=False
+            for v in obj.data.vertices:
+                coords.append((v.co.x,v.co.y))
+
+            simple.removeMultiple('temp_mesh')
+            length=0    #measure length
+            for p in coords:
+                if i:
+                    length += math.dist(p,oldp)
+                i=True
+                oldp=p
+
+            print("curve length=",length)
+            line = LineString(coords)
+            dilated=line.buffer(self.offset, cap_style = 1, resolution = 16, mitre_limit = self.mitrelimit)
+            polygon_utils_cam.shapelyToCurve("dilation", dilated, 0)
+        else:
+            utils.silhoueteOffset(context, self.offset,int(self.style),self.mitrelimit)
         return {'FINISHED'}
 
 
