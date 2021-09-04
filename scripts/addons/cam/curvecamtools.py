@@ -599,10 +599,10 @@ class CamOffsetSilhouete(bpy.types.Operator):
             bpy.context.active_object.name = "temp_mesh"
             coords = []
             i=False
-            for v in obj.data.vertices:
+            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
                 coords.append((v.co.x,v.co.y))
 
-            simple.removeMultiple('temp_mesh')
+            simple.removeMultiple('temp_mesh')  # delete temporary mesh
             length=0    #measure length
             for p in coords:
                 if i:
@@ -610,9 +610,9 @@ class CamOffsetSilhouete(bpy.types.Operator):
                 i=True
                 oldp=p
 
-            print("curve length=",length)
-            line = LineString(coords)
-            dilated=line.buffer(self.offset, cap_style = 1, resolution = 16, mitre_limit = self.mitrelimit)
+            print("curve length=",round(length*1000),'mm')
+            line = LineString(coords)   # convert coordinates to shapely LineString datastructure
+            dilated = line.buffer(self.offset, cap_style = 1, resolution = 16, mitre_limit = self.mitrelimit) # use shapely to expand
             polygon_utils_cam.shapelyToCurve("dilation", dilated, 0)
         else:
             utils.silhoueteOffset(context, self.offset,int(self.style),self.mitrelimit)
