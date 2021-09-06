@@ -931,6 +931,31 @@ def polygonBoolean(context, boolean_type):
 
     return {'FINISHED'}
 
+def polygonConvexHull(context):
+    coords = []
+
+    bpy.ops.object.duplicate()
+    bpy.ops.object.join()
+    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+    bpy.context.active_object.name = "_tmp"
+
+    bpy.ops.object.convert(target='MESH')
+    obj = bpy.context.view_layer.objects.active
+
+    for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
+        c=(v.co.x, v.co.y)
+        coords.append(c)
+
+    simple.removeMultiple('_tmp')  # delete temporary mesh
+    simple.removeMultiple('ConvexHull')  # delete old hull
+
+    points = sgeometry.MultiPoint(coords)  # convert coordinates to shapely MultiPoint datastructure
+
+    hull = points.convex_hull
+    shapelyToCurve('ConvexHull', hull, 0.0)
+
+    return {'FINISHED'}
+
 
 def Helix(r, np, zstart, pend, rev):
     c = []

@@ -60,6 +60,20 @@ class CamCurveBoolean(bpy.types.Operator):
             self.report({'ERROR'}, 'at least 2 curves must be selected')
             return {'CANCELLED'}
 
+class CamCurveConvexHull(bpy.types.Operator):
+    """perform hull operation on single or multiple curves"""  # by Alain Pelletier april 2021
+    bl_idname = "object.convex_hull"
+    bl_label = "Convex Hull"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
+
+    def execute(self, context):
+        utils.polygonConvexHull(context)
+        return {'FINISHED'}
+
 
 # intarsion or joints
 class CamCurveIntarsion(bpy.types.Operator):
@@ -592,27 +606,24 @@ class CamOffsetSilhouete(bpy.types.Operator):
                 context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
-        if self.opencurve:
+        ob = context.active_object
+        if self.opencurve and ob.type == 'CURVE':
             bpy.ops.object.duplicate()
             obj = context.active_object
             bpy.ops.object.convert(target='MESH')
             bpy.context.active_object.name = "temp_mesh"
+
             coords = []
-            i=False
             for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
                 coords.append((v.co.x,v.co.y))
 
             simple.removeMultiple('temp_mesh')  # delete temporary mesh
-            length=0    #measure length
-            for p in coords:
-                if i:
-                    length += math.dist(p,oldp)
-                i=True
-                oldp=p
+            simple.removeMultiple('dilation')  # delete old dilation objects
 
-            print("curve length=",round(length*1000),'mm')
             line = LineString(coords)   # convert coordinates to shapely LineString datastructure
-            dilated = line.buffer(self.offset, cap_style = 1, resolution = 16, mitre_limit = self.mitrelimit) # use shapely to expand
+            print("line length=", round(line.length*1000), 'mm')
+
+            dilated = line.buffer(self.offset, cap_style=1, resolution=16, mitre_limit=self.mitrelimit) # use shapely to expand
             polygon_utils_cam.shapelyToCurve("dilation", dilated, 0)
         else:
             utils.silhoueteOffset(context, self.offset,int(self.style),self.mitrelimit)
