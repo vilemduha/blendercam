@@ -74,6 +74,77 @@ class CamCurveConvexHull(bpy.types.Operator):
         utils.polygonConvexHull(context)
         return {'FINISHED'}
 
+class CamCurvePlate(bpy.types.Operator):
+    """perform generates rounded plate with mounting holes"""  # by Alain Pelletier april 2021
+    bl_idname = "object.curve_plate"
+    bl_label = "Sign plate"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+
+    radius: bpy.props.FloatProperty(name="Corner Radius", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
+    width: bpy.props.FloatProperty(name="Width of plate", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height of plate", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
+    hole_diameter: bpy.props.FloatProperty(name="Hole diameter", default=0.01, min=0, max=3.0, precision=4, unit="LENGTH")
+    hole_tolerence: bpy.props.FloatProperty(name="Hole V Tolerance", default=0.005, min=0, max=3.0, precision=4, unit="LENGTH")
+    hole_vdist: bpy.props.FloatProperty(name="Hole Vert distance", default=0.400, min=0, max=3.0, precision=4, unit="LENGTH")
+
+#    @classmethod
+ #   def poll(cls, context):
+#        return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
+
+    def execute(self, context):
+        diameter = 2 * self.radius
+        left = -self.width/2 + self.radius
+        bottom = -self.height/2 + self.radius
+        right = -left
+        top = -bottom
+
+        # create circles for the four corners
+        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(left,bottom, 0), scale=(1, 1, 1))
+        bpy.context.active_object.name = "_circ_LB"
+        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(right, bottom, 0), scale=(1, 1, 1))
+        bpy.context.active_object.name = "_circ_RB"
+        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(left, top, 0), scale=(1, 1, 1))
+        bpy.context.active_object.name = "_circ_LT"
+        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(right, top, 0), scale=(1, 1, 1))
+        bpy.context.active_object.name = "_circ_RT"
+
+        simple.selectMultiple("_circ")      # select the circles for the four corners
+        utils.polygonConvexHull(context)
+        bpy.context.active_object.name = "plate_base"
+        simple.removeMultiple("_circ")      # remove corner circles
+
+        if self.hole_diameter>0:
+            bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter/2, enter_editmode=False, align='WORLD', location=(0, self.hole_tolerence/2, 0), scale=(1, 1, 1))
+            bpy.context.active_object.name = "_hole_T"
+            if self.hole_tolerence > 0:
+                bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter/2, enter_editmode=False, align='WORLD', location=(0, -self.hole_tolerence/2, 0), scale=(1, 1, 1))
+                bpy.context.active_object.name = "_hole_B"
+
+            simple.selectMultiple("_hole")
+            utils.polygonConvexHull(context)
+            bpy.context.active_object.name = "plate_hole"
+            bpy.context.object.location[1] = -self.hole_vdist/2
+            bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                          TRANSFORM_OT_translate={"value": (0, self.hole_vdist, 0)})
+            simple.removeMultiple("_hole")  # remove temporary holes
+
+            simple.joinMultiple("plate_hole")   # join the holes together
+
+            simple.selectMultiple("plate_")
+            object = bpy.data.objects['plate_base']     # Make the plate base active
+            bpy.context.view_layer.objects.active = object
+            utils.polygonBoolean(context, "DIFFERENCE")  # Remove holes from the base
+            simple.removeMultiple("plate_")             # Remove temporary base and holes
+
+        bpy.context.active_object.name = "plate"
+        bpy.context.active_object.select_set(True)
+
+
+        return {'FINISHED'}
+
+
+
 
 # intarsion or joints
 class CamCurveIntarsion(bpy.types.Operator):

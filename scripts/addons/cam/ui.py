@@ -989,6 +989,7 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         # lt = context.window_manager.looptools
         layout.operator("object.curve_boolean")
         layout.operator("object.convex_hull")
+        layout.operator("object.curve_plate")
         layout.operator("object.curve_intarsion")
         layout.operator("object.curve_overcuts")
         layout.operator("object.curve_overcuts_b")

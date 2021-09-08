@@ -1176,6 +1176,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         # other tools
         curvecamtools.CamCurveBoolean,
         curvecamtools.CamCurveConvexHull,
+        curvecamtools.CamCurvePlate,
         curvecamtools.CamOffsetSilhouete,
         curvecamtools.CamObjectSilhouete,
         curvecamtools.CamCurveIntarsion,
@@ -1375,6 +1376,7 @@ classes = [
     # other tools
     curvecamtools.CamCurveBoolean,
     curvecamtools.CamCurveConvexHull,
+    curvecamtools.CamCurvePlate,
     curvecamtools.CamOffsetSilhouete,
     curvecamtools.CamObjectSilhouete,
     curvecamtools.CamCurveIntarsion,
