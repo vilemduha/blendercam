@@ -936,7 +936,7 @@ def polygonConvexHull(context):
 
     bpy.ops.object.duplicate()
     bpy.ops.object.join()
-    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     bpy.context.active_object.name = "_tmp"
 
     bpy.ops.object.convert(target='MESH')
