@@ -97,7 +97,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.cutter_type == 'BALLCONE':
                    layout.prop(ao,'ball_radius')
                    EngagementDisplay(ao,layout)
-                   layout.prop(ao,'ball_cone_flute')
+                   layout.prop(ao,'cutter_tip_angle')
                    layout.label(text='Cutter diameter = shank diameter')
                 if ao.cutter_type == 'CYLCONE':
                    layout.prop(ao,'cylcone_diameter')
@@ -590,6 +590,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'medial_axis_threshold')
                     layout.prop(ao, 'medial_axis_subdivision')
                     layout.prop(ao, 'add_pocket_for_medial')
+                    layout.prop(ao,'add_mesh_for_medial')
  #remove crazy strategy because no one knows what it does.
  #               elif ao.strategy == 'CRAZY':
  #                   layout.prop(ao, 'crazy_threshold1')
@@ -615,6 +616,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                                                 
                 elif ao.strategy == 'POCKET':
                     layout.prop(ao, 'pocket_option')
+                    layout.prop(ao, 'pocketToCurve')
                     layout.prop(ao, 'dist_between_paths')
                     EngagementDisplay(ao,layout)
                     layout.prop(ao,'enable_A')
@@ -986,6 +988,7 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         # col = layout.column(align=True)
         # lt = context.window_manager.looptools
         layout.operator("object.curve_boolean")
+        layout.operator("object.convex_hull")
         layout.operator("object.curve_intarsion")
         layout.operator("object.curve_overcuts")
         layout.operator("object.curve_overcuts_b")

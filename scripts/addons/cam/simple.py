@@ -170,10 +170,17 @@ def getCachePath(o):
     fn = bpy.data.filepath
     l = len(bpy.path.basename(fn))
     bn = bpy.path.basename(fn)[:-6]
+    print('fn-l:',fn[:-l])
+    print('bn:',bn)
 
     iname = fn[:-l] + 'temp_cam' + os.sep + bn + '_' + o.name
     return iname
 
+def getSimulationPath():
+    fn = bpy.data.filepath
+    l = len(bpy.path.basename(fn))
+    iname = fn[:-l] + 'temp_cam' + os.sep
+    return iname
 
 def safeFileName(name):  # for export gcode
     valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
@@ -188,3 +195,23 @@ def strInUnits(x, precision=5):
         return str(round(x * 1000 / 25.4, precision)) + "'' "
     else:
         return str(x)
+
+# join multiple objects starting with 'name' renaming final object as 'name'
+def joinMultiple(name):
+    scene = bpy.context.scene
+    for ob in scene.objects:  # join pocket curve calculations
+        if ob.name.startswith(name):
+            ob.select_set(True)
+        else:
+            ob.select_set(False)
+    bpy.ops.object.join()
+    bpy.context.active_object.name = name  # rename object
+
+# remove multiple objects starting with 'name'.... useful for fixed name operation
+def removeMultiple(name):
+    scene = bpy.context.scene
+    bpy.ops.object.select_all(action='DESELECT')
+    for ob in scene.objects:
+        if ob.name.startswith(name):
+            ob.select_set(True)
+            bpy.ops.object.delete()

@@ -115,17 +115,10 @@ def getBoundsWorldspace(obs, use_modifiers=False):
         elif ob.type == "FONT":
             activate(ob)
             bpy.ops.object.duplicate()
-
-            bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
-
             co = bpy.context.active_object
+            bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
             bpy.ops.object.convert(target='MESH', keep_original=False)
-
-            if use_modifiers:
-                mesh = co.to_mesh(preserve_all_data_layers=True, depsgraph=bpy.context.evaluated_depsgraph_get())
-            else:
-                mesh = co.data
-
+            mesh = co.data
             for c in mesh.vertices:
                 coord = c.co
                 worldCoord = mw @ Vector((coord[0], coord[1], coord[2]))
@@ -135,10 +128,8 @@ def getBoundsWorldspace(obs, use_modifiers=False):
                 maxx = max(maxx, worldCoord.x)
                 maxy = max(maxy, worldCoord.y)
                 maxz = max(maxz, worldCoord.z)
-
-            if use_modifiers:
-                bpy.data.meshes.remove(mesh)
             bpy.ops.object.delete()
+            bpy.ops.outliner.orphans_purge()
         else:
 
             # for coord in bb:
@@ -940,6 +931,31 @@ def polygonBoolean(context, boolean_type):
 
     return {'FINISHED'}
 
+def polygonConvexHull(context):
+    coords = []
+
+    bpy.ops.object.duplicate()
+    bpy.ops.object.join()
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    bpy.context.active_object.name = "_tmp"
+
+    bpy.ops.object.convert(target='MESH')
+    obj = bpy.context.view_layer.objects.active
+
+    for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
+        c=(v.co.x, v.co.y)
+        coords.append(c)
+
+    simple.removeMultiple('_tmp')  # delete temporary mesh
+    simple.removeMultiple('ConvexHull')  # delete old hull
+
+    points = sgeometry.MultiPoint(coords)  # convert coordinates to shapely MultiPoint datastructure
+
+    hull = points.convex_hull
+    shapelyToCurve('ConvexHull', hull, 0.0)
+
+    return {'FINISHED'}
+
 
 def Helix(r, np, zstart, pend, rev):
     c = []
@@ -1656,7 +1672,7 @@ def rotTo2axes(e, axescombination):
 
 
 
-def reload_paths(o):
+def reload_pathss(o):
     oname = "cam_path_" + o.name
     s = bpy.context.scene
     # for o in s.objects:

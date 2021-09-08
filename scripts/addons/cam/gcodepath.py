@@ -40,6 +40,9 @@ from cam.collision import *
 from cam import simple
 from cam.simple import *
 
+from cam import bridges
+from cam.bridges import *
+
 from cam import utils
 from cam import strategy
 
@@ -581,7 +584,9 @@ def getPath3axis(context, operation):
         if o.strategy == 'CARVE':
             pathSamples = []
             # for ob in o.objects:
+
             ob = bpy.data.objects[o.curve_object]
+
             pathSamples.extend(curveToChunks(ob))
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)
@@ -589,9 +594,6 @@ def getPath3axis(context, operation):
             prepareArea(o)
             utils.getAmbient(o)
             pathSamples = getOffsetImageCavities(o, o.offset_image)
-            # for ch in pathSamples:
-            #	for i,p in enumerate(ch.points):
-            #	 ch.points[i]=(p[0],p[1],0)
             pathSamples = limitChunks(pathSamples, o)
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
         elif o.strategy == 'CRAZY':
@@ -615,10 +617,9 @@ def getPath3axis(context, operation):
             pathSamples = getPathPattern(o)
 
             if o.strategy == 'OUTLINEFILL':
-                pathSamples = utils.sortChunks(pathSamples,
-                                               o)  # have to be sorted once before, because of the parenting inside of samplechunks
+                pathSamples = utils.sortChunks(pathSamples, o)  # have to be sorted once before, because of the parenting inside of samplechunks
             # chunksToMesh(pathSamples,o)#for testing pattern script
-            # return
+            
             if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
                 pathSamples = utils.connectChunksLow(pathSamples, o)
 

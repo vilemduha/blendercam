@@ -212,6 +212,9 @@ class CalculatePath(bpy.types.Operator):
         o = s.cam_operations[s.cam_active_operation]
         ob = bpy.data.objects[o.object_name]
         ob.hide_set(False)
+        if o.strategy=="CARVE":
+            curvob=bpy.data.objects[o.curve_object]
+            curvob.hide_set(False)
         print(bpy.context.mode)
         if bpy.context.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
@@ -570,19 +573,36 @@ def fixUnits():
     s.unit_settings.system_rotation = 'DEGREES'
 
     s.unit_settings.scale_length = 1.0  # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.
-# add pocket op for medial axis to clean unremoved material
+
+
+# add pocket op for medial axis and profile cut inside to clean unremoved material
 def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
-        s = bpy.context.scene
-        ob=bpy.data.objects[sname]
-        ob.select_set(True)
-        bpy.context.view_layer.objects.active = ob
-        utils.silhoueteOffset(ob, -new_cutter_diameter/2,1,0.3)
-        p_ob = bpy.context.active_object
+    bpy.ops.object.select_all(action='DESELECT')
+    s = bpy.context.scene
+    mpocket_exists = False
+    for ob in s.objects:  # delete old medial pocket
+        if ob.name.startswith("medial_poc"):
+            ob.select_set(True)
+            bpy.ops.object.delete()
+
+    for op in s.cam_operations:  # verify medial pocket operation exists
+        if op.name == "MedialPocket":
+            mpocket_exists = True
+
+
+
+    ob=bpy.data.objects[sname]
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    utils.silhoueteOffset(ob, -new_cutter_diameter/2,1,0.3)
+    bpy.context.active_object.name = 'medial_pocket'
+
+    if not mpocket_exists:     # create a pocket operation if it does not exist already
         s.cam_operations.add()
         o = s.cam_operations[-1]
-        o.object_name = p_ob.name
+        o.object_name = 'medial_pocket'
         s.cam_active_operation = len(s.cam_operations) - 1
-        o.name = 'pocket_for_medial_' + str(s.cam_active_operation + 1)
+        o.name = 'MedialPocket' # + str(s.cam_active_operation + 1)
         o.filename = o.name
         o.strategy = 'POCKET'
         o.use_layers = False

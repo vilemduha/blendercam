@@ -29,6 +29,7 @@ from bpy_extras.io_utils import ImportHelper
 
 from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser
 import shapely
+from shapely.geometry import Point, LineString, Polygon
 import mathutils
 import math
 from Equation import Expression
@@ -59,35 +60,89 @@ class CamCurveBoolean(bpy.types.Operator):
             self.report({'ERROR'}, 'at least 2 curves must be selected')
             return {'CANCELLED'}
 
+class CamCurveConvexHull(bpy.types.Operator):
+    """perform hull operation on single or multiple curves"""  # by Alain Pelletier april 2021
+    bl_idname = "object.convex_hull"
+    bl_label = "Convex Hull"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
+
+    def execute(self, context):
+        utils.polygonConvexHull(context)
+        return {'FINISHED'}
+
 
 # intarsion or joints
 class CamCurveIntarsion(bpy.types.Operator):
     """makes curve cuttable both inside and outside, for intarsion and joints"""
     bl_idname = "object.curve_intarsion"
     bl_label = "Intarsion"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    diameter: bpy.props.FloatProperty(name="cutter diameter", default=.001, min=0, max=100, precision=4, unit="LENGTH")
+    diameter: bpy.props.FloatProperty(name="cutter diameter", default=.001, min=0, max=0.025, precision=4, unit="LENGTH")
+    tolerance: bpy.props.FloatProperty(name="cutout Tolerance", default=.0001, min=0, max=0.005, precision=4, unit="LENGTH")
+    backlight: bpy.props.FloatProperty(name="Backlight seat", default=0.000, min=0, max=0.010, precision=4, unit="LENGTH")
+    perimeter_cut: bpy.props.FloatProperty(name="Perimeter cut offset", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
+    base_thickness:bpy.props.FloatProperty(name="Base material thickness", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
+    intarsion_thickness:bpy.props.FloatProperty(name="Intarsion material thickness", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
+    backlight_depth_from_top:bpy.props.FloatProperty(name="Backlight well depth", default=0.000, min=0, max=0.100, precision=4, unit="LENGTH")
 
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
 
     def execute(self, context):
-        utils.silhoueteOffset(context, -self.diameter / 2)
+        selected = context.selected_objects  # save original selected items
+        scene = bpy.context.scene
+
+        simple.removeMultiple('intarsion_')
+
+        for ob in selected: ob.select_set(True)     # select original curves
+
+        #  Perimeter cut largen then intarsion pocket externally, optional
+        if self.perimeter_cut > 0.0:
+            utils.silhoueteOffset(context, self.perimeter_cut)
+            bpy.context.active_object.name = "intarsion_perimeter"
+            bpy.context.object.location[2] = -self.base_thickness
+            bpy.ops.object.select_all(action='DESELECT')  # deselect new curve
+            for ob in selected:                           # select original curves
+                ob.select_set(True)
+                context.view_layer.objects.active = ob    # make original curve active
+
+
+
+        diam = self.diameter * 1.05  + self.backlight * 2 #make the diameter 5% larger and compensate for backlight
+        utils.silhoueteOffset(context, -diam / 2)
+
         o1 = bpy.context.active_object
-
-        utils.silhoueteOffset(context, self.diameter)
+        utils.silhoueteOffset(context, diam)
         o2 = bpy.context.active_object
-        utils.silhoueteOffset(context, -self.diameter / 2)
+        utils.silhoueteOffset(context, -diam/ 2)
         o3 = bpy.context.active_object
-        o1.select_set(state=True)
-        o2.select_set(state=True)
-        o3.select_set(state=False)
-        bpy.ops.object.delete(use_global=False)
-        o3.select_set(state=True)
-        return {'FINISHED'}
+        o1.select_set(True)
+        o2.select_set(True)
+        o3.select_set(False)
+        bpy.ops.object.delete(use_global=False)     # delete o1 and o2 temporary working curves
+        o3.name = "intarsion_pocket"                # this is the pocket for intarsion
+        bpy.context.object.location[2] = -self.intarsion_thickness
 
+        #   intarsion profile is the inside piece of the intarsion
+        utils.silhoueteOffset(context, -self.tolerance / 2)  #  make smaller curve for material profile
+        bpy.context.object.location[2] = self.intarsion_thickness
+        o4 = bpy.context.active_object
+        bpy.context.active_object.name = "intarsion_profil"
+        o4.select_set(False)
+
+        if self.backlight > 0.0:        #  Make a smaller curve for backlighting purposes
+            utils.silhoueteOffset(context, (-self.tolerance / 2)-self.backlight)
+            bpy.context.active_object.name = "intarsion_backlight"
+            bpy.context.object.location[2] = -self.backlight_depth_from_top-self.intarsion_thickness
+            o4.select_set(True)
+        o3.select_set(True)
+        return {'FINISHED'}
 
 # intarsion or joints
 class CamCurveOvercuts(bpy.types.Operator):
@@ -543,6 +598,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
     mitrelimit: bpy.props.FloatProperty(name="Mitre Limit", default=.003, min=0.0, max=20, precision=4, unit="LENGTH")
     style:  bpy.props.EnumProperty(name="type of curve", items=(
         ('1', 'Round', ''), ('2', 'Mitre', ''),('3','Bevel','')))
+    opencurve:  bpy.props.BoolProperty(name="Dialate open curve", default = False)
 
     @classmethod
     def poll(cls, context):
@@ -550,7 +606,27 @@ class CamOffsetSilhouete(bpy.types.Operator):
                 context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
-        utils.silhoueteOffset(context, self.offset,int(self.style),self.mitrelimit)
+        ob = context.active_object
+        if self.opencurve and ob.type == 'CURVE':
+            bpy.ops.object.duplicate()
+            obj = context.active_object
+            bpy.ops.object.convert(target='MESH')
+            bpy.context.active_object.name = "temp_mesh"
+
+            coords = []
+            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
+                coords.append((v.co.x,v.co.y))
+
+            simple.removeMultiple('temp_mesh')  # delete temporary mesh
+            simple.removeMultiple('dilation')  # delete old dilation objects
+
+            line = LineString(coords)   # convert coordinates to shapely LineString datastructure
+            print("line length=", round(line.length*1000), 'mm')
+
+            dilated = line.buffer(self.offset, cap_style=1, resolution=16, mitre_limit=self.mitrelimit) # use shapely to expand
+            polygon_utils_cam.shapelyToCurve("dilation", dilated, 0)
+        else:
+            utils.silhoueteOffset(context, self.offset,int(self.style),self.mitrelimit)
         return {'FINISHED'}
 
 

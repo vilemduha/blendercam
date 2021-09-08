@@ -40,12 +40,12 @@ import pickle
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
-    "version": (0, 9, 0),
+    "version": (0, 9, 2),
     "blender": (2, 80, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
     "warning": "there is no warranty for the produced gcode by now",
-    "wiki_url": "blendercam.blogspot.com",
+    "wiki_url": "https://github.com/vilemduha/blendercam/wiki",
     "tracker_url": "",
     "category": "Scene"}
 
@@ -551,7 +551,9 @@ class camOperation(bpy.types.PropertyGroup):
     pocket_option: EnumProperty(name='Start Position', items=(
         ('INSIDE', 'Inside', 'a'), ('OUTSIDE', 'Outside', 'a'), ('MIDDLE', 'Middle', 'a')),
                                 description='Pocket starting position', default='MIDDLE', update=updateRest)
-
+    pocketToCurve:bpy.props.BoolProperty(name="Pocket to curve",
+                                  description="generates a curve instead of a path",
+                                  default=False, update=updateRest)
     # Cutout
     cut_type: EnumProperty(name='Cut',
                            items=(('OUTSIDE', 'Outside', 'a'), ('INSIDE', 'Inside', 'a'), ('ONLINE', 'On line', 'a')),
@@ -578,8 +580,8 @@ class camOperation(bpy.types.PropertyGroup):
                                      max=180.0, default=60.0, precision=PRECISION, update=updateOffsetImage)
     ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
                                      max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
-    ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
-                                     max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+    #ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
+    #                                 max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
     bull_corner_radius: FloatProperty(name="Bull Corner Radius", description="Radius tool bit corner", min=0.0,
                                      max=0.035, default=0.005, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
 
@@ -619,6 +621,7 @@ class camOperation(bpy.types.PropertyGroup):
     # carve only
     carve_depth: bpy.props.FloatProperty(name="Carve depth", default=0.001, min=-.100, max=32, precision=PRECISION,
                                           unit="LENGTH", update=updateRest)
+
     # drill only
     drill_type: EnumProperty(name='Holes on', items=(
         ('MIDDLE_SYMETRIC', 'Middle of symetric curves', 'a'), ('MIDDLE_ALL', 'Middle of all curve parts', 'a'),
@@ -830,6 +833,9 @@ class camOperation(bpy.types.PropertyGroup):
                                               precision=PRECISION, update=updateRest)
     # Add pocket operation to medial axis
     add_pocket_for_medial: bpy.props.BoolProperty(name="Add pocket operation", description="clean unremoved material after medial axis", default=True,
+                                        update=updateRest)
+
+    add_mesh_for_medial: bpy.props.BoolProperty(name="Add Medial mesh", description="Medial operation returns mesh for editing and further processing", default=False,
                                         update=updateRest)
     ####
     medial_axis_threshold: bpy.props.FloatProperty(name="Long vector threshold", default=0.001, min=0.00000001,
@@ -1169,6 +1175,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         ops.CamSliceObjects,
         # other tools
         curvecamtools.CamCurveBoolean,
+        curvecamtools.CamCurveConvexHull,
         curvecamtools.CamOffsetSilhouete,
         curvecamtools.CamObjectSilhouete,
         curvecamtools.CamCurveIntarsion,
@@ -1367,6 +1374,7 @@ classes = [
     ops.CamSliceObjects,
     # other tools
     curvecamtools.CamCurveBoolean,
+    curvecamtools.CamCurveConvexHull,
     curvecamtools.CamOffsetSilhouete,
     curvecamtools.CamObjectSilhouete,
     curvecamtools.CamCurveIntarsion,
