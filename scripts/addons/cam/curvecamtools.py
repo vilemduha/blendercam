@@ -80,17 +80,14 @@ class CamCurvePlate(bpy.types.Operator):
     bl_label = "Sign plate"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-
     radius: bpy.props.FloatProperty(name="Corner Radius", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
     width: bpy.props.FloatProperty(name="Width of plate", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
     height: bpy.props.FloatProperty(name="Height of plate", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
     hole_diameter: bpy.props.FloatProperty(name="Hole diameter", default=0.01, min=0, max=3.0, precision=4, unit="LENGTH")
     hole_tolerence: bpy.props.FloatProperty(name="Hole V Tolerance", default=0.005, min=0, max=3.0, precision=4, unit="LENGTH")
     hole_vdist: bpy.props.FloatProperty(name="Hole Vert distance", default=0.400, min=0, max=3.0, precision=4, unit="LENGTH")
-
-#    @classmethod
- #   def poll(cls, context):
-#        return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
+    hole_hdist: bpy.props.FloatProperty(name="Hole horiz distance", default=0, min=0, max=3.0, precision=4, unit="LENGTH")
+    hole_hamount: bpy.props.IntProperty(name="Hole horiz amount", default=1, min=0, max=50)
 
     def execute(self, context):
         diameter = 2 * self.radius
@@ -110,18 +107,18 @@ class CamCurvePlate(bpy.types.Operator):
         bpy.context.active_object.name = "_circ_RT"
 
         simple.selectMultiple("_circ")      # select the circles for the four corners
-        utils.polygonConvexHull(context)
+        utils.polygonConvexHull(context)    # perform hull operation on the four corner circles
         bpy.context.active_object.name = "plate_base"
         simple.removeMultiple("_circ")      # remove corner circles
 
         if self.hole_diameter>0:
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter/2, enter_editmode=False, align='WORLD', location=(0, self.hole_tolerence/2, 0), scale=(1, 1, 1))
-            bpy.context.active_object.name = "_hole_T"
+            bpy.context.active_object.name = "_hole_Top"
             if self.hole_tolerence > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter/2, enter_editmode=False, align='WORLD', location=(0, -self.hole_tolerence/2, 0), scale=(1, 1, 1))
-                bpy.context.active_object.name = "_hole_B"
+                bpy.context.active_object.name = "_hole_Bottom"
 
-            simple.selectMultiple("_hole")
+            simple.selectMultiple("_hole")  # select everything starting with _hole and perform a convex hull on them
             utils.polygonConvexHull(context)
             bpy.context.active_object.name = "plate_hole"
             bpy.context.object.location[1] = -self.hole_vdist/2
@@ -131,9 +128,33 @@ class CamCurvePlate(bpy.types.Operator):
 
             simple.joinMultiple("plate_hole")   # join the holes together
 
-            simple.selectMultiple("plate_")
-            object = bpy.data.objects['plate_base']     # Make the plate base active
-            bpy.context.view_layer.objects.active = object
+            # horizontal holes
+            if self.hole_hamount>1:
+                if self.hole_hamount % 2 != 0:
+                    for x in range(int((self.hole_hamount-1)/2)):
+                        dist = self.hole_hdist * (x + 1)  # calculate the distance from the middle
+                        bpy.ops.object.duplicate()
+                        bpy.context.object.location[0] = dist
+                        bpy.ops.object.duplicate()
+                        bpy.context.object.location[0] = -dist
+                else:
+                    for x in range(int(self.hole_hamount / 2)):
+                        dist = self.hole_hdist * x + self.hole_hdist / 2    # calculate the distance from the middle
+                        if x == 0:      # special case where the original hole only needs to move and not duplicate
+                            bpy.context.object.location[0] = dist
+                            bpy.ops.object.duplicate()
+                            bpy.context.object.location[0] = -dist
+                        else:
+                            bpy.ops.object.duplicate()
+                            bpy.context.object.location[0] = dist
+                            bpy.ops.object.duplicate()
+                            bpy.context.object.location[0] = -dist
+                simple.joinMultiple("plate_hole")   # join the holes together
+
+
+            simple.selectMultiple("plate_")     # select everything starting with plate_
+
+            bpy.context.view_layer.objects.active = bpy.data.objects['plate_base']  # Make the plate base active
             utils.polygonBoolean(context, "DIFFERENCE")  # Remove holes from the base
             simple.removeMultiple("plate_")             # Remove temporary base and holes
 
