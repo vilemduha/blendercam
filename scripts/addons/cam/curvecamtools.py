@@ -74,6 +74,24 @@ class CamCurveConvexHull(bpy.types.Operator):
         utils.polygonConvexHull(context)
         return {'FINISHED'}
 
+class CamCurveHatch(bpy.types.Operator):
+    """perform hatch operation on single or multiple curves"""  # by Alain Pelletier September 2021
+    bl_idname = "object.curve_hatch"
+    bl_label = "Hatch curve"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+    angle: bpy.props.FloatProperty(name="angle", default=0, min=0, max=360, precision=4, subtype="ANGLE")
+    distance: bpy.props.FloatProperty(name="spacing", default=0.001, min=0, max=3.0, precision=4, unit="LENGTH")
+    cross: bpy.props.BoolProperty(name="Cross hatch", default=False)
+
+    @classmethod
+    def poll(cls, context):
+        return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
+
+    def execute(self,context):
+        utils.polygonHatch(self.distance, self.angle, self.cross)
+        return {'FINISHED'}
+
 class CamCurvePlate(bpy.types.Operator):
     """perform generates rounded plate with mounting holes"""  # by Alain Pelletier april 2021
     bl_idname = "object.curve_plate"
@@ -88,6 +106,7 @@ class CamCurvePlate(bpy.types.Operator):
     hole_vdist: bpy.props.FloatProperty(name="Hole Vert distance", default=0.400, min=0, max=3.0, precision=4, unit="LENGTH")
     hole_hdist: bpy.props.FloatProperty(name="Hole horiz distance", default=0, min=0, max=3.0, precision=4, unit="LENGTH")
     hole_hamount: bpy.props.IntProperty(name="Hole horiz amount", default=1, min=0, max=50)
+    resolution: bpy.props.IntProperty(name="Spline resolution", default=50, min=3, max=150)
 
     def execute(self, context):
         diameter = 2 * self.radius
@@ -101,22 +120,29 @@ class CamCurvePlate(bpy.types.Operator):
         bpy.context.active_object.name = "_circ_LB"
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(right, bottom, 0), scale=(1, 1, 1))
         bpy.context.active_object.name = "_circ_RB"
+        bpy.context.object.data.resolution_u = self.resolution
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(left, top, 0), scale=(1, 1, 1))
         bpy.context.active_object.name = "_circ_LT"
+        bpy.context.object.data.resolution_u = self.resolution
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(right, top, 0), scale=(1, 1, 1))
         bpy.context.active_object.name = "_circ_RT"
+        bpy.context.object.data.resolution_u = self.resolution
 
         simple.selectMultiple("_circ")      # select the circles for the four corners
+#        bpy.context.object.data.resolution_u = self.resolution
         utils.polygonConvexHull(context)    # perform hull operation on the four corner circles
         bpy.context.active_object.name = "plate_base"
         simple.removeMultiple("_circ")      # remove corner circles
 
+
         if self.hole_diameter>0:
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter/2, enter_editmode=False, align='WORLD', location=(0, self.hole_tolerence/2, 0), scale=(1, 1, 1))
             bpy.context.active_object.name = "_hole_Top"
+            bpy.context.object.data.resolution_u = self.resolution/4
             if self.hole_tolerence > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter/2, enter_editmode=False, align='WORLD', location=(0, -self.hole_tolerence/2, 0), scale=(1, 1, 1))
                 bpy.context.active_object.name = "_hole_Bottom"
+                bpy.context.object.data.resolution_u = self.resolution/4
 
             simple.selectMultiple("_hole")  # select everything starting with _hole and perform a convex hull on them
             utils.polygonConvexHull(context)
@@ -747,7 +773,6 @@ class CamObjectSilhouete(bpy.types.Operator):
         return {'FINISHED'}
 
 #---------------------------------------------------
-
 
 
 
