@@ -221,14 +221,7 @@ class CamCurveIntarsion(bpy.types.Operator):
         for ob in selected: ob.select_set(True)     # select original curves
 
         #  Perimeter cut largen then intarsion pocket externally, optional
-        if self.perimeter_cut > 0.0:
-            utils.silhoueteOffset(context, self.perimeter_cut)
-            bpy.context.active_object.name = "intarsion_perimeter"
-            bpy.context.object.location[2] = -self.base_thickness
-            bpy.ops.object.select_all(action='DESELECT')  # deselect new curve
-            for ob in selected:                           # select original curves
-                ob.select_set(True)
-                context.view_layer.objects.active = ob    # make original curve active
+
 
 
 
@@ -247,6 +240,14 @@ class CamCurveIntarsion(bpy.types.Operator):
         o3.name = "intarsion_pocket"                # this is the pocket for intarsion
         bpy.context.object.location[2] = -self.intarsion_thickness
 
+        if self.perimeter_cut > 0.0:
+            utils.silhoueteOffset(context, self.perimeter_cut)
+            bpy.context.active_object.name = "intarsion_perimeter"
+            bpy.context.object.location[2] = -self.base_thickness
+            bpy.ops.object.select_all(action='DESELECT')  # deselect new curve
+
+        o3.select_set(True)
+        context.view_layer.objects.active = o3
         #   intarsion profile is the inside piece of the intarsion
         utils.silhoueteOffset(context, -self.tolerance / 2)  #  make smaller curve for material profile
         bpy.context.object.location[2] = self.intarsion_thickness
