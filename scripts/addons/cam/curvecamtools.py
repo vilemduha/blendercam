@@ -129,13 +129,12 @@ class CamCurvePlate(bpy.types.Operator):
         bpy.context.object.data.resolution_u = self.resolution
 
         simple.selectMultiple("_circ")      # select the circles for the four corners
-#        bpy.context.object.data.resolution_u = self.resolution
         utils.polygonConvexHull(context)    # perform hull operation on the four corner circles
         bpy.context.active_object.name = "plate_base"
         simple.removeMultiple("_circ")      # remove corner circles
 
 
-        if self.hole_diameter>0:
+        if self.hole_diameter > 0 or self.hole_hamount > 0:
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter/2, enter_editmode=False, align='WORLD', location=(0, self.hole_tolerence/2, 0), scale=(1, 1, 1))
             bpy.context.active_object.name = "_hole_Top"
             bpy.context.object.data.resolution_u = self.resolution/4
