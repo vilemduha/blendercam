@@ -728,6 +728,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
         if self.opencurve and ob.type == 'CURVE':
             bpy.ops.object.duplicate()
             obj = context.active_object
+            bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)  # apply all transforms
             bpy.ops.object.convert(target='MESH')
             bpy.context.active_object.name = "temp_mesh"
 
