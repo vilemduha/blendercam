@@ -118,6 +118,7 @@ class CamCurvePlate(bpy.types.Operator):
         # create circles for the four corners
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(left,bottom, 0), scale=(1, 1, 1))
         bpy.context.active_object.name = "_circ_LB"
+        bpy.context.object.data.resolution_u = self.resolution
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(right, bottom, 0), scale=(1, 1, 1))
         bpy.context.active_object.name = "_circ_RB"
         bpy.context.object.data.resolution_u = self.resolution
@@ -729,6 +730,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
             bpy.ops.object.duplicate()
             obj = context.active_object
             bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)  # apply all transforms
+            bpy.context.object.data.resolution_u = 60
             bpy.ops.object.convert(target='MESH')
             bpy.context.active_object.name = "temp_mesh"
 
