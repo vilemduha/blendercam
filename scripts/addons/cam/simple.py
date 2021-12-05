@@ -223,3 +223,10 @@ def removeMultiple(name):
         if ob.name.startswith(name):
             ob.select_set(True)
             bpy.ops.object.delete()
+
+def makeActive(name):
+    bpy.ops.object.select_all(action='DESELECT')
+    ob = bpy.context.scene.objects[name]
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.context.view_layer.objects.active = ob  # Make the cube the active object
+    ob.select_set(True)

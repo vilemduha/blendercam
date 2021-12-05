@@ -27,7 +27,7 @@ from bpy.props import *
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
 
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser
+from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser, joinery
 import shapely
 from shapely.geometry import Point, LineString, Polygon
 import mathutils
@@ -93,7 +93,7 @@ class CamCurveHatch(bpy.types.Operator):
         return {'FINISHED'}
 
 class CamCurvePlate(bpy.types.Operator):
-    """perform generates rounded plate with mounting holes"""  # by Alain Pelletier april 2021
+    """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
     bl_idname = "object.curve_plate"
     bl_label = "Sign plate"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
@@ -115,7 +115,7 @@ class CamCurvePlate(bpy.types.Operator):
         right = -left
         top = -bottom
 
-        # create circles for the four corners
+        # create base
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD', location=(left,bottom, 0), scale=(1, 1, 1))
         bpy.context.active_object.name = "_circ_LB"
         bpy.context.object.data.resolution_u = self.resolution
@@ -190,7 +190,249 @@ class CamCurvePlate(bpy.types.Operator):
 
         return {'FINISHED'}
 
+def finger_amount_old(space,size):
+    finger_amt = space / (size)
+    if (finger_amt % 1) != 0:
+        finger_amt = round(finger_amt) + 1
+    if (finger_amt % 2) != 0:
+        finger_amt = round(finger_amt) + 1
+    return(finger_amt)
 
+def horizontal_finger_old(length, thickness, finger_play, amount):
+    for i in range(amount):
+        if i == 0:
+            bpy.ops.curve.simple(align='WORLD',
+                                 location=(0, thickness / 2, 0),
+                                 rotation=(0, 0, 0), Simple_Type='Rectangle',
+                                 Simple_width=length + finger_play,
+                                 Simple_length=thickness, shape='3D', outputType='POLY',
+                                 use_cyclic_u=True,
+                                 handleType='AUTO', edit_mode=False)
+            bpy.context.active_object.name = "_width_finger"
+        else:
+            bpy.ops.curve.simple(align='WORLD',
+                                 location=(i * 2 * length, thickness / 2, 0),
+                                 rotation=(0, 0, 0), Simple_Type='Rectangle',
+                                 Simple_width=length + finger_play,
+                                 Simple_length=thickness, shape='3D', outputType='POLY',
+                                 use_cyclic_u=True,
+                                 handleType='AUTO', edit_mode=False)
+            bpy.context.active_object.name = "_width_finger"
+            bpy.ops.curve.simple(align='WORLD',
+                                 location=(-i * 2 * length, thickness / 2, 0),
+                                 rotation=(0, 0, 0), Simple_Type='Rectangle',
+                                 Simple_width=length + finger_play,
+                                 Simple_length=thickness, shape='3D', outputType='POLY',
+                                 use_cyclic_u=True,
+                                 handleType='AUTO', edit_mode=False)
+            bpy.context.active_object.name = "_width_finger"
+
+    simple.joinMultiple("_width_finger")
+
+    bpy.context.active_object.name = "_wfa"
+    bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                  TRANSFORM_OT_translate={"value": (length, 0.0, 0.0)})
+    bpy.context.active_object.name = "_wfb"
+
+class CamCurveDrawer(bpy.types.Operator):
+    """Generates drawers"""  # by Alain Pelletier December 2021 inspired by The Drawinator
+    bl_idname = "object.curve_drawer"
+    bl_label = "Drawer"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+    depth: bpy.props.FloatProperty(name="Drawer Depth", default=0.2, min=0, max=1.0, precision=4, unit="LENGTH")
+    width: bpy.props.FloatProperty(name="Width of Drawer", default=0.125, min=0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height of drawer", default=0.07, min=0, max=3.0, precision=4, unit="LENGTH")
+    finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005, max=3.0, precision=4, unit="LENGTH")
+    finger_tolerence: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4, unit="LENGTH")
+    finger_inset: bpy.props.FloatProperty(name="Finger inset", default=0.0, min=0.0, max=0.01, precision=4,
+                                              unit="LENGTH")
+    drawer_plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0, precision=4, unit="LENGTH")
+    drawer_hole_diameter: bpy.props.FloatProperty(name="Drawer hole diameter", default=0.02, min=0.00001, max=0.5, precision=4, unit="LENGTH")
+    drawer_hole_offset: bpy.props.FloatProperty(name="Drawer hole offset", default=0.0, min=-0.5, max=0.5, precision=4, unit="LENGTH")
+
+
+    def execute(self, context):
+        height_finger_amt = int(joinery.finger_amount(self.height, self.finger_size))
+        height_finger = (self.height+0.0004) / height_finger_amt
+        width_finger_amt = int(joinery.finger_amount(self.width, self.finger_size))
+        width_finger = (self.width-self.finger_size) / width_finger_amt
+        depth_finger_amt = int(joinery.finger_amount(self.depth, self.finger_size))
+        depth_finger = (self.depth+self.finger_size) / depth_finger_amt
+
+        # create base
+        bpy.ops.curve.simple(align='WORLD', location=(0, self.height / 2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                             Simple_width=self.width, Simple_length=self.height, shape='3D', outputType='POLY', use_cyclic_u=True,
+                             handleType='AUTO', edit_mode=False)
+        bpy.context.active_object.name = "_back"
+        back = bpy.context.active_object
+        bpy.ops.curve.simple(align='WORLD', location=(0, self.height / 2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                             Simple_width=self.depth, Simple_length=self.height, shape='3D', outputType='POLY', use_cyclic_u=True,
+                             handleType='AUTO', edit_mode=False)
+        bpy.context.active_object.name = "_side"
+        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                             Simple_width=self.width, Simple_length=self.depth, shape='3D', outputType='POLY', use_cyclic_u=True,
+                             handleType='AUTO', edit_mode=False)
+        bpy.context.active_object.name = "_bottom"
+        bpy.context.object.data.resolution_u = 64
+        bpy.context.scene.cursor.location = (0, 0, 0)
+
+#        bpy.ops.curve.simple(align='WORLD', location=(0, self.height/2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+#                             Simple_width=self.height, Simple_length=self.width, shape='3D', outputType='POLY', use_cyclic_u=True,
+#                             handleType='AUTO', edit_mode=False)
+#        bpy.context.active_object.name = "_front"
+
+ #       bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+ #                            Simple_width=self.depth, Simple_length=self.width, shape='3D', outputType='POLY', use_cyclic_u=True,
+ #                            handleType='AUTO', edit_mode=False)
+ #       bpy.context.active_object.name = "_bottom"
+
+#        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+#                             Simple_width=self.height, Simple_length=self.depth, shape='3D', outputType='POLY', use_cyclic_u=True,
+#                             handleType='AUTO', edit_mode=False)
+#        bpy.context.active_object.name = "_side"
+
+        for i in range(height_finger_amt):
+            bpy.ops.curve.simple(align='WORLD', location=(0, i*2*height_finger+height_finger/2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                             Simple_width=self.drawer_plate_thickness, Simple_length=height_finger+self.finger_tolerence, shape='3D', outputType='POLY', use_cyclic_u=True,
+                             handleType='AUTO', edit_mode=False)
+            bpy.context.active_object.name = "_height_right_finger"
+
+        simple.joinMultiple("_height_right_")
+        bpy.context.active_object.name = "hfa"
+
+        joinery.horizontal_finger(width_finger, self.drawer_plate_thickness, self.finger_tolerence, width_finger_amt)
+        simple.makeActive('_wfb')
+        bpy.context.active_object.name = "_frontwb"
+        frontwb = bpy.context.active_object
+
+#########################################################################################
+#        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+#                                      TRANSFORM_OT_translate={"value": (width_finger, 0.0, 0.0)})
+#        bpy.context.active_object.name = "wfb"
+ #       frontw = bpy.context.active_object
+
+        simple.makeActive('hfa')
+
+        bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": (0.0, height_finger, 0.0)})
+        bpy.context.active_object.name = "hfb"
+
+        bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+
+        simple.makeActive('hfa')
+
+        hpos = self.width/2+0.0001-self.drawer_plate_thickness/2-self.finger_inset
+
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": (hpos, 0.0, 0.0)})
+        bpy.context.active_object.name = "front_vfinger"
+
+        simple.makeActive('hfa')
+
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": (-hpos, 0.0, 0.0)})
+        bpy.context.active_object.name = "front_vfinger"
+        simple.joinMultiple("front_v")
+        frontv = bpy.context.active_object
+        bpy.ops.object.select_all(action='DESELECT')
+
+        simple.makeActive('_wfa')
+        fronth = bpy.context.active_object
+        simple.makeActive('_back')
+        frontv.select_set(True)
+        fronth.select_set(True)
+        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+        bpy.context.active_object.name = "drawer_back"
+        bpy.ops.curve.primitive_bezier_circle_add(radius=self.drawer_hole_diameter/2, enter_editmode=False, align='WORLD', location=(0,self.height+self.drawer_hole_offset, 0), scale=(1, 1, 1))
+        bpy.context.active_object.name = "_circ"
+        front_hole = bpy.context.active_object
+        simple.makeActive('drawer_back')
+        bpy.ops.object.curve_remove_doubles()
+        front_hole.select_set(True)
+        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+        bpy.context.active_object.name = "drawer_front"
+        bpy.ops.object.curve_remove_doubles()
+        bpy.ops.transform.transform(mode='TRANSLATION', value=(0.0, 2*self.height, 0.0, 0.0))
+        simple.makeActive('drawer_back')
+
+        bpy.ops.transform.transform(mode='TRANSLATION', value=(self.width+0.01, 2*self.height, 0.0, 0.0))
+        simple.removeMultiple('_back')
+        simple.removeMultiple('_circ')
+        simple.removeMultiple('front_v')
+#   make side
+        simple.makeActive('hfb')
+
+        hpos = self.depth/2+0.00001-self.drawer_plate_thickness/2
+
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": (hpos, 0.0, 0.0)})
+        bpy.context.active_object.name = "front_vfinger"
+
+        simple.makeActive('hfb')
+
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": (-hpos, 0.0, 0.0)})
+        bpy.context.active_object.name = "front_vfinger"
+        simple.joinMultiple("front_v")
+        frontv = bpy.context.active_object
+        joinery.horizontal_finger(depth_finger, self.drawer_plate_thickness, self.finger_tolerence, depth_finger_amt)
+        simple.makeActive('_wfb')
+        bpy.context.active_object.name = "_depthwb"
+        depthwb = bpy.context.active_object
+        simple.makeActive('_wfa')
+        fronth = bpy.context.active_object
+        simple.makeActive('_side')
+        frontv.select_set(True)
+        fronth.select_set(True)
+        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+        bpy.context.active_object.name = "drawer_side"
+        bpy.ops.object.curve_remove_doubles()
+        simple.removeMultiple('front_v')
+        simple.removeMultiple('hf')
+        simple.removeMultiple('_side')
+        simple.removeMultiple('_wfa')
+#   make bottom
+        simple.makeActive("_frontwb")
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": (0, self.depth/2-self.drawer_plate_thickness, 0)})
+        bpy.context.active_object.name = "_front_wb"
+        simple.makeActive("_frontwb")
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},TRANSFORM_OT_translate={"value": (0, -self.depth/2, 0)})
+        bpy.context.active_object.name = "_front_wb"
+        simple.joinMultiple("_front_wb")
+        frontwb = bpy.context.active_object
+        simple.makeActive('_bottom')
+        frontwb.select_set(True)
+        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+
+        bpy.context.active_object.name = "_bottom2"
+        simple.makeActive('_bottom2')
+        bpy.context.object.rotation_euler[2] = math.pi/2
+
+        simple.makeActive("_depthwb")
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": (0, self.width/2-self.drawer_plate_thickness+0.00001-self.finger_inset, 0)})
+        bpy.context.active_object.name = "_depth_wb"
+        simple.makeActive("_depthwb")
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},TRANSFORM_OT_translate={"value": (0, -self.width/2-0.00001+self.finger_inset, 0)})
+        bpy.context.active_object.name = "_depth_wb"
+        simple.joinMultiple("_depth_wb")
+        depthwb = bpy.context.active_object
+        simple.makeActive('_bottom2')
+        depthwb.select_set(True)
+        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+        bpy.context.active_object.name = "drawer_bottom"
+        simple.removeMultiple("_")
+        simple.makeActive("drawer_side")
+        bpy.ops.object.curve_remove_doubles()
+        bpy.ops.transform.transform(mode='TRANSLATION', value=(self.depth/2 + 3*self.width/2+0.02, 2*self.height, 0.0, 0.0))
+        simple.makeActive("drawer_bottom")
+        bpy.ops.transform.transform(mode='TRANSLATION', value=(self.depth/2 + 3*self.width/2+0.02, self.width/2, 0.0, 0.0))
+        bpy.ops.object.curve_remove_doubles()
+
+        return {'FINISHED'}
 
 
 # intarsion or joints
@@ -270,7 +512,7 @@ class CamCurveOvercuts(bpy.types.Operator):
     bl_label = "Add Overcuts"
     bl_options = {'REGISTER', 'UNDO'}
 
-    diameter: bpy.props.FloatProperty(name="diameter", default=.003, min=0, max=100, precision=4, unit="LENGTH")
+    diameter: bpy.props.FloatProperty(name="diameter", default=.003175, min=0, max=100, precision=4, unit="LENGTH")
     threshold: bpy.props.FloatProperty(name="threshold", default=math.pi / 2 * .99, min=-3.14, max=3.14, precision=4,
                                        subtype="ANGLE", unit="ROTATION")
     do_outer: bpy.props.BoolProperty(name="Outer polygons", default=True)
@@ -281,7 +523,6 @@ class CamCurveOvercuts(bpy.types.Operator):
         return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
 
     def execute(self, context):
-        # utils.silhoueteOffset(context,-self.diameter)
         o1 = bpy.context.active_object
         shapes = utils.curveToShapely(o1)
         negative_overcuts = []
@@ -290,7 +531,7 @@ class CamCurveOvercuts(bpy.types.Operator):
         for s in shapes:
             s = shapely.geometry.polygon.orient(s, 1)
             if s.boundary.type == 'LineString':
-                loops = [s.boundary]  # s=shapely.geometry.asMultiLineString(s)
+                loops = [s.boundary]
             else:
                 loops = s.boundary
 
@@ -312,10 +553,6 @@ class CamCurveOvercuts(bpy.types.Operator):
                         if not v1.length == 0 and not v2.length == 0:
                             a = v1.angle_signed(v2)
                             sign = 1
-                            # if ci==0:
-                            #	sign=-1
-                            # else:
-                            #	sign=1
 
                             if self.invert:  # and ci>0:
                                 sign *= -1
@@ -336,21 +573,19 @@ class CamCurveOvercuts(bpy.types.Operator):
                                     shape = l.buffer(diameter / 2, resolution=64)
 
                                 if sign > 0:
-                                    negative_overcuts.apppend(shape)
+                                    negative_overcuts.append(shape)
                                 else:
                                     positive_overcuts.append(shape)
 
                             print(a)
 
-        # for c in s.boundary:
         negative_overcuts = shapely.ops.unary_union(negative_overcuts)
         positive_overcuts = shapely.ops.unary_union(positive_overcuts)
-        # shapes.extend(overcuts)
+
         fs = shapely.ops.unary_union(shapes)
         fs = fs.union(positive_overcuts)
         fs = fs.difference(negative_overcuts)
         o = utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
-        # o=utils.shapelyToCurve('overcuts',overcuts,0)
         return {'FINISHED'}
 
 
@@ -361,7 +596,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
     bl_label = "Add Overcuts-B"
     bl_options = {'REGISTER', 'UNDO'}
 
-    diameter: bpy.props.FloatProperty(name="Tool diameter", default=.003,
+    diameter: bpy.props.FloatProperty(name="Tool diameter", default=.003175,
                                       description='Tool bit diameter used in cut operation', min=0, max=100,
                                       precision=4, unit="LENGTH")
     style: bpy.props.EnumProperty(
@@ -395,7 +630,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
         # a list of tuples for defining the inside corner
         # tuple is: (pos, v1, v2, angle, allCorners list index)
         insideCorners = []
-        diameter = self.diameter * 1.001
+        diameter = self.diameter * 1.002    #   make bit size slightly larger to allow cutter
         radius = diameter / 2
         anglethreshold = math.pi - self.threshold
         centerv = mathutils.Vector((0, 0))
@@ -410,10 +645,13 @@ class CamCurveOvercutsB(bpy.types.Operator):
             nonlocal pos, centerv, radius, extendedv, sign, negative_overcuts, positive_overcuts
             # move the overcut shape center position 1 radius in direction v
             pos -= centerv * radius
-            if abs(a) < math.pi / 2:
+            print("abs(a)",abs(a))
+            if abs(a) <= math.pi / 2 +0.0001 :
+                print("<=pi/2")
                 shape = utils.Circle(radius, 64)
                 shape = shapely.affinity.translate(shape, pos.x, pos.y)
             else:  # elongate overcut circle to make sure tool bit can fit into slot
+                print(">pi/2")
                 p1 = pos + (extendedv * radius)
                 l = shapely.geometry.LineString((pos, p1))
                 shape = l.buffer(radius, resolution=64)
@@ -455,7 +693,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
             return delta
 
         for s in shapes:
-            s = shapely.geometry.polygon.orient(s, 1)
+            s = shapely.geometry.polygon.orient(s, 1)  #  ensure the shape is counterclockwise
             loops = [s.boundary] if s.boundary.type == 'LineString' else s.boundary
             outercurve = self.do_outer or len(loops) == 1
             for ci, c in enumerate(loops):
@@ -513,7 +751,6 @@ class CamCurveOvercutsB(bpy.types.Operator):
                                 else:  # DOGBONE style
                                     setCenterOffset(a)
 
-
                             elif isTBone and outsideCornerFound:
                                 # add an outside corner to the list
                                 cornerCnt += 1
@@ -521,7 +758,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
                     # check if t-bone processing required
                     # if no inside corners then nothing to do
                     if isTBone and len(insideCorners) > 0:
-                        # print(cornerCnt, len(insideCorners))
+                        print("corner count",cornerCnt, "inside corner count", len(insideCorners))
                         # process all of the inside corners
                         for i, corner in enumerate(insideCorners):
                             pos, v1, v2, a, idx = corner
@@ -529,44 +766,44 @@ class CamCurveOvercutsB(bpy.types.Operator):
                             # if prev corner is outside corner
                             # calc index distance between current corner and prev
                             prevCorner = getCorner(i, -1)
-                            # print('first:', i, idx, prevCorner[IDX])
+                            print('first:', i, idx, prevCorner[IDX])
                             if getCornerDelta(prevCorner[IDX], idx) == 1:
                                 # make sure there is an outside corner
-                                # print(getCornerDelta(getCorner(i, -2)[IDX], idx))
+                                print(getCornerDelta(getCorner(i, -2)[IDX], idx))
                                 if getCornerDelta(getCorner(i, -2)[IDX], idx) > 2:
                                     setOtherEdge(v1, v2, a)
-                                    # print('first won')
+                                    print('first won')
                                     continue
 
                             nextCorner = getCorner(i, 1)
-                            # print('second:', i, idx, nextCorner[IDX])
+                            print('second:', i, idx, nextCorner[IDX])
                             if getCornerDelta(idx, nextCorner[IDX]) == 1:
                                 # make sure there is an outside corner
-                                # print(getCornerDelta(idx, getCorner(i, 2)[IDX]))
+                                print(getCornerDelta(idx, getCorner(i, 2)[IDX]))
                                 if getCornerDelta(idx, getCorner(i, 2)[IDX]) > 2:
-                                    # print('second won')
+                                    print('second won')
                                     setOtherEdge(-v2, -v1, a)
                                     continue
 
-                            # print('third')
+                            print('third')
                             if getCornerDelta(prevCorner[IDX], idx) == 3:
                                 # check if they share the same edge
                                 a1 = v1.angle_signed(prevCorner[V2]) * 180.0 / math.pi
-                                # print('third won', a1)
+                                print('third won', a1)
                                 if a1 < -135 or a1 > 135:
                                     setOtherEdge(-v2, -v1, a)
                                     continue
 
-                            # print('fourth')
+                            print('fourth')
                             if getCornerDelta(idx, nextCorner[IDX]) == 3:
                                 # check if they share the same edge
                                 a1 = v2.angle_signed(nextCorner[V1]) * 180.0 / math.pi
-                                # print('fourth won', a1)
+                                print('fourth won', a1)
                                 if a1 < -135 or a1 > 135:
                                     setOtherEdge(v1, v2, a)
                                     continue
 
-                            # print('***No Win***')
+                            print('***No Win***')
                             # the default if no other rules pass
                             setCenterOffset(a)
 
@@ -575,6 +812,8 @@ class CamCurveOvercutsB(bpy.types.Operator):
         fs = shapely.ops.unary_union(shapes)
         fs = fs.union(positive_overcuts)
         fs = fs.difference(negative_overcuts)
+#        utils.shapelyToCurve(o1.name + '_overcuts', positive_overcuts, o1.location.z)
+#        utils.shapelyToCurve(o1.name + '_overcuts', negative_overcuts, o1.location.z)
         o = utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
         return {'FINISHED'}
 
