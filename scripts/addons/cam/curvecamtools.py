@@ -210,7 +210,7 @@ def finger_amount_old(space, size):
         finger_amt = round(finger_amt) + 1
     if (finger_amt % 2) != 0:
         finger_amt = round(finger_amt) + 1
-    return (finger_amt)
+    return finger_amt
 
 
 def horizontal_finger_old(length, thickness, finger_play, amount):
@@ -278,7 +278,6 @@ class CamCurveDrawer(bpy.types.Operator):
         width_finger_amt = int(joinery.finger_amount(self.width, self.finger_size))
         width_finger = (self.width - self.finger_size) / width_finger_amt
 
-
         # create base
         joinery.create_base_plate(self.height, self.width, self.depth)
         bpy.context.object.data.resolution_u = 64
@@ -286,14 +285,14 @@ class CamCurveDrawer(bpy.types.Operator):
 
         joinery.vertical_finger(height_finger, self.drawer_plate_thickness, self.finger_tolerence, height_finger_amt)
 
-        joinery.horizontal_finger(width_finger, self.drawer_plate_thickness, self.finger_tolerence, width_finger_amt*2)
+        joinery.horizontal_finger(width_finger, self.drawer_plate_thickness, self.finger_tolerence,
+                                  width_finger_amt * 2)
         simple.makeActive('_wfb')
-
 
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
-#   make drawer back
-        finger_pair = joinery.finger_pair("_vfa", self.width-self.drawer_plate_thickness-self.finger_inset*2, 0)
+        #   make drawer back
+        finger_pair = joinery.finger_pair("_vfa", self.width - self.drawer_plate_thickness - self.finger_inset * 2, 0)
         simple.makeActive('_wfa')
         fronth = bpy.context.active_object
         simple.makeActive('_back')
@@ -303,7 +302,7 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.removeMultiple("_finger_pair")
         bpy.context.active_object.name = "drawer_back"
 
-#   make drawer front
+        #   make drawer front
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.drawer_hole_diameter / 2, enter_editmode=False,
                                                   align='WORLD', location=(0, self.height + self.drawer_hole_offset, 0),
                                                   scale=(1, 1, 1))
@@ -316,17 +315,15 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.context.active_object.name = "drawer_front"
         bpy.ops.object.curve_remove_doubles()
 
-
-
-#   place back and front side by side
+        #   place back and front side by side
         simple.makeActive('drawer_front')
         bpy.ops.transform.transform(mode='TRANSLATION', value=(0.0, 2 * self.height, 0.0, 0.0))
         simple.makeActive('drawer_back')
 
         bpy.ops.transform.transform(mode='TRANSLATION', value=(self.width + 0.01, 2 * self.height, 0.0, 0.0))
-#   make side
+        #   make side
 
-        finger_pair = joinery.finger_pair("_vfb", self.depth-self.drawer_plate_thickness, 0)
+        finger_pair = joinery.finger_pair("_vfb", self.depth - self.drawer_plate_thickness, 0)
         simple.makeActive('_side')
         finger_pair.select_set(True)
         fronth.select_set(True)
@@ -338,7 +335,7 @@ class CamCurveDrawer(bpy.types.Operator):
         #   make bottom
         simple.makeActive("_wfb")
         bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
-                                      TRANSFORM_OT_translate={"value": (0, -self.drawer_plate_thickness/2, 0.0)})
+                                      TRANSFORM_OT_translate={"value": (0, -self.drawer_plate_thickness / 2, 0.0)})
 
         bpy.context.active_object.name = "_wfb0"
         finger_pair = joinery.finger_pair("_wfb0", 0, self.depth - self.drawer_plate_thickness)
@@ -351,17 +348,17 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.makeActive('_bottom2')
         bpy.context.object.rotation_euler[2] = math.pi / 2
 
-        finger_pair = joinery.finger_pair("_wfb0", 0, self.width - self.drawer_plate_thickness-self.finger_inset * 2)
+        finger_pair = joinery.finger_pair("_wfb0", 0, self.width - self.drawer_plate_thickness - self.finger_inset * 2)
 
         simple.makeActive('_bottom2')
         finger_pair.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         bpy.context.active_object.name = "drawer_bottom"
 
-# cleanup all temp polygons
+        # cleanup all temp polygons
         simple.removeMultiple("_")
 
-#   move side and bottom to location
+        #   move side and bottom to location
         simple.makeActive("drawer_side")
         bpy.ops.object.curve_remove_doubles()
         bpy.ops.transform.transform(mode='TRANSLATION',

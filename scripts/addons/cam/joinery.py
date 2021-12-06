@@ -81,6 +81,7 @@ def horizontal_finger(length, thickness, finger_play, amount):
                                   TRANSFORM_OT_translate={"value": (length, 0.0, 0.0)})
     bpy.context.active_object.name = "_wfb"
 
+
 def vertical_finger(length, thickness, finger_play, amount):
     #   creates _vfa and it's counterpart _vfb
     #   _vfa is starts at 0,0
@@ -92,7 +93,7 @@ def vertical_finger(length, thickness, finger_play, amount):
     #   amount = amount of fingers
 
     for i in range(amount):
-        mortice(length, thickness, finger_play, 0, i*2*length + length/2, rotation=math.pi / 2)
+        mortice(length, thickness, finger_play, 0, i * 2 * length + length / 2, rotation=math.pi / 2)
         bpy.context.active_object.name = "_height_finger"
 
     simple.joinMultiple("_height_finger")
@@ -101,7 +102,8 @@ def vertical_finger(length, thickness, finger_play, amount):
                                   TRANSFORM_OT_translate={"value": (0, -length, 0.0)})
     bpy.context.active_object.name = "_vfb"
 
-def finger_pair(name,dx=0,dy=0):
+
+def finger_pair(name, dx=0, dy=0):
     simple.makeActive(name)
 
     xpos = (dx / 2) * 1.00001
@@ -120,7 +122,8 @@ def finger_pair(name,dx=0,dy=0):
     bpy.ops.object.select_all(action='DESELECT')
     return bpy.context.active_object
 
-def create_base_plate(height,width,depth):
+
+def create_base_plate(height, width, depth):
     #   creates blank plates for
     #   _back using width and height
     #   _side using height and depth
@@ -131,7 +134,6 @@ def create_base_plate(height,width,depth):
                          use_cyclic_u=True,
                          handleType='AUTO', edit_mode=False)
     bpy.context.active_object.name = "_back"
-    back = bpy.context.active_object
     bpy.ops.curve.simple(align='WORLD', location=(0, height / 2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=depth, Simple_length=height, shape='3D', outputType='POLY',
                          use_cyclic_u=True,
