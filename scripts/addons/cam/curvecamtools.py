@@ -277,8 +277,7 @@ class CamCurveDrawer(bpy.types.Operator):
         height_finger = (self.height + 0.0004) / height_finger_amt
         width_finger_amt = int(joinery.finger_amount(self.width, self.finger_size))
         width_finger = (self.width - self.finger_size) / width_finger_amt
-        depth_finger_amt = int(joinery.finger_amount(self.depth, self.finger_size))
-        depth_finger = (self.depth + self.finger_size) / depth_finger_amt
+
 
         # create base
         joinery.create_base_plate(self.height, self.width, self.depth)
@@ -316,9 +315,7 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         bpy.context.active_object.name = "drawer_front"
         bpy.ops.object.curve_remove_doubles()
-        simple.removeMultiple('_back')
-        simple.removeMultiple('_circ')
-        simple.removeMultiple('front_v')
+
 
 
 #   place back and front side by side
@@ -336,18 +333,14 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         bpy.context.active_object.name = "drawer_side"
         bpy.ops.object.curve_remove_doubles()
-        simple.removeMultiple('front_v')
-        simple.removeMultiple('hf')
-        simple.removeMultiple('_side')
-        simple.removeMultiple('_wfa')
         simple.removeMultiple('_finger_pair')
 
         #   make bottom
         simple.makeActive("_wfb")
         bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                       TRANSFORM_OT_translate={"value": (0, -self.drawer_plate_thickness/2, 0.0)})
-        bpy.context.active_object.name = "_wfb0"
 
+        bpy.context.active_object.name = "_wfb0"
         finger_pair = joinery.finger_pair("_wfb0", 0, self.depth - self.drawer_plate_thickness)
 
         simple.makeActive('_bottom')
@@ -365,13 +358,15 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         bpy.context.active_object.name = "drawer_bottom"
 
+# cleanup all temp polygons
         simple.removeMultiple("_")
-        simple.makeActive("drawer_side")
 
 #   move side and bottom to location
+        simple.makeActive("drawer_side")
         bpy.ops.object.curve_remove_doubles()
         bpy.ops.transform.transform(mode='TRANSLATION',
                                     value=(self.depth / 2 + 3 * self.width / 2 + 0.02, 2 * self.height, 0.0, 0.0))
+
         simple.makeActive("drawer_bottom")
         bpy.ops.transform.transform(mode='TRANSLATION',
                                     value=(self.depth / 2 + 3 * self.width / 2 + 0.02, self.width / 2, 0.0, 0.0))
