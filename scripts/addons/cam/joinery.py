@@ -56,6 +56,14 @@ def mortice(length, thickness, finger_play, cx=0, cy=0, rotation=0):
 
 
 def horizontal_finger(length, thickness, finger_play, amount):
+    #   creates _wfa and it's counterpart _wfb
+    #   _wfa is centered at 0,0
+    #   _wfb is _wfa offset by one length
+    #   takes in the
+    #   length = length of the mortice
+    #   thickness = thickness of the material
+    #   fingerplay = tolerence in length of the finger for smooth fit
+
     for i in range(amount):
         if i == 0:
             mortice(length, thickness, finger_play, 0, thickness / 2)
@@ -72,3 +80,65 @@ def horizontal_finger(length, thickness, finger_play, amount):
     bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                   TRANSFORM_OT_translate={"value": (length, 0.0, 0.0)})
     bpy.context.active_object.name = "_wfb"
+
+def vertical_finger(length, thickness, finger_play, amount):
+    #   creates _vfa and it's counterpart _vfb
+    #   _vfa is starts at 0,0
+    #   _wfb is _wfa offset vertically by one length
+    #   takes in the
+    #   length = length of the mortice
+    #   thickness = thickness of the material
+    #   fingerplay = tolerence in length of the finger for smooth fit
+    #   amount = amount of fingers
+
+    for i in range(amount):
+        mortice(length, thickness, finger_play, 0, i*2*length + length/2, rotation=math.pi / 2)
+        bpy.context.active_object.name = "_height_finger"
+
+    simple.joinMultiple("_height_finger")
+    bpy.context.active_object.name = "_vfa"
+    bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                  TRANSFORM_OT_translate={"value": (0, -length, 0.0)})
+    bpy.context.active_object.name = "_vfb"
+
+def finger_pair(name,dx=0,dy=0):
+    simple.makeActive(name)
+
+    xpos = (dx / 2) * 1.00001
+    ypos = 1.00001 * dy / 2
+
+    bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                  TRANSFORM_OT_translate={"value": (xpos, ypos, 0.0)})
+    bpy.context.active_object.name = "_finger_pair"
+
+    simple.makeActive(name)
+
+    bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                  TRANSFORM_OT_translate={"value": (-xpos, -ypos, 0.0)})
+    bpy.context.active_object.name = "_finger_pair"
+    simple.joinMultiple("_finger_pair")
+    bpy.ops.object.select_all(action='DESELECT')
+    return bpy.context.active_object
+
+def create_base_plate(height,width,depth):
+    #   creates blank plates for
+    #   _back using width and height
+    #   _side using height and depth
+    #   _bottom using width and depth
+
+    bpy.ops.curve.simple(align='WORLD', location=(0, height / 2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=width, Simple_length=height, shape='3D', outputType='POLY',
+                         use_cyclic_u=True,
+                         handleType='AUTO', edit_mode=False)
+    bpy.context.active_object.name = "_back"
+    back = bpy.context.active_object
+    bpy.ops.curve.simple(align='WORLD', location=(0, height / 2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=depth, Simple_length=height, shape='3D', outputType='POLY',
+                         use_cyclic_u=True,
+                         handleType='AUTO', edit_mode=False)
+    bpy.context.active_object.name = "_side"
+    bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=width, Simple_length=depth, shape='3D', outputType='POLY',
+                         use_cyclic_u=True,
+                         handleType='AUTO', edit_mode=False)
+    bpy.context.active_object.name = "_bottom"
