@@ -988,6 +988,7 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.curve_hatch")
         layout.operator("object.curve_plate")
         layout.operator("object.curve_drawer")
+        layout.operator("object.curve_mortise")
         layout.operator("object.curve_intarsion")
         layout.operator("object.curve_overcuts")
         layout.operator("object.curve_overcuts_b")

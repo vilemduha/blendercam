@@ -45,7 +45,7 @@ def finger_amount(space, size):
     return finger_amt
 
 
-def mortice(length, thickness, finger_play, cx=0, cy=0, rotation=0):
+def mortise(length, thickness, finger_play, cx=0, cy=0, rotation=0):
     bpy.ops.curve.simple(align='WORLD',
                          location=(cx, cy, 0),
                          rotation=(0, 0, rotation), Simple_Type='Rectangle',
@@ -60,9 +60,9 @@ def horizontal_finger(length, thickness, finger_play, amount):
     #   _wfa is centered at 0,0
     #   _wfb is _wfa offset by one length
     #   takes in the
-    #   length = length of the mortice
+    #   length = length of the mortise
     #   thickness = thickness of the material
-    #   fingerplay = tolerence in length of the finger for smooth fit
+    #   fingerplay = tolerance in length of the finger for smooth fit
 
     for i in range(amount):
         if i == 0:
@@ -87,9 +87,9 @@ def vertical_finger(length, thickness, finger_play, amount):
     #   _vfa is starts at 0,0
     #   _wfb is _wfa offset vertically by one length
     #   takes in the
-    #   length = length of the mortice
+    #   length = length of the mortise
     #   thickness = thickness of the material
-    #   fingerplay = tolerence in length of the finger for smooth fit
+    #   fingerplay = tolerance in length of the finger for smooth fit
     #   amount = amount of fingers
 
     for i in range(amount):
@@ -144,3 +144,5 @@ def create_base_plate(height, width, depth):
                          use_cyclic_u=True,
                          handleType='AUTO', edit_mode=False)
     bpy.context.active_object.name = "_bottom"
+
+
