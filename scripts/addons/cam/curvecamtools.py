@@ -249,6 +249,56 @@ def horizontal_finger_old(length, thickness, finger_play, amount):
                                   TRANSFORM_OT_translate={"value": (length, 0.0, 0.0)})
     bpy.context.active_object.name = "_wfb"
 
+class CamCurveMortise(bpy.types.Operator):
+    """Generates mortise along a curve"""  # by Alain Pelletier December 2021
+    bl_idname = "object.curve_mortise"
+    bl_label = "Mortise"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+    finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005, max=3.0, precision=4,
+                                         unit="LENGTH")
+    finger_tolerence: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
+                                              unit="LENGTH")
+    plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0,unit="LENGTH")
+
+
+    @classmethod
+    def poll(cls, context):
+        return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
+
+    def execute(self, context):
+        o1 = bpy.context.active_object
+        shapes = utils.curveToShapely(o1)
+        cp = (0, 0)
+        for s in shapes:
+            s = shapely.geometry.polygon.orient(s, 1)
+            if s.boundary.type == 'LineString':
+                loops = [s.boundary]
+            else:
+                loops = s.boundary
+
+            for ci, c in enumerate(loops):
+                loop_length=c.length
+#                finger_size = c.length / (2 * self.finger_amt)
+                j = 0
+                distance = 0
+#                oldpd = (0,0)
+                coords = list(c.coords)
+                for i, p in enumerate(coords):
+                    pd = c.project(Point(p))
+                    if i > 0:
+                        while distance <= pd:
+                            mortise_point = c.interpolate(distance)
+                            p_difference = (p[0]-oldp[0],p[1]-oldp[1])
+                            print(distance, p_difference,math.degrees(math.atan2(p_difference[1], p_difference[0])))
+                            joinery.mortise(self.finger_size,self.plate_thickness,self.finger_tolerence,mortise_point.x, mortise_point.y, math.atan2(p_difference[1], p_difference[0]))
+                            j += 1
+                            distance = j * 2 * self.finger_size
+
+                    oldp = p
+
+        return {'FINISHED'}
+
 
 class CamCurveDrawer(bpy.types.Operator):
     """Generates drawers"""  # by Alain Pelletier December 2021 inspired by The Drawinator
