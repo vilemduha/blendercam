@@ -66,12 +66,12 @@ def horizontal_finger(length, thickness, finger_play, amount):
 
     for i in range(amount):
         if i == 0:
-            mortice(length, thickness, finger_play, 0, thickness / 2)
+            mortise(length, thickness, finger_play, 0, thickness / 2)
             bpy.context.active_object.name = "_width_finger"
         else:
-            mortice(length, thickness, finger_play, i * 2 * length, thickness / 2)
+            mortise(length, thickness, finger_play, i * 2 * length, thickness / 2)
             bpy.context.active_object.name = "_width_finger"
-            mortice(length, thickness, finger_play, -i * 2 * length, thickness / 2)
+            mortise(length, thickness, finger_play, -i * 2 * length, thickness / 2)
             bpy.context.active_object.name = "_width_finger"
 
     simple.joinMultiple("_width_finger")
@@ -93,7 +93,7 @@ def vertical_finger(length, thickness, finger_play, amount):
     #   amount = amount of fingers
 
     for i in range(amount):
-        mortice(length, thickness, finger_play, 0, i * 2 * length + length / 2, rotation=math.pi / 2)
+        mortise(length, thickness, finger_play, 0, i * 2 * length + length / 2, rotation=math.pi / 2)
         bpy.context.active_object.name = "_height_finger"
 
     simple.joinMultiple("_height_finger")
@@ -145,4 +145,21 @@ def create_base_plate(height, width, depth):
                          handleType='AUTO', edit_mode=False)
     bpy.context.active_object.name = "_bottom"
 
+def create_flex_side(length, height, finger_length, finger_thick, finger_tol):
+    bpy.ops.curve.simple(align='WORLD', location=(0, height/2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=length, Simple_length=height, shape='3D', outputType='POLY',
+                         use_cyclic_u=True,
+                         handleType='AUTO', edit_mode=False)
+    bpy.context.active_object.name = "_side"
+
+    horizontal_finger(finger_length, finger_thick, finger_tol, round(length/(2*finger_length)))
+    simple.makeActive('_wfa')
+    simple.selectMultiple("_wfa")
+#    bpy.ops.transform.transform(mode='TRANSLATION', value=(0, -height/2+finger_thick/2, 0.0))
+    fingers = bpy.context.active_object
+    simple.makeActive('_side')
+    fingers.select_set(True)
+    bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+    bpy.context.active_object.name = "side"
+    simple.removeMultiple('_')
 

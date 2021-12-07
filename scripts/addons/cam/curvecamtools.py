@@ -204,51 +204,6 @@ class CamCurvePlate(bpy.types.Operator):
         return {'FINISHED'}
 
 
-def finger_amount_old(space, size):
-    finger_amt = space / (size)
-    if (finger_amt % 1) != 0:
-        finger_amt = round(finger_amt) + 1
-    if (finger_amt % 2) != 0:
-        finger_amt = round(finger_amt) + 1
-    return finger_amt
-
-
-def horizontal_finger_old(length, thickness, finger_play, amount):
-    for i in range(amount):
-        if i == 0:
-            bpy.ops.curve.simple(align='WORLD',
-                                 location=(0, thickness / 2, 0),
-                                 rotation=(0, 0, 0), Simple_Type='Rectangle',
-                                 Simple_width=length + finger_play,
-                                 Simple_length=thickness, shape='3D', outputType='POLY',
-                                 use_cyclic_u=True,
-                                 handleType='AUTO', edit_mode=False)
-            bpy.context.active_object.name = "_width_finger"
-        else:
-            bpy.ops.curve.simple(align='WORLD',
-                                 location=(i * 2 * length, thickness / 2, 0),
-                                 rotation=(0, 0, 0), Simple_Type='Rectangle',
-                                 Simple_width=length + finger_play,
-                                 Simple_length=thickness, shape='3D', outputType='POLY',
-                                 use_cyclic_u=True,
-                                 handleType='AUTO', edit_mode=False)
-            bpy.context.active_object.name = "_width_finger"
-            bpy.ops.curve.simple(align='WORLD',
-                                 location=(-i * 2 * length, thickness / 2, 0),
-                                 rotation=(0, 0, 0), Simple_Type='Rectangle',
-                                 Simple_width=length + finger_play,
-                                 Simple_length=thickness, shape='3D', outputType='POLY',
-                                 use_cyclic_u=True,
-                                 handleType='AUTO', edit_mode=False)
-            bpy.context.active_object.name = "_width_finger"
-
-    simple.joinMultiple("_width_finger")
-
-    bpy.context.active_object.name = "_wfa"
-    bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
-                                  TRANSFORM_OT_translate={"value": (length, 0.0, 0.0)})
-    bpy.context.active_object.name = "_wfb"
-
 class CamCurveMortise(bpy.types.Operator):
     """Generates mortise along a curve"""  # by Alain Pelletier December 2021
     bl_idname = "object.curve_mortise"
@@ -260,6 +215,7 @@ class CamCurveMortise(bpy.types.Operator):
     finger_tolerence: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
                                               unit="LENGTH")
     plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0,unit="LENGTH")
+    side_height: bpy.props.FloatProperty(name="side height", default=0.05, min=0.001, max=3.0,unit="LENGTH")
 
 
     @classmethod
@@ -279,11 +235,11 @@ class CamCurveMortise(bpy.types.Operator):
 
             for ci, c in enumerate(loops):
                 loop_length=c.length
-#                finger_size = c.length / (2 * self.finger_amt)
                 j = 0
                 distance = 0
-#                oldpd = (0,0)
+                oldp = (0,0)
                 coords = list(c.coords)
+
                 for i, p in enumerate(coords):
                     pd = c.project(Point(p))
                     if i > 0:
@@ -292,11 +248,13 @@ class CamCurveMortise(bpy.types.Operator):
                             p_difference = (p[0]-oldp[0],p[1]-oldp[1])
                             print(distance, p_difference,math.degrees(math.atan2(p_difference[1], p_difference[0])))
                             joinery.mortise(self.finger_size,self.plate_thickness,self.finger_tolerence,mortise_point.x, mortise_point.y, math.atan2(p_difference[1], p_difference[0]))
+                            bpy.context.active_object.name = "_mortise"
                             j += 1
                             distance = j * 2 * self.finger_size
-
                     oldp = p
-
+            simple.joinMultiple("_mort")
+            bpy.context.active_object.name = "mortise"
+            joinery.create_flex_side(loop_length, self.side_height, self.finger_size, self.plate_thickness, self.finger_tolerence)
         return {'FINISHED'}
 
 
