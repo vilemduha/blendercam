@@ -55,7 +55,7 @@ def mortise(length, thickness, finger_play, cx=0, cy=0, rotation=0):
                          handleType='AUTO', edit_mode=False)
 
 
-def horizontal_finger(length, thickness, finger_play, amount):
+def horizontal_finger(length, thickness, finger_play, amount, center=True):
     #   creates _wfa and it's counterpart _wfb
     #   _wfa is centered at 0,0
     #   _wfb is _wfa offset by one length
@@ -63,15 +63,19 @@ def horizontal_finger(length, thickness, finger_play, amount):
     #   length = length of the mortise
     #   thickness = thickness of the material
     #   fingerplay = tolerance in length of the finger for smooth fit
-
-    for i in range(amount):
-        if i == 0:
-            mortise(length, thickness, finger_play, 0, thickness / 2)
-            bpy.context.active_object.name = "_width_finger"
-        else:
-            mortise(length, thickness, finger_play, i * 2 * length, thickness / 2)
-            bpy.context.active_object.name = "_width_finger"
-            mortise(length, thickness, finger_play, -i * 2 * length, thickness / 2)
+    if center:
+        for i in range(amount):
+            if i == 0:
+                mortise(length, thickness, finger_play, 0, thickness / 2)
+                bpy.context.active_object.name = "_width_finger"
+            else:
+                mortise(length, thickness, finger_play, i * 2 * length, thickness / 2)
+                bpy.context.active_object.name = "_width_finger"
+                mortise(length, thickness, finger_play, -i * 2 * length, thickness / 2)
+                bpy.context.active_object.name = "_width_finger"
+    else:
+        for i in range(amount):
+            mortise(length, thickness, finger_play, length/2+2*i*length, 0)
             bpy.context.active_object.name = "_width_finger"
 
     simple.joinMultiple("_width_finger")
@@ -106,8 +110,8 @@ def vertical_finger(length, thickness, finger_play, amount):
 def finger_pair(name, dx=0, dy=0):
     simple.makeActive(name)
 
-    xpos = (dx / 2) * 1.0005
-    ypos = 1.0005 * dy / 2
+    xpos = (dx / 2) * 1.006
+    ypos = 1.006 * dy / 2
 
     bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                   TRANSFORM_OT_translate={"value": (xpos, ypos, 0.0)})
@@ -146,43 +150,43 @@ def create_base_plate(height, width, depth):
     bpy.context.active_object.name = "_bottom"
 
 def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
-    dist = 0
-    while dist < length / 2:
-        if dist == 0:
-            mortise
-            mortise(height-2*finger_thick, pocket_width, 0, dist, 0, math.pi/2)
-            bpy.context.active_object.name = "_flex_pocket"
-        else:
-            mortise(height-2*finger_thick, pocket_width, 0,dist, 0, math.pi/2)
-            bpy.context.active_object.name = "_flex_pocket"
-            mortise(height-2*finger_thick, pocket_width, 0, -dist, 0, math.pi/2)
-            bpy.context.active_object.name = "_flex_pocket"
+    #   creates pockets pocket using mortise function for kerf bending
+    dist = 3*finger_width/2
+    while dist < length:
+        mortise(height-2*finger_thick, pocket_width, 0, dist, 0, math.pi/2)
+        bpy.context.active_object.name = "_flex_pocket"
         dist += finger_width * 2
 
     simple.joinMultiple("_flex_pocket")
     bpy.context.active_object.name = "flex_pocket"
 
 def create_flex_side(length, height, finger_length, finger_thick, finger_tol, top_bottom=False, flex_pocket=0):
-    horizontal_finger(finger_length, finger_thick, finger_tol, round(length / (2 * finger_length)))
-    simple.makeActive('_wfa')
-    simple.selectMultiple("_wfa")
-    side_height = height / 2
-    if top_bottom == True:
-        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
-                                      TRANSFORM_OT_translate={"value": (0, -finger_thick/2, 0.0)})
-        bpy.context.active_object.name = "_wfa0"
-        fingers = finger_pair("_wfa0", 0, height- finger_thick)
-        side_height = 0
-    else:
-        simple.makeActive('_wfa')
-        fingers = bpy.context.active_object
+    #   crates a flex side for mortise on curve
+    #   length = length of curve
+    #   height = height of side
+    #   finger_length = lenght of finger or mortise
+    #   finger_thick = finger thickness or thickness of material
+    #   finger_tol = Play for finger 0 is very tight
+    #   top_bottom = fingers on top and bottom if true, just on bottom if false
+    #   flex_pocket = width of pocket on the flex side.  This is for kerf bending.
 
-    bpy.ops.curve.simple(align='WORLD', location=(0, side_height, 0), rotation=(0, 0, 0), Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D', outputType='POLY', use_cyclic_u=True, handleType='AUTO', edit_mode=False)
+    horizontal_finger(finger_length, finger_thick, finger_tol, round(length / finger_length),False)
+    simple.makeActive('_wfb')
+    side_height = height / 2
+
+    if top_bottom == True:
+        fingers = finger_pair("_wfb", 0, height - finger_thick)
+    else:
+        fingers = bpy.context.active_object
+        bpy.ops.transform.translate(value=(0.0, side_height - finger_thick/2+0.00015, 0.0))
+
+    bpy.ops.curve.simple(align='WORLD', location=(length/2, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D', outputType='POLY', use_cyclic_u=True, handleType='AUTO', edit_mode=False)
     bpy.context.active_object.name = "_side"
 
     simple.makeActive('_side')
     fingers.select_set(True)
     bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+
     bpy.context.active_object.name = "side"
     simple.removeMultiple('_')
 
