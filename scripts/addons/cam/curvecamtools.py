@@ -218,6 +218,7 @@ class CamCurveMortise(bpy.types.Operator):
     side_height: bpy.props.FloatProperty(name="side height", default=0.05, min=0.001, max=3.0,unit="LENGTH")
     flex_pocket: bpy.props.FloatProperty(name="Flex pocket", default=0.004, min=0.000, max=1.0,unit="LENGTH")
     top_bottom: bpy.props.BoolProperty(name="Side Top & bottom fingers", default=True)
+    opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
 
 
     @classmethod
@@ -226,8 +227,23 @@ class CamCurveMortise(bpy.types.Operator):
 
     def execute(self, context):
         o1 = bpy.context.active_object
-        shapes = utils.curveToShapely(o1)
+
+        bpy.context.object.data.resolution_u = 60
+        bpy.ops.object.duplicate()
+        obj = context.active_object
+        bpy.ops.object.convert(target='MESH')
+        bpy.context.active_object.name = "_temp_mesh"
         cp = (0, 0)
+
+        if self.opencurve:
+            coords = []
+            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
+                coords.append((v.co.x, v.co.y))
+            line = LineString(coords)  # convert coordinates to shapely LineString datastructure
+            print("line length=", round(line.length * 1000), 'mm')
+
+        shapes = utils.curveToShapely(o1)
+
         for s in shapes:
             if s.boundary.type == 'LineString':
                 loops = [s.boundary]
@@ -235,14 +251,20 @@ class CamCurveMortise(bpy.types.Operator):
                 loops = s.boundary
 
             for ci, c in enumerate(loops):
-                loop_length=c.length
+                loop_length = c.length
+                print("loop Length:", loop_length)
                 j = 0
-                distance = 0
-                oldp = (0,0)
+                distance = self.finger_size / 2
+                oldp = (0, 0)
                 coords = list(c.coords)
-
+                if self.opencurve:
+                    loop_length = line.length
+                else:
+                    loop_length = c.length
+                print("line Length:", loop_length)
                 for i, p in enumerate(coords):
                     if i == 0:
+
                         p_start = p
 
                     if p != p_start:
@@ -258,7 +280,7 @@ class CamCurveMortise(bpy.types.Operator):
                             joinery.mortise(self.finger_size,self.plate_thickness,self.finger_tolerence,mortise_point.x, mortise_point.y, math.atan2(p_difference[1], p_difference[0]))
                             bpy.context.active_object.name = "_mortise"
                             j += 1
-                            distance = j * 2 * self.finger_size
+                            distance = j * 2 * self.finger_size + self.finger_size/2
                     oldp = p
             simple.joinMultiple("_mort")
             bpy.context.active_object.name = "mortise"
