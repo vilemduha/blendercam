@@ -106,8 +106,8 @@ def vertical_finger(length, thickness, finger_play, amount):
 def finger_pair(name, dx=0, dy=0):
     simple.makeActive(name)
 
-    xpos = (dx / 2) * 1.00001
-    ypos = 1.00001 * dy / 2
+    xpos = (dx / 2) * 1.0005
+    ypos = 1.0005 * dy / 2
 
     bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                   TRANSFORM_OT_translate={"value": (xpos, ypos, 0.0)})
@@ -145,21 +145,47 @@ def create_base_plate(height, width, depth):
                          handleType='AUTO', edit_mode=False)
     bpy.context.active_object.name = "_bottom"
 
-def create_flex_side(length, height, finger_length, finger_thick, finger_tol):
-    bpy.ops.curve.simple(align='WORLD', location=(0, height/2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
-                         Simple_width=length, Simple_length=height, shape='3D', outputType='POLY',
-                         use_cyclic_u=True,
-                         handleType='AUTO', edit_mode=False)
-    bpy.context.active_object.name = "_side"
+def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
+    dist = 0
+    while dist < length / 2:
+        if dist == 0:
+            mortise
+            mortise(height-2*finger_thick, pocket_width, 0, dist, 0, math.pi/2)
+            bpy.context.active_object.name = "_flex_pocket"
+        else:
+            mortise(height-2*finger_thick, pocket_width, 0,dist, 0, math.pi/2)
+            bpy.context.active_object.name = "_flex_pocket"
+            mortise(height-2*finger_thick, pocket_width, 0, -dist, 0, math.pi/2)
+            bpy.context.active_object.name = "_flex_pocket"
+        dist += finger_width * 2
 
-    horizontal_finger(finger_length, finger_thick, finger_tol, round(length/(2*finger_length)))
+    simple.joinMultiple("_flex_pocket")
+    bpy.context.active_object.name = "flex_pocket"
+
+def create_flex_side(length, height, finger_length, finger_thick, finger_tol, top_bottom=False, flex_pocket=0):
+    horizontal_finger(finger_length, finger_thick, finger_tol, round(length / (2 * finger_length)))
     simple.makeActive('_wfa')
     simple.selectMultiple("_wfa")
-#    bpy.ops.transform.transform(mode='TRANSLATION', value=(0, -height/2+finger_thick/2, 0.0))
-    fingers = bpy.context.active_object
+    side_height = height / 2
+    if top_bottom == True:
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": (0, -finger_thick/2, 0.0)})
+        bpy.context.active_object.name = "_wfa0"
+        fingers = finger_pair("_wfa0", 0, height- finger_thick)
+        side_height = 0
+    else:
+        simple.makeActive('_wfa')
+        fingers = bpy.context.active_object
+
+    bpy.ops.curve.simple(align='WORLD', location=(0, side_height, 0), rotation=(0, 0, 0), Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D', outputType='POLY', use_cyclic_u=True, handleType='AUTO', edit_mode=False)
+    bpy.context.active_object.name = "_side"
+
     simple.makeActive('_side')
     fingers.select_set(True)
     bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
     bpy.context.active_object.name = "side"
     simple.removeMultiple('_')
+
+    if flex_pocket > 0:
+        make_flex_pocket(length, height, finger_thick, finger_length, flex_pocket)
 

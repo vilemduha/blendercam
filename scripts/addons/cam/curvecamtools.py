@@ -216,6 +216,8 @@ class CamCurveMortise(bpy.types.Operator):
                                               unit="LENGTH")
     plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0,unit="LENGTH")
     side_height: bpy.props.FloatProperty(name="side height", default=0.05, min=0.001, max=3.0,unit="LENGTH")
+    flex_pocket: bpy.props.FloatProperty(name="Flex pocket", default=0.004, min=0.000, max=1.0,unit="LENGTH")
+    top_bottom: bpy.props.BoolProperty(name="Side Top & bottom fingers", default=True)
 
 
     @classmethod
@@ -227,7 +229,6 @@ class CamCurveMortise(bpy.types.Operator):
         shapes = utils.curveToShapely(o1)
         cp = (0, 0)
         for s in shapes:
-            s = shapely.geometry.polygon.orient(s, 1)
             if s.boundary.type == 'LineString':
                 loops = [s.boundary]
             else:
@@ -241,12 +242,19 @@ class CamCurveMortise(bpy.types.Operator):
                 coords = list(c.coords)
 
                 for i, p in enumerate(coords):
+                    if i == 0:
+                        p_start = p
+
+                    if p != p_start:
+                        not_start = True
+                    else:
+                        not_start = False
+
                     pd = c.project(Point(p))
-                    if i > 0:
+                    if not_start:
                         while distance <= pd:
                             mortise_point = c.interpolate(distance)
                             p_difference = (p[0]-oldp[0],p[1]-oldp[1])
-                            print(distance, p_difference,math.degrees(math.atan2(p_difference[1], p_difference[0])))
                             joinery.mortise(self.finger_size,self.plate_thickness,self.finger_tolerence,mortise_point.x, mortise_point.y, math.atan2(p_difference[1], p_difference[0]))
                             bpy.context.active_object.name = "_mortise"
                             j += 1
@@ -254,7 +262,7 @@ class CamCurveMortise(bpy.types.Operator):
                     oldp = p
             simple.joinMultiple("_mort")
             bpy.context.active_object.name = "mortise"
-            joinery.create_flex_side(loop_length, self.side_height, self.finger_size, self.plate_thickness, self.finger_tolerence)
+            joinery.create_flex_side(loop_length, self.side_height, self.finger_size, self.plate_thickness, self.finger_tolerence,self.top_bottom,self.flex_pocket)
         return {'FINISHED'}
 
 
