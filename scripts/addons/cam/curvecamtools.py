@@ -212,7 +212,7 @@ class CamCurveMortise(bpy.types.Operator):
 
     finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005, max=3.0, precision=4,
                                          unit="LENGTH")
-    finger_tolerence: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
+    finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
                                               unit="LENGTH")
     plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0,unit="LENGTH")
     side_height: bpy.props.FloatProperty(name="side height", default=0.05, min=0.001, max=3.0,unit="LENGTH")
@@ -251,8 +251,11 @@ class CamCurveMortise(bpy.types.Operator):
                 loops = s.boundary
 
             for ci, c in enumerate(loops):
-                loop_length = c.length
-                print("loop Length:", loop_length)
+                if self.opencurve:
+                    length = line.length
+                else:
+                    length = c.length
+                print("loop Length:", length)
                 j = 0
                 distance = self.finger_size / 2
                 oldp = (0, 0)
@@ -262,29 +265,10 @@ class CamCurveMortise(bpy.types.Operator):
                 else:
                     loop_length = c.length
                 print("line Length:", loop_length)
-                for i, p in enumerate(coords):
-                    if i == 0:
+                joinery.fixed_finger(c, length, self.finger_size,  self.plate_thickness, self.finger_tolerance)
+                joinery.fixed_finger(c, length, self.finger_size,  self.plate_thickness, self.finger_tolerance, True)
 
-                        p_start = p
-
-                    if p != p_start:
-                        not_start = True
-                    else:
-                        not_start = False
-
-                    pd = c.project(Point(p))
-                    if not_start:
-                        while distance <= pd:
-                            mortise_point = c.interpolate(distance)
-                            p_difference = (p[0]-oldp[0],p[1]-oldp[1])
-                            joinery.mortise(self.finger_size,self.plate_thickness,self.finger_tolerence,mortise_point.x, mortise_point.y, math.atan2(p_difference[1], p_difference[0]))
-                            bpy.context.active_object.name = "_mortise"
-                            j += 1
-                            distance = j * 2 * self.finger_size + self.finger_size/2
-                    oldp = p
-            simple.joinMultiple("_mort")
-            bpy.context.active_object.name = "mortise"
-            joinery.create_flex_side(loop_length, self.side_height, self.finger_size, self.plate_thickness, self.finger_tolerence,self.top_bottom,self.flex_pocket)
+            joinery.create_flex_side(loop_length, self.side_height, self.finger_size, self.plate_thickness, self.finger_tolerance, self.top_bottom,self.flex_pocket)
         return {'FINISHED'}
 
 
