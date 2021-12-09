@@ -207,6 +207,14 @@ def joinMultiple(name):
     bpy.ops.object.join()
     bpy.context.active_object.name = name  # rename object
 
+def selectMultiple(name):
+    scene = bpy.context.scene
+    for ob in scene.objects:  # join pocket curve calculations
+        if ob.name.startswith(name):
+            ob.select_set(True)
+        else:
+            ob.select_set(False)
+
 # remove multiple objects starting with 'name'.... useful for fixed name operation
 def removeMultiple(name):
     scene = bpy.context.scene
@@ -215,3 +223,10 @@ def removeMultiple(name):
         if ob.name.startswith(name):
             ob.select_set(True)
             bpy.ops.object.delete()
+
+def makeActive(name):
+    bpy.ops.object.select_all(action='DESELECT')
+    ob = bpy.context.scene.objects[name]
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.context.view_layer.objects.active = ob  # Make the cube the active object
+    ob.select_set(True)
