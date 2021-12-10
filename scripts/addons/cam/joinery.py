@@ -268,14 +268,10 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
 
     coords = list(loop.coords)
     old_mortise_angle = 0
-    distance = finger_size/2
     distance = min_finger/2
 
-    j = 0
-    print("joinery loop length",round(loop_length*1000),"mm")
-    finger_sz = finger_size
+    print("joinery loop length", round(loop_length*1000), "mm")
     finger_sz = min_finger
-    oldfinger_sz = finger_size
     oldfinger_sz = min_finger
     hpos = []
     for i, p in enumerate(coords):
@@ -292,7 +288,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
             while distance <= pd:
                 mortise_angle = angle(oldp, p)
                 mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
-                mad = (1+6*min(mortise_angle_difference,math.pi/4)/(math.pi/4))    #   factor for tolerance for the finger
+                mad = (1+6*min(mortise_angle_difference, math.pi/4)/(math.pi/4))    #   factor for tolerance for the finger
                 distance += mad * finger_tolerance
                 mortise_point = loop.interpolate(distance)
                 hpos.append(distance+finger_sz)
@@ -302,7 +298,6 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 else:
                     mortise(finger_sz, finger_thick, finger_tolerance * mad, mortise_point.x, mortise_point.y, mortise_angle)
 
-                j += 1
                 old_distance = distance
                 old_mortise_point = mortise_point
                 finger_sz = finger_size
