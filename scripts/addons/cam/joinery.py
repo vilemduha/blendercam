@@ -76,7 +76,7 @@ def horizontal_finger(length, thickness, finger_play, amount, center=True):
                 bpy.context.active_object.name = "_width_finger"
     else:
         for i in range(amount):
-            mortise(length, thickness, finger_play, length/2+2*i*length, 0)
+            mortise(length, thickness, finger_play, length / 2 + 2 * i * length, 0)
             bpy.context.active_object.name = "_width_finger"
 
     simple.joinMultiple("_width_finger")
@@ -150,21 +150,23 @@ def create_base_plate(height, width, depth):
                          handleType='AUTO', edit_mode=False)
     bpy.context.active_object.name = "_bottom"
 
+
 def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
     #   creates pockets pocket using mortise function for kerf bending
-    dist = 3*finger_width/2
+    dist = 3 * finger_width / 2
     while dist < length:
-        mortise(height-2*finger_thick, pocket_width, 0, dist, 0, math.pi/2)
+        mortise(height - 2 * finger_thick, pocket_width, 0, dist, 0, math.pi / 2)
         bpy.context.active_object.name = "_flex_pocket"
         dist += finger_width * 2
 
     simple.joinMultiple("_flex_pocket")
     bpy.context.active_object.name = "flex_pocket"
 
+
 def make_variable_flex_pocket(height, finger_thick, pocket_width, locations):
     #   creates pockets pocket using mortise function for kerf bending
     for dist in locations:
-        mortise(height-2*finger_thick, pocket_width, 0, dist, 0, math.pi/2)
+        mortise(height - 2 * finger_thick, pocket_width, 0, dist, 0, math.pi / 2)
         bpy.context.active_object.name = "_flex_pocket"
 
     simple.joinMultiple("_flex_pocket")
@@ -186,9 +188,11 @@ def create_flex_side(length, height, finger_length, finger_thick, finger_tol, to
     else:
         simple.makeActive("base")
         fingers = bpy.context.active_object
-        bpy.ops.transform.translate(value=(0.0, height/2 - finger_thick/2+0.0003, 0.0))
+        bpy.ops.transform.translate(value=(0.0, height / 2 - finger_thick / 2 + 0.0003, 0.0))
 
-    bpy.ops.curve.simple(align='WORLD', location=(length/2+0.00025, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D', outputType='POLY', use_cyclic_u=True, handleType='AUTO', edit_mode=False)
+    bpy.ops.curve.simple(align='WORLD', location=(length / 2 + 0.00025, 0, 0), rotation=(0, 0, 0),
+                         Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D',
+                         outputType='POLY', use_cyclic_u=True, handleType='AUTO', edit_mode=False)
     bpy.context.active_object.name = "_side"
 
     simple.makeActive('_side')
@@ -200,12 +204,12 @@ def create_flex_side(length, height, finger_length, finger_thick, finger_tol, to
     simple.removeMultiple('base')
 
 
-def angle(a,b):
-    return math.atan2(b[1]-a[1],b[0]-a[0])
+def angle(a, b):
+    return math.atan2(b[1] - a[1], b[0] - a[0])
 
 
-def angle_difference(a,b,c):
-    return angle(a,b) - angle(b,c)
+def angle_difference(a, b, c):
+    return angle(a, b) - angle(b, c)
 
 
 def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance, base=False):
@@ -220,7 +224,7 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
     old_mortise_angle = 0
     distance = finger_size / 2
     j = 0
-    print("joinery loop length",round(loop_length*1000),"mm")
+    print("joinery loop length", round(loop_length * 1000), "mm")
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
@@ -235,14 +239,16 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
             while distance <= pd:
                 mortise_angle = angle(oldp, p)
                 mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
-                mad = (1+6*min(mortise_angle_difference,math.pi/4)/(math.pi/4))    #   factor for tolerance for the finger
+                mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
+                            math.pi / 4))  # factor for tolerance for the finger
 
                 if base:
                     mortise(finger_size, finger_thick, finger_tolerance * mad, distance, 0, 0)
                     bpy.context.active_object.name = "_base"
                 else:
                     mortise_point = loop.interpolate(distance)
-                    mortise(finger_size, finger_thick, finger_tolerance * mad, mortise_point.x, mortise_point.y, mortise_angle)
+                    mortise(finger_size, finger_thick, finger_tolerance * mad, mortise_point.x, mortise_point.y,
+                            mortise_angle)
 
                 j += 1
                 distance = j * 2 * finger_size + finger_size / 2
@@ -268,12 +274,12 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
 
     coords = list(loop.coords)
     old_mortise_angle = 0
-    distance = min_finger/2
-
-    print("joinery loop length", round(loop_length*1000), "mm")
+    distance = min_finger / 2
     finger_sz = min_finger
     oldfinger_sz = min_finger
-    hpos = []
+    hpos = []   # hpos is the horizontal positions of the middle of the mortise
+
+    print("joinery loop length", round(loop_length * 1000), "mm")
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
@@ -288,25 +294,30 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
             while distance <= pd:
                 mortise_angle = angle(oldp, p)
                 mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
-                mad = (1+6*min(mortise_angle_difference, math.pi/4)/(math.pi/4))    #   factor for tolerance for the finger
-                distance += mad * finger_tolerance
+                mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
+                            math.pi / 4))  # factor for tolerance for the finger
+                distance += mad * finger_tolerance  # move finger by the factor mad greater with larger angle difference
                 mortise_point = loop.interpolate(distance)
-                hpos.append(distance+finger_sz)
+                hpos.append(distance + finger_sz)  # saves the mortise center
                 if base:
-                    mortise(finger_sz, finger_thick, finger_tolerance * mad, distance+finger_sz, 0, 0)
+                    mortise(finger_sz, finger_thick, finger_tolerance * mad, distance + finger_sz, 0, 0)
                     bpy.context.active_object.name = "_base"
                 else:
-                    mortise(finger_sz, finger_thick, finger_tolerance * mad, mortise_point.x, mortise_point.y, mortise_angle)
+                    mortise(finger_sz, finger_thick, finger_tolerance * mad, mortise_point.x, mortise_point.y,
+                            mortise_angle)
 
                 old_distance = distance
                 old_mortise_point = mortise_point
                 finger_sz = finger_size
-                next_angle_difference = 1
+                next_angle_difference = math.pi
+
+                #   adaptive finger length start
                 while finger_sz > min_finger and next_angle_difference > adaptive:
-                    finger_sz *= 0.95
-                    distance = old_distance + 3 * oldfinger_sz / 2 + finger_sz/2
-                    mortise_point = loop.interpolate(distance)
-                    next_mortise_angle = angle((old_mortise_point.x,old_mortise_point.y), (mortise_point.x, mortise_point.y))
+                    finger_sz *= 0.95  # reduce the size of finger by a percentage... the closer to 1.0, the slower
+                    distance = old_distance + 3 * oldfinger_sz / 2 + finger_sz / 2
+                    mortise_point = loop.interpolate(distance)  # get the next mortise point
+                    next_mortise_angle = angle((old_mortise_point.x, old_mortise_point.y),
+                                               (mortise_point.x, mortise_point.y))  # calculate next angle
                     next_angle_difference = abs(next_mortise_angle - mortise_angle)
 
                 oldfinger_sz = finger_sz
@@ -315,11 +326,8 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
     if base:
         simple.joinMultiple("_base")
         bpy.context.active_object.name = "base"
-        bpy.ops.transform.translate(value=(0, 0, 0.0))
     else:
         simple.joinMultiple("_mort")
         bpy.context.active_object.name = "variable_mortise"
     print(hpos)
     return hpos
-
-
