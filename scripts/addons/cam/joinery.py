@@ -188,7 +188,7 @@ def create_flex_side(length, height, finger_length, finger_thick, finger_tol, to
         fingers = bpy.context.active_object
         bpy.ops.transform.translate(value=(0.0, height/2 - finger_thick/2+0.0003, 0.0))
 
-    bpy.ops.curve.simple(align='WORLD', location=(length/2, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D', outputType='POLY', use_cyclic_u=True, handleType='AUTO', edit_mode=False)
+    bpy.ops.curve.simple(align='WORLD', location=(length/2+0.00025, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D', outputType='POLY', use_cyclic_u=True, handleType='AUTO', edit_mode=False)
     bpy.context.active_object.name = "_side"
 
     simple.makeActive('_side')
@@ -206,10 +206,6 @@ def angle(a,b):
 
 def angle_difference(a,b,c):
     return angle(a,b) - angle(b,c)
-
-
-def proportional_finger(coords,length,minfinger,finger_thick,finger_tolerance):
-    print("placeholder")
 
 
 def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance, base=False):
@@ -315,7 +311,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                     finger_sz *= 0.95
                     distance = old_distance + 3 * oldfinger_sz / 2 + finger_sz/2
                     mortise_point = loop.interpolate(distance)
-                    next_mortise_angle = angle((old_mortise_point.x,old_mortise_point.y),(mortise_point.x, mortise_point.y))
+                    next_mortise_angle = angle((old_mortise_point.x,old_mortise_point.y), (mortise_point.x, mortise_point.y))
                     next_angle_difference = abs(next_mortise_angle - mortise_angle)
 
                 oldfinger_sz = finger_sz
