@@ -210,8 +210,13 @@ class CalculatePath(bpy.types.Operator):
         # getIslands(context.object)
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
-        ob = bpy.data.objects[o.object_name]
-        ob.hide_set(False)
+        if o.geometry_source=='OBJECT':
+            ob = bpy.data.objects[o.object_name]
+            ob.hide_set(False)
+        if o.geometry_source=='COLLECTION':
+            obc = bpy.data.collections[o.collection_name]
+            for ob in obc.objects:
+                ob.hide_set(False)
         if o.strategy=="CARVE":
             curvob=bpy.data.objects[o.curve_object]
             curvob.hide_set(False)
