@@ -261,21 +261,26 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
         bpy.context.active_object.name = "mortise"
 
 
-def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, finger_tolerance, base=False):
+def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, finger_tolerance, adaptive, base=False):
     #   distributes mortises of a fixed distance
     #   dynamically changes the finger tolerance with the angle differences
     #   loop = takes in a shapely shape
     #   finger_size = size of the mortise
     #   finger_thick = thickness of the material
     #   finger_tolerance = minimum finger tolerance
+    #   adaptive = angle threshold to reduce finger size
 
     coords = list(loop.coords)
     old_mortise_angle = 0
     distance = finger_size/2
+    distance = min_finger/2
+
     j = 0
     print("joinery loop length",round(loop_length*1000),"mm")
     finger_sz = finger_size
+    finger_sz = min_finger
     oldfinger_sz = finger_size
+    oldfinger_sz = min_finger
     hpos = []
     for i, p in enumerate(coords):
         if i == 0:
@@ -292,6 +297,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 mortise_angle = angle(oldp, p)
                 mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
                 mad = (1+6*min(mortise_angle_difference,math.pi/4)/(math.pi/4))    #   factor for tolerance for the finger
+                distance += mad * finger_tolerance
                 mortise_point = loop.interpolate(distance)
                 hpos.append(distance+finger_sz)
                 if base:
@@ -305,8 +311,8 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 old_mortise_point = mortise_point
                 finger_sz = finger_size
                 next_angle_difference = 1
-                while finger_sz > min_finger and next_angle_difference > math.pi/180:
-                    finger_sz = finger_sz * 0.99
+                while finger_sz > min_finger and next_angle_difference > adaptive:
+                    finger_sz *= 0.95
                     distance = old_distance + 3 * oldfinger_sz / 2 + finger_sz/2
                     mortise_point = loop.interpolate(distance)
                     next_mortise_angle = angle((old_mortise_point.x,old_mortise_point.y),(mortise_point.x, mortise_point.y))
