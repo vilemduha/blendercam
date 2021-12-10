@@ -200,6 +200,7 @@ class CamCurvePlate(bpy.types.Operator):
 
         bpy.context.active_object.name = "plate"
         bpy.context.active_object.select_set(True)
+        bpy.ops.object.curve_remove_doubles()
 
         return {'FINISHED'}
 
@@ -340,6 +341,7 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.removeMultiple("_finger_pair")
         bpy.context.active_object.name = "drawer_back"
+        bpy.ops.object.curve_remove_doubles()
 
         #   make drawer front
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.drawer_hole_diameter / 2, enter_editmode=False,
@@ -348,7 +350,6 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.context.active_object.name = "_circ"
         front_hole = bpy.context.active_object
         simple.makeActive('drawer_back')
-        bpy.ops.object.curve_remove_doubles()
         front_hole.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         bpy.context.active_object.name = "drawer_front"
