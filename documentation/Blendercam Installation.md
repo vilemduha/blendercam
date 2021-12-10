@@ -20,7 +20,7 @@ You can watch the video using the documentation below.
 * [1. Obtaining Blender](#obtaining-blender)
 * [2. Get Blendercam source code](#get-blendercam-source-code)
 * [3. Setup Blender scripts alternate path](#setup-blender-scripts-alternate-file-path)
-* [4. Enable Blendercam add-on](#enable-blendercam-add-on)
+* [4. Enable Blendercam and required add-ons](#enable-blendercam-add-on)
 * [5. (Optional) Install OpenCAMLib](#optional-install-opencamlib)
 * [6. Updating Blendercam](#updating-blendercam)
 
@@ -89,8 +89,8 @@ The second step is to tell blender to also search an alternate path for add-ons.
  4. select **Save User Settings**
  5. restart Blender
 
-## Enable Blendercam add-on
-The third step is to enable the Blendercam add-on.
+## Enable Blendercam and required add-ons
+The next step is to enable the Blendercam add-on.
 
 ![Enable Addon](images/addonInstall3.png)
 
@@ -100,7 +100,9 @@ The third step is to enable the Blendercam add-on.
  4. enable the CAM addon by left clicking on the check box. (Note: the checkbox is on the left side in daily builds of Blender after 11 Jan 2016)  
    4a. the file path should match your Blendercam git path
  5. Optional: enable the experimental features
- 6. select **Save User Settings**
+ 6. enable additional bundled add-ons required by some Blendercam features:
+    - Add Curve: Extra Objects
+ 7. select **Save User Settings**
 
 Now when ever blender is started, the external blendercam add-on will be enabled.
 
