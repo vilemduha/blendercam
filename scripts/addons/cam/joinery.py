@@ -173,7 +173,7 @@ def make_variable_flex_pocket(height, finger_thick, pocket_width, locations):
     bpy.context.active_object.name = "flex_pocket"
 
 
-def create_flex_side(length, height, finger_length, finger_thick, finger_tol, top_bottom=False, flex_pocket=0):
+def create_flex_side(length, height, finger_thick, top_bottom=False):
     #   assumes the base fingers were created and exist
     #   crates a flex side for mortise on curve
     #   length = length of curve

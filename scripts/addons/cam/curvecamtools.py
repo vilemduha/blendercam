@@ -273,16 +273,14 @@ class CamCurveMortise(bpy.types.Operator):
                 if self.adaptive > 0.0:
                     joinery.variable_finger(c, length, self.min_finger_size, self.finger_size, self.plate_thickness, self.finger_tolerance, self.adaptive)
                     locations = joinery.variable_finger(c, length, self.min_finger_size, self.finger_size, self.plate_thickness, self.finger_tolerance, self.adaptive, True)
-                    joinery.create_flex_side(loop_length, self.side_height, self.finger_size, self.plate_thickness,
-                                         self.finger_tolerance, self.top_bottom, self.flex_pocket)
+                    joinery.create_flex_side(loop_length, self.side_height, self.plate_thickness, self.top_bottom)
                     if self.flex_pocket > 0:
                         joinery.make_variable_flex_pocket(self.side_height, self.plate_thickness, self.flex_pocket, locations)
 
                 else:
                     joinery.fixed_finger(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance)
                     joinery.fixed_finger(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, True)
-                    joinery.create_flex_side(loop_length, self.side_height, self.finger_size, self.plate_thickness,
-                                         self.finger_tolerance, self.top_bottom, self.flex_pocket)
+                    joinery.create_flex_side(loop_length, self.side_height, self.plate_thickness, self.top_bottom)
                     if self.flex_pocket > 0:
                         joinery.make_flex_pocket(length, self.side_height, self.plate_thickness, self.finger_size,self.flex_pocket)
 
