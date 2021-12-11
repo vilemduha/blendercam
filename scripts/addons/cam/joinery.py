@@ -263,7 +263,7 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
         bpy.context.active_object.name = "mortise"
 
 
-def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, finger_tolerance, adaptive, base=False):
+def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, finger_tolerance, adaptive, base=False, double_adaptive=False):
     #   distributes mortises of a fixed distance
     #   dynamically changes the finger tolerance with the angle differences
     #   loop = takes in a shapely shape
@@ -298,7 +298,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                             math.pi / 4))  # factor for tolerance for the finger
                 distance += mad * finger_tolerance  # move finger by the factor mad greater with larger angle difference
                 mortise_point = loop.interpolate(distance)
-                if mad > 2:
+                if mad > 2 and double_adaptive:
                     hpos.append(distance)  # saves the mortise center
 
                 hpos.append(distance + finger_sz)  # saves the mortise center

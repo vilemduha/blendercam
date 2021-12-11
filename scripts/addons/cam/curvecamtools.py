@@ -213,7 +213,7 @@ class CamCurveMortise(bpy.types.Operator):
 
     finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005,  max=3.0, precision=4,
                                          unit="LENGTH")
-    min_finger_size: bpy.props.FloatProperty(name="Minimum Finger Size", default=0.001, min=0.004, max=3.0, precision=4,
+    min_finger_size: bpy.props.FloatProperty(name="Minimum Finger Size", default=0.0025, min=0.001, max=3.0, precision=4,
                                          unit="LENGTH")
     finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
                                               unit="LENGTH")
@@ -223,6 +223,7 @@ class CamCurveMortise(bpy.types.Operator):
     top_bottom: bpy.props.BoolProperty(name="Side Top & bottom fingers", default=True)
     opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
     adaptive: bpy.props.FloatProperty(name="Adaptive angle threshold", default=0.0, min=0.000, max=2, subtype="ANGLE", unit="ROTATION")
+    double_adaptive: bpy.props.BoolProperty(name="Double adaptive Pockets", default=False)
 
 
     @classmethod
@@ -272,7 +273,7 @@ class CamCurveMortise(bpy.types.Operator):
 
                 if self.adaptive > 0.0:
                     joinery.variable_finger(c, length, self.min_finger_size, self.finger_size, self.plate_thickness, self.finger_tolerance, self.adaptive)
-                    locations = joinery.variable_finger(c, length, self.min_finger_size, self.finger_size, self.plate_thickness, self.finger_tolerance, self.adaptive, True)
+                    locations = joinery.variable_finger(c, length, self.min_finger_size, self.finger_size, self.plate_thickness, self.finger_tolerance, self.adaptive, True, self.double_adaptive)
                     joinery.create_flex_side(loop_length, self.side_height, self.plate_thickness, self.top_bottom)
                     if self.flex_pocket > 0:
                         joinery.make_variable_flex_pocket(self.side_height, self.plate_thickness, self.flex_pocket, locations)
