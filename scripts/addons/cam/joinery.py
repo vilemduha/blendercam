@@ -298,6 +298,9 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                             math.pi / 4))  # factor for tolerance for the finger
                 distance += mad * finger_tolerance  # move finger by the factor mad greater with larger angle difference
                 mortise_point = loop.interpolate(distance)
+                if mad > 2:
+                    hpos.append(distance)  # saves the mortise center
+
                 hpos.append(distance + finger_sz)  # saves the mortise center
                 if base:
                     mortise(finger_sz, finger_thick, finger_tolerance * mad, distance + finger_sz, 0, 0)

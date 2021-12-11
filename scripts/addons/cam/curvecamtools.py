@@ -213,7 +213,7 @@ class CamCurveMortise(bpy.types.Operator):
 
     finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005,  max=3.0, precision=4,
                                          unit="LENGTH")
-    min_finger_size: bpy.props.FloatProperty(name="Minimum Finger Size", default=0.004, min=0.004, max=3.0, precision=4,
+    min_finger_size: bpy.props.FloatProperty(name="Minimum Finger Size", default=0.001, min=0.004, max=3.0, precision=4,
                                          unit="LENGTH")
     finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
                                               unit="LENGTH")
