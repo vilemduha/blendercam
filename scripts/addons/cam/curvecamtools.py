@@ -211,20 +211,22 @@ class CamCurveMortise(bpy.types.Operator):
     bl_label = "Mortise"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005,  max=3.0, precision=4,
+    finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005, max=3.0, precision=4,
                                          unit="LENGTH")
-    min_finger_size: bpy.props.FloatProperty(name="Minimum Finger Size", default=0.0025, min=0.001, max=3.0, precision=4,
-                                         unit="LENGTH")
+    min_finger_size: bpy.props.FloatProperty(name="Minimum Finger Size", default=0.0025, min=0.001, max=3.0,
+                                             precision=4,
+                                             unit="LENGTH")
     finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
                                               unit="LENGTH")
-    plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0,unit="LENGTH")
+    plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0,
+                                             unit="LENGTH")
     side_height: bpy.props.FloatProperty(name="side height", default=0.05, min=0.001, max=3.0, unit="LENGTH")
     flex_pocket: bpy.props.FloatProperty(name="Flex pocket", default=0.004, min=0.000, max=1.0, unit="LENGTH")
     top_bottom: bpy.props.BoolProperty(name="Side Top & bottom fingers", default=True)
     opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
-    adaptive: bpy.props.FloatProperty(name="Adaptive angle threshold", default=0.0, min=0.000, max=2, subtype="ANGLE", unit="ROTATION")
+    adaptive: bpy.props.FloatProperty(name="Adaptive angle threshold", default=0.0, min=0.000, max=2, subtype="ANGLE",
+                                      unit="ROTATION")
     double_adaptive: bpy.props.BoolProperty(name="Double adaptive Pockets", default=False)
-
 
     @classmethod
     def poll(cls, context):
@@ -272,19 +274,23 @@ class CamCurveMortise(bpy.types.Operator):
                 print("line Length:", loop_length)
 
                 if self.adaptive > 0.0:
-                    joinery.variable_finger(c, length, self.min_finger_size, self.finger_size, self.plate_thickness, self.finger_tolerance, self.adaptive)
-                    locations = joinery.variable_finger(c, length, self.min_finger_size, self.finger_size, self.plate_thickness, self.finger_tolerance, self.adaptive, True, self.double_adaptive)
+                    joinery.variable_finger(c, length, self.min_finger_size, self.finger_size, self.plate_thickness,
+                                            self.finger_tolerance, self.adaptive)
+                    locations = joinery.variable_finger(c, length, self.min_finger_size, self.finger_size,
+                                                        self.plate_thickness, self.finger_tolerance, self.adaptive,
+                                                        True, self.double_adaptive)
                     joinery.create_flex_side(loop_length, self.side_height, self.plate_thickness, self.top_bottom)
                     if self.flex_pocket > 0:
-                        joinery.make_variable_flex_pocket(self.side_height, self.plate_thickness, self.flex_pocket, locations)
+                        joinery.make_variable_flex_pocket(self.side_height, self.plate_thickness, self.flex_pocket,
+                                                          locations)
 
                 else:
                     joinery.fixed_finger(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance)
                     joinery.fixed_finger(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, True)
                     joinery.create_flex_side(loop_length, self.side_height, self.plate_thickness, self.top_bottom)
                     if self.flex_pocket > 0:
-                        joinery.make_flex_pocket(length, self.side_height, self.plate_thickness, self.finger_size,self.flex_pocket)
-
+                        joinery.make_flex_pocket(length, self.side_height, self.plate_thickness, self.finger_size,
+                                                 self.flex_pocket)
 
         return {'FINISHED'}
 
