@@ -45,6 +45,8 @@ def finger_amount(space, size):
     return finger_amt
 
 
+
+
 def mortise(length, thickness, finger_play, cx=0, cy=0, rotation=0):
     bpy.ops.curve.simple(align='WORLD',
                          location=(cx, cy, 0),
@@ -259,8 +261,74 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
         bpy.context.active_object.name = "base"
         bpy.ops.transform.translate(value=(finger_size, 0, 0.0))
     else:
+        print("placeholder")
         simple.joinMultiple("_mort")
         bpy.context.active_object.name = "mortise"
+
+
+def find_slope(p1,p2):
+    return (p2[1]-p1[1]) / max(p2[0]-p1[0], 0.00001)
+
+
+def slope_array(loop):
+    simple.removeMultiple("-")
+    length = loop.length
+    coords = list(loop.coords)
+#    pnt_amount = round(length / resolution)
+    sarray = []
+    dsarray = []
+    for i, p in enumerate(coords):
+        distance = loop.project(Point(p))
+        if i != 0:
+            slope = find_slope(p, oldp)
+            sarray.append((distance, slope * -0.001))
+        oldp = p
+    for i, p in enumerate(sarray):
+        distance = p[0]
+        if i != 0:
+            slope = find_slope(p, oldp)
+            if abs(slope) > 10:
+                print(distance)
+            dsarray.append((distance, slope * -0.00001))
+        oldp = p
+    derivative = LineString(sarray)
+    dderivative = LineString(dsarray)
+    utils.shapelyToCurve('-derivative', derivative, 0.0)
+    utils.shapelyToCurve('-doublederivative', dderivative, 0.0)
+    return sarray
+
+def dslope_array(loop, resolution=0.001):
+    length = loop.length
+    pnt_amount = round(length / resolution)
+    sarray = []
+    dsarray = []
+    for i in range(pnt_amount):
+        distance = i * resolution
+        pt = loop.interpolate(distance)
+        p = (pt.x, pt.y)
+        if i != 0:
+            slope = find_slope(p, oldp)
+            slope = abs(angle(p, oldp))
+            sarray.append((distance, slope * -0.01))
+        oldp = p
+#    derivative = LineString(sarray)
+    for i, p in enumerate(sarray):
+        distance = p[0]
+        if i != 0:
+            slope = find_slope(p, oldp)
+            if abs(slope) > 10:
+                print(distance)
+            dsarray.append((distance, slope * -0.1))
+        oldp = p
+    derivative = LineString(sarray)
+    dderivative = LineString(dsarray)
+
+#    utils.shapelyToCurve('derivative', derivative, 0.0)
+    utils.shapelyToCurve('doublederivative', dderivative, 0.0)
+    return sarray
+
+
+
 
 
 def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, finger_tolerance, adaptive, base=False, double_adaptive=False):
@@ -278,7 +346,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
     finger_sz = min_finger
     oldfinger_sz = min_finger
     hpos = []   # hpos is the horizontal positions of the middle of the mortise
-
+    # slope_array(loop)
     print("joinery loop length", round(loop_length * 1000), "mm")
     for i, p in enumerate(coords):
         if i == 0:
@@ -308,6 +376,12 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 else:
                     mortise(finger_sz, finger_thick, finger_tolerance * mad, mortise_point.x, mortise_point.y,
                             mortise_angle)
+                    if i == 1:
+                        #  put a mesh cylinder at the first coordinates to indicate start
+                        simple.removeMultiple("start_here")
+                        bpy.ops.mesh.primitive_cylinder_add(radius=finger_thick / 2, depth=0.025, enter_editmode=False,
+                                                            align='WORLD', location=(mortise_point.x, mortise_point.y, 0), scale=(1, 1, 1))
+                        bpy.context.active_object.name = "start_here_mortise"
 
                 old_distance = distance
                 old_mortise_point = mortise_point
@@ -330,7 +404,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
         simple.joinMultiple("_base")
         bpy.context.active_object.name = "base"
     else:
+        print("placeholder")
         simple.joinMultiple("_mort")
         bpy.context.active_object.name = "variable_mortise"
-    print(hpos)
     return hpos

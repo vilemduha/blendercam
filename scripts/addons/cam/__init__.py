@@ -27,7 +27,7 @@ from bpy.props import *
 import bl_operators
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 
-from cam import ui, ops, curvecamtools, curvecamequation, utils, simple, polygon_utils_cam  # , post_processors
+from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, polygon_utils_cam  # , post_processors
 import numpy
 
 from shapely import geometry as sgeometry
@@ -1182,6 +1182,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         ui.CAM_PACK_Panel,
         ui.CAM_SLICE_Panel,
         ui.VIEW3D_PT_tools_curvetools,
+        ui.VIEW3D_PT_tools_create,
         ui.CustomPanel,
 
         ops.PathsBackground,
@@ -1215,10 +1216,6 @@ def get_panels():  # convenience function for bot register and unregister functi
         # other tools
         curvecamtools.CamCurveBoolean,
         curvecamtools.CamCurveConvexHull,
-        curvecamtools.CamCurveHatch,
-        curvecamtools.CamCurvePlate,
-        curvecamtools.CamCurveDrawer,
-        curvecamtools.CamCurveMortise,
         curvecamtools.CamOffsetSilhouete,
         curvecamtools.CamObjectSilhouete,
         curvecamtools.CamCurveIntarsion,
@@ -1226,10 +1223,16 @@ def get_panels():  # convenience function for bot register and unregister functi
         curvecamtools.CamCurveOvercutsB,
         curvecamtools.CamCurveRemoveDoubles,
         curvecamtools.CamMeshGetPockets,
+
         curvecamequation.CamSineCurve,
         curvecamequation.CamLissajousCurve,
         curvecamequation.CamHypotrochoidCurve,
         curvecamequation.CamCustomCurve,
+
+        curvecamcreate.CamCurveHatch,
+        curvecamcreate.CamCurvePlate,
+        curvecamcreate.CamCurveDrawer,
+        curvecamcreate.CamCurveMortise,
 
         CAM_CUTTER_MT_presets,
         CAM_OPERATION_MT_presets,
@@ -1360,7 +1363,6 @@ def compatible_panels():
 
 classes = [
     ui.CAM_UL_operations,
-    # ui.CAM_UL_orientations,
     ui.CAM_UL_chains,
     camOperation,
     opReference,
@@ -1384,6 +1386,7 @@ classes = [
     ui.CAM_PACK_Panel,
     ui.CAM_SLICE_Panel,
     ui.VIEW3D_PT_tools_curvetools,
+    ui.VIEW3D_PT_tools_create,
     ui.CustomPanel,
     ui.WM_OT_gcode_import,
 
@@ -1418,10 +1421,6 @@ classes = [
     # other tools
     curvecamtools.CamCurveBoolean,
     curvecamtools.CamCurveConvexHull,
-    curvecamtools.CamCurveHatch,
-    curvecamtools.CamCurvePlate,
-    curvecamtools.CamCurveDrawer,
-    curvecamtools.CamCurveMortise,
     curvecamtools.CamOffsetSilhouete,
     curvecamtools.CamObjectSilhouete,
     curvecamtools.CamCurveIntarsion,
@@ -1429,10 +1428,16 @@ classes = [
     curvecamtools.CamCurveOvercutsB,
     curvecamtools.CamCurveRemoveDoubles,
     curvecamtools.CamMeshGetPockets,
+
     curvecamequation.CamSineCurve,
     curvecamequation.CamLissajousCurve,
     curvecamequation.CamHypotrochoidCurve,
     curvecamequation.CamCustomCurve,
+
+    curvecamcreate.CamCurveHatch,
+    curvecamcreate.CamCurvePlate,
+    curvecamcreate.CamCurveDrawer,
+    curvecamcreate.CamCurveMortise,
 
     CAM_CUTTER_MT_presets,
     CAM_OPERATION_MT_presets,

@@ -976,6 +976,7 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
     bl_context = "objectmode"
     bl_label = "Curve CAM Tools"
 
+
     # bl_category = "Blender CAM"
     # bl_options = {'DEFAULT_CLOSED'}
 
@@ -985,10 +986,6 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         # lt = context.window_manager.looptools
         layout.operator("object.curve_boolean")
         layout.operator("object.convex_hull")
-        layout.operator("object.curve_hatch")
-        layout.operator("object.curve_plate")
-        layout.operator("object.curve_drawer")
-        layout.operator("object.curve_mortise")
         layout.operator("object.curve_intarsion")
         layout.operator("object.curve_overcuts")
         layout.operator("object.curve_overcuts_b")
@@ -996,10 +993,24 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.silhouete_offset")
         layout.operator("object.curve_remove_doubles")
         layout.operator("object.mesh_get_pockets")
+
+class VIEW3D_PT_tools_create(bpy.types.Panel):
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'TOOLS'
+    bl_context = "objectmode"
+    bl_label = "Curve CAM Creators"
+    bl_option = ('DEFAULT_CLOSED')
+
+    def draw(self, context):
+        layout = self.layout
+        layout.operator("object.curve_plate")
+        layout.operator("object.curve_drawer")
+        layout.operator("object.curve_mortise")
         layout.operator("object.sine")
         layout.operator("object.lissajous")
         layout.operator("object.hypotrochoid")
         layout.operator("object.customcurve")
+        layout.operator("object.curve_hatch")
 
 
 # Gcode import panel---------------------------------------------------------------
