@@ -27,19 +27,21 @@ from cam import polygon_utils_cam
 from cam.simple import *
 import math
 
-def Rotate_pbyp(originp, p, ang): ## rotate point around another point with angle
-    ox , oy , oz = originp
-    px , py , oz = p
-    
-    if ang == abs(math.pi/2):
-        d = ang/abs(ang)
-        qx = ox + d*(oy - py)
-        qy = oy + d*(px - ox)
+
+def Rotate_pbyp(originp, p, ang):  # rotate point around another point with angle
+    ox, oy, oz = originp
+    px, py, oz = p
+
+    if ang == abs(math.pi / 2):
+        d = ang / abs(ang)
+        qx = ox + d * (oy - py)
+        qy = oy + d * (px - ox)
     else:
         qx = ox + math.cos(ang) * (px - ox) - math.sin(ang) * (py - oy)
         qy = oy + math.sin(ang) * (px - ox) + math.cos(ang) * (py - oy)
-    rot_p =[qx , qy , oz]
+    rot_p = [qx, qy, oz]
     return rot_p
+
 
 class camPathChunk:
     # parents=[]
@@ -70,7 +72,7 @@ class camPathChunk:
         self.parents = []
         # self.unsortedchildren=False
         self.sorted = False  # if the chunk has allready been milled in the simulation
-        self.length = 0;  # this is total length of this chunk.
+        self.length = 0  # this is total length of this chunk.
         self.zstart = 0  # this is stored for ramps mainly, because they are added afterwards, but have to use layer info
         self.zend = 0  #
 
@@ -164,7 +166,6 @@ class camPathChunk:
             newchunk.extend(self.points[:minv + 1])
             self.points = newchunk
 
-
         else:
             if o.movement_type == 'MEANDER':
                 d1 = dist2d(pos, self.points[0])
@@ -194,12 +195,12 @@ class camPathChunk:
         ch = None
         while len(testlist) > 0:
             chtest = testlist.pop()
-            if chtest.sorted == False:
+            if not chtest.sorted:
                 self.cango = False
                 cango = True
 
                 for child in chtest.children:
-                    if child.sorted == False:
+                    if not child.sorted:
                         if child not in tested:
                             testlist.append(child)
                             tested.append(child)
@@ -210,7 +211,7 @@ class camPathChunk:
                     if d < mind:
                         ch = chtest
                         mind = d
-        if ch != None:
+        if ch is not None:
             # print('found some')
             return ch
         # print('returning none')
@@ -248,11 +249,11 @@ class camPathChunk:
 
     def append(self, point, startpoint=None, endpoint=None, rotation=None):
         self.points.append(point)
-        if startpoint != None:
+        if startpoint is not None:
             self.startpoints.append(startpoint)
-        if endpoint != None:
+        if endpoint is not None:
             self.endpoints.append(endpoint)
-        if rotation != None:
+        if rotation is not None:
             self.rotations.append(rotation)
 
     def rampContour(self, zstart, zend, o):
@@ -269,7 +270,7 @@ class camPathChunk:
         # z=zstart
         znew = 10
         rounds = 0  # for counting if ramping makes more layers
-        while endpoint == None and not (znew == zend and i == 0):  #
+        while endpoint is None and not (znew == zend and i == 0):  #
             # for i,s in enumerate(ch.points):
             # print(i, znew, zend, len(ch.points))
             s = ch.points[i]
@@ -293,7 +294,7 @@ class camPathChunk:
                 v = v1 + ratio * (v2 - v1)
                 chunk.points.append((v.x, v.y, max(s[2], v.z)))
 
-                if zend == o.min.z and endpoint == None and ch.closed == True:
+                if zend == o.min.z and endpoint is None and ch.closed == True:
                     endpoint = i + 1
                     if endpoint == len(ch.points):
                         endpoint = 0
@@ -302,15 +303,15 @@ class camPathChunk:
             znew = max(znew, zend, s[2])
             chunk.points.append((s[0], s[1], znew))
             z = znew
-            if endpoint != None:
-                break;
+            if endpoint is not None:
+                break
             i += 1
             if i >= len(ch.points):
                 i = 0
                 rounds += 1
         # if not o.use_layers:
-        #	endpoint=0
-        if endpoint != None:  # append final contour on the bottom z level
+        # endpoint=0
+        if endpoint is not None:  # append final contour on the bottom z level
             i = endpoint
             started = False
             # print('finaliz')
@@ -334,7 +335,8 @@ class camPathChunk:
                     i = 0
                 s1 = ch.points[i]
                 i2 = i - 1
-                if i2 < 0: i2 = len(ch.points) - 1
+                if i2 < 0:
+                    i2 = len(ch.points) - 1
                 s2 = ch.points[i2]
                 l = dist2d(s1, s2)
                 znew = z + tan(o.ramp_out_angle) * l
@@ -505,7 +507,6 @@ class camPathChunk:
 
         self.points = chunk.points
 
-
     def breakPathForLeadinLeadout(self, o):
         iradius = o.lead_in
         oradius = o.lead_out
@@ -518,28 +519,27 @@ class camPathChunk:
                 bpoint = ch.points[i + 1]
                 bmax = bpoint[0] - apoint[0]
                 bmay = bpoint[1] - apoint[1]
-                segmentLength = math.hypot(bmax, bmay)  #  find segment length
+                segmentLength = math.hypot(bmax, bmay)  # find segment length
 
-                if segmentLength > 2*max(iradius,oradius):  #  Be certain there is enough room for the leadin and leadiout
+                if segmentLength > 2 * max(iradius,
+                                           oradius):  # Be certain there is enough room for the leadin and leadiout
                     ### add point on the line here
-                    newpointx = (bpoint[0] + apoint[0]) / 2     # average of the two x points to find center
-                    newpointy = (bpoint[1] + apoint[1]) / 2     # average of the two y points to find center
+                    newpointx = (bpoint[0] + apoint[0]) / 2  # average of the two x points to find center
+                    newpointy = (bpoint[1] + apoint[1]) / 2  # average of the two y points to find center
                     first_part = ch.points[:i + 1]
                     sec_part = ch.points[i + 1:]
                     sec_part.insert(0, [newpointx, newpointy, apoint[2]])
                     sec_part.extend(first_part)
-                    self.points = sec_part         ##  modify the object
+                    self.points = sec_part  ##  modify the object
                     break
-
-
 
     def leadContour(self, o):
         perimeterDirection = 1  # 1 is clockwise, 0 is CCW
-        if o.spindle_rotation_direction  == 'CW':
+        if o.spindle_rotation_direction == 'CW':
             if o.movement_type == 'CONVENTIONAL':
-                perimeterDirection = 0;
+                perimeterDirection = 0
 
-        if self.parents != []:  #  if it is inside another parent
+        if self.parents != []:  # if it is inside another parent
             perimeterDirection ^= 1  # toggle with a bitwise XOR
             print("has parent")
 
@@ -547,27 +547,27 @@ class camPathChunk:
             print("path direction is Clockwise")
         else:
             print("path direcion is counterclockwise")
-        print("child",self.children)
-        print("parent",self.parents)
+        print("child", self.children)
+        print("parent", self.parents)
         iradius = o.lead_in
         oradius = o.lead_out
         ch = self
         start = ch.points[0]
         nextp = ch.points[1]
-        rpoint = Rotate_pbyp(start,nextp,math.pi/2) 
+        rpoint = Rotate_pbyp(start, nextp, math.pi / 2)
         dx = rpoint[0] - start[0]
         dy = rpoint[1] - start[1]
         la = math.hypot(dx, dy)
-        pvx = (iradius * dx) / la + start[0] ## arc center(x)
-        pvy = (iradius * dy) / la + start[1] ## arc center(y)
-        arc_c = [pvx , pvy , start[2]]
+        pvx = (iradius * dx) / la + start[0]  ## arc center(x)
+        pvy = (iradius * dy) / la + start[1]  ## arc center(y)
+        arc_c = [pvx, pvy, start[2]]
         chunk = camPathChunk([])  ## create a new cutting path
 
         ##        add lead in arc in the begining
         if round(o.lead_in, 6) > 0.0:
             for i in range(15):
                 iangle = -i * (math.pi / 2) / 15
-                arc_p = Rotate_pbyp(arc_c ,start , iangle)
+                arc_p = Rotate_pbyp(arc_c, start, iangle)
                 chunk.points.insert(0, arc_p)
 
         ##          glue rest of the path to the arc
@@ -578,7 +578,7 @@ class camPathChunk:
         if round(o.lead_in, 6) > 0.0:
             for i in range(15):
                 iangle = i * (math.pi / 2) / 15
-                arc_p = Rotate_pbyp(arc_c ,start , iangle)
+                arc_p = Rotate_pbyp(arc_c, start, iangle)
                 chunk.points.append(arc_p)
 
         self.points = chunk.points
@@ -737,7 +737,7 @@ def parentChildPoly(parents, children, o):
 def parentChildDist(parents, children, o, distance=None):
     # parenting based on x,y distance between chunks
     # hierarchy works like this: - children get milled first.
-    if distance == None:
+    if distance is None:
         dlim = o.dist_between_paths * 2
         if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS') and o.parallel_step_back:
             dlim = dlim * 2

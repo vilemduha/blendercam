@@ -26,7 +26,6 @@ import bpy
 from bpy.props import *
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
-
 from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser, joinery, curvecamtools
 import shapely
 from shapely.geometry import Point, LineString, Polygon
@@ -34,6 +33,7 @@ import mathutils
 import math
 from Equation import Expression
 import numpy as np
+
 
 class CamCurveHatch(bpy.types.Operator):
     """perform hatch operation on single or multiple curves"""  # by Alain Pelletier September 2021
@@ -75,7 +75,6 @@ class CamCurvePlate(bpy.types.Operator):
     resolution: bpy.props.IntProperty(name="Spline resolution", default=50, min=3, max=150)
 
     def execute(self, context):
-        diameter = 2 * self.radius
         left = -self.width / 2 + self.radius
         bottom = -self.height / 2 + self.radius
         right = -left
@@ -368,4 +367,3 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_remove_doubles()
 
         return {'FINISHED'}
-

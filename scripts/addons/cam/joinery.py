@@ -45,8 +45,6 @@ def finger_amount(space, size):
     return finger_amt
 
 
-
-
 def mortise(length, thickness, finger_play, cx=0, cy=0, rotation=0):
     bpy.ops.curve.simple(align='WORLD',
                          location=(cx, cy, 0),
@@ -242,7 +240,7 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
                 mortise_angle = angle(oldp, p)
                 mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
                 mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
-                            math.pi / 4))  # factor for tolerance for the finger
+                        math.pi / 4))  # factor for tolerance for the finger
 
                 if base:
                     mortise(finger_size, finger_thick, finger_tolerance * mad, distance, 0, 0)
@@ -266,15 +264,14 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
         bpy.context.active_object.name = "mortise"
 
 
-def find_slope(p1,p2):
-    return (p2[1]-p1[1]) / max(p2[0]-p1[0], 0.00001)
+def find_slope(p1, p2):
+    return (p2[1] - p1[1]) / max(p2[0] - p1[0], 0.00001)
 
 
 def slope_array(loop):
     simple.removeMultiple("-")
-    length = loop.length
     coords = list(loop.coords)
-#    pnt_amount = round(length / resolution)
+    #    pnt_amount = round(length / resolution)
     sarray = []
     dsarray = []
     for i, p in enumerate(coords):
@@ -297,6 +294,7 @@ def slope_array(loop):
     utils.shapelyToCurve('-doublederivative', dderivative, 0.0)
     return sarray
 
+
 def dslope_array(loop, resolution=0.001):
     length = loop.length
     pnt_amount = round(length / resolution)
@@ -307,11 +305,10 @@ def dslope_array(loop, resolution=0.001):
         pt = loop.interpolate(distance)
         p = (pt.x, pt.y)
         if i != 0:
-            slope = find_slope(p, oldp)
             slope = abs(angle(p, oldp))
             sarray.append((distance, slope * -0.01))
         oldp = p
-#    derivative = LineString(sarray)
+    #    derivative = LineString(sarray)
     for i, p in enumerate(sarray):
         distance = p[0]
         if i != 0:
@@ -320,18 +317,13 @@ def dslope_array(loop, resolution=0.001):
                 print(distance)
             dsarray.append((distance, slope * -0.1))
         oldp = p
-    derivative = LineString(sarray)
     dderivative = LineString(dsarray)
-
-#    utils.shapelyToCurve('derivative', derivative, 0.0)
     utils.shapelyToCurve('doublederivative', dderivative, 0.0)
     return sarray
 
 
-
-
-
-def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, finger_tolerance, adaptive, base=False, double_adaptive=False):
+def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, finger_tolerance, adaptive, base=False,
+                    double_adaptive=False):
     #   distributes mortises of a fixed distance
     #   dynamically changes the finger tolerance with the angle differences
     #   loop = takes in a shapely shape
@@ -345,7 +337,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
     distance = min_finger / 2
     finger_sz = min_finger
     oldfinger_sz = min_finger
-    hpos = []   # hpos is the horizontal positions of the middle of the mortise
+    hpos = []  # hpos is the horizontal positions of the middle of the mortise
     # slope_array(loop)
     print("joinery loop length", round(loop_length * 1000), "mm")
     for i, p in enumerate(coords):
@@ -363,7 +355,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 mortise_angle = angle(oldp, p)
                 mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
                 mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
-                            math.pi / 4))  # factor for tolerance for the finger
+                        math.pi / 4))  # factor for tolerance for the finger
                 distance += mad * finger_tolerance  # move finger by the factor mad greater with larger angle difference
                 mortise_point = loop.interpolate(distance)
                 if mad > 2 and double_adaptive:
@@ -380,7 +372,9 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                         #  put a mesh cylinder at the first coordinates to indicate start
                         simple.removeMultiple("start_here")
                         bpy.ops.mesh.primitive_cylinder_add(radius=finger_thick / 2, depth=0.025, enter_editmode=False,
-                                                            align='WORLD', location=(mortise_point.x, mortise_point.y, 0), scale=(1, 1, 1))
+                                                            align='WORLD',
+                                                            location=(mortise_point.x, mortise_point.y, 0),
+                                                            scale=(1, 1, 1))
                         bpy.context.active_object.name = "start_here_mortise"
 
                 old_distance = distance

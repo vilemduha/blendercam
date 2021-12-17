@@ -37,7 +37,7 @@ from cam.simple import *
 # EXPERIMENTAL=True#False
 
 
-####Panel definitions
+# Panel definitions
 class CAMButtonsPanel():
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'

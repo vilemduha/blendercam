@@ -105,7 +105,6 @@ class CamCurveIntarsion(bpy.types.Operator):
 
     def execute(self, context):
         selected = context.selected_objects  # save original selected items
-        scene = bpy.context.scene
 
         simple.removeMultiple('intarsion_')
 
@@ -232,7 +231,7 @@ class CamCurveOvercuts(bpy.types.Operator):
         fs = shapely.ops.unary_union(shapes)
         fs = fs.union(positive_overcuts)
         fs = fs.difference(negative_overcuts)
-        o = utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
+        utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
         return {'FINISHED'}
 
 
@@ -461,7 +460,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
         fs = fs.difference(negative_overcuts)
         #        utils.shapelyToCurve(o1.name + '_overcuts', positive_overcuts, o1.location.z)
         #        utils.shapelyToCurve(o1.name + '_overcuts', negative_overcuts, o1.location.z)
-        o = utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
+        utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
         return {'FINISHED'}
 
 
@@ -490,8 +489,7 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
             bpy.ops.mesh.remove_doubles()
             bpy.ops.object.editmode_toggle()
             bpy.ops.object.convert(target='CURVE')
-            a = bpy.context.active_object
-            # a.data.show_normal_face = False
+
             if mode:
                 bpy.ops.object.editmode_toggle()
 
