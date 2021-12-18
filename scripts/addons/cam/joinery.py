@@ -57,7 +57,7 @@ def mortise(length, thickness, finger_play, cx=0, cy=0, rotation=0):
 
 
 def horizontal_finger(length, thickness, finger_play, amount, center=True):
-    #   creates _wfa and it's counterpart _wfb
+    #   creates _wfa counterpart _wfb
     #   _wfa is centered at 0,0
     #   _wfb is _wfa offset by one length
     #   takes in the

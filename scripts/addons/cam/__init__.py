@@ -19,21 +19,26 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-import bpy, bgl, blf
-import math, time
-from mathutils import *
-from bpy_extras.object_utils import object_data_add
-from bpy.props import *
+import bgl
 import bl_operators
-from bpy.types import Menu, Operator, UIList, AddonPreferences
-
-from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, polygon_utils_cam  # , post_processors
+import blf
+import bpy
+import math
 import numpy
-
-from shapely import geometry as sgeometry
-from bpy.app.handlers import persistent
-import subprocess, os, sys, threading
+import os
 import pickle
+import subprocess
+import sys
+import threading
+import time
+from bpy.app.handlers import persistent
+from bpy.props import *
+from bpy.types import Menu, Operator, UIList, AddonPreferences
+from bpy_extras.object_utils import object_data_add
+from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, \
+    polygon_utils_cam  # , post_processors
+from mathutils import *
+from shapely import geometry as sgeometry
 
 bl_info = {
     "name": "CAM - gcode generation tools",
@@ -66,7 +71,7 @@ def updateOperation(self, context):
     scene = context.scene
     ao = scene.cam_operations[scene.cam_active_operation]
 
-    if ao.hide_all_others == True:
+    if ao.hide_all_others:
         for _ao in scene.cam_operations:
             if _ao.path_object_name in bpy.data.objects:
                 other_obj = bpy.data.objects[_ao.path_object_name]
@@ -77,7 +82,7 @@ def updateOperation(self, context):
     else:
         for path_obj_name in was_hidden_dict:
             print(was_hidden_dict)
-            if was_hidden_dict[path_obj_name] == True:
+            if was_hidden_dict[path_obj_name]:
                 # Find object and make it hidde, then reset 'hidden' flag
                 obj = bpy.data.objects[path_obj_name]
                 obj.hide = True
@@ -91,7 +96,7 @@ def updateOperation(self, context):
         ob = bpy.data.objects[ao.path_object_name]
         ob.select_set(state=True, view_layer=None)
         # Show object if, it's was hidden
-        if ob.hide == True:
+        if ob.hide:
             ob.hide = False
             was_hidden_dict[ao.path_object_name] = True
         bpy.context.scene.objects.active = ob
@@ -261,7 +266,7 @@ class import_settings(bpy.types.PropertyGroup):
                             description="Only Subdivide gcode segments that are bigger than 'Segment length' ",
                             default=False)
     output: bpy.props.EnumProperty(name="output type", items=(
-    ('mesh', 'Mesh', 'Make a mesh output'), ('curve', 'Curve', 'Make curve output')), default='curve')
+        ('mesh', 'Mesh', 'Make a mesh output'), ('curve', 'Curve', 'Make curve output')), default='curve')
     max_segment_size: FloatProperty(name="", description="Only Segments bigger then this value get subdivided",
                                     default=0.001, min=0.0001, max=1.0, unit="LENGTH")
 
@@ -275,14 +280,14 @@ def operationValid(self, context):
     o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     if o.geometry_source == 'OBJECT':
         if not o.object_name in bpy.data.objects:
-            o.valid = False;
+            o.valid = False
             o.warnings = invalidmsg
     if o.geometry_source == 'COLLECTION':
         if not o.collection_name in bpy.data.collections:
-            o.valid = False;
+            o.valid = False
             o.warnings = invalidmsg
         elif len(bpy.data.collections[o.collection_name].objects) == 0:
-            o.valid = False;
+            o.valid = False
             o.warnings = invalidmsg
 
     if o.geometry_source == 'IMAGE':
@@ -307,11 +312,11 @@ def updateOperationValid(self, context):
 def updateChipload(self, context):
     """this is very simple computation of chip size, could be very much improved"""
     print('update chipload ')
-    o = self;
+    o = self
     # self.changed=True
     # Old chipload
-    o.chipload = ((o.feedrate / (o.spindle_rpm * o.cutter_flutes)))
-    ###New chipload with chip thining compensation.
+    o.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
+    # New chipload with chip thining compensation.
     # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less than 50% cutter engagement with cylindrical end mills.
     # formula 1 Nominal Chipload is " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
     # formula 2 (.5*(cutter diameter mm devided by dist_between_paths)) devided by square root of ((cutter diameter mm devided by dist_between_paths)-1) x Nominal Chipload
@@ -355,7 +360,7 @@ def updateStrategy(o, context):
 
 
 def updateCutout(o, context):
-    pass;
+    pass
 
 
 # if o.outlines_count>1:
@@ -926,8 +931,8 @@ class camOperation(bpy.types.PropertyGroup):
                                               default=False, update=updateMaterial)
 
     material_Z: bpy.props.EnumProperty(name="Z placement", items=(
-    ('ABOVE', 'Above', 'Place objec above 0'), ('BELOW', 'Below', 'Place object below 0'),
-    ('CENTERED', 'Centered', 'Place object centered on 0')), description="Position below Zero", default='BELOW',
+        ('ABOVE', 'Above', 'Place objec above 0'), ('BELOW', 'Below', 'Place object below 0'),
+        ('CENTERED', 'Centered', 'Place object centered on 0')), description="Position below Zero", default='BELOW',
                                        update=updateMaterial)
 
     material_origin: bpy.props.FloatVectorProperty(name='Material origin', default=(0, 0, 0), unit='LENGTH',
@@ -988,7 +993,7 @@ class camOperation(bpy.types.PropertyGroup):
     update_bullet_collision_tag: bpy.props.BoolProperty(name="mark bullet collisionworld for update",
                                                         description="mark for update", default=True)
 
-    valid: bpy.props.BoolProperty(name="Valid", description="True if operation is ok for calculation", default=True);
+    valid: bpy.props.BoolProperty(name="Valid", description="True if operation is ok for calculation", default=True)
     changedata: bpy.props.StringProperty(name='changedata', description='change data for checking if stuff changed.')
 
     # process related data
@@ -1009,7 +1014,7 @@ class camChain(bpy.types.PropertyGroup):  # chain is just a set of operations wh
                                             default=-1)
     name: bpy.props.StringProperty(name="Chain Name", default="Chain")
     filename: bpy.props.StringProperty(name="File name", default="Chain")  # filename of
-    valid: bpy.props.BoolProperty(name="Valid", description="True if whole chain is ok for calculation", default=True);
+    valid: bpy.props.BoolProperty(name="Valid", description="True if whole chain is ok for calculation", default=True)
     computing: bpy.props.BoolProperty(name="Computing right now", description="", default=False)
     operations: bpy.props.CollectionProperty(type=opReference)  # this is to hold just operation names.
 
@@ -1490,4 +1495,3 @@ def unregister():
 
     del s.cam_active_operation
     del s.cam_machine
-
