@@ -56,6 +56,15 @@ def mortise(length, thickness, finger_play, cx=0, cy=0, rotation=0):
     bpy.context.active_object.name = "_mortise"
 
 
+def interlock_groove(length, thickness, finger_play, cx=0, cy=0, rotation=0):
+    mortise(length, thickness, finger_play, 0, 0, 0)
+    bpy.ops.transform.translate(value=(length/2-finger_play/2, 0.0, 0.0))
+    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+    bpy.context.active_object.rotation_euler.z = rotation
+    bpy.ops.transform.translate(value=(cx, cy, 0.0))
+#    bpy.context.active_object.name = "_groove"
+
+
 def horizontal_finger(length, thickness, finger_play, amount, center=True):
     #   creates _wfa counterpart _wfb
     #   _wfa is centered at 0,0
@@ -402,3 +411,57 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
         simple.joinMultiple("_mort")
         bpy.context.active_object.name = "variable_mortise"
     return hpos
+
+
+def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_tolerance, finger_amount, tangent=0, fixed_angle=0, start=0.01, end=0.01, closed=True):
+    #   distributes interlocking joints of a fixed amount
+    #   dynamically changes the finger tolerance with the angle differences
+    #   loop = takes in a shapely shape
+    #   finger_size = size of the mortise
+    #   finger_thick = thickness of the material
+    #   finger_tolerance = minimum finger tolerance
+    base = False
+    coords = list(loop.coords)
+    old_mortise_angle = 0
+    if not closed:
+        spacing = (loop_length-start-end) / finger_amount
+        distance = start
+    else:
+        spacing = loop_length / finger_amount
+        distance = 0
+
+    j = 0
+    print("joinery loop length", round(loop_length * 1000), "mm")
+    print("distance between joints", round(spacing * 1000), "mm")
+
+    for i, p in enumerate(coords):
+        if i == 0:
+            p_start = p
+
+        if p != p_start:
+            not_start = True
+        else:
+            not_start = False
+        pd = loop.project(Point(p))
+
+        if not_start:
+            while distance <= pd:
+                if fixed_angle == 0:
+                    groove_angle = angle(oldp, p) + math.pi/2 + tangent
+                else:
+                    groove_angle = fixed_angle
+
+                groove_point = loop.interpolate(distance)
+
+                print(j, "groove_angle", round(180*(groove_angle)/math.pi),"distance", round(distance * 1000),"mm")
+                interlock_groove(finger_depth, finger_thick, finger_tolerance, groove_point.x, groove_point.y,
+                        groove_angle)
+
+
+                j += 1
+                distance = j * spacing + start
+        oldp = p
+
+    simple.joinMultiple("_mort")
+    bpy.context.active_object.name = "mortise"
+

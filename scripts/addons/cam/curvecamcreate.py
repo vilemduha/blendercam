@@ -181,6 +181,12 @@ class CamCurveMortise(bpy.types.Operator):
     flex_pocket: bpy.props.FloatProperty(name="Flex pocket", default=0.004, min=0.000, max=1.0, unit="LENGTH")
     top_bottom: bpy.props.BoolProperty(name="Side Top & bottom fingers", default=True)
     opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
+    interlocking_groove: bpy.props.BoolProperty(name="interlocking_groove", default=False)
+    finger_amount: bpy.props.IntProperty(name="Finger Amount", default=2, min=1, max=100)
+    tangent_angle: bpy.props.FloatProperty(name="Tangent deviation", default=0.0, min=0.000, max=2, subtype="ANGLE",
+                                      unit="ROTATION")
+    fixed_angle: bpy.props.FloatProperty(name="fixed angle", default=0.0, min=0.000, max=2, subtype="ANGLE",
+                                      unit="ROTATION")
     adaptive: bpy.props.FloatProperty(name="Adaptive angle threshold", default=0.0, min=0.000, max=2, subtype="ANGLE",
                                       unit="ROTATION")
     double_adaptive: bpy.props.BoolProperty(name="Double adaptive Pockets", default=False)
@@ -225,7 +231,7 @@ class CamCurveMortise(bpy.types.Operator):
                     loop_length = c.length
                 print("line Length:", loop_length)
 
-                if self.adaptive > 0.0:
+                if self.adaptive > 0.0 and not self.interlocking_groove:
                     joinery.variable_finger(c, length, self.min_finger_size, self.finger_size, self.plate_thickness,
                                             self.finger_tolerance, self.adaptive)
                     locations = joinery.variable_finger(c, length, self.min_finger_size, self.finger_size,
@@ -236,7 +242,7 @@ class CamCurveMortise(bpy.types.Operator):
                         joinery.make_variable_flex_pocket(self.side_height, self.plate_thickness, self.flex_pocket,
                                                           locations)
 
-                else:
+                elif not self.interlocking_groove:
                     joinery.fixed_finger(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance)
                     joinery.fixed_finger(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, True)
                     joinery.create_flex_side(loop_length, self.side_height, self.plate_thickness, self.top_bottom)
@@ -244,6 +250,8 @@ class CamCurveMortise(bpy.types.Operator):
                         joinery.make_flex_pocket(length, self.side_height, self.plate_thickness, self.finger_size,
                                                  self.flex_pocket)
 
+                elif self.interlocking_groove:
+                    joinery.distributed_interlock(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, self.finger_amount, fixed_angle=self.fixed_angle, tangent=self.tangent_angle,closed=not self.opencurve)
         return {'FINISHED'}
 
 
