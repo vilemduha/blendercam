@@ -157,6 +157,7 @@ def getPathPatternParallel(o, angle):
             pathchunks.append(camPathChunk(ch))
         # print (ch)
 
+
     return pathchunks
 
 

@@ -293,12 +293,8 @@ def getBounds(o):
     s = bpy.context.scene
     m = s.cam_machine
     if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y or o.max.z - o.min.z > m.working_area.z:
-        # o.max.x=min(o.min.x+m.working_area.x,o.max.x)
-        # o.max.y=min(o.min.y+m.working_area.y,o.max.y)
-        # o.max.z=min(o.min.z+m.working_area.z,o.max.z)
         o.warnings += 'Operation exceeds your machine limits\n'
 
-# progress (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
 
 def getBoundsMultiple(operations):
     "gets bounds of multiple operations, mainly for purpose of simulations or rest milling. highly suboptimal."
@@ -943,7 +939,7 @@ def polygonConvexHull(context):
     obj = bpy.context.view_layer.objects.active
 
     for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-        c=(v.co.x, v.co.y)
+        c = (v.co.x, v.co.y)
         coords.append(c)
 
     simple.removeMultiple('_tmp')  # delete temporary mesh
