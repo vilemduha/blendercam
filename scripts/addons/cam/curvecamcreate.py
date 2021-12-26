@@ -181,13 +181,6 @@ class CamCurveMortise(bpy.types.Operator):
     flex_pocket: bpy.props.FloatProperty(name="Flex pocket", default=0.004, min=0.000, max=1.0, unit="LENGTH")
     top_bottom: bpy.props.BoolProperty(name="Side Top & bottom fingers", default=True)
     opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
-    interlocking_groove: bpy.props.BoolProperty(name="interlocking_groove", default=False)
-    twist: bpy.props.BoolProperty(name="twist_interlock", default=False)
-    finger_amount: bpy.props.IntProperty(name="Finger Amount", default=2, min=1, max=100)
-    tangent_angle: bpy.props.FloatProperty(name="Tangent deviation", default=0.0, min=0.000, max=2, subtype="ANGLE",
-                                      unit="ROTATION")
-    fixed_angle: bpy.props.FloatProperty(name="fixed angle", default=0.0, min=0.000, max=2, subtype="ANGLE",
-                                      unit="ROTATION")
     adaptive: bpy.props.FloatProperty(name="Adaptive angle threshold", default=0.0, min=0.000, max=2, subtype="ANGLE",
                                       unit="ROTATION")
     double_adaptive: bpy.props.BoolProperty(name="Double adaptive Pockets", default=False)
