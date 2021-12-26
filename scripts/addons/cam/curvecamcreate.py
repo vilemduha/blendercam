@@ -258,6 +258,73 @@ class CamCurveMortise(bpy.types.Operator):
                         joinery.distributed_interlock(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, self.finger_amount, fixed_angle=self.fixed_angle, tangent=self.tangent_angle,closed=not self.opencurve)
         return {'FINISHED'}
 
+class CamCurveInterlock(bpy.types.Operator):
+    """Generates interlock along a curve"""  # by Alain Pelletier December 2021
+    bl_idname = "object.curve_interlock"
+    bl_label = "Interlock"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+    finger_size: bpy.props.FloatProperty(name="Finger Size", default=0.015, min=0.005, max=3.0, precision=4,
+                                         unit="LENGTH")
+    finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
+                                              unit="LENGTH")
+    plate_thickness: bpy.props.FloatProperty(name="Plate thickness", default=0.00477, min=0.001, max=3.0,
+                                             unit="LENGTH")
+    opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
+    interlocking_groove: bpy.props.BoolProperty(name="interlocking_groove", default=False)
+    twist: bpy.props.BoolProperty(name="twist_interlock", default=False)
+    finger_amount: bpy.props.IntProperty(name="Finger Amount", default=2, min=1, max=100)
+    tangent_angle: bpy.props.FloatProperty(name="Tangent deviation", default=0.0, min=0.000, max=2, subtype="ANGLE",
+                                      unit="ROTATION")
+    fixed_angle: bpy.props.FloatProperty(name="fixed angle", default=0.0, min=0.000, max=2, subtype="ANGLE",
+                                      unit="ROTATION")
+    @classmethod
+    def poll(cls, context):
+        return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
+
+    def execute(self, context):
+        o1 = bpy.context.active_object
+
+        bpy.context.object.data.resolution_u = 60
+        bpy.ops.object.duplicate()
+        obj = context.active_object
+        bpy.ops.object.convert(target='MESH')
+        bpy.context.active_object.name = "_temp_mesh"
+
+        if self.opencurve:
+            coords = []
+            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
+                coords.append((v.co.x, v.co.y))
+            line = LineString(coords)  # convert coordinates to shapely LineString datastructure
+            simple.removeMultiple("-converted")
+            utils.shapelyToCurve('-converted_curve', line, 0.0)
+        shapes = utils.curveToShapely(o1)
+
+        for s in shapes:
+            if s.boundary.type == 'LineString':
+                loops = [s.boundary]
+            else:
+                loops = s.boundary
+
+            for ci, c in enumerate(loops):
+                if self.opencurve:
+                    length = line.length
+                else:
+                    length = c.length
+                print("loop Length:", length)
+                if self.opencurve:
+                    loop_length = line.length
+                else:
+                    loop_length = c.length
+                print("line Length:", loop_length)
+
+                if self.twist:
+                    joinery.distributed_interlock(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, self.finger_amount, fixed_angle=self.fixed_angle, tangent=self.tangent_angle,closed=not self.opencurve, type='twist')
+                else:
+                    joinery.distributed_interlock(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, self.finger_amount, fixed_angle=self.fixed_angle, tangent=self.tangent_angle,closed=not self.opencurve)
+        return {'FINISHED'}
+
+
 
 class CamCurveDrawer(bpy.types.Operator):
     """Generates drawers"""  # by Alain Pelletier December 2021 inspired by The Drawinator

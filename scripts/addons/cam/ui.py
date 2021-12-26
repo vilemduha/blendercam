@@ -1006,6 +1006,7 @@ class VIEW3D_PT_tools_create(bpy.types.Panel):
         layout.operator("object.curve_plate")
         layout.operator("object.curve_drawer")
         layout.operator("object.curve_mortise")
+        layout.operator("object.curve_interlock")
         layout.operator("object.sine")
         layout.operator("object.lissajous")
         layout.operator("object.hypotrochoid")
