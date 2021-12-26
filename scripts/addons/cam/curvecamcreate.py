@@ -182,6 +182,7 @@ class CamCurveMortise(bpy.types.Operator):
     top_bottom: bpy.props.BoolProperty(name="Side Top & bottom fingers", default=True)
     opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
     interlocking_groove: bpy.props.BoolProperty(name="interlocking_groove", default=False)
+    twist: bpy.props.BoolProperty(name="twist_interlock", default=False)
     finger_amount: bpy.props.IntProperty(name="Finger Amount", default=2, min=1, max=100)
     tangent_angle: bpy.props.FloatProperty(name="Tangent deviation", default=0.0, min=0.000, max=2, subtype="ANGLE",
                                       unit="ROTATION")
@@ -251,7 +252,10 @@ class CamCurveMortise(bpy.types.Operator):
                                                  self.flex_pocket)
 
                 elif self.interlocking_groove:
-                    joinery.distributed_interlock(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, self.finger_amount, fixed_angle=self.fixed_angle, tangent=self.tangent_angle,closed=not self.opencurve)
+                    if self.twist:
+                        joinery.distributed_interlock(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, self.finger_amount, fixed_angle=self.fixed_angle, tangent=self.tangent_angle,closed=not self.opencurve, type='twist')
+                    else:
+                        joinery.distributed_interlock(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, self.finger_amount, fixed_angle=self.fixed_angle, tangent=self.tangent_angle,closed=not self.opencurve)
         return {'FINISHED'}
 
 
