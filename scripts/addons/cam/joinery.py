@@ -58,26 +58,28 @@ def mortise(length, thickness, finger_play, cx=0, cy=0, rotation=0):
 
 def interlock_groove(length, thickness, finger_play, cx=0, cy=0, rotation=0):
     mortise(length, thickness, finger_play, 0, 0, 0)
-    bpy.ops.transform.translate(value=(length/2-finger_play/2, 0.0, 0.0))
+    bpy.ops.transform.translate(value=(length / 2 - finger_play / 2, 0.0, 0.0))
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     bpy.context.active_object.rotation_euler.z = rotation
     bpy.ops.transform.translate(value=(cx, cy, 0.0))
     bpy.context.active_object.name = "_groove"
 
 
-def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, percentage=0.5,):
+def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, percentage=0.5, ):
     mortise(length, thickness, finger_play, 0, 0, 0)
     bpy.context.active_object.name = "_tmp"
-    mortise(length*percentage, thickness, finger_play, 0, 0, math.pi/2)
+    mortise(length * percentage, thickness, finger_play, 0, 0, math.pi / 2)
     bpy.context.active_object.name = "_tmp"
-    h = math.hypot(thickness, length*percentage)
-    oangle = math.degrees(math.asin(length*percentage/h))
+    h = math.hypot(thickness, length * percentage)
+    oangle = math.degrees(math.asin(length * percentage / h))
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Sector',
-                         Simple_startangle=90+oangle, Simple_endangle=180-oangle, Simple_radius=h/2, use_cyclic_u=True, edit_mode=False)
+                         Simple_startangle=90 + oangle, Simple_endangle=180 - oangle, Simple_radius=h / 2,
+                         use_cyclic_u=True, edit_mode=False)
     bpy.context.active_object.name = "_tmp"
 
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Sector',
-                         Simple_startangle=270+oangle, Simple_endangle=360-oangle, Simple_radius=h/2, use_cyclic_u=True, edit_mode=False)
+                         Simple_startangle=270 + oangle, Simple_endangle=360 - oangle, Simple_radius=h / 2,
+                         use_cyclic_u=True, edit_mode=False)
     bpy.context.active_object.name = "_tmp"
 
     simple.selectMultiple('_tmp')
@@ -86,6 +88,7 @@ def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, perc
     bpy.ops.transform.translate(value=(cx, cy, 0.0))
     bpy.context.active_object.name = "_groove"
     simple.removeMultiple('_tmp')
+    simple.makeActive("_groove")
 
 
 def horizontal_finger(length, thickness, finger_play, amount, center=True):
@@ -436,7 +439,15 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
     return hpos
 
 
-def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_tolerance, finger_amount, tangent=0, fixed_angle=0, start=0.01, end=0.01, closed=True, type='groove'):
+def single_interlock(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle, type):
+    if type == "GROOVE":
+        interlock_groove(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle)
+    elif type == "TWIST":
+        interlock_twist(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle)
+
+
+def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_tolerance, finger_amount, tangent=0,
+                          fixed_angle=0, start=0.01, end=0.01, closed=True, type='GROOVE'):
     #   distributes interlocking joints of a fixed amount
     #   dynamically changes the finger tolerance with the angle differences
     #   loop = takes in a shapely shape
@@ -447,7 +458,7 @@ def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_
     coords = list(loop.coords)
     old_mortise_angle = 0
     if not closed:
-        spacing = (loop_length-start-end) / finger_amount
+        spacing = (loop_length - start - end) / finger_amount
         distance = start
     else:
         spacing = loop_length / finger_amount
@@ -470,22 +481,19 @@ def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_
         if not_start:
             while distance <= pd:
                 if fixed_angle == 0:
-                    groove_angle = angle(oldp, p) + math.pi/2 + tangent
+                    groove_angle = angle(oldp, p) + math.pi / 2 + tangent
                 else:
                     groove_angle = fixed_angle
 
                 groove_point = loop.interpolate(distance)
 
-                print(j, "groove_angle", round(180*(groove_angle)/math.pi),"distance", round(distance * 1000),"mm")
-                if type == "groove":
-                    interlock_groove(finger_depth, finger_thick, finger_tolerance, groove_point.x, groove_point.y,groove_angle)
-                elif type == "twist":
-                    interlock_twist(finger_depth, finger_thick, finger_tolerance, groove_point.x, groove_point.y,
-                        groove_angle)
+                print(j, "groove_angle", round(180 * groove_angle / math.pi), "distance", round(distance * 1000), "mm")
+                single_interlock(finger_depth, finger_thick, finger_tolerance, groove_point.x, groove_point.y,
+                                 groove_angle, type)
 
                 j += 1
                 distance = j * spacing + start
         oldp = p
 
     simple.joinMultiple("_groove")
-    bpy.context.active_object.name = "groove"
+    bpy.context.active_object.name = "interlock"
