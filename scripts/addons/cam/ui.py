@@ -405,24 +405,6 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                             layout.prop(ao, 'rotation_A')
                         if ao.enable_B:
                             layout.prop(ao, 'rotation_B')
-                        if ao.enable_B or ao.enable_A:
-                            if ao.old_rotation_A != ao.rotation_A or ao.old_rotation_B != ao.rotation_B:
-                                ao.old_rotation_A = ao.rotation_A
-                                ao.old_rotation_B = ao.rotation_B
-                                ob = bpy.data.objects[ao.object_name]
-                                ob.select_set(True)
-                                bpy.context.view_layer.objects.active = ob
-                                if ao.A_along_x:  # A parallel with X
-                                    if ao.enable_A:
-                                        bpy.context.active_object.rotation_euler.x = ao.rotation_A
-                                    if ao.enable_B:
-                                        bpy.context.active_object.rotation_euler.y = ao.rotation_B
-                                else:  # A parallel with Y
-                                    if ao.enable_A:
-                                        bpy.context.active_object.rotation_euler.y = ao.rotation_A
-                                    if ao.enable_B:
-                                        bpy.context.active_object.rotation_euler.x = ao.rotation_B
-
 
                     elif ao.geometry_source == 'COLLECTION':
                         layout.prop_search(ao, "collection_name", bpy.data, "collections")

@@ -394,6 +394,24 @@ def updateBridges(o, context):
     o.changed = True
 
 
+def updateRotation(o, context):
+    if o.enable_B or o.enable_A:
+        print(o, o.rotation_A)
+        ob = bpy.data.objects[o.object_name]
+        ob.select_set(True)
+        bpy.context.view_layer.objects.active = ob
+        if o.A_along_x:  # A parallel with X
+            if o.enable_A:
+                bpy.context.active_object.rotation_euler.x = o.rotation_A
+            if o.enable_B:
+                bpy.context.active_object.rotation_euler.y = o.rotation_B
+        else:  # A parallel with Y
+            if o.enable_A:
+                bpy.context.active_object.rotation_euler.y = o.rotation_A
+            if o.enable_B:
+                bpy.context.active_object.rotation_euler.x = o.rotation_B
+
+
 # def updateRest(o, context):
 #    print('update rest ')
 #    # if o.use_layers:
@@ -627,23 +645,23 @@ class camOperation(bpy.types.PropertyGroup):
     old_rotation_A: bpy.props.FloatProperty(name="A axis angle",
                                             description="old value of Rotate A axis\nto specified angle", default=0,
                                             min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION",
-                                            update=updateRest)
+                                            update=updateRotation)
 
     old_rotation_B: bpy.props.FloatProperty(name="A axis angle",
                                             description="old value of Rotate A axis\nto specified angle", default=0,
                                             min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION",
-                                            update=updateRest)
+                                            update=updateRotation)
 
     rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle", default=0,
                                         min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRest)
+                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
     enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False,
-                                     update=updateRest)
-    A_along_x: bpy.props.BoolProperty(name="A Along X ", description="A Parallel to X", default=True, update=updateRest)
+                                     update=updateRotation)
+    A_along_x: bpy.props.BoolProperty(name="A Along X ", description="A Parallel to X", default=True, update=updateRotation)
 
     rotation_B: bpy.props.FloatProperty(name="B axis angle", description="Rotate B axis\nto specified angle", default=0,
                                         min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRest)
+                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
     enable_B: bpy.props.BoolProperty(name="Enable B axis", description="Rotate B axis", default=False,
                                      update=updateRest)
 
