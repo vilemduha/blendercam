@@ -26,8 +26,8 @@ import bpy
 from bpy.props import *
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser, joinery, \
-    curvecamtools
+from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, joinery, \
+    curvecamtools, puzzle_joinery
 import shapely
 from shapely.geometry import Point, LineString, Polygon
 import mathutils
@@ -263,7 +263,8 @@ class CamCurveInterlock(bpy.types.Operator):
     opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
     interlock_type: EnumProperty(name='Type of interlock',
                                  items=(('TWIST', 'Twist', 'Iterlock requires 1/4 turn twist'),
-                                        ('GROOVE', 'Groove', 'Simple sliding groove')),
+                                        ('GROOVE', 'Groove', 'Simple sliding groove'),
+                                        ('PUZZLE', 'Puzzle interlock', 'puzzle good for flat joints')),
                                  description='Type of interlock',
                                  default='GROOVE')
     finger_amount: bpy.props.IntProperty(name="Finger Amount", default=2, min=1, max=100)
@@ -318,12 +319,36 @@ class CamCurveInterlock(bpy.types.Operator):
         else:
             location = bpy.context.scene.cursor.location
             joinery.single_interlock(self.finger_size, self.plate_thickness, self.finger_tolerance, location[0],
-                                     location[1], self.fixed_angle, self.interlock_type)
-            bpy.context.active_object.name = "interlock"
+                                     location[1], self.fixed_angle, self.interlock_type,self.finger_amount)
+
             bpy.context.scene.cursor.location = location
-        #        simple.removeMultiple('_')
         return {'FINISHED'}
 
+class CamCurvePuzzle(bpy.types.Operator):
+    """Generates interlock along a curve"""  # by Alain Pelletier December 2021
+    bl_idname = "object.curve_puzzle"
+    bl_label = "Puzzle joints"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+    diameter: bpy.props.FloatProperty(name="tool diameter", default=0.003, min=0.001, max=3.0, precision=4,
+                                         unit="LENGTH")
+    width: bpy.props.FloatProperty(name="Width", default=0.05, min=0.005, max=3.0, precision=4,
+                                         unit="LENGTH")
+    height: bpy.props.FloatProperty(name="height", default=0.025, min=0.005, max=3.0, precision=4,
+                                         unit="LENGTH")
+    finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.0001, min=0, max=0.003, precision=4,
+                                              unit="LENGTH")
+    finger_amount: bpy.props.IntProperty(name="Finger Amount", default=2, min=0, max=100)
+
+    angle: bpy.props.FloatProperty(name="angle", default=0.0, min=0.000, max=2, subtype="ANGLE",
+                                         unit="ROTATION")
+
+    radius: bpy.props.FloatProperty(name="Curve Radius", default=0.050, min=0.005, max=3.0, precision=4,
+                                         unit="LENGTH")
+
+    def execute(self, context):
+        puzzle_joinery.bar(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount)
+        return {'FINISHED'}
 
 class CamCurveDrawer(bpy.types.Operator):
     """Generates drawers"""  # by Alain Pelletier December 2021 inspired by The Drawinator

@@ -27,7 +27,7 @@ from bpy.props import *
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
 
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, gcodeimportparser
+from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, puzzle_joinery
 import shapely
 from shapely.geometry import Point, LineString, Polygon
 import mathutils
@@ -439,11 +439,13 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
     return hpos
 
 
-def single_interlock(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle, type):
+def single_interlock(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle, type, amount=1):
     if type == "GROOVE":
         interlock_groove(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle)
     elif type == "TWIST":
         interlock_twist(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle)
+    elif type == "PUZZLE":
+        puzzle_joinery.fingers(finger_thick, finger_tolerance, amount)
 
 
 def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_tolerance, finger_amount, tangent=0,
