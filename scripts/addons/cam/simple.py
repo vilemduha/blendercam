@@ -234,7 +234,7 @@ def makeActive(name):
 
 
 def activeName(name):
-    bpy.context.active_object.name = "name"
+    bpy.context.active_object.name = name
 
 def rename(name,name2):
     makeActive(name)

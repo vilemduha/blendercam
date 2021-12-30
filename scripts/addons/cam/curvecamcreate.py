@@ -330,24 +330,72 @@ class CamCurvePuzzle(bpy.types.Operator):
     bl_label = "Puzzle joints"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    diameter: bpy.props.FloatProperty(name="tool diameter", default=0.003, min=0.001, max=3.0, precision=4,
+    diameter: bpy.props.FloatProperty(name="tool diameter", default=0.003175, min=0.001, max=3.0, precision=4,
                                          unit="LENGTH")
+    finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.00005, min=0, max=0.003, precision=4,
+                                              unit="LENGTH")
+    finger_amount: bpy.props.IntProperty(name="Finger Amount", default=1, min=0, max=100)
+    stem_size: bpy.props.IntProperty(name="size of the stem", default=2, min=1, max=200)
     width: bpy.props.FloatProperty(name="Width", default=0.05, min=0.005, max=3.0, precision=4,
                                          unit="LENGTH")
-    height: bpy.props.FloatProperty(name="height", default=0.025, min=0.005, max=3.0, precision=4,
+    height: bpy.props.FloatProperty(name="height or thickness", default=0.025, min=0.005, max=3.0, precision=4,
                                          unit="LENGTH")
-    finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.0001, min=0, max=0.003, precision=4,
-                                              unit="LENGTH")
-    finger_amount: bpy.props.IntProperty(name="Finger Amount", default=2, min=0, max=100)
 
-    angle: bpy.props.FloatProperty(name="angle", default=0.0, min=0.000, max=2, subtype="ANGLE",
+    angle: bpy.props.FloatProperty(name="angle", default=math.pi/4, min=0.000, max=2, subtype="ANGLE",
                                          unit="ROTATION")
 
-    radius: bpy.props.FloatProperty(name="Curve Radius", default=0.050, min=0.005, max=3.0, precision=4,
+    radius: bpy.props.FloatProperty(name="Arc Radius", default=0.05, min=0.010, max=5, precision=4,
                                          unit="LENGTH")
 
+    interlock_type: EnumProperty(name='Type of shape',
+                                 items=(('BAR', 'Bar', 'Bar interlock'),
+                                        ('ARC', 'Arc', 'Curve interlock'),
+                                        ('CURVEBAR', 'Curve Bar', 'Curve Bar interlock')),
+                                 description='Type of interlock',
+                                 default='ARC')
+    twist_lock: bpy.props.BoolProperty(name="Add TwistLock", default=False)
+    twist_thick: bpy.props.FloatProperty(name="Twist Thickness", default=0.0047, min=0.001, max=3.0, precision=4,
+                                         unit="LENGTH")
+    twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.5, min=0.1, max=0.9, precision=4)
+
+
+    def draw(self, context):
+        layout = self.layout
+        scene = context.scene
+        layout = self.layout
+        layout.label(text='Puzzle Joint Definition')
+        layout.prop(self, 'stem_size')
+        layout.prop(self, 'diameter')
+        layout.prop(self, 'finger_tolerance')
+        layout.prop(self, 'finger_amount')
+        layout.prop(self, 'twist_lock')
+        if self.twist_lock:
+            layout.prop(self, 'twist_thick')
+            layout.prop(self, 'twist_percent')
+
+        layout.separator()
+        if self.interlock_type == 'BAR':
+            layout.prop(self, 'width')
+        layout.prop(self, 'height')
+
+        layout.prop(self, 'interlock_type')
+
+        if self.interlock_type == "ARC":
+            layout.prop(self, 'radius')
+            layout.prop(self, 'angle')
+
+
+
     def execute(self, context):
-        puzzle_joinery.bar(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount)
+        if self.interlock_type == 'BAR':
+            puzzle_joinery.bar(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
+                               stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
+                               tthick=self.twist_thick)
+        elif self.interlock_type == 'ARC':
+            puzzle_joinery.arc(self.radius, self.height, self.angle, self.diameter, self.finger_tolerance, self.finger_amount,
+                               stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
+                               tthick=self.twist_thick)
+
         return {'FINISHED'}
 
 class CamCurveDrawer(bpy.types.Operator):

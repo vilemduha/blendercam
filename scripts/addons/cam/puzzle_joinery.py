@@ -35,14 +35,14 @@ import math
 def rotate(angle):
     bpy.context.active_object.rotation_euler.z = angle
 
-def finger(diameter, inside, DT=1.025):
+def finger(diameter, inside, DT=1.025, stem=2):
     RESOLUTION = 12    # Data resolution
-    cube_sx = diameter * DT * 2 + inside
+    cube_sx = diameter * DT * (2 + stem - 1) + inside
     cube_ty = diameter * DT + inside
     cube_sy = 2 * diameter * DT + inside / 2
     circle_radius = diameter * DT / 2
-    c1x = -diameter * DT - inside
-    c2x = diameter * DT + inside
+    c1x = (cube_sx) / 2 + inside
+    c2x = (cube_sx + inside) / 2 + inside  # stem*diameter * DT + inside
     c2y = 3 * circle_radius   # + inside / 2
     c1y = circle_radius
 
@@ -96,58 +96,63 @@ def finger(diameter, inside, DT=1.025):
     simple.makeActive("PUZZLE")
     bpy.context.active_object.name = "_puzzle"
 
-def fingers(diameter, inside, amount):
+def fingers(diameter, inside, amount,stem=1):
     DT = 1.025
-    translate = -4 * (amount - 1) * diameter * DT/2
-    for i in range(amount):
-        print('i 1:', i)
-        finger(diameter, 0, DT=DT)
-        bpy.ops.transform.translate(value=(i * 4 * diameter * DT, 0, 0.0))
-        bpy.context.active_object.name = "puzzle"
+    translate = -(4+2*(stem-1)) * (amount - 1) * diameter * DT/2
+    finger(diameter, 0, DT=DT, stem=stem)
+    bpy.context.active_object.name = "puzzle"
+    bpy.ops.object.curve_remove_doubles()
+    bpy.ops.transform.translate(value=(translate, -0.00002, 0.0))
+
+    for i in range(amount-1):
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": ((4+2*(stem-1)) * diameter * DT, 0, 0.0)})
 
     simple.selectMultiple('puzzle')
     bpy.ops.object.curve_boolean(boolean_type='UNION')
     bpy.context.active_object.name = "fingers"
     simple.removeMultiple("puzzle")
     simple.makeActive('fingers')
-    bpy.ops.object.curve_remove_doubles()
-    bpy.ops.transform.translate(value=(translate, -0.00002, 0.0))
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
 
     #  receptacle is smaller by the inside tolerance amount
-    for i in range(amount):
-        print('i 2:', i)
-        finger(diameter, inside, DT=DT)
-        bpy.ops.transform.translate(value=(i * 4 * diameter * DT, 0, 0.0))
-        bpy.context.active_object.name = "puzzle"
+    finger(diameter, inside, DT=DT, stem=stem)
+    bpy.context.active_object.name = "puzzle"
+    bpy.ops.object.curve_remove_doubles()
+    bpy.ops.transform.translate(value=(translate, -inside * 1.05, 0.0))
+
+    for i in range(amount - 1):
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                          TRANSFORM_OT_translate={"value": ((4+2*(stem-1)) * diameter * DT, 0, 0.0)})
     simple.selectMultiple('puzzle')
     bpy.ops.object.curve_boolean(boolean_type='UNION')
     bpy.context.active_object.name = "receptacle"
     simple.removeMultiple("puzzle")
     simple.makeActive('receptacle')
-    bpy.ops.transform.translate(value=(translate, -inside * 1.05, 0.0))
+    bpy.ops.transform.translate(value=(0, -inside * 1.05, 0.0))
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
     bpy.ops.object.curve_remove_doubles()
 
 
-def bar(width, thick, diameter, tolerance, amount=0):
+def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01):
+    DT = 1.025
     if amount == 0:
-        amount = round(thick / (5 * diameter * 1.025))
+        amount = round(thick / ((4+2*(stem-1)) * diameter * DT))-1
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=width, Simple_length=thick, use_cyclic_u=True, edit_mode=False)
     bpy.context.active_object.name = "tmprect"
 
     if amount < 2:
-        finger(diameter, tolerance, DT=1.025)
+        finger(diameter, tolerance, DT=1.025, stem=stem)
         simple.rename('_puzzle', 'receptacle')
         bpy.ops.transform.translate(value=(0, -tolerance, 0.0))
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 
-        finger(diameter, 0, DT=1.025)
+        finger(diameter, 0, DT=1.025, stem=stem)
         simple.rename('_puzzle', '_tmpfingers')
     else:
-        fingers(diameter, tolerance, amount)
+        fingers(diameter, tolerance, amount, stem=stem)
         simple.rename('fingers', '_tmpfingers')
 
     rotate(-math.pi/2)
@@ -157,21 +162,92 @@ def bar(width, thick, diameter, tolerance, amount=0):
     bpy.ops.object.curve_boolean(boolean_type='UNION')
     bpy.context.active_object.name = "base"
     simple.removeMultiple('_tmp')
-    simple.rename('base', '_tmpbase')
+
+    if twist:
+        joinery.interlock_twist(thick, tthick, tolerance, cx=width/2+2*diameter*DT-tthick/2+0.00001, percentage=tneck)
+        joinery.interlock_twist(thick, tthick, tolerance, cx=-width/2+2*diameter*DT-tthick/2+0.00001, percentage=tneck)
+        simple.joinMultiple('_groove')
+        bpy.ops.object.curve_remove_doubles()
+
 
     simple.rename('receptacle', '_tmpreceptacle')
     rotate(-math.pi/2)
     bpy.ops.transform.translate(value=(-width/2, 0, 0.0))
-    simple.selectMultiple("_tmp")
 
+    simple.selectMultiple('_')
+    if twist:
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        simple.activeName('_tmpreceptacle')
+    simple.rename('base', '_tmpbase')
 
-    simple.selectMultiple("_")  # select everything starting with plate_
-
-    bpy.context.view_layer.objects.active = bpy.data.objects['_tmpbase']  # Make the plate base active
+    simple.selectMultiple("_tmp")  # select everything starting with plate_
+    bpy.context.view_layer.objects.active = bpy.data.objects['_tmpbase']
     bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
     bpy.context.active_object.name = "PUZZLE_bar"
     simple.removeMultiple("_")  # Remove temporary base and holes
+    simple.makeActive('PUZZLE_bar')
 
 
+def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01):
+    DT = 1.025
+    if amount == 0:
+        amount = round(thick / ((4+2*(stem-1)) * diameter * DT))-1
+    bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Segment', Simple_a=radius-thick/2,
+                         Simple_b=radius+thick/2, Simple_startangle=-0.0001,  Simple_endangle=math.degrees(angle), Simple_radius=radius, use_cyclic_u=False, edit_mode=False)
+
+    bpy.context.active_object.name = "tmparc"
+
+    if amount < 2:
+        finger(diameter, tolerance, DT=1.025, stem=stem)
+        simple.rename('_puzzle', 'receptacle')
+        bpy.ops.transform.translate(value=(0, -tolerance, 0.0))
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+
+        finger(diameter, 0, DT=1.025, stem=stem)
+        simple.rename('_puzzle', '_tmpfingers')
+    else:
+        fingers(diameter, tolerance, amount, stem=stem)
+        simple.rename('fingers', '_tmpfingers')
+
+    rotate(math.pi)
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
+    bpy.ops.transform.translate(value=(radius, 0, 0.0))
+    bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+
+    simple.rename('tmparc', '_tmparc')
+    simple.selectMultiple('_tmp')
+    bpy.ops.object.curve_boolean(boolean_type='UNION')
+    bpy.context.active_object.name = "base"
+    simple.removeMultiple('_tmp')
+
+    simple.rename('base', '_tmparc')
+
+    if twist:
+        joinery.interlock_twist(thick, tthick, tolerance, cx=width/2+2*diameter*DT-tthick/2+0.00001, percentage=tneck)
+        joinery.interlock_twist(thick, tthick, tolerance, cx=-width/2+2*diameter*DT-tthick/2+0.00001, percentage=tneck)
+        simple.joinMultiple('_groove')
+        bpy.ops.object.curve_remove_doubles()
+
+
+    simple.rename('receptacle', '_tmpreceptacle')
+    rotate(math.pi)
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
+    bpy.ops.transform.translate(value=(radius, 0, 0.0))
+    bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
+    rotate(angle)
+
+ #  simple.selectMultiple('_')
+    if twist:
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        simple.activeName('_tmpreceptacle')
+
+
+    simple.selectMultiple("_tmp")  # select everything starting with plate_
+    bpy.context.view_layer.objects.active = bpy.data.objects['_tmparc']
+    bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+    bpy.context.active_object.name = "PUZZLE_arc"
+    simple.removeMultiple("_")  # Remove temporary base and holes
+    simple.makeActive('PUZZLE_arc')
+    bpy.ops.transform.translate(value=(-radius, 0, 0.0))
 
 
