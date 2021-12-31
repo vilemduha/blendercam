@@ -353,6 +353,13 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('CURVEBAR', 'Curve Bar', 'Curve Bar interlock')),
                                  description='Type of interlock',
                                  default='ARC')
+    arc_type: EnumProperty(name='Type of arc',
+                                 items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
+                                        ('F', 'Receptacle only', 'Receptacle'),
+                                        ('M', 'Male only', 'Male')),
+                                 description='Type of interlock',
+                                 default='MF')
+
     twist_lock: bpy.props.BoolProperty(name="Add TwistLock", default=False)
     twist_thick: bpy.props.FloatProperty(name="Twist Thickness", default=0.0047, min=0.001, max=3.0, precision=4,
                                          unit="LENGTH")
@@ -374,15 +381,18 @@ class CamCurvePuzzle(bpy.types.Operator):
             layout.prop(self, 'twist_percent')
 
         layout.separator()
-        if self.interlock_type == 'BAR':
-            layout.prop(self, 'width')
+
         layout.prop(self, 'height')
 
         layout.prop(self, 'interlock_type')
 
         if self.interlock_type == "ARC":
+            layout.prop(self, 'arc_type')
             layout.prop(self, 'radius')
             layout.prop(self, 'angle')
+
+        if self.interlock_type == 'BAR':
+            layout.prop(self, 'width')
 
 
 
@@ -394,7 +404,7 @@ class CamCurvePuzzle(bpy.types.Operator):
         elif self.interlock_type == 'ARC':
             puzzle_joinery.arc(self.radius, self.height, self.angle, self.diameter, self.finger_tolerance, self.finger_amount,
                                stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                               tthick=self.twist_thick)
+                               tthick=self.twist_thick, which=self.arc_type)
 
         return {'FINISHED'}
 

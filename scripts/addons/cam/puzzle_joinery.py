@@ -34,6 +34,7 @@ import math
 
 def rotate(angle):
     bpy.context.active_object.rotation_euler.z = angle
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
 
 def finger(diameter, inside, DT=1.025, stem=2):
     RESOLUTION = 12    # Data resolution
@@ -188,7 +189,7 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
     simple.makeActive('PUZZLE_bar')
 
 
-def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01):
+def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
     DT = 1.025
     if amount == 0:
         amount = round(thick / ((4+2*(stem-1)) * diameter * DT))-1
@@ -210,17 +211,16 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
         simple.rename('fingers', '_tmpfingers')
 
     rotate(math.pi)
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
     bpy.ops.transform.translate(value=(radius, 0, 0.0))
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
     simple.rename('tmparc', '_tmparc')
-    simple.selectMultiple('_tmp')
-    bpy.ops.object.curve_boolean(boolean_type='UNION')
-    bpy.context.active_object.name = "base"
-    simple.removeMultiple('_tmp')
-
-    simple.rename('base', '_tmparc')
+    if which == 'MF' or which == 'M':
+        simple.selectMultiple('_tmp')
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        bpy.context.active_object.name = "base"
+        simple.removeMultiple('_tmp')
+        simple.rename('base', '_tmparc')
 
     if twist:
         joinery.interlock_twist(thick, tthick, tolerance, cx=width/2+2*diameter*DT-tthick/2+0.00001, percentage=tneck)
@@ -231,7 +231,6 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
 
     simple.rename('receptacle', '_tmpreceptacle')
     rotate(math.pi)
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
     bpy.ops.transform.translate(value=(radius, 0, 0.0))
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
     rotate(angle)
@@ -244,10 +243,29 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
 
     simple.selectMultiple("_tmp")  # select everything starting with plate_
     bpy.context.view_layer.objects.active = bpy.data.objects['_tmparc']
-    bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+    if which == 'MF' or which == 'F':
+        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
     bpy.context.active_object.name = "PUZZLE_arc"
+    bpy.ops.object.curve_remove_doubles()
     simple.removeMultiple("_")  # Remove temporary base and holes
     simple.makeActive('PUZZLE_arc')
-    bpy.ops.transform.translate(value=(-radius, 0, 0.0))
+    if which == 'M':
+        rotate(-angle)
+        bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+                                 orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
+        bpy.ops.transform.translate(value=(-radius, 0, 0.0))
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
+        rotate(-math.pi / 2)
+        simple.rename('PUZZLE_arc', 'PUZZLE_arc_male')
+    elif which == 'F':
+        bpy.ops.transform.mirror(orient_type='LOCAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)), orient_matrix_type='LOCAL', constraint_axis=(True, False, False))
+        bpy.ops.transform.translate(value=(radius, 0, 0.0))
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
+        rotate(math.pi / 2)
+        simple.rename('PUZZLE_arc', 'PUZZLE_arc_receptacle')
+    else:
+        bpy.ops.transform.translate(value=(-radius, 0, 0.0))
+
+
 
 
