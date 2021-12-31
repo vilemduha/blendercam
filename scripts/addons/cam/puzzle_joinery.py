@@ -266,6 +266,32 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
     else:
         bpy.ops.transform.translate(value=(-radius, 0, 0.0))
 
+    bpy.ops.object.curve_remove_doubles()
 
+def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
+    length -= (radius * 2 + thick)
+    bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=length*1.005, Simple_length=thick, use_cyclic_u=True, edit_mode=False)
+    simple.activeName("tmprect")
 
+    if which == 'M' or which == 'MF':
+        arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='M')
+        bpy.ops.transform.translate(value=(length / 2, 0, 0.0))
+        simple.activeName('tmp_male')
+        simple.selectMultiple('tmp')
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        simple.activeName('male')
+        simple.removeMultiple('tmp')
+        simple.rename('male', 'tmprect')
+
+    if which == 'F' or which == 'MF':
+        arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='F')
+        bpy.ops.transform.translate(value=(-length / 2, 0, 0.0))
+        simple.activeName('tmp_receptacle')
+        simple.selectMultiple('tmp')
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        simple.removeMultiple('tmp')
+
+    simple.activeName('arcBar')
+    simple.makeActive('arcBar')
 
