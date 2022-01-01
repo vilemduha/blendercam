@@ -173,18 +173,20 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
         amount = round(thick / ((4+2*(stem-1)) * diameter * DT))-1
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=width, Simple_length=thick, use_cyclic_u=True, edit_mode=False)
-    bpy.context.active_object.name = "tmprect"
+    simple.activeName('tmprect')
 
     fingers(diameter, tolerance, amount, stem=stem)
-    simple.rename('fingers', '_tmpfingers')
 
-    rotate(-math.pi/2)
-    bpy.ops.transform.translate(value=(width/2, 0, 0.0))
-    simple.rename('tmprect', '_tmprect')
-    simple.selectMultiple('_tmp')
-    bpy.ops.object.curve_boolean(boolean_type='UNION')
-    bpy.context.active_object.name = "base"
-    simple.removeMultiple('_tmp')
+    if which == 'MM' or which == 'M' or which == 'MF':
+        simple.rename('fingers', '_tmpfingers')
+        rotate(-math.pi/2)
+        bpy.ops.transform.translate(value=(width/2, 0, 0.0))
+        simple.rename('tmprect', '_tmprect')
+        simple.selectMultiple('_tmp')
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        simple.activeName("base")
+        simple.removeMultiple('_tmp')
+        simple.rename('base', 'tmprect')
 
     if twist:
         joinery.interlock_twist(thick, tthick, tolerance, cx=width/2+2*diameter*DT-tthick/2+0.00001, percentage=tneck)
@@ -194,21 +196,27 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
 
 
     simple.rename('receptacle', '_tmpreceptacle')
-    rotate(-math.pi/2)
-    bpy.ops.transform.translate(value=(-width/2, 0, 0.0))
+    if which == 'FF' or which == 'F' or which == 'MF':
+        rotate(-math.pi/2)
+        bpy.ops.transform.translate(value=(-width/2, 0, 0.0))
+        if twist:
+            simple.rename('tmprect', '_tmprect')
+            simple.selectMultiple('_')
+            bpy.ops.object.curve_boolean(boolean_type='UNION')
+            simple.activeName('tmprect')
+            simple.removeMultiple('_')
 
-    simple.selectMultiple('_')
-    if twist:
-        bpy.ops.object.curve_boolean(boolean_type='UNION')
-        simple.activeName('_tmpreceptacle')
-    simple.rename('base', '_tmpbase')
+        simple.rename('tmprect', '_tmprect')
+        simple.selectMultiple("_tmp")  # select everything starting with plate_
+        bpy.context.view_layer.objects.active = bpy.data.objects['_tmprect']
+        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+        simple.activeName("tmprect")
 
-    simple.selectMultiple("_tmp")  # select everything starting with plate_
-    bpy.context.view_layer.objects.active = bpy.data.objects['_tmpbase']
-    bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-    bpy.context.active_object.name = "PUZZLE_bar"
     simple.removeMultiple("_")  # Remove temporary base and holes
-    simple.makeActive('PUZZLE_bar')
+    simple.removeMultiple("fingers")  # Remove temporary base and holes
+    simple.rename('tmprect', 'Puzzle_bar')
+    simple.removeMultiple("tmp")  # Remove temporary base and holes
+    simple.makeActive('Puzzle_bar')
 
 
 def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
@@ -353,4 +361,63 @@ def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=
 
     simple.activeName('arcBarArc')
     simple.makeActive('arcBarArc')
+
+
+def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False,
+              tneck=0.5, tthick=0.01, which='MF'):
+    # length is the total width of the segments including 2 * radius and thick
+    # radius = radius of the curve
+    # thick = thickness of the bar
+    # angle = angle of the female part
+    # diameter = diameter of the tool for joint creation
+    # tolerance = Tolerance in the joint
+    # amount = amount of fingers in the joint 0 means auto generate
+    # stem = amount of radius the stem or neck of the joint will have
+    # twist = twist lock addition
+    # tneck = percentage the twist neck will have compared to thick
+    # tthick = thicknest of the twist material
+    # which = which joint to generate, Male Female MaleFemale M, F, MF
+    if which == 'M':
+        which = 'MM'
+    elif which == 'F':
+        which = 'FF'
+    length -= (radius * 2 + thick)  # adjust length to include 2x radius + thick
+
+    # generate base rectangle
+    #  Generate male section and join to the base
+    if which == 'MM' or which == 'MF':
+        bar(length, thick, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
+            which='M')
+        simple.activeName('tmprect')
+
+    if which == 'FF' or which == 'FM':
+        bar(length, thick, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
+            which='F')
+        rotate(math.pi)
+        simple.activeName('tmprect')
+
+    # Generate female section and join to base
+    if which == 'FF' or which == 'MF':
+        arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='F')
+        bpy.ops.transform.translate(value=(-length / 2*0.998, 0, 0.0))
+        simple.activeName('tmp_receptacle')
+        simple.selectMultiple('tmp')
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        simple.activeName('arcBar')
+        simple.removeMultiple('tmp')
+
+    if which == 'MM':
+        arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='M')
+        bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+                                 orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
+        bpy.ops.transform.translate(value=(-length / 2*0.998, 0, 0.0))
+        simple.activeName('tmp_receptacle')
+        simple.selectMultiple('tmp')
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        simple.activeName('arcBar')
+        simple.removeMultiple('tmp')
+
+    simple.makeActive('arcBar')
+
+
 
