@@ -190,6 +190,15 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
 
 
 def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
+    if angle == 0:
+        angle = 0.1
+
+    negative = False
+    if angle < 0:
+        angle = -angle
+        negative = True
+
+
     DT = 1.025
     if amount == 0:
         amount = round(thick / ((4+2*(stem-1)) * diameter * DT))-1
@@ -266,16 +275,22 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
     else:
         bpy.ops.transform.translate(value=(-radius, 0, 0.0))
 
+    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False, properties=False)
+    if negative:
+        bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+                                 orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
+
     bpy.ops.object.curve_remove_doubles()
 
-def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
+def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, twist=False,
+              tneck=0.5, tthick=0.01, which='MF'):
     length -= (radius * 2 + thick)
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=length*1.005, Simple_length=thick, use_cyclic_u=True, edit_mode=False)
     simple.activeName("tmprect")
 
     if which == 'M' or which == 'MF':
-        arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='M')
+        arc(radius, thick, angleb, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='M')
         bpy.ops.transform.translate(value=(length / 2, 0, 0.0))
         simple.activeName('tmp_male')
         simple.selectMultiple('tmp')
@@ -292,6 +307,6 @@ def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, 
         bpy.ops.object.curve_boolean(boolean_type='UNION')
         simple.removeMultiple('tmp')
 
-    simple.activeName('arcBar')
-    simple.makeActive('arcBar')
+    simple.activeName('arcBarArc')
+    simple.makeActive('arcBarArc')
 
