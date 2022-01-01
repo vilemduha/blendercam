@@ -19,7 +19,7 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# blender operators definitions are in this file. They mostly call the functions from utils.py
+# blender operators definitions are in this file. They mostly call the functions from curvecamcreate.py
 
 
 import bpy
@@ -33,18 +33,24 @@ import mathutils
 import math
 
 def rotate(angle):
+    #  rotate active object by angle in a xy plane.
+    #  transformation is applied after rotation
     bpy.context.active_object.rotation_euler.z = angle
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
 
 def finger(diameter, inside, DT=1.025, stem=2):
+    # diameter = diameter of the tool for joint creation
+    # tolerance = Tolerance in the joint
+    # DT = Bit diameter tolerance
+    # stem = amount of radius the stem or neck of the joint will have
     RESOLUTION = 12    # Data resolution
     cube_sx = diameter * DT * (2 + stem - 1) + inside
     cube_ty = diameter * DT + inside
     cube_sy = 2 * diameter * DT + inside / 2
     circle_radius = diameter * DT / 2
     c1x = (cube_sx) / 2 + inside
-    c2x = (cube_sx + inside) / 2 + inside  # stem*diameter * DT + inside
-    c2y = 3 * circle_radius   # + inside / 2
+    c2x = (cube_sx + inside) / 2 + inside
+    c2y = 3 * circle_radius
     c1y = circle_radius
 
     bpy.ops.curve.simple(align='WORLD', location=(0, cube_ty, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
@@ -74,8 +80,6 @@ def finger(diameter, inside, DT=1.025, stem=2):
     simple.makeActive('sum')
     bpy.context.active_object.name = "_sum"
 
-#    bpy.ops.curve.primitive_bezier_circle_add(radius=circle_radius, enter_editmode=False, align='WORLD',
-#                                              location=(c1x, circle_radius, 0))
     rc1 = circle_radius - inside
     bpy.ops.curve.simple(align='WORLD', location=(c1x, c1y, 0), rotation=(0, 0, 0), Simple_Type='Ellipse', Simple_a=circle_radius,
                          Simple_b=rc1, Simple_sides=4, use_cyclic_u=True, edit_mode=False)
@@ -97,22 +101,32 @@ def finger(diameter, inside, DT=1.025, stem=2):
     simple.makeActive("PUZZLE")
     bpy.context.active_object.name = "_puzzle"
 
-def fingers(diameter, inside, amount,stem=1):
-    DT = 1.025
+
+def fingers(diameter, inside, amount, stem=1, DT=1.025):
+    # diameter = diameter of the tool for joint creation
+    # inside = Tolerance in the joint receptacle
+    # DT = Bit diameter tolerance
+    # stem = amount of radius the stem or neck of the joint will have
+    # amount = the amount of fingers
+
     translate = -(4+2*(stem-1)) * (amount - 1) * diameter * DT/2
-    finger(diameter, 0, DT=DT, stem=stem)
-    bpy.context.active_object.name = "puzzle"
+    finger(diameter, 0, DT=DT, stem=stem)   # generate male finger
+    bpy.context.active_object.name = "puzzlem"
     bpy.ops.object.curve_remove_doubles()
     bpy.ops.transform.translate(value=(translate, -0.00002, 0.0))
 
-    for i in range(amount-1):
-        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+    if amount > 1:
+        # duplicate translate the amount needed (faster than generating new)
+        for i in range(amount-1):
+            bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                       TRANSFORM_OT_translate={"value": ((4+2*(stem-1)) * diameter * DT, 0, 0.0)})
 
-    simple.selectMultiple('puzzle')
-    bpy.ops.object.curve_boolean(boolean_type='UNION')
-    bpy.context.active_object.name = "fingers"
-    simple.removeMultiple("puzzle")
+        simple.selectMultiple('puzzle')
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        bpy.context.active_object.name = "fingers"
+        simple.removeMultiple("puzzle")
+    else:
+        bpy.context.active_object.name = "fingers"
     simple.makeActive('fingers')
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
@@ -123,20 +137,37 @@ def fingers(diameter, inside, amount,stem=1):
     bpy.ops.object.curve_remove_doubles()
     bpy.ops.transform.translate(value=(translate, -inside * 1.05, 0.0))
 
-    for i in range(amount - 1):
-        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
-                                          TRANSFORM_OT_translate={"value": ((4+2*(stem-1)) * diameter * DT, 0, 0.0)})
-    simple.selectMultiple('puzzle')
-    bpy.ops.object.curve_boolean(boolean_type='UNION')
-    bpy.context.active_object.name = "receptacle"
-    simple.removeMultiple("puzzle")
+    if amount > 1:
+        # duplicate translate the amount needed (faster than generating new)
+        for i in range(amount - 1):
+            bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                          TRANSFORM_OT_translate={
+                                              "value": ((4 + 2 * (stem - 1)) * diameter * DT, 0, 0.0)})
+
+        simple.selectMultiple('puzzle')
+        bpy.ops.object.curve_boolean(boolean_type='UNION')
+        simple.activeName("receptacle")
+        simple.removeMultiple("puzzle")
+    else:
+        simple.activeName("receptacle")
     simple.makeActive('receptacle')
     bpy.ops.transform.translate(value=(0, -inside * 1.05, 0.0))
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
     bpy.ops.object.curve_remove_doubles()
 
 
-def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01):
+def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
+    # width = length of the bar
+    # thick = thickness of the bar
+    # diameter = diameter of the tool for joint creation
+    # tolerance = Tolerance in the joint
+    # amount = amount of fingers in the joint 0 means auto generate
+    # stem = amount of radius the stem or neck of the joint will have
+    # twist = twist lock addition
+    # tneck = percentage the twist neck will have compared to thick
+    # tthick = thicknest of the twist material
+    # Which M,F, MF, MM, FF
+
     DT = 1.025
     if amount == 0:
         amount = round(thick / ((4+2*(stem-1)) * diameter * DT))-1
@@ -144,17 +175,8 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
                          Simple_width=width, Simple_length=thick, use_cyclic_u=True, edit_mode=False)
     bpy.context.active_object.name = "tmprect"
 
-    if amount < 2:
-        finger(diameter, tolerance, DT=1.025, stem=stem)
-        simple.rename('_puzzle', 'receptacle')
-        bpy.ops.transform.translate(value=(0, -tolerance, 0.0))
-        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-
-        finger(diameter, 0, DT=1.025, stem=stem)
-        simple.rename('_puzzle', '_tmpfingers')
-    else:
-        fingers(diameter, tolerance, amount, stem=stem)
-        simple.rename('fingers', '_tmpfingers')
+    fingers(diameter, tolerance, amount, stem=stem)
+    simple.rename('fingers', '_tmpfingers')
 
     rotate(-math.pi/2)
     bpy.ops.transform.translate(value=(width/2, 0, 0.0))
@@ -190,34 +212,37 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
 
 
 def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
-    if angle == 0:
-        angle = 0.1
+    # radius = radius of the curve
+    # thick = thickness of the bar
+    # angle = angle of the arc
+    # diameter = diameter of the tool for joint creation
+    # tolerance = Tolerance in the joint
+    # amount = amount of fingers in the joint 0 means auto generate
+    # stem = amount of radius the stem or neck of the joint will have
+    # twist = twist lock addition
+    # tneck = percentage the twist neck will have compared to thick
+    # tthick = thicknest of the twist material
+    # which = which joint to generate, Male Female MaleFemale M, F, MF
+
+    if angle == 0:  # angle cannot be 0
+        angle = 0.01
 
     negative = False
-    if angle < 0:
+    if angle < 0:   # if angle < 0 then negative is true
         angle = -angle
         negative = True
 
-
-    DT = 1.025
+    DT = 1.025  # diameter tolerance for diameter of finger creation
     if amount == 0:
         amount = round(thick / ((4+2*(stem-1)) * diameter * DT))-1
+
+    # generate arc
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Segment', Simple_a=radius-thick/2,
                          Simple_b=radius+thick/2, Simple_startangle=-0.0001,  Simple_endangle=math.degrees(angle), Simple_radius=radius, use_cyclic_u=False, edit_mode=False)
-
     bpy.context.active_object.name = "tmparc"
 
-    if amount < 2:
-        finger(diameter, tolerance, DT=1.025, stem=stem)
-        simple.rename('_puzzle', 'receptacle')
-        bpy.ops.transform.translate(value=(0, -tolerance, 0.0))
-        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-
-        finger(diameter, 0, DT=1.025, stem=stem)
-        simple.rename('_puzzle', '_tmpfingers')
-    else:
-        fingers(diameter, tolerance, amount, stem=stem)
-        simple.rename('fingers', '_tmpfingers')
+    fingers(diameter, tolerance, amount, stem=stem)
+    simple.rename('fingers', '_tmpfingers')
 
     rotate(math.pi)
     bpy.ops.transform.translate(value=(radius, 0, 0.0))
@@ -244,7 +269,6 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
     rotate(angle)
 
- #  simple.selectMultiple('_')
     if twist:
         bpy.ops.object.curve_boolean(boolean_type='UNION')
         simple.activeName('_tmpreceptacle')
@@ -276,7 +300,8 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
         bpy.ops.transform.translate(value=(-radius, 0, 0.0))
 
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False, properties=False)
-    if negative:
+
+    if negative:    # mirror if angle is negative
         bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
                                  orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
 
@@ -284,13 +309,31 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
 
 def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, twist=False,
               tneck=0.5, tthick=0.01, which='MF'):
-    length -= (radius * 2 + thick)
+    # length is the total width of the segments including 2 * radius and thick
+    # radius = radius of the curve
+    # thick = thickness of the bar
+    # angle = angle of the female part
+    # angleb = angle of the male part
+    # diameter = diameter of the tool for joint creation
+    # tolerance = Tolerance in the joint
+    # amount = amount of fingers in the joint 0 means auto generate
+    # stem = amount of radius the stem or neck of the joint will have
+    # twist = twist lock addition
+    # tneck = percentage the twist neck will have compared to thick
+    # tthick = thicknest of the twist material
+    # which = which joint to generate, Male Female MaleFemale M, F, MF
+
+    length -= (radius * 2 + thick)  # adjust length to include 2x radius + thick
+
+    # generate base rectangle
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=length*1.005, Simple_length=thick, use_cyclic_u=True, edit_mode=False)
     simple.activeName("tmprect")
 
+    #  Generate male section and join to the base
     if which == 'M' or which == 'MF':
-        arc(radius, thick, angleb, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='M')
+        arc(radius, thick, angleb, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck,
+            tthick=tthick, which='M')
         bpy.ops.transform.translate(value=(length / 2, 0, 0.0))
         simple.activeName('tmp_male')
         simple.selectMultiple('tmp')
@@ -299,6 +342,7 @@ def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=
         simple.removeMultiple('tmp')
         simple.rename('male', 'tmprect')
 
+    # Generate female section and join to base
     if which == 'F' or which == 'MF':
         arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='F')
         bpy.ops.transform.translate(value=(-length / 2, 0, 0.0))

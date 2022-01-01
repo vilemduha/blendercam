@@ -463,20 +463,22 @@ class CamCurvePuzzle(bpy.types.Operator):
     height: bpy.props.FloatProperty(name="height or thickness", default=0.025, min=0.005, max=3.0, precision=4,
                                          unit="LENGTH")
 
-    angle: bpy.props.FloatProperty(name="angle", default=math.pi/4, min=-10, max=10, subtype="ANGLE",
+    angle: bpy.props.FloatProperty(name="angle A", default=math.pi/4, min=-10, max=10, subtype="ANGLE",
                                          unit="ROTATION")
-    angleb: bpy.props.FloatProperty(name="angle", default=0, min=-10, max=10, subtype="ANGLE",
+    angleb: bpy.props.FloatProperty(name="angle B", default=math.pi/4, min=-10, max=10, subtype="ANGLE",
                                          unit="ROTATION")
 
     radius: bpy.props.FloatProperty(name="Arc Radius", default=0.02, min=0.005, max=5, precision=4,
                                          unit="LENGTH")
 
     interlock_type: EnumProperty(name='Type of shape',
-                                 items=(('BAR', 'Bar', 'Bar interlock'),
-                                        ('ARC', 'Arc', 'Curve interlock'),
-                                        ('CURVEBARCURVE', 'Curve Bar Curve', 'Curve Bar Curve interlock')),
+                                 items=(('JOINT', 'Joint', 'Puzzle Joint interlock'),
+                                        ('BAR', 'Bar', 'Bar interlock'),
+                                        ('ARC', 'Arc', 'Arc interlock'),
+                                        ('CURVEBAR', 'Arc Bar', 'Arc Bar interlock'),
+                                        ('CURVEBARCURVE', 'Arc Bar Arc', 'Arc Bar Arc interlock')),
                                  description='Type of interlock',
-                                 default='CURVEBARCURVE')
+                                 default='JOINT')
     arc_type: EnumProperty(name='Type of arc',
                                  items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
                                         ('F', 'Receptacle only', 'Receptacle'),
@@ -494,34 +496,47 @@ class CamCurvePuzzle(bpy.types.Operator):
         layout = self.layout
         scene = context.scene
         layout = self.layout
+        layout.prop(self, 'interlock_type')
         layout.label(text='Puzzle Joint Definition')
         layout.prop(self, 'stem_size')
         layout.prop(self, 'diameter')
         layout.prop(self, 'finger_tolerance')
         layout.prop(self, 'finger_amount')
-        layout.prop(self, 'twist_lock')
-        if self.twist_lock:
-            layout.prop(self, 'twist_thick')
-            layout.prop(self, 'twist_percent')
-
-        layout.separator()
-
-        layout.prop(self, 'height')
-
-        layout.prop(self, 'interlock_type')
+        if self.interlock_type != 'JOINT':
+            layout.prop(self, 'twist_lock')
+            if self.twist_lock:
+                layout.prop(self, 'twist_thick')
+                layout.prop(self, 'twist_percent')
+            layout.separator()
+            layout.prop(self, 'height')
 
         if self.interlock_type == "ARC" or self.interlock_type == "CURVEBARCURVE":
             layout.prop(self, 'arc_type')
             layout.prop(self, 'radius')
             layout.prop(self, 'angle')
-            layout.prop(self, 'angleb')
+            if self.interlock_type == 'CURVEBARCURVE':
+                layout.prop(self, 'angleb')
 
-        if self.interlock_type == 'BAR' or self.interlock_type == 'CURVEBAR':
-            if self.interlock_type == 'CURVEBAR':
+        if self.interlock_type == 'BAR' or self.interlock_type == 'CURVEBARCURVE':
+            if self.interlock_type == 'CURVEBARCURVE':
                 layout.label(text="Width includes 2 radius and thickness")
             layout.prop(self, 'width')
 
     def execute(self, context):
+
+        if self.interlock_type == 'FINGER':
+            puzzle_joinery.finger(self.diameter, self.finger_tolerance, stem=self.stem_size)
+            simple.rename('_puzzle', 'receptacle')
+            puzzle_joinery.finger(self.diameter, 0, stem=self.stem_size)
+            simple.rename('_puzzle', 'finger')
+
+        if self.interlock_type == 'JOINT':
+            if self.finger_amount == 0:    # cannot be 0 in joints
+                self.finger_amount = 1
+            puzzle_joinery.fingers(self.diameter, self.finger_tolerance, self.finger_amount, stem=self.stem_size)
+            simple.rename('fingers', 'joint_finger')
+            simple.rename('receptacle', 'joint_receptacle')
+
         if self.interlock_type == 'BAR':
             puzzle_joinery.bar(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
                                stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
