@@ -475,16 +475,23 @@ class CamCurvePuzzle(bpy.types.Operator):
                                  items=(('JOINT', 'Joint', 'Puzzle Joint interlock'),
                                         ('BAR', 'Bar', 'Bar interlock'),
                                         ('ARC', 'Arc', 'Arc interlock'),
+                                        ('MULTIANGLE', 'Multi angle', 'Multi angle joint'),
                                         ('CURVEBAR', 'Arc Bar', 'Arc Bar interlock'),
-                                        ('CURVEBARCURVE', 'Arc Bar Arc', 'Arc Bar Arc interlock')),
+                                        ('CURVEBARCURVE', 'Arc Bar Arc', 'Arc Bar Arc interlock'),
+                                        ('T', 'T Bar', 'T Bar interlock')),
                                  description='Type of interlock',
-                                 default='JOINT')
+                                 default='T')
     gender: EnumProperty(name='Type gender',
                                  items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
                                         ('F', 'Receptacle only', 'Receptacle'),
                                         ('M', 'Male only', 'Male')),
                                  description='Type of interlock',
                                  default='MF')
+    base_gender: EnumProperty(name='Base gender',
+                                 items=(('MF', 'Male - Receptacle', 'Male - Receptacle'), ('F', 'Receptacle', 'Receptacle'),
+                                        ('M', 'Male', 'Male')),
+                                 description='Type of interlock',
+                                 default='M')
 
     twist_lock: bpy.props.BoolProperty(name="Add TwistLock", default=False)
     twist_thick: bpy.props.FloatProperty(name="Twist Thickness", default=0.0047, min=0.001, max=3.0, precision=4,
@@ -510,15 +517,19 @@ class CamCurvePuzzle(bpy.types.Operator):
             layout.separator()
             layout.prop(self, 'height')
 
-        if self.interlock_type == "ARC" or self.interlock_type == "CURVEBARCURVE" or self.interlock_type == "CURVEBAR":
+        if self.interlock_type == "ARC" or self.interlock_type == "CURVEBARCURVE" or self.interlock_type == "CURVEBAR" \
+                or self.interlock_type == "MULTIANGLE":
             layout.prop(self, 'gender')
             layout.prop(self, 'radius')
             layout.prop(self, 'angle')
             if self.interlock_type == 'CURVEBARCURVE':
                 layout.prop(self, 'angleb')
 
-        if self.interlock_type == 'BAR' or self.interlock_type == 'CURVEBARCURVE' or self.interlock_type == "CURVEBAR":
+        if self.interlock_type == 'BAR' or self.interlock_type == 'CURVEBARCURVE' or self.interlock_type == "CURVEBAR" \
+                or self.interlock_type == "T":
             layout.prop(self, 'gender')
+            if self.interlock_type == 'T':
+                layout.prop(self, 'base_gender')
             if self.interlock_type == 'CURVEBARCURVE':
                 layout.label(text="Width includes 2 radius and thickness")
             layout.prop(self, 'width')
@@ -555,6 +566,17 @@ class CamCurvePuzzle(bpy.types.Operator):
             puzzle_joinery.arcbar(self.width, self.radius, self.height, self.angle, self.diameter, self.finger_tolerance, self.finger_amount,
                                stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
                                tthick=self.twist_thick, which=self.gender)
+
+        elif self.interlock_type == 'MULTIANGLE':
+            puzzle_joinery.multiangle(0.03, self.height, math.pi/3, self.diameter, self.finger_tolerance, self.finger_amount,
+                               stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
+                               tthick=self.twist_thick, combination=self.gender)
+
+        elif self.interlock_type == 'T':
+            puzzle_joinery.t(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
+                               stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
+                               tthick=self.twist_thick, combination=self.gender, base_gender=self.base_gender)
+
 
 
 

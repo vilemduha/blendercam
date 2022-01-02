@@ -236,6 +236,22 @@ def makeActive(name):
 def activeName(name):
     bpy.context.active_object.name = name
 
+
 def rename(name,name2):
     makeActive(name)
     bpy.context.active_object.name = name2
+
+
+def union(name):
+    selectMultiple(name)
+    bpy.ops.object.curve_boolean(boolean_type='UNION')
+    activeName('union')
+    removeMultiple(name)
+    rename('union', name)
+
+def difference(name, aname):
+    selectMultiple(name)
+    bpy.context.view_layer.objects.active = bpy.data.objects[aname]
+    bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+    removeMultiple(name)
+    activeName(aname)
