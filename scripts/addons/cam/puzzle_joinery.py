@@ -543,11 +543,12 @@ def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, t
     simple.makeActive('tmprect')
 
     fingers(diameter, tolerance, amount, stem=stem)
-    duplicate()
-    simple.activeName('tmpfingers')
 
     #  Generate male section and join to the base
     if which == 'M' or which == 'MF':
+        simple.makeActive('fingers')
+        duplicate()
+        simple.activeName('tmpfingers')
         rotate(angle-math.pi/2)
         h = thick/math.cos(angle)
         h /= 2
@@ -584,7 +585,7 @@ def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, t
 
     simple.removeMultiple('receptacle')
     simple.removeMultiple('fingers')
-    simple.activeName('mitre')
-    simple.makeActive('mitre')
+    simple.rename('tmprect', 'mitre')
+
 
 
