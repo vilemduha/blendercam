@@ -525,6 +525,8 @@ def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, t
                          Simple_width=length*1.005+4*thick, Simple_length=thick, use_cyclic_u=True, edit_mode=False,
                          shape='3D')
     simple.activeName("tmprect")
+
+    # generate cutout shapes
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=4*thick, Simple_length=6*thick, use_cyclic_u=True, edit_mode=False, shape='3D')
     translate(x=2*thick)
