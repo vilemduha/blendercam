@@ -218,15 +218,11 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
         bpy.ops.transform.translate(value=(-width/2, 0, 0.0))
         if twist:
             simple.rename('tmprect', '_tmprect')
-            simple.selectMultiple('_')
-            bpy.ops.object.curve_boolean(boolean_type='UNION')
+            simple.union('_')
             simple.activeName('tmprect')
-            simple.removeMultiple('_')
 
         simple.rename('tmprect', '_tmprect')
-        simple.selectMultiple("_tmp")  # select everything starting with plate_
-        bpy.context.view_layer.objects.active = bpy.data.objects['_tmprect']
-        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+        simple.difference('_tmp', '_tmprect')
         simple.activeName("tmprect")
 
     simple.removeMultiple("_")  # Remove temporary base and holes
@@ -507,5 +503,88 @@ def t(length,thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.
 
     simple.rename('tmp', 't')
     simple.makeActive('t')
+
+def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, twist=False,
+              tneck=0.5, tthick=0.01, which='MF'):
+    # length is the total width of the segments including 2 * radius and thick
+    # radius = radius of the curve
+    # thick = thickness of the bar
+    # angle = angle of the female part
+    # angleb = angle of the male part
+    # diameter = diameter of the tool for joint creation
+    # tolerance = Tolerance in the joint
+    # amount = amount of fingers in the joint 0 means auto generate
+    # stem = amount of radius the stem or neck of the joint will have
+    # twist = twist lock addition
+    # tneck = percentage the twist neck will have compared to thick
+    # tthick = thicknest of the twist material
+    # which = which joint to generate, Male Female MaleFemale M, F, MF
+
+    # generate base rectangle
+    bpy.ops.curve.simple(align='WORLD', location=(0, -thick/2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=length*1.005+4*thick, Simple_length=thick, use_cyclic_u=True, edit_mode=False,
+                         shape='3D')
+    simple.activeName("tmprect")
+    bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=4*thick, Simple_length=6*thick, use_cyclic_u=True, edit_mode=False, shape='3D')
+    translate(x=2*thick)
+    rotate(angle)
+    translate(x=length/2)
+    simple.activeName('tmpmitreright')
+
+    bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=4*thick, Simple_length=6*thick, use_cyclic_u=True, edit_mode=False, shape='3D')
+    translate(x=2*thick)
+    rotate(angleb)
+    translate(x=length/2)
+    mirrorx()
+    simple.activeName('tmpmitreleft')
+    simple.difference('tmp', 'tmprect')
+    simple.makeActive('tmprect')
+
+    fingers(diameter, tolerance, amount, stem=stem)
+    duplicate()
+    simple.activeName('tmpfingers')
+
+    #  Generate male section and join to the base
+    if which == 'M' or which == 'MF':
+        rotate(angle-math.pi/2)
+        h = thick/math.cos(angle)
+        h /= 2
+        translate(x=length/2+h*math.sin(angle), y=-thick/2)
+        if which == 'M':
+            simple.rename('fingers', 'tmpfingers')
+            rotate(angleb-math.pi/2)
+            h = thick/math.cos(angleb)
+            h /= 2
+            translate(x=length/2+h*math.sin(angleb), y=-thick/2)
+            mirrorx()
+
+        simple.union('tmp')
+        simple.activeName('tmprect')
+
+    # Generate female section and join to base
+    if which == 'MF' or which == 'F':
+        simple.makeActive('receptacle')
+        mirrory()
+        duplicate()
+        simple.activeName('tmpreceptacle')
+        rotate(angleb-math.pi/2)
+        h = thick/math.cos(angleb)
+        h /= 2
+        translate(x=length/2+h*math.sin(angleb), y=-thick/2)
+        mirrorx()
+        if which == 'F':
+            simple.rename('receptacle', 'tmpreceptacle2')
+            rotate(angle-math.pi/2)
+            h = thick/math.cos(angle)
+            h /= 2
+            translate(x=length/2+h*math.sin(angle), y=-thick/2)
+        simple.difference('tmp', 'tmprect')
+
+    simple.removeMultiple('receptacle')
+    simple.removeMultiple('fingers')
+    simple.activeName('mitre')
+    simple.makeActive('mitre')
 
 

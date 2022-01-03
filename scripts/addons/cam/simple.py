@@ -255,3 +255,4 @@ def difference(name, aname):
     bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
     removeMultiple(name)
     activeName(aname)
+
