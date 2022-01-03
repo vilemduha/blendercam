@@ -460,12 +460,23 @@ def multiangle(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twis
     mirrorx()
     simple.union("tmp_arc")
 
-def t(length,thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, combination='MF', base_gender='M'):
+def t(length,thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, combination='MF', base_gender='M', corner=False):
+    if corner:
+        if combination == 'MF':
+            base_gender = 'M'
+            combination = 'f'
+        elif combination == 'F':
+            base_gender = 'F'
+            combination = 'f'
+        elif combination == 'M':
+            base_gender = 'M'
+            combination = 'm'
+
     bar(length, thick, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck,
         tthick=tthick, which=base_gender)
     simple.activeName('tmp')
     fingers(diameter, tolerance, amount=amount, stem=stem)
-    if combination == 'MF' or combination == 'M':
+    if combination == 'MF' or combination == 'M' or combination == 'm':
         simple.makeActive('fingers')
         translate(y=thick / 2)
         duplicate()
@@ -478,7 +489,7 @@ def t(length,thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.
         simple.activeName('tmp')
         simple.union('tmp')
 
-    if combination == 'MF' or combination == 'F':
+    if combination == 'MF' or combination == 'F' or combination == 'f':
         simple.makeActive('receptacle')
         translate(y=-thick / 2)
         duplicate()

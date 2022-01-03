@@ -478,7 +478,8 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('MULTIANGLE', 'Multi angle', 'Multi angle joint'),
                                         ('CURVEBAR', 'Arc Bar', 'Arc Bar interlock'),
                                         ('CURVEBARCURVE', 'Arc Bar Arc', 'Arc Bar Arc interlock'),
-                                        ('T', 'T Bar', 'T Bar interlock')),
+                                        ('T', 'T Bar', 'T Bar interlock'),
+                                        ('CORNER', 'Corner Bar', 'Corner Bar interlock')),
                                  description='Type of interlock',
                                  default='T')
     gender: EnumProperty(name='Type gender',
@@ -526,7 +527,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                 layout.prop(self, 'angleb')
 
         if self.interlock_type == 'BAR' or self.interlock_type == 'CURVEBARCURVE' or self.interlock_type == "CURVEBAR" \
-                or self.interlock_type == "T":
+                or self.interlock_type == "T" or self.interlock_type == 'CORNER':
             layout.prop(self, 'gender')
             if self.interlock_type == 'T':
                 layout.prop(self, 'base_gender')
@@ -576,6 +577,12 @@ class CamCurvePuzzle(bpy.types.Operator):
             puzzle_joinery.t(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
                                stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
                                tthick=self.twist_thick, combination=self.gender, base_gender=self.base_gender)
+
+        elif self.interlock_type == 'CORNER':
+            puzzle_joinery.t(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
+                             stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
+                             tthick=self.twist_thick, combination=self.gender, base_gender=self.base_gender,
+                             corner=True)
 
 
 
