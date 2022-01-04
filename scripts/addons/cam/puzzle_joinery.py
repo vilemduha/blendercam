@@ -32,11 +32,13 @@ from shapely.geometry import Point, LineString, Polygon
 import mathutils
 import math
 
+DT = 1.025
 
-def finger(diameter, DT=1.025, stem=2):
+def finger(diameter, stem=2):
     # diameter = diameter of the tool for joint creation
     # DT = Bit diameter tolerance
     # stem = amount of radius the stem or neck of the joint will have
+    global DT
     RESOLUTION = 12  # Data resolution
     cube_sx = diameter * DT * (2 + stem - 1)
     cube_ty = diameter * DT
@@ -85,15 +87,15 @@ def finger(diameter, DT=1.025, stem=2):
     simple.rename('_sum', "_puzzle")
 
 
-def fingers(diameter, inside, amount, stem=1, DT=1.025):
+def fingers(diameter, inside, amount, stem=1):
     # diameter = diameter of the tool for joint creation
     # inside = Tolerance in the joint receptacle
-    # DT = Bit diameter tolerance
+    global DT   # Bit diameter tolerance
     # stem = amount of radius the stem or neck of the joint will have
     # amount = the amount of fingers
 
     xtranslate = -(4 + 2 * (stem - 1)) * (amount - 1) * diameter * DT / 2
-    finger(diameter, DT=DT, stem=stem)  # generate male finger
+    finger(diameter, stem=stem)  # generate male finger
     simple.activeName("puzzlem")
     simple.move(x=xtranslate, y=-0.00002)
 
@@ -114,6 +116,7 @@ def fingers(diameter, inside, amount, stem=1, DT=1.025):
         simple.activeName('receptacle')
         simple.move(y=-inside)
 
+
 def twistf(name, length, diameter, tolerance, twist, tneck, tthick):
     if twist:
         joinery.interlock_twist(length, tthick, tolerance, cx=0, cy=0, rotation=90, percentage=tneck)
@@ -127,10 +130,11 @@ def twistf(name, length, diameter, tolerance, twist, tneck, tthick):
 
 
 def twistm(name, length, diameter, tolerance, twist, tneck, tthick, angle, x=0, y=0):
+    global DT
     if twist:
         joinery.interlock_twist(length, tthick, tolerance, cx=0, cy=0, rotation=0, percentage=tneck)
         simple.rotate(math.pi/2)
-        simple.move(y=-tthick/2+2*diameter*1.025)
+        simple.move(y=-tthick/2+2*diameter*DT)
         simple.rotate(angle)
         simple.move(x=x, y=y)
         simple.activeName('_twist')
@@ -151,7 +155,7 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
     # tthick = thicknest of the twist material
     # Which M,F, MF, MM, FF
 
-    DT = 1.025
+    global DT
     if amount == 0:
         amount = round(thick / ((4 + 2 * (stem - 1)) * diameter * DT)) - 1
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
@@ -208,7 +212,7 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
         angle = -angle
         negative = True
 
-    DT = 1.025  # diameter tolerance for diameter of finger creation
+    global DT  # diameter tolerance for diameter of finger creation
     if amount == 0:
         amount = round(thick / ((4 + 2 * (stem - 1)) * diameter * DT)) - 1
 
