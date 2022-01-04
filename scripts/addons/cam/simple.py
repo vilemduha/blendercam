@@ -256,3 +256,36 @@ def difference(name, aname):
     removeMultiple(name)
     rename('boolean',aname)
 
+def duplicate(x=0, y=0):
+    if x == 0 and y == 0:
+        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
+                                      TRANSFORM_OT_translate={"value": (x, y, 0.0)})
+    else:
+        bpy.ops.object.duplicate()
+
+
+def mirrorx():
+    bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+                             orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
+
+
+def mirrory():
+    bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+                             orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
+
+
+def move(x=0.0, y=0.0):
+    bpy.ops.transform.translate(value=(x, y, 0.0))
+    bpy.ops.object.transform_apply(location=True)
+
+
+def rotate(angle):
+    bpy.context.object.rotation_euler[2] = angle
+    bpy.ops.object.transform_apply(rotation=True)
+
+
+def removeDoubles():
+    bpy.ops.object.curve_remove_doubles()
+
+
+

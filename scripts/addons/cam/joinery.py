@@ -65,7 +65,7 @@ def interlock_groove(length, thickness, finger_play, cx=0, cy=0, rotation=0):
     bpy.context.active_object.name = "_groove"
 
 
-def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, percentage=0.5, ):
+def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, percentage=0.5):
     mortise(length, thickness, finger_play, 0, 0, 0)
     bpy.context.active_object.name = "_tmp"
     mortise(length * percentage, thickness, finger_play, 0, 0, math.pi / 2)
@@ -89,6 +89,7 @@ def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, perc
     bpy.context.active_object.name = "_groove"
     simple.removeMultiple('_tmp')
     simple.makeActive("_groove")
+    simple.removeDoubles()
 
 
 def horizontal_finger(length, thickness, finger_play, amount, center=True):

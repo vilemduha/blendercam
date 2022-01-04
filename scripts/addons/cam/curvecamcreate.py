@@ -481,7 +481,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('T', 'T Bar', 'T Bar interlock'),
                                         ('CORNER', 'Corner Bar', 'Corner Bar interlock')),
                                  description='Type of interlock',
-                                 default='JOINT')
+                                 default='BAR')
     gender: EnumProperty(name='Type gender',
                                  items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
                                         ('F', 'Receptacle only', 'Receptacle'),
@@ -498,7 +498,7 @@ class CamCurvePuzzle(bpy.types.Operator):
     twist_lock: bpy.props.BoolProperty(name="Add TwistLock", default=False)
     twist_thick: bpy.props.FloatProperty(name="Twist Thickness", default=0.0047, min=0.001, max=3.0, precision=4,
                                          unit="LENGTH")
-    twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.5, min=0.1, max=0.9, precision=4)
+    twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.3, min=0.1, max=0.9, precision=4)
 
 
     def draw(self, context):
