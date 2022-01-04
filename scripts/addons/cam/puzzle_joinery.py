@@ -53,73 +53,61 @@ def mirrory():
     bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
                              orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
 
-def translate(x=0, y=0):
+def translate(x=0.0, y=0.0):
     bpy.ops.transform.translate(value=(x, y, 0.0))
     bpy.ops.object.transform_apply(location=True)
 
 
-def finger(diameter, inside, DT=1.025, stem=2):
+def finger(diameter, DT=1.025, stem=2):
     # diameter = diameter of the tool for joint creation
-    # tolerance = Tolerance in the joint
     # DT = Bit diameter tolerance
     # stem = amount of radius the stem or neck of the joint will have
     RESOLUTION = 12    # Data resolution
-    cube_sx = diameter * DT * (2 + stem - 1) + inside
-    cube_ty = diameter * DT + inside
-    cube_sy = 2 * diameter * DT + inside / 2
+    cube_sx = diameter * DT * (2 + stem - 1)
+    cube_ty = diameter * DT
+    cube_sy = 2 * diameter * DT
     circle_radius = diameter * DT / 2
-    c1x = (cube_sx) / 2 + inside
-    c2x = (cube_sx + inside) / 2 + inside
+    c1x = cube_sx / 2
+    c2x = cube_sx / 2
     c2y = 3 * circle_radius
     c1y = circle_radius
 
     bpy.ops.curve.simple(align='WORLD', location=(0, cube_ty, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=cube_sx, Simple_length=cube_sy, use_cyclic_u=True, edit_mode=False)
-    bpy.context.active_object.name = "_tmprect"
+    bpy.context.active_object.name = "ftmprect"
 
 
     bpy.ops.curve.simple(align='WORLD', location=(c2x, c2y, 0), rotation=(0, 0, 0), Simple_Type='Ellipse', Simple_a=circle_radius,
-                         Simple_b=circle_radius + inside, Simple_sides=4, use_cyclic_u=True, edit_mode=False)
+                         Simple_b=circle_radius, Simple_sides=4, use_cyclic_u=True, edit_mode=False, shape='3D')
 
-    bpy.context.active_object.name = "_tmpcirc_add"
+    bpy.context.active_object.name = "ftmpcirc_add"
     bpy.context.object.data.resolution_u = RESOLUTION
 
-    bpy.ops.curve.simple(align='WORLD', location=(-c2x, c2y, 0), rotation=(0, 0, 0), Simple_Type='Ellipse', Simple_a=circle_radius,
-                         Simple_b=circle_radius + inside, Simple_sides=4, use_cyclic_u=True, edit_mode=False)
-
-    bpy.context.active_object.name = "_tmpcirc_add"
-    bpy.context.object.data.resolution_u = RESOLUTION
-    simple.joinMultiple('_tmpcirc')
-    simple.selectMultiple('_tmp')
-    bpy.ops.object.curve_boolean(boolean_type='UNION')
-    bpy.context.active_object.name = "sum"
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-    bpy.context.object.scale[0] = inside * 3 + 1
-    bpy.context.object.scale[1] = inside * 3 + 1
-    simple.removeMultiple('_tmp')
-    simple.makeActive('sum')
-    bpy.context.active_object.name = "_sum"
 
-    rc1 = circle_radius - inside
-    bpy.ops.curve.simple(align='WORLD', location=(c1x, c1y, 0), rotation=(0, 0, 0), Simple_Type='Ellipse', Simple_a=circle_radius,
-                         Simple_b=rc1, Simple_sides=4, use_cyclic_u=True, edit_mode=False)
+    duplicate()
+    mirrorx()
+
+    simple.union('ftmp')
+    simple.rename('ftmp', '_sum')
+
+    rc1 = circle_radius
+
+    bpy.ops.curve.simple(align='WORLD', location=(c1x, c1y, 0), rotation=(0, 0, 0), Simple_Type='Ellipse',
+                         Simple_a=circle_radius, Simple_b=rc1, Simple_sides=4, use_cyclic_u=True, edit_mode=False,
+                         shape='3D')
 
     bpy.context.active_object.name = "_circ_delete"
     bpy.context.object.data.resolution_u = RESOLUTION
+    bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
-    bpy.ops.curve.simple(align='WORLD', location=(-c1x, c1y, 0), rotation=(0, 0, 0), Simple_Type='Ellipse', Simple_a=circle_radius,
-                         Simple_b=rc1, Simple_sides=4, use_cyclic_u=True, edit_mode=False)
-    bpy.context.active_object.name = "_circ_delete"
-    bpy.context.object.data.resolution_u = RESOLUTION
+    duplicate()
+    mirrorx()
+    simple.union('_circ')
 
-    simple.selectMultiple("_")  # select everything starting with _
-
-    bpy.context.view_layer.objects.active = bpy.data.objects['_sum']  # Make the plate base active
-    bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-    bpy.context.active_object.name = "PUZZLE"
-    simple.removeMultiple("_")  # Remove temporary base and holes
-    simple.makeActive("PUZZLE")
-    bpy.context.active_object.name = "_puzzle"
+    simple.difference('_', '_sum')
+    bpy.ops.object.curve_remove_doubles()
+    simple.rename('_sum', "_puzzle")
 
 
 def fingers(diameter, inside, amount, stem=1, DT=1.025):
@@ -130,9 +118,9 @@ def fingers(diameter, inside, amount, stem=1, DT=1.025):
     # amount = the amount of fingers
 
     translate = -(4+2*(stem-1)) * (amount - 1) * diameter * DT/2
-    finger(diameter, 0, DT=DT, stem=stem)   # generate male finger
-    bpy.context.active_object.name = "puzzlem"
-    bpy.ops.object.curve_remove_doubles()
+    finger(diameter, DT=DT, stem=stem)   # generate male finger
+    simple.activeName("puzzlem")
+
     bpy.ops.transform.translate(value=(translate, -0.00002, 0.0))
 
     if amount > 1:
@@ -150,30 +138,12 @@ def fingers(diameter, inside, amount, stem=1, DT=1.025):
     simple.makeActive('fingers')
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
-
-    #  receptacle is smaller by the inside tolerance amount
-    finger(diameter, inside, DT=DT, stem=stem)
-    bpy.context.active_object.name = "puzzle"
-    bpy.ops.object.curve_remove_doubles()
-    bpy.ops.transform.translate(value=(translate, -inside * 1.05, 0.0))
-
-    if amount > 1:
-        # duplicate translate the amount needed (faster than generating new)
-        for i in range(amount - 1):
-            bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
-                                          TRANSFORM_OT_translate={
-                                              "value": ((4 + 2 * (stem - 1)) * diameter * DT, 0, 0.0)})
-
-        simple.selectMultiple('puzzle')
-        bpy.ops.object.curve_boolean(boolean_type='UNION')
-        simple.activeName("receptacle")
-        simple.removeMultiple("puzzle")
-    else:
-        simple.activeName("receptacle")
-    simple.makeActive('receptacle')
-    bpy.ops.transform.translate(value=(0, -inside * 1.05, 0.0))
-    bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-    bpy.ops.object.curve_remove_doubles()
+    # Receptacle is made using the silhouette offset from the fingers
+    if inside > 0:
+        bpy.ops.object.silhouete_offset(offset=inside, style='1')
+        simple.activeName('receptacle')
+        bpy.ops.transform.translate(value=(0, -inside, 0.0))
+        bpy.ops.object.transform_apply(location=True)
 
 
 def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):

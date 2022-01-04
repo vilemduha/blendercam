@@ -481,7 +481,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('T', 'T Bar', 'T Bar interlock'),
                                         ('CORNER', 'Corner Bar', 'Corner Bar interlock')),
                                  description='Type of interlock',
-                                 default='BAR')
+                                 default='JOINT')
     gender: EnumProperty(name='Type gender',
                                  items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
                                         ('F', 'Receptacle only', 'Receptacle'),
@@ -554,8 +554,6 @@ class CamCurvePuzzle(bpy.types.Operator):
             if self.finger_amount == 0:    # cannot be 0 in joints
                 self.finger_amount = 1
             puzzle_joinery.fingers(self.diameter, self.finger_tolerance, self.finger_amount, stem=self.stem_size)
-            simple.rename('fingers', 'joint_finger')
-            simple.rename('receptacle', 'joint_receptacle')
 
         if self.interlock_type == 'BAR':
             if not self.mitre:

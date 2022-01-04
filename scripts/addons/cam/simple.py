@@ -245,14 +245,14 @@ def rename(name,name2):
 def union(name):
     selectMultiple(name)
     bpy.ops.object.curve_boolean(boolean_type='UNION')
-    activeName('union')
     removeMultiple(name)
-    rename('union', name)
+    rename('boolean', name)
+
 
 def difference(name, aname):
     selectMultiple(name)
     bpy.context.view_layer.objects.active = bpy.data.objects[aname]
     bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
     removeMultiple(name)
-    activeName(aname)
+    rename('boolean',aname)
 
