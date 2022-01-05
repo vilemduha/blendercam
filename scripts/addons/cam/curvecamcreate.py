@@ -468,7 +468,7 @@ class CamCurvePuzzle(bpy.types.Operator):
     angleb: bpy.props.FloatProperty(name="angle B", default=math.pi/4, min=-10, max=10, subtype="ANGLE",
                                          unit="ROTATION")
 
-    radius: bpy.props.FloatProperty(name="Arc Radius", default=0.02, min=0.005, max=5, precision=4,
+    radius: bpy.props.FloatProperty(name="Arc Radius", default=0.06, min=0.005, max=5, precision=4,
                                          unit="LENGTH")
 
     interlock_type: EnumProperty(name='Type of shape',
@@ -481,7 +481,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('T', 'T Bar', 'T Bar interlock'),
                                         ('CORNER', 'Corner Bar', 'Corner Bar interlock')),
                                  description='Type of interlock',
-                                 default='BAR')
+                                 default='ARC')
     gender: EnumProperty(name='Type gender',
                                  items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
                                         ('F', 'Receptacle only', 'Receptacle'),

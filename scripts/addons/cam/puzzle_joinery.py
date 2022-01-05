@@ -20,7 +20,7 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # blender operators definitions are in this file. They mostly call the functions from curvecamcreate.py
-
+from typing import Any
 
 import bpy
 from bpy.props import *
@@ -118,18 +118,20 @@ def fingers(diameter, inside, amount, stem=1):
 
 
 def twistf(name, length, diameter, tolerance, twist, tneck, tthick):
+    # add twist lock to receptacle
     if twist:
-        joinery.interlock_twist(length, tthick, tolerance, cx=0, cy=0, rotation=90, percentage=tneck)
+        joinery.interlock_twist(length, tthick, tolerance, cx=0, cy=0, rotation=0, percentage=tneck)
         simple.rotate(math.pi/2)
         simple.move(y=-tthick/2+2*diameter+2*tolerance)
-        simple.activeName('_tmptwist')
+        simple.activeName('xtemptwist')
         simple.makeActive(name)
-        simple.activeName('_tmp')
-        simple.union('_')
+        simple.activeName('xtemp')
+        simple.union('xtemp')
         simple.activeName(name)
 
 
 def twistm(name, length, diameter, tolerance, twist, tneck, tthick, angle, x=0, y=0):
+    # add twist lock to male connector
     global DT
     if twist:
         joinery.interlock_twist(length, tthick, tolerance, cx=0, cy=0, rotation=0, percentage=tneck)
@@ -168,7 +170,6 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
         simple.rename('fingers', '_tmpfingers')
         simple.rotate(-math.pi / 2)
         simple.move(x=width/2)
-#        bpy.ops.transform.translate(value=(width / 2, 0, 0.0))
         simple.rename('tmprect', '_tmprect')
         simple.union('_tmp')
         simple.activeName("tmprect")
@@ -204,6 +205,8 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
     # tthick = thicknest of the twist material
     # which = which joint to generate, Male Female MaleFemale M, F, MF
 
+    global DT  # diameter tolerance for diameter of finger creation
+
     if angle == 0:  # angle cannot be 0
         angle = 0.01
 
@@ -212,9 +215,11 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
         angle = -angle
         negative = True
 
-    global DT  # diameter tolerance for diameter of finger creation
     if amount == 0:
         amount = round(thick / ((4 + 2 * (stem - 1)) * diameter * DT)) - 1
+
+    fingers(diameter, tolerance, amount, stem=stem)
+    twistf('receptacle', thick, diameter, tolerance, twist, tneck, tthick)
 
     # generate arc
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Segment',
@@ -223,7 +228,6 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
                          Simple_radius=radius, use_cyclic_u=False, edit_mode=False)
     bpy.context.active_object.name = "tmparc"
 
-    fingers(diameter, tolerance, amount, stem=stem)
     simple.rename('fingers', '_tmpfingers')
 
     simple.rotate(math.pi)
@@ -232,63 +236,44 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
 
     simple.rename('tmparc', '_tmparc')
     if which == 'MF' or which == 'M':
-        simple.selectMultiple('_tmp')
-        bpy.ops.object.curve_boolean(boolean_type='UNION')
-        bpy.context.active_object.name = "base"
-        simple.removeMultiple('_tmp')
+        simple.union('_tmp')
+        simple.activeName("base")
+        twistm('base', thick, diameter, tolerance, twist, tneck, tthick, math.pi, x=radius)
         simple.rename('base', '_tmparc')
 
-    if twist:
-        joinery.interlock_twist(thick, tthick, tolerance, cx=width / 2 + 2 * diameter * DT - tthick / 2 + 0.00001,
-                                percentage=tneck)
-        joinery.interlock_twist(thick, tthick, tolerance, cx=-width / 2 + 2 * diameter * DT - tthick / 2 + 0.00001,
-                                percentage=tneck)
-        simple.joinMultiple('_groove')
-        bpy.ops.object.curve_remove_doubles()
-
     simple.rename('receptacle', '_tmpreceptacle')
-    simple.rotate(math.pi)
-    bpy.ops.transform.translate(value=(radius, 0, 0.0))
+    simple.mirrory()
+    simple.move(x=radius)
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
     simple.rotate(angle)
+    simple.makeActive('_tmparc')
 
-    if twist:
-        bpy.ops.object.curve_boolean(boolean_type='UNION')
-        simple.activeName('_tmpreceptacle')
-
-    simple.selectMultiple("_tmp")  # select everything starting with plate_
-    bpy.context.view_layer.objects.active = bpy.data.objects['_tmparc']
     if which == 'MF' or which == 'F':
-        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+        simple.difference('_tmp', '_tmparc')
     bpy.context.active_object.name = "PUZZLE_arc"
     bpy.ops.object.curve_remove_doubles()
     simple.removeMultiple("_")  # Remove temporary base and holes
     simple.makeActive('PUZZLE_arc')
     if which == 'M':
         simple.rotate(-angle)
-        bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
-                                 orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
-        bpy.ops.transform.translate(value=(-radius, 0, 0.0))
+        simple.mirrory()
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
         simple.rotate(-math.pi / 2)
+        simple.move(y=radius)
         simple.rename('PUZZLE_arc', 'PUZZLE_arc_male')
     elif which == 'F':
-        bpy.ops.transform.mirror(orient_type='LOCAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
-                                 orient_matrix_type='LOCAL', constraint_axis=(True, False, False))
-        bpy.ops.transform.translate(value=(radius, 0, 0.0))
-        bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
+        simple.mirrorx()
+        simple.move(x=radius)
         simple.rotate(math.pi / 2)
         simple.rename('PUZZLE_arc', 'PUZZLE_arc_receptacle')
     else:
-        bpy.ops.transform.translate(value=(-radius, 0, 0.0))
-
-    bpy.ops.object.transform_apply(location=True, rotation=False, scale=False, properties=False)
-
+        simple.move(x=-radius)
+    # bpy.ops.object.transform_apply(location=True, rotation=False, scale=False, properties=False)
+    #
     if negative:  # mirror if angle is negative
-        bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
-                                 orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
-
-    bpy.ops.object.curve_remove_doubles()
+        simple.mirrory()
+    #
+    # bpy.ops.object.curve_remove_doubles()
 
 
 def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, twist=False,
