@@ -34,6 +34,7 @@ import math
 
 DT = 1.025
 
+
 def finger(diameter, stem=2):
     # diameter = diameter of the tool for joint creation
     # DT = Bit diameter tolerance
@@ -144,6 +145,7 @@ def twistm(name, length, diameter, tolerance, twist, tneck, tthick, angle, x=0, 
         simple.activeName('_tmp')
         simple.difference('_', '_tmp')
         simple.activeName(name)
+
 
 def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
     # width = length of the bar
