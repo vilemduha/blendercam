@@ -396,19 +396,30 @@ def multiangle(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twis
     # tneck = percentage the twist neck will have compared to thick
     # tthick = thicknest of the twist material
     # which = which joint to generate, Male Female MaleFemale M, F, MF
+    rectxsize = (radius - thick / 2)
+    rexterior = radius + thick/2
+    rinterior = radius-thick/2
 
-    bpy.ops.curve.simple(align='WORLD', location=(0, (radius + thick / 2) * .707 + ((radius / thick) / 170) / 2, 0),
+    height = math.sqrt(rexterior * rexterior - radius * radius)
+
+    bpy.ops.curve.simple(align='WORLD', location=(0, height, 0),
                          rotation=(0, 0, 0), Simple_Type='Rectangle',
-                         Simple_width=(radius - thick / 2), Simple_length=(radius / thick) / 170, use_cyclic_u=True,
-                         edit_mode=False)
-    simple.activeName('rect')
+                         Simple_width=rectxsize, Simple_length=rectxsize/2, use_cyclic_u=True,
+                         edit_mode=False, shape='3D')
+    simple.move(y=rectxsize/4)
+    simple.activeName('tmp_rect')
+
+    bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle', Simple_sides=4,
+                         Simple_radius=rinterior, shape='3D', use_cyclic_u=True, edit_mode=False)
+    simple.activeName('circle')
 
     arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
         which='MF')
     simple.activeName('tmp_arc')
-    simpleduplicate()
+    simple.duplicate()
     simple.mirrorx()
-    simple.union("tmp_arc")
+    simple.union("tmp_")
+    simple.activeName('multiangle60')
 
 
 def t(length, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, combination='MF',

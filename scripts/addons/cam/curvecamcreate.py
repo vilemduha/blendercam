@@ -481,7 +481,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('T', 'T Bar', 'T Bar interlock'),
                                         ('CORNER', 'Corner Bar', 'Corner Bar interlock')),
                                  description='Type of interlock',
-                                 default='ARC')
+                                 default='MULTIANGLE')
     gender: EnumProperty(name='Type gender',
                                  items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
                                         ('F', 'Receptacle only', 'Receptacle'),
@@ -579,7 +579,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                tthick=self.twist_thick, which=self.gender)
 
         elif self.interlock_type == 'MULTIANGLE':
-            puzzle_joinery.multiangle(0.03, self.height, math.pi/3, self.diameter, self.finger_tolerance, self.finger_amount,
+            puzzle_joinery.multiangle(self.radius, self.height, math.pi/3, self.diameter, self.finger_tolerance, self.finger_amount,
                                stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
                                tthick=self.twist_thick, combination=self.gender)
 
