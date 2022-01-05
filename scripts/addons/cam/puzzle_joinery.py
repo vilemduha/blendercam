@@ -175,12 +175,11 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
         simple.activeName("tmprect")
         twistm('tmprect', thick, diameter, tolerance, twist, tneck, tthick, -math.pi/2, x=width/2)
 
-
     twistf('receptacle', thick, diameter, tolerance, twist, tneck, tthick)
     simple.rename('receptacle', '_tmpreceptacle')
     if which == 'FF' or which == 'F' or which == 'MF':
         simple.rotate(-math.pi / 2)
-        bpy.ops.transform.translate(value=(-width / 2, 0, 0.0))
+        simple.move(x=-width / 2)
         simple.rename('tmprect', '_tmprect')
         simple.difference('_tmp', '_tmprect')
         simple.activeName("tmprect")
@@ -231,7 +230,7 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
     simple.rename('fingers', '_tmpfingers')
 
     simple.rotate(math.pi)
-    bpy.ops.transform.translate(value=(radius, 0, 0.0))
+    simple.move(x=radius)
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
     simple.rename('tmparc', '_tmparc')
@@ -303,7 +302,7 @@ def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=
     if which == 'M' or which == 'MF':
         arc(radius, thick, angleb, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck,
             tthick=tthick, which='M')
-        bpy.ops.transform.translate(value=(length / 2, 0, 0.0))
+        simple.move(x=length / 2)
         simple.activeName('tmp_male')
         simple.selectMultiple('tmp')
         bpy.ops.object.curve_boolean(boolean_type='UNION')
@@ -315,11 +314,9 @@ def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=
     if which == 'F' or which == 'MF':
         arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck,
             tthick=tthick, which='F')
-        bpy.ops.transform.translate(value=(-length / 2, 0, 0.0))
+        simple.move(x=-length / 2)
         simple.activeName('tmp_receptacle')
-        simple.selectMultiple('tmp')
-        bpy.ops.object.curve_boolean(boolean_type='UNION')
-        simple.removeMultiple('tmp')
+        simple.union('tmp')
 
     simple.activeName('arcBarArc')
     simple.makeActive('arcBarArc')
@@ -362,7 +359,7 @@ def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, 
     if which == 'FF' or which == 'MF':
         arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck,
             tthick=tthick, which='F')
-        bpy.ops.transform.translate(value=(-length / 2 * 0.998, 0, 0.0))
+        simple.move(x=-length / 2 * 0.998)
         simple.activeName('tmp_receptacle')
         simple.union('tmp')
         simple.activeName('arcBar')
@@ -373,7 +370,7 @@ def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, 
             tthick=tthick, which='M')
         bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
                                  orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
-        bpy.ops.transform.translate(value=(-length / 2 * 0.998, 0, 0.0))
+        simple.move(x=-length / 2 * 0.998)
         simple.activeName('tmp_receptacle')
         simple.union('tmp')
         simple.activeName('arcBar')
@@ -454,7 +451,7 @@ def t(length, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0
 
     if combination == 'MF' or combination == 'F' or combination == 'f':
         simple.makeActive('receptacle')
-        translate(y=-thick / 2)
+        simple.move(y=-thick / 2)
         simple.duplicate()
         simple.activeName('tmp')
         simple.difference('tmp', 'tmp')
@@ -499,17 +496,17 @@ def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, t
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=4 * thick, Simple_length=6 * thick, use_cyclic_u=True, edit_mode=False,
                          shape='3D')
-    translate(x=2 * thick)
+    simple.move(x=2 * thick)
     simple.rotate(angle)
-    translate(x=length / 2)
+    simple.move(x=length / 2)
     simple.activeName('tmpmitreright')
 
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=4 * thick, Simple_length=6 * thick, use_cyclic_u=True, edit_mode=False,
                          shape='3D')
-    translate(x=2 * thick)
+    simple.move(x=2 * thick)
     simple.rotate(angleb)
-    translate(x=length / 2)
+    simple.move(x=length / 2)
     simple.mirrorx()
     simple.activeName('tmpmitreleft')
     simple.difference('tmp', 'tmprect')
