@@ -595,7 +595,7 @@ def medial_axis(o):
             new_cutter_diameter = (maxdepth - o.maxz) / (- slope) * 2
     elif o.cutter_type == 'BALLNOSE':
         # angle = o.cutter_tip_angle
-        maxdepth = new_cutter_diameter / 2
+        maxdepth = - new_cutter_diameter / 2
     else:
         o.warnings += 'Only Ballnose, Ball and V-carve cutters\n are supported'
         return
