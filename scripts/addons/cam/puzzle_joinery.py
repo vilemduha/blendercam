@@ -395,32 +395,40 @@ def multiangle(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twis
     # tneck = percentage the twist neck will have compared to thick
     # tthick = thicknest of the twist material
     # which = which joint to generate, Male Female MaleFemale M, F, MF
-    rectxsize = (radius - thick / 2)
-    rexterior = radius + thick/2
-    rinterior = radius-thick/2
 
-    height = math.sqrt(rexterior * rexterior - radius * radius)
+    r_exterior = radius + thick/2
+    r_interior = radius - thick/2
+
+    height = math.sqrt(r_exterior * r_exterior - radius * radius) + r_interior/4
 
     bpy.ops.curve.simple(align='WORLD', location=(0, height, 0),
                          rotation=(0, 0, 0), Simple_Type='Rectangle',
-                         Simple_width=rectxsize, Simple_length=rectxsize/2, use_cyclic_u=True,
+                         Simple_width=r_interior, Simple_length=r_interior/2, use_cyclic_u=True,
                          edit_mode=False, shape='3D')
-    simple.move(y=rectxsize/4)
     simple.activeName('tmp_rect')
 
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle', Simple_sides=4,
-                         Simple_radius=rinterior, shape='3D', use_cyclic_u=True, edit_mode=False)
+                         Simple_radius=r_interior, shape='3D', use_cyclic_u=True, edit_mode=False)
     simple.move(y=radius * math.tan(angle))
-    simple.activeName('tmpcircle')
+    simple.activeName('tmpCircle')
+
 
     arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
         which='MF')
     simple.activeName('tmp_arc')
-    simple.duplicate()
-    simple.mirrorx()
+    if combination == 'MFF':
+        simple.duplicate()
+        simple.mirrorx()
+    elif combination == 'MMF':
+        arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck,
+            tthick=tthick,
+            which='M')
+        simple.activeName('tmp_arc')
+        simple.mirrory()
+        simple.rotate(math.pi/2)
     simple.union("tmp_")
     simple.difference('tmp', 'tmp_')
-    simple.activeName('multiangle60')
+    simple.activeName('multiAngle60')
 
 
 def t(length, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, combination='MF',

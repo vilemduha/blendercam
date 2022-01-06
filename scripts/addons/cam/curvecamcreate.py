@@ -493,6 +493,11 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('M', 'Male', 'Male')),
                                  description='Type of interlock',
                                  default='M')
+    multiangle_gender: EnumProperty(name='Multiangle gender',
+                                    items=(('MMF', 'Male Male Receptacle', 'M M F'),
+                                           ('MFF', 'Male Receptacle Receptacle', 'M F F')),
+                                    description='Type of interlock',
+                                    default='MFF')
 
     mitre: bpy.props.BoolProperty(name="Add Mitres", default=False)
     twist_lock: bpy.props.BoolProperty(name="Add TwistLock", default=False)
@@ -524,7 +529,10 @@ class CamCurvePuzzle(bpy.types.Operator):
 
         if self.interlock_type == "ARC" or self.interlock_type == "CURVEBARCURVE" or self.interlock_type == "CURVEBAR" \
                 or self.interlock_type == "MULTIANGLE" or (self.interlock_type == 'BAR' and self.mitre):
-            layout.prop(self, 'gender')
+            if self.interlock_type == 'MULTIANGLE':
+                layout.prop(self, 'multiangle_gender')
+            else:
+                layout.prop(self, 'gender')
             if not self.mitre:
                 layout.prop(self, 'radius')
             layout.prop(self, 'angle')
@@ -581,7 +589,7 @@ class CamCurvePuzzle(bpy.types.Operator):
         elif self.interlock_type == 'MULTIANGLE':
             puzzle_joinery.multiangle(self.radius, self.height, math.pi/3, self.diameter, self.finger_tolerance, self.finger_amount,
                                stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                               tthick=self.twist_thick, combination=self.gender)
+                               tthick=self.twist_thick, combination=self.multiangle_gender)
 
         elif self.interlock_type == 'T':
             puzzle_joinery.t(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,

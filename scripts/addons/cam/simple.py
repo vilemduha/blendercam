@@ -245,16 +245,20 @@ def rename(name,name2):
 def union(name):
     selectMultiple(name)
     bpy.ops.object.curve_boolean(boolean_type='UNION')
+    activeName('unionboolean')
     removeMultiple(name)
-    rename('boolean', name)
+    rename('unionboolean', name)
 
 
-def difference(name, aname):
+def difference(name, basename):
+    #   name is the series to select
+    #   basename is what the base you want to cut including name
     selectMultiple(name)
-    bpy.context.view_layer.objects.active = bpy.data.objects[aname]
+    bpy.context.view_layer.objects.active = bpy.data.objects[basename]
     bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+    activeName('booleandifference')
     removeMultiple(name)
-    rename('boolean',aname)
+    rename('booleandifference', basename)
 
 def duplicate(x=0, y=0):
     if x == 0 and y == 0:
