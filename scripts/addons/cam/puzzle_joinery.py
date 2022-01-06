@@ -410,6 +410,7 @@ def multiangle(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twis
 
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle', Simple_sides=4,
                          Simple_radius=rinterior, shape='3D', use_cyclic_u=True, edit_mode=False)
+    simple.move(y = radius * math.tan(angle)) 
     simple.activeName('circle')
 
     arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
