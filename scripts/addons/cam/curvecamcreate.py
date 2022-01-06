@@ -481,7 +481,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('T', 'T Bar', 'T Bar interlock'),
                                         ('CORNER', 'Corner Bar', 'Corner Bar interlock')),
                                  description='Type of interlock',
-                                 default='MULTIANGLE')
+                                 default='MULTIANGLE' )
     gender: EnumProperty(name='Type gender',
                                  items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
                                         ('F', 'Receptacle only', 'Receptacle'),
