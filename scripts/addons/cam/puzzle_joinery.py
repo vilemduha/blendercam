@@ -611,7 +611,7 @@ def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, t
 
 
 def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
-    # width = length of the bar
+    # line = shapely linestring
     # thick = thickness of the bar
     # diameter = diameter of the tool for joint creation
     # tolerance = Tolerance in the joint
@@ -643,9 +643,9 @@ def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, t
     simple.rotate(end_angle)
     simple.move(x=p_end[0], y=p_end[1])
     simple.union('tmprect')
-    dilated = line.buffer(thick/2)
+    dilated = line.buffer(thick/2)  # expand shapely object to thickness
     utils.shapelyToCurve('tmp_curve', dilated, 0.0)
-    simple.difference('tmp', 'tmp_curve')
+    simple.difference('tmp', 'tmp_curve')   # truncate curve at both ends with the rectangles
 
     fingers(diameter, tolerance, amount, stem=stem)
     simple.makeActive('fingers')
@@ -654,7 +654,9 @@ def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, t
     simple.activeName('tmp_fingers')
     simple.union('tmp_')
     simple.activeName('tmp_curve')
+    twistm('tmp_curve', thick, diameter, tolerance, twist, tneck, tthick, end_angle, x=p_end[0], y=p_end[1])
 
+    twistf('receptacle', thick, diameter, tolerance, twist, tneck, tthick)
     simple.rename('receptacle', 'tmp')
     simple.rotate(start_angle+math.pi)
     simple.move(x=p_start[0], y=p_start[1])
