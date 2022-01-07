@@ -480,8 +480,9 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('CURVEBARCURVE', 'Arc Bar Arc', 'Arc Bar Arc interlock'),
                                         ('CURVET', 'T curve', 'T curve interlock'),
                                         ('T', 'T Bar', 'T Bar interlock'),
-                                        ('CORNER', 'Corner Bar', 'Corner Bar interlock')),
-                                 description='Type of interlock',
+                                        ('CORNER', 'Corner Bar', 'Corner Bar interlock'),
+                                        ('OPENCURVE', 'Open Curve', 'Corner Bar interlock')),
+    description='Type of interlock',
                                  default='CURVET')
     gender: EnumProperty(name='Type gender',
                                  items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
@@ -551,6 +552,24 @@ class CamCurvePuzzle(bpy.types.Operator):
 
 
     def execute(self, context):
+        curve_detected = False
+        print(len(context.selected_objects), "selected object", context.selected_objects)
+        if len(context.selected_objects) > 0 and context.active_object.type == 'CURVE':
+            curve_detected = True
+            # bpy.context.object.data.resolution_u = 60
+            simple.duplicate()
+            bpy.ops.object.transform_apply(location=True)
+            obj = context.active_object
+            bpy.ops.object.convert(target='MESH')
+            bpy.context.active_object.name = "_tempmesh"
+
+            coords = []
+            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
+                coords.append((v.co.x, v.co.y))
+            simple.removeMultiple('_tmp')
+            line = LineString(coords)  # convert coordinates to shapely LineString datastructure
+            simple.removeMultiple("_")
+            # utils.shapelyToCurve('-converted_curve', line, 0.0)
 
         if self.interlock_type == 'FINGER':
             puzzle_joinery.finger(self.diameter, self.finger_tolerance, stem=self.stem_size)
@@ -607,7 +626,16 @@ class CamCurvePuzzle(bpy.types.Operator):
                              tthick=self.twist_thick, combination=self.gender, base_gender=self.base_gender,
                              corner=True)
 
+        elif self.interlock_type == 'OPENCURVE' and curve_detected:
+            puzzle_joinery.openCurve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
+                               stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
+                               tthick=self.twist_thick, which=self.gender)
+
+
+
 
 
 
         return {'FINISHED'}
+
+
