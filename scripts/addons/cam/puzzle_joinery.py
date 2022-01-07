@@ -480,6 +480,46 @@ def t(length, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0
     simple.rename('tmp', 't')
     simple.makeActive('t')
 
+def curved_t(length, thick, radius, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01,
+             combination='MF', base_gender='M'):
+    bar(length, thick, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck,
+        tthick=tthick, which=combination)
+    simple.activeName('tmpbar')
+
+    bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=3 * radius, Simple_length=thick, use_cyclic_u=True, edit_mode=False)
+    simple.activeName("tmp_rect")
+
+    if base_gender == 'MF':
+        arc(radius, thick, math.pi/2, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
+            which='M')
+        simple.move(-radius)
+        simple.activeName('tmp_arc')
+        arc(radius, thick, math.pi/2, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
+            which='F')
+        simple.move(radius)
+        simple.mirrory()
+        simple.activeName('tmp_arc')
+        simple.union('tmp_arc')
+        simple.duplicate()
+        simple.mirrorx()
+        simple.union('tmp_arc')
+        simple.difference('tmp_', 'tmp_arc')
+    else:
+        arc(radius, thick, math.pi/2, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
+            which=base_gender)
+        simple.activeName('tmp_arc')
+        simple.difference('tmp_', 'tmp_arc')
+        if base_gender == 'M':
+            simple.move(-radius)
+        else:
+            simple.move(radius)
+        simple.duplicate()
+        simple.mirrorx()
+
+    simple.union('tmp')
+    simple.activeName('curved_t')
+
 
 def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, twist=False,
           tneck=0.5, tthick=0.01, which='MF'):

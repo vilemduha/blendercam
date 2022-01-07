@@ -468,7 +468,7 @@ class CamCurvePuzzle(bpy.types.Operator):
     angleb: bpy.props.FloatProperty(name="angle B", default=math.pi/4, min=-10, max=10, subtype="ANGLE",
                                          unit="ROTATION")
 
-    radius: bpy.props.FloatProperty(name="Arc Radius", default=0.06, min=0.005, max=5, precision=4,
+    radius: bpy.props.FloatProperty(name="Arc Radius", default=0.025, min=0.005, max=5, precision=4,
                                          unit="LENGTH")
 
     interlock_type: EnumProperty(name='Type of shape',
@@ -478,10 +478,11 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('MULTIANGLE', 'Multi angle', 'Multi angle joint'),
                                         ('CURVEBAR', 'Arc Bar', 'Arc Bar interlock'),
                                         ('CURVEBARCURVE', 'Arc Bar Arc', 'Arc Bar Arc interlock'),
+                                        ('CURVET', 'T curve', 'T curve interlock'),
                                         ('T', 'T Bar', 'T Bar interlock'),
                                         ('CORNER', 'Corner Bar', 'Corner Bar interlock')),
                                  description='Type of interlock',
-                                 default='MULTIANGLE' )
+                                 default='CURVET')
     gender: EnumProperty(name='Type gender',
                                  items=(('MF', 'Male-Receptacle', 'Male and receptacle'),
                                         ('F', 'Receptacle only', 'Receptacle'),
@@ -527,8 +528,12 @@ class CamCurvePuzzle(bpy.types.Operator):
         if self.interlock_type == 'BAR':
             layout.prop(self, 'mitre')
 
-        if self.interlock_type == "ARC" or self.interlock_type == "CURVEBARCURVE" or self.interlock_type == "CURVEBAR" \
-                or self.interlock_type == "MULTIANGLE" or (self.interlock_type == 'BAR' and self.mitre):
+        if self.interlock_type == "ARC" \
+                or self.interlock_type == "CURVEBARCURVE" \
+                or self.interlock_type == "CURVEBAR" \
+                or self.interlock_type == "MULTIANGLE" \
+                or self.interlock_type == 'CURVET'  \
+                or (self.interlock_type == 'BAR' and self.mitre):
             if self.interlock_type == 'MULTIANGLE':
                 layout.prop(self, 'multiangle_gender')
             else:
@@ -540,9 +545,9 @@ class CamCurvePuzzle(bpy.types.Operator):
                 layout.prop(self, 'angleb')
 
         if self.interlock_type == 'BAR' or self.interlock_type == 'CURVEBARCURVE' or self.interlock_type == "CURVEBAR" \
-                or self.interlock_type == "T" or self.interlock_type == 'CORNER':
+                or self.interlock_type == "T" or self.interlock_type == 'CORNER' or self.interlock_type == 'CURVET':
             layout.prop(self, 'gender')
-            if self.interlock_type == 'T':
+            if self.interlock_type == 'T' or self.interlock_type == 'CURVET':
                 layout.prop(self, 'base_gender')
             if self.interlock_type == 'CURVEBARCURVE':
                 layout.label(text="Width includes 2 radius and thickness")
@@ -593,6 +598,11 @@ class CamCurvePuzzle(bpy.types.Operator):
 
         elif self.interlock_type == 'T':
             puzzle_joinery.t(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
+                               stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
+                               tthick=self.twist_thick, combination=self.gender, base_gender=self.base_gender)
+
+        elif self.interlock_type == 'CURVET':
+            puzzle_joinery.curved_t(self.width, self.height, self.radius, self.diameter, self.finger_tolerance, self.finger_amount,
                                stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
                                tthick=self.twist_thick, combination=self.gender, base_gender=self.base_gender)
 

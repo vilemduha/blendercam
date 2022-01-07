@@ -262,10 +262,11 @@ def difference(name, basename):
 
 def duplicate(x=0, y=0):
     if x == 0 and y == 0:
+        bpy.ops.object.duplicate()
+
+    else:
         bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                       TRANSFORM_OT_translate={"value": (x, y, 0.0)})
-    else:
-        bpy.ops.object.duplicate()
 
 
 def mirrorx():
