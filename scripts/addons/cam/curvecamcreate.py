@@ -528,15 +528,11 @@ class CamCurvePuzzle(bpy.types.Operator):
         if self.interlock_type == 'BAR':
             layout.prop(self, 'mitre')
 
-        if self.interlock_type == "ARC" \
-                or self.interlock_type == "CURVEBARCURVE" \
-                or self.interlock_type == "CURVEBAR" \
-                or self.interlock_type == "MULTIANGLE" \
-                or self.interlock_type == 'CURVET'  \
+        if self.interlock_type in ["ARC", "CURVEBARCURVE", "CURVEBAR","MULTIANGLE", 'CURVET']  \
                 or (self.interlock_type == 'BAR' and self.mitre):
             if self.interlock_type == 'MULTIANGLE':
                 layout.prop(self, 'multiangle_gender')
-            else:
+            elif self.interlock_type != 'CURVET':
                 layout.prop(self, 'gender')
             if not self.mitre:
                 layout.prop(self, 'radius')
@@ -544,10 +540,9 @@ class CamCurvePuzzle(bpy.types.Operator):
             if self.interlock_type == 'CURVEBARCURVE' or self.mitre:
                 layout.prop(self, 'angleb')
 
-        if self.interlock_type == 'BAR' or self.interlock_type == 'CURVEBARCURVE' or self.interlock_type == "CURVEBAR" \
-                or self.interlock_type == "T" or self.interlock_type == 'CORNER' or self.interlock_type == 'CURVET':
+        if self.interlock_type in ['BAR', 'CURVEBARCURVE', 'CURVEBAR', "T", 'CORNER', 'CURVET']:
             layout.prop(self, 'gender')
-            if self.interlock_type == 'T' or self.interlock_type == 'CURVET':
+            if self.interlock_type in ['T', 'CURVET']:
                 layout.prop(self, 'base_gender')
             if self.interlock_type == 'CURVEBARCURVE':
                 layout.label(text="Width includes 2 radius and thickness")

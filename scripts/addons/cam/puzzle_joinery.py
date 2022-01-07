@@ -480,6 +480,7 @@ def t(length, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0
     simple.rename('tmp', 't')
     simple.makeActive('t')
 
+
 def curved_t(length, thick, radius, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01,
              combination='MF', base_gender='M'):
     bar(length, thick, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck,
@@ -491,12 +492,12 @@ def curved_t(length, thick, radius, diameter, tolerance, amount=0, stem=1, twist
     simple.activeName("tmp_rect")
 
     if base_gender == 'MF':
-        arc(radius, thick, math.pi/2, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
-            which='M')
+        arc(radius, thick, math.pi/2, diameter, tolerance,
+            amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='M')
         simple.move(-radius)
         simple.activeName('tmp_arc')
-        arc(radius, thick, math.pi/2, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
-            which='F')
+        arc(radius, thick, math.pi/2, diameter, tolerance,
+            amount=amount,  stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='F')
         simple.move(radius)
         simple.mirrory()
         simple.activeName('tmp_arc')
@@ -506,8 +507,8 @@ def curved_t(length, thick, radius, diameter, tolerance, amount=0, stem=1, twist
         simple.union('tmp_arc')
         simple.difference('tmp_', 'tmp_arc')
     else:
-        arc(radius, thick, math.pi/2, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
-            which=base_gender)
+        arc(radius, thick, math.pi/2, diameter, tolerance,
+            amount=amount, stem=stem,  twist=twist, tneck=tneck, tthick=tthick, which=base_gender)
         simple.activeName('tmp_arc')
         simple.difference('tmp_', 'tmp_arc')
         if base_gender == 'M':
