@@ -508,6 +508,7 @@ class CamCurvePuzzle(bpy.types.Operator):
     twist_thick: bpy.props.FloatProperty(name="Twist Thickness", default=0.0047, min=0.001, max=3.0, precision=4,
                                          unit="LENGTH")
     twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.3, min=0.1, max=0.9, precision=4)
+    interlock_amount: bpy.props.IntProperty(name="Interlock amount on curve", default=2, min=0, max=200)
 
     def draw(self, context):
         layout = self.layout
@@ -524,6 +525,8 @@ class CamCurvePuzzle(bpy.types.Operator):
             if self.twist_lock:
                 layout.prop(self, 'twist_thick')
                 layout.prop(self, 'twist_percent')
+                if self.interlock_type == 'OPENCURVE':
+                    layout.prop(self, 'interlock_amount')
             layout.separator()
             layout.prop(self, 'height')
 
@@ -633,7 +636,7 @@ class CamCurvePuzzle(bpy.types.Operator):
 
         elif self.interlock_type == 'OPENCURVE' and curve_detected:
             puzzle_joinery.openCurve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
-                                     stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                                     tthick=self.twist_thick, which=self.gender)
+                                     stem=self.stem_size, twist=self.twist_lock, t_neck=self.twist_percent,
+                                     t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount)
 
         return {'FINISHED'}

@@ -610,7 +610,11 @@ def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, t
     simple.rename('tmprect', 'mitre')
 
 
-def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, which='MF'):
+def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, t_neck=0.5, t_thick=0.01, twist_amount=1,
+              which='MF'):
+    # puts puzzle connectors at the end of an open curve
+    # optionally puts twist lock connectors at the puzzle connection
+    # optionally puts twist lock connectors along the open curve
     # line = shapely linestring
     # thick = thickness of the bar
     # diameter = diameter of the tool for joint creation
@@ -618,6 +622,7 @@ def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, t
     # amount = amount of fingers in the joint 0 means auto generate
     # stem = amount of radius the stem or neck of the joint will have
     # twist = twist lock addition
+    # twist_amount = twist amount distributed on the curve not counting the joint twist locks
     # tneck = percentage the twist neck will have compared to thick
     # tthick = thicknest of the twist material
     # Which M,F, MF, MM, FF
@@ -654,13 +659,22 @@ def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, t
     simple.activeName('tmp_fingers')
     simple.union('tmp_')
     simple.activeName('tmp_curve')
-    twistm('tmp_curve', thick, diameter, tolerance, twist, tneck, tthick, end_angle, x=p_end[0], y=p_end[1])
+    twistm('tmp_curve', thick, diameter, tolerance, twist, t_neck, t_thick, end_angle, x=p_end[0], y=p_end[1])
 
-    twistf('receptacle', thick, diameter, tolerance, twist, tneck, tthick)
+    twistf('receptacle', thick, diameter, tolerance, twist, t_neck, t_thick)
     simple.rename('receptacle', 'tmp')
     simple.rotate(start_angle+math.pi)
     simple.move(x=p_start[0], y=p_start[1])
     simple.difference('tmp', 'tmp_curve')
+
+    if twist_amount > 0 and twist:
+        twist_start = line.length / (twist_amount+1)
+        joinery.distributed_interlock(line, line.length, 0.03, t_thick, tolerance, twist_amount,
+                                      tangent=math.pi/2, fixed_angle=0, start=twist_start, end=twist_start,
+                                      closed=False, type='TWIST', twist_percentage=t_neck)
+        simple.activeName('tmp_twist')
+        simple.difference('tmp', 'tmp_curve')
+
     simple.activeName('puzzle_curve')
 
 

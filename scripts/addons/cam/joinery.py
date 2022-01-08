@@ -440,29 +440,32 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
     return hpos
 
 
-def single_interlock(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle, type, amount=1):
+def single_interlock(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle, type, amount=1, twist_percentage=0.5):
     if type == "GROOVE":
         interlock_groove(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle)
     elif type == "TWIST":
-        interlock_twist(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle)
+        interlock_twist(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle,percentage=twist_percentage)
     elif type == "PUZZLE":
         puzzle_joinery.fingers(finger_thick, finger_tolerance, amount)
 
 
 def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_tolerance, finger_amount, tangent=0,
-                          fixed_angle=0, start=0.01, end=0.01, closed=True, type='GROOVE'):
+                          fixed_angle=0, start=0.01, end=0.01, closed=True, type='GROOVE', twist_percentage=0.5):
     #   distributes interlocking joints of a fixed amount
     #   dynamically changes the finger tolerance with the angle differences
     #   loop = takes in a shapely shape
     #   finger_size = size of the mortise
     #   finger_thick = thickness of the material
     #   finger_tolerance = minimum finger tolerance
+    #   twist_percentage = portion of twist finger which is the stem
     base = False
     coords = list(loop.coords)
     old_mortise_angle = 0
+    print(closed)
     if not closed:
-        spacing = (loop_length - start - end) / finger_amount
+        spacing = (loop_length - start - end) / (finger_amount-1)
         distance = start
+        end_distance = loop_length - end
     else:
         spacing = loop_length / finger_amount
         distance = 0
@@ -482,7 +485,7 @@ def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_
         pd = loop.project(Point(p))
 
         if not_start:
-            while distance <= pd:
+            while distance <= pd and end_distance >= distance:
                 if fixed_angle == 0:
                     groove_angle = angle(oldp, p) + math.pi / 2 + tangent
                 else:
@@ -492,7 +495,7 @@ def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_
 
                 print(j, "groove_angle", round(180 * groove_angle / math.pi), "distance", round(distance * 1000), "mm")
                 single_interlock(finger_depth, finger_thick, finger_tolerance, groove_point.x, groove_point.y,
-                                 groove_angle, type)
+                                 groove_angle, type, twist_percentage=twist_percentage)
 
                 j += 1
                 distance = j * spacing + start
