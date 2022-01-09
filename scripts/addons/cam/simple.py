@@ -292,5 +292,14 @@ def rotate(angle):
 def removeDoubles():
     bpy.ops.object.curve_remove_doubles()
 
+def addOvercut(diametre, overcut=True):
+    if overcut:
+        name = bpy.context.active_object.name
+        bpy.ops.object.curve_overcuts(diameter=diametre, threshold=math.pi/2.05)
+        overcut_name = bpy.context.active_object.name
+        makeActive(name)
+        bpy.ops.object.delete()
+        rename(overcut_name, name)
+        removeDoubles()
 
 

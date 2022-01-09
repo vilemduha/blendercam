@@ -66,7 +66,7 @@ class CamCurvePlate(bpy.types.Operator):
     height: bpy.props.FloatProperty(name="Height of plate", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
     hole_diameter: bpy.props.FloatProperty(name="Hole diameter", default=0.01, min=0, max=3.0, precision=4,
                                            unit="LENGTH")
-    hole_tolerence: bpy.props.FloatProperty(name="Hole V Tolerance", default=0.005, min=0, max=3.0, precision=4,
+    hole_tolerance: bpy.props.FloatProperty(name="Hole V Tolerance", default=0.005, min=0, max=3.0, precision=4,
                                             unit="LENGTH")
     hole_vdist: bpy.props.FloatProperty(name="Hole Vert distance", default=0.400, min=0, max=3.0, precision=4,
                                         unit="LENGTH")
@@ -106,13 +106,13 @@ class CamCurvePlate(bpy.types.Operator):
 
         if self.hole_diameter > 0 or self.hole_hamount > 0:
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
-                                                      align='WORLD', location=(0, self.hole_tolerence / 2, 0),
+                                                      align='WORLD', location=(0, self.hole_tolerance / 2, 0),
                                                       scale=(1, 1, 1))
             bpy.context.active_object.name = "_hole_Top"
             bpy.context.object.data.resolution_u = self.resolution / 4
-            if self.hole_tolerence > 0:
+            if self.hole_tolerance > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
-                                                          align='WORLD', location=(0, -self.hole_tolerence / 2, 0),
+                                                          align='WORLD', location=(0, -self.hole_tolerance / 2, 0),
                                                           scale=(1, 1, 1))
                 bpy.context.active_object.name = "_hole_Bottom"
                 bpy.context.object.data.resolution_u = self.resolution / 4
@@ -336,7 +336,7 @@ class CamCurveDrawer(bpy.types.Operator):
     height: bpy.props.FloatProperty(name="Height of drawer", default=0.07, min=0, max=3.0, precision=4, unit="LENGTH")
     finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005, max=3.0, precision=4,
                                          unit="LENGTH")
-    finger_tolerence: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
+    finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
                                               unit="LENGTH")
     finger_inset: bpy.props.FloatProperty(name="Finger inset", default=0.0, min=0.0, max=0.01, precision=4,
                                           unit="LENGTH")
@@ -346,6 +346,24 @@ class CamCurveDrawer(bpy.types.Operator):
                                                   precision=4, unit="LENGTH")
     drawer_hole_offset: bpy.props.FloatProperty(name="Drawer hole offset", default=0.0, min=-0.5, max=0.5, precision=4,
                                                 unit="LENGTH")
+    overcut: bpy.props.BoolProperty(name="Add overcut", default=False)
+    overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5, precision=4,
+                                                unit="LENGTH")
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, 'depth')
+        layout.prop(self, 'width')
+        layout.prop(self, 'height')
+        layout.prop(self, 'finger_size')
+        layout.prop(self, 'finger_tolerance')
+        layout.prop(self, 'finger_inset')
+        layout.prop(self, 'drawer_plate_thickness')
+        layout.prop(self, 'drawer_hole_diameter')
+        layout.prop(self, 'drawer_hole_offset')
+        layout.prop(self, 'overcut')
+        if self.overcut:
+            layout.prop(self, 'overcut_diameter')
 
     def execute(self, context):
         height_finger_amt = int(joinery.finger_amount(self.height, self.finger_size))
@@ -358,9 +376,9 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.context.object.data.resolution_u = 64
         bpy.context.scene.cursor.location = (0, 0, 0)
 
-        joinery.vertical_finger(height_finger, self.drawer_plate_thickness, self.finger_tolerence, height_finger_amt)
+        joinery.vertical_finger(height_finger, self.drawer_plate_thickness, self.finger_tolerance, height_finger_amt)
 
-        joinery.horizontal_finger(width_finger, self.drawer_plate_thickness, self.finger_tolerence,
+        joinery.horizontal_finger(width_finger, self.drawer_plate_thickness, self.finger_tolerance,
                                   width_finger_amt * 2)
         simple.makeActive('_wfb')
 
@@ -376,7 +394,8 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.removeMultiple("_finger_pair")
         bpy.context.active_object.name = "drawer_back"
-        bpy.ops.object.curve_remove_doubles()
+        simple.removeDoubles()
+        simple.addOvercut(self.overcut_diameter, self.overcut)
 
         #   make drawer front
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.drawer_hole_diameter / 2, enter_editmode=False,
@@ -388,7 +407,8 @@ class CamCurveDrawer(bpy.types.Operator):
         front_hole.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         bpy.context.active_object.name = "drawer_front"
-        bpy.ops.object.curve_remove_doubles()
+        simple.removeDoubles()
+        simple.addOvercut(self.overcut_diameter, self.overcut)
 
         #   place back and front side by side
         simple.makeActive('drawer_front')
@@ -404,7 +424,8 @@ class CamCurveDrawer(bpy.types.Operator):
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         bpy.context.active_object.name = "drawer_side"
-        bpy.ops.object.curve_remove_doubles()
+        simple.removeDoubles()
+        simple.addOvercut(self.overcut_diameter, self.overcut)
         simple.removeMultiple('_finger_pair')
 
         #   make bottom
@@ -430,19 +451,21 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         bpy.context.active_object.name = "drawer_bottom"
 
+        simple.removeDoubles()
+        simple.addOvercut(self.overcut_diameter, self.overcut)
+
         # cleanup all temp polygons
         simple.removeMultiple("_")
 
         #   move side and bottom to location
         simple.makeActive("drawer_side")
-        bpy.ops.object.curve_remove_doubles()
         bpy.ops.transform.transform(mode='TRANSLATION',
                                     value=(self.depth / 2 + 3 * self.width / 2 + 0.02, 2 * self.height, 0.0, 0.0))
 
         simple.makeActive("drawer_bottom")
         bpy.ops.transform.transform(mode='TRANSLATION',
                                     value=(self.depth / 2 + 3 * self.width / 2 + 0.02, self.width / 2, 0.0, 0.0))
-        bpy.ops.object.curve_remove_doubles()
+
 
         return {'FINISHED'}
 
@@ -509,10 +532,12 @@ class CamCurvePuzzle(bpy.types.Operator):
                                          unit="LENGTH")
     twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.3, min=0.1, max=0.9, precision=4)
     interlock_amount: bpy.props.IntProperty(name="Interlock amount on curve", default=2, min=0, max=200)
+    overcut: bpy.props.BoolProperty(name="Add overcut", default=False)
+    overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5, precision=4,
+                                                unit="LENGTH")
+
 
     def draw(self, context):
-        layout = self.layout
-        scene = context.scene
         layout = self.layout
         layout.prop(self, 'interlock_type')
         layout.label(text='Puzzle Joint Definition')
@@ -553,6 +578,10 @@ class CamCurvePuzzle(bpy.types.Operator):
                 layout.label(text="Width includes 2 radius and thickness")
             layout.prop(self, 'width')
 
+        layout.prop(self, 'overcut')
+        if self.overcut:
+            layout.prop(self, 'overcut_diameter')
+
     def execute(self, context):
         curve_detected = False
         print(len(context.selected_objects), "selected object", context.selected_objects)
@@ -571,7 +600,6 @@ class CamCurvePuzzle(bpy.types.Operator):
             simple.removeMultiple('_tmp')
             line = LineString(coords)  # convert coordinates to shapely LineString datastructure
             simple.removeMultiple("_")
-            # utils.shapelyToCurve('-converted_curve', line, 0.0)
 
         if self.interlock_type == 'FINGER':
             puzzle_joinery.finger(self.diameter, self.finger_tolerance, stem=self.stem_size)
@@ -638,5 +666,7 @@ class CamCurvePuzzle(bpy.types.Operator):
             puzzle_joinery.openCurve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
                                      stem=self.stem_size, twist=self.twist_lock, t_neck=self.twist_percent,
                                      t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount)
+
+        simple.addOvercut(self.overcut_diameter, self.overcut)
 
         return {'FINISHED'}
