@@ -108,7 +108,7 @@ class CamCurvePlate(bpy.types.Operator):
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
                                                       align='WORLD', location=(0, self.hole_tolerance / 2, 0),
                                                       scale=(1, 1, 1))
-            bpy.context.active_object.name = "_hole_Top"
+            simple.activeName("_hole_Top")
             bpy.context.object.data.resolution_u = self.resolution / 4
             if self.hole_tolerance > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
@@ -120,9 +120,9 @@ class CamCurvePlate(bpy.types.Operator):
             simple.selectMultiple("_hole")  # select everything starting with _hole and perform a convex hull on them
             utils.polygonConvexHull(context)
             simple.activeName("plate_hole")
-            bpy.context.object.location[1] = -self.hole_vdist / 2
-            bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
-                                          TRANSFORM_OT_translate={"value": (0, self.hole_vdist, 0)})
+            simple.move(y=-self.hole_vdist / 2)
+            simple.duplicate(y=self.hole_vdist)
+
             simple.removeMultiple("_hole")  # remove temporary holes
 
             simple.joinMultiple("plate_hole")  # join the holes together
@@ -132,21 +132,21 @@ class CamCurvePlate(bpy.types.Operator):
                 if self.hole_hamount % 2 != 0:
                     for x in range(int((self.hole_hamount - 1) / 2)):
                         dist = self.hole_hdist * (x + 1)  # calculate the distance from the middle
-                        bpy.ops.object.duplicate()
+                        simple.duplicate()
                         bpy.context.object.location[0] = dist
-                        bpy.ops.object.duplicate()
+                        simple.duplicate()
                         bpy.context.object.location[0] = -dist
                 else:
                     for x in range(int(self.hole_hamount / 2)):
                         dist = self.hole_hdist * x + self.hole_hdist / 2  # calculate the distance from the middle
                         if x == 0:  # special case where the original hole only needs to move and not duplicate
                             bpy.context.object.location[0] = dist
-                            bpy.ops.object.duplicate()
+                            simple.duplicate()
                             bpy.context.object.location[0] = -dist
                         else:
-                            bpy.ops.object.duplicate()
+                            simple.duplicate()
                             bpy.context.object.location[0] = dist
-                            bpy.ops.object.duplicate()
+                            simple.duplicate()
                             bpy.context.object.location[0] = -dist
                 simple.joinMultiple("plate_hole")  # join the holes together
 
@@ -279,7 +279,7 @@ class CamCurveInterlock(bpy.types.Operator):
             o1 = bpy.context.active_object
 
             bpy.context.object.data.resolution_u = 60
-            bpy.ops.object.duplicate()
+            simple.duplicate()
             obj = context.active_object
             bpy.ops.object.convert(target='MESH')
             simple.activeName("_temp_mesh")
@@ -465,7 +465,7 @@ class CamCurveDrawer(bpy.types.Operator):
 
 
 class CamCurvePuzzle(bpy.types.Operator):
-    """Generates interlock along a curve"""  # by Alain Pelletier December 2021
+    """Generates Puzzle joints and interlocks"""  # by Alain Pelletier December 2021
     bl_idname = "object.curve_puzzle"
     bl_label = "Puzzle joints"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
