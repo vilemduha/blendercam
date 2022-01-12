@@ -84,24 +84,24 @@ class CamCurvePlate(bpy.types.Operator):
         # create base
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(left, bottom, 0), scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ_LB"
+        simple.activeName("_circ_LB")
         bpy.context.object.data.resolution_u = self.resolution
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(right, bottom, 0), scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ_RB"
+        simple.activeName("_circ_RB")
         bpy.context.object.data.resolution_u = self.resolution
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(left, top, 0), scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ_LT"
+        simple.activeName("_circ_LT")
         bpy.context.object.data.resolution_u = self.resolution
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(right, top, 0), scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ_RT"
+        simple.activeName("_circ_RT")
         bpy.context.object.data.resolution_u = self.resolution
 
         simple.selectMultiple("_circ")  # select the circles for the four corners
         utils.polygonConvexHull(context)  # perform hull operation on the four corner circles
-        bpy.context.active_object.name = "plate_base"
+        simple.activeName("plate_base")
         simple.removeMultiple("_circ")  # remove corner circles
 
         if self.hole_diameter > 0 or self.hole_hamount > 0:
@@ -114,12 +114,12 @@ class CamCurvePlate(bpy.types.Operator):
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
                                                           align='WORLD', location=(0, -self.hole_tolerance / 2, 0),
                                                           scale=(1, 1, 1))
-                bpy.context.active_object.name = "_hole_Bottom"
+                simple.activeName("_hole_Bottom")
                 bpy.context.object.data.resolution_u = self.resolution / 4
 
             simple.selectMultiple("_hole")  # select everything starting with _hole and perform a convex hull on them
             utils.polygonConvexHull(context)
-            bpy.context.active_object.name = "plate_hole"
+            simple.activeName("plate_hole")
             bpy.context.object.location[1] = -self.hole_vdist / 2
             bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                           TRANSFORM_OT_translate={"value": (0, self.hole_vdist, 0)})
@@ -156,7 +156,7 @@ class CamCurvePlate(bpy.types.Operator):
             utils.polygonBoolean(context, "DIFFERENCE")  # Remove holes from the base
             simple.removeMultiple("plate_")  # Remove temporary base and holes
 
-        bpy.context.active_object.name = "plate"
+        simple.activeName("plate")
         bpy.context.active_object.select_set(True)
         bpy.ops.object.curve_remove_doubles()
 
@@ -197,7 +197,7 @@ class CamCurveMortise(bpy.types.Operator):
         bpy.ops.object.duplicate()
         obj = context.active_object
         bpy.ops.object.convert(target='MESH')
-        bpy.context.active_object.name = "_temp_mesh"
+        simple.activeName("_temp_mesh")
 
         if self.opencurve:
             coords = []
@@ -282,7 +282,7 @@ class CamCurveInterlock(bpy.types.Operator):
             bpy.ops.object.duplicate()
             obj = context.active_object
             bpy.ops.object.convert(target='MESH')
-            bpy.context.active_object.name = "_temp_mesh"
+            simple.activeName("_temp_mesh")
 
             if self.opencurve:
                 coords = []
@@ -393,7 +393,7 @@ class CamCurveDrawer(bpy.types.Operator):
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.removeMultiple("_finger_pair")
-        bpy.context.active_object.name = "drawer_back"
+        simple.activeName("drawer_back")
         simple.removeDoubles()
         simple.addOvercut(self.overcut_diameter, self.overcut)
 
@@ -401,12 +401,12 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.drawer_hole_diameter / 2, enter_editmode=False,
                                                   align='WORLD', location=(0, self.height + self.drawer_hole_offset, 0),
                                                   scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ"
+        simple.activeName("_circ")
         front_hole = bpy.context.active_object
         simple.makeActive('drawer_back')
         front_hole.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        bpy.context.active_object.name = "drawer_front"
+        simple.activeName("drawer_front")
         simple.removeDoubles()
         simple.addOvercut(self.overcut_diameter, self.overcut)
 
@@ -423,7 +423,7 @@ class CamCurveDrawer(bpy.types.Operator):
         finger_pair.select_set(True)
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        bpy.context.active_object.name = "drawer_side"
+        simple.activeName("drawer_side")
         simple.removeDoubles()
         simple.addOvercut(self.overcut_diameter, self.overcut)
         simple.removeMultiple('_finger_pair')
@@ -432,24 +432,18 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.makeActive("_wfb")
         bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                       TRANSFORM_OT_translate={"value": (0, -self.drawer_plate_thickness / 2, 0.0)})
+        simple.activeName("_wfb0")
+        joinery.finger_pair("_wfb0", 0, self.depth - self.drawer_plate_thickness)
+        simple.activeName('_bot_fingers')
 
-        bpy.context.active_object.name = "_wfb0"
-        finger_pair = joinery.finger_pair("_wfb0", 0, self.depth - self.drawer_plate_thickness)
+        simple.difference('_bot', '_bottom')
+        simple.rotate(math.pi/2)
 
-        simple.makeActive('_bottom')
-        finger_pair.select_set(True)
-        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
+        joinery.finger_pair("_wfb0", 0, self.width - self.drawer_plate_thickness - self.finger_inset * 2)
+        simple.activeName('_bot_fingers')
+        simple.difference('_bot', '_bottom')
 
-        bpy.context.active_object.name = "_bottom2"
-        simple.makeActive('_bottom2')
-        bpy.context.object.rotation_euler[2] = math.pi / 2
-
-        finger_pair = joinery.finger_pair("_wfb0", 0, self.width - self.drawer_plate_thickness - self.finger_inset * 2)
-
-        simple.makeActive('_bottom2')
-        finger_pair.select_set(True)
-        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        bpy.context.active_object.name = "drawer_bottom"
+        simple.activeName("drawer_bottom")
 
         simple.removeDoubles()
         simple.addOvercut(self.overcut_diameter, self.overcut)
