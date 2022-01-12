@@ -669,7 +669,7 @@ def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, t
 
     if twist_amount > 0 and twist:
         twist_start = line.length / (twist_amount+1)
-        joinery.distributed_interlock(line, line.length, 0.03, t_thick, tolerance, twist_amount,
+        joinery.distributed_interlock(line, line.length, thick, t_thick, tolerance, twist_amount,
                                       tangent=math.pi/2, fixed_angle=0, start=twist_start, end=twist_start,
                                       closed=False, type='TWIST', twist_percentage=t_neck)
         simple.activeName('tmp_twist')

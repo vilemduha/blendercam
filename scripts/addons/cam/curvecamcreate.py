@@ -466,7 +466,7 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.transform.transform(mode='TRANSLATION',
                                     value=(self.depth / 2 + 3 * self.width / 2 + 0.02, self.width / 2, 0.0, 0.0))
 
-
+        simple.selectMultiple('drawer')
         return {'FINISHED'}
 
 
@@ -667,6 +667,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                      stem=self.stem_size, twist=self.twist_lock, t_neck=self.twist_percent,
                                      t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount)
 
+        simple.removeDoubles()
         simple.addOvercut(self.overcut_diameter, self.overcut)
 
         return {'FINISHED'}
