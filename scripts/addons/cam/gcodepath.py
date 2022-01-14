@@ -106,7 +106,7 @@ def exportGcodePath(filename, vertslist, operations):
         extension = '.tap'
         from .nc import fadal as postprocessor
     elif m.post_processor == 'GRBL':
-        extension = '.ngc'
+        extension = '.gcode'
         from .nc import grbl as postprocessor
     elif m.post_processor == 'HM50':
         from .nc import hm50 as postprocessor
