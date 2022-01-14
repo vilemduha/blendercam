@@ -237,7 +237,7 @@ def exportGcodePath(filename, vertslist, operations):
             c.dwell(m.spindle_start_time)
 
         #        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
-        fmh = round(free_movement_height * 1000, 2)
+        fmh = round(free_movement_height * unitcorr, 2)
         if o.cutter_type not in ['LASER', 'PLASMA']:
             c.write('G00 Z' + str(fmh) + '\n')
         if o.enable_A:
