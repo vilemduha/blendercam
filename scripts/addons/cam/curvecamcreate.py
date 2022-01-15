@@ -67,6 +67,7 @@ class CamCurveHatch(bpy.types.Operator):
 
             lines = MultiLineString(coords)
             utils.shapelyToCurve('lines', lines, 0)
+            bpy.ops.object.join()
 
         # utils.polygonHatch(self.distance, self.angle, self.cross)
         return {'FINISHED'}
