@@ -59,15 +59,16 @@ class CamCurveHatch(bpy.types.Operator):
             miny -= self.offset
             maxx += self.offset
             maxy += self.offset
-            simple.addBoundRectangle(minx, miny, maxx, maxy)
+            simple.addBoundRectangle(minx, miny, maxx, maxy,'_bound')
             amount = int((maxx - minx)/self.distance) + 1
             for x in range(amount):
                 distance = x * self.distance + minx
                 coords.append(((distance, miny), (distance, maxy)))
 
             lines = MultiLineString(coords)
-            utils.shapelyToCurve('lines', lines, 0)
-            bpy.ops.object.join()
+            utils.shapelyToCurve('_lines', lines, 0)
+            simple.joinMultiple('_')
+            simple.activeName('hatch_lines')
 
         # utils.polygonHatch(self.distance, self.angle, self.cross)
         return {'FINISHED'}
