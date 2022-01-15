@@ -303,3 +303,17 @@ def addOvercut(diametre, overcut=True):
         removeDoubles()
 
 
+def addBoundRectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
+    # xmin = minimum corner x value
+    # ymin = minimum corner y value
+    # xmax = maximum corner x value
+    # ymax = maximum corner y value
+    # name = name of the resulting object
+    xsize = xmax - xmin
+    ysize = ymax - ymin
+
+    bpy.ops.curve.simple(align='WORLD', location=(xmin + xsize/2, ymin + ysize/2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+                         Simple_width=xsize, Simple_length=ysize, use_cyclic_u=True, edit_mode=False, shape='3D')
+    activeName(name)
+
+

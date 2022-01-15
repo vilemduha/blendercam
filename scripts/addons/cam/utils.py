@@ -1720,3 +1720,5 @@ def reload_pathss(o):
 
     if old_pathmesh != None:
         bpy.data.meshes.remove(old_pathmesh)
+
+

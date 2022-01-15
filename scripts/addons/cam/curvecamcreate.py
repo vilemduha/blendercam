@@ -1,11 +1,11 @@
-# blender CAM ops.py (c) 2012 Vilem Novak
+# blender CAM ops.py (c) 2022 Alain Pelletier
 #
 # ***** BEGIN GPL LICENSE BLOCK *****
 #
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
+# as published by the Free Software Foundation; either version 3
 # of the License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -19,8 +19,6 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# blender operators definitions are in this file. They mostly call the functions from utils.py
-
 
 import bpy
 from bpy.props import *
@@ -29,7 +27,7 @@ from bpy_extras.io_utils import ImportHelper
 from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, joinery, \
     curvecamtools, puzzle_joinery
 import shapely
-from shapely.geometry import Point, LineString, Polygon
+from shapely.geometry import Point, LineString, Polygon, MultiLineString
 import mathutils
 import math
 from Equation import Expression
@@ -42,16 +40,35 @@ class CamCurveHatch(bpy.types.Operator):
     bl_label = "Hatch curve"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    angle: bpy.props.FloatProperty(name="angle", default=0, min=0, max=360, precision=4, subtype="ANGLE")
+#    angle: bpy.props.FloatProperty(name="angle", default=0, min=0, max=360, precision=4, subtype="ANGLE")
     distance: bpy.props.FloatProperty(name="spacing", default=0.001, min=0, max=3.0, precision=4, unit="LENGTH")
-    cross: bpy.props.BoolProperty(name="Cross hatch", default=False)
+    offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=0, max=3.0, precision=4, unit="LENGTH")
+#    cross: bpy.props.BoolProperty(name="Cross hatch", default=False)
 
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
 
     def execute(self, context):
-        utils.polygonHatch(self.distance, self.angle, self.cross)
+        coords = []
+        shapes = utils.curveToShapely(bpy.context.active_object)
+        for s in shapes:
+            minx, miny, maxx, maxy = s.bounds
+            print(minx, miny, maxx, maxy)
+            minx -= self.offset
+            miny -= self.offset
+            maxx += self.offset
+            maxy += self.offset
+            simple.addBoundRectangle(minx, miny, maxx, maxy)
+            amount = int((maxx - minx)/self.distance) + 1
+            for x in range(amount):
+                distance = x * self.distance + minx
+                coords.append(((distance, miny), (distance, maxy)))
+
+            lines = MultiLineString(coords)
+            utils.shapelyToCurve('lines', lines, 0)
+
+        # utils.polygonHatch(self.distance, self.angle, self.cross)
         return {'FINISHED'}
 
 
@@ -347,8 +364,8 @@ class CamCurveDrawer(bpy.types.Operator):
     drawer_hole_offset: bpy.props.FloatProperty(name="Drawer hole offset", default=0.0, min=-0.5, max=0.5, precision=4,
                                                 unit="LENGTH")
     overcut: bpy.props.BoolProperty(name="Add overcut", default=False)
-    overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5, precision=4,
-                                                unit="LENGTH")
+    overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5,
+                                              precision=4, unit="LENGTH")
 
     def draw(self, context):
         layout = self.layout
@@ -527,9 +544,8 @@ class CamCurvePuzzle(bpy.types.Operator):
     twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.3, min=0.1, max=0.9, precision=4)
     interlock_amount: bpy.props.IntProperty(name="Interlock amount on curve", default=2, min=0, max=200)
     overcut: bpy.props.BoolProperty(name="Add overcut", default=False)
-    overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5, precision=4,
-                                                unit="LENGTH")
-
+    overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5,
+                                              precision=4, unit="LENGTH")
 
     def draw(self, context):
         layout = self.layout
