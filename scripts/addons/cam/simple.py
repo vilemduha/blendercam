@@ -25,6 +25,7 @@ import bpy
 import mathutils
 from mathutils import *
 from math import *
+from shapely.geometry import Point, LineString, Polygon, MultiLineString
 
 
 def tuple_add(t, t1):  # add two tuples as Vectors
@@ -315,5 +316,22 @@ def addBoundRectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
     bpy.ops.curve.simple(align='WORLD', location=(xmin + xsize/2, ymin + ysize/2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=xsize, Simple_length=ysize, use_cyclic_u=True, edit_mode=False, shape='3D')
     activeName(name)
+
+
+def activeToCoords():
+    bpy.ops.object.duplicate()
+    obj = bpy.context.active_object
+    bpy.ops.object.convert(target='MESH')
+    activeName("_temp_mesh")
+
+    coords = []
+    for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
+        coords.append((v.co.x, v.co.y))
+    removeMultiple('_tmp_mesh')
+    return coords
+
+
+def activeToShapelyPoly():
+    return Polygon(activeToCoords())  # convert coordinates to shapely Polygon datastructure
 
 
