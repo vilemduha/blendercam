@@ -65,25 +65,15 @@ def timingprint(tinf):
 
 def progress(text, n=None):
     """function for reporting during the script, works for background operations in the header."""
-    # for i in range(n+1):
-    # sys.stdout.flush()
     text = str(text)
-    if n == None:
+    if n is None:
         n = ''
     else:
         n = ' ' + str(int(n * 1000) / 1000) + '%'
-    # d=int(n/2)
-    spaces = ' ' * (len(text) + 55)
     sys.stdout.write('progress{%s%s}\n' % (text, n))
     sys.stdout.flush()
 
 
-# bpy.data.window_managers['WinMan'].progress_update(n)
-# if bpy.context.scene.o
-# bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
-# time.sleep(0.5)
-
-#
 def activate(o):
     """makes an object active, used many times in blender"""
     s = bpy.context.scene
@@ -119,7 +109,7 @@ def dupliob(o, pos):
 
 def addToGroup(ob, groupname):
     activate(ob)
-    if bpy.data.groups.get(groupname) == None:
+    if bpy.data.groups.get(groupname) is None:
         bpy.ops.group.create(name=groupname)
     else:
         bpy.ops.object.group_link(group=groupname)
@@ -183,6 +173,7 @@ def getSimulationPath():
     iname = fn[:-l] + 'temp_cam' + os.sep
     return iname
 
+
 def safeFileName(name):  # for export gcode
     valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
     filename = ''.join(c for c in name if c in valid_chars)
@@ -197,6 +188,7 @@ def strInUnits(x, precision=5):
     else:
         return str(x)
 
+
 # join multiple objects starting with 'name' renaming final object as 'name'
 def joinMultiple(name):
     scene = bpy.context.scene
@@ -208,6 +200,8 @@ def joinMultiple(name):
     bpy.ops.object.join()
     bpy.context.active_object.name = name  # rename object
 
+
+# select multiple object starting with name
 def selectMultiple(name):
     scene = bpy.context.scene
     for ob in scene.objects:  # join pocket curve calculations
@@ -215,6 +209,7 @@ def selectMultiple(name):
             ob.select_set(True)
         else:
             ob.select_set(False)
+
 
 # remove multiple objects starting with 'name'.... useful for fixed name operation
 def removeMultiple(name):
@@ -226,23 +221,28 @@ def removeMultiple(name):
             bpy.ops.object.delete()
 
 
+# makes the object with the name active
 def makeActive(name):
     bpy.ops.object.select_all(action='DESELECT')
     ob = bpy.context.scene.objects[name]
     bpy.ops.object.select_all(action='DESELECT')
-    bpy.context.view_layer.objects.active = ob  # Make the cube the active object
+    bpy.context.view_layer.objects.active = ob
     ob.select_set(True)
 
 
+# change the name of the active object
 def activeName(name):
     bpy.context.active_object.name = name
 
 
-def rename(name,name2):
+# renames and makes active name and makes it active
+def rename(name, name2):
     makeActive(name)
     bpy.context.active_object.name = name2
 
 
+# boolean union of objects starting with name result is object name.
+# all objects starting with name will be deleted and the result will be name
 def union(name):
     selectMultiple(name)
     bpy.ops.object.curve_boolean(boolean_type='UNION')
@@ -251,6 +251,8 @@ def union(name):
     rename('unionboolean', name)
 
 
+# boolean difference of objects starting with name result is object from basename.
+# all objects starting with name will be deleted and the result will be basename
 def difference(name, basename):
     #   name is the series to select
     #   basename is what the base you want to cut including name
@@ -261,6 +263,9 @@ def difference(name, basename):
     removeMultiple(name)
     rename('booleandifference', basename)
 
+
+# duplicate active object or duplicate move
+# if x or y not the default, duplicate move will be executed
 def duplicate(x=0, y=0):
     if x == 0 and y == 0:
         bpy.ops.object.duplicate()
@@ -270,29 +275,36 @@ def duplicate(x=0, y=0):
                                       TRANSFORM_OT_translate={"value": (x, y, 0.0)})
 
 
+# Mirror active object along the x axis
 def mirrorx():
     bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
                              orient_matrix_type='GLOBAL', constraint_axis=(True, False, False))
 
 
+# mirror active object along y axis
 def mirrory():
     bpy.ops.transform.mirror(orient_type='GLOBAL', orient_matrix=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
                              orient_matrix_type='GLOBAL', constraint_axis=(False, True, False))
 
 
+# move active object and apply translation
 def move(x=0.0, y=0.0):
     bpy.ops.transform.translate(value=(x, y, 0.0))
     bpy.ops.object.transform_apply(location=True)
 
 
+# Rotate active object and apply rotation
 def rotate(angle):
     bpy.context.object.rotation_euler[2] = angle
     bpy.ops.object.transform_apply(rotation=True)
 
 
+# remove doubles
 def removeDoubles():
     bpy.ops.object.curve_remove_doubles()
 
+
+# Add overcut to active object
 def addOvercut(diametre, overcut=True):
     if overcut:
         name = bpy.context.active_object.name
@@ -304,6 +316,7 @@ def addOvercut(diametre, overcut=True):
         removeDoubles()
 
 
+# add bounding rectangtle to curve
 def addBoundRectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
     # xmin = minimum corner x value
     # ymin = minimum corner y value
@@ -313,11 +326,13 @@ def addBoundRectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
     xsize = xmax - xmin
     ysize = ymax - ymin
 
-    bpy.ops.curve.simple(align='WORLD', location=(xmin + xsize/2, ymin + ysize/2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
+    bpy.ops.curve.simple(align='WORLD', location=(xmin + xsize/2, ymin + ysize/2, 0), rotation=(0, 0, 0),
+                         Simple_Type='Rectangle',
                          Simple_width=xsize, Simple_length=ysize, use_cyclic_u=True, edit_mode=False, shape='3D')
     activeName(name)
 
 
+#  Returns coords from active object
 def activeToCoords():
     bpy.ops.object.duplicate()
     obj = bpy.context.active_object
@@ -331,7 +346,7 @@ def activeToCoords():
     return coords
 
 
+# returns shapely polygon from active object
 def activeToShapelyPoly():
     return Polygon(activeToCoords())  # convert coordinates to shapely Polygon datastructure
-
 
