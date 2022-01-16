@@ -37,40 +37,55 @@ import numpy as np
 class CamCurveHatch(bpy.types.Operator):
     """perform hatch operation on single or multiple curves"""  # by Alain Pelletier September 2021
     bl_idname = "object.curve_hatch"
-    bl_label = "Hatch curve"
+    bl_label = "CrossHatch curve"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-#    angle: bpy.props.FloatProperty(name="angle", default=0, min=0, max=360, precision=4, subtype="ANGLE")
-    distance: bpy.props.FloatProperty(name="spacing", default=0.001, min=0, max=3.0, precision=4, unit="LENGTH")
+    angle: bpy.props.FloatProperty(name="angle", default=0, min=-math.pi/2, max=math.pi/2, precision=4, subtype="ANGLE")
+    distance: bpy.props.FloatProperty(name="spacing", default=0.015, min=0, max=3.0, precision=4, unit="LENGTH")
     offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=0, max=3.0, precision=4, unit="LENGTH")
-#    cross: bpy.props.BoolProperty(name="Cross hatch", default=False)
 
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
 
     def execute(self, context):
+        from shapely import affinity
         coords = []
         shapes = utils.curveToShapely(bpy.context.active_object)
         for s in shapes:
             minx, miny, maxx, maxy = s.bounds
-            print(minx, miny, maxx, maxy)
             minx -= self.offset
             miny -= self.offset
             maxx += self.offset
             maxy += self.offset
-            simple.addBoundRectangle(minx, miny, maxx, maxy,'_bound')
-            amount = int((maxx - minx)/self.distance) + 1
+
+            centery = (miny + maxy) / 2
+            height = maxy - miny
+            width = maxx - minx
+            centerx = (minx+maxx) / 2
+            diagonal = math.hypot(width, height)
+
+            simple.addBoundRectangle(minx, miny, maxx, maxy, 'crosshatch_bound')
+            simple.addBoundRectangle(-width/2, -height/2, width/2, height/2, '_shape')
+
+            amount = int(2*diagonal/self.distance) + 1
+
             for x in range(amount):
-                distance = x * self.distance + minx
-                coords.append(((distance, miny), (distance, maxy)))
+                distance = x * self.distance - diagonal
+                coords.append(((distance, miny-0.5), (distance, maxy+0.5)))
 
             lines = MultiLineString(coords)
-            utils.shapelyToCurve('_lines', lines, 0)
-            simple.joinMultiple('_')
-            simple.activeName('hatch_lines')
+            rotated_a = affinity.rotate(lines, self.angle, use_radians=True)  # rotate using shapely
 
-        # utils.polygonHatch(self.distance, self.angle, self.cross)
+
+            bounds = simple.activeToShapelyPoly()
+
+            xing = rotated_a.intersection(bounds)  # Shapely detects intersections with the square bounds
+            utils.shapelyToCurve('crosshatch_lines', xing, 0)
+            simple.move(x=centerx, y=centery)
+
+            simple.removeMultiple('_')
+            simple.selectMultiple('crosshatch')
         return {'FINISHED'}
 
 
