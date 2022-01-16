@@ -29,19 +29,19 @@ from shapely.geometry import Point, LineString, Polygon, MultiLineString
 
 
 def tuple_add(t, t1):  # add two tuples as Vectors
-    return (t[0] + t1[0], t[1] + t1[1], t[2] + t1[2])
+    return t[0] + t1[0], t[1] + t1[1], t[2] + t1[2]
 
 
 def tuple_sub(t, t1):  # sub two tuples as Vectors
-    return (t[0] - t1[0], t[1] - t1[1], t[2] - t1[2])
+    return t[0] - t1[0], t[1] - t1[1], t[2] - t1[2]
 
 
 def tuple_mul(t, c):  # multiply two tuples with a number
-    return (t[0] * c, t[1] * c, t[2] * c)
+    return t[0] * c, t[1] * c, t[2] * c
 
 
 def tuple_length(t):  # get length of vector, but passed in as tuple.
-    return (Vector(t).length)
+    return Vector(t).length
 
 
 # timing functions for optimisation purposes...
@@ -161,11 +161,12 @@ def getCachePath(o):
     fn = bpy.data.filepath
     l = len(bpy.path.basename(fn))
     bn = bpy.path.basename(fn)[:-6]
-    print('fn-l:',fn[:-l])
-    print('bn:',bn)
+    print('fn-l:', fn[:-l])
+    print('bn:', bn)
 
     iname = fn[:-l] + 'temp_cam' + os.sep + bn + '_' + o.name
     return iname
+
 
 def getSimulationPath():
     fn = bpy.data.filepath
@@ -349,4 +350,3 @@ def activeToCoords():
 # returns shapely polygon from active object
 def activeToShapelyPoly():
     return Polygon(activeToCoords())  # convert coordinates to shapely Polygon datastructure
-
