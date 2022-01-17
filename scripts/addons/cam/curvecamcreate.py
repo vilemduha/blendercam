@@ -42,7 +42,7 @@ class CamCurveHatch(bpy.types.Operator):
 
     angle: bpy.props.FloatProperty(name="angle", default=0, min=-math.pi/2, max=math.pi/2, precision=4, subtype="ANGLE")
     distance: bpy.props.FloatProperty(name="spacing", default=0.015, min=0, max=3.0, precision=4, unit="LENGTH")
-    offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=0, max=3.0, precision=4, unit="LENGTH")
+    offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=-1.0, max=3.0, precision=4, unit="LENGTH")
     pocket_type: EnumProperty(name='Type pocket',
                                  items=(('BOUNDS', 'makes a bounds rectangle', 'makes a bounding square'),
                                         ('POCKET', 'Pocket', 'makes a pocket inside a closed loop')),
