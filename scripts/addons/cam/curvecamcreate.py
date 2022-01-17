@@ -94,6 +94,8 @@ class CamCurveHatch(bpy.types.Operator):
 
             simple.removeMultiple('_')
 
+        simple.removeMultiple('crosshatch_bound')
+        simple.joinMultiple('crosshatch')
         simple.selectMultiple('crosshatch')
         return {'FINISHED'}
 
