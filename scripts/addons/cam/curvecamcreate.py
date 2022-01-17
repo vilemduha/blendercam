@@ -95,10 +95,10 @@ class CamCurveHatch(bpy.types.Operator):
                 # Shapely detects intersections with the original curve or hull
             utils.shapelyToCurve('crosshatch_lines', xing, 0)
 
-            simple.removeMultiple('_')
-
+        # remove temporary shapes
         simple.removeMultiple('crosshatch_bound')
         simple.removeMultiple('crosshatch_hull')
+
         simple.selectMultiple('crosshatch')
         return {'FINISHED'}
 

@@ -339,7 +339,7 @@ def activeToCoords():
     bpy.ops.object.duplicate()
     obj = bpy.context.active_object
     bpy.ops.object.convert(target='MESH')
-    activeName("_temp_mesh")
+    activeName("_tmp_mesh")
 
     coords = []
     for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
