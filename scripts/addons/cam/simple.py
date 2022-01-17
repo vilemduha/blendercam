@@ -330,6 +330,7 @@ def addBoundRectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
     bpy.ops.curve.simple(align='WORLD', location=(xmin + xsize/2, ymin + ysize/2, 0), rotation=(0, 0, 0),
                          Simple_Type='Rectangle',
                          Simple_width=xsize, Simple_length=ysize, use_cyclic_u=True, edit_mode=False, shape='3D')
+    bpy.ops.object.transform_apply(location=True)
     activeName(name)
 
 

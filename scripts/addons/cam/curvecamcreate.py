@@ -43,6 +43,11 @@ class CamCurveHatch(bpy.types.Operator):
     angle: bpy.props.FloatProperty(name="angle", default=0, min=-math.pi/2, max=math.pi/2, precision=4, subtype="ANGLE")
     distance: bpy.props.FloatProperty(name="spacing", default=0.015, min=0, max=3.0, precision=4, unit="LENGTH")
     offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=0, max=3.0, precision=4, unit="LENGTH")
+    pocket_type: EnumProperty(name='Type pocket',
+                                 items=(('BOUNDS', 'makes a bounds rectangle', 'makes a bounding square'),
+                                        ('POCKET', 'Pocket', 'makes a pocket inside a closed loop')),
+                                 description='Type of pocket',
+                                 default='BOUNDS')
 
     @classmethod
     def poll(cls, context):
@@ -66,26 +71,30 @@ class CamCurveHatch(bpy.types.Operator):
             diagonal = math.hypot(width, height)
 
             simple.addBoundRectangle(minx, miny, maxx, maxy, 'crosshatch_bound')
-            simple.addBoundRectangle(-width/2, -height/2, width/2, height/2, '_shape')
+            # simple.addBoundRectangle(-width/2, -height/2, width/2, height/2, '_shape')
 
             amount = int(2*diagonal/self.distance) + 1
 
             for x in range(amount):
                 distance = x * self.distance - diagonal
-                coords.append(((distance, miny-0.5), (distance, maxy+0.5)))
+                coords.append(((distance, diagonal + 0.5), (distance, -diagonal - 0.5)))
 
             lines = MultiLineString(coords)
-            rotated_a = affinity.rotate(lines, self.angle, use_radians=True)  # rotate using shapely
+            rotated = affinity.rotate(lines, self.angle, use_radians=True)  # rotate using shapely
+            translated = affinity.translate(rotated, xoff=centerx, yoff=centery)  # move using shapely
 
-
+            simple.makeActive('crosshatch_bound')
             bounds = simple.activeToShapelyPoly()
 
-            xing = rotated_a.intersection(bounds)  # Shapely detects intersections with the square bounds
+            if self.pocket_type == 'BOUNDS':
+                xing = translated.intersection(bounds)  # Shapely detects intersections with the square bounds
+            else:
+                xing = translated.intersection(s.buffer(self.offset))  # Shapely detects intersections with the square bounds
             utils.shapelyToCurve('crosshatch_lines', xing, 0)
-            simple.move(x=centerx, y=centery)
 
             simple.removeMultiple('_')
-            simple.selectMultiple('crosshatch')
+
+        simple.selectMultiple('crosshatch')
         return {'FINISHED'}
 
 
