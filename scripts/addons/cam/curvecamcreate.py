@@ -43,6 +43,7 @@ class CamCurveHatch(bpy.types.Operator):
     angle: bpy.props.FloatProperty(name="angle", default=0, min=-math.pi/2, max=math.pi/2, precision=4, subtype="ANGLE")
     distance: bpy.props.FloatProperty(name="spacing", default=0.015, min=0, max=3.0, precision=4, unit="LENGTH")
     offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=-1.0, max=3.0, precision=4, unit="LENGTH")
+    hull: bpy.props.BoolProperty(name="Convex Hull", default=False)
     pocket_type: EnumProperty(name='Type pocket',
                                  items=(('BOUNDS', 'makes a bounds rectangle', 'makes a bounding square'),
                                         ('POCKET', 'Pocket', 'makes a pocket inside a closed loop')),
@@ -54,10 +55,12 @@ class CamCurveHatch(bpy.types.Operator):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
 
     def execute(self, context):
+        if self.hull:
+            bpy.ops.object.convex_hull()
         from shapely import affinity
-        coords = []
         shapes = utils.curveToShapely(bpy.context.active_object)
         for s in shapes:
+            coords = []
             minx, miny, maxx, maxy = s.bounds
             minx -= self.offset
             miny -= self.offset
@@ -71,7 +74,6 @@ class CamCurveHatch(bpy.types.Operator):
             diagonal = math.hypot(width, height)
 
             simple.addBoundRectangle(minx, miny, maxx, maxy, 'crosshatch_bound')
-            # simple.addBoundRectangle(-width/2, -height/2, width/2, height/2, '_shape')
 
             amount = int(2*diagonal/self.distance) + 1
 
@@ -95,7 +97,7 @@ class CamCurveHatch(bpy.types.Operator):
             simple.removeMultiple('_')
 
         simple.removeMultiple('crosshatch_bound')
-        simple.joinMultiple('crosshatch')
+        # simple.joinMultiple('crosshatch')
         simple.selectMultiple('crosshatch')
         return {'FINISHED'}
 
