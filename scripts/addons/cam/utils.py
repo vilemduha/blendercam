@@ -896,6 +896,7 @@ def polygonConvexHull(context):
 
     bpy.ops.object.duplicate()
     bpy.ops.object.join()
+    bpy.context.object.data.dimensions = '3D'  #  force curve to be a 3D curve
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     bpy.context.active_object.name = "_tmp"
 
