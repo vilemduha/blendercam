@@ -503,7 +503,8 @@ class CamMeshGetPockets(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     threshold: bpy.props.FloatProperty(name="horizontal threshold",
-                                       description="How horizontal the surface must be for a pocket: 1.0 perfectly flat, 0.0 is any orientation",
+                                       description="How horizontal the surface must be for a pocket: "
+                                                   "1.0 perfectly flat, 0.0 is any orientation",
                                        default=.99, min=0, max=1.0, precision=4)
     zlimit: bpy.props.FloatProperty(name="z limit",
                                     description="maximum z height considered for pocket operation, default is 0.0",
@@ -536,7 +537,7 @@ class CamMeshGetPockets(bpy.types.Operator):
                         face.select = True
                         z = (mw @ mesh.vertices[face.vertices[0]].co).z
                         if z < self.zlimit:
-                            if pockets.get(z) == None:
+                            if pockets.get(z) is None:
                                 pockets[z] = [i]
                             else:
                                 pockets[z].append(i)
@@ -606,7 +607,8 @@ class CamOffsetSilhouete(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and (
-                context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
+                context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or
+                context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
         ob = context.active_object
@@ -645,7 +647,8 @@ class CamObjectSilhouete(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        #        return context.active_object is not None and (context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
+        #        return context.active_object is not None and (context.active_object.type == 'CURVE'
+        #        or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
         return context.active_object is not None and (context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
