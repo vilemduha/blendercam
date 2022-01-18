@@ -27,7 +27,6 @@ import bpy
 from cam import utils
 
 
-
 def slicing2d(ob, height):  # April 2020 Alain Pelletier
     # let's slice things
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
@@ -47,6 +46,7 @@ def slicing2d(ob, height):  # April 2020 Alain Pelletier
         return False
     bpy.ops.object.select_all(action='DESELECT')  # deselect everything
     return True
+
 
 def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
     # let's slice things
@@ -85,8 +85,6 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
     print(ob.dimensions)
     print(ob.location)
 
-    layeramt = 1 + int(ob.dimensions.z // thickness)  # calculate amount of layers needed
-
     bpy.ops.object.mode_set(mode='OBJECT')  # force object mode
     minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
 
@@ -114,7 +112,7 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         if slice3d:
             slicing3d(obslice, height, height + thickness)  # slice 3d at desired height and stop at desired height
         else:
-            slicesuccess=slicing2d(obslice, height)  # slice object at desired height
+            slicesuccess = slicing2d(obslice, height)  # slice object at desired height
 
         if indexes and slicesuccess:
             # text objects
@@ -129,4 +127,5 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
             textob.parent = obslice  # make textob child of obslice
 
     # select all slices
-    for obj in bpy.data.collections['Slices'].all_objects: obj.select_set(True)
+    for obj in bpy.data.collections['Slices'].all_objects:
+        obj.select_set(True)
