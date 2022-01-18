@@ -33,7 +33,8 @@ from shapely import affinity, prepared
 
 
 def addBridge(x, y, rot, sizex, sizey):
-    bpy.ops.mesh.primitive_plane_add(size=sizey*2, calc_uvs=True, enter_editmode=False, align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0))
+    bpy.ops.mesh.primitive_plane_add(size=sizey*2, calc_uvs=True, enter_editmode=False, align='WORLD',
+                                     location=(0, 0, 0), rotation=(0, 0, 0))
     b = bpy.context.active_object
     b.name = 'bridge'
     # b.show_name=True
@@ -55,11 +56,8 @@ def addBridge(x, y, rot, sizex, sizey):
 def addAutoBridges(o):
     """attempt to add auto bridges as set of curves"""
     utils.getOperationSources(o)
-    # if not o.onlycurves:
-    #	o.warnings+=('not curves')
-    #	return;
     bridgecollectionname = o.bridges_collection_name
-    if bridgecollectionname == '' or bpy.data.collections.get(bridgecollectionname) == None:
+    if bridgecollectionname == '' or bpy.data.collections.get(bridgecollectionname) is None:
         bridgecollectionname = 'bridges_' + o.name
         bpy.data.collections.new(bridgecollectionname)
         bpy.context.collection.children.link(bpy.data.collections[bridgecollectionname])
@@ -71,7 +69,6 @@ def addAutoBridges(o):
             curve = utils.curveToShapely(ob)
         if ob.type == 'MESH':
             curve = utils.getObjectSilhouete('OBJECTS', [ob])
-        # curve = shapelyToMultipolygon(curve)
         for c in curve:
             c = c.exterior
             minx, miny, maxx, maxy = c.bounds
@@ -108,7 +105,7 @@ def getBridgesPoly(o):
             if ob.type == 'CURVE':
                 ob.select_set(state=True)
         bpy.context.view_layer.objects.active = ob
-        bpy.ops.object.duplicate();
+        bpy.ops.object.duplicate()
         bpy.ops.object.join()
         ob = bpy.context.active_object
         shapes.extend(utils.curveToShapely(ob, o.use_bridge_modifiers))
@@ -134,7 +131,7 @@ def useBridges(ch, o):
 
         ####
 
-        bridgeheight=min(o.max.z, o.min.z + abs(o.bridges_height))
+        bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
 
         vi = 0
         # shapelyToCurve('test',bridgespoly,0)
@@ -171,7 +168,6 @@ def useBridges(ch, o):
                 else:
                     intersections = sgeometry.GeometryCollection()
 
-                itempty = intersections.type == 'GeometryCollection'
                 itpoint = intersections.type == 'Point'
                 itmpoint = intersections.type == 'MultiPoint'
 
@@ -179,14 +175,9 @@ def useBridges(ch, o):
                 # print(l,bridgespoly)
                 if not startinside:
                     # print('nothing found')
-
                     newpoints.append(chp1)
-                # elif startinside and endinside and itempty:
-                #	newpoints.append((chp1[0],chp1[1],max(chp1[2],bridgeheight)))
                 elif startinside:
                     newpoints.append((chp1[0], chp1[1], max(chp1[2], bridgeheight)))
-                # elif not startinside:
-                #	newpoints.append(chp1)
                 cpoints = []
                 if itpoint:
                     cpoints = [mathutils.Vector((intersections.x, intersections.y, intersections.z))]
@@ -194,7 +185,7 @@ def useBridges(ch, o):
                     cpoints = []
                     for p in intersections:
                         cpoints.append(mathutils.Vector((p.x, p.y, p.z)))
-                #####sort collisions here :(
+                # ####sort collisions here :(
                 ncpoints = []
                 while len(cpoints) > 0:
                     mind = 10000000
@@ -230,8 +221,6 @@ def useBridges(ch, o):
                     isinside = not isinside
 
                 startinside = endinside
-                p1 = p2
-
                 vi += 1
             else:
                 newpoints.append(chp1)
