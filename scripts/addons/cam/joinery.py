@@ -457,9 +457,7 @@ def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_
     #   finger_thick = thickness of the material
     #   finger_tolerance = minimum finger tolerance
     #   twist_percentage = portion of twist finger which is the stem
-    base = False
     coords = list(loop.coords)
-    old_mortise_angle = 0
     print(closed)
     if not closed:
         spacing = (loop_length - start - end) / (finger_amount-1)
