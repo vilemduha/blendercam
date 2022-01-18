@@ -890,7 +890,6 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.curve_remove_doubles")
         layout.operator("object.mesh_get_pockets")
 
-
 class VIEW3D_PT_tools_create(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
