@@ -27,7 +27,7 @@ from bpy_extras.io_utils import ImportHelper
 from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, joinery, \
     curvecamtools, puzzle_joinery
 import shapely
-from shapely.geometry import Point, LineString, Polygon, MultiLineString
+from shapely.geometry import Point, LineString, Polygon, MultiLineString, MultiPoint
 import mathutils
 import math
 from Equation import Expression
@@ -43,6 +43,7 @@ class CamCurveHatch(bpy.types.Operator):
     angle: bpy.props.FloatProperty(name="angle", default=0, min=-math.pi/2, max=math.pi/2, precision=4, subtype="ANGLE")
     distance: bpy.props.FloatProperty(name="spacing", default=0.015, min=0, max=3.0, precision=4, unit="LENGTH")
     offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=-1.0, max=3.0, precision=4, unit="LENGTH")
+    amount: bpy.props.IntProperty(name="amount", default=10, min=1, max=10000)
     hull: bpy.props.BoolProperty(name="Convex Hull", default=False)
     pocket_type: EnumProperty(name='Type pocket',
                               items=(('BOUNDS', 'makes a bounds rectangle', 'makes a bounding square'),
@@ -58,6 +59,7 @@ class CamCurveHatch(bpy.types.Operator):
             bpy.ops.object.convex_hull()
             simple.activeName('crosshatch_hull')
         from shapely import affinity
+        from shapely.ops import voronoi_diagram
         shapes = utils.curveToShapely(bpy.context.active_object)
         for s in shapes:
             coords = []
@@ -93,6 +95,7 @@ class CamCurveHatch(bpy.types.Operator):
             else:
                 xing = translated.intersection(s.buffer(self.offset))
                 # Shapely detects intersections with the original curve or hull
+
             utils.shapelyToCurve('crosshatch_lines', xing, 0)
 
         # remove temporary shapes
