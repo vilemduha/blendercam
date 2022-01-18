@@ -43,7 +43,6 @@ import bpy
 from mathutils import Vector
 
 
-
 def derive_bezier_handles(a, b, c, d, tb, tc):
     """
     Derives bezier handles by using the start and end of the curve with 2 intermediate
@@ -84,7 +83,7 @@ def derive_bezier_handles(a, b, c, d, tb, tc):
     bezier_c = matrix_determinant * ((-matrix_c * final_b) + (matrix_a * final_c))
 
     # Return the handle points
-    return (bezier_b, bezier_c)
+    return bezier_b, bezier_c
 
 
 def create_parametric_curve(
@@ -95,8 +94,7 @@ def create_parametric_curve(
         use_cubic: bool = True,
         iterations: int = 8,
         resolution_u: int = 10,
-        **kwargs
-    ):
+        **kwargs):
     """
     Creates a Blender bezier curve object from a parametric function.
     This "plots" the function in 3D space from `min <= t <= max`.
@@ -248,5 +246,4 @@ def make_edge_loops(*objects):
 
     # Join them together
     bpy.ops.object.join(ctx)
-
 
