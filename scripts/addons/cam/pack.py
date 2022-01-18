@@ -33,8 +33,9 @@ from mathutils import Vector
 # this algorithm takes all selected curves,
 # converts them to polygons,
 # offsets them by the pre-set margin
-# then chooses a starting location possibly inside the allready occupied area and moves and rotates the polygon out of the occupied area
-# if one or more positions are found where the poly doesn't overlap, it is placed and added to the occupied area - allpoly
+# then chooses a starting location possibly inside the allready occupied area and moves and rotates the
+# polygon out of the occupied area if one or more positions are found where the poly doesn't overlap,
+# it is placed and added to the occupied area - allpoly
 # this algorithm is very slow and STUPID, a collision algorithm would be much much faster...
 
 
@@ -61,13 +62,12 @@ def packCurves():
     sheetsizey = packsettings.sheet_y
     direction = packsettings.sheet_fill_direction
     distance = packsettings.distance
-    tolerance =packsettings.tolerance
+    tolerance = packsettings.tolerance
     rotate = packsettings.rotate
-    rotate_angle=packsettings.rotate_angle
+    rotate_angle = packsettings.rotate_angle
 
     polyfield = []  # in this, position, rotation, and actual poly will be stored.
     for ob in bpy.context.selected_objects:
-        allchunks = []
         simple.activate(ob)
         bpy.ops.object.make_single_user(type='SELECTED_OBJECTS')
         bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
@@ -86,7 +86,6 @@ def packCurves():
     random.shuffle(polyfield)
     # primitive layout here:
     allpoly = prepared.prep(sgeometry.Polygon())  # main collision poly.
-    # allpoly=sgeometry.Polygon()#main collision poly.
 
     shift = tolerance  # one milimeter by now.
     rotchange = rotate_angle  # in radians
@@ -106,7 +105,6 @@ def packCurves():
         porig = pf[2]
         placed = False
         xmin, ymin, xmax, ymax = p.bounds
-        # p.shift(-xmin,-ymin)
         if direction == 'X':
             x = mindist
             y = -ymin
@@ -119,7 +117,6 @@ def packCurves():
         hits = 0
         besthit = None
         while not placed:
-
             # swap x and y, and add to x
             # print(x,y)
             p = porig
@@ -135,11 +132,9 @@ def packCurves():
             if xmin > 0 and ymin > 0 and (
                     (direction == 'Y' and xmax < sheetsizex) or (direction == 'X' and ymax < sheetsizey)):
                 if not allpoly.intersects(ptrans):
-                    # if allpoly.disjoint(ptrans):
-                    # print('gothit')
                     # we do more good solutions, choose best out of them:
                     hits += 1
-                    if best == None:
+                    if best is None:
                         best = [x, y, rot, xmax, ymax]
                         besthit = hits
                     if direction == 'X':
@@ -169,29 +164,10 @@ def packCurves():
                 ptrans = affinity.rotate(porig, best[2], rotcenter, use_radians=True)
                 ptrans = affinity.translate(ptrans, best[0], best[1])
 
-                # polygon_utils_cam.polyToMesh(p,0.1)#debug visualisation
-                keep = []
-                print(best[0], best[1],itera)
-                # print(len(ptrans.exterior))
-                # npoly=allpoly.union(ptrans)
-
-                # for ci in range(0,len(allpoly)):
-                #     cminx,cmaxx,cminy,cmaxy=allpoly.boundingBox(ci)
-                #     if direction=='X' and cmaxx>mindist-.1:
-                #             npoly.addContour(allpoly[ci])
-                #     if direction=='Y' and cmaxy>mindist-.1:
-                #             npoly.addContour(allpoly[ci])
-
-                # allpoly=npoly
+                print(best[0], best[1], itera)
                 placedpolys.append(ptrans)
                 allpoly = prepared.prep(sgeometry.MultiPolygon(placedpolys))
-                # *** temporary fix until prepared geometry code is setup properly
-                # allpoly=sgeometry.MultiPolygon(placedpolys)
 
-                # polygon_utils_cam.polyToMesh(allpoly,0.1)#debug visualisation
-
-                # for c in p:
-                #	allpoly.addContour(c)
                 # cleanup allpoly
                 print(itera, hits, besthit)
             if not placed:
@@ -207,7 +183,8 @@ def packCurves():
                     if ymax + shift > sheetsizey:
                         y = y - ymin
                         x += shift
-                if rotate: rot += rotchange
+                if rotate:
+                    rot += rotchange
             itera += 1
         i += 1
     t = time.time() - t
