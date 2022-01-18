@@ -27,13 +27,11 @@ from bpy.props import *
 from bpy_extras.io_utils import ImportHelper
 
 import subprocess, os, threading
-from cam import utils, pack, polygon_utils_cam, simple,gcodepath,bridges, simulation
+from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, simulation
 import shapely
 import mathutils
 import math
 import cam
-
-
 
 
 class threadCom:  # object passed to threads to read background process stdout info
@@ -55,7 +53,8 @@ def threadread(tcom):
 
 
 class CAMPositionObject(bpy.types.Operator):
-    """position object for CAM operation. Tests object bounds and places them so the object is aligned to be positive from x and y and negative from z."""
+    """position object for CAM operation. Tests object bounds and places them so the object
+    is aligned to be positive from x and y and negative from z."""
     bl_idname = "object.cam_position"
     bl_label = "position object for CAM operation"
     bl_options = {'REGISTER', 'UNDO'}
@@ -98,7 +97,7 @@ def timer_update(context):
                     processes.remove(p)
 
                     o = s.cam_operations[tcom.opname]
-                    o.computing = False;
+                    o.computing = False
                     utils.reload_paths(o)
                     update_zbufferimage_tag = False
                     update_offsetimage_tag = False
@@ -108,20 +107,7 @@ def timer_update(context):
                     p[0] = readthread
             o = s.cam_operations[tcom.opname]  # changes
             o.outtext = tcom.lasttext  # changes
-    # text=text+('# %s %s #' % (tcom.opname,tcom.lasttext))#CHANGES
 
-
-# s.cam_text=text#changes
-
-# commented out by NFZ: asking every property area to redraw
-# causes my netbook to come to a crawl and cpu overheats
-# need to find a better way of doing this
-# doesn't effect normal path calculation when commented out
-# maybe this should only be enabled when when background calc selected
-# if bpy.context.screen!=None:
-#	for area in bpy.context.screen.areas:
-#		if area.type == 'PROPERTIES':
-#			area.tag_redraw()
 
 class PathsBackground(bpy.types.Operator):
     """calculate CAM paths in background. File has to be saved before."""
@@ -129,20 +115,11 @@ class PathsBackground(bpy.types.Operator):
     bl_label = "Calculate CAM paths in background"
     bl_options = {'REGISTER', 'UNDO'}
 
-    # processes=[]
-
-    # @classmethod
-    # def poll(cls, context):
-    #	return context.active_object is not None
-
     def execute(self, context):
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
         self.operation = o
         o.computing = True
-        # if bpy.data.is_dirty:
-        # bpy.ops.wm.save_mainfile()#this has to be replaced with passing argument or pickle stuff..
-        # picklepath=getCachePath(o)+'init.pickle'
 
         bpath = bpy.app.binary_path
         fpath = bpy.data.filepath
@@ -171,12 +148,6 @@ class KillPathsBackground(bpy.types.Operator):
     bl_label = "Kill background computation of an operation"
     bl_options = {'REGISTER', 'UNDO'}
 
-    # processes=[]
-
-    # @classmethod
-    # def poll(cls, context):
-    #     return context.active_object is not None
-
     def execute(self, context):
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
@@ -185,8 +156,6 @@ class KillPathsBackground(bpy.types.Operator):
         if hasattr(bpy.ops.object.calculate_cam_paths_background.__class__, 'cam_processes'):
             processes = bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes
             for p in processes:
-                # proc=p[1].proc
-                # readthread=p[0]
                 tcom = p[1]
                 if tcom.opname == o.name:
                     processes.remove(p)
@@ -210,19 +179,19 @@ class CalculatePath(bpy.types.Operator):
         # getIslands(context.object)
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
-        if o.geometry_source=='OBJECT':
+        if o.geometry_source == 'OBJECT':
             ob = bpy.data.objects[o.object_name]
             ob.hide_set(False)
-        if o.geometry_source=='COLLECTION':
+        if o.geometry_source == 'COLLECTION':
             obc = bpy.data.collections[o.collection_name]
             for ob in obc.objects:
                 ob.hide_set(False)
-        if o.strategy=="CARVE":
-            curvob=bpy.data.objects[o.curve_object]
+        if o.strategy == "CARVE":
+            curvob = bpy.data.objects[o.curve_object]
             curvob.hide_set(False)
         print(bpy.context.mode)
         if bpy.context.mode != 'OBJECT':
-            bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
+            bpy.ops.object.mode_set(mode='OBJECT')	    # force object mode
         bpy.ops.object.select_all(action='DESELECT')
         path = bpy.data.objects.get('cam_path_{}'.format(o.name))
         if path:
@@ -279,7 +248,7 @@ class CamPackObjects(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode		
+        bpy.ops.object.mode_set(mode='OBJECT')	    # force object mode
         obs = bpy.context.selected_objects
         pack.packCurves()
         # layout.
@@ -324,7 +293,7 @@ class PathsChain(bpy.types.Operator):
 
     def execute(self, context):
         s = bpy.context.scene
-        bpy.ops.object.mode_set(mode = 'OBJECT')	#force object mode
+        bpy.ops.object.mode_set(mode='OBJECT')	    # force object mode
         chain = s.cam_chains[s.cam_active_chain]
         chainops = getChainOperations(chain)
         meshes = []
@@ -376,27 +345,25 @@ class PathExport(bpy.types.Operator):
 
         print("EXPORING", operation.filename, bpy.data.objects["cam_path_{}".format(operation.name)].data, operation)
 
-        gcodepath.exportGcodePath(operation.filename, [bpy.data.objects["cam_path_{}".format(operation.name)].data], [operation])
+        gcodepath.exportGcodePath(operation.filename, [bpy.data.objects["cam_path_{}".format(operation.name)].data],
+                                  [operation])
         return {'FINISHED'}
 
 
 class CAMSimulate(bpy.types.Operator):
     """simulate CAM operation
-    this is performed by: creating an image, painting Z depth of the brush substractively. Works only for some operations, can not be used for 4-5 axis."""
+    this is performed by: creating an image, painting Z depth of the brush substractively.
+    Works only for some operations, can not be used for 4-5 axis."""
     bl_idname = "object.cam_simulate"
     bl_label = "CAM simulation"
     bl_options = {'REGISTER', 'UNDO'}
 
     operation: StringProperty(name="Operation",
-                               description="Specify the operation to calculate", default='Operation')
+                              description="Specify the operation to calculate", default='Operation')
 
     def execute(self, context):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
-
-        # if operation.geometry_source=='OBJECT' and operation.object_name in bpy.data.objects and #bpy.data.objects[operation.object_name].type=='CURVE':
-        #	print('simulation of curve operations is not available')
-        #	return {'FINISHED'}
 
         operation_name = "cam_path_{}".format(operation.name)
 
@@ -413,13 +380,14 @@ class CAMSimulate(bpy.types.Operator):
 
 
 class CAMSimulateChain(bpy.types.Operator):
-    """simulate CAM chain, compared to single op simulation just writes into one image and thus enables to see how ops work together."""
+    """simulate CAM chain, compared to single op simulation just writes into one image and thus enables
+    to see how ops work together."""
     bl_idname = "object.cam_simulate_chain"
     bl_label = "CAM simulation"
     bl_options = {'REGISTER', 'UNDO'}
 
     operation: StringProperty(name="Operation",
-                               description="Specify the operation to calculate", default='Operation')
+                              description="Specify the operation to calculate", default='Operation')
 
     def execute(self, context):
         s = bpy.context.scene
@@ -428,8 +396,8 @@ class CAMSimulateChain(bpy.types.Operator):
 
         canSimulate = True
         for operation in chainops:
-            if not operation.name in bpy.data.objects:
-                canSimulate = True  #force true
+            if operation.name not in bpy.data.objects:
+                canSimulate = True  # force true
             print("operation name " + str(operation.name))
         if canSimulate:
             simulation.doSimulation(chain.name, chainops)
@@ -498,7 +466,6 @@ class CamChainOperationAdd(bpy.types.Operator):
         s = bpy.context.scene
         chain = s.cam_chains[s.cam_active_chain]
         s = bpy.context.scene
-        # s.chaindata[chain.index].remove(chain.active_operation+1,s.cam_operations[s.cam_active_operation])
         chain.operations.add()
         chain.active_operation += 1
         chain.operations[-1].name = s.cam_operations[s.cam_active_operation].name
@@ -556,11 +523,8 @@ class CamChainOperationRemove(bpy.types.Operator):
         return context.scene is not None
 
     def execute(self, context):
-        # main(context)
         s = bpy.context.scene
         chain = s.cam_chains[s.cam_active_chain]
-        s = bpy.context.scene
-        # s.chaindata[chain.index].append(s.cam_operations[s.cam_active_operation])
         chain.operations.remove(chain.active_operation)
         chain.active_operation -= 1
         if chain.active_operation < 0:
@@ -571,13 +535,11 @@ class CamChainOperationRemove(bpy.types.Operator):
 def fixUnits():
     """Sets up units for blender CAM"""
     s = bpy.context.scene
-    # dhull: leave unit settings alone - may also need to comment out scale_length below
-    # if s.unit_settings.system=='NONE':#metric is hereby default
-    #	s.unit_settings.system='METRIC'
 
     s.unit_settings.system_rotation = 'DEGREES'
 
-    s.unit_settings.scale_length = 1.0  # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.
+    s.unit_settings.scale_length = 1.0
+    # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.
 
 
 # add pocket op for medial axis and profile cut inside to clean unremoved material
@@ -594,12 +556,10 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         if op.name == "MedialPocket":
             mpocket_exists = True
 
-
-
-    ob=bpy.data.objects[sname]
+    ob = bpy.data.objects[sname]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
-    utils.silhoueteOffset(ob, -new_cutter_diameter/2,1,0.3)
+    utils.silhoueteOffset(ob, -new_cutter_diameter/2, 1, 0.3)
     bpy.context.active_object.name = 'medial_pocket'
 
     if not mpocket_exists:     # create a pocket operation if it does not exist already
@@ -607,11 +567,11 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         o = s.cam_operations[-1]
         o.object_name = 'medial_pocket'
         s.cam_active_operation = len(s.cam_operations) - 1
-        o.name = 'MedialPocket' # + str(s.cam_active_operation + 1)
+        o.name = 'MedialPocket'
         o.filename = o.name
         o.strategy = 'POCKET'
         o.use_layers = False
-        o.material_from_model =False
+        o.material_from_model = False
         o.material_size[2] = -maxdepth
         o.minz_from_ob = False
         o.minz_from_material = True
@@ -628,13 +588,11 @@ class CamOperationAdd(bpy.types.Operator):
         return context.scene is not None
 
     def execute(self, context):
-        # main(context)
         s = bpy.context.scene
-
         fixUnits()
 
         if s.objects.get('CAM_machine') is None:
-             utils.addMachineAreaObject()
+            utils.addMachineAreaObject()
         # if len(s.cam_material)==0:
         #     s.cam_material.add()
 
@@ -680,7 +638,7 @@ class CamOperationCopy(bpy.types.Operator):
             o[k] = copyop[k]
         o.computing = False
 
-        ####get digits in the end
+        # ###get digits in the end
 
         isdigit = True
         numdigits = 0
@@ -740,9 +698,8 @@ class CamOperationMove(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     direction: EnumProperty(name='direction',
-                             items=(('UP', 'Up', ''), ('DOWN', 'Down', '')),
-                             description='direction',
-                             default='DOWN')
+                            items=(('UP', 'Up', ''), ('DOWN', 'Down', '')),
+                            description='direction', default='DOWN')
 
     @classmethod
     def poll(cls, context):
@@ -776,7 +733,6 @@ class CamOrientationAdd(bpy.types.Operator):
         return context.scene is not None
 
     def execute(self, context):
-        # main(context)
         s = bpy.context.scene
         a = s.cam_active_operation
         o = s.cam_operations[a]
@@ -803,10 +759,8 @@ class CamBridgesAdd(bpy.types.Operator):
         return context.scene is not None
 
     def execute(self, context):
-        # main(context)
         s = bpy.context.scene
         a = s.cam_active_operation
         o = s.cam_operations[a]
         bridges.addAutoBridges(o)
         return {'FINISHED'}
-
