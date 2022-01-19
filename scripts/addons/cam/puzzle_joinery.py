@@ -610,8 +610,8 @@ def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, t
     simple.rename('tmprect', 'mitre')
 
 
-def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, t_neck=0.5, t_thick=0.01, twist_amount=1,
-              which='MF'):
+def open_curve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, t_neck=0.5, t_thick=0.01,
+               twist_amount=1, which='MF'):
     # puts puzzle connectors at the end of an open curve
     # optionally puts twist lock connectors at the puzzle connection
     # optionally puts twist lock connectors along the open curve
@@ -676,5 +676,3 @@ def openCurve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, t
         simple.difference('tmp', 'tmp_curve')
 
     simple.activeName('puzzle_curve')
-
-

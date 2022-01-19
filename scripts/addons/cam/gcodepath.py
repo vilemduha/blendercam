@@ -264,9 +264,9 @@ def exportGcodePath(filename, vertslist, operations):
         plungefeedrate = millfeedrate * o.plunge_feedrate / 100
         freefeedrate = m.feedrate_max * unitcorr
         fadjust = False
-        if o.do_simulation_feedrate and mesh.shape_keys != None and mesh.shape_keys.key_blocks.find('feedrates') != -1:
+        if o.do_simulation_feedrate and mesh.shape_keys is not None \
+                and mesh.shape_keys.key_blocks.find('feedrates') != -1:
             shapek = mesh.shape_keys.key_blocks['feedrates']
-
             fadjust = True
 
         if m.use_position_definitions:  # dhull
@@ -506,7 +506,8 @@ def getPath(context, operation):  # should do all path calculations.
         getPath3axis(context, operation)
 
     elif (operation.machine_axes == '5' and operation.strategy5axis == 'INDEXED') or (
-            operation.machine_axes == '4' and operation.strategy4axis == 'INDEXED'):  # 5 axis operations are now only 3 axis operations that get rotated...
+            operation.machine_axes == '4' and operation.strategy4axis == 'INDEXED'):
+        # 5 axis operations are now only 3 axis operations that get rotated...
         operation.orientation = prepareIndexed(operation)  # TODO RENAME THIS
 
         getPath3axis(context, operation)  # TODO RENAME THIS
@@ -717,7 +718,6 @@ def getPath3axis(context, operation):
                 #####################################
                 # fill top slice for normal and first for inverse, fill between polys
                 if not lastslice.is_empty or (o.inverse and not poly.is_empty and slicesfilled == 1):
-                    # offs=False
                     restpoly = None
                     if not lastslice.is_empty:  # between polys
                         if o.inverse:
@@ -759,10 +759,10 @@ def getPath3axis(context, operation):
                     fillz = z
                     layerstepinc = 0
 
-                    boundrect = o.ambient
-                    restpoly = boundrect.difference(poly)
-                    if (o.inverse and poly.is_empty and slicesfilled > 0):
-                        restpoly = boundrect.difference(lastslice)
+                    bound_rectangle = o.ambient
+                    restpoly = bound_rectangle.difference(poly)
+                    if o.inverse and poly.is_empty and slicesfilled > 0:
+                        restpoly = bound_rectangle.difference(lastslice)
 
                     restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.circle_detail)
 
@@ -809,12 +809,12 @@ def getPath4axis(context, operation):
     o = operation
     utils.getBounds(o)
     if o.strategy4axis in ['PARALLELR', 'PARALLEL', 'HELIX', 'CROSS']:
-        pathSamples = getPathPattern4axis(o)
+        path_samples = getPathPattern4axis(o)
 
-        depth = pathSamples[0].depth
+        depth = path_samples[0].depth
         chunks = []
 
         layers = strategy.getLayers(o, 0, depth)
 
-        chunks.extend(utils.sampleChunksNAxis(o, pathSamples, layers))
+        chunks.extend(utils.sampleChunksNAxis(o, path_samples, layers))
         strategy.chunksToMesh(chunks, o)

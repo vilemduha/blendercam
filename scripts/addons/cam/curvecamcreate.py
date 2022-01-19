@@ -446,7 +446,7 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.removeMultiple("_finger_pair")
         simple.activeName("drawer_back")
         simple.removeDoubles()
-        simple.addOvercut(self.overcut_diameter, self.overcut)
+        simple.add_overcut(self.overcut_diameter, self.overcut)
 
         #   make drawer front
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.drawer_hole_diameter / 2, enter_editmode=False,
@@ -459,7 +459,7 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.activeName("drawer_front")
         simple.removeDoubles()
-        simple.addOvercut(self.overcut_diameter, self.overcut)
+        simple.add_overcut(self.overcut_diameter, self.overcut)
 
         #   place back and front side by side
         simple.makeActive('drawer_front')
@@ -476,7 +476,7 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.activeName("drawer_side")
         simple.removeDoubles()
-        simple.addOvercut(self.overcut_diameter, self.overcut)
+        simple.add_overcut(self.overcut_diameter, self.overcut)
         simple.removeMultiple('_finger_pair')
 
         #   make bottom
@@ -497,7 +497,7 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.activeName("drawer_bottom")
 
         simple.removeDoubles()
-        simple.addOvercut(self.overcut_diameter, self.overcut)
+        simple.add_overcut(self.overcut_diameter, self.overcut)
 
         # cleanup all temp polygons
         simple.removeMultiple("_")
@@ -707,11 +707,11 @@ class CamCurvePuzzle(bpy.types.Operator):
                              corner=True)
 
         elif self.interlock_type == 'OPENCURVE' and curve_detected:
-            puzzle_joinery.openCurve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
+            puzzle_joinery.open_urve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
                                      stem=self.stem_size, twist=self.twist_lock, t_neck=self.twist_percent,
                                      t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount)
 
         simple.removeDoubles()
-        simple.addOvercut(self.overcut_diameter, self.overcut)
+        simple.add_overcut(self.overcut_diameter, self.overcut)
 
         return {'FINISHED'}

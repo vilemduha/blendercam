@@ -306,7 +306,7 @@ def removeDoubles():
 
 
 # Add overcut to active object
-def addOvercut(diametre, overcut=True):
+def add_overcut(diametre, overcut=True):
     if overcut:
         name = bpy.context.active_object.name
         bpy.ops.object.curve_overcuts(diameter=diametre, threshold=math.pi/2.05)
