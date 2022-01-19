@@ -355,7 +355,6 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if not ao.computing:
                     if ao.valid:
                         layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
-                        # layout.operator("object.calculate_cam_paths_background", text="Calculate path in background")
                         if ao.name is not None:
                             name = "cam_path_{}".format(ao.name)
                             if scene.objects.get(name) is not None:
