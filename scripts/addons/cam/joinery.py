@@ -83,11 +83,9 @@ def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, perc
     simple.activeName("_tmp")
 
     simple.union('_tmp')
-    bpy.context.active_object.rotation_euler.z = rotation
-    bpy.ops.transform.translate(value=(cx, cy, 0.0))
+    simple.rotate(rotation)
+    simple.move(x=cx, y=cy)
     simple.activeName("_groove")
-    simple.removeMultiple('_tmp')
-    simple.makeActive("_groove")
     simple.removeDoubles()
 
 
