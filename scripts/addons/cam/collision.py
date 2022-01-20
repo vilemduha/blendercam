@@ -328,7 +328,7 @@ def getSampleBulletNAxis(cutter, startpoint, endpoint, rotation, cutter_compensa
     # cutter compensation vector - cutter physics object has center in the middle, while cam needs the tip position.
     cutterVec.rotate(Euler(rotation))
     start = (startpoint * BULLET_SCALE + cutterVec).to_tuple()
-    end = ((endpoint) * BULLET_SCALE + cutterVec).to_tuple()
+    end = (endpoint * BULLET_SCALE + cutterVec).to_tuple()
     pos = bpy.context.scene.rigidbody_world.convex_sweep_test(cutter, start, end)
 
     if pos[3] == 1:

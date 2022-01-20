@@ -19,8 +19,6 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-
-
 import bpy
 from bpy.props import *
 
@@ -28,6 +26,7 @@ from cam import utils, parametric
 import math
 from Equation import Expression
 import numpy as np
+
 
 class CamSineCurve(bpy.types.Operator):
     """Object sine """  # by Alain Pelletier april 2021
@@ -40,38 +39,43 @@ class CamSineCurve(bpy.types.Operator):
         ('XY', 'Y to displace X axis', 'Y constant; X sine displacement'),
         ('YX', 'X to displace Y axis', 'X constant; Y sine displacement'),
         ('ZX', 'X to displace Z axis', 'X constant; Y sine displacement'),
-        ('ZY', 'Y to displace Z axis', 'X constant; Y sine displacement')),default='ZX')
+        ('ZY', 'Y to displace Z axis', 'X constant; Y sine displacement')), default='ZX')
     wave: bpy.props.EnumProperty(name="Wave", items=(
         ('sine', 'Sine Wave', 'Sine Wave'),
         ('triangle', 'Triangle Wave', 'triangle wave'),
-        ('cycloid', 'Cycloid', 'Sine wave rectification'),('invcycloid', 'Inverse Cycloid', 'Sine wave rectification')),default='sine')
+        ('cycloid', 'Cycloid', 'Sine wave rectification'),
+        ('invcycloid', 'Inverse Cycloid', 'Sine wave rectification')), default='sine')
     amplitude: bpy.props.FloatProperty(name="Amplitude", default=.01, min=0, max=10, precision=4, unit="LENGTH")
     period: bpy.props.FloatProperty(name="Period", default=.5, min=0.001, max=100, precision=4, unit="LENGTH")
-    beatperiod: bpy.props.FloatProperty(name="Beat Period offset", default=0.0, min=0.0, max=100, precision=4, unit="LENGTH")
+    beatperiod: bpy.props.FloatProperty(name="Beat Period offset", default=0.0, min=0.0, max=100, precision=4,
+                                        unit="LENGTH")
     shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
     offset: bpy.props.FloatProperty(name="offset", default=0, min=-1.0, max=1, precision=4, unit="LENGTH")
     iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
     maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=3, precision=4, unit="LENGTH")
     mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
-    wave_distance: bpy.props.FloatProperty(name="distance between multiple waves", default=0.0, min=0.0, max=100, precision=4, unit="LENGTH")
-    wave_angle_offset: bpy.props.FloatProperty(name="angle offset for multiple waves", default=math.pi/2, min=-200*math.pi, max=200*math.pi, precision=4, unit="ROTATION")
+    wave_distance: bpy.props.FloatProperty(name="distance between multiple waves", default=0.0, min=0.0, max=100,
+                                           precision=4, unit="LENGTH")
+    wave_angle_offset: bpy.props.FloatProperty(name="angle offset for multiple waves", default=math.pi/2,
+                                               min=-200*math.pi, max=200*math.pi, precision=4, unit="ROTATION")
     wave_amount: bpy.props.IntProperty(name="amount of multiple waves", default=1, min=1, max=2000)
 
     def execute(self, context):
 
         # z=Asin(B(x+C))+D
-        if self.wave=='sine':
-            zstring = ssine(self.amplitude,self.period, dc_offset=self.offset, phase_shift=self.shift)
-            if self.beatperiod !=0:
-                zstring+= "+"+ssine(self.amplitude, self.period+self.beatperiod, dc_offset=self.offset, phase_shift=self.shift)
-        elif self.wave=='triangle':  #build triangle wave from fourier series
-            zstring = str(round(self.offset, 6)) + "+(" + str(triangle(80,self.period,self.amplitude))+")"
-            if self.beatperiod !=0:
-                zstring += '+' + str(triangle(80,self.period+self.beatperiod,self.amplitude))
+        if self.wave == 'sine':
+            zstring = ssine(self.amplitude, self.period, dc_offset=self.offset, phase_shift=self.shift)
+            if self.beatperiod != 0:
+                zstring += "+"+ssine(self.amplitude, self.period+self.beatperiod, dc_offset=self.offset,
+                                     phase_shift=self.shift)
+        elif self.wave == 'triangle':  # build triangle wave from fourier series
+            zstring = str(round(self.offset, 6)) + "+(" + str(triangle(80, self.period, self.amplitude))+")"
+            if self.beatperiod != 0:
+                zstring += '+' + str(triangle(80, self.period+self.beatperiod, self.amplitude))
         elif self.wave == 'cycloid':
-            zstring = "abs("+ssine(self.amplitude,self.period, dc_offset=self.offset, phase_shift=self.shift)+")"
+            zstring = "abs("+ssine(self.amplitude, self.period, dc_offset=self.offset, phase_shift=self.shift)+")"
         elif self.wave == 'invcycloid':
-            zstring = "-1*abs("+ssine(self.amplitude,self.period, dc_offset=self.offset, phase_shift=self.shift)+")"
+            zstring = "-1*abs("+ssine(self.amplitude, self.period, dc_offset=self.offset, phase_shift=self.shift)+")"
 
         print(zstring)
         e = Expression(zstring, ["t"])  # make equation from string
@@ -89,9 +93,9 @@ class CamSineCurve(bpy.types.Operator):
             return c
 
         for i in range(self.wave_amount):
-            angle_off=self.wave_angle_offset*self.period*i/(2*math.pi)
-            parametric.create_parametric_curve(f, offset=self.wave_distance*i, min=self.mint, max=self.maxt, use_cubic=True,
-                                           iterations=self.iteration, angle_offset=angle_off)
+            angle_off = self.wave_angle_offset*self.period*i/(2*math.pi)
+            parametric.create_parametric_curve(f, offset=self.wave_distance*i, min=self.mint, max=self.maxt,
+                                               use_cubic=True, iterations=self.iteration, angle_offset=angle_off)
 
         return {'FINISHED'}
 
@@ -105,12 +109,12 @@ class CamLissajousCurve(bpy.types.Operator):
     amplitude_A: bpy.props.FloatProperty(name="Amplitude A", default=.1, min=0, max=100, precision=4, unit="LENGTH")
     waveA: bpy.props.EnumProperty(name="Wave X", items=(
         ('sine', 'Sine Wave', 'Sine Wave'),
-        ('triangle', 'Triangle Wave', 'triangle wave')),default='sine')
+        ('triangle', 'Triangle Wave', 'triangle wave')), default='sine')
 
     amplitude_B: bpy.props.FloatProperty(name="Amplitude B", default=.1, min=0, max=100, precision=4, unit="LENGTH")
     waveB: bpy.props.EnumProperty(name="Wave Y", items=(
         ('sine', 'Sine Wave', 'Sine Wave'),
-        ('triangle', 'Triangle Wave', 'triangle wave')),default='sine')
+        ('triangle', 'Triangle Wave', 'triangle wave')), default='sine')
     period_A: bpy.props.FloatProperty(name="Period A", default=1.1, min=0.001, max=100, precision=4, unit="LENGTH")
     period_B: bpy.props.FloatProperty(name="Period B", default=1.0, min=0.001, max=100, precision=4, unit="LENGTH")
     period_Z: bpy.props.FloatProperty(name="Period Z", default=1.0, min=0.001, max=100, precision=4, unit="LENGTH")
@@ -124,13 +128,13 @@ class CamLissajousCurve(bpy.types.Operator):
     def execute(self, context):
         # x=Asin(at+delta ),y=Bsin(bt)
 
-        if self.waveA =='sine':
-            xstring = ssine(self.amplitude_A,self.period_A, phase_shift=self.shift)
+        if self.waveA == 'sine':
+            xstring = ssine(self.amplitude_A, self.period_A, phase_shift=self.shift)
         elif self.waveA == 'triangle':
-            xstring= str(triangle(100,self.period_A,self.amplitude_A))
+            xstring = str(triangle(100, self.period_A, self.amplitude_A))
 
         if self.waveB == 'sine':
-            ystring = ssine(self.amplitude_B,self.period_B)
+            ystring = ssine(self.amplitude_B, self.period_B)
 
         elif self.waveB == 'triangle':
             ystring = str(triangle(100, self.period_B, self.amplitude_B))
@@ -141,7 +145,7 @@ class CamLissajousCurve(bpy.types.Operator):
         print("y= " + str(ystring))
         x = Expression(xstring, ["t"])  # make equation from string
         y = Expression(ystring, ["t"])  # make equation from string
-        z = Expression(zstring,["t"])
+        z = Expression(zstring, ["t"])
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
@@ -167,10 +171,8 @@ class CamHypotrochoidCurve(bpy.types.Operator):
                                unit="LENGTH")
     d: bpy.props.FloatProperty(name="distance from center of interior circle", default=0.050, min=0, max=100,
                                precision=4, unit="LENGTH")
-    dip: bpy.props.FloatProperty(name="variable depth from center", default=0.00, min=-100, max=100,
-                               precision=4)
-#    dipexponent: bpy.props.FloatProperty(name="exponent for dip", default=0.00, min=-100, max=100,
-#                               precision=6)
+    dip: bpy.props.FloatProperty(name="variable depth from center", default=0.00, min=-100, max=100, precision=4)
+
     def execute(self, context):
         r = round(self.r, 6)
         R = round(self.R, 6)
@@ -188,8 +190,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
             xstring = str(Rpr) + "*cos(t)-" + str(d) + "*cos(" + str(Rpror) + "*t)"
             ystring = str(Rpr) + "*sin(t)-" + str(d) + "*sin(" + str(Rpror) + "*t)"
 
-        zstring = '(' + str(round(self.dip, 6)) + '*(sqrt(((' + xstring + ')**2)+(('+ ystring + ')**2))))'
-
+        zstring = '(' + str(round(self.dip, 6)) + '*(sqrt(((' + xstring + ')**2)+((' + ystring + ')**2))))'
 
         print("x= " + str(xstring))
         print("y= " + str(ystring))
@@ -200,6 +201,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         y = Expression(ystring, ["t"])  # make equation from string
         z = Expression(zstring, ["t"])  # make equation from string
         # build function to be passed to create parametric curve ()
+
         def f(t, offset: float = 0.0):
             c = (x(t), y(t), z(t))
             return c
@@ -245,8 +247,9 @@ class CamCustomCurve(bpy.types.Operator):
 
         return {'FINISHED'}
 
-def triangle(i,T,A):
-    s=str(A*8/(math.pi**2))+'*('
+
+def triangle(i, T, A):
+    s = str(A*8/(math.pi**2))+'*('
     for n in range(i):
         if n % 2 != 0:
             e = (n-1)/2
@@ -254,11 +257,11 @@ def triangle(i,T,A):
             b = round(n*math.pi/(T/2), 8)
             if n > 1:
                 s += '+'
-            s += str(a)+"*sin("+str(b)+"*t) "
-    s+=')'
+            s += str(a) + "*sin("+str(b)+"*t) "
+    s += ')'
     return s
 
 
-def ssine(A,T,dc_offset=0, phase_shift=0):
+def ssine(A, T, dc_offset=0, phase_shift=0):
     return str(round(dc_offset, 6)) + "+" + str(round(A, 6)) + "*sin((2*pi/" + str(
         round(T, 6)) + ")*(t+" + str(round(phase_shift, 6)) + "))"
