@@ -165,7 +165,6 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
             row.menu("CAM_MACHINE_MT_presets", text=bpy.types.CAM_MACHINE_MT_presets.bl_label)
             row.operator("render.cam_preset_machine_add", text="", icon='ADD')
             row.operator("render.cam_preset_machine_add", text="", icon='REMOVE').remove_active = True
-            # layout.prop(ao,'name')
             layout.prop(ao, 'post_processor')
             layout.prop(ao, 'eval_splitting')
             if ao.eval_splitting:
@@ -187,6 +186,10 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
             layout.prop(ao, 'spindle_max')
             layout.prop(ao, 'spindle_start_time')
             layout.prop(ao, 'spindle_default')
+            layout.prop(ao, 'output_tool_definitions')
+            layout.prop(ao, 'output_tool_change')
+            if ao.output_tool_change:
+                layout.prop(ao, 'output_g43_on_tool_change')
 
             if use_experimental:
                 layout.prop(ao, 'axis4')
@@ -197,10 +200,6 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.output_block_numbers:
                     layout.prop(ao, 'start_block_number')
                     layout.prop(ao, 'block_number_increment')
-                layout.prop(ao, 'output_tool_definitions')
-                layout.prop(ao, 'output_tool_change')
-                if ao.output_tool_change:
-                    layout.prop(ao, 'output_g43_on_tool_change')
 
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -405,7 +404,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.label(text='Quality will suffer if tolerance')
                     layout.label(text='is high')
                     layout.prop(ao, 'simplify_tol')
-                if use_experimental and ao.geometry_source in ['OBJECT', 'COLLECTION']:
+                if ao.geometry_source in ['OBJECT', 'COLLECTION']:
                     layout.prop(ao, 'use_modifiers')
                 layout.prop(ao, 'hide_all_others')
                 layout.prop(ao, 'parent_path_to_object')
@@ -504,13 +503,13 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     if ao.enable_B:
                         layout.prop(ao, 'rotation_B')
 
-                    if use_experimental:
-                        layout.prop(ao, 'outlines_count')
-                        if ao.outlines_count > 1:
-                            layout.prop(ao, 'dist_between_paths')
-                            EngagementDisplay(ao, layout)
-                            layout.prop(ao, 'movement_insideout')
+                    layout.prop(ao, 'outlines_count')
+                    if ao.outlines_count > 1:
+                        layout.prop(ao, 'dist_between_paths')
+                        EngagementDisplay(ao, layout)
+                        layout.prop(ao, 'movement_insideout')
                     layout.prop(ao, 'dont_merge')
+
                 elif ao.strategy == 'WATERLINE':
                     if ao.waterline_fill:
                         layout.label(text="Waterline roughing strategy")
@@ -632,8 +631,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.strategy == 'PARALLEL' or ao.strategy == 'CROSS':
                     if not ao.ramp:
                         layout.prop(ao, 'parallel_step_back')
-                if ao.strategy == 'CUTOUT' or (
-                        use_experimental and (ao.strategy == 'POCKET' or ao.strategy == 'MEDIAL_AXIS')):
+                if ao.strategy == 'CUTOUT' or ao.strategy == 'POCKET' or ao.strategy == 'MEDIAL_AXIS':
                     layout.prop(ao, 'first_down')
 
                 if ao.strategy == 'POCKET':
@@ -808,20 +806,18 @@ class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
         if len(scene.cam_operations) == 0:
             layout.label(text='Add operation first')
         if len(scene.cam_operations) > 0:
-            use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
-            if use_experimental:
-                ao = scene.cam_operations[scene.cam_active_operation]
-                if ao.valid:
-                    layout.prop(ao, 'output_header')
-                    if ao.output_header:
-                        layout.prop(ao, 'gcode_header')
-                    layout.prop(ao, 'output_trailer')
-                    if ao.output_trailer:
-                        layout.prop(ao, 'gcode_trailer')
+            ao = scene.cam_operations[scene.cam_active_operation]
+            if ao.valid:
+                layout.prop(ao, 'output_header')
+                if ao.output_header:
+                    layout.prop(ao, 'gcode_header')
+                layout.prop(ao, 'output_trailer')
+                if ao.output_trailer:
+                    layout.prop(ao, 'gcode_trailer')
+
             else:
                 layout.label(text='Enable Show experimental features')
                 layout.label(text='in Blender CAM Addon preferences')
-
 
 class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM material panel"""
