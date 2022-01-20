@@ -765,9 +765,7 @@ def parentChild(parents, children, o):
 
 def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarchies... ;)
     # print ('analyzing paths')
-    # verts=[]
-    # pverts=[]
-    polys = []
+
     for ch in chunks:  # first convert chunk to poly
         if len(ch.points) > 2:
             # pchunk=[]
@@ -800,12 +798,8 @@ def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarc
         ch.parents = ch.nparents
         ch.nparents = None
         if len(ch.parents) > 0:
-            # print(len(ch.parents))
-            # ch.parents[0].poly=ch.parents[0].poly-ch.poly
-            # print(ch.parents[0].poly,[ch.poly])
+
             print('addparent')
-            # polygon_utils_cam.shapelyToCurve('crust',ch.parents[0].poly,0)
-            # polygon_utils_cam.shapelyToCurve('hole',ch.poly,0)
             try:
                 ch.parents[0].poly = ch.parents[0].poly.difference(
                     ch.poly)  # sgeometry.Polygon( ch.parents[0].poly, ch.poly)
@@ -899,8 +893,9 @@ def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarc
         ch = chunks[polyi]
         if len(ch.parents) == 0:
             returnpolys.append(ch.poly)
-
-    return returnpolys
+    from shapely.geometry import MultiPolygon
+    polys = MultiPolygon(returnpolys)
+    return polys
 
 
 def meshFromCurveToChunk(object):

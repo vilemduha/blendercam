@@ -174,7 +174,7 @@ class CamCurveOvercuts(bpy.types.Operator):
         negative_overcuts = []
         positive_overcuts = []
         diameter = self.diameter * 1.001
-        for s in shapes:
+        for s in shapes.geoms:
             s = shapely.geometry.polygon.orient(s, 1)
             if s.boundary.type == 'LineString':
                 loops = [s.boundary]
@@ -183,7 +183,6 @@ class CamCurveOvercuts(bpy.types.Operator):
 
             for ci, c in enumerate(loops):
                 if ci > 0 or self.do_outer:
-                    # c=s.boundary
                     for i, co in enumerate(c.coords):
                         i1 = i - 1
                         if i1 == -1:
@@ -232,6 +231,7 @@ class CamCurveOvercuts(bpy.types.Operator):
         fs = fs.union(positive_overcuts)
         fs = fs.difference(negative_overcuts)
         utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
+
         return {'FINISHED'}
 
 

@@ -95,7 +95,7 @@ def shapelyToCoords(anydata):
     elif p.type == 'MultiPolygon':
         clen = 0
         seq = []
-        for sp in p:
+        for sp in p.geoms:
             clen += len(sp.exterior.coords)
             seq.append(sp.exterior.coords)
             for interior in sp.interiors:
