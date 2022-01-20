@@ -30,7 +30,9 @@ from mathutils import *
 from bpy.props import *
 from bpy_extras import object_utils
 
-import sys, numpy, pickle
+import sys
+import numpy
+import pickle
 
 from cam.chunk import *
 from cam.collision import *
@@ -42,6 +44,7 @@ from cam.image_utils import *
 from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
 
 from shapely.geometry import polygon as spolygon
+from shapely.geometry import MultiPolygon
 from shapely import ops as sops
 from shapely import geometry as sgeometry
 
@@ -866,11 +869,11 @@ def polygonBoolean(context, boolean_type):
         if ob1 != ob:
             obs.append(ob1)
     plist = curveToShapely(ob)
-    p1 = sgeometry.asMultiPolygon(plist)
+    p1 = MultiPolygon(plist)
     polys = []
     for o in obs:
         plist = curveToShapely(o)
-        p2 = sgeometry.asMultiPolygon(plist)
+        p2 = MultiPolygon(plist)
         polys.append(p2)
     # print(polys)
     if boolean_type == 'UNION':

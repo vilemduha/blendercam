@@ -61,7 +61,7 @@ class CamCurveHatch(bpy.types.Operator):
         from shapely import affinity
         from shapely.ops import voronoi_diagram
         shapes = utils.curveToShapely(bpy.context.active_object)
-        for s in shapes:
+        for s in shapes.geoms:
             coords = []
             minx, miny, maxx, maxy = s.bounds
             minx -= self.offset
@@ -259,7 +259,7 @@ class CamCurveMortise(bpy.types.Operator):
             utils.shapelyToCurve('-converted_curve', line, 0.0)
         shapes = utils.curveToShapely(o1)
 
-        for s in shapes:
+        for s in shapes.geoms:
             if s.boundary.type == 'LineString':
                 loops = [s.boundary]
             else:
@@ -344,7 +344,7 @@ class CamCurveInterlock(bpy.types.Operator):
                 utils.shapelyToCurve('-converted_curve', line, 0.0)
             shapes = utils.curveToShapely(o1)
 
-            for s in shapes:
+            for s in shapes.geoms:
                 if s.boundary.type == 'LineString':
                     loops = [s.boundary]
                 else:
