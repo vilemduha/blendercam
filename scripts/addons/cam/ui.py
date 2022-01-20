@@ -420,7 +420,6 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         scene = bpy.context.scene
-        row = layout.row()
         oclpresent = "Opencamlib "
         if "ocl" not in sys.modules:
             oclpresent += "NOT "
@@ -437,9 +436,9 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.label(text=l, icon='COLOR_RED')
             if ao.valid:
                 if ao.duration > 0:
-                    layout.label(text='operation time: ' + str(int(ao.duration / 60)) + \
-                                      ' hour, ' + str(int(ao.duration) % 60) + ' min, ' + \
-                                      str(int(ao.duration * 60) % 60) + ' sec.')
+                    layout.label(text='operation time: ' + str(int(ao.duration / 60)) + ' hour, '
+                                      + str(int(ao.duration) % 60) + ' min, ' + str(int(ao.duration * 60) % 60) +
+                                      ' sec.')
                 layout.label(text='chipload: ' + strInUnits(ao.chipload, 4) + ' / tooth')
 
 
@@ -586,7 +585,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.prop(ao, 'use_bridge_modifiers')
                     layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
 
-
             layout.prop(ao, 'skin')
 
             if ao.machine_axes == '3':
@@ -705,7 +703,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                     exclude_exact = ao.strategy in ['MEDIAL_AXIS', 'POCKET', 'WATERLINE', 'CUTOUT', 'DRILL', 'PENCIL',
                                                     'CURVE']
                     if not exclude_exact:
-                        if ao.use_exact != True:
+                        if not ao.use_exact:
                             layout.prop(ao, 'use_exact')
                             layout.label(text="Exact mode must be set for opencamlib to work ")
 
@@ -764,7 +762,8 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.label(text="cannot use depth from object using CURVES")
 
                     if not ao.minz_from_ob:
-                        if not ao.minz_from_material: layout.prop(ao, 'minz')
+                        if not ao.minz_from_material:
+                            layout.prop(ao, 'minz')
                         layout.prop(ao, 'minz_from_material')
                     if not ao.minz_from_material:
                         layout.prop(ao, 'minz_from_ob')
@@ -802,7 +801,6 @@ class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         scene = bpy.context.scene
-        row = layout.row()
         if len(scene.cam_operations) == 0:
             layout.label(text='Add operation first')
         if len(scene.cam_operations) > 0:
@@ -818,6 +816,7 @@ class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
             else:
                 layout.label(text='Enable Show experimental features')
                 layout.label(text='in Blender CAM Addon preferences')
+
 
 class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM material panel"""
@@ -872,7 +871,6 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
     bl_context = "objectmode"
     bl_label = "Curve CAM Tools"
 
-
     def draw(self, context):
         layout = self.layout
         layout.operator("object.curve_boolean")
@@ -885,12 +883,13 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.curve_remove_doubles")
         layout.operator("object.mesh_get_pockets")
 
+
 class VIEW3D_PT_tools_create(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
     bl_label = "Curve CAM Creators"
-    bl_option = ('DEFAULT_CLOSED')
+    bl_option = 'DEFAULT_CLOSED'
 
     def draw(self, context):
         layout = self.layout
