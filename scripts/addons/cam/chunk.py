@@ -919,6 +919,7 @@ def meshFromCurveToChunk(object):
     lastvi = 0
     vtotal = len(mesh.vertices)
     perc = 0
+    progress('processing curve - START - Vertices: ' + str(vtotal))
     for vi in range(0, len(mesh.vertices) - 1):
         co = (mesh.vertices[vi].co + object.location).to_tuple()
         if not dk.isdisjoint([(vi, vi + 1)]) and d[(vi, vi + 1)] == 1:
@@ -936,9 +937,7 @@ def meshFromCurveToChunk(object):
             chunks.append(chunk)
             chunk = camPathChunk([])
 
-        if perc != int(100 * vi / vtotal):
-            perc = int(100 * vi / vtotal)
-            progress('processing curve', perc)
+    progress('processing curve - FINISHED')
 
     vi = len(mesh.vertices) - 1
     chunk.points.append((mesh.vertices[vi].co.x + x, mesh.vertices[vi].co.y + y, mesh.vertices[vi].co.z + z))
