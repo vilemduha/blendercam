@@ -707,7 +707,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                              corner=True)
 
         elif self.interlock_type == 'OPENCURVE' and curve_detected:
-            puzzle_joinery.open_urve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
+            puzzle_joinery.open_curve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
                                      stem=self.stem_size, twist=self.twist_lock, t_neck=self.twist_percent,
                                      t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount)
 
