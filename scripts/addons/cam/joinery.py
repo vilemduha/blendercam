@@ -82,7 +82,7 @@ def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, perc
                          use_cyclic_u=True, edit_mode=False)
     simple.activeName("_tmp")
 
-    simple.union('tmp')
+    simple.union('_tmp')
     bpy.context.active_object.rotation_euler.z = rotation
     bpy.ops.transform.translate(value=(cx, cy, 0.0))
     simple.activeName("_groove")
@@ -466,6 +466,7 @@ def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_
     else:
         spacing = loop_length / finger_amount
         distance = 0
+        end_distance = loop_length
 
     j = 0
     print("joinery loop length", round(loop_length * 1000), "mm")
