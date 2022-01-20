@@ -31,6 +31,8 @@ import numpy as np
 
 from cam import simple
 from cam import image_utils
+
+
 def createSimulationObject(name, operations, i):
     oname = 'csim_' + name
 
@@ -96,29 +98,28 @@ def doSimulation(name, operations):
     i = generateSimulationImage(operations, limits)
 #    cp = simple.getCachePath(operations[0])[:-len(operations[0].name)] + name
     cp = simple.getSimulationPath()+name
-    print('cp=',cp)
+    print('cp=', cp)
     iname = cp + '_sim.exr'
-
 
     image_utils.numpysave(i, iname)
     i = bpy.data.images.load(iname)
     createSimulationObject(name, operations, i)
+
 
 def generateSimulationImage(operations, limits):
     minx, miny, minz, maxx, maxy, maxz = limits
     # print(minx,miny,minz,maxx,maxy,maxz)
     sx = maxx - minx
     sy = maxy - miny
-    t = time.time()
+
     o = operations[0]  # getting sim detail and others from first op.
     simulation_detail = o.simulation_detail
     borderwidth = o.borderwidth
     resx = math.ceil(sx / simulation_detail) + 2 * borderwidth
     resy = math.ceil(sy / simulation_detail) + 2 * borderwidth
-    # resx=ceil(sx/o.pixsize)+2*o.borderwidth
-    # resy=ceil(sy/o.pixsize)+2*o.borderwidth
+
     # create array in which simulation happens, similar to an image to be painted in.
-    si = np.array((0.1), dtype=float)
+    si = np.array(0.1, dtype=float)
     si.resize(resx, resy)
     si.fill(maxz)
 
@@ -143,20 +144,12 @@ def generateSimulationImage(operations, limits):
         # print(len(shapek.data))
         # print(len(verts_rotations))
 
-        # for i,co in enumerate(verts_rotations):#TODO: optimize this. this is just rewritten too many times...
         # print(r)
-        #	shapek.data[i].co=co
 
         totalvolume = 0.0
 
         cutterArray = getCutterArray(o, simulation_detail)
-        # cb=cutterArray<-1
-        # cutterArray[cb]=1
         cutterArray = -cutterArray
-        mid = int(cutterArray.shape[0] / 2)
-        size = cutterArray.shape[0]
-        # print(si.shape)
-        # for ch in chunks:
         lasts = verts[1].co
         perc = -1
         vtotal = len(verts)
@@ -181,8 +174,9 @@ def generateSimulationImage(operations, limits):
                 if (lasts.z < maxz or s.z < maxz) and not (
                         v.x == 0 and v.y == 0 and v.z > 0):  # only simulate inside material, and exclude lift-ups
                     if (
-                            v.x == 0 and v.y == 0 and v.z < 0):  # if the cutter goes straight down, we don't have to interpolate.
-                        pass;
+                            v.x == 0 and v.y == 0 and v.z < 0):
+                        # if the cutter goes straight down, we don't have to interpolate.
+                        pass
 
                     elif v.length > simulation_detail:  # and not :
 
@@ -190,10 +184,10 @@ def generateSimulationImage(operations, limits):
                         lastxs = xs
                         lastys = ys
                         while v.length < l:
-                            xs = int((
-                                                 lasts.x + v.x - minx) / simulation_detail + borderwidth + simulation_detail / 2)  # -middle
-                            ys = int((
-                                                 lasts.y + v.y - miny) / simulation_detail + borderwidth + simulation_detail / 2)  # -middle
+                            xs = int((lasts.x + v.x - minx) / simulation_detail + borderwidth + simulation_detail / 2)
+                            # -middle
+                            ys = int((lasts.y + v.y - miny) / simulation_detail + borderwidth + simulation_detail / 2)
+                            # -middle
                             z = lasts.z + v.z
                             # print(z)
                             if lastxs != xs or lastys != ys:
@@ -218,7 +212,8 @@ def generateSimulationImage(operations, limits):
                     else:
                         load = 0
 
-                    # this will show the shapekey as debugging graph and will use same data to estimate parts with heavy load
+                    # this will show the shapekey as debugging graph and will use same data to estimate parts
+                    # with heavy load
                     if l != 0:
                         shapek.data[i].co.y = (load) * 0.000002
                     else:
@@ -275,32 +270,23 @@ def generateSimulationImage(operations, limits):
             totverts = len(shapek.data)
             for i, d in enumerate(shapek.data):
                 if d.co.y > normal_load:
-                    d.co.z = scale_graph * max(0.3,
-                                               normal_load / d.co.y)  # original method was : max(0.4,1-2*(d.co.y-max_load*thres)/(max_load*(1-thres)))
+                    d.co.z = scale_graph * max(0.3, normal_load / d.co.y)
                 else:
                     d.co.z = scale_graph * 1
                 if i < totverts - 1:
                     m.edges[i].crease = d.co.y / (normal_load * 4)
 
-    # d.co.z*=0.01#debug
-
-    o = operations[0]
     si = si[borderwidth:-borderwidth, borderwidth:-borderwidth]
     si += -minz
 
-    # print(si.shape[0],si.shape[1])
-
-    # print('simulation done in %f seconds' % (time.time()-t))
     return si
+
 
 def getCutterArray(operation, pixsize):
     type = operation.cutter_type
     # print('generating cutter')
     r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
     res = math.ceil((r * 2) / pixsize)
-    # if res%2==0:#compensation for half-pixels issue, which wasn't an issue, so commented out
-    # res+=1
-    # m=res/2
     m = res / 2.0
     car = np.array((0), dtype=float)
     car.resize(res, res)
@@ -313,21 +299,20 @@ def getCutterArray(operation, pixsize):
             v.x = (a + 0.5 - m) * ps
             for b in range(0, res):
                 v.y = (b + 0.5 - m) * ps
-                if (v.length <= r):
+                if v.length <= r:
                     car.itemset((a, b), 0)
     elif type == 'BALL' or type == 'BALLNOSE':
         for a in range(0, res):
             v.x = (a + 0.5 - m) * ps
             for b in range(0, res):
                 v.y = (b + 0.5 - m) * ps
-                if (v.length <= r):
+                if v.length <= r:
                     z = math.sin(math.acos(v.length / r)) * r - r
                     car.itemset((a, b), z)  # [a,b]=z
 
     elif type == 'VCARVE':
         angle = operation.cutter_tip_angle
         s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
-        #s = math.tan((math.pi - angle) / 2)  # angle in radians
         for a in range(0, res):
             v.x = (a + 0.5 - m) * ps
             for b in range(0, res):
@@ -339,7 +324,6 @@ def getCutterArray(operation, pixsize):
         angle = operation.cutter_tip_angle
         cyl_r = operation.cylcone_diameter/2
         s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
-        #s = math.tan((math.pi - angle) / 2)  # angle in radians
         for a in range(0, res):
             v.x = (a + 0.5 - m) * ps
             for b in range(0, res):
@@ -347,10 +331,10 @@ def getCutterArray(operation, pixsize):
                 if v.length <= r:
                     z = (-(v.length - cyl_r) * s)
                     if v.length <= cyl_r:
-                        z =0
+                        z = 0
                     car.itemset((a, b), z)
     elif type == 'BALLCONE':
-        angle =math.radians(operation.cutter_tip_angle)/2
+        angle = math.radians(operation.cutter_tip_angle)/2
         ball_r = operation.ball_radius
         cutter_r = operation.cutter_diameter / 2
         conedepth = (cutter_r - ball_r)/math.tan(angle)
@@ -362,9 +346,9 @@ def getCutterArray(operation, pixsize):
             for b in range(0, res):
                 v.y = (b + 0.5 - m) * ps
                 if v.length <= cutter_r:
-                    z = -(v.length - ball_r ) * s -Ball_R + D_ofset
+                    z = -(v.length - ball_r) * s - Ball_R + D_ofset
                     if v.length <= ball_r:
-                      z = math.sin(math.acos(v.length / Ball_R)) * Ball_R - Ball_R
+                        z = math.sin(math.acos(v.length / Ball_R)) * Ball_R - Ball_R
                     car.itemset((a, b), z)
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[operation.cutter_object_name]
@@ -396,24 +380,23 @@ def getCutterArray(operation, pixsize):
 
 
 def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):
-    """simulates a cutter cutting into stock, taking away the volume, and optionally returning the volume that has been milled. This is now used for feedrate tweaking."""
-    # xs=int(xs)
-    # ys=int(ys)
+    """simulates a cutter cutting into stock, taking away the volume,
+    and optionally returning the volume that has been milled. This is now used for feedrate tweaking."""
     m = int(cutterArray.shape[0] / 2)
     size = cutterArray.shape[0]
     if xs > m and xs < si.shape[0] - m and ys > m and ys < si.shape[1] - m:  # whole cutter in image there
         if getvolume:
             volarray = si[xs - m:xs - m + size, ys - m:ys - m + size].copy()
         si[xs - m:xs - m + size, ys - m:ys - m + size] = np.minimum(si[xs - m:xs - m + size, ys - m:ys - m + size],
-                                                                       cutterArray + z)
+                                                                    cutterArray + z)
         if getvolume:
             volarray = si[xs - m:xs - m + size, ys - m:ys - m + size] - volarray
             vsum = abs(volarray.sum())
             # print(vsum)
             return vsum
 
-    elif xs > -m and xs < si.shape[0] + m and ys > -m and ys < si.shape[
-        1] + m:  # part of cutter in image, for extra large cutters
+    elif xs > -m and xs < si.shape[0] + m and ys > -m and ys < si.shape[1] + m:
+        # part of cutter in image, for extra large cutters
 
         startx = max(0, xs - m)
         starty = max(0, ys - m)
@@ -423,15 +406,14 @@ def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):
         castarty = max(0, m - ys)
         caendx = min(size, si.shape[0] - xs + m)
         caendy = min(size, si.shape[1] - ys + m)
-        # print(startx,endx,starty,endy,castartx,caendx,castarty, caendy)
+
         if getvolume:
             volarray = si[startx:endx, starty:endy].copy()
         si[startx:endx, starty:endy] = np.minimum(si[startx:endx, starty:endy],
-                                                     cutterArray[castartx:caendx, castarty:caendy] + z)
+                                                  cutterArray[castartx:caendx, castarty:caendy] + z)
         if getvolume:
             volarray = si[startx:endx, starty:endy] - volarray
             vsum = abs(volarray.sum())
             # print(vsum)
             return vsum
-
     return 0
