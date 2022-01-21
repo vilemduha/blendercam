@@ -53,7 +53,7 @@ def mortise(length, thickness, finger_play, cx=0, cy=0, rotation=0):
                          Simple_length=thickness, shape='3D', outputType='POLY',
                          use_cyclic_u=True,
                          handleType='AUTO', edit_mode=False)
-    simple.activeName("_mortise")
+    simple.active_name("_mortise")
 
 
 def interlock_groove(length, thickness, finger_play, cx=0, cy=0, rotation=0):
@@ -62,31 +62,56 @@ def interlock_groove(length, thickness, finger_play, cx=0, cy=0, rotation=0):
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     bpy.context.active_object.rotation_euler.z = rotation
     bpy.ops.transform.translate(value=(cx, cy, 0.0))
-    simple.activeName("_groove")
+    simple.active_name("_groove")
 
 
 def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, percentage=0.5):
     mortise(length, thickness, finger_play, 0, 0, 0)
-    simple.activeName("_tmp")
+    simple.active_name("_tmp")
     mortise(length * percentage, thickness, finger_play, 0, 0, math.pi / 2)
-    simple.activeName("_tmp")
+    simple.active_name("_tmp")
     h = math.hypot(thickness, length * percentage)
     oangle = math.degrees(math.asin(length * percentage / h))
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Sector',
                          Simple_startangle=90 + oangle, Simple_endangle=180 - oangle, Simple_radius=h / 2,
                          use_cyclic_u=True, edit_mode=False)
-    simple.activeName("_tmp")
+    simple.active_name("_tmp")
 
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Sector',
                          Simple_startangle=270 + oangle, Simple_endangle=360 - oangle, Simple_radius=h / 2,
                          use_cyclic_u=True, edit_mode=False)
-    simple.activeName("_tmp")
+    simple.active_name("_tmp")
 
     simple.union('_tmp')
     simple.rotate(rotation)
     simple.move(x=cx, y=cy)
-    simple.activeName("_groove")
+    simple.active_name("_groove")
     simple.removeDoubles()
+
+
+def twist_separator_slot(length, thickness, finger_play=0.00005, percentage=0.5):
+    simple.add_rectangle(thickness+finger_play, length, center_y=False)
+    simple.move(y=((length*percentage-finger_play)/2))
+    simple.duplicate()
+    simple.mirrory()
+    simple.join_multiple('simple_rectangle')
+    simple.active_name('_separator_slot')
+    
+    
+def interlock_twist_separator(length, thickness, amount, spacing, edge_distance, finger_play=0.00005, percentage=0.5,
+                              start='rounded', end='rounded'):
+    amount -= 1
+    base_width = 2*edge_distance+spacing*amount+thickness
+    simple.add_rectangle(base_width, length, center_x=False)
+    simple.active_name('_base')
+    twist_separator_slot(length, thickness, finger_play, percentage)
+    while amount > 0:
+        simple.duplicate(x=spacing)
+        amount -= 1
+    simple.join_multiple('_separator_slot')
+    simple.move(x=edge_distance+thickness/2)
+    simple.difference('_', '_base')
+    simple.active_name('twist_separator')
 
 
 def horizontal_finger(length, thickness, finger_play, amount, center=True):
@@ -101,23 +126,23 @@ def horizontal_finger(length, thickness, finger_play, amount, center=True):
         for i in range(amount):
             if i == 0:
                 mortise(length, thickness, finger_play, 0, thickness / 2)
-                simple.activeName("_width_finger")
+                simple.active_name("_width_finger")
             else:
                 mortise(length, thickness, finger_play, i * 2 * length, thickness / 2)
-                simple.activeName("_width_finger")
+                simple.active_name("_width_finger")
                 mortise(length, thickness, finger_play, -i * 2 * length, thickness / 2)
-                simple.activeName("_width_finger")
+                simple.active_name("_width_finger")
     else:
         for i in range(amount):
             mortise(length, thickness, finger_play, length / 2 + 2 * i * length, 0)
-            simple.activeName("_width_finger")
+            simple.active_name("_width_finger")
 
     simple.joinMultiple("_width_finger")
 
-    simple.activeName("_wfa")
+    simple.active_name("_wfa")
     bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                   TRANSFORM_OT_translate={"value": (length, 0.0, 0.0)})
-    simple.activeName("_wfb")
+    simple.active_name("_wfb")
 
 
 def vertical_finger(length, thickness, finger_play, amount):
@@ -132,13 +157,13 @@ def vertical_finger(length, thickness, finger_play, amount):
 
     for i in range(amount):
         mortise(length, thickness, finger_play, 0, i * 2 * length + length / 2, rotation=math.pi / 2)
-        simple.activeName("_height_finger")
+        simple.active_name("_height_finger")
 
     simple.joinMultiple("_height_finger")
-    simple.activeName("_vfa")
+    simple.active_name("_vfa")
     bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                   TRANSFORM_OT_translate={"value": (0, -length, 0.0)})
-    simple.activeName("_vfb")
+    simple.active_name("_vfb")
 
 
 def finger_pair(name, dx=0, dy=0):
@@ -149,13 +174,13 @@ def finger_pair(name, dx=0, dy=0):
 
     bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                   TRANSFORM_OT_translate={"value": (xpos, ypos, 0.0)})
-    simple.activeName("_finger_pair")
+    simple.active_name("_finger_pair")
 
     simple.makeActive(name)
 
     bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                   TRANSFORM_OT_translate={"value": (-xpos, -ypos, 0.0)})
-    simple.activeName("_finger_pair")
+    simple.active_name("_finger_pair")
     simple.joinMultiple("_finger_pair")
     bpy.ops.object.select_all(action='DESELECT')
     return bpy.context.active_object
@@ -171,17 +196,17 @@ def create_base_plate(height, width, depth):
                          Simple_width=width, Simple_length=height, shape='3D', outputType='POLY',
                          use_cyclic_u=True,
                          handleType='AUTO', edit_mode=False)
-    simple.activeName("_back")
+    simple.active_name("_back")
     bpy.ops.curve.simple(align='WORLD', location=(0, height / 2, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=depth, Simple_length=height, shape='3D', outputType='POLY',
                          use_cyclic_u=True,
                          handleType='AUTO', edit_mode=False)
-    simple.activeName("_side")
+    simple.active_name("_side")
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
                          Simple_width=width, Simple_length=depth, shape='3D', outputType='POLY',
                          use_cyclic_u=True,
                          handleType='AUTO', edit_mode=False)
-    simple.activeName("_bottom")
+    simple.active_name("_bottom")
 
 
 def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
@@ -189,21 +214,21 @@ def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
     dist = 3 * finger_width / 2
     while dist < length:
         mortise(height - 2 * finger_thick, pocket_width, 0, dist, 0, math.pi / 2)
-        simple.activeName("_flex_pocket")
+        simple.active_name("_flex_pocket")
         dist += finger_width * 2
 
     simple.joinMultiple("_flex_pocket")
-    simple.activeName("flex_pocket")
+    simple.active_name("flex_pocket")
 
 
 def make_variable_flex_pocket(height, finger_thick, pocket_width, locations):
     #   creates pockets pocket using mortise function for kerf bending
     for dist in locations:
         mortise(height - 2 * finger_thick, pocket_width, 0, dist, 0, math.pi / 2)
-        simple.activeName("_flex_pocket")
+        simple.active_name("_flex_pocket")
 
     simple.joinMultiple("_flex_pocket")
-    simple.activeName("flex_pocket")
+    simple.active_name("flex_pocket")
 
 
 def create_flex_side(length, height, finger_thick, top_bottom=False):
@@ -226,13 +251,13 @@ def create_flex_side(length, height, finger_thick, top_bottom=False):
     bpy.ops.curve.simple(align='WORLD', location=(length / 2 + 0.00025, 0, 0), rotation=(0, 0, 0),
                          Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D',
                          outputType='POLY', use_cyclic_u=True, handleType='AUTO', edit_mode=False)
-    simple.activeName("_side")
+    simple.active_name("_side")
 
     simple.makeActive('_side')
     fingers.select_set(True)
     bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
 
-    simple.activeName("side")
+    simple.active_name("side")
     simple.removeMultiple('_')
     simple.removeMultiple('base')
 
@@ -277,7 +302,7 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
 
                 if base:
                     mortise(finger_size, finger_thick, finger_tolerance * mad, distance, 0, 0)
-                    simple.activeName("_base")
+                    simple.active_name("_base")
                 else:
                     mortise_point = loop.interpolate(distance)
                     mortise(finger_size, finger_thick, finger_tolerance * mad, mortise_point.x, mortise_point.y,
@@ -289,11 +314,11 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
         oldp = p
     if base:
         simple.joinMultiple("_base")
-        simple.activeName("base")
+        simple.active_name("base")
         simple.move(x=finger_size)
     else:
         simple.joinMultiple("_mort")
-        simple.activeName("mortise")
+        simple.active_name("mortise")
 
 
 def find_slope(p1, p2):
@@ -396,7 +421,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 hpos.append(distance + finger_sz)  # saves the mortise center
                 if base:
                     mortise(finger_sz, finger_thick, finger_tolerance * mad, distance + finger_sz, 0, 0)
-                    simple.activeName("_base")
+                    simple.active_name("_base")
                 else:
                     mortise(finger_sz, finger_thick, finger_tolerance * mad, mortise_point.x, mortise_point.y,
                             mortise_angle)
@@ -407,7 +432,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                                                             align='WORLD',
                                                             location=(mortise_point.x, mortise_point.y, 0),
                                                             scale=(1, 1, 1))
-                        simple.activeName("start_here_mortise")
+                        simple.active_name("start_here_mortise")
 
                 old_distance = distance
                 old_mortise_point = mortise_point
@@ -428,11 +453,11 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
         oldp = p
     if base:
         simple.joinMultiple("_base")
-        simple.activeName("base")
+        simple.active_name("base")
     else:
         print("placeholder")
         simple.joinMultiple("_mort")
-        simple.activeName("variable_mortise")
+        simple.active_name("variable_mortise")
     return hpos
 
 
@@ -498,4 +523,4 @@ def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_
         oldp = p
 
     simple.joinMultiple("_groove")
-    simple.activeName("interlock")
+    simple.active_name("interlock")
