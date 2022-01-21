@@ -75,7 +75,7 @@ class CamCurveHatch(bpy.types.Operator):
             centerx = (minx+maxx) / 2
             diagonal = math.hypot(width, height)
 
-            simple.addBoundRectangle(minx, miny, maxx, maxy, 'crosshatch_bound')
+            simple.add_bound_rectangle(minx, miny, maxx, maxy, 'crosshatch_bound')
 
             amount = int(2*diagonal/self.distance) + 1
 

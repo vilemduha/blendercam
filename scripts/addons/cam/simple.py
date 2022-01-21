@@ -318,7 +318,7 @@ def add_overcut(diametre, overcut=True):
 
 
 # add bounding rectangtle to curve
-def addBoundRectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
+def add_bound_rectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
     # xmin = minimum corner x value
     # ymin = minimum corner y value
     # xmax = maximum corner x value
@@ -332,6 +332,22 @@ def addBoundRectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
                          Simple_width=xsize, Simple_length=ysize, use_cyclic_u=True, edit_mode=False, shape='3D')
     bpy.ops.object.transform_apply(location=True)
     activeName(name)
+
+
+def add_rectangle(width, height, center_x=True, center_y=True):
+    x_offset = width / 2
+    y_offset = height / 2
+
+    if center_x:
+        x_offset = 0
+    if center_y:
+        y_offset = 0
+
+    bpy.ops.curve.simple(align='WORLD', location=(x_offset, y_offset, 0), rotation=(0, 0, 0),
+                         Simple_Type='Rectangle',
+                         Simple_width=width, Simple_length=height, use_cyclic_u=True, edit_mode=False, shape='3D')
+    bpy.ops.object.transform_apply(location=True)
+    activeName('simple_rectangle')
 
 
 #  Returns coords from active object
