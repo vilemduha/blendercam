@@ -191,7 +191,7 @@ def strInUnits(x, precision=5):
 
 
 # join multiple objects starting with 'name' renaming final object as 'name'
-def joinMultiple(name):
+def join_multiple(name):
     scene = bpy.context.scene
     for ob in scene.objects:  # join pocket curve calculations
         if ob.name.startswith(name):
@@ -232,7 +232,7 @@ def makeActive(name):
 
 
 # change the name of the active object
-def activeName(name):
+def active_name(name):
     bpy.context.active_object.name = name
 
 
@@ -247,7 +247,7 @@ def rename(name, name2):
 def union(name):
     selectMultiple(name)
     bpy.ops.object.curve_boolean(boolean_type='UNION')
-    activeName('unionboolean')
+    active_name('unionboolean')
     removeMultiple(name)
     rename('unionboolean', name)
 
@@ -260,7 +260,7 @@ def difference(name, basename):
     selectMultiple(name)
     bpy.context.view_layer.objects.active = bpy.data.objects[basename]
     bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-    activeName('booleandifference')
+    active_name('booleandifference')
     removeMultiple(name)
     rename('booleandifference', basename)
 
@@ -331,7 +331,7 @@ def add_bound_rectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
                          Simple_Type='Rectangle',
                          Simple_width=xsize, Simple_length=ysize, use_cyclic_u=True, edit_mode=False, shape='3D')
     bpy.ops.object.transform_apply(location=True)
-    activeName(name)
+    active_name(name)
 
 
 def add_rectangle(width, height, center_x=True, center_y=True):
@@ -347,7 +347,7 @@ def add_rectangle(width, height, center_x=True, center_y=True):
                          Simple_Type='Rectangle',
                          Simple_width=width, Simple_length=height, use_cyclic_u=True, edit_mode=False, shape='3D')
     bpy.ops.object.transform_apply(location=True)
-    activeName('simple_rectangle')
+    active_name('simple_rectangle')
 
 
 #  Returns coords from active object
@@ -355,7 +355,7 @@ def activeToCoords():
     bpy.ops.object.duplicate()
     obj = bpy.context.active_object
     bpy.ops.object.convert(target='MESH')
-    activeName("_tmp_mesh")
+    active_name("_tmp_mesh")
 
     coords = []
     for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data

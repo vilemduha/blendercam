@@ -222,7 +222,6 @@ class CamCurveOvercuts(bpy.types.Operator):
                                 else:
                                     positive_overcuts.append(shape)
 
-                            print(a)
 
         negative_overcuts = shapely.ops.unary_union(negative_overcuts)
         positive_overcuts = shapely.ops.unary_union(positive_overcuts)

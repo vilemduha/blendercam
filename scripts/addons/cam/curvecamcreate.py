@@ -57,7 +57,7 @@ class CamCurveHatch(bpy.types.Operator):
     def execute(self, context):
         if self.hull:
             bpy.ops.object.convex_hull()
-            simple.activeName('crosshatch_hull')
+            simple.active_name('crosshatch_hull')
         from shapely import affinity
         from shapely.ops import voronoi_diagram
         shapes = utils.curveToShapely(bpy.context.active_object)
@@ -135,48 +135,48 @@ class CamCurvePlate(bpy.types.Operator):
         # create base
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(left, bottom, 0), scale=(1, 1, 1))
-        simple.activeName("_circ_LB")
+        simple.active_name("_circ_LB")
         bpy.context.object.data.resolution_u = self.resolution
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(right, bottom, 0), scale=(1, 1, 1))
-        simple.activeName("_circ_RB")
+        simple.active_name("_circ_RB")
         bpy.context.object.data.resolution_u = self.resolution
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(left, top, 0), scale=(1, 1, 1))
-        simple.activeName("_circ_LT")
+        simple.active_name("_circ_LT")
         bpy.context.object.data.resolution_u = self.resolution
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(right, top, 0), scale=(1, 1, 1))
-        simple.activeName("_circ_RT")
+        simple.active_name("_circ_RT")
         bpy.context.object.data.resolution_u = self.resolution
 
         simple.selectMultiple("_circ")  # select the circles for the four corners
         utils.polygonConvexHull(context)  # perform hull operation on the four corner circles
-        simple.activeName("plate_base")
+        simple.active_name("plate_base")
         simple.removeMultiple("_circ")  # remove corner circles
 
         if self.hole_diameter > 0 or self.hole_hamount > 0:
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
                                                       align='WORLD', location=(0, self.hole_tolerance / 2, 0),
                                                       scale=(1, 1, 1))
-            simple.activeName("_hole_Top")
+            simple.active_name("_hole_Top")
             bpy.context.object.data.resolution_u = self.resolution / 4
             if self.hole_tolerance > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
                                                           align='WORLD', location=(0, -self.hole_tolerance / 2, 0),
                                                           scale=(1, 1, 1))
-                simple.activeName("_hole_Bottom")
+                simple.active_name("_hole_Bottom")
                 bpy.context.object.data.resolution_u = self.resolution / 4
 
             simple.selectMultiple("_hole")  # select everything starting with _hole and perform a convex hull on them
             utils.polygonConvexHull(context)
-            simple.activeName("plate_hole")
+            simple.active_name("plate_hole")
             simple.move(y=-self.hole_vdist / 2)
             simple.duplicate(y=self.hole_vdist)
 
             simple.removeMultiple("_hole")  # remove temporary holes
 
-            simple.joinMultiple("plate_hole")  # join the holes together
+            simple.join_multiple("plate_hole")  # join the holes together
 
             # horizontal holes
             if self.hole_hamount > 1:
@@ -199,7 +199,7 @@ class CamCurvePlate(bpy.types.Operator):
                             bpy.context.object.location[0] = dist
                             simple.duplicate()
                             bpy.context.object.location[0] = -dist
-                simple.joinMultiple("plate_hole")  # join the holes together
+                simple.join_multiple("plate_hole")  # join the holes together
 
             simple.selectMultiple("plate_")  # select everything starting with plate_
 
@@ -207,7 +207,7 @@ class CamCurvePlate(bpy.types.Operator):
             utils.polygonBoolean(context, "DIFFERENCE")  # Remove holes from the base
             simple.removeMultiple("plate_")  # Remove temporary base and holes
 
-        simple.activeName("plate")
+        simple.active_name("plate")
         bpy.context.active_object.select_set(True)
         bpy.ops.object.curve_remove_doubles()
 
@@ -248,7 +248,7 @@ class CamCurveMortise(bpy.types.Operator):
         bpy.ops.object.duplicate()
         obj = context.active_object
         bpy.ops.object.convert(target='MESH')
-        simple.activeName("_temp_mesh")
+        simple.active_name("_temp_mesh")
 
         if self.opencurve:
             coords = []
@@ -333,7 +333,7 @@ class CamCurveInterlock(bpy.types.Operator):
             simple.duplicate()
             obj = context.active_object
             bpy.ops.object.convert(target='MESH')
-            simple.activeName("_temp_mesh")
+            simple.active_name("_temp_mesh")
 
             if self.opencurve:
                 coords = []
@@ -444,7 +444,7 @@ class CamCurveDrawer(bpy.types.Operator):
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.removeMultiple("_finger_pair")
-        simple.activeName("drawer_back")
+        simple.active_name("drawer_back")
         simple.removeDoubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
 
@@ -452,12 +452,12 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.curve.primitive_bezier_circle_add(radius=self.drawer_hole_diameter / 2, enter_editmode=False,
                                                   align='WORLD', location=(0, self.height + self.drawer_hole_offset, 0),
                                                   scale=(1, 1, 1))
-        simple.activeName("_circ")
+        simple.active_name("_circ")
         front_hole = bpy.context.active_object
         simple.makeActive('drawer_back')
         front_hole.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        simple.activeName("drawer_front")
+        simple.active_name("drawer_front")
         simple.removeDoubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
 
@@ -474,7 +474,7 @@ class CamCurveDrawer(bpy.types.Operator):
         finger_pair.select_set(True)
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        simple.activeName("drawer_side")
+        simple.active_name("drawer_side")
         simple.removeDoubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
         simple.removeMultiple('_finger_pair')
@@ -483,18 +483,18 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.makeActive("_wfb")
         bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                       TRANSFORM_OT_translate={"value": (0, -self.drawer_plate_thickness / 2, 0.0)})
-        simple.activeName("_wfb0")
+        simple.active_name("_wfb0")
         joinery.finger_pair("_wfb0", 0, self.depth - self.drawer_plate_thickness)
-        simple.activeName('_bot_fingers')
+        simple.active_name('_bot_fingers')
 
         simple.difference('_bot', '_bottom')
         simple.rotate(math.pi/2)
 
         joinery.finger_pair("_wfb0", 0, self.width - self.drawer_plate_thickness - self.finger_inset * 2)
-        simple.activeName('_bot_fingers')
+        simple.active_name('_bot_fingers')
         simple.difference('_bot', '_bottom')
 
-        simple.activeName("drawer_bottom")
+        simple.active_name("drawer_bottom")
 
         simple.removeDoubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
@@ -572,10 +572,17 @@ class CamCurvePuzzle(bpy.types.Operator):
                                     default='MFF')
 
     mitre: bpy.props.BoolProperty(name="Add Mitres", default=False)
+
     twist_lock: bpy.props.BoolProperty(name="Add TwistLock", default=False)
     twist_thick: bpy.props.FloatProperty(name="Twist Thickness", default=0.0047, min=0.001, max=3.0, precision=4,
                                          unit="LENGTH")
     twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.3, min=0.1, max=0.9, precision=4)
+    twist_separator: bpy.props.BoolProperty(name="Add Twist separator", default=True)
+    twist_separator_amount: bpy.props.IntProperty(name="amount of separators", default=2, min=2, max=600)
+    twist_separator_spacing: bpy.props.FloatProperty(name="Separator spacing", default=0.025, min=-0.004, max=1.0,
+                                                     precision=4, unit="LENGTH")
+    twist_separator_edge_distance: bpy.props.FloatProperty(name="Separator edge distance", default=0.01, min=0.0005,
+                                                           max=0.1, precision=4, unit="LENGTH")
     interlock_amount: bpy.props.IntProperty(name="Interlock amount on curve", default=2, min=0, max=200)
     overcut: bpy.props.BoolProperty(name="Add overcut", default=False)
     overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5,
@@ -594,6 +601,12 @@ class CamCurvePuzzle(bpy.types.Operator):
             if self.twist_lock:
                 layout.prop(self, 'twist_thick')
                 layout.prop(self, 'twist_percent')
+                layout.prop(self, 'twist_separator')
+                if self.twist_separator:
+                    layout.prop(self, 'twist_separator_amount')
+                    layout.prop(self, 'twist_separator_spacing')
+                    layout.prop(self, 'twist_separator_edge_distance')
+
                 if self.interlock_type == 'OPENCURVE':
                     layout.prop(self, 'interlock_amount')
             layout.separator()
@@ -708,10 +721,17 @@ class CamCurvePuzzle(bpy.types.Operator):
 
         elif self.interlock_type == 'OPENCURVE' and curve_detected:
             puzzle_joinery.open_curve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
-                                     stem=self.stem_size, twist=self.twist_lock, t_neck=self.twist_percent,
-                                     t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount)
+                                      stem=self.stem_size, twist=self.twist_lock, t_neck=self.twist_percent,
+                                      t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount)
 
         simple.removeDoubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
 
+        if self.twist_lock and self.twist_separator:
+            joinery.interlock_twist_separator(self.height, self.twist_thick, self.twist_separator_amount,
+                                              self.twist_separator_spacing, self.twist_separator_edge_distance,
+                                              finger_play=self.finger_tolerance,
+                                              percentage=self.twist_percent)
+            simple.removeDoubles()
+            simple.add_overcut(self.overcut_diameter, self.overcut)
         return {'FINISHED'}
