@@ -108,7 +108,8 @@ class CamCurveIntarsion(bpy.types.Operator):
 
         simple.removeMultiple('intarsion_')
 
-        for ob in selected: ob.select_set(True)  # select original curves
+        for ob in selected:
+            ob.select_set(True)  # select original curves
 
         #  Perimeter cut largen then intarsion pocket externally, optional
 
@@ -221,7 +222,6 @@ class CamCurveOvercuts(bpy.types.Operator):
                                     negative_overcuts.append(shape)
                                 else:
                                     positive_overcuts.append(shape)
-
 
         negative_overcuts = shapely.ops.unary_union(negative_overcuts)
         positive_overcuts = shapely.ops.unary_union(positive_overcuts)

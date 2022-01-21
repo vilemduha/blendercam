@@ -19,7 +19,10 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-import math, sys, os, string
+import math
+import sys
+import os
+import string
 import time
 import bpy
 import mathutils
@@ -351,7 +354,7 @@ def add_rectangle(width, height, center_x=True, center_y=True):
 
 
 #  Returns coords from active object
-def activeToCoords():
+def active_to_coords():
     bpy.ops.object.duplicate()
     obj = bpy.context.active_object
     bpy.ops.object.convert(target='MESH')
@@ -365,5 +368,5 @@ def activeToCoords():
 
 
 # returns shapely polygon from active object
-def activeToShapelyPoly():
-    return Polygon(activeToCoords())  # convert coordinates to shapely Polygon datastructure
+def active_to_shapely_poly():
+    return Polygon(active_to_coords())  # convert coordinates to shapely Polygon datastructure
