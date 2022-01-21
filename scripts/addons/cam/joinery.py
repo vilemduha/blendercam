@@ -86,7 +86,7 @@ def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, perc
     simple.rotate(rotation)
     simple.move(x=cx, y=cy)
     simple.active_name("_groove")
-    simple.removeDoubles()
+    simple.remove_oubles()
 
 
 def twist_separator_slot(length, thickness, finger_play=0.00005, percentage=0.5):

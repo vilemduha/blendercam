@@ -304,7 +304,7 @@ def rotate(angle):
 
 
 # remove doubles
-def removeDoubles():
+def remove_doubles():
     bpy.ops.object.curve_remove_doubles()
 
 
@@ -317,7 +317,7 @@ def add_overcut(diametre, overcut=True):
         makeActive(name)
         bpy.ops.object.delete()
         rename(overcut_name, name)
-        removeDoubles()
+        remove_doubles()
 
 
 # add bounding rectangtle to curve

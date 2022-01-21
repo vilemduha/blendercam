@@ -445,7 +445,7 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.removeMultiple("_finger_pair")
         simple.active_name("drawer_back")
-        simple.removeDoubles()
+        simple.remove_doubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
 
         #   make drawer front
@@ -458,7 +458,7 @@ class CamCurveDrawer(bpy.types.Operator):
         front_hole.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.active_name("drawer_front")
-        simple.removeDoubles()
+        simple.remove_doubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
 
         #   place back and front side by side
@@ -475,7 +475,7 @@ class CamCurveDrawer(bpy.types.Operator):
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.active_name("drawer_side")
-        simple.removeDoubles()
+        simple.remove_doubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
         simple.removeMultiple('_finger_pair')
 
@@ -496,7 +496,7 @@ class CamCurveDrawer(bpy.types.Operator):
 
         simple.active_name("drawer_bottom")
 
-        simple.removeDoubles()
+        simple.remove_doubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
 
         # cleanup all temp polygons
@@ -724,7 +724,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                       stem=self.stem_size, twist=self.twist_lock, t_neck=self.twist_percent,
                                       t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount)
 
-        simple.removeDoubles()
+        simple.remove_doubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
 
         if self.twist_lock and self.twist_separator:
@@ -732,6 +732,6 @@ class CamCurvePuzzle(bpy.types.Operator):
                                               self.twist_separator_spacing, self.twist_separator_edge_distance,
                                               finger_play=self.finger_tolerance,
                                               percentage=self.twist_percent)
-            simple.removeDoubles()
+            simple.remove_doubles()
             simple.add_overcut(self.overcut_diameter, self.overcut)
         return {'FINISHED'}
