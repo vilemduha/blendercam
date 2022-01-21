@@ -174,7 +174,6 @@ class camPathChunk:
                 if d2 < d1:
                     self.points.reverse()
 
-
     def getNextClosest(self, o, pos):
         # finds closest chunk that can be milled, when inside sorting hierarchy.
         mind = 100000000000
@@ -1112,7 +1111,6 @@ def chunksRefineThreshold(chunks, distance, limitdistance):
                 v.normalize()
                 i = 1
                 vref = Vector((0, 0, 0))
-                vhalf = v * d / 2
                 while vref.length < d / 2:
 
                     vref = v * distance * i
@@ -1129,7 +1127,6 @@ def chunksRefineThreshold(chunks, distance, limitdistance):
 
                         newchunk.append((p.x, p.y, p.z))
                     i -= 1
-                    vref = v * distance * i
 
             newchunk.append(s)
             v2 = v1
