@@ -193,30 +193,26 @@ def strInUnits(x, precision=5):
         return str(x)
 
 
-# join multiple objects starting with 'name' renaming final object as 'name'
-def join_multiple(name):
+# select multiple object starting with name
+def select_multiple(name):
     scene = bpy.context.scene
+    bpy.ops.object.select_all(action='DESELECT')
     for ob in scene.objects:  # join pocket curve calculations
         if ob.name.startswith(name):
             ob.select_set(True)
         else:
             ob.select_set(False)
+
+
+# join multiple objects starting with 'name' renaming final object as 'name'
+def join_multiple(name):
+    select_multiple(name)
     bpy.ops.object.join()
     bpy.context.active_object.name = name  # rename object
 
 
-# select multiple object starting with name
-def selectMultiple(name):
-    scene = bpy.context.scene
-    for ob in scene.objects:  # join pocket curve calculations
-        if ob.name.startswith(name):
-            ob.select_set(True)
-        else:
-            ob.select_set(False)
-
-
 # remove multiple objects starting with 'name'.... useful for fixed name operation
-def removeMultiple(name):
+def remove_multiple(name):
     scene = bpy.context.scene
     bpy.ops.object.select_all(action='DESELECT')
     for ob in scene.objects:
@@ -226,8 +222,7 @@ def removeMultiple(name):
 
 
 # makes the object with the name active
-def makeActive(name):
-    bpy.ops.object.select_all(action='DESELECT')
+def make_active(name):
     ob = bpy.context.scene.objects[name]
     bpy.ops.object.select_all(action='DESELECT')
     bpy.context.view_layer.objects.active = ob
@@ -241,17 +236,17 @@ def active_name(name):
 
 # renames and makes active name and makes it active
 def rename(name, name2):
-    makeActive(name)
+    make_active(name)
     bpy.context.active_object.name = name2
 
 
 # boolean union of objects starting with name result is object name.
 # all objects starting with name will be deleted and the result will be name
 def union(name):
-    selectMultiple(name)
+    select_multiple(name)
     bpy.ops.object.curve_boolean(boolean_type='UNION')
     active_name('unionboolean')
-    removeMultiple(name)
+    remove_multiple(name)
     rename('unionboolean', name)
 
 
@@ -260,11 +255,11 @@ def union(name):
 def difference(name, basename):
     #   name is the series to select
     #   basename is what the base you want to cut including name
-    selectMultiple(name)
+    select_multiple(name)
     bpy.context.view_layer.objects.active = bpy.data.objects[basename]
     bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
     active_name('booleandifference')
-    removeMultiple(name)
+    remove_multiple(name)
     rename('booleandifference', basename)
 
 
@@ -273,7 +268,6 @@ def difference(name, basename):
 def duplicate(x=0, y=0):
     if x == 0 and y == 0:
         bpy.ops.object.duplicate()
-
     else:
         bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                       TRANSFORM_OT_translate={"value": (x, y, 0.0)})
@@ -314,7 +308,7 @@ def add_overcut(diametre, overcut=True):
         name = bpy.context.active_object.name
         bpy.ops.object.curve_overcuts(diameter=diametre, threshold=math.pi/2.05)
         overcut_name = bpy.context.active_object.name
-        makeActive(name)
+        make_active(name)
         bpy.ops.object.delete()
         rename(overcut_name, name)
         remove_doubles()
@@ -363,7 +357,7 @@ def active_to_coords():
     coords = []
     for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
         coords.append((v.co.x, v.co.y))
-    removeMultiple('_tmp_mesh')
+    remove_multiple('_tmp_mesh')
     return coords
 
 

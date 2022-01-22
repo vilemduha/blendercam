@@ -910,8 +910,8 @@ def polygonConvexHull(context):
         c = (v.co.x, v.co.y)
         coords.append(c)
 
-    simple.removeMultiple('_tmp')  # delete temporary mesh
-    simple.removeMultiple('ConvexHull')  # delete old hull
+    simple.select_multiple('_tmp')  # delete temporary mesh
+    simple.select_multiple('ConvexHull')  # delete old hull
 
     points = sgeometry.MultiPoint(coords)  # convert coordinates to shapely MultiPoint datastructure
 
