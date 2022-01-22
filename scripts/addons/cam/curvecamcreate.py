@@ -99,10 +99,10 @@ class CamCurveHatch(bpy.types.Operator):
             utils.shapelyToCurve('crosshatch_lines', xing, 0)
 
         # remove temporary shapes
-        simple.removeMultiple('crosshatch_bound')
-        simple.removeMultiple('crosshatch_hull')
+        simple.remove_multiple('crosshatch_bound')
+        simple.remove_multiple('crosshatch_hull')
 
-        simple.selectMultiple('crosshatch')
+        simple.select_multiple('crosshatch')
         return {'FINISHED'}
 
 
@@ -150,10 +150,10 @@ class CamCurvePlate(bpy.types.Operator):
         simple.active_name("_circ_RT")
         bpy.context.object.data.resolution_u = self.resolution
 
-        simple.selectMultiple("_circ")  # select the circles for the four corners
+        simple.select_multiple("_circ")  # select the circles for the four corners
         utils.polygonConvexHull(context)  # perform hull operation on the four corner circles
         simple.active_name("plate_base")
-        simple.removeMultiple("_circ")  # remove corner circles
+        simple.remove_multiple("_circ")  # remove corner circles
 
         if self.hole_diameter > 0 or self.hole_hamount > 0:
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
@@ -168,13 +168,13 @@ class CamCurvePlate(bpy.types.Operator):
                 simple.active_name("_hole_Bottom")
                 bpy.context.object.data.resolution_u = self.resolution / 4
 
-            simple.selectMultiple("_hole")  # select everything starting with _hole and perform a convex hull on them
+            simple.select_multiple("_hole")  # select everything starting with _hole and perform a convex hull on them
             utils.polygonConvexHull(context)
             simple.active_name("plate_hole")
             simple.move(y=-self.hole_vdist / 2)
             simple.duplicate(y=self.hole_vdist)
 
-            simple.removeMultiple("_hole")  # remove temporary holes
+            simple.remove_multiple("_hole")  # remove temporary holes
 
             simple.join_multiple("plate_hole")  # join the holes together
 
@@ -201,11 +201,12 @@ class CamCurvePlate(bpy.types.Operator):
                             bpy.context.object.location[0] = -dist
                 simple.join_multiple("plate_hole")  # join the holes together
 
-            simple.selectMultiple("plate_")  # select everything starting with plate_
+            simple.select_multiple("plate_")  # select everything starting with plate_
 
             bpy.context.view_layer.objects.active = bpy.data.objects['plate_base']  # Make the plate base active
             utils.polygonBoolean(context, "DIFFERENCE")  # Remove holes from the base
-            simple.removeMultiple("plate_")  # Remove temporary base and holes
+            simple.remove_multiple("plate_")  # Remove temporary base and holes
+            simple.remove_multiple("_")
 
         simple.active_name("plate")
         bpy.context.active_object.select_set(True)
@@ -255,7 +256,7 @@ class CamCurveMortise(bpy.types.Operator):
             for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
                 coords.append((v.co.x, v.co.y))
             line = LineString(coords)  # convert coordinates to shapely LineString datastructure
-            simple.removeMultiple("-converted")
+            simple.remove_multiple("-converted")
             utils.shapelyToCurve('-converted_curve', line, 0.0)
         shapes = utils.curveToShapely(o1)
 
@@ -295,7 +296,7 @@ class CamCurveMortise(bpy.types.Operator):
                     if self.flex_pocket > 0:
                         joinery.make_flex_pocket(length, self.side_height, self.plate_thickness, self.finger_size,
                                                  self.flex_pocket)
-        simple.removeMultiple('_')
+        simple.remove_multiple('_')
         return {'FINISHED'}
 
 
@@ -340,7 +341,7 @@ class CamCurveInterlock(bpy.types.Operator):
                 for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
                     coords.append((v.co.x, v.co.y))
                 line = LineString(coords)  # convert coordinates to shapely LineString datastructure
-                simple.removeMultiple("-converted")
+                simple.remove_multiple("-converted")
                 utils.shapelyToCurve('-converted_curve', line, 0.0)
             shapes = utils.curveToShapely(o1)
 
@@ -443,7 +444,7 @@ class CamCurveDrawer(bpy.types.Operator):
         finger_pair.select_set(True)
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        simple.removeMultiple("_finger_pair")
+        simple.remove_multiple("_finger_pair")
         simple.active_name("drawer_back")
         simple.remove_doubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
@@ -477,7 +478,7 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.active_name("drawer_side")
         simple.remove_doubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
-        simple.removeMultiple('_finger_pair')
+        simple.remove_multiple('_finger_pair')
 
         #   make bottom
         simple.makeActive("_wfb")
@@ -500,7 +501,7 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.add_overcut(self.overcut_diameter, self.overcut)
 
         # cleanup all temp polygons
-        simple.removeMultiple("_")
+        simple.remove_multiple("_")
 
         #   move side and bottom to location
         simple.makeActive("drawer_side")
@@ -511,7 +512,7 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.transform.transform(mode='TRANSLATION',
                                     value=(self.depth / 2 + 3 * self.width / 2 + 0.02, self.width / 2, 0.0, 0.0))
 
-        simple.selectMultiple('drawer')
+        simple.select_multiple('drawer')
         return {'FINISHED'}
 
 
@@ -577,12 +578,14 @@ class CamCurvePuzzle(bpy.types.Operator):
     twist_thick: bpy.props.FloatProperty(name="Twist Thickness", default=0.0047, min=0.001, max=3.0, precision=4,
                                          unit="LENGTH")
     twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.3, min=0.1, max=0.9, precision=4)
+    twist_keep: bpy.props.BoolProperty(name="keep Twist holes", default=False)
     twist_separator: bpy.props.BoolProperty(name="Add Twist separator", default=True)
     twist_separator_amount: bpy.props.IntProperty(name="amount of separators", default=2, min=2, max=600)
     twist_separator_spacing: bpy.props.FloatProperty(name="Separator spacing", default=0.025, min=-0.004, max=1.0,
                                                      precision=4, unit="LENGTH")
     twist_separator_edge_distance: bpy.props.FloatProperty(name="Separator edge distance", default=0.01, min=0.0005,
                                                            max=0.1, precision=4, unit="LENGTH")
+
     interlock_amount: bpy.props.IntProperty(name="Interlock amount on curve", default=2, min=0, max=200)
     overcut: bpy.props.BoolProperty(name="Add overcut", default=False)
     overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5,
@@ -601,6 +604,7 @@ class CamCurvePuzzle(bpy.types.Operator):
             if self.twist_lock:
                 layout.prop(self, 'twist_thick')
                 layout.prop(self, 'twist_percent')
+                layout.prop(self, 'twist_keep')
                 layout.prop(self, 'twist_separator')
                 if self.twist_separator:
                     layout.prop(self, 'twist_separator_amount')
@@ -654,9 +658,9 @@ class CamCurvePuzzle(bpy.types.Operator):
             coords = []
             for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
                 coords.append((v.co.x, v.co.y))
-            simple.removeMultiple('_tmp')
+            simple.remove_multiple('_tmp')
             line = LineString(coords)  # convert coordinates to shapely LineString datastructure
-            simple.removeMultiple("_")
+            simple.remove_multiple("_")
 
         if self.interlock_type == 'FINGER':
             puzzle_joinery.finger(self.diameter, self.finger_tolerance, stem=self.stem_size)
@@ -673,7 +677,7 @@ class CamCurvePuzzle(bpy.types.Operator):
             if not self.mitre:
                 puzzle_joinery.bar(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
                                    stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                                   tthick=self.twist_thick, which=self.gender)
+                                   tthick=self.twist_thick, twist_keep=self.twist_keep, which=self.gender)
             else:
                 puzzle_joinery.mitre(self.width,  self.height, self.angle, self.angleb, self.diameter,
                                      self.finger_tolerance, self.finger_amount, stem=self.stem_size,
@@ -688,19 +692,21 @@ class CamCurvePuzzle(bpy.types.Operator):
             puzzle_joinery.arcbararc(self.width, self.radius, self.height, self.angle, self.angleb, self.diameter,
                                      self.finger_tolerance, self.finger_amount,
                                      stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                                     tthick=self.twist_thick, which=self.gender)
+                                     tthick=self.twist_thick, twist_keep=self.twist_keep, which=self.gender)
 
         elif self.interlock_type == 'CURVEBAR':
             puzzle_joinery.arcbar(self.width, self.radius, self.height, self.angle, self.diameter,
                                   self.finger_tolerance, self.finger_amount,
                                   stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                                  tthick=self.twist_thick, which=self.gender)
+                                  tthick=self.twist_thick, twist_keep=self.twist_keep,
+                                  which=self.gender)
 
         elif self.interlock_type == 'MULTIANGLE':
             puzzle_joinery.multiangle(self.radius, self.height, math.pi/3, self.diameter, self.finger_tolerance,
                                       self.finger_amount,
                                       stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                                      tthick=self.twist_thick, combination=self.multiangle_gender)
+                                      tthick=self.twist_thick, twist_keep=self.twist_keep,
+                                      combination=self.multiangle_gender)
 
         elif self.interlock_type == 'T':
             puzzle_joinery.t(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
@@ -716,13 +722,14 @@ class CamCurvePuzzle(bpy.types.Operator):
         elif self.interlock_type == 'CORNER':
             puzzle_joinery.t(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
                              stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                             tthick=self.twist_thick, combination=self.gender, base_gender=self.base_gender,
-                             corner=True)
+                             tthick=self.twist_thick, combination=self.gender,
+                             base_gender=self.base_gender, corner=True)
 
         elif self.interlock_type == 'OPENCURVE' and curve_detected:
             puzzle_joinery.open_curve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
                                       stem=self.stem_size, twist=self.twist_lock, t_neck=self.twist_percent,
-                                      t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount)
+                                      t_thick=self.twist_thick, which=self.gender, twist_amount=self.interlock_amount,
+                                      twist_keep=self.twist_keep)
 
         simple.remove_doubles()
         simple.add_overcut(self.overcut_diameter, self.overcut)
