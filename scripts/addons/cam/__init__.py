@@ -710,7 +710,8 @@ class camOperation(bpy.types.PropertyGroup):
     profile_start: bpy.props.IntProperty(name="Start point", description="Start point offset", min=0, default=0,
                                          update=updateRest)
 
-    # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
+    # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001,
+    # max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
     helix_diameter: bpy.props.FloatProperty(name='Helix diameter % of cutter D', default=90, min=10, max=100,
                                             precision=1, subtype='PERCENTAGE', update=updateRest)
     retract_tangential: bpy.props.BoolProperty(name="Retract tangential - EXPERIMENTAL",
@@ -728,12 +729,14 @@ class camOperation(bpy.types.PropertyGroup):
                                                default=False, update=updateRest)
     minz: bpy.props.FloatProperty(name="Operation depth end", default=-0.01, min=-3, max=3, precision=PRECISION,
                                   unit="LENGTH",
-                                  update=updateRest)  # this is input minz. True minimum z can be something else, depending on material e.t.c.
+                                  update=updateRest)  # this is input minz. True minimum z can be something else,
+    # depending on material e.t.c.
     start_type: bpy.props.EnumProperty(name='Start type',
                                        items=(
                                            ('ZLEVEL', 'Z level', 'Starts on a given Z level'),
                                            ('OPERATIONRESULT', 'Rest milling',
-                                            'For rest milling, operations have to be put in chain for this to work well.'),
+                                            'For rest milling, operations have to be put in chain for this to '
+                                            'work well.'),
                                        ),
                                        description='Starting depth',
                                        default='ZLEVEL',
@@ -788,7 +791,6 @@ class camOperation(bpy.types.PropertyGroup):
                                   description="Radius around the part which will be milled if ambient is set to Around",
                                   min=0.0, max=100.0, default=0.01, precision=PRECISION, unit="LENGTH",
                                   update=updateRest)
-    # ambient_cutter = EnumProperty(name='Borders',items=(('EXTRAFORCUTTER', 'Extra for cutter', "Extra space for cutter is cut around the segment"),('ONBORDER', "Cutter on edge", "Cutter goes exactly on edge of ambient with it's middle") ,('INSIDE', "Inside segment", 'Cutter stays within segment')	 ),description='handling of ambient and cutter size',default='INSIDE')
     use_limit_curve: bpy.props.BoolProperty(name="Use limit curve", description="A curve limits the operation area",
                                             default=False, update=updateRest)
     ambient_cutter_restrict: bpy.props.BoolProperty(name="Cutter stays in ambient limits",
@@ -914,19 +916,6 @@ class camOperation(bpy.types.PropertyGroup):
                                        description="include bridge curve modifiers using render level when calculating operation, does not effect original bridge data",
                                        default=True, update=updateBridges)
 
-    # commented this - auto bridges will be generated, but not as a setting of the operation
-    # bridges_placement = bpy.props.EnumProperty(name='Bridge placement',
-    #     items=(
-    #         ('AUTO','Automatic', 'Automatic bridges with a set distance'),
-    #         ('MANUAL','Manual', 'Manual placement of bridges'),
-    #         ),
-    #     description='Bridge placement',
-    #     default='AUTO',
-    #     update = updateStrategy)
-    #
-    # bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
-    # bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
-
     use_modifiers: BoolProperty(name="use mesh modifiers",
                                 description="include mesh modifiers using render level when calculating operation, does not effect original mesh",
                                 default=True, update=operationValid)
@@ -982,7 +971,6 @@ class camOperation(bpy.types.PropertyGroup):
     # internal properties
     ###########################################
 
-    # testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
     offset_image = numpy.array([], dtype=float)
     zbuffer_image = numpy.array([], dtype=float)
 
