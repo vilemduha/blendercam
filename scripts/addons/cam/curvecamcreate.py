@@ -87,7 +87,7 @@ class CamCurveHatch(bpy.types.Operator):
             rotated = affinity.rotate(lines, self.angle, use_radians=True)  # rotate using shapely
             translated = affinity.translate(rotated, xoff=centerx, yoff=centery)  # move using shapely
 
-            simple.makeActive('crosshatch_bound')
+            simple.make_active('crosshatch_bound')
             bounds = simple.active_to_shapelyPoly()
 
             if self.pocket_type == 'BOUNDS':
@@ -432,15 +432,15 @@ class CamCurveDrawer(bpy.types.Operator):
 
         joinery.horizontal_finger(width_finger, self.drawer_plate_thickness, self.finger_tolerance,
                                   width_finger_amt * 2)
-        simple.makeActive('_wfb')
+        simple.make_active('_wfb')
 
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
         #   make drawer back
         finger_pair = joinery.finger_pair("_vfa", self.width - self.drawer_plate_thickness - self.finger_inset * 2, 0)
-        simple.makeActive('_wfa')
+        simple.make_active('_wfa')
         fronth = bpy.context.active_object
-        simple.makeActive('_back')
+        simple.make_active('_back')
         finger_pair.select_set(True)
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
@@ -455,7 +455,7 @@ class CamCurveDrawer(bpy.types.Operator):
                                                   scale=(1, 1, 1))
         simple.active_name("_circ")
         front_hole = bpy.context.active_object
-        simple.makeActive('drawer_back')
+        simple.make_active('drawer_back')
         front_hole.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
         simple.active_name("drawer_front")
@@ -463,15 +463,15 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.add_overcut(self.overcut_diameter, self.overcut)
 
         #   place back and front side by side
-        simple.makeActive('drawer_front')
+        simple.make_active('drawer_front')
         bpy.ops.transform.transform(mode='TRANSLATION', value=(0.0, 2 * self.height, 0.0, 0.0))
-        simple.makeActive('drawer_back')
+        simple.make_active('drawer_back')
 
         bpy.ops.transform.transform(mode='TRANSLATION', value=(self.width + 0.01, 2 * self.height, 0.0, 0.0))
         #   make side
 
         finger_pair = joinery.finger_pair("_vfb", self.depth - self.drawer_plate_thickness, 0)
-        simple.makeActive('_side')
+        simple.make_active('_side')
         finger_pair.select_set(True)
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
@@ -481,7 +481,7 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.remove_multiple('_finger_pair')
 
         #   make bottom
-        simple.makeActive("_wfb")
+        simple.make_active("_wfb")
         bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
                                       TRANSFORM_OT_translate={"value": (0, -self.drawer_plate_thickness / 2, 0.0)})
         simple.active_name("_wfb0")
@@ -504,11 +504,11 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.remove_multiple("_")
 
         #   move side and bottom to location
-        simple.makeActive("drawer_side")
+        simple.make_active("drawer_side")
         bpy.ops.transform.transform(mode='TRANSLATION',
                                     value=(self.depth / 2 + 3 * self.width / 2 + 0.02, 2 * self.height, 0.0, 0.0))
 
-        simple.makeActive("drawer_bottom")
+        simple.make_active("drawer_bottom")
         bpy.ops.transform.transform(mode='TRANSLATION',
                                     value=(self.depth / 2 + 3 * self.width / 2 + 0.02, self.width / 2, 0.0, 0.0))
 
