@@ -176,7 +176,8 @@ class machineSettings(bpy.types.PropertyGroup):
     spindle_default: bpy.props.FloatProperty(name="Spindle speed default RPM", default=15000, min=0.00001, max=320000,
                                              precision=1)
     spindle_start_time: bpy.props.FloatProperty(name="Spindle start delay seconds",
-                                                description='Wait for the spindle to start spinning before starting the feeds , in seconds',
+                                                description='Wait for the spindle to start spinning before starting '
+                                                            'the feeds , in seconds',
                                                 default=0, min=0.0000, max=320000, precision=1)
 
     axis4: bpy.props.BoolProperty(name="#4th axis", description="Machine has 4th axis", default=0)
@@ -225,7 +226,6 @@ class machineSettings(bpy.types.PropertyGroup):
 
 class PackObjectsSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
-    # name = bpy.props.StringProperty(name="Machine Name", default="Machine")
     sheet_fill_direction: EnumProperty(name='Fill direction',
                                        items=(('X', 'X', 'Fills sheet in X axis direction'),
                                               ('Y', 'Y', 'Fills sheet in Y axis direction')),
@@ -250,8 +250,6 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
 
 class SliceObjectsSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
-    # name = bpy.props.StringProperty(name="Machine Name", default="Machine")
-
     slice_distance: FloatProperty(name="Slicing distance",
                                   description="slices distance in z, should be most often thickness of plywood sheet.",
                                   min=0.001, max=10, default=0.005, precision=PRECISION, unit="LENGTH")
@@ -314,7 +312,6 @@ def updateChipload(self, context):
     """this is very simple computation of chip size, could be very much improved"""
     print('update chipload ')
     o = self
-    # self.changed=True
     # Old chipload
     o.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
     # New chipload with chip thining compensation.
@@ -351,8 +348,6 @@ def updateZbufferImage(self, context):
     utils.getOperationSources(self)
 
 
-# utils.checkMemoryLimit(self)
-
 def updateStrategy(o, context):
     """"""
     o.changed = True
@@ -367,10 +362,6 @@ def updateStrategy(o, context):
 
 def updateCutout(o, context):
     pass
-
-
-# if o.outlines_count>1:
-#	o.use_bridges=False
 
 
 def updateExact(o, context):
@@ -550,7 +541,6 @@ class camOperation(bpy.types.PropertyGroup):
                                 default='INDEXED',
                                 update=updateStrategy)
 
-    # active_orientation = bpy.props.IntProperty(name="active orientation",description="active orientation", default=0,min=0, max=32000, update = updateRest)
     rotary_axis_1: EnumProperty(name='Rotary axis',
                                 items=(
                                     ('X', 'X', ''),
@@ -620,7 +610,8 @@ class camOperation(bpy.types.PropertyGroup):
     ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
                                max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
     # ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
-    #                                 max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+    #                                 max=0.1, default=0.017, unit="LENGTH", precision=PRECISION,
+    #                                 update=updateOffsetImage)
     bull_corner_radius: FloatProperty(name="Bull Corner Radius", description="Radius tool bit corner", min=0.0,
                                       max=0.035, default=0.005, unit="LENGTH", precision=PRECISION,
                                       update=updateOffsetImage)
