@@ -162,9 +162,10 @@ def exportGcodePath(filename, vertslist, operations):
             c.output_block_numbers = m.output_block_numbers
             c.start_block_number = m.start_block_number
             c.block_number_increment = m.block_number_increment
-            c.output_tool_definitions = m.output_tool_definitions
-            c.output_tool_change = m.output_tool_change
-            c.output_g43_on_tool_change_line = m.output_g43_on_tool_change
+
+        c.output_tool_definitions = m.output_tool_definitions
+        c.output_tool_change = m.output_tool_change
+        c.output_g43_on_tool_change_line = m.output_g43_on_tool_change
 
         c.file_open(filename)
 
@@ -219,12 +220,15 @@ def exportGcodePath(filename, vertslist, operations):
 
         # write tool, not working yet probably
         # print (last_cutter)
-        if ((not use_experimental) or m.output_tool_change) and last_cutter != [o.cutter_id, o.cutter_diameter,
-                                                                                o.cutter_type, o.cutter_flutes]:
-            c.comment('Tool change - D = %s type %s flutes %s' % (
+        if m.output_tool_change and last_cutter != [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]:
+            if m.output_tool_change:
+                c.tool_change(o.cutter_id)
+
+        if m.output_tool_definitions:
+            c.comment('Tool: D = %s type %s flutes %s' % (
                 strInUnits(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes))
-            c.tool_change(o.cutter_id)
-            c.flush_nc()
+
+        c.flush_nc()
 
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
         if o.cutter_type not in ['LASER', 'PLASMA']:
