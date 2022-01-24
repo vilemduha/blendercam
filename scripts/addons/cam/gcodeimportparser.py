@@ -110,7 +110,7 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    if bpy.context.scene.import_cam_gcode.output == 'curve':
+    if bpy.context.scene.cam_import_gcode.output == 'curve':
         bpy.ops.object.convert(target='CURVE')
 
 
