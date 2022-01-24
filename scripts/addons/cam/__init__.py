@@ -148,7 +148,8 @@ class machineSettings(bpy.types.PropertyGroup):
     # units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
     # position definitions:
     use_position_definitions: bpy.props.BoolProperty(name="Use position definitions",
-                                                     description="Define own positions for op start, toolchange, ending position",
+                                                     description="Define own positions for op start, "
+                                                                 "toolchange, ending position",
                                                      default=False)
     starting_position: bpy.props.FloatVectorProperty(name='Start position', default=(0, 0, 0), unit='LENGTH',
                                                      precision=PRECISION, subtype="XYZ", update=updateMachine)
@@ -279,11 +280,11 @@ def operationValid(self, context):
     o.warnings = ""
     o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     if o.geometry_source == 'OBJECT':
-        if not o.object_name in bpy.data.objects:
+        if o.object_name not in bpy.data.objects:
             o.valid = False
             o.warnings = invalidmsg
     if o.geometry_source == 'COLLECTION':
-        if not o.collection_name in bpy.data.collections:
+        if o.collection_name not in bpy.data.collections:
             o.valid = False
             o.warnings = invalidmsg
         elif len(bpy.data.collections[o.collection_name].objects) == 0:
@@ -291,7 +292,7 @@ def operationValid(self, context):
             o.warnings = invalidmsg
 
     if o.geometry_source == 'IMAGE':
-        if not o.source_image_name in bpy.data.images:
+        if o.source_image_name not in bpy.data.images:
             o.valid = False
             o.warnings = invalidmsg
 
@@ -317,11 +318,16 @@ def updateChipload(self, context):
     # Old chipload
     o.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
     # New chipload with chip thining compensation.
-    # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less than 50% cutter engagement with cylindrical end mills.
-    # formula 1 Nominal Chipload is " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
-    # formula 2 (.5*(cutter diameter mm devided by dist_between_paths)) devided by square root of ((cutter diameter mm devided by dist_between_paths)-1) x Nominal Chipload
-    # Nominal Chipload = what you find in end mill data sheats recomended chip load at %50 cutter engagment. I have no programming or math back ground.
-    # I am sure there is a better way to do this. I dont get consistent result and I am not sure if there is something wrong with the units going into the formula, my math or my lack of underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck we will be one tiny step on the way to a slightly better chipload calculating function.
+    # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less
+    # than 50% cutter engagement with cylindrical end mills. formula 1 Nominal Chipload is
+    # " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
+    # formula 2 (.5*(cutter diameter mm devided by dist_between_paths)) divided by square root of
+    # ((cutter diameter mm devided by dist_between_paths)-1) x Nominal Chipload
+    # Nominal Chipload = what you find in end mill data sheats recomended chip load at %50 cutter engagment.
+    # I am sure there is a better way to do this. I dont get consistent result and
+    # I am not sure if there is something wrong with the units going into the formula, my math or my lack of
+    # underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck
+    # we will be one tiny step on the way to a slightly better chipload calculating function.
 
     # self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(math.sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
     print(o.chipload)
@@ -1496,7 +1502,7 @@ def register():
                                                    update=updateOperation)
     s.cam_machine = bpy.props.PointerProperty(type=machineSettings)
 
-    bpy.types.Scene.import_gcode = bpy.props.PointerProperty(type=import_settings)
+    s.cam_import_gcode = bpy.props.PointerProperty(type=import_settings)
 
     s.cam_text = bpy.props.StringProperty()
     bpy.app.handlers.frame_change_pre.append(ops.timer_update)
@@ -1512,7 +1518,6 @@ def unregister():
     for p in get_panels():
         bpy.utils.unregister_class(p)
     s = bpy.types.Scene
-    del s.cam_operations
     # cam chains are defined hardly now.
     del s.cam_chains
     del s.cam_active_chain
