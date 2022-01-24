@@ -928,7 +928,7 @@ class CustomPanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        isettings = scene.import_gcode
+        isettings = scene.cam_import_gcode
         layout.prop(isettings, 'output')
         layout.prop(isettings, "split_layers")
 
