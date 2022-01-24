@@ -1081,23 +1081,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
     bl_label = "Add Operation Preset"
     preset_menu = "CAM_OPERATION_MT_presets"
 
-    preset_defines = [
-        "o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"
-    ]
-
-    # d1=dir(bpy.types.machineSettings.bl_rna)
-    #
-    # d=[]
-    # for prop in d1:
-    #     if (prop[:2]!='__'
-    #         and prop!='bl_rna'
-    #         and prop!='translation_context'
-    #         and prop!='base'
-    #         and prop!='description'
-    #         and prop!='identifier'
-    #         and prop!='name'
-    #         and prop!='name_property'):
-    #             d.append(prop)
+    preset_defines = ["o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"]
 
     preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material_size',
@@ -1164,10 +1148,8 @@ class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
 
 
 def get_panels():  # convenience function for bot register and unregister functions
-    # types = bpy.types
     return (
         ui.CAM_UL_operations,
-        # ui.CAM_UL_orientations,
         ui.CAM_UL_chains,
         camOperation,
         opReference,
@@ -1258,118 +1240,6 @@ def get_panels():  # convenience function for bot register and unregister functi
         SliceObjectsSettings,
 
     )
-
-
-# def compatible_panels():
-#     """gets panels that are for blender internal, but are compatible with blender CAM"""
-#     t = bpy.types
-#     return (
-#         # textures
-#         t.TEXTURE_PT_context_texture,
-#         t.TEXTURE_PT_preview,
-#         t.TEXTURE_PT_colors,
-#         t.TEXTURE_PT_clouds,
-#         t.TEXTURE_PT_wood,
-#         t.TEXTURE_PT_marble,
-#         t.TEXTURE_PT_magic,
-#         t.TEXTURE_PT_blend,
-#         t.TEXTURE_PT_stucci,
-#         t.TEXTURE_PT_image,
-#         t.TEXTURE_PT_image_sampling,
-#         t.TEXTURE_PT_image_mapping,
-#         t.TEXTURE_PT_envmap,
-#         t.TEXTURE_PT_envmap_sampling,
-#         t.TEXTURE_PT_musgrave,
-#         t.TEXTURE_PT_voronoi,
-#         t.TEXTURE_PT_distortednoise,
-#         t.TEXTURE_PT_voxeldata,
-#         t.TEXTURE_PT_pointdensity,
-#         t.TEXTURE_PT_pointdensity_turbulence,
-#         t.TEXTURE_PT_ocean,
-#         t.TEXTURE_PT_mapping,
-#         t.TEXTURE_PT_influence,
-#         t.TEXTURE_PT_custom_props,
-#
-#         # meshes
-#         t.DATA_PT_context_mesh,
-#         t.DATA_PT_normals,
-#         t.DATA_PT_texture_space,
-#         t.DATA_PT_shape_keys,
-#         t.DATA_PT_uv_texture,
-#         t.DATA_PT_vertex_colors,
-#         t.DATA_PT_vertex_groups,
-#         t.DATA_PT_customdata,
-#         t.DATA_PT_custom_props_mesh,
-#
-#         # materials
-#         t.MATERIAL_PT_context_material,
-#         t.MATERIAL_PT_preview,
-#         t.MATERIAL_PT_pipeline,
-#         t.MATERIAL_PT_diffuse,
-#         t.MATERIAL_PT_specular,
-#         t.MATERIAL_PT_shading,
-#         t.MATERIAL_PT_transp,
-#         t.MATERIAL_PT_mirror,
-#         t.MATERIAL_PT_sss,
-#         t.MATERIAL_PT_halo,
-#         t.MATERIAL_PT_flare,
-#         t.MATERIAL_PT_game_settings,
-#         t.MATERIAL_PT_physics,
-#         t.MATERIAL_PT_strand,
-#         t.MATERIAL_PT_options,
-#         t.MATERIAL_PT_shadow,
-#         t.MATERIAL_PT_transp_game,
-#         t.MATERIAL_PT_volume_density,
-#         t.MATERIAL_PT_volume_shading,
-#         t.MATERIAL_PT_volume_lighting,
-#         t.MATERIAL_PT_volume_transp,
-#         t.MATERIAL_PT_volume_integration,
-#         t.MATERIAL_PT_volume_options,
-#         t.MATERIAL_PT_custom_props,
-#
-#         # particles
-#         t.PARTICLE_PT_context_particles,
-#         t.PARTICLE_PT_emission,
-#         t.PARTICLE_PT_hair_dynamics,
-#         t.PARTICLE_PT_cache,
-#         t.PARTICLE_PT_velocity,
-#         t.PARTICLE_PT_rotation,
-#         t.PARTICLE_PT_physics,
-#         t.PARTICLE_PT_boidbrain,
-#         t.PARTICLE_PT_render,
-#         t.PARTICLE_PT_draw,
-#         t.PARTICLE_PT_children,
-#         t.PARTICLE_PT_field_weights,
-#         t.PARTICLE_PT_force_fields,
-#         t.PARTICLE_PT_vertexgroups,
-#
-#         # scene
-#         t.SCENE_PT_scene,
-#         t.SCENE_PT_unit,
-#         t.SCENE_PT_keying_sets,
-#         t.SCENE_PT_keying_set_paths,
-#         t.SCENE_PT_color_management,
-#
-#         t.SCENE_PT_audio,
-#         t.SCENE_PT_physics,
-#         t.SCENE_PT_rigid_body_world,
-#         t.SCENE_PT_rigid_body_cache,
-#         t.SCENE_PT_rigid_body_field_weights,
-#         t.SCENE_PT_simplify,
-#         t.SCENE_PT_custom_props,
-#
-#         # world
-#         t.WORLD_PT_context_world,
-#         t.WORLD_PT_preview,
-#         t.WORLD_PT_world,
-#         t.WORLD_PT_ambient_occlusion,
-#         t.WORLD_PT_environment_lighting,
-#         t.WORLD_PT_indirect_lighting,
-#         t.WORLD_PT_gather,
-#         t.WORLD_PT_mist,
-#         t.WORLD_PT_custom_props
-#
-#     )
 
 
 classes = [
