@@ -457,8 +457,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
         fs = shapely.ops.unary_union(shapes)
         fs = fs.union(positive_overcuts)
         fs = fs.difference(negative_overcuts)
-        #        utils.shapelyToCurve(o1.name + '_overcuts', positive_overcuts, o1.location.z)
-        #        utils.shapelyToCurve(o1.name + '_overcuts', negative_overcuts, o1.location.z)
+
         utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
         return {'FINISHED'}
 
