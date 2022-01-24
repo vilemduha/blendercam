@@ -579,7 +579,9 @@ class CamCurvePuzzle(bpy.types.Operator):
                                          unit="LENGTH")
     twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.3, min=0.1, max=0.9, precision=4)
     twist_keep: bpy.props.BoolProperty(name="keep Twist holes", default=False)
-    twist_separator: bpy.props.BoolProperty(name="Add Twist separator", default=True)
+    twist_line: bpy.props.BoolProperty(name="Add Twist to bar", default=False)
+    twist_line_amount: bpy.props.IntProperty(name="amount of separators", default=2, min=1, max=600)
+    twist_separator: bpy.props.BoolProperty(name="Add Twist separator", default=False)
     twist_separator_amount: bpy.props.IntProperty(name="amount of separators", default=2, min=2, max=600)
     twist_separator_spacing: bpy.props.FloatProperty(name="Separator spacing", default=0.025, min=-0.004, max=1.0,
                                                      precision=4, unit="LENGTH")
@@ -605,6 +607,9 @@ class CamCurvePuzzle(bpy.types.Operator):
                 layout.prop(self, 'twist_thick')
                 layout.prop(self, 'twist_percent')
                 layout.prop(self, 'twist_keep')
+                layout.prop(self, 'twist_line')
+                if self.twist_line:
+                    layout.prop(self, 'twist_line_amount')
                 layout.prop(self, 'twist_separator')
                 if self.twist_separator:
                     layout.prop(self, 'twist_separator_amount')
@@ -677,7 +682,9 @@ class CamCurvePuzzle(bpy.types.Operator):
             if not self.mitre:
                 puzzle_joinery.bar(self.width, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
                                    stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                                   tthick=self.twist_thick, twist_keep=self.twist_keep, which=self.gender)
+                                   tthick=self.twist_thick, twist_keep=self.twist_keep,
+                                   twist_line=self.twist_line, twist_line_amount=self.twist_line_amount,
+                                   which=self.gender)
             else:
                 puzzle_joinery.mitre(self.width,  self.height, self.angle, self.angleb, self.diameter,
                                      self.finger_tolerance, self.finger_amount, stem=self.stem_size,
@@ -692,13 +699,16 @@ class CamCurvePuzzle(bpy.types.Operator):
             puzzle_joinery.arcbararc(self.width, self.radius, self.height, self.angle, self.angleb, self.diameter,
                                      self.finger_tolerance, self.finger_amount,
                                      stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                                     tthick=self.twist_thick, twist_keep=self.twist_keep, which=self.gender)
+                                     tthick=self.twist_thick, twist_keep=self.twist_keep,
+                                     twist_line=self.twist_line, twist_line_amount=self.twist_line_amount,
+                                     which=self.gender)
 
         elif self.interlock_type == 'CURVEBAR':
             puzzle_joinery.arcbar(self.width, self.radius, self.height, self.angle, self.diameter,
                                   self.finger_tolerance, self.finger_amount,
                                   stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
                                   tthick=self.twist_thick, twist_keep=self.twist_keep,
+                                  twist_line=self.twist_line, twist_line_amount=self.twist_line_amount,
                                   which=self.gender)
 
         elif self.interlock_type == 'MULTIANGLE':

@@ -154,7 +154,8 @@ def twistm(name, length, diameter, tolerance, twist, tneck, tthick, angle, twist
 
 
 def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=0.5, tthick=0.01, twist_keep=False,
-        which='MF'):
+        twist_line=False, twist_line_amount=2, which='MF'):
+
     # width = length of the bar
     # thick = thickness of the bar
     # diameter = diameter of the tool for joint creation
@@ -200,6 +201,13 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
            
     simple.remove_multiple("_")  # Remove temporary base and holes
     simple.remove_multiple("fingers")  # Remove temporary base and holes
+
+    if twist_line:
+        joinery.twist_line(thick, tthick, tolerance, tneck, twist_line_amount, width)
+        if twist_keep:
+            simple.duplicate()
+        simple.active_name('tmptwist')
+        simple.difference('tmp', 'tmprect')
     simple.rename('tmprect', 'Puzzle_bar')
     simple.remove_multiple("tmp")  # Remove temporary base and holes
     simple.make_active('Puzzle_bar')
@@ -291,7 +299,7 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
 
 
 def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, twist=False,
-              tneck=0.5, tthick=0.01, which='MF', twist_keep=False):
+              tneck=0.5, tthick=0.01, which='MF', twist_keep=False, twist_line=False, twist_line_amount=2):
     # length is the total width of the segments including 2 * radius and thick
     # radius = radius of the curve
     # thick = thickness of the bar
@@ -332,13 +340,21 @@ def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=
         simple.move(x=-length / 2)
         simple.active_name('tmp_receptacle')
         simple.union('tmp')
+        simple.active_name('tmprect')
+
+    if twist_line:
+        joinery.twist_line(thick, tthick, tolerance, tneck, twist_line_amount, length)
+        if twist_keep:
+            simple.duplicate()
+        simple.active_name('tmptwist')
+        simple.difference('tmp', 'tmprect')
 
     simple.active_name('arcBarArc')
     simple.make_active('arcBarArc')
 
 
 def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False,
-           tneck=0.5, tthick=0.01, twist_keep=False, which='MF'):
+           tneck=0.5, tthick=0.01, twist_keep=False, which='MF', twist_line=False, twist_line_amount=2):
     # length is the total width of the segments including 2 * radius and thick
     # radius = radius of the curve
     # thick = thickness of the bar
@@ -361,12 +377,12 @@ def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, 
     #  Generate male section and join to the base
     if which == 'MM' or which == 'MF':
         bar(length, thick, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
-            which='M', twist_keep=twist_keep)
+            which='M', twist_keep=twist_keep, twist_line=twist_line, twist_line_amount=twist_line_amount)
         simple.active_name('tmprect')
 
     if which == 'FF' or which == 'FM':
         bar(length, thick, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
-            which='F', twist_keep=twist_keep)
+            which='F', twist_keep=twist_keep, twist_line=twist_line, twist_line_amount=twist_line_amount)
         simple.rotate(math.pi)
         simple.active_name('tmprect')
 

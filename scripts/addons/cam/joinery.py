@@ -89,6 +89,21 @@ def interlock_twist(length, thickness, finger_play, cx=0, cy=0, rotation=0, perc
     simple.remove_doubles()
 
 
+def twist_line(length, thickness, finger_play, percentage, amount, distance, center=True):
+    # Makes an amount of twist for the distance and  centers it
+    spacing = distance / amount
+    while amount > 0:
+        position = spacing * amount
+        interlock_twist(length, thickness, finger_play, percentage=percentage, cx=position)
+        print('twistline', amount, distance, position)
+        amount -= 1
+
+    simple.join_multiple('_groove')
+    simple.active_name('twist_line')
+    if center:
+        simple.move(x=(-distance-spacing)/2)
+
+
 def twist_separator_slot(length, thickness, finger_play=0.00005, percentage=0.5):
     simple.add_rectangle(thickness+finger_play, length, center_y=False)
     simple.move(y=((length*percentage-finger_play)/2))
