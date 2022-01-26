@@ -88,7 +88,7 @@ def finger(diameter, stem=2):
     simple.rename('_sum', "_puzzle")
 
 
-def fingers(diameter, inside, amount, stem=1):
+def fingers(diameter, inside, amount=1, stem=1):
     # diameter = diameter of the tool for joint creation
     # inside = Tolerance in the joint receptacle
     global DT  # Bit diameter tolerance

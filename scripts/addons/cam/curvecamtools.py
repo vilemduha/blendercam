@@ -106,7 +106,7 @@ class CamCurveIntarsion(bpy.types.Operator):
     def execute(self, context):
         selected = context.selected_objects  # save original selected items
 
-        simple.removeMultiple('intarsion_')
+        simple.remove_multiple('intarsion_')
 
         for ob in selected:
             ob.select_set(True)  # select original curves
@@ -622,8 +622,8 @@ class CamOffsetSilhouete(bpy.types.Operator):
             for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
                 coords.append((v.co.x, v.co.y))
 
-            simple.removeMultiple('temp_mesh')  # delete temporary mesh
-            simple.removeMultiple('dilation')  # delete old dilation objects
+            simple.remove_multiple('temp_mesh')  # delete temporary mesh
+            simple.remove_multiple('dilation')  # delete old dilation objects
 
             line = LineString(coords)  # convert coordinates to shapely LineString datastructure
             print("line length=", round(line.length * 1000), 'mm')

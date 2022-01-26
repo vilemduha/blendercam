@@ -715,7 +715,7 @@ class CamCurvePuzzle(bpy.types.Operator):
             puzzle_joinery.multiangle(self.radius, self.height, math.pi/3, self.diameter, self.finger_tolerance,
                                       self.finger_amount,
                                       stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
-                                      tthick=self.twist_thick, twist_keep=self.twist_keep,
+                                      tthick=self.twist_thick,
                                       combination=self.multiangle_gender)
 
         elif self.interlock_type == 'T':

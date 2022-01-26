@@ -105,8 +105,8 @@ def twist_line(length, thickness, finger_play, percentage, amount, distance, cen
 
 
 def twist_separator_slot(length, thickness, finger_play=0.00005, percentage=0.5):
-    simple.add_rectangle(thickness+finger_play, length, center_y=False)
-    simple.move(y=((length*percentage-finger_play)/2))
+    simple.add_rectangle(thickness+finger_play/2, length, center_y=False)
+    simple.move(y=((length*percentage-finger_play/2)/2))
     simple.duplicate()
     simple.mirrory()
     simple.join_multiple('simple_rectangle')
@@ -117,7 +117,7 @@ def interlock_twist_separator(length, thickness, amount, spacing, edge_distance,
                               start='rounded', end='rounded'):
     amount -= 1
     base_width = 2*edge_distance+spacing*amount+thickness
-    simple.add_rectangle(base_width, length, center_x=False)
+    simple.add_rectangle(base_width, length-finger_play*2, center_x=False)
     simple.active_name('_base')
     twist_separator_slot(length, thickness, finger_play, percentage)
     while amount > 0:
@@ -483,7 +483,7 @@ def single_interlock(finger_depth, finger_thick, finger_tolerance, x, y, groove_
     elif type == "TWIST":
         interlock_twist(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle, percentage=twist_percentage)
     elif type == "PUZZLE":
-        puzzle_joinery.fingers(finger_thick, finger_tolerance, amount)
+        puzzle_joinery.fingers(finger_thick, finger_tolerance)
 
 
 def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_tolerance, finger_amount, tangent=0,
