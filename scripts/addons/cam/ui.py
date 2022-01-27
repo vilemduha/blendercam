@@ -903,6 +903,7 @@ class VIEW3D_PT_tools_create(bpy.types.Panel):
         layout.operator("object.hypotrochoid")
         layout.operator("object.customcurve")
         layout.operator("object.curve_hatch")
+        layout.operator("object.curve_gear")
 
 
 # Gcode import panel---------------------------------------------------------------

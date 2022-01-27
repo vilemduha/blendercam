@@ -25,7 +25,7 @@ from bpy.props import *
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
 from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, joinery, \
-    curvecamtools, puzzle_joinery
+    curvecamtools, puzzle_joinery, involute_gear
 import shapely
 from shapely.geometry import Point, LineString, Polygon, MultiLineString, MultiPoint
 import mathutils
@@ -751,4 +751,54 @@ class CamCurvePuzzle(bpy.types.Operator):
                                               percentage=self.twist_percent)
             simple.remove_doubles()
             simple.add_overcut(self.overcut_diameter, self.overcut)
+        return {'FINISHED'}
+
+
+class CamCurveGear(bpy.types.Operator):
+    """Generates involute Gears // version 1.1 by Leemon Baird, 2011, Leemon@Leemon.com
+    http://www.thingiverse.com/thing:5505"""  # ported by Alain Pelletier January 2022
+
+    bl_idname = "object.curve_gear"
+    bl_label = "Gears"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+    tooth_spacing: bpy.props.FloatProperty(name="distance per tooth", default=0.003, min=0.001, max=1.0, precision=4,
+                                           unit="LENGTH")
+    tooth_amount: bpy.props.IntProperty(name="Amount of teeth", default=7, min=4)
+    hole_diameter: bpy.props.FloatProperty(name="Hole diameter", default=0.003175, min=0, max=3.0, precision=4,
+                                           unit="LENGTH")
+    pressure_angle: bpy.props.FloatProperty(name="Pressure Angle", default=math.radians(20), min=0.001, max=math.pi/2,
+                                            precision=4,
+                                            subtype="ANGLE",
+                                            unit="ROTATION")
+    clearance: bpy.props.FloatProperty(name="Clearance", default=0.00, min=0, max=0.1, precision=4,
+                                       unit="LENGTH")
+    backlash: bpy.props.FloatProperty(name="Backlash", default=0.0, min=0.0, max=0.1, precision=4,
+                                      unit="LENGTH")
+    gear_type: EnumProperty(name='Type of gear',
+                            items=(('PINION', 'Pinion', 'circular gear'),
+                                   ('RACK', 'Rack', 'Straight Rack')),
+                            description='Type of gear',
+                            default='PINION')
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, 'gear_type')
+        layout.prop(self, 'tooth_spacing')
+        layout.prop(self, 'tooth_amount')
+        layout.prop(self, 'hole_diameter')
+        layout.prop(self, 'pressure_angle')
+        layout.prop(self, 'clearance')
+        layout.prop(self, 'backlash')
+
+    def execute(self, context):
+        if self.gear_type == 'PINION':
+            involute_gear.gear(mm_per_tooth=self.tooth_spacing, number_of_teeth=self.tooth_amount,
+                               hole_diameter=self.hole_diameter, pressure_angle=self.pressure_angle,
+                               clearance=self.clearance, backlash=self.backlash)
+        elif self.gear_type == 'RACK':
+            involute_gear.rack(mm_per_tooth=self.tooth_spacing, number_of_teeth=self.tooth_amount,
+                               pressure_angle=self.pressure_angle,
+                               backlash=self.backlash)
+
         return {'FINISHED'}
