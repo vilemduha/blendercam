@@ -157,13 +157,20 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003,
                          Simple_radius=hole_diameter/2, shape='3D', use_cyclic_u=True, edit_mode=False)
     simple.active_name('_hole')
     simple.difference('_', '_gear')
-    simple.active_name('gear_pinion')
+    name = 'gear-' + str(round(mm_per_tooth*1000, 1))
+    name += 'mm-pitch-' + str(number_of_teeth)
+    name += 'teeth-PA-' + str(round(math.degrees(pressure_angle), 1))
+    simple.active_name(name)
 
 
-def rack(mm_per_tooth=0.003, number_of_teeth=11, height=0.05, pressure_angle=0.3488, backlash=0.0):
+def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3488, backlash=0.0):
     pi = math.pi
+    mm_per_tooth *= 1000
     a = mm_per_tooth / pi  # addendum
-    t = a * 1000 * math.cos(pressure_angle)-1         # tooth side is tilted so top/bottom corners move this amount
+    t = (a * math.sin(pressure_angle))         # tooth side is tilted so top/bottom corners move this amount
+    a /= 1000
+    mm_per_tooth /= 1000
+    t /= 1000
     print('mmpertooth', mm_per_tooth)
     print('t=',t)
     print('a=',a)
@@ -171,20 +178,25 @@ def rack(mm_per_tooth=0.003, number_of_teeth=11, height=0.05, pressure_angle=0.3
 
     print('pt-1', -mm_per_tooth * 0.25 + backlash - t,-a)
     shapely_gear = Polygon([
-                            (-mm_per_tooth * 3/4, a-height),
-                            (-mm_per_tooth * 3/4 - backlash, -a),
+                            (-mm_per_tooth * 2/4, a-height),
+                            (-mm_per_tooth * 2/4 - backlash, -a),
                             (-mm_per_tooth * 1/4 + backlash - t, -a),
                             (-mm_per_tooth * 1/4 + backlash + t, a),
                             (mm_per_tooth * 1/4 - backlash - t, a),
                             (mm_per_tooth * 1/4 - backlash + t, -a),
-                            (mm_per_tooth * 3/4 + backlash, -a),
-                            (mm_per_tooth * 3/4, a-height)])
+                            (mm_per_tooth * 2/4 + backlash, -a),
+                            (mm_per_tooth * 2/4, a-height)
+                            ])
 
-    utils.shapelyToCurve('tooth', shapely_gear, 0.0)
-    # i = number_of_teeth
-    # while i > 1:
-    #     simple.duplicate(x=mm_per_tooth)
-    #     i -= 1
+    utils.shapelyToCurve('_tooth', shapely_gear, 0.0)
+    i = number_of_teeth
+    while i > 1:
+        simple.duplicate(x=mm_per_tooth)
+        i -= 1
+    simple.union('_tooth')
+    name = 'rack-' + str(round(mm_per_tooth*1000, 1))
+    name += '-PA-' + str(round(math.degrees(pressure_angle), 1))
+    simple.active_name(name)
 
 
 

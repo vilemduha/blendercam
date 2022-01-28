@@ -762,7 +762,7 @@ class CamCurveGear(bpy.types.Operator):
     bl_label = "Gears"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    tooth_spacing: bpy.props.FloatProperty(name="distance per tooth", default=0.003, min=0.001, max=1.0, precision=4,
+    tooth_spacing: bpy.props.FloatProperty(name="distance per tooth", default=0.010, min=0.001, max=1.0, precision=4,
                                            unit="LENGTH")
     tooth_amount: bpy.props.IntProperty(name="Amount of teeth", default=7, min=4)
     hole_diameter: bpy.props.FloatProperty(name="Hole diameter", default=0.003175, min=0, max=3.0, precision=4,
