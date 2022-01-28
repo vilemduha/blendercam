@@ -109,9 +109,6 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003,
     r = p-(c-p)-clearance   # radius of root circle
     t = mm_per_tooth / 2 - backlash / 2  # tooth thickness at pitch circle
     k = - gear_iang(b, p) - t / 2 / p    # angle to where involute meets base circle on each side of tooth
-    print('--------b=', b)
-    print('cos pressure angle', math.cos(pressure_angle))
-    print('p=', p)
     shapely_gear = Polygon([
                             (0, 0),
                             gear_polar(r, k if r < b else -pi / number_of_teeth),
@@ -171,12 +168,7 @@ def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3
     a /= 1000
     mm_per_tooth /= 1000
     t /= 1000
-    print('mmpertooth', mm_per_tooth)
-    print('t=',t)
-    print('a=',a)
-    print('pt-0', (-mm_per_tooth * 0.75 - backlash, -a))
 
-    print('pt-1', -mm_per_tooth * 0.25 + backlash - t,-a)
     shapely_gear = Polygon([
                             (-mm_per_tooth * 2/4, a-height),
                             (-mm_per_tooth * 2/4 - backlash, -a),
@@ -197,8 +189,4 @@ def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3
     name = 'rack-' + str(round(mm_per_tooth*1000, 1))
     name += '-PA-' + str(round(math.degrees(pressure_angle), 1))
     simple.active_name(name)
-
-
-
-
 
