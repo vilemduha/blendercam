@@ -61,6 +61,8 @@
 //Meshing gears must match in mm_per_tooth, pressure_angle, and twist,
 //and be separated by the sum of their pitch radii, which can be found with pitch_radius(). """
 
+# ported to Blendercam by Alain Pelletier Jan 2022
+
 
 import bpy
 from bpy.props import *
@@ -189,7 +191,7 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
     name = 'gear-' + str(round(mm_per_tooth*1000, 1))
     name += 'mm-pitch-' + str(number_of_teeth)
     name += 'teeth-PA-' + str(round(math.degrees(pressure_angle), 1))
-    #simple.active_name(name)
+    simple.active_name(name)
 
 
 def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3488, backlash=0.0,
