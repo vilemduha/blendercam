@@ -102,6 +102,7 @@ def gear_q6(b, s, t, d):
 
 def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003,
          pressure_angle=0.3488, clearance=0.0, backlash=0.0):
+    simple.deselect()
     pi = math.pi
     p = mm_per_tooth * number_of_teeth / pi / 2  # radius of pitch circle
     c = p + mm_per_tooth / pi - clearance        # radius of outer circle
@@ -160,7 +161,9 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003,
     simple.active_name(name)
 
 
-def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3488, backlash=0.0):
+def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3488, backlash=0.0,
+         hole_diameter=0.003175, tooth_per_hole=4):
+    simple.deselect()
     pi = math.pi
     mm_per_tooth *= 1000
     a = mm_per_tooth / pi  # addendum
@@ -170,14 +173,14 @@ def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3
     t /= 1000
 
     shapely_gear = Polygon([
-                            (-mm_per_tooth * 2/4, a-height),
-                            (-mm_per_tooth * 2/4 - backlash, -a),
+                            (-mm_per_tooth * 2/4*1.001, a-height),
+                            (-mm_per_tooth * 2/4*1.001 - backlash, -a),
                             (-mm_per_tooth * 1/4 + backlash - t, -a),
                             (-mm_per_tooth * 1/4 + backlash + t, a),
                             (mm_per_tooth * 1/4 - backlash - t, a),
                             (mm_per_tooth * 1/4 - backlash + t, -a),
-                            (mm_per_tooth * 2/4 + backlash, -a),
-                            (mm_per_tooth * 2/4, a-height)
+                            (mm_per_tooth * 2/4*1.001 + backlash, -a),
+                            (mm_per_tooth * 2/4*1.001, a-height)
                             ])
 
     utils.shapelyToCurve('_tooth', shapely_gear, 0.0)
@@ -186,7 +189,19 @@ def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3
         simple.duplicate(x=mm_per_tooth)
         i -= 1
     simple.union('_tooth')
-    name = 'rack-' + str(round(mm_per_tooth*1000, 1))
+    simple.move(y=height/2)
+    if hole_diameter > 0:
+        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
+                             Simple_radius=hole_diameter/2, shape='3D', use_cyclic_u=True, edit_mode=False)
+        simple.active_name('_hole')
+        distance = number_of_teeth * mm_per_tooth
+        while distance > tooth_per_hole * mm_per_tooth:
+            simple.duplicate(x=tooth_per_hole * mm_per_tooth)
+            distance -= tooth_per_hole * mm_per_tooth
+        simple.difference('_', '_tooth')
+
+    name = 'rack-' + str(round(mm_per_tooth * 1000, 1))
     name += '-PA-' + str(round(math.degrees(pressure_angle), 1))
     simple.active_name(name)
+
 

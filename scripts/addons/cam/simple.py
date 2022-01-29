@@ -221,6 +221,10 @@ def remove_multiple(name):
             bpy.ops.object.delete()
 
 
+def deselect():
+    bpy.ops.object.select_all(action='DESELECT')
+
+
 # makes the object with the name active
 def make_active(name):
     ob = bpy.context.scene.objects[name]

@@ -775,6 +775,9 @@ class CamCurveGear(bpy.types.Operator):
                                        unit="LENGTH")
     backlash: bpy.props.FloatProperty(name="Backlash", default=0.0, min=0.0, max=0.1, precision=4,
                                       unit="LENGTH")
+    rack_height: bpy.props.FloatProperty(name="Rack Height", default=0.012, min=0.001, max=1, precision=4,
+                                      unit="LENGTH")
+    rack_tooth_per_hole: bpy.props.IntProperty(name="teeth per mounting hole", default=7, min=2)
     gear_type: EnumProperty(name='Type of gear',
                             items=(('PINION', 'Pinion', 'circular gear'),
                                    ('RACK', 'Rack', 'Straight Rack')),
@@ -788,8 +791,12 @@ class CamCurveGear(bpy.types.Operator):
         layout.prop(self, 'tooth_amount')
         layout.prop(self, 'hole_diameter')
         layout.prop(self, 'pressure_angle')
-        layout.prop(self, 'clearance')
         layout.prop(self, 'backlash')
+        if self.gear_type == 'PINION':
+            layout.prop(self, 'clearance')
+        elif self.gear_type == 'RACK':
+            layout.prop(self, 'rack_height')
+            layout.prop(self, 'rack_tooth_per_hole')
 
     def execute(self, context):
         if self.gear_type == 'PINION':
@@ -798,7 +805,9 @@ class CamCurveGear(bpy.types.Operator):
                                clearance=self.clearance, backlash=self.backlash)
         elif self.gear_type == 'RACK':
             involute_gear.rack(mm_per_tooth=self.tooth_spacing, number_of_teeth=self.tooth_amount,
-                               pressure_angle=self.pressure_angle,
-                               backlash=self.backlash)
+                               pressure_angle=self.pressure_angle, height=self.rack_height,
+                               backlash=self.backlash,
+                               tooth_per_hole=self.rack_tooth_per_hole,
+                               hole_diameter=self.hole_diameter)
 
         return {'FINISHED'}
