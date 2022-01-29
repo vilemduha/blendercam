@@ -191,10 +191,10 @@ def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3
     simple.union('_tooth')
     simple.move(y=height/2)
     if hole_diameter > 0:
-        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
+        bpy.ops.curve.simple(align='WORLD', location=(mm_per_tooth/2, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
                              Simple_radius=hole_diameter/2, shape='3D', use_cyclic_u=True, edit_mode=False)
         simple.active_name('_hole')
-        distance = number_of_teeth * mm_per_tooth
+        distance = (number_of_teeth-1) * mm_per_tooth
         while distance > tooth_per_hole * mm_per_tooth:
             simple.duplicate(x=tooth_per_hole * mm_per_tooth)
             distance -= tooth_per_hole * mm_per_tooth
