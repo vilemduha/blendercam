@@ -100,8 +100,8 @@ def gear_q6(b, s, t, d):
 # backlash = gap between two meshing teeth, in the direction along the  circumference of the pitch circle
 
 
-def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003,
-         pressure_angle=0.3488, clearance=0.0, backlash=0.0):
+def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
+         pressure_angle=0.3488, clearance=0.0, backlash=0.0, rim_size=0.0005, hub_diameter=0.006, spokes=4):
     simple.deselect()
     pi = math.pi
     p = mm_per_tooth * number_of_teeth / pi / 2  # radius of pitch circle
@@ -151,14 +151,45 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003,
     simple.active_name('_hub')
     simple.union('_')
     simple.active_name('_gear')
-    bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
-                         Simple_radius=hole_diameter/2, shape='3D', use_cyclic_u=True, edit_mode=False)
-    simple.active_name('_hole')
-    simple.difference('_', '_gear')
+    simple.remove_doubles()
+
+    if spokes > 0:
+        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
+                             Simple_radius=r-rim_size, shape='3D', use_cyclic_u=True, edit_mode=False)
+        simple.active_name('_hole')
+        simple.difference('_', '_gear')
+        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
+                             Simple_radius=hub_diameter/2, shape='3D', use_cyclic_u=True, edit_mode=False)
+        simple.active_name('_hub')
+        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
+                             Simple_radius=hole_diameter/2, shape='3D', use_cyclic_u=True, edit_mode=False)
+        simple.active_name('_hub_hole')
+        simple.difference('_hub', '_hub')
+
+        simple.join_multiple('_')
+
+        simple.add_rectangle(r-rim_size-((hub_diameter-hole_diameter)/4 + hole_diameter/2), hub_diameter/2, center_x=False)
+        simple.move(x=(hub_diameter-hole_diameter)/4 + hole_diameter/2)
+        simple.active_name('_spoke')
+
+        angle = 2 * pi / spokes
+        while spokes > 0:
+            simple.duplicate()
+            simple.rotate(angle)
+            spokes -= 1
+        simple.union('_spoke')
+        simple.remove_doubles()
+        simple.union('_')
+    else:
+        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
+                             Simple_radius=hole_diameter, shape='3D', use_cyclic_u=True, edit_mode=False)
+        simple.active_name('_hole')
+        simple.difference('_', '_gear')
+
     name = 'gear-' + str(round(mm_per_tooth*1000, 1))
     name += 'mm-pitch-' + str(number_of_teeth)
     name += 'teeth-PA-' + str(round(math.degrees(pressure_angle), 1))
-    simple.active_name(name)
+    #simple.active_name(name)
 
 
 def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3488, backlash=0.0,

@@ -765,7 +765,14 @@ class CamCurveGear(bpy.types.Operator):
     tooth_spacing: bpy.props.FloatProperty(name="distance per tooth", default=0.010, min=0.001, max=1.0, precision=4,
                                            unit="LENGTH")
     tooth_amount: bpy.props.IntProperty(name="Amount of teeth", default=7, min=4)
+
+    spoke_amount: bpy.props.IntProperty(name="Amount of spokes", default=4, min=0)
+
     hole_diameter: bpy.props.FloatProperty(name="Hole diameter", default=0.003175, min=0, max=3.0, precision=4,
+                                           unit="LENGTH")
+    rim_size: bpy.props.FloatProperty(name="Rim size", default=0.003175, min=0, max=3.0, precision=4,
+                                           unit="LENGTH")
+    hub_diameter: bpy.props.FloatProperty(name="Hub diameter", default=0.005, min=0, max=3.0, precision=4,
                                            unit="LENGTH")
     pressure_angle: bpy.props.FloatProperty(name="Pressure Angle", default=math.radians(20), min=0.001, max=math.pi/2,
                                             precision=4,
@@ -794,6 +801,9 @@ class CamCurveGear(bpy.types.Operator):
         layout.prop(self, 'backlash')
         if self.gear_type == 'PINION':
             layout.prop(self, 'clearance')
+            layout.prop(self, 'spoke_amount')
+            layout.prop(self, 'rim_size')
+            layout.prop(self, 'hub_diameter')
         elif self.gear_type == 'RACK':
             layout.prop(self, 'rack_height')
             layout.prop(self, 'rack_tooth_per_hole')
@@ -802,7 +812,8 @@ class CamCurveGear(bpy.types.Operator):
         if self.gear_type == 'PINION':
             involute_gear.gear(mm_per_tooth=self.tooth_spacing, number_of_teeth=self.tooth_amount,
                                hole_diameter=self.hole_diameter, pressure_angle=self.pressure_angle,
-                               clearance=self.clearance, backlash=self.backlash)
+                               clearance=self.clearance, backlash=self.backlash,
+                               rim_size=self.rim_size, hub_diameter=self.hub_diameter, spokes=self.spoke_amount)
         elif self.gear_type == 'RACK':
             involute_gear.rack(mm_per_tooth=self.tooth_spacing, number_of_teeth=self.tooth_amount,
                                pressure_angle=self.pressure_angle, height=self.rack_height,
