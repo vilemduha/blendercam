@@ -26,19 +26,18 @@ You can watch the video using the documentation below.
 
 
 ## Obtaining Blender
-Blendercam is an addon of Blender. It works now with Blender version 2.83 and 2.92.
-You can download Blender portable version for linux64 2.83 or 2.92 and install dependencies from command lines.
+Blendercam is an addon of Blender. It works now with Blender version 2.83, 2.92, 2.93 and 3.0.
+You can download Blender portable version for linux64 2.83 or 2.93 or 3.0 and install dependencies from command lines.
 
 ```
 $ cd ~/
 $ mkdir Apps
 $ cd Apps
-$ wget https://ftp.nluug.nl/pub/graphics/blender/release/Blender2.92/blender-2.92.0-linux64.tar.xz
-$ tar xf blender-2.92.0-linux64.tar.xz
-$ cd blender-2.92.0-linux64/2.92/python/bin
-$ ./python3.7m -m ensurepip
+$ wget https://ftp.nluug.nl/pub/graphics/blender/release/Blender3.0/blender-3.0.0-linux-x64.tar.xz
+$ tar xf blender-3.0.0-linux64.tar.xz
+$ cd blender-3.0.0-linux64/3.0/python/bin
+$ ./python3.9 -m ensurepip
 $ ./pip3 install shapely
-$ ./pip3 install vtk
 $ ./pip3 install Equation
 ```
 
@@ -48,8 +47,8 @@ $ ./pip3 install Equation
 | ------------- |:-------------:|
 | shapely  | >= 1.5 |
 | numpy    | ...      |
-| vtk      | ...      |
 | Equation | ...      |
+| libgeos_c | libgeos-c1v5|
 
 
 
@@ -58,11 +57,11 @@ $ ./pip3 install Equation
 
 **Note:** if you are using a Blender with a bundled Python then shapely and numpy must be installed in the `site-packages` directory of the bundled python. For Blender 2.8 only Shapely is needed. To install it, open terminal, get to Blender directory and use PIP:
 
-`cd 2.80/python/bin/`
+`cd 3.0/python/bin/`
 
-`./python3.7m -m ensurepip`
+`./python3.9 -m ensurepip`
 
-`./python3.7m -m pip install shapely`
+`./python3.7 -m pip install shapely`
 
 
 ## Get Blendercam source code
