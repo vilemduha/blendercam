@@ -61,7 +61,7 @@ $ ./pip3 install Equation
 
 `./python3.9 -m ensurepip`
 
-`./python3.7 -m pip install shapely`
+`./python3.9 -m pip install shapely`
 
 
 ## Get Blendercam source code
