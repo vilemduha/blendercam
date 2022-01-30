@@ -39,6 +39,7 @@ $ cd blender-3.0.0-linux64/3.0/python/bin
 $ ./python3.9 -m ensurepip
 $ ./pip3 install shapely
 $ ./pip3 install Equation
+$ sudo apt-get install libgeos-c1v5
 ```
 
 ## Dependencies
