@@ -567,7 +567,7 @@ def drill(o):
 def medial_axis(o):
     print('operation: Medial Axis')
 
-    simple.removeMultiple("medialMesh")
+    simple.remove_multiple("medialMesh")
 
     from cam.voronoi import Site, computeVoronoiDiagram
 
