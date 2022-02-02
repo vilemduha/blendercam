@@ -88,7 +88,7 @@ class CamCurveHatch(bpy.types.Operator):
             translated = affinity.translate(rotated, xoff=centerx, yoff=centery)  # move using shapely
 
             simple.make_active('crosshatch_bound')
-            bounds = simple.active_to_shapelyPoly()
+            bounds = simple.active_to_shapely_poly()
 
             if self.pocket_type == 'BOUNDS':
                 xing = translated.intersection(bounds)  # Shapely detects intersections with the square bounds
