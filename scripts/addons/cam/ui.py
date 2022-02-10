@@ -441,6 +441,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
                                       + str(int(ao.duration) % 60) + ' min, ' + str(int(ao.duration * 60) % 60) +
                                       ' sec.')
                     layout.label(text='operation time: ' + str(int(ao.duration*60)) + ' sec.')
+                    layout.prop(scene.cam_machine, 'hourly_rate')
 
                     cost_per_second = scene.cam_machine.hourly_rate / 3600
 
