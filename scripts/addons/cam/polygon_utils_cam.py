@@ -103,7 +103,7 @@ def shapelyToCoords(anydata):
 
     elif p.type == 'MultiLineString':
         seq = []
-        for linestring in p:
+        for linestring in p.geoms:
             seq.append(linestring.coords)
     elif p.type == 'LineString':
         seq = []

@@ -295,7 +295,7 @@ def pocket(o):
     print('operation: pocket')
     scene = bpy.context.scene
 
-    simple.removeMultiple("3D_poc")
+    simple.remove_multiple("3D_poc")
 
     max_depth = checkminz(o)
     cutter_angle = math.radians(o.cutter_tip_angle / 2)
@@ -607,10 +607,10 @@ def medial_axis(o):
                 ob.data.resolution_u = 64
 
     polys = utils.getOperationSilhouete(o)
-    mpoly = sgeometry.asMultiPolygon(polys)
+    mpoly = sgeometry.shape(polys)
     mpoly_boundary = mpoly.boundary
     ipol = 0
-    for poly in polys:
+    for poly in polys.geoms:
         ipol = ipol + 1
         print("polygon:", ipol)
         schunks = shapelyToChunks(poly, -1)
