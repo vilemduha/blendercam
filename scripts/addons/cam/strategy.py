@@ -295,7 +295,7 @@ def pocket(o):
     print('operation: pocket')
     scene = bpy.context.scene
 
-    simple.removeMultiple("3D_poc")
+    simple.remove_multiple("3D_poc")
 
     max_depth = checkminz(o)
     cutter_angle = math.radians(o.cutter_tip_angle / 2)
