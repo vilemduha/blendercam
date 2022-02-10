@@ -200,6 +200,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.output_block_numbers:
                     layout.prop(ao, 'start_block_number')
                     layout.prop(ao, 'block_number_increment')
+            layout.prop(ao, 'hourly_rate')
 
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -439,6 +440,13 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.label(text='operation time: ' + str(int(ao.duration / 60)) + ' hour, '
                                       + str(int(ao.duration) % 60) + ' min, ' + str(int(ao.duration * 60) % 60) +
                                       ' sec.')
+                    layout.label(text='operation time: ' + str(int(ao.duration*60)) + ' sec.')
+
+                    cost_per_second = scene.cam_machine.hourly_rate / 3600
+
+                    operation_cost = 'operation cost: $' + str(round((ao.duration * 60 * cost_per_second), 2))
+                    layout.label(text='cost per second:' + str(round(cost_per_second, 3)))
+                    layout.label(text=operation_cost)
                 layout.label(text='chipload: ' + strInUnits(ao.chipload, 4) + ' / tooth')
 
 

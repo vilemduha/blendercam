@@ -166,6 +166,7 @@ class machineSettings(bpy.types.PropertyGroup):
                                           precision=PRECISION, unit='LENGTH')
     feedrate_default: bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,
                                               precision=PRECISION, unit='LENGTH')
+    hourly_rate: bpy.props.FloatProperty(name="Price per hour", default=100, min=0.005, precision=4)
 
     # UNSUPPORTED:
 
