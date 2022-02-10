@@ -607,10 +607,10 @@ def medial_axis(o):
                 ob.data.resolution_u = 64
 
     polys = utils.getOperationSilhouete(o)
-    mpoly = sgeometry.asMultiPolygon(polys)
+    mpoly = sgeometry.shape(polys)
     mpoly_boundary = mpoly.boundary
     ipol = 0
-    for poly in polys:
+    for poly in polys.geoms:
         ipol = ipol + 1
         print("polygon:", ipol)
         schunks = shapelyToChunks(poly, -1)
