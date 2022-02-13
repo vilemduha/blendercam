@@ -551,6 +551,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                         ('CURVET', 'T curve', 'T curve interlock'),
                                         ('T', 'T Bar', 'T Bar interlock'),
                                         ('CORNER', 'Corner Bar', 'Corner Bar interlock'),
+                                        ('TILE', 'Tile', 'Tile interlock'),
                                         ('OPENCURVE', 'Open Curve', 'Corner Bar interlock')),
                                  description='Type of interlock',
                                  default='CURVET')
@@ -587,7 +588,8 @@ class CamCurvePuzzle(bpy.types.Operator):
                                                      precision=4, unit="LENGTH")
     twist_separator_edge_distance: bpy.props.FloatProperty(name="Separator edge distance", default=0.01, min=0.0005,
                                                            max=0.1, precision=4, unit="LENGTH")
-
+    tile_x_amount: bpy.props.IntProperty(name="amount of x fingers", default=2, min=1, max=600)
+    tile_y_amount: bpy.props.IntProperty(name="amount of y fingers", default=2, min=1, max=600)
     interlock_amount: bpy.props.IntProperty(name="Interlock amount on curve", default=2, min=0, max=200)
     overcut: bpy.props.BoolProperty(name="Add overcut", default=False)
     overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5,
@@ -600,8 +602,12 @@ class CamCurvePuzzle(bpy.types.Operator):
         layout.prop(self, 'stem_size')
         layout.prop(self, 'diameter')
         layout.prop(self, 'finger_tolerance')
-        layout.prop(self, 'finger_amount')
-        if self.interlock_type != 'JOINT':
+        if self.interlock_type == 'TILE':
+            layout.prop(self, 'tile_x_amount')
+            layout.prop(self, 'tile_y_amount')
+        else:
+            layout.prop(self, 'finger_amount')
+        if self.interlock_type != 'JOINT' and self.interlock_type != 'TILE':
             layout.prop(self, 'twist_lock')
             if self.twist_lock:
                 layout.prop(self, 'twist_thick')
@@ -643,8 +649,8 @@ class CamCurvePuzzle(bpy.types.Operator):
             if self.interlock_type == 'CURVEBARCURVE':
                 layout.label(text="Width includes 2 radius and thickness")
             layout.prop(self, 'width')
-
-        layout.prop(self, 'overcut')
+        if self.interlock_type != 'TILE':
+            layout.prop(self, 'overcut')
         if self.overcut:
             layout.prop(self, 'overcut_diameter')
 
@@ -734,6 +740,10 @@ class CamCurvePuzzle(bpy.types.Operator):
                              stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
                              tthick=self.twist_thick, combination=self.gender,
                              base_gender=self.base_gender, corner=True)
+
+        elif self.interlock_type == 'TILE':
+            puzzle_joinery.tile(self.diameter, self.finger_tolerance, self.tile_x_amount, self.tile_y_amount,
+                             stem=self.stem_size)
 
         elif self.interlock_type == 'OPENCURVE' and curve_detected:
             puzzle_joinery.open_curve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,

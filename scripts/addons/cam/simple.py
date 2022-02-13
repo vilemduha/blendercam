@@ -253,6 +253,10 @@ def union(name):
     remove_multiple(name)
     rename('unionboolean', name)
 
+def intersect(name):
+    select_multiple(name)
+    bpy.ops.object.curve_boolean(boolean_type='INTERSECT')
+    active_name('intersection')
 
 # boolean difference of objects starting with name result is object from basename.
 # all objects starting with name will be deleted and the result will be basename

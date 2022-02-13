@@ -244,7 +244,8 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
                              min=0.001, max=0.02, default=0.005, precision=PRECISION, unit="LENGTH")
     rotate: bpy.props.BoolProperty(name="enable rotation", description="Enable rotation of elements", default=True)
     rotate_angle: FloatProperty(name="Placement Angle rotation step",
-                                description="bigger rotation angle,faster placemant", default=0.19635 * 4, min=0.19635,
+                                description="bigger rotation angle,faster placemant", default=0.19635 * 4,
+                                min=math.pi/180,
                                 max=math.pi, precision=5,
                                 subtype="ANGLE", unit="ROTATION")
 

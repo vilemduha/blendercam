@@ -715,9 +715,45 @@ def open_curve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, 
         simple.active_name('tmp_twist')
         simple.difference('tmp', 'tmp_curve')
         simple.active_name('puzzle_curve')
-    #
-    # simple.active_name('puzzle_curve')
 
-    # if twist_keep:
-    #     simple.join_multiple('twist_k')
+
+def tile(diameter, tolerance, tile_x_amount, tile_y_amount, stem=1):
+    global DT
+    diameter = diameter * DT
+    # diameter * DT * (2 + stem - 1)
+    (4 + 2 * (stem - 1)) * diameter
+    width = (tile_x_amount) * (4 + 2 * (stem - 1)) * diameter + diameter
+    height = (tile_y_amount) * (4 + 2 * (stem - 1)) * diameter + diameter
+
+    print('size:', width, height)
+    fingers(diameter, tolerance, amount=tile_x_amount+2, stem=stem)
+    simple.add_rectangle(width, height)
+    simple.active_name('_base')
+
+    simple.make_active('fingers')
+    simple.active_name('_fingers')
+    simple.intersect('_')
+    simple.remove_multiple('_fingers')
+    simple.rename('intersection', '_fingers')
+    simple.move(y=height/2)
+    simple.union('_')
+    simple.active_name('_base')
+    simple.remove_doubles()
+    simple.rename('receptacle', '_receptacle')
+    simple.move(y=-height/2)
+    simple.difference('_', '_base')
+    simple.active_name('base')
+    fingers(diameter, tolerance, amount=tile_y_amount, stem=stem)
+    simple.rename('base', '_base')
+    simple.remove_doubles()
+    simple.rename('fingers', '_fingers')
+    simple.rotate(math.pi/2)
+    simple.move(x=-width/2)
+    simple.union('_')
+    simple.active_name('_base')
+    simple.rename('receptacle', '_receptacle')
+    simple.rotate(math.pi/2)
+    simple.move(x=width/2)
+    simple.difference('_', '_base')
+    simple.active_name('tile_ ' + str(tile_x_amount) + '_' + str(tile_y_amount))
 
