@@ -122,6 +122,7 @@ def getCutterBullet(o):
         ob = bpy.context.active_object
         ob.name = "BallConeTool"
         ob_scr = ob.modifiers.new(type='SCREW', name = 'scr')
+        ob_scr.angle = math.radians(-360)
         ob_scr.steps = 32
         ob_scr.merge_threshold = 0
         ob_scr.use_merge_vertices = True
