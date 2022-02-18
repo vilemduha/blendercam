@@ -107,24 +107,27 @@ def getCutterBullet(o):
         bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0),
                                          Simple_Type='Point', use_cyclic_u=False)
         oy = Ball_R
-        for i in range(9):
+        for i in range(1 , 10):
             ang = -i * (math.pi/2-angle) / 9
             qx = math.sin(ang) * oy
             qy = oy - math.cos(ang) * oy
             bpy.ops.curve.vertex_add(location=(qx , qy , 0))
         conedepth += qy
         bpy.ops.curve.vertex_add(location=(-cutter_R , conedepth , 0))
-        bpy.ops.curve.vertex_add(location=(0 , conedepth , 0))
+        #bpy.ops.curve.vertex_add(location=(0 , conedepth , 0))
         bpy.ops.object.editmode_toggle()
         bpy.ops.object.convert(target='MESH')
         bpy.ops.transform.rotate(value = -math.pi / 2, orient_axis = 'X')
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-        bpy.ops.object.modifier_add(type='SCREW')
-        bpy.ops.object.modifier_apply(modifier="Screw")
         ob = bpy.context.active_object
         ob.name = "BallConeTool"
+        ob_scr = ob.modifiers.new(type='SCREW', name = 'scr')
+        ob_scr.steps = 32
+        ob_scr.merge_threshold = 0
+        ob_scr.use_merge_vertices = True
+        bpy.ops.object.modifier_apply(modifier='scr')
         bpy.data.objects['BallConeTool'].select_set(True)
-        bpy.ops.object.duplicate()
+        #bpy.ops.object.duplicate()
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
