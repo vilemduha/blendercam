@@ -101,41 +101,30 @@ def getCutterBullet(o):
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
     elif type == 'BALLCONE':
         angle = math.radians(o.cutter_tip_angle)/2
-        conedepth = (o.cutter_diameter/2 - o.ball_radius)/math.tan(angle)
+        cutter_R = o.cutter_diameter/2
         Ball_R = o.ball_radius/math.cos(angle)
-        D_ofset = o.ball_radius * math.tan(angle)
-        bpy.ops.mesh.primitive_cone_add(vertices=32,
-                                        radius1=o.cutter_diameter / 2,
-                                        radius2=o.ball_radius,
-                                        depth=conedepth,
-                                        end_fill_type='NGON',
-                                        align='WORLD',
-                                        enter_editmode=False,
-                                        location=(0, 0, conedepth/2 - D_ofset),
-                                        rotation=(math.pi, 0, 0))
-
-        # bpy.ops.rigidbody.object_add(type='ACTIVE')
-
-        ob1 = bpy.context.active_object
-        ob1.name = "ConeTool"
-
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=Ball_R,
-                                             enter_editmode=False,
-                                             align='WORLD',
-                                             location=(0, 0, 0),
-                                             scale=(1, 1, 1))
-
-        ob2 = bpy.context.active_object
-        ob2.name = "BallConeTool"
-        ob_bool = ob2.modifiers.new(type='BOOLEAN', name='booly')
-        ob_bool.object = ob1
-        ob_bool.operation = 'UNION'
-        bpy.ops.object.modifier_apply(modifier='booly')
-
-        bpy.ops.object.select_all(action='DESELECT')
-        bpy.data.objects['ConeTool'].select_set(True)
-        bpy.ops.object.delete()
+        conedepth = (cutter_R - o.ball_radius)/math.tan(angle)
+        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0),
+                                         Simple_Type='Point', use_cyclic_u=False)
+        oy = Ball_R
+        for i in range(9):
+            ang = -i * (math.pi/2-angle) / 9
+            qx = math.sin(ang) * oy
+            qy = oy - math.cos(ang) * oy
+            bpy.ops.curve.vertex_add(location=(qx , qy , 0))
+        conedepth += qy
+        bpy.ops.curve.vertex_add(location=(-cutter_R , conedepth , 0))
+        bpy.ops.curve.vertex_add(location=(0 , conedepth , 0))
+        bpy.ops.object.editmode_toggle()
+        bpy.ops.object.convert(target='MESH')
+        bpy.ops.transform.rotate(value = -math.pi / 2, orient_axis = 'X')
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        bpy.ops.object.modifier_add(type='SCREW')
+        bpy.ops.object.modifier_apply(modifier="Screw")
+        ob = bpy.context.active_object
+        ob.name = "BallConeTool"
         bpy.data.objects['BallConeTool'].select_set(True)
+        bpy.ops.object.duplicate()
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
