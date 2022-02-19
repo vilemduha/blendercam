@@ -48,7 +48,7 @@ def getCutterBullet(o):
                                             depth= o.cutter_diameter, end_fill_type='NGON',
                                             align='WORLD', enter_editmode=False, location=(0 , 0, o.cutter_diameter / 2),
                                             rotation=(0, 0, 0))
-        bpy.ops.object.duplicate()    # show bit
+        #bpy.ops.object.duplicate()    # show bit
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -63,7 +63,7 @@ def getCutterBullet(o):
             bpy.ops.mesh.primitive_ico_sphere_add(subdivisions = 3, radius = o.cutter_diameter / 2,
                                                   align='WORLD', enter_editmode=False,
                                                 location=(0, 0, o.cutter_diameter / 2), rotation=(0, 0, 0))
-            bpy.ops.object.duplicate()    # show bit
+            #bpy.ops.object.duplicate()    # show bit
             cutter = bpy.context.active_object
             cutter.scale *= BULLET_SCALE
             bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -83,7 +83,7 @@ def getCutterBullet(o):
                                         depth =  cone_d, end_fill_type='NGON',
                                         align='WORLD', enter_editmode=False, location = (0, 0, cone_d / 2),
                                         rotation=(math.pi, 0, 0))
-        bpy.ops.object.duplicate()    # show bit
+        #bpy.ops.object.duplicate()    # show bit
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -138,7 +138,7 @@ def getCutterBullet(o):
         ob_scr.use_merge_vertices = True
         bpy.ops.object.modifier_apply(modifier='scr')
         bpy.data.objects['BallConeTool'].select_set(True)
-        bpy.ops.object.duplicate()  # show bit   
+        #bpy.ops.object.duplicate()  # show bit   
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
