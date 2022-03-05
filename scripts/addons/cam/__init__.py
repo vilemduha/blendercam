@@ -19,21 +19,26 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-import bpy, bgl, blf
-import math, time
-from mathutils import *
-from bpy_extras.object_utils import object_data_add
-from bpy.props import *
+import bgl
 import bl_operators
-from bpy.types import Menu, Operator, UIList, AddonPreferences
-
-from cam import ui, ops, curvecamtools, curvecamequation, utils, simple, polygon_utils_cam  # , post_processors
+import blf
+import bpy
+import math
 import numpy
-
-from shapely import geometry as sgeometry
-from bpy.app.handlers import persistent
-import subprocess, os, sys, threading
+import os
 import pickle
+import subprocess
+import sys
+import threading
+import time
+from bpy.app.handlers import persistent
+from bpy.props import *
+from bpy.types import Menu, Operator, UIList, AddonPreferences
+from bpy_extras.object_utils import object_data_add
+from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, \
+    polygon_utils_cam  # , post_processors
+from mathutils import *
+from shapely import geometry as sgeometry
 
 bl_info = {
     "name": "CAM - gcode generation tools",
@@ -66,7 +71,7 @@ def updateOperation(self, context):
     scene = context.scene
     ao = scene.cam_operations[scene.cam_active_operation]
 
-    if ao.hide_all_others == True:
+    if ao.hide_all_others:
         for _ao in scene.cam_operations:
             if _ao.path_object_name in bpy.data.objects:
                 other_obj = bpy.data.objects[_ao.path_object_name]
@@ -77,7 +82,7 @@ def updateOperation(self, context):
     else:
         for path_obj_name in was_hidden_dict:
             print(was_hidden_dict)
-            if was_hidden_dict[path_obj_name] == True:
+            if was_hidden_dict[path_obj_name]:
                 # Find object and make it hidde, then reset 'hidden' flag
                 obj = bpy.data.objects[path_obj_name]
                 obj.hide = True
@@ -91,7 +96,7 @@ def updateOperation(self, context):
         ob = bpy.data.objects[ao.path_object_name]
         ob.select_set(state=True, view_layer=None)
         # Show object if, it's was hidden
-        if ob.hide == True:
+        if ob.hide:
             ob.hide = False
             was_hidden_dict[ao.path_object_name] = True
         bpy.context.scene.objects.active = ob
@@ -143,7 +148,8 @@ class machineSettings(bpy.types.PropertyGroup):
     # units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
     # position definitions:
     use_position_definitions: bpy.props.BoolProperty(name="Use position definitions",
-                                                     description="Define own positions for op start, toolchange, ending position",
+                                                     description="Define own positions for op start, "
+                                                                 "toolchange, ending position",
                                                      default=False)
     starting_position: bpy.props.FloatVectorProperty(name='Start position', default=(0, 0, 0), unit='LENGTH',
                                                      precision=PRECISION, subtype="XYZ", update=updateMachine)
@@ -160,6 +166,7 @@ class machineSettings(bpy.types.PropertyGroup):
                                           precision=PRECISION, unit='LENGTH')
     feedrate_default: bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,
                                               precision=PRECISION, unit='LENGTH')
+    hourly_rate: bpy.props.FloatProperty(name="Price per hour", default=100, min=0.005, precision=2)
 
     # UNSUPPORTED:
 
@@ -170,7 +177,8 @@ class machineSettings(bpy.types.PropertyGroup):
     spindle_default: bpy.props.FloatProperty(name="Spindle speed default RPM", default=15000, min=0.00001, max=320000,
                                              precision=1)
     spindle_start_time: bpy.props.FloatProperty(name="Spindle start delay seconds",
-                                                description='Wait for the spindle to start spinning before starting the feeds , in seconds',
+                                                description='Wait for the spindle to start spinning before starting '
+                                                            'the feeds , in seconds',
                                                 default=0, min=0.0000, max=320000, precision=1)
 
     axis4: bpy.props.BoolProperty(name="#4th axis", description="Machine has 4th axis", default=0)
@@ -219,7 +227,6 @@ class machineSettings(bpy.types.PropertyGroup):
 
 class PackObjectsSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
-    # name = bpy.props.StringProperty(name="Machine Name", default="Machine")
     sheet_fill_direction: EnumProperty(name='Fill direction',
                                        items=(('X', 'X', 'Fills sheet in X axis direction'),
                                               ('Y', 'Y', 'Fills sheet in Y axis direction')),
@@ -237,15 +244,14 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
                              min=0.001, max=0.02, default=0.005, precision=PRECISION, unit="LENGTH")
     rotate: bpy.props.BoolProperty(name="enable rotation", description="Enable rotation of elements", default=True)
     rotate_angle: FloatProperty(name="Placement Angle rotation step",
-                                description="bigger rotation angle,faster placemant", default=0.19635 * 4, min=0.19635,
+                                description="bigger rotation angle,faster placemant", default=0.19635 * 4,
+                                min=math.pi/180,
                                 max=math.pi, precision=5,
                                 subtype="ANGLE", unit="ROTATION")
 
 
 class SliceObjectsSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
-    # name = bpy.props.StringProperty(name="Machine Name", default="Machine")
-
     slice_distance: FloatProperty(name="Slicing distance",
                                   description="slices distance in z, should be most often thickness of plywood sheet.",
                                   min=0.001, max=10, default=0.005, precision=PRECISION, unit="LENGTH")
@@ -261,7 +267,7 @@ class import_settings(bpy.types.PropertyGroup):
                             description="Only Subdivide gcode segments that are bigger than 'Segment length' ",
                             default=False)
     output: bpy.props.EnumProperty(name="output type", items=(
-    ('mesh', 'Mesh', 'Make a mesh output'), ('curve', 'Curve', 'Make curve output')), default='curve')
+        ('mesh', 'Mesh', 'Make a mesh output'), ('curve', 'Curve', 'Make curve output')), default='curve')
     max_segment_size: FloatProperty(name="", description="Only Segments bigger then this value get subdivided",
                                     default=0.001, min=0.0001, max=1.0, unit="LENGTH")
 
@@ -274,19 +280,19 @@ def operationValid(self, context):
     o.warnings = ""
     o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     if o.geometry_source == 'OBJECT':
-        if not o.object_name in bpy.data.objects:
-            o.valid = False;
+        if o.object_name not in bpy.data.objects:
+            o.valid = False
             o.warnings = invalidmsg
     if o.geometry_source == 'COLLECTION':
-        if not o.collection_name in bpy.data.collections:
-            o.valid = False;
+        if o.collection_name not in bpy.data.collections:
+            o.valid = False
             o.warnings = invalidmsg
         elif len(bpy.data.collections[o.collection_name].objects) == 0:
-            o.valid = False;
+            o.valid = False
             o.warnings = invalidmsg
 
     if o.geometry_source == 'IMAGE':
-        if not o.source_image_name in bpy.data.images:
+        if o.source_image_name not in bpy.data.images:
             o.valid = False
             o.warnings = invalidmsg
 
@@ -307,16 +313,20 @@ def updateOperationValid(self, context):
 def updateChipload(self, context):
     """this is very simple computation of chip size, could be very much improved"""
     print('update chipload ')
-    o = self;
-    # self.changed=True
+    o = self
     # Old chipload
-    o.chipload = ((o.feedrate / (o.spindle_rpm * o.cutter_flutes)))
-    ###New chipload with chip thining compensation.
-    # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less than 50% cutter engagement with cylindrical end mills.
-    # formula 1 Nominal Chipload is " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
-    # formula 2 (.5*(cutter diameter mm devided by dist_between_paths)) devided by square root of ((cutter diameter mm devided by dist_between_paths)-1) x Nominal Chipload
-    # Nominal Chipload = what you find in end mill data sheats recomended chip load at %50 cutter engagment. I have no programming or math back ground.
-    # I am sure there is a better way to do this. I dont get consistent result and I am not sure if there is something wrong with the units going into the formula, my math or my lack of underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck we will be one tiny step on the way to a slightly better chipload calculating function.
+    o.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
+    # New chipload with chip thining compensation.
+    # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less
+    # than 50% cutter engagement with cylindrical end mills. formula 1 Nominal Chipload is
+    # " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
+    # formula 2 (.5*(cutter diameter mm devided by dist_between_paths)) divided by square root of
+    # ((cutter diameter mm devided by dist_between_paths)-1) x Nominal Chipload
+    # Nominal Chipload = what you find in end mill data sheats recomended chip load at %50 cutter engagment.
+    # I am sure there is a better way to do this. I dont get consistent result and
+    # I am not sure if there is something wrong with the units going into the formula, my math or my lack of
+    # underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck
+    # we will be one tiny step on the way to a slightly better chipload calculating function.
 
     # self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(math.sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
     print(o.chipload)
@@ -340,8 +350,6 @@ def updateZbufferImage(self, context):
     utils.getOperationSources(self)
 
 
-# utils.checkMemoryLimit(self)
-
 def updateStrategy(o, context):
     """"""
     o.changed = True
@@ -355,11 +363,7 @@ def updateStrategy(o, context):
 
 
 def updateCutout(o, context):
-    pass;
-
-
-# if o.outlines_count>1:
-#	o.use_bridges=False
+    pass
 
 
 def updateExact(o, context):
@@ -387,6 +391,24 @@ def updateOpencamlib(o, context):
 def updateBridges(o, context):
     print('update bridges ')
     o.changed = True
+
+
+def updateRotation(o, context):
+    if o.enable_B or o.enable_A:
+        print(o, o.rotation_A)
+        ob = bpy.data.objects[o.object_name]
+        ob.select_set(True)
+        bpy.context.view_layer.objects.active = ob
+        if o.A_along_x:  # A parallel with X
+            if o.enable_A:
+                bpy.context.active_object.rotation_euler.x = o.rotation_A
+            if o.enable_B:
+                bpy.context.active_object.rotation_euler.y = o.rotation_B
+        else:  # A parallel with Y
+            if o.enable_A:
+                bpy.context.active_object.rotation_euler.y = o.rotation_A
+            if o.enable_B:
+                bpy.context.active_object.rotation_euler.x = o.rotation_B
 
 
 # def updateRest(o, context):
@@ -521,7 +543,6 @@ class camOperation(bpy.types.PropertyGroup):
                                 default='INDEXED',
                                 update=updateStrategy)
 
-    # active_orientation = bpy.props.IntProperty(name="active orientation",description="active orientation", default=0,min=0, max=32000, update = updateRest)
     rotary_axis_1: EnumProperty(name='Rotary axis',
                                 items=(
                                     ('X', 'X', ''),
@@ -591,7 +612,8 @@ class camOperation(bpy.types.PropertyGroup):
     ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
                                max=0.035, default=0.001, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
     # ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
-    #                                 max=0.1, default=0.017, unit="LENGTH", precision=PRECISION, update=updateOffsetImage)
+    #                                 max=0.1, default=0.017, unit="LENGTH", precision=PRECISION,
+    #                                 update=updateOffsetImage)
     bull_corner_radius: FloatProperty(name="Bull Corner Radius", description="Radius tool bit corner", min=0.0,
                                       max=0.035, default=0.005, unit="LENGTH", precision=PRECISION,
                                       update=updateOffsetImage)
@@ -622,23 +644,23 @@ class camOperation(bpy.types.PropertyGroup):
     old_rotation_A: bpy.props.FloatProperty(name="A axis angle",
                                             description="old value of Rotate A axis\nto specified angle", default=0,
                                             min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION",
-                                            update=updateRest)
+                                            update=updateRotation)
 
     old_rotation_B: bpy.props.FloatProperty(name="A axis angle",
                                             description="old value of Rotate A axis\nto specified angle", default=0,
                                             min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION",
-                                            update=updateRest)
+                                            update=updateRotation)
 
     rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle", default=0,
                                         min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRest)
+                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
     enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False,
-                                     update=updateRest)
-    A_along_x: bpy.props.BoolProperty(name="A Along X ", description="A Parallel to X", default=True, update=updateRest)
+                                     update=updateRotation)
+    A_along_x: bpy.props.BoolProperty(name="A Along X ", description="A Parallel to X", default=True, update=updateRotation)
 
     rotation_B: bpy.props.FloatProperty(name="B axis angle", description="Rotate B axis\nto specified angle", default=0,
                                         min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRest)
+                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
     enable_B: bpy.props.BoolProperty(name="Enable B axis", description="Rotate B axis", default=False,
                                      update=updateRest)
 
@@ -690,7 +712,8 @@ class camOperation(bpy.types.PropertyGroup):
     profile_start: bpy.props.IntProperty(name="Start point", description="Start point offset", min=0, default=0,
                                          update=updateRest)
 
-    # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
+    # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001,
+    # max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
     helix_diameter: bpy.props.FloatProperty(name='Helix diameter % of cutter D', default=90, min=10, max=100,
                                             precision=1, subtype='PERCENTAGE', update=updateRest)
     retract_tangential: bpy.props.BoolProperty(name="Retract tangential - EXPERIMENTAL",
@@ -708,12 +731,14 @@ class camOperation(bpy.types.PropertyGroup):
                                                default=False, update=updateRest)
     minz: bpy.props.FloatProperty(name="Operation depth end", default=-0.01, min=-3, max=3, precision=PRECISION,
                                   unit="LENGTH",
-                                  update=updateRest)  # this is input minz. True minimum z can be something else, depending on material e.t.c.
+                                  update=updateRest)  # this is input minz. True minimum z can be something else,
+    # depending on material e.t.c.
     start_type: bpy.props.EnumProperty(name='Start type',
                                        items=(
                                            ('ZLEVEL', 'Z level', 'Starts on a given Z level'),
                                            ('OPERATIONRESULT', 'Rest milling',
-                                            'For rest milling, operations have to be put in chain for this to work well.'),
+                                            'For rest milling, operations have to be put in chain for this to '
+                                            'work well.'),
                                        ),
                                        description='Starting depth',
                                        default='ZLEVEL',
@@ -768,7 +793,6 @@ class camOperation(bpy.types.PropertyGroup):
                                   description="Radius around the part which will be milled if ambient is set to Around",
                                   min=0.0, max=100.0, default=0.01, precision=PRECISION, unit="LENGTH",
                                   update=updateRest)
-    # ambient_cutter = EnumProperty(name='Borders',items=(('EXTRAFORCUTTER', 'Extra for cutter', "Extra space for cutter is cut around the segment"),('ONBORDER', "Cutter on edge", "Cutter goes exactly on edge of ambient with it's middle") ,('INSIDE', "Inside segment", 'Cutter stays within segment')	 ),description='handling of ambient and cutter size',default='INSIDE')
     use_limit_curve: bpy.props.BoolProperty(name="Use limit curve", description="A curve limits the operation area",
                                             default=False, update=updateRest)
     ambient_cutter_restrict: bpy.props.BoolProperty(name="Cutter stays in ambient limits",
@@ -894,19 +918,6 @@ class camOperation(bpy.types.PropertyGroup):
                                        description="include bridge curve modifiers using render level when calculating operation, does not effect original bridge data",
                                        default=True, update=updateBridges)
 
-    # commented this - auto bridges will be generated, but not as a setting of the operation
-    # bridges_placement = bpy.props.EnumProperty(name='Bridge placement',
-    #     items=(
-    #         ('AUTO','Automatic', 'Automatic bridges with a set distance'),
-    #         ('MANUAL','Manual', 'Manual placement of bridges'),
-    #         ),
-    #     description='Bridge placement',
-    #     default='AUTO',
-    #     update = updateStrategy)
-    #
-    # bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
-    # bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=PRECISION, update = updateBridges)
-
     use_modifiers: BoolProperty(name="use mesh modifiers",
                                 description="include mesh modifiers using render level when calculating operation, does not effect original mesh",
                                 default=True, update=operationValid)
@@ -926,8 +937,8 @@ class camOperation(bpy.types.PropertyGroup):
                                               default=False, update=updateMaterial)
 
     material_Z: bpy.props.EnumProperty(name="Z placement", items=(
-    ('ABOVE', 'Above', 'Place objec above 0'), ('BELOW', 'Below', 'Place object below 0'),
-    ('CENTERED', 'Centered', 'Place object centered on 0')), description="Position below Zero", default='BELOW',
+        ('ABOVE', 'Above', 'Place objec above 0'), ('BELOW', 'Below', 'Place object below 0'),
+        ('CENTERED', 'Centered', 'Place object centered on 0')), description="Position below Zero", default='BELOW',
                                        update=updateMaterial)
 
     material_origin: bpy.props.FloatVectorProperty(name='Material origin', default=(0, 0, 0), unit='LENGTH',
@@ -962,7 +973,6 @@ class camOperation(bpy.types.PropertyGroup):
     # internal properties
     ###########################################
 
-    # testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
     offset_image = numpy.array([], dtype=float)
     zbuffer_image = numpy.array([], dtype=float)
 
@@ -988,7 +998,7 @@ class camOperation(bpy.types.PropertyGroup):
     update_bullet_collision_tag: bpy.props.BoolProperty(name="mark bullet collisionworld for update",
                                                         description="mark for update", default=True)
 
-    valid: bpy.props.BoolProperty(name="Valid", description="True if operation is ok for calculation", default=True);
+    valid: bpy.props.BoolProperty(name="Valid", description="True if operation is ok for calculation", default=True)
     changedata: bpy.props.StringProperty(name='changedata', description='change data for checking if stuff changed.')
 
     # process related data
@@ -1009,7 +1019,7 @@ class camChain(bpy.types.PropertyGroup):  # chain is just a set of operations wh
                                             default=-1)
     name: bpy.props.StringProperty(name="Chain Name", default="Chain")
     filename: bpy.props.StringProperty(name="File name", default="Chain")  # filename of
-    valid: bpy.props.BoolProperty(name="Valid", description="True if whole chain is ok for calculation", default=True);
+    valid: bpy.props.BoolProperty(name="Valid", description="True if whole chain is ok for calculation", default=True)
     computing: bpy.props.BoolProperty(name="Computing right now", description="", default=False)
     operations: bpy.props.CollectionProperty(type=opReference)  # this is to hold just operation names.
 
@@ -1073,23 +1083,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
     bl_label = "Add Operation Preset"
     preset_menu = "CAM_OPERATION_MT_presets"
 
-    preset_defines = [
-        "o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"
-    ]
-
-    # d1=dir(bpy.types.machineSettings.bl_rna)
-    #
-    # d=[]
-    # for prop in d1:
-    #     if (prop[:2]!='__'
-    #         and prop!='bl_rna'
-    #         and prop!='translation_context'
-    #         and prop!='base'
-    #         and prop!='description'
-    #         and prop!='identifier'
-    #         and prop!='name'
-    #         and prop!='name_property'):
-    #             d.append(prop)
+    preset_defines = ["o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"]
 
     preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material_from_model', 'o.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material_size',
@@ -1156,10 +1150,8 @@ class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
 
 
 def get_panels():  # convenience function for bot register and unregister functions
-    # types = bpy.types
     return (
         ui.CAM_UL_operations,
-        # ui.CAM_UL_orientations,
         ui.CAM_UL_chains,
         camOperation,
         opReference,
@@ -1182,6 +1174,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         ui.CAM_PACK_Panel,
         ui.CAM_SLICE_Panel,
         ui.VIEW3D_PT_tools_curvetools,
+        ui.VIEW3D_PT_tools_create,
         ui.CustomPanel,
 
         ops.PathsBackground,
@@ -1215,10 +1208,6 @@ def get_panels():  # convenience function for bot register and unregister functi
         # other tools
         curvecamtools.CamCurveBoolean,
         curvecamtools.CamCurveConvexHull,
-        curvecamtools.CamCurveHatch,
-        curvecamtools.CamCurvePlate,
-        curvecamtools.CamCurveDrawer,
-        curvecamtools.CamCurveMortise,
         curvecamtools.CamOffsetSilhouete,
         curvecamtools.CamObjectSilhouete,
         curvecamtools.CamCurveIntarsion,
@@ -1226,10 +1215,20 @@ def get_panels():  # convenience function for bot register and unregister functi
         curvecamtools.CamCurveOvercutsB,
         curvecamtools.CamCurveRemoveDoubles,
         curvecamtools.CamMeshGetPockets,
+
         curvecamequation.CamSineCurve,
         curvecamequation.CamLissajousCurve,
         curvecamequation.CamHypotrochoidCurve,
         curvecamequation.CamCustomCurve,
+
+        curvecamcreate.CamCurveHatch,
+        curvecamcreate.CamCurvePlate,
+        curvecamcreate.CamCurveDrawer,
+        curvecamcreate.CamCurveGear,
+        curvecamcreate.CamCurveMortise,
+        curvecamcreate.CamCurveInterlock,
+        curvecamcreate.CamCurvePuzzle,
+
 
         CAM_CUTTER_MT_presets,
         CAM_OPERATION_MT_presets,
@@ -1246,121 +1245,8 @@ def get_panels():  # convenience function for bot register and unregister functi
     )
 
 
-def compatible_panels():
-    """gets panels that are for blender internal, but are compatible with blender CAM"""
-    t = bpy.types
-    return (
-        # textures
-        t.TEXTURE_PT_context_texture,
-        t.TEXTURE_PT_preview,
-        t.TEXTURE_PT_colors,
-        t.TEXTURE_PT_clouds,
-        t.TEXTURE_PT_wood,
-        t.TEXTURE_PT_marble,
-        t.TEXTURE_PT_magic,
-        t.TEXTURE_PT_blend,
-        t.TEXTURE_PT_stucci,
-        t.TEXTURE_PT_image,
-        t.TEXTURE_PT_image_sampling,
-        t.TEXTURE_PT_image_mapping,
-        t.TEXTURE_PT_envmap,
-        t.TEXTURE_PT_envmap_sampling,
-        t.TEXTURE_PT_musgrave,
-        t.TEXTURE_PT_voronoi,
-        t.TEXTURE_PT_distortednoise,
-        t.TEXTURE_PT_voxeldata,
-        t.TEXTURE_PT_pointdensity,
-        t.TEXTURE_PT_pointdensity_turbulence,
-        t.TEXTURE_PT_ocean,
-        t.TEXTURE_PT_mapping,
-        t.TEXTURE_PT_influence,
-        t.TEXTURE_PT_custom_props,
-
-        # meshes
-        t.DATA_PT_context_mesh,
-        t.DATA_PT_normals,
-        t.DATA_PT_texture_space,
-        t.DATA_PT_shape_keys,
-        t.DATA_PT_uv_texture,
-        t.DATA_PT_vertex_colors,
-        t.DATA_PT_vertex_groups,
-        t.DATA_PT_customdata,
-        t.DATA_PT_custom_props_mesh,
-
-        # materials
-        t.MATERIAL_PT_context_material,
-        t.MATERIAL_PT_preview,
-        t.MATERIAL_PT_pipeline,
-        t.MATERIAL_PT_diffuse,
-        t.MATERIAL_PT_specular,
-        t.MATERIAL_PT_shading,
-        t.MATERIAL_PT_transp,
-        t.MATERIAL_PT_mirror,
-        t.MATERIAL_PT_sss,
-        t.MATERIAL_PT_halo,
-        t.MATERIAL_PT_flare,
-        t.MATERIAL_PT_game_settings,
-        t.MATERIAL_PT_physics,
-        t.MATERIAL_PT_strand,
-        t.MATERIAL_PT_options,
-        t.MATERIAL_PT_shadow,
-        t.MATERIAL_PT_transp_game,
-        t.MATERIAL_PT_volume_density,
-        t.MATERIAL_PT_volume_shading,
-        t.MATERIAL_PT_volume_lighting,
-        t.MATERIAL_PT_volume_transp,
-        t.MATERIAL_PT_volume_integration,
-        t.MATERIAL_PT_volume_options,
-        t.MATERIAL_PT_custom_props,
-
-        # particles
-        t.PARTICLE_PT_context_particles,
-        t.PARTICLE_PT_emission,
-        t.PARTICLE_PT_hair_dynamics,
-        t.PARTICLE_PT_cache,
-        t.PARTICLE_PT_velocity,
-        t.PARTICLE_PT_rotation,
-        t.PARTICLE_PT_physics,
-        t.PARTICLE_PT_boidbrain,
-        t.PARTICLE_PT_render,
-        t.PARTICLE_PT_draw,
-        t.PARTICLE_PT_children,
-        t.PARTICLE_PT_field_weights,
-        t.PARTICLE_PT_force_fields,
-        t.PARTICLE_PT_vertexgroups,
-
-        # scene
-        t.SCENE_PT_scene,
-        t.SCENE_PT_unit,
-        t.SCENE_PT_keying_sets,
-        t.SCENE_PT_keying_set_paths,
-        t.SCENE_PT_color_management,
-
-        t.SCENE_PT_audio,
-        t.SCENE_PT_physics,
-        t.SCENE_PT_rigid_body_world,
-        t.SCENE_PT_rigid_body_cache,
-        t.SCENE_PT_rigid_body_field_weights,
-        t.SCENE_PT_simplify,
-        t.SCENE_PT_custom_props,
-
-        # world
-        t.WORLD_PT_context_world,
-        t.WORLD_PT_preview,
-        t.WORLD_PT_world,
-        t.WORLD_PT_ambient_occlusion,
-        t.WORLD_PT_environment_lighting,
-        t.WORLD_PT_indirect_lighting,
-        t.WORLD_PT_gather,
-        t.WORLD_PT_mist,
-        t.WORLD_PT_custom_props
-
-    )
-
-
 classes = [
     ui.CAM_UL_operations,
-    # ui.CAM_UL_orientations,
     ui.CAM_UL_chains,
     camOperation,
     opReference,
@@ -1384,6 +1270,7 @@ classes = [
     ui.CAM_PACK_Panel,
     ui.CAM_SLICE_Panel,
     ui.VIEW3D_PT_tools_curvetools,
+    ui.VIEW3D_PT_tools_create,
     ui.CustomPanel,
     ui.WM_OT_gcode_import,
 
@@ -1418,10 +1305,6 @@ classes = [
     # other tools
     curvecamtools.CamCurveBoolean,
     curvecamtools.CamCurveConvexHull,
-    curvecamtools.CamCurveHatch,
-    curvecamtools.CamCurvePlate,
-    curvecamtools.CamCurveDrawer,
-    curvecamtools.CamCurveMortise,
     curvecamtools.CamOffsetSilhouete,
     curvecamtools.CamObjectSilhouete,
     curvecamtools.CamCurveIntarsion,
@@ -1429,10 +1312,19 @@ classes = [
     curvecamtools.CamCurveOvercutsB,
     curvecamtools.CamCurveRemoveDoubles,
     curvecamtools.CamMeshGetPockets,
+
     curvecamequation.CamSineCurve,
     curvecamequation.CamLissajousCurve,
     curvecamequation.CamHypotrochoidCurve,
     curvecamequation.CamCustomCurve,
+
+    curvecamcreate.CamCurveHatch,
+    curvecamcreate.CamCurvePlate,
+    curvecamcreate.CamCurveDrawer,
+    curvecamcreate.CamCurveGear,
+    curvecamcreate.CamCurveMortise,
+    curvecamcreate.CamCurveInterlock,
+    curvecamcreate.CamCurvePuzzle,
 
     CAM_CUTTER_MT_presets,
     CAM_OPERATION_MT_presets,
@@ -1463,7 +1355,7 @@ def register():
                                                    update=updateOperation)
     s.cam_machine = bpy.props.PointerProperty(type=machineSettings)
 
-    bpy.types.Scene.import_gcode = bpy.props.PointerProperty(type=import_settings)
+    s.cam_import_gcode = bpy.props.PointerProperty(type=import_settings)
 
     s.cam_text = bpy.props.StringProperty()
     bpy.app.handlers.frame_change_pre.append(ops.timer_update)
@@ -1479,10 +1371,13 @@ def unregister():
     for p in get_panels():
         bpy.utils.unregister_class(p)
     s = bpy.types.Scene
-    del s.cam_operations
     # cam chains are defined hardly now.
     del s.cam_chains
-
+    del s.cam_active_chain
+    del s.cam_operations
     del s.cam_active_operation
     del s.cam_machine
-
+    del s.cam_import_gcode
+    del s.cam_text
+    del s.cam_pack
+    del s.cam_slice

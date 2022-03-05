@@ -58,15 +58,17 @@ from cam.image_utils import *
 from cam.nc import iso
 
 
-
-def pointonline(a,b,c,tolerence):
-    b=b-a  # convert to vector by subtracting origin
-    c=c-a
+def pointonline(a, b, c, tolerence):
+    b = b - a  # convert to vector by subtracting origin
+    c = c - a
     dot_pr = b.dot(c)  # b dot c
     norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
-    angle = (numpy.rad2deg(numpy.arccos(dot_pr / norms))) # find angle between the two vectors
-    if angle > tolerence: return False
-    else: return True
+    angle = (numpy.rad2deg(numpy.arccos(dot_pr / norms)))  # find angle between the two vectors
+    if angle > tolerence:
+        return False
+    else:
+        return True
+
 
 def exportGcodePath(filename, vertslist, operations):
     """exports gcode with the heeks nc adopted library."""
@@ -106,7 +108,7 @@ def exportGcodePath(filename, vertslist, operations):
         extension = '.tap'
         from .nc import fadal as postprocessor
     elif m.post_processor == 'GRBL':
-        extension = '.ngc'
+        extension = '.gcode'
         from .nc import grbl as postprocessor
     elif m.post_processor == 'HM50':
         from .nc import hm50 as postprocessor
@@ -140,9 +142,9 @@ def exportGcodePath(filename, vertslist, operations):
     if s.unit_settings.system == 'METRIC':
         unitcorr = 1000.0
     elif s.unit_settings.system == 'IMPERIAL':
-        unitcorr = 1 / 0.0254;
+        unitcorr = 1 / 0.0254
     else:
-        unitcorr = 1;
+        unitcorr = 1
     rotcorr = 180.0 / pi
 
     use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
@@ -160,9 +162,10 @@ def exportGcodePath(filename, vertslist, operations):
             c.output_block_numbers = m.output_block_numbers
             c.start_block_number = m.start_block_number
             c.block_number_increment = m.block_number_increment
-            c.output_tool_definitions = m.output_tool_definitions
-            c.output_tool_change = m.output_tool_change
-            c.output_g43_on_tool_change_line = m.output_g43_on_tool_change
+
+        c.output_tool_definitions = m.output_tool_definitions
+        c.output_tool_change = m.output_tool_change
+        c.output_g43_on_tool_change_line = m.output_g43_on_tool_change
 
         c.file_open(filename)
 
@@ -187,7 +190,7 @@ def exportGcodePath(filename, vertslist, operations):
         return c
 
     c = startNewFile()
-    last_cutter = None;  # [o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
+    last_cutter = None  # [o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
 
     processedops = 0
     last = Vector((0, 0, 0))
@@ -217,15 +220,18 @@ def exportGcodePath(filename, vertslist, operations):
 
         # write tool, not working yet probably
         # print (last_cutter)
-        if ((not use_experimental) or m.output_tool_change) and last_cutter != [o.cutter_id, o.cutter_diameter,
-                                                                                o.cutter_type, o.cutter_flutes]:
-            c.comment('Tool change - D = %s type %s flutes %s' % (
+        if m.output_tool_change and last_cutter != [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]:
+            if m.output_tool_change:
+                c.tool_change(o.cutter_id)
+
+        if m.output_tool_definitions:
+            c.comment('Tool: D = %s type %s flutes %s' % (
                 strInUnits(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes))
-            c.tool_change(o.cutter_id)
-            c.flush_nc()
+
+        c.flush_nc()
 
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
-        if o.cutter_type not in  ['LASER','PLASMA']:
+        if o.cutter_type not in ['LASER', 'PLASMA']:
             c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
             c.write_spindle()
             c.flush_nc()
@@ -235,8 +241,8 @@ def exportGcodePath(filename, vertslist, operations):
             c.dwell(m.spindle_start_time)
 
         #        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
-        fmh = round(free_movement_height * 1000, 2)
-        if o.cutter_type not in  ['LASER','PLASMA']:
+        fmh = round(free_movement_height * unitcorr, 2)
+        if o.cutter_type not in ['LASER', 'PLASMA']:
             c.write('G00 Z' + str(fmh) + '\n')
         if o.enable_A:
             if o.rotation_A == 0:
@@ -262,17 +268,14 @@ def exportGcodePath(filename, vertslist, operations):
         plungefeedrate = millfeedrate * o.plunge_feedrate / 100
         freefeedrate = m.feedrate_max * unitcorr
         fadjust = False
-        if o.do_simulation_feedrate and mesh.shape_keys != None and mesh.shape_keys.key_blocks.find('feedrates') != -1:
+        if o.do_simulation_feedrate and mesh.shape_keys is not None \
+                and mesh.shape_keys.key_blocks.find('feedrates') != -1:
             shapek = mesh.shape_keys.key_blocks['feedrates']
-
             fadjust = True
 
         if m.use_position_definitions:  # dhull
             last = Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
-        #		removed by pppalain 2020/12
-        #       else:
-        #           if i < 1:
-        #                last = Vector((0.0, 0.0, free_movement_height))  # nonsense values so first step of the operation gets written for sure
+
         lastrot = Euler((0, 0, 0))
         duration = 0.0
         f = 0.1123456  # nonsense value, so first feedrate always gets written
@@ -283,11 +286,10 @@ def exportGcodePath(filename, vertslist, operations):
 
         scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
 
-        # print('2')
-        ii=0
-        offline=0
-        online=0
-        cut= True  #active cut variable for laser or plasma
+        ii = 0
+        offline = 0
+        online = 0
+        cut = True  # active cut variable for laser or plasma
         for vi, vert in enumerate(verts):
             # skip the first vertex if this is a chained operation
             # ie: outputting more than one operation
@@ -295,22 +297,24 @@ def exportGcodePath(filename, vertslist, operations):
             if i > 0 and vi == 0:
                 continue
             v = vert.co
-# redundant point on line detection
+            # redundant point on line detection
             if o.remove_redundant_points:
                 nextv = v
-                if ii==0: firstv=v  #only happens once
-                elif ii==1: middlev=v
+                if ii == 0:
+                    firstv = v  # only happens once
+                elif ii == 1:
+                    middlev = v
                 else:
-                    if pointonline(firstv, middlev, nextv,o.simplify_tol/1000):
-                        middlev=nextv
+                    if pointonline(firstv, middlev, nextv, o.simplify_tol / 1000):
+                        middlev = nextv
                         online += 1
                         continue
                     else:  # create new start point with the last tested point
-                        ii=0
-                        offline+=1
-                        firstv=nextv
-                ii +=1
-# end of redundant point on line detection
+                        ii = 0
+                        offline += 1
+                        firstv = nextv
+                ii += 1
+            # end of redundant point on line detection
             if o.machine_axes != '3':
                 v = v.copy()  # we rotate it so we need to copy the vector
                 r = Euler(rots[vi].co)
@@ -323,7 +327,7 @@ def exportGcodePath(filename, vertslist, operations):
                 v.rotate(rcompensate)
 
                 if r.x == lastrot.x:
-                    ra = None;
+                    ra = None
                 # print(r.x,lastrot.x)
                 else:
 
@@ -331,22 +335,22 @@ def exportGcodePath(filename, vertslist, operations):
                 # print(ra,'RA')
                 # ra=r.x*rotcorr
                 if r.y == lastrot.y:
-                    rb = None;
+                    rb = None
                 else:
                     rb = r.y * rotcorr
             # rb=r.y*rotcorr
             # print (	ra,rb)
 
             if vi > 0 and v.x == last.x:
-                vx = None;
+                vx = None
             else:
                 vx = v.x * unitcorr
             if vi > 0 and v.y == last.y:
-                vy = None;
+                vy = None
             else:
                 vy = v.y * unitcorr
             if vi > 0 and v.z == last.z:
-                vz = None;
+                vz = None
             else:
                 vz = v.z * unitcorr
 
@@ -365,18 +369,18 @@ def exportGcodePath(filename, vertslist, operations):
 
                 if o.machine_axes == '3':
                     if o.cutter_type in ['LASER', 'PLASMA']:
-                        if cut != True:
+                        if not cut:
                             if o.cutter_type == 'LASER':
                                 c.write("(*************dwell->laser on)\n")
                                 c.write("G04 P" + str(round(o.Laser_delay, 2)) + "\n")
                                 c.write(o.Laser_on + '\n')
                             elif o.cutter_type == 'PLASMA':
                                 c.write("(*************dwell->PLASMA on)\n")
-                                plasma_delay=round(o.Plasma_delay,5)
+                                plasma_delay = round(o.Plasma_delay, 5)
                                 if plasma_delay > 0:
                                     c.write("G04 P" + str(plasma_delay) + "\n")
                                 c.write(o.Plasma_on + '\n')
-                                plasma_dwell=round(o.Plasma_dwell,5)
+                                plasma_dwell = round(o.Plasma_dwell, 5)
                                 if plasma_dwell > 0:
                                     c.write("G04 P" + str(plasma_dwell) + "\n")
                             cut = True
@@ -480,7 +484,8 @@ def getPath(context, operation):  # should do all path calculations.
     if shapely.speedups.available:
         shapely.speedups.enable()
 
-    # these tags are for caching of some of the results. Not working well still - although it can save a lot of time during calculation...
+    # these tags are for caching of some of the results. Not working well still
+    # - although it can save a lot of time during calculation...
 
     chd = getChangeData(operation)
     # print(chd)
@@ -505,7 +510,8 @@ def getPath(context, operation):  # should do all path calculations.
         getPath3axis(context, operation)
 
     elif (operation.machine_axes == '5' and operation.strategy5axis == 'INDEXED') or (
-            operation.machine_axes == '4' and operation.strategy4axis == 'INDEXED'):  # 5 axis operations are now only 3 axis operations that get rotated...
+            operation.machine_axes == '4' and operation.strategy4axis == 'INDEXED'):
+        # 5 axis operations are now only 3 axis operations that get rotated...
         operation.orientation = prepareIndexed(operation)  # TODO RENAME THIS
 
         getPath3axis(context, operation)  # TODO RENAME THIS
@@ -528,8 +534,8 @@ def getPath(context, operation):  # should do all path calculations.
 
 
 def getChangeData(o):
-    """this is a function to check if object props have changed, to see if image updates are needed in the image based method"""
-    s = bpy.context.scene
+    """this is a function to check if object props have changed,
+    to see if image updates are needed in the image based method"""
     changedata = ''
     obs = []
     if o.geometry_source == 'OBJECT':
@@ -583,10 +589,7 @@ def getPath3axis(context, operation):
 
         if o.strategy == 'CARVE':
             pathSamples = []
-            # for ob in o.objects:
-
             ob = bpy.data.objects[o.curve_object]
-
             pathSamples.extend(curveToChunks(ob))
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)
@@ -598,9 +601,8 @@ def getPath3axis(context, operation):
             pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
         elif o.strategy == 'CRAZY':
             prepareArea(o)
-
             # pathSamples = crazyStrokeImage(o)
-            #####this kind of worked and should work:
+            # this kind of worked and should work:
             millarea = o.zbuffer_image < o.minz + 0.000001
             avoidarea = o.offset_image > o.minz + 0.000001
 
@@ -617,9 +619,9 @@ def getPath3axis(context, operation):
             pathSamples = getPathPattern(o)
 
             if o.strategy == 'OUTLINEFILL':
-                pathSamples = utils.sortChunks(pathSamples, o)  # have to be sorted once before, because of the parenting inside of samplechunks
-            # chunksToMesh(pathSamples,o)#for testing pattern script
-            
+                pathSamples = utils.sortChunks(pathSamples, o)
+                # have to be sorted once before, because of the parenting inside of samplechunks
+
             if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
                 pathSamples = utils.connectChunksLow(pathSamples, o)
 
@@ -682,56 +684,37 @@ def getPath3axis(context, operation):
         layers = [[layerstart, layerend]]
         #######################
         nslices = ceil(abs(o.minz / o.slice_detail))
-        lastislice = numpy.array([])
         lastslice = spolygon.Polygon()  # polyversion
         layerstepinc = 0
 
         slicesfilled = 0
         utils.getAmbient(o)
-        # polyToMesh(o.ambient,0)
+
         for h in range(0, nslices):
             layerstepinc += 1
             slicechunks = []
             z = o.minz + h * o.slice_detail
             if h == 0:
-                z += 0.0000001  # if people do mill flat areas, this helps to reach those... otherwise first layer would actually be one slicelevel above min z.
-            # print(z)
-            # sliceimage=o.offset_image>z
+                z += 0.0000001
+                # if people do mill flat areas, this helps to reach those...
+                # otherwise first layer would actually be one slicelevel above min z.
+
             islice = o.offset_image > z
             slicepolys = imageToShapely(o, islice, with_border=True)
-            # for pviz in slicepolys:
-            #    polyToMesh('slice',pviz,z)
+
             poly = spolygon.Polygon()  # polygversion
             lastchunks = []
-            # imagechunks=imageToChunks(o,islice)
-            # for ch in imagechunks:
-            #    slicechunks.append(camPathChunk([]))
-            #    for s in ch.points:
-            #    slicechunks[-1].points.append((s[0],s[1],z))
 
-            # print('found polys',layerstepinc,len(slicepolys))
             for p in slicepolys:
-                # print('polypoints',p.nPoints(0))
                 poly = poly.union(p)  # polygversion TODO: why is this added?
-                # print()
-                # polyToMesh(p,z)
                 nchunks = shapelyToChunks(p, z)
                 nchunks = limitChunks(nchunks, o, force=True)
-                # print('chunksnum',len(nchunks))
-                # if len(nchunks)>0:
-                #    print('chunkpoints',len(nchunks[0].points))
-                # print()
                 lastchunks.extend(nchunks)
                 slicechunks.extend(nchunks)
-            # print('totchunks',len(slicechunks))
             if len(slicepolys) > 0:
                 slicesfilled += 1
-            # chunks.extend(polyToChunks(slicepolys[1],z))
-            # print(len(p),'slicelen')
 
             #
-            # print(len(lastslice))
-            # """
             if o.waterline_fill:
                 layerstart = min(o.maxz, z + o.slice_detail)  #
                 layerend = max(o.min.z, z - o.slice_detail)  #
@@ -739,7 +722,6 @@ def getPath3axis(context, operation):
                 #####################################
                 # fill top slice for normal and first for inverse, fill between polys
                 if not lastslice.is_empty or (o.inverse and not poly.is_empty and slicesfilled == 1):
-                    # offs=False
                     restpoly = None
                     if not lastslice.is_empty:  # between polys
                         if o.inverse:
@@ -750,10 +732,6 @@ def getPath3axis(context, operation):
                     if (not o.inverse and poly.is_empty and slicesfilled > 0) or (
                             o.inverse and not poly.is_empty and slicesfilled == 1):  # first slice fill
                         restpoly = lastslice
-                    # print('filling first')
-
-                    # print(len(restpoly))
-                    # polyToMesh('fillrest',restpoly,z)
 
                     restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.circle_detail)
 
@@ -777,22 +755,18 @@ def getPath3axis(context, operation):
                         i += 1
                 # print(i)
                 i = 0
-                # """
-                #####################################
-                # fill layers and last slice, last slice with inverse is not working yet - inverse millings end now always on 0 so filling ambient does have no sense.
+                #  fill layers and last slice, last slice with inverse is not working yet
+                #  - inverse millings end now always on 0 so filling ambient does have no sense.
                 if (slicesfilled > 0 and layerstepinc == layerstep) or (
                         not o.inverse and not poly.is_empty and slicesfilled == 1) or (
                         o.inverse and poly.is_empty and slicesfilled > 0):
                     fillz = z
                     layerstepinc = 0
 
-                    # ilim=1000#TODO:this should be replaced... no limit, just check if the shape grows over limits.
-
-                    # offs=False
-                    boundrect = o.ambient
-                    restpoly = boundrect.difference(poly)
-                    if (o.inverse and poly.is_empty and slicesfilled > 0):
-                        restpoly = boundrect.difference(lastslice)
+                    bound_rectangle = o.ambient
+                    restpoly = bound_rectangle.difference(poly)
+                    if o.inverse and poly.is_empty and slicesfilled > 0:
+                        restpoly = bound_rectangle.difference(lastslice)
 
                     restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.circle_detail)
 
@@ -805,36 +779,13 @@ def getPath3axis(context, operation):
                         slicechunks.extend(nchunks)
                         parentChildDist(lastchunks, nchunks, o)
                         lastchunks = nchunks
-                        # slicechunks.extend(polyToChunks(restpoly,z))
                         restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.circle_detail)
                         i += 1
 
-                # """
                 percent = int(h / nslices * 100)
                 progress('waterline layers ', percent)
                 lastslice = poly
 
-            # print(poly)
-            # print(len(lastslice))
-
-            # if len(lastislice)>0:
-            #     i=numpy.logical_xor(lastislice , islice)
-            #
-            #     n=0
-            #     while i.sum()>0 and n<10000:
-            #         i=outlineImageBinary(o,o.dist_between_paths,i,False)
-            #         polys=imageToShapely(o,i)
-            #         for poly in polys:
-            #             chunks.extend(polyToChunks(poly,z))
-            #         n+=1
-            #
-            #
-            #         #restpoly=outlinePoly(restpoly,o.dist_between_paths,oo.circle_detail,o.optimize,o.optimize_threshold,,False)
-            #         #chunks.extend(polyToChunks(restpoly,z))
-            #
-            # lastislice=islice
-
-            # if bpy.app.debug_value==1:
             if (o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW') or (
                     o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CW'):
                 for chunk in slicechunks:
@@ -845,19 +796,8 @@ def getPath3axis(context, operation):
             # project chunks in between
 
             chunks.extend(slicechunks)
-        # chunks=sortChunks(chunks,o)
         if topdown:
             chunks.reverse()
-
-            # chi=0
-            # if len(chunks)>2:
-            #     while chi<len(chunks)-2:
-            #         d=dist2d((chunks[chi][-1][0],chunks[chi][-1][1]),(chunks[chi+1][0][0],chunks[chi+1][0][1]))
-            #         if chunks[chi][0][2]>=chunks[chi+1][0][2] and d<o.dist_between_paths*2:
-            #             chunks[chi].extend(chunks[chi+1])
-            #             chunks.remove(chunks[chi+1])
-            #             chi=chi-1
-            #         chi+=1
 
         print(time.time() - tw)
         strategy.chunksToMesh(chunks, o)
@@ -870,17 +810,15 @@ def getPath3axis(context, operation):
 
 
 def getPath4axis(context, operation):
-    t = time.process_time()
-    s = bpy.context.scene
     o = operation
     utils.getBounds(o)
     if o.strategy4axis in ['PARALLELR', 'PARALLEL', 'HELIX', 'CROSS']:
-        pathSamples = getPathPattern4axis(o)
+        path_samples = getPathPattern4axis(o)
 
-        depth = pathSamples[0].depth
+        depth = path_samples[0].depth
         chunks = []
 
         layers = strategy.getLayers(o, 0, depth)
 
-        chunks.extend(utils.sampleChunksNAxis(o, pathSamples, layers))
+        chunks.extend(utils.sampleChunksNAxis(o, path_samples, layers))
         strategy.chunksToMesh(chunks, o)

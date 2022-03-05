@@ -30,8 +30,9 @@ from mathutils import *
 from bpy.props import *
 from bpy_extras import object_utils
 
-import sys, numpy,pickle
-
+import sys
+import numpy
+import pickle
 
 from cam.chunk import *
 from cam.collision import *
@@ -43,6 +44,7 @@ from cam.image_utils import *
 from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
 
 from shapely.geometry import polygon as spolygon
+from shapely.geometry import MultiPolygon
 from shapely import ops as sops
 from shapely import geometry as sgeometry
 
@@ -54,32 +56,32 @@ def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
     ob.select_set(True)
-    bpy.context.view_layer.objects.active = ob   
+    bpy.context.view_layer.objects.active = ob
 
     minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace([ob], operation.use_modifiers)
-    totx=maxx-minx
-    toty=maxy-miny
-    totz=maxz-minz
+    totx = maxx - minx
+    toty = maxy - miny
+    totz = maxz - minz
     if operation.material_center_x:
-        ob.location.x -= minx +totx/2
+        ob.location.x -= minx + totx / 2
     else:
         ob.location.x -= minx
-        
+
     if operation.material_center_y:
-        ob.location.y -= miny +toty/2
+        ob.location.y -= miny + toty / 2
     else:
         ob.location.y -= miny
-        
-    if operation.material_Z== 'BELOW':
- 	    ob.location.z -= maxz
+
+    if operation.material_Z == 'BELOW':
+        ob.location.z -= maxz
     elif operation.material_Z == 'ABOVE':
-        ob.location.z -= minz  	    
+        ob.location.z -= minz
     elif operation.material_Z == 'CENTERED':
-        ob.location.z -= minz +totz/2 	
+        ob.location.z -= minz + totz / 2
 
     if ob.type != 'CURVE':
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-    #addMaterialAreaObject()  
+    # addMaterialAreaObject()
 
 
 def getBoundsWorldspace(obs, use_modifiers=False):
@@ -203,20 +205,19 @@ def getOperationSources(o):
             if o.old_rotation_A != o.rotation_A or o.old_rotation_B != o.rotation_B:
                 o.old_rotation_A = o.rotation_A
                 o.old_rotation_B = o.rotation_B
-                ob=bpy.data.objects[o.object_name]
+                ob = bpy.data.objects[o.object_name]
                 ob.select_set(True)
                 bpy.context.view_layer.objects.active = ob
-                if o.A_along_x : #A parallel with X
+                if o.A_along_x:  # A parallel with X
                     if o.enable_A:
                         bpy.context.active_object.rotation_euler.x = o.rotation_A
                     if o.enable_B:
                         bpy.context.active_object.rotation_euler.y = o.rotation_B
-                else :  #A parallel with Y
+                else:  # A parallel with Y
                     if o.enable_A:
                         bpy.context.active_object.rotation_euler.y = o.rotation_A
                     if o.enable_B:
                         bpy.context.active_object.rotation_euler.x = o.rotation_B
-
 
     elif o.geometry_source == 'COLLECTION':
         collection = bpy.data.collections[o.collection_name]
@@ -231,6 +232,7 @@ def getOperationSources(o):
                 o.onlycurves = False
     else:
         o.onlycurves = False
+
 
 def getBounds(o):
     # print('kolikrat sem rpijde')
@@ -255,7 +257,6 @@ def getBounds(o):
             o.min.y = miny - o.material_radius_around_model
             o.max.z = max(o.maxz, maxz)
 
-
             o.max.x = maxx + o.material_radius_around_model
             o.max.y = maxy + o.material_radius_around_model
         else:
@@ -274,8 +275,6 @@ def getBounds(o):
             ex = int(i.size[0] * o.source_image_crop_end_x / 100)
             sy = int(i.size[1] * o.source_image_crop_start_y / 100)
             ey = int(i.size[1] * o.source_image_crop_end_y / 100)
-            # operation.image.resize(ex-sx,ey-sy)
-            crop = (sx, sy, ex, ey)
         else:
             sx = 0
             ex = i.size[0]
@@ -284,24 +283,21 @@ def getBounds(o):
 
         o.pixsize = o.source_image_size_x / i.size[0]
 
-        o.min.x = o.source_image_offset.x + (sx) * o.pixsize
-        o.max.x = o.source_image_offset.x + (ex) * o.pixsize
-        o.min.y = o.source_image_offset.y + (sy) * o.pixsize
-        o.max.y = o.source_image_offset.y + (ey) * o.pixsize
+        o.min.x = o.source_image_offset.x + sx * o.pixsize
+        o.max.x = o.source_image_offset.x + ex * o.pixsize
+        o.min.y = o.source_image_offset.y + sy * o.pixsize
+        o.max.y = o.source_image_offset.y + ey * o.pixsize
         o.min.z = o.source_image_offset.z + o.minz
         o.max.z = o.source_image_offset.z
     s = bpy.context.scene
     m = s.cam_machine
-    if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y or o.max.z - o.min.z > m.working_area.z:
-        # o.max.x=min(o.min.x+m.working_area.x,o.max.x)
-        # o.max.y=min(o.min.y+m.working_area.y,o.max.y)
-        # o.max.z=min(o.min.z+m.working_area.z,o.max.z)
+    if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y \
+            or o.max.z - o.min.z > m.working_area.z:
         o.warnings += 'Operation exceeds your machine limits\n'
 
-# progress (o.min.x,o.min.y,o.min.z,o.max.x,o.max.y,o.max.z)
 
 def getBoundsMultiple(operations):
-    "gets bounds of multiple operations, mainly for purpose of simulations or rest milling. highly suboptimal."
+    """gets bounds of multiple operations, mainly for purpose of simulations or rest milling. highly suboptimal."""
     maxx = maxy = maxz = -10000000
     minx = miny = minz = 10000000
     for o in operations:
@@ -391,7 +387,7 @@ def sampleChunks(o, pathSamples, layers):
     t = time.time()
     # print('sampling paths')
 
-    totlen = 0;  # total length of all chunks, to estimate sampling time.
+    totlen = 0  # total length of all chunks, to estimate sampling time.
     for ch in pathSamples:
         totlen += len(ch.points)
     layerchunks = []
@@ -443,10 +439,11 @@ def sampleChunks(o, pathSamples, layers):
                     if minz > z:
                         z = minz
                     newsample = (x, y, z)
-                ####sampling
+                # ampling
                 elif o.use_exact and not o.use_opencamlib:
 
-                    if lastsample != None:  # this is an optimalization, search only for near depths to the last sample. Saves about 30% of sampling time.
+                    if lastsample is not None:  # this is an optimalization,
+                        # search only for near depths to the last sample. Saves about 30% of sampling time.
                         z = getSampleBullet(cutter, x, y, cutterdepth, 1,
                                             lastsample[2] - o.dist_along_paths)  # first try to the last sample
                         if z < minz - 1:
@@ -455,17 +452,13 @@ def sampleChunks(o, pathSamples, layers):
                         z = getSampleBullet(cutter, x, y, cutterdepth, 1, minz)
 
                 # print(z)
-                # here we have
                 else:
                     timingstart(samplingtime)
                     xs = (x - minx) / pixsize + coordoffset
                     ys = (y - miny) / pixsize + coordoffset
                     timingadd(samplingtime)
-                    # if o.inverse:
-                    #  z=layerstart
                     z = getSampleImage((xs, ys), o.offset_image, minz) + o.skin
-                # if minz>z and o.ambient.isInside(x,y):
-                #	z=minz;
+
                 ################################
                 # handling samples
                 ############################################
@@ -473,29 +466,24 @@ def sampleChunks(o, pathSamples, layers):
                 if minz > z:
                     z = minz
                 newsample = (x, y, z)
-            # z=max(minz,z)
 
-            # if sampled:# and (not o.inverse or (o.inverse)):uh what was this? disabled
-            #	newsample=(x,y,z)
-
-            # elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here, this should be obsolete,
-            #	newsample=(x,y,minz)
             for i, l in enumerate(layers):
                 terminatechunk = False
 
                 ch = layeractivechunks[i]
-                # print(i,l)
-                # print(l[1],l[0])
 
                 if l[1] <= newsample[2] <= l[0]:
-                    lastlayer = None  # rather the last sample here ? has to be set to None, since sometimes lastsample vs lastlayer didn't fit and did ugly ugly stuff....
-                    if lastsample != None:
+                    lastlayer = None  # rather the last sample here ? has to be set to None,
+                    # since sometimes lastsample vs lastlayer didn't fit and did ugly ugly stuff....
+                    if lastsample is not None:
                         for i2, l2 in enumerate(layers):
                             if l2[1] <= lastsample[2] <= l2[0]:
                                 lastlayer = i2
 
                     currentlayer = i
-                    if lastlayer != None and lastlayer != currentlayer:  # and lastsample[2]!=newsample[2]:#sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
+                    if lastlayer is not None and lastlayer != currentlayer:  # and lastsample[2]!=newsample[2]:
+                        # #sampling for sorted paths in layers- to go to the border of the sampled layer at least...
+                        # there was a bug here, but should be fixed.
                         if currentlayer < lastlayer:
                             growing = True
                             r = range(currentlayer, lastlayer)
@@ -577,10 +565,10 @@ def sampleChunks(o, pathSamples, layers):
                 children = []
                 # only pick chunks that should have connectivity assigned - 'last' and 'first' ones of the layer.
                 for ch in layerchunks[i + 1]:
-                    if ch.children == []:
+                    if not ch.children:
                         parents.append(ch)
                 for ch1 in layerchunks[i]:
-                    if ch1.parents == []:
+                    if not ch1.parents:
                         children.append(ch1)
 
                 parentChild(parents, children, o)  # parent only last and first chunk, before it did this for all.
@@ -645,8 +633,9 @@ def sampleChunksNAxis(o, pathSamples, layers):
         # for t in range(0,threads):
         # print(len(patternchunk.startpoints),len( patternchunk.endpoints))
         spl = len(patternchunk.startpoints)
-        for si in range(0,
-                        spl):  # ,startp in enumerate(patternchunk.startpoints):#TODO: seems we are writing into the source chunk , and that is why we need to write endpoints everywhere too?
+        for si in range(0, spl):  # ,startp in enumerate(patternchunk.startpoints):
+            # #TODO: seems we are writing into the source chunk ,
+            #  and that is why we need to write endpoints everywhere too?
 
             if n / 200.0 == int(n / 200.0):
                 progress('sampling paths ', int(100 * n / totlen))
@@ -660,7 +649,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
             rotation = patternchunk.rotations[si]
             sweepvect = endp - startp
             sweepvect.normalize()
-            ####sampling
+            # sampling
             if rotation != lastrotation:
 
                 cutter.rotation_euler = rotation
@@ -670,29 +659,18 @@ def sampleChunksNAxis(o, pathSamples, layers):
                 if o.cutter_type == 'VCARVE':  # Bullet cone is always pointing Up Z in the object
                     cutter.rotation_euler.x += pi
                 cutter.update_tag()
-                # bpy.context.scene.frame_set(-1)
-                # bpy.context.scene.update()
-                # bpy.context.scene.frame_set(1)
-                bpy.context.scene.frame_set(
-                    1)  # this has to be :( it resets the rigidbody world. No other way to update it probably now :(
+                bpy.context.scene.frame_set(1)  # this has to be :( it resets the rigidbody world.
+                # No other way to update it probably now :(
                 bpy.context.scene.frame_set(2)  # actually 2 frame jumps are needed.
                 bpy.context.scene.frame_set(0)
-            #
-            #
-            # bpy.context.scene.frame_set(-1)
 
-            # bpy.context.scene.update()
-            # update scene here?
-
-            # print(startp,endp)
-            # samplestartp=startp+sweepvect*0.3#this is correction for the sweep algorithm to work better.
             newsample = getSampleBulletNAxis(cutter, startp, endp, rotation, cutterdepth)
 
             # print('totok',startp,endp,rotation,newsample)
             ################################
             # handling samples
             ############################################
-            if newsample != None:  # this is weird, but will leave it this way now.. just prototyping here.
+            if newsample is not None:  # this is weird, but will leave it this way now.. just prototyping here.
                 sampled = True
             else:  # TODO: why was this here?
                 newsample = startp
@@ -715,7 +693,10 @@ def sampleChunksNAxis(o, pathSamples, layers):
                         lastlayer = currentlayer
                         currentlayer = i
 
-                        if lastsample != None and lastlayer != None and currentlayer != None and lastlayer != currentlayer:  # sampling for sorted paths in layers- to go to the border of the sampled layer at least...there was a bug here, but should be fixed.
+                        if lastsample is not None and lastlayer is not None and currentlayer is not None \
+                                and lastlayer != currentlayer:  # sampling for sorted paths in layers-
+                            # to go to the border of the sampled layer at least...
+                            # there was a bug here, but should be fixed.
                             if currentlayer < lastlayer:
                                 growing = True
                                 r = range(currentlayer, lastlayer)
@@ -730,13 +711,6 @@ def sampleChunksNAxis(o, pathSamples, layers):
                             for ls in r:
                                 splitdistance = layers[ls][1]
 
-                                # v1=lastsample
-                                # v2=newsample
-                                # if o.protect_vertical:#different algo for N-Axis! need sto be perpendicular to or whatever.
-                                #	v1,v2=isVerticalLimit(v1,v2,o.protect_vertical_limit)
-                                # v1=Vector(v1)
-                                # v2=Vector(v2)
-                                # print(v1,v2)
                                 ratio = (splitdistance - lastdistance) / (distance - lastdistance)
                                 # print(ratio)
                                 betweensample = lastsample + (newsample - lastsample) * ratio
@@ -785,7 +759,6 @@ def sampleChunksNAxis(o, pathSamples, layers):
                         ch.endpoints.append(endp)
                         lastdistance = distance
 
-
                     elif l[1] > distance:
                         v = sweepvect * l[1]
                         p = startp - v
@@ -798,18 +771,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
                         ch.rotations.append(rotation)
                         ch.startpoints.append(startp)
                         ch.endpoints.append(endp)
-                    # terminatechunk=True
 
-                    # if terminatechunk:
-                    #     #print(ch.points)
-                    #     if len(ch.points)>0:
-                    #         if len(ch.points)>0:
-                    #             layerchunks[i].append(ch)
-                    #             thisrunchunks[i].append(ch)
-                    #             layeractivechunks[i]=camPathChunk([])
-
-            # else:
-            #	terminatechunk=True
             lastsample = newsample
             lastrotation = rotation
             laststartpoint = startp
@@ -822,7 +784,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
                 thisrunchunks[i].append(ch)
                 layeractivechunks[i] = camPathChunk([])
 
-            if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL'):
+            if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL':
                 parentChildDist(thisrunchunks[i], lastrunchunks[i], o)
 
         lastrunchunks = thisrunchunks
@@ -842,6 +804,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
         chunks.extend(layerchunks[i])
 
     return chunks
+
 
 def extendChunks5axis(chunks, o):
     s = bpy.context.scene
@@ -871,7 +834,6 @@ def extendChunks5axis(chunks, o):
                 (a, b, 0))  # TODO: this is a placeholder. It does 99.9% probably write total nonsense.
 
 
-
 def curveToShapely(cob, use_modifiers=False):
     chunks = curveToChunks(cob, use_modifiers)
     polys = chunksToShapely(chunks)
@@ -881,7 +843,7 @@ def curveToShapely(cob, use_modifiers=False):
 # separate function in blender, so you can offset any curve.
 # FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
 
-def silhoueteOffset(context, offset,style = 1,mitrelimit = 1.0):
+def silhoueteOffset(context, offset, style=1, mitrelimit=1.0):
     bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
     if ob.type == 'CURVE' or ob.type == 'FONT':
@@ -892,9 +854,9 @@ def silhoueteOffset(context, offset,style = 1,mitrelimit = 1.0):
     polys = []
     mp = shapely.ops.unary_union(silhs)
     print("offset attributes:")
-    print(offset,style)
-    mp = mp.buffer(offset, cap_style = 1, join_style=style, resolution=16, mitre_limit=mitrelimit)
-    shapelyToCurve(ob.name +'_offset_'+str(round(offset,5)), mp, ob.location.z)
+    print(offset, style)
+    mp = mp.buffer(offset, cap_style=1, join_style=style, resolution=16, mitre_limit=mitrelimit)
+    shapelyToCurve(ob.name + '_offset_' + str(round(offset, 5)), mp, ob.location.z)
 
     return {'FINISHED'}
 
@@ -907,11 +869,11 @@ def polygonBoolean(context, boolean_type):
         if ob1 != ob:
             obs.append(ob1)
     plist = curveToShapely(ob)
-    p1 = sgeometry.asMultiPolygon(plist)
+    p1 = MultiPolygon(plist)
     polys = []
     for o in obs:
         plist = curveToShapely(o)
-        p2 = sgeometry.asMultiPolygon(plist)
+        p2 = MultiPolygon(plist)
         polys.append(p2)
     # print(polys)
     if boolean_type == 'UNION':
@@ -931,11 +893,13 @@ def polygonBoolean(context, boolean_type):
 
     return {'FINISHED'}
 
+
 def polygonConvexHull(context):
     coords = []
 
     bpy.ops.object.duplicate()
     bpy.ops.object.join()
+    bpy.context.object.data.dimensions = '3D'  #  force curve to be a 3D curve
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     bpy.context.active_object.name = "_tmp"
 
@@ -943,11 +907,11 @@ def polygonConvexHull(context):
     obj = bpy.context.view_layer.objects.active
 
     for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-        c=(v.co.x, v.co.y)
+        c = (v.co.x, v.co.y)
         coords.append(c)
 
-    simple.removeMultiple('_tmp')  # delete temporary mesh
-    simple.removeMultiple('ConvexHull')  # delete old hull
+    simple.select_multiple('_tmp')  # delete temporary mesh
+    simple.select_multiple('ConvexHull')  # delete old hull
 
     points = sgeometry.MultiPoint(coords)  # convert coordinates to shapely MultiPoint datastructure
 
@@ -990,7 +954,8 @@ def connectChunksLow(chunks, o):
     connectedchunks = []
     chunks_to_resample = []  # for OpenCAMLib sampling
     mergedist = 3 * o.dist_between_paths
-    if o.strategy == 'PENCIL':  # this is bigger for pencil path since it goes on the surface to clean up the rests, and can go to close points on the surface without fear of going deep into material.
+    if o.strategy == 'PENCIL':  # this is bigger for pencil path since it goes on the surface to clean up the rests,
+        # and can go to close points on the surface without fear of going deep into material.
         mergedist = 10 * o.dist_between_paths
 
     if o.strategy == 'MEDIAL_AXIS':
@@ -1008,10 +973,11 @@ def connectChunksLow(chunks, o):
 
     for ch in chunks:
         if len(ch.points) > 0:
-            if lastch != None and (ch.distStart(pos, o) < mergedist):
+            if lastch is not None and (ch.distStart(pos, o) < mergedist):
                 # CARVE should lift allways, when it goes below surface...
                 # print(mergedist,ch.dist(pos,o))
-                if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'PENCIL':  # for these paths sorting happens after sampling, thats why they need resample the connection
+                if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'PENCIL':
+                    # for these paths sorting happens after sampling, thats why they need resample the connection
                     between = samplePathLow(o, lastch, ch, True)
                 else:
                     # print('addbetwee')
@@ -1029,7 +995,7 @@ def connectChunksLow(chunks, o):
             lastch = ch
             pos = lastch.points[-1]
 
-    if o.use_opencamlib and o.use_exact and o.strategy != 'CUTOUT' and  o.strategy != 'POCKET':
+    if o.use_opencamlib and o.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET':
         oclResampleChunks(o, chunks_to_resample)
 
     return connectedchunks
@@ -1043,9 +1009,9 @@ def getClosest(o, pos, chunks):
     for chtest in chunks:
         cango = True
         for child in chtest.children:  # here was chtest.getNext==chtest, was doing recursion error and slowing down.
-            if child.sorted == False:
+            if not child.sorted:
                 cango = False
-                break;
+                break
         if cango:
             d = chtest.dist(pos, o)
             if d < mind:
@@ -1065,7 +1031,7 @@ def sortChunks(chunks, o):
     i = len(chunks)
     pos = (0, 0, 0)
     # for ch in chunks:
-    #	ch.getNext()#this stores the unsortedchildren properties
+    # ch.getNext()#this stores the unsortedchildren properties
     # print('numofchunks')
     # print(len(chunks))
     while len(chunks) > 0:
@@ -1074,21 +1040,13 @@ def sortChunks(chunks, o):
                 lastch.parents) == 0:  # first chunk or when there are no parents -> parents come after children here...
             ch = getClosest(o, pos, chunks)
         elif len(lastch.parents) > 0:  # looks in parents for next candidate, recursively
-            # get siblings here
-            # siblings=[]
-            # for chs in lastch.parents:
-            #	siblings.extend(chs.children)
-            # ch = getClosest(o,pos,siblings)
-            # if ch==None:
-            #	ch = getClosest(o,pos,chunks)
             for parent in lastch.parents:
                 ch = parent.getNextClosest(o, pos)
-                if ch != None:
+                if ch is not None:
                     break
-            if ch == None:
+            if ch is None:
                 ch = getClosest(o, pos, chunks)
-        #	break
-        # pass;
+
         if ch is not None:  # found next chunk, append it to list
             # only adaptdist the chunk if it has not been sorted before
             if not ch.sorted:
@@ -1116,7 +1074,9 @@ def sortChunks(chunks, o):
         i -= 1
 
     sys.setrecursionlimit(1000)
-    if o.strategy != 'DRILL' and o.strategy != 'OUTLINEFILL':  # THIS SHOULD AVOID ACTUALLY MOST STRATEGIES, THIS SHOULD BE DONE MANUALLY, BECAUSE SOME STRATEGIES GET SORTED TWICE.
+    if o.strategy != 'DRILL' and o.strategy != 'OUTLINEFILL':
+        # THIS SHOULD AVOID ACTUALLY MOST STRATEGIES, THIS SHOULD BE DONE MANUALLY,
+        # BECAUSE SOME STRATEGIES GET SORTED TWICE.
         sortedchunks = connectChunksLow(sortedchunks, o)
     return sortedchunks
 
@@ -1130,8 +1090,6 @@ def getVectorRight(lastv, verts):  # most right vector from a set regarding angl
         if v != lastv[0]:
             vb = Vector(v) - v2
             a = va.angle_signed(Vector(vb))
-            # if a<=0:
-            #	a=2*pi+a
 
             if a < defa:
                 defa = a
@@ -1198,7 +1156,7 @@ def getOperationSilhouete(operation):
         image = None
         objects = None
         if operation.geometry_source == 'OBJECT' or operation.geometry_source == 'COLLECTION':
-            if operation.onlycurves == False:
+            if not operation.onlycurves:
                 stype = 'OBJECTS'
             else:
                 stype = 'CURVES'
@@ -1215,7 +1173,10 @@ def getOperationSilhouete(operation):
             print('image method')
             samples = renderSampleImage(operation)
             if stype == 'OBJECTS':
-                i = samples > operation.minz - 0.0000001  # numpy.min(operation.zbuffer_image)-0.0000001##the small number solves issue with totally flat meshes, which people tend to mill instead of proper pockets. then the minimum was also maximum, and it didn't detect contour.
+                i = samples > operation.minz - 0.0000001
+                # numpy.min(operation.zbuffer_image)-0.0000001#
+                # #the small number solves issue with totally flat meshes, which people tend to mill instead of
+                # proper pockets. then the minimum was also maximum, and it didn't detect contour.
             else:
                 i = samples > numpy.min(operation.zbuffer_image)  # this fixes another numeric imprecision.
 
@@ -1225,7 +1186,8 @@ def getOperationSilhouete(operation):
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
             print('object method for retrieving silhouette')  #
-            operation.silhouete = getObjectSilhouete(stype, objects=operation.objects, use_modifiers=operation.use_modifiers)
+            operation.silhouete = getObjectSilhouete(stype, objects=operation.objects,
+                                                     use_modifiers=operation.use_modifiers)
 
         operation.update_silhouete_tag = False
     return operation.silhouete
@@ -1245,7 +1207,8 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
         for ob in objects:
             totfaces += len(ob.data.polygons)
 
-        if totfaces < 20000000:  # boolean polygons method originaly was 20 000 poly limit, now limitless, it might become teribly slow, but who cares?
+        if totfaces < 20000000:  # boolean polygons method originaly was 20 000 poly limit, now limitless,
+            # it might become teribly slow, but who cares?
             t = time.time()
             print('shapely getting silhouette')
             polys = []
@@ -1265,10 +1228,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
                 for tri in m.loop_triangles:
                     n = tri.normal.copy()
                     n.rotate(r)
-                    # verts=[]
-                    # for i in f.vertices:
-                    #	verts.append(mw*m.vertices[i].co)
-                    # n=mathutils.geometry.normal(verts[0],verts[1],verts[2])
+
                     if tri.area > 0 and n.z != 0:  # n.z>0.0 and f.area>0.0 :
                         s = []
                         c = mw @ tri.center
@@ -1283,10 +1243,8 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
                             if p.is_valid:
                                 # polys.append(p)
                                 polys.append(p.buffer(e, resolution=0))
-                        # if id==923:
-                        #	m.polygons[923].select
                         id += 1
-   
+
             if totfaces < 20000:
                 p = sops.unary_union(polys)
             else:
@@ -1330,11 +1288,9 @@ def getAmbient(o):
         if o.use_limit_curve:
             if o.limit_curve != '':
                 limit_curve = bpy.data.objects[o.limit_curve]
-                # polys=curveToPolys(limit_curve)
                 polys = curveToShapely(limit_curve)
                 o.limit_poly = shapely.ops.unary_union(polys)
-                # for p in polys:
-                #	o.limit_poly+=p
+
                 if o.ambient_cutter_restrict:
                     o.limit_poly = o.limit_poly.buffer(o.cutter_diameter / 2, resolution=o.circle_detail)
             o.ambient = o.ambient.intersection(o.limit_poly)
@@ -1356,16 +1312,18 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
 
     outlines = []
     i = 0
-    if o.straight: join = 2
-    else: join = 1
-    for p1 in polygons:  # sort by size before this???
-        #print(p1.type, len(polygons))
+    if o.straight:
+        join = 2
+    else:
+        join = 1
+    for p1 in polygons.geoms:  # sort by size before this???
+        # print(p1.type, len(polygons))
         i += 1
         if radius > 0:
-            p1 = p1.buffer(radius * offset, resolution=o.circle_detail,join_style = join,mitre_limit=2)
+            p1 = p1.buffer(radius * offset, resolution=o.circle_detail, join_style=join, mitre_limit=2)
         outlines.append(p1)
 
-    #print(outlines)
+    # print(outlines)
     if o.dont_merge:
         outline = sgeometry.MultiPolygon(outlines)
     else:
@@ -1428,6 +1386,7 @@ def addTranspMat(ob, mname, color, alpha):
             ob.data.materials[0] = mat
         else:
             ob.data.materials.append(mat)
+
 
 def addMachineAreaObject():
     s = bpy.context.scene
@@ -1498,7 +1457,7 @@ def addMaterialAreaObject():
     o.dimensions = bpy.context.scene.cam_machine.working_area
 
     o.dimensions = (
-    operation.max.x - operation.min.x, operation.max.y - operation.min.y, operation.max.z - operation.min.z)
+        operation.max.x - operation.min.x, operation.max.y - operation.min.y, operation.max.z - operation.min.z)
     o.location = (operation.min.x, operation.min.y, operation.max.z)
     if ao is not None:
         ao.select_set(True)
@@ -1508,7 +1467,7 @@ def addMaterialAreaObject():
 
 def getContainer():
     s = bpy.context.scene
-    if s.objects.get('CAM_OBJECTS') == None:
+    if s.objects.get('CAM_OBJECTS') is None:
         bpy.ops.object.empty_add(type='PLAIN_AXES', align='WORLD')
         container = bpy.context.active_object
         container.name = 'CAM_OBJECTS'
@@ -1519,6 +1478,7 @@ def getContainer():
 
     return container
 
+
 # progress('finished')
 
 # tools for voroni graphs all copied from the delaunayVoronoi addon:
@@ -1526,10 +1486,12 @@ class Point:
     def __init__(self, x, y, z):
         self.x, self.y, self.z = x, y, z
 
+
 def unique(L):
     """Return a list of unhashable elements in s, but without duplicates.
     [[1, 2], [2, 3], [1, 2]] >>> [[1, 2], [2, 3]]"""
-    # For unhashable objects, you can sort the sequence and then scan from the end of the list, deleting duplicates as you go
+    # For unhashable objects, you can sort the sequence and then scan from the end of the list,
+    # deleting duplicates as you go
     nDupli = 0
     nZcolinear = 0
     L.sort()  # sort() brings the equal elements together; then duplicates are easy to weed out in a single pass.
@@ -1544,7 +1506,8 @@ def unique(L):
         else:
             last = L[i]
     return (nDupli,
-            nZcolinear)  # list data type is mutable, input list will automatically update and doesn't need to be returned
+            nZcolinear)  # list data type is mutable,
+    # input list will automatically update and doesn't need to be returned
 
 
 def checkEqual(lst):
@@ -1619,7 +1582,8 @@ def cleanupIndexed(operation):
 
 
 def rotTo2axes(e, axescombination):
-    """converts an orientation object rotation to rotation defined by 2 rotational axes on the machine - for indexed machining.
+    """converts an orientation object rotation to rotation defined by 2 rotational axes on the machine -
+    for indexed machining.
     attempting to do this for all axes combinations.
     """
     v = Vector((0, 0, 1))
@@ -1668,8 +1632,6 @@ def rotTo2axes(e, axescombination):
     # print(bangle)
 
     return (angle1, angle2)
-
-
 
 
 def reload_pathss(o):
@@ -1722,5 +1684,5 @@ def reload_pathss(o):
     o.path_object_name = oname
     o.changed = False
 
-    if old_pathmesh != None:
+    if old_pathmesh is not None:
         bpy.data.meshes.remove(old_pathmesh)

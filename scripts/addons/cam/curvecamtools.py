@@ -77,323 +77,6 @@ class CamCurveConvexHull(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamCurveHatch(bpy.types.Operator):
-    """perform hatch operation on single or multiple curves"""  # by Alain Pelletier September 2021
-    bl_idname = "object.curve_hatch"
-    bl_label = "Hatch curve"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
-
-    angle: bpy.props.FloatProperty(name="angle", default=0, min=0, max=360, precision=4, subtype="ANGLE")
-    distance: bpy.props.FloatProperty(name="spacing", default=0.001, min=0, max=3.0, precision=4, unit="LENGTH")
-    cross: bpy.props.BoolProperty(name="Cross hatch", default=False)
-
-    @classmethod
-    def poll(cls, context):
-        return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
-
-    def execute(self, context):
-        utils.polygonHatch(self.distance, self.angle, self.cross)
-        return {'FINISHED'}
-
-
-class CamCurvePlate(bpy.types.Operator):
-    """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
-    bl_idname = "object.curve_plate"
-    bl_label = "Sign plate"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
-
-    radius: bpy.props.FloatProperty(name="Corner Radius", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
-    width: bpy.props.FloatProperty(name="Width of plate", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
-    height: bpy.props.FloatProperty(name="Height of plate", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
-    hole_diameter: bpy.props.FloatProperty(name="Hole diameter", default=0.01, min=0, max=3.0, precision=4,
-                                           unit="LENGTH")
-    hole_tolerence: bpy.props.FloatProperty(name="Hole V Tolerance", default=0.005, min=0, max=3.0, precision=4,
-                                            unit="LENGTH")
-    hole_vdist: bpy.props.FloatProperty(name="Hole Vert distance", default=0.400, min=0, max=3.0, precision=4,
-                                        unit="LENGTH")
-    hole_hdist: bpy.props.FloatProperty(name="Hole horiz distance", default=0, min=0, max=3.0, precision=4,
-                                        unit="LENGTH")
-    hole_hamount: bpy.props.IntProperty(name="Hole horiz amount", default=1, min=0, max=50)
-    resolution: bpy.props.IntProperty(name="Spline resolution", default=50, min=3, max=150)
-
-    def execute(self, context):
-        diameter = 2 * self.radius
-        left = -self.width / 2 + self.radius
-        bottom = -self.height / 2 + self.radius
-        right = -left
-        top = -bottom
-
-        # create base
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(left, bottom, 0), scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ_LB"
-        bpy.context.object.data.resolution_u = self.resolution
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(right, bottom, 0), scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ_RB"
-        bpy.context.object.data.resolution_u = self.resolution
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(left, top, 0), scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ_LT"
-        bpy.context.object.data.resolution_u = self.resolution
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(right, top, 0), scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ_RT"
-        bpy.context.object.data.resolution_u = self.resolution
-
-        simple.selectMultiple("_circ")  # select the circles for the four corners
-        utils.polygonConvexHull(context)  # perform hull operation on the four corner circles
-        bpy.context.active_object.name = "plate_base"
-        simple.removeMultiple("_circ")  # remove corner circles
-
-        if self.hole_diameter > 0 or self.hole_hamount > 0:
-            bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
-                                                      align='WORLD', location=(0, self.hole_tolerence / 2, 0),
-                                                      scale=(1, 1, 1))
-            bpy.context.active_object.name = "_hole_Top"
-            bpy.context.object.data.resolution_u = self.resolution / 4
-            if self.hole_tolerence > 0:
-                bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
-                                                          align='WORLD', location=(0, -self.hole_tolerence / 2, 0),
-                                                          scale=(1, 1, 1))
-                bpy.context.active_object.name = "_hole_Bottom"
-                bpy.context.object.data.resolution_u = self.resolution / 4
-
-            simple.selectMultiple("_hole")  # select everything starting with _hole and perform a convex hull on them
-            utils.polygonConvexHull(context)
-            bpy.context.active_object.name = "plate_hole"
-            bpy.context.object.location[1] = -self.hole_vdist / 2
-            bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
-                                          TRANSFORM_OT_translate={"value": (0, self.hole_vdist, 0)})
-            simple.removeMultiple("_hole")  # remove temporary holes
-
-            simple.joinMultiple("plate_hole")  # join the holes together
-
-            # horizontal holes
-            if self.hole_hamount > 1:
-                if self.hole_hamount % 2 != 0:
-                    for x in range(int((self.hole_hamount - 1) / 2)):
-                        dist = self.hole_hdist * (x + 1)  # calculate the distance from the middle
-                        bpy.ops.object.duplicate()
-                        bpy.context.object.location[0] = dist
-                        bpy.ops.object.duplicate()
-                        bpy.context.object.location[0] = -dist
-                else:
-                    for x in range(int(self.hole_hamount / 2)):
-                        dist = self.hole_hdist * x + self.hole_hdist / 2  # calculate the distance from the middle
-                        if x == 0:  # special case where the original hole only needs to move and not duplicate
-                            bpy.context.object.location[0] = dist
-                            bpy.ops.object.duplicate()
-                            bpy.context.object.location[0] = -dist
-                        else:
-                            bpy.ops.object.duplicate()
-                            bpy.context.object.location[0] = dist
-                            bpy.ops.object.duplicate()
-                            bpy.context.object.location[0] = -dist
-                simple.joinMultiple("plate_hole")  # join the holes together
-
-            simple.selectMultiple("plate_")  # select everything starting with plate_
-
-            bpy.context.view_layer.objects.active = bpy.data.objects['plate_base']  # Make the plate base active
-            utils.polygonBoolean(context, "DIFFERENCE")  # Remove holes from the base
-            simple.removeMultiple("plate_")  # Remove temporary base and holes
-
-        bpy.context.active_object.name = "plate"
-        bpy.context.active_object.select_set(True)
-
-        return {'FINISHED'}
-
-
-class CamCurveMortise(bpy.types.Operator):
-    """Generates mortise along a curve"""  # by Alain Pelletier December 2021
-    bl_idname = "object.curve_mortise"
-    bl_label = "Mortise"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
-
-    finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005, max=3.0, precision=4,
-                                         unit="LENGTH")
-    finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
-                                              unit="LENGTH")
-    plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0,unit="LENGTH")
-    side_height: bpy.props.FloatProperty(name="side height", default=0.05, min=0.001, max=3.0,unit="LENGTH")
-    flex_pocket: bpy.props.FloatProperty(name="Flex pocket", default=0.004, min=0.000, max=1.0,unit="LENGTH")
-    top_bottom: bpy.props.BoolProperty(name="Side Top & bottom fingers", default=True)
-    opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
-
-
-    @classmethod
-    def poll(cls, context):
-        return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
-
-    def execute(self, context):
-        o1 = bpy.context.active_object
-
-        bpy.context.object.data.resolution_u = 60
-        bpy.ops.object.duplicate()
-        obj = context.active_object
-        bpy.ops.object.convert(target='MESH')
-        bpy.context.active_object.name = "_temp_mesh"
-        cp = (0, 0)
-
-        if self.opencurve:
-            coords = []
-            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                coords.append((v.co.x, v.co.y))
-            line = LineString(coords)  # convert coordinates to shapely LineString datastructure
-            print("line length=", round(line.length * 1000), 'mm')
-
-        shapes = utils.curveToShapely(o1)
-
-        for s in shapes:
-            if s.boundary.type == 'LineString':
-                loops = [s.boundary]
-            else:
-                loops = s.boundary
-
-            for ci, c in enumerate(loops):
-                if self.opencurve:
-                    length = line.length
-                else:
-                    length = c.length
-                print("loop Length:", length)
-                j = 0
-                distance = self.finger_size / 2
-                oldp = (0, 0)
-                coords = list(c.coords)
-                if self.opencurve:
-                    loop_length = line.length
-                else:
-                    loop_length = c.length
-                print("line Length:", loop_length)
-                joinery.fixed_finger(c, length, self.finger_size,  self.plate_thickness, self.finger_tolerance)
-                joinery.fixed_finger(c, length, self.finger_size,  self.plate_thickness, self.finger_tolerance, True)
-
-            joinery.create_flex_side(loop_length, self.side_height, self.finger_size, self.plate_thickness, self.finger_tolerance, self.top_bottom,self.flex_pocket)
-        return {'FINISHED'}
-
-
-class CamCurveDrawer(bpy.types.Operator):
-    """Generates drawers"""  # by Alain Pelletier December 2021 inspired by The Drawinator
-    bl_idname = "object.curve_drawer"
-    bl_label = "Drawer"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
-
-    depth: bpy.props.FloatProperty(name="Drawer Depth", default=0.2, min=0, max=1.0, precision=4, unit="LENGTH")
-    width: bpy.props.FloatProperty(name="Width of Drawer", default=0.125, min=0, max=3.0, precision=4, unit="LENGTH")
-    height: bpy.props.FloatProperty(name="Height of drawer", default=0.07, min=0, max=3.0, precision=4, unit="LENGTH")
-    finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005, max=3.0, precision=4,
-                                         unit="LENGTH")
-    finger_tolerence: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
-                                              unit="LENGTH")
-    finger_inset: bpy.props.FloatProperty(name="Finger inset", default=0.0, min=0.0, max=0.01, precision=4,
-                                          unit="LENGTH")
-    drawer_plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0,
-                                                    precision=4, unit="LENGTH")
-    drawer_hole_diameter: bpy.props.FloatProperty(name="Drawer hole diameter", default=0.02, min=0.00001, max=0.5,
-                                                  precision=4, unit="LENGTH")
-    drawer_hole_offset: bpy.props.FloatProperty(name="Drawer hole offset", default=0.0, min=-0.5, max=0.5, precision=4,
-                                                unit="LENGTH")
-
-    def execute(self, context):
-        height_finger_amt = int(joinery.finger_amount(self.height, self.finger_size))
-        height_finger = (self.height + 0.0004) / height_finger_amt
-        width_finger_amt = int(joinery.finger_amount(self.width, self.finger_size))
-        width_finger = (self.width - self.finger_size) / width_finger_amt
-
-        # create base
-        joinery.create_base_plate(self.height, self.width, self.depth)
-        bpy.context.object.data.resolution_u = 64
-        bpy.context.scene.cursor.location = (0, 0, 0)
-
-        joinery.vertical_finger(height_finger, self.drawer_plate_thickness, self.finger_tolerence, height_finger_amt)
-
-        joinery.horizontal_finger(width_finger, self.drawer_plate_thickness, self.finger_tolerence,
-                                  width_finger_amt * 2)
-        simple.makeActive('_wfb')
-
-        bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
-
-        #   make drawer back
-        finger_pair = joinery.finger_pair("_vfa", self.width - self.drawer_plate_thickness - self.finger_inset * 2, 0)
-        simple.makeActive('_wfa')
-        fronth = bpy.context.active_object
-        simple.makeActive('_back')
-        finger_pair.select_set(True)
-        fronth.select_set(True)
-        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        simple.removeMultiple("_finger_pair")
-        bpy.context.active_object.name = "drawer_back"
-
-        #   make drawer front
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.drawer_hole_diameter / 2, enter_editmode=False,
-                                                  align='WORLD', location=(0, self.height + self.drawer_hole_offset, 0),
-                                                  scale=(1, 1, 1))
-        bpy.context.active_object.name = "_circ"
-        front_hole = bpy.context.active_object
-        simple.makeActive('drawer_back')
-        bpy.ops.object.curve_remove_doubles()
-        front_hole.select_set(True)
-        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        bpy.context.active_object.name = "drawer_front"
-        bpy.ops.object.curve_remove_doubles()
-
-        #   place back and front side by side
-        simple.makeActive('drawer_front')
-        bpy.ops.transform.transform(mode='TRANSLATION', value=(0.0, 2 * self.height, 0.0, 0.0))
-        simple.makeActive('drawer_back')
-
-        bpy.ops.transform.transform(mode='TRANSLATION', value=(self.width + 0.01, 2 * self.height, 0.0, 0.0))
-        #   make side
-
-        finger_pair = joinery.finger_pair("_vfb", self.depth - self.drawer_plate_thickness, 0)
-        simple.makeActive('_side')
-        finger_pair.select_set(True)
-        fronth.select_set(True)
-        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        bpy.context.active_object.name = "drawer_side"
-        bpy.ops.object.curve_remove_doubles()
-        simple.removeMultiple('_finger_pair')
-
-        #   make bottom
-        simple.makeActive("_wfb")
-        bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
-                                      TRANSFORM_OT_translate={"value": (0, -self.drawer_plate_thickness / 2, 0.0)})
-
-        bpy.context.active_object.name = "_wfb0"
-        finger_pair = joinery.finger_pair("_wfb0", 0, self.depth - self.drawer_plate_thickness)
-
-        simple.makeActive('_bottom')
-        finger_pair.select_set(True)
-        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-
-        bpy.context.active_object.name = "_bottom2"
-        simple.makeActive('_bottom2')
-        bpy.context.object.rotation_euler[2] = math.pi / 2
-
-        finger_pair = joinery.finger_pair("_wfb0", 0, self.width - self.drawer_plate_thickness - self.finger_inset * 2)
-
-        simple.makeActive('_bottom2')
-        finger_pair.select_set(True)
-        bpy.ops.object.curve_boolean(boolean_type='DIFFERENCE')
-        bpy.context.active_object.name = "drawer_bottom"
-
-        # cleanup all temp polygons
-        simple.removeMultiple("_")
-
-        #   move side and bottom to location
-        simple.makeActive("drawer_side")
-        bpy.ops.object.curve_remove_doubles()
-        bpy.ops.transform.transform(mode='TRANSLATION',
-                                    value=(self.depth / 2 + 3 * self.width / 2 + 0.02, 2 * self.height, 0.0, 0.0))
-
-        simple.makeActive("drawer_bottom")
-        bpy.ops.transform.transform(mode='TRANSLATION',
-                                    value=(self.depth / 2 + 3 * self.width / 2 + 0.02, self.width / 2, 0.0, 0.0))
-        bpy.ops.object.curve_remove_doubles()
-
-        return {'FINISHED'}
-
-
 # intarsion or joints
 class CamCurveIntarsion(bpy.types.Operator):
     """makes curve cuttable both inside and outside, for intarsion and joints"""
@@ -422,11 +105,11 @@ class CamCurveIntarsion(bpy.types.Operator):
 
     def execute(self, context):
         selected = context.selected_objects  # save original selected items
-        scene = bpy.context.scene
 
-        simple.removeMultiple('intarsion_')
+        simple.remove_multiple('intarsion_')
 
-        for ob in selected: ob.select_set(True)  # select original curves
+        for ob in selected:
+            ob.select_set(True)  # select original curves
 
         #  Perimeter cut largen then intarsion pocket externally, optional
 
@@ -492,7 +175,7 @@ class CamCurveOvercuts(bpy.types.Operator):
         negative_overcuts = []
         positive_overcuts = []
         diameter = self.diameter * 1.001
-        for s in shapes:
+        for s in shapes.geoms:
             s = shapely.geometry.polygon.orient(s, 1)
             if s.boundary.type == 'LineString':
                 loops = [s.boundary]
@@ -501,7 +184,6 @@ class CamCurveOvercuts(bpy.types.Operator):
 
             for ci, c in enumerate(loops):
                 if ci > 0 or self.do_outer:
-                    # c=s.boundary
                     for i, co in enumerate(c.coords):
                         i1 = i - 1
                         if i1 == -1:
@@ -541,15 +223,14 @@ class CamCurveOvercuts(bpy.types.Operator):
                                 else:
                                     positive_overcuts.append(shape)
 
-                            print(a)
-
         negative_overcuts = shapely.ops.unary_union(negative_overcuts)
         positive_overcuts = shapely.ops.unary_union(positive_overcuts)
 
         fs = shapely.ops.unary_union(shapes)
         fs = fs.union(positive_overcuts)
         fs = fs.difference(negative_overcuts)
-        o = utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
+        utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
+
         return {'FINISHED'}
 
 
@@ -656,7 +337,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
                 delta += cornerCnt
             return delta
 
-        for s in shapes:
+        for s in shapes.geoms:
             s = shapely.geometry.polygon.orient(s, 1)  # ensure the shape is counterclockwise
             loops = [s.boundary] if s.boundary.type == 'LineString' else s.boundary
             outercurve = self.do_outer or len(loops) == 1
@@ -776,9 +457,8 @@ class CamCurveOvercutsB(bpy.types.Operator):
         fs = shapely.ops.unary_union(shapes)
         fs = fs.union(positive_overcuts)
         fs = fs.difference(negative_overcuts)
-        #        utils.shapelyToCurve(o1.name + '_overcuts', positive_overcuts, o1.location.z)
-        #        utils.shapelyToCurve(o1.name + '_overcuts', negative_overcuts, o1.location.z)
-        o = utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
+
+        utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
         return {'FINISHED'}
 
 
@@ -807,8 +487,7 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
             bpy.ops.mesh.remove_doubles()
             bpy.ops.object.editmode_toggle()
             bpy.ops.object.convert(target='CURVE')
-            a = bpy.context.active_object
-            # a.data.show_normal_face = False
+
             if mode:
                 bpy.ops.object.editmode_toggle()
 
@@ -822,7 +501,8 @@ class CamMeshGetPockets(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     threshold: bpy.props.FloatProperty(name="horizontal threshold",
-                                       description="How horizontal the surface must be for a pocket: 1.0 perfectly flat, 0.0 is any orientation",
+                                       description="How horizontal the surface must be for a pocket: "
+                                                   "1.0 perfectly flat, 0.0 is any orientation",
                                        default=.99, min=0, max=1.0, precision=4)
     zlimit: bpy.props.FloatProperty(name="z limit",
                                     description="maximum z height considered for pocket operation, default is 0.0",
@@ -855,7 +535,7 @@ class CamMeshGetPockets(bpy.types.Operator):
                         face.select = True
                         z = (mw @ mesh.vertices[face.vertices[0]].co).z
                         if z < self.zlimit:
-                            if pockets.get(z) == None:
+                            if pockets.get(z) is None:
                                 pockets[z] = [i]
                             else:
                                 pockets[z].append(i)
@@ -925,7 +605,8 @@ class CamOffsetSilhouete(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and (
-                context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
+                context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or
+                context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
         ob = context.active_object
@@ -941,8 +622,8 @@ class CamOffsetSilhouete(bpy.types.Operator):
             for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
                 coords.append((v.co.x, v.co.y))
 
-            simple.removeMultiple('temp_mesh')  # delete temporary mesh
-            simple.removeMultiple('dilation')  # delete old dilation objects
+            simple.remove_multiple('temp_mesh')  # delete temporary mesh
+            simple.remove_multiple('dilation')  # delete old dilation objects
 
             line = LineString(coords)  # convert coordinates to shapely LineString datastructure
             print("line length=", round(line.length * 1000), 'mm')
@@ -964,7 +645,8 @@ class CamObjectSilhouete(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        #        return context.active_object is not None and (context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
+        #        return context.active_object is not None and (context.active_object.type == 'CURVE'
+        #        or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
         return context.active_object is not None and (context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data

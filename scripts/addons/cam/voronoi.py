@@ -155,8 +155,8 @@ class Context(object):
             if not complete:
                 startPt = polyPts[0]
                 endPt = polyPts[-1]
-                if startPt[0] == endPt[0] or startPt[1] == endPt[
-                    1]:  # if start & end points are collinear then they are along an extent border
+                if startPt[0] == endPt[0] or startPt[1] == endPt[1]:
+                    # if start & end points are collinear then they are along an extent border
                     polyPts.append(polyPts[0])  # simple close
                 else:  # close at extent corner
                     if (startPt[0] == xmin and endPt[1] == ymax) or (
@@ -243,7 +243,8 @@ class Context(object):
                     break
             poly.append(edges[firstIdx][0])
             poly.append(edges[firstIdx][1])
-            if poly[0] != startPt: poly.reverse()
+            if poly[0] != startPt:
+                poly.reverse()
         # append next points in list
         del edges[firstIdx]
         while edges:  # all points will be treated when edges list will be empty
@@ -268,38 +269,38 @@ class Context(object):
         ymax = ymax + height * ypourcent / 100
         self.extent = xmin, xmax, ymin, ymax
 
-    ########End clip functions########
+    # End clip functions########
 
     def outSite(self, s):
-        if (self.debug):
+        if self.debug:
             print("site (%d) at %f %f" % (s.sitenum, s.x, s.y))
-        elif (self.triangulate):
+        elif self.triangulate:
             pass
-        elif (self.doPrint):
+        elif self.doPrint:
             print("s %f %f" % (s.x, s.y))
 
     def outVertex(self, s):
         self.vertices.append((s.x, s.y))
-        if (self.debug):
+        if self.debug:
             print("vertex(%d) at %f %f" % (s.sitenum, s.x, s.y))
-        elif (self.triangulate):
+        elif self.triangulate:
             pass
-        elif (self.doPrint):
+        elif self.doPrint:
             print("v %f %f" % (s.x, s.y))
 
     def outTriple(self, s1, s2, s3):
         self.triangles.append((s1.sitenum, s2.sitenum, s3.sitenum))
-        if (self.debug):
+        if self.debug:
             print("circle through left=%d right=%d bottom=%d" % (s1.sitenum, s2.sitenum, s3.sitenum))
-        elif (self.triangulate and self.doPrint):
+        elif self.triangulate and self.doPrint:
             print("%d %d %d" % (s1.sitenum, s2.sitenum, s3.sitenum))
 
     def outBisector(self, edge):
         self.lines.append((edge.a, edge.b, edge.c))
-        if (self.debug):
+        if self.debug:
             print("line(%d) %gx+%gy=%g, bisecting %d %d" % (
             edge.edgenum, edge.a, edge.b, edge.c, edge.reg[0].sitenum, edge.reg[1].sitenum))
-        elif (self.doPrint):
+        elif self.doPrint:
             print("l %f %f %f" % (edge.a, edge.b, edge.c))
 
     def outEdge(self, edge):
@@ -320,8 +321,8 @@ class Context(object):
 
         self.edges.append((edge.edgenum, sitenumL, sitenumR))
 
-        if (not self.triangulate):
-            if (self.doPrint):
+        if not self.triangulate:
+            if self.doPrint:
                 print("e %d" % edge.edgenum)
                 print(" %d " % sitenumL)
                 print("%d" % sitenumR)
@@ -342,7 +343,7 @@ def voronoi(siteList, context):
         if not priorityQ.isEmpty():
             minpt = priorityQ.getMinPt()
 
-        if (newsite and (priorityQ.isEmpty() or newsite < minpt)):
+        if newsite and (priorityQ.isEmpty() or newsite < minpt):
             # newsite is smallest -  this is a site event
             context.outSite(newsite)
 
@@ -449,7 +450,7 @@ def voronoi(siteList, context):
             # the left HE, and reinsert it
             p = llbnd.intersect(bisector)
             if p is not None:
-                priorityQ.delete(llbnd);
+                priorityQ.delete(llbnd)
                 priorityQ.insert(llbnd, p, bot.distance(p))
 
             # if right HE and the new bisector don't intersect, then reinsert it
@@ -626,29 +627,29 @@ class Halfedge(object):
         topsite = e.reg[1]
         right_of_site = pt.x > topsite.x
 
-        if (right_of_site and self.pm == Edge.LE):
+        if right_of_site and self.pm == Edge.LE:
             return True
 
-        if (not right_of_site and self.pm == Edge.RE):
+        if not right_of_site and self.pm == Edge.RE:
             return False
 
-        if (e.a == 1.0):
+        if e.a == 1.0:
             dyp = pt.y - topsite.y
             dxp = pt.x - topsite.x
-            fast = 0;
-            if ((not right_of_site and e.b < 0.0) or (right_of_site and e.b >= 0.0)):
+            fast = 0
+            if (not right_of_site and e.b < 0.0) or (right_of_site and e.b >= 0.0):
                 above = dyp >= e.b * dxp
                 fast = above
             else:
                 above = pt.x + pt.y * e.b > e.c
-                if (e.b < 0.0):
+                if e.b < 0.0:
                     above = not above
-                if (not above):
+                if not above:
                     fast = 1
-            if (not fast):
+            if not fast:
                 dxs = topsite.x - (e.reg[0]).x
                 above = e.b * (dxp * dxp - dyp * dyp) < dxs * dyp * (1.0 + 2.0 * dxp / dxs + e.b * e.b)
-                if (e.b < 0.0):
+                if e.b < 0.0:
                     above = not above
         else:  # e.b == 1.0
             yl = e.c - e.a * pt.x
@@ -657,7 +658,7 @@ class Halfedge(object):
             t3 = yl - topsite.y
             above = t1 * t1 > t2 * t2 + t3 * t3
 
-        if (self.pm == Edge.LE):
+        if self.pm == Edge.LE:
             return above
         else:
             return not above
@@ -700,7 +701,8 @@ class Halfedge(object):
 # ------------------------------------------------------------------
 class EdgeList(object):
     def __init__(self, xmin, xmax, nsites):
-        if xmin > xmax: xmin, xmax = xmax, xmin
+        if xmin > xmax:
+            xmin, xmax = xmax, xmin
         self.hashsize = int(2 * math.sqrt(nsites + 4))
 
         self.xmin = xmin
@@ -741,10 +743,10 @@ class EdgeList(object):
         # Use hash table to get close to desired halfedge
         bucket = int(((pt.x - self.xmin) / self.deltax * self.hashsize))
 
-        if (bucket < 0):
-            bucket = 0;
+        if bucket < 0:
+            bucket = 0
 
-        if (bucket >= self.hashsize):
+        if bucket >= self.hashsize:
             bucket = self.hashsize - 1
 
         he = self.gethash(bucket)
@@ -752,9 +754,11 @@ class EdgeList(object):
             i = 1
             while True:
                 he = self.gethash(bucket - i)
-                if (he is not None): break;
+                if (he is not None):
+                    break
                 he = self.gethash(bucket + i)
-                if (he is not None): break;
+                if (he is not None):
+                    break
                 i += 1
 
         # Now search linear list of halfedges for the corect one
@@ -762,14 +766,14 @@ class EdgeList(object):
             he = he.right
             while he is not self.rightend and he.isPointRightOf(pt):
                 he = he.right
-            he = he.left;
+            he = he.left
         else:
             he = he.left
-            while (he is not self.leftend and not he.isPointRightOf(pt)):
+            while he is not self.leftend and not he.isPointRightOf(pt):
                 he = he.left
 
         # Update hash table and reference counts
-        if (bucket > 0 and bucket < self.hashsize - 1):
+        if bucket > 0 and bucket < self.hashsize - 1:
             self.hash[bucket] = he
         return he
 
@@ -797,7 +801,7 @@ class PriorityQueue(object):
         he.ystar = site.y + offset
         last = self.hash[self.getBucket(he)]
         next = last.qnext
-        while ((next is not None) and he > next):
+        while (next is not None) and he > next:
             last = next
             next = last.qnext
         he.qnext = last.qnext
@@ -805,7 +809,7 @@ class PriorityQueue(object):
         self.count += 1
 
     def delete(self, he):
-        if (he.vertex is not None):
+        if he.vertex is not None:
             last = self.hash[self.getBucket(he)]
             while last.qnext is not he:
                 last = last.qnext
@@ -815,13 +819,16 @@ class PriorityQueue(object):
 
     def getBucket(self, he):
         bucket = int(((he.ystar - self.ymin) / self.deltay) * self.hashsize)
-        if bucket < 0: bucket = 0
-        if bucket >= self.hashsize: bucket = self.hashsize - 1
-        if bucket < self.minidx:  self.minidx = bucket
+        if bucket < 0:
+            bucket = 0
+        if bucket >= self.hashsize:
+            bucket = self.hashsize - 1
+        if bucket < self.minidx:
+            self.minidx = bucket
         return bucket
 
     def getMinPt(self):
-        while (self.hash[self.minidx].qnext is None):
+        while self.hash[self.minidx].qnext is None:
             self.minidx += 1
         he = self.hash[self.minidx].qnext
         x = he.vertex.x
@@ -991,4 +998,16 @@ def computeDelaunayTriangulation(points):
     return context.triangles
 
 # -----------------------------------------------------------------------------
-# if __name__=="__main__":
+# def shapely_voronoi(amount):
+#     import random
+#
+#     rcoord = []
+#     x = 0
+#     while x < self.amount:
+#         rcoord.append((width * random.random(), height * random.random(), 0.02 * random.random()))
+#         x += 1
+#
+#     points = MultiPoint(rcoord)
+#     voronoi = shapely.ops.voronoi_diagram(points, tolerance=0, edges=False)
+#
+#     utils.shapelyToCurve('voronoi', voronoi, 0)

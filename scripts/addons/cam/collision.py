@@ -26,9 +26,11 @@ from cam import simple
 from cam.simple import *
 
 
-BULLET_SCALE = 10000  # this is a constant for scaling the rigidbody collision world for higher precision from bullet library
-CUTTER_OFFSET = (-5 * BULLET_SCALE, -5 * BULLET_SCALE,
-                 -5 * BULLET_SCALE)  # the cutter object has to be present in the scene , so we need to put it aside for sweep collisions, otherwise it collides itself.
+BULLET_SCALE = 10000
+# this is a constant for scaling the rigidbody collision world for higher precision from bullet library
+CUTTER_OFFSET = (-5 * BULLET_SCALE, -5 * BULLET_SCALE, -5 * BULLET_SCALE)
+# the cutter object has to be present in the scene , so we need to put it aside for sweep collisions,
+# otherwise it collides itself.
 
 
 def getCutterBullet(o):
@@ -42,98 +44,101 @@ def getCutterBullet(o):
 
     type = o.cutter_type
     if type == 'END':
-        bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius=BULLET_SCALE * o.cutter_diameter / 2,
-                                            depth=BULLET_SCALE * o.cutter_diameter, end_fill_type='NGON',
-                                            align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
+        bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius= o.cutter_diameter / 2,
+                                            depth= o.cutter_diameter, end_fill_type='NGON',
+                                            align='WORLD', enter_editmode=False, location=(0 , 0, o.cutter_diameter / 2),
                                             rotation=(0, 0, 0))
+        #bpy.ops.object.duplicate()    # show bit
+        cutter = bpy.context.active_object
+        cutter.scale *= BULLET_SCALE
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CYLINDER'
-    elif type == 'BALL' or type == 'BALLNOSE':
-        if o.strategy != 'PROJECTED_CURVE' or type == 'BALL':  # only sphere, good for 3 axis and real ball cutters for undercuts and projected curve
+    elif type == 'BALLNOSE':
 
-            bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=BULLET_SCALE * o.cutter_diameter / 2,
-                                                  align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
-                                                  rotation=(0, 0, 0))
-            bpy.ops.rigidbody.object_add(type='ACTIVE')
+            # ballnose ending used mainly when projecting from sides.
+            # the actual collision shape is capsule in this case.
+            bpy.ops.mesh.primitive_ico_sphere_add(subdivisions = 3, radius = o.cutter_diameter / 2,
+                                                  align='WORLD', enter_editmode=False,
+                                                location=(0, 0, o.cutter_diameter / 2), rotation=(0, 0, 0))
+            #bpy.ops.object.duplicate()    # show bit
             cutter = bpy.context.active_object
-            cutter.rigid_body.collision_shape = 'SPHERE'
-        else:  # ballnose ending used mainly when projecting from sides. the actual collision shape is capsule in this case.
-            bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, raius=BULLET_SCALE * o.cutter_diameter / 2,
-                                                  align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
-                                                  rotation=(0, 0, 0))
-            bpy.ops.rigidbody.object_add(type='ACTIVE')
-            cutter = bpy.context.active_object
-            cutter.dimensions.z = 0.2 * BULLET_SCALE  # should be sufficient for now... 20 cm.
-            cutter.rigid_body.collision_shape = 'CAPSULE'
+            cutter.scale *= BULLET_SCALE
             bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+            bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')                            
+            bpy.ops.rigidbody.object_add(type='ACTIVE')
+            cutter = bpy.context.active_object
+            #cutter.dimensions.z = 0.2 * BULLET_SCALE  # should be sufficient for now... 20 cm.
+            cutter.rigid_body.collision_shape = 'CAPSULE'
+            #bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
     elif type == 'VCARVE':
 
         angle = o.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  #angles in degrees
-        #s = math.tan((math.pi-angle)/2)/2 #angle in radians
-
-        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=0,
-                                        depth=BULLET_SCALE * o.cutter_diameter * s, end_fill_type='NGON',
-                                        align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
-                                        rotation=(math.pi, 0, 0))                            
+        s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  # angles in degrees
+        cone_d = o.cutter_diameter * s
+        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1 = o.cutter_diameter / 2, radius2=0,
+                                        depth =  cone_d, end_fill_type='NGON',
+                                        align='WORLD', enter_editmode=False, location = (0, 0, cone_d / 2),
+                                        rotation=(math.pi, 0, 0))
+        #bpy.ops.object.duplicate()    # show bit
+        cutter = bpy.context.active_object
+        cutter.scale *= BULLET_SCALE
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')                            
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CONE'
     elif type == 'CYLCONE':
 
         angle = o.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  #angles in degrees
-        #s = math.tan((math.pi-angle)/2)/2 #angle in radians
-
-        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=BULLET_SCALE * o.cutter_diameter / 2, radius2=BULLET_SCALE
-         * o.cylcone_diameter / 2, depth=BULLET_SCALE * (o.cutter_diameter - o.cylcone_diameter) * s, end_fill_type='NGON',
-                                        align='WORLD', enter_editmode=False, location = CUTTER_OFFSET,
-                                        rotation=(math.pi, 0, 0))
+        s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  # angles in degrees
+        cylcone_d =(o.cutter_diameter - o.cylcone_diameter) * s
+        bpy.ops.mesh.primitive_cone_add(vertices = 32, radius1 = o.cutter_diameter / 2,
+                                        radius2 = o.cylcone_diameter / 2,
+                                        depth = cylcone_d, end_fill_type='NGON',
+                                        align = 'WORLD', enter_editmode = False,
+                                        location = (0 , 0 , cylcone_d / 2),rotation = (math.pi, 0, 0))
+        #bpy.ops.object.duplicate()    # show bit
+        cutter = bpy.context.active_object
+        cutter.scale *= BULLET_SCALE
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
     elif type == 'BALLCONE':
-        angle =math.radians(o.cutter_tip_angle)/2
-        conedepth = (o.cutter_diameter/2 - o.ball_radius)/math.tan(angle)
+        angle = math.radians(o.cutter_tip_angle)/2
+        cutter_R = o.cutter_diameter/2
         Ball_R = o.ball_radius/math.cos(angle)
-        D_ofset = o.ball_radius * math.tan(angle)
-        bpy.ops.mesh.primitive_cone_add(vertices=32,
-                                        radius1=o.cutter_diameter / 2,
-                                        radius2=o.ball_radius,
-                                        depth= conedepth,
-                                        end_fill_type='NGON',
-                                        align='WORLD',
-                                        enter_editmode=False,
-                                        location=(0, 0,conedepth/2 - D_ofset),
-                                        rotation=(math.pi, 0, 0))
-
-        # bpy.ops.rigidbody.object_add(type='ACTIVE')
-
-        ob1 = bpy.context.active_object
-        ob1.name = "ConeTool"
-
-        bpy.ops.mesh.primitive_uv_sphere_add(radius = Ball_R,
-                                             enter_editmode=False,
-                                             align='WORLD',
-                                             location=(0, 0, 0),
-                                             scale=(1, 1, 1))
-
-        # bpy.ops.rigidbody.object_add(type='ACTIVE')
-
-        ob2 = bpy.context.active_object
-        ob2.name = "BallConeTool"
-        # add union boolean mod_bool =  bpy.data.objects[name_a].modifiers.new('my_bool_mod', 'BOOLEAN')
-        ob_bool = ob2.modifiers.new(type='BOOLEAN', name='booly')
-        ob_bool.object = ob1
-        ob_bool.operation = 'UNION'
-        bpy.ops.object.modifier_apply(modifier='booly')
-
-        bpy.ops.object.select_all(action='DESELECT')
-        bpy.data.objects['ConeTool'].select_set(True)
-        bpy.ops.object.delete()
+        conedepth = (cutter_R - o.ball_radius)/math.tan(angle)
+        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0),
+                                         Simple_Type='Point', use_cyclic_u=False)
+        oy = Ball_R
+        for i in range(1 , 10):
+            ang = -i * (math.pi/2-angle) / 9
+            qx = math.sin(ang) * oy
+            qy = oy - math.cos(ang) * oy
+            bpy.ops.curve.vertex_add(location=(qx , qy , 0))
+        conedepth += qy
+        bpy.ops.curve.vertex_add(location=(-cutter_R , conedepth , 0))
+        #bpy.ops.curve.vertex_add(location=(0 , conedepth , 0))
+        bpy.ops.object.editmode_toggle()
+        bpy.ops.object.convert(target='MESH')
+        bpy.ops.transform.rotate(value = -math.pi / 2, orient_axis = 'X')
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        ob = bpy.context.active_object
+        ob.name = "BallConeTool"
+        ob_scr = ob.modifiers.new(type='SCREW', name = 'scr')
+        ob_scr.angle = math.radians(-360)
+        ob_scr.steps = 32
+        ob_scr.merge_threshold = 0
+        ob_scr.use_merge_vertices = True
+        bpy.ops.object.modifier_apply(modifier='scr')
         bpy.data.objects['BallConeTool'].select_set(True)
+        #bpy.ops.object.duplicate()  # show bit   
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -217,7 +222,8 @@ def prepareBulletCollision(o):
     s.gravity = (0, 0, 0)
     # cleanup rigidbodies wrongly placed somewhere in the scene
     for ob in bpy.context.scene.objects:
-        if ob.rigid_body is not None and (bpy.data.objects.find('machine') > -1 and ob.name not in bpy.data.objects['machine'].objects):
+        if ob.rigid_body is not None and (bpy.data.objects.find('machine') > -1
+                                          and ob.name not in bpy.data.objects['machine'].objects):
             activate(ob)
             bpy.ops.rigidbody.object_remove()
 
@@ -248,9 +254,11 @@ def prepareBulletCollision(o):
         if o.exact_subdivide_edges:
             subdivideLongEdges(collisionob, o.cutter_diameter * 2)
 
-        bpy.ops.rigidbody.object_add(type='ACTIVE')  # using active instead of passive because of performance.TODO: check if this works also with 4axis...
+        bpy.ops.rigidbody.object_add(type='ACTIVE')
+        # using active instead of passive because of performance.TODO: check if this works also with 4axis...
         collisionob.rigid_body.collision_shape = 'MESH'
-        collisionob.rigid_body.kinematic = True  # this fixed a serious bug and gave big speedup, rbs could move since they are now active...
+        collisionob.rigid_body.kinematic = True
+        # this fixed a serious bug and gave big speedup, rbs could move since they are now active...
         collisionob.rigid_body.collision_margin = o.skin * BULLET_SCALE
         bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE),
                                  constraint_axis=(False, False, False), orient_type='GLOBAL', mirror=False,
@@ -261,8 +269,6 @@ def prepareBulletCollision(o):
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         bpy.context.view_layer.objects.active = collisionob
         active_collection.objects.unlink(collisionob)
-        #bpy.ops.collection.objects_remove(collection=active_collection_name)
-
 
     getCutterBullet(o)
 
@@ -307,9 +313,9 @@ def cleanupBulletCollision(o):
 
 def getSampleBullet(cutter, x, y, radius, startz, endz):
     """collision test for 3 axis milling. Is simplified compared to the full 3d test"""
-    pos = bpy.context.scene.rigidbody_world.convex_sweep_test(cutter, (
-    x * BULLET_SCALE, y * BULLET_SCALE, startz * BULLET_SCALE),
-                                                              (x * BULLET_SCALE, y * BULLET_SCALE, endz * BULLET_SCALE))
+    scene = bpy.context.scene
+    pos = scene.rigidbody_world.convex_sweep_test(cutter, (x * BULLET_SCALE, y * BULLET_SCALE, startz * BULLET_SCALE),
+                                                  (x * BULLET_SCALE, y * BULLET_SCALE, endz * BULLET_SCALE))
 
     # radius is subtracted because we are interested in cutter tip position, this gets collision object center
 
@@ -321,29 +327,17 @@ def getSampleBullet(cutter, x, y, radius, startz, endz):
 
 def getSampleBulletNAxis(cutter, startpoint, endpoint, rotation, cutter_compensation):
     """fully 3d collision test for NAxis milling"""
-    cutterVec = Vector((0, 0,
-                        1)) * cutter_compensation  # cutter compensation vector - cutter physics object has center in the middle, while cam needs the tip position.
+    cutterVec = Vector((0, 0, 1)) * cutter_compensation
+    # cutter compensation vector - cutter physics object has center in the middle, while cam needs the tip position.
     cutterVec.rotate(Euler(rotation))
-    # print(rotation)
-    # print(cutterVec)
-    # cutterVec=Vector((0,0,0))
-    # cutterVec = startpoint-endpoint
-    # cutterVec.normalize()
-    # cutterVec*=cutter_compensation
-    # cutterVec=Vector((0,0,0))
     start = (startpoint * BULLET_SCALE + cutterVec).to_tuple()
-    end = ((endpoint) * BULLET_SCALE + cutterVec).to_tuple()
-    # cutter.rotation_euler=rotation
+    end = (endpoint * BULLET_SCALE + cutterVec).to_tuple()
     pos = bpy.context.scene.rigidbody_world.convex_sweep_test(cutter, start, end)
 
     if pos[3] == 1:
         pos = Vector(pos[0])
         # rescale and compensate from center to tip.
-
         res = pos / BULLET_SCALE - cutterVec / BULLET_SCALE
-        # this is a debug loop that duplicates the cutter on sampling positions, to see where it was moving...
-        # if random.random()<0.01:
-        #	dupliob(cutter,res)
 
         return res
     else:

@@ -21,7 +21,6 @@
 
 import math
 import mathutils
-#from mathutils import *
 import curve_simplify
 
 import shapely
@@ -31,12 +30,8 @@ from shapely import geometry as sgeometry
 SHAPELY = True
 
 
-# except:
-#	SHAPELY=False
-
 def Circle(r, np):
     c = []
-    pi = math.pi
     v = mathutils.Vector((r, 0, 0))
     e = mathutils.Euler((0, 0, 2.0 * math.pi / np))
     for a in range(0, np):
@@ -49,7 +44,6 @@ def Circle(r, np):
 
 def shapelyRemoveDoubles(p, optimize_threshold):
     optimize_threshold *= 0.000001
-    # vecs=[]
 
     soptions = ['distance', 'distance', 0.0, 5, optimize_threshold, 5, optimize_threshold]
     for ci, c in enumerate(p.boundary):  # in range(0,len(p)):
@@ -57,9 +51,7 @@ def shapelyRemoveDoubles(p, optimize_threshold):
         veclist = []
         for v in c:
             veclist.append(mathutils.Vector((v[0], v[1])))
-        # progress(len(veclist))
         s = curve_simplify.simplify_RDP(veclist, soptions)
-        # progress(len(s))
         nc = []
         for i in range(0, len(s)):
             nc.append(c[s[i]])
@@ -68,7 +60,6 @@ def shapelyRemoveDoubles(p, optimize_threshold):
             pnew.addContour(nc, p.isHole(ci))
         else:
             pnew.addContour(p[ci], p.isHole(ci))
-    # progress(time.time()-t)
     return pnew
 
 
@@ -104,7 +95,7 @@ def shapelyToCoords(anydata):
     elif p.type == 'MultiPolygon':
         clen = 0
         seq = []
-        for sp in p:
+        for sp in p.geoms:
             clen += len(sp.exterior.coords)
             seq.append(sp.exterior.coords)
             for interior in sp.interiors:
@@ -112,14 +103,14 @@ def shapelyToCoords(anydata):
 
     elif p.type == 'MultiLineString':
         seq = []
-        for linestring in p:
+        for linestring in p.geoms:
             seq.append(linestring.coords)
     elif p.type == 'LineString':
         seq = []
         seq.append(p.coords)
 
     elif p.type == 'MultiPoint':
-        return;
+        return
     elif p.type == 'GeometryCollection':
         # print(dir(p))
         # print(p.geometryType, p.geom_type)
@@ -127,14 +118,10 @@ def shapelyToCoords(anydata):
         seq = []
         # print(p.boundary.coordsd)
         for sp in p:  # TODO
-            # seq.append(shapelyToCoords(sp))
             clen += len(sp.exterior.coords)
             seq.append(sp.exterior.coords)
             for interior in sp.interiors:
                 seq.extend(interior.coords)
-
-    # for g in p.geom:
-    #	print(g.type)
 
     return seq
 
@@ -171,7 +158,5 @@ def shapelyToCurve(name, p, z):
 
     for c in objectdata.data.splines:
         c.use_cyclic_u = True
-    # objectdata.data.show_handles = False
-    # objectdata.data.show_normal_face = False
 
     return objectdata  # bpy.context.active_object
