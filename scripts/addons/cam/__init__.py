@@ -812,7 +812,7 @@ class camOperation(bpy.types.PropertyGroup):
                                           description="What angle is allready considered to plunge",
                                           default=math.pi / 6, min=0, max=math.pi * 0.5, precision=0, subtype="ANGLE",
                                           unit="ROTATION", update=updateRest)
-    spindle_rpm: FloatProperty(name="Spindle rpm", description="Spindle speed ", min=1000, max=60000, default=12000,
+    spindle_rpm: FloatProperty(name="Spindle rpm", description="Spindle speed ", min=0, max=60000, default=12000,
                                update=updateChipload)
     # movement parallel_step_back
     movement_type: EnumProperty(name='Movement type', items=(
