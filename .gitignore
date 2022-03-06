@@ -20,3 +20,7 @@ syncWithUpstream
 forceSyncWithUpstream
 
 \.idea/
+
+.project
+
+.pydevproject
