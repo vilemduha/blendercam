@@ -846,15 +846,16 @@ def curveToShapely(cob, use_modifiers=False):
 def silhoueteOffset(context, offset, style=1, mitrelimit=1.0):
     bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
+    
     if ob.type == 'CURVE' or ob.type == 'FONT':
-        silhs = curveToShapely(ob)
+        mp = curveToShapely(ob)
     else:
         silhs = getObjectSilhouete('OBJECTS', [ob])
-
-    polys = []
-    mp = shapely.ops.unary_union(silhs)
+        mp = shapely.ops.unary_union(silhs)
+    
     print("offset attributes:")
     print(offset, style)
+    
     mp = mp.buffer(offset, cap_style=1, join_style=style, resolution=16, mitre_limit=mitrelimit)
     shapelyToCurve(ob.name + '_offset_' + str(round(offset, 5)), mp, ob.location.z)
 
