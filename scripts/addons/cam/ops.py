@@ -575,8 +575,8 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         o.material_size[2] = -maxdepth
         o.minz_from_ob = False
         o.minz_from_material = True
-        
-       
+
+
 class CamOperationAdd(bpy.types.Operator):
     """Add new CAM operation"""
     bl_idname = "scene.cam_operation_add"
@@ -622,17 +622,18 @@ class CamOperationCopy(bpy.types.Operator):
 
     def execute(self, context):
         # main(context)
-        s = bpy.context.scene
+        scene = bpy.context.scene
 
         fixUnits()
 
-        s = bpy.context.scene
-        s.cam_operations.add()
-        copyop = s.cam_operations[s.cam_active_operation]
-        s.cam_active_operation += 1
-        l = len(s.cam_operations) - 1
-        s.cam_operations.move(l, s.cam_active_operation)
-        o = s.cam_operations[s.cam_active_operation]
+        scene = bpy.context.scene
+        if len(scene.cam_operations) == 0: return {'FINISHED'}
+        copyop = scene.cam_operations[scene.cam_active_operation]
+        scene.cam_operations.add()
+        scene.cam_active_operation += 1
+        l = len(scene.cam_operations) - 1
+        scene.cam_operations.move(l, scene.cam_active_operation)
+        o = scene.cam_operations[scene.cam_active_operation]
 
         for k in copyop.keys():
             o[k] = copyop[k]
@@ -671,9 +672,10 @@ class CamOperationRemove(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
         try:
-            ao = scene.cam_operations[scene.cam_active_operation]
-            ob = bpy.data.objects[ao.name]
-            scene.objects.active = ob
+            if len(scene.cam_operations) == 0: return {'FINISHED'}
+            active_op = scene.cam_operations[scene.cam_active_operation]
+            active_op_object = bpy.data.objects[active_op.name]
+            scene.objects.active = active_op_object
             bpy.ops.object.delete(True)
         except:
             pass
