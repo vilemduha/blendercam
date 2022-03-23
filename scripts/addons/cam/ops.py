@@ -627,7 +627,7 @@ class CamOperationCopy(bpy.types.Operator):
         fixUnits()
 
         scene = bpy.context.scene
-        if len(scene.cam_operations) == 0: return {'FINISHED'}
+        if len(scene.cam_operations) == 0: return {'CANCELLED'}
         copyop = scene.cam_operations[scene.cam_active_operation]
         scene.cam_operations.add()
         scene.cam_active_operation += 1
@@ -672,7 +672,7 @@ class CamOperationRemove(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
         try:
-            if len(scene.cam_operations) == 0: return {'FINISHED'}
+            if len(scene.cam_operations) == 0: return {'CANCELLED'}
             active_op = scene.cam_operations[scene.cam_active_operation]
             active_op_object = bpy.data.objects[active_op.name]
             scene.objects.active = active_op_object
