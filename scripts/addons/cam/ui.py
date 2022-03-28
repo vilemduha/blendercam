@@ -33,22 +33,8 @@ from bpy.types import (Panel, Menu, Operator, PropertyGroup, )
 from cam import gcodeimportparser, simple
 from cam.simple import *
 
-
-# EXPERIMENTAL=True#False
-
-
-# Panel definitions
-class CAMButtonsPanel:
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_context = "render"
-
-    # COMPAT_ENGINES must be defined in each subclass, external engines can add themselves here
-
-    @classmethod
-    def poll(cls, context):
-        rd = context.scene.render
-        return rd.engine in cls.COMPAT_ENGINES
+from cam.ui_panels.info_panel import CAM_INFO_Panel
+from cam.ui_panels.buttons_panel import CAMButtonsPanel
 
 
 # Displays percentage of the cutter which is engaged with the material
@@ -410,45 +396,6 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 layout.prop(ao, 'hide_all_others')
                 layout.prop(ao, 'parent_path_to_object')
 
-
-class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
-    """CAM info panel"""
-    bl_label = "CAM info & warnings"
-    bl_idname = "WORLD_PT_CAM_INFO"
-
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
-
-    def draw(self, context):
-        layout = self.layout
-        scene = bpy.context.scene
-        oclpresent = "Opencamlib "
-        if "ocl" not in sys.modules:
-            oclpresent += "NOT "
-        oclpresent += "installed"
-        layout.label(text=oclpresent)
-
-        if len(scene.cam_operations) == 0:
-            layout.label(text='Add operation first')
-        if len(scene.cam_operations) > 0:
-            ao = scene.cam_operations[scene.cam_active_operation]
-            if ao.warnings != '':
-                lines = ao.warnings.split('\n')
-                for l in lines:
-                    layout.label(text=l, icon='COLOR_RED')
-            if ao.valid:
-                if ao.duration > 0:
-                    layout.label(text='operation time: ' + str(int(ao.duration / 60)) + ' hour, '
-                                      + str(int(ao.duration) % 60) + ' min, ' + str(int(ao.duration * 60) % 60) +
-                                      ' sec.')
-                    layout.label(text='operation time: ' + str(int(ao.duration*60)) + ' sec.')
-                    layout.prop(scene.cam_machine, 'hourly_rate')
-
-                    cost_per_second = scene.cam_machine.hourly_rate / 3600
-
-                    operation_cost = 'operation cost: $' + str(round((ao.duration * 60 * cost_per_second), 2))
-                    layout.label(text='cost per second:' + str(round(cost_per_second, 3)))
-                    layout.label(text=operation_cost)
-                layout.label(text='chipload: ' + strInUnits(ao.chipload, 4) + ' / tooth')
 
 
 class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
