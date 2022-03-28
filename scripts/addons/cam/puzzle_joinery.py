@@ -722,8 +722,8 @@ def tile(diameter, tolerance, tile_x_amount, tile_y_amount, stem=1):
     diameter = diameter * DT
     # diameter * DT * (2 + stem - 1)
     (4 + 2 * (stem - 1)) * diameter
-    width = (tile_x_amount) * (4 + 2 * (stem - 1)) * diameter + diameter
-    height = (tile_y_amount) * (4 + 2 * (stem - 1)) * diameter + diameter
+    width = (tile_x_amount) * (4 + 2 * (stem - 1)) * diameter + 1*diameter
+    height = (tile_y_amount) * (4 + 2 * (stem - 1)) * diameter + 5 * diameter / 2
 
     print('size:', width, height)
     fingers(diameter, tolerance, amount=tile_x_amount+2, stem=stem)

@@ -1003,7 +1003,7 @@ def connectChunksLow(chunks, o):
 
 def getClosest(o, pos, chunks):
     # ch=-1
-    mind = 10000
+    mind = 2000
     d = 100000000000
     ch = None
     for chtest in chunks:
