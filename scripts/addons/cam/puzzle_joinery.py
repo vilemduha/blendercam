@@ -720,9 +720,8 @@ def open_curve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, 
 def tile(diameter, tolerance, tile_x_amount, tile_y_amount, stem=1):
     global DT
     diameter = diameter * DT
-    # (4 + 2 * (stem - 1)) * diameter
-    width = (tile_x_amount) * (4 + 2 * (stem-1)) * diameter
-    height = (tile_y_amount) * (4 + 2 * (stem - 1)) * diameter
+    width = ((tile_x_amount) * (4 + 2 * (stem-1)) + 1) * diameter
+    height = ((tile_y_amount) * (4 + 2 * (stem - 1)) + 1) * diameter
 
     print('size:', width, height)
     fingers(diameter, tolerance, amount=tile_x_amount, stem=stem)
