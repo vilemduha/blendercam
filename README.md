@@ -34,7 +34,7 @@ Blender CAM is an open source solution for artistic CAM - Computer aided machini
 
 Blender CAM is an add-on for the free open-source [Blender 3d package](https://www.blender.org/).
 
-It has been used for many milling projects, and is actively developed. If you are a developer who would like to help, don't hesistate to fork the project and start generating pull requests.
+It has been used for many milling projects, and is actively developed. If you are a developer who would like to help, don't hesitate to fork the project and start generating pull requests.
 
 ## 👨‍🎓 How to use (Wiki)
 
