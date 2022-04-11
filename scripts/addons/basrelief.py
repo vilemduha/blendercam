@@ -13,7 +13,7 @@ bl_info = {
 	"blender": (2, 80, 0),
 	"location": "Properties > render",
 	"description": "Converts zbuffer image to bas relief.",
-	"warning": "there is no warranty. needs Numpy library installed in blende python directory.",
+	"warning": "there is no warranty. needs Numpy library installed in blender python directory.",
 	"wiki_url": "blendercam.blogspot.com",
 	"tracker_url": "",
 	"category": "Scene"}
@@ -958,7 +958,7 @@ class BasReliefsettings(bpy.types.PropertyGroup):
 	linbcg_iterations: bpy.props.IntProperty(name="Linbcg iterations",description="set lower for flatter relief, and when using planar constraint", default=5, min=1, max=64)
 	use_planar: bpy.props.BoolProperty(name="Use planar constraint",description="", default=False)
 	gradient_scaling_mask_use: bpy.props.BoolProperty(name="Scale gradients with mask",description="", default=False)
-	decimate_ratio: FloatProperty(name="Decimate Ratio", description="Simplyfy the mesh using the Decimate modifier.  The lower the value the more simplyfied", min=0.01, max=1.0, default=0.1, precision=PRECISION)
+	decimate_ratio: FloatProperty(name="Decimate Ratio", description="Simplify the mesh using the Decimate modifier.  The lower the value the more simplyfied", min=0.01, max=1.0, default=0.1, precision=PRECISION)
 
 
 	gradient_scaling_mask_name: bpy.props.StringProperty(name='Scaling mask name', description='mask name')
