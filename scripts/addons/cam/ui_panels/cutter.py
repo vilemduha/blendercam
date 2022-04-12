@@ -10,6 +10,23 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
+
+    # Displays percentage of the cutter which is engaged with the material
+    # Displays a warning for engagements greater than 50%
+    def EngagementDisplay(self, operat, layout):
+        ao = operat
+
+        if ao.cutter_type == 'BALLCONE':
+            if ao.dist_between_paths > ao.ball_radius:
+                layout.label(text="CAUTION: CUTTER ENGAGEMENT")
+                layout.label(text="GREATER THAN 50%")
+            layout.label(text="Cutter engagement: " + str(round(100 * ao.dist_between_paths / ao.ball_radius, 1)) + "%")
+        else:
+            if ao.dist_between_paths > ao.cutter_diameter / 2:
+                layout.label(text="CAUTION: CUTTER ENGAGEMENT")
+                layout.label(text="GREATER THAN 50%")
+            layout.label(text="Cutter Engagement: " + str(round(100 * ao.dist_between_paths / ao.cutter_diameter, 1)) + "%")
+
     def draw_header(self, context):
         self.layout.menu("CAM_CUTTER_MT_presets", text="CAM Cutter")
 
@@ -31,17 +48,17 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'cutter_tip_angle')
                 if ao.cutter_type == 'BALLCONE':
                     layout.prop(ao, 'ball_radius')
-                    EngagementDisplay(ao, layout)
+                    self.EngagementDisplay(ao, layout)
                     layout.prop(ao, 'cutter_tip_angle')
                     layout.label(text='Cutter diameter = shank diameter')
                 if ao.cutter_type == 'CYLCONE':
                     layout.prop(ao, 'cylcone_diameter')
-                    EngagementDisplay(ao, layout)
+                    self.EngagementDisplay(ao, layout)
                     layout.prop(ao, 'cutter_tip_angle')
                     layout.label(text='Cutter diameter = shank diameter')
                 if ao.cutter_type == 'BULLNOSE':
                     layout.prop(ao, 'bull_corner_radius')
-                    EngagementDisplay(ao, layout)
+                    self.EngagementDisplay(ao, layout)
                     layout.label(text='Cutter diameter = shank diameter')
 
                 if ao.cutter_type == 'LASER':
@@ -69,7 +86,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                 layout.prop(ao, 'cutter_diameter')
                 if ao.strategy == "POCKET" or ao.strategy == "PARALLEL" or ao.strategy == "CROSS" \
                         or ao.strategy == "WATERLINE":
-                    EngagementDisplay(ao, layout)
+                    self.EngagementDisplay(ao, layout)
                 if ao.cutter_type != "LASER":
                     layout.prop(ao, 'cutter_flutes')
                 layout.prop(ao, 'cutter_description')

@@ -1,3 +1,4 @@
+import bpy
 
 # Panel definitions
 class CAMButtonsPanel:
@@ -11,3 +12,26 @@ class CAMButtonsPanel:
     def poll(cls, context):
         rd = context.scene.render
         return rd.engine in cls.COMPAT_ENGINES
+
+    def __init__(self):
+        self.scene = bpy.context.scene
+
+    def active_operation_index(self):
+        return(self.scene.cam_active_operation)
+
+    def active_operation(self):
+        self.scene = bpy.context.scene
+        active_op = None
+        try:
+            active_op = self.scene.cam_operations[self.active_operation_index()]
+            #active_op = self.scene.cam_operations[12]
+        except IndexError:
+            print(f"Invalid operation index {self.active_operation_index()}")
+
+        return(active_op)
+
+    def operations_count(self):
+        return(len(self.scene.cam_operations))
+
+    def has_operations(self):
+        return (self.operations_count() > 0)
