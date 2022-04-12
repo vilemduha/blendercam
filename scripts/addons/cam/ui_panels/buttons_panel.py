@@ -20,11 +20,9 @@ class CAMButtonsPanel:
         return(self.scene.cam_active_operation)
 
     def active_operation(self):
-        self.scene = bpy.context.scene
         active_op = None
         try:
             active_op = self.scene.cam_operations[self.active_operation_index()]
-            #active_op = self.scene.cam_operations[12]
         except IndexError:
             print(f"Invalid operation index {self.active_operation_index()}")
 
