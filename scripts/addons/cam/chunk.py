@@ -540,7 +540,7 @@ class camPathChunk:
         if perimeterDirection == 1:
             print("path direction is Clockwise")
         else:
-            print("path direcion is counterclockwise")
+            print("path direction is counterclockwise")
         print("child", self.children)
         print("parent", self.parents)
         iradius = o.lead_in
