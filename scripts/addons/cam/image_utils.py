@@ -1088,8 +1088,6 @@ def renderSampleImage(o):
             o.offset_image.fill(-10)
 
             # various settings for  faster render
-            r.tile_x = 1024  # ceil(resx/1024)
-            r.tile_y = 1024  # ceil(resy/1024)
             r.resolution_percentage = 100
 
             r.engine = 'BLENDER_EEVEE'
