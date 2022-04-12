@@ -6,8 +6,6 @@ import ocl
 from cam.simple import strInUnits
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
 
-
-
 # Info panel
 # This panel gives general information about the current operation
 
