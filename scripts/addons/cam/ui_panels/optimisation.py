@@ -28,12 +28,13 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                             layout.prop(ao, 'use_exact')
                             layout.label(text="Exact mode must be set for opencamlib to work ")
 
-                        if "ocl" in sys.modules:
-                            layout.label(text="Opencamlib is available ")
-                            layout.prop(ao, 'use_opencamlib')
-                        else:
+                        opencamlib_version = self.opencamlib_version()
+                        if opencamlib_version is None:
                             layout.label(text="Opencamlib is NOT available ")
                             layout.prop(ao, 'exact_subdivide_edges')
+                        else:
+                            layout.label(text=f"Opencamlib v{opencamlib_version} installed")
+                            layout.prop(ao, 'use_opencamlib')
 
                     if exclude_exact or not ao.use_exact:
                         layout.prop(ao, 'pixsize')

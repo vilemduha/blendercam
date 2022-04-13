@@ -37,6 +37,5 @@ class CAMButtonsPanel:
 
     def opencamlib_version(self):
         if "ocl" in sys.modules:
-            return(f"Opencamlib v{ocl.version()} installed")
-        else:
-            return("Opencamlib is not installed")
+            return(ocl.version())
+        return

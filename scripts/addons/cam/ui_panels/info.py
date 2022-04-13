@@ -24,7 +24,11 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.label(text='No CAM operation created')
 
     def draw_opencamlib_version(self):
-        self.layout.label(text = self.opencamlib_version())
+        opencamlib_version = self.opencamlib_version()
+        if opencamlib_version is None:
+            self.layout.label(text = "Opencamlib is not installed")
+        else:
+            self.layout.label(text = f"Opencamlib v{opencamlib_version} installed")
 
     def draw_active_op_warnings(self):
         active_op = self.active_operation()
