@@ -214,15 +214,16 @@ class CamCurvePlate(bpy.types.Operator):
 
         return {'FINISHED'}
 
-class CamFlatCone(bpy.types.Operator):
+class CamCurveFlatCone(bpy.types.Operator):
     """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
-    bl_idname = "object.flat_cone"
+    bl_idname = "object.curve_flat_cone"
     bl_label = "Cone flat calculator"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     small_d: bpy.props.FloatProperty(name="small diameter", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
     large_d: bpy.props.FloatProperty(name="large diameter", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
     height: bpy.props.FloatProperty(name="Height of plate", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
+    resolution: bpy.props.IntProperty(name="Resolution", default=12, min=5, max=200)
 
     def execute(self, context):
         y = self.small_d / 2
@@ -236,12 +237,13 @@ class CamFlatCone(bpy.types.Operator):
 
         # create base
         bpy.ops.curve.simple(Simple_Type='Segment', Simple_a=ab, Simple_b=a, Simple_endangle=math.degrees(angle),
-                             use_cyclic_u=True)
+                             use_cyclic_u=True, edit_mode=False)
 
         simple.active_name("_segment")
-        bpy.ops.curve.simple(Simple_Type='Segment', Simple_a=ab-0.005, Simple_b=a+0.005,
-                             Simple_endangle=math.degrees(-5),
-                             use_cyclic_u=True)
+        bpy.ops.curve.simple(Simple_Type='Segment', Simple_a=ab-0.01, Simple_b=a+0.01,
+                             Simple_endangle=0, Simple_startangle=-1,
+                             use_cyclic_u=True, edit_mode=False)
+        simple.active_name("_segment")
 
         bpy.context.object.data.resolution_u = self.resolution
 
