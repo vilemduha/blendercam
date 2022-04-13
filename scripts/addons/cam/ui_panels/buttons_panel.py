@@ -1,5 +1,6 @@
 import bpy
-
+import sys
+import ocl
 # Panel definitions
 class CAMButtonsPanel:
     bl_space_type = 'PROPERTIES'
@@ -33,3 +34,9 @@ class CAMButtonsPanel:
 
     def has_operations(self):
         return (self.operations_count() > 0)
+
+    def opencamlib_version(self):
+        if "ocl" in sys.modules:
+            return(f"Opencamlib v{ocl.version()} installed")
+        else:
+            return("Opencamlib is not installed")
