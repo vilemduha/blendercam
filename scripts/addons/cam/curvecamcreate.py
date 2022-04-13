@@ -223,6 +223,7 @@ class CamCurveFlatCone(bpy.types.Operator):
     small_d: bpy.props.FloatProperty(name="small diameter", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
     large_d: bpy.props.FloatProperty(name="large diameter", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
     height: bpy.props.FloatProperty(name="Height of plate", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
+    tab: bpy.props.FloatProperty(name="tab witdh", default=0.01, min=0, max=0.100, precision=4, unit="LENGTH")
     resolution: bpy.props.IntProperty(name="Resolution", default=12, min=5, max=200)
 
     def execute(self, context):
@@ -240,12 +241,15 @@ class CamCurveFlatCone(bpy.types.Operator):
                              use_cyclic_u=True, edit_mode=False)
 
         simple.active_name("_segment")
-        bpy.ops.curve.simple(Simple_Type='Segment', Simple_a=ab-0.01, Simple_b=a+0.01,
-                             Simple_endangle=0, Simple_startangle=-1,
-                             use_cyclic_u=True, edit_mode=False)
-        simple.active_name("_segment")
 
+        bpy.ops.curve.simple(align='WORLD', location=(a+b/2, -self.tab/2, 0), rotation=(0, 0, 0),
+                             Simple_Type='Rectangle',
+                             Simple_width=b-0.0050, Simple_length=self.tab, use_cyclic_u=True, edit_mode=False, shape='3D')
+
+        simple.active_name("_segment")
         bpy.context.object.data.resolution_u = self.resolution
+        simple.union("_segment")
+        simple.active_name('flat_cone')
 
 
         return {'FINISHED'}
