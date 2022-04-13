@@ -231,7 +231,7 @@ class VIEW3D_PT_tools_create(bpy.types.Panel):
         layout.operator("object.customcurve")
         layout.operator("object.curve_hatch")
         layout.operator("object.curve_gear")
-
+        layout.operator("object.curve_flat_cone")
 
 # Gcode import panel---------------------------------------------------------------
 # ------------------------------------------------------------------------
