@@ -160,13 +160,13 @@ class CamCurvePlate(bpy.types.Operator):
                                                       align='WORLD', location=(0, self.hole_tolerance / 2, 0),
                                                       scale=(1, 1, 1))
             simple.active_name("_hole_Top")
-            bpy.context.object.data.resolution_u = self.resolution / 4
+            bpy.context.object.data.resolution_u = int(self.resolution / 4)
             if self.hole_tolerance > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
                                                           align='WORLD', location=(0, -self.hole_tolerance / 2, 0),
                                                           scale=(1, 1, 1))
                 simple.active_name("_hole_Bottom")
-                bpy.context.object.data.resolution_u = self.resolution / 4
+                bpy.context.object.data.resolution_u = int(self.resolution / 4)
 
             simple.select_multiple("_hole")  # select everything starting with _hole and perform a convex hull on them
             utils.polygonConvexHull(context)
@@ -213,6 +213,41 @@ class CamCurvePlate(bpy.types.Operator):
         bpy.ops.object.curve_remove_doubles()
 
         return {'FINISHED'}
+
+class CamFlatCone(bpy.types.Operator):
+    """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
+    bl_idname = "object.flat_cone"
+    bl_label = "Cone flat calculator"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+    small_d: bpy.props.FloatProperty(name="small diameter", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
+    large_d: bpy.props.FloatProperty(name="large diameter", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height of plate", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
+
+    def execute(self, context):
+        y = self.small_d / 2
+        z = self.large_d / 2
+        x = self.height
+        h = x * y / (z - y)
+        a = math.hypot(h, y)
+        ab = math.hypot(x+h, z)
+        b = ab - a
+        angle = math.pi * 2 * y / a
+
+        # create base
+        bpy.ops.curve.simple(Simple_Type='Segment', Simple_a=ab, Simple_b=a, Simple_endangle=math.degrees(angle),
+                             use_cyclic_u=True)
+
+        simple.active_name("_segment")
+        bpy.ops.curve.simple(Simple_Type='Segment', Simple_a=ab-0.005, Simple_b=a+0.005,
+                             Simple_endangle=math.degrees(-5),
+                             use_cyclic_u=True)
+
+        bpy.context.object.data.resolution_u = self.resolution
+
+
+        return {'FINISHED'}
+
 
 
 class CamCurveMortise(bpy.types.Operator):
