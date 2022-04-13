@@ -1,12 +1,10 @@
 
-import bpy
 import sys
 import ocl
+import bpy
 
 from cam.simple import strInUnits
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
-
-
 
 # Info panel
 # This panel gives general information about the current operation
@@ -19,11 +17,9 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     def draw(self, context):
-        self.scene = bpy.context.scene
-
         self.draw_opencamlib_version()
 
-        if len(self.scene.cam_operations) > 0:
+        if self.has_operations():
             self.draw_active_op_warnings()
             self.draw_active_op_data()
             self.draw_active_op_money_cost()
@@ -32,18 +28,21 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     def draw_opencamlib_version(self):
         if "ocl" in sys.modules:
-            self.layout.label(text = "Opencamlib v%s installed" % ocl.version())
+            self.layout.label(text = f"Opencamlib v{ocl.version()} installed")
         else:
             self.layout.label(text = "Opencamlib is not installed")
 
     def draw_active_op_warnings(self):
-        active_op = self.scene.cam_operations[self.scene.cam_active_operation]
-        if active_op.warnings != '':
-            for line in active_op.warnings.rstrip("\n").split("\n"):
+        active_op = self.active_operation()
+        if active_op is None: return
+
+        for line in active_op.warnings.rstrip("\n").split("\n"):
+            if len(line) > 0 :
                 self.layout.label(text=line, icon='ERROR')
 
     def draw_active_op_data(self):
-        active_op = self.scene.cam_operations[self.scene.cam_active_operation]
+        active_op = self.active_operation()
+        if active_op is None: return
         if not active_op.valid: return
         if not int(active_op.duration*60) > 0: return
 
@@ -58,7 +57,8 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
         self.layout.label(text="Chipload: %s/tooth" % strInUnits(active_op.chipload, 4))
 
     def draw_active_op_money_cost(self):
-        active_op = self.scene.cam_operations[self.scene.cam_active_operation]
+        active_op = self.active_operation()
+        if active_op is None: return
         if not active_op.valid: return
         if not int(active_op.duration*60) > 0: return
 
