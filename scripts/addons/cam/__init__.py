@@ -972,6 +972,30 @@ class camOperation(bpy.types.PropertyGroup):
                                  description="g-code commands at start of operation. Use ; for line breaks",
                                  default="G53 G0")
 
+    enable_dust: BoolProperty(name="Dust collector",
+                                description="output user defined g-code command header at start of operation",
+                                default=False)
+
+    gcode_start_dust_cmd: StringProperty(name="Start dust collector",
+                                 description="commands to start dust collection. Use ; for line breaks",
+                                 default="M100")
+
+    gcode_stop_dust_cmd: StringProperty(name="Stop dust collector",
+                                 description="command to stop dust collection. Use ; for line breaks",
+                                 default="M101")
+
+    enable_hold: BoolProperty(name="Hold down",
+                              description="output hold down command at start of operation",
+                              default=False)
+
+    gcode_start_hold_cmd: StringProperty(name="g-code header",
+                                         description="g-code commands at start of operation. Use ; for line breaks",
+                                         default="M102")
+
+    gcode_stop_hold_cmd: StringProperty(name="g-code header",
+                                        description="g-code commands at end operation. Use ; for line breaks",
+                                        default="M103")
+
     output_trailer: BoolProperty(name="output g-code trailer",
                                  description="output user defined g-code command trailer at end of operation",
                                  default=False)
