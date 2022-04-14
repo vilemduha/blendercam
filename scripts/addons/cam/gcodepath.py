@@ -77,7 +77,8 @@ def exportGcodePath(filename, vertslist, operations):
     t = time.time()
     s = bpy.context.scene
     m = s.cam_machine
-
+    enable_dust = False
+    enable_hold = False
     # find out how many files will be done:
 
     split = False
@@ -232,10 +233,26 @@ def exportGcodePath(filename, vertslist, operations):
 
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
         if o.cutter_type not in ['LASER', 'PLASMA']:
+            if o.enable_hold:
+                c.write('(Hold Down)\n')
+                lines = o.gcode_start_hold_cmd.split(';')
+                for aline in lines:
+                    c.write(aline + '\n')
+                enable_hold = True
+                stop_hold = o.gcode_stop_hold_cmd
+
             c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
             c.write_spindle()
             c.flush_nc()
             c.write('\n')
+
+            if o.enable_dust:
+                c.write('(Dust collector)\n')
+                lines = o.gcode_start_dust_cmd.split(';')
+                for aline in lines:
+                    c.write(aline + '\n')
+                enable_dust = True
+                stop_dust = o.gcode_stop_dust_cmd
 
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)
@@ -472,7 +489,10 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
     o.duration = duration * unitcorr
-
+    if enable_dust:
+        c.write(stop_dust + '\n')
+    if enable_hold:
+        c.write(stop_hold + '\n')
     c.program_end()
     c.file_close()
     print(time.time() - t)
