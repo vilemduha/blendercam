@@ -996,6 +996,18 @@ class camOperation(bpy.types.PropertyGroup):
                                         description="g-code commands at end operation. Use ; for line breaks",
                                         default="M103")
 
+    enable_mist: BoolProperty(name="Mist",
+                              description="Mist command at start of operation",
+                              default=False)
+
+    gcode_start_mist_cmd: StringProperty(name="g-code header",
+                                         description="g-code commands at start of operation. Use ; for line breaks",
+                                         default="M104")
+
+    gcode_stop_mist_cmd: StringProperty(name="g-code header",
+                                        description="g-code commands at end operation. Use ; for line breaks",
+                                        default="M105")
+
     output_trailer: BoolProperty(name="output g-code trailer",
                                  description="output user defined g-code command trailer at end of operation",
                                  default=False)

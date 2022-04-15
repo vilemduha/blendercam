@@ -218,6 +218,9 @@ class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
                 if ao.enable_hold:
                     layout.prop(ao, 'gcode_start_hold_cmd')
                     layout.prop(ao, 'gcode_stop_hold_cmd')
+                if ao.enable_mist:
+                    layout.prop(ao, 'gcode_start_mist_cmd')
+                    layout.prop(ao, 'gcode_stop_mist_cmd')
 
             else:
                 layout.label(text='Enable Show experimental features')

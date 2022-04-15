@@ -79,6 +79,7 @@ def exportGcodePath(filename, vertslist, operations):
     m = s.cam_machine
     enable_dust = False
     enable_hold = False
+    enable_mist = False
     # find out how many files will be done:
 
     split = False
@@ -240,6 +241,13 @@ def exportGcodePath(filename, vertslist, operations):
                     c.write(aline + '\n')
                 enable_hold = True
                 stop_hold = o.gcode_stop_hold_cmd
+            if o.enable_mist:
+                c.write('(Hold Down)\n')
+                lines = o.gcode_start_mist_cmd.split(';')
+                for aline in lines:
+                    c.write(aline + '\n')
+                enable_mist = True
+                stop_mist = o.gcode_stop_mist_cmd
 
             c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
             c.write_spindle()
@@ -493,6 +501,9 @@ def exportGcodePath(filename, vertslist, operations):
         c.write(stop_dust + '\n')
     if enable_hold:
         c.write(stop_hold + '\n')
+    if enable_mist:
+        c.write(stop_mist + '\n')
+
     c.program_end()
     c.file_close()
     print(time.time() - t)
