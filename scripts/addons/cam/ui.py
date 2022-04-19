@@ -135,11 +135,23 @@ class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
             ao = scene.cam_operations[scene.cam_active_operation]
             if ao.valid:
                 layout.prop(ao, 'output_header')
+
                 if ao.output_header:
                     layout.prop(ao, 'gcode_header')
                 layout.prop(ao, 'output_trailer')
                 if ao.output_trailer:
                     layout.prop(ao, 'gcode_trailer')
+                layout.prop(ao, 'enable_dust')
+                if ao.enable_dust:
+                    layout.prop(ao, 'gcode_start_dust_cmd')
+                    layout.prop(ao, 'gcode_stop_dust_cmd')
+                layout.prop(ao, 'enable_hold')
+                if ao.enable_hold:
+                    layout.prop(ao, 'gcode_start_hold_cmd')
+                    layout.prop(ao, 'gcode_stop_hold_cmd')
+                if ao.enable_mist:
+                    layout.prop(ao, 'gcode_start_mist_cmd')
+                    layout.prop(ao, 'gcode_stop_mist_cmd')
 
             else:
                 layout.label(text='Enable Show experimental features')

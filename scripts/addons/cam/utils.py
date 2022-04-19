@@ -1529,7 +1529,7 @@ def prepareIndexed(o):
     s.objects.active = ob
     bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 
-    s.cursor_location = (0, 0, 0)
+    s.cursor.location = (0, 0, 0)
     oriname = o.name + ' orientation'
     ori = s.objects[oriname]
     o.orientation_matrix = ori.matrix_world.copy()
