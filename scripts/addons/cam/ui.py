@@ -44,6 +44,7 @@ from cam.ui_panels.op_properties  import CAM_OPERATION_PROPERTIES_Panel
 from cam.ui_panels.movement       import CAM_MOVEMENT_Panel
 from cam.ui_panels.feedrate       import CAM_FEEDRATE_Panel
 from cam.ui_panels.optimisation   import CAM_OPTIMISATION_Panel
+from cam.ui_panels.area           import CAM_AREA_Panel
 
 
 class CAM_UL_orientations(UIList):
@@ -55,68 +56,6 @@ class CAM_UL_orientations(UIList):
             layout.alignment = 'CENTER'
             layout.label(text="", icon_value=icon)
 
-
-
-class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
-    """CAM operation area panel"""
-    bl_label = "CAM operation area "
-    bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
-
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
-
-    def draw(self, context):
-        layout = self.layout
-        scene = bpy.context.scene
-        if len(scene.cam_operations) == 0:
-            layout.label(text='Add operation first')
-        if len(scene.cam_operations) > 0:
-            ao = scene.cam_operations[scene.cam_active_operation]
-            if ao.valid:
-                layout.prop(ao, 'use_layers')
-                if ao.use_layers:
-                    layout.prop(ao, 'stepdown')
-
-                layout.prop(ao, 'ambient_behaviour')
-                if ao.ambient_behaviour == 'AROUND':
-                    layout.prop(ao, 'ambient_radius')
-
-                layout.prop(ao, 'maxz')  # experimental
-                if ao.maxz > ao.free_movement_height:
-                    layout.prop(ao, 'free_movement_height')
-                    layout.label(text='Depth start > Free movement')
-                    layout.label(text='POSSIBLE COLLISION')
-                if ao.geometry_source in ['OBJECT', 'COLLECTION']:
-                    if ao.strategy == 'CURVE':
-                        layout.label(text="cannot use depth from object using CURVES")
-
-                    if not ao.minz_from_ob:
-                        if not ao.minz_from_material:
-                            layout.prop(ao, 'minz')
-                        layout.prop(ao, 'minz_from_material')
-                    if not ao.minz_from_material:
-                        layout.prop(ao, 'minz_from_ob')
-                else:
-                    layout.prop(ao, 'source_image_scale_z')
-                    layout.prop(ao, 'source_image_size_x')
-                    if ao.source_image_name != '':
-                        i = bpy.data.images[ao.source_image_name]
-                        if i is not None:
-                            sy = int((ao.source_image_size_x / i.size[0]) * i.size[1] * 1000000) / 1000
-
-                            layout.label(text='image size on y axis: ' + strInUnits(sy, 8))
-                            layout.separator()
-                    layout.prop(ao, 'source_image_offset')
-                    col = layout.column(align=True)
-                    col.prop(ao, 'source_image_crop', text='Crop source image')
-                    if ao.source_image_crop:
-                        col.prop(ao, 'source_image_crop_start_x', text='start x')
-                        col.prop(ao, 'source_image_crop_start_y', text='start y')
-                        col.prop(ao, 'source_image_crop_end_x', text='end x')
-                        col.prop(ao, 'source_image_crop_end_y', text='end y')
-                layout.prop(ao, 'use_limit_curve')
-                if ao.use_limit_curve:
-                    layout.prop_search(ao, "limit_curve", bpy.data, "objects")
-                layout.prop(ao, "ambient_cutter_restrict")
 
 
 class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
