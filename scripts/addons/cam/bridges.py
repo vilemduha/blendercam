@@ -227,3 +227,10 @@ def useBridges(ch, o):
                 vi += 1
                 interrupted = True
         ch.points = newpoints
+
+
+def auto_cut_bridge(o):
+    bridgecollectionname = o.bridges_collection_name
+    bridgecollection = bpy.data.collections[bridgecollectionname]
+    if len(bridgecollection.objects) > 0:
+        print("bridges")
