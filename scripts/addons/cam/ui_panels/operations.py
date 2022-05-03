@@ -22,6 +22,8 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw(self, context):
         self.context = context
         self.draw_operations_list()
+
+        # FIXME: is this ever used ?
         use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
 
         if (not self.has_operations()): return

@@ -591,21 +591,25 @@ class CamOperationAdd(bpy.types.Operator):
         s = bpy.context.scene
         fixUnits()
 
-        if s.objects.get('CAM_machine') is None:
-            utils.addMachineAreaObject()
-        # if len(s.cam_material)==0:
-        #     s.cam_material.add()
-
         s.cam_operations.add()
         o = s.cam_operations[-1]
-        s.cam_active_operation = len(s.cam_operations) - 1
-        o.name = 'Operation_' + str(s.cam_active_operation + 1)
-        o.filename = o.name
         ob = bpy.context.active_object
         if ob is not None:
             o.object_name = ob.name
             minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
             o.minz = minz
+        else:
+            o.object_name = "unknown"
+
+        s.cam_active_operation = len(s.cam_operations) - 1
+        o.name = f"Op_{o.object_name}_{s.cam_active_operation + 1}"
+        o.filename = o.name
+
+        if s.objects.get('CAM_machine') is None:
+            utils.addMachineAreaObject()
+        # if len(s.cam_material)==0:
+        #     s.cam_material.add()
+
 
         return {'FINISHED'}
 
