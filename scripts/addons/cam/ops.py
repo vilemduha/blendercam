@@ -599,7 +599,11 @@ class CamOperationAdd(bpy.types.Operator):
             minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
             o.minz = minz
         else:
-            o.object_name = "unknown"
+            # FIXME Creating an operation without any object selected
+            # This should actually display a modal dialog
+            # and cancel the operation creation
+            o.object_name = "none"
+            o.minz = 0
 
         s.cam_active_operation = len(s.cam_operations) - 1
         o.name = f"Op_{o.object_name}_{s.cam_active_operation + 1}"
@@ -607,9 +611,6 @@ class CamOperationAdd(bpy.types.Operator):
 
         if s.objects.get('CAM_machine') is None:
             utils.addMachineAreaObject()
-        # if len(s.cam_material)==0:
-        #     s.cam_material.add()
-
 
         return {'FINISHED'}
 
