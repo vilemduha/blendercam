@@ -1,6 +1,6 @@
 
 import sys
-import ocl
+
 import bpy
 
 from cam.simple import strInUnits
@@ -28,6 +28,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     def draw_opencamlib_version(self):
         if "ocl" in sys.modules:
+            import ocl
             self.layout.label(text = f"Opencamlib v{ocl.version()} installed")
         else:
             self.layout.label(text = "Opencamlib is not installed")
