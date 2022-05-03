@@ -1,6 +1,6 @@
 import bpy
 import sys
-import ocl
+
 # Panel definitions
 class CAMButtonsPanel:
     bl_space_type = 'PROPERTIES'
@@ -16,6 +16,7 @@ class CAMButtonsPanel:
 
     def __init__(self):
         self.scene = bpy.context.scene
+
 
     def active_operation_index(self):
         return(self.scene.cam_active_operation)
@@ -36,6 +37,8 @@ class CAMButtonsPanel:
         return (self.operations_count() > 0)
 
     def opencamlib_version(self):
-        if "ocl" in sys.modules:
-            return(ocl.version())
-        return
+        try:
+            import ocl
+            if "ocl" in sys.modules: return(ocl.version())
+        except ImportError as e:
+            return
