@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-=======
-
 import sys
-
->>>>>>> 6bf95c0f69b1ecef7355bd0b5ac27722a6fcfd21
 import bpy
 
 from cam.simple import strInUnits
