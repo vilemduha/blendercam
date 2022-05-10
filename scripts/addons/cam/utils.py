@@ -1316,7 +1316,13 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
         join = 2
     else:
         join = 1
-    for p1 in polygons.geoms:  # sort by size before this???
+
+    if isinstance(polygons, list):
+        polygon_list = polygons
+    else:
+        polygon_list = polygons.geoms
+
+    for p1 in polygon_list:  # sort by size before this???
         # print(p1.type, len(polygons))
         i += 1
         if radius > 0:

@@ -685,7 +685,7 @@ class camOperation(bpy.types.PropertyGroup):
     # movement and ramps
     use_layers: bpy.props.BoolProperty(name="Use Layers", description="Use layers for roughing", default=True,
                                        update=updateRest)
-    stepdown: bpy.props.FloatProperty(name="Step down", default=0.01, min=0.00001, max=32, precision=PRECISION,
+    stepdown: bpy.props.FloatProperty(name="", description="Layer height", default=0.01, min=0.00001, max=32, precision=PRECISION,
                                       unit="LENGTH", update=updateRest)
     first_down: bpy.props.BoolProperty(name="First down",
                                        description="First go down on a contour, then go to the next one",
@@ -1527,7 +1527,7 @@ def unregister():
     for p in classes:
         bpy.utils.unregister_class(p)
     s = bpy.types.Scene
-    
+
     # cam chains are defined hardly now.
     del s.cam_chains
     del s.cam_active_chain
