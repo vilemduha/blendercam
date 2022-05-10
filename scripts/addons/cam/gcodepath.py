@@ -242,7 +242,7 @@ def exportGcodePath(filename, vertslist, operations):
                 enable_hold = True
                 stop_hold = o.gcode_stop_hold_cmd
             if o.enable_mist:
-                c.write('(Hold Down)\n')
+                c.write('(Mist)\n')
                 lines = o.gcode_start_mist_cmd.split(';')
                 for aline in lines:
                     c.write(aline + '\n')
