@@ -11,6 +11,7 @@ from cam.ui_panels.buttons_panel import CAMButtonsPanel
 #
 # For each operation, generate the corresponding gcode and export the gcode file
 
+
 class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM operations panel"""
     bl_label = "CAM operations"
