@@ -194,7 +194,7 @@ def useBridges(ch, o):
 
                 elif itmpoint:
                     cpoints = []
-                    for p in intersections:
+                    for p in intersections.geoms:
                         pt = mathutils.Vector((p.x, p.y, p.z))
                         cpoints.append(pt)
                 # ####sort collisions here :(
