@@ -265,6 +265,7 @@ def useBridges(ch, o):
     object_data_add(bpy.context, mesh)      # create object
     bpy.ops.object.convert(target='CURVE')  # convert mesh to curve
     simple.join_multiple(o.name + '_cut_bridges')   # join all the new cut bridges curves
+    bpy.data.objects[o.name + '_cut_bridges'].location[2]= o.minz
     simple.remove_doubles()     # remove overlapping vertices
 
 
