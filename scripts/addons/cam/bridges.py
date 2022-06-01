@@ -251,7 +251,7 @@ def useBridges(ch, o):
             count += 1
             verts.append((x, y, o.minz))    # make new vertex
             isedge += 1
-            if isedge > 1:  # Two or more points make an edge
+            if isedge > 1:  # Two points make an edge
                 edge = []
                 edge.append(count-2)    # Edge are in pairs of coordinates
                 edge.append(count-1)
