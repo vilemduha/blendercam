@@ -268,7 +268,6 @@ def useBridges(ch, o):
     simple.remove_doubles()     # remove overlapping vertices
 
 
-
 def auto_cut_bridge(o):
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
