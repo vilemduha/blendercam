@@ -259,7 +259,8 @@ def useBridges(ch, o):
 
         elif isedge > 0:
             isedge = 0
-
+    bpy.data.objects[o.name + '_cut_bridges'].select_set(True)
+    bpy.ops.object.delete()
     mesh = bpy.data.meshes.new(name=o.name + "_cut_bridges")  # generate new mesh
     mesh.from_pydata(verts, edges, faces)   # integrate coordinates and edges
     object_data_add(bpy.context, mesh)      # create object
