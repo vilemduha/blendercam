@@ -249,7 +249,7 @@ def useBridges(ch, o):
         z = pt[2]
         if z == bridgeheight:   # find all points with z = bridge height
             count += 1
-            verts.append((x, y, 0))    # make new vertex
+            verts.append((x, y, o.minz))    # make new vertex
             isedge += 1
             if isedge > 1:  # Two or more points make an edge
                 edge = []
@@ -259,7 +259,6 @@ def useBridges(ch, o):
 
         elif isedge > 0:
             isedge = 0
-
     mesh = bpy.data.meshes.new(name=o.name + "_cut_bridges")  # generate new mesh
     mesh.from_pydata(verts, edges, faces)   # integrate coordinates and edges
     object_data_add(bpy.context, mesh)      # create object
