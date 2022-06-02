@@ -684,6 +684,7 @@ def getPath3axis(context, operation):
         if o.use_bridges:
             for bridge_chunk in chunks:
                 useBridges(bridge_chunk, o)
+
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and o.use_opencamlib:

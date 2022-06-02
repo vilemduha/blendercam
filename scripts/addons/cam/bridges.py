@@ -243,29 +243,42 @@ def useBridges(ch, o):
     # create bridge cut curve here
     count = 0
     isedge = 0
+    x2, y2 = 0, 0
     for pt in newpoints:
         x = pt[0]
         y = pt[1]
         z = pt[2]
         if z == bridgeheight:   # find all points with z = bridge height
             count += 1
+            if isedge == 1:     # This is to subdivide  edges which are longer than the width of the bridge
+                edgelength = math.hypot(x - x2, y - y2)
+                if edgelength > o.bridges_width:
+                    verts.append(((x + x2)/2, (y + y2)/2, o.minz))  # make new vertex
+
+                    isedge += 1
+                    edge = [count - 2, count - 1]
+                    edges.append(edge)
+                    count += 1
+            else:
+                x2 = x
+                y2 = y
             verts.append((x, y, o.minz))    # make new vertex
             isedge += 1
             if isedge > 1:  # Two points make an edge
-                edge = []
-                edge.append(count-2)    # Edge are in pairs of coordinates
-                edge.append(count-1)
+                edge = [count - 2, count - 1]
                 edges.append(edge)
 
-        elif isedge > 0:
+        else:
             isedge = 0
 
-    mesh = bpy.data.meshes.new(name=o.name + "_cut_bridges")  # generate new mesh
-    mesh.from_pydata(verts, edges, faces)   # integrate coordinates and edges
-    object_data_add(bpy.context, mesh)      # create object
-    bpy.ops.object.convert(target='CURVE')  # convert mesh to curve
-    simple.join_multiple(o.name + '_cut_bridges')   # join all the new cut bridges curves
-    simple.remove_doubles()     # remove overlapping vertices
+    #  verify if vertices have been generated and generate a mesh
+    if verts:
+        mesh = bpy.data.meshes.new(name=o.name + "_cut_bridges")  # generate new mesh
+        mesh.from_pydata(verts, edges, faces)   # integrate coordinates and edges
+        object_data_add(bpy.context, mesh)      # create object
+        bpy.ops.object.convert(target='CURVE')  # convert mesh to curve
+        simple.join_multiple(o.name + '_cut_bridges')   # join all the new cut bridges curves
+        simple.remove_doubles()     # remove overlapping vertices
 
 
 def auto_cut_bridge(o):
