@@ -229,7 +229,7 @@ If not enabled then the Material origin and Material size are used in case when 
 This panel sets up your machine and the settings are common in the whole file.
 You can also set up your machine and then save your default file with Ctrl+U command. This way you will always start with the settings you need.
 
-* **Post processor** - this defines the formatting of the output file. If you machine is not in the list, you can try the Iso code, which is standardized g-code
+* **Post processor** - this defines the formatting of the output file. If your machine is not in the list, you can try the Iso code, which is standardized g-code
 
 ![post processor](images/processor.png)
 
