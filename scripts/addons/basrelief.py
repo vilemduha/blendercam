@@ -13,7 +13,7 @@ bl_info = {
 	"blender": (2, 80, 0),
 	"location": "Properties > render",
 	"description": "Converts zbuffer image to bas relief.",
-	"warning": "there is no warranty. needs Numpy library installed in blende python directory.",
+	"warning": "there is no warranty. needs Numpy library installed in blender python directory.",
 	"wiki_url": "blendercam.blogspot.com",
 	"tracker_url": "",
 	"category": "Scene"}
