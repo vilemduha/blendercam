@@ -128,7 +128,6 @@ def useBridges(ch, o):
     """this adds bridges to chunks, takes the bridge-objects collection and uses the curves inside it as bridges."""
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
-    print('ch', ch)
     if len(bridgecollection.objects) > 0:
 
         # get bridgepoly
