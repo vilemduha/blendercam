@@ -682,6 +682,7 @@ def getPath3axis(context, operation):
                 for vi in range(0, len(ch.points)):
                     ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
         if o.use_bridges:
+            print(chunks)
             for bridge_chunk in chunks:
                 useBridges(bridge_chunk, o)
 

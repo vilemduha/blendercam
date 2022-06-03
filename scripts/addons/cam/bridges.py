@@ -128,6 +128,7 @@ def useBridges(ch, o):
     """this adds bridges to chunks, takes the bridge-objects collection and uses the curves inside it as bridges."""
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
+    print('ch', ch)
     if len(bridgecollection.objects) > 0:
 
         # get bridgepoly
@@ -138,7 +139,6 @@ def useBridges(ch, o):
         bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
 
         vi = 0
-        # shapelyToCurve('test',bridgespoly,0)
         newpoints = []
         p1 = sgeometry.Point(ch.points[0])
         startinside = o.bridgespoly.contains(p1)
@@ -158,7 +158,6 @@ def useBridges(ch, o):
             v2 = mathutils.Vector(chp2)
             if v1.z < bridgeheight or v2.z < bridgeheight:
                 v = v2 - v1
-                # dist+=v.length
                 p2 = sgeometry.Point(chp2)
 
                 if interrupted:
@@ -168,11 +167,9 @@ def useBridges(ch, o):
 
                 endinside = o.bridgespoly.contains(p2)
                 l = sgeometry.LineString([chp1, chp2])
-                # print(dir(bridgespoly_boundary))
                 if o.bridgespoly_boundary_prep.intersects(l):
                     intersections = o.bridgespoly_boundary.intersection(l)
 
-                    # intersect = mathutils.Vector((intersections.x, intersections.y, intersections.z))
 
                 else:
                     intersections = sgeometry.GeometryCollection()
@@ -180,10 +177,7 @@ def useBridges(ch, o):
                 itpoint = intersections.type == 'Point'
                 itmpoint = intersections.type == 'MultiPoint'
 
-                # print(startinside, endinside,intersections, intersections.type)
-                # print(l,bridgespoly)
                 if not startinside:
-                    # print('nothing found')
                     newpoints.append(chp1)
                 elif startinside:
                     newpoints.append((chp1[0], chp1[1], max(chp1[2], bridgeheight)))
