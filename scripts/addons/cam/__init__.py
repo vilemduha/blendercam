@@ -685,7 +685,7 @@ class camOperation(bpy.types.PropertyGroup):
     # movement and ramps
     use_layers: bpy.props.BoolProperty(name="Use Layers", description="Use layers for roughing", default=True,
                                        update=updateRest)
-    stepdown: bpy.props.FloatProperty(name="Step down", default=0.01, min=0.00001, max=32, precision=PRECISION,
+    stepdown: bpy.props.FloatProperty(name="", description="Layer height", default=0.01, min=0.00001, max=32, precision=PRECISION,
                                       unit="LENGTH", update=updateRest)
     first_down: bpy.props.BoolProperty(name="First down",
                                        description="First go down on a contour, then go to the next one",
@@ -972,6 +972,42 @@ class camOperation(bpy.types.PropertyGroup):
                                  description="g-code commands at start of operation. Use ; for line breaks",
                                  default="G53 G0")
 
+    enable_dust: BoolProperty(name="Dust collector",
+                                description="output user defined g-code command header at start of operation",
+                                default=False)
+
+    gcode_start_dust_cmd: StringProperty(name="Start dust collector",
+                                 description="commands to start dust collection. Use ; for line breaks",
+                                 default="M100")
+
+    gcode_stop_dust_cmd: StringProperty(name="Stop dust collector",
+                                 description="command to stop dust collection. Use ; for line breaks",
+                                 default="M101")
+
+    enable_hold: BoolProperty(name="Hold down",
+                              description="output hold down command at start of operation",
+                              default=False)
+
+    gcode_start_hold_cmd: StringProperty(name="g-code header",
+                                         description="g-code commands at start of operation. Use ; for line breaks",
+                                         default="M102")
+
+    gcode_stop_hold_cmd: StringProperty(name="g-code header",
+                                        description="g-code commands at end operation. Use ; for line breaks",
+                                        default="M103")
+
+    enable_mist: BoolProperty(name="Mist",
+                              description="Mist command at start of operation",
+                              default=False)
+
+    gcode_start_mist_cmd: StringProperty(name="g-code header",
+                                         description="g-code commands at start of operation. Use ; for line breaks",
+                                         default="M104")
+
+    gcode_stop_mist_cmd: StringProperty(name="g-code header",
+                                        description="g-code commands at end operation. Use ; for line breaks",
+                                        default="M105")
+
     output_trailer: BoolProperty(name="output g-code trailer",
                                  description="output user defined g-code command trailer at end of operation",
                                  default=False)
@@ -1223,6 +1259,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         curvecamtools.CamCurveHatch,
         curvecamtools.CamCurvePlate,
         curvecamtools.CamCurveDrawer,
+        curvecamcreate.CamCurveFlatCone,
         curvecamtools.CamCurveMortise,
         curvecamtools.CamOffsetSilhouete,
         curvecamtools.CamObjectSilhouete,
@@ -1440,6 +1477,7 @@ classes = [
     curvecamcreate.CamCurvePlate,
     curvecamcreate.CamCurveDrawer,
     curvecamcreate.CamCurveGear,
+    curvecamcreate.CamCurveFlatCone,
     curvecamcreate.CamCurveMortise,
     curvecamcreate.CamCurveInterlock,
     curvecamcreate.CamCurvePuzzle,
@@ -1489,7 +1527,7 @@ def unregister():
     for p in classes:
         bpy.utils.unregister_class(p)
     s = bpy.types.Scene
-    
+
     # cam chains are defined hardly now.
     del s.cam_chains
     del s.cam_active_chain

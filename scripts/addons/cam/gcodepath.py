@@ -77,7 +77,9 @@ def exportGcodePath(filename, vertslist, operations):
     t = time.time()
     s = bpy.context.scene
     m = s.cam_machine
-
+    enable_dust = False
+    enable_hold = False
+    enable_mist = False
     # find out how many files will be done:
 
     split = False
@@ -232,10 +234,33 @@ def exportGcodePath(filename, vertslist, operations):
 
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
         if o.cutter_type not in ['LASER', 'PLASMA']:
+            if o.enable_hold:
+                c.write('(Hold Down)\n')
+                lines = o.gcode_start_hold_cmd.split(';')
+                for aline in lines:
+                    c.write(aline + '\n')
+                enable_hold = True
+                stop_hold = o.gcode_stop_hold_cmd
+            if o.enable_mist:
+                c.write('(Mist)\n')
+                lines = o.gcode_start_mist_cmd.split(';')
+                for aline in lines:
+                    c.write(aline + '\n')
+                enable_mist = True
+                stop_mist = o.gcode_stop_mist_cmd
+
             c.spindle(o.spindle_rpm, spdir_clockwise)  # start spindle
             c.write_spindle()
             c.flush_nc()
             c.write('\n')
+
+            if o.enable_dust:
+                c.write('(Dust collector)\n')
+                lines = o.gcode_start_dust_cmd.split(';')
+                for aline in lines:
+                    c.write(aline + '\n')
+                enable_dust = True
+                stop_dust = o.gcode_stop_dust_cmd
 
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)
@@ -472,6 +497,12 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
     o.duration = duration * unitcorr
+    if enable_dust:
+        c.write(stop_dust + '\n')
+    if enable_hold:
+        c.write(stop_hold + '\n')
+    if enable_mist:
+        c.write(stop_mist + '\n')
 
     c.program_end()
     c.file_close()
@@ -651,8 +682,10 @@ def getPath3axis(context, operation):
                 for vi in range(0, len(ch.points)):
                     ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
         if o.use_bridges:
+            print(chunks)
             for bridge_chunk in chunks:
                 useBridges(bridge_chunk, o)
+
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and o.use_opencamlib:

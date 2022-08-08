@@ -22,10 +22,14 @@
 
 import bpy
 from bpy.props import *
+from bpy_extras.object_utils import AddObjectHelper, object_data_add
 
 from cam import utils
+from cam import simple
+
 import mathutils
 import math
+
 
 from shapely import ops as sops
 from shapely import geometry as sgeometry
@@ -134,11 +138,13 @@ def useBridges(ch, o):
         bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
 
         vi = 0
-        # shapelyToCurve('test',bridgespoly,0)
         newpoints = []
         p1 = sgeometry.Point(ch.points[0])
         startinside = o.bridgespoly.contains(p1)
         interrupted = False
+        verts = []
+        edges = []
+        faces = []
         while vi < len(ch.points):
             i1 = vi
             i2 = vi
@@ -151,7 +157,6 @@ def useBridges(ch, o):
             v2 = mathutils.Vector(chp2)
             if v1.z < bridgeheight or v2.z < bridgeheight:
                 v = v2 - v1
-                # dist+=v.length
                 p2 = sgeometry.Point(chp2)
 
                 if interrupted:
@@ -161,30 +166,30 @@ def useBridges(ch, o):
 
                 endinside = o.bridgespoly.contains(p2)
                 l = sgeometry.LineString([chp1, chp2])
-                # print(dir(bridgespoly_boundary))
                 if o.bridgespoly_boundary_prep.intersects(l):
-                    # print('intersects')
                     intersections = o.bridgespoly_boundary.intersection(l)
+
+
                 else:
                     intersections = sgeometry.GeometryCollection()
 
                 itpoint = intersections.type == 'Point'
                 itmpoint = intersections.type == 'MultiPoint'
 
-                # print(startinside, endinside,intersections, intersections.type)
-                # print(l,bridgespoly)
                 if not startinside:
-                    # print('nothing found')
                     newpoints.append(chp1)
                 elif startinside:
                     newpoints.append((chp1[0], chp1[1], max(chp1[2], bridgeheight)))
                 cpoints = []
                 if itpoint:
-                    cpoints = [mathutils.Vector((intersections.x, intersections.y, intersections.z))]
+                    pt = mathutils.Vector((intersections.x, intersections.y, intersections.z))
+                    cpoints = [pt]
+
                 elif itmpoint:
                     cpoints = []
-                    for p in intersections:
-                        cpoints.append(mathutils.Vector((p.x, p.y, p.z)))
+                    for p in intersections.geoms:
+                        pt = mathutils.Vector((p.x, p.y, p.z))
+                        cpoints.append(pt)
                 # ####sort collisions here :(
                 ncpoints = []
                 while len(cpoints) > 0:
@@ -227,3 +232,50 @@ def useBridges(ch, o):
                 vi += 1
                 interrupted = True
         ch.points = newpoints
+
+    # create bridge cut curve here
+    count = 0
+    isedge = 0
+    x2, y2 = 0, 0
+    for pt in newpoints:
+        x = pt[0]
+        y = pt[1]
+        z = pt[2]
+        if z == bridgeheight:   # find all points with z = bridge height
+            count += 1
+            if isedge == 1:     # This is to subdivide  edges which are longer than the width of the bridge
+                edgelength = math.hypot(x - x2, y - y2)
+                if edgelength > o.bridges_width:
+                    verts.append(((x + x2)/2, (y + y2)/2, o.minz))  # make new vertex
+
+                    isedge += 1
+                    edge = [count - 2, count - 1]
+                    edges.append(edge)
+                    count += 1
+            else:
+                x2 = x
+                y2 = y
+            verts.append((x, y, o.minz))    # make new vertex
+            isedge += 1
+            if isedge > 1:  # Two points make an edge
+                edge = [count - 2, count - 1]
+                edges.append(edge)
+
+        else:
+            isedge = 0
+
+    #  verify if vertices have been generated and generate a mesh
+    if verts:
+        mesh = bpy.data.meshes.new(name=o.name + "_cut_bridges")  # generate new mesh
+        mesh.from_pydata(verts, edges, faces)   # integrate coordinates and edges
+        object_data_add(bpy.context, mesh)      # create object
+        bpy.ops.object.convert(target='CURVE')  # convert mesh to curve
+        simple.join_multiple(o.name + '_cut_bridges')   # join all the new cut bridges curves
+        simple.remove_doubles()     # remove overlapping vertices
+
+
+def auto_cut_bridge(o):
+    bridgecollectionname = o.bridges_collection_name
+    bridgecollection = bpy.data.collections[bridgecollectionname]
+    if len(bridgecollection.objects) > 0:
+        print("bridges")

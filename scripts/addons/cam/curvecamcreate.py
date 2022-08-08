@@ -160,13 +160,13 @@ class CamCurvePlate(bpy.types.Operator):
                                                       align='WORLD', location=(0, self.hole_tolerance / 2, 0),
                                                       scale=(1, 1, 1))
             simple.active_name("_hole_Top")
-            bpy.context.object.data.resolution_u = self.resolution / 4
+            bpy.context.object.data.resolution_u = int(self.resolution / 4)
             if self.hole_tolerance > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
                                                           align='WORLD', location=(0, -self.hole_tolerance / 2, 0),
                                                           scale=(1, 1, 1))
                 simple.active_name("_hole_Bottom")
-                bpy.context.object.data.resolution_u = self.resolution / 4
+                bpy.context.object.data.resolution_u = int(self.resolution / 4)
 
             simple.select_multiple("_hole")  # select everything starting with _hole and perform a convex hull on them
             utils.polygonConvexHull(context)
@@ -213,6 +213,59 @@ class CamCurvePlate(bpy.types.Operator):
         bpy.ops.object.curve_remove_doubles()
 
         return {'FINISHED'}
+
+class CamCurveFlatCone(bpy.types.Operator):
+    """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
+    bl_idname = "object.curve_flat_cone"
+    bl_label = "Cone flat calculator"
+    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+
+    small_d: bpy.props.FloatProperty(name="small diameter", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
+    large_d: bpy.props.FloatProperty(name="large diameter", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height of cone", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
+    tab: bpy.props.FloatProperty(name="tab witdh", default=0.01, min=0, max=0.100, precision=4, unit="LENGTH")
+    intake: bpy.props.FloatProperty(name="intake diameter", default=0, min=0, max=0.200, precision=4, unit="LENGTH")
+    intake_skew: bpy.props.FloatProperty(name="intake_skew", default=1, min=0.1, max=4 )
+    resolution: bpy.props.IntProperty(name="Resolution", default=12, min=5, max=200)
+
+    def execute(self, context):
+        y = self.small_d / 2
+        z = self.large_d / 2
+        x = self.height
+        h = x * y / (z - y)
+        a = math.hypot(h, y)
+        ab = math.hypot(x+h, z)
+        b = ab - a
+        angle = math.pi * 2 * y / a
+
+        # create base
+        bpy.ops.curve.simple(Simple_Type='Segment', Simple_a=ab, Simple_b=a, Simple_endangle=math.degrees(angle),
+                             use_cyclic_u=True, edit_mode=False)
+
+        simple.active_name("_segment")
+
+        bpy.ops.curve.simple(align='WORLD', location=(a+b/2, -self.tab/2, 0), rotation=(0, 0, 0),
+                             Simple_Type='Rectangle',
+                             Simple_width=b-0.0050, Simple_length=self.tab, use_cyclic_u=True, edit_mode=False,
+                             shape='3D')
+
+        simple.active_name("_segment")
+        if self.intake > 0:
+            bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Ellipse',
+                                 Simple_a=self.intake, Simple_b=self.intake*self.intake_skew, use_cyclic_u=True,
+                                 edit_mode=False, shape='3D')
+            simple.move(x=ab-3*self.intake/2)
+            simple.rotate(angle/2)
+
+        bpy.context.object.data.resolution_u = self.resolution
+
+        simple.union("_segment")
+
+        simple.active_name('flat_cone')
+
+
+        return {'FINISHED'}
+
 
 
 class CamCurveMortise(bpy.types.Operator):

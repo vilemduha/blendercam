@@ -1003,7 +1003,7 @@ def connectChunksLow(chunks, o):
 
 def getClosest(o, pos, chunks):
     # ch=-1
-    mind = 10000
+    mind = 2000
     d = 100000000000
     ch = None
     for chtest in chunks:
@@ -1316,7 +1316,13 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
         join = 2
     else:
         join = 1
-    for p1 in polygons.geoms:  # sort by size before this???
+
+    if isinstance(polygons, list):
+        polygon_list = polygons
+    else:
+        polygon_list = polygons.geoms
+
+    for p1 in polygon_list:  # sort by size before this???
         # print(p1.type, len(polygons))
         i += 1
         if radius > 0:
@@ -1529,7 +1535,7 @@ def prepareIndexed(o):
     s.objects.active = ob
     bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 
-    s.cursor_location = (0, 0, 0)
+    s.cursor.location = (0, 0, 0)
     oriname = o.name + ' orientation'
     ori = s.objects[oriname]
     o.orientation_matrix = ori.matrix_world.copy()

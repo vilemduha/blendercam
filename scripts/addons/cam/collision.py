@@ -46,9 +46,8 @@ def getCutterBullet(o):
     if type == 'END':
         bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius= o.cutter_diameter / 2,
                                             depth= o.cutter_diameter, end_fill_type='NGON',
-                                            align='WORLD', enter_editmode=False, location=(0 , 0, o.cutter_diameter / 2),
+                                            align='WORLD', enter_editmode=False, location = CUTTER_OFFSET,
                                             rotation=(0, 0, 0))
-        #bpy.ops.object.duplicate()    # show bit
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -62,8 +61,7 @@ def getCutterBullet(o):
             # the actual collision shape is capsule in this case.
             bpy.ops.mesh.primitive_ico_sphere_add(subdivisions = 3, radius = o.cutter_diameter / 2,
                                                   align='WORLD', enter_editmode=False,
-                                                location=(0, 0, o.cutter_diameter / 2), rotation=(0, 0, 0))
-            #bpy.ops.object.duplicate()    # show bit
+                                                location = CUTTER_OFFSET, rotation=(0, 0, 0))
             cutter = bpy.context.active_object
             cutter.scale *= BULLET_SCALE
             bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -81,9 +79,8 @@ def getCutterBullet(o):
         cone_d = o.cutter_diameter * s
         bpy.ops.mesh.primitive_cone_add(vertices=32, radius1 = o.cutter_diameter / 2, radius2=0,
                                         depth =  cone_d, end_fill_type='NGON',
-                                        align='WORLD', enter_editmode=False, location = (0, 0, cone_d / 2),
+                                        align='WORLD', enter_editmode=False, location = CUTTER_OFFSET,
                                         rotation=(math.pi, 0, 0))
-        #bpy.ops.object.duplicate()    # show bit
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -100,8 +97,7 @@ def getCutterBullet(o):
                                         radius2 = o.cylcone_diameter / 2,
                                         depth = cylcone_d, end_fill_type='NGON',
                                         align = 'WORLD', enter_editmode = False,
-                                        location = (0 , 0 , cylcone_d / 2),rotation = (math.pi, 0, 0))
-        #bpy.ops.object.duplicate()    # show bit
+                                        location = CUTTER_OFFSET,rotation = (math.pi, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -109,6 +105,7 @@ def getCutterBullet(o):
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
+        cutter.location = CUTTER_OFFSET
     elif type == 'BALLCONE':
         angle = math.radians(o.cutter_tip_angle)/2
         cutter_R = o.cutter_diameter/2
@@ -137,8 +134,7 @@ def getCutterBullet(o):
         ob_scr.merge_threshold = 0
         ob_scr.use_merge_vertices = True
         bpy.ops.object.modifier_apply(modifier='scr')
-        bpy.data.objects['BallConeTool'].select_set(True)
-        #bpy.ops.object.duplicate()  # show bit   
+        bpy.data.objects['BallConeTool'].select_set(True) 
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -146,7 +142,7 @@ def getCutterBullet(o):
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter.location = CUTTER_OFFSET
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
-
+        cutter.location = CUTTER_OFFSET
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[o.cutter_object_name]
         activate(cutob)

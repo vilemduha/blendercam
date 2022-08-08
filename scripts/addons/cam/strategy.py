@@ -156,6 +156,8 @@ def cutout(o):
 
     if o.use_bridges:  # add bridges to chunks
         print('using bridges')
+        simple.remove_multiple(o.name+'_cut_bridges')
+        print("old briddge cut removed")
 
         bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
 
