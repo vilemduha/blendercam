@@ -95,7 +95,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.prop(ao, 'skin')
                         layout.prop(ao, 'dist_between_paths')
                         self.EngagementDisplay(ao, layout)
-                        layout.prop(ao, 'stepdown')
+                        layout.prop(ao, 'slice_detail')
                         layout.prop(ao, 'waterline_project')
                 elif ao.strategy == 'CARVE':
                     layout.prop(ao, 'carve_depth')
