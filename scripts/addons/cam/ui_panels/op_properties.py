@@ -89,13 +89,14 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'dont_merge')
 
                 elif ao.strategy == 'WATERLINE':
+                    layout.label(text="Waterline roughing strategy")
+                    layout.label(text="needs a skin margin")
+                    layout.prop(ao, 'skin')
+                    layout.prop(ao, 'slice_detail')
+                    layout.prop(ao, 'waterline_fill')
                     if ao.waterline_fill:
-                        layout.label(text="Waterline roughing strategy")
-                        layout.label(text="needs a skin margin")
-                        layout.prop(ao, 'skin')
                         layout.prop(ao, 'dist_between_paths')
                         self.EngagementDisplay(ao, layout)
-                        layout.prop(ao, 'slice_detail')
                         layout.prop(ao, 'waterline_project')
                 elif ao.strategy == 'CARVE':
                     layout.prop(ao, 'carve_depth')

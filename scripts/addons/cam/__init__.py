@@ -372,20 +372,20 @@ def updateExact(o, context):
     o.update_zbufferimage_tag = True
     o.update_offsetimage_tag = True
     if o.use_exact and (
-            o.strategy == 'WATERLINE' or o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse):
+             o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse):
         #    o.use_exact = False
         o.use_opencamlib = False
-        print('waterline and pocket cannot use opencamlib')
+        print(' pocket cannot use opencamlib')
 
 
 def updateOpencamlib(o, context):
     print('update opencamlib ')
     o.changed = True
     if o.use_opencamlib and (
-            o.strategy == 'WATERLINE' or o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse):
+            o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse):
         o.use_exact = False
         o.use_opencamlib = False
-        print('waterline and pocket cannot use opencamlib')
+        print('pocket cannot use opencamlib')
 
 
 def updateBridges(o, context):
