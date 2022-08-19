@@ -343,7 +343,7 @@ class PathExport(bpy.types.Operator):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
 
-        print("EXPORING", operation.filename, bpy.data.objects["cam_path_{}".format(operation.name)].data, operation)
+        print("EXPORTING", operation.filename, bpy.data.objects["cam_path_{}".format(operation.name)].data, operation)
 
         gcodepath.exportGcodePath(operation.filename, [bpy.data.objects["cam_path_{}".format(operation.name)].data],
                                   [operation])

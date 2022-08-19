@@ -208,7 +208,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
 
         iter = int(maxangle * 10)
         if iter > 10000:  # do not calculate more than 10000 points
-            print("limiting calculatons to 10000 points")
+            print("limiting calculations to 10000 points")
             iter = 10000
         parametric.create_parametric_curve(f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=iter)
 
