@@ -466,7 +466,7 @@ def pocket(o):
         chunks = utils.sortChunks(chunks, o)
 
     if o.pocketToCurve:  # make curve instead of a path
-        simple.joinMultiple("3dpocket")
+        simple.join_multiple("3dpocket")
 
     else:
         chunksToMesh(chunks, o)  # make normal pocket path
@@ -743,7 +743,7 @@ def medial_axis(o):
         chunklayers = utils.sortChunks(chunklayers, o)
 
     if o.add_mesh_for_medial:  # make curve instead of a path
-        simple.joinMultiple("medialMesh")
+        simple.join_multiple("medialMesh")
 
     chunksToMesh(chunklayers, o)
     # add pocket operation for medial if add pocket checked
