@@ -24,9 +24,8 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                     exclude_exact = ao.strategy in ['MEDIAL_AXIS', 'POCKET', 'CUTOUT', 'DRILL', 'PENCIL',
                                                     'CURVE']
                     if not exclude_exact:
-                        if not ao.use_exact:
-                            layout.prop(ao, 'use_exact')
-                            layout.label(text="Exact mode must be set for opencamlib to work ")
+                        layout.prop(ao, 'use_exact')
+                        layout.label(text="Exact mode must be set for opencamlib to work ")
 
                         opencamlib_version = self.opencamlib_version()
                         if opencamlib_version is None:

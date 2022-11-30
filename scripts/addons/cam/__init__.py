@@ -382,7 +382,7 @@ def updateOpencamlib(o, context):
     print('update opencamlib ')
     o.changed = True
     if o.use_opencamlib and (
-            o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse):
+            o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS'):
         o.use_exact = False
         o.use_opencamlib = False
         print('pocket cannot use opencamlib')
