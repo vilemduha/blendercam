@@ -323,7 +323,7 @@ def exportGcodePath(filename, vertslist, operations):
                 continue
             v = vert.co
             # redundant point on line detection
-            if o.remove_redundant_points:
+            if o.remove_redundant_points and o.strategy != 'DRILL':
                 nextv = v
                 if ii == 0:
                     firstv = v  # only happens once
@@ -486,7 +486,7 @@ def exportGcodePath(filename, vertslist, operations):
                 c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=last.z * unitcorr)
                 processedops = 0
 
-        if o.remove_redundant_points:
+        if o.remove_redundant_points and o.strategy != "DRILL":
             print("online " + str(online) + " offline " + str(offline) + " " + str(
                 round(online / (offline + online) * 100, 1)) + "% removal")
         c.feedrate(unitcorr * o.feedrate)

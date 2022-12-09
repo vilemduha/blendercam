@@ -135,7 +135,9 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
         ao = self.active_operation()
 
         # TODO This should be in some optimization menu
-        layout.prop(ao, 'remove_redundant_points')
+        if ao.strategy != 'DRILL':
+            layout.prop(ao, 'remove_redundant_points')
+
         if ao.remove_redundant_points:
             layout.label(text='Revise your Code before running!')
             layout.label(text='Quality will suffer if tolerance')
