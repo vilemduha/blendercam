@@ -31,6 +31,14 @@ import subprocess
 import sys
 import threading
 import time
+
+try:
+    import shapely
+except ImportError:
+    # pip install required python stuff
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","equation","opencamlib"])
+
+
 from bpy.app.handlers import persistent
 from bpy.props import *
 from bpy.types import Menu, Operator, UIList, AddonPreferences

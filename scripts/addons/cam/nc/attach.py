@@ -5,8 +5,11 @@
 #
 
 import recreator
-import ocl
-import ocl_funcs
+try:
+    import ocl
+    import ocl_funcs
+except ImportError:
+    import opencamlib as ocl
 import nc
 
 attached = False

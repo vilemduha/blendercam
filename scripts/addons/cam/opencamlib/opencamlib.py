@@ -4,7 +4,10 @@ import bpy
 try:
     import ocl
 except ImportError:
-    pass
+    try:
+        import opencamlib as ocl
+    except ImportError:
+        pass
 import os
 import tempfile
 from subprocess import call
