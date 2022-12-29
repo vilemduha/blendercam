@@ -39,6 +39,10 @@ class CAMButtonsPanel:
     def opencamlib_version(self):
         try:
             import ocl
-            return(ocl.version())
-        except ImportError as e:
-            return
+        except ImportError:
+            try:
+                import opencamlib as ocl
+            except ImportError as e:
+                return
+        return(ocl.version())
+

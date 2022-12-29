@@ -2,7 +2,10 @@ import os
 try:
     import ocl
 except ImportError:
-    pass
+    try:
+        import opencamlib as ocl
+    except ImportError:
+        pass
 import tempfile
 
 from io_mesh_stl import blender_utils
