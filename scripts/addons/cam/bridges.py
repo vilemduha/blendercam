@@ -112,7 +112,7 @@ def getBridgesPoly(o):
         bpy.ops.object.duplicate()
         bpy.ops.object.join()
         ob = bpy.context.active_object
-        shapes.extend(utils.curveToShapely(ob, o.use_bridge_modifiers))
+        shapes=utils.curveToShapely(ob, o.use_bridge_modifiers)
         ob.select_set(state=True)
         bpy.ops.object.delete(use_global=False)
         bridgespoly = sops.unary_union(shapes)
