@@ -738,13 +738,13 @@ def getPath3axis(context, operation):
             poly = spolygon.Polygon()  # polygversion
             lastchunks = []
 
-            for p in slicepolys:
+            for p in slicepolys.geoms:
                 poly = poly.union(p)  # polygversion TODO: why is this added?
                 nchunks = shapelyToChunks(p, z)
                 nchunks = limitChunks(nchunks, o, force=True)
                 lastchunks.extend(nchunks)
                 slicechunks.extend(nchunks)
-            if len(slicepolys) > 0:
+            if len(slicepolys.geoms) > 0:
                 slicesfilled += 1
 
             #
