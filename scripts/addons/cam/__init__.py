@@ -36,6 +36,7 @@ try:
     import shapely
 except ImportError:
     # pip install required python stuff
+    subprocess.check_call([sys.executable, "-m", "ensurepip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","equation","opencamlib"])
 
 
