@@ -73,7 +73,7 @@ def addAutoBridges(o):
             curve = utils.curveToShapely(ob)
         if ob.type == 'MESH':
             curve = utils.getObjectSilhouete('OBJECTS', [ob])
-        for c in curve:
+        for c in curve.geoms:
             c = c.exterior
             minx, miny, maxx, maxy = c.bounds
             d1 = c.project(sgeometry.Point(maxx + 1000, (maxy + miny) / 2.0))
