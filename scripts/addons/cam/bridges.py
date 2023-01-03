@@ -102,7 +102,6 @@ def getBridgesPoly(o):
     if not hasattr(o, 'bridgespolyorig'):
         bridgecollectionname = o.bridges_collection_name
         bridgecollection = bpy.data.collections[bridgecollectionname]
-        shapes = []
         bpy.ops.object.select_all(action='DESELECT')
 
         for ob in bridgecollection.objects:
@@ -112,7 +111,7 @@ def getBridgesPoly(o):
         bpy.ops.object.duplicate()
         bpy.ops.object.join()
         ob = bpy.context.active_object
-        shapes=utils.curveToShapely(ob, o.use_bridge_modifiers)
+        shapes = utils.curveToShapely(ob, o.use_bridge_modifiers)
         ob.select_set(state=True)
         bpy.ops.object.delete(use_global=False)
         bridgespoly = sops.unary_union(shapes)
