@@ -83,7 +83,7 @@ def shapelyToCoords(anydata):
     # print(p.geom_type)
     if p.is_empty:
         return seq
-    elif p.type == 'Polygon':
+    elif p.geom_type == 'Polygon':
 
         # print('polygon')
         clen = len(p.exterior.coords)
