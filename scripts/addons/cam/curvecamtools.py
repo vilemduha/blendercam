@@ -341,7 +341,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
 
         for s in shapes.geoms:
             s = shapely.geometry.polygon.orient(s, 1)  # ensure the shape is counterclockwise
-            loops = [s.boundary] if s.boundary.type == 'LineString' else s.boundary
+            loops = [s.boundary] if s.boundary.geom_type == 'LineString' else s.boundary
             outercurve = self.do_outer or len(loops) == 1
             for ci, c in enumerate(loops):
                 if ci > 0 or outercurve:
