@@ -172,8 +172,8 @@ def useBridges(ch, o):
                 else:
                     intersections = sgeometry.GeometryCollection()
 
-                itpoint = intersections.type == 'Point'
-                itmpoint = intersections.type == 'MultiPoint'
+                itpoint = intersections.geom_type == 'Point'
+                itmpoint = intersections.geom_type == 'MultiPoint'
 
                 if not startinside:
                     newpoints.append(chp1)
