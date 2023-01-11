@@ -6,15 +6,6 @@ Using Blendercam from github is a great way to try out the newest features and f
 
 The easiest way to "install" is not to install but instead just tell Blender where to find the add-on.  This way you don't have to worry about copying/moving files around.  You can keep Blendercam source files separate from Blender if using source control (ie git for development) and still easily test your changes in Blender.
 
-If you are using Arch Linux, you can just install `blendercam-git` from the AUR and skip to [Enable Blendercam add-on](#enable-blendercam-add-on). OpenCAMLib is also available as `opencamlib-git`.
-
----
-
-
-You can watch the video using the documentation below.
-
-[![How To Install on Linux](images/installLinux.png)](http://www.youtube.com/watch?v=7_Qq8Zv4SEo)
-
 ---
 
 * [1. Obtaining Blender](#obtaining-blender)
