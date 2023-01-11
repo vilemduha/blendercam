@@ -49,6 +49,8 @@ from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils,
 from mathutils import *
 from shapely import geometry as sgeometry
 
+
+
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
