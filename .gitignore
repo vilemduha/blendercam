@@ -11,7 +11,6 @@ config/bookmarks.txt
 *.pyc
 *.ocio
 *.spi3d
-*.py
 config/recent-files.txt
 scripts/addons_contrib/add_mesh_rocks/add_mesh_rocks.xml
 scripts/addons_contrib/online_mat_lib/material-library/bundled/cycles/wood/rough_pine.bcm
