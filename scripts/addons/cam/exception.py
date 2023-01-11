@@ -1,0 +1,2 @@
+class CamException(Exception):
+    pass
