@@ -12,6 +12,7 @@ from io_mesh_stl import blender_utils
 import mathutils
 import math
 from cam.simple import activate
+from cam.exception import *
 
 OCL_SCALE = 1000.0
 
@@ -32,8 +33,7 @@ def get_oclSTL(operation):
                 oclSTL.addTriangle(t)
         # FIXME needs to work with collections
     if not found_mesh:
-        operation.operator.report({'ERROR_INVALID_INPUT'},"This operation requires a mesh object")        
-        return None
+        raise CamException("This operation requires a mesh or curve object or equivalent (e.g. text, volume).")
     return oclSTL
 
 

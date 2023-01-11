@@ -40,6 +40,7 @@ from cam.simple import *
 from cam.pattern import *
 from cam.polygon_utils_cam import *
 from cam.image_utils import *
+from cam.exception import *
 
 from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
 
@@ -133,7 +134,8 @@ def getBoundsWorldspace(obs, use_modifiers=False):
             bpy.ops.object.delete()
             bpy.ops.outliner.orphans_purge()
         else:
-
+            if not hasattr(ob.data,"splines"):
+                raise CamException("Can't do CAM operation on the selected object type")
             # for coord in bb:
             for c in ob.data.splines:
                 for p in c.bezier_points:
