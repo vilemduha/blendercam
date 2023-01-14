@@ -31,6 +31,15 @@ import subprocess
 import sys
 import threading
 import time
+
+try:
+    import shapely
+except ImportError:
+    # pip install required python stuff
+    subprocess.check_call([sys.executable, "-m", "ensurepip"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","equation","opencamlib"])
+
+
 from bpy.app.handlers import persistent
 from bpy.props import *
 from bpy.types import Menu, Operator, UIList, AddonPreferences
@@ -39,6 +48,8 @@ from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils,
     polygon_utils_cam  # , post_processors
 from mathutils import *
 from shapely import geometry as sgeometry
+
+
 
 bl_info = {
     "name": "CAM - gcode generation tools",
@@ -372,20 +383,20 @@ def updateExact(o, context):
     o.update_zbufferimage_tag = True
     o.update_offsetimage_tag = True
     if o.use_exact and (
-            o.strategy == 'WATERLINE' or o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse):
+             o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse):
         #    o.use_exact = False
         o.use_opencamlib = False
-        print('waterline and pocket cannot use opencamlib')
+        print(' pocket cannot use opencamlib')
 
 
 def updateOpencamlib(o, context):
     print('update opencamlib ')
     o.changed = True
     if o.use_opencamlib and (
-            o.strategy == 'WATERLINE' or o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse):
+            o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS'):
         o.use_exact = False
         o.use_opencamlib = False
-        print('waterline and pocket cannot use opencamlib')
+        print('pocket cannot use opencamlib')
 
 
 def updateBridges(o, context):

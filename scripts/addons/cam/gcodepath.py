@@ -54,7 +54,7 @@ from cam.polygon_utils_cam import *
 
 from cam import image_utils
 from cam.image_utils import *
-
+from cam.opencamlib.opencamlib import *
 from cam.nc import iso
 
 
@@ -323,7 +323,7 @@ def exportGcodePath(filename, vertslist, operations):
                 continue
             v = vert.co
             # redundant point on line detection
-            if o.remove_redundant_points:
+            if o.remove_redundant_points and o.strategy != 'DRILL':
                 nextv = v
                 if ii == 0:
                     firstv = v  # only happens once
@@ -486,7 +486,7 @@ def exportGcodePath(filename, vertslist, operations):
                 c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=last.z * unitcorr)
                 processedops = 0
 
-        if o.remove_redundant_points:
+        if o.remove_redundant_points and o.strategy != "DRILL":
             print("online " + str(online) + " offline " + str(offline) + " " + str(
                 round(online / (offline + online) * 100, 1)) + "% removal")
         c.feedrate(unitcorr * o.feedrate)
@@ -738,13 +738,13 @@ def getPath3axis(context, operation):
             poly = spolygon.Polygon()  # polygversion
             lastchunks = []
 
-            for p in slicepolys:
+            for p in slicepolys.geoms:
                 poly = poly.union(p)  # polygversion TODO: why is this added?
                 nchunks = shapelyToChunks(p, z)
                 nchunks = limitChunks(nchunks, o, force=True)
                 lastchunks.extend(nchunks)
                 slicechunks.extend(nchunks)
-            if len(slicepolys) > 0:
+            if len(slicepolys.geoms) > 0:
                 slicesfilled += 1
 
             #

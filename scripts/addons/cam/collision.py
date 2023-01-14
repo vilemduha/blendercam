@@ -259,8 +259,7 @@ def prepareBulletCollision(o):
         bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE),
                                  constraint_axis=(False, False, False), orient_type='GLOBAL', mirror=False,
                                  use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1,
-                                 snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False,
-                                 snap_normal=(0, 0, 0), texture_space=False, release_confirm=False)
+                                 texture_space=False, release_confirm=False)
         collisionob.location = collisionob.location * BULLET_SCALE
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         bpy.context.view_layer.objects.active = collisionob
@@ -275,8 +274,7 @@ def prepareBulletCollision(o):
             bpy.ops.transform.resize(value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE),
                                      constraint_axis=(False, False, False), orient_type='GLOBAL',
                                      mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH',
-                                     proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0),
-                                     snap_align=False, snap_normal=(0, 0, 0), texture_space=False,
+                                     proportional_size=1, texture_space=False,
                                      release_confirm=False)
             ob.location = ob.location * BULLET_SCALE
     # stepping simulation so that objects are up to date
@@ -301,8 +299,7 @@ def cleanupBulletCollision(o):
             bpy.ops.transform.resize(value=(1.0 / BULLET_SCALE, 1.0 / BULLET_SCALE, 1.0 / BULLET_SCALE),
                                      constraint_axis=(False, False, False), orient_type='GLOBAL',
                                      mirror=False, use_proportional_edit=False, proportional_edit_falloff='SMOOTH',
-                                     proportional_size=1, snap=False, snap_target='CLOSEST', snap_point=(0, 0, 0),
-                                     snap_align=False, snap_normal=(0, 0, 0), texture_space=False,
+                                     proportional_size=1, texture_space=False,
                                      release_confirm=False)
             ob.location = ob.location / BULLET_SCALE
 

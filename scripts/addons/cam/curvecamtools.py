@@ -170,6 +170,7 @@ class CamCurveOvercuts(bpy.types.Operator):
         return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
 
     def execute(self, context):
+        bpy.ops.object.curve_remove_doubles()
         o1 = bpy.context.active_object
         shapes = utils.curveToShapely(o1)
         negative_overcuts = []
@@ -177,12 +178,13 @@ class CamCurveOvercuts(bpy.types.Operator):
         diameter = self.diameter * 1.001
         for s in shapes.geoms:
             s = shapely.geometry.polygon.orient(s, 1)
-            if s.boundary.type == 'LineString':
-                loops = [s.boundary]
+            if s.boundary.geom_type == 'LineString':
+                from shapely import MultiLineString
+                loops = MultiLineString([s.boundary])
             else:
                 loops = s.boundary
 
-            for ci, c in enumerate(loops):
+            for ci, c in enumerate(loops.geoms):
                 if ci > 0 or self.do_outer:
                     for i, co in enumerate(c.coords):
                         i1 = i - 1
@@ -266,6 +268,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
         return context.active_object is not None and context.active_object.type == 'CURVE'
 
     def execute(self, context):
+        bpy.ops.object.curve_remove_doubles()
         o1 = bpy.context.active_object
         shapes = utils.curveToShapely(o1)
         negative_overcuts = []
@@ -339,9 +342,16 @@ class CamCurveOvercutsB(bpy.types.Operator):
 
         for s in shapes.geoms:
             s = shapely.geometry.polygon.orient(s, 1)  # ensure the shape is counterclockwise
-            loops = [s.boundary] if s.boundary.type == 'LineString' else s.boundary
-            outercurve = self.do_outer or len(loops) == 1
-            for ci, c in enumerate(loops):
+
+            if s.boundary.geom_type == 'LineString':
+                from shapely import MultiLineString
+                loops = MultiLineString([s.boundary])
+            else:
+                loops = s.boundary
+
+
+            outercurve = self.do_outer or len(loops.geoms) == 1
+            for ci, c in enumerate(loops.geoms):
                 if ci > 0 or outercurve:
                     if isTBone:
                         cornerCnt = 0
@@ -609,6 +619,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
                 context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
+        bpy.ops.object.curve_remove_doubles()
         ob = context.active_object
         if self.opencurve and ob.type == 'CURVE':
             bpy.ops.object.duplicate()

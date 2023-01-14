@@ -83,7 +83,7 @@ def shapelyToCoords(anydata):
     # print(p.geom_type)
     if p.is_empty:
         return seq
-    elif p.type == 'Polygon':
+    elif p.geom_type == 'Polygon':
 
         # print('polygon')
         clen = len(p.exterior.coords)
@@ -92,7 +92,7 @@ def shapelyToCoords(anydata):
         # print(len(p.interiors))
         for interior in p.interiors:
             seq.append(interior.coords)
-    elif p.type == 'MultiPolygon':
+    elif p.geom_type == 'MultiPolygon':
         clen = 0
         seq = []
         for sp in p.geoms:
@@ -101,23 +101,23 @@ def shapelyToCoords(anydata):
             for interior in sp.interiors:
                 seq.append(interior.coords)
 
-    elif p.type == 'MultiLineString':
+    elif p.geom_type == 'MultiLineString':
         seq = []
         for linestring in p.geoms:
             seq.append(linestring.coords)
-    elif p.type == 'LineString':
+    elif p.geom_type == 'LineString':
         seq = []
         seq.append(p.coords)
 
-    elif p.type == 'MultiPoint':
+    elif p.geom_type == 'MultiPoint':
         return
-    elif p.type == 'GeometryCollection':
+    elif p.geom_type == 'GeometryCollection':
         # print(dir(p))
         # print(p.geometryType, p.geom_type)
         clen = 0
         seq = []
         # print(p.boundary.coordsd)
-        for sp in p:  # TODO
+        for sp in p.geoms:  # TODO
             clen += len(sp.exterior.coords)
             seq.append(sp.exterior.coords)
             for interior in sp.interiors:

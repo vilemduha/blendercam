@@ -73,7 +73,7 @@ def addAutoBridges(o):
             curve = utils.curveToShapely(ob)
         if ob.type == 'MESH':
             curve = utils.getObjectSilhouete('OBJECTS', [ob])
-        for c in curve:
+        for c in curve.geoms:
             c = c.exterior
             minx, miny, maxx, maxy = c.bounds
             d1 = c.project(sgeometry.Point(maxx + 1000, (maxy + miny) / 2.0))
@@ -102,7 +102,6 @@ def getBridgesPoly(o):
     if not hasattr(o, 'bridgespolyorig'):
         bridgecollectionname = o.bridges_collection_name
         bridgecollection = bpy.data.collections[bridgecollectionname]
-        shapes = []
         bpy.ops.object.select_all(action='DESELECT')
 
         for ob in bridgecollection.objects:
@@ -112,7 +111,7 @@ def getBridgesPoly(o):
         bpy.ops.object.duplicate()
         bpy.ops.object.join()
         ob = bpy.context.active_object
-        shapes.extend(utils.curveToShapely(ob, o.use_bridge_modifiers))
+        shapes = utils.curveToShapely(ob, o.use_bridge_modifiers)
         ob.select_set(state=True)
         bpy.ops.object.delete(use_global=False)
         bridgespoly = sops.unary_union(shapes)
@@ -173,8 +172,8 @@ def useBridges(ch, o):
                 else:
                     intersections = sgeometry.GeometryCollection()
 
-                itpoint = intersections.type == 'Point'
-                itmpoint = intersections.type == 'MultiPoint'
+                itpoint = intersections.geom_type == 'Point'
+                itmpoint = intersections.geom_type == 'MultiPoint'
 
                 if not startinside:
                     newpoints.append(chp1)

@@ -2,23 +2,28 @@ import os
 try:
     import ocl
 except ImportError:
-    pass
+    try:
+        import opencamlib as ocl
+    except ImportError:
+        pass
 import tempfile
 
 from io_mesh_stl import blender_utils
 import mathutils
 import math
 from cam.simple import activate
+from cam.exception import *
 
 OCL_SCALE = 1000.0
 
 def get_oclSTL(operation):
     me = None
     oclSTL = ocl.STLSurf()
-
+    found_mesh=False
     for collision_object in operation.objects:
         activate(collision_object)
-        if collision_object.type == "MESH":
+        if collision_object.type == "MESH" or collision_object.type== "CURVE" or collision_object.type== "FONT" or collision_object.type== "SURFACE":
+            found_mesh=True
             global_matrix = mathutils.Matrix.Identity(4)
             faces = blender_utils.faces_from_mesh(collision_object, global_matrix, operation.use_modifiers)
             for face in faces:
@@ -26,8 +31,9 @@ def get_oclSTL(operation):
                         ocl.Point(face[1][0]*OCL_SCALE, face[1][1]*OCL_SCALE, (face[1][2]+operation.skin)*OCL_SCALE),
                         ocl.Point(face[2][0]*OCL_SCALE, face[2][1]*OCL_SCALE, (face[2][2]+operation.skin)*OCL_SCALE))
                 oclSTL.addTriangle(t)
-
         # FIXME needs to work with collections
+    if not found_mesh:
+        raise CamException("This operation requires a mesh or curve object or equivalent (e.g. text, volume).")
     return oclSTL
 
 

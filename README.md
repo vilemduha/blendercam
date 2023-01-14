@@ -40,7 +40,7 @@ It has been used for many milling projects, and is actively developed. If you ar
 
 ![Linux](https://img.shields.io/badge/Plateform-Linux%20|%20Windows-brightgreen.svg)
 
-BlenderCam is recommended with Linux. BlenderCam can work on Windows but the installation of a dependency (optional OpenCamlib) is tricky.
+Blendercam works on Windows or Linux. Probably on MacOS also.
 
 * [BlenderCam Installation](documentation/Blendercam%20Installation.md) 
 * [Getting started](documentation/Getting%20started.md)
@@ -51,7 +51,7 @@ BlenderCam is recommended with Linux. BlenderCam can work on Windows but the ins
 
 ## 👌 Features
 
-|                            | Blender 3.0, 2.93 and 2.80  
+|                            | Blender 3.4, 3.0, 2.93 and 2.80  
 | -------------------------- | :----------------: |
 | Several milling strategies for 2D and 3D          |         ✔️        | 
 | Cutter types: ball, ballcone, endmill flat, v-carve with various angles, user definable             |         ✔️         |  

@@ -32,7 +32,7 @@ import shapely
 import mathutils
 import math
 import cam
-
+from cam.exception import *
 
 class threadCom:  # object passed to threads to read background process stdout info
     def __init__(self, o, proc):
@@ -201,7 +201,7 @@ class CalculatePath(bpy.types.Operator):
         if not o.valid:
             self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
             print("Operation can't be performed, see warnings for info")
-            return {'FINISHED'}
+            return {'CANCELLED'}
 
         if o.computing:
             return {'FINISHED'}
@@ -210,8 +210,11 @@ class CalculatePath(bpy.types.Operator):
 
         if o.use_layers:
             o.parallel_step_back = False
-
-        gcodepath.getPath(context, o)
+        try:
+            gcodepath.getPath(context, o)
+        except CamException as e:
+            self.report({'ERROR'},str(e))
+            return {'CANCELLED'}
         coll = bpy.data.collections.get('RigidBodyWorld')
         if coll:
             bpy.data.collections.remove(coll)

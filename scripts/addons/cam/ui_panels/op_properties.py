@@ -89,14 +89,14 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'dont_merge')
 
                 elif ao.strategy == 'WATERLINE':
-                    if ao.waterline_fill:
-                        layout.label(text="Waterline roughing strategy")
-                        layout.label(text="needs a skin margin")
-                        layout.prop(ao, 'skin')
-                        layout.prop(ao, 'dist_between_paths')
-                        self.EngagementDisplay(ao, layout)
-                        layout.prop(ao, 'stepdown')
-                        layout.prop(ao, 'waterline_project')
+                    layout.label(text="OCL doesn't support fill areas")
+                    if not ao.use_opencamlib:
+                        layout.prop(ao, 'slice_detail')
+                        layout.prop(ao, 'waterline_fill')
+                        if ao.waterline_fill:
+                            layout.prop(ao, 'dist_between_paths')
+                            self.EngagementDisplay(ao, layout)
+                            layout.prop(ao, 'waterline_project')
                 elif ao.strategy == 'CARVE':
                     layout.prop(ao, 'carve_depth')
                     layout.prop(ao, 'dist_along_paths')
@@ -163,7 +163,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                         layout.prop_search(ao, "bridges_collection_name", bpy.data, "collections")
                         layout.prop(ao, 'use_bridge_modifiers')
                     layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
-
+            if ao.strategy == 'WATERLINE':
+                    layout.label(text="Waterline roughing strategy")
+                    layout.label(text="needs a skin margin")
             layout.prop(ao, 'skin')
 
             if ao.machine_axes == '3':

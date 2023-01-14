@@ -466,7 +466,7 @@ def pocket(o):
         chunks = utils.sortChunks(chunks, o)
 
     if o.pocketToCurve:  # make curve instead of a path
-        simple.joinMultiple("3dpocket")
+        simple.join_multiple("3dpocket")
 
     else:
         chunksToMesh(chunks, o)  # make normal pocket path
