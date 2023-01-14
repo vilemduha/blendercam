@@ -743,7 +743,7 @@ def medial_axis(o):
         chunklayers = utils.sortChunks(chunklayers, o)
 
     if o.add_mesh_for_medial:  # make curve instead of a path
-        simple.joinMultiple("medialMesh")
+        simple.join_multiple("medialMesh")
 
     chunksToMesh(chunklayers, o)
     # add pocket operation for medial if add pocket checked
