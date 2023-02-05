@@ -964,7 +964,7 @@ class camOperation(bpy.types.PropertyGroup):
 
     material_origin: bpy.props.FloatVectorProperty(name='Material origin', default=(0, 0, 0), unit='LENGTH',
                                                    precision=PRECISION, subtype="XYZ", update=updateMaterial)
-    material_size: bpy.props.FloatVectorProperty(name='Material size', default=(0.200, 0.200, 0.100), unit='LENGTH',
+    material_size: bpy.props.FloatVectorProperty(name='Material size', default=(0.200, 0.200, 0.100), min=0, unit='LENGTH',
                                                  precision=PRECISION, subtype="XYZ", update=updateMaterial)
     min: bpy.props.FloatVectorProperty(name='Operation minimum', default=(0, 0, 0), unit='LENGTH', precision=PRECISION,
                                        subtype="XYZ")
