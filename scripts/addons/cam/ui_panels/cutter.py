@@ -43,7 +43,10 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                 row.operator("render.cam_preset_cutter_add", text="", icon='ADD')
                 row.operator("render.cam_preset_cutter_add", text="", icon='REMOVE').remove_active = True
                 layout.prop(ao, 'cutter_id')
-                layout.prop(ao, 'cutter_type')
+                if ao.strategy == "POCKET" or ao.strategy == "CUTOUT" :
+                    layout.prop(ao, 'cutter_typeb')
+                else:
+                    layout.prop(ao, 'cutter_type')
                 if ao.cutter_type == 'VCARVE':
                     layout.prop(ao, 'cutter_tip_angle')
                 if ao.cutter_type == 'BALLCONE':
