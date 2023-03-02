@@ -274,6 +274,7 @@ class CamCurveMortise(bpy.types.Operator):
     bl_label = "Mortise"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
+    finger_size: bpy.props.BoolProperty(name="kurf bending only", default=False)
     finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005, max=3.0, precision=4,
                                          unit="LENGTH")
     min_finger_size: bpy.props.FloatProperty(name="Minimum Finger Size", default=0.0025, min=0.001, max=3.0,

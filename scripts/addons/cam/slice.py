@@ -82,6 +82,7 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         bpy.context.scene.collection.children.link(tcollection)
 
     # show object information
+    print(ob)
     print(ob.dimensions)
     print(ob.location)
 

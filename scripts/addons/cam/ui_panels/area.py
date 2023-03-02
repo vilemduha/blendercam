@@ -21,7 +21,9 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
             return
 
         self.draw_z_limits()
-        self.draw_xy_limits()
+
+        if self.ao.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'PARALLEL', 'CROSS']:
+            self.draw_xy_limits()
 
     # Draw layers option: use layers(y/n) and choose the stepdown
     def draw_z_limits(self):
