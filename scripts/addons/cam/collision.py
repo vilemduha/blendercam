@@ -263,7 +263,8 @@ def prepareBulletCollision(o):
         collisionob.location = collisionob.location * BULLET_SCALE
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         bpy.context.view_layer.objects.active = collisionob
-        active_collection.objects.unlink(collisionob)
+        if active_collection in collisionob.users_collection:
+            active_collection.objects.unlink(collisionob)
 
     getCutterBullet(o)
 
