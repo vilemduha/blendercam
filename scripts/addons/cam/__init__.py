@@ -504,7 +504,7 @@ class camOperation(bpy.types.PropertyGroup):
                                       ('IMAGE', 'Image', 'a')),
                                   description='Geometry source',
                                   default='OBJECT', update=updateOperationValid)
-    cutter_type: EnumProperty(name='Cutter',
+    cutter_typeb: EnumProperty(name='Cutter',
                               items=(
                                   ('END', 'End', 'end - flat cutter'),
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
@@ -514,6 +514,18 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('CYLCONE', 'Cylinder cone', 'Cylinder end with a Cone for Parallel - X'),
                                   ('LASER', 'Laser', 'Laser cutter'),
                                   ('PLASMA', 'Plasma', 'Plasma cutter'),
+                                  ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
+                              description='Type of cutter used',
+                              default='END', update=updateZbufferImage)
+
+    cutter_type: EnumProperty(name='Cutter',
+                              items=(
+                                  ('END', 'End', 'end - flat cutter'),
+                                  ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
+                                  ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
+                                  ('VCARVE', 'V-carve', 'v carve cutter'),
+                                  ('BALLCONE', 'Ballcone', 'Ball with a Cone for Parallel - X'),
+                                  ('CYLCONE', 'Cylinder cone', 'Cylinder end with a Cone for Parallel - X'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
                               description='Type of cutter used',
                               default='END', update=updateZbufferImage)
@@ -964,7 +976,7 @@ class camOperation(bpy.types.PropertyGroup):
 
     material_origin: bpy.props.FloatVectorProperty(name='Material origin', default=(0, 0, 0), unit='LENGTH',
                                                    precision=PRECISION, subtype="XYZ", update=updateMaterial)
-    material_size: bpy.props.FloatVectorProperty(name='Material size', default=(0.200, 0.200, 0.100), unit='LENGTH',
+    material_size: bpy.props.FloatVectorProperty(name='Material size', default=(0.200, 0.200, 0.100), min=0, unit='LENGTH',
                                                  precision=PRECISION, subtype="XYZ", update=updateMaterial)
     min: bpy.props.FloatVectorProperty(name='Operation minimum', default=(0, 0, 0), unit='LENGTH', precision=PRECISION,
                                        subtype="XYZ")

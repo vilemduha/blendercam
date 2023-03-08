@@ -239,7 +239,7 @@ def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
 def make_variable_flex_pocket(height, finger_thick, pocket_width, locations):
     #   creates pockets pocket using mortise function for kerf bending
     for dist in locations:
-        mortise(height - 2 * finger_thick, pocket_width, 0, dist, 0, math.pi / 2)
+        mortise(height + 2 * finger_thick, pocket_width, 0, dist, 0, math.pi / 2)
         simple.active_name("_flex_pocket")
 
     simple.join_multiple("_flex_pocket")
@@ -262,6 +262,11 @@ def create_flex_side(length, height, finger_thick, top_bottom=False):
         simple.make_active("base")
         fingers = bpy.context.active_object
         bpy.ops.transform.translate(value=(0.0, height / 2 - finger_thick / 2 + 0.0003, 0.0))
+
+    bpy.ops.curve.simple(align='WORLD', location=(length / 2 + 0.00025, 0, 0), rotation=(0, 0, 0),
+                         Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D',
+                         outputType='POLY', use_cyclic_u=True, handleType='AUTO', edit_mode=False)
+    simple.active_name("no_fingers")
 
     bpy.ops.curve.simple(align='WORLD', location=(length / 2 + 0.00025, 0, 0), rotation=(0, 0, 0),
                          Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D',
@@ -456,6 +461,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
 
                 #   adaptive finger length start
                 while finger_sz > min_finger and next_angle_difference > adaptive:
+#                while finger_sz > min_finger and next_angle_difference > adaptive:
                     finger_sz *= 0.95  # reduce the size of finger by a percentage... the closer to 1.0, the slower
                     distance = old_distance + 3 * oldfinger_sz / 2 + finger_sz / 2
                     mortise_point = loop.interpolate(distance)  # get the next mortise point
