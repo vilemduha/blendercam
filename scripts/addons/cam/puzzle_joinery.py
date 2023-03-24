@@ -242,7 +242,8 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
 
     fingers(diameter, tolerance, amount, stem=stem)
     twistf('receptacle', thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
-
+    twistf('testing', thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
+    print("generating arc")
     # generate arc
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Segment',
                          Simple_a=radius - thick / 2,

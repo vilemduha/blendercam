@@ -37,7 +37,7 @@ try:
 except ImportError:
     # pip install required python stuff
     subprocess.check_call([sys.executable, "-m", "ensurepip"])
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","equation","opencamlib"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","Equation","opencamlib"])
 
 
 from bpy.app.handlers import persistent
