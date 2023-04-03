@@ -329,7 +329,10 @@ def pocket(o):
 
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
-        pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
+        endDiv = 2
+        if i < approxn -2:     #detect end of rectangular pocket
+            endDiv = 1
+        pnew = p.buffer(-o.dist_between_paths/endDiv, o.circle_detail)
         # print("pnew")
 
         nchunks = limitChunks(nchunks, o)
