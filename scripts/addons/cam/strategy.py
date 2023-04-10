@@ -331,7 +331,10 @@ def pocket(o):
         # print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
         if pnew.is_empty:
-            pnew = p.buffer(-o.dist_between_paths/2, o.circle_detail)
+            
+            pt = p.buffer(-c_offset, o.circle_detail)     # test if the last curve will leave material
+            if not pt.is_empty:
+                pnew = pt
         # print("pnew")
 
         nchunks = limitChunks(nchunks, o)
