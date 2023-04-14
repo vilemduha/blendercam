@@ -64,7 +64,8 @@ class CamCurveHatch(bpy.types.Operator):
         layout.prop(self, 'pocket_type')
         if self.pocket_type == 'POCKET':
             layout.prop(self, 'contour')
-            layout.prop(self, 'contour_separate')
+            if self.contour:
+                layout.prop(self, 'contour_separate')
         else:
             layout.prop(self, 'hull')
 
