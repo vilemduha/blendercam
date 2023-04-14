@@ -45,6 +45,7 @@ class CamCurveHatch(bpy.types.Operator):
     offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=-1.0, max=3.0, precision=4, unit="LENGTH")
     amount: bpy.props.IntProperty(name="amount", default=10, min=1, max=10000)
     hull: bpy.props.BoolProperty(name="Convex Hull", default=False)
+    contour:bpy.props.BoolProperty(name="Contour Curve", default=False)
     pocket_type: EnumProperty(name='Type pocket',
                               items=(('BOUNDS', 'makes a bounds rectangle', 'makes a bounding square'),
                                      ('POCKET', 'Pocket', 'makes a pocket inside a closed loop')),
@@ -55,11 +56,11 @@ class CamCurveHatch(bpy.types.Operator):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
 
     def execute(self, context):
+        ob = context.active_object
         if self.hull:
             bpy.ops.object.convex_hull()
             simple.active_name('crosshatch_hull')
         from shapely import affinity
-        from shapely.ops import voronoi_diagram
         shapes = utils.curveToShapely(bpy.context.active_object)
         for s in shapes.geoms:
             coords = []
@@ -107,6 +108,12 @@ class CamCurveHatch(bpy.types.Operator):
         bpy.ops.curve.select_all(action='SELECT')
         bpy.ops.curve.subdivide()
         bpy.ops.object.editmode_toggle()
+        if self.contour:
+            simple.deselect()
+            bpy.context.view_layer.objects.active = ob
+            ob.select_set(True)
+            bpy.ops.object.silhouete_offset(offset=self.offset)
+            simple.active_name('crosshatch_contour')
         simple.join_multiple('crosshatch')
         simple.remove_doubles()
         return {'FINISHED'}
