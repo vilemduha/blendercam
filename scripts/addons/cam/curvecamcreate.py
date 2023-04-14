@@ -46,6 +46,7 @@ class CamCurveHatch(bpy.types.Operator):
     amount: bpy.props.IntProperty(name="amount", default=10, min=1, max=10000)
     hull: bpy.props.BoolProperty(name="Convex Hull", default=False)
     contour:bpy.props.BoolProperty(name="Contour Curve", default=False)
+    contour_separate: bpy.props.BoolProperty(name="Contour separate", default=False)
     pocket_type: EnumProperty(name='Type pocket',
                               items=(('BOUNDS', 'makes a bounds rectangle', 'makes a bounding square'),
                                      ('POCKET', 'Pocket', 'makes a pocket inside a closed loop')),
@@ -108,16 +109,23 @@ class CamCurveHatch(bpy.types.Operator):
         bpy.ops.curve.select_all(action='SELECT')
         bpy.ops.curve.subdivide()
         bpy.ops.object.editmode_toggle()
+        simple.join_multiple('crosshatch')
+        simple.remove_doubles()
+
         # add contour
         if self.contour:
             simple.deselect()
             bpy.context.view_layer.objects.active = ob
             ob.select_set(True)
             bpy.ops.object.silhouete_offset(offset=self.offset)
-            simple.active_name('crosshatch_contour')
+            if self.contour_separate:
+                simple.active_name('contour_hatch')
+                simple.deselect()
+            else:
+                simple.active_name('crosshatch_contour')
+                simple.join_multiple('crosshatch')
+                simple.remove_doubles()
 
-        simple.join_multiple('crosshatch')
-        simple.remove_doubles()
         return {'FINISHED'}
 
 
