@@ -103,6 +103,10 @@ class CamCurveHatch(bpy.types.Operator):
         simple.remove_multiple('crosshatch_hull')
 
         simple.select_multiple('crosshatch')
+        bpy.ops.object.editmode_toggle()
+        bpy.ops.curve.select_all(action='SELECT')
+        bpy.ops.curve.subdivide()
+        bpy.ops.object.editmode_toggle()
         return {'FINISHED'}
 
 
