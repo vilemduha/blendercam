@@ -108,12 +108,14 @@ class CamCurveHatch(bpy.types.Operator):
         bpy.ops.curve.select_all(action='SELECT')
         bpy.ops.curve.subdivide()
         bpy.ops.object.editmode_toggle()
+        # add contour
         if self.contour:
             simple.deselect()
             bpy.context.view_layer.objects.active = ob
             ob.select_set(True)
             bpy.ops.object.silhouete_offset(offset=self.offset)
             simple.active_name('crosshatch_contour')
+
         simple.join_multiple('crosshatch')
         simple.remove_doubles()
         return {'FINISHED'}
