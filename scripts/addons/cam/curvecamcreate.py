@@ -45,7 +45,7 @@ class CamCurveHatch(bpy.types.Operator):
     offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=-1.0, max=3.0, precision=4, unit="LENGTH")
     amount: bpy.props.IntProperty(name="amount", default=10, min=1, max=10000)
     hull: bpy.props.BoolProperty(name="Convex Hull", default=False)
-    contour:bpy.props.BoolProperty(name="Contour Curve", default=False)
+    contour: bpy.props.BoolProperty(name="Contour Curve", default=False)
     contour_separate: bpy.props.BoolProperty(name="Contour separate", default=False)
     pocket_type: EnumProperty(name='Type pocket',
                               items=(('BOUNDS', 'makes a bounds rectangle', 'makes a bounding square'),
@@ -56,7 +56,20 @@ class CamCurveHatch(bpy.types.Operator):
     def poll(cls, context):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
 
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, 'angle')
+        layout.prop(self, 'distance')
+        layout.prop(self, 'hull')
+        layout.prop(self, 'pocket_type')
+        if self.pocket_type == 'POCKET':
+            layout.prop(self, 'contour')
+            layout.prop(self, 'contour_separate')
+
     def execute(self, context):
+
+
+
         ob = context.active_object
         if self.hull:
             bpy.ops.object.convex_hull()
