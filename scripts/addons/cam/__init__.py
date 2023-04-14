@@ -603,8 +603,8 @@ class camOperation(bpy.types.PropertyGroup):
 
     # pocket options
     pocket_option: EnumProperty(name='Start Position', items=(
-        ('INSIDE', 'Inside', 'a'), ('OUTSIDE', 'Outside', 'a'), ('MIDDLE', 'Middle', 'a')),
-                                description='Pocket starting position', default='MIDDLE', update=updateRest)
+        ('INSIDE', 'Inside', 'a'), ('OUTSIDE', 'Outside', 'a')),
+                                description='Pocket starting position', default='INSIDE', update=updateRest)
     pocketToCurve: bpy.props.BoolProperty(name="Pocket to curve",
                                           description="generates a curve instead of a path",
                                           default=False, update=updateRest)

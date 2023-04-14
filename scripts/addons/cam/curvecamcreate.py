@@ -108,6 +108,7 @@ class CamCurveHatch(bpy.types.Operator):
         bpy.ops.curve.subdivide()
         bpy.ops.object.editmode_toggle()
         simple.join_multiple('crosshatch')
+        bpy.ops.object.curve_remove_doubles()
         return {'FINISHED'}
 
 
