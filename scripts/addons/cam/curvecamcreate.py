@@ -60,6 +60,7 @@ class CamCurveHatch(bpy.types.Operator):
         layout = self.layout
         layout.prop(self, 'angle')
         layout.prop(self, 'distance')
+        layout.prop(self, 'distance')
 
         layout.prop(self, 'pocket_type')
         if self.pocket_type == 'POCKET':
