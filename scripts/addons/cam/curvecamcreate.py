@@ -43,6 +43,7 @@ class CamCurveHatch(bpy.types.Operator):
     angle: bpy.props.FloatProperty(name="angle", default=0, min=-math.pi/2, max=math.pi/2, precision=4, subtype="ANGLE")
     distance: bpy.props.FloatProperty(name="spacing", default=0.015, min=0, max=3.0, precision=4, unit="LENGTH")
     offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=-1.0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height", default=0.000, min=-1.0, max=1.0, precision=4, unit="LENGTH")
     amount: bpy.props.IntProperty(name="amount", default=10, min=1, max=10000)
     hull: bpy.props.BoolProperty(name="Convex Hull", default=False)
     contour: bpy.props.BoolProperty(name="Contour Curve", default=False)
@@ -61,6 +62,7 @@ class CamCurveHatch(bpy.types.Operator):
         layout.prop(self, 'angle')
         layout.prop(self, 'distance')
         layout.prop(self, 'offset')
+        layout.prop(self, 'height')
 
         layout.prop(self, 'pocket_type')
         if self.pocket_type == 'POCKET':
@@ -71,6 +73,8 @@ class CamCurveHatch(bpy.types.Operator):
                 layout.prop(self, 'contour_separate')
         else:
             layout.prop(self, 'hull')
+            if self.contour:
+                layout.prop(self, 'contour')
 
     def execute(self, context):
         simple.remove_multiple("crosshatch")
@@ -115,7 +119,7 @@ class CamCurveHatch(bpy.types.Operator):
                 xing = translated.intersection(s.buffer(self.offset))
                 # Shapely detects intersections with the original curve or hull
 
-            utils.shapelyToCurve('crosshatch_lines', xing, depth)
+            utils.shapelyToCurve('crosshatch_lines', xing, self.height)
 
         # remove temporary shapes
         simple.remove_multiple('crosshatch_bound')
