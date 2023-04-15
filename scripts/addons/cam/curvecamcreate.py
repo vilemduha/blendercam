@@ -75,6 +75,9 @@ class CamCurveHatch(bpy.types.Operator):
 
 
         ob = context.active_object
+        ob.select_set(True)
+        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+        depth = ob.location[2]
         if self.hull:
             bpy.ops.object.convex_hull()
             simple.active_name('crosshatch_hull')
@@ -115,7 +118,7 @@ class CamCurveHatch(bpy.types.Operator):
                 xing = translated.intersection(s.buffer(self.offset))
                 # Shapely detects intersections with the original curve or hull
 
-            utils.shapelyToCurve('crosshatch_lines', xing, 0)
+            utils.shapelyToCurve('crosshatch_lines', xing, depth)
 
         # remove temporary shapes
         simple.remove_multiple('crosshatch_bound')
