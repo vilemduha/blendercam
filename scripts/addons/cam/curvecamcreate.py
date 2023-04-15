@@ -73,10 +73,11 @@ class CamCurveHatch(bpy.types.Operator):
             layout.prop(self, 'hull')
 
     def execute(self, context):
-
-
-
+        simple.remove_multiple("crosshatch")
         ob = context.active_object
+        ob.select_set(True)
+        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+        depth = ob.location[2]
         if self.hull:
             bpy.ops.object.convex_hull()
             simple.active_name('crosshatch_hull')
@@ -89,15 +90,12 @@ class CamCurveHatch(bpy.types.Operator):
             miny -= self.offset
             maxx += self.offset
             maxy += self.offset
-
             centery = (miny + maxy) / 2
             height = maxy - miny
             width = maxx - minx
             centerx = (minx+maxx) / 2
             diagonal = math.hypot(width, height)
-
             simple.add_bound_rectangle(minx, miny, maxx, maxy, 'crosshatch_bound')
-
             amount = int(2*diagonal/self.distance) + 1
 
             for x in range(amount):
@@ -117,12 +115,11 @@ class CamCurveHatch(bpy.types.Operator):
                 xing = translated.intersection(s.buffer(self.offset))
                 # Shapely detects intersections with the original curve or hull
 
-            utils.shapelyToCurve('crosshatch_lines', xing, 0)
+            utils.shapelyToCurve('crosshatch_lines', xing, depth)
 
         # remove temporary shapes
         simple.remove_multiple('crosshatch_bound')
         simple.remove_multiple('crosshatch_hull')
-
         simple.select_multiple('crosshatch')
         bpy.ops.object.editmode_toggle()
         bpy.ops.curve.select_all(action='SELECT')
