@@ -330,6 +330,11 @@ def pocket(o):
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
+        if pnew.is_empty:
+            
+            pt = p.buffer(-c_offset, o.circle_detail)     # test if the last curve will leave material
+            if not pt.is_empty:
+                pnew = pt
         # print("pnew")
 
         nchunks = limitChunks(nchunks, o)

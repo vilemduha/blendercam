@@ -43,8 +43,11 @@ class CamCurveHatch(bpy.types.Operator):
     angle: bpy.props.FloatProperty(name="angle", default=0, min=-math.pi/2, max=math.pi/2, precision=4, subtype="ANGLE")
     distance: bpy.props.FloatProperty(name="spacing", default=0.015, min=0, max=3.0, precision=4, unit="LENGTH")
     offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=-1.0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height", default=0.000, min=-1.0, max=1.0, precision=4, unit="LENGTH")
     amount: bpy.props.IntProperty(name="amount", default=10, min=1, max=10000)
     hull: bpy.props.BoolProperty(name="Convex Hull", default=False)
+    contour: bpy.props.BoolProperty(name="Contour Curve", default=False)
+    contour_separate: bpy.props.BoolProperty(name="Contour separate", default=False)
     pocket_type: EnumProperty(name='Type pocket',
                               items=(('BOUNDS', 'makes a bounds rectangle', 'makes a bounding square'),
                                      ('POCKET', 'Pocket', 'makes a pocket inside a closed loop')),
@@ -54,12 +57,35 @@ class CamCurveHatch(bpy.types.Operator):
     def poll(cls, context):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
 
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, 'angle')
+        layout.prop(self, 'distance')
+        layout.prop(self, 'offset')
+        layout.prop(self, 'height')
+
+        layout.prop(self, 'pocket_type')
+        if self.pocket_type == 'POCKET':
+            if self.hull:
+                layout.prop(self, 'hull')
+            layout.prop(self, 'contour')
+            if self.contour:
+                layout.prop(self, 'contour_separate')
+        else:
+            layout.prop(self, 'hull')
+            if self.contour:
+                layout.prop(self, 'contour')
+
     def execute(self, context):
+        simple.remove_multiple("crosshatch")
+        ob = context.active_object
+        ob.select_set(True)
+        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+        depth = ob.location[2]
         if self.hull:
             bpy.ops.object.convex_hull()
             simple.active_name('crosshatch_hull')
         from shapely import affinity
-        from shapely.ops import voronoi_diagram
         shapes = utils.curveToShapely(bpy.context.active_object)
         for s in shapes.geoms:
             coords = []
@@ -68,15 +94,12 @@ class CamCurveHatch(bpy.types.Operator):
             miny -= self.offset
             maxx += self.offset
             maxy += self.offset
-
             centery = (miny + maxy) / 2
             height = maxy - miny
             width = maxx - minx
             centerx = (minx+maxx) / 2
             diagonal = math.hypot(width, height)
-
             simple.add_bound_rectangle(minx, miny, maxx, maxy, 'crosshatch_bound')
-
             amount = int(2*diagonal/self.distance) + 1
 
             for x in range(amount):
@@ -96,13 +119,33 @@ class CamCurveHatch(bpy.types.Operator):
                 xing = translated.intersection(s.buffer(self.offset))
                 # Shapely detects intersections with the original curve or hull
 
-            utils.shapelyToCurve('crosshatch_lines', xing, 0)
+            utils.shapelyToCurve('crosshatch_lines', xing, self.height)
 
         # remove temporary shapes
         simple.remove_multiple('crosshatch_bound')
         simple.remove_multiple('crosshatch_hull')
-
         simple.select_multiple('crosshatch')
+        bpy.ops.object.editmode_toggle()
+        bpy.ops.curve.select_all(action='SELECT')
+        bpy.ops.curve.subdivide()
+        bpy.ops.object.editmode_toggle()
+        simple.join_multiple('crosshatch')
+        simple.remove_doubles()
+
+        # add contour
+        if self.contour:
+            simple.deselect()
+            bpy.context.view_layer.objects.active = ob
+            ob.select_set(True)
+            bpy.ops.object.silhouete_offset(offset=self.offset)
+            if self.contour_separate:
+                simple.active_name('contour_hatch')
+                simple.deselect()
+            else:
+                simple.active_name('crosshatch_contour')
+                simple.join_multiple('crosshatch')
+                simple.remove_doubles()
+
         return {'FINISHED'}
 
 

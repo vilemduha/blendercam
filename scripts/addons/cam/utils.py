@@ -1074,6 +1074,8 @@ def sortChunks(chunks, o):
         # chunks[:] = []
 
         i -= 1
+    if o.strategy == 'POCKET' and o.pocket_option == 'OUTSIDE':
+        sortedchunks.reverse()
 
     sys.setrecursionlimit(1000)
     if o.strategy != 'DRILL' and o.strategy != 'OUTLINEFILL':
