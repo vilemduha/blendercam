@@ -12,7 +12,6 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw(self, context):
 
         if self.active_op is None: return
-        if not self.active_op.valid: return
 
         # FIXME: This function displays the progression of a job with a progress bar
         # Commenting because it makes no sense here
