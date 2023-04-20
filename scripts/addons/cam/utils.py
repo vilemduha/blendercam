@@ -1405,6 +1405,7 @@ def addMachineAreaObject():
         o = s.objects['CAM_machine']
     else:
         oldunits = s.unit_settings.system
+        oldLengthUnit = s.unit_settings.length_unit
         # need to be in metric units when adding machine mesh object
         # in order for location to work properly
         s.unit_settings.system = 'METRIC'
@@ -1431,6 +1432,7 @@ def addMachineAreaObject():
         o.hide_select = True
         # o.select = False
         s.unit_settings.system = oldunits
+        s.unit_settings.length_unit = oldLengthUnit
 
     # bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
 
