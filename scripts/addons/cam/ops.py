@@ -594,21 +594,17 @@ class CamOperationAdd(bpy.types.Operator):
         s = bpy.context.scene
         fixUnits()
 
+        ob = bpy.context.active_object
+        if ob is None: raise CamException("No object selected")
+
+        minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
         s.cam_operations.add()
         o = s.cam_operations[-1]
-        ob = bpy.context.active_object
-        if ob is not None:
-            o.object_name = ob.name
-            minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
-            o.minz = minz
-        else:
-            # FIXME Creating an operation without any object selected
-            # This should actually display a modal dialog
-            # and cancel the operation creation
-            o.object_name = "none"
-            o.minz = 0
+        o.object_name = ob.name
+        o.minz = minz
 
         s.cam_active_operation = len(s.cam_operations) - 1
+        
         o.name = f"Op_{o.object_name}_{s.cam_active_operation + 1}"
         o.filename = o.name
 

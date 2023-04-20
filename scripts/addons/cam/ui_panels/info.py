@@ -1,4 +1,3 @@
-import sys
 import bpy
 
 from cam.simple import strInUnits
@@ -14,16 +13,18 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
+    # Display the Info Panel
     def draw(self, context):
         self.draw_opencamlib_version()
 
         if self.has_operations():
             self.draw_active_op_warnings()
-            self.draw_active_op_data()
+            self.draw_active_op_time()
             self.draw_active_op_money_cost()
         else:
             self.layout.label(text='No CAM operation created')
 
+    # Display the OpenCamLib version
     def draw_opencamlib_version(self):
         opencamlib_version = self.opencamlib_version()
         if opencamlib_version is None:
@@ -31,43 +32,54 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
         else:
             self.layout.label(text = f"Opencamlib v{opencamlib_version} installed")
 
+    # Display warnings related to the current operation
     def draw_active_op_warnings(self):
-        active_op = self.active_operation()
-        if active_op is None: return
+        if self.active_op is None: return
 
-        for line in active_op.warnings.rstrip("\n").split("\n"):
+        for line in self.active_op.warnings.rstrip("\n").split("\n"):
             if len(line) > 0 :
                 self.layout.label(text=line, icon='ERROR')
 
-    def draw_active_op_data(self):
-        active_op = self.active_operation()
-        if active_op is None: return
-        if not active_op.valid: return
-        if not int(active_op.duration*60) > 0: return
+    # Display the time estimation for the current operation
+    def draw_active_op_time(self):
+        if self.active_op is None: return
+        if not self.active_op.valid: return
+        if not int(self.active_op.duration*60) > 0: return
 
-        active_op_time_text = "Operation Time: %d s " % int(active_op.duration*60)
-        if active_op.duration > 60:
-            active_op_time_text += " (%dh %dmin)" % (int(active_op.duration / 60), round(active_op.duration % 60))
-        elif active_op.duration > 1:
-            active_op_time_text += " (%dmin)" % round(active_op.duration % 60)
+        time_estimate = f"Operation Time: {int(self.active_op.duration*60)}s " 
+        if self.active_op.duration > 60:
+            time_estimate += f" ({int(self.active_op.duration / 60)}h {round(self.active_op.duration % 60)}min)"
+        elif self.active_op.duration > 1:
+            time_estimate += f" ({round(self.active_op.duration % 60)}min)" 
 
-        self.layout.label(text = active_op_time_text)
+        self.layout.label(text = time_estimate)
 
-        self.layout.label(text="Chipload: %s/tooth" % strInUnits(active_op.chipload, 4))
 
+    # Display the chipload (does this work ?)
+    def draw_active_op_chipload(self):
+        if self.active_op is None: return
+        if not self.active_op.valid: return
+        if not self.active_op.chipload > 0: return
+
+        chipload = f"Chipload: {strInUnits(self.active_op.chipload, 4)}/tooth"
+        self.layout.label(text= chipload)
+
+    # Display the current operation money cost
     def draw_active_op_money_cost(self):
-        active_op = self.active_operation()
-        if active_op is None: return
-        if not active_op.valid: return
-        if not int(active_op.duration*60) > 0: return
+        if self.active_op is None: return
+        if not self.active_op.valid: return
+        if not int(self.active_op.duration*60) > 0: return
+
+        row = self.layout.row()
+        row.label(text='Hourly Rate')
+        row.prop(bpy.context.scene.cam_machine, 'hourly_rate', text='')
 
         # TODO: the hourly_rate button properties should be moved here (UI related only)
         # Right now, trying to do so causes an error
-        self.layout.prop(self.scene.cam_machine, 'hourly_rate')
+        
+        if float(bpy.context.scene.cam_machine.hourly_rate) < 0.01: return
 
-        if float(self.scene.cam_machine.hourly_rate) < 0.01: return
+        cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
+        op_cost = f"Operation cost: ${self.active_op.duration * 60 * cost_per_second:.2f} (${cost_per_second:.2f}/s)"
+        self.layout.label(text = op_cost)
 
-        cost_per_second = self.scene.cam_machine.hourly_rate / 3600
-        self.layout.label(text = "Operation cost: $%.2f (%.2f $/s)"
-            % (active_op.duration * 60 * cost_per_second, cost_per_second)
-        )
