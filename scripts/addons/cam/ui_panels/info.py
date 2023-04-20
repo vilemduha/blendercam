@@ -21,8 +21,6 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.draw_active_op_warnings()
             self.draw_active_op_time()
             self.draw_active_op_money_cost()
-        else:
-            self.layout.label(text='No CAM operation created')
 
     # Display the OpenCamLib version
     def draw_opencamlib_version(self):
