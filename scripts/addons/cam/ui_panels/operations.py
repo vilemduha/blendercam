@@ -21,27 +21,23 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Main draw function
     def draw(self, context):
-        self.context = context
         self.draw_operations_list()
 
         # FIXME: is this ever used ?
         use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
 
         if (not self.has_operations()): return
-        ao = self.active_operation()
-        if ao is None: return
+        if self.active_op is None: return
 
         self.draw_presets()
-
         self.draw_output_buttons()
 
-        layout = self.layout
-        sub = layout.column()
-        sub.active = not ao.computing
+        sub = self.layout.column()
+        sub.active = not self.active_op.computing
 
         # Draw operation name and filename
-        sub.prop(ao, 'name')
-        sub.prop(ao, 'filename')
+        sub.prop(self.active_op, 'name')
+        sub.prop(self.active_op, 'filename')
 
         self.draw_operation_source()
         self.draw_operation_options()
@@ -51,7 +47,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
     # create, delete, duplicate, reorder
     def draw_operations_list(self):
         row = self.layout.row()
-        row.template_list("CAM_UL_operations", '', self.scene, "cam_operations", self.scene, 'cam_active_operation')
+        row.template_list("CAM_UL_operations", '', bpy.context.scene, "cam_operations", bpy.context.scene, 'cam_active_operation')
         col = row.column(align=True)
         col.operator("scene.cam_operation_add", icon='ADD', text="")
         col.operator("scene.cam_operation_copy", icon='COPYDOWN', text="")
@@ -71,58 +67,53 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Draw buttons "Calculate path & export Gcode", "Export Gcode ", and "Simulate this operation"
     def draw_output_buttons(self):
-        layout = self.layout
-        ao = self.active_operation()
-
         # FIXME This does not seem to work - there is never a "Computing" label displayed
         # while an operation is being calculated
-        if ao.computing:
-            row = layout.row(align=True)
+        if self.active_op.computing:
+            row = self.layout.row(align=True)
             row.label(text='computing')
             row.operator('object.kill_calculate_cam_paths_background', text="", icon='CANCEL')
         else:
-            if ao.valid:
-                layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
-                if ao.name is not None:
-                    name = "cam_path_{}".format(ao.name)
-                    if self.scene.objects.get(name) is not None:
-                        layout.operator("object.cam_export", text="Export Gcode ")
-                layout.operator("object.cam_simulate", text="Simulate this operation")
+            if self.active_op.valid:
+                self.layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
+                if self.active_op.name is not None:
+                    name = "cam_path_{}".format(self.active_op.name)
+                    if bpy.context.scene.objects.get(name) is not None:
+                        self.layout.operator("object.cam_export", text="Export Gcode ")
+                self.layout.operator("object.cam_simulate", text="Simulate this operation")
             else:
-                layout.label(text="operation invalid, can't compute")
+                self.layout.label(text="operation invalid, can't compute")
 
 
     # Draw a list of objects which will be used as the source of the operation
     # FIXME Right now, cameras or lights may be used, which crashes
     # The user should only be able to choose meshes and curves
     def draw_operation_source(self):
-        layout = self.layout
-        ao = self.active_operation()
 
-        layout.prop(ao, 'geometry_source')
+        self.layout.prop(self.active_op, 'geometry_source')
 
-        if ao.strategy == 'CURVE':
-            if ao.geometry_source == 'OBJECT':
-                layout.prop_search(ao, "object_name", bpy.data, "objects")
-            elif ao.geometry_source == 'COLLECTION':
-                layout.prop_search(ao, "collection_name", bpy.data, "collections")
+        if self.active_op.strategy == 'CURVE':
+            if self.active_op.geometry_source == 'OBJECT':
+                self.layout.prop_search(self.active_op, "object_name", bpy.data, "objects")
+            elif self.active_op.geometry_source == 'COLLECTION':
+                self.layout.prop_search(self.active_op, "collection_name", bpy.data, "collections")
         else:
-            if ao.geometry_source == 'OBJECT':
-                layout.prop_search(ao, "object_name", bpy.data, "objects")
-                if ao.enable_A:
-                    layout.prop(ao, 'rotation_A')
-                if ao.enable_B:
-                    layout.prop(ao, 'rotation_B')
+            if self.active_op.geometry_source == 'OBJECT':
+                self.layout.prop_search(self.active_op, "object_name", bpy.data, "objects")
+                if self.active_op.enable_A:
+                    self.layout.prop(self.active_op, 'rotation_A')
+                if self.active_op.enable_B:
+                    self.layout.prop(self.active_op, 'rotation_B')
 
-            elif ao.geometry_source == 'COLLECTION':
-                layout.prop_search(ao, "collection_name", bpy.data, "collections")
+            elif self.active_op.geometry_source == 'COLLECTION':
+                self.layout.prop_search(self.active_op, "collection_name", bpy.data, "collections")
             else:
-                layout.prop_search(ao, "source_image_name", bpy.data, "images")
+                self.layout.prop_search(self.active_op, "source_image_name", bpy.data, "images")
 
-        if ao.strategy in ['CARVE', 'PROJECTED_CURVE']:
-            layout.prop_search(ao, "curve_object", bpy.data, "objects")
-            if ao.strategy == 'PROJECTED_CURVE':
-                layout.prop_search(ao, "curve_object1", bpy.data, "objects")
+        if self.active_op.strategy in ['CARVE', 'PROJECTED_CURVE']:
+            self.layout.prop_search(self.active_op, "curve_object", bpy.data, "objects")
+            if self.active_op.strategy == 'PROJECTED_CURVE':
+                self.layout.prop_search(self.active_op, "curve_object1", bpy.data, "objects")
 
     # Draw Operation options:
     # Remove redundant points (optimizes operation)
@@ -131,20 +122,18 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
     # Parent path to object (?)
 
     def draw_operation_options(self):
-        layout = self.layout
-        ao = self.active_operation()
 
         # TODO This should be in some optimization menu
-        if ao.strategy != 'DRILL':
-            layout.prop(ao, 'remove_redundant_points')
+        if self.active_op.strategy != 'DRILL':
+            self.layout.prop(self.active_op, 'remove_redundant_points')
 
-        if ao.remove_redundant_points:
-            layout.label(text='Revise your Code before running!')
-            layout.label(text='Quality will suffer if tolerance')
-            layout.label(text='is high')
-            layout.prop(ao, 'simplify_tol')
+        if self.active_op.remove_redundant_points:
+            self.layout.label(text='Revise your Code before running!')
+            self.layout.label(text='Quality will suffer if tolerance')
+            self.layout.label(text='is high')
+            self.layout.prop(self.active_op, 'simplify_tol')
 
-        if ao.geometry_source in ['OBJECT', 'COLLECTION']:
-            layout.prop(ao, 'use_modifiers')
-        layout.prop(ao, 'hide_all_others')
-        layout.prop(ao, 'parent_path_to_object')
+        if self.active_op.geometry_source in ['OBJECT', 'COLLECTION']:
+            self.layout.prop(self.active_op, 'use_modifiers')
+        self.layout.prop(self.active_op, 'hide_all_others')
+        self.layout.prop(self.active_op, 'parent_path_to_object')
