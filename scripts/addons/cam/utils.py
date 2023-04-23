@@ -1,3 +1,4 @@
+
 # blender CAM utils.py (c) 2012 Vilem Novak
 #
 # ***** BEGIN GPL LICENSE BLOCK *****
@@ -52,6 +53,15 @@ from shapely import geometry as sgeometry
 # from shapely.geometry import * not possible until Polygon libs gets out finally..
 SHAPELY = True
 
+def opencamlib_version():
+    try:
+        import ocl
+    except ImportError:
+        try:
+            import opencamlib as ocl
+        except ImportError as e:
+            return
+    return(ocl.version())
 
 def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
