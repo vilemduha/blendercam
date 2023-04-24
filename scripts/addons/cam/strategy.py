@@ -585,7 +585,7 @@ def medial_axis(o):
     slope = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
     # slope = math.tan((math.pi-angle)/2) #angle in radian
     new_cutter_diameter = o.cutter_diameter
-    m_o_name = o.object_name
+    m_o_name = o.object_source
     if o.cutter_type == 'VCARVE':
         angle = o.cutter_tip_angle
         # start the max depth calc from the "start depth" of the operation.
