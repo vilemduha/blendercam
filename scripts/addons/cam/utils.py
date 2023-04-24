@@ -64,7 +64,7 @@ def opencamlib_version():
     return(ocl.version())
 
 def positionObject(operation):
-    ob = bpy.data.objects[operation.object_source]
+    ob = bpy.data.objects[operation.object_source.name]
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
