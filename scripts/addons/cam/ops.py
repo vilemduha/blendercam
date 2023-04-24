@@ -51,29 +51,6 @@ def threadread(tcom):
         e = inline.find('}')
         tcom.outtext = inline[s + 9:e]
 
-
-class CAMPositionObject(bpy.types.Operator):
-    """position object for CAM operation. Tests object bounds and places them so the object
-    is aligned to be positive from x and y and negative from z."""
-    bl_idname = "object.cam_position"
-    bl_label = "position object for CAM operation"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        s = bpy.context.scene
-        operation = s.cam_operations[s.cam_active_operation]
-        if operation.object_name in bpy.data.objects:
-            utils.positionObject(operation)
-        else:
-            print('no object assigned')
-            return {'FINISHED'}
-        return {'FINISHED'}
-
-    def draw(self, context):
-        layout = self.layout
-        layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
-
-
 @bpy.app.handlers.persistent
 def timer_update(context):
     """monitoring of background processes"""
@@ -574,8 +551,8 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         o.filename = o.name
         o.strategy = 'POCKET'
         o.use_layers = False
-        o.material_from_model = False
-        o.material_size[2] = -maxdepth
+        o.material.estimate_from_model = False
+        o.material.size[2] = -maxdepth
         o.minz_from_ob = False
         o.minz_from_material = True
 
