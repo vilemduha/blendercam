@@ -101,7 +101,7 @@ def testParallel(pos):
     bpy.ops.scene.cam_operation_add()
     o = bpy.context.scene.cam_operations[-1]
     o.ambient_behaviour = 'AROUND'
-    o.material_radius_around_model = 0.01
+    o.material.radius_around_model = 0.01
     bpy.ops.object.calculate_cam_path()
 
 

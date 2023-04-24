@@ -64,7 +64,7 @@ def opencamlib_version():
     return(ocl.version())
 
 def positionObject(operation):
-    ob = bpy.data.objects[operation.object_source]
+    ob = bpy.data.objects[operation.object_source.name]
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
@@ -73,21 +73,21 @@ def positionObject(operation):
     totx = maxx - minx
     toty = maxy - miny
     totz = maxz - minz
-    if operation.material_center_x:
+    if operation.material.center_x:
         ob.location.x -= minx + totx / 2
     else:
         ob.location.x -= minx
 
-    if operation.material_center_y:
+    if operation.material.center_y:
         ob.location.y -= miny + toty / 2
     else:
         ob.location.y -= miny
 
-    if operation.material_Z == 'BELOW':
+    if operation.material.z_position == 'BELOW':
         ob.location.z -= maxz
-    elif operation.material_Z == 'ABOVE':
+    elif operation.material.z_position == 'ABOVE':
         ob.location.z -= minz
-    elif operation.material_Z == 'CENTERED':
+    elif operation.material.z_position == 'CENTERED':
         ob.location.z -= minz + totz / 2
 
     if ob.type != 'CURVE':
@@ -262,23 +262,23 @@ def getBounds(o):
             o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
             print("not minz from object")
 
-        if o.material_from_model:
-            print("material_from_model")
+        if o.material.estimate_from_model:
+            print("Estimate material from model")
 
-            o.min.x = minx - o.material_radius_around_model
-            o.min.y = miny - o.material_radius_around_model
+            o.min.x = minx - o.material.radius_around_model
+            o.min.y = miny - o.material.radius_around_model
             o.max.z = max(o.maxz, maxz)
 
-            o.max.x = maxx + o.material_radius_around_model
-            o.max.y = maxy + o.material_radius_around_model
+            o.max.x = maxx + o.material.radius_around_model
+            o.max.y = maxy + o.material.radius_around_model
         else:
             print("not material from model")
-            o.min.x = o.material_origin.x
-            o.min.y = o.material_origin.y
-            o.min.z = o.material_origin.z - o.material_size.z
-            o.max.x = o.min.x + o.material_size.x
-            o.max.y = o.min.y + o.material_size.y
-            o.max.z = o.material_origin.z
+            o.min.x = o.material.origin.x
+            o.min.y = o.material.origin.y
+            o.min.z = o.material.origin.z - o.material.size.z
+            o.max.x = o.min.x + o.material.size.x
+            o.max.y = o.min.y + o.material.size.y
+            o.max.z = o.material.origin.z
 
     else:
         i = bpy.data.images[o.source_image_name]
@@ -1451,7 +1451,6 @@ def addMachineAreaObject():
         ao.select_set(True)
     # else:
     #     bpy.context.scene.objects.active = None
-
 
 def addMaterialAreaObject():
     s = bpy.context.scene
