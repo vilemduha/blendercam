@@ -2,6 +2,7 @@ import bpy
 
 from cam.simple import strInUnits
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
+import cam.utils
 
 # Info panel
 # This panel gives general information about the current operation
@@ -21,12 +22,10 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.draw_active_op_warnings()
             self.draw_active_op_time()
             self.draw_active_op_money_cost()
-        else:
-            self.layout.label(text='No CAM operation created')
 
     # Display the OpenCamLib version
     def draw_opencamlib_version(self):
-        opencamlib_version = self.opencamlib_version()
+        opencamlib_version = cam.utils.opencamlib_version()
         if opencamlib_version is None:
             self.layout.label(text = "Opencamlib is not installed")
         else:

@@ -960,13 +960,13 @@ class camOperation(bpy.types.PropertyGroup):
     material_from_model: bpy.props.BoolProperty(name="Estimate from model",
                                                 description="Estimate material size from model", default=True,
                                                 update=updateMaterial)
-    material_radius_around_model: bpy.props.FloatProperty(name="radius around model",
+    material_radius_around_model: bpy.props.FloatProperty(name='',
                                                           description="How much to add to model size on all sides",
                                                           default=0.0, unit='LENGTH', precision=PRECISION,
                                                           update=updateMaterial)
-    material_center_x: bpy.props.BoolProperty(name="Center with X axis", description="Position model centered on X",
+    material_center_x: bpy.props.BoolProperty(name="Center on X axis", description="Position model centered on X",
                                               default=False, update=updateMaterial)
-    material_center_y: bpy.props.BoolProperty(name="Center with Y axis", description="Position model centered on Y",
+    material_center_y: bpy.props.BoolProperty(name="Center on Y axis", description="Position model centered on Y",
                                               default=False, update=updateMaterial)
 
     material_Z: bpy.props.EnumProperty(name="Z placement", items=(

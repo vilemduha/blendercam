@@ -10,27 +10,42 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     def draw(self, context):
-        layout = self.layout
-        scene = bpy.context.scene
 
-        if len(scene.cam_operations) == 0:
-            layout.label(text='Add operation first')
-        if len(scene.cam_operations) > 0:
-            ao = scene.cam_operations[scene.cam_active_operation]
-            if ao:
-                layout.template_running_jobs()
-                if ao.geometry_source in ['OBJECT', 'COLLECTION']:
-                    layout.prop(ao, 'material_from_model')
+        if self.active_op is None: return
 
-                    if ao.material_from_model:
-                        layout.prop(ao, 'material_radius_around_model')
-                    else:
-                        layout.prop(ao, 'material_origin')
-                        layout.prop(ao, 'material_size')
+        # FIXME: This function displays the progression of a job with a progress bar
+        # Commenting because it makes no sense here
+        # Consider removing it entirely
+        # self.layout.template_running_jobs()
 
-                    layout.prop(ao, 'material_center_x')
-                    layout.prop(ao, 'material_center_y')
-                    layout.prop(ao, 'material_Z')
-                    layout.operator("object.cam_position", text="Position object")
-                else:
-                    layout.label(text='Estimated from image')
+        if not self.active_op.geometry_source in ['OBJECT', 'COLLECTION']:
+            self.layout.label(text='Estimated from image')
+            return
+
+        self.layout.prop(self.active_op, 'material_from_model')
+
+        if self.active_op.material_from_model:
+            self.draw_estimate_material_from_model()
+        else:
+            self.draw_custom_material_size_and_origin()
+
+        self.draw_axis_alignment()
+            
+    # Display section selecting the radius around the model
+    def draw_estimate_material_from_model(self):
+        row_radius = self.layout.row()
+        row_radius.label(text="Radius around model")
+        row_radius.prop(self.active_op, 'material_radius_around_model')
+    
+    # Display section showing custom material size
+    def draw_custom_material_size_and_origin(self):
+        self.layout.prop(self.active_op, 'material_origin')
+        self.layout.prop(self.active_op, 'material_size')
+
+    # Display Axis alignment section
+    def draw_axis_alignment(self):
+        row_axis = self.layout.row()
+        row_axis.prop(self.active_op, 'material_center_x')
+        row_axis.prop(self.active_op, 'material_center_y')
+        self.layout.prop(self.active_op, 'material_Z')
+        self.layout.operator("object.cam_position", text="Position object")
