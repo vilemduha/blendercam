@@ -17,7 +17,7 @@ class CAM_MATERIAL_Properties(bpy.types.PropertyGroup):
     )
 
     radius_around_model: bpy.props.FloatProperty(
-        name='',
+        name='Radius around model',
         description="Increase cut area around the model on X and Y by this amount",
         default=0.0, unit='LENGTH', precision=cam.constants.PRECISION,
         update=update_material
@@ -110,7 +110,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw_estimate_material_from_model(self):
         row_radius = self.layout.row()
         row_radius.label(text="Additional radius")
-        row_radius.prop(self.active_op.material, 'radius_around_model')
+        row_radius.prop(self.active_op.material, 'radius_around_model', text='')
     
     # Display section showing custom material size
     def draw_custom_material_size_and_origin(self):
