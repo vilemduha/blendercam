@@ -1113,7 +1113,7 @@ def renderSampleImage(o):
 
             h = []
 
-            # ob=bpy.data.objects[o.object_name]
+            # ob=bpy.data.objects[o.object_source.name]
             for ob in s.objects:
                 h.append(ob.hide_render)
                 ob.hide_render = True

@@ -157,7 +157,7 @@ class CalculatePath(bpy.types.Operator):
         s = bpy.context.scene
         o = s.cam_operations[s.cam_active_operation]
         if o.geometry_source == 'OBJECT':
-            ob = bpy.data.objects[o.object_name]
+            ob = bpy.data.objects[o.object_source.name]
             ob.hide_set(False)
         if o.geometry_source == 'COLLECTION':
             obc = bpy.data.collections[o.collection_name]
@@ -536,7 +536,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         if op.name == "MedialPocket":
             mpocket_exists = True
 
-    ob = bpy.data.objects[sname]
+    ob = bpy.data.objects[sname.name]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
     utils.silhoueteOffset(ob, -new_cutter_diameter/2, 1, 0.3)
@@ -545,7 +545,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     if not mpocket_exists:     # create a pocket operation if it does not exist already
         s.cam_operations.add()
         o = s.cam_operations[-1]
-        o.object_name = 'medial_pocket'
+        o.object_source = bpy.data.objects['medial_pocket']
         s.cam_active_operation = len(s.cam_operations) - 1
         o.name = 'MedialPocket'
         o.filename = o.name
@@ -577,12 +577,12 @@ class CamOperationAdd(bpy.types.Operator):
         minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
         s.cam_operations.add()
         o = s.cam_operations[-1]
-        o.object_name = ob.name
+        o.object_source = ob
         o.minz = minz
 
         s.cam_active_operation = len(s.cam_operations) - 1
         
-        o.name = f"Op_{o.object_name}_{s.cam_active_operation + 1}"
+        o.name = f"Op_{ob.name}_{s.cam_active_operation + 1}"
         o.filename = o.name
 
         if s.objects.get('CAM_machine') is None:

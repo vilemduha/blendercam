@@ -570,7 +570,7 @@ def getChangeData(o):
     changedata = ''
     obs = []
     if o.geometry_source == 'OBJECT':
-        obs = [bpy.data.objects[o.object_name]]
+        obs = [bpy.data.objects[o.object_source.name]]
     elif o.geometry_source == 'COLLECTION':
         obs = bpy.data.collections[o.collection_name].objects
     for ob in obs:
