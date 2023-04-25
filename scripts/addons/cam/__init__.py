@@ -291,7 +291,7 @@ def operationValid(self, context):
     o.warnings = ""
     o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     if o.geometry_source == 'OBJECT':
-        if o.object_source not in bpy.data.objects:
+        if o.object_source.name not in bpy.data.objects:
             o.valid = False
             o.warnings = invalidmsg
     if o.geometry_source == 'COLLECTION':

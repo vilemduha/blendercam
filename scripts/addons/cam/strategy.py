@@ -585,7 +585,7 @@ def medial_axis(o):
     slope = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
     # slope = math.tan((math.pi-angle)/2) #angle in radian
     new_cutter_diameter = o.cutter_diameter
-    m_o_name = o.object_source
+    m_o_ob = o.object_source
     if o.cutter_type == 'VCARVE':
         angle = o.cutter_tip_angle
         # start the max depth calc from the "start depth" of the operation.
@@ -755,7 +755,7 @@ def medial_axis(o):
     if o.add_pocket_for_medial:
         #        o.add_pocket_for_medial = False
         # export medial axis parameter to pocket op
-        ops.Add_Pocket(None, maxdepth, m_o_name, new_cutter_diameter)
+        ops.Add_Pocket(None, maxdepth, m_o_ob, new_cutter_diameter)
 
 
 def getLayers(operation, startdepth, enddepth):
