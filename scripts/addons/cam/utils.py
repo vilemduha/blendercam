@@ -57,7 +57,7 @@ def update_operation():
     from . import updateRest
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     active_op.changed = True
-    #updateRest(active_op, bpy.context)
+    updateRest(active_op, bpy.context)
 
 def opencamlib_version():
     try:
