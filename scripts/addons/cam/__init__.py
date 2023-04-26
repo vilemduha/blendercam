@@ -288,24 +288,24 @@ def operationValid(self, context):
     o.changed = True
     o.valid = True
     invalidmsg = "Operation has no valid data input\n"
-    o.warnings = ""
+    o.info.warnings = ""
     o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     if o.geometry_source == 'OBJECT':
         if o.object_source.name not in bpy.data.objects:
             o.valid = False
-            o.warnings = invalidmsg
+            o.info.warnings = invalidmsg
     if o.geometry_source == 'COLLECTION':
         if o.collection_name not in bpy.data.collections:
             o.valid = False
-            o.warnings = invalidmsg
+            o.info.warnings = invalidmsg
         elif len(bpy.data.collections[o.collection_name].objects) == 0:
             o.valid = False
-            o.warnings = invalidmsg
+            o.info.warnings = invalidmsg
 
     if o.geometry_source == 'IMAGE':
         if o.source_image_name not in bpy.data.images:
             o.valid = False
-            o.warnings = invalidmsg
+            o.info.warnings = invalidmsg
 
         o.use_exact = False
     o.update_offsetimage_tag = True
@@ -326,7 +326,7 @@ def updateChipload(self, context):
     print('update chipload ')
     o = self
     # Old chipload
-    o.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
+    o.info.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
     # New chipload with chip thining compensation.
     # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less
     # than 50% cutter engagement with cylindrical end mills. formula 1 Nominal Chipload is
@@ -340,7 +340,7 @@ def updateChipload(self, context):
     # we will be one tiny step on the way to a slightly better chipload calculating function.
 
     # self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(math.sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
-    print(o.chipload)
+    print(o.info.chipload)
 
 
 def updateOffsetImage(self, context):
@@ -468,7 +468,7 @@ def getStrategyList(scene, context):
 class camOperation(bpy.types.PropertyGroup):
 
     material: bpy.props.PointerProperty(type=CAM_MATERIAL_Properties)
-
+    info: bpy.props.PointerProperty(type=CAM_INFO_Properties)
 
 
     name: bpy.props.StringProperty(name="Operation Name", default="Operation", update=updateRest)
@@ -977,9 +977,6 @@ class camOperation(bpy.types.PropertyGroup):
     max: bpy.props.FloatVectorProperty(name='Operation maximum', default=(0, 0, 0), unit='LENGTH', precision=cam.constants.PRECISION,
                                        subtype="XYZ")
 
-    warnings: bpy.props.StringProperty(name='warnings', description='warnings', default='', update=updateRest)
-    chipload: bpy.props.FloatProperty(name="chipload", description="Calculated chipload", default=0.0, unit='LENGTH',
-                                      precision=10)
 
     # g-code options for operation
     output_header: BoolProperty(name="output g-code header",
@@ -1150,7 +1147,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 
     preset_defines = ["o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"]
 
-    preset_values = ['o.use_layers', 'o.duration', 'o.chipload', 'o.material.estimate_from_model', 'o.stay_low', 'o.carve_depth',
+    preset_values = ['o.use_layers', 'o.duration', 'o.info.chipload', 'o.material.estimate_from_model', 'o.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material.size',
                      'o.material.radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact',
                      'o.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height',
@@ -1164,7 +1161,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
                      'o.material.origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.circle_detail',
                      'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle',
                      'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source',
-                     'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.warnings',
+                     'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.info.warnings',
                      'o.object_source', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
                      'o.output_header', 'o.gcode_header', 'o.output_trailer', 'o.gcode_trailer', 'o.use_modifiers',
                      'o.minz_from_material', 'o.useG64',
@@ -1429,6 +1426,7 @@ classes = [
 
     ui.CAM_CHAINS_Panel,
     ui.CAM_OPERATIONS_Panel,
+    ui.CAM_INFO_Properties,
     ui.CAM_INFO_Panel,
     ui.CAM_MATERIAL_Panel,
     ui.CAM_MATERIAL_Properties,

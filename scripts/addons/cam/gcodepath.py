@@ -532,7 +532,7 @@ def getPath(context, operation):  # should do all path calculations.
 
     utils.getOperationSources(operation)
 
-    operation.warnings = ''
+    operation.info.warnings = ''
     checkMemoryLimit(operation)
 
     print(operation.machine_axes)
@@ -593,7 +593,7 @@ def checkMemoryLimit(o):
     if res > limit:
         ratio = (res / limit)
         o.pixsize = o.pixsize * math.sqrt(ratio)
-        o.warnings = o.warnings + 'sampling resolution had to be reduced!\n'
+        o.info.warnings += f"Memory limit: sampling resolution reduced to {o.pixsize}\n"
         print('changing sampling resolution to %f' % o.pixsize)
 
 

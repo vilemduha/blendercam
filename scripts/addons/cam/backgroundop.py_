@@ -47,7 +47,7 @@ def calculatePath(op):
 	d={}
 	
 	d['duration']=o.duration
-	d['warnings']=o.warnings
+	d['warnings']=o.info.warnings
 	
 	#pickle path...
 	oname="cam_path_"+o.name

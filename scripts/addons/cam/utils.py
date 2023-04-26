@@ -53,6 +53,12 @@ from shapely import geometry as sgeometry
 # from shapely.geometry import * not possible until Polygon libs gets out finally..
 SHAPELY = True
 
+def update_operation():
+    from . import updateRest
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    active_op.changed = True
+    updateRest(active_op, bpy.context)
+
 def opencamlib_version():
     try:
         import ocl
@@ -305,7 +311,7 @@ def getBounds(o):
     m = s.cam_machine
     if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y \
             or o.max.z - o.min.z > m.working_area.z:
-        o.warnings += 'Operation exceeds your machine limits\n'
+        o.info.warnings += 'Operation exceeds your machine limits\n'
 
 
 def getBoundsMultiple(operations):
