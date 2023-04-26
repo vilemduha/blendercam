@@ -205,7 +205,7 @@ def curve(o):
     pathSamples = []
     utils.getOperationSources(o)
     if not o.onlycurves:
-        o.warnings += 'at least one of assigned objects is not a curve\n'
+        o.info.warnings += 'at least one of assigned objects is not a curve\n'
 
     for ob in o.objects:
         pathSamples.extend(curveToChunks(ob))  # make the chunks from curve here
@@ -253,7 +253,7 @@ def proj_curve(s, o):
 
     from cam import chunk
     if targetCurve.type != 'CURVE':
-        o.warnings = o.warnings + 'Projection target and source have to be curve objects!\n '
+        o.info.warnings += 'Projection target and source have to be curve objects!\n '
         return
 
     if 1:
@@ -397,7 +397,7 @@ def pocket(o):
                             h = nhelix
                         ch.points = h + ch.points
                     else:
-                        o.warnings = o.warnings + 'Helix entry did not fit! \n '
+                        o.info.warnings += 'Helix entry did not fit! \n '
                         ch.closed = True
                         ch.rampZigZag(l[0], l[1], o)
         # Arc retract here first try:
@@ -601,7 +601,7 @@ def medial_axis(o):
     elif o.cutter_type == 'BALLNOSE':
         maxdepth = - new_cutter_diameter / 2
     else:
-        o.warnings += 'Only Ballnose, Ball and V-carve cutters\n are supported'
+        o.info.warnings += 'Only Ballnose, Ball and V-carve cutters\n are supported'
         return
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts

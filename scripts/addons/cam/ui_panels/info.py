@@ -3,9 +3,27 @@ import bpy
 from cam.simple import strInUnits
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
 import cam.utils
+import cam.constants
 
 # Info panel
 # This panel gives general information about the current operation
+
+class CAM_INFO_Properties(bpy.types.PropertyGroup):
+
+    def update_operation(self, context):
+        cam.utils.update_operation()
+
+    warnings: bpy.props.StringProperty(
+        name='warnings', 
+        description='warnings', 
+        default='', update=update_operation
+    )
+
+    chipload: bpy.props.FloatProperty(
+        name="chipload", description="Calculated chipload", 
+        default=0.0, unit='LENGTH', 
+        precision= cam.constants.chipload_precision)
+
 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM info panel"""
@@ -35,7 +53,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw_active_op_warnings(self):
         if self.active_op is None: return
 
-        for line in self.active_op.warnings.rstrip("\n").split("\n"):
+        for line in self.active_op.info.warnings.rstrip("\n").split("\n"):
             if len(line) > 0 :
                 self.layout.label(text=line, icon='ERROR')
 
@@ -58,9 +76,9 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw_active_op_chipload(self):
         if self.active_op is None: return
         if not self.active_op.valid: return
-        if not self.active_op.chipload > 0: return
+        if not self.active_op.info.chipload > 0: return
 
-        chipload = f"Chipload: {strInUnits(self.active_op.chipload, 4)}/tooth"
+        chipload = f"Chipload: {strInUnits(self.active_op.info.chipload, 4)}/tooth"
         self.layout.label(text= chipload)
 
     # Display the current operation money cost
