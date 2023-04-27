@@ -453,7 +453,7 @@ class camOperation(bpy.types.PropertyGroup):
         name="Parent path to object",
         description="Parent generated CAM path to source object",
         default=False)
-    object_source: bpy.props.PointerProperty(type = bpy.types.Objedt, name='Object', description='object handled by this operation',
+    object_source: bpy.props.PointerProperty(type = bpy.types.Object, name='Object', description='object handled by this operation',
                                           update=updateOperationValid)
     collection_name: bpy.props.StringProperty(name='Collection', description='Object collection handled by this operation',
                                          update=updateOperationValid)
