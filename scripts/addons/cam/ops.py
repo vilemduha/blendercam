@@ -536,7 +536,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         if op.name == "MedialPocket":
             mpocket_exists = True
 
-    ob = bpy.data.objects[sname.name]
+    ob = bpy.data.objects[sname]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
     utils.silhoueteOffset(ob, -new_cutter_diameter/2, 1, 0.3)
@@ -545,7 +545,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     if not mpocket_exists:     # create a pocket operation if it does not exist already
         s.cam_operations.add()
         o = s.cam_operations[-1]
-        o.object_= bpy.data.objects['medial_pocket']
+        o.object_name= 'medial_pocket'
         s.cam_active_operation = len(s.cam_operations) - 1
         o.name = 'MedialPocket'
         o.filename = o.name
