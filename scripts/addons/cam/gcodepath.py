@@ -19,7 +19,7 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# here is the Gcode generaton 
+# here is the Gcode generaton
 
 import bpy
 import time
@@ -496,7 +496,7 @@ def exportGcodePath(filename, vertslist, operations):
             for aline in lines:
                 c.write(aline + '\n')
 
-    o.duration = duration * unitcorr
+    o.info.duration = duration * unitcorr
     if enable_dust:
         c.write(stop_dust + '\n')
     if enable_hold:

@@ -925,9 +925,7 @@ class camOperation(bpy.types.PropertyGroup):
     medial_axis_subdivision: bpy.props.FloatProperty(name="Fine subdivision", default=0.0002, min=0.00000001, max=100,
                                                      precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
     # calculations
-    duration: bpy.props.FloatProperty(name="Estimated time", default=0.01, min=0.0000, max=3200000000,
-                                      precision=cam.constants.PRECISION, unit="TIME")
-    # chip_rate
+
     # bridges
     use_bridges: bpy.props.BoolProperty(name="Use bridges", description="use bridges in cutout", default=False,
                                         update=updateBridges)
@@ -1147,7 +1145,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 
     preset_defines = ["o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"]
 
-    preset_values = ['o.use_layers', 'o.duration', 'o.info.chipload', 'o.material.estimate_from_model', 'o.stay_low', 'o.carve_depth',
+    preset_values = ['o.use_layers', 'o.info.duration', 'o.info.chipload', 'o.material.estimate_from_model', 'o.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material.size',
                      'o.material.radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact',
                      'o.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height',

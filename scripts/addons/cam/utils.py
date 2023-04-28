@@ -56,9 +56,10 @@ SHAPELY = True
 def update_operation():
     from . import updateRest
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    active_op.changed = True
     updateRest(active_op, bpy.context)
 
+# Import OpencamLib
+# Return available OpenCamLib version on success, None otherwise
 def opencamlib_version():
     try:
         import ocl
@@ -1687,8 +1688,8 @@ def reload_pathss(o):
     #         print('sleep')
     #         time.sleep(1)
 
-    o.warnings = d['warnings']
-    o.duration = d['duration']
+    o.info.warnings = d['warnings']
+    o.info.duration = d['duration']
     verts = d['path']
 
     edges = []
