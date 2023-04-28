@@ -94,12 +94,12 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 
         if self.active_op.strategy == 'CURVE':
             if self.active_op.geometry_source == 'OBJECT':
-                self.layout.prop_search(self.active_op, "object_source", bpy.data, "objects")
+                self.layout.prop_search(self.active_op, "object_name", bpy.data, "objects")
             elif self.active_op.geometry_source == 'COLLECTION':
                 self.layout.prop_search(self.active_op, "collection_name", bpy.data, "collections")
         else:
             if self.active_op.geometry_source == 'OBJECT':
-                self.layout.prop_search(self.active_op, "object_source", bpy.data, "objects")
+                self.layout.prop_search(self.active_op, "object_name", bpy.data, "objects")
                 if self.active_op.enable_A:
                     self.layout.prop(self.active_op, 'rotation_A')
                 if self.active_op.enable_B:

@@ -70,7 +70,7 @@ def opencamlib_version():
     return(ocl.version())
 
 def positionObject(operation):
-    ob = bpy.data.objects[operation.object_source.name]
+    ob = bpy.data.objects[operation.object_name]
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
@@ -215,7 +215,7 @@ def getSplineBounds(ob, curve):
 def getOperationSources(o):
     if o.geometry_source == 'OBJECT':
         # bpy.ops.object.select_all(action='DESELECT')
-        ob = bpy.data.objects[o.object_source.name]
+        ob = bpy.data.objects[o.object_name]
         o.objects = [ob]
         ob.select_set(True)
         bpy.context.view_layer.objects.active = ob
@@ -223,7 +223,7 @@ def getOperationSources(o):
             if o.old_rotation_A != o.rotation_A or o.old_rotation_B != o.rotation_B:
                 o.old_rotation_A = o.rotation_A
                 o.old_rotation_B = o.rotation_B
-                ob = bpy.data.objects[o.object_source.name]
+                ob = bpy.data.objects[o.object_name]
                 ob.select_set(True)
                 bpy.context.view_layer.objects.active = ob
                 if o.A_along_x:  # A parallel with X
@@ -420,7 +420,7 @@ def sampleChunks(o, pathSamples, layers):
 
     zinvert = 0
     if o.inverse:
-        ob = bpy.data.objects[o.object_source.name]
+        ob = bpy.data.objects[o.object_name]
         zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
 
     n = 0

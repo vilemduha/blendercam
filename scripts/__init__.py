@@ -280,7 +280,7 @@ def operationValid(self, context):
     o.warnings = ""
     o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     if o.geometry_source == 'OBJECT':
-        if not o.object_source.name in bpy.data.objects:
+        if not o.object_name in bpy.data.objects:
             o.valid = False;
             o.warnings = invalidmsg
     if o.geometry_source == 'COLLECTION':
@@ -453,7 +453,7 @@ class camOperation(bpy.types.PropertyGroup):
         name="Parent path to object",
         description="Parent generated CAM path to source object",
         default=False)
-    object_source: bpy.props.PointerProperty(type = bpy.types.Object, name='Object', description='object handled by this operation',
+    object_name: bpy.props.StringProperty(name='Object', description='object handled by this operation',
                                           update=updateOperationValid)
     collection_name: bpy.props.StringProperty(name='Collection', description='Object collection handled by this operation',
                                          update=updateOperationValid)
@@ -1071,7 +1071,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
                      'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle',
                      'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source',
                      'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.warnings',
-                     'o.object_source', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
+                     'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
                      'o.output_header', 'o.gcode_header', 'o.output_trailer', 'o.gcode_trailer', 'o.use_modifiers','o.minz_from_material','o.useG64',
                      'o.G64','o.enable_A','o.enable_B','o.A_along_x','o.rotation_A','o.rotation_B','o.straight']
 
