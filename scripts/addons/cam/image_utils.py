@@ -142,7 +142,7 @@ def offsetArea(o, samples):
         o.offset_image.fill(-10)
 
         sourceArray = samples
-        cutterArray = simulation.getCutterArray(o, o.pixsize)
+        cutterArray = simulation.getCutterArray(o, o.optimisation.pixsize)
 
         # progress('image size', sourceArray.shape)
 
@@ -222,7 +222,7 @@ def getOffsetImageCavities(o, i):  # for pencil operation mainly
 
 def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, another try.
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-    r = ceil((o.cutter_diameter/12)/o.pixsize)   # was commented
+    r = ceil((o.cutter_diameter/12)/o.optimisation.pixsize)   # was commented
     coef = 0.75
     maxarx = ar.shape[0]
     maxary = ar.shape[1]
@@ -340,8 +340,8 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
     for ch in chunks:
         ch = ch.points
         for i in range(0, len(ch)):
-            ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.pixsize + minx,
-                     (ch[i][1] + coef - o.borderwidth) * o.pixsize + miny, ch[i][2])
+            ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
+                     (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny, ch[i][2])
     return chunks
 
 
@@ -352,13 +352,13 @@ def crazyPath(o):
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
 
-    resx = ceil(sx / o.simulation_detail) + 2 * o.borderwidth
-    resy = ceil(sy / o.simulation_detail) + 2 * o.borderwidth
+    resx = ceil(sx / o.optimisation.simulation_detail) + 2 * o.borderwidth
+    resy = ceil(sy / o.optimisation.simulation_detail) + 2 * o.borderwidth
 
     o.millimage = numpy.array((0.1), dtype=float)
     o.millimage.resize(resx, resy)
     o.millimage.fill(0)
-    o.cutterArray = -simulation.getCutterArray(o, o.simulation_detail)  # getting inverted cutter
+    o.cutterArray = -simulation.getCutterArray(o, o.optimisation.simulation_detail)  # getting inverted cutter
 
 
 def buildStroke(start, end, cutterArray):
@@ -396,7 +396,7 @@ def crazyStrokeImage(o):
     # this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
-    r = int((o.cutter_diameter / 2.0) / o.pixsize)  # ceil((o.cutter_diameter/12)/o.pixsize)
+    r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)  # ceil((o.cutter_diameter/12)/o.optimisation.pixsize)
     d = 2 * r
     coef = 0.75
 
@@ -562,8 +562,8 @@ def crazyStrokeImage(o):
     for ch in chunks:
         ch = ch.points
         for i in range(0, len(ch)):
-            ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.pixsize + minx,
-                     (ch[i][1] + coef - o.borderwidth) * o.pixsize + miny, 0)
+            ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
+                     (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny, 0)
     return chunks
 
 
@@ -581,7 +581,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     ar[:, :o.borderwidth] = 0
     ar[:, -o.borderwidth:] = 0
 
-    r = int((o.cutter_diameter / 2.0) / o.pixsize)  # ceil((o.cutter_diameter/12)/o.pixsize)
+    r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)  # ceil((o.cutter_diameter/12)/o.optimisation.pixsize)
     d = 2 * r
     coef = 0.75
     maxarx = ar.shape[0]
@@ -821,8 +821,8 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     for ch in chunks:
         ch = ch.points
         for i in range(0, len(ch)):
-            ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.pixsize + minx,
-                     (ch[i][1] + coef - o.borderwidth) * o.pixsize + miny, o.minz)
+            ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
+                     (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny, o.minz)
 
     return chunks
 
@@ -830,7 +830,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
 def imageToChunks(o, image, with_border=False):
     t = time.time()
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-    pixsize = o.pixsize
+    pixsize = o.optimisation.pixsize
 
     image = image.astype(numpy.uint8)
 
@@ -840,7 +840,7 @@ def imageToChunks(o, image, with_border=False):
 
     indices1 = ar.nonzero()
     borderspread = 2
-    # o.cutter_diameter/o.pixsize#when the border was excluded precisely, sometimes it did remove some silhouette parts
+    # o.cutter_diameter/o.optimisation.pixsize#when the border was excluded precisely, sometimes it did remove some silhouette parts
     r = o.borderwidth - borderspread
     # to prevent outline of the border was 3 before and also (o.cutter_diameter/2)/pixsize+o.borderwidth
     if with_border:
@@ -980,7 +980,7 @@ def imageToChunks(o, image, with_border=False):
 
         # print('directsimplify')
         reduxratio = 1.25  # was 1.25
-        soptions = ['distance', 'distance', o.pixsize * reduxratio, 5, o.pixsize * reduxratio]
+        soptions = ['distance', 'distance', o.optimisation.pixsize * reduxratio, 5, o.optimisation.pixsize * reduxratio]
         nchunks = []
         for i, ch in enumerate(vecchunks):
 
@@ -1030,8 +1030,8 @@ def getResolution(o):
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
 
-    resx = ceil(sx / o.pixsize) + 2 * o.borderwidth
-    resy = ceil(sy / o.pixsize) + 2 * o.borderwidth
+    resx = ceil(sx / o.optimisation.pixsize) + 2 * o.borderwidth
+    resy = ceil(sy / o.optimisation.pixsize) + 2 * o.borderwidth
 
 # this basically renders blender zbuffer and makes it accessible by saving & loading it again.
 # that's because blender doesn't allow accessing pixels in render :(
@@ -1043,13 +1043,13 @@ def renderSampleImage(o):
     # print(o.zbuffer_image)
 
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
-        pixsize = o.pixsize
+        pixsize = o.optimisation.pixsize
 
         sx = o.max.x - o.min.x
         sy = o.max.y - o.min.y
 
-        resx = math.ceil(sx / o.pixsize) + 2 * o.borderwidth
-        resy = math.ceil(sy / o.pixsize) + 2 * o.borderwidth
+        resx = math.ceil(sx / o.optimisation.pixsize) + 2 * o.borderwidth
+        resy = math.ceil(sy / o.optimisation.pixsize) + 2 * o.borderwidth
 
         if not o.update_zbufferimage_tag and len(o.zbuffer_image) == resx and len(o.zbuffer_image[0]) == resy:
             # if we call this accidentally in more functions, which currently happens...
@@ -1106,7 +1106,7 @@ def renderSampleImage(o):
                 bpy.context.scene.camera = camera
 
             camera.data.type = 'ORTHO'
-            camera.data.ortho_scale = max(resx * o.pixsize, resy * o.pixsize)
+            camera.data.ortho_scale = max(resx * o.optimisation.pixsize, resy * o.optimisation.pixsize)
             camera.location = (o.min.x + sx / 2, o.min.y + sy / 2, 1)
             camera.rotation_euler = (0, 0, 0)
             # if not o.render_all:#removed in 0.3
@@ -1160,8 +1160,8 @@ def renderSampleImage(o):
 
         o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
 
-        o.pixsize = o.source_image_size_x / i.size[0]
-        simple.progress('pixel size in the image source', o.pixsize)
+        o.optimisation.pixsize = o.source_image_size_x / i.size[0]
+        simple.progress('pixel size in the image source', o.optimisation.pixsize)
 
         rawimage = imagetonumpy(i)
         maxa = numpy.max(rawimage)

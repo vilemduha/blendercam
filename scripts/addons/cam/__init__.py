@@ -307,7 +307,7 @@ def operationValid(self, context):
             o.valid = False
             o.info.warnings = invalidmsg
 
-        o.use_exact = False
+        o.optimisation.use_exact = False
     o.update_offsetimage_tag = True
     o.update_zbufferimage_tag = True
     print('validity ')
@@ -376,28 +376,27 @@ def updateStrategy(o, context):
 def updateCutout(o, context):
     pass
 
-
 def updateExact(o, context):
     print('update exact ')
     o.changed = True
     o.update_zbufferimage_tag = True
     o.update_offsetimage_tag = True
-    if o.use_exact and (
-             o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse):
-        #    o.use_exact = False
-        o.use_opencamlib = False
-        print(' pocket cannot use opencamlib')
+    if o.optimisation.use_exact:
+        if o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse:
+            o.optimisation.use_opencamlib = False
+            print('Current operation cannot use exact mode')
+    else:
+        o.optimisation.use_opencamlib = False
 
 
 def updateOpencamlib(o, context):
     print('update opencamlib ')
     o.changed = True
-    if o.use_opencamlib and (
+    if o.optimisation.use_opencamlib and (
             o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS'):
-        o.use_exact = False
-        o.use_opencamlib = False
-        print('pocket cannot use opencamlib')
-
+        o.optimisation.use_exact = False
+        o.optimisation.use_opencamlib = False
+        print('Current operation cannot use opencamlib')
 
 def updateBridges(o, context):
     print('update bridges ')
@@ -469,6 +468,7 @@ class camOperation(bpy.types.PropertyGroup):
 
     material: bpy.props.PointerProperty(type=CAM_MATERIAL_Properties)
     info: bpy.props.PointerProperty(type=CAM_INFO_Properties)
+    optimisation: bpy.props.PointerProperty(type=CAM_OPTIMISATION_Properties)
 
 
     name: bpy.props.StringProperty(name="Operation Name", default="Operation", update=updateRest)
@@ -866,32 +866,10 @@ class camOperation(bpy.types.PropertyGroup):
     merge_dist: bpy.props.FloatProperty(name="Merge distance - EXPERIMENTAL", default=0.0, min=0.0000, max=0.1,
                                         precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
     # optimization and performance
-    circle_detail: bpy.props.IntProperty(name="Detail of circles used for curve offsets", default=64, min=12, max=512,
-                                         update=updateRest)
-    use_exact: bpy.props.BoolProperty(name="Use exact mode",
-                                      description="Exact mode allows greater precision, but is slower with complex meshes",
-                                      default=True, update=updateExact)
-    exact_subdivide_edges: bpy.props.BoolProperty(name="Auto subdivide long edges",
-                                                  description="This can avoid some collision issues when importing CAD models",
-                                                  default=False, update=updateExact)
-    use_opencamlib: bpy.props.BoolProperty(name="Use OpenCAMLib",
-                                           description="Use OpenCAMLib to sample paths or get waterline shape",
-                                           default=False, update=updateOpencamlib)
-    pixsize: bpy.props.FloatProperty(name="sampling raster detail", default=0.0001, min=0.00001, max=0.1,
-                                     precision=cam.constants.PRECISION, unit="LENGTH", update=updateZbufferImage)
-    simulation_detail: bpy.props.FloatProperty(name="Simulation sampling raster detail", default=0.0002, min=0.00001,
-                                               max=0.01, precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
+
     do_simulation_feedrate: bpy.props.BoolProperty(name="Adjust feedrates with simulation EXPERIMENTAL",
                                                    description="Adjust feedrates with simulation", default=False,
                                                    update=updateRest)
-
-    imgres_limit: bpy.props.IntProperty(name="Maximum resolution in megapixels", default=16, min=1, max=512,
-                                        description="This property limits total memory usage and prevents crashes. Increase it if you know what are doing.",
-                                        update=updateZbufferImage)
-    optimize: bpy.props.BoolProperty(name="Reduce path points", description="Reduce path points", default=True,
-                                     update=updateRest)
-    optimize_threshold: bpy.props.FloatProperty(name="Reduction threshold in μm", default=.2, min=0.000000001,
-                                                max=1000, precision=20, update=updateRest)
 
     dont_merge: bpy.props.BoolProperty(name="Dont merge outlines when cutting",
                                        description="this is usefull when you want to cut around everything",
@@ -1147,20 +1125,20 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 
     preset_values = ['o.use_layers', 'o.info.duration', 'o.info.chipload', 'o.material.estimate_from_model', 'o.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material.size',
-                     'o.material.radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.use_exact',
-                     'o.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height',
+                     'o.material.radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.optimisation.use_exact',
+                     'o.optimisation.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height',
                      'o.source_image_crop_start_x', 'o.movement_insideout', 'o.spindle_rotation_direction', 'o.skin',
                      'o.source_image_crop_start_y', 'o.movement_type', 'o.source_image_crop', 'o.limit_curve',
                      'o.spindle_rpm', 'o.ambient_behaviour', 'o.cutter_type', 'o.source_image_scale_z',
                      'o.cutter_diameter', 'o.source_image_size_x', 'o.curve_object', 'o.curve_object1',
-                     'o.cutter_flutes', 'o.ambient_radius', 'o.simulation_detail', 'o.update_offsetimage_tag',
-                     'o.dist_between_paths', 'o.max', 'o.min', 'o.pixsize', 'o.slice_detail', 'o.parallel_step_back',
+                     'o.cutter_flutes', 'o.ambient_radius', 'o.optimisation.simulation_detail', 'o.update_offsetimage_tag',
+                     'o.dist_between_paths', 'o.max', 'o.min', 'o.optimisation.pixsize', 'o.slice_detail', 'o.parallel_step_back',
                      'o.drill_type', 'o.source_image_name', 'o.dont_merge', 'o.update_silhouete_tag',
-                     'o.material.origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.circle_detail',
+                     'o.material.origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.optimisation.circle_detail',
                      'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle',
                      'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source',
-                     'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.info.warnings',
-                     'o.object_source', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
+                     'o.optimisation.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.info.warnings',
+                     'o.object_source', 'o.optimisation.optimize', 'o.parallel_angle', 'o.cutter_length',
                      'o.output_header', 'o.gcode_header', 'o.output_trailer', 'o.gcode_trailer', 'o.use_modifiers',
                      'o.minz_from_material', 'o.useG64',
                      'o.G64', 'o.enable_A', 'o.enable_B', 'o.A_along_x', 'o.rotation_A', 'o.rotation_B', 'o.straight']
@@ -1431,6 +1409,7 @@ classes = [
     ui.CAM_MATERIAL_PositionObject,
     ui.CAM_OPERATION_PROPERTIES_Panel,
     ui.CAM_OPTIMISATION_Panel,
+    ui.CAM_OPTIMISATION_Properties,
     ui.CAM_AREA_Panel,
     ui.CAM_MOVEMENT_Panel,
     ui.CAM_FEEDRATE_Panel,

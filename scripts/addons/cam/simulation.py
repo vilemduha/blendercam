@@ -113,7 +113,7 @@ def generateSimulationImage(operations, limits):
     sy = maxy - miny
 
     o = operations[0]  # getting sim detail and others from first op.
-    simulation_detail = o.simulation_detail
+    simulation_detail = o.optimisation.simulation_detail
     borderwidth = o.borderwidth
     resx = math.ceil(sx / simulation_detail) + 2 * borderwidth
     resy = math.ceil(sy / simulation_detail) + 2 * borderwidth

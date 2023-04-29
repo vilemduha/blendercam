@@ -320,7 +320,7 @@ def getPathPattern(operation):
         pathchunks = []
         chunks = []
         for p in polys:
-            p = p.buffer(-o.dist_between_paths / 10, o.circle_detail)
+            p = p.buffer(-o.dist_between_paths / 10, o.optimisation.circle_detail)
             # first, move a bit inside, because otherwise the border samples go crazy very often changin between
             # hit/non hit and making too many jumps in the path.
             chunks.extend(shapelyToChunks(p, 0))
@@ -335,7 +335,7 @@ def getPathPattern(operation):
         for porig in polys:
             p = porig
             while not p.is_empty:
-                p = p.buffer(-o.dist_between_paths, o.circle_detail)
+                p = p.buffer(-o.dist_between_paths, o.optimisation.circle_detail)
                 if not p.is_empty:
 
                     nchunks = shapelyToChunks(p, zlevel)
@@ -358,13 +358,13 @@ def getPathPattern(operation):
                 for a in range(0, int(steps)):
                     dist = d
                     if a == int(o.cutter_diameter / 2 / o.dist_between_paths):
-                        if o.use_exact:
-                            dist += o.pixsize * 0.85
+                        if o.optimisation.use_exact:
+                            dist += o.optimisation.pixsize * 0.85
                             # this is here only because silhouette is still done with zbuffer method,
                             # even if we use bullet collisions.
                         else:
-                            dist += o.pixsize * 2.5
-                    p = p.buffer(dist, o.circle_detail)
+                            dist += o.optimisation.pixsize * 2.5
+                    p = p.buffer(dist, o.optimisation.circle_detail)
                     if not p.is_empty:
                         nchunks = shapelyToChunks(p, zlevel)
                         if o.movement_insideout == 'INSIDEOUT':

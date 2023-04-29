@@ -635,7 +635,7 @@ def optimizeChunk(chunk, operation):
         protect_vertical = operation.protect_vertical and operation.machine_axes == '3'
         for vi in range(0, len(points) - 1):
 
-            if not compare(chunk.points[-1], points[vi + 1], points[vi], operation.optimize_threshold * 0.000001):
+            if not compare(chunk.points[-1], points[vi + 1], points[vi], operation.optimisation.optimize_threshold * 0.000001):
                 if naxispoints:
                     chunk.append(points[vi], startpoints[vi], endpoints[vi], rotations[vi])
                 else:
