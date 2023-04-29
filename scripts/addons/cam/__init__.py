@@ -291,7 +291,7 @@ def operationValid(self, context):
     o.info.warnings = ""
     o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     if o.geometry_source == 'OBJECT':
-        if o.object_source.name not in bpy.data.objects:
+        if o.object_name not in bpy.data.objects:
             o.valid = False
             o.info.warnings = invalidmsg
     if o.geometry_source == 'COLLECTION':
@@ -491,7 +491,7 @@ class camOperation(bpy.types.PropertyGroup):
         name="Parent path to object",
         description="Parent generated CAM path to source object",
         default=False)
-    object_source: bpy.props.PointerProperty(type=bpy.types.Object ,name='Object', description='object handled by this operation',
+    object_name: bpy.props.StringProperty(name='Object', description='object handled by this operation',
                                           update=updateOperationValid)
     collection_name: bpy.props.StringProperty(name='Collection',
                                               description='Object collection handled by this operation',
@@ -1137,8 +1137,8 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
                      'o.material.origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.optimisation.circle_detail',
                      'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle',
                      'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source',
-                     'o.optimisation.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.info.warnings',
-                     'o.object_source', 'o.optimisation.optimize', 'o.parallel_angle', 'o.cutter_length',
+                     'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.info.warnings',
+                     'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
                      'o.output_header', 'o.gcode_header', 'o.output_trailer', 'o.gcode_trailer', 'o.use_modifiers',
                      'o.minz_from_material', 'o.useG64',
                      'o.G64', 'o.enable_A', 'o.enable_B', 'o.A_along_x', 'o.rotation_A', 'o.rotation_B', 'o.straight']
