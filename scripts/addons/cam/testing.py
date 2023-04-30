@@ -110,7 +110,7 @@ def testWaterline(pos):
     bpy.ops.scene.cam_operation_add()
     o = bpy.context.scene.cam_operations[-1]
     o.strategy = 'WATERLINE'
-    o.pixsize = .0002
+    o.optimisation.pixsize = .0002
     # o.ambient_behaviour='AROUND'
     # o.material_radius_around_model=0.01
 

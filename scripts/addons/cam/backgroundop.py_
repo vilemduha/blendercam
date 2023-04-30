@@ -27,7 +27,7 @@ def getCachePath(o):
 	fn=bpy.data.filepath
 	l=len(bpy.path.basename(fn))
 	bn=bpy.path.basename(fn)[:-6]
-	
+
 	try:
 		os.mkdir(fn[:-l]+'temp_cam')
 	except:
@@ -45,10 +45,10 @@ def calculatePath(op):
 	picklepath=getCachePath(o)+'.pickle'
 	f=open(picklepath,'wb')
 	d={}
-	
-	d['duration']=o.duration
+
+	d['duration']=o.info.duration
 	d['warnings']=o.info.warnings
-	
+
 	#pickle path...
 	oname="cam_path_"+o.name
 	if oname in s.objects:
@@ -73,7 +73,7 @@ def calculatePath(op):
 			time.sleep(1)
 	sys.stdout.write('progress{%s}\n' % ('finished'))
 	sys.stdout.flush()
-	
+
 #parse arguments here
 argv = sys.argv
 

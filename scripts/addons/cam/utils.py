@@ -53,12 +53,40 @@ from shapely import geometry as sgeometry
 # from shapely.geometry import * not possible until Polygon libs gets out finally..
 SHAPELY = True
 
-def update_operation():
+
+# The following functions are temporary
+# until all content in __init__.py is cleaned up
+
+def update_material(self, context):
+    addMaterialAreaObject()
+
+def update_operation(self, context):
     from . import updateRest
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    active_op.changed = True
     updateRest(active_op, bpy.context)
 
+def update_exact_mode(self, context):
+    from . import updateExact
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateExact(active_op, bpy.context)
+
+def update_opencamlib(self, context):
+    from . import updateOpencamlib
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateOpencamlib(active_op, bpy.context)
+
+def update_zbuffer_image(self, context):
+    from . import updateZbufferImage
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateZbufferImage(active_op, bpy.context)
+
+
+
+
+
+
+# Import OpencamLib
+# Return available OpenCamLib version on success, None otherwise
 def opencamlib_version():
     try:
         import ocl
@@ -241,7 +269,7 @@ def getOperationSources(o):
         collection = bpy.data.collections[o.collection_name]
         o.objects = collection.objects
     elif o.geometry_source == 'IMAGE':
-        o.use_exact = False
+        o.optimisation.use_exact = False
 
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
         o.onlycurves = True
@@ -299,12 +327,12 @@ def getBounds(o):
             sy = 0
             ey = i.size[1]
 
-        o.pixsize = o.source_image_size_x / i.size[0]
+        o.optimisation.pixsize = o.source_image_size_x / i.size[0]
 
-        o.min.x = o.source_image_offset.x + sx * o.pixsize
-        o.max.x = o.source_image_offset.x + ex * o.pixsize
-        o.min.y = o.source_image_offset.y + sy * o.pixsize
-        o.max.y = o.source_image_offset.y + ey * o.pixsize
+        o.min.x = o.source_image_offset.x + sx * o.optimisation.pixsize
+        o.max.x = o.source_image_offset.x + ex * o.optimisation.pixsize
+        o.min.y = o.source_image_offset.y + sy * o.optimisation.pixsize
+        o.max.y = o.source_image_offset.y + ey * o.optimisation.pixsize
         o.min.z = o.source_image_offset.z + o.minz
         o.max.z = o.source_image_offset.z
     s = bpy.context.scene
@@ -349,10 +377,10 @@ def samplePathLow(o, ch1, ch2, dosample):
             bpath.points.append([p.x, p.y, p.z])
     # print('between path')
     # print(len(bpath))
-    pixsize = o.pixsize
+    pixsize = o.optimisation.pixsize
     if dosample:
-        if not (o.use_opencamlib and o.use_exact):
-            if o.use_exact:
+        if not (o.optimisation.use_opencamlib and o.optimisation.use_exact):
+            if o.optimisation.use_exact:
                 if o.update_bullet_collision_tag:
                     prepareBulletCollision(o)
                     o.update_bullet_collision_tag = False
@@ -379,8 +407,8 @@ def sampleChunks(o, pathSamples, layers):
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     getAmbient(o)
 
-    if o.use_exact:  # prepare collision world
-        if o.use_opencamlib:
+    if o.optimisation.use_exact:  # prepare collision world
+        if o.optimisation.use_opencamlib:
             oclSample(o, pathSamples)
             cutterdepth = 0
         else:
@@ -395,11 +423,11 @@ def sampleChunks(o, pathSamples, layers):
         if o.strategy != 'WATERLINE':  # or prepare offset image, but not in some strategies.
             prepareArea(o)
 
-        pixsize = o.pixsize
+        pixsize = o.optimisation.pixsize
 
         coordoffset = o.borderwidth + pixsize / 2  # -m
 
-        res = ceil(o.cutter_diameter / o.pixsize)
+        res = ceil(o.cutter_diameter / o.optimisation.pixsize)
         m = res / 2
 
     t = time.time()
@@ -452,13 +480,13 @@ def sampleChunks(o, pathSamples, layers):
             if not o.ambient.contains(sgeometry.Point(x, y)):
                 newsample = (x, y, 1)
             else:
-                if o.use_opencamlib and o.use_exact:
+                if o.optimisation.use_opencamlib and o.optimisation.use_exact:
                     z = s[2]
                     if minz > z:
                         z = minz
                     newsample = (x, y, z)
                 # ampling
-                elif o.use_exact and not o.use_opencamlib:
+                elif o.optimisation.use_exact and not o.optimisation.use_opencamlib:
 
                     if lastsample is not None:  # this is an optimalization,
                         # search only for near depths to the last sample. Saves about 30% of sampling time.
@@ -1001,7 +1029,7 @@ def connectChunksLow(chunks, o):
                     # print('addbetwee')
                     between = samplePathLow(o, lastch, ch,
                                             False)  # other paths either dont use sampling or are sorted before it.
-                if o.use_opencamlib and o.use_exact and (
+                if o.optimisation.use_opencamlib and o.optimisation.use_exact and (
                         o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'PENCIL'):
                     chunks_to_resample.append(
                         (connectedchunks[-1], len(connectedchunks[-1].points), len(between.points)))
@@ -1013,7 +1041,7 @@ def connectChunksLow(chunks, o):
             lastch = ch
             pos = lastch.points[-1]
 
-    if o.use_opencamlib and o.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET':
+    if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET':
         oclResampleChunks(o, chunks_to_resample)
 
     return connectedchunks
@@ -1312,7 +1340,7 @@ def getAmbient(o):
                 o.limit_poly = shapely.ops.unary_union(polys)
 
                 if o.ambient_cutter_restrict:
-                    o.limit_poly = o.limit_poly.buffer(o.cutter_diameter / 2, resolution=o.circle_detail)
+                    o.limit_poly = o.limit_poly.buffer(o.cutter_diameter / 2, resolution=o.optimisation.circle_detail)
             o.ambient = o.ambient.intersection(o.limit_poly)
     o.update_ambient_tag = False
 
@@ -1346,7 +1374,7 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
         # print(p1.type, len(polygons))
         i += 1
         if radius > 0:
-            p1 = p1.buffer(radius * offset, resolution=o.circle_detail, join_style=join, mitre_limit=2)
+            p1 = p1.buffer(radius * offset, resolution=o.optimisation.circle_detail, join_style=join, mitre_limit=2)
         outlines.append(p1)
 
     # print(outlines)
@@ -1687,8 +1715,8 @@ def reload_pathss(o):
     #         print('sleep')
     #         time.sleep(1)
 
-    o.warnings = d['warnings']
-    o.duration = d['duration']
+    o.info.warnings = d['warnings']
+    o.info.duration = d['duration']
     verts = d['path']
 
     edges = []

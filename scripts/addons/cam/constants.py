@@ -4,4 +4,6 @@
 # PRECISION is used in most operations
 PRECISION = 5
 
-chipload_precision = 10
+CHIPLOAD_PRECISION = 10
+
+MAX_OPERATION_TIME = 3200000000 # seconds

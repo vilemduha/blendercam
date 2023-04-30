@@ -79,7 +79,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'lead_out')
 
                 if ao.cutter_type == 'CUSTOM':
-                    if ao.use_exact:
+                    if ao.optimisation.use_exact:
                         layout.label(text='Warning - only convex shapes are supported. ', icon='COLOR_RED')
                         layout.label(text='If your custom cutter is concave,')
                         layout.label(text='switch exact mode off.')

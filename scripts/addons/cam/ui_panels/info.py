@@ -10,19 +10,21 @@ import cam.constants
 
 class CAM_INFO_Properties(bpy.types.PropertyGroup):
 
-    def update_operation(self, context):
-        cam.utils.update_operation()
-
     warnings: bpy.props.StringProperty(
-        name='warnings', 
-        description='warnings', 
-        default='', update=update_operation
-    )
+        name='warnings',
+        description='warnings',
+        default='',
+        update=cam.utils.update_operation)
 
     chipload: bpy.props.FloatProperty(
-        name="chipload", description="Calculated chipload", 
-        default=0.0, unit='LENGTH', 
-        precision= cam.constants.chipload_precision)
+        name="chipload", description="Calculated chipload",
+        default=0.0, unit='LENGTH',
+        precision=cam.constants.CHIPLOAD_PRECISION)
+
+    duration: bpy.props.FloatProperty(
+        name="Estimated time", default=0.01, min=0.0000,
+        max=cam.constants.MAX_OPERATION_TIME,
+        precision=cam.constants.PRECISION, unit="TIME")
 
 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -45,58 +47,65 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw_opencamlib_version(self):
         opencamlib_version = cam.utils.opencamlib_version()
         if opencamlib_version is None:
-            self.layout.label(text = "Opencamlib is not installed")
+            self.layout.label(text="Opencamlib is not installed")
         else:
-            self.layout.label(text = f"Opencamlib v{opencamlib_version} installed")
+            self.layout.label(
+                text=f"Opencamlib v{opencamlib_version} installed")
 
     # Display warnings related to the current operation
     def draw_active_op_warnings(self):
-        if self.active_op is None: return
+        if self.active_op is None:
+            return
 
         for line in self.active_op.info.warnings.rstrip("\n").split("\n"):
-            if len(line) > 0 :
+            if len(line) > 0:
                 self.layout.label(text=line, icon='ERROR')
 
     # Display the time estimation for the current operation
     def draw_active_op_time(self):
-        if self.active_op is None: return
-        if not self.active_op.valid: return
-        if not int(self.active_op.duration*60) > 0: return
+        if self.active_op is None:
+            return
+        if not self.active_op.valid:
+            return
+        if not int(self.active_op.info.duration * 60) > 0:
+            return
 
-        time_estimate = f"Operation Time: {int(self.active_op.duration*60)}s " 
-        if self.active_op.duration > 60:
-            time_estimate += f" ({int(self.active_op.duration / 60)}h {round(self.active_op.duration % 60)}min)"
-        elif self.active_op.duration > 1:
-            time_estimate += f" ({round(self.active_op.duration % 60)}min)" 
+        time_estimate = f"Operation Time: {int(self.active_op.info.duration*60)}s "
+        if self.active_op.info.duration > 60:
+            time_estimate += f" ({int(self.active_op.info.duration / 60)}h"
+            time_estimate += f" {round(self.active_op.info.duration % 60)}min)"
+        elif self.active_op.info.duration > 1:
+            time_estimate += f" ({round(self.active_op.info.duration % 60)}min)"
 
-        self.layout.label(text = time_estimate)
-
+        self.layout.label(text=time_estimate)
 
     # Display the chipload (does this work ?)
     def draw_active_op_chipload(self):
-        if self.active_op is None: return
-        if not self.active_op.valid: return
-        if not self.active_op.info.chipload > 0: return
+        if self.active_op is None:
+            return
+        if not self.active_op.valid:
+            return
+        if not self.active_op.info.chipload > 0:
+            return
 
         chipload = f"Chipload: {strInUnits(self.active_op.info.chipload, 4)}/tooth"
-        self.layout.label(text= chipload)
+        self.layout.label(text=chipload)
 
     # Display the current operation money cost
     def draw_active_op_money_cost(self):
-        if self.active_op is None: return
-        if not self.active_op.valid: return
-        if not int(self.active_op.duration*60) > 0: return
+        if self.active_op is None or not self.active_op.valid:
+            return
+        if not int(self.active_op.info.duration * 60) > 0:
+            return
 
         row = self.layout.row()
         row.label(text='Hourly Rate')
         row.prop(bpy.context.scene.cam_machine, 'hourly_rate', text='')
 
-        # TODO: the hourly_rate button properties should be moved here (UI related only)
-        # Right now, trying to do so causes an error
-        
-        if float(bpy.context.scene.cam_machine.hourly_rate) < 0.01: return
+        if float(bpy.context.scene.cam_machine.hourly_rate) < 0.01:
+            return
 
         cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
-        op_cost = f"Operation cost: ${self.active_op.duration * 60 * cost_per_second:.2f} (${cost_per_second:.2f}/s)"
-        self.layout.label(text = op_cost)
-
+        total_cost = self.active_op.info.duration * 60 * cost_per_second
+        op_cost = f"Operation cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
+        self.layout.label(text=op_cost)

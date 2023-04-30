@@ -90,7 +90,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
 
                 elif ao.strategy == 'WATERLINE':
                     layout.label(text="OCL doesn't support fill areas")
-                    if not ao.use_opencamlib:
+                    if not ao.optimisation.use_opencamlib:
                         layout.prop(ao, 'slice_detail')
                         layout.prop(ao, 'waterline_fill')
                         if ao.waterline_fill:

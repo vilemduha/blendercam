@@ -18,6 +18,7 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
+
 import sys
 import bpy
 from bpy.types import UIList, Operator
@@ -43,7 +44,7 @@ from cam.ui_panels.chains         import CAM_UL_operations, CAM_UL_chains, CAM_C
 from cam.ui_panels.op_properties  import CAM_OPERATION_PROPERTIES_Panel
 from cam.ui_panels.movement       import CAM_MOVEMENT_Panel
 from cam.ui_panels.feedrate       import CAM_FEEDRATE_Panel
-from cam.ui_panels.optimisation   import CAM_OPTIMISATION_Panel
+from cam.ui_panels.optimisation   import *
 from cam.ui_panels.area           import CAM_AREA_Panel
 
 

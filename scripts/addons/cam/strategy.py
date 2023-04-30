@@ -101,7 +101,7 @@ def cutout(o):
             if o.outlines_count > 1:
                 for i in range(1, o.outlines_count):
                     chunksFromCurve.extend(shapelyToChunks(p, -1))
-                    p = p.buffer(distance=o.dist_between_paths * offset, resolution=o.circle_detail, join_style=join,
+                    p = p.buffer(distance=o.dist_between_paths * offset, resolution=o.optimisation.circle_detail, join_style=join,
                                  mitre_limit=2)
 
         chunksFromCurve.extend(shapelyToChunks(p, -1))
@@ -322,17 +322,17 @@ def pocket(o):
     lastchunks = []
     centers = None
     firstoutline = p  # for testing in the end.
-    prest = p.buffer(-c_offset, o.circle_detail)
+    prest = p.buffer(-c_offset, o.optimisation.circle_detail)
     while not p.is_empty:
         if o.pocketToCurve:
             polygon_utils_cam.shapelyToCurve('3dpocket', p, 0.0)  # make a curve starting with _3dpocket
 
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
-        pnew = p.buffer(-o.dist_between_paths, o.circle_detail)
+        pnew = p.buffer(-o.dist_between_paths, o.optimisation.circle_detail)
         if pnew.is_empty:
-            
-            pt = p.buffer(-c_offset, o.circle_detail)     # test if the last curve will leave material
+
+            pt = p.buffer(-c_offset, o.optimisation.circle_detail)     # test if the last curve will leave material
             if not pt.is_empty:
                 pnew = pt
         # print("pnew")
@@ -376,7 +376,7 @@ def pocket(o):
                 if not chunksFromCurve[chi].children:
                     p = ch.points[0]  # TODO:intercept closest next point when it should stay low
                     # first thing to do is to check if helix enter can really enter.
-                    checkc = Circle(helix_radius + c_offset, o.circle_detail)
+                    checkc = Circle(helix_radius + c_offset, o.optimisation.circle_detail)
                     checkc = affinity.translate(checkc, p[0], p[1])
                     covers = False
                     for poly in o.silhouete:
@@ -387,7 +387,7 @@ def pocket(o):
                     if covers:
                         revolutions = (l[0] - p[2]) / revheight
                         # print(revolutions)
-                        h = Helix(helix_radius, o.circle_detail, l[0], p, revolutions)
+                        h = Helix(helix_radius, o.optimisation.circle_detail, l[0], p, revolutions)
                         # invert helix if not the typical direction
                         if (o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CW') or (
                                 o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CCW'):
@@ -427,7 +427,7 @@ def pocket(o):
                     p = (p.x, p.y, p.z)
 
                     # progress(str((v1,v,p)))
-                    h = Helix(o.retract_radius, o.circle_detail, p[2] + o.retract_height, p, revolutions)
+                    h = Helix(o.retract_radius, o.optimisation.circle_detail, p[2] + o.retract_height, p, revolutions)
 
                     e = Euler((0, 0, rotangle + pi))  # angle to rotate whole retract move
                     rothelix = []
@@ -445,7 +445,7 @@ def pocket(o):
                     c = sgeometry.Polygon(c)
                     # print('çoutline')
                     # print(c)
-                    coutline = c.buffer(c_offset, o.circle_detail)
+                    coutline = c.buffer(c_offset, o.optimisation.circle_detail)
                     # print(h)
                     # print('çoutline')
                     # print(coutline)
@@ -828,7 +828,7 @@ def chunksToMesh(chunks, o):
         if len(ch.points) > 0:  # TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
             # print(len(ch.points))
             nverts = []
-            if o.optimize:
+            if o.optimisation.optimize:
                 ch = optimizeChunk(ch, o)
 
             # lift and drop
@@ -874,7 +874,7 @@ def chunksToMesh(chunks, o):
                 verts.append(v)
             lifted = lift
     # print(verts_rotations)
-    if o.use_exact and not o.use_opencamlib:
+    if o.optimisation.use_exact and not o.optimisation.use_opencamlib:
         cleanupBulletCollision(o)
     print(time.time() - t)
     t = time.time()
