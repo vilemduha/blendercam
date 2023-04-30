@@ -406,7 +406,7 @@ def updateBridges(o, context):
 def updateRotation(o, context):
     if o.enable_B or o.enable_A:
         print(o, o.rotation_A)
-        ob = bpy.data.objects[o.object_source.name]
+        ob = bpy.data.objects[o.object_name]
         ob.select_set(True)
         bpy.context.view_layer.objects.active = ob
         if o.A_along_x:  # A parallel with X
