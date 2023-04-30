@@ -5,57 +5,46 @@ import cam.constants
 
 
 class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
-    def update_rest(self, context):
-        cam.utils.update_operation()
-
-    def update_exact(self, context):
-        cam.utils.update_exact_mode()
-
-    def update_z_buffer_image(self, context):
-        cam.utils.update_z_buffer_image()
-
-    def update_opencamlib(self, context):
-        cam.utils.update_opencamlib()
 
     optimize: bpy.props.BoolProperty(
         name="Reduce path points", description="Reduce path points", default=True,
-        update=update_rest)
+        update=cam.utils.update_operation)
 
     optimize_threshold: bpy.props.FloatProperty(
         name="Reduction threshold in μm", default=.2, min=0.000000001,
-        max=1000, precision=20, update=update_rest)
+        max=1000, precision=20, update=cam.utils.update_operation)
 
     use_exact: bpy.props.BoolProperty(
         name="Use exact mode",
         description="Exact mode allows greater precision, but is slower with complex meshes",
-        default=True, update=update_exact)
+        default=True, update=cam.utils.update_exact_mode)
 
     imgres_limit: bpy.props.IntProperty(
         name="Maximum resolution in megapixels", default=16, min=1, max=512,
         description="Limits total memory usage and prevents crashes. Increase it if you know what are doing",
-        update=update_z_buffer_image)
+        update=cam.utils.update_zbuffer_image)
 
     pixsize: bpy.props.FloatProperty(
         name="sampling raster detail", default=0.0001, min=0.00001, max=0.1,
-        precision=cam.constants.PRECISION, unit="LENGTH", update=update_z_buffer_image)
+        precision=cam.constants.PRECISION, unit="LENGTH", update=cam.utils.update_zbuffer_image)
 
     use_opencamlib: bpy.props.BoolProperty(
         name="Use OpenCAMLib",
         description="Use OpenCAMLib to sample paths or get waterline shape",
-        default=False, update=update_opencamlib)
+        default=False, update=cam.utils.update_opencamlib)
 
     exact_subdivide_edges: bpy.props.BoolProperty(
         name="Auto subdivide long edges",
         description="This can avoid some collision issues when importing CAD models",
-        default=False, update=update_exact)
+        default=False, update=cam.utils.update_exact_mode)
 
     circle_detail: bpy.props.IntProperty(
         name="Detail of circles used for curve offsets", default=64, min=12, max=512,
-        update=update_rest)
+        update=cam.utils.update_operation)
 
     simulation_detail: bpy.props.FloatProperty(
         name="Simulation sampling raster detail", default=0.0002, min=0.00001,
-        max=0.01, precision=cam.constants.PRECISION, unit="LENGTH", update=update_rest)
+        max=0.01, precision=cam.constants.PRECISION, unit="LENGTH", update=cam.utils.update_operation)
 
 
 class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):

@@ -57,22 +57,25 @@ SHAPELY = True
 # The following functions are temporary
 # until all content in __init__.py is cleaned up
 
-def update_operation():
+def update_material(self, context):
+    addMaterialAreaObject()
+
+def update_operation(self, context):
     from . import updateRest
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     updateRest(active_op, bpy.context)
 
-def update_exact_mode():
+def update_exact_mode(self, context):
     from . import updateExact
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     updateExact(active_op, bpy.context)
 
-def update_opencamlib():
+def update_opencamlib(self, context):
     from . import updateOpencamlib
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     updateOpencamlib(active_op, bpy.context)
 
-def update_z_buffer_image():
+def update_zbuffer_image(self, context):
     from . import updateZbufferImage
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     updateZbufferImage(active_op, bpy.context)

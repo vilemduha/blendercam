@@ -8,17 +8,13 @@ import cam.constants
 # Info panel
 # This panel gives general information about the current operation
 
-
 class CAM_INFO_Properties(bpy.types.PropertyGroup):
-
-    def update_operation(self, context):
-        cam.utils.update_operation()
 
     warnings: bpy.props.StringProperty(
         name='warnings',
         description='warnings',
         default='',
-        update=update_operation)
+        update=cam.utils.update_operation)
 
     chipload: bpy.props.FloatProperty(
         name="chipload", description="Calculated chipload",
