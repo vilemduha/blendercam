@@ -1,3 +1,4 @@
+
 # blender CAM utils.py (c) 2012 Vilem Novak
 #
 # ***** BEGIN GPL LICENSE BLOCK *****
@@ -53,6 +54,49 @@ from shapely import geometry as sgeometry
 SHAPELY = True
 
 
+# The following functions are temporary
+# until all content in __init__.py is cleaned up
+
+def update_material(self, context):
+    addMaterialAreaObject()
+
+def update_operation(self, context):
+    from . import updateRest
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateRest(active_op, bpy.context)
+
+def update_exact_mode(self, context):
+    from . import updateExact
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateExact(active_op, bpy.context)
+
+def update_opencamlib(self, context):
+    from . import updateOpencamlib
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateOpencamlib(active_op, bpy.context)
+
+def update_zbuffer_image(self, context):
+    from . import updateZbufferImage
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateZbufferImage(active_op, bpy.context)
+
+
+
+
+
+
+# Import OpencamLib
+# Return available OpenCamLib version on success, None otherwise
+def opencamlib_version():
+    try:
+        import ocl
+    except ImportError:
+        try:
+            import opencamlib as ocl
+        except ImportError as e:
+            return
+    return(ocl.version())
+
 def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
@@ -63,21 +107,21 @@ def positionObject(operation):
     totx = maxx - minx
     toty = maxy - miny
     totz = maxz - minz
-    if operation.material_center_x:
+    if operation.material.center_x:
         ob.location.x -= minx + totx / 2
     else:
         ob.location.x -= minx
 
-    if operation.material_center_y:
+    if operation.material.center_y:
         ob.location.y -= miny + toty / 2
     else:
         ob.location.y -= miny
 
-    if operation.material_Z == 'BELOW':
+    if operation.material.z_position == 'BELOW':
         ob.location.z -= maxz
-    elif operation.material_Z == 'ABOVE':
+    elif operation.material.z_position == 'ABOVE':
         ob.location.z -= minz
-    elif operation.material_Z == 'CENTERED':
+    elif operation.material.z_position == 'CENTERED':
         ob.location.z -= minz + totz / 2
 
     if ob.type != 'CURVE':
@@ -225,7 +269,7 @@ def getOperationSources(o):
         collection = bpy.data.collections[o.collection_name]
         o.objects = collection.objects
     elif o.geometry_source == 'IMAGE':
-        o.use_exact = False
+        o.optimisation.use_exact = False
 
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
         o.onlycurves = True
@@ -252,23 +296,23 @@ def getBounds(o):
             o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
             print("not minz from object")
 
-        if o.material_from_model:
-            print("material_from_model")
+        if o.material.estimate_from_model:
+            print("Estimate material from model")
 
-            o.min.x = minx - o.material_radius_around_model
-            o.min.y = miny - o.material_radius_around_model
+            o.min.x = minx - o.material.radius_around_model
+            o.min.y = miny - o.material.radius_around_model
             o.max.z = max(o.maxz, maxz)
 
-            o.max.x = maxx + o.material_radius_around_model
-            o.max.y = maxy + o.material_radius_around_model
+            o.max.x = maxx + o.material.radius_around_model
+            o.max.y = maxy + o.material.radius_around_model
         else:
             print("not material from model")
-            o.min.x = o.material_origin.x
-            o.min.y = o.material_origin.y
-            o.min.z = o.material_origin.z - o.material_size.z
-            o.max.x = o.min.x + o.material_size.x
-            o.max.y = o.min.y + o.material_size.y
-            o.max.z = o.material_origin.z
+            o.min.x = o.material.origin.x
+            o.min.y = o.material.origin.y
+            o.min.z = o.material.origin.z - o.material.size.z
+            o.max.x = o.min.x + o.material.size.x
+            o.max.y = o.min.y + o.material.size.y
+            o.max.z = o.material.origin.z
 
     else:
         i = bpy.data.images[o.source_image_name]
@@ -283,19 +327,19 @@ def getBounds(o):
             sy = 0
             ey = i.size[1]
 
-        o.pixsize = o.source_image_size_x / i.size[0]
+        o.optimisation.pixsize = o.source_image_size_x / i.size[0]
 
-        o.min.x = o.source_image_offset.x + sx * o.pixsize
-        o.max.x = o.source_image_offset.x + ex * o.pixsize
-        o.min.y = o.source_image_offset.y + sy * o.pixsize
-        o.max.y = o.source_image_offset.y + ey * o.pixsize
+        o.min.x = o.source_image_offset.x + sx * o.optimisation.pixsize
+        o.max.x = o.source_image_offset.x + ex * o.optimisation.pixsize
+        o.min.y = o.source_image_offset.y + sy * o.optimisation.pixsize
+        o.max.y = o.source_image_offset.y + ey * o.optimisation.pixsize
         o.min.z = o.source_image_offset.z + o.minz
         o.max.z = o.source_image_offset.z
     s = bpy.context.scene
     m = s.cam_machine
     if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y \
             or o.max.z - o.min.z > m.working_area.z:
-        o.warnings += 'Operation exceeds your machine limits\n'
+        o.info.warnings += 'Operation exceeds your machine limits\n'
 
 
 def getBoundsMultiple(operations):
@@ -333,10 +377,10 @@ def samplePathLow(o, ch1, ch2, dosample):
             bpath.points.append([p.x, p.y, p.z])
     # print('between path')
     # print(len(bpath))
-    pixsize = o.pixsize
+    pixsize = o.optimisation.pixsize
     if dosample:
-        if not (o.use_opencamlib and o.use_exact):
-            if o.use_exact:
+        if not (o.optimisation.use_opencamlib and o.optimisation.use_exact):
+            if o.optimisation.use_exact:
                 if o.update_bullet_collision_tag:
                     prepareBulletCollision(o)
                     o.update_bullet_collision_tag = False
@@ -363,8 +407,8 @@ def sampleChunks(o, pathSamples, layers):
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     getAmbient(o)
 
-    if o.use_exact:  # prepare collision world
-        if o.use_opencamlib:
+    if o.optimisation.use_exact:  # prepare collision world
+        if o.optimisation.use_opencamlib:
             oclSample(o, pathSamples)
             cutterdepth = 0
         else:
@@ -379,11 +423,11 @@ def sampleChunks(o, pathSamples, layers):
         if o.strategy != 'WATERLINE':  # or prepare offset image, but not in some strategies.
             prepareArea(o)
 
-        pixsize = o.pixsize
+        pixsize = o.optimisation.pixsize
 
         coordoffset = o.borderwidth + pixsize / 2  # -m
 
-        res = ceil(o.cutter_diameter / o.pixsize)
+        res = ceil(o.cutter_diameter / o.optimisation.pixsize)
         m = res / 2
 
     t = time.time()
@@ -436,13 +480,13 @@ def sampleChunks(o, pathSamples, layers):
             if not o.ambient.contains(sgeometry.Point(x, y)):
                 newsample = (x, y, 1)
             else:
-                if o.use_opencamlib and o.use_exact:
+                if o.optimisation.use_opencamlib and o.optimisation.use_exact:
                     z = s[2]
                     if minz > z:
                         z = minz
                     newsample = (x, y, z)
                 # ampling
-                elif o.use_exact and not o.use_opencamlib:
+                elif o.optimisation.use_exact and not o.optimisation.use_opencamlib:
 
                     if lastsample is not None:  # this is an optimalization,
                         # search only for near depths to the last sample. Saves about 30% of sampling time.
@@ -985,7 +1029,7 @@ def connectChunksLow(chunks, o):
                     # print('addbetwee')
                     between = samplePathLow(o, lastch, ch,
                                             False)  # other paths either dont use sampling or are sorted before it.
-                if o.use_opencamlib and o.use_exact and (
+                if o.optimisation.use_opencamlib and o.optimisation.use_exact and (
                         o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'PENCIL'):
                     chunks_to_resample.append(
                         (connectedchunks[-1], len(connectedchunks[-1].points), len(between.points)))
@@ -997,7 +1041,7 @@ def connectChunksLow(chunks, o):
             lastch = ch
             pos = lastch.points[-1]
 
-    if o.use_opencamlib and o.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET':
+    if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET':
         oclResampleChunks(o, chunks_to_resample)
 
     return connectedchunks
@@ -1296,7 +1340,7 @@ def getAmbient(o):
                 o.limit_poly = shapely.ops.unary_union(polys)
 
                 if o.ambient_cutter_restrict:
-                    o.limit_poly = o.limit_poly.buffer(o.cutter_diameter / 2, resolution=o.circle_detail)
+                    o.limit_poly = o.limit_poly.buffer(o.cutter_diameter / 2, resolution=o.optimisation.circle_detail)
             o.ambient = o.ambient.intersection(o.limit_poly)
     o.update_ambient_tag = False
 
@@ -1330,7 +1374,7 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
         # print(p1.type, len(polygons))
         i += 1
         if radius > 0:
-            p1 = p1.buffer(radius * offset, resolution=o.circle_detail, join_style=join, mitre_limit=2)
+            p1 = p1.buffer(radius * offset, resolution=o.optimisation.circle_detail, join_style=join, mitre_limit=2)
         outlines.append(p1)
 
     # print(outlines)
@@ -1405,6 +1449,7 @@ def addMachineAreaObject():
         o = s.objects['CAM_machine']
     else:
         oldunits = s.unit_settings.system
+        oldLengthUnit = s.unit_settings.length_unit
         # need to be in metric units when adding machine mesh object
         # in order for location to work properly
         s.unit_settings.system = 'METRIC'
@@ -1431,6 +1476,7 @@ def addMachineAreaObject():
         o.hide_select = True
         # o.select = False
         s.unit_settings.system = oldunits
+        s.unit_settings.length_unit = oldLengthUnit
 
     # bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
 
@@ -1439,7 +1485,6 @@ def addMachineAreaObject():
         ao.select_set(True)
     # else:
     #     bpy.context.scene.objects.active = None
-
 
 def addMaterialAreaObject():
     s = bpy.context.scene
@@ -1670,8 +1715,8 @@ def reload_pathss(o):
     #         print('sleep')
     #         time.sleep(1)
 
-    o.warnings = d['warnings']
-    o.duration = d['duration']
+    o.info.warnings = d['warnings']
+    o.info.duration = d['duration']
     verts = d['path']
 
     edges = []

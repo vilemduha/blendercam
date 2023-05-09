@@ -65,7 +65,7 @@ def getCutterBullet(o):
             cutter = bpy.context.active_object
             cutter.scale *= BULLET_SCALE
             bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-            bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')                            
+            bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
             bpy.ops.rigidbody.object_add(type='ACTIVE')
             cutter = bpy.context.active_object
             #cutter.dimensions.z = 0.2 * BULLET_SCALE  # should be sufficient for now... 20 cm.
@@ -84,7 +84,7 @@ def getCutterBullet(o):
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-        bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')                            
+        bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = 'CONE'
@@ -134,7 +134,7 @@ def getCutterBullet(o):
         ob_scr.merge_threshold = 0
         ob_scr.use_merge_vertices = True
         bpy.ops.object.modifier_apply(modifier='scr')
-        bpy.data.objects['BallConeTool'].select_set(True) 
+        bpy.data.objects['BallConeTool'].select_set(True)
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -247,7 +247,7 @@ def prepareBulletCollision(o):
             bpy.data.meshes.remove(oldmesh)
 
         # subdivide long edges here:
-        if o.exact_subdivide_edges:
+        if o.optimisation.exact_subdivide_edges:
             subdivideLongEdges(collisionob, o.cutter_diameter * 2)
 
         bpy.ops.rigidbody.object_add(type='ACTIVE')

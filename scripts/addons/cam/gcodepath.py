@@ -19,7 +19,7 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# here is the Gcode generaton 
+# here is the Gcode generaton
 
 import bpy
 import time
@@ -496,7 +496,7 @@ def exportGcodePath(filename, vertslist, operations):
             for aline in lines:
                 c.write(aline + '\n')
 
-    o.duration = duration * unitcorr
+    o.info.duration = duration * unitcorr
     if enable_dust:
         c.write(stop_dust + '\n')
     if enable_hold:
@@ -532,7 +532,7 @@ def getPath(context, operation):  # should do all path calculations.
 
     utils.getOperationSources(operation)
 
-    operation.warnings = ''
+    operation.info.warnings = ''
     checkMemoryLimit(operation)
 
     print(operation.machine_axes)
@@ -585,16 +585,16 @@ def checkMemoryLimit(o):
     # utils.getBounds(o)
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
-    resx = sx / o.pixsize
-    resy = sy / o.pixsize
+    resx = sx / o.optimisation.pixsize
+    resy = sy / o.optimisation.pixsize
     res = resx * resy
-    limit = o.imgres_limit * 1000000
+    limit = o.optimisation.imgres_limit * 1000000
     # print('co se to deje')
     if res > limit:
         ratio = (res / limit)
-        o.pixsize = o.pixsize * math.sqrt(ratio)
-        o.warnings = o.warnings + 'sampling resolution had to be reduced!\n'
-        print('changing sampling resolution to %f' % o.pixsize)
+        o.optimisation.pixsize = o.optimisation.pixsize * math.sqrt(ratio)
+        o.info.warnings += f"Memory limit: sampling resolution reduced to {o.optimisation.pixsize}\n"
+        print('changing sampling resolution to %f' % o.optimisation.pixsize)
 
 
 # this is the main function.
@@ -688,7 +688,7 @@ def getPath3axis(context, operation):
 
         strategy.chunksToMesh(chunks, o)
 
-    elif o.strategy == 'WATERLINE' and o.use_opencamlib:
+    elif o.strategy == 'WATERLINE' and o.optimisation.use_opencamlib:
         utils.getAmbient(o)
         chunks = []
         oclGetWaterline(o, chunks)
@@ -699,7 +699,7 @@ def getPath3axis(context, operation):
                 ch.points.reverse()
         strategy.chunksToMesh(chunks, o)
 
-    elif o.strategy == 'WATERLINE' and not o.use_opencamlib:
+    elif o.strategy == 'WATERLINE' and not o.optimisation.use_opencamlib:
         topdown = True
         tw = time.time()
         chunks = []
@@ -766,7 +766,7 @@ def getPath3axis(context, operation):
                             o.inverse and not poly.is_empty and slicesfilled == 1):  # first slice fill
                         restpoly = lastslice
 
-                    restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.circle_detail)
+                    restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
 
                     fillz = z
                     i = 0
@@ -783,7 +783,7 @@ def getPath3axis(context, operation):
                         parentChildDist(lastchunks, nchunks, o)
                         lastchunks = nchunks
                         # slicechunks.extend(polyToChunks(restpoly,z))
-                        restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.circle_detail)
+                        restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
 
                         i += 1
                 # print(i)
@@ -801,7 +801,7 @@ def getPath3axis(context, operation):
                     if o.inverse and poly.is_empty and slicesfilled > 0:
                         restpoly = bound_rectangle.difference(lastslice)
 
-                    restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.circle_detail)
+                    restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
 
                     i = 0
                     while not restpoly.is_empty:  # 'GeometryCollection':#len(restpoly.boundary.coords)>0:
@@ -812,7 +812,7 @@ def getPath3axis(context, operation):
                         slicechunks.extend(nchunks)
                         parentChildDist(lastchunks, nchunks, o)
                         lastchunks = nchunks
-                        restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.circle_detail)
+                        restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
                         i += 1
 
                 percent = int(h / nslices * 100)

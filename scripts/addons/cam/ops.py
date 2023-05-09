@@ -51,29 +51,6 @@ def threadread(tcom):
         e = inline.find('}')
         tcom.outtext = inline[s + 9:e]
 
-
-class CAMPositionObject(bpy.types.Operator):
-    """position object for CAM operation. Tests object bounds and places them so the object
-    is aligned to be positive from x and y and negative from z."""
-    bl_idname = "object.cam_position"
-    bl_label = "position object for CAM operation"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    def execute(self, context):
-        s = bpy.context.scene
-        operation = s.cam_operations[s.cam_active_operation]
-        if operation.object_name in bpy.data.objects:
-            utils.positionObject(operation)
-        else:
-            print('no object assigned')
-            return {'FINISHED'}
-        return {'FINISHED'}
-
-    def draw(self, context):
-        layout = self.layout
-        layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
-
-
 @bpy.app.handlers.persistent
 def timer_update(context):
     """monitoring of background processes"""
@@ -568,14 +545,14 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     if not mpocket_exists:     # create a pocket operation if it does not exist already
         s.cam_operations.add()
         o = s.cam_operations[-1]
-        o.object_name = 'medial_pocket'
+        o.object_name= 'medial_pocket'
         s.cam_active_operation = len(s.cam_operations) - 1
         o.name = 'MedialPocket'
         o.filename = o.name
         o.strategy = 'POCKET'
         o.use_layers = False
-        o.material_from_model = False
-        o.material_size[2] = -maxdepth
+        o.material.estimate_from_model = False
+        o.material.size[2] = -maxdepth
         o.minz_from_ob = False
         o.minz_from_material = True
 
@@ -594,22 +571,18 @@ class CamOperationAdd(bpy.types.Operator):
         s = bpy.context.scene
         fixUnits()
 
+        ob = bpy.context.active_object
+        if ob is None: raise CamException("No object selected")
+
+        minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
         s.cam_operations.add()
         o = s.cam_operations[-1]
-        ob = bpy.context.active_object
-        if ob is not None:
-            o.object_name = ob.name
-            minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
-            o.minz = minz
-        else:
-            # FIXME Creating an operation without any object selected
-            # This should actually display a modal dialog
-            # and cancel the operation creation
-            o.object_name = "none"
-            o.minz = 0
+        o.object_name = ob.name
+        o.minz = minz
 
         s.cam_active_operation = len(s.cam_operations) - 1
-        o.name = f"Op_{o.object_name}_{s.cam_active_operation + 1}"
+        
+        o.name = f"Op_{ob.name}_{s.cam_active_operation + 1}"
         o.filename = o.name
 
         if s.objects.get('CAM_machine') is None:
