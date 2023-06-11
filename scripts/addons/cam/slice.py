@@ -48,7 +48,7 @@ def slicing2d(ob, height):  # April 2020 Alain Pelletier
     return True
 
 
-def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
+def slicing3d(ob, start, end):  #  April 2020 Alain Pelletier
     # let's slice things
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     bpy.ops.object.mode_set(mode='EDIT')  # force edit mode
