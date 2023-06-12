@@ -64,19 +64,19 @@ def getPathPatternParallel(o, angle):
 
                 if v.x > o.min.x and v.x < o.max.x and v.y > o.min.y and v.y < o.max.y:
                     chunk.points.append((v.x, v.y, zlevel))
-            if (reverse and o.movement_type == 'MEANDER') or (
-                    o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CW') or (
-                    o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CCW'):
+            if (reverse and o.movement.type == 'MEANDER') or (
+                    o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW') or (
+                    o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW'):
                 chunk.points.reverse()
 
             if len(chunk.points) > 0:
                 pathchunks.append(chunk)
-            if len(pathchunks) > 1 and reverse and o.parallel_step_back and not o.use_layers:
+            if len(pathchunks) > 1 and reverse and o.movement.parallel_step_back and not o.use_layers:
                 # parallel step back - for finishing, best with climb movement, saves cutter life by going into
                 # material with climb, while using move back on the surface to improve finish
                 # (which would otherwise be a conventional move in the material)
 
-                if o.movement_type == 'CONVENTIONAL' or o.movement_type == 'CLIMB':
+                if o.movement.type == 'CONVENTIONAL' or o.movement.type == 'CLIMB':
                     pathchunks[-2].points.reverse()
                 changechunk = pathchunks[-1]
                 pathchunks[-1] = pathchunks[-2]
@@ -199,10 +199,10 @@ def getPathPattern(operation):
             maxyp -= pathd
 
             i += 1
-        if o.movement_insideout == 'INSIDEOUT':
+        if o.movement.insideout == 'INSIDEOUT':
             chunk.points.reverse()
-        if (o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CW') or (
-                o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW'):
+        if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
+                o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
             for si in range(0, len(chunk.points)):
                 s = chunk.points[si]
                 chunk.points[si] = (o.max.x + o.min.x - s[0], s[1], s[2])
@@ -238,14 +238,14 @@ def getPathPattern(operation):
                 chunk = camPathChunk([])
         if len(chunk.points) > 0:
             pathchunks.append(chunk)
-        if o.movement_insideout == 'OUTSIDEIN':
+        if o.movement.insideout == 'OUTSIDEIN':
             pathchunks.reverse()
         for chunk in pathchunks:
-            if o.movement_insideout == 'OUTSIDEIN':
+            if o.movement.insideout == 'OUTSIDEIN':
                 chunk.points.reverse()
 
-            if (o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CW') or (
-                    o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CCW'):
+            if (o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW') or (
+                    o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW'):
                 for si in range(0, len(chunk.points)):
                     s = chunk.points[si]
                     chunk.points[si] = (o.max.x + o.min.x - s[0], s[1], s[2])
@@ -302,13 +302,13 @@ def getPathPattern(operation):
                 for p in currentstepchunks:
                     parentChildDist(p, ch, o)
 
-        if o.movement_insideout == 'OUTSIDEIN':
+        if o.movement.insideout == 'OUTSIDEIN':
             pathchunks.reverse()
         for chunk in pathchunks:
-            if o.movement_insideout == 'OUTSIDEIN':
+            if o.movement.insideout == 'OUTSIDEIN':
                 chunk.points.reverse()
-            if (o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CW') or (
-                    o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CCW'):
+            if (o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW') or (
+                    o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW'):
                 chunk.points.reverse()
             # for si in range(0,len(chunk.points)):
             # s=chunk.points[si]
@@ -340,7 +340,7 @@ def getPathPattern(operation):
 
                     nchunks = shapelyToChunks(p, zlevel)
 
-                    if o.movement_insideout == 'INSIDEOUT':
+                    if o.movement.insideout == 'INSIDEOUT':
                         parentChildDist(lastchunks, nchunks, o)
                     else:
                         parentChildDist(nchunks, lastchunks, o)
@@ -367,21 +367,21 @@ def getPathPattern(operation):
                     p = p.buffer(dist, o.optimisation.circle_detail)
                     if not p.is_empty:
                         nchunks = shapelyToChunks(p, zlevel)
-                        if o.movement_insideout == 'INSIDEOUT':
+                        if o.movement.insideout == 'INSIDEOUT':
                             parentChildDist(nchunks, lastchunks, o)
                         else:
                             parentChildDist(lastchunks, nchunks, o)
                         pathchunks.extend(nchunks)
                         lastchunks = nchunks
 
-        if o.movement_insideout == 'OUTSIDEIN':
+        if o.movement.insideout == 'OUTSIDEIN':
             pathchunks.reverse()
 
         for chunk in pathchunks:
-            if o.movement_insideout == 'OUTSIDEIN':
+            if o.movement.insideout == 'OUTSIDEIN':
                 chunk.points.reverse()
-            if (o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CW') or (
-                    o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW'):
+            if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
+                    o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
                 chunk.points.reverse()
 
         chunksRefine(pathchunks, o)
@@ -502,9 +502,9 @@ def getPathPattern4axis(operation):
             chunk.depth = radiusend - radius
             pathchunks.append(chunk)
 
-            if (reverse and o.movement_type == 'MEANDER') or (
-                    o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CW') or (
-                    o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CCW'):
+            if (reverse and o.movement.type == 'MEANDER') or (
+                    o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW') or (
+                    o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW'):
                 chunk.reverse()
 
             reverse = not reverse

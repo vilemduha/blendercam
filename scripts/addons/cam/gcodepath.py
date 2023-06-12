@@ -204,9 +204,9 @@ def exportGcodePath(filename, vertslist, operations):
             for aline in lines:
                 c.write(aline + '\n')
 
-        free_movement_height = o.free_movement_height  # o.max.z+
-        if o.useG64:
-            c.set_path_control_mode(2, round(o.G64 * 1000, 5), 0)
+        free_height = o.movement.free_height  # o.max.z+
+        if o.movement.useG64:
+            c.set_path_control_mode(2, round(o.movement.G64 * 1000, 5), 0)
 
         mesh = vertslist[i]
         verts = mesh.vertices[:]
@@ -215,7 +215,7 @@ def exportGcodePath(filename, vertslist, operations):
 
         # spindle rpm and direction
         ###############
-        if o.spindle_rotation_direction == 'CW':
+        if o.movement.spindle_rotation == 'CW':
             spdir_clockwise = True
         else:
             spdir_clockwise = False
@@ -265,8 +265,8 @@ def exportGcodePath(filename, vertslist, operations):
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)
 
-        #        c.rapid(z=free_movement_height*1000)  #raise the spindle to safe height
-        fmh = round(free_movement_height * unitcorr, 2)
+        #        c.rapid(z=free_height*1000)  #raise the spindle to safe height
+        fmh = round(free_height * unitcorr, 2)
         if o.cutter_type not in ['LASER', 'PLASMA']:
             c.write('G00 Z' + str(fmh) + '\n')
         if o.enable_A:
@@ -416,7 +416,7 @@ def exportGcodePath(filename, vertslist, operations):
                     # print('plungef',ra,rb)
                     c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
 
-            elif v.z >= free_movement_height or vi == 0:  # v.z==last.z==free_movement_height or vi==0
+            elif v.z >= free_height or vi == 0:  # v.z==last.z==free_height or vi==0
 
                 if f != freefeedrate:
                     f = freefeedrate
@@ -464,8 +464,8 @@ def exportGcodePath(filename, vertslist, operations):
 
             processedops += 1
             if split and processedops > m.split_limit:
-                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_movement_height * unitcorr)
-                # @v=(ch.points[-1][0],ch.points[-1][1],free_movement_height)
+                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_height * unitcorr)
+                # @v=(ch.points[-1][0],ch.points[-1][1],free_height)
                 findex += 1
                 c.file_close()
                 c = startNewFile()
@@ -482,7 +482,7 @@ def exportGcodePath(filename, vertslist, operations):
                     c.flush_nc()
 
                 c.feedrate(unitcorr * o.feedrate)
-                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_movement_height * unitcorr)
+                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_height * unitcorr)
                 c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=last.z * unitcorr)
                 processedops = 0
 
@@ -593,7 +593,7 @@ def checkMemoryLimit(o):
     if res > limit:
         ratio = (res / limit)
         o.optimisation.pixsize = o.optimisation.pixsize * math.sqrt(ratio)
-        o.info.warnings += f"Memory limit: sampling resolution reduced to {o.optimisation.pixsize}\n"
+        o.info.warnings += f"Memory limit: sampling resolution reduced to {o.optimisation.pixsize:.2e}\n"
         print('changing sampling resolution to %f' % o.optimisation.pixsize)
 
 
@@ -668,12 +668,12 @@ def getPath3axis(context, operation):
             chunks = chunksCoherency(chunks)
             print('coherency check')
 
-        if o.strategy in ['PARALLEL', 'CROSS', 'PENCIL', 'OUTLINEFILL']:  # and not o.parallel_step_back:
+        if o.strategy in ['PARALLEL', 'CROSS', 'PENCIL', 'OUTLINEFILL']:  # and not o.movement.parallel_step_back:
             print('sorting')
             chunks = utils.sortChunks(chunks, o)
             if o.strategy == 'OUTLINEFILL':
                 chunks = utils.connectChunksLow(chunks, o)
-        if o.ramp:
+        if o.movement.ramp:
             for ch in chunks:
                 ch.rampZigZag(ch.zstart, ch.points[0][2], o)
         # print(chunks)
@@ -693,8 +693,8 @@ def getPath3axis(context, operation):
         chunks = []
         oclGetWaterline(o, chunks)
         chunks = limitChunks(chunks, o)
-        if (o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CW') or (
-                o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW'):
+        if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
+                o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
             for ch in chunks:
                 ch.points.reverse()
         strategy.chunksToMesh(chunks, o)
@@ -819,8 +819,8 @@ def getPath3axis(context, operation):
                 progress('waterline layers ', percent)
                 lastslice = poly
 
-            if (o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW') or (
-                    o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CW'):
+            if (o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW') or (
+                    o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW'):
                 for chunk in slicechunks:
                     chunk.points.reverse()
             slicechunks = utils.sortChunks(slicechunks, o)

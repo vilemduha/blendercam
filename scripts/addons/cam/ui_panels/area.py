@@ -34,8 +34,8 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
 
         self.layout.prop(self.ao, 'maxz')
 
-        if self.ao.maxz > self.ao.free_movement_height:
-            self.layout.prop(self.ao, 'free_movement_height')
+        if self.ao.maxz > self.ao.movement.free_height:
+            self.layout.prop(self.ao.movement, 'free_height')
             self.layout.label(text='Depth start > Free movement')
             self.layout.label(text='POSSIBLE COLLISION')
 
@@ -45,7 +45,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
 
             if not self.ao.minz_from_ob:
                 if not self.ao.minz_from_material:
-                    self.layout.prop(self.ao, 'minz') 
+                    self.layout.prop(self.ao, 'minz')
                 self.layout.prop(self.ao, 'minz_from_material')
             if not self.ao.minz_from_material:
                 self.layout.prop(self.ao, 'minz_from_ob')
