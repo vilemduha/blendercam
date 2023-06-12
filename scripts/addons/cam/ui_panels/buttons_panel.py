@@ -11,7 +11,13 @@ class CAMButtonsPanel:
     @classmethod
     def poll(cls, context):
         rd = bpy.context.scene.render
-        return rd.engine in cls.COMPAT_ENGINES
+        if rd.engine in cls.COMPAT_ENGINES:
+            if hasattr(cls,'always_show_panel') and cls.always_show_panel:
+                return True
+            op = cls.active_operation()
+            if op and op.valid:
+                return True
+        return False
 
     @classmethod
     def active_operation_index(cls):

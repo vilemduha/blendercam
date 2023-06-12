@@ -16,6 +16,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM operations panel"""
     bl_label = "CAM operations"
     bl_idname = "WORLD_PT_CAM_OPERATIONS"
+    always_show_panel = True
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
