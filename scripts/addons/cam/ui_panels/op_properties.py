@@ -31,14 +31,13 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         scene = bpy.context.scene
-        use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
 
         if len(scene.cam_operations) == 0:
             layout.label(text='Add operation first')
         if len(scene.cam_operations) > 0:
             ao = scene.cam_operations[scene.cam_active_operation]
             if ao.valid:
-                if use_experimental:
+                if self.use_experimental:
                     layout.prop(ao, 'machine_axes')
                 if ao.machine_axes == '3':
                     layout.prop(ao, 'strategy')

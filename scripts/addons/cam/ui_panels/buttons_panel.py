@@ -5,6 +5,7 @@ class CAMButtonsPanel:
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = "render"
+    always_show_panel = False
 
     # COMPAT_ENGINES must be defined in each subclass, external engines can add themselves here
 
@@ -12,7 +13,7 @@ class CAMButtonsPanel:
     def poll(cls, context):
         rd = bpy.context.scene.render
         if rd.engine in cls.COMPAT_ENGINES:
-            if hasattr(cls,'always_show_panel') and cls.always_show_panel:
+            if cls.always_show_panel:
                 return True
             op = cls.active_operation()
             if op and op.valid:
@@ -34,6 +35,7 @@ class CAMButtonsPanel:
 
     def __init__(self):
         self.op = self.active_operation()
+        self.use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
 
     def operations_count(self):
         return(len(bpy.context.scene.cam_operations))

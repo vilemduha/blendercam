@@ -175,7 +175,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw(self, context):
         self.context = context
         scene = bpy.context.scene
-        use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
 
         if not self.op.valid:
             return
