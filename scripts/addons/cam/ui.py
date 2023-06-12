@@ -35,6 +35,7 @@ from cam import gcodeimportparser, simple
 from cam.simple import *
 
 from cam.ui_panels.buttons_panel  import CAMButtonsPanel
+from cam.ui_panels.interface      import *
 from cam.ui_panels.info           import *
 from cam.ui_panels.operations     import *
 from cam.ui_panels.cutter         import *

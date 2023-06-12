@@ -109,8 +109,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_label = "CAM movement"
     bl_idname = "WORLD_PT_CAM_MOVEMENT"
 
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
-
     def draw_cut_type(self):
         self.layout.prop(self.op.movement, 'type')
         if self.op.movement.type in ['BLOCK', 'SPIRAL', 'CIRCLES']:

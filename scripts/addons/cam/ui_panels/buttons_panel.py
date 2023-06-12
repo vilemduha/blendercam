@@ -6,6 +6,7 @@ class CAMButtonsPanel:
     bl_region_type = 'WINDOW'
     bl_context = "render"
     always_show_panel = False
+    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     # COMPAT_ENGINES must be defined in each subclass, external engines can add themselves here
 
