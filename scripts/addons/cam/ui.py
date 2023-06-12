@@ -36,16 +36,16 @@ from cam.simple import *
 
 from cam.ui_panels.buttons_panel  import CAMButtonsPanel
 from cam.ui_panels.info           import *
-from cam.ui_panels.operations     import CAM_OPERATIONS_Panel
-from cam.ui_panels.cutter         import CAM_CUTTER_Panel
-from cam.ui_panels.machine        import CAM_MACHINE_Panel
+from cam.ui_panels.operations     import *
+from cam.ui_panels.cutter         import *
+from cam.ui_panels.machine        import *
 from cam.ui_panels.material       import *
-from cam.ui_panels.chains         import CAM_UL_operations, CAM_UL_chains, CAM_CHAINS_Panel
-from cam.ui_panels.op_properties  import CAM_OPERATION_PROPERTIES_Panel
-from cam.ui_panels.movement       import CAM_MOVEMENT_Panel
-from cam.ui_panels.feedrate       import CAM_FEEDRATE_Panel
+from cam.ui_panels.chains         import *
+from cam.ui_panels.op_properties  import *
+from cam.ui_panels.movement       import *
+from cam.ui_panels.feedrate       import *
 from cam.ui_panels.optimisation   import *
-from cam.ui_panels.area           import CAM_AREA_Panel
+from cam.ui_panels.area           import *
 
 
 class CAM_UL_orientations(UIList):

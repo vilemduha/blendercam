@@ -56,7 +56,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.prop(ao, 'rotary_axis_2')
 
                 if ao.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'OUTLINEFILL']:
-                    layout.prop(ao, 'movement_insideout')
+                    layout.prop(ao.movement, 'insideout')
 
                 if ao.strategy in ['CUTOUT', 'CURVE']:
                     if ao.strategy == 'CUTOUT':
@@ -85,7 +85,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                     if ao.outlines_count > 1:
                         layout.prop(ao, 'dist_between_paths')
                         self.EngagementDisplay(ao, layout)
-                        layout.prop(ao, 'movement_insideout')
+                        layout.prop(ao.movement, 'insideout')
                     layout.prop(ao, 'dont_merge')
 
                 elif ao.strategy == 'WATERLINE':

@@ -186,7 +186,7 @@ class CalculatePath(bpy.types.Operator):
         o.operator = self
 
         if o.use_layers:
-            o.parallel_step_back = False
+            o.movement.parallel_step_back = False
         try:
             gcodepath.getPath(context, o)
         except CamException as e:

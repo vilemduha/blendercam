@@ -438,13 +438,13 @@ def crazyStrokeImage(o):
     anglerange = [-pi, pi]  # range for angle of toolpath vector versus material vector
     testangleinit = 0
     angleincrement = 0.05
-    if (o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CCW') or (
-            o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CW'):
+    if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW') or (
+            o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW'):
         anglerange = [-pi, 0]
         testangleinit = 1
         angleincrement = -angleincrement
-    elif (o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW') or (
-            o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CW'):
+    elif (o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW') or (
+            o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW'):
         anglerange = [0, pi]
         testangleinit = -1
         angleincrement = angleincrement
@@ -633,13 +633,13 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     testangleinit = 0
     angleincrement = o.crazy_threshold4
 
-    if (o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CCW') or (
-            o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CW'):
+    if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW') or (
+            o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW'):
         anglerange = [-pi, 0]
         testangleinit = anglelimit
         angleincrement = -angleincrement
-    elif (o.movement_type == 'CONVENTIONAL' and o.spindle_rotation_direction == 'CCW') or (
-            o.movement_type == 'CLIMB' and o.spindle_rotation_direction == 'CW'):
+    elif (o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW') or (
+            o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW'):
         anglerange = [0, pi]
         testangleinit = -anglelimit
         angleincrement = angleincrement
