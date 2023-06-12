@@ -315,10 +315,12 @@ def exportGcodePath(filename, vertslist, operations):
         offline = 0
         online = 0
         cut = True  # active cut variable for laser or plasma
+        shapes = 0
         for vi, vert in enumerate(verts):
             # skip the first vertex if this is a chained operation
             # ie: outputting more than one operation
             # otherwise the machine gets sent back to 0,0 for each operation which is unecessary
+            shapes += 1  #  Count amount of shapes
             if i > 0 and vi == 0:
                 continue
             v = vert.co
@@ -353,18 +355,14 @@ def exportGcodePath(filename, vertslist, operations):
 
                 if r.x == lastrot.x:
                     ra = None
-                # print(r.x,lastrot.x)
                 else:
 
                     ra = r.x * rotcorr
-                # print(ra,'RA')
-                # ra=r.x*rotcorr
+
                 if r.y == lastrot.y:
                     rb = None
                 else:
                     rb = r.y * rotcorr
-            # rb=r.y*rotcorr
-            # print (	ra,rb)
 
             if vi > 0 and v.x == last.x:
                 vx = None
@@ -386,8 +384,6 @@ def exportGcodePath(filename, vertslist, operations):
             vect = v - last
             l = vect.length
             if vi > 0 and l > 0 and downvector.angle(vect) < plungelimit:
-                # print('plunge')
-                # print(vect)
                 if f != plungefeedrate or (fadjust and fadjustval != 1):
                     f = plungefeedrate * fadjustval
                     c.feedrate(f)
@@ -413,17 +409,12 @@ def exportGcodePath(filename, vertslist, operations):
                         c.feed(x=vx, y=vy, z=vz)
                 else:
 
-                    # print('plungef',ra,rb)
                     c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
 
             elif v.z >= free_height or vi == 0:  # v.z==last.z==free_height or vi==0
-
                 if f != freefeedrate:
                     f = freefeedrate
                     c.feedrate(f)
-
-                #                if o.machine_axes == '3':
-                #                    c.rapid(x=vx, y=vy, z=vz)
 
                 if o.machine_axes == '3':
                     if o.cutter_type in ['LASER', 'PLASMA']:
@@ -439,10 +430,13 @@ def exportGcodePath(filename, vertslist, operations):
                         c.rapid(x=vx, y=vy)
                     else:
                         c.rapid(x=vx, y=vy, z=vz)
+                        #  this is to evaluate operation time and adds a feedrate for fast moves
+                        if vz is not None:
+                            f = plungefeedrate * fadjustval
+                        if vx is not None or vy is not None:
+                            f = freefeedrate
                 else:
-                    # print('rapidf',ra,rb)
                     c.rapid(x=vx, y=vy, z=vz, a=ra, b=rb)
-            # gcommand='{RAPID}'
 
             else:
 
@@ -453,11 +447,10 @@ def exportGcodePath(filename, vertslist, operations):
                 if o.machine_axes == '3':
                     c.feed(x=vx, y=vy, z=vz)
                 else:
-                    # print('normalf',ra,rb)
                     c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
 
-            duration += vect.length / f
-            # print(duration)
+            vector_duration = vect.length / f
+            duration += vector_duration
             last = v
             if o.machine_axes != '3':
                 lastrot = r
@@ -497,6 +490,7 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
     o.info.duration = duration * unitcorr
+    print("total time:",round(o.info.duration * 60),"seconds")
     if enable_dust:
         c.write(stop_dust + '\n')
     if enable_hold:
