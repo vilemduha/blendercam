@@ -177,8 +177,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
         scene = bpy.context.scene
         use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
 
-        self.set_active_operation()
-
         if not self.op.valid:
             return
 

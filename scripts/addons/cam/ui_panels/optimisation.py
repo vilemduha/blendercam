@@ -55,9 +55,9 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     def draw(self, context):
-        if self.active_op is None:
+        if self.op is None:
             return
-        if not self.active_op.valid:
+        if not self.op.valid:
             return
 
         self.draw_optimize()
@@ -68,64 +68,64 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
         self.draw_simulation_detail()
 
     def draw_optimize(self):
-        if self.active_op is None:
+        if self.op is None:
             return
-        if not self.active_op.valid:
+        if not self.op.valid:
             return
 
-        self.layout.prop(self.active_op.optimisation, 'optimize')
-        if self.active_op.optimisation.optimize:
-            self.layout.prop(self.active_op.optimisation, 'optimize_threshold')
+        self.layout.prop(self.op.optimisation, 'optimize')
+        if self.op.optimisation.optimize:
+            self.layout.prop(self.op.optimisation, 'optimize_threshold')
 
     def draw_exact_mode(self):
-        if self.active_op is None:
+        if self.op is None:
             return
-        if not self.active_op.valid:
-            return
-
-        if not self.active_op.geometry_source == 'OBJECT' or self.active_op.geometry_source == 'COLLECTION':
+        if not self.op.valid:
             return
 
-        self.exact_possible = self.active_op.strategy not in [
+        if not self.op.geometry_source == 'OBJECT' or self.op.geometry_source == 'COLLECTION':
+            return
+
+        self.exact_possible = self.op.strategy not in [
             'MEDIAL_AXIS', 'POCKET', 'CUTOUT', 'DRILL', 'PENCIL', 'CURVE']
 
         if self.exact_possible:
-            self.layout.prop(self.active_op.optimisation, 'use_exact')
+            self.layout.prop(self.op.optimisation, 'use_exact')
 
-        if not self.exact_possible or not self.active_op.optimisation.use_exact:
-            self.layout.prop(self.active_op.optimisation, 'pixsize')
-            self.layout.prop(self.active_op.optimisation, 'imgres_limit')
+        if not self.exact_possible or not self.op.optimisation.use_exact:
+            self.layout.prop(self.op.optimisation, 'pixsize')
+            self.layout.prop(self.op.optimisation, 'imgres_limit')
 
-            sx = self.active_op.max.x - self.active_op.min.x
-            sy = self.active_op.max.y - self.active_op.min.y
-            resx = int(sx / self.active_op.optimisation.pixsize)
-            resy = int(sy / self.active_op.optimisation.pixsize)
+            sx = self.op.max.x - self.op.min.x
+            sy = self.op.max.y - self.op.min.y
+            resx = int(sx / self.op.optimisation.pixsize)
+            resy = int(sy / self.op.optimisation.pixsize)
 
             if resx > 0 and resy > 0:
                 resolution = 'Resolution: ' + str(resx) + ' x ' + str(resy)
                 self.layout.label(text=resolution)
 
     def draw_use_opencamlib(self):
-        if self.active_op is None:
+        if self.op is None:
             return
-        if not self.active_op.valid:
+        if not self.op.valid:
             return
-        if not (self.exact_possible and self.active_op.optimisation.use_exact):
+        if not (self.exact_possible and self.op.optimisation.use_exact):
             return
 
         opencamlib_version = cam.utils.opencamlib_version()
 
         if opencamlib_version is None:
             self.layout.label(text="Opencamlib is not available ")
-            self.layout.prop(self.active_op.optimisation, 'exact_subdivide_edges')
+            self.layout.prop(self.op.optimisation, 'exact_subdivide_edges')
         else:
-            self.layout.prop(self.active_op.optimisation, 'use_opencamlib')
+            self.layout.prop(self.op.optimisation, 'use_opencamlib')
 
     def draw_simulation_detail(self):
-        if self.active_op is None:
+        if self.op is None:
             return
-        if not self.active_op.valid:
+        if not self.op.valid:
             return
 
-        self.layout.prop(self.active_op.optimisation, 'simulation_detail')
-        self.layout.prop(self.active_op.optimisation, 'circle_detail')
+        self.layout.prop(self.op.optimisation, 'simulation_detail')
+        self.layout.prop(self.op.optimisation, 'circle_detail')

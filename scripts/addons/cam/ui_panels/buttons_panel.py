@@ -13,28 +13,21 @@ class CAMButtonsPanel:
         rd = bpy.context.scene.render
         return rd.engine in cls.COMPAT_ENGINES
 
-    def __init__(self):
-        self.active_op = self.active_operation()
-
-    def active_operation_index(self):
+    @classmethod
+    def active_operation_index(cls):
         return(bpy.context.scene.cam_active_operation)
 
-    def active_operation(self):
+    @classmethod
+    def active_operation(cls):
         active_op = None
         try:
-            active_op = bpy.context.scene.cam_operations[self.active_operation_index()]
+            active_op = bpy.context.scene.cam_operations[cls.active_operation_index()]
         except IndexError:
             pass
-
         return(active_op)
 
-    def set_active_operation(self):
-        scene = bpy.context.scene
-        self.op = None
-        if len(scene.cam_operations) == 0:
-            return
-        self.op = scene.cam_operations[scene.cam_active_operation]
-        return
+    def __init__(self):
+        self.op = self.active_operation()
 
     def operations_count(self):
         return(len(bpy.context.scene.cam_operations))
