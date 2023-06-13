@@ -108,7 +108,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM movement panel"""
     bl_label = "CAM movement"
     bl_idname = "WORLD_PT_CAM_MOVEMENT"
-    panel_interface_level = 2
+    panel_interface_level = 0
 
     def draw_cut_type(self):
         self.layout.prop(self.op.movement, 'type')
