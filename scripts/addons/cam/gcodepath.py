@@ -432,7 +432,7 @@ def exportGcodePath(filename, vertslist, operations):
                         c.rapid(x=vx, y=vy, z=vz)
                         #  this is to evaluate operation time and adds a feedrate for fast moves
                         if vz is not None:
-                            f = plungefeedrate * fadjustval * 0.25  #  compensate for multiple fast move accelerations
+                            f = plungefeedrate * fadjustval * 0.45  #  compensate for multiple fast move accelerations
                         if vx is not None or vy is not None:
                             f = freefeedrate * 0.8  #  compensate for free feedrate acceleration
                 else:
