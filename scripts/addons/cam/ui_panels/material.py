@@ -64,6 +64,7 @@ class CAM_MATERIAL_PositionObject(bpy.types.Operator):
     bl_idname = "object.material_cam_position"
     bl_label = "position object for CAM operation"
     bl_options = {'REGISTER', 'UNDO'}
+    panel_interface_level = 0
 
     def execute(self, context):
         s = bpy.context.scene

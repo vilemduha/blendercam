@@ -7,6 +7,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_label = " "
     bl_idname = "WORLD_PT_CAM_MACHINE"
     always_show_panel = True
+    panel_interface_level = 0
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 

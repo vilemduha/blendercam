@@ -16,6 +16,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_label = "CAM operations"
     bl_idname = "WORLD_PT_CAM_OPERATIONS"
     always_show_panel = True
+    panel_interface_level = 0
 
     # Main draw function
     def draw(self, context):

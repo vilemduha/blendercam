@@ -28,9 +28,9 @@ class CAM_INFO_Properties(bpy.types.PropertyGroup):
 
 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
-    """CAM info panel"""
     bl_label = "CAM info & warnings"
     bl_idname = "WORLD_PT_CAM_INFO"
+    panel_interface_level = 1
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 

@@ -6,6 +6,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM operation area panel"""
     bl_label = "CAM operation area "
     bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
+    panel_interface_level = 0
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 

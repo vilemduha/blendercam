@@ -5,6 +5,7 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM feedrate panel"""
     bl_label = "CAM feedrate"
     bl_idname = "WORLD_PT_CAM_FEEDRATE"
+    panel_interface_level = 0
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 

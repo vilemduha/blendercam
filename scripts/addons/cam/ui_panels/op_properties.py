@@ -7,6 +7,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM operation properties panel"""
     bl_label = "CAM operation setup"
     bl_idname = "WORLD_PT_CAM_OPERATION"
+    panel_interface_level = 0
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 

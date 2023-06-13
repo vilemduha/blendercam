@@ -7,6 +7,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM cutter panel"""
     bl_label = " "
     bl_idname = "WORLD_PT_CAM_CUTTER"
+    panel_interface_level = 0
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
