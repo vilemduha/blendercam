@@ -36,6 +36,7 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM chains panel"""
     bl_label = "CAM chains"
     bl_idname = "WORLD_PT_CAM_CHAINS"
+    panel_interface_level = 1
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 

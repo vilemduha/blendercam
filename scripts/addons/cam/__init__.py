@@ -51,6 +51,8 @@ from shapely import geometry as sgeometry
 
 from cam.ui import *
 
+
+
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
@@ -66,7 +68,6 @@ bl_info = {
 import cam.constants
 
 was_hidden_dict = {}
-
 
 def updateMachine(self, context):
     print('update machine ')
@@ -466,7 +467,6 @@ def getStrategyList(scene, context):
 
 class camOperation(bpy.types.PropertyGroup):
 
-    interface: bpy.props.PointerProperty(type=CAM_INTERFACE_Properties)
     material: bpy.props.PointerProperty(type=CAM_MATERIAL_Properties)
     info: bpy.props.PointerProperty(type=CAM_INFO_Properties)
     optimisation: bpy.props.PointerProperty(type=CAM_OPTIMISATION_Properties)
@@ -1467,6 +1467,7 @@ def register():
 
     s.cam_slice = bpy.props.PointerProperty(type=SliceObjectsSettings)
 
+    bpy.types.Scene.interface = bpy.props.PointerProperty(type=CAM_INTERFACE_Properties)
 
 def unregister():
     for p in classes:

@@ -6,25 +6,23 @@ import cam.utils
 import cam.constants
 
 class CAM_INTERFACE_Properties(bpy.types.PropertyGroup):
-    interface_level: bpy.props.EnumProperty(
+    level: bpy.props.EnumProperty(
         name="Interface",
-        description="Choose the interface details",
-        items=[('0', "Basic", "Basic interface"),
-               ('1', "Advanced", "Advanced interface"),
-               ('2', "Complete", "Complete interface")],
+        description="Choose visible options",
+        items=[('0', "Basic", "Only show essential options"),
+               ('1', "Advanced", "Show advanced options"),
+               ('2', "Complete", "Show all options")],
         default='0',
     )
 
 class CAM_INTERFACE_Panel(CAMButtonsPanel, bpy.types.Panel):
-    bl_label = "CAM interface"
+    bl_label = "Interface"
     bl_idname = "WORLD_PT_CAM_INTERFACE"
     always_show_panel = True
 
     def draw_interface_level(self):
-        self.layout.prop(self.op.interface, 'interface_level')
+        self.layout.prop(self.context.scene.interface, 'level', text='')
 
     def draw(self, context):
         self.context = context
-        scene = bpy.context.scene
-
         self.draw_interface_level()

@@ -18,7 +18,10 @@ class CAMButtonsPanel:
                 return True
             op = cls.active_operation()
             if op and op.valid:
-                return True
+                if hasattr(cls, 'panel_interface_level'):
+                    return cls.panel_interface_level <= int(context.scene.interface.level)
+                else:
+                    return True
         return False
 
     @classmethod
