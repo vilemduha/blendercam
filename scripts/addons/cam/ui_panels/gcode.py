@@ -7,7 +7,7 @@ class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM operation g-code options panel"""
     bl_label = "CAM g-code options "
     bl_idname = "WORLD_PT_CAM_GCODE"
-    panel_interface_level = 2
+    panel_interface_level = 1
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
