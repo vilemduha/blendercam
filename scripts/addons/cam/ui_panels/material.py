@@ -64,11 +64,11 @@ class CAM_MATERIAL_PositionObject(bpy.types.Operator):
     bl_idname = "object.material_cam_position"
     bl_label = "position object for CAM operation"
     bl_options = {'REGISTER', 'UNDO'}
-    panel_interface_level = 0
+    interface_level = 0
 
     def execute(self, context):
         s = bpy.context.scene
-        operation = s.cam_operations[s.cam_operation]
+        operation = s.cam_operations[s.cam_active_operation]
         if operation.object_name in bpy.data.objects:
             cam.utils.positionObject(operation)
         else:
@@ -76,16 +76,49 @@ class CAM_MATERIAL_PositionObject(bpy.types.Operator):
         return {'FINISHED'}
 
     def draw(self, context):
+        if not self.interface_level <= int(self.context.scene.interface.level): return
         self.layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
-
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_label = "CAM Material size and position"
     bl_idname = "WORLD_PT_CAM_MATERIAL"
+    panel_interface_level = 0
 
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+    prop_level = {
+        'estimate_from_model': 0,
+        'radius_around_model': 1,
+        'position_object': 0
+    }
+
+    def draw_estimate_from_image(self):
+        if self.op.geometry_source not in ['OBJECT', 'COLLECTION']:
+            self.layout.label(text='Estimated from image')
+
+    def draw_estimate_from_object(self):
+        if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
+            if not self.has_correct_level('estimate_from_model'): return
+            self.layout.prop(self.op.material, 'estimate_from_model')
+            if self.op.material.estimate_from_model:
+                row_radius = self.layout.row()
+                if self.has_correct_level('radius_around_model'):
+                    row_radius.label(text="Additional radius")
+                    row_radius.prop(self.op.material, 'radius_around_model', text='')
+            else:
+                self.layout.prop(self.op.material, 'origin')
+                self.layout.prop(self.op.material, 'size')
+
+    # Display Axis alignment section
+    def draw_axis_alignment(self):
+        if not self.has_correct_level('position_object'): return
+        if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
+            row_axis = self.layout.row()
+            row_axis.prop(self.op.material, 'center_x')
+            row_axis.prop(self.op.material, 'center_y')
+            self.layout.prop(self.op.material, 'z_position')
+            self.layout.operator("object.material_cam_position", text="Position object")
 
     def draw(self, context):
+        self.context = context
 
         if self.op is None:
             return
@@ -95,34 +128,6 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
         # Consider removing it entirely
         # self.layout.template_running_jobs()
 
-        if self.op.geometry_source not in ['OBJECT', 'COLLECTION']:
-            self.layout.label(text='Estimated from image')
-            return
-
-        self.layout.prop(self.op.material, 'estimate_from_model')
-
-        if self.op.material.estimate_from_model:
-            self.draw_estimate_material_from_model()
-        else:
-            self.draw_custom_material_size_and_origin()
-
+        self.draw_estimate_from_image()
+        self.draw_estimate_from_object()
         self.draw_axis_alignment()
-
-    # Display section selecting the radius around the model
-    def draw_estimate_material_from_model(self):
-        row_radius = self.layout.row()
-        row_radius.label(text="Additional radius")
-        row_radius.prop(self.op.material, 'radius_around_model', text='')
-
-    # Display section showing custom material size
-    def draw_custom_material_size_and_origin(self):
-        self.layout.prop(self.op.material, 'origin')
-        self.layout.prop(self.op.material, 'size')
-
-    # Display Axis alignment section
-    def draw_axis_alignment(self):
-        row_axis = self.layout.row()
-        row_axis.prop(self.op.material, 'center_x')
-        row_axis.prop(self.op.material, 'center_y')
-        self.layout.prop(self.op.material, 'z_position')
-        self.layout.operator("object.material_cam_position", text="Position object")

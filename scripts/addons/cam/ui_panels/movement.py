@@ -124,7 +124,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
         'protect_vertical': 1
     }
 
-
     def draw_cut_type(self):
         if not self.has_correct_level('type'): return
         self.layout.prop(self.op.movement, 'type')
@@ -199,7 +198,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     def draw(self, context):
         self.context = context
-        scene = bpy.context.scene
 
         if not self.op.valid:
             return
