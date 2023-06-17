@@ -424,7 +424,7 @@ def updateRotation(o, context):
 # def updateRest(o, context):
 #    print('update rest ')
 #    # if o.use_layers:
-# o.parallel_step_back = False
+# o.movement.parallel_step_back = False
 #    o.changed = True
 
 def updateRest(o, context):
@@ -469,6 +469,7 @@ class camOperation(bpy.types.PropertyGroup):
     material: bpy.props.PointerProperty(type=CAM_MATERIAL_Properties)
     info: bpy.props.PointerProperty(type=CAM_INFO_Properties)
     optimisation: bpy.props.PointerProperty(type=CAM_OPTIMISATION_Properties)
+    movement: bpy.props.PointerProperty(type=CAM_MOVEMENT_Properties)
 
 
     name: bpy.props.StringProperty(name="Operation Name", default="Operation", update=updateRest)
@@ -509,7 +510,7 @@ class camOperation(bpy.types.PropertyGroup):
                                       ('IMAGE', 'Image', 'a')),
                                   description='Geometry source',
                                   default='OBJECT', update=updateOperationValid)
-    cutter_typeb: EnumProperty(name='Cutter',
+    cutter_type: EnumProperty(name='Cutter',
                               items=(
                                   ('END', 'End', 'end - flat cutter'),
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
@@ -519,18 +520,6 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('CYLCONE', 'Cylinder cone', 'Cylinder end with a Cone for Parallel - X'),
                                   ('LASER', 'Laser', 'Laser cutter'),
                                   ('PLASMA', 'Plasma', 'Plasma cutter'),
-                                  ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
-                              description='Type of cutter used',
-                              default='END', update=updateZbufferImage)
-
-    cutter_type: EnumProperty(name='Cutter',
-                              items=(
-                                  ('END', 'End', 'end - flat cutter'),
-                                  ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
-                                  ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
-                                  ('VCARVE', 'V-carve', 'v carve cutter'),
-                                  ('BALLCONE', 'Ballcone', 'Ball with a Cone for Parallel - X'),
-                                  ('CYLCONE', 'Cylinder cone', 'Cylinder end with a Cone for Parallel - X'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
                               description='Type of cutter used',
                               default='END', update=updateZbufferImage)
@@ -715,21 +704,6 @@ class camOperation(bpy.types.PropertyGroup):
                                        update=updateRest)
     stepdown: bpy.props.FloatProperty(name="", description="Layer height", default=0.01, min=0.00001, max=32, precision=cam.constants.PRECISION,
                                       unit="LENGTH", update=updateRest)
-    first_down: bpy.props.BoolProperty(name="First down",
-                                       description="First go down on a contour, then go to the next one",
-                                       default=False, update=updateRest)
-    ramp: bpy.props.BoolProperty(name="Ramp in - EXPERIMENTAL",
-                                 description="Ramps down the whole contour, so the cutline looks like helix",
-                                 default=False, update=updateRest)
-    ramp_out: bpy.props.BoolProperty(name="Ramp out - EXPERIMENTAL",
-                                     description="Ramp out to not leave mark on surface", default=False,
-                                     update=updateRest)
-    ramp_in_angle: bpy.props.FloatProperty(name="Ramp in angle", default=math.pi / 6, min=0, max=math.pi * 0.4999,
-                                           precision=1, subtype="ANGLE", unit="ROTATION", update=updateRest)
-    ramp_out_angle: bpy.props.FloatProperty(name="Ramp out angle", default=math.pi / 6, min=0, max=math.pi * 0.4999,
-                                            precision=1, subtype="ANGLE", unit="ROTATION", update=updateRest)
-    helix_enter: bpy.props.BoolProperty(name="Helix enter - EXPERIMENTAL", description="Enter material in helix",
-                                        default=False, update=updateRest)
     lead_in: bpy.props.FloatProperty(name="Lead in radius",
                                      description="Lead out radius for torch or laser to turn off",
                                      min=0.00, max=1, default=0.0, precision=cam.constants.PRECISION, unit="LENGTH")
@@ -740,15 +714,6 @@ class camOperation(bpy.types.PropertyGroup):
                                          update=updateRest)
 
     # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
-    helix_diameter: bpy.props.FloatProperty(name='Helix diameter % of cutter D', default=90, min=10, max=100,
-                                            precision=1, subtype='PERCENTAGE', update=updateRest)
-    retract_tangential: bpy.props.BoolProperty(name="Retract tangential - EXPERIMENTAL",
-                                               description="Retract from material in circular motion", default=False,
-                                               update=updateRest)
-    retract_radius: bpy.props.FloatProperty(name='Retract arc radius', default=0.001, min=0.000001, max=100,
-                                            precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
-    retract_height: bpy.props.FloatProperty(name='Retract arc height', default=0.001, min=0.00000, max=100,
-                                            precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
 
     minz_from_ob: bpy.props.BoolProperty(name="Depth from object", description="Operation ending depth from object",
                                          default=True, update=updateRest)
@@ -802,13 +767,6 @@ class camOperation(bpy.types.PropertyGroup):
     # Toolpath and area related
     #####################################################
 
-    protect_vertical: bpy.props.BoolProperty(name="Protect vertical",
-                                             description="The path goes only vertically next to steep areas",
-                                             default=True)
-    protect_vertical_limit: bpy.props.FloatProperty(name="Verticality limit",
-                                                    description="What angle is allready considered vertical",
-                                                    default=math.pi / 45, min=0, max=math.pi * 0.5, precision=0,
-                                                    subtype="ANGLE", unit="ROTATION", update=updateRest)
 
     ambient_behaviour: EnumProperty(name='Ambient', items=(('ALL', 'All', 'a'), ('AROUND', 'Around', 'a')),
                                     description='handling ambient surfaces', default='ALL', update=updateZbufferImage)
@@ -839,32 +797,7 @@ class camOperation(bpy.types.PropertyGroup):
                                           unit="ROTATION", update=updateRest)
     spindle_rpm: FloatProperty(name="Spindle rpm", description="Spindle speed ", min=0, max=60000, default=12000,
                                update=updateChipload)
-    # movement parallel_step_back
-    movement_type: EnumProperty(name='Movement type', items=(
-        ('CONVENTIONAL', 'Conventional / Up milling', 'cutter rotates against the direction of the feed'),
-        ('CLIMB', 'Climb / Down milling', 'cutter rotates with the direction of the feed'),
-        ('MEANDER', 'Meander / Zig Zag', 'cutting is done both with and against the rotation of the spindle')),
-                                description='movement type', default='CLIMB', update=updateRest)
-    spindle_rotation_direction: EnumProperty(name='Spindle rotation',
-                                             items=(('CW', 'Clock wise', 'a'), ('CCW', 'Counter clock wise', 'a')),
-                                             description='Spindle rotation direction', default='CW', update=updateRest)
-    free_movement_height: bpy.props.FloatProperty(name="Free movement height", default=0.01, min=0.0000, max=32,
-                                                  precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
-    useG64: bpy.props.BoolProperty(name="G64 trajectory",
-                                   description='Use only if your machie supports G64 code.  LinuxCNC and Mach3 do',
-                                   default=False, update=updateRest)
-    G64: bpy.props.FloatProperty(name="Path Control Mode with Optional Tolerance", default=0.0001, min=0.0000,
-                                 max=0.005,
-                                 precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
-    movement_insideout: EnumProperty(name='Direction',
-                                     items=(('INSIDEOUT', 'Inside out', 'a'), ('OUTSIDEIN', 'Outside in', 'a')),
-                                     description='approach to the piece', default='INSIDEOUT', update=updateRest)
-    parallel_step_back: bpy.props.BoolProperty(name="Parallel step back",
-                                               description='For roughing and finishing in one pass: mills material in climb mode, then steps back and goes between 2 last chunks back',
-                                               default=False, update=updateRest)
-    stay_low: bpy.props.BoolProperty(name="Stay low if possible", default=True, update=updateRest)
-    merge_dist: bpy.props.FloatProperty(name="Merge distance - EXPERIMENTAL", default=0.0, min=0.0000, max=0.1,
-                                        precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
+
     # optimization and performance
 
     do_simulation_feedrate: bpy.props.BoolProperty(name="Adjust feedrates with simulation EXPERIMENTAL",
@@ -1123,25 +1056,25 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
 
     preset_defines = ["o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"]
 
-    preset_values = ['o.use_layers', 'o.info.duration', 'o.info.chipload', 'o.material.estimate_from_model', 'o.stay_low', 'o.carve_depth',
+    preset_values = ['o.use_layers', 'o.info.duration', 'o.info.chipload', 'o.material.estimate_from_model', 'o.movement.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material.size',
                      'o.material.radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.optimisation.use_exact',
-                     'o.optimisation.exact_subdivide_edges', 'o.minz_from_ob', 'o.free_movement_height',
-                     'o.source_image_crop_start_x', 'o.movement_insideout', 'o.spindle_rotation_direction', 'o.skin',
-                     'o.source_image_crop_start_y', 'o.movement_type', 'o.source_image_crop', 'o.limit_curve',
+                     'o.optimisation.exact_subdivide_edges', 'o.minz_from_ob', 'o.movement.free_height',
+                     'o.source_image_crop_start_x', 'o.movement.insideout', 'o.movement.movement.spindle_rotation', 'o.skin',
+                     'o.source_image_crop_start_y', 'o.movement.type', 'o.source_image_crop', 'o.limit_curve',
                      'o.spindle_rpm', 'o.ambient_behaviour', 'o.cutter_type', 'o.source_image_scale_z',
                      'o.cutter_diameter', 'o.source_image_size_x', 'o.curve_object', 'o.curve_object1',
                      'o.cutter_flutes', 'o.ambient_radius', 'o.optimisation.simulation_detail', 'o.update_offsetimage_tag',
-                     'o.dist_between_paths', 'o.max', 'o.min', 'o.optimisation.pixsize', 'o.slice_detail', 'o.parallel_step_back',
+                     'o.dist_between_paths', 'o.max', 'o.min', 'o.optimisation.pixsize', 'o.slice_detail', 'o.movement.parallel_step_back',
                      'o.drill_type', 'o.source_image_name', 'o.dont_merge', 'o.update_silhouete_tag',
                      'o.material.origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.optimisation.circle_detail',
                      'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle',
                      'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source',
-                     'o.optimize_threshold', 'o.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.info.warnings',
+                     'o.optimize_threshold', 'o.movement.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.info.warnings',
                      'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
                      'o.output_header', 'o.gcode_header', 'o.output_trailer', 'o.gcode_trailer', 'o.use_modifiers',
-                     'o.minz_from_material', 'o.useG64',
-                     'o.G64', 'o.enable_A', 'o.enable_B', 'o.A_along_x', 'o.rotation_A', 'o.rotation_B', 'o.straight']
+                     'o.minz_from_material', 'o.movement.useG64',
+                     'o.movement.G64', 'o.enable_A', 'o.enable_B', 'o.A_along_x', 'o.rotation_A', 'o.rotation_B', 'o.straight']
 
     preset_subdir = "cam_operations"
 
@@ -1412,6 +1345,7 @@ classes = [
     ui.CAM_OPTIMISATION_Properties,
     ui.CAM_AREA_Panel,
     ui.CAM_MOVEMENT_Panel,
+    ui.CAM_MOVEMENT_Properties,
     ui.CAM_FEEDRATE_Panel,
     ui.CAM_CUTTER_Panel,
     ui.CAM_GCODE_Panel,

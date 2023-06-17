@@ -546,8 +546,8 @@ def sampleChunks(o, pathSamples, layers):
 
                             v1 = lastsample
                             v2 = newsample
-                            if o.protect_vertical:
-                                v1, v2 = isVerticalLimit(v1, v2, o.protect_vertical_limit)
+                            if o.movement.protect_vertical:
+                                v1, v2 = isVerticalLimit(v1, v2, o.movement.protect_vertical_limit)
                             v1 = Vector(v1)
                             v2 = Vector(v2)
                             # print(v1,v2)
@@ -622,7 +622,7 @@ def sampleChunks(o, pathSamples, layers):
     chunks = []
 
     for i, l in enumerate(layers):
-        if o.ramp:
+        if o.movement.ramp:
             for ch in layerchunks[i]:
                 ch.zstart = layers[i][0]
                 ch.zend = layers[i][1]
@@ -856,12 +856,12 @@ def extendChunks5axis(chunks, o):
     s = bpy.context.scene
     m = s.cam_machine
     s = bpy.context.scene
-    free_movement_height = o.free_movement_height  # o.max.z +
+    free_height = o.movement.free_height  # o.max.z +
     if m.use_position_definitions:  # dhull
         cutterstart = Vector((m.starting_position.x, m.starting_position.y,
                               max(o.max.z, m.starting_position.z)))  # start point for casting
     else:
-        cutterstart = Vector((0, 0, max(o.max.z, free_movement_height)))  # start point for casting
+        cutterstart = Vector((0, 0, max(o.max.z, free_height)))  # start point for casting
     cutterend = Vector((0, 0, o.min.z))
     oriname = o.name + ' orientation'
     ori = s.objects[oriname]
@@ -994,7 +994,7 @@ def overlaps(bb1, bb2):  # true if bb1 is child of bb2
 
 def connectChunksLow(chunks, o):
     """ connects chunks that are close to each other without lifting, sampling them 'low' """
-    if not o.stay_low or (o.strategy == 'CARVE' and o.carve_depth > 0):
+    if not o.movement.stay_low or (o.strategy == 'CARVE' and o.carve_depth > 0):
         return chunks
 
     connectedchunks = []
@@ -1007,11 +1007,11 @@ def connectChunksLow(chunks, o):
     if o.strategy == 'MEDIAL_AXIS':
         mergedist = 1 * o.medial_axis_subdivision
 
-    if o.parallel_step_back:
+    if o.movement.parallel_step_back:
         mergedist *= 2
 
-    if o.merge_dist > 0:
-        mergedist = o.merge_dist
+    if o.movement.merge_dist > 0:
+        mergedist = o.movement.merge_dist
     # mergedist=10
     lastch = None
     i = len(chunks)

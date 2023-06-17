@@ -91,8 +91,8 @@ def testPocket(pos):
     bpy.ops.scene.cam_operation_add()
     o = bpy.context.scene.cam_operations[-1]
     o.strategy = 'POCKET'
-    o.helix_enter = True
-    o.retract_tangential = True
+    o.movement.helix_enter = True
+    o.movement.retract_tangential = True
     testCalc(o)
 
 

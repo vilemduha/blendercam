@@ -137,7 +137,7 @@ class camPathChunk:
                     minv = vi
             return mind
         else:
-            if o.movement_type == 'MEANDER':
+            if o.movement.type == 'MEANDER':
                 d1 = dist2d(pos, self.points[0])
                 d2 = dist2d(pos, self.points[-1])
                 # if d2<d1:
@@ -168,7 +168,7 @@ class camPathChunk:
             self.points = newchunk
 
         else:
-            if o.movement_type == 'MEANDER':
+            if o.movement.type == 'MEANDER':
                 d1 = dist2d(pos, self.points[0])
                 d2 = dist2d(pos, self.points[-1])
                 if d2 < d1:
@@ -253,7 +253,7 @@ class camPathChunk:
         stepdown = zstart - zend
         ch = self
         chunk = camPathChunk([])
-        estlength = (zstart - zend) / tan(o.ramp_in_angle)
+        estlength = (zstart - zend) / tan(o.movement.ramp_in_angle)
         ch.getLength()
         ramplength = estlength  # min(ch.length,estlength)
         ltraveled = 0
@@ -318,7 +318,7 @@ class camPathChunk:
                 if i == len(ch.points):
                     i = 0
         # ramp out
-        if o.ramp_out and (not o.use_layers or not o.first_down or (o.first_down and endpoint is not None)):
+        if o.movement.ramp_out and (not o.use_layers or not o.movement.first_down or (o.movement.first_down and endpoint is not None)):
             z = zend
             # i=endpoint
 
@@ -331,7 +331,7 @@ class camPathChunk:
                     i2 = len(ch.points) - 1
                 s2 = ch.points[i2]
                 l = dist2d(s1, s2)
-                znew = z + tan(o.ramp_out_angle) * l
+                znew = z + tan(o.movement.ramp_out_angle) * l
                 if znew > o.maxz:
                     ratio = ((z - o.maxz) / (z - znew))
                     v1 = Vector(chunk.points[-1])
@@ -355,7 +355,7 @@ class camPathChunk:
             stepdown = zstart - zend
             ch = self
 
-            estlength = (zstart - zend) / tan(o.ramp_in_angle)
+            estlength = (zstart - zend) / tan(o.movement.ramp_in_angle)
             ch.getLength()
             if ch.length > 0:  # for single point chunks..
                 ramplength = estlength
@@ -417,13 +417,13 @@ class camPathChunk:
 
             ######################################
             # ramp out - this is the same thing, just on the other side..
-            if o.ramp_out:
+            if o.movement.ramp_out:
                 zstart = o.maxz
                 zend = ch.points[-1][2]
                 if zend < zstart:  # again, sometimes a chunk could theoretically end above the starting level.
                     stepdown = zstart - zend
 
-                    estlength = (zstart - zend) / tan(o.ramp_out_angle)
+                    estlength = (zstart - zend) / tan(o.movement.ramp_out_angle)
                     ch.getLength()
                     if ch.length > 0:
                         ramplength = estlength
@@ -529,8 +529,8 @@ class camPathChunk:
 
     def leadContour(self, o):
         perimeterDirection = 1  # 1 is clockwise, 0 is CCW
-        if o.spindle_rotation_direction == 'CW':
-            if o.movement_type == 'CONVENTIONAL':
+        if o.movement.spindle_rotation == 'CW':
+            if o.movement.type == 'CONVENTIONAL':
                 perimeterDirection = 0
 
         if self.parents:  # if it is inside another parent
@@ -632,7 +632,7 @@ def optimizeChunk(chunk, operation):
             #  NEED TO MAKE A POINT ADDING FUNCTION SINCE THIS IS A MESS, WOULD BE TOO MUCH IF'S
             naxispoints = True
 
-        protect_vertical = operation.protect_vertical and operation.machine_axes == '3'
+        protect_vertical = operation.movement.protect_vertical and operation.machine_axes == '3'
         for vi in range(0, len(points) - 1):
 
             if not compare(chunk.points[-1], points[vi + 1], points[vi], operation.optimisation.optimize_threshold * 0.000001):
@@ -643,7 +643,7 @@ def optimizeChunk(chunk, operation):
                 if protect_vertical:
                     v1 = chunk.points[-1]
                     v2 = chunk.points[-2]
-                    v1c, v2c = isVerticalLimit(v1, v2, operation.protect_vertical_limit)
+                    v1c, v2c = isVerticalLimit(v1, v2, operation.movement.protect_vertical_limit)
                     if v1c != v1:  # TODO FIX THIS FOR N AXIS?
                         chunk.points[-1] = v1c
                     elif v2c != v2:
@@ -710,7 +710,7 @@ def parentChildDist(parents, children, o, distance=None):
     # hierarchy works like this: - children get milled first.
     if distance is None:
         dlim = o.dist_between_paths * 2
-        if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS') and o.parallel_step_back:
+        if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS') and o.movement.parallel_step_back:
             dlim = dlim * 2
     else:
         dlim = distance
