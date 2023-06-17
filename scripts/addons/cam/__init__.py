@@ -510,7 +510,7 @@ class camOperation(bpy.types.PropertyGroup):
                                       ('IMAGE', 'Image', 'a')),
                                   description='Geometry source',
                                   default='OBJECT', update=updateOperationValid)
-    cutter_typeb: EnumProperty(name='Cutter',
+    cutter_type: EnumProperty(name='Cutter',
                               items=(
                                   ('END', 'End', 'end - flat cutter'),
                                   ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
@@ -520,18 +520,6 @@ class camOperation(bpy.types.PropertyGroup):
                                   ('CYLCONE', 'Cylinder cone', 'Cylinder end with a Cone for Parallel - X'),
                                   ('LASER', 'Laser', 'Laser cutter'),
                                   ('PLASMA', 'Plasma', 'Plasma cutter'),
-                                  ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
-                              description='Type of cutter used',
-                              default='END', update=updateZbufferImage)
-
-    cutter_type: EnumProperty(name='Cutter',
-                              items=(
-                                  ('END', 'End', 'end - flat cutter'),
-                                  ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
-                                  ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
-                                  ('VCARVE', 'V-carve', 'v carve cutter'),
-                                  ('BALLCONE', 'Ballcone', 'Ball with a Cone for Parallel - X'),
-                                  ('CYLCONE', 'Cylinder cone', 'Cylinder end with a Cone for Parallel - X'),
                                   ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
                               description='Type of cutter used',
                               default='END', update=updateZbufferImage)
