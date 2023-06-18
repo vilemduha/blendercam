@@ -8,28 +8,27 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
     panel_interface_level = 0
 
-    def draw(self, context):
-        self.context = context
+    prop_level = {
+        'use_layers': 0,
+        'maxz': 1,
+        'minz': 1,
+        'ambient': 1,
+        'limit_curve': 1
+    }
 
-        self.draw_z_limits()
-
-        if self.op.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'PARALLEL', 'CROSS']:
-            self.draw_xy_limits()
-
-    # Draw layers option: use layers(y/n) and choose the stepdown
-    def draw_z_limits(self):
+    def draw_use_layers(self):
+        if not self.has_correct_level('use_layers'): return
         row = self.layout.row(align=True)
         row.prop(self.op, 'use_layers')
         if self.op.use_layers:
             row.prop(self.op, 'stepdown')
 
+    def draw_maxz(self):
+        if not self.has_correct_level('maxz'): return
         self.layout.prop(self.op, 'maxz')
 
-        if self.op.maxz > self.op.movement.free_height:
-            self.layout.prop(self.op.movement, 'free_height')
-            self.layout.label(text='Depth start > Free movement')
-            self.layout.label(text='POSSIBLE COLLISION')
-
+    def draw_minz(self):
+        if not self.has_correct_level('minz'): return
         if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
             if self.op.strategy == 'CURVE':
                 self.layout.label(text="cannot use depth from object using CURVES")
@@ -58,14 +57,27 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                 col.prop(self.op, 'source_image_crop_end_x', text='end x')
                 col.prop(self.op, 'source_image_crop_end_y', text='end y')
 
-    def draw_xy_limits(self):
-        self.layout.prop(self.op, 'ambient_behaviour')
-        if self.op.ambient_behaviour == 'AROUND':
-            self.layout.prop(self.op, 'ambient_radius')
+    def draw_ambient(self):
+        if not self.has_correct_level('ambient'): return
+        if self.op.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'PARALLEL', 'CROSS']:
+            self.layout.prop(self.op, 'ambient_behaviour')
+            if self.op.ambient_behaviour == 'AROUND':
+                self.layout.prop(self.op, 'ambient_radius')
+            self.layout.prop(self.op, "ambient_cutter_restrict")
 
-        self.layout.prop(self.op, 'use_limit_curve')
+    def draw_limit_curve(self):
+        if not self.has_correct_level('limit_curve'): return
+        if self.op.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'PARALLEL', 'CROSS']:
+            self.layout.prop(self.op, 'use_limit_curve')
+            if self.op.use_limit_curve:
+                self.layout.prop_search(self.op, "limit_curve", bpy.data, "objects")
 
-        if self.op.use_limit_curve:
-            self.layout.prop_search(self.op, "limit_curve", bpy.data, "objects")
+    def draw(self, context):
+        self.context = context
 
-        self.layout.prop(self.op, "ambient_cutter_restrict")
+        self.draw_use_layers()
+        self.draw_maxz()
+        self.draw_minz()
+        self.draw_ambient()
+        self.draw_limit_curve()
+
