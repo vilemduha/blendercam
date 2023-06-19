@@ -10,12 +10,6 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, bpy.types.Panel):
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     def draw(self, context):
-        if not self.has_operations():
-            self.layout.label(text='Add operation first')
-            return
-
-        ao = self.active_operation()
-        if not ao.valid: return
 
         self.layout.prop(ao, 'feedrate')
         self.layout.prop(ao, 'do_simulation_feedrate')
