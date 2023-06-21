@@ -9,39 +9,52 @@ class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_idname = "WORLD_PT_CAM_GCODE"
     panel_interface_level = 1
 
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+    prop_level = {
+        'output_header': 1,
+        'output_trailer': 1,
+        'enable_dust': 1,
+        'enable_hold': 1,
+        'enable_mist': 1
+    }
+
+    def draw_output_header(self):
+        if not self.has_correct_level('output_header'): return
+        self.layout.prop(self.op, 'output_header')
+        if self.op.output_header:
+            self.layout.prop(self.op, 'gcode_header')
+
+    def draw_output_trailer(self):
+        if not self.has_correct_level('output_trailer'): return
+        self.layout.prop(self.op, 'output_trailer')
+        if self.op.output_trailer:
+            self.layout.prop(self.op, 'gcode_trailer')
+
+    def draw_enable_dust(self):
+        if not self.has_correct_level('enable_dust'): return
+        self.layout.prop(self.op, 'enable_dust')
+        if self.op.enable_dust:
+            self.layout.prop(self.op, 'gcode_start_dust_cmd')
+            self.layout.prop(self.op, 'gcode_stop_dust_cmd')
+
+    def draw_enable_hold(self):
+        if not self.has_correct_level('enable_hold'): return
+        self.layout.prop(self.op, 'enable_hold')
+        if self.op.enable_hold:
+            self.layout.prop(self.op, 'gcode_start_hold_cmd')
+            self.layout.prop(self.op, 'gcode_stop_hold_cmd')
+
+    def draw_enable_mist(self):
+        if not self.has_correct_level('enable_mist'): return
+        self.layout.prop(self.op, 'enable_mist')
+        if self.op.enable_mist:
+            self.layout.prop(self.op, 'gcode_start_mist_cmd')
+            self.layout.prop(self.op, 'gcode_stop_mist_cmd')
 
     def draw(self, context):
-        layout = self.layout
-        scene = bpy.context.scene
-        if len(scene.cam_operations) == 0:
-            layout.label(text='Add operation first')
-        if len(scene.cam_operations) > 0:
-            ao = scene.cam_operations[scene.cam_active_operation]
-            if ao.valid:
-                layout.prop(ao, 'output_header')
+        self.context = context
 
-                if ao.output_header:
-                    layout.prop(ao, 'gcode_header')
-                layout.prop(ao, 'output_trailer')
-                if ao.output_trailer:
-                    layout.prop(ao, 'gcode_trailer')
-                layout.prop(ao, 'enable_dust')
-                if ao.enable_dust:
-                    layout.prop(ao, 'gcode_start_dust_cmd')
-                    layout.prop(ao, 'gcode_stop_dust_cmd')
-                layout.prop(ao, 'enable_hold')
-                if ao.enable_hold:
-                    layout.prop(ao, 'gcode_start_hold_cmd')
-                    layout.prop(ao, 'gcode_stop_hold_cmd')
-                layout.prop(ao, 'enable_mist')
-                if ao.enable_mist:
-                    layout.prop(ao, 'gcode_start_mist_cmd')
-                    layout.prop(ao, 'gcode_stop_mist_cmd')
-
-            else:
-                layout.label(text='Enable Show experimental features')
-                layout.label(text='in Blender CAM Addon preferences')
-
-
-
+        self.draw_output_header()
+        self.draw_output_trailer()
+        self.draw_enable_dust()
+        self.draw_enable_hold()
+        self.draw_enable_mist()
