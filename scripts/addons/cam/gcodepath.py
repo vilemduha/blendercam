@@ -484,7 +484,7 @@ def exportGcodePath(filename, vertslist, operations):
                 round(online / (offline + online) * 100, 1)) + "% removal")
         c.feedrate(unitcorr * o.feedrate)
 
-        if use_experimental and o.output_trailer:
+        if o.output_trailer:
             lines = o.gcode_trailer.split(';')
             for aline in lines:
                 c.write(aline + '\n')
