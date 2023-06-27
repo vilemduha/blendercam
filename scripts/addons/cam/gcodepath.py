@@ -459,6 +459,7 @@ def exportGcodePath(filename, vertslist, operations):
             if split and processedops > m.split_limit:
                 c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_height * unitcorr)
                 # @v=(ch.points[-1][0],ch.points[-1][1],free_height)
+                c.program_end()
                 findex += 1
                 c.file_close()
                 c = startNewFile()
