@@ -38,8 +38,6 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_idname = "WORLD_PT_CAM_CHAINS"
     panel_interface_level = 1
 
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
-
     def draw(self, context):
         layout = self.layout
 

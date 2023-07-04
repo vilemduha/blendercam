@@ -1,4 +1,5 @@
 import bpy
+import inspect
 
 # Panel definitions
 class CAMButtonsPanel:
@@ -47,9 +48,13 @@ class CAMButtonsPanel:
     def has_operations(self):
         return (self.operations_count() > 0)
 
-    def has_correct_level(self, prop_name):
+    def has_correct_level(self):
         if not hasattr(self, 'prop_level'):
             return True
-        if not prop_name in self.prop_level:
+
+        caller_function = inspect.stack()[1][3]
+
+        if not caller_function in self.prop_level:
             return True
-        return self.prop_level[prop_name] <= int(self.context.scene.interface.level)
+
+        return self.prop_level[caller_function] <= int(self.context.scene.interface.level)

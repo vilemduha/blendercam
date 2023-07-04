@@ -9,26 +9,26 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
     panel_interface_level = 0
 
     prop_level = {
-        'use_layers': 0,
-        'maxz': 1,
-        'minz': 1,
-        'ambient': 1,
-        'limit_curve': 1
+        'draw_use_layers': 0,
+        'draw_maxz': 1,
+        'draw_minz': 1,
+        'draw_ambient': 1,
+        'draw_limit_curve': 1
     }
 
     def draw_use_layers(self):
-        if not self.has_correct_level('use_layers'): return
+        if not self.has_correct_level(): return
         row = self.layout.row(align=True)
         row.prop(self.op, 'use_layers')
         if self.op.use_layers:
             row.prop(self.op, 'stepdown')
 
     def draw_maxz(self):
-        if not self.has_correct_level('maxz'): return
+        if not self.has_correct_level(): return
         self.layout.prop(self.op, 'maxz')
 
     def draw_minz(self):
-        if not self.has_correct_level('minz'): return
+        if not self.has_correct_level(): return
         if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
             if self.op.strategy == 'CURVE':
                 self.layout.label(text="cannot use depth from object using CURVES")
@@ -58,7 +58,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                 col.prop(self.op, 'source_image_crop_end_y', text='end y')
 
     def draw_ambient(self):
-        if not self.has_correct_level('ambient'): return
+        if not self.has_correct_level(): return
         if self.op.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'PARALLEL', 'CROSS']:
             self.layout.prop(self.op, 'ambient_behaviour')
             if self.op.ambient_behaviour == 'AROUND':
@@ -66,7 +66,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.prop(self.op, "ambient_cutter_restrict")
 
     def draw_limit_curve(self):
-        if not self.has_correct_level('limit_curve'): return
+        if not self.has_correct_level(): return
         if self.op.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'PARALLEL', 'CROSS']:
             self.layout.prop(self.op, 'use_limit_curve')
             if self.op.use_limit_curve:

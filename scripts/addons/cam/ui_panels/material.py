@@ -85,31 +85,31 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
     panel_interface_level = 0
 
     prop_level = {
-        'estimate_from_model': 0,
-        'radius_around_model': 1,
-        'position_object': 0
+        'draw_estimate_from_image': 0,
+        'draw_estimate_from_object': 1,
+        'draw_axis_alignment': 0
     }
 
     def draw_estimate_from_image(self):
+        if not self.has_correct_level(): return
         if self.op.geometry_source not in ['OBJECT', 'COLLECTION']:
             self.layout.label(text='Estimated from image')
 
     def draw_estimate_from_object(self):
+        if not self.has_correct_level(): return
         if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
-            if not self.has_correct_level('estimate_from_model'): return
             self.layout.prop(self.op.material, 'estimate_from_model')
             if self.op.material.estimate_from_model:
                 row_radius = self.layout.row()
-                if self.has_correct_level('radius_around_model'):
-                    row_radius.label(text="Additional radius")
-                    row_radius.prop(self.op.material, 'radius_around_model', text='')
+                row_radius.label(text="Additional radius")
+                row_radius.prop(self.op.material, 'radius_around_model', text='')
             else:
                 self.layout.prop(self.op.material, 'origin')
                 self.layout.prop(self.op.material, 'size')
 
     # Display Axis alignment section
     def draw_axis_alignment(self):
-        if not self.has_correct_level('position_object'): return
+        if not self.has_correct_level(): return
         if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
             row_axis = self.layout.row()
             row_axis.prop(self.op.material, 'center_x')
@@ -119,9 +119,6 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     def draw(self, context):
         self.context = context
-
-        if self.op is None:
-            return
 
         # FIXME: This function displays the progression of a job with a progress bar
         # Commenting because it makes no sense here

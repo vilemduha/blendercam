@@ -33,16 +33,16 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     panel_interface_level = 0
 
     prop_level = {
-        'opencamlib_version': 1,
-        'warnings': 0,
-        'time': 0,
-        'chipload': 0,
-        'money_cost': 1
+        'draw_opencamlib_version': 1,
+        'draw_op_warnings': 0,
+        'draw_op_time': 0,
+        'draw_op_chipload': 0,
+        'draw_op_money_cost': 1
     }
 
     # Display the OpenCamLib version
     def draw_opencamlib_version(self):
-        if not self.has_correct_level('opencamlib_version'): return
+        if not self.has_correct_level(): return
         opencamlib_version = cam.utils.opencamlib_version()
         if opencamlib_version is None:
             self.layout.label(text="Opencamlib is not installed")
@@ -52,14 +52,14 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Display warnings related to the current operation
     def draw_op_warnings(self):
-        if not self.has_correct_level('warnings'): return
+        if not self.has_correct_level(): return
         for line in self.op.info.warnings.rstrip("\n").split("\n"):
             if len(line) > 0:
                 self.layout.label(text=line, icon='ERROR')
 
     # Display the time estimation for the current operation
     def draw_op_time(self):
-        if not self.has_correct_level('time'): return
+        if not self.has_correct_level(): return
         if not int(self.op.info.duration * 60) > 0:
             return
 
@@ -74,7 +74,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Display the chipload (does this work ?)
     def draw_op_chipload(self):
-        if not self.has_correct_level('chipload'): return
+        if not self.has_correct_level(): return
         if not self.op.info.chipload > 0:
             return
 
@@ -83,7 +83,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Display the current operation money cost
     def draw_op_money_cost(self):
-        if not self.has_correct_level('money_cost'): return
+        if not self.has_correct_level(): return
         if not int(self.op.info.duration * 60) > 0:
             return
 

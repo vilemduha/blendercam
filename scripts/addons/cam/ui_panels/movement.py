@@ -111,50 +111,50 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
     panel_interface_level = 0
 
     prop_level = {
-        'type': 1,
-        'spindle_rotation': 2,
-        'free_height': 0,
-        'useG64': 2,
-        'parallel_step_back': 1,
-        'first_down': 1,
-        'helix_enter': 2,
-        'ramp': 1,
-        'retract_tangential': 2,
-        'stay_low': 1,
-        'protect_vertical': 1
+        'draw_cut_type': 1,
+        'draw_spindle_rotation': 2,
+        'draw_free_height': 0,
+        'draw_use_g64': 2,
+        'draw_parallel_stepback': 1,
+        'draw_first_down': 1,
+        'draw_helix_enter': 2,
+        'draw_ramp': 1,
+        'draw_retract_tangential': 2,
+        'draw_stay_low': 1,
+        'draw_protect_vertical': 1
     }
 
     def draw_cut_type(self):
-        if not self.has_correct_level('type'): return
+        if not self.has_correct_level(): return
         self.layout.prop(self.op.movement, 'type')
         if self.op.movement.type in ['BLOCK', 'SPIRAL', 'CIRCLES']:
             self.layout.prop(self.op.movement, 'insideout')
 
     def draw_spindle_rotation(self):
-        if not self.has_correct_level('spindle_rotation'): return
+        if not self.has_correct_level(): return
         self.layout.prop(self.op.movement, 'spindle_rotation')
 
     def draw_free_height(self):
-        if not self.has_correct_level('free_height'): return
+        if not self.has_correct_level(): return
         self.layout.prop(self.op.movement, 'free_height')
         if self.op.maxz > self.op.movement.free_height:
             self.layout.label(text='Depth start > Free movement')
             self.layout.label(text='POSSIBLE COLLISION')
 
     def draw_use_g64(self):
-        if not self.has_correct_level('useG64'): return
+        if not self.has_correct_level(): return
         self.layout.prop(self.op.movement, 'useG64')
         if self.op.movement.useG64:
             self.layout.prop(self.op.movement, 'G64')
 
     def draw_parallel_stepback(self):
-        if not self.has_correct_level('parallel_step_back'): return
+        if not self.has_correct_level(): return
         if self.op.strategy in ['PARALLEL','CROSS']:
             if not self.op.movement.ramp:
                 self.layout.prop(self.op.movement, 'parallel_step_back')
 
     def draw_helix_enter(self):
-        if not self.has_correct_level('helix_enter'): return
+        if not self.has_correct_level(): return
         if self.op.strategy in ['POCKET']:
             self.layout.prop(self.op.movement, 'helix_enter')
             if self.op.movement.helix_enter:
@@ -162,12 +162,12 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
                 self.layout.prop(self.op.movement, 'helix_diameter')
 
     def draw_first_down(self):
-        if not self.has_correct_level('first_down'): return
+        if not self.has_correct_level(): return
         if self.op.strategy in ['CUTOUT','POCKET','MEDIAL_AXIS']:
             self.layout.prop(self.op.movement, 'first_down')
 
     def draw_ramp(self):
-        if not self.has_correct_level('ramp'): return
+        if not self.has_correct_level(): return
         self.layout.prop(self.op.movement, 'ramp')
         if self.op.movement.ramp:
             self.layout.prop(self.op.movement, 'ramp_in_angle')
@@ -176,7 +176,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
                 self.layout.prop(self.movement, 'ramp_out_angle')
 
     def draw_retract_tangential(self):
-        if not self.has_correct_level('retract_tangential'): return
+        if not self.has_correct_level(): return
         if self.op.strategy in ['POCKET']:
             self.layout.prop(self.op.movement, 'retract_tangential')
             if self.op.movement.retract_tangential:
@@ -184,13 +184,13 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
                 self.layout.prop(self.op.movement, 'retract_height')
 
     def draw_stay_low(self):
-        if not self.has_correct_level('stay_low'): return
+        if not self.has_correct_level(): return
         self.layout.prop(self.op.movement, 'stay_low')
         if self.op.movement.stay_low:
             self.layout.prop(self.op.movement, 'merge_dist')
 
     def draw_protect_vertical(self):
-        if not self.has_correct_level('protect_vertical'): return
+        if not self.has_correct_level(): return
         if self.op.cutter_type not in ['BALLCONE']:
             self.layout.prop(self.op.movement, 'protect_vertical')
             if self.op.movement.protect_vertical:
@@ -198,9 +198,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     def draw(self, context):
         self.context = context
-
-        if not self.op.valid:
-            return
 
         self.draw_cut_type()
         self.draw_spindle_rotation()
