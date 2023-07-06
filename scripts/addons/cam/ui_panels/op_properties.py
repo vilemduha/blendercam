@@ -26,7 +26,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
         'draw_cutout_type': 0,
         'draw_overshoot': 1,
         'draw_startpoint': 1,
-        'draw_lead_in_out': 1,
+        'draw_lead_in_out': 3,
         'draw_outlines': 2,
         'draw_merge': 2
     }
