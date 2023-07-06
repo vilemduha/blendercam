@@ -28,23 +28,21 @@ class CAM_INFO_Properties(bpy.types.PropertyGroup):
 
 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
-    """CAM info panel"""
     bl_label = "CAM info & warnings"
     bl_idname = "WORLD_PT_CAM_INFO"
+    panel_interface_level = 0
 
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
-
-    # Display the Info Panel
-    def draw(self, context):
-        self.draw_opencamlib_version()
-
-        if self.has_operations():
-            self.draw_op_warnings()
-            self.draw_op_time()
-            self.draw_op_money_cost()
+    prop_level = {
+        'draw_opencamlib_version': 1,
+        'draw_op_warnings': 0,
+        'draw_op_time': 0,
+        'draw_op_chipload': 0,
+        'draw_op_money_cost': 1
+    }
 
     # Display the OpenCamLib version
     def draw_opencamlib_version(self):
+        if not self.has_correct_level(): return
         opencamlib_version = cam.utils.opencamlib_version()
         if opencamlib_version is None:
             self.layout.label(text="Opencamlib is not installed")
@@ -54,23 +52,18 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Display warnings related to the current operation
     def draw_op_warnings(self):
-        if self.op is None:
-            return
-
+        if not self.has_correct_level(): return
         for line in self.op.info.warnings.rstrip("\n").split("\n"):
             if len(line) > 0:
                 self.layout.label(text=line, icon='ERROR')
 
     # Display the time estimation for the current operation
     def draw_op_time(self):
-        if self.op is None:
-            return
-        if not self.op.valid:
-            return
+        if not self.has_correct_level(): return
         if not int(self.op.info.duration * 60) > 0:
             return
 
-        time_estimate = f"Operation Time: {int(self.op.info.duration*60)}s "
+        time_estimate = f"Operation duration: {int(self.op.info.duration*60)}s "
         if self.op.info.duration > 60:
             time_estimate += f" ({int(self.op.info.duration / 60)}h"
             time_estimate += f" {round(self.op.info.duration % 60)}min)"
@@ -81,10 +74,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Display the chipload (does this work ?)
     def draw_op_chipload(self):
-        if self.op is None:
-            return
-        if not self.op.valid:
-            return
+        if not self.has_correct_level(): return
         if not self.op.info.chipload > 0:
             return
 
@@ -93,8 +83,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Display the current operation money cost
     def draw_op_money_cost(self):
-        if self.op is None or not self.op.valid:
-            return
+        if not self.has_correct_level(): return
         if not int(self.op.info.duration * 60) > 0:
             return
 
@@ -109,3 +98,11 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
         total_cost = self.op.info.duration * 60 * cost_per_second
         op_cost = f"Operation cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
         self.layout.label(text=op_cost)
+
+    # Display the Info Panel
+    def draw(self, context):
+        self.context = context
+        self.draw_opencamlib_version()
+        self.draw_op_warnings()
+        self.draw_op_time()
+        self.draw_op_money_cost()

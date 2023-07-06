@@ -51,6 +51,8 @@ from shapely import geometry as sgeometry
 
 from cam.ui import *
 
+
+
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
@@ -66,7 +68,6 @@ bl_info = {
 import cam.constants
 
 was_hidden_dict = {}
-
 
 def updateMachine(self, context):
     print('update machine ')
@@ -470,7 +471,6 @@ class camOperation(bpy.types.PropertyGroup):
     info: bpy.props.PointerProperty(type=CAM_INFO_Properties)
     optimisation: bpy.props.PointerProperty(type=CAM_OPTIMISATION_Properties)
     movement: bpy.props.PointerProperty(type=CAM_MOVEMENT_Properties)
-
 
     name: bpy.props.StringProperty(name="Operation Name", default="Operation", update=updateRest)
     filename: bpy.props.StringProperty(name="File name", default="Operation", update=updateRest)
@@ -1131,6 +1131,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         machineSettings,
         CamAddonPreferences,
 
+        ui.CAM_INTERFACE_Panel,
         ui.CAM_CHAINS_Panel,
         ui.CAM_OPERATIONS_Panel,
         ui.CAM_INFO_Panel,
@@ -1333,6 +1334,8 @@ classes = [
     CamAddonPreferences,
     import_settings,
 
+    ui.CAM_INTERFACE_Panel,
+    ui.CAM_INTERFACE_Properties,
     ui.CAM_CHAINS_Panel,
     ui.CAM_OPERATIONS_Panel,
     ui.CAM_INFO_Properties,
@@ -1452,6 +1455,7 @@ def register():
 
     s.cam_slice = bpy.props.PointerProperty(type=SliceObjectsSettings)
 
+    bpy.types.Scene.interface = bpy.props.PointerProperty(type=CAM_INTERFACE_Properties)
 
 def unregister():
     for p in classes:

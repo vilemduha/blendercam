@@ -51,6 +51,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM optimisation panel"""
     bl_label = "CAM optimisation"
     bl_idname = "WORLD_PT_CAM_OPTIMISATION"
+    panel_interface_level = 2
 
     COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
