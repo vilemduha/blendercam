@@ -405,6 +405,7 @@ def updateBridges(o, context):
 
 
 def updateRotation(o, context):
+    print('update rotation')
     if o.enable_B or o.enable_A:
         print(o, o.rotation_A)
         ob = bpy.data.objects[o.object_name]
@@ -669,16 +670,16 @@ class camOperation(bpy.types.PropertyGroup):
 
     rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle", default=0,
                                         min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRest)
+                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
     enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False,
-                                     update=updateRest)
+                                     update=updateRotation)
     A_along_x: bpy.props.BoolProperty(name="A Along X ", description="A Parallel to X", default=True, update=updateRest)
 
     rotation_B: bpy.props.FloatProperty(name="B axis angle", description="Rotate B axis\nto specified angle", default=0,
                                         min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRest)
+                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
     enable_B: bpy.props.BoolProperty(name="Enable B axis", description="Rotate B axis", default=False,
-                                     update=updateRest)
+                                     update=updateRotation)
 
     # carve only
     carve_depth: bpy.props.FloatProperty(name="Carve depth", default=0.001, min=-.100, max=32, precision=cam.constants.PRECISION,

@@ -658,7 +658,9 @@ class CamObjectSilhouete(bpy.types.Operator):
     def poll(cls, context):
         #        return context.active_object is not None and (context.active_object.type == 'CURVE'
         #        or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
-        return context.active_object is not None and (context.active_object.type == 'MESH')
+        return context.active_object is not None and (
+                context.active_object.type == 'FONT' or
+                context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
         ob = bpy.context.active_object
