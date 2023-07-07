@@ -1,0 +1,22 @@
+
+1. Running the tests
+
+> python test-suite.py
+
+The script will go through each blend file, generate GCode for all operations and compare the results with the reference.
+
+
+2. Creating new tests
+
+> cd test_data
+> mkdir name_of_your_test
+> blender name_of_your_blend_file (can be the same name as the subdirectory)
+
+Create as many operations as necessary using BlenderCAM
+Generate the corresponding GCode with "Calculate Path and export GCode"
+Rename the generated files by adding an underscore at the beginning:
+> mv Op1.gcode _Op1.gcode
+
+Commit and push
+
+
