@@ -35,14 +35,17 @@ class BlenderCAMTest(unittest.TestCase):
         return '\n'.join(lines[1:])
 
     def test_operation(self):
-        for test_case in self.test_cases:
-            original_dir = os.getcwd()  # Get the original working directory
+        original_dir = os.getcwd()  # Get the original working directory
+        generator_path = os.path.join(original_dir, "gcode_generator.py")
 
-            blend_dir = f'test_data/{test_case["subdir_name"]}'
-            os.chdir(blend_dir)  # Change the current working directory to the blend file directory
+        for test_case in self.test_cases:
+            os.chdir(original_dir)  # Always start at original working directory
+
+            blend_dir = os.path.join('test_data', test_case["subdir_name"])
+            os.chdir(blend_dir)
 
             # Run Blender in the background to generate GCode
-            command = f"blender -b {test_case['blend_file']} -P ../../gcode_generator.py"
+            command = f"blender -b \"{test_case['blend_file']}\" -P \"{generator_path}\""
             subprocess.run(command, shell=True, check=True)
 
             for gcode_file in test_case['gcode_files']:
@@ -52,10 +55,8 @@ class BlenderCAMTest(unittest.TestCase):
                 with self.subTest(operation= f"{test_case['subdir_name']}/{gcode_file}"):
                     self.assertEqual(generated_gcode, expected_gcode)
 
-                    # Delete the generated GCode file after test
                 os.remove(gcode_file[1:])
 
-            os.chdir(original_dir)  # Return to the original working directory
 
 if __name__ == '__main__':
     unittest.main()
