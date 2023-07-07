@@ -21,7 +21,7 @@ class BlenderCAMTest(unittest.TestCase):
             for file in files:
                 if file.endswith('.blend'):
                     blend_file = file
-                elif file.startswith('_') and file.endswith('.gcode'):
+                elif file.startswith('_') and (file.endswith('.gcode') or file.endswith('.tap')):
                     gcode_files = gcode_files or []
                     gcode_files.append(file)
 
