@@ -10,6 +10,7 @@ The script will go through each blend file, generate GCode for all operations an
 
 > cd test_data
 > mkdir name_of_your_test
+> cd name_of_your_test
 > blender name_of_your_blend_file (can be the same name as the subdirectory)
 
 Create as many operations as necessary using BlenderCAM
