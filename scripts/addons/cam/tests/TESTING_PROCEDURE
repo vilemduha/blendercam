@@ -18,7 +18,9 @@ long calculation time unless absolutely necessary, as they will be executed ever
 tests are run.
 
 - Generate the corresponding GCode with "Calculate Path and export GCode" for every operation.
-Rename the generated files by adding an underscore at the beginning:
+
+-Rename the generated files by adding an underscore at the beginning. This will make them
+become the reference result files.
 > mv Op1.gcode _Op1.gcode
 
 - Save the blender file
