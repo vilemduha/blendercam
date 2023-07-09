@@ -25,7 +25,7 @@ Setup machine parameters (postprocessor, maximum feed rate, work area, etc.) in 
 Add new operation in the render properties.
 ![New operation](images/newop.png)
 
-Choose Parallel (or Outline Fill, Circles, Spiral, Block, Cross) in the Strategy dialog. Waterline option works best when [OpenCAMLib](Opencamlib%20Installation.md) is installed and other operations require curve data source. See how to generate curves from mesh model [here](Profile%20and%20Pocket%20operations.md).
+Choose Parallel (or Outline Fill, Circles, Spiral, Block, Cross) in the Strategy dialog. Waterline option works best when OpenCAMLib is installed and other operations require curve data source. See how to generate curves from mesh model [here](Profile%20and%20Pocket%20operations.md).
 
 ![Select operation](images/selectOperation.png)
 
