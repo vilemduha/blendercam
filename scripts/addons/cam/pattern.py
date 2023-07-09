@@ -71,7 +71,7 @@ def getPathPatternParallel(o, angle):
 
             if len(chunk.points) > 0:
                 pathchunks.append(chunk)
-            if len(pathchunks) > 1 and reverse and o.movement.parallel_step_back and not o.use_layers:
+            if len(pathchunks) > 1 and reverse and o.movement.parallel_step_back and not o.area.use_layers:
                 # parallel step back - for finishing, best with climb movement, saves cutter life by going into
                 # material with climb, while using move back on the surface to improve finish
                 # (which would otherwise be a conventional move in the material)
@@ -354,7 +354,7 @@ def getPathPattern(operation):
             lastchunks = firstchunks
             for p in polys:
                 d = o.dist_between_paths
-                steps = o.ambient_radius / o.dist_between_paths
+                steps = o.area.ambient_radius / o.dist_between_paths
                 for a in range(0, int(steps)):
                     dist = d
                     if a == int(o.cutter_diameter / 2 / o.dist_between_paths):
@@ -411,7 +411,7 @@ def getPathPattern4axis(operation):
         a2 = 0
         a3 = 1
 
-    o.max.z = o.maxz
+    o.max.z = o.area.maxz
     # set radius for all types of operation
     radius = max(o.max.z, 0.0001)
     radiusend = o.min.z

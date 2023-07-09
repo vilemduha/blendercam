@@ -301,7 +301,7 @@ class camPathChunk:
             if i >= len(ch.points):
                 i = 0
                 rounds += 1
-        # if not o.use_layers:
+        # if not o.area.use_layers:
         # endpoint=0
         if endpoint is not None:  # append final contour on the bottom z level
             i = endpoint
@@ -318,11 +318,11 @@ class camPathChunk:
                 if i == len(ch.points):
                     i = 0
         # ramp out
-        if o.movement.ramp_out and (not o.use_layers or not o.movement.first_down or (o.movement.first_down and endpoint is not None)):
+        if o.movement.ramp_out and (not o.area.use_layers or not o.movement.first_down or (o.movement.first_down and endpoint is not None)):
             z = zend
             # i=endpoint
 
-            while z < o.maxz:
+            while z < o.area.maxz:
                 if i == len(ch.points):
                     i = 0
                 s1 = ch.points[i]
@@ -332,8 +332,8 @@ class camPathChunk:
                 s2 = ch.points[i2]
                 l = dist2d(s1, s2)
                 znew = z + tan(o.movement.ramp_out_angle) * l
-                if znew > o.maxz:
-                    ratio = ((z - o.maxz) / (z - znew))
+                if znew > o.area.maxz:
+                    ratio = ((z - o.area.maxz) / (z - znew))
                     v1 = Vector(chunk.points[-1])
                     v2 = Vector((s1[0], s1[1], znew))
                     v = v1 + ratio * (v2 - v1)
@@ -418,7 +418,7 @@ class camPathChunk:
             ######################################
             # ramp out - this is the same thing, just on the other side..
             if o.movement.ramp_out:
-                zstart = o.maxz
+                zstart = o.area.maxz
                 zend = ch.points[-1][2]
                 if zend < zstart:  # again, sometimes a chunk could theoretically end above the starting level.
                     stepdown = zstart - zend
@@ -660,7 +660,7 @@ def optimizeChunk(chunk, operation):
 def limitChunks(chunks, o,
                 force=False):  # TODO: this should at least add point on area border...
     # but shouldn't be needed at all at the first place...
-    if o.use_limit_curve or force:
+    if o.area.use_limit_curve or force:
         nchunks = []
         for ch in chunks:
             prevsampled = True
