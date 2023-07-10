@@ -637,8 +637,8 @@ def getPath3axis(context, operation):
             prepareArea(o)
             # pathSamples = crazyStrokeImage(o)
             # this kind of worked and should work:
-            millarea = o.zbuffer_image < o.area.minz + 0.000001
-            avoidarea = o.offset_image > o.area.minz + 0.000001
+            millarea = o.zbuffer_image < o.minz + 0.000001
+            avoidarea = o.offset_image > o.minz + 0.000001
 
             pathSamples = crazyStrokeImageBinary(o, millarea, avoidarea)
             #####
@@ -662,7 +662,7 @@ def getPath3axis(context, operation):
         # print (minz)
 
         chunks = []
-        layers = strategy.getLayers(o, o.area.maxz, o.min.z)
+        layers = strategy.getLayers(o, o.maxz, o.min.z)
 
         print("SAMPLE", o.name)
         chunks.extend(utils.sampleChunks(o, pathSamples, layers))
@@ -709,8 +709,8 @@ def getPath3axis(context, operation):
         progress('retrieving object slices')
         prepareArea(o)
         layerstep = 1000000000
-        if o.area.use_layers:
-            layerstep = math.floor(o.area.stepdown / o.slice_detail)
+        if o.use_layers:
+            layerstep = math.floor(o.stepdown / o.slice_detail)
             if layerstep == 0:
                 layerstep = 1
 
@@ -719,7 +719,7 @@ def getPath3axis(context, operation):
         layerend = o.min.z  #
         layers = [[layerstart, layerend]]
         #######################
-        nslices = ceil(abs(o.area.minz / o.slice_detail))
+        nslices = ceil(abs(o.minz / o.slice_detail))
         lastslice = spolygon.Polygon()  # polyversion
         layerstepinc = 0
 
@@ -729,7 +729,7 @@ def getPath3axis(context, operation):
         for h in range(0, nslices):
             layerstepinc += 1
             slicechunks = []
-            z = o.area.minz + h * o.slice_detail
+            z = o.minz + h * o.slice_detail
             if h == 0:
                 z += 0.0000001
                 # if people do mill flat areas, this helps to reach those...
@@ -752,7 +752,7 @@ def getPath3axis(context, operation):
 
             #
             if o.waterline_fill:
-                layerstart = min(o.area.maxz, z + o.slice_detail)  #
+                layerstart = min(o.maxz, z + o.slice_detail)  #
                 layerend = max(o.min.z, z - o.slice_detail)  #
                 layers = [[layerstart, layerend]]
                 #####################################

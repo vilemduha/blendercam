@@ -94,7 +94,7 @@ def oclResampleChunks(operation, chunks_to_resample):
     for chunk, i_start, i_length in chunks_to_resample:
         for p_index in range(i_start, i_start + i_length):
             tmp_chunks[0].append(chunk.points[p_index])
-
+ 
 
     samples = ocl_sample(operation, tmp_chunks)
 
@@ -109,9 +109,9 @@ def oclResampleChunks(operation, chunks_to_resample):
 
 def oclWaterlineLayerHeights(operation):
     layers = []
-    l_last = operation.area.minz
-    l_step = operation.area.stepdown
-    l_first = operation.area.maxz - l_step
+    l_last = operation.minz
+    l_step = operation.stepdown
+    l_first = operation.maxz - l_step
     l_depth = l_first
     while l_depth > (l_last + 0.0000001):
         layers.append(l_depth)
@@ -133,7 +133,7 @@ def oclGetWaterline(operation, chunks):
 
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
-    op_minz = operation.area.minz
+    op_minz = operation.minz
     if op_cutter_type == "VCARVE":
         op_cutter_tip_angle = operation['cutter_tip_angle']
 
