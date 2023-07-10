@@ -822,7 +822,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
         ch = ch.points
         for i in range(0, len(ch)):
             ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
-                     (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny, o.area.minz)
+                     (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny, o.minz)
 
     return chunks
 
@@ -1147,11 +1147,11 @@ def renderSampleImage(o):
 
     else:
         i = bpy.data.images[o.source_image_name]
-        if o.area.source_image_crop:
-            sx = int(i.size[0] * o.area.source_image_crop_start_x / 100.0)
-            ex = int(i.size[0] * o.area.source_image_crop_end_x / 100.0)
-            sy = int(i.size[1] * o.area.source_image_crop_start_y / 100.0)
-            ey = int(i.size[1] * o.area.source_image_crop_end_y / 100.0)
+        if o.source_image_crop:
+            sx = int(i.size[0] * o.source_image_crop_start_x / 100.0)
+            ex = int(i.size[0] * o.source_image_crop_end_x / 100.0)
+            sy = int(i.size[1] * o.source_image_crop_start_y / 100.0)
+            ey = int(i.size[1] * o.source_image_crop_end_y / 100.0)
         else:
             sx = 0
             ex = i.size[0]
@@ -1160,7 +1160,7 @@ def renderSampleImage(o):
 
         o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
 
-        o.optimisation.pixsize = o.area.source_image_size_x / i.size[0]
+        o.optimisation.pixsize = o.source_image_size_x / i.size[0]
         simple.progress('pixel size in the image source', o.optimisation.pixsize)
 
         rawimage = imagetonumpy(i)
@@ -1168,7 +1168,7 @@ def renderSampleImage(o):
         mina = numpy.min(rawimage)
         a = numpy.array((1.0, 1.0))
         a.resize(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1])
-        neg = o.area.source_image_scale_z < 0
+        neg = o.source_image_scale_z < 0
         if o.strategy == 'WATERLINE':  # waterline strategy needs image border to have ok ambient.
             a.fill(1 - neg)
 
@@ -1178,19 +1178,19 @@ def renderSampleImage(o):
         a[o.borderwidth:-o.borderwidth, o.borderwidth:-o.borderwidth] = rawimage
         a = a[sx:ex + o.borderwidth * 2, sy:ey + o.borderwidth * 2]
 
-        if o.area.source_image_scale_z < 0:
+        if o.source_image_scale_z < 0:
             # negative images place themselves under the 0 plane by inverting through scale multiplication
             a = (a - mina)  # first, put the image down, se we know the image minimum is on 0
-            a *= o.area.source_image_scale_z
+            a *= o.source_image_scale_z
 
         else:  # place positive images under 0 plane, this is logical
             a = (a - mina)  # first, put the image down, se we know the image minimum is on 0
-            a *= o.area.source_image_scale_z
-            a -= (maxa - mina) * o.area.source_image_scale_z
+            a *= o.source_image_scale_z
+            a -= (maxa - mina) * o.source_image_scale_z
 
-        a += o.area.source_image_offset.z  # after that, image gets offset.
+        a += o.source_image_offset.z  # after that, image gets offset.
 
-        o.area.minz = numpy.min(a)  # TODO: I really don't know why this is here...
+        o.minz = numpy.min(a)  # TODO: I really don't know why this is here...
         o.min.z = numpy.min(a)
         print('min z ', o.min.z)
         print('max z ', o.max.z)

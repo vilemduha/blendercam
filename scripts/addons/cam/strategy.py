@@ -125,7 +125,7 @@ def cutout(o):
         for ch in chunksFromCurve:
             ch.points.reverse()
 
-    layers = getLayers(o, o.area.maxz, checkminz(o))
+    layers = getLayers(o, o.maxz, checkminz(o))
     extendorder = []
 
     if o.movement.first_down:  # each shape gets either cut all the way to bottom,
@@ -213,8 +213,8 @@ def curve(o):
     pathSamples = chunksRefine(pathSamples, o)  # simplify
 
     # layers here
-    if o.area.use_layers:
-        layers = getLayers(o, o.area.maxz, round(checkminz(o), 6))
+    if o.use_layers:
+        layers = getLayers(o, o.maxz, round(checkminz(o), 6))
         # layers is a list of lists [[0.00,l1],[l1,l2],[l2,l3]] containg the start and end of each layer
         extendorder = []
         chunks = []
@@ -226,8 +226,8 @@ def curve(o):
             chunk = chl[0]
             layer = chl[1]
             print('layer: ' + str(layer[1]))
-            chunk.offsetZ(o.area.maxz * 2 - o.area.minz + layer[1])
-            chunk.clampZ(o.area.minz)  # safety to not cut lower than minz
+            chunk.offsetZ(o.maxz * 2 - o.minz + layer[1])
+            chunk.clampZ(o.minz)  # safety to not cut lower than minz
             chunk.clampmaxZ(o.movement.free_height)  # safety, not higher than free movement height
 
         for chl in extendorder:  # strip layer information from extendorder and transfer them to chunks
@@ -237,7 +237,7 @@ def curve(o):
 
     else:  # no layers, old curve
         for ch in pathSamples:
-            ch.clampZ(o.area.minz)  # safety to not cut lower than minz
+            ch.clampZ(o.minz)  # safety to not cut lower than minz
             ch.clampmaxZ(o.movement.free_height)  # safety, not higher than free movement height
         chunksToMesh(pathSamples, o)
 
@@ -357,7 +357,7 @@ def pocket(o):
     chunksFromCurve = utils.sortChunks(chunksFromCurve, o)
 
     chunks = []
-    layers = getLayers(o, o.area.maxz, checkminz(o))
+    layers = getLayers(o, o.maxz, checkminz(o))
 
     for l in layers:
         lchunks = setChunksZ(chunksFromCurve, l[1])
@@ -544,16 +544,16 @@ def drill(o):
                 chunks.append(camPathChunk([(v.co.x + l.x, v.co.y + l.y, v.co.z + l.z)]))
         delob(ob)  # delete temporary object with applied transforms
 
-    layers = getLayers(o, o.area.maxz, checkminz(o))
+    layers = getLayers(o, o.maxz, checkminz(o))
 
     chunklayers = []
     for layer in layers:
         for chunk in chunks:
             # If using object for minz then use z from points in object
-            if o.area.minz_from_ob:
+            if o.minz_from_ob:
                 z = chunk.points[0][2]
             else:  # using operation minz
-                z = o.area.minz
+                z = o.minz
             # only add a chunk layer if the chunk z point is in or lower than the layer
             if z <= layer[0]:
                 if z <= layer[1]:
@@ -564,7 +564,7 @@ def drill(o):
                 chunklayers.append(newchunk)
                 # retract tool to maxz (operation depth start in ui)
                 newchunk = chunk.copy()
-                newchunk.setZ(o.area.maxz)
+                newchunk.setZ(o.maxz)
                 chunklayers.append(newchunk)
 
     chunklayers = utils.sortChunks(chunklayers, o)
@@ -589,15 +589,15 @@ def medial_axis(o):
     if o.cutter_type == 'VCARVE':
         angle = o.cutter_tip_angle
         # start the max depth calc from the "start depth" of the operation.
-        maxdepth = o.area.maxz - slope * o.cutter_diameter / 2
+        maxdepth = o.maxz - slope * o.cutter_diameter / 2
         # don't cut any deeper than the "end depth" of the operation.
-        if maxdepth < o.area.minz:
-            maxdepth = o.area.minz
+        if maxdepth < o.minz:
+            maxdepth = o.minz
             # the effective cutter diameter can be reduced from it's max
             # since we will be cutting shallower than the original maxdepth
             # without this, the curve is calculated as if the diameter was at the original maxdepth and we get the bit
             # pulling away from the desired cut surface
-            new_cutter_diameter = (maxdepth - o.area.maxz) / (- slope) * 2
+            new_cutter_diameter = (maxdepth - o.maxz) / (- slope) * 2
     elif o.cutter_type == 'BALLNOSE':
         maxdepth = - new_cutter_diameter / 2
     else:
@@ -674,7 +674,7 @@ def medial_axis(o):
                 vertr.append((False, newIdx))
                 if o.cutter_type == 'VCARVE':
                     # start the z depth calc from the "start depth" of the operation.
-                    z = o.area.maxz - mpoly.boundary.distance(sgeometry.Point(p)) * slope
+                    z = o.maxz - mpoly.boundary.distance(sgeometry.Point(p)) * slope
                     if z < maxdepth:
                         z = maxdepth
                 elif o.cutter_type == 'BALL' or o.cutter_type == 'BALLNOSE':
@@ -733,7 +733,7 @@ def medial_axis(o):
     # bpy.ops.object.join()
     chunks = utils.sortChunks(chunks, o)
 
-    layers = getLayers(o, o.area.maxz, o.min.z)
+    layers = getLayers(o, o.maxz, o.min.z)
 
     chunklayers = []
 
@@ -760,16 +760,16 @@ def medial_axis(o):
 
 def getLayers(operation, startdepth, enddepth):
     """returns a list of layers bounded by startdepth and enddepth
-       uses operation.area.stepdown to determine number of layers.
+       uses operation.stepdown to determine number of layers.
     """
-    if operation.area.use_layers:
+    if operation.use_layers:
         layers = []
-        n = math.ceil((startdepth - enddepth) / operation.area.stepdown)
+        n = math.ceil((startdepth - enddepth) / operation.stepdown)
         print("start " + str(startdepth) + " end " + str(enddepth) + " n " + str(n))
 
-        layerstart = operation.area.maxz
+        layerstart = operation.maxz
         for x in range(0, n):
-            layerend = round(max(startdepth - ((x + 1) * operation.area.stepdown), enddepth), 6)
+            layerend = round(max(startdepth - ((x + 1) * operation.stepdown), enddepth), 6)
             if int(layerstart * 10 ** 8) != int(layerend * 10 ** 8):
                 # it was possible that with precise same end of operation,
                 # last layer was done 2x on exactly same level...
@@ -925,7 +925,7 @@ def chunksToMesh(chunks, o):
 
 
 def checkminz(o):
-    if o.area.minz_from_material:
+    if o.minz_from_material:
         return o.min.z
     else:
-        return o.area.minz
+        return o.minz

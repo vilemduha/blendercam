@@ -245,7 +245,7 @@ def useBridges(ch, o):
             if isedge == 1:     # This is to subdivide  edges which are longer than the width of the bridge
                 edgelength = math.hypot(x - x2, y - y2)
                 if edgelength > o.bridges_width:
-                    verts.append(((x + x2)/2, (y + y2)/2, o.area.minz))  # make new vertex
+                    verts.append(((x + x2)/2, (y + y2)/2, o.minz))  # make new vertex
 
                     isedge += 1
                     edge = [count - 2, count - 1]
@@ -254,7 +254,7 @@ def useBridges(ch, o):
             else:
                 x2 = x
                 y2 = y
-            verts.append((x, y, o.area.minz))    # make new vertex
+            verts.append((x, y, o.minz))    # make new vertex
             isedge += 1
             if isedge > 1:  # Two points make an edge
                 edge = [count - 2, count - 1]
