@@ -185,7 +185,7 @@ class CalculatePath(bpy.types.Operator):
 
         o.operator = self
 
-        if o.use_layers:
+        if o.area.use_layers:
             o.movement.parallel_step_back = False
         try:
             gcodepath.getPath(context, o)
@@ -550,11 +550,11 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         o.name = 'MedialPocket'
         o.filename = o.name
         o.strategy = 'POCKET'
-        o.use_layers = False
+        o.area.use_layers = False
         o.material.estimate_from_model = False
         o.material.size[2] = -maxdepth
-        o.minz_from_ob = False
-        o.minz_from_material = True
+        o.area.minz_from_ob = False
+        o.area.minz_from_material = True
 
 
 class CamOperationAdd(bpy.types.Operator):
@@ -578,7 +578,7 @@ class CamOperationAdd(bpy.types.Operator):
         s.cam_operations.add()
         o = s.cam_operations[-1]
         o.object_name = ob.name
-        o.minz = minz
+        o.area.minz = minz
 
         s.cam_active_operation = len(s.cam_operations) - 1
         

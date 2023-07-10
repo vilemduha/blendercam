@@ -100,7 +100,7 @@ def testParallel(pos):
     addTestMesh((pos[0], pos[1], -.02))
     bpy.ops.scene.cam_operation_add()
     o = bpy.context.scene.cam_operations[-1]
-    o.ambient_behaviour = 'AROUND'
+    o.area.ambient_behaviour = 'AROUND'
     o.material.radius_around_model = 0.01
     bpy.ops.object.calculate_cam_path()
 
@@ -111,7 +111,7 @@ def testWaterline(pos):
     o = bpy.context.scene.cam_operations[-1]
     o.strategy = 'WATERLINE'
     o.optimisation.pixsize = .0002
-    # o.ambient_behaviour='AROUND'
+    # o.area.ambient_behaviour='AROUND'
     # o.material_radius_around_model=0.01
 
     testCalc(o)

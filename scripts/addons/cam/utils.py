@@ -286,14 +286,14 @@ def getBounds(o):
         print("valid geometry")
         minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
 
-        if o.minz_from_ob:
+        if o.area.minz_from_ob:
             if minz == 10000000:
                 minz = 0
             print("minz from object:" + str(minz))
             o.min.z = minz
-            o.minz = o.min.z
+            o.area.minz = o.min.z
         else:
-            o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
+            o.min.z = o.area.minz  # max(bb[0][2]+l.z,o.area.minz)#
             print("not minz from object")
 
         if o.material.estimate_from_model:
@@ -301,7 +301,7 @@ def getBounds(o):
 
             o.min.x = minx - o.material.radius_around_model
             o.min.y = miny - o.material.radius_around_model
-            o.max.z = max(o.maxz, maxz)
+            o.max.z = max(o.area.maxz, maxz)
 
             o.max.x = maxx + o.material.radius_around_model
             o.max.y = maxy + o.material.radius_around_model
@@ -316,25 +316,25 @@ def getBounds(o):
 
     else:
         i = bpy.data.images[o.source_image_name]
-        if o.source_image_crop:
-            sx = int(i.size[0] * o.source_image_crop_start_x / 100)
-            ex = int(i.size[0] * o.source_image_crop_end_x / 100)
-            sy = int(i.size[1] * o.source_image_crop_start_y / 100)
-            ey = int(i.size[1] * o.source_image_crop_end_y / 100)
+        if o.area.source_image_crop:
+            sx = int(i.size[0] * o.area.source_image_crop_start_x / 100)
+            ex = int(i.size[0] * o.area.source_image_crop_end_x / 100)
+            sy = int(i.size[1] * o.area.source_image_crop_start_y / 100)
+            ey = int(i.size[1] * o.area.source_image_crop_end_y / 100)
         else:
             sx = 0
             ex = i.size[0]
             sy = 0
             ey = i.size[1]
 
-        o.optimisation.pixsize = o.source_image_size_x / i.size[0]
+        o.optimisation.pixsize = o.area.source_image_size_x / i.size[0]
 
-        o.min.x = o.source_image_offset.x + sx * o.optimisation.pixsize
-        o.max.x = o.source_image_offset.x + ex * o.optimisation.pixsize
-        o.min.y = o.source_image_offset.y + sy * o.optimisation.pixsize
-        o.max.y = o.source_image_offset.y + ey * o.optimisation.pixsize
-        o.min.z = o.source_image_offset.z + o.minz
-        o.max.z = o.source_image_offset.z
+        o.min.x = o.area.source_image_offset.x + sx * o.optimisation.pixsize
+        o.max.x = o.area.source_image_offset.x + ex * o.optimisation.pixsize
+        o.min.y = o.area.source_image_offset.y + sy * o.optimisation.pixsize
+        o.max.y = o.area.source_image_offset.y + ey * o.optimisation.pixsize
+        o.min.z = o.area.source_image_offset.z + o.area.minz
+        o.max.z = o.area.source_image_offset.z
     s = bpy.context.scene
     m = s.cam_machine
     if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y \
@@ -387,14 +387,14 @@ def samplePathLow(o, ch1, ch2, dosample):
 
                 cutterdepth = o.cutter_shape.dimensions.z / 2
                 for p in bpath.points:
-                    z = getSampleBullet(o.cutter_shape, p[0], p[1], cutterdepth, 1, o.minz)
+                    z = getSampleBullet(o.cutter_shape, p[0], p[1], cutterdepth, 1, o.area.minz)
                     if z > p[2]:
                         p[2] = z
             else:
                 for p in bpath.points:
                     xs = (p[0] - o.min.x) / pixsize + o.borderwidth + pixsize / 2  # -m
                     ys = (p[1] - o.min.y) / pixsize + o.borderwidth + pixsize / 2  # -m
-                    z = getSampleImage((xs, ys), o.offset_image, o.minz) + o.skin
+                    z = getSampleImage((xs, ys), o.offset_image, o.area.minz) + o.skin
                     if z > p[2]:
                         p[2] = z
     return bpath
@@ -437,7 +437,7 @@ def sampleChunks(o, pathSamples, layers):
     for ch in pathSamples:
         totlen += len(ch.points)
     layerchunks = []
-    minz = o.minz - 0.000001  # correction for image method problems
+    minz = o.area.minz - 0.000001  # correction for image method problems
     layeractivechunks = []
     lastrunchunks = []
 
@@ -655,7 +655,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
     for chs in pathSamples:
         totlen += len(chs.startpoints)
     layerchunks = []
-    minz = o.minz
+    minz = o.area.minz
     layeractivechunks = []
     lastrunchunks = []
 
@@ -723,7 +723,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
                 sampled = True
             # print(newsample)
 
-            # elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here
+            # elif o.area.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here
             # newsample=(x,y,minz)
             if sampled:
                 for i, l in enumerate(layers):
@@ -1221,7 +1221,7 @@ def getOperationSilhouete(operation):
             print('image method')
             samples = renderSampleImage(operation)
             if stype == 'OBJECTS':
-                i = samples > operation.minz - 0.0000001
+                i = samples > operation.area.minz - 0.0000001
                 # numpy.min(operation.zbuffer_image)-0.0000001#
                 # #the small number solves issue with totally flat meshes, which people tend to mill instead of
                 # proper pockets. then the minimum was also maximum, and it didn't detect contour.
@@ -1321,25 +1321,25 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
 
 def getAmbient(o):
     if o.update_ambient_tag:
-        if o.ambient_cutter_restrict:  # cutter stays in ambient & limit curve
+        if o.area.ambient_cutter_restrict:  # cutter stays in ambient & limit curve
             m = o.cutter_diameter / 2
         else:
             m = 0
 
-        if o.ambient_behaviour == 'AROUND':
-            r = o.ambient_radius - m
+        if o.area.ambient_behaviour == 'AROUND':
+            r = o.area.ambient_radius - m
             o.ambient = getObjectOutline(r, o, True)  # in this method we need ambient from silhouete
         else:
             o.ambient = spolygon.Polygon(((o.min.x + m, o.min.y + m), (o.min.x + m, o.max.y - m),
                                           (o.max.x - m, o.max.y - m), (o.max.x - m, o.min.y + m)))
 
-        if o.use_limit_curve:
-            if o.limit_curve != '':
-                limit_curve = bpy.data.objects[o.limit_curve]
+        if o.area.use_limit_curve:
+            if o.area.limit_curve != '':
+                limit_curve = bpy.data.objects[o.area.limit_curve]
                 polys = curveToShapely(limit_curve)
                 o.limit_poly = shapely.ops.unary_union(polys)
 
-                if o.ambient_cutter_restrict:
+                if o.area.ambient_cutter_restrict:
                     o.limit_poly = o.limit_poly.buffer(o.cutter_diameter / 2, resolution=o.optimisation.circle_detail)
             o.ambient = o.ambient.intersection(o.limit_poly)
     o.update_ambient_tag = False
