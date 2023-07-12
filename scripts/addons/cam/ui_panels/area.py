@@ -26,7 +26,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw_maxz(self):
         if not self.has_correct_level(): return
         self.layout.prop(self.op, 'maxz')
-        if self.ôp.maxz > self.op.movement.free_height:
+        if self.op.maxz > self.op.movement.free_height:
             self.layout.prop(self.op.movement, 'free_height')
             self.layout.label(text='POSSIBLE COLLISION: Depth start > Free movement')
 
