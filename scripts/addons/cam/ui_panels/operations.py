@@ -26,11 +26,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
         'draw_simulate_op': 1,
         'draw_op_name': 1,
         'draw_op_filename': 0,
-        'draw_operation_source': 0,
-        'draw_simplify_gcode': 1,
-        'draw_use_modifiers': 1,
-        'draw_hide_all_others': 2,
-        'draw_parent_path_to_object': 2
+        'draw_operation_source': 0
     }
 
     # Draw the list of operations and the associated buttons:
@@ -115,27 +111,6 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
             if self.op.strategy == 'PROJECTED_CURVE':
                 self.layout.prop_search(self.op, "curve_object1", bpy.data, "objects")
 
-    def draw_simplify_gcode(self):
-        if not self.has_correct_level(): return
-
-        if self.op.strategy not in ['DRILL']:
-            self.layout.prop(self.op, 'remove_redundant_points')
-
-        if self.op.remove_redundant_points:
-            self.layout.prop(self.op, 'simplify_tol')
-
-    def draw_use_modifiers(self):
-        if not self.has_correct_level(): return
-        if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
-            self.layout.prop(self.op, 'use_modifiers')
-
-    def draw_hide_all_others(self):
-        if not self.has_correct_level(): return
-        self.layout.prop(self.op, 'hide_all_others')
-
-    def draw_parent_path_to_object(self):
-        if not self.has_correct_level(): return
-        self.layout.prop(self.op, 'parent_path_to_object')
 
 
     def draw(self, context):
@@ -152,8 +127,5 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
         self.draw_op_name()
         self.draw_op_filename()
         self.draw_operation_source()
-        self.draw_simplify_gcode()
-        self.draw_use_modifiers()
-        self.draw_hide_all_others()
-        self.draw_parent_path_to_object()
+
 
