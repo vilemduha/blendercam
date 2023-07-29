@@ -171,7 +171,8 @@ class CamCurvePlate(bpy.types.Operator):
     plate_type: EnumProperty(name='Type plate',
                               items=(('ROUNDED', 'Rounded corner', 'Makes a rounded corner plate'),
                                      ('COVE', 'Cove corner', 'Makes a plate with circles cut in each corner '),
-                                     ('BEVEL', 'Bevel corner', 'Makes a plate with beveled corners ')),
+                                     ('BEVEL', 'Bevel corner', 'Makes a plate with beveled corners '),
+                                     ('OVAL', 'Elipse', 'Makes an oval plate')),
                               description='Type of Plate', default='ROUNDED')
 
     def draw(self, context):
@@ -220,6 +221,11 @@ class CamCurvePlate(bpy.types.Operator):
             simple.active_name("plate_base")
             simple.remove_multiple("_circ")  # remove corner circles
 
+        elif self.plate_type == "OVAL":
+            bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Ellipse',
+                                 Simple_a=self.width/2,Simple_b=self.height/2, use_cyclic_u=True, edit_mode=False)
+            bpy.context.object.data.resolution_u = self.resolution
+            simple.active_name("plate_base")
 
         elif self.plate_type == 'COVE':
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
