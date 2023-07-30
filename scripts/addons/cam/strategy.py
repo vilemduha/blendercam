@@ -550,7 +550,7 @@ def drill(o):
     for layer in layers:
         for chunk in chunks:
             # If using object for minz then use z from points in object
-            if o.minz_from_ob:
+            if o.minz_from == 'OBJECT':
                 z = chunk.points[0][2]
             else:  # using operation minz
                 z = o.minz
@@ -925,7 +925,7 @@ def chunksToMesh(chunks, o):
 
 
 def checkminz(o):
-    if o.minz_from_material:
+    if o.minz_from == 'MATERIAL':
         return o.min.z
     else:
         return o.minz

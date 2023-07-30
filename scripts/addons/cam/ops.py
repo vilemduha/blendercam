@@ -553,9 +553,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         o.use_layers = False
         o.material.estimate_from_model = False
         o.material.size[2] = -maxdepth
-        o.minz_from_ob = False
-        o.minz_from_material = True
-
+        o.minz_from = 'MATERIAL'
 
 class CamOperationAdd(bpy.types.Operator):
     """Add new CAM operation"""
@@ -581,7 +579,7 @@ class CamOperationAdd(bpy.types.Operator):
         o.minz = minz
 
         s.cam_active_operation = len(s.cam_operations) - 1
-        
+
         o.name = f"Op_{ob.name}_{s.cam_active_operation + 1}"
         o.filename = o.name
 

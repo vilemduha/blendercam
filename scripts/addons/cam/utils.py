@@ -286,7 +286,7 @@ def getBounds(o):
         print("valid geometry")
         minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
 
-        if o.minz_from_ob:
+        if o.minz_from == 'OBJECT':
             if minz == 10000000:
                 minz = 0
             print("minz from object:" + str(minz))

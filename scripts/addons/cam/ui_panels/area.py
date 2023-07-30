@@ -36,12 +36,12 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
             if self.op.strategy == 'CURVE':
                 self.layout.label(text="cannot use depth from object using CURVES")
 
-            if not self.op.minz_from_ob:
-                if not self.op.minz_from_material:
-                    self.layout.prop(self.op, 'minz')
-                self.layout.prop(self.op, 'minz_from_material')
-            if not self.op.minz_from_material:
-                self.layout.prop(self.op, 'minz_from_ob')
+            row = self.layout.row(align=True)
+            row.label(text='Set max depth from')
+            row.prop(self.op, 'minz_from', text='')
+            if self.op.minz_from == 'CUSTOM':
+                self.layout.prop(self.op, 'minz')
+
         else:
             self.layout.prop(self.op, 'source_image_scale_z')
             self.layout.prop(self.op, 'source_image_size_x')
