@@ -607,7 +607,7 @@ class camOperation(bpy.types.PropertyGroup):
     cut_type: EnumProperty(name='Cut',
                            items=(('OUTSIDE', 'Outside', 'a'), ('INSIDE', 'Inside', 'a'), ('ONLINE', 'On line', 'a')),
                            description='Type of cutter used', default='OUTSIDE', update=updateRest)
-    outlines_count: bpy.props.IntProperty(name="Outlines count`EXPERIMENTAL", description="Outlines count", default=1,
+    outlines_count: bpy.props.IntProperty(name="Outlines count", description="Outlines count", default=1,
                                           min=1, max=32, update=updateCutout)
     straight: bpy.props.BoolProperty(name="Overshoot Style",
                                      description="Use overshoot cutout instead of conventional rounded",
