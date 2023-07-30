@@ -168,6 +168,28 @@ class CamCurvePlate(bpy.types.Operator):
                                         unit="LENGTH")
     hole_hamount: bpy.props.IntProperty(name="Hole horiz amount", default=1, min=0, max=50)
     resolution: bpy.props.IntProperty(name="Spline resolution", default=50, min=3, max=150)
+    plate_type: EnumProperty(name='Type plate',
+                              items=(('ROUNDED', 'Rounded corner', 'Makes a rounded corner plate'),
+                                     ('COVE', 'Cove corner', 'Makes a plate with circles cut in each corner '),
+                                     ('BEVEL', 'Bevel corner', 'Makes a plate with beveled corners '),
+                                     ('OVAL', 'Elipse', 'Makes an oval plate')),
+                              description='Type of Plate', default='ROUNDED')
+
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, 'plate_type')
+        layout.prop(self, 'width')
+        layout.prop(self, 'height')
+        layout.prop(self, 'hole_diameter')
+        layout.prop(self, 'hole_tolerance')
+        layout.prop(self, 'hole_vdist')
+        layout.prop(self, 'hole_hdist')
+        layout.prop(self, 'hole_hamount')
+        layout.prop(self, 'resolution')
+
+        if self.plate_type in ["ROUNDED", "COVE", "BEVEL"]:
+            layout.prop(self, 'radius')
+
 
     def execute(self, context):
         left = -self.width / 2 + self.radius
@@ -175,39 +197,115 @@ class CamCurvePlate(bpy.types.Operator):
         right = -left
         top = -bottom
 
+        if self.plate_type == "ROUNDED":
         # create base
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
+            bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(left, bottom, 0), scale=(1, 1, 1))
-        simple.active_name("_circ_LB")
-        bpy.context.object.data.resolution_u = self.resolution
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
+            simple.active_name("_circ_LB")
+            bpy.context.object.data.resolution_u = self.resolution
+            bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(right, bottom, 0), scale=(1, 1, 1))
-        simple.active_name("_circ_RB")
-        bpy.context.object.data.resolution_u = self.resolution
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
+            simple.active_name("_circ_RB")
+            bpy.context.object.data.resolution_u = self.resolution
+            bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(left, top, 0), scale=(1, 1, 1))
-        simple.active_name("_circ_LT")
-        bpy.context.object.data.resolution_u = self.resolution
-        bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
+            simple.active_name("_circ_LT")
+            bpy.context.object.data.resolution_u = self.resolution
+            bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
                                                   location=(right, top, 0), scale=(1, 1, 1))
-        simple.active_name("_circ_RT")
-        bpy.context.object.data.resolution_u = self.resolution
+            simple.active_name("_circ_RT")
+            bpy.context.object.data.resolution_u = self.resolution
 
-        simple.select_multiple("_circ")  # select the circles for the four corners
-        utils.polygonConvexHull(context)  # perform hull operation on the four corner circles
-        simple.active_name("plate_base")
-        simple.remove_multiple("_circ")  # remove corner circles
+            simple.select_multiple("_circ")  # select the circles for the four corners
+            utils.polygonConvexHull(context)  # perform hull operation on the four corner circles
+            simple.active_name("plate_base")
+            simple.remove_multiple("_circ")  # remove corner circles
+
+        elif self.plate_type == "OVAL":
+            bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Ellipse',
+                                 Simple_a=self.width/2,Simple_b=self.height/2, use_cyclic_u=True, edit_mode=False)
+            bpy.context.object.data.resolution_u = self.resolution
+            simple.active_name("plate_base")
+
+        elif self.plate_type == 'COVE':
+            bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
+                                                  location=(left-self.radius, bottom-self.radius, 0), scale=(1, 1, 1))
+            simple.active_name("_circ_LB")
+            bpy.context.object.data.resolution_u = self.resolution
+            bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
+                                                  location=(right+self.radius, bottom-self.radius, 0), scale=(1, 1, 1))
+            simple.active_name("_circ_RB")
+            bpy.context.object.data.resolution_u = self.resolution
+            bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
+                                                  location=(left-self.radius, top+self.radius, 0), scale=(1, 1, 1))
+            simple.active_name("_circ_LT")
+            bpy.context.object.data.resolution_u = self.resolution
+            bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
+                                                  location=(right+self.radius, top+self.radius, 0), scale=(1, 1, 1))
+            simple.active_name("_circ_RT")
+            bpy.context.object.data.resolution_u = self.resolution
+
+            simple.join_multiple("_circ")
+
+            bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
+                                 Simple_width=self.width, Simple_length=self.height, outputType='POLY', use_cyclic_u=True,
+                                 edit_mode=False)
+            simple.active_name("_base")
+
+            simple.difference("_","_base")
+            simple.rename("_base","plate_base")
+
+
+
+        elif self.plate_type == 'BEVEL':
+            bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
+                                 Simple_width=self.radius*2, Simple_length=self.radius*2, location=(left-self.radius, bottom-self.radius, 0),
+                                 rotation=(0, 0, 0.785398),outputType='POLY', use_cyclic_u=True, edit_mode=False)
+            simple.active_name("_bev_LB")
+            bpy.context.object.data.resolution_u = self.resolution
+            bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
+                                 Simple_width=self.radius*2, Simple_length=self.radius*2,
+                                 location=(right+self.radius, bottom-self.radius, 0),
+                                 rotation=(0, 0, 0.785398),outputType='POLY', use_cyclic_u=True, edit_mode=False)
+            simple.active_name("_bev_RB")
+            bpy.context.object.data.resolution_u = self.resolution
+            bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
+                                 Simple_width=self.radius*2, Simple_length=self.radius*2,
+                                 location=(left-self.radius, top+self.radius, 0),
+                                 rotation=(0, 0, 0.785398),outputType='POLY', use_cyclic_u=True, edit_mode=False)
+
+            simple.active_name("_bev_LT")
+            bpy.context.object.data.resolution_u = self.resolution
+
+            bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
+                                 Simple_width=self.radius*2, Simple_length=self.radius*2,
+                                 location=(right+self.radius, top+self.radius, 0),
+                                 rotation=(0, 0, 0.785398),outputType='POLY', use_cyclic_u=True, edit_mode=False)
+
+            simple.active_name("_bev_RT")
+            bpy.context.object.data.resolution_u = self.resolution
+
+            simple.join_multiple("_bev")
+
+            bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
+                                 Simple_width=self.width, Simple_length=self.height, outputType='POLY', use_cyclic_u=True,
+                                 edit_mode=False)
+            simple.active_name("_base")
+
+            simple.difference("_","_base")
+            simple.rename("_base","plate_base")
+
 
         if self.hole_diameter > 0 or self.hole_hamount > 0:
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
-                                                      align='WORLD', location=(0, self.hole_tolerance / 2, 0),
-                                                      scale=(1, 1, 1))
+                                                  align='WORLD', location=(0, self.hole_tolerance / 2, 0),
+                                                  scale=(1, 1, 1))
             simple.active_name("_hole_Top")
             bpy.context.object.data.resolution_u = int(self.resolution / 4)
             if self.hole_tolerance > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
-                                                          align='WORLD', location=(0, -self.hole_tolerance / 2, 0),
-                                                          scale=(1, 1, 1))
+                                                      align='WORLD', location=(0, -self.hole_tolerance / 2, 0),
+                                                      scale=(1, 1, 1))
                 simple.active_name("_hole_Bottom")
                 bpy.context.object.data.resolution_u = int(self.resolution / 4)
 
@@ -221,7 +319,7 @@ class CamCurvePlate(bpy.types.Operator):
 
             simple.join_multiple("plate_hole")  # join the holes together
 
-            # horizontal holes
+        # horizontal holes
             if self.hole_hamount > 1:
                 if self.hole_hamount % 2 != 0:
                     for x in range(int((self.hole_hamount - 1) / 2)):
