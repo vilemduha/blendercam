@@ -138,9 +138,10 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     def draw_use_g64(self):
         if not self.has_correct_level(): return
-        self.layout.prop(self.op.movement, 'useG64')
-        if self.op.movement.useG64:
-            self.layout.prop(self.op.movement, 'G64')
+        if self.context.scene.cam_machine.post_processor not in cam.constants.G64_INCOMPATIBLE_MACHINES:
+            self.layout.prop(self.op.movement, 'useG64')
+            if self.op.movement.useG64:
+                self.layout.prop(self.op.movement, 'G64')
 
     def draw_parallel_stepback(self):
         if not self.has_correct_level(): return
