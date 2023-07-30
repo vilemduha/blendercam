@@ -746,6 +746,11 @@ class camOperation(bpy.types.PropertyGroup):
                                   min=-3, max=10, precision=cam.constants.PRECISION, unit="LENGTH",
                                   update=updateRest)  # EXPERIMENTAL
 
+    first_down: bpy.props.BoolProperty(name="First down",
+        description="First go down on a contour, then go to the next one",
+        default=False, update=cam.utils.update_operation)
+
+
     #######################################################
     # Image related
     ####################################################
