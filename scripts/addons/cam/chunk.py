@@ -318,7 +318,7 @@ class camPathChunk:
                 if i == len(ch.points):
                     i = 0
         # ramp out
-        if o.movement.ramp_out and (not o.use_layers or not o.movement.first_down or (o.movement.first_down and endpoint is not None)):
+        if o.movement.ramp_out and (not o.use_layers or not o.first_down or (o.first_down and endpoint is not None)):
             z = zend
             # i=endpoint
 

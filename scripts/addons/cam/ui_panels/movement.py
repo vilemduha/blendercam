@@ -44,10 +44,6 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         description='For roughing and finishing in one pass: mills material in climb mode, then steps back and goes between 2 last chunks back',
         default=False, update=cam.utils.update_operation)
 
-    first_down: bpy.props.BoolProperty(name="First down",
-        description="First go down on a contour, then go to the next one",
-        default=False, update=cam.utils.update_operation)
-
     helix_enter: bpy.props.BoolProperty(name="Helix enter - EXPERIMENTAL",
         description="Enter material in helix",
         default=False, update=cam.utils.update_operation)
@@ -116,7 +112,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
         'draw_free_height': 0,
         'draw_use_g64': 2,
         'draw_parallel_stepback': 1,
-        'draw_first_down': 1,
         'draw_helix_enter': 2,
         'draw_ramp': 1,
         'draw_retract_tangential': 2,
@@ -143,9 +138,10 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     def draw_use_g64(self):
         if not self.has_correct_level(): return
-        self.layout.prop(self.op.movement, 'useG64')
-        if self.op.movement.useG64:
-            self.layout.prop(self.op.movement, 'G64')
+        if self.context.scene.cam_machine.post_processor not in cam.constants.G64_INCOMPATIBLE_MACHINES:
+            self.layout.prop(self.op.movement, 'useG64')
+            if self.op.movement.useG64:
+                self.layout.prop(self.op.movement, 'G64')
 
     def draw_parallel_stepback(self):
         if not self.has_correct_level(): return
@@ -160,11 +156,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
             if self.op.movement.helix_enter:
                 self.layout.prop(self.op.movement, 'ramp_in_angle')
                 self.layout.prop(self.op.movement, 'helix_diameter')
-
-    def draw_first_down(self):
-        if not self.has_correct_level(): return
-        if self.op.strategy in ['CUTOUT','POCKET','MEDIAL_AXIS']:
-            self.layout.prop(self.op.movement, 'first_down')
 
     def draw_ramp(self):
         if not self.has_correct_level(): return
@@ -204,7 +195,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
         self.draw_free_height()
         self.draw_use_g64()
         self.draw_parallel_stepback()
-        self.draw_first_down()
         self.draw_ramp()
         self.draw_helix_enter()
         self.draw_retract_tangential()

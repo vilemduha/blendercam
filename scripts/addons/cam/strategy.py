@@ -131,7 +131,7 @@ def cutout(o):
     layers = getLayers(o, o.maxz, checkminz(o))
     extendorder = []
 
-    if o.movement.first_down:  # each shape gets either cut all the way to bottom,
+    if o.first_down:  # each shape gets either cut all the way to bottom,
         # or every shape gets cut 1 layer, then all again. has to create copies,
         # because same chunks are worked with on more layers usually
         for chunk in chunksFromCurve:
@@ -470,7 +470,7 @@ def pocket(o):
         for ch in chunks:
             ch.rampZigZag(ch.zstart, ch.points[0][2], o)
 
-    if o.movement.first_down:
+    if o.first_down:
         chunks = utils.sortChunks(chunks, o)
 
     if o.pocketToCurve:  # make curve instead of a path
@@ -553,7 +553,7 @@ def drill(o):
     for layer in layers:
         for chunk in chunks:
             # If using object for minz then use z from points in object
-            if o.minz_from_ob:
+            if o.minz_from == 'OBJECT':
                 z = chunk.points[0][2]
             else:  # using operation minz
                 z = o.minz
@@ -747,7 +747,7 @@ def medial_axis(o):
                 newchunk.clampZ(layer[1])
                 chunklayers.append(newchunk)
 
-    if o.movement.first_down:
+    if o.first_down:
         chunklayers = utils.sortChunks(chunklayers, o)
 
     if o.add_mesh_for_medial:  # make curve instead of a path
@@ -928,7 +928,7 @@ def chunksToMesh(chunks, o):
 
 
 def checkminz(o):
-    if o.minz_from_material:
+    if o.minz_from == 'MATERIAL':
         return o.min.z
     else:
         return o.minz
