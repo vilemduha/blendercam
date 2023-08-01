@@ -101,7 +101,10 @@ def cutout(o):
             if o.outlines_count > 1:
                 for i in range(1, o.outlines_count):
                     chunksFromCurve.extend(shapelyToChunks(p, -1))
-                    p = p.buffer(distance=o.dist_between_paths * offset, resolution=o.optimisation.circle_detail, join_style=join,
+                    path_distance = o.dist_between_paths
+                    if o.cut_type == "INSIDE":
+                        path_distance *= -1
+                    p = p.buffer(distance = path_distance, resolution=o.optimisation.circle_detail, join_style=join,
                                  mitre_limit=2)
 
         chunksFromCurve.extend(shapelyToChunks(p, -1))

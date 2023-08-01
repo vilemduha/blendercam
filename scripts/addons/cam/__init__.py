@@ -51,6 +51,8 @@ from shapely import geometry as sgeometry
 
 from cam.ui import *
 
+
+
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
@@ -66,7 +68,6 @@ bl_info = {
 import cam.constants
 
 was_hidden_dict = {}
-
 
 def updateMachine(self, context):
     print('update machine ')
@@ -404,6 +405,7 @@ def updateBridges(o, context):
 
 
 def updateRotation(o, context):
+    print('update rotation')
     if o.enable_B or o.enable_A:
         print(o, o.rotation_A)
         ob = bpy.data.objects[o.object_name]
@@ -470,7 +472,6 @@ class camOperation(bpy.types.PropertyGroup):
     info: bpy.props.PointerProperty(type=CAM_INFO_Properties)
     optimisation: bpy.props.PointerProperty(type=CAM_OPTIMISATION_Properties)
     movement: bpy.props.PointerProperty(type=CAM_MOVEMENT_Properties)
-
 
     name: bpy.props.StringProperty(name="Operation Name", default="Operation", update=updateRest)
     filename: bpy.props.StringProperty(name="File name", default="Operation", update=updateRest)
@@ -669,16 +670,16 @@ class camOperation(bpy.types.PropertyGroup):
 
     rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle", default=0,
                                         min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRest)
+                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
     enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False,
-                                     update=updateRest)
+                                     update=updateRotation)
     A_along_x: bpy.props.BoolProperty(name="A Along X ", description="A Parallel to X", default=True, update=updateRest)
 
     rotation_B: bpy.props.FloatProperty(name="B axis angle", description="Rotate B axis\nto specified angle", default=0,
                                         min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRest)
+                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
     enable_B: bpy.props.BoolProperty(name="Enable B axis", description="Rotate B axis", default=False,
-                                     update=updateRest)
+                                     update=updateRotation)
 
     # carve only
     carve_depth: bpy.props.FloatProperty(name="Carve depth", default=0.001, min=-.100, max=32, precision=cam.constants.PRECISION,
@@ -1131,6 +1132,7 @@ def get_panels():  # convenience function for bot register and unregister functi
         machineSettings,
         CamAddonPreferences,
 
+        ui.CAM_INTERFACE_Panel,
         ui.CAM_CHAINS_Panel,
         ui.CAM_OPERATIONS_Panel,
         ui.CAM_INFO_Panel,
@@ -1333,6 +1335,8 @@ classes = [
     CamAddonPreferences,
     import_settings,
 
+    ui.CAM_INTERFACE_Panel,
+    ui.CAM_INTERFACE_Properties,
     ui.CAM_CHAINS_Panel,
     ui.CAM_OPERATIONS_Panel,
     ui.CAM_INFO_Properties,
@@ -1452,6 +1456,7 @@ def register():
 
     s.cam_slice = bpy.props.PointerProperty(type=SliceObjectsSettings)
 
+    bpy.types.Scene.interface = bpy.props.PointerProperty(type=CAM_INTERFACE_Properties)
 
 def unregister():
     for p in classes:

@@ -11,34 +11,23 @@ from cam.ui_panels.buttons_panel import CAMButtonsPanel
 #
 # For each operation, generate the corresponding gcode and export the gcode file
 
-
 class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM operations panel"""
     bl_label = "CAM operations"
     bl_idname = "WORLD_PT_CAM_OPERATIONS"
     always_show_panel = True
+    panel_interface_level = 0
 
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
-
-    # Main draw function
-    def draw(self, context):
-        self.draw_operations_list()
-        if (not self.has_operations()): return
-        if self.op is None: return
-
-        self.draw_presets()
-        self.draw_output_buttons()
-
-        sub = self.layout.column()
-        sub.active = not self.op.computing
-
-        # Draw operation name and filename
-        sub.prop(self.op, 'name')
-        sub.prop(self.op, 'filename')
-
-        self.draw_operation_source()
-        self.draw_operation_options()
-
+    prop_level = {
+        'draw_presets': 1,
+        'draw_operations_list': 0,
+        'draw_calculate_path': 0,
+        'draw_export_gcode': 1,
+        'draw_simulate_op': 1,
+        'draw_op_name': 1,
+        'draw_op_filename': 0,
+        'draw_operation_source': 0
+    }
 
     # Draw the list of operations and the associated buttons:
     # create, delete, duplicate, reorder
@@ -56,37 +45,47 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Draw the list of preset operations, and preset add and remove buttons
     def draw_presets(self):
+        if not self.has_correct_level(): return
         row = self.layout.row(align=True)
         row.menu("CAM_OPERATION_MT_presets", text=bpy.types.CAM_OPERATION_MT_presets.bl_label)
         row.operator("render.cam_preset_operation_add", text="", icon='ADD')
         row.operator("render.cam_preset_operation_add", text="", icon='REMOVE').remove_active = True
 
 
-    # Draw buttons "Calculate path & export Gcode", "Export Gcode ", and "Simulate this operation"
-    def draw_output_buttons(self):
-        # FIXME This does not seem to work - there is never a "Computing" label displayed
-        # while an operation is being calculated
-        if self.op.computing:
-            row = self.layout.row(align=True)
-            row.label(text='computing')
-            row.operator('object.kill_calculate_cam_paths_background', text="", icon='CANCEL')
+    def draw_calculate_path(self):
+        if not self.has_correct_level(): return
+        if self.op.valid:
+            self.layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
         else:
-            if self.op.valid:
-                self.layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
-                if self.op.name is not None:
-                    name = "cam_path_{}".format(self.op.name)
-                    if bpy.context.scene.objects.get(name) is not None:
-                        self.layout.operator("object.cam_export", text="Export Gcode ")
-                self.layout.operator("object.cam_simulate", text="Simulate this operation")
-            else:
-                self.layout.label(text="operation invalid, can't compute")
+            self.layout.label(text="operation invalid, can't compute")
+
+    def draw_export_gcode(self):
+        if not self.has_correct_level(): return
+        if self.op.valid:
+            if self.op.name is not None:
+                name = f"cam_path_{self.op.name}"
+                if bpy.context.scene.objects.get(name) is not None:
+                    self.layout.operator("object.cam_export", text="Export Gcode ")
+
+    def draw_simulate_op(self):
+        if not self.has_correct_level(): return
+        if self.op.valid:
+            self.layout.operator("object.cam_simulate", text="Simulate this operation")
+
+    def draw_op_name(self):
+        if not self.has_correct_level(): return
+        self.layout.prop(self.op, 'name')
+
+    def draw_op_filename(self):
+        if not self.has_correct_level(): return
+        self.layout.prop(self.op, 'filename')
 
 
     # Draw a list of objects which will be used as the source of the operation
     # FIXME Right now, cameras or lights may be used, which crashes
     # The user should only be able to choose meshes and curves
     def draw_operation_source(self):
-
+        if not self.has_correct_level(): return
         self.layout.prop(self.op, 'geometry_source')
 
         if self.op.strategy == 'CURVE':
@@ -112,25 +111,21 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
             if self.op.strategy == 'PROJECTED_CURVE':
                 self.layout.prop_search(self.op, "curve_object1", bpy.data, "objects")
 
-    # Draw Operation options:
-    # Remove redundant points (optimizes operation)
-    # Use modifiers of the object
-    # Hide all other paths
-    # Parent path to object (?)
 
-    def draw_operation_options(self):
 
-        # TODO This should be in some optimization menu
-        if self.op.strategy != 'DRILL':
-            self.layout.prop(self.op, 'remove_redundant_points')
+    def draw(self, context):
+        self.context = context
 
-        if self.op.remove_redundant_points:
-            self.layout.label(text='Revise your Code before running!')
-            self.layout.label(text='Quality will suffer if tolerance')
-            self.layout.label(text='is high')
-            self.layout.prop(self.op, 'simplify_tol')
+        self.draw_presets()
+        self.draw_operations_list()
 
-        if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
-            self.layout.prop(self.op, 'use_modifiers')
-        self.layout.prop(self.op, 'hide_all_others')
-        self.layout.prop(self.op, 'parent_path_to_object')
+        if self.op is None: return
+
+        self.draw_calculate_path()
+        self.draw_export_gcode()
+        self.draw_simulate_op()
+        self.draw_op_name()
+        self.draw_op_filename()
+        self.draw_operation_source()
+
+

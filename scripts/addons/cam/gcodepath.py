@@ -196,7 +196,7 @@ def exportGcodePath(filename, vertslist, operations):
 
     processedops = 0
     last = Vector((0, 0, 0))
-
+    cut_distance = 0
     for i, o in enumerate(operations):
 
         if use_experimental and o.output_header:
@@ -448,7 +448,7 @@ def exportGcodePath(filename, vertslist, operations):
                     c.feed(x=vx, y=vy, z=vz)
                 else:
                     c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
-
+            cut_distance+=vect.length * unitcorr
             vector_duration = vect.length / f
             duration += vector_duration
             last = v
@@ -459,6 +459,7 @@ def exportGcodePath(filename, vertslist, operations):
             if split and processedops > m.split_limit:
                 c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_height * unitcorr)
                 # @v=(ch.points[-1][0],ch.points[-1][1],free_height)
+                c.program_end()
                 findex += 1
                 c.file_close()
                 c = startNewFile()
@@ -484,13 +485,21 @@ def exportGcodePath(filename, vertslist, operations):
                 round(online / (offline + online) * 100, 1)) + "% removal")
         c.feedrate(unitcorr * o.feedrate)
 
-        if use_experimental and o.output_trailer:
+        if o.output_trailer:
             lines = o.gcode_trailer.split(';')
             for aline in lines:
                 c.write(aline + '\n')
 
     o.info.duration = duration * unitcorr
     print("total time:",round(o.info.duration * 60),"seconds")
+    if bpy.context.scene.unit_settings.system == 'METRIC':
+        unit_distance = 'm'
+        cut_distance /= 1000
+    else:
+        unit_distance = 'feet'
+        cut_distance /= 12
+
+    print("cut distance:", round(cut_distance,3), unit_distance)
     if enable_dust:
         c.write(stop_dust + '\n')
     if enable_hold:

@@ -51,37 +51,18 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM optimisation panel"""
     bl_label = "CAM optimisation"
     bl_idname = "WORLD_PT_CAM_OPTIMISATION"
+    panel_interface_level = 2
 
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
-
-    def draw(self, context):
-        if self.op is None:
-            return
-        if not self.op.valid:
-            return
-
-        self.draw_optimize()
-        self.layout.separator()
-        self.draw_exact_mode()
-        self.draw_use_opencamlib()
-        self.layout.separator()
-        self.draw_simulation_detail()
 
     def draw_optimize(self):
-        if self.op is None:
-            return
-        if not self.op.valid:
-            return
+        if not self.has_correct_level(): return
 
         self.layout.prop(self.op.optimisation, 'optimize')
         if self.op.optimisation.optimize:
             self.layout.prop(self.op.optimisation, 'optimize_threshold')
 
     def draw_exact_mode(self):
-        if self.op is None:
-            return
-        if not self.op.valid:
-            return
+        if not self.has_correct_level(): return
 
         if not self.op.geometry_source == 'OBJECT' or self.op.geometry_source == 'COLLECTION':
             return
@@ -106,10 +87,8 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
                 self.layout.label(text=resolution)
 
     def draw_use_opencamlib(self):
-        if self.op is None:
-            return
-        if not self.op.valid:
-            return
+        if not self.has_correct_level(): return
+
         if not (self.exact_possible and self.op.optimisation.use_exact):
             return
 
@@ -122,10 +101,44 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.prop(self.op.optimisation, 'use_opencamlib')
 
     def draw_simulation_detail(self):
-        if self.op is None:
-            return
-        if not self.op.valid:
-            return
+        if not self.has_correct_level(): return
 
         self.layout.prop(self.op.optimisation, 'simulation_detail')
         self.layout.prop(self.op.optimisation, 'circle_detail')
+
+
+    def draw_simplify_gcode(self):
+        if not self.has_correct_level(): return
+
+        if self.op.strategy not in ['DRILL']:
+            self.layout.prop(self.op, 'remove_redundant_points')
+
+        if self.op.remove_redundant_points:
+            self.layout.prop(self.op, 'simplify_tol')
+
+    def draw_use_modifiers(self):
+        if not self.has_correct_level(): return
+        if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
+            self.layout.prop(self.op, 'use_modifiers')
+
+    def draw_hide_all_others(self):
+        if not self.has_correct_level(): return
+        self.layout.prop(self.op, 'hide_all_others')
+
+    def draw_parent_path_to_object(self):
+        if not self.has_correct_level(): return
+        self.layout.prop(self.op, 'parent_path_to_object')
+
+    def draw(self, context):
+        self.context = context
+
+        self.draw_optimize()
+        self.layout.separator()
+        self.draw_exact_mode()
+        self.draw_use_opencamlib()
+        self.layout.separator()
+        self.draw_simulation_detail()
+        self.draw_simplify_gcode()
+        self.draw_use_modifiers()
+        self.draw_hide_all_others()
+        self.draw_parent_path_to_object()

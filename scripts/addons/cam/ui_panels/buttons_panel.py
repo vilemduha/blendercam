@@ -1,4 +1,5 @@
 import bpy
+import inspect
 
 # Panel definitions
 class CAMButtonsPanel:
@@ -6,6 +7,7 @@ class CAMButtonsPanel:
     bl_region_type = 'WINDOW'
     bl_context = "render"
     always_show_panel = False
+    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
 
     # COMPAT_ENGINES must be defined in each subclass, external engines can add themselves here
 
@@ -17,7 +19,10 @@ class CAMButtonsPanel:
                 return True
             op = cls.active_operation()
             if op and op.valid:
-                return True
+                if hasattr(cls, 'panel_interface_level'):
+                    return cls.panel_interface_level <= int(context.scene.interface.level)
+                else:
+                    return True
         return False
 
     @classmethod
@@ -43,3 +48,13 @@ class CAMButtonsPanel:
     def has_operations(self):
         return (self.operations_count() > 0)
 
+    def has_correct_level(self):
+        if not hasattr(self, 'prop_level'):
+            return True
+
+        caller_function = inspect.stack()[1][3]
+
+        if not caller_function in self.prop_level:
+            return True
+
+        return self.prop_level[caller_function] <= int(self.context.scene.interface.level)
