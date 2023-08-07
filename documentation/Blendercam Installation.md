@@ -9,11 +9,10 @@ The easiest way to "install" is not to install but instead just tell Blender whe
 ---
 
 * [1. Obtaining Blender](#obtaining-blender)
-* [2. Get Blendercam source code](#get-blendercam-source-code)
+* [2. Install (or update) Blendercam source code](#install-or-update-blendercam-addon)
 * [3. Setup Blender scripts alternate path](#setup-blender-scripts-alternate-file-path)
-* [4. Enable Blendercam and required add-ons](#enable-blendercam-add-on)
-* [5. (Optional) Install OpenCAMLib](#optional-install-opencamlib)
-* [6. Updating Blendercam](#updating-blendercam)
+* [4. Enable Blendercam and required add-ons](#enable-blendercam-and-required-add-ons)
+* [5. (Optional) Install OpenCAMLib](#opencamlib)
 
 
 ## Obtaining Blender
@@ -36,7 +35,7 @@ these modules on first load.
 | opencamlib | >= 2022.12 |
 
 
-## Get Blendercam addon
+## Install (or update) Blendercam addon
 The first step is to get the addon from the github repository. You can either do this with git, or by downloading and extracting a zip file. 
 
 ### Install (and update) using Git
