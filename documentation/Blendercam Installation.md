@@ -9,7 +9,7 @@ The easiest way to "install" is not to install but instead just tell Blender whe
 ---
 
 * [1. Obtaining Blender](#obtaining-blender)
-* [2. Install (or update) Blendercam source code](#install-or-update-blendercam-addon)
+* [2. Install (or update) Blendercam addon](#install-or-update-blendercam-addon)
 * [3. Setup Blender scripts alternate path](#setup-blender-scripts-alternate-file-path)
 * [4. Enable Blendercam and required add-ons](#enable-blendercam-and-required-add-ons)
 * [5. (Optional) Install OpenCAMLib](#opencamlib)
