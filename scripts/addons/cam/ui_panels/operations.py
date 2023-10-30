@@ -54,6 +54,12 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     def draw_calculate_path(self):
         if not self.has_correct_level(): return
+        if self.op.maxz > self.op.movement.free_height:
+            self.layout.label(text='!ERROR! COLLISION!')
+            self.layout.label(text='Depth start > Free movement height')
+            self.layout.label(text='!ERROR! COLLISION!')
+            self.layout.prop(self.op.movement, 'free_height')
+
         if self.op.valid:
             self.layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
         else:

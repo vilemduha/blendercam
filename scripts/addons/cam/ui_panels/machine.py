@@ -13,16 +13,16 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
         'draw_presets': 1,
         'draw_post_processor': 0,
         'draw_split_files': 2,
-        'draw_system': 1,
+        'draw_system': 0,
         'draw_position_definitions': 2,
-        'draw_working_area': 2,
-        'draw_feedrates': 2,
-        'draw_splindle_speeds': 2,
+        'draw_working_area': 0,
+        'draw_feedrates': 1,
+        'draw_splindle_speeds': 0,
         'draw_tool_options': 2,
-        'draw_suplemental_axis': 2,
+        'draw_suplemental_axis': 3,
         'draw_collet_size': 2,
         'draw_block_numbers': 2,
-        'draw_hourly_rate': 2
+        'draw_hourly_rate': 1
     }
 
     def draw_presets(self):

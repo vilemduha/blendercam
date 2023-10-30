@@ -2,6 +2,7 @@
 import bpy
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
 
+
 class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM operation area panel"""
     bl_label = "CAM operation area "
@@ -37,9 +38,11 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw_maxz(self):
         if not self.has_correct_level(): return
         self.layout.prop(self.op, 'maxz')
+        self.layout.prop(self.op.movement, 'free_height')
         if self.op.maxz > self.op.movement.free_height:
-            self.layout.prop(self.op.movement, 'free_height')
-            self.layout.label(text='POSSIBLE COLLISION: Depth start > Free movement')
+            self.layout.label(text='!ERROR! COLLISION!')
+            self.layout.label(text='Depth start > Free movement height')
+            self.layout.label(text='!ERROR! COLLISION!')
 
     def draw_minz(self):
         if not self.has_correct_level(): return

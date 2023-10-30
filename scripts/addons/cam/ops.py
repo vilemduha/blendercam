@@ -182,7 +182,7 @@ class CalculatePath(bpy.types.Operator):
         
         #check for free movement height < maxz and return with error
         if(o.movement.free_height < o.maxz):
-            self.report({'ERROR_INVALID_INPUT'}, "Free movement height is less than maximum Z height, correct and try again.")
+            self.report({'ERROR_INVALID_INPUT'}, "Free movement height is less than Operation depth start \n correct and try again.")
             return {'CANCELLED'}
 
         if o.computing:
