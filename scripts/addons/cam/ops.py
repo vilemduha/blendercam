@@ -179,6 +179,11 @@ class CalculatePath(bpy.types.Operator):
             self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
             print("Operation can't be performed, see warnings for info")
             return {'CANCELLED'}
+        
+        #check for free movement height < maxz and return with error
+        if(o.movement.free_height < o.maxz):
+            self.report({'ERROR_INVALID_INPUT'}, "Free movement height is less than maximum Z height, correct and try again.")
+            return {'CANCELLED'}
 
         if o.computing:
             return {'FINISHED'}
