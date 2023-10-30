@@ -575,7 +575,9 @@ class CamOperationAdd(bpy.types.Operator):
         fixUnits()
 
         ob = bpy.context.active_object
-        if ob is None: raise CamException("No object selected")
+        if ob is None:
+            self.report({'ERROR_INVALID_INPUT'}, "Please add an object to base the operation on.")
+            return {'CANCELLED'}
 
         minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
         s.cam_operations.add()
