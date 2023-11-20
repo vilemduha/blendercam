@@ -472,8 +472,10 @@ def pocket(o):
     if o.movement.ramp:
         for ch in chunks:
             ch.rampZigZag(ch.zstart, ch.points[0][2], o)
-
+    
     if o.first_down:
+        if o.pocket_option == "OUTSIDE":
+            chunks.reverse()   
         chunks = utils.sortChunks(chunks, o)
 
     if o.pocketToCurve:  # make curve instead of a path
