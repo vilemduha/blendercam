@@ -303,7 +303,7 @@ def pocket(o):
 
     simple.remove_multiple("3D_poc")
 
-    max_depth = checkminz(o)
+    max_depth = checkminz(o) + o.skin
     cutter_angle = math.radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2
     if o.cutter_type == 'VCARVE':
