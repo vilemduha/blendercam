@@ -63,12 +63,13 @@ def cutout(o):
         c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
     elif o.cutter_type == 'BALLNOSE':
         r = o.cutter_diameter / 2
-        print("cutter radius:", r)
+        print("cutter radius:", r," skin",o.skin)
         if -max_depth < r:
             c_offset = math.sqrt(r ** 2 - (r + max_depth) ** 2)
             print("offset:", c_offset)
     if c_offset > o.cutter_diameter / 2:
         c_offset = o.cutter_diameter / 2
+    c_offset += o.skin  # add skin for profile
     if o.straight:
         join = 2
     else:
@@ -313,6 +314,8 @@ def pocket(o):
         c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
     if c_offset > o.cutter_diameter / 2:
         c_offset = o.cutter_diameter / 2
+
+    c_offset = o.skin  # add skin
 
     p = utils.getObjectOutline(c_offset, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
@@ -592,7 +595,7 @@ def medial_axis(o):
     if o.cutter_type == 'VCARVE':
         angle = o.cutter_tip_angle
         # start the max depth calc from the "start depth" of the operation.
-        maxdepth = o.maxz - slope * o.cutter_diameter / 2
+        maxdepth = o.maxz - slope * o.cutter_diameter / 2 - o.skin
         # don't cut any deeper than the "end depth" of the operation.
         if maxdepth < o.minz:
             maxdepth = o.minz
@@ -602,9 +605,9 @@ def medial_axis(o):
             # pulling away from the desired cut surface
             new_cutter_diameter = (maxdepth - o.maxz) / (- slope) * 2
     elif o.cutter_type == 'BALLNOSE':
-        maxdepth = - new_cutter_diameter / 2
+        maxdepth = - new_cutter_diameter / 2 - o.skin
     else:
-        o.info.warnings += 'Only Ballnose, Ball and V-carve cutters\n are supported'
+        o.info.warnings += 'Only Ballnose, V-carve cutters\n are supported'
         return
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
