@@ -315,7 +315,8 @@ def pocket(o):
     if c_offset > o.cutter_diameter / 2:
         c_offset = o.cutter_diameter / 2
 
-    c_offset = o.skin  # add skin
+    c_offset += o.skin  # add skin
+    print("cutter offset", c_offset)
 
     p = utils.getObjectOutline(c_offset, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
