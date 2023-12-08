@@ -63,12 +63,13 @@ def cutout(o):
         c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
     elif o.cutter_type == 'BALLNOSE':
         r = o.cutter_diameter / 2
-        print("cutter radius:", r)
+        print("cutter radius:", r," skin",o.skin)
         if -max_depth < r:
             c_offset = math.sqrt(r ** 2 - (r + max_depth) ** 2)
             print("offset:", c_offset)
     if c_offset > o.cutter_diameter / 2:
         c_offset = o.cutter_diameter / 2
+    c_offset += o.skin  # add skin for profile
     if o.straight:
         join = 2
     else:
@@ -131,7 +132,7 @@ def cutout(o):
     layers = getLayers(o, o.maxz, checkminz(o))
     extendorder = []
 
-    if o.movement.first_down:  # each shape gets either cut all the way to bottom,
+    if o.first_down:  # each shape gets either cut all the way to bottom,
         # or every shape gets cut 1 layer, then all again. has to create copies,
         # because same chunks are worked with on more layers usually
         for chunk in chunksFromCurve:
@@ -302,7 +303,7 @@ def pocket(o):
 
     simple.remove_multiple("3D_poc")
 
-    max_depth = checkminz(o)
+    max_depth = checkminz(o) + o.skin
     cutter_angle = math.radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2
     if o.cutter_type == 'VCARVE':
@@ -313,6 +314,9 @@ def pocket(o):
         c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
     if c_offset > o.cutter_diameter / 2:
         c_offset = o.cutter_diameter / 2
+
+    c_offset += o.skin  # add skin
+    print("cutter offset", c_offset)
 
     p = utils.getObjectOutline(c_offset, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
@@ -469,8 +473,10 @@ def pocket(o):
     if o.movement.ramp:
         for ch in chunks:
             ch.rampZigZag(ch.zstart, ch.points[0][2], o)
-
-    if o.movement.first_down:
+    
+    if o.first_down:
+        if o.pocket_option == "OUTSIDE":
+            chunks.reverse()   
         chunks = utils.sortChunks(chunks, o)
 
     if o.pocketToCurve:  # make curve instead of a path
@@ -553,7 +559,7 @@ def drill(o):
     for layer in layers:
         for chunk in chunks:
             # If using object for minz then use z from points in object
-            if o.minz_from_ob:
+            if o.minz_from == 'OBJECT':
                 z = chunk.points[0][2]
             else:  # using operation minz
                 z = o.minz
@@ -592,7 +598,7 @@ def medial_axis(o):
     if o.cutter_type == 'VCARVE':
         angle = o.cutter_tip_angle
         # start the max depth calc from the "start depth" of the operation.
-        maxdepth = o.maxz - slope * o.cutter_diameter / 2
+        maxdepth = o.maxz - slope * o.cutter_diameter / 2 - o.skin
         # don't cut any deeper than the "end depth" of the operation.
         if maxdepth < o.minz:
             maxdepth = o.minz
@@ -602,9 +608,9 @@ def medial_axis(o):
             # pulling away from the desired cut surface
             new_cutter_diameter = (maxdepth - o.maxz) / (- slope) * 2
     elif o.cutter_type == 'BALLNOSE':
-        maxdepth = - new_cutter_diameter / 2
+        maxdepth = - new_cutter_diameter / 2 - o.skin
     else:
-        o.info.warnings += 'Only Ballnose, Ball and V-carve cutters\n are supported'
+        o.info.warnings += 'Only Ballnose, V-carve cutters\n are supported'
         return
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
@@ -747,7 +753,7 @@ def medial_axis(o):
                 newchunk.clampZ(layer[1])
                 chunklayers.append(newchunk)
 
-    if o.movement.first_down:
+    if o.first_down:
         chunklayers = utils.sortChunks(chunklayers, o)
 
     if o.add_mesh_for_medial:  # make curve instead of a path
@@ -928,7 +934,7 @@ def chunksToMesh(chunks, o):
 
 
 def checkminz(o):
-    if o.minz_from_material:
+    if o.minz_from == 'MATERIAL':
         return o.min.z
     else:
         return o.minz

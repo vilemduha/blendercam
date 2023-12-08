@@ -37,6 +37,7 @@ try:
 except ImportError:
     # pip install required python stuff
     subprocess.check_call([sys.executable, "-m", "ensurepip"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","Equation","opencamlib"])
 
 
@@ -607,7 +608,7 @@ class camOperation(bpy.types.PropertyGroup):
     cut_type: EnumProperty(name='Cut',
                            items=(('OUTSIDE', 'Outside', 'a'), ('INSIDE', 'Inside', 'a'), ('ONLINE', 'On line', 'a')),
                            description='Type of cutter used', default='OUTSIDE', update=updateRest)
-    outlines_count: bpy.props.IntProperty(name="Outlines count`EXPERIMENTAL", description="Outlines count", default=1,
+    outlines_count: bpy.props.IntProperty(name="Outlines count", description="Outlines count", default=1,
                                           min=1, max=32, update=updateCutout)
     straight: bpy.props.BoolProperty(name="Overshoot Style",
                                      description="Use overshoot cutout instead of conventional rounded",
@@ -716,14 +717,22 @@ class camOperation(bpy.types.PropertyGroup):
 
     # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 
-    minz_from_ob: bpy.props.BoolProperty(name="Depth from object", description="Operation ending depth from object",
-                                         default=True, update=updateRest)
-    minz_from_material: bpy.props.BoolProperty(name="Depth from material",
-                                               description="Operation ending depth from material",
-                                               default=False, update=updateRest)
-    minz: bpy.props.FloatProperty(name="Operation depth end", default=-0.01, min=-3, max=3, precision=cam.constants.PRECISION,
-                                  unit="LENGTH",
-                                  update=updateRest)  # this is input minz. True minimum z can be something else, depending on material e.t.c.
+    minz: bpy.props.FloatProperty(name="Operation depth end",
+        default=-0.01, min=-3, max=3, precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest)
+
+    minz_from: bpy.props.EnumProperty(name='Set max depth from',
+        description = 'Set maximum operation depth',
+        items=(
+            ('OBJECT', 'Object', 'Set max operation depth from Object'),
+            ('MATERIAL', 'Material', 'Set max operation depth from Material'),
+            ('CUSTOM', 'Custom', 'Custom max depth'),
+            ),
+        default='OBJECT',
+        update=updateRest
+    )
+
     start_type: bpy.props.EnumProperty(name='Start type',
                                        items=(
                                            ('ZLEVEL', 'Z level', 'Starts on a given Z level'),
@@ -737,6 +746,11 @@ class camOperation(bpy.types.PropertyGroup):
     maxz: bpy.props.FloatProperty(name="Operation depth start", description='operation starting depth', default=0,
                                   min=-3, max=10, precision=cam.constants.PRECISION, unit="LENGTH",
                                   update=updateRest)  # EXPERIMENTAL
+
+    first_down: bpy.props.BoolProperty(name="First down",
+        description="First go down on a contour, then go to the next one",
+        default=False, update=cam.utils.update_operation)
+
 
     #######################################################
     # Image related
@@ -1004,7 +1018,6 @@ def check_operations_on_load(context):
         if o.computing:
             o.computing = False
 
-
 class CAM_CUTTER_MT_presets(Menu):
     bl_label = "Cutter presets"
     preset_subdir = "cam_cutters"
@@ -1060,7 +1073,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
     preset_values = ['o.use_layers', 'o.info.duration', 'o.info.chipload', 'o.material.estimate_from_model', 'o.movement.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material.size',
                      'o.material.radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.optimisation.use_exact',
-                     'o.optimisation.exact_subdivide_edges', 'o.minz_from_ob', 'o.movement.free_height',
+                     'o.optimisation.exact_subdivide_edges', 'o.minz_from', 'o.movement.free_height',
                      'o.source_image_crop_start_x', 'o.movement.insideout', 'o.movement.movement.spindle_rotation', 'o.skin',
                      'o.source_image_crop_start_y', 'o.movement.type', 'o.source_image_crop', 'o.limit_curve',
                      'o.spindle_rpm', 'o.ambient_behaviour', 'o.cutter_type', 'o.source_image_scale_z',
@@ -1074,7 +1087,7 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
                      'o.optimize_threshold', 'o.movement.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.info.warnings',
                      'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
                      'o.output_header', 'o.gcode_header', 'o.output_trailer', 'o.gcode_trailer', 'o.use_modifiers',
-                     'o.minz_from_material', 'o.movement.useG64',
+                     'o.movement.useG64',
                      'o.movement.G64', 'o.enable_A', 'o.enable_B', 'o.A_along_x', 'o.rotation_A', 'o.rotation_B', 'o.straight']
 
     preset_subdir = "cam_operations"
@@ -1457,6 +1470,7 @@ def register():
     s.cam_slice = bpy.props.PointerProperty(type=SliceObjectsSettings)
 
     bpy.types.Scene.interface = bpy.props.PointerProperty(type=CAM_INTERFACE_Properties)
+
 
 def unregister():
     for p in classes:

@@ -2,6 +2,7 @@
 import bpy
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
 
+
 class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
     """CAM operation area panel"""
     bl_label = "CAM operation area "
@@ -13,22 +14,35 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
         'draw_maxz': 1,
         'draw_minz': 1,
         'draw_ambient': 1,
-        'draw_limit_curve': 1
+        'draw_limit_curve': 1,
+        'draw_first_down': 1
+
     }
 
     def draw_use_layers(self):
         if not self.has_correct_level(): return
-        row = self.layout.row(align=True)
+        col = self.layout.column(align=True)
+        row = col.row(align=True)
         row.prop(self.op, 'use_layers')
         if self.op.use_layers:
             row.prop(self.op, 'stepdown')
+            self.draw_first_down(col)
+
+    def draw_first_down(self, col):
+        if not self.has_correct_level(): return
+        if self.op.strategy in ['CUTOUT','POCKET','MEDIAL_AXIS']:
+            row = col.row(align=True)
+            row.label(text="")
+            row.prop(self.op, 'first_down')
 
     def draw_maxz(self):
         if not self.has_correct_level(): return
         self.layout.prop(self.op, 'maxz')
+        self.layout.prop(self.op.movement, 'free_height')
         if self.op.maxz > self.op.movement.free_height:
-            self.layout.prop(self.op.movement, 'free_height')
-            self.layout.label(text='POSSIBLE COLLISION: Depth start > Free movement')
+            self.layout.label(text='!ERROR! COLLISION!')
+            self.layout.label(text='Depth start > Free movement height')
+            self.layout.label(text='!ERROR! COLLISION!')
 
     def draw_minz(self):
         if not self.has_correct_level(): return
@@ -36,12 +50,12 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
             if self.op.strategy == 'CURVE':
                 self.layout.label(text="cannot use depth from object using CURVES")
 
-            if not self.op.minz_from_ob:
-                if not self.op.minz_from_material:
-                    self.layout.prop(self.op, 'minz')
-                self.layout.prop(self.op, 'minz_from_material')
-            if not self.op.minz_from_material:
-                self.layout.prop(self.op, 'minz_from_ob')
+            row = self.layout.row(align=True)
+            row.label(text='Set max depth from')
+            row.prop(self.op, 'minz_from', text='')
+            if self.op.minz_from == 'CUSTOM':
+                self.layout.prop(self.op, 'minz')
+
         else:
             self.layout.prop(self.op, 'source_image_scale_z')
             self.layout.prop(self.op, 'source_image_size_x')

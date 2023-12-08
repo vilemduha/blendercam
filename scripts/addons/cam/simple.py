@@ -20,7 +20,7 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # Solves: No module named 'shapely' (even if it is installed)
-help('modules')
+#help('modules')
 
 import math
 import sys

@@ -179,6 +179,11 @@ class CalculatePath(bpy.types.Operator):
             self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
             print("Operation can't be performed, see warnings for info")
             return {'CANCELLED'}
+        
+        #check for free movement height < maxz and return with error
+        if(o.movement.free_height < o.maxz):
+            self.report({'ERROR_INVALID_INPUT'}, "Free movement height is less than Operation depth start \n correct and try again.")
+            return {'CANCELLED'}
 
         if o.computing:
             return {'FINISHED'}
@@ -553,9 +558,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         o.use_layers = False
         o.material.estimate_from_model = False
         o.material.size[2] = -maxdepth
-        o.minz_from_ob = False
-        o.minz_from_material = True
-
+        o.minz_from = 'MATERIAL'
 
 class CamOperationAdd(bpy.types.Operator):
     """Add new CAM operation"""
@@ -572,7 +575,9 @@ class CamOperationAdd(bpy.types.Operator):
         fixUnits()
 
         ob = bpy.context.active_object
-        if ob is None: raise CamException("No object selected")
+        if ob is None:
+            self.report({'ERROR_INVALID_INPUT'}, "Please add an object to base the operation on.")
+            return {'CANCELLED'}
 
         minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
         s.cam_operations.add()
@@ -581,7 +586,7 @@ class CamOperationAdd(bpy.types.Operator):
         o.minz = minz
 
         s.cam_active_operation = len(s.cam_operations) - 1
-        
+
         o.name = f"Op_{ob.name}_{s.cam_active_operation + 1}"
         o.filename = o.name
 
