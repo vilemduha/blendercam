@@ -1078,6 +1078,7 @@ def renderSampleImage(o):
             n.links.new(n1.outputs['Depth'], n3.inputs['Image'])
             n.nodes.active = n2
             ###################
+            s.view_layers[n1.layer].use_pass_z=True
 
             r = s.render
             r.resolution_x = resx
