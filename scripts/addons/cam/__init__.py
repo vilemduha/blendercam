@@ -23,6 +23,7 @@ import bgl
 import bl_operators
 import blf
 import bpy
+import bpy.ops
 import math
 import numpy
 import os
@@ -71,8 +72,10 @@ import cam.constants
 was_hidden_dict = {}
 
 def updateMachine(self, context):
+    global _IS_LOADING_DEFAULTS    
     print('update machine ')
-    utils.addMachineAreaObject()
+    if not _IS_LOADING_DEFAULTS:
+        utils.addMachineAreaObject()
 
 
 def updateMaterial(self, context):
@@ -125,6 +128,22 @@ class CamAddonPreferences(AddonPreferences):
     experimental: BoolProperty(
         name="Show experimental features",
         default=False,
+    )
+
+    default_interface_level: bpy.props.EnumProperty(
+        name="Interface level in new file",
+        description="Choose visible options",
+        items=[('0', "Basic", "Only show essential options"),
+               ('1', "Advanced", "Show advanced options"),
+               ('2', "Complete", "Show all options"),
+               ('3', "Experimental", "Show experimental options")],
+        default='3',
+    )
+
+    default_machine_preset: bpy.props.StringProperty(
+        name="Machine preset in new file",
+        description="So that machine preset choice persists between files",
+        default='',
     )
 
     def draw(self, context):
@@ -1009,21 +1028,11 @@ class camChain(bpy.types.PropertyGroup):  # chain is just a set of operations wh
     computing: bpy.props.BoolProperty(name="Computing right now", description="", default=False)
     operations: bpy.props.CollectionProperty(type=opReference)  # this is to hold just operation names.
 
-
-@bpy.app.handlers.persistent
-def check_operations_on_load(context):
-    """checks any broken computations on load and reset them."""
-    s = bpy.context.scene
-    for o in s.cam_operations:
-        if o.computing:
-            o.computing = False
-
 class CAM_CUTTER_MT_presets(Menu):
     bl_label = "Cutter presets"
     preset_subdir = "cam_cutters"
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset
-
 
 class CAM_MACHINE_MT_presets(Menu):
     bl_label = "Machine presets"
@@ -1031,6 +1040,15 @@ class CAM_MACHINE_MT_presets(Menu):
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset
 
+    @classmethod
+    def post_cb(cls,context):
+        name = cls.bl_label
+        filepath = bpy.utils.preset_find(name,
+                                                 cls.preset_subdir,
+                                                 display_name=True,
+                                                 ext=".py")
+        context.preferences.addons['cam'].preferences.default_machine_preset=filepath
+        bpy.ops.wm.save_userpref()
 
 class AddPresetCamCutter(bl_operators.presets.AddPresetBase, Operator):
     """Add a Cutter Preset"""
@@ -1132,6 +1150,28 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
     bl_idname = 'BLENDERCAM_RENDER'
     bl_label = "Cam"
+
+_IS_LOADING_DEFAULTS=False
+
+@bpy.app.handlers.persistent
+def check_operations_on_load(context):
+    global _IS_LOADING_DEFAULTS
+    """checks any broken computations on load and reset them."""
+    s = bpy.context.scene
+    for o in s.cam_operations:
+        if o.computing:
+            o.computing = False
+    # set interface level to previously used level for a new file
+    if not bpy.data.filepath:
+        _IS_LOADING_DEFAULTS=True
+        s.interface.level = bpy.context.preferences.addons['cam'].preferences.default_interface_level
+        machine_preset=bpy.context.preferences.addons['cam'].preferences.machine_preset=bpy.context.preferences.addons['cam'].preferences.default_machine_preset
+        if len(machine_preset)>0:
+            print("Loading preset:",machine_preset)
+            # load last used machine preset
+            bpy.ops.script.execute_preset(filepath=machine_preset,menu_idname="CAM_MACHINE_MT_presets")
+        _IS_LOADING_DEFAULTS=False
+
 
 
 def get_panels():  # convenience function for bot register and unregister functions
@@ -1285,6 +1325,7 @@ def compatible_panels():
         t.MATERIAL_PT_strand,
         t.MATERIAL_PT_options,
         t.MATERIAL_PT_shadow,
+        
         t.MATERIAL_PT_transp_game,
         t.MATERIAL_PT_volume_density,
         t.MATERIAL_PT_volume_shading,
@@ -1347,7 +1388,6 @@ classes = [
     machineSettings,
     CamAddonPreferences,
     import_settings,
-
     ui.CAM_INTERFACE_Panel,
     ui.CAM_INTERFACE_Properties,
     ui.CAM_CHAINS_Panel,

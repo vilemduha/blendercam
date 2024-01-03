@@ -5,6 +5,13 @@ from cam.ui_panels.buttons_panel import CAMButtonsPanel
 import cam.utils
 import cam.constants
 
+
+def update_interface(self,context):
+    # set default for new files
+    context.preferences.addons['cam'].preferences.default_interface_level=context.scene.interface.level
+    bpy.ops.wm.save_userpref()
+
+
 class CAM_INTERFACE_Properties(bpy.types.PropertyGroup):
     level: bpy.props.EnumProperty(
         name="Interface",
@@ -14,7 +21,9 @@ class CAM_INTERFACE_Properties(bpy.types.PropertyGroup):
                ('2', "Complete", "Show all options"),
                ('3', "Experimental", "Show experimental options")],
         default='0',
+        update=update_interface
     )
+
 
 class CAM_INTERFACE_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_label = "Interface"
