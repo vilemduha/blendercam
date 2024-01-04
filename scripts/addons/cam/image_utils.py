@@ -139,7 +139,6 @@ def offsetArea(o, samples):
     """ offsets the whole image with the cutter + skin offsets """
     if o.update_offsetimage_tag:
         minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-        o.offset_image.fill(-10)
 
         sourceArray = samples
         cutterArray = simulation.getCutterArray(o, o.optimisation.pixsize)
@@ -149,6 +148,7 @@ def offsetArea(o, samples):
         width = len(sourceArray)
         height = len(sourceArray[0])
         cwidth = len(cutterArray)
+        o.offset_image= numpy.full(shape=(width,height),fill_value=-10,dtype=numpy.double)
 
         t = time.time()
 
