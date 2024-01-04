@@ -139,7 +139,6 @@ def offsetArea(o, samples):
     """ offsets the whole image with the cutter + skin offsets """
     if o.update_offsetimage_tag:
         minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-        o.offset_image.fill(-10)
 
         sourceArray = samples
         cutterArray = simulation.getCutterArray(o, o.optimisation.pixsize)
@@ -149,6 +148,7 @@ def offsetArea(o, samples):
         width = len(sourceArray)
         height = len(sourceArray[0])
         cwidth = len(cutterArray)
+        o.offset_image= numpy.full(shape=(width,height),fill_value=-10,dtype=numpy.double)
 
         t = time.time()
 
@@ -1068,21 +1068,23 @@ def renderSampleImage(o):
             # prepare nodes first
             s.use_nodes = True
             n = s.node_tree
+            r = s.render
+            r.resolution_x = resx
+            r.resolution_y = resy
+            r.engine = 'BLENDER_EEVEE'
 
             n.links.clear()
             n.nodes.clear()
             n1 = n.nodes.new('CompositorNodeRLayers')
+            s.view_layers[n1.layer].use_pass_z=True
             n2 = n.nodes.new('CompositorNodeViewer')
             n3 = n.nodes.new('CompositorNodeComposite')
-            n.links.new(n1.outputs['Depth'], n2.inputs['Image'])
-            n.links.new(n1.outputs['Depth'], n3.inputs['Image'])
+            n.links.new(n1.outputs[n1.outputs.find('Depth')], n2.inputs[n2.inputs.find('Image')])
+            n.links.new(n1.outputs[n1.outputs.find('Depth')], n3.inputs[n3.inputs.find('Image')])
+
             n.nodes.active = n2
             ###################
-            s.view_layers[n1.layer].use_pass_z=True
 
-            r = s.render
-            r.resolution_x = resx
-            r.resolution_y = resy
 
             # resize operation image
             o.offset_image.resize((resx, resy))
@@ -1091,7 +1093,6 @@ def renderSampleImage(o):
             # various settings for  faster render
             r.resolution_percentage = 100
 
-            r.engine = 'BLENDER_EEVEE'
             ff = r.image_settings.file_format
             cm = r.image_settings.color_mode
             r.image_settings.file_format = 'OPEN_EXR'

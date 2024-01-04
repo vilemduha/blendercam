@@ -604,7 +604,7 @@ def tonemap(i,exponent):
 	maxheight=i.max(where=i<1000000000.0,initial=0)
 	minheight=i.min()
 	i[:]=numpy.clip(i,minheight,maxheight)
-	print("Tonemap:",maxheight,minheight)
+	
 	i[:]=((i-minheight))/(maxheight-minheight)
 	i[:]**=exponent
 
@@ -679,7 +679,7 @@ def buildMesh(mesh_z,br):
 		m =  ob.modifiers.new(name="Foo", type='DECIMATE')
 		m.ratio=decimateRatio
 		print("decimating with ratio:"+str(decimateRatio))
-		bpy.ops.object.modifier_apply({"object" : ob}, modifier=m.name)
+		bpy.ops.object.modifier_apply(modifier=m.name)
 		print("decimated")
 		print("faces:" + str(len(ob.data.polygons)))
 		print("vertices:" + str(len(ob.data.vertices)))
@@ -689,11 +689,12 @@ def renderScene(width,height,bit_diameter,passes_per_radius,make_nodes,view_laye
 	print("rendering scene")
 	scene = bpy.context.scene
 	# make sure we're in object mode or else bad things happen
+	if 	bpy.context.active_object:
+		bpy.ops.object.mode_set(mode='OBJECT')
 
 	scene.render.engine = 'CYCLES'
 	our_viewer=None
 	our_renderer=None
-	bpy.ops.object.mode_set(mode='OBJECT')
 	if make_nodes:
 		# make depth render node and viewer node
 		if scene.use_nodes==False:
@@ -705,7 +706,7 @@ def renderScene(width,height,bit_diameter,passes_per_radius,make_nodes,view_laye
 		our_renderer=node_tree.nodes.new(type= 'CompositorNodeRLayers')
 		our_renderer.label="CAM_basrelief_renderlayers"
 		our_renderer.layer=view_layer
-		node_tree.links.new(our_renderer.outputs['Depth'],our_viewer.inputs["Image"])
+		node_tree.links.new(our_renderer.outputs[our_renderer.outputs.find('Depth')],our_viewer.inputs[our_viewer.inputs.find("Image")])
 		scene.view_layers[view_layer].use_pass_z=True
 		# set our viewer as active so that it is what gets rendered to viewer node image
 		nodes.active=our_viewer
@@ -847,6 +848,9 @@ def relief(br):
 	tonemap(nar,br.depth_exponent)
 	nar=1-nar# reverse z buffer+ add something
 	print("Range:",nar.min(),nar.max())
+	if nar.min() - nar.max() ==0:
+		raise ReliefError("Input image is blank - check you have the correct view layer or input image set.")
+
 	gx=nar.copy()
 	gx.fill(0)
 	gx[:-1,:]=nar[1:,:]-nar[:-1,:]
@@ -1091,6 +1095,9 @@ class BASRELIEF_Panel(bpy.types.Panel):
 		#if br.scale_down_before_use:
 		#	layout.prop(br,'scale_down_before')
 
+class ReliefError(Exception):
+	pass
+
 class DoBasRelief(bpy.types.Operator):
 	"""calculate Bas relief"""
 	bl_idname = "scene.calculate_bas_relief"
@@ -1099,19 +1106,23 @@ class DoBasRelief(bpy.types.Operator):
 
 	processes=[]
 
-	#@classmethod
-	#def poll(cls, context):
-	#	return context.active_object is not None
-
 	def execute(self, context):
 		s=bpy.context.scene
 		br=s.basreliefsettings
 		if not br.use_image_source and br.view_layer_name=="":
 			br.view_layer_name=bpy.context.view_layer.name
 		
-		renderScene(br.widthmm,br.heightmm,br.bit_diameter,br.pass_per_radius,not br.use_image_source,br.view_layer_name)
-		
-		relief(br)
+		try:		
+			renderScene(br.widthmm,br.heightmm,br.bit_diameter,br.pass_per_radius,not br.use_image_source,br.view_layer_name)
+		except ReliefError as e:
+			self.report({"ERROR"}, str(e))
+			return {"CANCELLED"}			
+
+		try:		
+			relief(br)
+		except ReliefError as e:
+			self.report({"ERROR"}, str(e))
+			return {"CANCELLED"}			
 		return {'FINISHED'}
 
 class ProblemAreas(bpy.types.Operator):
