@@ -30,7 +30,7 @@
 </center>
 
 ## 👁️ About
-Blender CAM is an open source solution for artistic, personal, comercial or industrial CAM - Computer aided machining - a g-code generation tool.
+Blender CAM is an open source solution for artistic, personal, commercial or industrial CAM - Computer aided machining - a g-code generation tool.
 
 Blender CAM is an add-on for the free open-source [Blender 3d package](https://www.blender.org/).
 
