@@ -719,7 +719,7 @@ def getPath3axis(context, operation):
         layerend = o.min.z  #
         layers = [[layerstart, layerend]]
         #######################
-        nslices = ceil(abs(o.minz / o.slice_detail))
+        nslices = ceil(abs((o.minz-o.maxz) / o.slice_detail))
         lastslice = spolygon.Polygon()  # polyversion
         layerstepinc = 0
 
