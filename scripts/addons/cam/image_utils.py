@@ -1060,6 +1060,9 @@ def renderSampleImage(o):
         if not o.update_zbufferimage_tag:
             try:
                 i = bpy.data.images.load(iname)
+                if i.size[0] != resx or i.size[1] != resy:
+                    print("Z buffer size changed:",i.size,resx,resy)
+                    o.update_zbufferimage_tag = True
             except:
                 o.update_zbufferimage_tag = True
         if o.update_zbufferimage_tag:
