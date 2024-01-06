@@ -36,11 +36,9 @@ from cam import simulation
 
 
 def getCircle(r, z):
-    car = numpy.array(0, dtype=float)
+    car = numpy.full(shape=(r*2,r*2),fill_value=-10,dtype=numpy.double)
     res = 2 * r
     m = r
-    car.resize(r * 2, r * 2)
-    car.fill(-10)
     v = mathutils.Vector((0, 0, 0))
     for a in range(0, res):
         v.x = (a + 0.5 - m)
@@ -52,11 +50,9 @@ def getCircle(r, z):
 
 
 def getCircleBinary(r):
-    car = numpy.array((False), dtype=bool)
+    car = numpy.full(shape=(r*2,r*2),fill_value=False,dtype=bool)
     res = 2 * r
     m = r
-    car.resize(r * 2, r * 2)
-    car.fill(False)
     v = mathutils.Vector((0, 0, 0))
     for a in range(0, res):
         v.x = (a + 0.5 - m)
@@ -118,10 +114,7 @@ def imagetonumpy(i):
 
     width = i.size[0]
     height = i.size[1]
-    na = numpy.array((0.1), dtype=float)
-
-    size = width * height
-    na.resize(size * 4)
+    na = numpy.full(shape=(width*height*4,),fill_value=-10,dtype=numpy.double)
 
     p = i.pixels[:]
     # these 2 lines are about 15% faster than na[:]=i.pixels[:].... whyyyyyyyy!!?!?!?!?!
@@ -148,7 +141,7 @@ def offsetArea(o, samples):
         width = len(sourceArray)
         height = len(sourceArray[0])
         cwidth = len(cutterArray)
-        o.offset_image= numpy.full(shape=(width,height),fill_value=-10,dtype=numpy.double)
+        o.offset_image= numpy.full(shape=(width,height),fill_value=-10,dtype=numpy.float)
 
         t = time.time()
 
@@ -355,9 +348,7 @@ def crazyPath(o):
     resx = ceil(sx / o.optimisation.simulation_detail) + 2 * o.borderwidth
     resy = ceil(sy / o.optimisation.simulation_detail) + 2 * o.borderwidth
 
-    o.millimage = numpy.array((0.1), dtype=float)
-    o.millimage.resize(resx, resy)
-    o.millimage.fill(0)
+    o.millimage = numpy.full(shape=(resx,resy),fill_value=0.,dtype=numpy.float)
     o.cutterArray = -simulation.getCutterArray(o, o.optimisation.simulation_detail)  # getting inverted cutter
 
 
@@ -367,9 +358,7 @@ def buildStroke(start, end, cutterArray):
     size_y = abs(end[1] - start[1]) + cutterArray.size[0]
     r = cutterArray.size[0] / 2
 
-    strokeArray = numpy.array((0), dtype=float)
-    strokeArray.resize(size_x, size_y)
-    strokeArray.fill(-10)
+    strokeArray = numpy.full(shape=(size_x,size_y),fill_value=-10.0,dtype=numpy.float)
     samplesx = numpy.round(numpy.linspace(start[0], end[0], strokelength))
     samplesy = numpy.round(numpy.linspace(start[1], end[1], strokelength))
     samplesz = numpy.round(numpy.linspace(start[2], end[2], strokelength))
@@ -1090,8 +1079,7 @@ def renderSampleImage(o):
 
 
             # resize operation image
-            o.offset_image.resize((resx, resy))
-            o.offset_image.fill(-10)
+            o.offset_image= numpy.full(shape=(resx,resy),fill_value=-10,dtype=numpy.double)
 
             # various settings for  faster render
             r.resolution_percentage = 100
@@ -1163,7 +1151,7 @@ def renderSampleImage(o):
             sy = 0
             ey = i.size[1]
 
-        o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
+        #o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
 
         o.optimisation.pixsize = o.source_image_size_x / i.size[0]
         simple.progress('pixel size in the image source', o.optimisation.pixsize)
@@ -1171,14 +1159,11 @@ def renderSampleImage(o):
         rawimage = imagetonumpy(i)
         maxa = numpy.max(rawimage)
         mina = numpy.min(rawimage)
-        a = numpy.array((1.0, 1.0))
-        a.resize(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1])
         neg = o.source_image_scale_z < 0
         if o.strategy == 'WATERLINE':  # waterline strategy needs image border to have ok ambient.
-            a.fill(1 - neg)
-
+            a = numpy.full(shape=(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]),fill_value=1-neg,dtype=numpy.float)
         else:  # other operations like parallel need to reach the border
-            a.fill(neg)  #
+            a = numpy.full(shape=(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]),fill_value=neg,dtype=numpy.float)
         # 2*o.borderwidth
         a[o.borderwidth:-o.borderwidth, o.borderwidth:-o.borderwidth] = rawimage
         a = a[sx:ex + o.borderwidth * 2, sy:ey + o.borderwidth * 2]

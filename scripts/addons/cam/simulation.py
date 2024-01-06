@@ -119,9 +119,7 @@ def generateSimulationImage(operations, limits):
     resy = math.ceil(sy / simulation_detail) + 2 * borderwidth
 
     # create array in which simulation happens, similar to an image to be painted in.
-    si = np.array(0.1, dtype=float)
-    si.resize(resx, resy)
-    si.fill(maxz)
+    si = np.full(shape=(resx,resy),fill_value=maxz,dtype=np.float)
 
     for o in operations:
         ob = bpy.data.objects["cam_path_{}".format(o.name)]
@@ -288,9 +286,7 @@ def getCutterArray(operation, pixsize):
     r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
     res = math.ceil((r * 2) / pixsize)
     m = res / 2.0
-    car = np.array((0), dtype=float)
-    car.resize(res, res)
-    car.fill(-10)
+    car = np.full(shape=(res,res),fill_value=-10.0,dtype=np.float)
 
     v = mathutils.Vector((0, 0, 0))
     ps = pixsize
