@@ -166,10 +166,10 @@ class CalculatePath(bpy.types.Operator):
         if o.strategy == "CARVE":
             curvob = bpy.data.objects[o.curve_object]
             curvob.hide_set(False)
-        if o.strategy == 'WATERLINE':
+        '''if o.strategy == 'WATERLINE':
             ob = bpy.data.objects[o.object_name]
             ob.select_set(True)
-            bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+            bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)'''
         print(bpy.context.mode)
         if bpy.context.mode != 'OBJECT':
             bpy.ops.object.mode_set(mode='OBJECT')	    # force object mode
