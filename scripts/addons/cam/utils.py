@@ -43,6 +43,7 @@ from cam.polygon_utils_cam import *
 from cam.image_utils import *
 from cam.exception import *
 
+from cam.async_op import progress_async
 from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
 
 from shapely.geometry import polygon as spolygon
@@ -402,7 +403,7 @@ def samplePathLow(o, ch1, ch2, dosample):
 
 # def threadedSampling():#not really possible at all without running more blenders for same operation :( python!
 # samples in both modes now - image and bullet collision too.
-def sampleChunks(o, pathSamples, layers):
+async def sampleChunks(o, pathSamples, layers):
     #
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     getAmbient(o)
@@ -473,7 +474,7 @@ def sampleChunks(o, pathSamples, layers):
         for s in patternchunk.points:
             if o.strategy != 'WATERLINE' and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
-                progress('sampling paths ', last_percent)
+                await progress_async('sampling paths ', last_percent)
             n += 1
             x = s[0]
             y = s[1]
@@ -634,7 +635,7 @@ def sampleChunks(o, pathSamples, layers):
     return chunks
 
 
-def sampleChunksNAxis(o, pathSamples, layers):
+async def sampleChunksNAxis(o, pathSamples, layers):
     #
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
@@ -684,7 +685,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
             #  and that is why we need to write endpoints everywhere too?
 
             if n / 200.0 == int(n / 200.0):
-                progress('sampling paths ', int(100 * n / totlen))
+                await progress_async('sampling paths', int(100 * n / totlen))
             n += 1
             sampled = False
             # print(si)
@@ -1066,21 +1067,22 @@ def getClosest(o, pos, chunks):
     return ch
 
 
-def sortChunks(chunks, o):
+async def sortChunks(chunks, o):
     if o.strategy != 'WATERLINE':
-        progress('sorting paths')
+        await progress_async('sorting paths')
     sys.setrecursionlimit(100000)  # the getNext() function of CamPathChunk was running out of recursion limits.
     sortedchunks = []
     chunks_to_resample = []
 
     lastch = None
+    last_progress_time=time.time()
+    total= len(chunks)
     i = len(chunks)
     pos = (0, 0, 0)
-    # for ch in chunks:
-    # ch.getNext()#this stores the unsortedchildren properties
-    # print('numofchunks')
-    # print(len(chunks))
-    while len(chunks) > 0:
+    while len(chunks) > 0:        
+        if o.strategy != 'WATERLINE' and time.time()-last_progress_time>0.1:
+            await progress_async("Sorting paths",100.0*(total-len(chunks))/total)
+            last_progress_time=time.time()
         ch = None
         if len(sortedchunks) == 0 or len(
                 lastch.parents) == 0:  # first chunk or when there are no parents -> parents come after children here...

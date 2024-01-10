@@ -50,7 +50,7 @@ SHAPELY = True
 
 
 # cutout strategy is completely here:
-def cutout(o):
+async def cutout(o):
     max_depth = checkminz(o)
     cutter_angle = math.radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2  # cutter ofset
@@ -117,7 +117,7 @@ def cutout(o):
     if not o.dont_merge:
         parentChildPoly(chunksFromCurve, chunksFromCurve, o)
     if o.outlines_count == 1:
-        chunksFromCurve = utils.sortChunks(chunksFromCurve, o)
+        chunksFromCurve = await utils.sortChunks(chunksFromCurve, o)
 
     if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW') or (
             o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW'):
@@ -204,7 +204,7 @@ def cutout(o):
     chunksToMesh(chunks, o)
 
 
-def curve(o):
+async def curve(o):
     print('operation: curve')
     pathSamples = []
     utils.getOperationSources(o)
@@ -213,7 +213,7 @@ def curve(o):
 
     for ob in o.objects:
         pathSamples.extend(curveToChunks(ob))  # make the chunks from curve here
-    pathSamples = utils.sortChunks(pathSamples, o)  # sort before sampling
+    pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
     pathSamples = chunksRefine(pathSamples, o)  # simplify
 
     # layers here
@@ -297,7 +297,7 @@ def proj_curve(s, o):
     chunksToMesh(chunks, o)
 
 
-def pocket(o):
+async def pocket(o):
     print('operation: pocket')
     scene = bpy.context.scene
 
@@ -361,7 +361,7 @@ def pocket(o):
         for ch in chunksFromCurve:
             ch.points.reverse()
 
-    chunksFromCurve = utils.sortChunks(chunksFromCurve, o)
+    chunksFromCurve = await utils.sortChunks(chunksFromCurve, o)
 
     chunks = []
     layers = getLayers(o, o.maxz, checkminz(o))
@@ -477,7 +477,7 @@ def pocket(o):
     if o.first_down:
         if o.pocket_option == "OUTSIDE":
             chunks.reverse()   
-        chunks = utils.sortChunks(chunks, o)
+        chunks = await utils.sortChunks(chunks, o)
 
     if o.pocketToCurve:  # make curve instead of a path
         simple.join_multiple("3dpocket")
@@ -486,7 +486,7 @@ def pocket(o):
         chunksToMesh(chunks, o)  # make normal pocket path
 
 
-def drill(o):
+async def drill(o):
     print('operation: Drill')
     chunks = []
     for ob in o.objects:
@@ -576,11 +576,11 @@ def drill(o):
                 newchunk.setZ(o.maxz)
                 chunklayers.append(newchunk)
 
-    chunklayers = utils.sortChunks(chunklayers, o)
+    chunklayers = await utils.sortChunks(chunklayers, o)
     chunksToMesh(chunklayers, o)
 
 
-def medial_axis(o):
+async def medial_axis(o):
     print('operation: Medial Axis')
 
     simple.remove_multiple("medialMesh")
@@ -740,7 +740,7 @@ def medial_axis(o):
             oi += 1
 
     # bpy.ops.object.join()
-    chunks = utils.sortChunks(chunks, o)
+    chunks = await utils.sortChunks(chunks, o)
 
     layers = getLayers(o, o.maxz, o.min.z)
 
@@ -754,7 +754,7 @@ def medial_axis(o):
                 chunklayers.append(newchunk)
 
     if o.first_down:
-        chunklayers = utils.sortChunks(chunklayers, o)
+        chunklayers = await utils.sortChunks(chunklayers, o)
 
     if o.add_mesh_for_medial:  # make curve instead of a path
         simple.join_multiple("medialMesh")
