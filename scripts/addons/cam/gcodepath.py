@@ -840,10 +840,10 @@ async def getPath3axis(context, operation):
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'DRILL':
-        strategy.drill(o)
+        await strategy.drill(o)
 
     elif o.strategy == 'MEDIAL_AXIS':
-        strategy.medial_axis(o)
+        await strategy.medial_axis(o)
     await progress_async(f"Done",time.time() - tw,"s")
 
 
