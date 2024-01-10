@@ -72,9 +72,16 @@ class AsyncOperatorMixin:
             return False
 
     def execute(self, context):
-        self.timer=context.window_manager.event_timer_add(.001, window=context.window)
-        context.window_manager.modal_handler_add(self)
-        return {'RUNNING_MODAL'}
+        if bpy.app.background:
+            # running in background - don't run as modal,
+            # otherwise tests all fail
+            while self.tick(context)==True:
+                pass
+            return {'FINISHED'}
+        else:
+            self.timer=context.window_manager.event_timer_add(.001, window=context.window)
+            context.window_manager.modal_handler_add(self)
+            return {'RUNNING_MODAL'}
 
 class AsyncTestOperator(bpy.types.Operator,AsyncOperatorMixin):
     """test async operator"""
