@@ -660,7 +660,7 @@ async def getPath3axis(context, operation):
                 # have to be sorted once before, because of the parenting inside of samplechunks
 
             if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
-                pathSamples = utils.connectChunksLow(pathSamples, o)
+                pathSamples = await utils.connectChunksLow(pathSamples, o)
 
         # print (minz)
 
@@ -678,7 +678,7 @@ async def getPath3axis(context, operation):
             print('sorting')
             chunks = await utils.sortChunks(chunks, o)
             if o.strategy == 'OUTLINEFILL':
-                chunks = utils.connectChunksLow(chunks, o)
+                chunks = await utils.connectChunksLow(chunks, o)
         if o.movement.ramp:
             for ch in chunks:
                 ch.rampZigZag(ch.zstart, ch.points[0][2], o)

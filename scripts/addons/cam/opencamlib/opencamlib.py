@@ -79,25 +79,24 @@ def exportModelsToSTL(operation):
         file_number += 1
 
 
-def oclSamplePoints(operation, points):
-    samples = ocl_sample(operation, points)
+async def oclSamplePoints(operation, points):
+    samples = await ocl_sample(operation, points)
     pointSamplesFromOCL(points, samples)
 
 
-def oclSample(operation, chunks):
-    samples = ocl_sample(operation, chunks)
+async def oclSample(operation, chunks):
+    samples = await ocl_sample(operation, chunks)
     chunkPointSamplesFromOCL(chunks, samples)
 
 
-def oclResampleChunks(operation, chunks_to_resample):
+async def oclResampleChunks(operation, chunks_to_resample,use_cached_mesh):
     tmp_chunks = list()
     tmp_chunks.append(camPathChunk(inpoints=[]))
     for chunk, i_start, i_length in chunks_to_resample:
         for p_index in range(i_start, i_start + i_length):
             tmp_chunks[0].append(chunk.points[p_index])
  
-
-    samples = ocl_sample(operation, tmp_chunks)
+    samples = await ocl_sample(operation, tmp_chunks,use_cached_mesh=use_cached_mesh)
 
     sample_index = 0
     for chunk, i_start, i_length in chunks_to_resample:
