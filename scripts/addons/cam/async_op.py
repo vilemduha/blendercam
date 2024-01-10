@@ -47,10 +47,10 @@ class AsyncOperatorMixin:
 
     def show_progress(self,context,text, n,value_type):
         if n is not None:
-            progress_text = f"{text},{n:.2f}{value_type}"
+            progress_text = f"{text}: {n:.2f}{value_type}"
         else:
             progress_text = f"{text}"
-        bpy.context.workspace.status_text_set(progress_text + " Press ESC to cancel")
+        bpy.context.workspace.status_text_set(progress_text + " (Press ESC to cancel)")
         sys.stdout.write(f"Progress: {progress_text}\n")
         sys.stdout.flush()
 

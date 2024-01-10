@@ -697,7 +697,7 @@ async def getPath3axis(context, operation):
     elif o.strategy == 'WATERLINE' and o.optimisation.use_opencamlib:
         utils.getAmbient(o)
         chunks = []
-        oclGetWaterline(o, chunks)
+        await oclGetWaterline(o, chunks)
         chunks = limitChunks(chunks, o)
         if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
                 o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):

@@ -15,6 +15,7 @@ from cam.collision import BULLET_SCALE
 from cam import simple
 from cam.chunk import camPathChunk
 from cam.simple import *
+from cam.async_op import progress_async
 from shapely import geometry as sgeometry
 from .oclSample import get_oclSTL
 
@@ -127,7 +128,7 @@ def oclGetMedialAxis(operation, chunks):
     waterlineChunksFromOCL(operation, chunks)
 
 
-def oclGetWaterline(operation, chunks):
+async def oclGetWaterline(operation, chunks):
     layers = oclWaterlineLayerHeights(operation)
     oclSTL = get_oclSTL(operation)
 
@@ -155,8 +156,8 @@ def oclGetWaterline(operation, chunks):
     waterline.setSTL(oclSTL)
     waterline.setCutter(cutter)
     waterline.setSampling(0.1)#TODO: add sampling setting to UI
-    for height in layers:
-        print(str(height) + '\n')
+    for count,height in enumerate(layers):
+        await progress_async("Waterline",int((100*count)/len(layers)))
         waterline.reset()
         waterline.setZ(height * OCL_SCALE)
         waterline.run2()
