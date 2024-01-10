@@ -1030,7 +1030,7 @@ def renderSampleImage(o):
     t = time.time()
     simple.progress('getting zbuffer')
     # print(o.zbuffer_image)
-
+    o.update_offsetimage_tag = True
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
         pixsize = o.optimisation.pixsize
 
@@ -1052,7 +1052,9 @@ def renderSampleImage(o):
                 if i.size[0] != resx or i.size[1] != resy:
                     print("Z buffer size changed:",i.size,resx,resy)
                     o.update_zbufferimage_tag = True
+                    
             except:
+                
                 o.update_zbufferimage_tag = True
         if o.update_zbufferimage_tag:
             s = bpy.context.scene
