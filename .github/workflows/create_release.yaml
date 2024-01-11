@@ -56,7 +56,6 @@ jobs:
         directory: './scripts/addons'
     - name: tag release
       uses: ncipollo/release-action@v1
-      if: false
       with:
         artifacts: "scripts/addons/blendercam.zip"
         tag: ${{ env.VERSION_TAG }}
