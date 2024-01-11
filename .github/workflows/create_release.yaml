@@ -57,6 +57,7 @@ jobs:
         filename: 'blendercam.zip'
         directory: './scripts/addons'
     - name: Write version number
+      if: ${{ inputs.version_bump }} != "overwrite previous tag"
       run: |
         git config --global user.name 'Release robot'
         git config --global user.email 'release-robot@users.noreply.github.com'
