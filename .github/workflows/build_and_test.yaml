@@ -54,8 +54,9 @@ jobs:
       run: |
         export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
         export PATH=$PATH:${BLENDER_BIN_PATH}
+        export ADDON_PATH=${PWD}/blendercam.zip
         cd scripts/addons/cam/tests
-        python install_addon.py ../../../../blendercam.zip
+        python install_addon.py ${ADDON_PATH}
         python test_suite.py
     - name: upload blender addon zip file
       uses: actions/upload-artifact@v4
