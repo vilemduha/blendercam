@@ -83,6 +83,7 @@ jobs:
         python install_addon.py ${ADDON_PATH}
         python test_suite.py
     - uses: actions/upload-artifact@v4
+      if: always()
       with:
         name: blendercam-${{matrix.os}}-${{matrix.blender_version}}
         path: ./scripts/addons/blendercam.zip
