@@ -5,8 +5,8 @@ import pathlib
 
 INSTALL_CODE=f"""
 import bpy
-bpy.ops.wm.addon_install(filepath='{sys.argv[1]}')
-bpy.ops.wm.addon_enable(module='testaddon')
+bpy.ops.preferences.addon_install(filepath='{sys.argv[1]}')
+bpy.ops.preferences.addon_enable(module='cam')
 bpy.ops.wm.save_userpref()
 """
 
