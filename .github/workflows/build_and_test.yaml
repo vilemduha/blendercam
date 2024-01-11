@@ -16,7 +16,7 @@ jobs:
       id: download
       shell: bash
       run: |
-        IFS='.' read -ra BLENDER_SPLIT <<< "${{matrix.blender_version}"
+        IFS='.' read -ra BLENDER_SPLIT <<< "${{matrix.blender_version}}"
         export BLENDER_MAJOR=${BLENDER_SPLIT[0]}.${BLENDER_SPLIT[1]}
         export BLENDER_MINOR=${BLENDER_SPLIT[2]}
         export BLENDER_ARCHIVE=blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}
