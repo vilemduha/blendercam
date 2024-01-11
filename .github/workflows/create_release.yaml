@@ -67,5 +67,5 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         artifacts: "scripts/addons/blendercam.zip"
-        commit: ${{ env.VERSION_TAG }}
+        commit: tags/${{ env.VERSION_TAG }}
 
