@@ -40,7 +40,7 @@ jobs:
       run: |
         export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
         export PATH=$PATH:${BLENDER_BIN_PATH}
-        cd scripts/addon/cam/tests
+        cd scripts/addons/cam/tests
         python test_suite.py
     - name: Build Blender Addon
       uses: BlenderKit/blender-addon-build@v0.1            
