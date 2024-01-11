@@ -47,7 +47,7 @@ jobs:
       with:
         type: 'zip'
         filename: 'blendercam.zip'
-        path: './scripts/addons'    
+        directory: './scripts/addons'    
     - uses: actions/upload-artifact@v4
       with:
         name: blendercam
