@@ -62,7 +62,7 @@ jobs:
         git config --global user.email 'release-robot@users.noreply.github.com'
         git commit -am "Version number"
         git tag -f ${{ env.VERSION_TAG }}
-        git push
+        git push origin ${{ env.VERSION_TAG }}
     - name: tag release
       uses: ncipollo/release-action@v1
       with:
