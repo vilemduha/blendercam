@@ -46,7 +46,7 @@ jobs:
         echo Major version: $BLENDER_MAJOR
         echo Minor version: $BLENDER_MINOR        
         echo Archive name: $BLENDER_ARCHIVE
-        curl -O https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
+        curl -O -L https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
         echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
     - name: Extract blender
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
