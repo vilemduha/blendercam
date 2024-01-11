@@ -246,7 +246,7 @@ async def curve(o):
         chunksToMesh(pathSamples, o)
 
 
-def proj_curve(s, o):
+async def proj_curve(s, o):
     print('operation: projected curve')
     pathSamples = []
     chunks = []

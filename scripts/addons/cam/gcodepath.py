@@ -631,13 +631,13 @@ async def getPath3axis(context, operation):
             pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)
         elif o.strategy == 'PENCIL':
-            prepareArea(o)
+            await prepareArea(o)
             utils.getAmbient(o)
             pathSamples = getOffsetImageCavities(o, o.offset_image)
             pathSamples = limitChunks(pathSamples, o)
             pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
         elif o.strategy == 'CRAZY':
-            prepareArea(o)
+            await prepareArea(o)
             # pathSamples = crazyStrokeImage(o)
             # this kind of worked and should work:
             millarea = o.zbuffer_image < o.minz + 0.000001
@@ -649,7 +649,6 @@ async def getPath3axis(context, operation):
             pathSamples = chunksRefine(pathSamples, o)
 
         else:
-            print("PARALLEL")
             if o.strategy == 'OUTLINEFILL':
                 utils.getOperationSilhouete(o)
 
@@ -660,7 +659,7 @@ async def getPath3axis(context, operation):
                 # have to be sorted once before, because of the parenting inside of samplechunks
 
             if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
-                pathSamples = utils.connectChunksLow(pathSamples, o)
+                pathSamples = await utils.connectChunksLow(pathSamples, o)
 
         # print (minz)
 
@@ -678,7 +677,7 @@ async def getPath3axis(context, operation):
             print('sorting')
             chunks = await utils.sortChunks(chunks, o)
             if o.strategy == 'OUTLINEFILL':
-                chunks = utils.connectChunksLow(chunks, o)
+                chunks = await utils.connectChunksLow(chunks, o)
         if o.movement.ramp:
             for ch in chunks:
                 ch.rampZigZag(ch.zstart, ch.points[0][2], o)
@@ -697,7 +696,7 @@ async def getPath3axis(context, operation):
     elif o.strategy == 'WATERLINE' and o.optimisation.use_opencamlib:
         utils.getAmbient(o)
         chunks = []
-        oclGetWaterline(o, chunks)
+        await oclGetWaterline(o, chunks)
         chunks = limitChunks(chunks, o)
         if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
                 o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
@@ -709,7 +708,7 @@ async def getPath3axis(context, operation):
         topdown = True
         chunks = []
         await progress_async('retrieving object slices')
-        prepareArea(o)
+        await prepareArea(o)
         layerstep = 1000000000
         if o.use_layers:
             layerstep = math.floor(o.stepdown / o.slice_detail)
@@ -840,10 +839,10 @@ async def getPath3axis(context, operation):
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'DRILL':
-        strategy.drill(o)
+        await  strategy.drill(o)
 
     elif o.strategy == 'MEDIAL_AXIS':
-        strategy.medial_axis(o)
+        await strategy.medial_axis(o)
     await progress_async(f"Done",time.time() - tw,"s")
 
 

@@ -1,0 +1,61 @@
+name: Run tests on push / PR
+on:
+  workflow_dispatch:
+    inputs:
+        version_bump:
+          description: 'New version:'
+          required: true
+          default: 'patch'
+          type: choice
+          options:
+          - overwrite previous tag
+          - minor
+          - major
+          - patch
+jobs:
+  release:
+    runs-on: "ubuntu-latest"
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.1.1
+    - name: Bump version
+      shell: python
+      env:
+        VERSION_BUMP: ${{ inputs.version_bump }} 
+      run: |
+        from pathlib import Path
+        import re
+        import os
+        v_file=Path("scripts","addons","cam","version.py")
+        version_txt=v_file.read_text()
+        major,minor,patch = re.match(version_txt,".*\((\d+),(\d+),(\d+)\)".groups()
+        bump = os.getenv("VERSION_BUMP")
+        if bump == "minor":
+          minor+=1
+        bump = "${{ inputs.logLevel }}"
+        if version=='patch':
+          patch+=1
+        elif version=='minor':
+          minor+=1
+          patch=0
+        elif version=='major':
+          major+=1
+          minor=0
+          patch=0
+        v_file.write_text(f"__version__={(major,minor,patch)}")
+        env_file = Path(os.getenv('GITHUB_ENV'))  
+        env_file.write_text("VERSION_TAG")=f"v{major}.{minor}.{patch}"
+        print(f"New version: v{major}.{minor}.{patch}")
+    - name: Make addon zip
+      uses: thedoctor0/zip-release@0.7.5
+      with:
+        type: 'zip'
+        filename: 'blendercam.zip'
+        directory: './scripts/addons'
+    - name: tag release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "scripts/addons/blendercam.zip"
+        tag: ${{ env.VERSION_TAG }}
+        commit: ${ GITHUB_SHA }
+

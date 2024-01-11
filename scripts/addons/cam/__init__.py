@@ -52,18 +52,17 @@ from mathutils import *
 from shapely import geometry as sgeometry
 
 from cam.ui import *
-
-
+from cam.version import __version__
 
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
-    "version": (0, 9, 3),
-    "blender": (2, 80, 0),
+    "version": __version__,
+    "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
-    "warning": "there is no warranty for the produced gcode by now",
-    "wiki_url": "https://github.com/vilemduha/blendercam/wiki",
+    "warning": "",
+    "doc_url": "https://blendercam.com/",
     "tracker_url": "",
     "category": "Scene"}
 
