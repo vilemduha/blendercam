@@ -313,9 +313,6 @@ def exportGcodePath(filename, vertslist, operations):
 
         scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
 
-
-        ZERO_DIFFERENCE = 0.0000000001 # difference (in units) that is counted as zero
-
         ii = 0
         offline = 0
         online = 0
@@ -358,26 +355,26 @@ def exportGcodePath(filename, vertslist, operations):
                 rcompensate.z = -r.z
                 v.rotate(rcompensate)
 
-                if abs(r.x - lastrot.x) <= ZERO_DIFFERENCE:
+                if math.isclose(r.x , lastrot.x):
                     ra = None
                 else:
 
                     ra = r.x * rotcorr
 
-                if abs(r.y - lastrot.y) <= ZERO_DIFFERENCE:
+                if math.isclose(r.y,lastrot.y):
                     rb = None
                 else:
                     rb = r.y * rotcorr
 
-            if vi > 0 and abs(v.x - last.x) <= ZERO_DIFFERENCE:
+            if vi > 0 and math.isclose(v.x,last.x):
                 vx = None
             else:
                 vx = v.x * unitcorr
-            if vi > 0 and abs( v.y - last.y) <= ZERO_DIFFERENCE:
+            if vi > 0 and math.isclose(v.y, last.y):
                 vy = None
             else:
                 vy = v.y * unitcorr
-            if vi > 0 and abs(v.z - last.z) <= ZERO_DIFFERENCE:
+            if vi > 0 and math.isclose(v.z,last.z):
                 vz = None
             else:
                 vz = v.z * unitcorr
