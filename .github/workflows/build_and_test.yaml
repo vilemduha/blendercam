@@ -1,0 +1,53 @@
+name: Run tests on push / PR
+on:
+  push:
+  pull_request:
+jobs:
+  build_and_test:
+    strategy:
+      matrix:
+        os: ['ubuntu-latest','windows-latest','macos-latest']
+        blender_version: ['3.6.7','4.0.2']
+    runs-on: ${{matrix.os}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Download blender
+      id: download
+      shell: bash
+      run: |
+        IFS='.' read -ra BLENDER_SPLIT <<< "${{matrix.blender_version}"
+        export BLENDER_MAJOR=${BLENDER_SPLIT[0]}.${BLENDER_SPLIT[1]}
+        export BLENDER_MINOR=${BLENDER_SPLIT[2]}
+        export BLENDER_ARCHIVE=blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}
+        echo Major version: $BLENDER_MAJOR
+        echo Minor version: $BLENDER_MAJOR        
+        echo Archive name: $BLENDER_ARCHIVE
+        wget https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
+        echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
+    - name: Extract Action
+      uses: ihiroky/extract-action@v1
+      with:
+          file_path: ${{ steps.download.outputs.BLENDER_ARCHIVE }}
+          extract_dir: blender
+    - name: Run tests
+      shell: bash
+      run: |
+        export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
+        export PATH=$PATH:${BLENDER_BIN_PATH}
+        cd scripts/addon/cam/tests
+        python test_suite.py
+    - name: Build Blender Addon
+      uses: BlenderKit/blender-addon-build-action@v1
+      with:
+        name: 'blendercam'
+        build-location: './scripts/addons'
+        do-checkout: 'false'
+        exclude-files: '.git;.github;.gitignore;cam/tests/'
+    - name: upload blender addon zip file
+      uses: actions/upload-artifact@v4
+      with:
+        # Name of the artifact to upload.
+        # Optional. Default is 'artifact'
+        name: blender_addon
+        path: blendercam.zip
