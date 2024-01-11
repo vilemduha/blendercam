@@ -70,7 +70,8 @@ class BlenderCAMTest(unittest.TestCase):
                     self.assertMultiLineEqual(generated, expected,
                         msg = "\n"+self.get_diff(gcode_file[1:], gcode_file))
                 finally:
-                    os.remove(gcode_file[1:])  # Cleanup generated file
+                    if os.getenv("CI")!='true': # Cleanup generated file unless on CI, in which case leave it for analysis
+                        os.remove(gcode_file[1:]) 
 
 if __name__ == '__main__':
     # Add a test method for each test case to the TestCase class
