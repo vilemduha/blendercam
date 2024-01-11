@@ -44,7 +44,7 @@ jobs:
           patch=0
         v_file.write_text(f"__version__={(major,minor,patch)}")
         env_file = Path(os.getenv('GITHUB_ENV'))  
-        env_file.write_text("VERSION_TAG")=f"v{major}.{minor}.{patch}"
+        env_file.write_text(f"VERSION_TAG=v{major}.{minor}.{patch}")
         print(f"New version: v{major}.{minor}.{patch}")
     - name: Make addon zip
       uses: thedoctor0/zip-release@0.7.5
