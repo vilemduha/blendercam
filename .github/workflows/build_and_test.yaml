@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{matrix.os}}
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4.1.1
     - name: Install bash 4(macOS)
       if: runner.os == 'macOS'
       run: brew install bash
@@ -85,5 +85,5 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: blendercam-${{matrix.os}}-${{matrix.blender-version}}
-        path: blendercam.zip
+        path: ./scripts/addons/blendercam.zip
         
