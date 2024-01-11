@@ -56,10 +56,16 @@ jobs:
         type: 'zip'
         filename: 'blendercam.zip'
         directory: './scripts/addons'
+    - name: Write version number
+      run: |
+        git config --global user.name 'Release robot'
+        git config --global user.email 'release-robot@users.noreply.github.com'
+        git commit -am "Version number"
+        git tag -f ${{ env.VERSION_TAG }}
+        git push
     - name: tag release
       uses: ncipollo/release-action@v1
       with:
         artifacts: "scripts/addons/blendercam.zip"
-        tag: ${{ env.VERSION_TAG }}
-        commit: ${ GITHUB_SHA }
+        commit: ${{ env.VERSION_TAG }}
 
