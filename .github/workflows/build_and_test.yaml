@@ -16,12 +16,17 @@ jobs:
       id: download
       shell: bash
       run: |
+        declare -A os_suffixes
+        os_suffixes["ubuntu-latest"]="-linux-x64.tar.xz"
+        os_suffixes["macos-latest"]="-macos-x64.dmg"
+        os_suffixes["windows-latest"]="-windows-x64.zip"
+        export OS_SUFFIX=${os_suffixes["${{matrix.os}}]}
         IFS='.' read -ra BLENDER_SPLIT <<< "${{matrix.blender_version}}"
         export BLENDER_MAJOR=${BLENDER_SPLIT[0]}.${BLENDER_SPLIT[1]}
         export BLENDER_MINOR=${BLENDER_SPLIT[2]}
-        export BLENDER_ARCHIVE=blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}
+        export BLENDER_ARCHIVE="blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}"
         echo Major version: $BLENDER_MAJOR
-        echo Minor version: $BLENDER_MAJOR        
+        echo Minor version: $BLENDER_MINOR        
         echo Archive name: $BLENDER_ARCHIVE
         wget https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
         echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
