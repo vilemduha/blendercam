@@ -46,7 +46,7 @@ jobs:
         echo Major version: $BLENDER_MAJOR
         echo Minor version: $BLENDER_MINOR        
         echo Archive name: $BLENDER_ARCHIVE
-        wget https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
+        curl -O https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
         echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
     - name: Save blender
       uses:  actions/cache/save@v3
