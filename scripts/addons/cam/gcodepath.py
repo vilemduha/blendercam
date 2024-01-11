@@ -355,26 +355,26 @@ def exportGcodePath(filename, vertslist, operations):
                 rcompensate.z = -r.z
                 v.rotate(rcompensate)
 
-                if math.isclose(r.x , lastrot.x):
+                if r.x == lastrot.x:
                     ra = None
                 else:
 
                     ra = r.x * rotcorr
 
-                if math.isclose(r.y,lastrot.y):
+                if r.y == lastrot.y:
                     rb = None
                 else:
                     rb = r.y * rotcorr
 
-            if vi > 0 and math.isclose(v.x,last.x):
+            if vi > 0 and v.x == last.x:
                 vx = None
             else:
                 vx = v.x * unitcorr
-            if vi > 0 and math.isclose(v.y, last.y):
+            if vi > 0 and v.y == last.y:
                 vy = None
             else:
                 vy = v.y * unitcorr
-            if vi > 0 and math.isclose(v.z,last.z):
+            if vi > 0 and v.z == last.z:
                 vz = None
             else:
                 vz = v.z * unitcorr
