@@ -12,8 +12,15 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+    - name: Cache blender
+      id: cache-blender
+      uses: actions/cache@v3
+      with:
+        path: blender
+        key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
     - name: Download blender
       id: download
+      if: steps.cache-blender.outputs.cache-hit != 'true'
       shell: bash
       run: |
         declare -A os_suffixes
