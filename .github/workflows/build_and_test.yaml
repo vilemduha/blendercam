@@ -48,18 +48,18 @@ jobs:
         echo Archive name: $BLENDER_ARCHIVE
         curl -O https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
         echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
-    - name: Save blender
-      uses:  actions/cache/save@v3
-      if: runner.os != 'macOS'
-      with:
-        path: blender
-        key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
     - name: Extract Action
       uses: ihiroky/extract-action@v1
       if: runner.os != 'macOS'
       with:
           file_path: ${{ steps.download.outputs.BLENDER_ARCHIVE }}
           extract_dir: blender
+    - name: Save blender
+      uses:  actions/cache/save@v3
+      if: runner.os != 'macOS'
+      with:
+        path: blender
+        key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
     - name: Make addon zip
       uses: thedoctor0/zip-release@0.7.5
       with:
