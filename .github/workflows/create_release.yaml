@@ -28,7 +28,7 @@ jobs:
         import os
         v_file=Path("scripts","addons","cam","version.py")
         version_txt=v_file.read_text()
-        major,minor,patch = re.match(version_txt,r".*\((\d+),(\d+),(\d+)\)").groups()
+        major,minor,patch = re.match(r".*\((\d+),(\d+),(\d+)\)",version_txt).groups()
         bump = os.getenv("VERSION_BUMP")
         if bump == "minor":
           minor+=1
