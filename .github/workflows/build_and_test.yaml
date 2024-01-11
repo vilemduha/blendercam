@@ -74,9 +74,6 @@ jobs:
         if [ "${{ runner.os }}" != "macOS" ]; then
           export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
           export PATH=$PATH:${BLENDER_BIN_PATH}
-        else
-          export PATH=$PATH:$PWD
-          ln -s /Applications/Blender.app/Contents/MacOS/Blender $PWD/blender
         fi
         export ADDON_PATH=${PWD}/scripts/addons/blendercam.zip
         cd scripts/addons/cam/tests
