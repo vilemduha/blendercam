@@ -1,4 +1,4 @@
-name: Run tests on push / PR
+name: Make new release
 on:
   workflow_dispatch:
     inputs:
