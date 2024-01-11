@@ -38,7 +38,7 @@ jobs:
         cd scripts/addon/cam/tests
         python test_suite.py
     - name: Build Blender Addon
-      uses: BlenderKit/blender-addon-build-action@v1
+      uses: BlenderKit/blender-addon-build@v0.1            
       with:
         name: 'blendercam'
         build-location: './scripts/addons'
