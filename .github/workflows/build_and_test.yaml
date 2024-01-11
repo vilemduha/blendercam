@@ -48,13 +48,14 @@ jobs:
         echo Archive name: $BLENDER_ARCHIVE
         curl -O https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
         echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
-    - name: Extract Action
-      uses: ihiroky/extract-action@v1
+    - name: Extract blender
       if: runner.os != 'macOS'
-      with:
-          file_path: ${{ steps.download.outputs.BLENDER_ARCHIVE }}
-          extract_dir: blender
-          verbose: true
+      run: |
+        import shutil
+        import os
+        os.makedirs("blender",exist_ok=True)
+        shutil.unpack_archive("${{ steps.download.outputs.BLENDER_ARCHIVE }}","blender")
+      shell: python
     - name: Save blender
       uses:  actions/cache/save@v3
       if: runner.os != 'macOS'
