@@ -631,13 +631,13 @@ async def getPath3axis(context, operation):
             pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
             pathSamples = chunksRefine(pathSamples, o)
         elif o.strategy == 'PENCIL':
-            prepareArea(o)
+            await prepareArea(o)
             utils.getAmbient(o)
             pathSamples = getOffsetImageCavities(o, o.offset_image)
             pathSamples = limitChunks(pathSamples, o)
             pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
         elif o.strategy == 'CRAZY':
-            prepareArea(o)
+            await prepareArea(o)
             # pathSamples = crazyStrokeImage(o)
             # this kind of worked and should work:
             millarea = o.zbuffer_image < o.minz + 0.000001
@@ -649,7 +649,6 @@ async def getPath3axis(context, operation):
             pathSamples = chunksRefine(pathSamples, o)
 
         else:
-            print("PARALLEL")
             if o.strategy == 'OUTLINEFILL':
                 utils.getOperationSilhouete(o)
 
@@ -709,7 +708,7 @@ async def getPath3axis(context, operation):
         topdown = True
         chunks = []
         await progress_async('retrieving object slices')
-        prepareArea(o)
+        await prepareArea(o)
         layerstep = 1000000000
         if o.use_layers:
             layerstep = math.floor(o.stepdown / o.slice_detail)
@@ -840,7 +839,7 @@ async def getPath3axis(context, operation):
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'DRILL':
-        await strategy.drill(o)
+        await  strategy.drill(o)
 
     elif o.strategy == 'MEDIAL_AXIS':
         await strategy.medial_axis(o)

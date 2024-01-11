@@ -33,7 +33,7 @@ from cam.simple import *
 from cam import chunk
 from cam.chunk import *
 from cam import simulation
-
+from cam.async_op import progress_async
 
 def getCircle(r, z):
     car = numpy.full(shape=(r*2,r*2),fill_value=-10,dtype=numpy.double)
@@ -128,7 +128,7 @@ def imagetonumpy(i):
     return na
 
 
-def offsetArea(o, samples):
+async def offsetArea(o, samples):
     """ offsets the whole image with the cutter + skin offsets """
     if o.update_offsetimage_tag:
         minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
@@ -155,25 +155,17 @@ def offsetArea(o, samples):
         for x in range(0, cwidth):  # cwidth):
             text = "Offsetting depth " + str(int(x * 100 / cwidth))
             # o.operator.report({"INFO"}, text)
-            simple.progress('offset ', int(x * 100 / cwidth))
+            await progress_async('offset depth image', int(x * 100 / cwidth))
             for y in range(0, cwidth):
-                # TODO:OPTIMIZE THIS - this can run much faster when the areas won't be created each run????
-                #  tests dont work now
                 if cutterArray[x, y] > -10:
-                    # i+=1
-                    # progress(i)
-                    # winner
                     numpy.maximum(sourceArray[x: width - cwidth + x, y: height - cwidth + y] + cutterArray[x, y],
                                   comparearea, comparearea)
-                    # contest of performance
 
         o.offset_image[m: width - cwidth + m, m:height - cwidth + m] = comparearea
-        # progress('offseting done')
 
-        simple.progress('\ntime ' + str(time.time() - t))
+        print('\nOffset image time ' + str(time.time() - t))
 
         o.update_offsetimage_tag = False
-    # progress('doing offsetimage')
     return o.offset_image
 
 
@@ -1199,7 +1191,7 @@ def renderSampleImage(o):
 
 # return numpy.array([])
 
-def prepareArea(o):
+async def prepareArea(o):
     # if not o.use_exact:
     renderSampleImage(o)
     samples = o.zbuffer_image
@@ -1217,5 +1209,5 @@ def prepareArea(o):
     if o.update_offsetimage_tag:
         if o.inverse:
             samples = numpy.maximum(samples, o.min.z - 0.00001)
-        offsetArea(o, samples)
+        await offsetArea(o, samples)
         numpysave(o.offset_image, iname)
