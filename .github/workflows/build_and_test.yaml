@@ -42,16 +42,16 @@ jobs:
       with:
           file_path: ${{ steps.download.outputs.BLENDER_ARCHIVE }}
           extract_dir: blender
-    - name: Build Blender Addon
-      uses: BlenderKit/blender-addon-build@v0.1            
+    - name: Make addon zip
+      uses: thedoctor0/zip-release@0.7.5
       with:
-        name: 'blendercam'
-        build-location: './scripts/addons'
-        do-checkout: 'false'
-        exclude-files: '.git;.github;.gitignore;cam/tests/'
-    - uses: actions/download-artifact@v4
+        type: 'zip'
+        filename: 'blendercam.zip'
+        path: './scripts/addons'    
+    - uses: actions/upload-artifact@v4
       with:
-        name: 'blendercam'        
+        name: blendercam
+        path: blendercam.zip
     - name: Run tests
       shell: bash
       run: |
@@ -61,3 +61,4 @@ jobs:
         cd scripts/addons/cam/tests
         python install_addon.py ${ADDON_PATH}
         python test_suite.py
+        
