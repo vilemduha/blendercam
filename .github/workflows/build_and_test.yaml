@@ -49,7 +49,7 @@ jobs:
         curl -O https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
         echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
     - name: Extract blender
-      if: runner.os != 'macOS'
+      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
       run: |
         import shutil
         import os
