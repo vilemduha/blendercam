@@ -32,7 +32,6 @@ jobs:
         bump = os.getenv("VERSION_BUMP")
         if bump == "minor":
           minor+=1
-        bump = "${{ inputs.logLevel }}"
         if bump=='patch':
           patch+=1
         elif bump=='minor':
