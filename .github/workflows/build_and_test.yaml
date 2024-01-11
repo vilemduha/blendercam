@@ -17,9 +17,9 @@ jobs:
       shell: bash
       run: |
         declare -A os_suffixes
-        os_suffixes["ubuntu-latest"]="-linux-x64.tar.xz"
-        os_suffixes["macos-latest"]="-macos-x64.dmg"
-        os_suffixes["windows-latest"]="-windows-x64.zip"
+        os_suffixes["ubuntu-latest"]="linux-x64.tar.xz"
+        os_suffixes["macos-latest"]="macos-x64.dmg"
+        os_suffixes["windows-latest"]="windows-x64.zip"
         export OS_SUFFIX=${os_suffixes["${{matrix.os}}"]}
         IFS='.' read -ra BLENDER_SPLIT <<< "${{matrix.blender_version}}"
         export BLENDER_MAJOR=${BLENDER_SPLIT[0]}.${BLENDER_SPLIT[1]}
