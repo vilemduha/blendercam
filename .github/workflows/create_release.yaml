@@ -63,9 +63,9 @@ jobs:
         git commit -am "Version number"
         git tag -f ${{ env.VERSION_TAG }}
         git push origin ${{ env.VERSION_TAG }}
-    - name: tag release
+    - name: make release
       uses: ncipollo/release-action@v1
       with:
         artifacts: "scripts/addons/blendercam.zip"
-        commit: tags/${{ env.VERSION_TAG }}
+        tag: ${{ env.VERSION_TAG }}
 
