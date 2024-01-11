@@ -33,12 +33,12 @@ jobs:
         if bump == "minor":
           minor+=1
         bump = "${{ inputs.logLevel }}"
-        if version=='patch':
+        if bump=='patch':
           patch+=1
-        elif version=='minor':
+        elif bump=='minor':
           minor+=1
           patch=0
-        elif version=='major':
+        elif bump=='major':
           major+=1
           minor=0
           patch=0
