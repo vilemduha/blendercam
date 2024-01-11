@@ -58,7 +58,7 @@ jobs:
       shell: python
     - name: Save blender
       uses:  actions/cache/save@v3
-      if: runner.os != 'macOS'
+      if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
