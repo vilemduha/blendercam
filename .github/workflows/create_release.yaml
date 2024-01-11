@@ -30,7 +30,7 @@ jobs:
         import os
         v_file=Path("scripts","addons","cam","version.py")
         version_txt=v_file.read_text()
-        major,minor,patch = re.match(r".*\((\d+),(\d+),(\d+)\)",version_txt).groups()
+        major,minor,patch = re.match(r".*\(\s*(\d+),(\s*\d+),(\s*\d+)\)",version_txt).groups()
         major=int(major)
         minor=int(minor)
         patch=int(patch)
@@ -46,7 +46,7 @@ jobs:
           major+=1
           minor=0
           patch=0
-        v_file.write_text(f"__version__={(major,minor,patch)}")
+        v_file.write_text(f"__version__=({major},{minor},{patch})")
         env_file = Path(os.getenv('GITHUB_ENV'))  
         env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")
         print(f"New version: {major}.{minor}.{patch}")
