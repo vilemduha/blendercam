@@ -13,8 +13,11 @@ import mathutils
 import math
 from cam.simple import activate
 from cam.exception import *
+from cam.async_op import progress_async
 
 OCL_SCALE = 1000.0
+
+_PREVIOUS_OCL_MESH=None
 
 def get_oclSTL(operation):
     me = None
@@ -37,9 +40,9 @@ def get_oclSTL(operation):
     return oclSTL
 
 
-def ocl_sample(operation, chunks):
+async def ocl_sample(operation, chunks,use_cached_mesh = False):
+    global _PREVIOUS_OCL_MESH
 
-    oclSTL = get_oclSTL(operation)
 
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
@@ -48,7 +51,7 @@ def ocl_sample(operation, chunks):
     if op_cutter_type == "VCARVE": 
         cutter_length = (op_cutter_diameter/math.tan(op_cutter_tip_angle))/2
     else:
-     cutter_length = 10
+        cutter_length = 10
 
     cutter = None
 
@@ -70,13 +73,18 @@ def ocl_sample(operation, chunks):
         quit()
 
     bdc = ocl.BatchDropCutter()
+    if use_cached_mesh and _PREVIOUS_OCL_MESH is not None:
+        oclSTL=_PREVIOUS_OCL_MESH
+    else:
+        oclSTL = get_oclSTL(operation)
+        _PREVIOUS_OCL_MESH=oclSTL
     bdc.setSTL(oclSTL)
     bdc.setCutter(cutter)
 
     for chunk in chunks:
         for coord in chunk.points:
             bdc.appendPoint(ocl.CLPoint(coord[0] * 1000, coord[1] * 1000, op_minz * 1000))
-
+    await progress_async("OpenCAMLib sampling")
     bdc.run()
 
     cl_points = bdc.getCLPoints()

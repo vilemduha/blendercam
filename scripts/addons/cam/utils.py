@@ -410,7 +410,7 @@ async def sampleChunks(o, pathSamples, layers):
 
     if o.optimisation.use_exact:  # prepare collision world
         if o.optimisation.use_opencamlib:
-            oclSample(o, pathSamples)
+            await oclSample(o, pathSamples)
             cutterdepth = 0
         else:
             if o.update_bullet_collision_tag:
@@ -993,7 +993,7 @@ def overlaps(bb1, bb2):  # true if bb1 is child of bb2
         return True
 
 
-def connectChunksLow(chunks, o):
+async def connectChunksLow(chunks, o):
     """ connects chunks that are close to each other without lifting, sampling them 'low' """
     if not o.movement.stay_low or (o.strategy == 'CARVE' and o.carve_depth > 0):
         return chunks
@@ -1043,7 +1043,7 @@ def connectChunksLow(chunks, o):
             pos = lastch.points[-1]
 
     if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET':
-        oclResampleChunks(o, chunks_to_resample)
+        await oclResampleChunks(o, chunks_to_resample,use_cached_mesh=True)
 
     return connectedchunks
 
@@ -1127,7 +1127,7 @@ async def sortChunks(chunks, o):
     if o.strategy != 'DRILL' and o.strategy != 'OUTLINEFILL':
         # THIS SHOULD AVOID ACTUALLY MOST STRATEGIES, THIS SHOULD BE DONE MANUALLY,
         # BECAUSE SOME STRATEGIES GET SORTED TWICE.
-        sortedchunks = connectChunksLow(sortedchunks, o)
+        sortedchunks = await connectChunksLow(sortedchunks, o)
     return sortedchunks
 
 
