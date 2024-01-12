@@ -96,7 +96,7 @@ class Updater(bpy.types.Operator):
                                         path_pos=filename.replace("\\","/").find("/scripts/addons/cam/")
                                         if path_pos!=-1:
                                             relative_path=filename[path_pos+len("/scripts/addons/cam/"):]
-                                            out_path = addons_path / relative_path
+                                            out_path = cam_addon_path / relative_path
                                             print(out_path)
                                             # check folder exists
                                             out_path.parent.mkdir(parents=True,exist_ok=True)
