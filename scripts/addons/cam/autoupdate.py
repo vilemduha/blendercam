@@ -18,10 +18,14 @@ class UpdateChecker(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        print("update check")
         last_update_check = bpy.context.preferences.addons['cam'].preferences.last_update_check
         today=date.today().toordinal()
         update_source = bpy.context.preferences.addons['cam'].preferences.update_source
+        match = re.match(r"https://github.com/([^/]+/[^/]+)",update_source)
+        if match:
+            update_source = f"https://api.github.com/repos/{match.group(1)}/releases"
+        
+        print(f"update check: {update_source}")
         if update_source=="None" or len(update_source)==0:
             return {'FINISHED'}
 
@@ -72,6 +76,9 @@ class Updater(bpy.types.Operator):
         update_source = bpy.context.preferences.addons['cam'].preferences.update_source
         if update_source=="None" or len(update_source)==0:
             return {'FINISHED'}
+        match = re.match(r"https://github.com/([^/]+/[^/]+)",update_source)
+        if match:
+            update_source = f"https://api.github.com/repos/{match.group(1)}/releases"
 
         # get list of releases from github release
         if update_source.endswith("/releases"):

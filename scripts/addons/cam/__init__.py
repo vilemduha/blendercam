@@ -132,7 +132,8 @@ class CamAddonPreferences(AddonPreferences):
 
     update_source: bpy.props.StringProperty(
         name="Source of updates for the addon",
-        description="This can be either a github repo link (for releases)",
+        description="This can be either a github repo link in which case it will download the latest release on there, "
+        "or a link like https://api.github.com/repos/<author>/blendercam/commits to get from a github repository",
         default="",
     )
 
@@ -182,10 +183,12 @@ class CamAddonPreferences(AddonPreferences):
         layout.prop(self, "update_source")
         layout.label(text="Choose a preset update source")
 
-        UPDATE_SOURCES=[("https://api.github.com/repos/vilemduha/blendercam/releases", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
-               ("https://api.github.com/repos/pppalain/blendercam/releases", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
-               ## REPO ON THIS LINE
-               ("https://api.github.com/repos/joemarshall/blendercam/commits","Direct from git (may not work)","Get from git commits directly"),
+        UPDATE_SOURCES=[("https://github.com/vilemduha/blendercam", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
+               ("https://github.com/pppalain/blendercam", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
+               # comments for searching in github actions release script to automatically set this repo
+               # if required
+               ## REPO ON NEXT LINE
+               ("https://api.github.com/repos/pppalain/blendercam/commits","Direct from git (may not work)","Get from git commits directly"),
                ## REPO ON PREV LINE
                ("","None","Don't do auto update"),
         ]
