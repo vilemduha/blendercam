@@ -68,7 +68,7 @@ jobs:
       run: |
         git config --global user.name 'Release robot'
         git config --global user.email 'release-robot@users.noreply.github.com'
-        git commit -am "Version number"
+        git commit -am "Version number" || true
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
