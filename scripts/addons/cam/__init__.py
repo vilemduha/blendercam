@@ -133,8 +133,8 @@ class CamAddonPreferences(AddonPreferences):
     update_source: bpy.props.StringProperty(
         name="Source of updates for the addon",
         description="This can be either a github repo link in which case it will download the latest release on there, "
-        "or a link like https://api.github.com/repos/<author>/blendercam/commits to get from a github repository",
-        default="",
+        "or an api link like https://api.github.com/repos/<author>/blendercam/commits to get from a github repository",
+        default="https://github.com/pppalain/blendercam",
     )
 
     last_update_check: IntProperty(
