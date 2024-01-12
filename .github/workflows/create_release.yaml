@@ -79,4 +79,5 @@ jobs:
       with:
         artifacts: "scripts/addons/blendercam.zip"
         tag: ${{ env.VERSION_TAG }}
+        allowUpdates: true
 
