@@ -131,10 +131,10 @@ class Updater(bpy.types.Operator):
                         out_path.parent.mkdir(parents=True,exist_ok=True)
                         with zf.open(filename,"r") as in_file, open(out_path,"wb") as out_file:
                             time_struct=(*fileinfo.date_time,0,0,0)
-                            mtime=fileinfo.timegm(time_struct)
+                            mtime=calendar.timegm(time_struct)
                             out_file.write(in_file.read())
-                            os.utime(out_file,times=(mtime,mtime))
-                            # TODO: check for newer times
+                        os.utime(out_path,times=(mtime,mtime))
+                        # TODO: check for newer times
                         # TODO: what about if a file is deleted...
             # updated everything, now mark as updated and reload scripts
             bpy.context.preferences.addons['cam'].preferences.just_updated=True
