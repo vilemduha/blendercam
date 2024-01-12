@@ -119,6 +119,7 @@ def updateOperation(self, context):
         print(e)
 
 
+
 class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
     # when defining this in a submodule of a python package.
@@ -129,18 +130,10 @@ class CamAddonPreferences(AddonPreferences):
         default=False,
     )
 
-    update_source: bpy.props.EnumProperty(
+    update_source: bpy.props.StringProperty(
         name="Source of updates for the addon",
-        description="",
-        # source repository is altered in release action
-        items=[("https://api.github.com/repos/vilemduha/blendercam/releases", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
-               ("https://api.github.com/repos/pppalain/blendercam/releases", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
-               ## REPO ON THIS LINE
-               ("https://api.github.com/repos/joemarshall/blendercam/commits","Direct from git (may not work)","Get from git commits directly"),
-               ## REPO ON PREV LINE
-               ("None","None","Don't do auto update"),
-               ],
-        default="None",
+        description="This can be either a github repo link (for releases)",
+        default="",
     )
 
     last_update_check: IntProperty(
@@ -185,9 +178,21 @@ class CamAddonPreferences(AddonPreferences):
     def draw(self, context):
         layout = self.layout
         layout.label(text="Use experimental features when you want to help development of Blender CAM:")
-        layout.prop(self, "update_source")
         layout.prop(self, "experimental")
+        layout.prop(self, "update_source")
+        layout.label(text="Choose a preset update source")
 
+        UPDATE_SOURCES=[("https://api.github.com/repos/vilemduha/blendercam/releases", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
+               ("https://api.github.com/repos/pppalain/blendercam/releases", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
+               ## REPO ON THIS LINE
+               ("https://api.github.com/repos/joemarshall/blendercam/commits","Direct from git (may not work)","Get from git commits directly"),
+               ## REPO ON PREV LINE
+               ("","None","Don't do auto update"),
+        ]
+        grid=layout.grid_flow(align=True)
+        for (url,short,long) in UPDATE_SOURCES:
+            op=grid.operator("render.cam_set_update_source",text=short)
+            op.new_source=url
 
 class machineSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
@@ -1419,6 +1424,7 @@ def compatible_panels():
 
 
 classes = [
+    autoupdate.UpdateSourceOperator,
     autoupdate.Updater,
     autoupdate.UpdateChecker,
     ui.CAM_UL_operations,

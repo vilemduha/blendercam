@@ -22,44 +22,41 @@ class UpdateChecker(bpy.types.Operator):
         last_update_check = bpy.context.preferences.addons['cam'].preferences.last_update_check
         today=date.today().toordinal()
         update_source = bpy.context.preferences.addons['cam'].preferences.update_source
+        if update_source=="None" or len(update_source)==0:
+            return {'FINISHED'}
 
-        if last_update_check!=today or True: # TODO: remove after testing
-            bpy.context.preferences.addons['cam'].preferences.new_version_available = ""
-            bpy.ops.wm.save_userpref()
-            if update_source=="None":
-                return {'FINISHED'}
-            # get list of releases from github release
-            if update_source.endswith("/releases"):
-                with urlopen(update_source) as response:
-                    body = response.read().decode("UTF-8")
-                    # find the tag name
-                    release_list=json.loads(body)
-                    if len(release_list) > 0:
-                        release = release_list[0]
-                        tag = release["tag_name"]
-                        print(f"Found release: {tag}")
-                        match = re.match(r".*(\d+)\.(\s*\d+)\.(\s*\d+)",tag)
-                        if match:
-                            version_num  = tuple(map(int,match.groups()))
-                            print(f"Found version: {version_num}")
-                            bpy.context.preferences.addons['cam'].preferences.last_update_check = today
+        bpy.context.preferences.addons['cam'].preferences.new_version_available = ""
+        bpy.ops.wm.save_userpref()
+        # get list of releases from github release
+        if update_source.endswith("/releases"):
+            with urlopen(update_source,timeout=2.0) as response:
+                body = response.read().decode("UTF-8")
+                # find the tag name
+                release_list=json.loads(body)
+                if len(release_list) > 0:
+                    release = release_list[0]
+                    tag = release["tag_name"]
+                    print(f"Found release: {tag}")
+                    match = re.match(r".*(\d+)\.(\s*\d+)\.(\s*\d+)",tag)
+                    if match:
+                        version_num  = tuple(map(int,match.groups()))
+                        print(f"Found version: {version_num}")
+                        bpy.context.preferences.addons['cam'].preferences.last_update_check = today
 
-                            if version_num > current_version:
-                                bpy.context.preferences.addons['cam'].preferences.new_version_available = ".".join(
-                                    [str(x) for x in version_num])
-                            bpy.ops.wm.save_userpref()
-            elif update_source.endswith("/commits"):
-                with urlopen(update_source+"?per_page=1") as response:
-                    body = response.read().decode("UTF-8")
-                    # find the tag name
-                    commit_list=json.loads(body)
-                    commit_sha=commit_list[0]['sha']
-                    commit_date=commit_list[0]['commit']['author']['date']
-                    if bpy.context.preferences.addons['cam'].preferences.last_commit_hash != commit_sha:
-                        bpy.context.preferences.addons['cam'].preferences.new_version_available=commit_date
+                        if version_num > current_version:
+                            bpy.context.preferences.addons['cam'].preferences.new_version_available = ".".join(
+                                [str(x) for x in version_num])
                         bpy.ops.wm.save_userpref()
-
-
+        elif update_source.endswith("/commits"):
+            with urlopen(update_source+"?per_page=1",timeout=2) as response:
+                body = response.read().decode("UTF-8")
+                # find the tag name
+                commit_list=json.loads(body)
+                commit_sha=commit_list[0]['sha']
+                commit_date=commit_list[0]['commit']['author']['date']
+                if bpy.context.preferences.addons['cam'].preferences.last_commit_hash != commit_sha:
+                    bpy.context.preferences.addons['cam'].preferences.new_version_available=commit_date
+                    bpy.ops.wm.save_userpref()
         return {'FINISHED'}
 
 class Updater(bpy.types.Operator):
@@ -73,12 +70,12 @@ class Updater(bpy.types.Operator):
         last_update_check = bpy.context.preferences.addons['cam'].preferences.last_update_check
         today=date.today().toordinal()
         update_source = bpy.context.preferences.addons['cam'].preferences.update_source
-
-        if update_source=="None":
+        if update_source=="None" or len(update_source)==0:
             return {'FINISHED'}
+
         # get list of releases from github release
         if update_source.endswith("/releases"):
-            with urlopen(update_source) as response:
+            with urlopen(update_source,timeout=2) as response:
                 body = response.read().decode("UTF-8")
                 # find the tag name
                 release_list=json.loads(body)
@@ -99,7 +96,7 @@ class Updater(bpy.types.Operator):
                             self.install_zip_from_url(zip_url)
                             return {'FINISHED'}
         elif update_source.endswith("/commits"):
-            with urlopen(update_source+"?per_page=1") as response:
+            with urlopen(update_source+"?per_page=1",timeout=2) as response:
                 body = response.read().decode("UTF-8")
                 # find the tag name
                 commit_list=json.loads(body)
@@ -148,3 +145,13 @@ class Updater(bpy.types.Operator):
             for d in delete_list:
                 del sys.modules[d]
             bpy.ops.script.reload()
+
+class UpdateSourceOperator(bpy.types.Operator):
+    bl_idname = "render.cam_set_update_source"
+    bl_label = "Set blendercam update source"
+
+    new_source: bpy.props.StringProperty(default='')
+    def execute(self,context):
+        bpy.context.preferences.addons['cam'].preferences.update_source=self.new_source
+        bpy.ops.wm.save_userpref()
+        return {'FINISHED'}
