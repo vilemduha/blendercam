@@ -51,7 +51,7 @@ jobs:
         init_file=Path("scripts","addons","cam","__init__.py")
         init_text=init_file.read_text()
         version_regex= r"\"version\"\s*:\s*\(([\d\s,]+)\)"
-        init_text = re.sub(version_regex,f"__version__=({major},{minor},{patch})",init_text)
+        init_text = re.sub(version_regex,f'"version":({major},{minor},{patch})',init_text)
         init_file.write_text(init_text)
         
         env_file = Path(os.getenv('GITHUB_ENV'))  
@@ -69,8 +69,11 @@ jobs:
         git config --global user.name 'Release robot'
         git config --global user.email 'release-robot@users.noreply.github.com'
         git commit -am "Version number"
-        git tag -f ${{ env.VERSION_TAG }}
-        git push -f origin ${{ env.VERSION_TAG }}
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
     - name: make release
       uses: ncipollo/release-action@v1
       with:
