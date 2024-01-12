@@ -136,7 +136,7 @@ class CamAddonPreferences(AddonPreferences):
         items=[("https://api.github.com/repos/vilemduha/blendercam/releases", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
                ("https://api.github.com/repos/pppalain/blendercam/releases", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
                ("https://github.com/pppalain/blendercam/archive/refs/heads/master.zip", "Daily", "Direct from git repository (github.com/pppalain/blendercam)"),
-               ("<CUSTOM_DOWNLOAD_SOURCE>","Source","Where the release was downloaded from"),
+               ("https://api.github.com/repos/joemarshall/blendercam/releases","Source","Where the release was downloaded from"),
                ("None","None","Don't do auto update"),
                ],
         default="None",
@@ -1412,6 +1412,7 @@ def compatible_panels():
 
 
 classes = [
+    autoupdate.Updater,
     autoupdate.UpdateChecker,
     ui.CAM_UL_operations,
     ui.CAM_UL_chains,

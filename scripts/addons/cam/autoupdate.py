@@ -53,7 +53,7 @@ class UpdateChecker(bpy.types.Operator):
 class Updater(bpy.types.Operator):
     """update to newer version if possible """
     bl_idname = "render.cam_update_now"
-    bl_label = "Update to newer version"
+    bl_label = "Update"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
