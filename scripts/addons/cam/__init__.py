@@ -137,9 +137,9 @@ class CamAddonPreferences(AddonPreferences):
                ("https://api.github.com/repos/pppalain/blendercam/releases", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
                ("https://github.com/pppalain/blendercam/archive/refs/heads/master.zip", "Daily", "Direct from git repository (github.com/pppalain/blendercam)"),
                ("<CUSTOM_DOWNLOAD_SOURCE>","Source","Where the release was downloaded from"),
-               ("","None","Don't do auto update"),
+               ("None","None","Don't do auto update"),
                ],
-        default="",
+        default="None",
     )
 
     last_update_check: IntProperty(
@@ -1195,7 +1195,7 @@ def check_operations_on_load(context):
             # load last used machine preset
             bpy.ops.script.execute_preset(filepath=machine_preset,menu_idname="CAM_MACHINE_MT_presets")
         _IS_LOADING_DEFAULTS=False
-    # check for updated plugin
+    # check for updated version of the plugin
     bpy.ops.render.cam_check_updates()
 
 

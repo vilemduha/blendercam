@@ -18,10 +18,14 @@ class UpdateChecker(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
+        print("update check")
         last_update_check = bpy.context.preferences.addons['cam'].preferences.last_update_check
         today=date.today().toordinal()
+        update_source = bpy.context.preferences.addons['cam'].preferences.update_source
+
         if last_update_check!=today or True: # TODO: remove after testing
-            update_source = bpy.context.preferences.addons['cam'].preferences.update_source
+            if update_source=="None":
+                return {'FINISHED'}
             # get list of releases from github release
             if update_source.endswith("/releases"):
                 with urlopen(update_source) as response:
