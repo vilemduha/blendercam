@@ -47,7 +47,7 @@ from bpy.props import *
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 from bpy_extras.object_utils import object_data_add
 from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, \
-    polygon_utils_cam, autoupdate  # , post_processors
+    polygon_utils_cam, autoupdate, basrelief  # , post_processors
 from mathutils import *
 from shapely import geometry as sgeometry
 
@@ -1532,7 +1532,6 @@ classes = [
 
 
 def register():
-
     for p in classes:
         bpy.utils.register_class(p)
 
@@ -1560,6 +1559,8 @@ def register():
 
     bpy.types.Scene.interface = bpy.props.PointerProperty(type=CAM_INTERFACE_Properties)
 
+    basrelief.register()
+
 
 def unregister():
     for p in classes:
@@ -1576,3 +1577,4 @@ def unregister():
     del s.cam_text
     del s.cam_pack
     del s.cam_slice
+    basrelief.unregister()
