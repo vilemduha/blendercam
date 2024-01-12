@@ -28,10 +28,13 @@ import math
 import numpy
 import os
 import pickle
+import shutil
 import subprocess
 import sys
 import threading
 import time
+
+from pathlib import Path
 
 try:
     import shapely
@@ -149,8 +152,8 @@ class CamAddonPreferences(AddonPreferences):
 
 
     just_updated: BoolProperty(
-        name="Set to true on update",
-        default=False
+        name="Set to true on update or initial install",
+        default=True
     )
 
     new_version_available: StringProperty(
@@ -1217,6 +1220,18 @@ def check_operations_on_load(context):
         _IS_LOADING_DEFAULTS=False
     # check for updated version of the plugin
     bpy.ops.render.cam_check_updates()
+    # copy presets if not there yet
+    if bpy.context.preferences.addons['cam'].preferences.just_updated:
+        preset_source_path = Path(__file__).parent / 'presets'
+        preset_target_path = Path(bpy.utils.script_path_user()) / 'presets'
+
+        def copy_if_not_exists(src,dst):
+            if Path(dst).exists()==False:
+                shutil.copy2(src,dst)
+        shutil.copytree(preset_source_path,preset_target_path,copy_function=copy_if_not_exists,dirs_exist_ok=True)
+
+        bpy.context.preferences.addons['cam'].preferences.just_updated=False
+        bpy.ops.wm.save_userpref()
 
 
 
