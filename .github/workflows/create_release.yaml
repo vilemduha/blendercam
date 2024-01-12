@@ -1,0 +1,83 @@
+name: Make new release
+on:
+  workflow_dispatch:
+    inputs:
+        version_bump:
+          description: 'New version:'
+          required: true
+          default: 'patch'
+          type: choice
+          options:
+          - overwrite previous tag
+          - minor
+          - major
+          - patch
+jobs:
+  release:
+    runs-on: "ubuntu-latest"
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4.1.1
+    - name: Bump version
+      shell: python
+      env:
+        VERSION_BUMP: ${{ inputs.version_bump }} 
+      run: |
+        from pathlib import Path
+        import re
+        import os
+        v_file=Path("scripts","addons","cam","version.py")
+        version_txt=v_file.read_text()
+        major,minor,patch = re.match(r".*\(\s*(\d+),(\s*\d+),(\s*\d+)\)",version_txt).groups()
+        major=int(major)
+        minor=int(minor)
+        patch=int(patch)
+        bump = os.getenv("VERSION_BUMP")
+        if bump == "minor":
+          minor+=1
+        if bump=='patch':
+          patch+=1
+        elif bump=='minor':
+          minor+=1
+          patch=0
+        elif bump=='major':
+          major+=1
+          minor=0
+          patch=0
+        v_file.write_text(f"__version__=({major},{minor},{patch})")
+        # update in bl_info structure (which can't be dynamic because blender...)
+        init_file=Path("scripts","addons","cam","__init__.py")
+        init_text=init_file.read_text()
+        version_regex= r"\"version\"\s*:\s*\(([\d\s,]+)\)"
+        init_text = re.sub(version_regex,f'"version":({major},{minor},{patch})',init_text)
+        init_file.write_text(init_text)
+        
+        env_file = Path(os.getenv('GITHUB_ENV'))  
+        env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")
+        print(f"New version: {major}.{minor}.{patch}")
+    - name: Make addon zip
+      uses: thedoctor0/zip-release@0.7.5
+      with:
+        type: 'zip'
+        filename: 'blendercam.zip'
+        directory: './scripts/addons'
+    - name: Write version number
+      if: ${{ inputs.version_bump }} != "overwrite previous tag"
+      run: |
+        git config --global user.name 'Release robot'
+        git config --global user.email 'release-robot@users.noreply.github.com'
+        git commit -am "Version number" || true
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+    - name: make release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "scripts/addons/blendercam.zip"
+        tag: ${{ env.VERSION_TAG }}
+        allowUpdates: true
+        body: "To install BlenderCAM, download blendercam.zip and *don't* extract it. In blender, go to preferences, add-ons, and select 'install from file' and select the blendercam.zip file you downloaded"
