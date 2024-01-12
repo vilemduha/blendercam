@@ -1407,6 +1407,7 @@ def compatible_panels():
 
 
 classes = [
+    autoupdate.UpdateChecker,
     ui.CAM_UL_operations,
     ui.CAM_UL_chains,
     opReference,
