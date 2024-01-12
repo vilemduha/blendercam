@@ -47,7 +47,7 @@ from bpy.props import *
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 from bpy_extras.object_utils import object_data_add
 from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, \
-    polygon_utils_cam  # , post_processors
+    polygon_utils_cam, autoupdate  # , post_processors
 from mathutils import *
 from shapely import geometry as sgeometry
 
@@ -129,6 +129,31 @@ class CamAddonPreferences(AddonPreferences):
         default=False,
     )
 
+    update_source: bpy.props.EnumProperty(
+        name="Source of updates for the addon",
+        description="",
+        # first item is filled in by github actions when a release is created
+        items=[("https://api.github.com/repos/vilemduha/blendercam/releases", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
+               ("https://api.github.com/repos/pppalain/blendercam/releases", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
+               ("https://github.com/pppalain/blendercam/archive/refs/heads/master.zip", "Daily", "Direct from git repository (github.com/pppalain/blendercam)"),
+               ("<CUSTOM_DOWNLOAD_SOURCE>","Source","Where the release was downloaded from"),
+               ("","None","Don't do auto update"),
+               ],
+        default="",
+    )
+
+    last_update_check: IntProperty(
+        name="Last update time",
+        default=0
+    )
+
+    just_updated: BoolProperty(
+        name="Set to true on update",
+        default=False
+    )
+
+
+
     default_interface_level: bpy.props.EnumProperty(
         name="Interface level in new file",
         description="Choose visible options",
@@ -148,7 +173,7 @@ class CamAddonPreferences(AddonPreferences):
     def draw(self, context):
         layout = self.layout
         layout.label(text="Use experimental features when you want to help development of Blender CAM:")
-
+        layout.prop(self, "update_source")
         layout.prop(self, "experimental")
 
 

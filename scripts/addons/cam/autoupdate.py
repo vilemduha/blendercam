@@ -8,6 +8,7 @@ import bpy
 import re
 import io
 import os
+import sys
 
 class UpdateChecker(bpy.types.Operator):
     """calculate all CAM paths"""
@@ -34,6 +35,8 @@ class UpdateChecker(bpy.types.Operator):
                         if match:
                             version_num  = tuple(map(int,match.groups()))
                             print(f"Found version: {version_num}")
+                            bpy.context.preferences.addons['cam'].preferences.last_update_check = today
+                            bpy.ops.wm.save_userpref()
 
                             if version_num > current_version:
                                 print("Version is newer, downloading source")
@@ -50,7 +53,6 @@ class UpdateChecker(bpy.types.Operator):
                                             path_pos=filename.replace("\\","/").find("/scripts/addons/cam/")
                                             if path_pos!=-1:
                                                 relative_path=filename[path_pos+len("/scripts/addons/cam/"):]
-                                                print("rp",relative_path,addons_path)
                                                 out_path = addons_path / relative_path
                                                 print(out_path)
                                                 # check folder exists
@@ -60,6 +62,13 @@ class UpdateChecker(bpy.types.Operator):
                                                 # TODO: what about if a file is deleted...
                                     # updated everything, now mark as updated and reload scripts
                                     bpy.context.preferences.addons['cam'].preferences.just_updated=True
+                                    # unload ourself from python module system
+                                    delete_list=[]
+                                    for m in sys.modules.keys():
+                                        if m.startswith("cam.") or m=='cam':
+                                            delete_list.append(m)
+                                    for d in delete_list:
+                                        del sys.modules[d]
                                     bpy.ops.wm.save_userpref()
                                     bpy.ops.script.reload()
         return {'FINISHED'}
