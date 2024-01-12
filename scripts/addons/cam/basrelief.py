@@ -6,18 +6,6 @@ from math import *
 from bpy.props import *
 
 
-bl_info = {
-	"name": "Bas relief",
-	"author": "Vilem Novak",
-	"version": (0, 1, 0),
-	"blender": (2, 80, 0),
-	"location": "Properties > render",
-	"description": "Converts zbuffer image to bas relief.",
-	"warning": "there is no warranty. needs Numpy library installed in blender python directory.",
-	"wiki_url": "blendercam.blogspot.com",
-	"tracker_url": "",
-	"category": "Scene"}
-
 ##////////////////////////////////////////////////////////////////////
 #// Full Multigrid Algorithm for solving partial differential equations
 #//////////////////////////////////////////////////////////////////////
@@ -1164,5 +1152,3 @@ def unregister():
 	s=bpy.types.Scene
 	del s.basreliefsettings
 
-if __name__ == "__main__":
-	register()

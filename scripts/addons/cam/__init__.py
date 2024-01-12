@@ -28,10 +28,13 @@ import math
 import numpy
 import os
 import pickle
+import shutil
 import subprocess
 import sys
 import threading
 import time
+
+from pathlib import Path
 
 try:
     import shapely
@@ -47,7 +50,7 @@ from bpy.props import *
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 from bpy_extras.object_utils import object_data_add
 from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, \
-    polygon_utils_cam  # , post_processors
+    polygon_utils_cam, autoupdate, basrelief  # , post_processors
 from mathutils import *
 from shapely import geometry as sgeometry
 
@@ -119,6 +122,7 @@ def updateOperation(self, context):
         print(e)
 
 
+
 class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
     # when defining this in a submodule of a python package.
@@ -128,6 +132,36 @@ class CamAddonPreferences(AddonPreferences):
         name="Show experimental features",
         default=False,
     )
+
+    update_source: bpy.props.StringProperty(
+        name="Source of updates for the addon",
+        description="This can be either a github repo link in which case it will download the latest release on there, "
+        "or an api link like https://api.github.com/repos/<author>/blendercam/commits to get from a github repository",
+        default="https://github.com/pppalain/blendercam",
+    )
+
+    last_update_check: IntProperty(
+        name="Last update time",
+        default=0
+    )
+
+    last_commit_hash: StringProperty(
+        name="Hash of last commit from updater",
+        default=""
+    )
+
+
+    just_updated: BoolProperty(
+        name="Set to true on update or initial install",
+        default=True
+    )
+
+    new_version_available: StringProperty(
+        name="Set to new version name if one is found",
+        default=""
+    )
+
+
 
     default_interface_level: bpy.props.EnumProperty(
         name="Interface level in new file",
@@ -148,9 +182,23 @@ class CamAddonPreferences(AddonPreferences):
     def draw(self, context):
         layout = self.layout
         layout.label(text="Use experimental features when you want to help development of Blender CAM:")
-
         layout.prop(self, "experimental")
+        layout.prop(self, "update_source")
+        layout.label(text="Choose a preset update source")
 
+        UPDATE_SOURCES=[("https://github.com/vilemduha/blendercam", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
+               ("https://github.com/pppalain/blendercam", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
+               # comments for searching in github actions release script to automatically set this repo
+               # if required
+               ## REPO ON NEXT LINE
+               ("https://api.github.com/repos/pppalain/blendercam/commits","Direct from git (may not work)","Get from git commits directly"),
+               ## REPO ON PREV LINE
+               ("","None","Don't do auto update"),
+        ]
+        grid=layout.grid_flow(align=True)
+        for (url,short,long) in UPDATE_SOURCES:
+            op=grid.operator("render.cam_set_update_source",text=short)
+            op.new_source=url
 
 class machineSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
@@ -1170,6 +1218,20 @@ def check_operations_on_load(context):
             # load last used machine preset
             bpy.ops.script.execute_preset(filepath=machine_preset,menu_idname="CAM_MACHINE_MT_presets")
         _IS_LOADING_DEFAULTS=False
+    # check for updated version of the plugin
+    bpy.ops.render.cam_check_updates()
+    # copy presets if not there yet
+    if bpy.context.preferences.addons['cam'].preferences.just_updated:
+        preset_source_path = Path(__file__).parent / 'presets'
+        preset_target_path = Path(bpy.utils.script_path_user()) / 'presets'
+
+        def copy_if_not_exists(src,dst):
+            if Path(dst).exists()==False:
+                shutil.copy2(src,dst)
+        shutil.copytree(preset_source_path,preset_target_path,copy_function=copy_if_not_exists,dirs_exist_ok=True)
+
+        bpy.context.preferences.addons['cam'].preferences.just_updated=False
+        bpy.ops.wm.save_userpref()
 
 
 
@@ -1380,6 +1442,9 @@ def compatible_panels():
 
 
 classes = [
+    autoupdate.UpdateSourceOperator,
+    autoupdate.Updater,
+    autoupdate.UpdateChecker,
     ui.CAM_UL_operations,
     ui.CAM_UL_chains,
     opReference,
@@ -1482,7 +1547,6 @@ classes = [
 
 
 def register():
-
     for p in classes:
         bpy.utils.register_class(p)
 
@@ -1510,6 +1574,8 @@ def register():
 
     bpy.types.Scene.interface = bpy.props.PointerProperty(type=CAM_INTERFACE_Properties)
 
+    basrelief.register()
+
 
 def unregister():
     for p in classes:
@@ -1526,3 +1592,4 @@ def unregister():
     del s.cam_text
     del s.cam_pack
     del s.cam_slice
+    basrelief.unregister()
