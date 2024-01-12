@@ -57,7 +57,7 @@ from cam.version import __version__
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
-    "version": __version__,
+    "version":  (0, 6, 9),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
