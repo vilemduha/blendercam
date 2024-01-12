@@ -5,6 +5,9 @@ import json
 import pathlib
 import zipfile
 import bpy
+import re
+import io
+import os
 
 class UpdateChecker(bpy.types.Operator):
     """calculate all CAM paths"""
@@ -22,35 +25,39 @@ class UpdateChecker(bpy.types.Operator):
                 with urlopen(update_source) as response:
                     body = response.read().decode("UTF-8")
                     # find the tag name
-                    release_list=json.reads(body)
+                    release_list=json.loads(body)
                     if len(release_list) > 0:
                         release = release_list[0]
                         tag = release["tag_name"]
                         print(f"Found release: {tag}")
-                        match = re.match(r".*\(\s*(\d+),(\s*\d+),(\s*\d+)\)",tag)
+                        match = re.match(r".*(\d+)\.(\s*\d+)\.(\s*\d+)",tag)
                         if match:
-                            version_num  = map(int,match.groups())                                
-                            print(f"Found release: {version_num}")
+                            version_num  = tuple(map(int,match.groups()))
+                            print(f"Found version: {version_num}")
+
                             if version_num > current_version:
                                 print("Version is newer, downloading source")
-                                zip_url = zipball_url
-                                with urlopen(zipball_url) as zip_response:
+                                zip_url = release["zipball_url"]
+                                with urlopen(zip_url) as zip_response:
                                     zip_body=zip_response.read()
+                                    buffer= io.BytesIO(zip_body)
                                     zf=zipfile.ZipFile(buffer,mode='r')
                                     files=zf.infolist()
-                                    addons_path = pathlib.Path(__file__).parent.parent
+                                    cam_addon_path = pathlib.Path(__file__).parent
                                     for fileinfo in files:
                                         filename=fileinfo.filename
-                                        path= zipfile.Path(zf,filename)
-                                        parent_path=path.parents[-4]
-                                        if path.is_file() and parent_path.match("/*/scripts/addons"):
-                                            # path is under scripts/addons, copy it into our addon folder
-                                            relative_path = path.relative_to(parent_path)
-                                            out_path = addons_path.joinpath(relative_path)
-                                            # check folder exists
-                                            out_path.parent.mkdir(parents=True,exist_ok=True)
-                                            zf.extract(path,path=out_path)
-                                        # TODO: what about if a file is deleted...
+                                        if fileinfo.is_dir() == False:
+                                            path_pos=filename.replace("\\","/").find("/scripts/addons/cam/")
+                                            if path_pos!=-1:
+                                                relative_path=filename[path_pos+len("/scripts/addons/cam/"):]
+                                                print("rp",relative_path,addons_path)
+                                                out_path = addons_path / relative_path
+                                                print(out_path)
+                                                # check folder exists
+                                                out_path.parent.mkdir(parents=True,exist_ok=True)
+                                                with zf.open(filename,"r") as in_file, open(out_path,"wb") as out_file:
+                                                    out_file.write(in_file.read())
+                                                # TODO: what about if a file is deleted...
                                     # updated everything, now mark as updated and reload scripts
                                     bpy.context.preferences.addons['cam'].preferences.just_updated=True
                                     bpy.ops.wm.save_userpref()
