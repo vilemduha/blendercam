@@ -132,11 +132,12 @@ class CamAddonPreferences(AddonPreferences):
     update_source: bpy.props.EnumProperty(
         name="Source of updates for the addon",
         description="",
-        # first item is filled in by github actions when a release is created
+        # source repository is altered in release action
         items=[("https://api.github.com/repos/vilemduha/blendercam/releases", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
                ("https://api.github.com/repos/pppalain/blendercam/releases", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
-               ("https://github.com/pppalain/blendercam/archive/refs/heads/master.zip", "Daily", "Direct from git repository (github.com/pppalain/blendercam)"),
-               ("https://api.github.com/repos/joemarshall/blendercam/releases","Source","Where the release was downloaded from"),
+               ## REPO ON THIS LINE
+               ("https://api.github.com/repos/joemarshall/blendercam/commits","Direct from git (may not work)","Get from git commits directly"),
+               ## REPO ON PREV LINE
                ("None","None","Don't do auto update"),
                ],
         default="None",
@@ -147,14 +148,20 @@ class CamAddonPreferences(AddonPreferences):
         default=0
     )
 
+    last_commit_hash: StringProperty(
+        name="Hash of last commit from updater",
+        default=""
+    )
+
+
     just_updated: BoolProperty(
         name="Set to true on update",
         default=False
     )
 
-    new_version_available: BoolProperty(
-        name="Set to true if new version is found",
-        default=False
+    new_version_available: StringProperty(
+        name="Set to new version name if one is found",
+        default=""
     )
 
 
