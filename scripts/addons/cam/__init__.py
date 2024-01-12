@@ -1195,6 +1195,8 @@ def check_operations_on_load(context):
             # load last used machine preset
             bpy.ops.script.execute_preset(filepath=machine_preset,menu_idname="CAM_MACHINE_MT_presets")
         _IS_LOADING_DEFAULTS=False
+    # check for updated plugin
+    bpy.ops.render.cam_check_updates()
 
 
 

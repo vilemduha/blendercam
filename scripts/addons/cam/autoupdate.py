@@ -9,6 +9,7 @@ import re
 import io
 import os
 import sys
+import calendar
 
 class UpdateChecker(bpy.types.Operator):
     """calculate all CAM paths"""
@@ -58,7 +59,10 @@ class UpdateChecker(bpy.types.Operator):
                                                 # check folder exists
                                                 out_path.parent.mkdir(parents=True,exist_ok=True)
                                                 with zf.open(filename,"r") as in_file, open(out_path,"wb") as out_file:
+                                                    time_struct=(*fileinfo.date_time,0,0,0)
+                                                    mtime=fileinfo.timegm(time_struct)
                                                     out_file.write(in_file.read())
+                                                    os.utime(out_file,times=(mtime,mtime))
                                                 # TODO: what about if a file is deleted...
                                     # updated everything, now mark as updated and reload scripts
                                     bpy.context.preferences.addons['cam'].preferences.just_updated=True
