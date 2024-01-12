@@ -47,7 +47,7 @@ from bpy.props import *
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 from bpy_extras.object_utils import object_data_add
 from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, \
-    polygon_utils_cam  # , post_processors
+    polygon_utils_cam, autoupdate  # , post_processors
 from mathutils import *
 from shapely import geometry as sgeometry
 
@@ -57,7 +57,7 @@ from cam.version import __version__
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
-    "version": __version__,
+    "version": (0, 6, 9),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
@@ -129,6 +129,29 @@ class CamAddonPreferences(AddonPreferences):
         default=False,
     )
 
+    update_source: bpy.props.EnumProperty(
+        name="Source of updates for the addon",
+        description="",
+        # first item is filled in by github actions when a release is created
+        items=[("https://api.github.com/repos/vilemduha/blendercam/releases", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
+               ("https://api.github.com/repos/pppalain/blendercam/releases", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
+               ("https://github.com/pppalain/blendercam/archive/refs/heads/master.zip", "Daily", "Direct from git repository (github.com/pppalain/blendercam)"),
+               ("<CUSTOM_DOWNLOAD_SOURCE>","Source","Where the release was downloaded from"),
+               ],
+        default='<CUSTOM_DOWNLOAD_SOURCE>',
+    )
+
+    last_update_check: IntProperty(
+        name="Last update time",
+        default=0
+    )
+
+    just_updated: BoolProperty(
+        name="Set to true on update",
+        default=False
+    )
+
+
     default_interface_level: bpy.props.EnumProperty(
         name="Interface level in new file",
         description="Choose visible options",
@@ -147,9 +170,10 @@ class CamAddonPreferences(AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
+        layout.prop(self, "update_source")
         layout.label(text="Use experimental features when you want to help development of Blender CAM:")
-
         layout.prop(self, "experimental")
+
 
 
 class machineSettings(bpy.types.PropertyGroup):
@@ -1170,6 +1194,8 @@ def check_operations_on_load(context):
             # load last used machine preset
             bpy.ops.script.execute_preset(filepath=machine_preset,menu_idname="CAM_MACHINE_MT_presets")
         _IS_LOADING_DEFAULTS=False
+    # check for updates
+    bpy.ops.render.cam_check_updates()
 
 
 
@@ -1380,6 +1406,7 @@ def compatible_panels():
 
 
 classes = [
+    autoupdate.UpdateChecker,
     ui.CAM_UL_operations,
     ui.CAM_UL_chains,
     opReference,
