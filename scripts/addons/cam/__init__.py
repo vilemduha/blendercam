@@ -152,6 +152,11 @@ class CamAddonPreferences(AddonPreferences):
         default=False
     )
 
+    new_version_available: BoolProperty(
+        name="Set to true if new version is found",
+        default=False
+    )
+
 
 
     default_interface_level: bpy.props.EnumProperty(

@@ -4,6 +4,7 @@ from cam.simple import strInUnits
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
 import cam.utils
 import cam.constants
+from cam.version import __version__ as cam_version
 
 # Info panel
 # This panel gives general information about the current operation
@@ -33,12 +34,20 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     panel_interface_level = 0
 
     prop_level = {
+        'draw_blendercam_version': 0,
         'draw_opencamlib_version': 1,
         'draw_op_warnings': 0,
         'draw_op_time': 0,
         'draw_op_chipload': 0,
-        'draw_op_money_cost': 1
+        'draw_op_money_cost': 1,
     }
+
+    # Draw blendercam version (and whether there are updates available)
+    def draw_blendercam_version(self):
+        if not self.has_correct_level(): return
+        self.layout.label(text=f"Blendercam version: {".".join(cam_version)}")
+        if bpy.context.preferences.addons['cam'].preferences.new_version_available == True:
+            self.layout.operator("render.cam_update_now")
 
     # Display the OpenCamLib version
     def draw_opencamlib_version(self):
@@ -102,6 +111,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     # Display the Info Panel
     def draw(self, context):
         self.context = context
+        self.draw_blendercam_version()
         self.draw_opencamlib_version()
         self.draw_op_warnings()
         self.draw_op_time()
