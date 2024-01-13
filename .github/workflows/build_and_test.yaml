@@ -62,6 +62,13 @@ jobs:
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
+    - name: Make addon zip
+      uses: thedoctor0/zip-release@0.7.5
+      if: always()
+      with:
+        type: 'zip'
+        filename: 'blendercam.zip'
+        directory: './scripts/addons'    
     - name: Run tests
       shell: bash
       run: |
@@ -73,16 +80,9 @@ jobs:
         cd scripts/addons/cam/tests
         python install_addon.py ${ADDON_PATH}
         python test_suite.py
-    - name: Make addon zip
-      uses: thedoctor0/zip-release@0.7.5
-      if: always()
-      with:
-        type: 'zip'
-        filename: 'blendercam.zip'
-        directory: './scripts/addons'    
     - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: blendercam-${{matrix.os}}-${{matrix.blender_version}}
-        path: ./scripts/addons/blendercam.zip
+        path: ./scripts/addons/cam
         
