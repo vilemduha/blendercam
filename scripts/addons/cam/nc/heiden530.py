@@ -162,7 +162,8 @@ class Creator(iso.Creator):
 
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
 
-        if self.same_xyz(x, y, z): return
+		(x, y, z, a, b, c,axis_count)=self.filter_xyz(x, y, z)
+		if axis_count==0: return
 
         self.write_blocknum()
 

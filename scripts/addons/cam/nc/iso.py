@@ -548,7 +548,8 @@ class Creator(nc.Creator):
 	##  Moves
 
 	def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None ):
-		if self.same_xyz(x, y, z, a, b, c): return
+		(x, y, z, a, b, c,axis_count)=self.filter_xyz(x, y, z, a, b, c)
+		if axis_count==0: return
 		self.on_move()
 
 		if self.g0123_modal:
@@ -610,7 +611,8 @@ class Creator(nc.Creator):
 		self.write('\n')
 
 	def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
-		if self.same_xyz(x, y, z, a, b, c): return
+		(x, y, z, a, b, c,axis_count)=self.filter_xyz(x, y, z, a, b, c)
+		if axis_count==0: return
 		self.on_move()
 		if self.g0123_modal:
 			if self.prev_g0123 != self.FEED():
@@ -674,26 +676,22 @@ class Creator(nc.Creator):
 		self.write_misc()
 		self.write('\n')
 
-	def same_xyz(self, x=None, y=None, z=None, a=None, b=None, c=None):
-		if (x != None):
-			if (self.fmt.string(x + self.shift_x)) != (self.fmt.string(self.x)):
-				return False
-		if (y != None):
-			if (self.fmt.string(y + self.shift_y)) != (self.fmt.string(self.y)):
-				return False
-		if (z != None):
-			if (self.fmt.string(z + self.shift_z)) != (self.fmt.string(self.z)):
-				return False
-		if (a != None):
-			if (self.fmt.string(a)) != (self.fmt.string(self.a)):
-				return False
-		if (b != None):
-			if (self.fmt.string(b)) != (self.fmt.string(self.b)):
-				return False
-		if (c != None):
-			if (self.fmt.string(c)) != (self.fmt.string(self.c)):
-				return False
-		return True
+	def filter_xyz(self, x=None, y=None, z=None, a=None, b=None, c=None):
+		""" Check if x,y,z,a,b,c are the same and set them to None if they are
+			return value = (x,y,z,a,b,c,count) where count is the number of
+			axis moves left.
+		"""
+		rv = [x,y,z,a,b,c,0]
+		comparisons = ((x,self.shift_x,self.x),(y,self.shift_y,self.y),(z,self.shift_z,self.z),
+			(a,0,self.a),(b,0,self.b),(c,0,self.c))
+
+		for i,(new_val,shift,current_val) in enumerate(comparisons):
+			if new_val is not None:
+				if self.fmt.string(new_val+shift) == self.fmt.string(current_val):
+					rv[i]=None
+				else:
+					rv[6]+=1
+		return rv
 
 
 	def get_quadrant(self, dx, dy):
@@ -732,7 +730,8 @@ class Creator(nc.Creator):
 		return angle_e - angle_s
 
 	def arc(self, cw, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
-		if self.same_xyz(x, y, z): return
+		(x,y,z,_,_,_,axis_count) = self.filter_xyz(x,y,z)
+		if axis_count==0: return
 
 		if self.output_arcs_as_lines or (self.can_do_helical_arcs == False and self.in_quadrant_splitting == False and (z != None) and (math.fabs(z - self.z) > 0.000001) and (self.fmt.string(z) != self.fmt.string(self.z))):
 			# split the helical arc into little line feed moves
