@@ -90,6 +90,8 @@ jobs:
     needs: [ build_and_test ]
     if: failure()
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
       - name: Rerun failed jobs in the current workflow (because mac blender is unstable)
         env:
           GH_TOKEN: ${{ github.token }}
