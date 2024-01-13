@@ -71,7 +71,7 @@ class BlenderCAMTest(unittest.TestCase):
                     print("Using mac test file")
                     expected = self.get_gcode_from_file(gcode_file+".mac")
                     self.assertMultiLineEqual(generated, expected,
-                        msg = "\n"+self.get_diff(gcode_file[1:], gcode_file+".mac"))
+                        msg = "\n"+self.get_diff(gcode_file[1:], gcode_file+".mac")+"\n---"+generated)
                 else:
                     self.assertMultiLineEqual(generated, expected,
                         msg = "\n"+self.get_diff(gcode_file[1:], gcode_file))
