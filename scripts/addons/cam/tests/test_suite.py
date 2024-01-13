@@ -68,10 +68,13 @@ class BlenderCAMTest(unittest.TestCase):
                 generated = self.get_gcode_from_file(gcode_file[1:])                    
                 expected = self.get_gcode_from_file(gcode_file)
                 if sys.platform=='darwin' and os.path.exists(gcode_file+".mac"):
+                    print("Using mac test file")
                     expected = self.get_gcode_from_file(gcode_file+".mac")
-
-                self.assertMultiLineEqual(generated, expected,
-                    msg = "\n"+self.get_diff(gcode_file[1:], gcode_file))
+                    self.assertMultiLineEqual(generated, expected,
+                        msg = "\n"+self.get_diff(gcode_file[1:], gcode_file+".mac"))
+                else:
+                    self.assertMultiLineEqual(generated, expected,
+                        msg = "\n"+self.get_diff(gcode_file[1:], gcode_file))
                 os.remove(gcode_file[1:])  # cleanup generated file unless test fails
 
 if __name__ == '__main__':
