@@ -19,16 +19,16 @@ with tempfile.TemporaryDirectory() as td:
   # blender 4.0 installing addon crashes sometimes on mac github actions...
   for x in range(NUM_RETRIES):
     try:
-      if sys.platform.startswith('darwin') and x!=0:
-        print("Reinstall blender for osx")
-        # reinstall blender with brew because sometimes it is broken
-        subprocess.run("brew uninstall --cask blender", shell=True, check=True)
-        subprocess.run("brew install --cask blender", shell=True, check=True)
-
-      subprocess.run(command, shell=True, check=True)
+      subprocess.run(command, shell=True, check=True,capture_output=True``)
       sys.exit(0)
-    except Exception as e:
-        
+    except subprocess.CalledProcessError as e:        
       print("Install addon failed, retrying:",e)
+      for line in e.stderr:
+        if line.startswith("Writing: "):
+          crash_file=pathlib.Path(line[len("Writing: "):])
+          if crash_file.exists():
+            print("Crash log:\n================")
+            print(crash_file.read_text())
+            print("============================")
 
 
