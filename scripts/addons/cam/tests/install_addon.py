@@ -19,7 +19,7 @@ with tempfile.TemporaryDirectory() as td:
   # blender 4.0 installing addon crashes sometimes on mac github actions...
   for x in range(NUM_RETRIES):
     try:
-      subprocess.run(command, shell=True, check=True,capture_output=True``)
+      subprocess.run(command, shell=True, check=True,capture_output=True)
       sys.exit(0)
     except subprocess.CalledProcessError as e:        
       print("Install addon failed, retrying:",e)
