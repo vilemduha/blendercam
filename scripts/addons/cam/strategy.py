@@ -209,7 +209,7 @@ async def curve(o):
     pathSamples = []
     utils.getOperationSources(o)
     if not o.onlycurves:
-        o.info.warnings += 'at least one of assigned objects is not a curve\n'
+        raise CamException("All objects must be curves for this operation.")
 
     for ob in o.objects:
         pathSamples.extend(curveToChunks(ob))  # make the chunks from curve here
@@ -257,8 +257,7 @@ async def proj_curve(s, o):
 
     from cam import chunk
     if targetCurve.type != 'CURVE':
-        o.info.warnings += 'Projection target and source have to be curve objects!\n '
-        return
+        raise CamException('Projection target and source have to be curve objects!')
 
     if 1:
         extend_up = 0.1
@@ -610,8 +609,7 @@ async def medial_axis(o):
     elif o.cutter_type == 'BALLNOSE':
         maxdepth = - new_cutter_diameter / 2 - o.skin
     else:
-        o.info.warnings += 'Only Ballnose, V-carve cutters\n are supported'
-        return
+        raise CamException("Only Ballnose and V-carve cutters are supported for meial axis.")
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
@@ -771,6 +769,10 @@ def getLayers(operation, startdepth, enddepth):
     """returns a list of layers bounded by startdepth and enddepth
        uses operation.stepdown to determine number of layers.
     """
+    if startdepth < enddepth:
+        raise CamException("Start depth is lower than end depth. "
+        "If you have set a custom depth end, it must be lower than depth start, "
+        "and should usually be negative. Set this in the CAM Operation Area panel.")
     if operation.use_layers:
         layers = []
         n = math.ceil((startdepth - enddepth) / operation.stepdown)
