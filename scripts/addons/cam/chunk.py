@@ -25,6 +25,7 @@ from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
 from cam import polygon_utils_cam
 from cam.simple import *
+from cam.exception import CamException
 import math
 
 
@@ -970,7 +971,6 @@ def restoreVisibility(o, storage):
 
 
 def meshFromCurve(o, use_modifiers=False):
-    # print(o.name,o)
     activate(o)
     bpy.ops.object.duplicate()
 
@@ -980,6 +980,9 @@ def meshFromCurve(o, use_modifiers=False):
 
     if co.type == 'FONT':  # support for text objects is only and only here, just convert them to curves.
         bpy.ops.object.convert(target='CURVE', keep_original=False)
+    elif co.type != 'CURVE': # curve must be a curve...
+        bpy.ops.object.delete() # delete temporary object
+        raise CamException("Source curve object must be of type CURVE")
     co.data.dimensions = '3D'
     co.data.bevel_depth = 0
     co.data.extrude = 0

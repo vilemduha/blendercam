@@ -32,6 +32,7 @@ from cam.async_op import AsyncOperatorMixin,AsyncCancelledException
 import shapely
 import mathutils
 import math
+import textwrap
 import traceback
 
 import cam
@@ -194,7 +195,8 @@ async def _calc_path(operator,context):
         print("Got path:",context)
     except CamException as e:
         traceback.print_tb(e.__traceback__)
-        operator.report({'ERROR'},str(e))
+        error_str="\n".join(textwrap.wrap(str(e),width=80))
+        operator.report({'ERROR'},error_str)
         return {'FINISHED',False}
     except AsyncCancelledException as e:
         return {'CANCELLED',False}
@@ -215,9 +217,15 @@ class CalculatePath(bpy.types.Operator,AsyncOperatorMixin):
     bl_idname = "object.calculate_cam_path"
     bl_label = "Calculate CAM paths"
     bl_options = {'REGISTER', 'UNDO','BLOCKING'}
-
-    # this property was actually ignored, so removing it in 0.3
-    # operation= StringProperty(name="Operation", description="Specify the operation to calculate",default='Operation')
+    
+    @classmethod
+    def poll(cls,context):
+        s = context.scene
+        o = s.cam_operations[s.cam_active_operation]
+        if o is not None:
+            if cam.isValid(o,context):
+                return True
+        return False
 
     async def execute_async(self, context):
         (retval,success) = await _calc_path(self,context)
@@ -296,8 +304,14 @@ class PathsChain(bpy.types.Operator,AsyncOperatorMixin):
     bl_label = "Calculate CAM paths in current chain and export chain gcode"
     bl_options = {'REGISTER', 'UNDO','BLOCKING'}
 
+    @classmethod
+    def poll(cls, context):
+        s = context.scene
+        chain = s.cam_chains[s.cam_active_chain]
+        return cam.isChainValid(chain,context)[0]
+
     async def execute_async(self, context):
-        s = bpy.context.scene
+        s = context.scene
         bpy.ops.object.mode_set(mode='OBJECT')	    # force object mode
         chain = s.cam_chains[s.cam_active_chain]
         chainops = getChainOperations(chain)
@@ -326,6 +340,12 @@ class PathExportChain(bpy.types.Operator):
     bl_idname = "object.cam_export_paths_chain"
     bl_label = "Export CAM paths in current chain as gcode"
     bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        s = context.scene
+        chain = s.cam_chains[s.cam_active_chain]
+        return cam.isChainValid(chain,context)[0]
 
     def execute(self, context):
         s = bpy.context.scene
@@ -399,6 +419,12 @@ class CAMSimulateChain(bpy.types.Operator, AsyncOperatorMixin):
     bl_idname = "object.cam_simulate_chain"
     bl_label = "CAM simulation"
     bl_options = {'REGISTER', 'UNDO','BLOCKING'}
+
+    @classmethod
+    def poll(cls, context):
+        s = context.scene
+        chain = s.cam_chains[s.cam_active_chain]
+        return cam.isChainValid(chain,context)[0]
 
     operation: StringProperty(name="Operation",
                               description="Specify the operation to calculate", default='Operation')

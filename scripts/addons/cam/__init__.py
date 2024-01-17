@@ -88,6 +88,7 @@ def updateMaterial(self, context):
 def updateOperation(self, context):
     scene = context.scene
     ao = scene.cam_operations[scene.cam_active_operation]
+    operationValid(self, context)
 
     if ao.hide_all_others:
         for _ao in scene.cam_operations:
@@ -350,41 +351,56 @@ class import_settings(bpy.types.PropertyGroup):
     max_segment_size: FloatProperty(name="", description="Only Segments bigger then this value get subdivided",
                                     default=0.001, min=0.0001, max=1.0, unit="LENGTH")
 
-
-def operationValid(self, context):
-    o = self
-    o.changed = True
-    o.valid = True
-    invalidmsg = "Operation has no valid data input\n"
-    o.info.warnings = ""
-    o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+def isValid(o,context):
+    valid=True
     if o.geometry_source == 'OBJECT':
         if o.object_name not in bpy.data.objects:
-            o.valid = False
-            o.info.warnings = invalidmsg
+            valid = False
     if o.geometry_source == 'COLLECTION':
         if o.collection_name not in bpy.data.collections:
-            o.valid = False
-            o.info.warnings = invalidmsg
+            valid = False
         elif len(bpy.data.collections[o.collection_name].objects) == 0:
-            o.valid = False
-            o.info.warnings = invalidmsg
+            valid = False
 
     if o.geometry_source == 'IMAGE':
         if o.source_image_name not in bpy.data.images:
-            o.valid = False
-            o.info.warnings = invalidmsg
+            valid = False
+    return valid
 
+def operationValid(self, context):
+    scene=context.scene
+    o = scene.cam_operations[scene.cam_active_operation]
+    o.changed = True
+    o.valid = isValid(o,context)
+    invalidmsg = "Invalid source object for operation.\n"
+    if o.valid:
+        o.info.warnings = ""
+    else:
+        o.info.warnings = invalidmsg
+
+    if o.geometry_source == 'IMAGE':
         o.optimisation.use_exact = False
     o.update_offsetimage_tag = True
     o.update_zbufferimage_tag = True
     print('validity ')
 
+def isChainValid(chain,context):
+    s = context.scene
+    if len(chain.operations)==0:
+        return (False,"")
+    for cho in chain.operations:
+        found_op = None
+        for so in s.cam_operations:
+            if so.name == cho.name:
+                found_op= so
+        if found_op == None:
+            return (False,f"Couldn't find operation {cho.name}")
+        if cam.isValid(found_op,context) is False:
+            return (False,f"Operation {found_op.name} is not valid")
+    return (True,"")
 
-# print(o.valid)
 
 def updateOperationValid(self, context):
-    operationValid(self, context)
     updateOperation(self, context)
 
 
@@ -868,7 +884,7 @@ class camOperation(bpy.types.PropertyGroup):
                                           update=updateRest)
 
     # feeds
-    feedrate: FloatProperty(name="Feedrate", description="Feedrate", min=0.00005, max=50.0, default=1.0,
+    feedrate: FloatProperty(name="Feedrate", description="Feedrate in units per minute", min=0.00005, max=50.0, default=1.0,
                             precision=cam.constants.PRECISION, unit="LENGTH", update=updateChipload)
     plunge_feedrate: FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,
                                    precision=1, subtype='PERCENTAGE', update=updateRest)

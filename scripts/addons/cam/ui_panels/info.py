@@ -32,6 +32,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_label = "CAM info & warnings"
     bl_idname = "WORLD_PT_CAM_INFO"
     panel_interface_level = 0
+    always_show_panel = True
 
     prop_level = {
         'draw_blendercam_version': 0,
@@ -115,6 +116,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
         self.context = context
         self.draw_blendercam_version()
         self.draw_opencamlib_version()
-        self.draw_op_warnings()
-        self.draw_op_time()
-        self.draw_op_money_cost()
+        if self.op:
+            self.draw_op_warnings()
+            self.draw_op_time()
+            self.draw_op_money_cost()

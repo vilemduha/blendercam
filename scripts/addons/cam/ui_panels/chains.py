@@ -3,6 +3,8 @@ import bpy
 from bpy.types import UIList
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
 
+import cam
+
 
 class CAM_UL_operations(UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
@@ -37,6 +39,7 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_label = "CAM chains"
     bl_idname = "WORLD_PT_CAM_CHAINS"
     panel_interface_level = 1
+    always_show_panel = True
 
     def draw(self, context):
         layout = self.layout
@@ -63,13 +66,14 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
                     col.operator("scene.cam_chain_operation_down", icon='TRIA_DOWN', text="")
 
                 if not chain.computing:
-                    if chain.valid:
-                        pass
-                        layout.operator("object.calculate_cam_paths_chain", text="Calculate chain paths & Export Gcode")
-                        layout.operator("object.cam_export_paths_chain", text="Export chain gcode")
-                        layout.operator("object.cam_simulate_chain", text="Simulate this chain")
-                    else:
-                        layout.label(text="chain invalid, can't compute")
+                    layout.operator("object.calculate_cam_paths_chain", text="Calculate chain paths & Export Gcode")
+                    layout.operator("object.cam_export_paths_chain", text="Export chain gcode")
+                    layout.operator("object.cam_simulate_chain", text="Simulate this chain")
+
+                    valid,reason=cam.isChainValid(chain,context)
+                    if not valid:
+                        layout.label(icon="ERROR",text=f"Can't compute chain - reason:\n")
+                        layout.label(text=reason)
                 else:
                     layout.label(text='chain is currently computing')
 

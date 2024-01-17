@@ -60,10 +60,10 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.label(text='!ERROR! COLLISION!')
             self.layout.prop(self.op.movement, 'free_height')
 
-        if self.op.valid:
-            self.layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
-        else:
-            self.layout.label(text="operation invalid, can't compute")
+        if not self.op.valid:
+            self.layout.label(text="Select a valid object to calculate the path.")
+        # will be disable if not valid            
+        self.layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
 
     def draw_export_gcode(self):
         if not self.has_correct_level(): return

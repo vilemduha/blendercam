@@ -338,6 +338,8 @@ def getBounds(o):
         o.max.z = o.source_image_offset.z
     s = bpy.context.scene
     m = s.cam_machine
+    # make sure this message only shows once and goes away once fixed
+    o.info.warnings.replace('Operation exceeds your machine limits\n','')
     if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y \
             or o.max.z - o.min.z > m.working_area.z:
         o.info.warnings += 'Operation exceeds your machine limits\n'
