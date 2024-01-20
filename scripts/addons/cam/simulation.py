@@ -31,6 +31,7 @@ import numpy as np
 
 from cam import simple
 from cam import image_utils
+from cam.async_op import progress_async
 
 
 def createSimulationObject(name, operations, i):
@@ -89,13 +90,13 @@ def createSimulationObject(name, operations, i):
     bpy.ops.object.shade_smooth()
 
 
-def doSimulation(name, operations):
+async def doSimulation(name, operations):
     """perform simulation of operations. Currently only for 3 axis"""
     for o in operations:
         utils.getOperationSources(o)
     limits = utils.getBoundsMultiple(
         operations)  # this is here because some background computed operations still didn't have bounds data
-    i = generateSimulationImage(operations, limits)
+    i = await generateSimulationImage(operations, limits)
 #    cp = simple.getCachePath(operations[0])[:-len(operations[0].name)] + name
     cp = simple.getSimulationPath()+name
     print('cp=', cp)
@@ -106,7 +107,7 @@ def doSimulation(name, operations):
     createSimulationObject(name, operations, i)
 
 
-def generateSimulationImage(operations, limits):
+async def generateSimulationImage(operations, limits):
     minx, miny, minz, maxx, maxy, maxz = limits
     # print(minx,miny,minz,maxx,maxy,maxz)
     sx = maxx - minx
@@ -119,11 +120,13 @@ def generateSimulationImage(operations, limits):
     resy = math.ceil(sy / simulation_detail) + 2 * borderwidth
 
     # create array in which simulation happens, similar to an image to be painted in.
-    si = np.array(0.1, dtype=float)
-    si.resize(resx, resy)
-    si.fill(maxz)
+    si = np.full(shape=(resx,resy),fill_value=maxz,dtype=np.float)
 
-    for o in operations:
+    num_operations=len(operations)
+
+    start_time=time.time()
+
+    for op_count,o in enumerate(operations):
         ob = bpy.data.objects["cam_path_{}".format(o.name)]
         m = ob.data
         verts = m.vertices
@@ -141,10 +144,6 @@ def generateSimulationImage(operations, limits):
             else:
                 shapek = m.shape_keys.key_blocks[kname]
             shapek.data[0].co = (0.0, 0, 0)
-        # print(len(shapek.data))
-        # print(len(verts_rotations))
-
-        # print(r)
 
         totalvolume = 0.0
 
@@ -161,8 +160,8 @@ def generateSimulationImage(operations, limits):
         for i, vert in enumerate(verts):
             if perc != int(100 * i / vtotal):
                 perc = int(100 * i / vtotal)
-                simple.progress('simulation', perc)
-            # progress('simulation ',int(100*i/l))
+                total_perc = (perc+ op_count*100) / num_operations
+                await progress_async(f'Simulation',int(total_perc))
 
             if i > 0:
                 volume = 0
@@ -279,6 +278,7 @@ def generateSimulationImage(operations, limits):
     si = si[borderwidth:-borderwidth, borderwidth:-borderwidth]
     si += -minz
 
+    await progress_async("Simulated:",time.time()-start_time,'s')
     return si
 
 
@@ -288,9 +288,7 @@ def getCutterArray(operation, pixsize):
     r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
     res = math.ceil((r * 2) / pixsize)
     m = res / 2.0
-    car = np.array((0), dtype=float)
-    car.resize(res, res)
-    car.fill(-10)
+    car = np.full(shape=(res,res),fill_value=-10.0,dtype=np.float)
 
     v = mathutils.Vector((0, 0, 0))
     ps = pixsize

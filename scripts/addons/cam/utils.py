@@ -43,6 +43,7 @@ from cam.polygon_utils_cam import *
 from cam.image_utils import *
 from cam.exception import *
 
+from cam.async_op import progress_async
 from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
 
 from shapely.geometry import polygon as spolygon
@@ -337,6 +338,8 @@ def getBounds(o):
         o.max.z = o.source_image_offset.z
     s = bpy.context.scene
     m = s.cam_machine
+    # make sure this message only shows once and goes away once fixed
+    o.info.warnings.replace('Operation exceeds your machine limits\n','')
     if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y \
             or o.max.z - o.min.z > m.working_area.z:
         o.info.warnings += 'Operation exceeds your machine limits\n'
@@ -402,14 +405,14 @@ def samplePathLow(o, ch1, ch2, dosample):
 
 # def threadedSampling():#not really possible at all without running more blenders for same operation :( python!
 # samples in both modes now - image and bullet collision too.
-def sampleChunks(o, pathSamples, layers):
+async def sampleChunks(o, pathSamples, layers):
     #
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     getAmbient(o)
 
     if o.optimisation.use_exact:  # prepare collision world
         if o.optimisation.use_opencamlib:
-            oclSample(o, pathSamples)
+            await oclSample(o, pathSamples)
             cutterdepth = 0
         else:
             if o.update_bullet_collision_tag:
@@ -473,7 +476,7 @@ def sampleChunks(o, pathSamples, layers):
         for s in patternchunk.points:
             if o.strategy != 'WATERLINE' and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
-                progress('sampling paths ', last_percent)
+                await progress_async('sampling paths ', last_percent)
             n += 1
             x = s[0]
             y = s[1]
@@ -634,7 +637,7 @@ def sampleChunks(o, pathSamples, layers):
     return chunks
 
 
-def sampleChunksNAxis(o, pathSamples, layers):
+async def sampleChunksNAxis(o, pathSamples, layers):
     #
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
@@ -684,7 +687,7 @@ def sampleChunksNAxis(o, pathSamples, layers):
             #  and that is why we need to write endpoints everywhere too?
 
             if n / 200.0 == int(n / 200.0):
-                progress('sampling paths ', int(100 * n / totlen))
+                await progress_async('sampling paths', int(100 * n / totlen))
             n += 1
             sampled = False
             # print(si)
@@ -992,7 +995,7 @@ def overlaps(bb1, bb2):  # true if bb1 is child of bb2
         return True
 
 
-def connectChunksLow(chunks, o):
+async def connectChunksLow(chunks, o):
     """ connects chunks that are close to each other without lifting, sampling them 'low' """
     if not o.movement.stay_low or (o.strategy == 'CARVE' and o.carve_depth > 0):
         return chunks
@@ -1042,7 +1045,7 @@ def connectChunksLow(chunks, o):
             pos = lastch.points[-1]
 
     if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET':
-        oclResampleChunks(o, chunks_to_resample)
+        await oclResampleChunks(o, chunks_to_resample,use_cached_mesh=True)
 
     return connectedchunks
 
@@ -1066,21 +1069,22 @@ def getClosest(o, pos, chunks):
     return ch
 
 
-def sortChunks(chunks, o):
+async def sortChunks(chunks, o):
     if o.strategy != 'WATERLINE':
-        progress('sorting paths')
+        await progress_async('sorting paths')
     sys.setrecursionlimit(100000)  # the getNext() function of CamPathChunk was running out of recursion limits.
     sortedchunks = []
     chunks_to_resample = []
 
     lastch = None
+    last_progress_time=time.time()
+    total= len(chunks)
     i = len(chunks)
     pos = (0, 0, 0)
-    # for ch in chunks:
-    # ch.getNext()#this stores the unsortedchildren properties
-    # print('numofchunks')
-    # print(len(chunks))
-    while len(chunks) > 0:
+    while len(chunks) > 0:        
+        if o.strategy != 'WATERLINE' and time.time()-last_progress_time>0.1:
+            await progress_async("Sorting paths",100.0*(total-len(chunks))/total)
+            last_progress_time=time.time()
         ch = None
         if len(sortedchunks) == 0 or len(
                 lastch.parents) == 0:  # first chunk or when there are no parents -> parents come after children here...
@@ -1125,7 +1129,7 @@ def sortChunks(chunks, o):
     if o.strategy != 'DRILL' and o.strategy != 'OUTLINEFILL':
         # THIS SHOULD AVOID ACTUALLY MOST STRATEGIES, THIS SHOULD BE DONE MANUALLY,
         # BECAUSE SOME STRATEGIES GET SORTED TWICE.
-        sortedchunks = connectChunksLow(sortedchunks, o)
+        sortedchunks = await connectChunksLow(sortedchunks, o)
     return sortedchunks
 
 

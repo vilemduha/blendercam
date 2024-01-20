@@ -33,14 +33,12 @@ from cam.simple import *
 from cam import chunk
 from cam.chunk import *
 from cam import simulation
-
+from cam.async_op import progress_async
 
 def getCircle(r, z):
-    car = numpy.array(0, dtype=float)
+    car = numpy.full(shape=(r*2,r*2),fill_value=-10,dtype=numpy.double)
     res = 2 * r
     m = r
-    car.resize(r * 2, r * 2)
-    car.fill(-10)
     v = mathutils.Vector((0, 0, 0))
     for a in range(0, res):
         v.x = (a + 0.5 - m)
@@ -52,11 +50,9 @@ def getCircle(r, z):
 
 
 def getCircleBinary(r):
-    car = numpy.array((False), dtype=bool)
+    car = numpy.full(shape=(r*2,r*2),fill_value=False,dtype=bool)
     res = 2 * r
     m = r
-    car.resize(r * 2, r * 2)
-    car.fill(False)
     v = mathutils.Vector((0, 0, 0))
     for a in range(0, res):
         v.x = (a + 0.5 - m)
@@ -118,10 +114,7 @@ def imagetonumpy(i):
 
     width = i.size[0]
     height = i.size[1]
-    na = numpy.array((0.1), dtype=float)
-
-    size = width * height
-    na.resize(size * 4)
+    na = numpy.full(shape=(width*height*4,),fill_value=-10,dtype=numpy.double)
 
     p = i.pixels[:]
     # these 2 lines are about 15% faster than na[:]=i.pixels[:].... whyyyyyyyy!!?!?!?!?!
@@ -135,11 +128,10 @@ def imagetonumpy(i):
     return na
 
 
-def offsetArea(o, samples):
+async def offsetArea(o, samples):
     """ offsets the whole image with the cutter + skin offsets """
     if o.update_offsetimage_tag:
         minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-        o.offset_image.fill(-10)
 
         sourceArray = samples
         cutterArray = simulation.getCutterArray(o, o.optimisation.pixsize)
@@ -149,6 +141,7 @@ def offsetArea(o, samples):
         width = len(sourceArray)
         height = len(sourceArray[0])
         cwidth = len(cutterArray)
+        o.offset_image= numpy.full(shape=(width,height),fill_value=-10,dtype=numpy.float)
 
         t = time.time()
 
@@ -162,25 +155,17 @@ def offsetArea(o, samples):
         for x in range(0, cwidth):  # cwidth):
             text = "Offsetting depth " + str(int(x * 100 / cwidth))
             # o.operator.report({"INFO"}, text)
-            simple.progress('offset ', int(x * 100 / cwidth))
+            await progress_async('offset depth image', int(x * 100 / cwidth))
             for y in range(0, cwidth):
-                # TODO:OPTIMIZE THIS - this can run much faster when the areas won't be created each run????
-                #  tests dont work now
                 if cutterArray[x, y] > -10:
-                    # i+=1
-                    # progress(i)
-                    # winner
                     numpy.maximum(sourceArray[x: width - cwidth + x, y: height - cwidth + y] + cutterArray[x, y],
                                   comparearea, comparearea)
-                    # contest of performance
 
         o.offset_image[m: width - cwidth + m, m:height - cwidth + m] = comparearea
-        # progress('offseting done')
 
-        simple.progress('\ntime ' + str(time.time() - t))
+        print('\nOffset image time ' + str(time.time() - t))
 
         o.update_offsetimage_tag = False
-    # progress('doing offsetimage')
     return o.offset_image
 
 
@@ -355,9 +340,7 @@ def crazyPath(o):
     resx = ceil(sx / o.optimisation.simulation_detail) + 2 * o.borderwidth
     resy = ceil(sy / o.optimisation.simulation_detail) + 2 * o.borderwidth
 
-    o.millimage = numpy.array((0.1), dtype=float)
-    o.millimage.resize(resx, resy)
-    o.millimage.fill(0)
+    o.millimage = numpy.full(shape=(resx,resy),fill_value=0.,dtype=numpy.float)
     o.cutterArray = -simulation.getCutterArray(o, o.optimisation.simulation_detail)  # getting inverted cutter
 
 
@@ -367,9 +350,7 @@ def buildStroke(start, end, cutterArray):
     size_y = abs(end[1] - start[1]) + cutterArray.size[0]
     r = cutterArray.size[0] / 2
 
-    strokeArray = numpy.array((0), dtype=float)
-    strokeArray.resize(size_x, size_y)
-    strokeArray.fill(-10)
+    strokeArray = numpy.full(shape=(size_x,size_y),fill_value=-10.0,dtype=numpy.float)
     samplesx = numpy.round(numpy.linspace(start[0], end[0], strokelength))
     samplesy = numpy.round(numpy.linspace(start[1], end[1], strokelength))
     samplesz = numpy.round(numpy.linspace(start[2], end[2], strokelength))
@@ -1041,7 +1022,7 @@ def renderSampleImage(o):
     t = time.time()
     simple.progress('getting zbuffer')
     # print(o.zbuffer_image)
-
+    o.update_offsetimage_tag = True
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
         pixsize = o.optimisation.pixsize
 
@@ -1060,7 +1041,12 @@ def renderSampleImage(o):
         if not o.update_zbufferimage_tag:
             try:
                 i = bpy.data.images.load(iname)
+                if i.size[0] != resx or i.size[1] != resy:
+                    print("Z buffer size changed:",i.size,resx,resy)
+                    o.update_zbufferimage_tag = True
+                    
             except:
+                
                 o.update_zbufferimage_tag = True
         if o.update_zbufferimage_tag:
             s = bpy.context.scene
@@ -1068,29 +1054,30 @@ def renderSampleImage(o):
             # prepare nodes first
             s.use_nodes = True
             n = s.node_tree
+            r = s.render
+            r.resolution_x = resx
+            r.resolution_y = resy
+            r.engine = 'BLENDER_EEVEE'
 
             n.links.clear()
             n.nodes.clear()
             n1 = n.nodes.new('CompositorNodeRLayers')
+            s.view_layers[n1.layer].use_pass_z=True
             n2 = n.nodes.new('CompositorNodeViewer')
             n3 = n.nodes.new('CompositorNodeComposite')
-            n.links.new(n1.outputs['Depth'], n2.inputs['Image'])
-            n.links.new(n1.outputs['Depth'], n3.inputs['Image'])
+            n.links.new(n1.outputs[n1.outputs.find('Depth')], n2.inputs[n2.inputs.find('Image')])
+            n.links.new(n1.outputs[n1.outputs.find('Depth')], n3.inputs[n3.inputs.find('Image')])
+
             n.nodes.active = n2
             ###################
 
-            r = s.render
-            r.resolution_x = resx
-            r.resolution_y = resy
 
             # resize operation image
-            o.offset_image.resize((resx, resy))
-            o.offset_image.fill(-10)
+            o.offset_image= numpy.full(shape=(resx,resy),fill_value=-10,dtype=numpy.double)
 
             # various settings for  faster render
             r.resolution_percentage = 100
 
-            r.engine = 'BLENDER_EEVEE'
             ff = r.image_settings.file_format
             cm = r.image_settings.color_mode
             r.image_settings.file_format = 'OPEN_EXR'
@@ -1158,7 +1145,7 @@ def renderSampleImage(o):
             sy = 0
             ey = i.size[1]
 
-        o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
+        #o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
 
         o.optimisation.pixsize = o.source_image_size_x / i.size[0]
         simple.progress('pixel size in the image source', o.optimisation.pixsize)
@@ -1166,14 +1153,11 @@ def renderSampleImage(o):
         rawimage = imagetonumpy(i)
         maxa = numpy.max(rawimage)
         mina = numpy.min(rawimage)
-        a = numpy.array((1.0, 1.0))
-        a.resize(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1])
         neg = o.source_image_scale_z < 0
         if o.strategy == 'WATERLINE':  # waterline strategy needs image border to have ok ambient.
-            a.fill(1 - neg)
-
+            a = numpy.full(shape=(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]),fill_value=1-neg,dtype=numpy.float)
         else:  # other operations like parallel need to reach the border
-            a.fill(neg)  #
+            a = numpy.full(shape=(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]),fill_value=neg,dtype=numpy.float)
         # 2*o.borderwidth
         a[o.borderwidth:-o.borderwidth, o.borderwidth:-o.borderwidth] = rawimage
         a = a[sx:ex + o.borderwidth * 2, sy:ey + o.borderwidth * 2]
@@ -1207,7 +1191,7 @@ def renderSampleImage(o):
 
 # return numpy.array([])
 
-def prepareArea(o):
+async def prepareArea(o):
     # if not o.use_exact:
     renderSampleImage(o)
     samples = o.zbuffer_image
@@ -1225,5 +1209,5 @@ def prepareArea(o):
     if o.update_offsetimage_tag:
         if o.inverse:
             samples = numpy.maximum(samples, o.min.z - 0.00001)
-        offsetArea(o, samples)
+        await offsetArea(o, samples)
         numpysave(o.offset_image, iname)

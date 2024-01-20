@@ -23,14 +23,18 @@ import bgl
 import bl_operators
 import blf
 import bpy
+import bpy.ops
 import math
 import numpy
 import os
 import pickle
+import shutil
 import subprocess
 import sys
 import threading
 import time
+
+from pathlib import Path
 
 try:
     import shapely
@@ -46,23 +50,22 @@ from bpy.props import *
 from bpy.types import Menu, Operator, UIList, AddonPreferences
 from bpy_extras.object_utils import object_data_add
 from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, \
-    polygon_utils_cam  # , post_processors
+    polygon_utils_cam, autoupdate, basrelief  # , post_processors
 from mathutils import *
 from shapely import geometry as sgeometry
 
 from cam.ui import *
-
-
+from cam.version import __version__
 
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
-    "version": (0, 9, 3),
-    "blender": (2, 80, 0),
+    "version":(0,9,9),
+    "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
-    "warning": "there is no warranty for the produced gcode by now",
-    "wiki_url": "https://github.com/vilemduha/blendercam/wiki",
+    "warning": "",
+    "doc_url": "https://blendercam.com/",
     "tracker_url": "",
     "category": "Scene"}
 
@@ -71,8 +74,10 @@ import cam.constants
 was_hidden_dict = {}
 
 def updateMachine(self, context):
+    global _IS_LOADING_DEFAULTS    
     print('update machine ')
-    utils.addMachineAreaObject()
+    if not _IS_LOADING_DEFAULTS:
+        utils.addMachineAreaObject()
 
 
 def updateMaterial(self, context):
@@ -83,6 +88,7 @@ def updateMaterial(self, context):
 def updateOperation(self, context):
     scene = context.scene
     ao = scene.cam_operations[scene.cam_active_operation]
+    operationValid(self, context)
 
     if ao.hide_all_others:
         for _ao in scene.cam_operations:
@@ -117,6 +123,7 @@ def updateOperation(self, context):
         print(e)
 
 
+
 class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
     # when defining this in a submodule of a python package.
@@ -127,12 +134,72 @@ class CamAddonPreferences(AddonPreferences):
         default=False,
     )
 
+    update_source: bpy.props.StringProperty(
+        name="Source of updates for the addon",
+        description="This can be either a github repo link in which case it will download the latest release on there, "
+        "or an api link like https://api.github.com/repos/<author>/blendercam/commits to get from a github repository",
+        default="https://github.com/pppalain/blendercam",
+    )
+
+    last_update_check: IntProperty(
+        name="Last update time",
+        default=0
+    )
+
+    last_commit_hash: StringProperty(
+        name="Hash of last commit from updater",
+        default=""
+    )
+
+
+    just_updated: BoolProperty(
+        name="Set to true on update or initial install",
+        default=True
+    )
+
+    new_version_available: StringProperty(
+        name="Set to new version name if one is found",
+        default=""
+    )
+
+
+
+    default_interface_level: bpy.props.EnumProperty(
+        name="Interface level in new file",
+        description="Choose visible options",
+        items=[('0', "Basic", "Only show essential options"),
+               ('1', "Advanced", "Show advanced options"),
+               ('2', "Complete", "Show all options"),
+               ('3', "Experimental", "Show experimental options")],
+        default='3',
+    )
+
+    default_machine_preset: bpy.props.StringProperty(
+        name="Machine preset in new file",
+        description="So that machine preset choice persists between files",
+        default='',
+    )
+
     def draw(self, context):
         layout = self.layout
         layout.label(text="Use experimental features when you want to help development of Blender CAM:")
-
         layout.prop(self, "experimental")
+        layout.prop(self, "update_source")
+        layout.label(text="Choose a preset update source")
 
+        UPDATE_SOURCES=[("https://github.com/vilemduha/blendercam", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
+               ("https://github.com/pppalain/blendercam", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
+               # comments for searching in github actions release script to automatically set this repo
+               # if required
+               ## REPO ON NEXT LINE
+               ("https://api.github.com/repos/pppalain/blendercam/commits","Direct from git (may not work)","Get from git commits directly"),
+               ## REPO ON PREV LINE
+               ("","None","Don't do auto update"),
+        ]
+        grid=layout.grid_flow(align=True)
+        for (url,short,long) in UPDATE_SOURCES:
+            op=grid.operator("render.cam_set_update_source",text=short)
+            op.new_source=url
 
 class machineSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
@@ -284,41 +351,56 @@ class import_settings(bpy.types.PropertyGroup):
     max_segment_size: FloatProperty(name="", description="Only Segments bigger then this value get subdivided",
                                     default=0.001, min=0.0001, max=1.0, unit="LENGTH")
 
-
-def operationValid(self, context):
-    o = self
-    o.changed = True
-    o.valid = True
-    invalidmsg = "Operation has no valid data input\n"
-    o.info.warnings = ""
-    o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+def isValid(o,context):
+    valid=True
     if o.geometry_source == 'OBJECT':
         if o.object_name not in bpy.data.objects:
-            o.valid = False
-            o.info.warnings = invalidmsg
+            valid = False
     if o.geometry_source == 'COLLECTION':
         if o.collection_name not in bpy.data.collections:
-            o.valid = False
-            o.info.warnings = invalidmsg
+            valid = False
         elif len(bpy.data.collections[o.collection_name].objects) == 0:
-            o.valid = False
-            o.info.warnings = invalidmsg
+            valid = False
 
     if o.geometry_source == 'IMAGE':
         if o.source_image_name not in bpy.data.images:
-            o.valid = False
-            o.info.warnings = invalidmsg
+            valid = False
+    return valid
 
+def operationValid(self, context):
+    scene=context.scene
+    o = scene.cam_operations[scene.cam_active_operation]
+    o.changed = True
+    o.valid = isValid(o,context)
+    invalidmsg = "Invalid source object for operation.\n"
+    if o.valid:
+        o.info.warnings = ""
+    else:
+        o.info.warnings = invalidmsg
+
+    if o.geometry_source == 'IMAGE':
         o.optimisation.use_exact = False
     o.update_offsetimage_tag = True
     o.update_zbufferimage_tag = True
     print('validity ')
 
+def isChainValid(chain,context):
+    s = context.scene
+    if len(chain.operations)==0:
+        return (False,"")
+    for cho in chain.operations:
+        found_op = None
+        for so in s.cam_operations:
+            if so.name == cho.name:
+                found_op= so
+        if found_op == None:
+            return (False,f"Couldn't find operation {cho.name}")
+        if cam.isValid(found_op,context) is False:
+            return (False,f"Operation {found_op.name} is not valid")
+    return (True,"")
 
-# print(o.valid)
 
 def updateOperationValid(self, context):
-    operationValid(self, context)
     updateOperation(self, context)
 
 
@@ -802,7 +884,7 @@ class camOperation(bpy.types.PropertyGroup):
                                           update=updateRest)
 
     # feeds
-    feedrate: FloatProperty(name="Feedrate", description="Feedrate", min=0.00005, max=50.0, default=1.0,
+    feedrate: FloatProperty(name="Feedrate", description="Feedrate in units per minute", min=0.00005, max=50.0, default=1.0,
                             precision=cam.constants.PRECISION, unit="LENGTH", update=updateChipload)
     plunge_feedrate: FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,
                                    precision=1, subtype='PERCENTAGE', update=updateRest)
@@ -1009,21 +1091,11 @@ class camChain(bpy.types.PropertyGroup):  # chain is just a set of operations wh
     computing: bpy.props.BoolProperty(name="Computing right now", description="", default=False)
     operations: bpy.props.CollectionProperty(type=opReference)  # this is to hold just operation names.
 
-
-@bpy.app.handlers.persistent
-def check_operations_on_load(context):
-    """checks any broken computations on load and reset them."""
-    s = bpy.context.scene
-    for o in s.cam_operations:
-        if o.computing:
-            o.computing = False
-
 class CAM_CUTTER_MT_presets(Menu):
     bl_label = "Cutter presets"
     preset_subdir = "cam_cutters"
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset
-
 
 class CAM_MACHINE_MT_presets(Menu):
     bl_label = "Machine presets"
@@ -1031,6 +1103,15 @@ class CAM_MACHINE_MT_presets(Menu):
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset
 
+    @classmethod
+    def post_cb(cls,context):
+        name = cls.bl_label
+        filepath = bpy.utils.preset_find(name,
+                                                 cls.preset_subdir,
+                                                 display_name=True,
+                                                 ext=".py")
+        context.preferences.addons['cam'].preferences.default_machine_preset=filepath
+        bpy.ops.wm.save_userpref()
 
 class AddPresetCamCutter(bl_operators.presets.AddPresetBase, Operator):
     """Add a Cutter Preset"""
@@ -1132,6 +1213,42 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
     bl_idname = 'BLENDERCAM_RENDER'
     bl_label = "Cam"
+
+_IS_LOADING_DEFAULTS=False
+
+@bpy.app.handlers.persistent
+def check_operations_on_load(context):
+    global _IS_LOADING_DEFAULTS
+    """checks any broken computations on load and reset them."""
+    s = bpy.context.scene
+    for o in s.cam_operations:
+        if o.computing:
+            o.computing = False
+    # set interface level to previously used level for a new file
+    if not bpy.data.filepath:
+        _IS_LOADING_DEFAULTS=True
+        s.interface.level = bpy.context.preferences.addons['cam'].preferences.default_interface_level
+        machine_preset=bpy.context.preferences.addons['cam'].preferences.machine_preset=bpy.context.preferences.addons['cam'].preferences.default_machine_preset
+        if len(machine_preset)>0:
+            print("Loading preset:",machine_preset)
+            # load last used machine preset
+            bpy.ops.script.execute_preset(filepath=machine_preset,menu_idname="CAM_MACHINE_MT_presets")
+        _IS_LOADING_DEFAULTS=False
+    # check for updated version of the plugin
+    bpy.ops.render.cam_check_updates()
+    # copy presets if not there yet
+    if bpy.context.preferences.addons['cam'].preferences.just_updated:
+        preset_source_path = Path(__file__).parent / 'presets'
+        preset_target_path = Path(bpy.utils.script_path_user()) / 'presets'
+
+        def copy_if_not_exists(src,dst):
+            if Path(dst).exists()==False:
+                shutil.copy2(src,dst)
+        shutil.copytree(preset_source_path,preset_target_path,copy_function=copy_if_not_exists,dirs_exist_ok=True)
+
+        bpy.context.preferences.addons['cam'].preferences.just_updated=False
+        bpy.ops.wm.save_userpref()
+
 
 
 def get_panels():  # convenience function for bot register and unregister functions
@@ -1285,6 +1402,7 @@ def compatible_panels():
         t.MATERIAL_PT_strand,
         t.MATERIAL_PT_options,
         t.MATERIAL_PT_shadow,
+        
         t.MATERIAL_PT_transp_game,
         t.MATERIAL_PT_volume_density,
         t.MATERIAL_PT_volume_shading,
@@ -1340,6 +1458,9 @@ def compatible_panels():
 
 
 classes = [
+    autoupdate.UpdateSourceOperator,
+    autoupdate.Updater,
+    autoupdate.UpdateChecker,
     ui.CAM_UL_operations,
     ui.CAM_UL_chains,
     opReference,
@@ -1347,7 +1468,6 @@ classes = [
     machineSettings,
     CamAddonPreferences,
     import_settings,
-
     ui.CAM_INTERFACE_Panel,
     ui.CAM_INTERFACE_Properties,
     ui.CAM_CHAINS_Panel,
@@ -1443,7 +1563,6 @@ classes = [
 
 
 def register():
-
     for p in classes:
         bpy.utils.register_class(p)
 
@@ -1471,6 +1590,8 @@ def register():
 
     bpy.types.Scene.interface = bpy.props.PointerProperty(type=CAM_INTERFACE_Properties)
 
+    basrelief.register()
+
 
 def unregister():
     for p in classes:
@@ -1487,3 +1608,4 @@ def unregister():
     del s.cam_text
     del s.cam_pack
     del s.cam_slice
+    basrelief.unregister()

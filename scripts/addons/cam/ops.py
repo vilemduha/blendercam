@@ -28,9 +28,13 @@ from bpy_extras.io_utils import ImportHelper
 
 import subprocess, os, threading
 from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, simulation
+from cam.async_op import AsyncOperatorMixin,AsyncCancelledException
 import shapely
 import mathutils
 import math
+import textwrap
+import traceback
+
 import cam
 from cam.exception import *
 
@@ -142,66 +146,90 @@ class KillPathsBackground(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CalculatePath(bpy.types.Operator):
+async def _calc_path(operator,context):
+    s = bpy.context.scene
+    o = s.cam_operations[s.cam_active_operation]
+    if o.geometry_source == 'OBJECT':
+        ob = bpy.data.objects[o.object_name]
+        ob.hide_set(False)
+    if o.geometry_source == 'COLLECTION':
+        obc = bpy.data.collections[o.collection_name]
+        for ob in obc.objects:
+            ob.hide_set(False)
+    if o.strategy == "CARVE":
+        curvob = bpy.data.objects[o.curve_object]
+        curvob.hide_set(False)
+    '''if o.strategy == 'WATERLINE':
+        ob = bpy.data.objects[o.object_name]
+        ob.select_set(True)
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)'''
+    if bpy.context.mode != 'OBJECT':
+        bpy.ops.object.mode_set(mode='OBJECT')	    # force object mode
+    bpy.ops.object.select_all(action='DESELECT')
+    path = bpy.data.objects.get('cam_path_{}'.format(o.name))
+    if path:
+        path.select_set(state=True)
+        bpy.ops.object.delete()
+
+    if not o.valid:
+        operator.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
+        progress_async("Operation can't be performed, see warnings for info")
+        return {'FINISHED',False}
+    
+    #check for free movement height < maxz and return with error
+    if(o.movement.free_height < o.maxz):
+        operator.report({'ERROR_INVALID_INPUT'}, "Free movement height is less than Operation depth start \n correct and try again.")
+        progress_async("Operation can't be performed, see warnings for info")
+        return {'FINISHED',False}
+
+    if o.computing:
+        return {'FINISHED',False}
+
+    o.operator = operator
+
+    if o.use_layers:
+        o.movement.parallel_step_back = False
+    try:
+        print("Get path:",context)
+        await gcodepath.getPath(context, o)
+        print("Got path:",context)
+    except CamException as e:
+        traceback.print_tb(e.__traceback__)
+        error_str="\n".join(textwrap.wrap(str(e),width=80))
+        operator.report({'ERROR'},error_str)
+        return {'FINISHED',False}
+    except AsyncCancelledException as e:
+        return {'CANCELLED',False}
+    except Exception as e:
+        print("FAIL",e)
+        traceback.print_tb(e.__traceback__)
+        operator.report({'ERROR'},str(e))
+        return {'FINISHED',False}
+    coll = bpy.data.collections.get('RigidBodyWorld')
+    if coll:
+        bpy.data.collections.remove(coll)
+
+    return {'FINISHED',True}
+
+
+class CalculatePath(bpy.types.Operator,AsyncOperatorMixin):
     """calculate CAM paths"""
     bl_idname = "object.calculate_cam_path"
     bl_label = "Calculate CAM paths"
-    bl_options = {'REGISTER', 'UNDO'}
-
-    # this property was actually ignored, so removing it in 0.3
-    # operation= StringProperty(name="Operation", description="Specify the operation to calculate",default='Operation')
-
-    def execute(self, context):
-        print("CALCULATE")
-        # getIslands(context.object)
-        s = bpy.context.scene
+    bl_options = {'REGISTER', 'UNDO','BLOCKING'}
+    
+    @classmethod
+    def poll(cls,context):
+        s = context.scene
         o = s.cam_operations[s.cam_active_operation]
-        if o.geometry_source == 'OBJECT':
-            ob = bpy.data.objects[o.object_name]
-            ob.hide_set(False)
-        if o.geometry_source == 'COLLECTION':
-            obc = bpy.data.collections[o.collection_name]
-            for ob in obc.objects:
-                ob.hide_set(False)
-        if o.strategy == "CARVE":
-            curvob = bpy.data.objects[o.curve_object]
-            curvob.hide_set(False)
-        print(bpy.context.mode)
-        if bpy.context.mode != 'OBJECT':
-            bpy.ops.object.mode_set(mode='OBJECT')	    # force object mode
-        bpy.ops.object.select_all(action='DESELECT')
-        path = bpy.data.objects.get('cam_path_{}'.format(o.name))
-        if path:
-            path.select_set(state=True)
-            bpy.ops.object.delete()
+        if o is not None:
+            if cam.isValid(o,context):
+                return True
+        return False
 
-        if not o.valid:
-            self.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
-            print("Operation can't be performed, see warnings for info")
-            return {'CANCELLED'}
-        
-        #check for free movement height < maxz and return with error
-        if(o.movement.free_height < o.maxz):
-            self.report({'ERROR_INVALID_INPUT'}, "Free movement height is less than Operation depth start \n correct and try again.")
-            return {'CANCELLED'}
-
-        if o.computing:
-            return {'FINISHED'}
-
-        o.operator = self
-
-        if o.use_layers:
-            o.movement.parallel_step_back = False
-        try:
-            gcodepath.getPath(context, o)
-        except CamException as e:
-            self.report({'ERROR'},str(e))
-            return {'CANCELLED'}
-        coll = bpy.data.collections.get('RigidBodyWorld')
-        if coll:
-            bpy.data.collections.remove(coll)
-
-        return {'FINISHED'}
+    async def execute_async(self, context):
+        (retval,success) = await _calc_path(self,context)
+        return retval
 
 
 class PathsAll(bpy.types.Operator):
@@ -270,26 +298,38 @@ def getChainOperations(chain):
     return chop
 
 
-class PathsChain(bpy.types.Operator):
+class PathsChain(bpy.types.Operator,AsyncOperatorMixin):
     """calculate a chain and export the gcode alltogether. """
     bl_idname = "object.calculate_cam_paths_chain"
     bl_label = "Calculate CAM paths in current chain and export chain gcode"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO','BLOCKING'}
 
-    def execute(self, context):
-        s = bpy.context.scene
+    @classmethod
+    def poll(cls, context):
+        s = context.scene
+        chain = s.cam_chains[s.cam_active_chain]
+        return cam.isChainValid(chain,context)[0]
+
+    async def execute_async(self, context):
+        s = context.scene
         bpy.ops.object.mode_set(mode='OBJECT')	    # force object mode
         chain = s.cam_chains[s.cam_active_chain]
         chainops = getChainOperations(chain)
         meshes = []
-
-        # if len(chainops)<4:
-        for i in range(0, len(chainops)):
-            s.cam_active_operation = s.cam_operations.find(chainops[i].name)
-            bpy.ops.object.calculate_cam_path()
+        try:
+            for i in range(0, len(chainops)):
+                s.cam_active_operation = s.cam_operations.find(chainops[i].name)
+                self.report({'INFO'},f"Calculating path: {chainops[i].name}")
+                result,success=await _calc_path(self,context)
+                if not success and 'FINISHED' in result:
+                    self.report({'ERROR'},f"Couldn't calculate path: {chainops[i].name}")
+        except Exception as e:
+            print("FAIL",e)
+            traceback.print_tb(e.__traceback__)
+            operator.report({'ERROR'},str(e))
+            return {'FINISHED'}
 
         for o in chainops:
-            # bpy.ops.object.calculate_cam_paths_background()
             meshes.append(bpy.data.objects["cam_path_{}".format(o.name)].data)
         gcodepath.exportGcodePath(chain.filename, meshes, chainops)
         return {'FINISHED'}
@@ -300,6 +340,12 @@ class PathExportChain(bpy.types.Operator):
     bl_idname = "object.cam_export_paths_chain"
     bl_label = "Export CAM paths in current chain as gcode"
     bl_options = {'REGISTER', 'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        s = context.scene
+        chain = s.cam_chains[s.cam_active_chain]
+        return cam.isChainValid(chain,context)[0]
 
     def execute(self, context):
         s = bpy.context.scene
@@ -335,27 +381,30 @@ class PathExport(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CAMSimulate(bpy.types.Operator):
+class CAMSimulate(bpy.types.Operator,AsyncOperatorMixin):
     """simulate CAM operation
     this is performed by: creating an image, painting Z depth of the brush substractively.
     Works only for some operations, can not be used for 4-5 axis."""
     bl_idname = "object.cam_simulate"
     bl_label = "CAM simulation"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO','BLOCKING'}
 
     operation: StringProperty(name="Operation",
                               description="Specify the operation to calculate", default='Operation')
 
-    def execute(self, context):
+    async def execute_async(self, context):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
 
         operation_name = "cam_path_{}".format(operation.name)
 
         if operation_name in bpy.data.objects:
-            simulation.doSimulation(operation_name, [operation])
+            try:
+                await simulation.doSimulation(operation_name, [operation])
+            except AsyncCancelledException as e:
+                return {'CANCELLED'}
         else:
-            print('no computed path to simulate')
+            self.report({'ERROR'},'no computed path to simulate')
             return {'FINISHED'}
         return {'FINISHED'}
 
@@ -364,17 +413,23 @@ class CAMSimulate(bpy.types.Operator):
         layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
 
 
-class CAMSimulateChain(bpy.types.Operator):
+class CAMSimulateChain(bpy.types.Operator, AsyncOperatorMixin):
     """simulate CAM chain, compared to single op simulation just writes into one image and thus enables
     to see how ops work together."""
     bl_idname = "object.cam_simulate_chain"
     bl_label = "CAM simulation"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {'REGISTER', 'UNDO','BLOCKING'}
+
+    @classmethod
+    def poll(cls, context):
+        s = context.scene
+        chain = s.cam_chains[s.cam_active_chain]
+        return cam.isChainValid(chain,context)[0]
 
     operation: StringProperty(name="Operation",
                               description="Specify the operation to calculate", default='Operation')
 
-    def execute(self, context):
+    async def execute_async(self, context):
         s = bpy.context.scene
         chain = s.cam_chains[s.cam_active_chain]
         chainops = getChainOperations(chain)
@@ -385,7 +440,10 @@ class CAMSimulateChain(bpy.types.Operator):
                 canSimulate = True  # force true
             print("operation name " + str(operation.name))
         if canSimulate:
-            simulation.doSimulation(chain.name, chainops)
+            try:
+                await simulation.doSimulation(chain.name, chainops)
+            except AsyncCancelledException as e:
+                return {'CANCELLED'}
         else:
             print('no computed path to simulate')
             return {'FINISHED'}
