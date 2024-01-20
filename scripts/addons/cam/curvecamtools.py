@@ -179,7 +179,7 @@ class CamCurveOvercuts(bpy.types.Operator):
         for s in shapes.geoms:
             s = shapely.geometry.polygon.orient(s, 1)
             if s.boundary.geom_type == 'LineString':
-                from shapely import MultiLineString
+                from shapely.geometry import MultiLineString
                 loops = MultiLineString([s.boundary])
             else:
                 loops = s.boundary
