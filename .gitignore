@@ -23,3 +23,4 @@ forceSyncWithUpstream
 .project
 
 .pydevproject
+__pycache__/

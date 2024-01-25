@@ -81,11 +81,12 @@ async def cutout(o):
         chunksFromCurve = []
         for ob in o.objects:
             chunksFromCurve.extend(curveToChunks(ob, o.use_modifiers))
-        for ch in chunksFromCurve:
-            # print(ch.points)
+        # chunks always have polys now
+        # for ch in chunksFromCurve:
+        #     # print(ch.points)
 
-            if len(ch.points) > 2:
-                ch.poly = chunkToShapely(ch)
+        #     if len(ch.points) > 2:
+        #         ch.poly = chunkToShapely(ch)
 
     # p.addContour(ch.poly)
     else:
@@ -122,12 +123,12 @@ async def cutout(o):
     if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW') or (
             o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW'):
         for ch in chunksFromCurve:
-            ch.points.reverse()
+            ch.reverse()
 
     if o.cut_type == 'INSIDE':  # there would bee too many conditions above,
         # so for now it gets reversed once again when inside cutting.
         for ch in chunksFromCurve:
-            ch.points.reverse()
+            ch.reverse()
 
     layers = getLayers(o, o.maxz, checkminz(o))
     extendorder = []
@@ -141,7 +142,7 @@ async def cutout(o):
             for layer in layers:
                 chunk_copy = chunk.copy()
                 if dir_switch:
-                    chunk_copy.points.reverse()
+                    chunk_copy.reverse()
                 extendorder.append([chunk_copy, layer])
                 if (not chunk.closed) and o.movement.type == "MEANDER":
                     dir_switch = not dir_switch
@@ -264,12 +265,13 @@ async def proj_curve(s, o):
         extend_down = 0.04
         tsamples = curveToChunks(targetCurve)
         for chi, ch in enumerate(pathSamples):
-            cht = tsamples[chi].points
+            cht = tsamples[chi].get_points()
             ch.depth = 0
-            for i, s in enumerate(ch.points):
+            ch_points=ch.get_points()
+            for i, s in enumerate(ch_points):
                 # move the points a bit
                 ep = Vector(cht[i])
-                sp = Vector(ch.points[i])
+                sp = Vector(ch_points[i])
                 # extend startpoint
                 vecs = sp - ep
                 vecs.normalize()
@@ -288,8 +290,8 @@ async def proj_curve(s, o):
 
                 vec = sp - ep
                 ch.depth = min(ch.depth, -vec.length)
-                ch.points[i] = sp.copy()
-
+                ch_points[i] = sp.copy()
+    ch.set_points(ch_points)
     layers = getLayers(o, 0, ch.depth)
 
     chunks.extend(utils.sampleChunksNAxis(o, pathSamples, layers))
@@ -358,7 +360,7 @@ async def pocket(o):
     if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
             o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
         for ch in chunksFromCurve:
-            ch.points.reverse()
+            ch.reverse()
 
     chunksFromCurve = await utils.sortChunks(chunksFromCurve, o)
 
@@ -380,7 +382,7 @@ async def pocket(o):
             revheight = helix_circumference * tan(o.movement.ramp_in_angle)
             for chi, ch in enumerate(lchunks):
                 if not chunksFromCurve[chi].children:
-                    p = ch.points[0]  # TODO:intercept closest next point when it should stay low
+                    p = ch.get_point(0)  # TODO:intercept closest next point when it should stay low
                     # first thing to do is to check if helix enter can really enter.
                     checkc = Circle(helix_radius + c_offset, o.optimisation.circle_detail)
                     checkc = affinity.translate(checkc, p[0], p[1])
@@ -401,7 +403,9 @@ async def pocket(o):
                             for v in h:
                                 nhelix.append((2 * p[0] - v[0], v[1], v[2]))
                             h = nhelix
-                        ch.points = h + ch.points
+                        ch.extend(h,at_index=0)
+#                        ch.points = h + ch.points
+
                     else:
                         o.info.warnings += 'Helix entry did not fit! \n '
                         ch.closed = True
@@ -415,13 +419,13 @@ async def pocket(o):
                 if chunksFromCurve[chi].parents == [] or len(chunksFromCurve[chi].parents) == 1:
 
                     revolutions = 0.25
-                    v1 = Vector(ch.points[-1])
+                    v1 = Vector(ch.get_point(-1))
                     i = -2
-                    v2 = Vector(ch.points[i])
+                    v2 = Vector(ch.get_point(i))
                     v = v1 - v2
                     while v.length == 0:
                         i = i - 1
-                        v2 = Vector(ch.points[i])
+                        v2 = Vector(ch.get_point(i))
                         v = v1 - v2
 
                     v.normalize()
@@ -465,13 +469,13 @@ async def pocket(o):
                             break
 
                     if covers:
-                        ch.points.extend(rothelix)
+                        ch.extend(rothelix)
 
         chunks.extend(lchunks)
 
     if o.movement.ramp:
         for ch in chunks:
-            ch.rampZigZag(ch.zstart, ch.points[0][2], o)
+            ch.rampZigZag(ch.zstart, ch.get_point(0)[2], o)
     
     if o.first_down:
         if o.pocket_option == "OUTSIDE":
@@ -559,7 +563,7 @@ async def drill(o):
         for chunk in chunks:
             # If using object for minz then use z from points in object
             if o.minz_from == 'OBJECT':
-                z = chunk.points[0][2]
+                z = chunk.get_point(0)[2]
             else:  # using operation minz
                 z = o.minz
             # only add a chunk layer if the chunk z point is in or lower than the layer
@@ -633,9 +637,10 @@ async def medial_axis(o):
 
         verts = []
         for ch in schunks:
-            for pt in ch.points:
-                # pvoro = Site(pt[0], pt[1])
-                verts.append(pt)  # (pt[0], pt[1]), pt[2])
+            verts.extend(ch.get_points())
+            # for pt in ch.get_points():
+            #     # pvoro = Site(pt[0], pt[1])
+            #     verts.append(pt)  # (pt[0], pt[1]), pt[2])
         # verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
         nDupli, nZcolinear = unique(verts)
         nVerts = len(verts)
@@ -836,7 +841,7 @@ def chunksToMesh(chunks, o):
         ch = chunks[chi]
         # print(chunks)
         # print (ch)
-        if len(ch.points) > 0:  # TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
+        if ch.count() > 0:  # TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
             # print(len(ch.points))
             nverts = []
             if o.optimisation.optimize:
@@ -847,14 +852,14 @@ def chunksToMesh(chunks, o):
             if lifted:  # did the cutter lift before? if yes, put a new position above of the first point of next chunk.
                 if o.machine_axes == '3' or (o.machine_axes == '5' and o.strategy5axis == 'INDEXED') or (
                         o.machine_axes == '4' and o.strategy4axis == 'INDEXED'):
-                    v = (ch.points[0][0], ch.points[0][1], free_height)
+                    v = (ch.get_point(0)[0], ch.get_point(0)[1], free_height)
                 else:  # otherwise, continue with the next chunk without lifting/dropping
                     v = ch.startpoints[0]  # startpoints=retract points
                     verts_rotations.append(ch.rotations[0])
                 verts.append(v)
 
             # add whole chunk
-            verts.extend(ch.points)
+            verts.extend(ch.get_points())
 
             # add rotations for n-axis
             if o.machine_axes != '3':
@@ -862,10 +867,10 @@ def chunksToMesh(chunks, o):
 
             lift = True
             # check if lifting should happen
-            if chi < len(chunks) - 1 and len(chunks[chi + 1].points) > 0:
+            if chi < len(chunks) - 1 and chunks[chi + 1].count() > 0:
                 # TODO: remake this for n axis, and this check should be somewhere else...
-                last = Vector(ch.points[-1])
-                first = Vector(chunks[chi + 1].points[0])
+                last = Vector(ch.get_point(-1))
+                first = Vector(chunks[chi + 1].get_point(0))
                 vect = first - last
                 if (o.machine_axes == '3' and (o.strategy == 'PARALLEL' or o.strategy == 'CROSS')
                     and vect.z == 0 and vect.length < o.dist_between_paths * 2.5) \
@@ -878,7 +883,7 @@ def chunksToMesh(chunks, o):
             if lift:
                 if o.machine_axes == '3' or (o.machine_axes == '5' and o.strategy5axis == 'INDEXED') or (
                         o.machine_axes == '4' and o.strategy4axis == 'INDEXED'):
-                    v = (ch.points[-1][0], ch.points[-1][1], free_height)
+                    v = (ch.get_point(-1)[0], ch.get_point(-1)[1], free_height)
                 else:
                     v = ch.startpoints[-1]
                     verts_rotations.append(ch.rotations[-1])

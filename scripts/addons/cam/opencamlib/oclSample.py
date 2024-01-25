@@ -82,7 +82,7 @@ async def ocl_sample(operation, chunks,use_cached_mesh = False):
     bdc.setCutter(cutter)
 
     for chunk in chunks:
-        for coord in chunk.points:
+        for coord in chunk.get_points():
             bdc.appendPoint(ocl.CLPoint(coord[0] * 1000, coord[1] * 1000, op_minz * 1000))
     await progress_async("OpenCAMLib sampling")
     bdc.run()

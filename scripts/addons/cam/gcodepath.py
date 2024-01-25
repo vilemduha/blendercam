@@ -543,7 +543,19 @@ async def getPath(context, operation):  # should do all path calculations.
     print(operation.machine_axes)
 
     if operation.machine_axes == '3':
-        await getPath3axis(context, operation)
+        if True: # profiler
+            import cProfile, pstats, io
+            pr = cProfile.Profile()
+            pr.enable()
+            await getPath3axis(context, operation)
+            pr.disable()
+            s = io.StringIO()
+            sortby = pstats.SortKey.CALLS
+            ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+            ps.print_stats()
+            print(s.getvalue())            
+        else:        
+            await getPath3axis(context, operation)
 
     elif (operation.machine_axes == '5' and operation.strategy5axis == 'INDEXED') or (
             operation.machine_axes == '4' and operation.strategy4axis == 'INDEXED'):
@@ -680,12 +692,13 @@ async def getPath3axis(context, operation):
                 chunks = await utils.connectChunksLow(chunks, o)
         if o.movement.ramp:
             for ch in chunks:
-                ch.rampZigZag(ch.zstart, ch.points[0][2], o)
+                ch.rampZigZag(ch.zstart, None, o)
         # print(chunks)
         if o.strategy == 'CARVE':
             for ch in chunks:
-                for vi in range(0, len(ch.points)):
-                    ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
+                ch.offsetZ(-o.carve_depth)
+#                for vi in range(0, len(ch.points)):
+#                    ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
         if o.use_bridges:
             print(chunks)
             for bridge_chunk in chunks:
@@ -701,7 +714,7 @@ async def getPath3axis(context, operation):
         if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
                 o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
             for ch in chunks:
-                ch.points.reverse()
+                ch.reverse()
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and not o.optimisation.use_opencamlib:
@@ -826,7 +839,7 @@ async def getPath3axis(context, operation):
             if (o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW') or (
                     o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW'):
                 for chunk in slicechunks:
-                    chunk.points.reverse()
+                    chunk.reverse()
             slicechunks = await utils.sortChunks(slicechunks, o)
             if topdown:
                 slicechunks.reverse()

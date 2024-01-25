@@ -138,20 +138,21 @@ def useBridges(ch, o):
 
         vi = 0
         newpoints = []
-        p1 = sgeometry.Point(ch.points[0])
+        ch_points=ch.get_points()
+        p1 = sgeometry.Point(ch_points[0])
         startinside = o.bridgespoly.contains(p1)
         interrupted = False
         verts = []
         edges = []
         faces = []
-        while vi < len(ch.points):
+        while vi < len(ch_points):
             i1 = vi
             i2 = vi
-            chp1 = ch.points[i1]
-            chp2 = ch.points[i1]  # Vector(v1)#this is for case of last point and not closed chunk..
-            if vi + 1 < len(ch.points):
+            chp1 = ch_points[i1]
+            chp2 = ch_points[i1]  # Vector(v1)#this is for case of last point and not closed chunk..
+            if vi + 1 < len(ch_points):
                 i2 = vi + 1
-                chp2 = ch.points[vi + 1]  # Vector(ch.points[vi+1])
+                chp2 = ch_points[vi + 1]  # Vector(ch_points[vi+1])
             v1 = mathutils.Vector(chp1)
             v2 = mathutils.Vector(chp2)
             if v1.z < bridgeheight or v2.z < bridgeheight:
@@ -230,7 +231,7 @@ def useBridges(ch, o):
                 newpoints.append(chp1)
                 vi += 1
                 interrupted = True
-        ch.points = newpoints
+        ch.set_points(newpoints)
 
     # create bridge cut curve here
     count = 0
