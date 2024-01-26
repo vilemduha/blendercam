@@ -303,7 +303,7 @@ class camPathChunk:
             if rotation is not None:
                 self.rotations.append(rotation)
         else:
-            self._points=np.concatenate((self._points[0:at_index],np.array([point]),self.points[at_index:]))
+            self._points=np.concatenate((self._points[0:at_index],np.array([point]),self._points[at_index:]))
             if startpoint is not None:
                 self.startpoints[at_index:at_index]=[startpoint]
             if endpoint is not None:
@@ -321,7 +321,7 @@ class camPathChunk:
             if rotations is not None:
                 self.rotations.extend(rotations)
         else:
-            self._points=np.concatenate((self._points[0:at_index],np.array(points),self.points[at_index:]))
+            self._points=np.concatenate((self._points[0:at_index],np.array(points),self._points[at_index:]))
             if startpoints is not None:
                 self.startpoints[at_index:at_index]=startpoints
             if endpoints is not None:
@@ -447,7 +447,7 @@ class camPathChunk:
 
             estlength = (zstart - zend) / tan(o.movement.ramp_in_angle)
             self.getLength()
-            if self._length > 0:  # for single point chunks..
+            if self.length > 0:  # for single point chunks..
                 ramplength = estlength
                 zigzaglength = ramplength / 2.000
                 turns = 1
@@ -474,11 +474,8 @@ class camPathChunk:
                             if (i + 1 == len(
                                     self._points)):  # this condition is for a rare case of combined layers+bridges+ramps..
                                 ratio = 1
-                            # print((ratio,zigzaglength))
-                            v1 = Vector(p1)
-                            v2 = Vector(p2)
-                            v = v1 + ratio * (v2 - v1)
-                            ramppoints.append((v.x, v.y, v.z))
+                            v = p1 + ratio * (p2 - p1)
+                            ramppoints.append(v.tolist())
                             haspoints = True
                         else:
                             ramppoints.append(p2)
@@ -543,10 +540,8 @@ class camPathChunk:
                                         # combined layers+bridges+ramps...
                                         ratio = 1
                                     # print((ratio,zigzaglength))
-                                    v1 = Vector(p1)
-                                    v2 = Vector(p2)
-                                    v = v1 + ratio * (v2 - v1)
-                                    ramppoints.append((v.x, v.y, v.z))
+                                    v = p1 + ratio * (p2 - p1)
+                                    ramppoints.append(v.tolist())
                                     haspoints = True
                                 # elif :
 
