@@ -1,4 +1,5 @@
 import bpy
+import sys
 
 # Get the scene
 s = bpy.context.scene
@@ -11,4 +12,6 @@ for i, operation in enumerate(s.cam_operations):
 
     # Run the calculate_cam_path() operator
     bpy.ops.object.calculate_cam_path()
+
+sys.exit(0)
 
