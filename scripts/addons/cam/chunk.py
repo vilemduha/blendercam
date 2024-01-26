@@ -294,19 +294,25 @@ class camPathChunk:
             self.rotations.pop(index)
 
     def append(self, point, startpoint=None, endpoint=None, rotation=None,at_index=None):
-        if at_index==None:
+        if at_index is None:
             self._points=np.concatenate((self._points,np.array([point])))
+            if startpoint is not None:
+                self.startpoints.append(startpoint)
+            if endpoint is not None:
+                self.endpoints.append(endpoint)
+            if rotation is not None:
+                self.rotations.append(rotation)
         else:
             self._points=np.concatenate((self._points[0:at_index],np.array([point]),self.points[at_index:]))
-        if startpoint is not None:
-            self.startpoints.append(startpoint)
-        if endpoint is not None:
-            self.endpoints.append(endpoint)
-        if rotation is not None:
-            self.rotations.append(rotation)
+            if startpoint is not None:
+                self.startpoints[at_index:at_index]=[startpoint]
+            if endpoint is not None:
+                self.endpoints[at_index:at_index]=[endpoint]
+            if rotation is not None:
+                self.rotations[at_index:at_index]=[rotation]
 
     def extend(self, points, startpoints=None, endpoints=None, rotations=None,at_index=None):
-        if at_index==None:
+        if at_index is None:
             self._points=np.concatenate((self._points,np.array(points)))
             if startpoints is not None:
                 self.startpoints.extend(startpoints)
@@ -867,8 +873,7 @@ def parentChildDist(parents, children, o, distance=None):
             dlim = dlim * 2
     else:
         dlim = distance
-    # print('distance')
-    # print(len(children),len(parents))
+    
     # i=0
     # simplification greatly speeds up the distance finding algorithms.
     for child in children:
@@ -880,12 +885,13 @@ def parentChildDist(parents, children, o, distance=None):
 
     for child in children:
         for parent in parents:
-            # print(len(children),len(parents))
+            print("CH=",len(children),"PA:",len(parents))
             isrelation = False
             if parent != child:
                 if not parent.poly.is_empty and not child.poly.is_empty:
                     # print(dir(parent.simppoly))
                     d = parent.simppoly.distance(child.simppoly)
+                    print(d,dlim,parent,child)
                     if d < dlim:
                         isrelation = True
                 else:  # this is the old method, preferably should be replaced in most cases except parallell
