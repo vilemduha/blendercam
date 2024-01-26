@@ -1,5 +1,8 @@
 import bpy
 import sys
+import warnings
+
+warnings.simplefilter("once")
 
 # Get the scene
 s = bpy.context.scene
