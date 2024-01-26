@@ -279,7 +279,7 @@ class camPathChunk:
     # print(v,pos)
 
     def reverse(self):
-        np.flip(self._points,axis=0)
+        self._points=np.flip(self._points,axis=0)
         self.startpoints.reverse()
         self.endpoints.reverse()
         self.rotations.reverse()
