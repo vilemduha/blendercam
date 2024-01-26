@@ -51,7 +51,7 @@ class BlenderCAMTest(unittest.TestCase):
         return ''.join(list(diff)[:num_lines])
 
     def execute_blender(self, blend_file):
-        command = f'blender -b "{blend_file}" -P "{self.generator_path}"'
+        command = f'blender -noaudio -b "{blend_file}" -P "{self.generator_path}"'
         subprocess.run(command, shell=True, check=False)
 
     def run_test_case(self, test_case):
