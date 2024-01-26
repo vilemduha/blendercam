@@ -169,16 +169,6 @@ class camPathChunk:
         if self.closed:
             dist_sq = (pos[0]-self._points[:,0])**2 + (pos[1]-self._points[:,1])**2
             return sqrt(np.min(dist_sq))
-#            mind = 10000000
-#            minv = -1
-#            for vi in range(0, len(self.points)):
-#                v = self.points[vi]
-#                # print(v,pos)
-#                d = dist2d(pos, v)
-#                if d < mind:
-#                    mind = d
-#                    minv = vi
-#            return mind
         else:
             if o.movement.type == 'MEANDER':
                 d1 = dist2d(pos, self._points[0])
@@ -199,21 +189,6 @@ class camPathChunk:
             pos = np.argmin(dist_sq)
             new_points = np.concatenate((self._points[pos:],self._points[:pos+1]))
             self._points=new_points
-            # mind = 10000000
-            # minv = -1
-            # for vi in range(0, len(self.points)):
-            #     v = self.points[vi]
-            #     # print(v,pos)
-            #     d = dist2d(pos, v)
-            #     if d < mind:
-            #         mind = d
-            #         minv = vi
-
-            # newchunk = []
-            # newchunk.extend(self.points[minv:])
-            # newchunk.extend(self.points[:minv + 1])
-            # self.points = newchunk
-
         else:
             if o.movement.type == 'MEANDER':
                 d1 = dist2d(pos, self._points[0])
@@ -263,21 +238,6 @@ class camPathChunk:
         distances=np.linalg.norm(point_differences,axis=1)
         self.length = np.sum(distances)
 
-        # self.length = 0
-
-        # for vi, v1 in enumerate(self.points):
-        #     # print(len(self.points),vi)
-        #     v2 = Vector(v1)  # this is for case of last point and not closed chunk..
-        #     if self.closed and vi == len(self.points) - 1:
-        #         v2 = Vector(self.points[0])
-        #     elif vi < len(self.points) - 1:
-        #         v2 = Vector(self.points[vi + 1])
-        #     v1 = Vector(v1)
-        #     v = v2 - v1
-        #     self.length += v.length
-
-    # print(v,pos)
-
     def reverse(self):
         self._points=np.flip(self._points,axis=0)
         self.startpoints.reverse()
@@ -287,7 +247,6 @@ class camPathChunk:
     def pop(self, index):
         print("WARNING: Popping from chunk is slow",self,index)
         self._points=np.concatenate((self._points[0:index],self._points[index+1:]),axis=0)
-#        self.points.pop(index)
         if len(self.startpoints) > 0:
             self.startpoints.pop(index)
             self.endpoints.pop(index)
@@ -758,52 +717,6 @@ def optimizeChunk(chunk, operation):
             chunk.startpoints=[chunk.startpoints[i] for i,b in enumerate(keep_points) if b==True]
             chunk.endpoints=[chunk.endpoints[i] for i,b in enumerate(keep_points) if b==True]
             chunk.rotations=[chunk.rotations[i] for i,b in enumerate(keep_points) if b==True]
-
-    # # TODO: numpy properly
-    # if len(chunk._points) > 2:
-    #     points = chunk._points
-
-    #     new_chunk_points = [points[0]]
-    #     naxispoints = False
-    #     if len(chunk.startpoints) > 0:
-    #         startpoints = chunk.startpoints
-    #         endpoints = chunk.endpoints
-    #         chunk.startpoints = [startpoints[0]]
-    #         chunk.endpoints = [endpoints[0]]
-    #         rotations = chunk.rotations
-    #         chunk.rotations = [rotations[0]]
-    #         # TODO FIRST THIS ROTATIONS E.T.C.
-    #         #  NEED TO MAKE A POINT ADDING FUNCTION SINCE THIS IS A MESS, WOULD BE TOO MUCH IF'S
-    #         naxispoints = True
-
-    #     protect_vertical = operation.movement.protect_vertical and operation.machine_axes == '3'
-    #     for vi in range(0, len(points) - 1):
-
-    #         if not compare(new_chunk_points[-1], points[vi + 1], points[vi], operation.optimisation.optimize_threshold * 0.000001):
-    #             if naxispoints:
-    #                 chunk.startpoints.append(startpoints[vi])
-    #                 chunk.endpoints.append(endpoints[vi])
-    #                 chunk.rotations.append(rotations[vi])
-    #                 new_chunk_points.append(points[vi])
-    #             else:
-    #                 new_chunk_points.append(points[vi])
-    #             if protect_vertical:
-    #                 v1 = new_chunk_points[-1]
-    #                 v2 = new_chunk_points[-2]
-    #                 v1c, v2c = isVerticalLimit(v1, v2, operation.movement.protect_vertical_limit)
-    #                 if not np.array_equal(v1c,v1):  # TODO FIX THIS FOR N AXIS?
-    #                     new_chunk_points[-1] = v1c
-    #                 elif not np.array_equal(v2c,v2):
-    #                     new_chunk_points[-2] = v2c
-    #     # add last point
-    #     if naxispoints:
-    #         chunk.startpoints.append(startpoints[-1])
-    #         chunk.endpoints.append(endpoints[-1])
-    #         chunk.rotations.append(rotations[-1])
-    #         new_chunk_points.append(points[-1])
-    #     else:
-    #         new_chunk_points.append(points[-1])
-    #     chunk._points=np.array(new_chunk_points)
     return chunk
 
 

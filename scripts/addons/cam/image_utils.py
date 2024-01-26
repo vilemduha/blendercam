@@ -35,20 +35,7 @@ from cam.chunk import *
 from cam import simulation
 from cam.async_op import progress_async
 
-try:
-    from numba import jit
-    print("Yes numba")
-except:
-    print("No numba")
-    def jit(f=None, *args, **kwargs):
-        def decorator(func):
-            return func 
-
-        if callable(f):
-            return f
-        else:
-            return decorator    
-
+from cam.numba_wrapper import jit,prange
 
 
 def getCircle(r, z):
@@ -146,7 +133,7 @@ def imagetonumpy(i):
 
 @jit(nopython=True,parallel=True,fastmath=True,cache=True)
 def _offset_inner_loop(x,cutterArray,cwidth,sourceArray,width,height,comparearea):
-    for y in range(0, cwidth):
+    for y in prange(0, cwidth):
         if cutterArray[x, y] > -10:
             numpy.maximum(sourceArray[x: width - cwidth + x, y: height - cwidth + y] + cutterArray[x,y] ,
                              comparearea, comparearea)
