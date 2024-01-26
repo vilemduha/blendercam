@@ -583,8 +583,9 @@ async def sampleChunks(o, pathSamples, layers):
 
                 if terminatechunk:
                     if len(ch.points) > 0:
-                        layerchunks[i].append(ch.to_chunk())
-                        thisrunchunks[i].append(ch.to_chunk())
+                        as_chunk=ch.to_chunk()
+                        layerchunks[i].append(as_chunk)
+                        thisrunchunks[i].append(as_chunk)
                         layeractivechunks[i] = camPathChunkBuilder([])
             lastsample = newsample
 
@@ -592,8 +593,9 @@ async def sampleChunks(o, pathSamples, layers):
         for i, l in enumerate(layers):
             ch = layeractivechunks[i]
             if len(ch.points) > 0:
-                layerchunks[i].append(ch.to_chunk())
-                thisrunchunks[i].append(ch.to_chunk())
+                as_chunk=ch.to_chunk()
+                layerchunks[i].append(as_chunk)
+                thisrunchunks[i].append(as_chunk)
                 layeractivechunks[i] = camPathChunkBuilder([])
 
             # PARENTING

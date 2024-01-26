@@ -867,6 +867,7 @@ def parentChildPoly(parents, children, o):
 def parentChildDist(parents, children, o, distance=None):
     # parenting based on x,y distance between chunks
     # hierarchy works like this: - children get milled first.
+
     if distance is None:
         dlim = o.dist_between_paths * 2
         if (o.strategy == 'PARALLEL' or o.strategy == 'CROSS') and o.movement.parallel_step_back:
@@ -885,7 +886,6 @@ def parentChildDist(parents, children, o, distance=None):
 
     for child in children:
         for parent in parents:
-            print("CH=",len(children),"PA:",len(parents))
             isrelation = False
             if parent != child:
                 if not parent.poly.is_empty and not child.poly.is_empty:
