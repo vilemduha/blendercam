@@ -25,7 +25,7 @@ jobs:
     - name: Cache blender
       id: cache-blender
       if: runner.os != 'macOS'
-      uses:  actions/cache/restore@v
+      uses:  actions/cache/restore@v4
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
