@@ -891,7 +891,6 @@ def parentChildDist(parents, children, o, distance=None):
                 if not parent.poly.is_empty and not child.poly.is_empty:
                     # print(dir(parent.simppoly))
                     d = parent.simppoly.distance(child.simppoly)
-                    print(d,dlim,parent,child)
                     if d < dlim:
                         isrelation = True
                 else:  # this is the old method, preferably should be replaced in most cases except parallell
