@@ -62,7 +62,7 @@ jobs:
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
-    - uses: openrndr/setup-opengl@v1
+    - uses: openrndr/setup-opengl@v1.1
       if: runner.os == 'Linux'
     - name: Install mesa for opengl software rendering in windows
       uses: ssciwr/setup-mesa-dist-win@v2
