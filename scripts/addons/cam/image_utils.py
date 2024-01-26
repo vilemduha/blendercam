@@ -1085,7 +1085,14 @@ def renderSampleImage(o):
             r = s.render
             r.resolution_x = resx
             r.resolution_y = resy
-            r.engine = 'BLENDER_EEVEE'
+            if bpy.app.background:
+                # in CI we use cycles because it
+                # works without opengl support
+                r.engine = 'CYCLES'
+                s.cycles.samples = 1
+            else:
+                r.engine = 'BLENDER_EEVEE'
+
 
             n.links.clear()
             n.nodes.clear()
