@@ -62,6 +62,20 @@ jobs:
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
+    - uses: openrndr/setup-opengl@v1.1
+      if: runner.os == 'Linux'
+    - name: Install 7zip
+      run: choco install 7zip.install
+      if: runner.os == 'Windows'
+    - name: Install mesa for opengl software rendering in windows
+      shell: cmd
+      run: |
+        curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/20.3.2/mesa3d-20.3.2-release-msvc.7z
+        "C:\Program Files\7-Zip\7z.exe" x mesa.7z
+        mklink opengl32.dll "x64\opengl32.dll"
+        mklink libglapi.dll "x64\libglapi.dll"
+      working-directory: blender
+      if: runner.os == 'Windows'   
     - name: Make addon zip
       uses: thedoctor0/zip-release@0.7.5
       if: always()
