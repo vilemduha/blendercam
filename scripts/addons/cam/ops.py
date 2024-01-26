@@ -190,9 +190,8 @@ async def _calc_path(operator,context):
     if o.use_layers:
         o.movement.parallel_step_back = False
     try:
-        print("Get path:",context)
         await gcodepath.getPath(context, o)
-        print("Got path:",context)
+        print("Got path okay")
     except CamException as e:
         traceback.print_tb(e.__traceback__)
         error_str="\n".join(textwrap.wrap(str(e),width=80))
