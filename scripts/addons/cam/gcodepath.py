@@ -159,6 +159,7 @@ def exportGcodePath(filename, vertslist, operations):
         if split:
             fileindex = '_' + str(findex)
         filename = basefilename + fileindex + extension
+        print("writing: ",filename)
         c = postprocessor.Creator()
 
         # process user overrides for post processor settings
