@@ -18,10 +18,9 @@ class UpdateChecker(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        
         if bpy.app.background:
             return {"FINISHED"}
-         last_update_check = bpy.context.preferences.addons['cam'].preferences.last_update_check
+        last_update_check = bpy.context.preferences.addons['cam'].preferences.last_update_check
         today=date.today().toordinal()
         update_source = bpy.context.preferences.addons['cam'].preferences.update_source
         match = re.match(r"https://github.com/([^/]+/[^/]+)",update_source)
