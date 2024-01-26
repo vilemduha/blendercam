@@ -1089,7 +1089,11 @@ def renderSampleImage(o):
                 # in CI we use cycles because it
                 # works without opengl support
                 r.engine = 'CYCLES'
+                cycles_settings=s.cycles.items()
                 s.cycles.samples = 1
+                bpy.context.view_layer.samples=1
+                vl_settings=bpy.context.view_layer.cycles
+                vl_settings.use_denoising=False
             else:
                 r.engine = 'BLENDER_EEVEE'
 
