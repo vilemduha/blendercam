@@ -68,7 +68,7 @@ jobs:
       with:
         version: '23.3.3'
         build-type: 'release-msvc'
-        deployment-choice: '1'        
+        deployment-choice: '5'        
     - name: Make addon zip
       uses: thedoctor0/zip-release@0.7.5
       if: always()
