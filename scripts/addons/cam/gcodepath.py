@@ -59,6 +59,7 @@ from cam.image_utils import *
 from cam.opencamlib.opencamlib import *
 from cam.nc import iso
 
+PROFILING=False # set this true to run cprofile on code
 
 def pointonline(a, b, c, tolerence):
     b = b - a  # convert to vector by subtracting origin
@@ -543,7 +544,7 @@ async def getPath(context, operation):  # should do all path calculations.
     print(operation.machine_axes)
 
     if operation.machine_axes == '3':
-        if True: # profiler
+        if PROFILING==True: # profiler
             import cProfile, pstats, io
             pr = cProfile.Profile()
             pr.enable()
