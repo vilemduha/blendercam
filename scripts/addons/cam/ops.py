@@ -229,6 +229,7 @@ class CalculatePath(bpy.types.Operator,AsyncOperatorMixin):
 
     async def execute_async(self, context):
         (retval,success) = await _calc_path(self,context)
+        print(f"CALCULATED PATH (success={success},retval={retval}")
         return retval
 
 
