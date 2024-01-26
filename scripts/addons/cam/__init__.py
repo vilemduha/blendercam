@@ -41,6 +41,8 @@ except ImportError:
     subprocess.check_call([sys.executable, "-m", "ensurepip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","Equation","opencamlib"])
+    # install numba if available for this platform, ignore failure
+    subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
 
 
 from bpy.app.handlers import persistent

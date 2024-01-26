@@ -25,7 +25,7 @@ jobs:
     - name: Cache blender
       id: cache-blender
       if: runner.os != 'macOS'
-      uses:  actions/cache/restore@v3
+      uses:  actions/cache/restore@v
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
@@ -57,7 +57,7 @@ jobs:
         shutil.unpack_archive("${{ steps.download.outputs.BLENDER_ARCHIVE }}","blender")
       shell: python
     - name: Save blender
-      uses:  actions/cache/save@v3
+      uses:  actions/cache/save@v4
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
       with:
         path: blender
@@ -85,15 +85,4 @@ jobs:
       with:
         name: blendercam-${{matrix.os}}-${{matrix.blender_version}}
         path: ./scripts/addons/cam
-  rerun-failed-jobs:
-    runs-on: ubuntu-latest
-    needs: [ build_and_test ]
-    if: failure()
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.1
-      - name: Rerun failed jobs in the current workflow (because mac blender is unstable)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh run rerun ${{ github.run_id }} --failed
        
