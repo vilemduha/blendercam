@@ -62,6 +62,13 @@ jobs:
       with:
         path: blender
         key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
+    - name: Install mesa for opengl software rendering in windows
+      uses: ssciwr/setup-mesa-dist-win@v2
+      if: runner.os == 'Windows'
+      with:
+        version: '23.3.3'
+        build-type: 'release-msvc'
+        deployment-choice: '1'        
     - name: Make addon zip
       uses: thedoctor0/zip-release@0.7.5
       if: always()
