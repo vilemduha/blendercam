@@ -717,6 +717,8 @@ async def getPath3axis(context, operation):
                 o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
             for ch in chunks:
                 ch.reverse()
+        chunks = await utils.sortChunks(chunks, o)
+
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and not o.optimisation.use_opencamlib:
