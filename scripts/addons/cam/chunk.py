@@ -85,7 +85,7 @@ class camPathChunk:
     def __init__(self, inpoints, startpoints=None, endpoints=None, rotations=None):
         # name this as _points so nothing external accesses it directly
         self._points = np.array(inpoints)  # for 3 axes, this is only storage of points. For N axes, here go the sampled points
-        self.update_poly()
+        self.poly = None # get polygon just in time 
         if startpoints:
             self.startpoints = startpoints  # from where the sweep test begins, but also retract point for given path
         else:
@@ -143,23 +143,19 @@ class camPathChunk:
             self.startpoints[i] = (p[0] + x, p[1] + y, p[2] + z)
         for i, p in enumerate(self.endpoints):
             self.endpoints[i] = (p[0] + x, p[1] + y, p[2] + z)
-        self.update_poly()
 
     def setZ(self, z,if_bigger=False):
         if if_bigger:
             self._points[:,2]=z if z>self._points[:,2] else self._points[:,2]
         else:
             self._points[:,2]=z
-        self.update_poly()
             
 
     def offsetZ(self, z):
         self._points[:,2]+=z
-        self.update_poly()
 
     def flipX(self, x_centre):
         self._points[:,0]= x_centre - self._points[:,0]
-        self.update_poly()
 
 
     def isbelowZ(self, z):
@@ -167,11 +163,9 @@ class camPathChunk:
 
     def clampZ(self, z):
         np.clip(self._points[:,2],z,None,self._points[:,2])
-        self.update_poly()
 
     def clampmaxZ(self, z):
         np.clip(self._points[:,2],None,z,self._points[:,2])
-        self.update_poly()
 
     def dist(self, pos, o):
         if self.closed:
@@ -205,15 +199,15 @@ class camPathChunk:
         # reorders chunk so that it starts at the closest point to pos.
         if self.closed:
             dist_sq = (pos[0]-self._points[:,0])**2 + (pos[1]-self._points[:,1])**2
-            pos = np.argmin(dist_sq)
-            new_points = np.concatenate((self._points[pos:],self._points[:pos+1]))
+            point_idx = np.argmin(dist_sq)
+            new_points = np.concatenate((self._points[point_idx:],self._points[:point_idx+1]))
             self._points=new_points
         else:
             if o.movement.type == 'MEANDER':
                 d1 = dist2d(pos, self._points[0])
                 d2 = dist2d(pos, self._points[-1])
                 if d2 < d1:
-                    np.flip(self._points,axis=0)
+                    self.points=np.flip(self._points,axis=0)
 
     def getNextClosest(self, o, pos):
         # finds closest chunk that can be milled, when inside sorting hierarchy.
@@ -414,7 +408,6 @@ class camPathChunk:
 
         # TODO: convert to numpy properly
         self._points = np.array(chunk_points)
-        self.update_poly()
 
     def rampZigZag(self, zstart, zend, o):
         # TODO: convert to numpy properly
@@ -546,7 +539,6 @@ class camPathChunk:
                                 chunk_points.append((p2[0], p2[1], max(p2[2], znew)))
                                 # max value here is so that it doesn't go below surface in the case of 3d paths
         self._points = np.array(chunk_points)
-        self.update_poly()
 
     #  modify existing path start point
     def changePathStart(self, o):
@@ -555,7 +547,6 @@ class camPathChunk:
             chunkamt = len(self._points)
             newstart = newstart % chunkamt
             self._points=np.concatenate((self._points[newstart:],self._points[:newstart]))
-            self.update_poly()
 
 
     def breakPathForLeadinLeadout(self, o):
@@ -577,7 +568,6 @@ class camPathChunk:
                     newpointx = (bpoint[0] + apoint[0]) / 2  # average of the two x points to find center
                     newpointy = (bpoint[1] + apoint[1]) / 2  # average of the two y points to find center
                     self._points=np.concatenate((self._points[:i+1],np.array([[newpointx, newpointy, apoint[2]]]),self._points[i+1:]))
-                    self.update_poly()
 
     def leadContour(self, o):
         perimeterDirection = 1  # 1 is clockwise, 0 is CCW
@@ -628,7 +618,6 @@ class camPathChunk:
                 chunk_points.append(arc_p)
 
         self._points = np.array(chunk_points)
-        self.updatePoly()
 
 
 def chunksCoherency(chunks):
@@ -820,9 +809,11 @@ def parentChildDist(parents, children, o, distance=None):
     # i=0
     # simplification greatly speeds up the distance finding algorithms.
     for child in children:
+        child.update_poly()
         if not child.poly.is_empty:
             child.simppoly = child.poly.simplify(0.0003).boundary
     for parent in parents:
+        parent.update_poly()
         if not parent.poly.is_empty:
             parent.simppoly = parent.poly.simplify(0.0003).boundary
 
