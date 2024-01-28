@@ -63,7 +63,9 @@ def _internalXyDistanceTo(ourpoints,theirpoints,cutoff):
 
 # for building points - stores points as lists for easy insert /append behaviour
 class camPathChunkBuilder:
-    def __init__(self,inpoints=[], startpoints=None, endpoints=None, rotations=None):
+    def __init__(self,inpoints=None, startpoints=None, endpoints=None, rotations=None):
+        if inpoints==None:
+            inpoints=[]
         self.points=inpoints
         self.startpoints=startpoints
         self.endpoints=endpoints
