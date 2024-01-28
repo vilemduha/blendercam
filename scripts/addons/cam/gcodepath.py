@@ -760,15 +760,7 @@ async def getPath3axis(context, operation):
             for p in slicepolys.geoms:
                 poly = poly.union(p)  # polygversion TODO: why is this added?
                 nchunks = shapelyToChunks(p, z)
-                print("---------------------")
-                for x in nchunks:
-                    print("  *",x.count())
-                print("---------------------")
                 nchunks = limitChunks(nchunks, o, force=True)
-                print("---------------------")
-                for x in nchunks:
-                    print("  #",x.count())
-                print("---------------------")
                 lastchunks.extend(nchunks)
                 slicechunks.extend(nchunks)
             if len(slicepolys.geoms) > 0:
