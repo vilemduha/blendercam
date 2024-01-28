@@ -979,12 +979,12 @@ def imageToChunks(o, image, with_border=False):
 
             s = curve_simplify.simplify_RDP(ch, soptions)
             # print(s)
-            nch = camPathChunk([])
+            nch = camPathChunkBuilder([])
             for i in range(0, len(s)):
                 nch.points.append((ch[s[i]].x, ch[s[i]].y))
 
             if len(nch.points) > 2:
-                nchunks.append(nch)
+                nchunks.append(nch.to_chunk())
 
         return nchunks
     else:

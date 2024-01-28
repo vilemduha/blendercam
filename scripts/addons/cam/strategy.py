@@ -630,7 +630,6 @@ async def medial_axis(o):
     ipol = 0
     for poly in polys.geoms:
         ipol = ipol + 1
-        print("polygon:", ipol)
         schunks = shapelyToChunks(poly, -1)
         schunks = chunksRefineThreshold(schunks, o.medial_axis_subdivision,
                                         o.medial_axis_threshold)  # chunksRefine(schunks,o)
@@ -836,7 +835,7 @@ def chunksToMesh(chunks, o):
 
     for chi in range(0, len(chunks)):
 
-        # print(chi)
+        print(chi,len(chunks))
 
         ch = chunks[chi]
         # print(chunks)

@@ -826,6 +826,8 @@ async def getPath3axis(context, operation):
                     while not restpoly.is_empty:  # 'GeometryCollection':#len(restpoly.boundary.coords)>0:
                         # print(i)
                         nchunks = shapelyToChunks(restpoly, fillz)
+                        for x in nchunks:
+                            print(x.poly)
                         #########################
                         nchunks = limitChunks(nchunks, o, force=True)
                         slicechunks.extend(nchunks)
