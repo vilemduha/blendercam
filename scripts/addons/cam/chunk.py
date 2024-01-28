@@ -790,7 +790,11 @@ def parentChildPoly(parents, children, o):
     # hierarchy works like this: - children get milled first.
 
     for parent in parents:
+        if parent.poly is None: 
+            parent.update_poly()
         for child in children:
+            if child.poly is None: 
+                child.update_poly()
             if child != parent:  # and len(child.poly)>0
                 if parent.poly.contains(sgeometry.Point(child.poly.boundary.coords[0])):
                     parent.children.append(child)
