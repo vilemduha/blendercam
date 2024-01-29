@@ -138,7 +138,7 @@ def useBridges(ch, o):
 
         vi = 0
         newpoints = []
-        ch_points=ch.get_points()
+        ch_points=ch.get_points_np()
         p1 = sgeometry.Point(ch_points[0])
         startinside = o.bridgespoly.contains(p1)
         interrupted = False

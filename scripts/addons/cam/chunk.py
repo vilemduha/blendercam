@@ -125,6 +125,9 @@ class camPathChunk:
     def get_points(self):
         return self._points.tolist()
 
+    def get_points_np(self):
+        return self._points
+
     def set_points(self,points):
         self._points=np.array(points)
 
@@ -670,7 +673,7 @@ def setChunksZ(chunks, z):
 
 # don't make this @jit parallel, because it sometimes gets called with small N
 # and the overhead of threading is too much.
-@jit(nopython=True,fastmath=True)
+@jit(nopython=True,fastmath=True,cache=True)
 def _optimize_internal(points,keep_points,e,protect_vertical,protect_vertical_limit):
     # inlined so that numba can optimize it nicely
     def _mag_sq(v1):

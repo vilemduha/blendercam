@@ -362,8 +362,8 @@ def getBoundsMultiple(operations):
 
 
 def samplePathLow(o, ch1, ch2, dosample):
-    v1 = Vector(ch1.get_points()[-1])
-    v2 = Vector(ch2.get_points()[0])
+    v1 = Vector(ch1.get_point(-1))
+    v2 = Vector(ch2.get_point(0))
 
     v = v2 - v1
     d = v.length
@@ -1046,8 +1046,8 @@ async def connectChunksLow(chunks, o):
                     chunks_to_resample.append(
                         (connectedchunks[-1], connectedchunks[-1].count(), between.count()))
 
-                connectedchunks[-1].extend(between.get_points())
-                connectedchunks[-1].extend(ch.get_points())
+                connectedchunks[-1].extend(between.get_points_np())
+                connectedchunks[-1].extend(ch.get_points_np())
             else:
                 connectedchunks.append(ch)
             lastch = ch
