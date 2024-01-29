@@ -1078,7 +1078,7 @@ def getClosest(o, pos, chunks):
     return ch
 
 
-async def sortChunks(chunks, o):
+async def sortChunks(chunks, o,last_pos=None):
     if o.strategy != 'WATERLINE':
         await progress_async('sorting paths')
     sys.setrecursionlimit(100000)  # the getNext() function of CamPathChunk was running out of recursion limits.
@@ -1089,7 +1089,7 @@ async def sortChunks(chunks, o):
     last_progress_time=time.time()
     total= len(chunks)
     i = len(chunks)
-    pos = (0, 0, 0)
+    pos = (0, 0, 0) if last_pos is None else last_pos
     while len(chunks) > 0:        
         if o.strategy != 'WATERLINE' and time.time()-last_progress_time>0.1:
             await progress_async("Sorting paths",100.0*(total-len(chunks))/total)

@@ -20,6 +20,7 @@ from cam.simple import *
 from cam.async_op import progress_async
 from shapely import geometry as sgeometry
 from .oclSample import get_oclSTL
+from cam import utils
 
 from cam.opencamlib.oclSample import ocl_sample
 
@@ -175,6 +176,7 @@ async def oclGetWaterline(operation, chunks):
     waterline.setSampling(0.1)#TODO: add sampling setting to UI
     last_pos=[0,0,0]
     for count,height in enumerate(layers):
+        layer_chunks=[]
         await progress_async("Waterline",int((100*count)/len(layers)))
         waterline.reset()
         waterline.setZ(height * OCL_SCALE)
@@ -187,8 +189,10 @@ async def oclGetWaterline(operation, chunks):
             inpoints.append(inpoints[0])
             chunk=camPathChunk(inpoints=inpoints)
             chunk.closed = True
-            chunk.adaptdist(last_pos,operation)
-            last_pos= chunk._points[-1]
-            chunks.append(chunk)
+            layer_chunks.append(chunk)
+        # sort chunks so that ordering is stable
+        chunks.extend(await utils.sortChunks(layer_chunks,operation,last_pos=last_pos))
+        if len(chunks)>0:
+            last_pos=chunks[-1].get_point(-1)
 
 # def oclFillMedialAxis(operation):
