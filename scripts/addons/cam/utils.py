@@ -832,8 +832,6 @@ async def sampleChunksNAxis(o, pathSamples, layers):
         # convert everything to actual chunks 
         # rather than chunkBuilders 
         for i, l in enumerate(layers):
-            layerchunks[i]=[x.to_chunk() for x in layerchunks[i]]
-            thisrunchunks[i]=[x.to_chunk() for x in thisrunchunks[i]]
             layeractivechunks[i]=layeractivechunks[i].to_chunk() if layeractivechunks[i] is not None else None
 
 

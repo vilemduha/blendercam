@@ -835,8 +835,6 @@ def chunksToMesh(chunks, o):
 
     for chi in range(0, len(chunks)):
 
-        print(chi,len(chunks))
-
         ch = chunks[chi]
         # print(chunks)
         # print (ch)

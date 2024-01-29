@@ -88,6 +88,7 @@ class camPathChunk:
         # name this as _points so nothing external accesses it directly
         self._points = np.array(inpoints)  # for 3 axes, this is only storage of points. For N axes, here go the sampled points
         self.poly = None # get polygon just in time 
+        self.simppoly = None
         if startpoints:
             self.startpoints = startpoints  # from where the sweep test begins, but also retract point for given path
         else:
@@ -189,9 +190,18 @@ class camPathChunk:
 
     # if cutoff is set, then the first distance < cutoff is returned
     def xyDistanceTo(self,other,cutoff=0):
+        if self.poly is None:
+            self.update_poly()
+        if other.poly is None:
+            other.update_poly()
         if not self.poly.is_empty and not other.poly.is_empty:
-            d = self.simppoly.distance(other.simppoly)
-            return d
+            # both polygons have >2 points
+            # simplify them if they aren't already, to speed up distance finding
+            if self.simppoly is None:
+                self.simppoly=self.poly.simplify(0.0003).boundary
+            if other.simppoly is None:
+                other.simppoly=other.poly.simplify(0.0003).boundary
+            return self.simppoly.distance(other.simppoly)
         else:  # this is the old method, preferably should be replaced in most cases except parallel
             # where this method works probably faster.
             # print('warning, sorting will be slow due to bad parenting in parentChildDist')
@@ -289,7 +299,6 @@ class camPathChunk:
         if len(points)==0:
             return
         if at_index is None:
-            print(self._points.shape,np.array(points).shape)
             self._points=np.concatenate((self._points,np.array(points)))
             if startpoints is not None:
                 self.startpoints.extend(startpoints)
@@ -715,10 +724,10 @@ def _optimize_internal(points,keep_points,e,protect_vertical,protect_vertical_li
         if distance_sq < e*e:
             keep_points[i]=False
         else:
-            prev_i=i
             keep_points[i]=True
             if protect_vertical:
                 _applyVerticalLimit(points[prev_i], points[i], cos_limit)
+            prev_i=i
 
 
 def optimizeChunk(chunk, operation):
@@ -812,17 +821,6 @@ def parentChildDist(parents, children, o, distance=None):
     else:
         dlim = distance
     
-    # i=0
-    # simplification greatly speeds up the distance finding algorithms.
-    for child in children:
-        child.update_poly()
-        if not child.poly.is_empty:
-            child.simppoly = child.poly.simplify(0.0003).boundary
-    for parent in parents:
-        parent.update_poly()
-        if not parent.poly.is_empty:
-            parent.simppoly = parent.poly.simplify(0.0003).boundary
-
     for child in children:
         for parent in parents:
             isrelation = False
@@ -881,7 +879,6 @@ def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarc
         ch.nparents = None
         if len(ch.parents) > 0:
 
-            print('addparent')
             try:
                 ch.parents[0].poly = ch.parents[0].poly.difference(
                     ch.poly)  # sgeometry.Polygon( ch.parents[0].poly, ch.poly)

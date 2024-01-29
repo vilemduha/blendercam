@@ -519,8 +519,6 @@ def exportGcodePath(filename, vertslist, operations):
 async def getPath(context, operation):  # should do all path calculations.
     t = time.process_time()
     # print('ahoj0')
-    if shapely.speedups.available:
-        shapely.speedups.enable()
 
     # these tags are for caching of some of the results. Not working well still
     # - although it can save a lot of time during calculation...
@@ -717,7 +715,6 @@ async def getPath3axis(context, operation):
                 o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
             for ch in chunks:
                 ch.reverse()
-        chunks = await utils.sortChunks(chunks, o)
 
         strategy.chunksToMesh(chunks, o)
 
@@ -852,7 +849,6 @@ async def getPath3axis(context, operation):
             chunks.extend(slicechunks)
         if topdown:
             chunks.reverse()
-
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'DRILL':

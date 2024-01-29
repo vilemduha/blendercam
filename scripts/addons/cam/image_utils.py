@@ -131,13 +131,11 @@ def imagetonumpy(i):
     return na
 
 
-@jit(nopython=True,parallel=True,fastmath=True,cache=True)
-def _offset_inner_loop(x,cutterArray,cwidth,sourceArray,width,height,comparearea):
-    for y in prange(0, cwidth):
-        if cutterArray[x, y] > -10:
-            numpy.maximum(sourceArray[x: width - cwidth + x, y: height - cwidth + y] + cutterArray[x,y] ,
-                             comparearea, comparearea)
-
+@jit(nopython=True,parallel=True,fastmath=False,cache=True)
+def _offset_inner_loop(y1,y2,cutterArrayNan,cwidth,sourceArray,width,height,comparearea):
+    for y in prange(y1,y2):
+        for x in range(0,width-cwidth):
+            comparearea[x,y] = numpy.nanmax(sourceArray[x:x+cwidth,y:y+cwidth] + cutterArrayNan)
 
 async def offsetArea(o, samples):
     """ offsets the whole image with the cutter + skin offsets """
@@ -152,7 +150,7 @@ async def offsetArea(o, samples):
         width = len(sourceArray)
         height = len(sourceArray[0])
         cwidth = len(cutterArray)
-        o.offset_image= numpy.full(shape=(width,height),fill_value=-10,dtype=numpy.float)
+        o.offset_image= numpy.full(shape=(width,height),fill_value=-10.0,dtype=numpy.double)
 
         t = time.time()
 
@@ -160,18 +158,14 @@ async def offsetArea(o, samples):
 
         if o.inverse:
             sourceArray = -sourceArray + minz
-        print(o.offset_image.shape)
         comparearea = o.offset_image[m: width - cwidth + m, m:height - cwidth + m]
         # i=0
-        for x in range(0, cwidth):  # cwidth):
-            # o.operator.report({"INFO"}, text)
-            await progress_async('offset depth image', int(x * 100 / cwidth))
-            _offset_inner_loop(x,cutterArray,cwidth,sourceArray,width,height,comparearea)
-            # for y in range(0, cwidth):
-            #     if cutterArray[x, y] > -10:
-            #         numpy.maximum(sourceArray[x: width - cwidth + x, y: height - cwidth + y] + cutterArray[x,y] ,
-            #                       comparearea, comparearea)
-
+        cutterArrayNan=np.where(cutterArray>-10,cutterArray,np.full(cutterArray.shape,np.nan))
+        for y in range(0,10):
+            y1 = (y * comparearea.shape[1])//10
+            y2 = ((y+1) * comparearea.shape[1])//10
+            _offset_inner_loop(y1,y2,cutterArrayNan,cwidth,sourceArray,width,height,comparearea)
+            await progress_async('offset depth image', int((y2 * 100) / comparearea.shape[1]))
         o.offset_image[m: width - cwidth + m, m:height - cwidth + m] = comparearea
 
         print('\nOffset image time ' + str(time.time() - t))

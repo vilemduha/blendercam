@@ -173,6 +173,7 @@ async def oclGetWaterline(operation, chunks):
     waterline.setSTL(oclSTL)
     waterline.setCutter(cutter)
     waterline.setSampling(0.1)#TODO: add sampling setting to UI
+    last_pos=[0,0,0]
     for count,height in enumerate(layers):
         await progress_async("Waterline",int((100*count)/len(layers)))
         waterline.reset()
@@ -184,7 +185,10 @@ async def oclGetWaterline(operation, chunks):
             for p in l:
                 inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
             inpoints.append(inpoints[0])
-            chunks.append(camPathChunk(inpoints=inpoints))
-            chunks[-1].closed = True
+            chunk=camPathChunk(inpoints=inpoints)
+            chunk.closed = True
+            chunk.adaptdist(last_pos,operation)
+            last_pos= chunk._points[-1]
+            chunks.append(chunk)
 
 # def oclFillMedialAxis(operation):
