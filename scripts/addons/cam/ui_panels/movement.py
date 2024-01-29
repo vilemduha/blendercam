@@ -164,7 +164,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.prop(self.op.movement, 'ramp_in_angle')
             self.layout.prop(self.op.movement, 'ramp_out')
             if self.op.movement.ramp_out:
-                self.layout.prop(self.movement, 'ramp_out_angle')
+                self.layout.prop(self.op.movement, 'ramp_out_angle')
 
     def draw_retract_tangential(self):
         if not self.has_correct_level(): return

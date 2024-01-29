@@ -17,9 +17,7 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
-# ***** END GPL LICENCE BLOCK *****
-
-import bgl
+# ***** END GPL LICENCE BLOCK ****
 import bl_operators
 import blf
 import bpy
@@ -43,6 +41,8 @@ except ImportError:
     subprocess.check_call([sys.executable, "-m", "ensurepip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","Equation","opencamlib"])
+    # install numba if available for this platform, ignore failure
+    subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
 
 
 from bpy.app.handlers import persistent

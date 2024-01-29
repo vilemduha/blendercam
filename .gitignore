@@ -23,3 +23,5 @@ forceSyncWithUpstream
 .project
 
 .pydevproject
+__pycache__/
+temp_cam/

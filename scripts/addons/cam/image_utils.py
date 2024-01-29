@@ -35,6 +35,9 @@ from cam.chunk import *
 from cam import simulation
 from cam.async_op import progress_async
 
+from cam.numba_wrapper import jit,prange
+
+
 def getCircle(r, z):
     car = numpy.full(shape=(r*2,r*2),fill_value=-10,dtype=numpy.double)
     res = 2 * r
@@ -128,6 +131,12 @@ def imagetonumpy(i):
     return na
 
 
+@jit(nopython=True,parallel=True,fastmath=False,cache=True)
+def _offset_inner_loop(y1,y2,cutterArrayNan,cwidth,sourceArray,width,height,comparearea):
+    for y in prange(y1,y2):
+        for x in range(0,width-cwidth):
+            comparearea[x,y] = numpy.nanmax(sourceArray[x:x+cwidth,y:y+cwidth] + cutterArrayNan)
+
 async def offsetArea(o, samples):
     """ offsets the whole image with the cutter + skin offsets """
     if o.update_offsetimage_tag:
@@ -141,7 +150,7 @@ async def offsetArea(o, samples):
         width = len(sourceArray)
         height = len(sourceArray[0])
         cwidth = len(cutterArray)
-        o.offset_image= numpy.full(shape=(width,height),fill_value=-10,dtype=numpy.float)
+        o.offset_image= numpy.full(shape=(width,height),fill_value=-10.0,dtype=numpy.double)
 
         t = time.time()
 
@@ -149,18 +158,14 @@ async def offsetArea(o, samples):
 
         if o.inverse:
             sourceArray = -sourceArray + minz
-        print(o.offset_image.shape)
         comparearea = o.offset_image[m: width - cwidth + m, m:height - cwidth + m]
         # i=0
-        for x in range(0, cwidth):  # cwidth):
-            text = "Offsetting depth " + str(int(x * 100 / cwidth))
-            # o.operator.report({"INFO"}, text)
-            await progress_async('offset depth image', int(x * 100 / cwidth))
-            for y in range(0, cwidth):
-                if cutterArray[x, y] > -10:
-                    numpy.maximum(sourceArray[x: width - cwidth + x, y: height - cwidth + y] + cutterArray[x, y],
-                                  comparearea, comparearea)
-
+        cutterArrayNan=np.where(cutterArray>-10,cutterArray,np.full(cutterArray.shape,np.nan))
+        for y in range(0,10):
+            y1 = (y * comparearea.shape[1])//10
+            y2 = ((y+1) * comparearea.shape[1])//10
+            _offset_inner_loop(y1,y2,cutterArrayNan,cwidth,sourceArray,width,height,comparearea)
+            await progress_async('offset depth image', int((y2 * 100) / comparearea.shape[1]))
         o.offset_image[m: width - cwidth + m, m:height - cwidth + m] = comparearea
 
         print('\nOffset image time ' + str(time.time() - t))
@@ -196,10 +201,11 @@ def getOffsetImageCavities(o, i):  # for pencil operation mainly
     # ##crop pixels that are on outer borders
     for chi in range(len(chunks) - 1, -1, -1):
         chunk = chunks[chi]
-        for si in range(len(chunk.points) - 1, -1, -1):
-            if not (o.min.x < chunk.points[si][0] < o.max.x and o.min.y < chunk.points[si][1] < o.max.y):
-                chunk.points.pop(si)
-        if len(chunk.points) < 2:
+        chunk.clip_points(o.min.x,o.max.x,o.min.y,o.max.y)
+        # for si in range(len(chunk.points) - 1, -1, -1):
+        #     if not (o.min.x < chunk.points[si][0] < o.max.x and o.min.y < chunk.points[si][1] < o.max.y):
+        #         chunk.points.pop(si)
+        if chunk.count() < 2:
             chunks.pop(chi)
 
     return chunks
@@ -217,10 +223,10 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
     indices = ar.nonzero()  # first get white pixels
     startpix = ar.sum()
     totpix = startpix
-    chunks = []
+    chunk_builders = []
     xs = indices[0][0]
     ys = indices[1][0]
-    nchunk = camPathChunk([(xs, ys, zimage[xs, ys])])  # startposition
+    nchunk = camPathChunkBuilder([(xs, ys, zimage[xs, ys])])  # startposition
     dindex = 0  # index in the directions list
     last_direction = directions[dindex]
     test_direction = directions[dindex]
@@ -276,15 +282,15 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
                     testangulardistance = 0
                     indices = ar.nonzero()
                     totpix = len(indices[0])
-                    chunks.append(nchunk)
+                    chunk_builders.append(nchunk)
                     if len(indices[0] > 0):
                         xs = indices[0][0]
                         ys = indices[1][0]
-                        nchunk = camPathChunk([(xs, ys, zimage[xs, ys])])  # startposition
+                        nchunk = camPathChunkBuilder([(xs, ys, zimage[xs, ys])])  # startposition
 
                         ar[xs, ys] = False
                     else:
-                        nchunk = camPathChunk([])
+                        nchunk = camPathChunkBuilder([])
 
                     test_direction = directions[3]
                     last_direction = directions[3]
@@ -321,19 +327,19 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
             # print(totpix)
             # print(totaltests)
             i = 0
-    chunks.append(nchunk)
-    for ch in chunks:
+    chunk_builders.append(nchunk)
+    for ch in chunk_builders:
         ch = ch.points
         for i in range(0, len(ch)):
             ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                      (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny, ch[i][2])
-    return chunks
+    return [c.to_chunk() for c in chunk_builders]
 
 
-def crazyPath(o):
+async def crazyPath(o):
     # TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm.
     #  started another thing below.
-    prepareArea(o)
+    await prepareArea(o)
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
 
@@ -394,14 +400,14 @@ def crazyStrokeImage(o):
     indices = ar.nonzero()  # first get white pixels
     startpix = ar.sum()  #
     totpix = startpix
-    chunks = []
+    chunk_builders = []
     xs = indices[0][0] - r
     if xs < r:
         xs = r
     ys = indices[1][0] - r
     if ys < r:
         ys = r
-    nchunk = camPathChunk([(xs, ys)])  # startposition
+    nchunk = camPathChunkBuilder([(xs, ys)])  # startposition
     print(indices)
     print(indices[0][0], indices[1][0])
     lastvect = Vector((r, 0, 0))  # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
@@ -514,7 +520,7 @@ def crazyStrokeImage(o):
             if itests > maxtests or testlength > r * 1.5:
                 # print('resetting location')
                 indices = ar.nonzero()
-                chunks.append(nchunk)
+                chunk_builders.append(nchunk)
                 if len(indices[0]) > 0:
                     xs = indices[0][0] - r
                     if xs < r:
@@ -522,7 +528,7 @@ def crazyStrokeImage(o):
                     ys = indices[1][0] - r
                     if ys < r:
                         ys = r
-                    nchunk = camPathChunk([(xs, ys)])  # startposition
+                    nchunk = camPathChunkBuilder([(xs, ys)])  # startposition
                     ar[xs - r:xs - r + d, ys - r:ys - r + d] = ar[xs - r:xs - r + d,
                                                                ys - r:ys - r + d] * cutterArrayNegative
                     r = random.random() * 2 * pi
@@ -539,13 +545,13 @@ def crazyStrokeImage(o):
             print(totpix)
             print(totaltests)
             i = 0
-    chunks.append(nchunk)
-    for ch in chunks:
+    chunk_builders.append(nchunk)
+    for ch in chunk_builders:
         ch = ch.points
         for i in range(0, len(ch)):
             ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                      (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny, 0)
-    return chunks
+    return [c.to_chunk() for c in chunk_builders]
 
 
 def crazyStrokeImageBinary(o, ar, avoidar):
@@ -582,7 +588,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     startpix = ar.sum()  #
     totpix = startpix
 
-    chunks = []
+    chunk_builders = []
     # try to find starting point here
 
     xs = indices[0][0] - r / 2
@@ -592,7 +598,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     if ys < r:
         ys = r
 
-    nchunk = camPathChunk([(xs, ys)])  # startposition
+    nchunk = camPathChunkBuilder([(xs, ys)])  # startposition
     print(indices)
     print(indices[0][0], indices[1][0])
     lastvect = Vector((r, 0, 0))  # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
@@ -741,7 +747,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                     indices = andar.nonzero()
                     if len(nchunk.points) > 1:
                         chunk.parentChildDist([nchunk], chunks, o, distance=r)
-                        chunks.append(nchunk)
+                        chunk_builders.append(nchunk)
 
                     if totpix > startpix * 0.001:
                         found = False
@@ -797,15 +803,15 @@ def crazyStrokeImageBinary(o, ar, avoidar):
             i = 0
     if len(nchunk.points) > 1:
         chunk.parentChildDist([nchunk], chunks, o, distance=r)
-        chunks.append(nchunk)
+        chunk_builders.append(nchunk)
 
-    for ch in chunks:
+    for ch in chunk_builders:
         ch = ch.points
         for i in range(0, len(ch)):
             ch[i] = ((ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                      (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny, o.minz)
 
-    return chunks
+    return [c.to_chunk for c in chunk_builders]
 
 
 def imageToChunks(o, image, with_border=False):
@@ -967,12 +973,12 @@ def imageToChunks(o, image, with_border=False):
 
             s = curve_simplify.simplify_RDP(ch, soptions)
             # print(s)
-            nch = camPathChunk([])
+            nch = camPathChunkBuilder([])
             for i in range(0, len(s)):
                 nch.points.append((ch[s[i]].x, ch[s[i]].y))
 
             if len(nch.points) > 2:
-                nchunks.append(nch)
+                nchunks.append(nch.to_chunk())
 
         return nchunks
     else:
@@ -985,7 +991,6 @@ def imageToShapely(o, i, with_border=False):
 
     return polys
 
-
 def getSampleImage(s, sarray, minz):
     x = s[0]
     y = s[1]
@@ -996,10 +1001,14 @@ def getSampleImage(s, sarray, minz):
         maxx = minx + 1
         miny = floor(y)
         maxy = miny + 1
-        s1a = sarray.item(minx, miny)  # most optimal access to array so far
-        s2a = sarray.item(maxx, miny)
-        s1b = sarray.item(minx, maxy)
-        s2b = sarray.item(maxx, maxy)
+        s1a=sarray[minx,miny]
+        s2a=sarray[maxx,miny]
+        s1b=sarray[minx,maxy]
+        s2b=sarray[maxx,maxy]
+        # s1a = sarray.item(minx, miny)  # most optimal access to array so far
+        # s2a = sarray.item(maxx, miny)
+        # s1b = sarray.item(minx, maxy)
+        # s2b = sarray.item(maxx, maxy)
 
         sa = s1a * (maxx - x) + s2a * (x - minx)
         sb = s1b * (maxx - x) + s2b * (x - minx)
@@ -1057,7 +1066,18 @@ def renderSampleImage(o):
             r = s.render
             r.resolution_x = resx
             r.resolution_y = resy
-            r.engine = 'BLENDER_EEVEE'
+            if bpy.app.background:
+                # in CI we use cycles because it
+                # works without opengl support
+                r.engine = 'CYCLES'
+                cycles_settings=s.cycles.items()
+                s.cycles.samples = 1
+                bpy.context.view_layer.samples=1
+                vl_settings=bpy.context.view_layer.cycles
+                vl_settings.use_denoising=False
+            else:
+                r.engine = 'BLENDER_EEVEE'
+
 
             n.links.clear()
             n.nodes.clear()
