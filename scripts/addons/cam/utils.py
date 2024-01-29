@@ -1053,7 +1053,7 @@ async def connectChunksLow(chunks, o):
             lastch = ch
             pos = lastch.get_point(-1)
 
-    if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET':
+    if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET' and o.strategy != 'WATERLINE':
         await oclResampleChunks(o, chunks_to_resample,use_cached_mesh=True)
 
     return connectedchunks
