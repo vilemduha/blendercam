@@ -549,11 +549,7 @@ async def getPath(context, operation):  # should do all path calculations.
             pr.enable()
             await getPath3axis(context, operation)
             pr.disable()
-            s = io.StringIO()
-            sortby = pstats.SortKey.CALLS
-            ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-            ps.print_stats()
-            print(s.getvalue())            
+            pr.dump_stats(time.strftime("blendercam_%Y%m%d_%H%M.prof"))
         else:        
             await getPath3axis(context, operation)
 

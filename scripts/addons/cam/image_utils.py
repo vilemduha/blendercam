@@ -19,10 +19,11 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-import numpy
 import math
-import time
+import numpy
+import os
 import random
+import time
 
 import curve_simplify
 import mathutils
@@ -1027,6 +1028,22 @@ def getResolution(o):
 # that's because blender doesn't allow accessing pixels in render :(
 
 
+def _backup_render_settings(pairs):
+    properties=[]
+    for owner,struct_name in pairs:
+        obj = getattr(owner,struct_name)
+        obj_dict={}
+        for k in dir(obj):
+            if not k.startswith("_"):
+                obj_dict[k]=getattr(obj,k)
+        properties.append(obj_dict)
+
+def _restore_render_settings(pairs,properties):
+    for (owner,struct_name),obj_dict in zip(pairs,properties):
+        obj = getattr(owner,struct_name)
+        for k,v in obj_dict.items():
+            setattr(obj,k,v)
+
 def renderSampleImage(o):
     t = time.time()
     simple.progress('getting zbuffer')
@@ -1066,43 +1083,41 @@ def renderSampleImage(o):
             r = s.render
             r.resolution_x = resx
             r.resolution_y = resy
-            if bpy.app.background:
-                # in CI we use cycles because it
-                # works without opengl support
-                r.engine = 'CYCLES'
-                cycles_settings=s.cycles.items()
-                s.cycles.samples = 1
-                bpy.context.view_layer.samples=1
-                vl_settings=bpy.context.view_layer.cycles
-                vl_settings.use_denoising=False
-            else:
-                r.engine = 'BLENDER_EEVEE'
+            # use cycles for everything because
+            # it renders okay on github actions
+            r.engine = 'CYCLES'
+            s.cycles.samples = 1
+            bpy.context.view_layer.samples=1
+            vl_settings=bpy.context.view_layer.cycles
+            vl_settings.use_denoising=False
 
 
             n.links.clear()
             n.nodes.clear()
-            n1 = n.nodes.new('CompositorNodeRLayers')
-            s.view_layers[n1.layer].use_pass_z=True
-            n2 = n.nodes.new('CompositorNodeViewer')
-            n3 = n.nodes.new('CompositorNodeComposite')
-            n.links.new(n1.outputs[n1.outputs.find('Depth')], n2.inputs[n2.inputs.find('Image')])
-            n.links.new(n1.outputs[n1.outputs.find('Depth')], n3.inputs[n3.inputs.find('Image')])
-
-            n.nodes.active = n2
+            node_in = n.nodes.new('CompositorNodeRLayers')            
+            s.view_layers[node_in.layer].use_pass_mist=True
+#            s.view_layers[node_in.layer].use_pass_z=True
+            mist_settings=s.world.mist_settings
+            s.world.mist_settings.depth=10.0 
+            s.world.mist_settings.start=0
+            s.world.mist_settings.falloff="LINEAR"
+            s.world.mist_settings.height=0
+            s.world.mist_settings.intensity=0
+            node_out = n.nodes.new("CompositorNodeOutputFile")
+            node_out.base_path = os.path.dirname(iname)
+            node_out.format.file_format = 'OPEN_EXR'
+            node_out.format.color_mode = 'RGB'
+            node_out.format.color_depth = '32'
+            node_out.file_slots.new(os.path.basename(iname))
+            print(node_out,node_out.inputs)
+            n.links.new(node_in.outputs[node_in.outputs.find('Mist')], node_out.inputs[-1])
             ###################
-
 
             # resize operation image
             o.offset_image= numpy.full(shape=(resx,resy),fill_value=-10,dtype=numpy.double)
 
             # various settings for  faster render
             r.resolution_percentage = 100
-
-            ff = r.image_settings.file_format
-            cm = r.image_settings.color_mode
-            r.image_settings.file_format = 'OPEN_EXR'
-            r.image_settings.color_mode = 'BW'
-            r.image_settings.color_depth = '32'
 
             # camera settings
             camera = s.camera
@@ -1116,6 +1131,7 @@ def renderSampleImage(o):
             camera.data.ortho_scale = max(resx * o.optimisation.pixsize, resy * o.optimisation.pixsize)
             camera.location = (o.min.x + sx / 2, o.min.y + sy / 2, 1)
             camera.rotation_euler = (0, 0, 0)
+            camera.data.clip_end = 10.0
             # if not o.render_all:#removed in 0.3
 
             h = []
@@ -1129,26 +1145,23 @@ def renderSampleImage(o):
 
             bpy.ops.render.render()
 
+            n.nodes.remove(node_out)
+            n.nodes.remove(node_in)
+
+            os.replace(iname+"0002.exr",iname)
+
+
             # if not o.render_all:
             for id, obs in enumerate(s.objects):
                 obs.hide_render = h[id]
 
-            imgs = bpy.data.images
-            for isearch in imgs:
-                if len(isearch.name) >= 13:
-                    if isearch.name[:13] == 'Render Result':
-                        i = isearch
-
-                        # progress(iname)
-                        i.save_render(iname)
-
-            r.image_settings.file_format = ff
-            r.image_settings.color_mode = cm
-
             i = bpy.data.images.load(iname)
             bpy.context.scene.render.engine = 'BLENDERCAM_RENDER'
+
+
         a = imagetonumpy(i)
-        a = 1.0 - a
+        a = 10.0 * a
+        a= 1.0 - a
         o.zbuffer_image = a
         o.update_zbufferimage_tag = False
 
