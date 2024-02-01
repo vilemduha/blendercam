@@ -34,6 +34,8 @@ import time
 
 from pathlib import Path
 
+USE_PROFILER = False
+
 try:
     import shapely
 except ImportError:
