@@ -1032,17 +1032,25 @@ def _backup_render_settings(pairs):
     properties=[]
     for owner,struct_name in pairs:
         obj = getattr(owner,struct_name)
-        obj_dict={}
-        for k in dir(obj):
-            if not k.startswith("_"):
-                obj_dict[k]=getattr(obj,k)
-        properties.append(obj_dict)
+        if isinstance(obj,bpy.types.bpy_struct):
+            # structure, backup all properties
+            obj_value={}
+            for k in dir(obj):
+                if not k.startswith("_"):
+                    obj_value[k]=getattr(obj,k)
+            properties.append(obj_value)
+        else:
+            # simple value
+            properties.append(obj)
 
 def _restore_render_settings(pairs,properties):
-    for (owner,struct_name),obj_dict in zip(pairs,properties):
+    for (owner,struct_name),obj_value in zip(pairs,properties):
         obj = getattr(owner,struct_name)
-        for k,v in obj_dict.items():
-            setattr(obj,k,v)
+        if isinstance(obj,bpy.types.bpy_struct):
+            for k,v in obj_value.items():
+                setattr(obj,k,v)
+        else:
+            setattr(owner,struct_name,obj_value)
 
 def renderSampleImage(o):
     t = time.time()
@@ -1076,84 +1084,98 @@ def renderSampleImage(o):
                 o.update_zbufferimage_tag = True
         if o.update_zbufferimage_tag:
             s = bpy.context.scene
-
-            # prepare nodes first
             s.use_nodes = True
+            vl = bpy.context.view_layer
             n = s.node_tree
             r = s.render
-            r.resolution_x = resx
-            r.resolution_y = resy
-            # use cycles for everything because
-            # it renders okay on github actions
-            r.engine = 'CYCLES'
-            s.cycles.samples = 1
-            bpy.context.view_layer.samples=1
-            vl_settings=bpy.context.view_layer.cycles
-            vl_settings.use_denoising=False
 
+            SETTINGS_TO_BACKUP = [
+                (s.render,"resolution_x"),
+                (s.render,"resolution_x"),
+                (s.cycles,"samples"),
+                (s,"camera"),
+                (vl,"samples"),
+                (vl.cycles,"use_denoising"),
+                (s.world,"mist_settings"),
+                (r,"resolution_x"),
+                (r,"resolution_y"),
+                (r,"resolution_percentage"),
+            ]
+            for ob in s.objects:
+                SETTINGS_TO_BACKUP.append((ob,"hide_render"))
+            backup_settings=None
+            try:
+                backup_settings=_backup_render_settings(SETTINGS_TO_BACKUP)
+                # prepare nodes first
+                r.resolution_x = resx
+                r.resolution_y = resy
+                # use cycles for everything because
+                # it renders okay on github actions
+                r.engine = 'CYCLES'
+                s.cycles.samples = 1
+                vl.samples=1
+                vl.cycles.use_denoising=False
 
-            n.links.clear()
-            n.nodes.clear()
-            node_in = n.nodes.new('CompositorNodeRLayers')            
-            s.view_layers[node_in.layer].use_pass_mist=True
-#            s.view_layers[node_in.layer].use_pass_z=True
-            mist_settings=s.world.mist_settings
-            s.world.mist_settings.depth=10.0 
-            s.world.mist_settings.start=0
-            s.world.mist_settings.falloff="LINEAR"
-            s.world.mist_settings.height=0
-            s.world.mist_settings.intensity=0
-            node_out = n.nodes.new("CompositorNodeOutputFile")
-            node_out.base_path = os.path.dirname(iname)
-            node_out.format.file_format = 'OPEN_EXR'
-            node_out.format.color_mode = 'RGB'
-            node_out.format.color_depth = '32'
-            node_out.file_slots.new(os.path.basename(iname))
-            print(node_out,node_out.inputs)
-            n.links.new(node_in.outputs[node_in.outputs.find('Mist')], node_out.inputs[-1])
-            ###################
+                n.links.clear()
+                n.nodes.clear()
+                node_in = n.nodes.new('CompositorNodeRLayers')            
+                s.view_layers[node_in.layer].use_pass_mist=True
+                mist_settings=s.world.mist_settings
+                s.world.mist_settings.depth=10.0 
+                s.world.mist_settings.start=0
+                s.world.mist_settings.falloff="LINEAR"
+                s.world.mist_settings.height=0
+                s.world.mist_settings.intensity=0
+                node_out = n.nodes.new("CompositorNodeOutputFile")
+                node_out.base_path = os.path.dirname(iname)
+                node_out.format.file_format = 'OPEN_EXR'
+                node_out.format.color_mode = 'RGB'
+                node_out.format.color_depth = '32'
+                node_out.file_slots.new(os.path.basename(iname))
+                n.links.new(node_in.outputs[node_in.outputs.find('Mist')], node_out.inputs[-1])
+                ###################
 
-            # resize operation image
-            o.offset_image= numpy.full(shape=(resx,resy),fill_value=-10,dtype=numpy.double)
+                # resize operation image
+                o.offset_image= numpy.full(shape=(resx,resy),fill_value=-10,dtype=numpy.double)
 
-            # various settings for  faster render
-            r.resolution_percentage = 100
+                # various settings for  faster render
+                r.resolution_percentage = 100
 
-            # camera settings
-            camera = s.camera
-            if camera is None:
+                # add a new camera settings
                 bpy.ops.object.camera_add(align='WORLD', enter_editmode=False, location=(0, 0, 0),
-                                          rotation=(0, 0, 0))
+                                        rotation=(0, 0, 0))
                 camera = bpy.context.active_object
                 bpy.context.scene.camera = camera
 
-            camera.data.type = 'ORTHO'
-            camera.data.ortho_scale = max(resx * o.optimisation.pixsize, resy * o.optimisation.pixsize)
-            camera.location = (o.min.x + sx / 2, o.min.y + sy / 2, 1)
-            camera.rotation_euler = (0, 0, 0)
-            camera.data.clip_end = 10.0
-            # if not o.render_all:#removed in 0.3
+                camera.data.type = 'ORTHO'
+                camera.data.ortho_scale = max(resx * o.optimisation.pixsize, resy * o.optimisation.pixsize)
+                camera.location = (o.min.x + sx / 2, o.min.y + sy / 2, 1)
+                camera.rotation_euler = (0, 0, 0)
+                camera.data.clip_end = 10.0
+                # if not o.render_all:#removed in 0.3
 
-            h = []
+                h = []
 
-            # ob=bpy.data.objects[o.object_name]
-            for ob in s.objects:
-                h.append(ob.hide_render)
-                ob.hide_render = True
-            for ob in o.objects:
-                ob.hide_render = False
+                # ob=bpy.data.objects[o.object_name]
+                for ob in s.objects:
+                    ob.hide_render = True
+                for ob in o.objects:
+                    ob.hide_render = False
 
-            bpy.ops.render.render()
+                bpy.ops.render.render()
 
-            n.nodes.remove(node_out)
-            n.nodes.remove(node_in)
+                n.nodes.remove(node_out)
+                n.nodes.remove(node_in)
+                camera.select_set(True)
+                bpy.ops.object.delete()
 
-            os.replace(iname+"0002.exr",iname)
+                os.replace(iname+"%04d.exr"%(s.frame_current),iname)
+            finally:
+                if backup_settings is not None:
+                    _restore_render_settings(SETTINGS_TO_BACKUP,backup_settings)
+                else:
+                    print("Failed to backup scene settings")
 
-
-            # if not o.render_all:
-            for id, obs in enumerate(s.objects):
-                obs.hide_render = h[id]
 
             i = bpy.data.images.load(iname)
             bpy.context.scene.render.engine = 'BLENDERCAM_RENDER'
