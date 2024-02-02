@@ -25,3 +25,5 @@ forceSyncWithUpstream
 .pydevproject
 __pycache__/
 temp_cam/
+# profiler output files
+*.prof

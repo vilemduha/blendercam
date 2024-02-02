@@ -1,4 +1,4 @@
-(Created with grbl post processor 2024/01/26 22:12)
+(Created with grbl post processor 2024/01/31 14:46)
 G21
 (G-code generated with BlenderCAM and NC library)
 G17G90
@@ -376,7 +376,7 @@ X-20Y65
 Y-64.999
 X-18Y-65.999
 Y65
-Y66Z-6.899
+Y66Z-6.9
 G0Z2
 X-16
 G1Z-6.912F500
@@ -427,7 +427,7 @@ G1Z-6.912F500
 Y-65.999F1000
 X18
 Y65
-Y66Z-6.899
+Y66Z-6.9
 G0Z2
 X20Y65
 G1Z-6.912F500

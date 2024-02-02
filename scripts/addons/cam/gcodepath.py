@@ -33,6 +33,7 @@ import numpy
 
 from cam import chunk
 from cam.chunk import *
+from cam import USE_PROFILER
 
 from cam import collision
 from cam.collision import *
@@ -58,8 +59,6 @@ from cam import image_utils
 from cam.image_utils import *
 from cam.opencamlib.opencamlib import *
 from cam.nc import iso
-
-PROFILING=False # set this true to run cprofile on code
 
 def pointonline(a, b, c, tolerence):
     b = b - a  # convert to vector by subtracting origin
@@ -543,17 +542,13 @@ async def getPath(context, operation):  # should do all path calculations.
     print(operation.machine_axes)
 
     if operation.machine_axes == '3':
-        if PROFILING==True: # profiler
+        if USE_PROFILER == True: # profiler
             import cProfile, pstats, io
             pr = cProfile.Profile()
             pr.enable()
             await getPath3axis(context, operation)
             pr.disable()
-            s = io.StringIO()
-            sortby = pstats.SortKey.CALLS
-            ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-            ps.print_stats()
-            print(s.getvalue())            
+            pr.dump_stats(time.strftime("blendercam_%Y%m%d_%H%M.prof"))
         else:        
             await getPath3axis(context, operation)
 

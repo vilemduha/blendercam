@@ -454,6 +454,9 @@ async def sampleChunks(o, pathSamples, layers):
         ob = bpy.data.objects[o.object_name]
         zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
 
+    print(f"Total sample points {totlen}")
+
+
     n = 0
     last_percent = -1
     # timing for optimisation
@@ -472,15 +475,16 @@ async def sampleChunks(o, pathSamples, layers):
         # threads_count=4
 
         # for t in range(0,threads):
-
-        for s in patternchunk.get_points():
+        our_points=patternchunk.get_points_np()
+        ambient_contains=shapely.contains(o.ambient,shapely.points(our_points[:,0:2]))
+        for s,in_ambient in zip(our_points,ambient_contains):
             if o.strategy != 'WATERLINE' and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
                 await progress_async('sampling paths ', last_percent)
             n += 1
             x = s[0]
             y = s[1]
-            if not o.ambient.contains(sgeometry.Point(x, y)):
+            if not in_ambient:
                 newsample = (x, y, 1)
             else:
                 if o.optimisation.use_opencamlib and o.optimisation.use_exact:

@@ -191,6 +191,17 @@ class camPathChunk:
         return dist2d(pos, self._points[0])
 
 
+    def xyDistanceWithin(self,other,cutoff):
+        if self.poly is None:
+            self.update_poly()
+        if other.poly is None:
+            other.update_poly()
+        if not self.poly.is_empty and not other.poly.is_empty:
+            return self.poly.dwithin(other.poly,cutoff)
+        else:
+            return _internalXyDistanceTo(self._points,other._points,cutoff)<cutoff
+
+
     # if cutoff is set, then the first distance < cutoff is returned
     def xyDistanceTo(self,other,cutoff=0):
         if self.poly is None:
@@ -828,10 +839,7 @@ def parentChildDist(parents, children, o, distance=None):
         for parent in parents:
             isrelation = False
             if parent != child:
-                d = parent.xyDistanceTo(child,cutoff=dlim)
-                if d< dlim:
-                    isrelation = True
-                if isrelation:
+                if parent.xyDistanceWithin(child,cutoff=dlim):
                     parent.children.append(child)
                     child.parents.append(parent)
 
