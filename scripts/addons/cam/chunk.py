@@ -67,14 +67,18 @@ class camPathChunkBuilder:
         if inpoints is None:
             inpoints=[]
         self.points=inpoints
-        self.startpoints=startpoints
-        self.endpoints=endpoints
-        self.rotations=rotations
+        self.startpoints=startpoints or []
+        self.endpoints=endpoints or []
+        self.rotations=rotations or []
+        self.depth = None
 
     def to_chunk(self):
         chunk = camPathChunk(self.points,self.startpoints,self.endpoints,self.rotations)
         if len(self.points)>2 and np.array_equal(self.points[0],self.points[-1]):
             chunk.closed = True
+        if self.depth is not None:
+            chunk.depth = self.depth
+        
         return chunk
 
 # an actual chunk - stores points as numpy arrays
@@ -290,6 +294,9 @@ class camPathChunk:
             self.startpoints.pop(index)
             self.endpoints.pop(index)
             self.rotations.pop(index)
+
+    def insert(self,at_index,point,startpoint=None, endpoint=None, rotation=None):
+        self.append(point,startpoint=startpoint,endpoint=endpoint,rotation=rotation,at_index=at_index)
 
     def append(self, point, startpoint=None, endpoint=None, rotation=None,at_index=None):
         if at_index is None:

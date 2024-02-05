@@ -501,8 +501,9 @@ def getPathPattern4axis(operation):
                 rot[a1] = b * anglestep
                 chunk.rotations.append(rot)
 
+            chunk = chunk.to_chunk()
             chunk.depth = radiusend - radius
-            pathchunks.append(chunk.to_chunk())
+            pathchunks.append(chunk)
 
             if (reverse and o.movement.type == 'MEANDER') or (
                     o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW') or (
@@ -540,9 +541,10 @@ def getPathPattern4axis(operation):
                 cutterstart.rotate(e)
                 cutterend.rotate(e)
 
+            chunk=chunk.to_chunk()
             chunk.depth = radiusend - radius
 
-        pathchunks.append(chunk.to_chunk())
+        pathchunks.append(chunk)
     # print(chunk.startpoints)
     # print(pathchunks)
     # sprint(len(pathchunks))
