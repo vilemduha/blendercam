@@ -1334,7 +1334,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             print(time.time() - t)
 
             t = time.time()
-            silhouete = [p]  # [polygon_utils_cam.Shapely2Polygon(p)]
+            silhouete = p  # [polygon_utils_cam.Shapely2Polygon(p)]
 
     return silhouete
 

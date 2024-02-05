@@ -117,7 +117,7 @@ class camPathChunk:
 
     def update_poly(self):
         if len(self._points) > 2:
-            self.poly = sgeometry.Polygon(self._points)
+            self.poly = sgeometry.Polygon(self._points[:,0:2])
         else:
             self.poly = sgeometry.Polygon()
 
@@ -294,6 +294,15 @@ class camPathChunk:
             self.startpoints.pop(index)
             self.endpoints.pop(index)
             self.rotations.pop(index)
+
+    def dedupePoints(self):
+        if len(self._points)>1:
+            keep_points=np.empty(self._points.shape[0],dtype=bool)
+            keep_points[0]=True
+            diff_points=np.sum((self._points[1:]-self._points[:1])**2,axis=1)
+            keep_points[1:]=diff_points>0.000000001
+            self._points=self._points[keep_points,:]
+
 
     def insert(self,at_index,point,startpoint=None, endpoint=None, rotation=None):
         self.append(point,startpoint=startpoint,endpoint=endpoint,rotation=rotation,at_index=at_index)
@@ -864,19 +873,22 @@ def parentChild(parents, children, o):
 
 def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarchies... ;)
     # print ('analyzing paths')
-
     for ch in chunks:  # first convert chunk to poly
         if len(ch._points) > 2:
             # pchunk=[]
-            ch.poly = sgeometry.Polygon(ch._points)
+            ch.poly = sgeometry.Polygon(ch._points[:,0:2])
+            if not ch.poly.is_valid:
+                ch.poly = sgeometry.Polygon()
+        else:
+            ch.poly = sgeometry.Polygon()
 
     for ppart in chunks:  # then add hierarchy relations
         for ptest in chunks:
-
             if ppart != ptest:
-                if ptest.poly.contains(ppart.poly):
-                    # hierarchy works like this: - children get milled first.
-                    ppart.parents.append(ptest)
+                if not ppart.poly.is_empty and not ptest.poly.is_empty:
+                    if ptest.poly.contains(ppart.poly):
+                        # hierarchy works like this: - children get milled first.
+                        ppart.parents.append(ptest)
 
     for ch in chunks:  # now make only simple polygons with holes, not more polys inside others
         found = False
@@ -904,14 +916,14 @@ def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarc
 
                 print('chunksToShapely oops!')
 
-                lastPt = False
+                lastPt = None
                 tolerance = 0.0000003
                 newPoints = []
 
                 for pt in ch._points:
                     toleranceXok = True
                     toleranceYok = True
-                    if lastPt:
+                    if lastPt is not None:
                         if abs(pt[0] - lastPt[0]) < tolerance:
                             toleranceXok = False
                         if abs(pt[1] - lastPt[1]) < tolerance:
@@ -943,7 +955,7 @@ def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarc
 
                     # print('chunksToShapely double oops!')
 
-                    lastPt = False
+                    lastPt = None
                     tolerance = 0.0000003
                     newPoints = []
 
@@ -952,7 +964,7 @@ def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarc
                         toleranceYok = True
                         # print( '{0:.9f}, {0:.9f}, {0:.9f}'.format(pt[0], pt[1], pt[2]) )
                         # print(pt)
-                        if lastPt:
+                        if lastPt is not None:
                             if abs(pt[0] - lastPt[0]) < tolerance:
                                 toleranceXok = False
                             if abs(pt[1] - lastPt[1]) < tolerance:
@@ -986,8 +998,9 @@ def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarc
 
     for polyi in range(0, len(chunks)):  # export only the booleaned polygons
         ch = chunks[polyi]
-        if len(ch.parents) == 0:
-            returnpolys.append(ch.poly)
+        if not ch.poly.is_empty:
+            if len(ch.parents) == 0:
+                returnpolys.append(ch.poly)
     from shapely.geometry import MultiPolygon
     polys = MultiPolygon(returnpolys)
     return polys
@@ -1024,7 +1037,11 @@ def meshFromCurveToChunk(object):
                 chunk.points.append((mesh.vertices[lastvi].co + object.location).to_tuple())
                 # add first point to end#originally the z was mesh.vertices[lastvi].co.z+z
             lastvi = vi + 1
-            chunks.append(chunk.to_chunk())
+            chunk=chunk.to_chunk()
+            chunk.dedupePoints()
+            if chunk.count()>=1:
+                # dump single point chunks 
+                chunks.append(chunk)
             chunk = camPathChunkBuilder()
 
     progress('processing curve - FINISHED')
@@ -1035,9 +1052,12 @@ def meshFromCurveToChunk(object):
         chunk.closed = True
         chunk.points.append(
             (mesh.vertices[lastvi].co.x + x, mesh.vertices[lastvi].co.y + y, mesh.vertices[lastvi].co.z + z))
-    chunks.append(chunk.to_chunk())
+    chunk=chunk.to_chunk()
+    chunk.dedupePoints()
+    if chunk.count()>=1:
+        # dump single point chunks 
+        chunks.append(chunk)
     return chunks
-
 
 def makeVisible(o):
     storage = [True, []]
