@@ -625,10 +625,20 @@ async def medial_axis(o):
                 ob.data.resolution_u = 64
 
     polys = utils.getOperationSilhouete(o)
-    mpoly = sgeometry.shape(polys)
+    if isinstance(polys, list):
+        if len(polys)==1 and isinstance(polys[0],shapely.MultiPolygon):
+            mpoly=polys[0]
+        else:
+            mpoly=sgeometry.MultiPolygon(polys)
+    elif isinstance(polys,shapely.MultiPolygon):
+        # just a multipolygon
+        mpoly=polys
+    else:
+        raise CamException("Failed getting object silhouette. Is input curve closed?")
+    
     mpoly_boundary = mpoly.boundary
     ipol = 0
-    for poly in polys.geoms:
+    for poly in mpoly.geoms:
         ipol = ipol + 1
         schunks = shapelyToChunks(poly, -1)
         schunks = chunksRefineThreshold(schunks, o.medial_axis_subdivision,

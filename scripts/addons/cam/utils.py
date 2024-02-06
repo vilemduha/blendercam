@@ -675,6 +675,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
         lastrunchunks.append([])
     n = 0
 
+    last_percent=-1
     lastz = minz
     for patternchunk in pathSamples:
         # print (patternchunk.endpoints)
@@ -689,7 +690,6 @@ async def sampleChunksNAxis(o, pathSamples, layers):
         # for t in range(0,threads):
         # print(len(patternchunk.startpoints),len( patternchunk.endpoints))
         spl = len(patternchunk.startpoints)
-        last_percent=-1
         for si in range(0, spl):  # ,startp in enumerate(patternchunk.startpoints):
             # #TODO: seems we are writing into the source chunk ,
             #  and that is why we need to write endpoints everywhere too?
@@ -1334,7 +1334,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             print(time.time() - t)
 
             t = time.time()
-            silhouete = p  # [polygon_utils_cam.Shapely2Polygon(p)]
+            silhouete = [p]  # [polygon_utils_cam.Shapely2Polygon(p)]
 
     return silhouete
 
