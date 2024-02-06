@@ -675,6 +675,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
         lastrunchunks.append([])
     n = 0
 
+    last_percent=-1
     lastz = minz
     for patternchunk in pathSamples:
         # print (patternchunk.endpoints)
@@ -693,8 +694,10 @@ async def sampleChunksNAxis(o, pathSamples, layers):
             # #TODO: seems we are writing into the source chunk ,
             #  and that is why we need to write endpoints everywhere too?
 
-            if n / 200.0 == int(n / 200.0):
-                await progress_async('sampling paths', int(100 * n / totlen))
+            percent=int(100 * n / totlen)
+            if percent!=last_percent:
+                await progress_async('sampling paths', percent)
+                last_percent=percent
             n += 1
             sampled = False
             # print(si)
@@ -841,10 +844,10 @@ async def sampleChunksNAxis(o, pathSamples, layers):
 
         for i, l in enumerate(layers):
             ch = layeractivechunks[i]
-            if len(ch.points) > 0:
+            if ch.count() > 0:
                 layerchunks[i].append(ch)
                 thisrunchunks[i].append(ch)
-                layeractivechunks[i] = None
+                layeractivechunks[i] = camPathChunkBuilder([])
 
             if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL':
                 parentChildDist(thisrunchunks[i], lastrunchunks[i], o)
