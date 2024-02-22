@@ -90,7 +90,11 @@ class camPathChunk:
     # progressIndex=-1# for e.g. parallel strategy, when trying to save time..
     def __init__(self, inpoints, startpoints=None, endpoints=None, rotations=None):
         # name this as _points so nothing external accesses it directly
-        self._points = np.array(inpoints)  # for 3 axes, this is only storage of points. For N axes, here go the sampled points
+        # for 3 axes, this is only storage of points. For N axes, here go the sampled points
+        if len(inpoints)==0:
+            self._points = np.empty(shape=(0,3)) 
+        else:
+            self._points = np.array(inpoints)  
         self.poly = None # get polygon just in time 
         self.simppoly = None
         if startpoints:
