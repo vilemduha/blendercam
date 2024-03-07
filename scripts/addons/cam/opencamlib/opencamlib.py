@@ -110,7 +110,7 @@ async def oclResampleChunks(operation, chunks_to_resample,use_cached_mesh):
     tmp_chunks.append(camPathChunk(inpoints=[]))
     for chunk, i_start, i_length in chunks_to_resample:
         tmp_chunks[0].extend(chunk.get_points_np()[i_start:i_start+i_length])
-        print(i_start,i_length,len(tmp_chunks[0]._points))
+        print(i_start,i_length,len(tmp_chunks[0].points))
  
     samples = await ocl_sample(operation, tmp_chunks,use_cached_mesh=use_cached_mesh)
 
