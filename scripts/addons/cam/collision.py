@@ -266,9 +266,7 @@ def prepareBulletCollision(o):
         if active_collection in collisionob.users_collection:
             active_collection.objects.unlink(collisionob)
 
-    # call this twice or else blender doesn't update physics. No idea why, but just leave
-    # this double call to avoid bad things
-    getCutterBullet(o)
+
     getCutterBullet(o)
 
     # machine objects scaling up to simulation scale
