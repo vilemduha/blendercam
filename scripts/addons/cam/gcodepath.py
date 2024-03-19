@@ -33,6 +33,7 @@ import numpy
 
 from cam import chunk
 from cam.chunk import *
+from cam import USE_PROFILER
 
 from cam import collision
 from cam.collision import *
@@ -58,7 +59,6 @@ from cam import image_utils
 from cam.image_utils import *
 from cam.opencamlib.opencamlib import *
 from cam.nc import iso
-
 
 def pointonline(a, b, c, tolerence):
     b = b - a  # convert to vector by subtracting origin
@@ -158,6 +158,7 @@ def exportGcodePath(filename, vertslist, operations):
         if split:
             fileindex = '_' + str(findex)
         filename = basefilename + fileindex + extension
+        print("writing: ",filename)
         c = postprocessor.Creator()
 
         # process user overrides for post processor settings
@@ -517,8 +518,6 @@ def exportGcodePath(filename, vertslist, operations):
 async def getPath(context, operation):  # should do all path calculations.
     t = time.process_time()
     # print('ahoj0')
-    if shapely.speedups.available:
-        shapely.speedups.enable()
 
     # these tags are for caching of some of the results. Not working well still
     # - although it can save a lot of time during calculation...
@@ -543,7 +542,15 @@ async def getPath(context, operation):  # should do all path calculations.
     print(operation.machine_axes)
 
     if operation.machine_axes == '3':
-        await getPath3axis(context, operation)
+        if USE_PROFILER == True: # profiler
+            import cProfile, pstats, io
+            pr = cProfile.Profile()
+            pr.enable()
+            await getPath3axis(context, operation)
+            pr.disable()
+            pr.dump_stats(time.strftime("blendercam_%Y%m%d_%H%M.prof"))
+        else:        
+            await getPath3axis(context, operation)
 
     elif (operation.machine_axes == '5' and operation.strategy5axis == 'INDEXED') or (
             operation.machine_axes == '4' and operation.strategy4axis == 'INDEXED'):
@@ -680,12 +687,13 @@ async def getPath3axis(context, operation):
                 chunks = await utils.connectChunksLow(chunks, o)
         if o.movement.ramp:
             for ch in chunks:
-                ch.rampZigZag(ch.zstart, ch.points[0][2], o)
+                ch.rampZigZag(ch.zstart, None, o)
         # print(chunks)
         if o.strategy == 'CARVE':
             for ch in chunks:
-                for vi in range(0, len(ch.points)):
-                    ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
+                ch.offsetZ(-o.carve_depth)
+#                for vi in range(0, len(ch.points)):
+#                    ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
         if o.use_bridges:
             print(chunks)
             for bridge_chunk in chunks:
@@ -701,7 +709,8 @@ async def getPath3axis(context, operation):
         if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
                 o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
             for ch in chunks:
-                ch.points.reverse()
+                ch.reverse()
+
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and not o.optimisation.use_opencamlib:
@@ -826,7 +835,7 @@ async def getPath3axis(context, operation):
             if (o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW') or (
                     o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW'):
                 for chunk in slicechunks:
-                    chunk.points.reverse()
+                    chunk.reverse()
             slicechunks = await utils.sortChunks(slicechunks, o)
             if topdown:
                 slicechunks.reverse()
@@ -835,7 +844,6 @@ async def getPath3axis(context, operation):
             chunks.extend(slicechunks)
         if topdown:
             chunks.reverse()
-
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'DRILL':

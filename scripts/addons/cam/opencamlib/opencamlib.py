@@ -10,6 +10,8 @@ except ImportError:
         pass
 import os
 import tempfile
+import numpy as np
+
 from subprocess import call
 from cam.collision import BULLET_SCALE
 from cam import simple
@@ -18,6 +20,7 @@ from cam.simple import *
 from cam.async_op import progress_async
 from shapely import geometry as sgeometry
 from .oclSample import get_oclSTL
+from cam import utils
 
 from cam.opencamlib.oclSample import ocl_sample
 
@@ -32,30 +35,43 @@ def pointSamplesFromOCL(points, samples):
 def chunkPointSamplesFromOCL(chunks, samples):
     s_index = 0
     for ch in chunks:
-        p_index = 0
-        for point in ch.points:
-            if len(point) == 2 or point[2] != 2:
-                z_sample = samples[s_index].z / OCL_SCALE
-                ch.points[p_index] = (point[0], point[1], z_sample)
-            # print(str(point[2]))
-            else:
-                ch.points[p_index] = (point[0], point[1], 1)
-            p_index += 1
-            s_index += 1
+        ch_points=ch.count()
+        z_vals=np.array([p.z for p in samples[s_index:s_index+ch_points]])
+        z_vals /= OCL_SCALE
+        ch.setZ(z_vals)
+        s_index+=ch_points
+        # p_index = 0
+        # for point in ch.points:
+        #     if len(point) == 2 or point[2] != 2:
+        #         z_sample = samples[s_index].z / OCL_SCALE
+        #         ch.points[p_index] = (point[0], point[1], z_sample)
+        #     # print(str(point[2]))
+        #     else:
+        #         ch.points[p_index] = (point[0], point[1], 1)
+        #     p_index += 1
+        #     s_index += 1
 
 def chunkPointsResampleFromOCL(chunks, samples):
     s_index = 0
     for ch in chunks:
-        p_index = 0
-        for point in ch.points:
-            if len(point) == 2 or point[2] != 2:
-                z_sample = samples[s_index].z / OCL_SCALE
-                ch.points[p_index] = (point[0], point[1], z_sample)
-            # print(str(point[2]))
-            else:
-                ch.points[p_index] = (point[0], point[1], 1)
-            p_index += 1
-            s_index += 1
+        ch_points=ch.count()
+        z_vals=np.array([p.z for p in samples[s_index:s_index+ch_points]])
+        z_vals /= OCL_SCALE
+        ch.setZ(z_vals)
+        s_index+=ch_points
+
+    # s_index = 0
+    # for ch in chunks:
+    #     p_index = 0
+    #     for point in ch.points:
+    #         if len(point) == 2 or point[2] != 2:
+    #             z_sample = samples[s_index].z / OCL_SCALE
+    #             ch.points[p_index] = (point[0], point[1], z_sample)
+    #         # print(str(point[2]))
+    #         else:
+    #             ch.points[p_index] = (point[0], point[1], 1)
+    #         p_index += 1
+    #         s_index += 1
 
 
 def exportModelsToSTL(operation):
@@ -93,18 +109,24 @@ async def oclResampleChunks(operation, chunks_to_resample,use_cached_mesh):
     tmp_chunks = list()
     tmp_chunks.append(camPathChunk(inpoints=[]))
     for chunk, i_start, i_length in chunks_to_resample:
-        for p_index in range(i_start, i_start + i_length):
-            tmp_chunks[0].append(chunk.points[p_index])
+        tmp_chunks[0].extend(chunk.get_points_np()[i_start:i_start+i_length])
+        print(i_start,i_length,len(tmp_chunks[0].points))
  
     samples = await ocl_sample(operation, tmp_chunks,use_cached_mesh=use_cached_mesh)
 
     sample_index = 0
     for chunk, i_start, i_length in chunks_to_resample:
-        for p_index in range(i_start, i_start + i_length):
-            z = samples[sample_index].z / OCL_SCALE
-            sample_index += 1
-            if z > chunk.points[p_index][2]:
-                chunk.points[p_index][2] = z
+        z = np.array([p.z for p in samples[sample_index:sample_index+i_length]]) / OCL_SCALE
+        pts = chunk.get_points_np()
+        pt_z = pts[i_start:i_start+i_length,2]
+        pt_z = np.where(z>pt_z,z,pt_z)
+
+        sample_index += i_length
+        # for p_index in range(i_start, i_start + i_length):
+        #     z = samples[sample_index].z / OCL_SCALE
+        #     sample_index += 1
+        #     if z > chunk.points[p_index][2]:
+        #         chunk.points[p_index][2] = z
 
 
 def oclWaterlineLayerHeights(operation):
@@ -155,18 +177,25 @@ async def oclGetWaterline(operation, chunks):
     waterline.setSTL(oclSTL)
     waterline.setCutter(cutter)
     waterline.setSampling(0.1)#TODO: add sampling setting to UI
+    last_pos=[0,0,0]
     for count,height in enumerate(layers):
+        layer_chunks=[]
         await progress_async("Waterline",int((100*count)/len(layers)))
         waterline.reset()
         waterline.setZ(height * OCL_SCALE)
         waterline.run2()
         wl_loops = waterline.getLoops()
         for l in wl_loops:
-            chunks.append(camPathChunk(inpoints=[]))
+            inpoints=[]
             for p in l:
-                chunks[-1].points.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
-            chunks[-1].append(chunks[-1].points[0])
-            chunks[-1].closed = True
-            chunks[-1].poly = sgeometry.Polygon(chunks[-1].points)
+                inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
+            inpoints.append(inpoints[0])
+            chunk=camPathChunk(inpoints=inpoints)
+            chunk.closed = True
+            layer_chunks.append(chunk)
+        # sort chunks so that ordering is stable
+        chunks.extend(await utils.sortChunks(layer_chunks,operation,last_pos=last_pos))
+        if len(chunks)>0:
+            last_pos=chunks[-1].get_point(-1)
 
 # def oclFillMedialAxis(operation):

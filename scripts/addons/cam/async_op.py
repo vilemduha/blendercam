@@ -21,6 +21,9 @@ class AsyncOperatorMixin:
         self._is_cancelled=False
 
     def modal(self,context,event):
+        if bpy.app.background:
+            return {'PASS_THROUGH'}
+
         if event.type == 'TIMER':
             try:
                 if self.tick(context):
@@ -70,6 +73,8 @@ class AsyncOperatorMixin:
             return True
         except StopIteration:
             return False
+        except Exception as e:
+            print("Exception thrown in tick:",e)
 
     def execute(self, context):
         if bpy.app.background:

@@ -362,22 +362,22 @@ def getBoundsMultiple(operations):
 
 
 def samplePathLow(o, ch1, ch2, dosample):
-    v1 = Vector(ch1.points[-1])
-    v2 = Vector(ch2.points[0])
+    v1 = Vector(ch1.get_point(-1))
+    v2 = Vector(ch2.get_point(0))
 
     v = v2 - v1
     d = v.length
     v.normalize()
 
     vref = Vector((0, 0, 0))
-    bpath = camPathChunk([])
+    bpath_points = []
     i = 0
     while vref.length < d:
         i += 1
         vref = v * o.dist_along_paths * i
         if vref.length < d:
             p = v1 + vref
-            bpath.points.append([p.x, p.y, p.z])
+            bpath_points.append([p.x, p.y, p.z])
     # print('between path')
     # print(len(bpath))
     pixsize = o.optimisation.pixsize
@@ -389,18 +389,18 @@ def samplePathLow(o, ch1, ch2, dosample):
                     o.update_bullet_collision_tag = False
 
                 cutterdepth = o.cutter_shape.dimensions.z / 2
-                for p in bpath.points:
+                for p in bpath_points:
                     z = getSampleBullet(o.cutter_shape, p[0], p[1], cutterdepth, 1, o.minz)
                     if z > p[2]:
                         p[2] = z
             else:
-                for p in bpath.points:
+                for p in bpath_points:
                     xs = (p[0] - o.min.x) / pixsize + o.borderwidth + pixsize / 2  # -m
                     ys = (p[1] - o.min.y) / pixsize + o.borderwidth + pixsize / 2  # -m
                     z = getSampleImage((xs, ys), o.offset_image, o.minz) + o.skin
                     if z > p[2]:
                         p[2] = z
-    return bpath
+    return camPathChunk(bpath_points)
 
 
 # def threadedSampling():#not really possible at all without running more blenders for same operation :( python!
@@ -424,7 +424,7 @@ async def sampleChunks(o, pathSamples, layers):
             cutterdepth = cutter.dimensions.z / 2
     else:
         if o.strategy != 'WATERLINE':  # or prepare offset image, but not in some strategies.
-            prepareArea(o)
+            await prepareArea(o)
 
         pixsize = o.optimisation.pixsize
 
@@ -438,7 +438,7 @@ async def sampleChunks(o, pathSamples, layers):
 
     totlen = 0  # total length of all chunks, to estimate sampling time.
     for ch in pathSamples:
-        totlen += len(ch.points)
+        totlen += ch.count()
     layerchunks = []
     minz = o.minz - 0.000001  # correction for image method problems
     layeractivechunks = []
@@ -446,13 +446,16 @@ async def sampleChunks(o, pathSamples, layers):
 
     for l in layers:
         layerchunks.append([])
-        layeractivechunks.append(camPathChunk([]))
+        layeractivechunks.append(camPathChunkBuilder([]))
         lastrunchunks.append([])
 
     zinvert = 0
     if o.inverse:
         ob = bpy.data.objects[o.object_name]
         zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
+
+    print(f"Total sample points {totlen}")
+
 
     n = 0
     last_percent = -1
@@ -472,15 +475,16 @@ async def sampleChunks(o, pathSamples, layers):
         # threads_count=4
 
         # for t in range(0,threads):
-
-        for s in patternchunk.points:
+        our_points=patternchunk.get_points_np()
+        ambient_contains=shapely.contains(o.ambient,shapely.points(our_points[:,0:2]))
+        for s,in_ambient in zip(our_points,ambient_contains):
             if o.strategy != 'WATERLINE' and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
                 await progress_async('sampling paths ', last_percent)
             n += 1
             x = s[0]
             y = s[1]
-            if not o.ambient.contains(sgeometry.Point(x, y)):
+            if not in_ambient:
                 newsample = (x, y, 1)
             else:
                 if o.optimisation.use_opencamlib and o.optimisation.use_exact:
@@ -583,17 +587,20 @@ async def sampleChunks(o, pathSamples, layers):
 
                 if terminatechunk:
                     if len(ch.points) > 0:
-                        layerchunks[i].append(ch)
-                        thisrunchunks[i].append(ch)
-                        layeractivechunks[i] = camPathChunk([])
+                        as_chunk=ch.to_chunk()
+                        layerchunks[i].append(as_chunk)
+                        thisrunchunks[i].append(as_chunk)
+                        layeractivechunks[i] = camPathChunkBuilder([])
             lastsample = newsample
+
 
         for i, l in enumerate(layers):
             ch = layeractivechunks[i]
             if len(ch.points) > 0:
-                layerchunks[i].append(ch)
-                thisrunchunks[i].append(ch)
-                layeractivechunks[i] = camPathChunk([])
+                as_chunk=ch.to_chunk()
+                layerchunks[i].append(as_chunk)
+                thisrunchunks[i].append(as_chunk)
+                layeractivechunks[i] = camPathChunkBuilder([])
 
             # PARENTING
             if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL':
@@ -664,10 +671,11 @@ async def sampleChunksNAxis(o, pathSamples, layers):
 
     for l in layers:
         layerchunks.append([])
-        layeractivechunks.append(camPathChunk([]))
+        layeractivechunks.append(camPathChunkBuilder([]))
         lastrunchunks.append([])
     n = 0
 
+    last_percent=-1
     lastz = minz
     for patternchunk in pathSamples:
         # print (patternchunk.endpoints)
@@ -686,8 +694,10 @@ async def sampleChunksNAxis(o, pathSamples, layers):
             # #TODO: seems we are writing into the source chunk ,
             #  and that is why we need to write endpoints everywhere too?
 
-            if n / 200.0 == int(n / 200.0):
-                await progress_async('sampling paths', int(100 * n / totlen))
+            percent=int(100 * n / totlen)
+            if percent!=last_percent:
+                await progress_async('sampling paths', percent)
+                last_percent=percent
             n += 1
             sampled = False
             # print(si)
@@ -826,12 +836,18 @@ async def sampleChunksNAxis(o, pathSamples, layers):
             laststartpoint = startp
             lastendpoint = endp
 
+        # convert everything to actual chunks 
+        # rather than chunkBuilders 
+        for i, l in enumerate(layers):
+            layeractivechunks[i]=layeractivechunks[i].to_chunk() if layeractivechunks[i] is not None else None
+
+
         for i, l in enumerate(layers):
             ch = layeractivechunks[i]
-            if len(ch.points) > 0:
+            if ch.count() > 0:
                 layerchunks[i].append(ch)
                 thisrunchunks[i].append(ch)
-                layeractivechunks[i] = camPathChunk([])
+                layeractivechunks[i] = camPathChunkBuilder([])
 
             if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL':
                 parentChildDist(thisrunchunks[i], lastrunchunks[i], o)
@@ -1021,7 +1037,7 @@ async def connectChunksLow(chunks, o):
     pos = (0, 0, 0)
 
     for ch in chunks:
-        if len(ch.points) > 0:
+        if ch.count() > 0:
             if lastch is not None and (ch.distStart(pos, o) < mergedist):
                 # CARVE should lift allways, when it goes below surface...
                 # print(mergedist,ch.dist(pos,o))
@@ -1035,16 +1051,16 @@ async def connectChunksLow(chunks, o):
                 if o.optimisation.use_opencamlib and o.optimisation.use_exact and (
                         o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'PENCIL'):
                     chunks_to_resample.append(
-                        (connectedchunks[-1], len(connectedchunks[-1].points), len(between.points)))
+                        (connectedchunks[-1], connectedchunks[-1].count(), between.count()))
 
-                connectedchunks[-1].points.extend(between.points)
-                connectedchunks[-1].points.extend(ch.points)
+                connectedchunks[-1].extend(between.get_points_np())
+                connectedchunks[-1].extend(ch.get_points_np())
             else:
                 connectedchunks.append(ch)
             lastch = ch
-            pos = lastch.points[-1]
+            pos = lastch.get_point(-1)
 
-    if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET':
+    if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET' and o.strategy != 'WATERLINE':
         await oclResampleChunks(o, chunks_to_resample,use_cached_mesh=True)
 
     return connectedchunks
@@ -1069,7 +1085,7 @@ def getClosest(o, pos, chunks):
     return ch
 
 
-async def sortChunks(chunks, o):
+async def sortChunks(chunks, o,last_pos=None):
     if o.strategy != 'WATERLINE':
         await progress_async('sorting paths')
     sys.setrecursionlimit(100000)  # the getNext() function of CamPathChunk was running out of recursion limits.
@@ -1080,7 +1096,7 @@ async def sortChunks(chunks, o):
     last_progress_time=time.time()
     total= len(chunks)
     i = len(chunks)
-    pos = (0, 0, 0)
+    pos = (0, 0, 0) if last_pos is None else last_pos
     while len(chunks) > 0:        
         if o.strategy != 'WATERLINE' and time.time()-last_progress_time>0.1:
             await progress_async("Sorting paths",100.0*(total-len(chunks))/total)
@@ -1106,7 +1122,7 @@ async def sortChunks(chunks, o):
             chunks.remove(ch)
             sortedchunks.append(ch)
             lastch = ch
-            pos = lastch.points[-1]
+            pos = lastch.get_point(-1)
         # print(i, len(chunks))
         # experimental fix for infinite loop problem
         # else:

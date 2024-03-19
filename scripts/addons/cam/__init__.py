@@ -17,9 +17,7 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
-# ***** END GPL LICENCE BLOCK *****
-
-import bgl
+# ***** END GPL LICENCE BLOCK ****
 import bl_operators
 import blf
 import bpy
@@ -36,6 +34,8 @@ import time
 
 from pathlib import Path
 
+USE_PROFILER = False
+
 try:
     import shapely
 except ImportError:
@@ -43,6 +43,8 @@ except ImportError:
     subprocess.check_call([sys.executable, "-m", "ensurepip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","Equation","opencamlib"])
+    # install numba if available for this platform, ignore failure
+    subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
 
 
 from bpy.app.handlers import persistent
@@ -60,7 +62,7 @@ from cam.version import __version__
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak",
-    "version":(0,9,10),
+    "version":(1,0,3),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
