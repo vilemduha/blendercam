@@ -8,6 +8,7 @@ import area
 import math
 count = 0
 
+
 class Parser:
 
     def __init__(self, writer):
@@ -23,23 +24,31 @@ class Parser:
         self.file_in.close()
 
     ############################################################################
-    ##  Internals
+    # Internals
 
     def readline(self):
         self.line = self.file_in.readline().rstrip()
-        if (len(self.line)) : return True
-        else : return False
+        if (len(self.line)):
+            return True
+        else:
+            return False
 
     def set_current_pos(self, x, y, z):
-        if (x != None) :
-            if self.absolute_flag or self.currentx == None: self.currentx = x
-            else: self.currentx = self.currentx + x
-        if (y != None) :
-            if self.absolute_flag or self.currenty == None: self.currenty = y
-            else: self.currenty = self.currenty + y
-        if (z != None) :
-            if self.absolute_flag or self.currentz == None: self.currentz = z
-            else: self.currentz = self.currentz + z
+        if (x != None):
+            if self.absolute_flag or self.currentx == None:
+                self.currentx = x
+            else:
+                self.currentx = self.currentx + x
+        if (y != None):
+            if self.absolute_flag or self.currenty == None:
+                self.currenty = y
+            else:
+                self.currenty = self.currenty + y
+        if (z != None):
+            if self.absolute_flag or self.currentz == None:
+                self.currentz = z
+            else:
+                self.currentz = self.currentz + z
 
 #    def add_line(self, x, y, z, a, b, c):
 #        if (x == None and y == None and z == None and a == None and b == None and c == None) : return
@@ -98,10 +107,11 @@ class Parser:
 
             if self.t != None:
                 if (self.m6 == True) or (self.need_m6_for_t_change == False):
-                    self.writer.tool_change( self.t )
+                    self.writer.tool_change(self.t)
 
             if (self.drill):
-                if self.z != None: self.drillz = self.z
+                if self.z != None:
+                    self.drillz = self.z
                 self.writer.rapid(self.x, self.y, self.r)
                 self.writer.feed(self.x, self.y, self.drillz)
                 self.writer.feed(self.x, self.y, self.r)
@@ -111,7 +121,7 @@ class Parser:
 
             else:
                 if (self.move and not self.no_move):
-                    if (self.arc==0):
+                    if (self.arc == 0):
                         if self.path_col == "feed":
                             self.writer.feed(self.x, self.y, self.z)
                         else:
@@ -125,15 +135,17 @@ class Parser:
                         else:
                             if (self.arc_centre_positive == True) and (self.oldx != None) and (self.oldy != None):
                                 x = self.oldx
-                                if self.x != None: x = self.x
+                                if self.x != None:
+                                    x = self.x
                                 if (self.x > self.oldx) != (self.arc > 0):
                                     j = -j
                                 y = self.oldy
-                                if self.y != None: y = self.y
+                                if self.y != None:
+                                    y = self.y
                                 if (self.y > self.oldy) != (self.arc < 0):
                                     i = -i
 
-                                #fix centre point
+                                # fix centre point
                                 r = math.sqrt(i*i + j*j)
                                 p0 = area.Point(self.oldx, self.oldy)
                                 p1 = area.Point(x, y)
@@ -143,7 +155,8 @@ class Parser:
                                 d = math.sqrt(r*r - h*h)
                                 n = area.Point(-v.y, v.x)
                                 n.normalize()
-                                if self.arc == -1: d = -d
+                                if self.arc == -1:
+                                    d = -d
                                 c = p0 + (v * 0.5) + (n * d)
                                 i = c.x
                                 j = c.y
@@ -164,10 +177,11 @@ class Parser:
                             self.writer.arc_cw(self.x, self.y, self.z, i, j, k)
                         else:
                             self.writer.arc_ccw(self.x, self.y, self.z, i, j, k)
-                    if self.x != None: self.oldx = self.x
-                    if self.y != None: self.oldy = self.y
-                    if self.z != None: self.oldz = self.z
+                    if self.x != None:
+                        self.oldx = self.x
+                    if self.y != None:
+                        self.oldy = self.y
+                    if self.z != None:
+                        self.oldz = self.z
 
             self.writer.end_ncblock()
-
-

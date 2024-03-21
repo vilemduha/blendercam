@@ -9,14 +9,16 @@
 from . import nc
 from . import hpgl2d
 
+
 class Creator(hpgl2d.Creator):
     def __init__(self):
         hpgl2d.Creator.__init__(self)
 
     def imperial(self):
-        self.units_to_mc_units = 101.6 # multiplier from inches to machine units
+        self.units_to_mc_units = 101.6  # multiplier from inches to machine units
 
     def metric(self):
-        self.units_to_mc_units = 4 # multiplier from mm to machine units
+        self.units_to_mc_units = 4  # multiplier from mm to machine units
+
 
 nc.creator = Creator()

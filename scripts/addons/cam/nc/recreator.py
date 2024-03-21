@@ -2,6 +2,7 @@ import nc
 
 units = 1.0
 
+
 class Redirector(nc.Creator):
 
     def __init__(self, original):
@@ -11,16 +12,19 @@ class Redirector(nc.Creator):
         self.x = None
         self.y = None
         self.z = None
-        if original.x != None: self.x = original.x * units
-        if original.y != None: self.y = original.y * units
-        if original.z != None: self.z = original.z * units
+        if original.x != None:
+            self.x = original.x * units
+        if original.y != None:
+            self.y = original.y * units
+        if original.z != None:
+            self.z = original.z * units
         self.imperial = False
 
     def cut_path(self):
         pass
 
     ############################################################################
-    ##  Programs
+    # Programs
     def write(self, s):
         self.original.write(s)
 
@@ -53,7 +57,7 @@ class Redirector(nc.Creator):
         self.original.flush_nc()
 
     ############################################################################
-    ##  Subprograms
+    # Subprograms
 
     def sub_begin(self, id, name=None):
         self.cut_path()
@@ -74,7 +78,7 @@ class Redirector(nc.Creator):
         self.original.enable_output()
 
     ############################################################################
-    ##  Settings
+    # Settings
 
     def imperial(self):
         self.cut_path()
@@ -103,14 +107,14 @@ class Redirector(nc.Creator):
 
     def set_temporary_origin(self, x=None, y=None, z=None, a=None, b=None, c=None):
         self.cut_path()
-        self.original.set_temporary_origin(x,y,z,a,b,c)
+        self.original.set_temporary_origin(x, y, z, a, b, c)
 
     def remove_temporary_origin(self):
         self.cut_path()
         self.original.remove_temporary_origin()
 
     ############################################################################
-    ##  Tools
+    # Tools
 
     def tool_change(self, id):
         self.cut_path()
@@ -129,7 +133,7 @@ class Redirector(nc.Creator):
         self.original.offset_length(id, length)
 
     ############################################################################
-    ##  Datums
+    # Datums
 
     def datum_shift(self, x=None, y=None, z=None, a=None, b=None, c=None):
         self.cut_path()
@@ -167,14 +171,17 @@ class Redirector(nc.Creator):
         self.original.gearrange(gear)
 
     ############################################################################
-    ##  Moves
+    # Moves
 
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
         self.cut_path()
         self.original.rapid(x, y, z, a, b, c)
-        if x != None: self.x = x * units
-        if y != None: self.y = y * units
-        if z != None: self.z = z * units
+        if x != None:
+            self.x = x * units
+        if y != None:
+            self.y = y * units
+        if z != None:
+            self.z = z * units
 
     def cut_path(self):
         pass
@@ -182,13 +189,16 @@ class Redirector(nc.Creator):
     def z2(self, z):
         return z
 
-    def feed(self, x=None, y=None, z=None, a = None, b = None, c = None):
+    def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
         px = self.x
         py = self.y
         pz = self.z
-        if x != None: self.x = x * units
-        if y != None: self.y = y * units
-        if z != None: self.z = z * units
+        if x != None:
+            self.x = x * units
+        if y != None:
+            self.y = y * units
+        if z != None:
+            self.z = z * units
         if self.x == None or self.y == None or self.z == None:
             self.cut_path()
             self.original.feed(x, y, z)
@@ -199,15 +209,18 @@ class Redirector(nc.Creator):
             self.original.feed(self.x/units, self.y/units, self.z2(self.z)/units)
             return
 
-    def arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, ccw = True):
+    def arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, ccw=True):
         if self.x == None or self.y == None or self.z == None:
             raise "first attached move can't be an arc"
         px = self.x
         py = self.y
         pz = self.z
-        if x != None: self.x = x * units
-        if y != None: self.y = y * units
-        if z != None: self.z = z * units
+        if x != None:
+            self.x = x * units
+        if y != None:
+            self.y = y * units
+        if z != None:
+            self.z = z * units
 
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         self.arc(x, y, z, i, j, k, r, False)
@@ -228,12 +241,12 @@ class Redirector(nc.Creator):
         self.original.rapid_unhome()
 
     ############################################################################
-    ##  Cutter radius compensation
+    # Cutter radius compensation
 
     def use_CRC(self):
         return self.original.use_CRC()
 
-    def start_CRC(self, left = True, radius = 0.0):
+    def start_CRC(self, left=True, radius=0.0):
         self.cut_path()
         self.original.start_CRC(left, radius)
 
@@ -242,7 +255,7 @@ class Redirector(nc.Creator):
         self.original.end_CRC()
 
     ############################################################################
-    ##  Cycles
+    # Cycles
 
     def pattern(self):
         self.cut_path()
@@ -259,30 +272,33 @@ class Redirector(nc.Creator):
         self.cut_path()
         self.original.profile()
 
-    def circular_pocket(self, x=None, y=None, ToolDiameter=None, HoleDiameter=None, ClearanceHeight=None, StartHeight=None, MaterialTop=None, FeedRate=None, SpindleRPM=None, HoleDepth=None, DepthOfCut=None, StepOver=None ):
+    def circular_pocket(self, x=None, y=None, ToolDiameter=None, HoleDiameter=None, ClearanceHeight=None, StartHeight=None, MaterialTop=None, FeedRate=None, SpindleRPM=None, HoleDepth=None, DepthOfCut=None, StepOver=None):
         self.cut_path()
-        self.circular_pocket(x, y, ToolDiameter, HoleDiameter, ClearanceHeight, StartHeight, MaterialTop, FeedRate, SpindleRPM, HoleDepth, DepthOfCut, StepOver)
+        self.circular_pocket(x, y, ToolDiameter, HoleDiameter, ClearanceHeight, StartHeight,
+                             MaterialTop, FeedRate, SpindleRPM, HoleDepth, DepthOfCut, StepOver)
 
-    def drill(self, x=None, y=None, dwell=None, depthparams = None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
+    def drill(self, x=None, y=None, dwell=None, depthparams=None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
         self.cut_path()
-        self.original.drill(x, y, dwell, depthparams, spindle_mode, internal_coolant_on, rapid_to_clearance)
+        self.original.drill(x, y, dwell, depthparams, spindle_mode,
+                            internal_coolant_on, rapid_to_clearance)
 
     # argument list adapted for compatibility with Tapping module
     # wild guess - I'm unsure about the purpose of this file and wether this works -haberlerm
     def tap(self, x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, pitch=None, stoppos=None, spin_in=None, spin_out=None, tap_mode=None, direction=None):
         self.cut_path()
-        self.original.tap( x, y, self.z2(z), self.z2(zretract), depth, standoff, dwell_bottom, pitch, stoppos, spin_in, spin_out, tap_mode, direction)
-
+        self.original.tap(x, y, self.z2(z), self.z2(zretract), depth, standoff,
+                          dwell_bottom, pitch, stoppos, spin_in, spin_out, tap_mode, direction)
 
     def bore(self, x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, feed_in=None, feed_out=None, stoppos=None, shift_back=None, shift_right=None, backbore=False, stop=False):
         self.cut_path()
-        self.original.bore(x, y, self.z2(z), self.z2(zretract), depth, standoff, dwell_Bottom, feed_in, feed_out, stoppos, shift_back, shift_right, backbore, stop)
+        self.original.bore(x, y, self.z2(z), self.z2(zretract), depth, standoff, dwell_Bottom,
+                           feed_in, feed_out, stoppos, shift_back, shift_right, backbore, stop)
 
     def end_canned_cycle(self):
         self.original.end_canned_cycle()
 
     ############################################################################
-    ##  Misc
+    # Misc
 
     def comment(self, text):
         self.cut_path()

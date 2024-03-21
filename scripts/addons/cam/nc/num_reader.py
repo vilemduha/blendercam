@@ -4,6 +4,7 @@ import math
 
 # a base class for hpgl parsers, and maybe others
 
+
 class NumReader(nc.Parser):
 
     def __init__(self):
@@ -37,7 +38,7 @@ class NumReader(nc.Parser):
         self.parse_word = ""
 
     def Parse(self, name, oname=None):
-        self.files_open(name,oname)
+        self.files_open(name, oname)
 
         while self.readline():
             self.begin_ncblock()
@@ -59,4 +60,3 @@ class NumReader(nc.Parser):
             self.end_ncblock()
 
         self.files_close()
-

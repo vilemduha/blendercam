@@ -3,6 +3,8 @@ from . import iso_modal
 import math
 
 ################################################################################
+
+
 class Creator(iso_modal.Creator):
 
     def __init__(self):
@@ -24,8 +26,9 @@ class Creator(iso_modal.Creator):
         self.fmt.number_of_decimal_places = 2
 
     def SPACE(self):
-         return('')
+        return('')
 
 ################################################################################
+
 
 nc.creator = Creator()

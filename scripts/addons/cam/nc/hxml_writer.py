@@ -1,5 +1,6 @@
 import tempfile
 
+
 class HxmlWriter:
     def __init__(self):
         self.file_out = open(tempfile.gettempdir()+'/backplot.xml', 'w')
@@ -26,25 +27,32 @@ class HxmlWriter:
         s.replace('"', '&quot;')
         s.replace('<', '&lt;')
         s.replace('>', '&gt;')
-        if (cdata) : (cd1, cd2) = ('<![CDATA[', ']]>')
-        else : (cd1, cd2) = ('', '')
-        if (col != None) : self.file_out.write('\t\t<text col="'+col+'">'+cd1+s+cd2+'</text>\n')
-        else : self.file_out.write('\t\t<text>'+cd1+s+cd2+'</text>\n')
+        if (cdata):
+            (cd1, cd2) = ('<![CDATA[', ']]>')
+        else:
+            (cd1, cd2) = ('', '')
+        if (col != None):
+            self.file_out.write('\t\t<text col="'+col+'">'+cd1+s+cd2+'</text>\n')
+        else:
+            self.file_out.write('\t\t<text>'+cd1+s+cd2+'</text>\n')
 
     def set_mode(self, units):
         self.file_out.write('\t\t<mode')
-        if (units != None) : self.file_out.write(' units="'+str(units)+'"')
+        if (units != None):
+            self.file_out.write(' units="'+str(units)+'"')
         self.file_out.write(' />\n')
 
     def metric(self):
-        self.set_mode(units = 1.0)
+        self.set_mode(units=1.0)
 
     def imperial(self):
-        self.set_mode(units = 25.4)
+        self.set_mode(units=25.4)
 
     def begin_path(self, col):
-        if (col != None) : self.file_out.write('\t\t<path col="'+col+'">\n')
-        else : self.file_out.write('\t\t<path>\n')
+        if (col != None):
+            self.file_out.write('\t\t<path col="'+col+'">\n')
+        else:
+            self.file_out.write('\t\t<path>\n')
 
     def end_path(self):
         self.file_out.write('\t\t</path>\n')
@@ -71,7 +79,7 @@ class HxmlWriter:
 
     def tool_change(self, id):
         self.file_out.write('\t\t<tool')
-        if (id != None) :
+        if (id != None):
             self.file_out.write(' number="'+str(id)+'"')
             self.file_out.write(' />\n')
 
@@ -81,36 +89,50 @@ class HxmlWriter:
     def feedrate(self, f):
         pass
 
-    def add_line(self, x, y, z, a = None, b = None, c = None):
+    def add_line(self, x, y, z, a=None, b=None, c=None):
         self.file_out.write('\t\t\t<line')
-        if (x != None) :
+        if (x != None):
             self.file_out.write(' x="%.6f"' % x)
-        if (y != None) :
+        if (y != None):
             self.file_out.write(' y="%.6f"' % y)
-        if (z != None) :
+        if (z != None):
             self.file_out.write(' z="%.6f"' % z)
-        if (a != None) : self.file_out.write(' a="%.6f"' % a)
-        if (b != None) : self.file_out.write(' b="%.6f"' % b)
-        if (c != None) : self.file_out.write(' c="%.6f"' % c)
+        if (a != None):
+            self.file_out.write(' a="%.6f"' % a)
+        if (b != None):
+            self.file_out.write(' b="%.6f"' % b)
+        if (c != None):
+            self.file_out.write(' c="%.6f"' % c)
         self.file_out.write(' />\n')
-        if x != None: self.oldx = x
-        if y != None: self.oldy = y
-        if z != None: self.oldz = z
+        if x != None:
+            self.oldx = x
+        if y != None:
+            self.oldy = y
+        if z != None:
+            self.oldz = z
 
-    def add_arc(self, x, y, z, i, j, k, r = None, d = None):
+    def add_arc(self, x, y, z, i, j, k, r=None, d=None):
         self.file_out.write('\t\t\t<arc')
-        if (x != None) :
+        if (x != None):
             self.file_out.write(' x="%.6f"' % x)
-        if (y != None) :
+        if (y != None):
             self.file_out.write(' y="%.6f"' % y)
-        if (z != None) :
+        if (z != None):
             self.file_out.write(' z="%.6f"' % z)
-        if (i != None) : self.file_out.write(' i="%.6f"' % (i - self.oldx))
-        if (j != None) : self.file_out.write(' j="%.6f"' % (j - self.oldy))
-        if (k != None) : self.file_out.write(' k="%.6f"' % (k - self.oldz))
-        if (r != None) : self.file_out.write(' r="%.6f"' % r)
-        if (d != None) : self.file_out.write(' d="%i"' % d)
+        if (i != None):
+            self.file_out.write(' i="%.6f"' % (i - self.oldx))
+        if (j != None):
+            self.file_out.write(' j="%.6f"' % (j - self.oldy))
+        if (k != None):
+            self.file_out.write(' k="%.6f"' % (k - self.oldz))
+        if (r != None):
+            self.file_out.write(' r="%.6f"' % r)
+        if (d != None):
+            self.file_out.write(' d="%i"' % d)
         self.file_out.write(' />\n')
-        if x != None: self.oldx = x
-        if y != None: self.oldy = y
-        if z != None: self.oldz = z
+        if x != None:
+            self.oldx = x
+        if y != None:
+            self.oldy = y
+        if z != None:
+            self.oldz = z

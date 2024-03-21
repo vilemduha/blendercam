@@ -10,6 +10,8 @@ from . import emc2b
 import math
 
 ################################################################################
+
+
 class Creator(emc2b.Creator):
 
     def __init__(self):
@@ -17,5 +19,6 @@ class Creator(emc2b.Creator):
         self.useCrc = True
 
 ################################################################################
+
 
 nc.creator = Creator()

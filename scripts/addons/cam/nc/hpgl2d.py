@@ -7,18 +7,19 @@
 from . import nc
 import math
 
+
 class Creator(nc.Creator):
     def __init__(self):
         nc.Creator.__init__(self)
         self.x = int(0)
-        self.y = int(0) # these are in machine units, like 0.01mm or maybe 0.25mm
-        self.metric() # set self.units_to_mc_units
+        self.y = int(0)  # these are in machine units, like 0.01mm or maybe 0.25mm
+        self.metric()  # set self.units_to_mc_units
 
     def imperial(self):
-        self.units_to_mc_units = 2540 # multiplier from inches to machine units
+        self.units_to_mc_units = 2540  # multiplier from inches to machine units
 
     def metric(self):
-        self.units_to_mc_units = 100 # multiplier from mm to machine units
+        self.units_to_mc_units = 100  # multiplier from mm to machine units
 
     def program_begin(self, id, name=''):
         self.write('IN;\n')
@@ -89,12 +90,15 @@ class Creator(nc.Creator):
             start_angle = math.atan2(sdy, sdx)
             end_angle = math.atan2(edy, edx)
             if cw:
-                if start_angle < end_angle: start_angle += 2 * math.pi
+                if start_angle < end_angle:
+                    start_angle += 2 * math.pi
             else:
-                if end_angle < start_angle: end_angle += 2 * math.pi
+                if end_angle < start_angle:
+                    end_angle += 2 * math.pi
 
             a = math.fabs(end_angle - start_angle)
-            if cw: a = -a
+            if cw:
+                a = -a
 
             mcx, mcy = self.get_machine_x_y(cx, cy)
 
@@ -105,5 +109,6 @@ class Creator(nc.Creator):
 
     def arc_ccw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         self.arc(False, x, y, z, i, j, k, r)
+
 
 nc.creator = Creator()

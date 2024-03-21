@@ -1,4 +1,5 @@
 class Codes():
-	pass
+    pass
+
 
 codes = Codes()
