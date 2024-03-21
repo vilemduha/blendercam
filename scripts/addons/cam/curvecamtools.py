@@ -113,7 +113,8 @@ class CamCurveIntarsion(bpy.types.Operator):
 
         #  Perimeter cut largen then intarsion pocket externally, optional
 
-        diam = self.diameter * 1.05 + self.backlight * 2  # make the diameter 5% larger and compensate for backlight
+        # make the diameter 5% larger and compensate for backlight
+        diam = self.diameter * 1.05 + self.backlight * 2
         utils.silhoueteOffset(context, -diam / 2)
 
         o1 = bpy.context.active_object
@@ -137,7 +138,8 @@ class CamCurveIntarsion(bpy.types.Operator):
         o3.select_set(True)
         context.view_layer.objects.active = o3
         #   intarsion profile is the inside piece of the intarsion
-        utils.silhoueteOffset(context, -self.tolerance / 2)  # make smaller curve for material profile
+        # make smaller curve for material profile
+        utils.silhoueteOffset(context, -self.tolerance / 2)
         bpy.context.object.location[2] = self.intarsion_thickness
         o4 = bpy.context.active_object
         bpy.context.active_object.name = "intarsion_profil"
@@ -146,7 +148,8 @@ class CamCurveIntarsion(bpy.types.Operator):
         if self.backlight > 0.0:  # Make a smaller curve for backlighting purposes
             utils.silhoueteOffset(context, (-self.tolerance / 2) - self.backlight)
             bpy.context.active_object.name = "intarsion_backlight"
-            bpy.context.object.location[2] = -self.backlight_depth_from_top - self.intarsion_thickness
+            bpy.context.object.location[2] = - \
+                self.backlight_depth_from_top - self.intarsion_thickness
             o4.select_set(True)
         o3.select_set(True)
         return {'FINISHED'}
@@ -159,7 +162,8 @@ class CamCurveOvercuts(bpy.types.Operator):
     bl_label = "Add Overcuts"
     bl_options = {'REGISTER', 'UNDO'}
 
-    diameter: bpy.props.FloatProperty(name="diameter", default=.003175, min=0, max=100, precision=4, unit="LENGTH")
+    diameter: bpy.props.FloatProperty(
+        name="diameter", default=.003175, min=0, max=100, precision=4, unit="LENGTH")
     threshold: bpy.props.FloatProperty(name="threshold", default=math.pi / 2 * .99, min=-3.14, max=3.14, precision=4,
                                        subtype="ANGLE", unit="ROTATION")
     do_outer: bpy.props.BoolProperty(name="Outer polygons", default=True)
@@ -348,7 +352,6 @@ class CamCurveOvercutsB(bpy.types.Operator):
                 loops = MultiLineString([s.boundary])
             else:
                 loops = s.boundary
-
 
             outercurve = self.do_outer or len(loops.geoms) == 1
             for ci, c in enumerate(loops.geoms):
@@ -606,8 +609,10 @@ class CamOffsetSilhouete(bpy.types.Operator):
     bl_label = "Silhouete offset"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    offset: bpy.props.FloatProperty(name="offset", default=.003, min=-100, max=100, precision=4, unit="LENGTH")
-    mitrelimit: bpy.props.FloatProperty(name="Mitre Limit", default=.003, min=0.0, max=20, precision=4, unit="LENGTH")
+    offset: bpy.props.FloatProperty(name="offset", default=.003,
+                                    min=-100, max=100, precision=4, unit="LENGTH")
+    mitrelimit: bpy.props.FloatProperty(
+        name="Mitre Limit", default=.003, min=0.0, max=20, precision=4, unit="LENGTH")
     style: bpy.props.EnumProperty(name="type of curve", items=(
         ('1', 'Round', ''), ('2', 'Mitre', ''), ('3', 'Bevel', '')))
     opencurve: bpy.props.BoolProperty(name="Dialate open curve", default=False)
@@ -615,8 +620,8 @@ class CamOffsetSilhouete(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and (
-                context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or
-                context.active_object.type == 'MESH')
+            context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or
+            context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
         bpy.ops.object.curve_remove_doubles()
@@ -624,7 +629,8 @@ class CamOffsetSilhouete(bpy.types.Operator):
         if self.opencurve and ob.type == 'CURVE':
             bpy.ops.object.duplicate()
             obj = context.active_object
-            bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)  # apply all transforms
+            bpy.ops.object.transform_apply(
+                location=True, rotation=True, scale=True)  # apply all transforms
             bpy.context.object.data.resolution_u = 60
             bpy.ops.object.convert(target='MESH')
             bpy.context.active_object.name = "temp_mesh"
@@ -659,8 +665,8 @@ class CamObjectSilhouete(bpy.types.Operator):
         #        return context.active_object is not None and (context.active_object.type == 'CURVE'
         #        or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
         return context.active_object is not None and (
-                context.active_object.type == 'FONT' or
-                context.active_object.type == 'MESH')
+            context.active_object.type == 'FONT' or
+            context.active_object.type == 'MESH')
 
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
         ob = bpy.context.active_object

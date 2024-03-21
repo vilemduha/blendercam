@@ -57,7 +57,8 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
             row = layout.row(align=True)
 
             if chain:
-                row.template_list("CAM_UL_operations", '', chain, "operations", chain, 'active_operation')
+                row.template_list("CAM_UL_operations", '', chain,
+                                  "operations", chain, 'active_operation')
                 col = row.column(align=True)
                 col.operator("scene.cam_chain_operation_add", icon='ADD', text="")
                 col.operator("scene.cam_chain_operation_remove", icon='REMOVE', text="")
@@ -66,13 +67,14 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
                     col.operator("scene.cam_chain_operation_down", icon='TRIA_DOWN', text="")
 
                 if not chain.computing:
-                    layout.operator("object.calculate_cam_paths_chain", text="Calculate chain paths & Export Gcode")
+                    layout.operator("object.calculate_cam_paths_chain",
+                                    text="Calculate chain paths & Export Gcode")
                     layout.operator("object.cam_export_paths_chain", text="Export chain gcode")
                     layout.operator("object.cam_simulate_chain", text="Simulate this chain")
 
-                    valid,reason=cam.isChainValid(chain,context)
+                    valid, reason = cam.isChainValid(chain, context)
                     if not valid:
-                        layout.label(icon="ERROR",text=f"Can't compute chain - reason:\n")
+                        layout.label(icon="ERROR", text=f"Can't compute chain - reason:\n")
                         layout.label(text=reason)
                 else:
                     layout.label(text='chain is currently computing')

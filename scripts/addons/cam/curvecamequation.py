@@ -45,15 +45,21 @@ class CamSineCurve(bpy.types.Operator):
         ('triangle', 'Triangle Wave', 'triangle wave'),
         ('cycloid', 'Cycloid', 'Sine wave rectification'),
         ('invcycloid', 'Inverse Cycloid', 'Sine wave rectification')), default='sine')
-    amplitude: bpy.props.FloatProperty(name="Amplitude", default=.01, min=0, max=10, precision=4, unit="LENGTH")
-    period: bpy.props.FloatProperty(name="Period", default=.5, min=0.001, max=100, precision=4, unit="LENGTH")
+    amplitude: bpy.props.FloatProperty(
+        name="Amplitude", default=.01, min=0, max=10, precision=4, unit="LENGTH")
+    period: bpy.props.FloatProperty(name="Period", default=.5,
+                                    min=0.001, max=100, precision=4, unit="LENGTH")
     beatperiod: bpy.props.FloatProperty(name="Beat Period offset", default=0.0, min=0.0, max=100, precision=4,
                                         unit="LENGTH")
-    shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
-    offset: bpy.props.FloatProperty(name="offset", default=0, min=-1.0, max=1, precision=4, unit="LENGTH")
+    shift: bpy.props.FloatProperty(name="phase shift", default=0,
+                                   min=-360, max=360, precision=4, unit="ROTATION")
+    offset: bpy.props.FloatProperty(name="offset", default=0, min=-
+                                    1.0, max=1, precision=4, unit="LENGTH")
     iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
-    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=3, precision=4, unit="LENGTH")
-    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
+    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5,
+                                  min=-3.0, max=3, precision=4, unit="LENGTH")
+    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0,
+                                  min=-3.0, max=3, precision=4, unit="LENGTH")
     wave_distance: bpy.props.FloatProperty(name="distance between multiple waves", default=0.0, min=0.0, max=100,
                                            precision=4, unit="LENGTH")
     wave_angle_offset: bpy.props.FloatProperty(name="angle offset for multiple waves", default=math.pi/2,
@@ -64,18 +70,22 @@ class CamSineCurve(bpy.types.Operator):
 
         # z=Asin(B(x+C))+D
         if self.wave == 'sine':
-            zstring = ssine(self.amplitude, self.period, dc_offset=self.offset, phase_shift=self.shift)
+            zstring = ssine(self.amplitude, self.period,
+                            dc_offset=self.offset, phase_shift=self.shift)
             if self.beatperiod != 0:
                 zstring += "+"+ssine(self.amplitude, self.period+self.beatperiod, dc_offset=self.offset,
                                      phase_shift=self.shift)
         elif self.wave == 'triangle':  # build triangle wave from fourier series
-            zstring = str(round(self.offset, 6)) + "+(" + str(triangle(80, self.period, self.amplitude))+")"
+            zstring = str(round(self.offset, 6)) + \
+                "+(" + str(triangle(80, self.period, self.amplitude))+")"
             if self.beatperiod != 0:
                 zstring += '+' + str(triangle(80, self.period+self.beatperiod, self.amplitude))
         elif self.wave == 'cycloid':
-            zstring = "abs("+ssine(self.amplitude, self.period, dc_offset=self.offset, phase_shift=self.shift)+")"
+            zstring = "abs("+ssine(self.amplitude, self.period,
+                                   dc_offset=self.offset, phase_shift=self.shift)+")"
         elif self.wave == 'invcycloid':
-            zstring = "-1*abs("+ssine(self.amplitude, self.period, dc_offset=self.offset, phase_shift=self.shift)+")"
+            zstring = "-1*abs("+ssine(self.amplitude, self.period,
+                                      dc_offset=self.offset, phase_shift=self.shift)+")"
 
         print(zstring)
         e = Expression(zstring, ["t"])  # make equation from string
@@ -106,24 +116,33 @@ class CamLissajousCurve(bpy.types.Operator):
     bl_label = "Create Lissajous figure"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    amplitude_A: bpy.props.FloatProperty(name="Amplitude A", default=.1, min=0, max=100, precision=4, unit="LENGTH")
+    amplitude_A: bpy.props.FloatProperty(
+        name="Amplitude A", default=.1, min=0, max=100, precision=4, unit="LENGTH")
     waveA: bpy.props.EnumProperty(name="Wave X", items=(
         ('sine', 'Sine Wave', 'Sine Wave'),
         ('triangle', 'Triangle Wave', 'triangle wave')), default='sine')
 
-    amplitude_B: bpy.props.FloatProperty(name="Amplitude B", default=.1, min=0, max=100, precision=4, unit="LENGTH")
+    amplitude_B: bpy.props.FloatProperty(
+        name="Amplitude B", default=.1, min=0, max=100, precision=4, unit="LENGTH")
     waveB: bpy.props.EnumProperty(name="Wave Y", items=(
         ('sine', 'Sine Wave', 'Sine Wave'),
         ('triangle', 'Triangle Wave', 'triangle wave')), default='sine')
-    period_A: bpy.props.FloatProperty(name="Period A", default=1.1, min=0.001, max=100, precision=4, unit="LENGTH")
-    period_B: bpy.props.FloatProperty(name="Period B", default=1.0, min=0.001, max=100, precision=4, unit="LENGTH")
-    period_Z: bpy.props.FloatProperty(name="Period Z", default=1.0, min=0.001, max=100, precision=4, unit="LENGTH")
-    amplitude_Z: bpy.props.FloatProperty(name="Amplitude Z", default=0.0, min=0, max=100, precision=4, unit="LENGTH")
-    shift: bpy.props.FloatProperty(name="phase shift", default=0, min=-360, max=360, precision=4, unit="ROTATION")
+    period_A: bpy.props.FloatProperty(name="Period A", default=1.1,
+                                      min=0.001, max=100, precision=4, unit="LENGTH")
+    period_B: bpy.props.FloatProperty(name="Period B", default=1.0,
+                                      min=0.001, max=100, precision=4, unit="LENGTH")
+    period_Z: bpy.props.FloatProperty(name="Period Z", default=1.0,
+                                      min=0.001, max=100, precision=4, unit="LENGTH")
+    amplitude_Z: bpy.props.FloatProperty(
+        name="Amplitude Z", default=0.0, min=0, max=100, precision=4, unit="LENGTH")
+    shift: bpy.props.FloatProperty(name="phase shift", default=0,
+                                   min=-360, max=360, precision=4, unit="ROTATION")
 
     iteration: bpy.props.IntProperty(name="iteration", default=500, min=50, max=10000)
-    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=11, min=-3.0, max=1000000, precision=4, unit="LENGTH")
-    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-10.0, max=3, precision=4, unit="LENGTH")
+    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=11,
+                                  min=-3.0, max=1000000, precision=4, unit="LENGTH")
+    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0,
+                                  min=-10.0, max=3, precision=4, unit="LENGTH")
 
     def execute(self, context):
         # x=Asin(at+delta ),y=Bsin(bt)
@@ -166,12 +185,14 @@ class CamHypotrochoidCurve(bpy.types.Operator):
 
     typecurve: bpy.props.EnumProperty(name="type of curve", items=(
         ('hypo', 'Hypotrochoid', 'inside ring'), ('epi', 'Epicycloid', 'outside inner ring')))
-    R: bpy.props.FloatProperty(name="Big circle radius", default=0.25, min=0.001, max=100, precision=4, unit="LENGTH")
+    R: bpy.props.FloatProperty(name="Big circle radius", default=0.25,
+                               min=0.001, max=100, precision=4, unit="LENGTH")
     r: bpy.props.FloatProperty(name="Small circle radius", default=0.18, min=0.0001, max=100, precision=4,
                                unit="LENGTH")
     d: bpy.props.FloatProperty(name="distance from center of interior circle", default=0.050, min=0, max=100,
                                precision=4, unit="LENGTH")
-    dip: bpy.props.FloatProperty(name="variable depth from center", default=0.00, min=-100, max=100, precision=4)
+    dip: bpy.props.FloatProperty(name="variable depth from center",
+                                 default=0.00, min=-100, max=100, precision=4)
 
     def execute(self, context):
         r = round(self.r, 6)
@@ -190,7 +211,8 @@ class CamHypotrochoidCurve(bpy.types.Operator):
             xstring = str(Rpr) + "*cos(t)-" + str(d) + "*cos(" + str(Rpror) + "*t)"
             ystring = str(Rpr) + "*sin(t)-" + str(d) + "*sin(" + str(Rpror) + "*t)"
 
-        zstring = '(' + str(round(self.dip, 6)) + '*(sqrt(((' + xstring + ')**2)+((' + ystring + ')**2))))'
+        zstring = '(' + str(round(self.dip, 6)) + \
+            '*(sqrt(((' + xstring + ')**2)+((' + ystring + ')**2))))'
 
         print("x= " + str(xstring))
         print("y= " + str(ystring))
@@ -210,7 +232,8 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         if iter > 10000:  # do not calculate more than 10000 points
             print("limiting calculations to 10000 points")
             iter = 10000
-        parametric.create_parametric_curve(f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=iter)
+        parametric.create_parametric_curve(
+            f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=iter)
 
         return {'FINISHED'}
 
@@ -223,11 +246,14 @@ class CamCustomCurve(bpy.types.Operator):
 
     xstring: StringProperty(name="X equation", description="Equation x=F(t)", default="t")
     ystring: StringProperty(name="Y equation", description="Equation y=F(t)", default="0")
-    zstring: StringProperty(name="Z equation", description="Equation z=F(t)", default="0.05*sin(2*pi*4*t)")
+    zstring: StringProperty(name="Z equation", description="Equation z=F(t)",
+                            default="0.05*sin(2*pi*4*t)")
 
     iteration: bpy.props.IntProperty(name="iteration", default=100, min=50, max=2000)
-    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5, min=-3.0, max=10, precision=4, unit="LENGTH")
-    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0, min=-3.0, max=3, precision=4, unit="LENGTH")
+    maxt: bpy.props.FloatProperty(name="Wave ends at x", default=0.5,
+                                  min=-3.0, max=10, precision=4, unit="LENGTH")
+    mint: bpy.props.FloatProperty(name="Wave starts at x", default=0,
+                                  min=-3.0, max=3, precision=4, unit="LENGTH")
 
     def execute(self, context):
         print("x= " + self.xstring)

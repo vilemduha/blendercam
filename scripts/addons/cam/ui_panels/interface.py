@@ -6,9 +6,9 @@ import cam.utils
 import cam.constants
 
 
-def update_interface(self,context):
+def update_interface(self, context):
     # set default for new files
-    context.preferences.addons['cam'].preferences.default_interface_level=context.scene.interface.level
+    context.preferences.addons['cam'].preferences.default_interface_level = context.scene.interface.level
     bpy.ops.wm.save_userpref()
 
 

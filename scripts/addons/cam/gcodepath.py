@@ -60,6 +60,7 @@ from cam.image_utils import *
 from cam.opencamlib.opencamlib import *
 from cam.nc import iso
 
+
 def pointonline(a, b, c, tolerence):
     b = b - a  # convert to vector by subtracting origin
     c = c - a
@@ -98,7 +99,8 @@ def exportGcodePath(filename, vertslist, operations):
             print('file will be separated into %i files' % filesnum)
     print('1')
 
-    basefilename = bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))] + safeFileName(filename)
+    basefilename = bpy.data.filepath[:-
+                                     len(bpy.path.basename(bpy.data.filepath))] + safeFileName(filename)
 
     extension = '.tap'
     if m.post_processor == 'ISO':
@@ -158,7 +160,7 @@ def exportGcodePath(filename, vertslist, operations):
         if split:
             fileindex = '_' + str(findex)
         filename = basefilename + fileindex + extension
-        print("writing: ",filename)
+        print("writing: ", filename)
         c = postprocessor.Creator()
 
         # process user overrides for post processor settings
@@ -323,7 +325,7 @@ def exportGcodePath(filename, vertslist, operations):
             # skip the first vertex if this is a chained operation
             # ie: outputting more than one operation
             # otherwise the machine gets sent back to 0,0 for each operation which is unecessary
-            shapes += 1  #  Count amount of shapes
+            shapes += 1  # Count amount of shapes
             if i > 0 and vi == 0:
                 continue
             v = vert.co
@@ -435,9 +437,9 @@ def exportGcodePath(filename, vertslist, operations):
                         c.rapid(x=vx, y=vy, z=vz)
                         #  this is to evaluate operation time and adds a feedrate for fast moves
                         if vz is not None:
-                            f = plungefeedrate * fadjustval * 0.35  #  compensate for multiple fast move accelerations
+                            f = plungefeedrate * fadjustval * 0.35  # compensate for multiple fast move accelerations
                         if vx is not None or vy is not None:
-                            f = freefeedrate * 0.8  #  compensate for free feedrate acceleration
+                            f = freefeedrate * 0.8  # compensate for free feedrate acceleration
                 else:
                     c.rapid(x=vx, y=vy, z=vz, a=ra, b=rb)
 
@@ -451,7 +453,7 @@ def exportGcodePath(filename, vertslist, operations):
                     c.feed(x=vx, y=vy, z=vz)
                 else:
                     c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
-            cut_distance+=vect.length * unitcorr
+            cut_distance += vect.length * unitcorr
             vector_duration = vect.length / f
             duration += vector_duration
             last = v
@@ -494,7 +496,7 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
     o.info.duration = duration * unitcorr
-    print("total time:",round(o.info.duration * 60),"seconds")
+    print("total time:", round(o.info.duration * 60), "seconds")
     if bpy.context.scene.unit_settings.system == 'METRIC':
         unit_distance = 'm'
         cut_distance /= 1000
@@ -502,7 +504,7 @@ def exportGcodePath(filename, vertslist, operations):
         unit_distance = 'feet'
         cut_distance /= 12
 
-    print("cut distance:", round(cut_distance,3), unit_distance)
+    print("cut distance:", round(cut_distance, 3), unit_distance)
     if enable_dust:
         c.write(stop_dust + '\n')
     if enable_hold:
@@ -542,14 +544,16 @@ async def getPath(context, operation):  # should do all path calculations.
     print(operation.machine_axes)
 
     if operation.machine_axes == '3':
-        if USE_PROFILER == True: # profiler
-            import cProfile, pstats, io
+        if USE_PROFILER == True:  # profiler
+            import cProfile
+            import pstats
+            import io
             pr = cProfile.Profile()
             pr.enable()
             await getPath3axis(context, operation)
             pr.disable()
             pr.dump_stats(time.strftime("blendercam_%Y%m%d_%H%M.prof"))
-        else:        
+        else:
             await getPath3axis(context, operation)
 
     elif (operation.machine_axes == '5' and operation.strategy5axis == 'INDEXED') or (
@@ -680,7 +684,8 @@ async def getPath3axis(context, operation):
             chunks = chunksCoherency(chunks)
             print('coherency check')
 
-        if o.strategy in ['PARALLEL', 'CROSS', 'PENCIL', 'OUTLINEFILL']:  # and not o.movement.parallel_step_back:
+        # and not o.movement.parallel_step_back:
+        if o.strategy in ['PARALLEL', 'CROSS', 'PENCIL', 'OUTLINEFILL']:
             print('sorting')
             chunks = await utils.sortChunks(chunks, o)
             if o.strategy == 'OUTLINEFILL':
@@ -779,7 +784,8 @@ async def getPath3axis(context, operation):
                             o.inverse and not poly.is_empty and slicesfilled == 1):  # first slice fill
                         restpoly = lastslice
 
-                    restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
+                    restpoly = restpoly.buffer(-o.dist_between_paths,
+                                               resolution=o.optimisation.circle_detail)
 
                     fillz = z
                     i = 0
@@ -796,7 +802,8 @@ async def getPath3axis(context, operation):
                         parentChildDist(lastchunks, nchunks, o)
                         lastchunks = nchunks
                         # slicechunks.extend(polyToChunks(restpoly,z))
-                        restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
+                        restpoly = restpoly.buffer(-o.dist_between_paths,
+                                                   resolution=o.optimisation.circle_detail)
 
                         i += 1
                 # print(i)
@@ -814,10 +821,12 @@ async def getPath3axis(context, operation):
                     if o.inverse and poly.is_empty and slicesfilled > 0:
                         restpoly = bound_rectangle.difference(lastslice)
 
-                    restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
+                    restpoly = restpoly.buffer(-o.dist_between_paths,
+                                               resolution=o.optimisation.circle_detail)
 
                     i = 0
-                    while not restpoly.is_empty:  # 'GeometryCollection':#len(restpoly.boundary.coords)>0:
+                    # 'GeometryCollection':#len(restpoly.boundary.coords)>0:
+                    while not restpoly.is_empty:
                         # print(i)
                         nchunks = shapelyToChunks(restpoly, fillz)
                         #########################
@@ -825,7 +834,8 @@ async def getPath3axis(context, operation):
                         slicechunks.extend(nchunks)
                         parentChildDist(lastchunks, nchunks, o)
                         lastchunks = nchunks
-                        restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
+                        restpoly = restpoly.buffer(-o.dist_between_paths,
+                                                   resolution=o.optimisation.circle_detail)
                         i += 1
 
                 percent = int(h / nslices * 100)
@@ -847,11 +857,11 @@ async def getPath3axis(context, operation):
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'DRILL':
-        await  strategy.drill(o)
+        await strategy.drill(o)
 
     elif o.strategy == 'MEDIAL_AXIS':
         await strategy.medial_axis(o)
-    await progress_async(f"Done",time.time() - tw,"s")
+    await progress_async(f"Done", time.time() - tw, "s")
 
 
 async def getPath4axis(context, operation):

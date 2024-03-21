@@ -63,7 +63,7 @@ async def cutout(o):
         c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
     elif o.cutter_type == 'BALLNOSE':
         r = o.cutter_diameter / 2
-        print("cutter radius:", r," skin",o.skin)
+        print("cutter radius:", r, " skin", o.skin)
         if -max_depth < r:
             c_offset = math.sqrt(r ** 2 - (r + max_depth) ** 2)
             print("offset:", c_offset)
@@ -106,7 +106,7 @@ async def cutout(o):
                     path_distance = o.dist_between_paths
                     if o.cut_type == "INSIDE":
                         path_distance *= -1
-                    p = p.buffer(distance = path_distance, resolution=o.optimisation.circle_detail, join_style=join,
+                    p = p.buffer(distance=path_distance, resolution=o.optimisation.circle_detail, join_style=join,
                                  mitre_limit=2)
 
         chunksFromCurve.extend(shapelyToChunks(p, -1))
@@ -267,7 +267,7 @@ async def proj_curve(s, o):
         for chi, ch in enumerate(pathSamples):
             cht = tsamples[chi].get_points()
             ch.depth = 0
-            ch_points=ch.get_points()
+            ch_points = ch.get_points()
             for i, s in enumerate(ch_points):
                 # move the points a bit
                 ep = Vector(cht[i])
@@ -333,14 +333,16 @@ async def pocket(o):
     prest = p.buffer(-c_offset, o.optimisation.circle_detail)
     while not p.is_empty:
         if o.pocketToCurve:
-            polygon_utils_cam.shapelyToCurve('3dpocket', p, 0.0)  # make a curve starting with _3dpocket
+            # make a curve starting with _3dpocket
+            polygon_utils_cam.shapelyToCurve('3dpocket', p, 0.0)
 
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
         pnew = p.buffer(-o.dist_between_paths, o.optimisation.circle_detail)
         if pnew.is_empty:
 
-            pt = p.buffer(-c_offset, o.optimisation.circle_detail)     # test if the last curve will leave material
+            # test if the last curve will leave material
+            pt = p.buffer(-c_offset, o.optimisation.circle_detail)
             if not pt.is_empty:
                 pnew = pt
         # print("pnew")
@@ -403,7 +405,7 @@ async def pocket(o):
                             for v in h:
                                 nhelix.append((2 * p[0] - v[0], v[1], v[2]))
                             h = nhelix
-                        ch.extend(h,at_index=0)
+                        ch.extend(h, at_index=0)
 #                        ch.points = h + ch.points
 
                     else:
@@ -411,7 +413,8 @@ async def pocket(o):
                         ch.closed = True
                         ch.rampZigZag(l[0], l[1], o)
         # Arc retract here first try:
-        if o.movement.retract_tangential:  # TODO: check for entry and exit point before actual computing... will be much better.
+        # TODO: check for entry and exit point before actual computing... will be much better.
+        if o.movement.retract_tangential:
             # TODO: fix this for CW and CCW!
             for chi, ch in enumerate(lchunks):
                 # print(chunksFromCurve[chi])
@@ -437,7 +440,8 @@ async def pocket(o):
                     p = (p.x, p.y, p.z)
 
                     # progress(str((v1,v,p)))
-                    h = Helix(o.movement.retract_radius, o.optimisation.circle_detail, p[2] + o.movement.retract_height, p, revolutions)
+                    h = Helix(o.movement.retract_radius, o.optimisation.circle_detail,
+                              p[2] + o.movement.retract_height, p, revolutions)
 
                     e = Euler((0, 0, rotangle + pi))  # angle to rotate whole retract move
                     rothelix = []
@@ -476,10 +480,10 @@ async def pocket(o):
     if o.movement.ramp:
         for ch in chunks:
             ch.rampZigZag(ch.zstart, ch.get_point(0)[2], o)
-    
+
     if o.first_down:
         if o.pocket_option == "OUTSIDE":
-            chunks.reverse()   
+            chunks.reverse()
         chunks = await utils.sortChunks(chunks, o)
 
     if o.pocketToCurve:  # make curve instead of a path
@@ -626,16 +630,16 @@ async def medial_axis(o):
 
     polys = utils.getOperationSilhouete(o)
     if isinstance(polys, list):
-        if len(polys)==1 and isinstance(polys[0],shapely.MultiPolygon):
-            mpoly=polys[0]
+        if len(polys) == 1 and isinstance(polys[0], shapely.MultiPolygon):
+            mpoly = polys[0]
         else:
-            mpoly=sgeometry.MultiPolygon(polys)
-    elif isinstance(polys,shapely.MultiPolygon):
+            mpoly = sgeometry.MultiPolygon(polys)
+    elif isinstance(polys, shapely.MultiPolygon):
         # just a multipolygon
-        mpoly=polys
+        mpoly = polys
     else:
         raise CamException("Failed getting object silhouette. Is input curve closed?")
-    
+
     mpoly_boundary = mpoly.boundary
     ipol = 0
     for poly in mpoly.geoms:
@@ -671,7 +675,8 @@ async def medial_axis(o):
         vertsPts = [Point(vert[0], vert[1], vert[2]) for vert in verts]
         # vertsPts= [Point(vert[0], vert[1]) for vert in verts]
 
-        pts, edgesIdx = computeVoronoiDiagram(vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
+        pts, edgesIdx = computeVoronoiDiagram(
+            vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True)
 
         # pts=[[pt[0], pt[1], zPosition] for pt in pts]
         newIdx = 0
@@ -727,7 +732,8 @@ async def medial_axis(o):
                 do = False
             if do:
                 filteredEdgs.append((vertr[e[0]][1], vertr[e[1]][1]))
-                ledges.append(sgeometry.LineString((filteredPts[vertr[e[0]][1]], filteredPts[vertr[e[1]][1]])))
+                ledges.append(sgeometry.LineString(
+                    (filteredPts[vertr[e[0]][1]], filteredPts[vertr[e[1]][1]])))
         # print(ledges[-1].has_z)
 
         bufpoly = poly.buffer(-new_cutter_diameter / 2, resolution=64)
@@ -785,8 +791,8 @@ def getLayers(operation, startdepth, enddepth):
     """
     if startdepth < enddepth:
         raise CamException("Start depth is lower than end depth. "
-        "If you have set a custom depth end, it must be lower than depth start, "
-        "and should usually be negative. Set this in the CAM Operation Area panel.")
+                           "If you have set a custom depth end, it must be lower than depth start, "
+                           "and should usually be negative. Set this in the CAM Operation Area panel.")
     if operation.use_layers:
         layers = []
         n = math.ceil((startdepth - enddepth) / operation.stepdown)
@@ -848,7 +854,8 @@ def chunksToMesh(chunks, o):
         ch = chunks[chi]
         # print(chunks)
         # print (ch)
-        if ch.count() > 0:  # TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
+        # TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
+        if ch.count() > 0:
             # print(len(ch.points))
             nverts = []
             if o.optimisation.optimize:
@@ -930,7 +937,8 @@ def chunksToMesh(chunks, o):
         print(len(shapek.data))
         print(len(verts_rotations))
 
-        for i, co in enumerate(verts_rotations):  # TODO: optimize this. this is just rewritten too many times...
+        # TODO: optimize this. this is just rewritten too many times...
+        for i, co in enumerate(verts_rotations):
             shapek.data[i].co = co
 
     print(time.time() - t)

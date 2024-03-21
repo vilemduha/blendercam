@@ -82,8 +82,10 @@ class Context(object):
         self.extent = ()  # tuple (xmin, xmax, ymin, ymax)
         self.triangulate = False
         self.vertices = []  # list of vertex 2-tuples: (x,y)
-        self.lines = []  # equation of line 3-tuple (a b c), for the equation of the line a*x+b*y = c
-        self.edges = []  # edge 3-tuple: (line index, vertex 1 index, vertex 2 index)	if either vertex index is -1, the edge extends to infinity
+        # equation of line 3-tuple (a b c), for the equation of the line a*x+b*y = c
+        self.lines = []
+        # edge 3-tuple: (line index, vertex 1 index, vertex 2 index)	if either vertex index is -1, the edge extends to infinity
+        self.edges = []
         self.triangles = []  # 3-tuple of vertex indices
         self.polygons = {}  # a dict of site:[edges] pairs
 
@@ -228,7 +230,8 @@ class Context(object):
             pts.extend([pt for pt in edge])
         # try to get start & end point
         try:
-            startPt, endPt = [pt for pt in pts if pts.count(pt) < 2]  # start and end point aren't duplicate
+            # start and end point aren't duplicate
+            startPt, endPt = [pt for pt in pts if pts.count(pt) < 2]
         except:  # all points are duplicate --> polygon is complete --> append some or other edge points
             complete = True
             firstIdx = 0
@@ -291,7 +294,8 @@ class Context(object):
     def outTriple(self, s1, s2, s3):
         self.triangles.append((s1.sitenum, s2.sitenum, s3.sitenum))
         if self.debug:
-            print("circle through left=%d right=%d bottom=%d" % (s1.sitenum, s2.sitenum, s3.sitenum))
+            print("circle through left=%d right=%d bottom=%d" %
+                  (s1.sitenum, s2.sitenum, s3.sitenum))
         elif self.triangulate and self.doPrint:
             print("%d %d %d" % (s1.sitenum, s2.sitenum, s3.sitenum))
 
@@ -299,7 +303,7 @@ class Context(object):
         self.lines.append((edge.a, edge.b, edge.c))
         if self.debug:
             print("line(%d) %gx+%gy=%g, bisecting %d %d" % (
-            edge.edgenum, edge.a, edge.b, edge.c, edge.reg[0].sitenum, edge.reg[1].sitenum))
+                edge.edgenum, edge.a, edge.b, edge.c, edge.reg[0].sitenum, edge.reg[1].sitenum))
         elif self.doPrint:
             print("l %f %f %f" % (edge.a, edge.b, edge.c))
 
@@ -648,7 +652,8 @@ class Halfedge(object):
                     fast = 1
             if not fast:
                 dxs = topsite.x - (e.reg[0]).x
-                above = e.b * (dxp * dxp - dyp * dyp) < dxs * dyp * (1.0 + 2.0 * dxp / dxs + e.b * e.b)
+                above = e.b * (dxp * dxp - dyp * dyp) < dxs * dyp * \
+                    (1.0 + 2.0 * dxp / dxs + e.b * e.b)
                 if e.b < 0.0:
                     above = not above
         else:  # e.b == 1.0

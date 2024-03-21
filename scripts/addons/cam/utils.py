@@ -61,29 +61,29 @@ SHAPELY = True
 def update_material(self, context):
     addMaterialAreaObject()
 
+
 def update_operation(self, context):
     from . import updateRest
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     updateRest(active_op, bpy.context)
+
 
 def update_exact_mode(self, context):
     from . import updateExact
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     updateExact(active_op, bpy.context)
 
+
 def update_opencamlib(self, context):
     from . import updateOpencamlib
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     updateOpencamlib(active_op, bpy.context)
 
+
 def update_zbuffer_image(self, context):
     from . import updateZbufferImage
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     updateZbufferImage(active_op, bpy.context)
-
-
-
-
 
 
 # Import OpencamLib
@@ -97,6 +97,7 @@ def opencamlib_version():
         except ImportError as e:
             return
     return(ocl.version())
+
 
 def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
@@ -179,7 +180,7 @@ def getBoundsWorldspace(obs, use_modifiers=False):
             bpy.ops.object.delete()
             bpy.ops.outliner.orphans_purge()
         else:
-            if not hasattr(ob.data,"splines"):
+            if not hasattr(ob.data, "splines"):
                 raise CamException("Can't do CAM operation on the selected object type")
             # for coord in bb:
             for c in ob.data.splines:
@@ -339,7 +340,7 @@ def getBounds(o):
     s = bpy.context.scene
     m = s.cam_machine
     # make sure this message only shows once and goes away once fixed
-    o.info.warnings.replace('Operation exceeds your machine limits\n','')
+    o.info.warnings.replace('Operation exceeds your machine limits\n', '')
     if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y \
             or o.max.z - o.min.z > m.working_area.z:
         o.info.warnings += 'Operation exceeds your machine limits\n'
@@ -456,7 +457,6 @@ async def sampleChunks(o, pathSamples, layers):
 
     print(f"Total sample points {totlen}")
 
-
     n = 0
     last_percent = -1
     # timing for optimisation
@@ -475,9 +475,9 @@ async def sampleChunks(o, pathSamples, layers):
         # threads_count=4
 
         # for t in range(0,threads):
-        our_points=patternchunk.get_points_np()
-        ambient_contains=shapely.contains(o.ambient,shapely.points(our_points[:,0:2]))
-        for s,in_ambient in zip(our_points,ambient_contains):
+        our_points = patternchunk.get_points_np()
+        ambient_contains = shapely.contains(o.ambient, shapely.points(our_points[:, 0:2]))
+        for s, in_ambient in zip(our_points, ambient_contains):
             if o.strategy != 'WATERLINE' and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
                 await progress_async('sampling paths ', last_percent)
@@ -500,7 +500,8 @@ async def sampleChunks(o, pathSamples, layers):
                         z = getSampleBullet(cutter, x, y, cutterdepth, 1,
                                             lastsample[2] - o.dist_along_paths)  # first try to the last sample
                         if z < minz - 1:
-                            z = getSampleBullet(cutter, x, y, cutterdepth, lastsample[2] - o.dist_along_paths, minz)
+                            z = getSampleBullet(cutter, x, y, cutterdepth,
+                                                lastsample[2] - o.dist_along_paths, minz)
                     else:
                         z = getSampleBullet(cutter, x, y, cutterdepth, 1, minz)
 
@@ -534,7 +535,8 @@ async def sampleChunks(o, pathSamples, layers):
                                 lastlayer = i2
 
                     currentlayer = i
-                    if lastlayer is not None and lastlayer != currentlayer:  # and lastsample[2]!=newsample[2]:
+                    # and lastsample[2]!=newsample[2]:
+                    if lastlayer is not None and lastlayer != currentlayer:
                         # #sampling for sorted paths in layers- to go to the border of the sampled layer at least...
                         # there was a bug here, but should be fixed.
                         if currentlayer < lastlayer:
@@ -566,7 +568,8 @@ async def sampleChunks(o, pathSamples, layers):
 
                             if growing:
                                 if li > 0:
-                                    layeractivechunks[ls].points.insert(-1, betweensample.to_tuple())
+                                    layeractivechunks[ls].points.insert(-1,
+                                                                        betweensample.to_tuple())
                                 else:
                                     layeractivechunks[ls].points.append(betweensample.to_tuple())
                                 layeractivechunks[ls + 1].points.append(betweensample.to_tuple())
@@ -587,17 +590,16 @@ async def sampleChunks(o, pathSamples, layers):
 
                 if terminatechunk:
                     if len(ch.points) > 0:
-                        as_chunk=ch.to_chunk()
+                        as_chunk = ch.to_chunk()
                         layerchunks[i].append(as_chunk)
                         thisrunchunks[i].append(as_chunk)
                         layeractivechunks[i] = camPathChunkBuilder([])
             lastsample = newsample
 
-
         for i, l in enumerate(layers):
             ch = layeractivechunks[i]
             if len(ch.points) > 0:
-                as_chunk=ch.to_chunk()
+                as_chunk = ch.to_chunk()
                 layerchunks[i].append(as_chunk)
                 thisrunchunks[i].append(as_chunk)
                 layeractivechunks[i] = camPathChunkBuilder([])
@@ -627,7 +629,8 @@ async def sampleChunks(o, pathSamples, layers):
                     if not ch1.parents:
                         children.append(ch1)
 
-                parentChild(parents, children, o)  # parent only last and first chunk, before it did this for all.
+                # parent only last and first chunk, before it did this for all.
+                parentChild(parents, children, o)
     timingadd(sortingtime)
     chunks = []
 
@@ -675,7 +678,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
         lastrunchunks.append([])
     n = 0
 
-    last_percent=-1
+    last_percent = -1
     lastz = minz
     for patternchunk in pathSamples:
         # print (patternchunk.endpoints)
@@ -694,10 +697,10 @@ async def sampleChunksNAxis(o, pathSamples, layers):
             # #TODO: seems we are writing into the source chunk ,
             #  and that is why we need to write endpoints everywhere too?
 
-            percent=int(100 * n / totlen)
-            if percent!=last_percent:
+            percent = int(100 * n / totlen)
+            if percent != last_percent:
                 await progress_async('sampling paths', percent)
-                last_percent=percent
+                last_percent = percent
             n += 1
             sampled = False
             # print(si)
@@ -777,14 +780,16 @@ async def sampleChunksNAxis(o, pathSamples, layers):
                                 betweenrotation = tuple_add(lastrotation,
                                                             tuple_mul(tuple_sub(rotation, lastrotation), ratio))
                                 # startpoint = retract point, it has to be always available...
-                                betweenstartpoint = laststartpoint + (startp - laststartpoint) * ratio
+                                betweenstartpoint = laststartpoint + \
+                                    (startp - laststartpoint) * ratio
                                 # here, we need to have also possible endpoints always..
                                 betweenendpoint = lastendpoint + (endp - lastendpoint) * ratio
                                 if growing:
                                     if li > 0:
                                         layeractivechunks[ls].points.insert(-1, betweensample)
                                         layeractivechunks[ls].rotations.insert(-1, betweenrotation)
-                                        layeractivechunks[ls].startpoints.insert(-1, betweenstartpoint)
+                                        layeractivechunks[ls].startpoints.insert(
+                                            -1, betweenstartpoint)
                                         layeractivechunks[ls].endpoints.insert(-1, betweenendpoint)
                                     else:
                                         layeractivechunks[ls].points.append(betweensample)
@@ -836,11 +841,11 @@ async def sampleChunksNAxis(o, pathSamples, layers):
             laststartpoint = startp
             lastendpoint = endp
 
-        # convert everything to actual chunks 
-        # rather than chunkBuilders 
+        # convert everything to actual chunks
+        # rather than chunkBuilders
         for i, l in enumerate(layers):
-            layeractivechunks[i]=layeractivechunks[i].to_chunk() if layeractivechunks[i] is not None else None
-
+            layeractivechunks[i] = layeractivechunks[i].to_chunk(
+            ) if layeractivechunks[i] is not None else None
 
         for i, l in enumerate(layers):
             ch = layeractivechunks[i]
@@ -964,7 +969,7 @@ def polygonConvexHull(context):
 
     bpy.ops.object.duplicate()
     bpy.ops.object.join()
-    bpy.context.object.data.dimensions = '3D'  #  force curve to be a 3D curve
+    bpy.context.object.data.dimensions = '3D'  # force curve to be a 3D curve
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     bpy.context.active_object.name = "_tmp"
 
@@ -1061,7 +1066,7 @@ async def connectChunksLow(chunks, o):
             pos = lastch.get_point(-1)
 
     if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET' and o.strategy != 'WATERLINE':
-        await oclResampleChunks(o, chunks_to_resample,use_cached_mesh=True)
+        await oclResampleChunks(o, chunks_to_resample, use_cached_mesh=True)
 
     return connectedchunks
 
@@ -1085,22 +1090,23 @@ def getClosest(o, pos, chunks):
     return ch
 
 
-async def sortChunks(chunks, o,last_pos=None):
+async def sortChunks(chunks, o, last_pos=None):
     if o.strategy != 'WATERLINE':
         await progress_async('sorting paths')
-    sys.setrecursionlimit(100000)  # the getNext() function of CamPathChunk was running out of recursion limits.
+    # the getNext() function of CamPathChunk was running out of recursion limits.
+    sys.setrecursionlimit(100000)
     sortedchunks = []
     chunks_to_resample = []
 
     lastch = None
-    last_progress_time=time.time()
-    total= len(chunks)
+    last_progress_time = time.time()
+    total = len(chunks)
     i = len(chunks)
     pos = (0, 0, 0) if last_pos is None else last_pos
-    while len(chunks) > 0:        
-        if o.strategy != 'WATERLINE' and time.time()-last_progress_time>0.1:
-            await progress_async("Sorting paths",100.0*(total-len(chunks))/total)
-            last_progress_time=time.time()
+    while len(chunks) > 0:
+        if o.strategy != 'WATERLINE' and time.time()-last_progress_time > 0.1:
+            await progress_async("Sorting paths", 100.0*(total-len(chunks))/total)
+            last_progress_time = time.time()
         ch = None
         if len(sortedchunks) == 0 or len(
                 lastch.parents) == 0:  # first chunk or when there are no parents -> parents come after children here...
@@ -1166,7 +1172,8 @@ def getVectorRight(lastv, verts):  # most right vector from a set regarding angl
 
 
 def cleanUpDict(ndict):
-    print('removing lonely points')  # now it should delete all junk first, iterate over lonely verts.
+    # now it should delete all junk first, iterate over lonely verts.
+    print('removing lonely points')
     # found_solitaires=True
     # while found_solitaires:
     found_solitaires = False
@@ -1246,7 +1253,8 @@ def getOperationSilhouete(operation):
                 # #the small number solves issue with totally flat meshes, which people tend to mill instead of
                 # proper pockets. then the minimum was also maximum, and it didn't detect contour.
             else:
-                i = samples > numpy.min(operation.zbuffer_image)  # this fixes another numeric imprecision.
+                # this fixes another numeric imprecision.
+                i = samples > numpy.min(operation.zbuffer_image)
 
             chunks = imageToChunks(operation, i)
             operation.silhouete = chunksToShapely(chunks)
@@ -1348,7 +1356,8 @@ def getAmbient(o):
 
         if o.ambient_behaviour == 'AROUND':
             r = o.ambient_radius - m
-            o.ambient = getObjectOutline(r, o, True)  # in this method we need ambient from silhouete
+            # in this method we need ambient from silhouete
+            o.ambient = getObjectOutline(r, o, True)
         else:
             o.ambient = spolygon.Polygon(((o.min.x + m, o.min.y + m), (o.min.x + m, o.max.y - m),
                                           (o.max.x - m, o.max.y - m), (o.max.x - m, o.min.y + m)))
@@ -1360,7 +1369,8 @@ def getAmbient(o):
                 o.limit_poly = shapely.ops.unary_union(polys)
 
                 if o.ambient_cutter_restrict:
-                    o.limit_poly = o.limit_poly.buffer(o.cutter_diameter / 2, resolution=o.optimisation.circle_detail)
+                    o.limit_poly = o.limit_poly.buffer(
+                        o.cutter_diameter / 2, resolution=o.optimisation.circle_detail)
             o.ambient = o.ambient.intersection(o.limit_poly)
     o.update_ambient_tag = False
 
@@ -1394,7 +1404,8 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
         # print(p1.type, len(polygons))
         i += 1
         if radius > 0:
-            p1 = p1.buffer(radius * offset, resolution=o.optimisation.circle_detail, join_style=join, mitre_limit=2)
+            p1 = p1.buffer(radius * offset, resolution=o.optimisation.circle_detail,
+                           join_style=join, mitre_limit=2)
         outlines.append(p1)
 
     # print(outlines)
@@ -1473,7 +1484,8 @@ def addMachineAreaObject():
         # need to be in metric units when adding machine mesh object
         # in order for location to work properly
         s.unit_settings.system = 'METRIC'
-        bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(
+            align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
         o = bpy.context.active_object
         o.name = 'CAM_machine'
         o.data.name = 'CAM_machine'
@@ -1487,7 +1499,8 @@ def addMachineAreaObject():
                                fractal_along_normal=0, seed=0)
         bpy.ops.mesh.select_nth(nth=2, offset=0)
         bpy.ops.mesh.delete(type='EDGE')
-        bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(
+            align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
 
         bpy.ops.object.editmode_toggle()
         # addTranspMat(o, "violet_transparent", (0.800000, 0.530886, 0.725165), 0.1)
@@ -1506,6 +1519,7 @@ def addMachineAreaObject():
     # else:
     #     bpy.context.scene.objects.active = None
 
+
 def addMaterialAreaObject():
     s = bpy.context.scene
     operation = s.cam_operations[s.cam_active_operation]
@@ -1516,7 +1530,8 @@ def addMaterialAreaObject():
     if s.objects.get('CAM_material') is not None:
         o = s.objects['CAM_material']
     else:
-        bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(
+            align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
         o = bpy.context.active_object
         o.name = 'CAM_material'
         o.data.name = 'CAM_material'
@@ -1569,7 +1584,8 @@ def unique(L):
     # deleting duplicates as you go
     nDupli = 0
     nZcolinear = 0
-    L.sort()  # sort() brings the equal elements together; then duplicates are easy to weed out in a single pass.
+    # sort() brings the equal elements together; then duplicates are easy to weed out in a single pass.
+    L.sort()
     last = L[-1]
     for i in range(len(L) - 2, -1, -1):
         if last[:2] == L[i][:2]:  # XY coordinates compararison
@@ -1650,7 +1666,8 @@ def cleanupIndexed(operation):
     path.rotation_euler = ori.rotation_euler
 
     print(ori.matrix_world, operation.orientation_matrix)
-    for i, ob in enumerate(operation.objects):  # TODO: fix this here wrong order can cause objects out of place
+    # TODO: fix this here wrong order can cause objects out of place
+    for i, ob in enumerate(operation.objects):
         ob.parent = operation.parents[i]
     for i, ob in enumerate(operation.objects):
         ob.matrix_world = operation.matrices[i]

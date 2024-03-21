@@ -127,7 +127,8 @@ def shapelyToCoords(anydata):
 
 
 def shapelyToCurve(name, p, z):
-    import bpy, bmesh
+    import bpy
+    import bmesh
     from bpy_extras import object_utils
     verts = []
     edges = []

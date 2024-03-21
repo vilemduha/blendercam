@@ -44,9 +44,9 @@ def getCutterBullet(o):
 
     type = o.cutter_type
     if type == 'END':
-        bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius= o.cutter_diameter / 2,
-                                            depth= o.cutter_diameter, end_fill_type='NGON',
-                                            align='WORLD', enter_editmode=False, location = CUTTER_OFFSET,
+        bpy.ops.mesh.primitive_cylinder_add(vertices=32, radius=o.cutter_diameter / 2,
+                                            depth=o.cutter_diameter, end_fill_type='NGON',
+                                            align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
                                             rotation=(0, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
@@ -57,29 +57,29 @@ def getCutterBullet(o):
         cutter.rigid_body.collision_shape = 'CYLINDER'
     elif type == 'BALLNOSE':
 
-            # ballnose ending used mainly when projecting from sides.
-            # the actual collision shape is capsule in this case.
-            bpy.ops.mesh.primitive_ico_sphere_add(subdivisions = 3, radius = o.cutter_diameter / 2,
-                                                  align='WORLD', enter_editmode=False,
-                                                location = CUTTER_OFFSET, rotation=(0, 0, 0))
-            cutter = bpy.context.active_object
-            cutter.scale *= BULLET_SCALE
-            bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-            bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
-            bpy.ops.rigidbody.object_add(type='ACTIVE')
-            cutter = bpy.context.active_object
-            #cutter.dimensions.z = 0.2 * BULLET_SCALE  # should be sufficient for now... 20 cm.
-            cutter.rigid_body.collision_shape = 'CAPSULE'
-            #bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        # ballnose ending used mainly when projecting from sides.
+        # the actual collision shape is capsule in this case.
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=3, radius=o.cutter_diameter / 2,
+                                              align='WORLD', enter_editmode=False,
+                                              location=CUTTER_OFFSET, rotation=(0, 0, 0))
+        cutter = bpy.context.active_object
+        cutter.scale *= BULLET_SCALE
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
+        bpy.ops.rigidbody.object_add(type='ACTIVE')
+        cutter = bpy.context.active_object
+        # cutter.dimensions.z = 0.2 * BULLET_SCALE  # should be sufficient for now... 20 cm.
+        cutter.rigid_body.collision_shape = 'CAPSULE'
+        #bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
     elif type == 'VCARVE':
 
         angle = o.cutter_tip_angle
         s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  # angles in degrees
         cone_d = o.cutter_diameter * s
-        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1 = o.cutter_diameter / 2, radius2=0,
-                                        depth =  cone_d, end_fill_type='NGON',
-                                        align='WORLD', enter_editmode=False, location = CUTTER_OFFSET,
+        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=o.cutter_diameter / 2, radius2=0,
+                                        depth=cone_d, end_fill_type='NGON',
+                                        align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
                                         rotation=(math.pi, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
@@ -92,12 +92,12 @@ def getCutterBullet(o):
 
         angle = o.cutter_tip_angle
         s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  # angles in degrees
-        cylcone_d =(o.cutter_diameter - o.cylcone_diameter) * s
-        bpy.ops.mesh.primitive_cone_add(vertices = 32, radius1 = o.cutter_diameter / 2,
-                                        radius2 = o.cylcone_diameter / 2,
-                                        depth = cylcone_d, end_fill_type='NGON',
-                                        align = 'WORLD', enter_editmode = False,
-                                        location = CUTTER_OFFSET,rotation = (math.pi, 0, 0))
+        cylcone_d = (o.cutter_diameter - o.cylcone_diameter) * s
+        bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=o.cutter_diameter / 2,
+                                        radius2=o.cylcone_diameter / 2,
+                                        depth=cylcone_d, end_fill_type='NGON',
+                                        align='WORLD', enter_editmode=False,
+                                        location=CUTTER_OFFSET, rotation=(math.pi, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -112,23 +112,23 @@ def getCutterBullet(o):
         Ball_R = o.ball_radius/math.cos(angle)
         conedepth = (cutter_R - o.ball_radius)/math.tan(angle)
         bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0),
-                                         Simple_Type='Point', use_cyclic_u=False)
+                             Simple_Type='Point', use_cyclic_u=False)
         oy = Ball_R
-        for i in range(1 , 10):
+        for i in range(1, 10):
             ang = -i * (math.pi/2-angle) / 9
             qx = math.sin(ang) * oy
             qy = oy - math.cos(ang) * oy
-            bpy.ops.curve.vertex_add(location=(qx , qy , 0))
+            bpy.ops.curve.vertex_add(location=(qx, qy, 0))
         conedepth += qy
-        bpy.ops.curve.vertex_add(location=(-cutter_R , conedepth , 0))
+        bpy.ops.curve.vertex_add(location=(-cutter_R, conedepth, 0))
         #bpy.ops.curve.vertex_add(location=(0 , conedepth , 0))
         bpy.ops.object.editmode_toggle()
         bpy.ops.object.convert(target='MESH')
-        bpy.ops.transform.rotate(value = -math.pi / 2, orient_axis = 'X')
+        bpy.ops.transform.rotate(value=-math.pi / 2, orient_axis='X')
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         ob = bpy.context.active_object
         ob.name = "BallConeTool"
-        ob_scr = ob.modifiers.new(type='SCREW', name = 'scr')
+        ob_scr = ob.modifiers.new(type='SCREW', name='scr')
         ob_scr.angle = math.radians(-360)
         ob_scr.steps = 32
         ob_scr.merge_threshold = 0
@@ -197,7 +197,8 @@ def subdivideLongEdges(ob, threshold):
             bpy.ops.mesh.subdivide(smoothness=0)
             if iter == 0:
                 bpy.ops.mesh.select_all(action='SELECT')
-                bpy.ops.mesh.quads_convert_to_tris(quad_method='SHORTEST_DIAGONAL', ngon_method='BEAUTY')
+                bpy.ops.mesh.quads_convert_to_tris(
+                    quad_method='SHORTEST_DIAGONAL', ngon_method='BEAUTY')
             bpy.ops.mesh.select_all(action='DESELECT')
             bpy.ops.object.editmode_toggle()
             ob.update_from_editmode()
@@ -265,7 +266,6 @@ def prepareBulletCollision(o):
         bpy.context.view_layer.objects.active = collisionob
         if active_collection in collisionob.users_collection:
             active_collection.objects.unlink(collisionob)
-
 
     getCutterBullet(o)
 

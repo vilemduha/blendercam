@@ -17,4 +17,3 @@ for i, operation in enumerate(s.cam_operations):
     bpy.ops.object.calculate_cam_path()
 
 sys.exit(0)
-

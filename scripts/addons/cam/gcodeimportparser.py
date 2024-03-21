@@ -18,7 +18,8 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-import bpy, bmesh
+import bpy
+import bmesh
 import math
 
 import re
@@ -375,7 +376,7 @@ class GcodeModel:
             # some horizontal movement, and positive extruder movement: extrusion
             if (
                     ((seg.coords["X"] != coords["X"]) or (seg.coords["Y"] != coords["Y"]) or (
-                            seg.coords["Z"] != coords["Z"]))):  # != coords["E"]
+                        seg.coords["Z"] != coords["Z"]))):  # != coords["E"]
                 style = "extrude"
             # #force extrude if there is some movement
 
@@ -386,7 +387,8 @@ class GcodeModel:
                 currentLayerIdx += 1
                 seg.style = style
                 seg.layerIdx = currentLayerIdx
-                self.layers.append(layer)  # add layer to list of Layers, used to later draw single layer objects
+                # add layer to list of Layers, used to later draw single layer objects
+                self.layers.append(layer)
                 break
 
             # positive extruder movement of next point in a different Z signals a layer change for this segment
@@ -435,7 +437,8 @@ class GcodeModel:
                 P2 = seg.coords
 
                 # interpolated points
-                interp_coords = np.linspace(list(P1.values()), list(P2.values()), num=subdivs, endpoint=True)
+                interp_coords = np.linspace(list(P1.values()), list(
+                    P2.values()), num=subdivs, endpoint=True)
 
                 for i in range(len(interp_coords)):  # inteprolated points array back to segment object
 
@@ -454,7 +457,8 @@ class GcodeModel:
                         # write segment only if movement changes,
                         # avoid double coordinates due to same start and endpoint of linspace
 
-                        new_seg = Segment(seg.type, new_coords, seg.color, seg.toolnumber, seg.lineNb, seg.line)
+                        new_seg = Segment(seg.type, new_coords, seg.color,
+                                          seg.toolnumber, seg.lineNb, seg.line)
                         new_seg.layerIdx = seg.layerIdx
                         new_seg.style = seg.style
                         subdivided_segs.append(new_seg)

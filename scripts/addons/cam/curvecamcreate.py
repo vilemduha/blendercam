@@ -40,10 +40,14 @@ class CamCurveHatch(bpy.types.Operator):
     bl_label = "CrossHatch curve"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    angle: bpy.props.FloatProperty(name="angle", default=0, min=-math.pi/2, max=math.pi/2, precision=4, subtype="ANGLE")
-    distance: bpy.props.FloatProperty(name="spacing", default=0.015, min=0, max=3.0, precision=4, unit="LENGTH")
-    offset: bpy.props.FloatProperty(name="Margin", default=0.001, min=-1.0, max=3.0, precision=4, unit="LENGTH")
-    height: bpy.props.FloatProperty(name="Height", default=0.000, min=-1.0, max=1.0, precision=4, unit="LENGTH")
+    angle: bpy.props.FloatProperty(name="angle", default=0, min=-
+                                   math.pi/2, max=math.pi/2, precision=4, subtype="ANGLE")
+    distance: bpy.props.FloatProperty(name="spacing", default=0.015,
+                                      min=0, max=3.0, precision=4, unit="LENGTH")
+    offset: bpy.props.FloatProperty(name="Margin", default=0.001,
+                                    min=-1.0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height", default=0.000,
+                                    min=-1.0, max=1.0, precision=4, unit="LENGTH")
     amount: bpy.props.IntProperty(name="amount", default=10, min=1, max=10000)
     hull: bpy.props.BoolProperty(name="Convex Hull", default=False)
     contour: bpy.props.BoolProperty(name="Contour Curve", default=False)
@@ -108,13 +112,15 @@ class CamCurveHatch(bpy.types.Operator):
 
             lines = MultiLineString(coords)  # create a multilinestring shapely object
             rotated = affinity.rotate(lines, self.angle, use_radians=True)  # rotate using shapely
-            translated = affinity.translate(rotated, xoff=centerx, yoff=centery)  # move using shapely
+            translated = affinity.translate(
+                rotated, xoff=centerx, yoff=centery)  # move using shapely
 
             simple.make_active('crosshatch_bound')
             bounds = simple.active_to_shapely_poly()
 
             if self.pocket_type == 'BOUNDS':
-                xing = translated.intersection(bounds)  # Shapely detects intersections with the square bounds
+                # Shapely detects intersections with the square bounds
+                xing = translated.intersection(bounds)
             else:
                 xing = translated.intersection(s.buffer(self.offset))
                 # Shapely detects intersections with the original curve or hull
@@ -155,9 +161,12 @@ class CamCurvePlate(bpy.types.Operator):
     bl_label = "Sign plate"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    radius: bpy.props.FloatProperty(name="Corner Radius", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
-    width: bpy.props.FloatProperty(name="Width of plate", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
-    height: bpy.props.FloatProperty(name="Height of plate", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
+    radius: bpy.props.FloatProperty(name="Corner Radius", default=.025,
+                                    min=0, max=0.1, precision=4, unit="LENGTH")
+    width: bpy.props.FloatProperty(name="Width of plate", default=0.3048,
+                                   min=0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height of plate", default=0.457,
+                                    min=0, max=3.0, precision=4, unit="LENGTH")
     hole_diameter: bpy.props.FloatProperty(name="Hole diameter", default=0.01, min=0, max=3.0, precision=4,
                                            unit="LENGTH")
     hole_tolerance: bpy.props.FloatProperty(name="Hole V Tolerance", default=0.005, min=0, max=3.0, precision=4,
@@ -169,11 +178,11 @@ class CamCurvePlate(bpy.types.Operator):
     hole_hamount: bpy.props.IntProperty(name="Hole horiz amount", default=1, min=0, max=50)
     resolution: bpy.props.IntProperty(name="Spline resolution", default=50, min=3, max=150)
     plate_type: EnumProperty(name='Type plate',
-                              items=(('ROUNDED', 'Rounded corner', 'Makes a rounded corner plate'),
-                                     ('COVE', 'Cove corner', 'Makes a plate with circles cut in each corner '),
-                                     ('BEVEL', 'Bevel corner', 'Makes a plate with beveled corners '),
-                                     ('OVAL', 'Elipse', 'Makes an oval plate')),
-                              description='Type of Plate', default='ROUNDED')
+                             items=(('ROUNDED', 'Rounded corner', 'Makes a rounded corner plate'),
+                                    ('COVE', 'Cove corner', 'Makes a plate with circles cut in each corner '),
+                                    ('BEVEL', 'Bevel corner', 'Makes a plate with beveled corners '),
+                                    ('OVAL', 'Elipse', 'Makes an oval plate')),
+                             description='Type of Plate', default='ROUNDED')
 
     def draw(self, context):
         layout = self.layout
@@ -190,7 +199,6 @@ class CamCurvePlate(bpy.types.Operator):
         if self.plate_type in ["ROUNDED", "COVE", "BEVEL"]:
             layout.prop(self, 'radius')
 
-
     def execute(self, context):
         left = -self.width / 2 + self.radius
         bottom = -self.height / 2 + self.radius
@@ -198,21 +206,21 @@ class CamCurvePlate(bpy.types.Operator):
         top = -bottom
 
         if self.plate_type == "ROUNDED":
-        # create base
+            # create base
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(left, bottom, 0), scale=(1, 1, 1))
+                                                      location=(left, bottom, 0), scale=(1, 1, 1))
             simple.active_name("_circ_LB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(right, bottom, 0), scale=(1, 1, 1))
+                                                      location=(right, bottom, 0), scale=(1, 1, 1))
             simple.active_name("_circ_RB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(left, top, 0), scale=(1, 1, 1))
+                                                      location=(left, top, 0), scale=(1, 1, 1))
             simple.active_name("_circ_LT")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(right, top, 0), scale=(1, 1, 1))
+                                                      location=(right, top, 0), scale=(1, 1, 1))
             simple.active_name("_circ_RT")
             bpy.context.object.data.resolution_u = self.resolution
 
@@ -223,25 +231,25 @@ class CamCurvePlate(bpy.types.Operator):
 
         elif self.plate_type == "OVAL":
             bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Ellipse',
-                                 Simple_a=self.width/2,Simple_b=self.height/2, use_cyclic_u=True, edit_mode=False)
+                                 Simple_a=self.width/2, Simple_b=self.height/2, use_cyclic_u=True, edit_mode=False)
             bpy.context.object.data.resolution_u = self.resolution
             simple.active_name("plate_base")
 
         elif self.plate_type == 'COVE':
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(left-self.radius, bottom-self.radius, 0), scale=(1, 1, 1))
+                                                      location=(left-self.radius, bottom-self.radius, 0), scale=(1, 1, 1))
             simple.active_name("_circ_LB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(right+self.radius, bottom-self.radius, 0), scale=(1, 1, 1))
+                                                      location=(right+self.radius, bottom-self.radius, 0), scale=(1, 1, 1))
             simple.active_name("_circ_RB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(left-self.radius, top+self.radius, 0), scale=(1, 1, 1))
+                                                      location=(left-self.radius, top+self.radius, 0), scale=(1, 1, 1))
             simple.active_name("_circ_LT")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.radius, enter_editmode=False, align='WORLD',
-                                                  location=(right+self.radius, top+self.radius, 0), scale=(1, 1, 1))
+                                                      location=(right+self.radius, top+self.radius, 0), scale=(1, 1, 1))
             simple.active_name("_circ_RT")
             bpy.context.object.data.resolution_u = self.resolution
 
@@ -252,27 +260,25 @@ class CamCurvePlate(bpy.types.Operator):
                                  edit_mode=False)
             simple.active_name("_base")
 
-            simple.difference("_","_base")
-            simple.rename("_base","plate_base")
-
-
+            simple.difference("_", "_base")
+            simple.rename("_base", "plate_base")
 
         elif self.plate_type == 'BEVEL':
             bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
                                  Simple_width=self.radius*2, Simple_length=self.radius*2, location=(left-self.radius, bottom-self.radius, 0),
-                                 rotation=(0, 0, 0.785398),outputType='POLY', use_cyclic_u=True, edit_mode=False)
+                                 rotation=(0, 0, 0.785398), outputType='POLY', use_cyclic_u=True, edit_mode=False)
             simple.active_name("_bev_LB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
                                  Simple_width=self.radius*2, Simple_length=self.radius*2,
                                  location=(right+self.radius, bottom-self.radius, 0),
-                                 rotation=(0, 0, 0.785398),outputType='POLY', use_cyclic_u=True, edit_mode=False)
+                                 rotation=(0, 0, 0.785398), outputType='POLY', use_cyclic_u=True, edit_mode=False)
             simple.active_name("_bev_RB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
                                  Simple_width=self.radius*2, Simple_length=self.radius*2,
                                  location=(left-self.radius, top+self.radius, 0),
-                                 rotation=(0, 0, 0.785398),outputType='POLY', use_cyclic_u=True, edit_mode=False)
+                                 rotation=(0, 0, 0.785398), outputType='POLY', use_cyclic_u=True, edit_mode=False)
 
             simple.active_name("_bev_LT")
             bpy.context.object.data.resolution_u = self.resolution
@@ -280,7 +286,7 @@ class CamCurvePlate(bpy.types.Operator):
             bpy.ops.curve.simple(align='WORLD', Simple_Type='Rectangle',
                                  Simple_width=self.radius*2, Simple_length=self.radius*2,
                                  location=(right+self.radius, top+self.radius, 0),
-                                 rotation=(0, 0, 0.785398),outputType='POLY', use_cyclic_u=True, edit_mode=False)
+                                 rotation=(0, 0, 0.785398), outputType='POLY', use_cyclic_u=True, edit_mode=False)
 
             simple.active_name("_bev_RT")
             bpy.context.object.data.resolution_u = self.resolution
@@ -292,24 +298,24 @@ class CamCurvePlate(bpy.types.Operator):
                                  edit_mode=False)
             simple.active_name("_base")
 
-            simple.difference("_","_base")
-            simple.rename("_base","plate_base")
-
+            simple.difference("_", "_base")
+            simple.rename("_base", "plate_base")
 
         if self.hole_diameter > 0 or self.hole_hamount > 0:
             bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
-                                                  align='WORLD', location=(0, self.hole_tolerance / 2, 0),
-                                                  scale=(1, 1, 1))
+                                                      align='WORLD', location=(0, self.hole_tolerance / 2, 0),
+                                                      scale=(1, 1, 1))
             simple.active_name("_hole_Top")
             bpy.context.object.data.resolution_u = int(self.resolution / 4)
             if self.hole_tolerance > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(radius=self.hole_diameter / 2, enter_editmode=False,
-                                                      align='WORLD', location=(0, -self.hole_tolerance / 2, 0),
-                                                      scale=(1, 1, 1))
+                                                          align='WORLD', location=(0, -self.hole_tolerance / 2, 0),
+                                                          scale=(1, 1, 1))
                 simple.active_name("_hole_Bottom")
                 bpy.context.object.data.resolution_u = int(self.resolution / 4)
 
-            simple.select_multiple("_hole")  # select everything starting with _hole and perform a convex hull on them
+            # select everything starting with _hole and perform a convex hull on them
+            simple.select_multiple("_hole")
             utils.polygonConvexHull(context)
             simple.active_name("plate_hole")
             simple.move(y=-self.hole_vdist / 2)
@@ -344,7 +350,8 @@ class CamCurvePlate(bpy.types.Operator):
 
             simple.select_multiple("plate_")  # select everything starting with plate_
 
-            bpy.context.view_layer.objects.active = bpy.data.objects['plate_base']  # Make the plate base active
+            # Make the plate base active
+            bpy.context.view_layer.objects.active = bpy.data.objects['plate_base']
             utils.polygonBoolean(context, "DIFFERENCE")  # Remove holes from the base
             simple.remove_multiple("plate_")  # Remove temporary base and holes
             simple.remove_multiple("_")
@@ -355,18 +362,24 @@ class CamCurvePlate(bpy.types.Operator):
 
         return {'FINISHED'}
 
+
 class CamCurveFlatCone(bpy.types.Operator):
     """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
     bl_idname = "object.curve_flat_cone"
     bl_label = "Cone flat calculator"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    small_d: bpy.props.FloatProperty(name="small diameter", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
-    large_d: bpy.props.FloatProperty(name="large diameter", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
-    height: bpy.props.FloatProperty(name="Height of cone", default=0.457, min=0, max=3.0, precision=4, unit="LENGTH")
-    tab: bpy.props.FloatProperty(name="tab witdh", default=0.01, min=0, max=0.100, precision=4, unit="LENGTH")
-    intake: bpy.props.FloatProperty(name="intake diameter", default=0, min=0, max=0.200, precision=4, unit="LENGTH")
-    intake_skew: bpy.props.FloatProperty(name="intake_skew", default=1, min=0.1, max=4 )
+    small_d: bpy.props.FloatProperty(
+        name="small diameter", default=.025, min=0, max=0.1, precision=4, unit="LENGTH")
+    large_d: bpy.props.FloatProperty(
+        name="large diameter", default=0.3048, min=0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height of cone", default=0.457,
+                                    min=0, max=3.0, precision=4, unit="LENGTH")
+    tab: bpy.props.FloatProperty(name="tab witdh", default=0.01, min=0,
+                                 max=0.100, precision=4, unit="LENGTH")
+    intake: bpy.props.FloatProperty(name="intake diameter", default=0,
+                                    min=0, max=0.200, precision=4, unit="LENGTH")
+    intake_skew: bpy.props.FloatProperty(name="intake_skew", default=1, min=0.1, max=4)
     resolution: bpy.props.IntProperty(name="Resolution", default=12, min=5, max=200)
 
     def execute(self, context):
@@ -404,9 +417,7 @@ class CamCurveFlatCone(bpy.types.Operator):
 
         simple.active_name('flat_cone')
 
-
         return {'FINISHED'}
-
 
 
 class CamCurveMortise(bpy.types.Operator):
@@ -425,8 +436,10 @@ class CamCurveMortise(bpy.types.Operator):
                                               unit="LENGTH")
     plate_thickness: bpy.props.FloatProperty(name="Drawer plate thickness", default=0.00477, min=0.001, max=3.0,
                                              unit="LENGTH")
-    side_height: bpy.props.FloatProperty(name="side height", default=0.05, min=0.001, max=3.0, unit="LENGTH")
-    flex_pocket: bpy.props.FloatProperty(name="Flex pocket", default=0.004, min=0.000, max=1.0, unit="LENGTH")
+    side_height: bpy.props.FloatProperty(
+        name="side height", default=0.05, min=0.001, max=3.0, unit="LENGTH")
+    flex_pocket: bpy.props.FloatProperty(
+        name="Flex pocket", default=0.004, min=0.000, max=1.0, unit="LENGTH")
     top_bottom: bpy.props.BoolProperty(name="Side Top & bottom fingers", default=True)
     opencurve: bpy.props.BoolProperty(name="OpenCurve", default=False)
     adaptive: bpy.props.FloatProperty(name="Adaptive angle threshold", default=0.0, min=0.000, max=2, subtype="ANGLE",
@@ -479,15 +492,19 @@ class CamCurveMortise(bpy.types.Operator):
                     locations = joinery.variable_finger(c, length, self.min_finger_size, self.finger_size,
                                                         self.plate_thickness, self.finger_tolerance, self.adaptive,
                                                         True, self.double_adaptive)
-                    joinery.create_flex_side(loop_length, self.side_height, self.plate_thickness, self.top_bottom)
+                    joinery.create_flex_side(loop_length, self.side_height,
+                                             self.plate_thickness, self.top_bottom)
                     if self.flex_pocket > 0:
                         joinery.make_variable_flex_pocket(self.side_height, self.plate_thickness, self.flex_pocket,
                                                           locations)
 
                 else:
-                    joinery.fixed_finger(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance)
-                    joinery.fixed_finger(c, length, self.finger_size, self.plate_thickness, self.finger_tolerance, True)
-                    joinery.create_flex_side(loop_length, self.side_height, self.plate_thickness, self.top_bottom)
+                    joinery.fixed_finger(c, length, self.finger_size,
+                                         self.plate_thickness, self.finger_tolerance)
+                    joinery.fixed_finger(c, length, self.finger_size,
+                                         self.plate_thickness, self.finger_tolerance, True)
+                    joinery.create_flex_side(loop_length, self.side_height,
+                                             self.plate_thickness, self.top_bottom)
                     if self.flex_pocket > 0:
                         joinery.make_flex_pocket(length, self.side_height, self.plate_thickness, self.finger_size,
                                                  self.flex_pocket)
@@ -578,9 +595,12 @@ class CamCurveDrawer(bpy.types.Operator):
     bl_label = "Drawer"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    depth: bpy.props.FloatProperty(name="Drawer Depth", default=0.2, min=0, max=1.0, precision=4, unit="LENGTH")
-    width: bpy.props.FloatProperty(name="Width of Drawer", default=0.125, min=0, max=3.0, precision=4, unit="LENGTH")
-    height: bpy.props.FloatProperty(name="Height of drawer", default=0.07, min=0, max=3.0, precision=4, unit="LENGTH")
+    depth: bpy.props.FloatProperty(name="Drawer Depth", default=0.2,
+                                   min=0, max=1.0, precision=4, unit="LENGTH")
+    width: bpy.props.FloatProperty(name="Width of Drawer", default=0.125,
+                                   min=0, max=3.0, precision=4, unit="LENGTH")
+    height: bpy.props.FloatProperty(name="Height of drawer", default=0.07,
+                                    min=0, max=3.0, precision=4, unit="LENGTH")
     finger_size: bpy.props.FloatProperty(name="Maximum Finger Size", default=0.015, min=0.005, max=3.0, precision=4,
                                          unit="LENGTH")
     finger_tolerance: bpy.props.FloatProperty(name="Finger play room", default=0.000045, min=0, max=0.003, precision=4,
@@ -623,7 +643,8 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.context.object.data.resolution_u = 64
         bpy.context.scene.cursor.location = (0, 0, 0)
 
-        joinery.vertical_finger(height_finger, self.drawer_plate_thickness, self.finger_tolerance, height_finger_amt)
+        joinery.vertical_finger(height_finger, self.drawer_plate_thickness,
+                                self.finger_tolerance, height_finger_amt)
 
         joinery.horizontal_finger(width_finger, self.drawer_plate_thickness, self.finger_tolerance,
                                   width_finger_amt * 2)
@@ -632,7 +653,8 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
         #   make drawer back
-        finger_pair = joinery.finger_pair("_vfa", self.width - self.drawer_plate_thickness - self.finger_inset * 2, 0)
+        finger_pair = joinery.finger_pair(
+            "_vfa", self.width - self.drawer_plate_thickness - self.finger_inset * 2, 0)
         simple.make_active('_wfa')
         fronth = bpy.context.active_object
         simple.make_active('_back')
@@ -662,7 +684,8 @@ class CamCurveDrawer(bpy.types.Operator):
         bpy.ops.transform.transform(mode='TRANSLATION', value=(0.0, 2 * self.height, 0.0, 0.0))
         simple.make_active('drawer_back')
 
-        bpy.ops.transform.transform(mode='TRANSLATION', value=(self.width + 0.01, 2 * self.height, 0.0, 0.0))
+        bpy.ops.transform.transform(mode='TRANSLATION', value=(
+            self.width + 0.01, 2 * self.height, 0.0, 0.0))
         #   make side
 
         finger_pair = joinery.finger_pair("_vfb", self.depth - self.drawer_plate_thickness, 0)
@@ -686,7 +709,8 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.difference('_bot', '_bottom')
         simple.rotate(math.pi/2)
 
-        joinery.finger_pair("_wfb0", 0, self.width - self.drawer_plate_thickness - self.finger_inset * 2)
+        joinery.finger_pair("_wfb0", 0, self.width -
+                            self.drawer_plate_thickness - self.finger_inset * 2)
         simple.active_name('_bot_fingers')
         simple.difference('_bot', '_bottom')
 
@@ -773,19 +797,22 @@ class CamCurvePuzzle(bpy.types.Operator):
     twist_lock: bpy.props.BoolProperty(name="Add TwistLock", default=False)
     twist_thick: bpy.props.FloatProperty(name="Twist Thickness", default=0.0047, min=0.001, max=3.0, precision=4,
                                          unit="LENGTH")
-    twist_percent: bpy.props.FloatProperty(name="Twist neck", default=0.3, min=0.1, max=0.9, precision=4)
+    twist_percent: bpy.props.FloatProperty(
+        name="Twist neck", default=0.3, min=0.1, max=0.9, precision=4)
     twist_keep: bpy.props.BoolProperty(name="keep Twist holes", default=False)
     twist_line: bpy.props.BoolProperty(name="Add Twist to bar", default=False)
     twist_line_amount: bpy.props.IntProperty(name="amount of separators", default=2, min=1, max=600)
     twist_separator: bpy.props.BoolProperty(name="Add Twist separator", default=False)
-    twist_separator_amount: bpy.props.IntProperty(name="amount of separators", default=2, min=2, max=600)
+    twist_separator_amount: bpy.props.IntProperty(
+        name="amount of separators", default=2, min=2, max=600)
     twist_separator_spacing: bpy.props.FloatProperty(name="Separator spacing", default=0.025, min=-0.004, max=1.0,
                                                      precision=4, unit="LENGTH")
     twist_separator_edge_distance: bpy.props.FloatProperty(name="Separator edge distance", default=0.01, min=0.0005,
                                                            max=0.1, precision=4, unit="LENGTH")
     tile_x_amount: bpy.props.IntProperty(name="amount of x fingers", default=2, min=1, max=600)
     tile_y_amount: bpy.props.IntProperty(name="amount of y fingers", default=2, min=1, max=600)
-    interlock_amount: bpy.props.IntProperty(name="Interlock amount on curve", default=2, min=0, max=200)
+    interlock_amount: bpy.props.IntProperty(
+        name="Interlock amount on curve", default=2, min=0, max=200)
     overcut: bpy.props.BoolProperty(name="Add overcut", default=False)
     overcut_diameter: bpy.props.FloatProperty(name="Overcut toool Diameter", default=0.003175, min=-0.001, max=0.5,
                                               precision=4, unit="LENGTH")
@@ -877,7 +904,8 @@ class CamCurvePuzzle(bpy.types.Operator):
         if self.interlock_type == 'JOINT':
             if self.finger_amount == 0:    # cannot be 0 in joints
                 self.finger_amount = 1
-            puzzle_joinery.fingers(self.diameter, self.finger_tolerance, self.finger_amount, stem=self.stem_size)
+            puzzle_joinery.fingers(self.diameter, self.finger_tolerance,
+                                   self.finger_amount, stem=self.stem_size)
 
         if self.interlock_type == 'BAR':
             if not self.mitre:
@@ -938,7 +966,7 @@ class CamCurvePuzzle(bpy.types.Operator):
 
         elif self.interlock_type == 'TILE':
             puzzle_joinery.tile(self.diameter, self.finger_tolerance, self.tile_x_amount, self.tile_y_amount,
-                             stem=self.stem_size)
+                                stem=self.stem_size)
 
         elif self.interlock_type == 'OPENCURVE' and curve_detected:
             puzzle_joinery.open_curve(line, self.height, self.diameter, self.finger_tolerance, self.finger_amount,
@@ -978,7 +1006,7 @@ class CamCurveGear(bpy.types.Operator):
     rim_size: bpy.props.FloatProperty(name="Rim size", default=0.003175, min=0, max=3.0, precision=4,
                                            unit="LENGTH")
     hub_diameter: bpy.props.FloatProperty(name="Hub diameter", default=0.005, min=0, max=3.0, precision=4,
-                                           unit="LENGTH")
+                                          unit="LENGTH")
     pressure_angle: bpy.props.FloatProperty(name="Pressure Angle", default=math.radians(20), min=0.001, max=math.pi/2,
                                             precision=4,
                                             subtype="ANGLE",
@@ -988,7 +1016,7 @@ class CamCurveGear(bpy.types.Operator):
     backlash: bpy.props.FloatProperty(name="Backlash", default=0.0, min=0.0, max=0.1, precision=4,
                                       unit="LENGTH")
     rack_height: bpy.props.FloatProperty(name="Rack Height", default=0.012, min=0.001, max=1, precision=4,
-                                      unit="LENGTH")
+                                         unit="LENGTH")
     rack_tooth_per_hole: bpy.props.IntProperty(name="teeth per mounting hole", default=7, min=2)
     gear_type: EnumProperty(name='Type of gear',
                             items=(('PINION', 'Pinion', 'circular gear'),

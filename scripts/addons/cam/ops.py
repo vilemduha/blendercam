@@ -26,9 +26,11 @@ import bpy
 from bpy.props import *
 from bpy_extras.io_utils import ImportHelper
 
-import subprocess, os, threading
+import subprocess
+import os
+import threading
 from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, simulation
-from cam.async_op import AsyncOperatorMixin,AsyncCancelledException
+from cam.async_op import AsyncOperatorMixin, AsyncCancelledException
 import shapely
 import mathutils
 import math
@@ -37,6 +39,7 @@ import traceback
 
 import cam
 from cam.exception import *
+
 
 class threadCom:  # object passed to threads to read background process stdout info
     def __init__(self, o, proc):
@@ -54,6 +57,7 @@ def threadread(tcom):
     if s > -1:
         e = inline.find('}')
         tcom.outtext = inline[s + 9:e]
+
 
 @bpy.app.handlers.persistent
 def timer_update(context):
@@ -119,7 +123,8 @@ class PathsBackground(bpy.types.Operator):
         # self.__class__.cam_processes=[]
         if not hasattr(bpy.ops.object.calculate_cam_paths_background.__class__, 'cam_processes'):
             bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes = []
-        bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes.append([readthread, tcom])
+        bpy.ops.object.calculate_cam_paths_background.__class__.cam_processes.append([
+                                                                                     readthread, tcom])
         return {'FINISHED'}
 
 
@@ -146,7 +151,7 @@ class KillPathsBackground(bpy.types.Operator):
         return {'FINISHED'}
 
 
-async def _calc_path(operator,context):
+async def _calc_path(operator, context):
     s = bpy.context.scene
     o = s.cam_operations[s.cam_active_operation]
     if o.geometry_source == 'OBJECT':
@@ -172,18 +177,20 @@ async def _calc_path(operator,context):
         bpy.ops.object.delete()
 
     if not o.valid:
-        operator.report({'ERROR_INVALID_INPUT'}, "Operation can't be performed, see warnings for info")
+        operator.report({'ERROR_INVALID_INPUT'},
+                        "Operation can't be performed, see warnings for info")
         progress_async("Operation can't be performed, see warnings for info")
-        return {'FINISHED',False}
-    
-    #check for free movement height < maxz and return with error
+        return {'FINISHED', False}
+
+    # check for free movement height < maxz and return with error
     if(o.movement.free_height < o.maxz):
-        operator.report({'ERROR_INVALID_INPUT'}, "Free movement height is less than Operation depth start \n correct and try again.")
+        operator.report({'ERROR_INVALID_INPUT'},
+                        "Free movement height is less than Operation depth start \n correct and try again.")
         progress_async("Operation can't be performed, see warnings for info")
-        return {'FINISHED',False}
+        return {'FINISHED', False}
 
     if o.computing:
-        return {'FINISHED',False}
+        return {'FINISHED', False}
 
     o.operator = operator
 
@@ -194,40 +201,40 @@ async def _calc_path(operator,context):
         print("Got path okay")
     except CamException as e:
         traceback.print_tb(e.__traceback__)
-        error_str="\n".join(textwrap.wrap(str(e),width=80))
-        operator.report({'ERROR'},error_str)
-        return {'FINISHED',False}
+        error_str = "\n".join(textwrap.wrap(str(e), width=80))
+        operator.report({'ERROR'}, error_str)
+        return {'FINISHED', False}
     except AsyncCancelledException as e:
-        return {'CANCELLED',False}
+        return {'CANCELLED', False}
     except Exception as e:
-        print("FAIL",e)
+        print("FAIL", e)
         traceback.print_tb(e.__traceback__)
-        operator.report({'ERROR'},str(e))
-        return {'FINISHED',False}
+        operator.report({'ERROR'}, str(e))
+        return {'FINISHED', False}
     coll = bpy.data.collections.get('RigidBodyWorld')
     if coll:
         bpy.data.collections.remove(coll)
 
-    return {'FINISHED',True}
+    return {'FINISHED', True}
 
 
-class CalculatePath(bpy.types.Operator,AsyncOperatorMixin):
+class CalculatePath(bpy.types.Operator, AsyncOperatorMixin):
     """calculate CAM paths"""
     bl_idname = "object.calculate_cam_path"
     bl_label = "Calculate CAM paths"
-    bl_options = {'REGISTER', 'UNDO','BLOCKING'}
-    
+    bl_options = {'REGISTER', 'UNDO', 'BLOCKING'}
+
     @classmethod
-    def poll(cls,context):
+    def poll(cls, context):
         s = context.scene
         o = s.cam_operations[s.cam_active_operation]
         if o is not None:
-            if cam.isValid(o,context):
+            if cam.isValid(o, context):
                 return True
         return False
 
     async def execute_async(self, context):
-        (retval,success) = await _calc_path(self,context)
+        (retval, success) = await _calc_path(self, context)
         print(f"CALCULATED PATH (success={success},retval={retval}")
         return retval
 
@@ -298,17 +305,17 @@ def getChainOperations(chain):
     return chop
 
 
-class PathsChain(bpy.types.Operator,AsyncOperatorMixin):
+class PathsChain(bpy.types.Operator, AsyncOperatorMixin):
     """calculate a chain and export the gcode alltogether. """
     bl_idname = "object.calculate_cam_paths_chain"
     bl_label = "Calculate CAM paths in current chain and export chain gcode"
-    bl_options = {'REGISTER', 'UNDO','BLOCKING'}
+    bl_options = {'REGISTER', 'UNDO', 'BLOCKING'}
 
     @classmethod
     def poll(cls, context):
         s = context.scene
         chain = s.cam_chains[s.cam_active_chain]
-        return cam.isChainValid(chain,context)[0]
+        return cam.isChainValid(chain, context)[0]
 
     async def execute_async(self, context):
         s = context.scene
@@ -319,14 +326,14 @@ class PathsChain(bpy.types.Operator,AsyncOperatorMixin):
         try:
             for i in range(0, len(chainops)):
                 s.cam_active_operation = s.cam_operations.find(chainops[i].name)
-                self.report({'INFO'},f"Calculating path: {chainops[i].name}")
-                result,success=await _calc_path(self,context)
+                self.report({'INFO'}, f"Calculating path: {chainops[i].name}")
+                result, success = await _calc_path(self, context)
                 if not success and 'FINISHED' in result:
-                    self.report({'ERROR'},f"Couldn't calculate path: {chainops[i].name}")
+                    self.report({'ERROR'}, f"Couldn't calculate path: {chainops[i].name}")
         except Exception as e:
-            print("FAIL",e)
+            print("FAIL", e)
             traceback.print_tb(e.__traceback__)
-            operator.report({'ERROR'},str(e))
+            operator.report({'ERROR'}, str(e))
             return {'FINISHED'}
 
         for o in chainops:
@@ -345,7 +352,7 @@ class PathExportChain(bpy.types.Operator):
     def poll(cls, context):
         s = context.scene
         chain = s.cam_chains[s.cam_active_chain]
-        return cam.isChainValid(chain,context)[0]
+        return cam.isChainValid(chain, context)[0]
 
     def execute(self, context):
         s = bpy.context.scene
@@ -374,20 +381,21 @@ class PathExport(bpy.types.Operator):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
 
-        print("EXPORTING", operation.filename, bpy.data.objects["cam_path_{}".format(operation.name)].data, operation)
+        print("EXPORTING", operation.filename,
+              bpy.data.objects["cam_path_{}".format(operation.name)].data, operation)
 
         gcodepath.exportGcodePath(operation.filename, [bpy.data.objects["cam_path_{}".format(operation.name)].data],
                                   [operation])
         return {'FINISHED'}
 
 
-class CAMSimulate(bpy.types.Operator,AsyncOperatorMixin):
+class CAMSimulate(bpy.types.Operator, AsyncOperatorMixin):
     """simulate CAM operation
     this is performed by: creating an image, painting Z depth of the brush substractively.
     Works only for some operations, can not be used for 4-5 axis."""
     bl_idname = "object.cam_simulate"
     bl_label = "CAM simulation"
-    bl_options = {'REGISTER', 'UNDO','BLOCKING'}
+    bl_options = {'REGISTER', 'UNDO', 'BLOCKING'}
 
     operation: StringProperty(name="Operation",
                               description="Specify the operation to calculate", default='Operation')
@@ -404,7 +412,7 @@ class CAMSimulate(bpy.types.Operator,AsyncOperatorMixin):
             except AsyncCancelledException as e:
                 return {'CANCELLED'}
         else:
-            self.report({'ERROR'},'no computed path to simulate')
+            self.report({'ERROR'}, 'no computed path to simulate')
             return {'FINISHED'}
         return {'FINISHED'}
 
@@ -418,13 +426,13 @@ class CAMSimulateChain(bpy.types.Operator, AsyncOperatorMixin):
     to see how ops work together."""
     bl_idname = "object.cam_simulate_chain"
     bl_label = "CAM simulation"
-    bl_options = {'REGISTER', 'UNDO','BLOCKING'}
+    bl_options = {'REGISTER', 'UNDO', 'BLOCKING'}
 
     @classmethod
     def poll(cls, context):
         s = context.scene
         chain = s.cam_chains[s.cam_active_chain]
-        return cam.isChainValid(chain,context)[0]
+        return cam.isChainValid(chain, context)[0]
 
     operation: StringProperty(name="Operation",
                               description="Specify the operation to calculate", default='Operation')
@@ -608,7 +616,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     if not mpocket_exists:     # create a pocket operation if it does not exist already
         s.cam_operations.add()
         o = s.cam_operations[-1]
-        o.object_name= 'medial_pocket'
+        o.object_name = 'medial_pocket'
         s.cam_active_operation = len(s.cam_operations) - 1
         o.name = 'MedialPocket'
         o.filename = o.name
@@ -617,6 +625,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         o.material.estimate_from_model = False
         o.material.size[2] = -maxdepth
         o.minz_from = 'MATERIAL'
+
 
 class CamOperationAdd(bpy.types.Operator):
     """Add new CAM operation"""
@@ -671,7 +680,8 @@ class CamOperationCopy(bpy.types.Operator):
         fixUnits()
 
         scene = bpy.context.scene
-        if len(scene.cam_operations) == 0: return {'CANCELLED'}
+        if len(scene.cam_operations) == 0:
+            return {'CANCELLED'}
         copyop = scene.cam_operations[scene.cam_active_operation]
         scene.cam_operations.add()
         scene.cam_active_operation += 1
@@ -716,7 +726,8 @@ class CamOperationRemove(bpy.types.Operator):
     def execute(self, context):
         scene = context.scene
         try:
-            if len(scene.cam_operations) == 0: return {'CANCELLED'}
+            if len(scene.cam_operations) == 0:
+                return {'CANCELLED'}
             active_op = scene.cam_operations[scene.cam_active_operation]
             active_op_object = bpy.data.objects[active_op.name]
             scene.objects.active = active_op_object
