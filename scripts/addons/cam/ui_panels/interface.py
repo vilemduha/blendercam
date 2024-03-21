@@ -1,5 +1,6 @@
-
 import bpy
+from bpy.props import EnumProperty
+
 import math
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
 import cam.utils
@@ -13,7 +14,7 @@ def update_interface(self, context):
 
 
 class CAM_INTERFACE_Properties(bpy.types.PropertyGroup):
-    level: bpy.props.EnumProperty(
+    level: EnumProperty(
         name="Interface",
         description="Choose visible options",
         items=[('0', "Basic", "Only show essential options"),
@@ -21,7 +22,7 @@ class CAM_INTERFACE_Properties(bpy.types.PropertyGroup):
                ('2', "Complete", "Show all options"),
                ('3', "Experimental", "Show experimental options")],
         default='0',
-        update=update_interface
+        update=update_interface,
     )
 
 

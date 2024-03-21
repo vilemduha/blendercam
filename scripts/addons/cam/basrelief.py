@@ -48,7 +48,8 @@ def restrictbuf(inbuf, outbuf):  # scale down array....
         # if dx<2:
         # restricted=
         # num=restricted.shape[0]*restricted.shape[1]
-        outbuf[:] = (inbuf[::2, ::2]+inbuf[1::2, ::2]+inbuf[::2, 1::2]+inbuf[1::2, 1::2])/4.0
+        outbuf[:] = (inbuf[::2, ::2]+inbuf[1::2, ::2] +
+                     inbuf[::2, 1::2]+inbuf[1::2, 1::2])/4.0
 
     elif NUMPYALG:  # numpy method
         yrange = numpy.arange(0, outy)
@@ -78,7 +79,8 @@ def restrictbuf(inbuf, outbuf):  # scale down array....
 
         indices[0] = sxstartrange.repeat(outy)
 
-        indices[1] = systartrange.repeat(outx).reshape(outx, outy).swapaxes(0, 1).flatten()
+        indices[1] = systartrange.repeat(outx).reshape(
+            outx, outy).swapaxes(0, 1).flatten()
 
         # systartrange=numpy.max(0,numpy.ceil(syrange-xfiltersize))
         # syendrange=numpy.min(numpy.floor(syrange+xfiltersize),iny-1)+1
@@ -153,7 +155,8 @@ def prolongate(inbuf, outbuf):
 
         indices = numpy.arange(outx*outy*2).reshape((2, outx*outy))
         indices[0] = sxstartrange.repeat(outy)
-        indices[1] = systartrange.repeat(outx).reshape(outx, outy).swapaxes(0, 1).flatten()
+        indices[1] = systartrange.repeat(outx).reshape(
+            outx, outy).swapaxes(0, 1).flatten()
 
         # systartrange=numpy.max(0,numpy.ceil(syrange-xfiltersize))
         # syendrange=numpy.min(numpy.floor(syrange+xfiltersize),iny-1)+1
@@ -225,9 +228,11 @@ def calculate_defect(D, U, F):
         U[1:-1, :-2] - U[1:-1, 2:] + 4*U[1:-1, 1:-1]
     # sides
     D[1:-1, 0] = F[1:-1, 0] - U[:-2, 0] - U[2:, 0] - U[1:-1, 1] + 3*U[1:-1, 0]
-    D[1:-1, -1] = F[1:-1, -1] - U[:-2, -1] - U[2:, -1] - U[1:-1, -2] + 3*U[1:-1, -1]
+    D[1:-1, -1] = F[1:-1, -1] - U[:-2, -1] - \
+        U[2:, -1] - U[1:-1, -2] + 3*U[1:-1, -1]
     D[0, 1:-1] = F[0, 1:-1] - U[0, :-2] - U[0, :-2] - U[1, 1:-1] + 3*U[0, 1:-1]
-    D[-1, 1:-1] = F[-1, 1:-1] - U[-1, :-2] - U[-1, :-2] - U[-1, 1:-1] + 3*U[-1, 1:-1]
+    D[-1, 1:-1] = F[-1, 1:-1] - U[-1, :-2] - \
+        U[-1, :-2] - U[-1, 1:-1] + 3*U[-1, 1:-1]
     # coners
     D[0, 0] = F[0, 0] - U[0, 1] - U[1, 0] + 2*U[0, 0]
     D[0, -1] = F[0, -1] - U[1, -1] - U[0, -2] + 2*U[0, -1]
@@ -399,7 +404,8 @@ def asolve(b, x):
 
 
 def atimes(x, res):
-    res[1:-1, 1:-1] = x[:-2, 1:-1]+x[2:, 1:-1]+x[1:-1, :-2]+x[1:-1, 2:] - 4*x[1:-1, 1:-1]
+    res[1:-1, 1:-1] = x[:-2, 1:-1]+x[2:, 1:-1] + \
+        x[1:-1, :-2]+x[1:-1, 2:] - 4*x[1:-1, 1:-1]
     # sides
     res[1:-1, 0] = x[0:-2, 0]+x[2:, 0]+x[1:-1, 1] - 3*x[1:-1, 0]
     res[1:-1, -1] = x[0:-2, -1]+x[2:, -1]+x[1:-1, -2] - 3*x[1:-1, -1]
@@ -664,7 +670,8 @@ def buildMesh(mesh_z, br):
     ob = bpy.data.objects['BasReliefMesh']
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
-    bpy.context.active_object.dimensions = (br.widthmm/1000, br.heightmm/1000, br.thicknessmm/1000)
+    bpy.context.active_object.dimensions = (
+        br.widthmm/1000, br.heightmm/1000, br.thicknessmm/1000)
     bpy.context.active_object.location = (float(
         br.justifyx)*br.widthmm/1000, float(br.justifyy)*br.heightmm/1000, float(br.justifyz)*br.thicknessmm/1000)
 
@@ -719,7 +726,8 @@ def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view
     scene.render.resolution_x = x
     scene.render.resolution_y = y
     scene.render.resolution_percentage = 100
-    bpy.ops.render.render(animation=False, write_still=False, use_viewport=True, layer="", scene="")
+    bpy.ops.render.render(animation=False, write_still=False,
+                          use_viewport=True, layer="", scene="")
     if our_renderer is not None:
         nodes.remove(our_renderer)
     if our_viewer is not None:
@@ -769,7 +777,8 @@ def problemAreas(br):
 
     # it' ok, we can treat neg and positive silh separately here:
     a = br.attenuation
-    planar = nar < (nar.min()+0.0001)  # numpy.logical_or(silhxplanar,silhyplanar)#
+    # numpy.logical_or(silhxplanar,silhyplanar)#
+    planar = nar < (nar.min()+0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = numpy.abs(gx)
     for iter in range(0, br.silhouette_exponent):
@@ -859,7 +868,8 @@ def relief(br):
 
     # it' ok, we can treat neg and positive silh separately here:
     a = br.attenuation
-    planar = nar < (nar.min()+0.0001)  # numpy.logical_or(silhxplanar,silhyplanar)#
+    # numpy.logical_or(silhxplanar,silhyplanar)#
+    planar = nar < (nar.min()+0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = numpy.abs(gx)
     for iter in range(0, br.silhouette_exponent):
@@ -927,7 +937,8 @@ def relief(br):
             # v=(abs((cx-x)/(cx))+abs((cy-y)/(cy)))
             # return v
 
-        mask = numpy.fromfunction(filterwindow, divg.shape, cx=crow, cy=ccol)  # , curve=cur)
+        mask = numpy.fromfunction(
+            filterwindow, divg.shape, cx=crow, cy=ccol)  # , curve=cur)
         mask = numpy.sqrt(mask)
         # for x in range(mask.shape[0]):
         #	for y in range(mask.shape[1]):
@@ -970,64 +981,213 @@ def relief(br):
 
 
 class BasReliefsettings(bpy.types.PropertyGroup):
-    use_image_source: bpy.props.BoolProperty(name="Use image source", description="", default=False)
-    source_image_name: bpy.props.StringProperty(name='Image source', description='image source')
-    view_layer_name: bpy.props.StringProperty(
-        name='View layer source', description='Make a bas-relief from whatever is on this view layer')
-    bit_diameter: FloatProperty(name="Diameter of ball end in mm", description="Diameter of bit which will be used for carving",
-                                min=0.01, max=50.0, default=3.175, precision=PRECISION)
-    pass_per_radius: bpy.props.IntProperty(
-        name="Passes per radius", description="Amount of passes per radius\n(more passes, more mesh precision)", default=2, min=1, max=10)
-    widthmm: bpy.props.IntProperty(name="Desired width in mm", default=200, min=5, max=4000)
-    heightmm: bpy.props.IntProperty(name="Desired height in mm", default=150, min=5, max=4000)
-    thicknessmm: bpy.props.IntProperty(name="Thickness in mm", default=15, min=5, max=100)
+    use_image_source: BoolProperty(
+        name="Use image source",
+        description="",
+        default=False,
+    )
+    source_image_name: StringProperty(
+        name='Image source',
+        description='image source',
+    )
+    view_layer_name: StringProperty(
+        name='View layer source',
+        description='Make a bas-relief from whatever is on this view layer',
+    )
+    bit_diameter: FloatProperty(
+        name="Diameter of ball end in mm",
+        description="Diameter of bit which will be used for carving",
+        min=0.01,
+        max=50.0,
+        default=3.175,
+        precision=PRECISION,
+    )
+    pass_per_radius: IntProperty(
+        name="Passes per radius",
+        description="Amount of passes per radius\n(more passes, "
+        "more mesh precision)",
+        default=2,
+        min=1,
+        max=10,
+    )
+    widthmm: IntProperty(
+        name="Desired width in mm",
+        default=200,
+        min=5,
+        max=4000,
+    )
+    heightmm: IntProperty(
+        name="Desired height in mm",
+        default=150,
+        min=5,
+        max=4000,
+    )
+    thicknessmm: IntProperty(
+        name="Thickness in mm",
+        default=15,
+        min=5,
+        max=100,
+    )
 
-    justifyx: bpy.props.EnumProperty(name="X", items=[(
-        '1', 'Left', '', 0), ('-0.5', 'Centered', '', 1), ('-1', 'Right', '', 2)], default='-1')
-    justifyy: bpy.props.EnumProperty(name="Y", items=[(
-        '1', 'Bottom', '', 0), ('-0.5', 'Centered', '', 2), ('-1', 'Top', '', 1), ], default='-1')
-    justifyz: bpy.props.EnumProperty(name="Z", items=[(
-        '-1', 'Below 0', '', 0), ('-0.5', 'Centered', '', 2), ('1', 'Above 0', '', 1), ], default='-1')
+    justifyx: EnumProperty(
+        name="X",
+        items=[
+            ('1', 'Left', '', 0),
+            ('-0.5', 'Centered', '', 1),
+            ('-1', 'Right', '', 2)
+        ],
+        default='-1',
+    )
+    justifyy: EnumProperty(
+        name="Y",
+        items=[
+            ('1', 'Bottom', '', 0),
+            ('-0.5', 'Centered', '', 2),
+            ('-1', 'Top', '', 1),
+        ],
+        default='-1',
+    )
+    justifyz: EnumProperty(
+        name="Z",
+        items=[
+            ('-1', 'Below 0', '', 0),
+            ('-0.5', 'Centered', '', 2),
+            ('1', 'Above 0', '', 1),
+        ],
+        default='-1',
+    )
 
-    depth_exponent: FloatProperty(name="Depth exponent", description="Initial depth map is taken to this power. Higher = sharper relief",
-                                  min=0.5, max=10.0, default=1.0, precision=PRECISION)
+    depth_exponent: FloatProperty(
+        name="Depth exponent",
+        description="Initial depth map is taken to this power. Higher = "
+        "sharper relief",
+        min=0.5,
+        max=10.0,
+        default=1.0,
+        precision=PRECISION,
+    )
 
     silhouette_threshold: FloatProperty(
-        name="Silhouette threshold", description="Silhouette threshold", min=0.000001, max=1.0, default=0.003, precision=PRECISION)
-    recover_silhouettes: bpy.props.BoolProperty(
-        name="Recover silhouettes", description="", default=True)
-    silhouette_scale: FloatProperty(name="Silhouette scale", description="Silhouette scale",
-                                    min=0.000001, max=5.0, default=0.3, precision=PRECISION)
-    silhouette_exponent: bpy.props.IntProperty(
-        name="Silhouette square exponent", description="If lower, true depht distances between objects will be more visibe in the relief", default=3, min=0, max=5)
-    attenuation: FloatProperty(name="Gradient attenuation", description="Gradient attenuation",
-                               min=0.000001, max=100.0, default=1.0, precision=PRECISION)
-    min_gridsize: bpy.props.IntProperty(name="Minimum grid size", default=16, min=2, max=512)
-    smooth_iterations: bpy.props.IntProperty(name="Smooth iterations", default=1, min=1, max=64)
-    vcycle_iterations: bpy.props.IntProperty(
-        name="V-cycle iterations", description="set up higher for plananr constraint", default=2, min=1, max=128)
-    linbcg_iterations: bpy.props.IntProperty(
-        name="Linbcg iterations", description="set lower for flatter relief, and when using planar constraint", default=5, min=1, max=64)
-    use_planar: bpy.props.BoolProperty(name="Use planar constraint", description="", default=False)
-    gradient_scaling_mask_use: bpy.props.BoolProperty(
-        name="Scale gradients with mask", description="", default=False)
-    decimate_ratio: FloatProperty(name="Decimate Ratio", description="Simplify the mesh using the Decimate modifier.  The lower the value the more simplyfied",
-                                  min=0.01, max=1.0, default=0.1, precision=PRECISION)
+        name="Silhouette threshold",
+        description="Silhouette threshold",
+        min=0.000001,
+        max=1.0,
+        default=0.003,
+        precision=PRECISION,
+    )
+    recover_silhouettes: BoolProperty(
+        name="Recover silhouettes",
+        description="",
+        default=True,
+    )
+    silhouette_scale: FloatProperty(
+        name="Silhouette scale",
+        description="Silhouette scale",
+        min=0.000001,
+        max=5.0,
+        default=0.3,
+        precision=PRECISION,
+    )
+    silhouette_exponent: IntProperty(
+        name="Silhouette square exponent",
+        description="If lower, true depht distances between objects will be "
+        "more visibe in the relief",
+        default=3,
+        min=0,
+        max=5,
+    )
+    attenuation: FloatProperty(
+        name="Gradient attenuation",
+        description="Gradient attenuation",
+        min=0.000001,
+        max=100.0,
+        default=1.0,
+        precision=PRECISION,
+    )
+    min_gridsize: IntProperty(
+        name="Minimum grid size",
+        default=16,
+        min=2,
+        max=512,
+    )
+    smooth_iterations: IntProperty(
+        name="Smooth iterations",
+        default=1,
+        min=1,
+        max=64,
+    )
+    vcycle_iterations: IntProperty(
+        name="V-cycle iterations",
+        description="set up higher for plananr constraint",
+        default=2,
+        min=1,
+        max=128,
+    )
+    linbcg_iterations: IntProperty(
+        name="Linbcg iterations",
+        description="set lower for flatter relief, and when using "
+        "planar constraint",
+        default=5,
+        min=1,
+        max=64,
+    )
+    use_planar: BoolProperty(
+        name="Use planar constraint",
+        description="",
+        default=False,
+    )
+    gradient_scaling_mask_use: BoolProperty(
+        name="Scale gradients with mask",
+        description="",
+        default=False,
+    )
+    decimate_ratio: FloatProperty(
+        name="Decimate Ratio",
+        description="Simplify the mesh using the Decimate modifier. "
+        "The lower the value the more simplyfied",
+        min=0.01,
+        max=1.0,
+        default=0.1,
+        precision=PRECISION,
+    )
 
-    gradient_scaling_mask_name: bpy.props.StringProperty(
-        name='Scaling mask name', description='mask name')
-    scale_down_before_use: bpy.props.BoolProperty(
-        name="Scale down image before processing", description="", default=False)
+    gradient_scaling_mask_name: StringProperty(
+        name='Scaling mask name',
+        description='mask name',
+    )
+    scale_down_before_use: BoolProperty(
+        name="Scale down image before processing",
+        description="",
+        default=False,
+    )
     scale_down_before: FloatProperty(
-        name="Image scale", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
-    detail_enhancement_use: bpy.props.BoolProperty(
-        name="Enhance details ", description="enhance details by frequency analysis", default=False)
+        name="Image scale",
+        description="Image scale",
+        min=0.025,
+        max=1.0,
+        default=.5,
+        precision=PRECISION,
+    )
+    detail_enhancement_use: BoolProperty(
+        name="Enhance details ",
+        description="enhance details by frequency analysis",
+        default=False,
+    )
     #detail_enhancement_freq=FloatProperty(name="frequency limit", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
     detail_enhancement_amount: FloatProperty(
-        name="amount", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
+        name="amount",
+        description="Image scale",
+        min=0.025,
+        max=1.0,
+        default=.5,
+        precision=PRECISION,
+    )
 
-    advanced: bpy.props.BoolProperty(
-        name="Advanced options", description="show advanced options", default=True)
+    advanced: BoolProperty(
+        name="Advanced options",
+        description="show advanced options",
+        default=True,
+    )
 
 
 class BASRELIEF_Panel(bpy.types.Panel):
@@ -1063,7 +1223,8 @@ class BASRELIEF_Panel(bpy.types.Panel):
         if br.use_image_source:
             layout.prop_search(br, 'source_image_name', bpy.data, "images")
         else:
-            layout.prop_search(br, 'view_layer_name', bpy.context.scene, "view_layers")
+            layout.prop_search(br, 'view_layer_name',
+                               bpy.context.scene, "view_layers")
         layout.prop(br, 'depth_exponent')
         layout.label(text="Project parameters")
         layout.prop(br, 'bit_diameter')
@@ -1097,7 +1258,8 @@ class BASRELIEF_Panel(bpy.types.Panel):
         layout.prop(br, 'gradient_scaling_mask_use')
         if br.advanced:
             if br.gradient_scaling_mask_use:
-                layout.prop_search(br, 'gradient_scaling_mask_name', bpy.data, "images")
+                layout.prop_search(
+                    br, 'gradient_scaling_mask_name', bpy.data, "images")
             layout.prop(br, 'detail_enhancement_use')
             if br.detail_enhancement_use:
                 # layout.prop(br,'detail_enhancement_freq')
@@ -1179,7 +1341,9 @@ def register():
     for p in get_panels():
         bpy.utils.register_class(p)
     s = bpy.types.Scene
-    s.basreliefsettings = bpy.props.PointerProperty(type=BasReliefsettings)
+    s.basreliefsettings = PointerProperty(
+        type=BasReliefsettings,
+    )
 
 
 def unregister():

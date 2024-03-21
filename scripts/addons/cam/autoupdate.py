@@ -5,6 +5,8 @@ import json
 import pathlib
 import zipfile
 import bpy
+from bpy.props import StringProperty
+
 import re
 import io
 import os
@@ -114,7 +116,8 @@ class Updater(bpy.types.Operator):
                 commit_sha = commit_list[0]['sha']
                 if bpy.context.preferences.addons['cam'].preferences.last_commit_hash != commit_sha:
                     # get zipball from this commit
-                    zip_url = update_source.replace("/commits", f"/zipball/{commit_sha}")
+                    zip_url = update_source.replace(
+                        "/commits", f"/zipball/{commit_sha}")
                     self.install_zip_from_url(zip_url)
                     bpy.context.preferences.addons['cam'].preferences.last_commit_hash = commit_sha
                     bpy.ops.wm.save_userpref()
@@ -130,9 +133,11 @@ class Updater(bpy.types.Operator):
             for fileinfo in files:
                 filename = fileinfo.filename
                 if fileinfo.is_dir() == False:
-                    path_pos = filename.replace("\\", "/").find("/scripts/addons/cam/")
+                    path_pos = filename.replace(
+                        "\\", "/").find("/scripts/addons/cam/")
                     if path_pos != -1:
-                        relative_path = filename[path_pos+len("/scripts/addons/cam/"):]
+                        relative_path = filename[path_pos +
+                                                 len("/scripts/addons/cam/"):]
                         out_path = cam_addon_path / relative_path
                         print(out_path)
                         # check folder exists
@@ -162,7 +167,9 @@ class UpdateSourceOperator(bpy.types.Operator):
     bl_idname = "render.cam_set_update_source"
     bl_label = "Set blendercam update source"
 
-    new_source: bpy.props.StringProperty(default='')
+    new_source: StringProperty(
+        default='',
+    )
 
     def execute(self, context):
         bpy.context.preferences.addons['cam'].preferences.update_source = self.new_source

@@ -87,7 +87,8 @@ def timer_update(context):
                     update_zbufferimage_tag = False
                     update_offsetimage_tag = False
                 else:
-                    readthread = threading.Thread(target=threadread, args=([tcom]), daemon=True)
+                    readthread = threading.Thread(
+                        target=threadread, args=([tcom]), daemon=True)
                     readthread.start()
                     p[0] = readthread
             o = s.cam_operations[tcom.opname]  # changes
@@ -118,7 +119,8 @@ class PathsBackground(bpy.types.Operator):
                                 bufsize=1, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
 
         tcom = threadCom(o, proc)
-        readthread = threading.Thread(target=threadread, args=([tcom]), daemon=True)
+        readthread = threading.Thread(
+            target=threadread, args=([tcom]), daemon=True)
         readthread.start()
         # self.__class__.cam_processes=[]
         if not hasattr(bpy.ops.object.calculate_cam_paths_background.__class__, 'cam_processes'):
@@ -258,7 +260,8 @@ class PathsAll(bpy.types.Operator):
 
     def draw(self, context):
         layout = self.layout
-        layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
+        layout.prop_search(self, "operation",
+                           bpy.context.scene, "cam_operations")
 
 
 class CamPackObjects(bpy.types.Operator):
@@ -325,11 +328,13 @@ class PathsChain(bpy.types.Operator, AsyncOperatorMixin):
         meshes = []
         try:
             for i in range(0, len(chainops)):
-                s.cam_active_operation = s.cam_operations.find(chainops[i].name)
+                s.cam_active_operation = s.cam_operations.find(
+                    chainops[i].name)
                 self.report({'INFO'}, f"Calculating path: {chainops[i].name}")
                 result, success = await _calc_path(self, context)
                 if not success and 'FINISHED' in result:
-                    self.report({'ERROR'}, f"Couldn't calculate path: {chainops[i].name}")
+                    self.report(
+                        {'ERROR'}, f"Couldn't calculate path: {chainops[i].name}")
         except Exception as e:
             print("FAIL", e)
             traceback.print_tb(e.__traceback__)
@@ -397,8 +402,11 @@ class CAMSimulate(bpy.types.Operator, AsyncOperatorMixin):
     bl_label = "CAM simulation"
     bl_options = {'REGISTER', 'UNDO', 'BLOCKING'}
 
-    operation: StringProperty(name="Operation",
-                              description="Specify the operation to calculate", default='Operation')
+    operation: StringProperty(
+        name="Operation",
+        description="Specify the operation to calculate",
+        default='Operation',
+    )
 
     async def execute_async(self, context):
         s = bpy.context.scene
@@ -418,7 +426,8 @@ class CAMSimulate(bpy.types.Operator, AsyncOperatorMixin):
 
     def draw(self, context):
         layout = self.layout
-        layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
+        layout.prop_search(self, "operation",
+                           bpy.context.scene, "cam_operations")
 
 
 class CAMSimulateChain(bpy.types.Operator, AsyncOperatorMixin):
@@ -434,8 +443,11 @@ class CAMSimulateChain(bpy.types.Operator, AsyncOperatorMixin):
         chain = s.cam_chains[s.cam_active_chain]
         return cam.isChainValid(chain, context)[0]
 
-    operation: StringProperty(name="Operation",
-                              description="Specify the operation to calculate", default='Operation')
+    operation: StringProperty(
+        name="Operation",
+        description="Specify the operation to calculate",
+        default='Operation',
+    )
 
     async def execute_async(self, context):
         s = bpy.context.scene
@@ -459,7 +471,8 @@ class CAMSimulateChain(bpy.types.Operator, AsyncOperatorMixin):
 
     def draw(self, context):
         layout = self.layout
-        layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
+        layout.prop_search(self, "operation",
+                           bpy.context.scene, "cam_operations")
 
 
 class CamChainAdd(bpy.types.Operator):
@@ -643,7 +656,8 @@ class CamOperationAdd(bpy.types.Operator):
 
         ob = bpy.context.active_object
         if ob is None:
-            self.report({'ERROR_INVALID_INPUT'}, "Please add an object to base the operation on.")
+            self.report({'ERROR_INVALID_INPUT'},
+                        "Please add an object to base the operation on.")
             return {'CANCELLED'}
 
         minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
@@ -704,7 +718,8 @@ class CamOperationCopy(bpy.types.Operator):
                 numdigits += 1
                 isdigit = o.name[-numdigits].isdigit()
             numdigits -= 1
-            o.name = o.name[:-numdigits] + str(int(o.name[-numdigits:]) + 1).zfill(numdigits)
+            o.name = o.name[:-numdigits] + \
+                str(int(o.name[-numdigits:]) + 1).zfill(numdigits)
             o.filename = o.name
         else:
             o.name = o.name + '_copy'
@@ -754,9 +769,15 @@ class CamOperationMove(bpy.types.Operator):
     bl_label = "Move CAM operation in list"
     bl_options = {'REGISTER', 'UNDO'}
 
-    direction: EnumProperty(name='direction',
-                            items=(('UP', 'Up', ''), ('DOWN', 'Down', '')),
-                            description='direction', default='DOWN')
+    direction: EnumProperty(
+        name='direction',
+        items=(
+            ('UP', 'Up', ''),
+            ('DOWN', 'Down', '')
+        ),
+        description='direction',
+        default='DOWN',
+    )
 
     @classmethod
     def poll(cls, context):
@@ -800,7 +821,8 @@ class CamOrientationAdd(bpy.types.Operator):
         oriob.empty_draw_size = 0.02  # 2 cm
 
         simple.addToGroup(oriob, gname)
-        oriob.name = 'ori_' + o.name + '.' + str(len(bpy.data.collections[gname].objects)).zfill(3)
+        oriob.name = 'ori_' + o.name + '.' + \
+            str(len(bpy.data.collections[gname].objects)).zfill(3)
 
         return {'FINISHED'}
 
