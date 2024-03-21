@@ -27,7 +27,8 @@ from cam.simple import *
 
 
 def addTestCurve(loc):
-    bpy.ops.curve.primitive_bezier_circle_add(radius=.05, align='WORLD', enter_editmode=False, location=loc)
+    bpy.ops.curve.primitive_bezier_circle_add(
+        radius=.05, align='WORLD', enter_editmode=False, location=loc)
     bpy.ops.object.editmode_toggle()
     bpy.ops.curve.duplicate()
     bpy.ops.transform.resize(value=(0.5, 0.5, 0.5), constraint_axis=(False, False, False),
@@ -121,7 +122,7 @@ def testWaterline(pos):
 
 
 def testSimulation():
-    pass;
+    pass
 
 
 def cleanUp():

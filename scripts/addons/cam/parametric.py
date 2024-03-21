@@ -36,13 +36,14 @@ This code has been checked to work on Blender 2.92.
 
 """
 
+
+
+
 import math
 from math import sin, cos, pi
 import bmesh
 import bpy
 from mathutils import Vector
-
-
 def derive_bezier_handles(a, b, c, d, tb, tc):
     """
     Derives bezier handles by using the start and end of the curve with 2 intermediate
@@ -182,7 +183,7 @@ def create_parametric_curve(
     curve_object = bpy.data.objects.new('Parametric', curve)
     context = bpy.context
     scene = context.scene
-    link_object = scene.collection.objects.link 
+    link_object = scene.collection.objects.link
     link_object(curve_object)
 
     # Return the new object
@@ -246,4 +247,3 @@ def make_edge_loops(*objects):
 
     # Join them together
     bpy.ops.object.join(ctx)
-

@@ -20,7 +20,7 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # Solves: No module named 'shapely' (even if it is installed)
-#help('modules')
+# help('modules')
 
 import math
 import sys
@@ -256,6 +256,7 @@ def union(name):
     remove_multiple(name)
     rename('unionboolean', name)
 
+
 def intersect(name):
     select_multiple(name)
     bpy.ops.object.curve_boolean(boolean_type='INTERSECT')
@@ -263,6 +264,8 @@ def intersect(name):
 
 # boolean difference of objects starting with name result is object from basename.
 # all objects starting with name will be deleted and the result will be basename
+
+
 def difference(name, basename):
     #   name is the series to select
     #   basename is what the base you want to cut including name

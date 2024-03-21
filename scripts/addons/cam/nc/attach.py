@@ -16,6 +16,8 @@ attached = False
 units = 1.0
 
 ################################################################################
+
+
 class Creator(recreator.Redirector):
 
     def __init__(self, original):
@@ -44,10 +46,11 @@ class Creator(recreator.Redirector):
         # use a line with no length
         path.append(ocl.Line(ocl.Point(self.x, self.y, self.z), ocl.Point(self.x, self.y, self.z)))
         self.setPdcfIfNotSet()
-        if (self.z>self.minz):
-            self.pdcf.setZ(self.z)  # Adjust Z if we have gotten a higher limit (Fix pocketing loosing steps when using attach?)
+        if (self.z > self.minz):
+            # Adjust Z if we have gotten a higher limit (Fix pocketing loosing steps when using attach?)
+            self.pdcf.setZ(self.z)
         else:
-            self.pdcf.setZ(self.minz/units) # Else use minz
+            self.pdcf.setZ(self.minz/units)  # Else use minz
         self.pdcf.setPath(path)
         self.pdcf.run()
         plist = self.pdcf.getCLPoints()
@@ -55,13 +58,15 @@ class Creator(recreator.Redirector):
         return p.z + self.material_allowance/units
 
     def cut_path(self):
-        if self.path == None: return
+        if self.path == None:
+            return
         self.setPdcfIfNotSet()
 
-        if (self.z>self.minz):
-            self.pdcf.setZ(self.z)  # Adjust Z if we have gotten a higher limit (Fix pocketing loosing steps when using attach?)
+        if (self.z > self.minz):
+            # Adjust Z if we have gotten a higher limit (Fix pocketing loosing steps when using attach?)
+            self.pdcf.setZ(self.z)
         else:
-            self.pdcf.setZ(self.minz/units) # Else use minz
+            self.pdcf.setZ(self.minz/units)  # Else use minz
 
        # get the points on the surface
         self.pdcf.setPath(self.path)
@@ -69,7 +74,7 @@ class Creator(recreator.Redirector):
         self.pdcf.run()
         plist = self.pdcf.getCLPoints()
 
-        #refine the points
+        # refine the points
         f = ocl.LineCLFilter()
         f.setTolerance(0.005)
         for p in plist:
@@ -85,7 +90,7 @@ class Creator(recreator.Redirector):
 
         self.path = ocl.Path()
 
-    def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None ):
+    def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
         if z != None:
             if z < self.z:
                 return
@@ -102,23 +107,27 @@ class Creator(recreator.Redirector):
             return
 
         # add a line to the path
-        if self.path == None: self.path = ocl.Path()
+        if self.path == None:
+            self.path = ocl.Path()
         self.path.append(ocl.Line(ocl.Point(px, py, pz), ocl.Point(self.x, self.y, self.z)))
 
-    def arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, ccw = True):
+    def arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, ccw=True):
         px = self.x
         py = self.y
         pz = self.z
         recreator.Redirector.arc(self, x, y, z, i, j, k, r, ccw)
 
         # add an arc to the path
-        if self.path == None: self.path = ocl.Path()
-        self.path.append(ocl.Arc(ocl.Point(px, py, pz), ocl.Point(self.x, self.y, self.z), ocl.Point(i, j, pz), ccw))
+        if self.path == None:
+            self.path = ocl.Path()
+        self.path.append(ocl.Arc(ocl.Point(px, py, pz), ocl.Point(
+            self.x, self.y, self.z), ocl.Point(i, j, pz), ccw))
 
     def set_ocl_cutter(self, cutter):
         self.cutter = cutter
 
 ################################################################################
+
 
 def attach_begin():
     global attached
@@ -129,6 +138,7 @@ def attach_begin():
     attached = True
     nc.creator.pdcf = None
     nc.creator.path = None
+
 
 def attach_end():
     global attached

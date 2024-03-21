@@ -111,34 +111,35 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
     b = p * math.cos(pressure_angle)  # radius of base circle
     r = p-(c-p)-clearance   # radius of root circle
     t = mm_per_tooth / 2 - backlash / 2  # tooth thickness at pitch circle
-    k = - gear_iang(b, p) - t / 2 / p    # angle to where involute meets base circle on each side of tooth
+    # angle to where involute meets base circle on each side of tooth
+    k = - gear_iang(b, p) - t / 2 / p
     shapely_gear = Polygon([
-                            (0, 0),
-                            gear_polar(r, k if r < b else -pi / number_of_teeth),
-                            gear_q7(0, r, b, c, k, 1),
-                            gear_q7(0.1, r, b, c, k, 1),
-                            gear_q7(0.2, r, b, c, k, 1),
-                            gear_q7(0.3, r, b, c, k, 1),
-                            gear_q7(0.4, r, b, c, k, 1),
-                            gear_q7(0.5, r, b, c, k, 1),
-                            gear_q7(0.6, r, b, c, k, 1),
-                            gear_q7(0.7, r, b, c, k, 1),
-                            gear_q7(0.8, r, b, c, k, 1),
-                            gear_q7(0.9, r, b, c, k, 1),
-                            gear_q7(1.0, r, b, c, k, 1),
-                            gear_q7(1.0, r, b, c, k, -1),
-                            gear_q7(0.9, r, b, c, k, -1),
-                            gear_q7(0.8, r, b, c, k, -1),
-                            gear_q7(0.7, r, b, c, k, -1),
-                            gear_q7(0.6, r, b, c, k, -1),
-                            gear_q7(0.5, r, b, c, k, -1),
-                            gear_q7(0.4, r, b, c, k, -1),
-                            gear_q7(0.3, r, b, c, k, -1),
-                            gear_q7(0.2, r, b, c, k, -1),
-                            gear_q7(0.1, r, b, c, k, -1),
-                            gear_q7(0.0, r, b, c, k, -1),
-                            gear_polar(r, -k if r < b else pi / number_of_teeth)
-                            ])
+        (0, 0),
+        gear_polar(r, k if r < b else -pi / number_of_teeth),
+        gear_q7(0, r, b, c, k, 1),
+        gear_q7(0.1, r, b, c, k, 1),
+        gear_q7(0.2, r, b, c, k, 1),
+        gear_q7(0.3, r, b, c, k, 1),
+        gear_q7(0.4, r, b, c, k, 1),
+        gear_q7(0.5, r, b, c, k, 1),
+        gear_q7(0.6, r, b, c, k, 1),
+        gear_q7(0.7, r, b, c, k, 1),
+        gear_q7(0.8, r, b, c, k, 1),
+        gear_q7(0.9, r, b, c, k, 1),
+        gear_q7(1.0, r, b, c, k, 1),
+        gear_q7(1.0, r, b, c, k, -1),
+        gear_q7(0.9, r, b, c, k, -1),
+        gear_q7(0.8, r, b, c, k, -1),
+        gear_q7(0.7, r, b, c, k, -1),
+        gear_q7(0.6, r, b, c, k, -1),
+        gear_q7(0.5, r, b, c, k, -1),
+        gear_q7(0.4, r, b, c, k, -1),
+        gear_q7(0.3, r, b, c, k, -1),
+        gear_q7(0.2, r, b, c, k, -1),
+        gear_q7(0.1, r, b, c, k, -1),
+        gear_q7(0.0, r, b, c, k, -1),
+        gear_polar(r, -k if r < b else pi / number_of_teeth)
+    ])
     utils.shapelyToCurve('tooth', shapely_gear, 0.0)
     i = number_of_teeth
     while i > 1:
@@ -170,7 +171,8 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
 
         simple.join_multiple('_')
 
-        simple.add_rectangle(r-rim_size-((hub_diameter-hole_diameter)/4 + hole_diameter/2), hub_diameter/2, center_x=False)
+        simple.add_rectangle(r-rim_size-((hub_diameter-hole_diameter)/4 +
+                                         hole_diameter/2), hub_diameter/2, center_x=False)
         simple.move(x=(hub_diameter-hole_diameter)/4 + hole_diameter/2)
         simple.active_name('_spoke')
 
@@ -200,21 +202,22 @@ def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3
     pi = math.pi
     mm_per_tooth *= 1000
     a = mm_per_tooth / pi  # addendum
-    t = (a * math.sin(pressure_angle))         # tooth side is tilted so top/bottom corners move this amount
+    # tooth side is tilted so top/bottom corners move this amount
+    t = (a * math.sin(pressure_angle))
     a /= 1000
     mm_per_tooth /= 1000
     t /= 1000
 
     shapely_gear = Polygon([
-                            (-mm_per_tooth * 2/4*1.001, a-height),
-                            (-mm_per_tooth * 2/4*1.001 - backlash, -a),
-                            (-mm_per_tooth * 1/4 + backlash - t, -a),
-                            (-mm_per_tooth * 1/4 + backlash + t, a),
-                            (mm_per_tooth * 1/4 - backlash - t, a),
-                            (mm_per_tooth * 1/4 - backlash + t, -a),
-                            (mm_per_tooth * 2/4*1.001 + backlash, -a),
-                            (mm_per_tooth * 2/4*1.001, a-height)
-                            ])
+        (-mm_per_tooth * 2/4*1.001, a-height),
+        (-mm_per_tooth * 2/4*1.001 - backlash, -a),
+        (-mm_per_tooth * 1/4 + backlash - t, -a),
+        (-mm_per_tooth * 1/4 + backlash + t, a),
+        (mm_per_tooth * 1/4 - backlash - t, a),
+        (mm_per_tooth * 1/4 - backlash + t, -a),
+        (mm_per_tooth * 2/4*1.001 + backlash, -a),
+        (mm_per_tooth * 2/4*1.001, a-height)
+    ])
 
     utils.shapelyToCurve('_tooth', shapely_gear, 0.0)
     i = number_of_teeth
@@ -236,5 +239,3 @@ def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3
     name = 'rack-' + str(round(mm_per_tooth * 1000, 1))
     name += '-PA-' + str(round(math.degrees(pressure_angle), 1))
     simple.active_name(name)
-
-

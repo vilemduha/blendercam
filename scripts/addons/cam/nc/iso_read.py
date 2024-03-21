@@ -10,20 +10,23 @@ import re
 import sys
 
 ################################################################################
+
+
 class Parser(nc.Parser):
 
     def __init__(self, writer):
         nc.Parser.__init__(self, writer)
 
-        self.pattern_main = re.compile('([(!;].*|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+-])?\d*(?:\.\d*)?)')
+        self.pattern_main = re.compile(
+            '([(!;].*|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+-])?\d*(?:\.\d*)?)')
         self.arc_centre_absolute = False
         self.arc_centre_positive = False
         self.oldx = None
         self.oldy = None
         self.oldz = None
 
-        #if ( or ! or ; at least one space or a letter followed by some character or not followed by a +/- followed by decimal, with a possible decimal point
-         #  followed by a possible deimcal, or a letter followed by # with a decimal . deimcal
+        # if ( or ! or ; at least one space or a letter followed by some character or not followed by a +/- followed by decimal, with a possible decimal point
+        #  followed by a possible deimcal, or a letter followed by # with a decimal . deimcal
         # add your character here > [(!;] for comments char
         # then look for the 'comment' function towards the end of the file and add another elif
 
@@ -86,7 +89,7 @@ class Parser(nc.Parser):
             self.path_col = "feed"
             self.col = "feed"
         elif (word == 'G82' or word == 'g82'):
-            self.drill = True;
+            self.drill = True
             self.no_move = True
             self.path_col = "feed"
             self.col = "feed"
@@ -99,7 +102,8 @@ class Parser(nc.Parser):
             self.absolute()
         elif (word == 'G91' or word == 'g91'):
             self.incremental()
-        elif (word[0] == 'G') : col = "prep"
+        elif (word[0] == 'G'):
+            col = "prep"
         elif (word[0] == 'I' or word[0] == 'i'):
             self.col = "axis"
             self.i = eval(word[1:])
@@ -112,19 +116,22 @@ class Parser(nc.Parser):
             self.col = "axis"
             self.k = eval(word[1:])
             self.move = True
-        elif (word[0] == 'M') : self.col = "misc"
-        elif (word[0] == 'N') : self.col = "blocknum"
-        elif (word[0] == 'O') : self.col = "program"
+        elif (word[0] == 'M'):
+            self.col = "misc"
+        elif (word[0] == 'N'):
+            self.col = "blocknum"
+        elif (word[0] == 'O'):
+            self.col = "program"
         elif (word[0] == 'P' or word[0] == 'p'):
-             if (self.no_move != True):
-                 self.col = "axis"
-                 self.p = eval(word[1:])
-                 self.move = True
+            if (self.no_move != True):
+                self.col = "axis"
+                self.p = eval(word[1:])
+                self.move = True
         elif (word[0] == 'Q' or word[0] == 'q'):
-             if (self.no_move != True):
-                 self.col = "axis"
-                 self.q = eval(word[1:])
-                 self.move = True
+            if (self.no_move != True):
+                self.col = "axis"
+                self.q = eval(word[1:])
+                self.move = True
         elif (word[0] == 'R' or word[0] == 'r'):
             self.col = "axis"
             self.r = eval(word[1:])
@@ -132,9 +139,9 @@ class Parser(nc.Parser):
         elif (word[0] == 'S' or word[0] == 's'):
             self.col = "axis"
             self.writer.spindle(word[1:], (float(word[1:]) >= 0.0))
-        elif (word[0] == 'T') :
+        elif (word[0] == 'T'):
             self.col = "tool"
-            self.writer.tool_change( eval(word[1:]) )
+            self.writer.tool_change(eval(word[1:]))
         elif (word[0] == 'X' or word[0] == 'x'):
             self.col = "axis"
             self.x = eval(word[1:])
@@ -147,9 +154,15 @@ class Parser(nc.Parser):
             self.col = "axis"
             self.z = eval(word[1:])
             self.move = True
-        elif (word[0] == '(') : (self.col, self.cdata) = ("comment", True)
-        elif (word[0] == '!') : (self.col, self.cdata) = ("comment", True)
-        elif (word[0] == ';') : (self.col, self.cdata) = ("comment", True)
-        elif (word[0] == '#') : self.col = "variable"
-        elif (word[0] == ':') : self.col = "blocknum"
-        elif (ord(word[0]) <= 32) : self.cdata = True
+        elif (word[0] == '('):
+            (self.col, self.cdata) = ("comment", True)
+        elif (word[0] == '!'):
+            (self.col, self.cdata) = ("comment", True)
+        elif (word[0] == ';'):
+            (self.col, self.cdata) = ("comment", True)
+        elif (word[0] == '#'):
+            self.col = "variable"
+        elif (word[0] == ':'):
+            self.col = "blocknum"
+        elif (ord(word[0]) <= 32):
+            self.cdata = True

@@ -2,6 +2,7 @@ from . import num_reader
 import sys
 import math
 
+
 class Parser(num_reader.NumReader):
 
     def __init__(self, writer):
@@ -27,11 +28,14 @@ class Parser(num_reader.NumReader):
             if len(y) > 0:
                 z = self.get_number()
                 if len(z) > 0:
-                    if self.f > 40: color = "rapid"
-                    else: color = "feed"
+                    if self.f > 40:
+                        color = "rapid"
+                    else:
+                        color = "feed"
                     self.add_word(color)
                     self.begin_path(color)
-                    self.add_line(int(x) * self.units_to_mm, int(y) * self.units_to_mm, int(z) * self.units_to_mm)
+                    self.add_line(int(x) * self.units_to_mm, int(y) *
+                                  self.units_to_mm, int(z) * self.units_to_mm)
                     self.end_path()
                     self.x = int(x)
                     self.y = int(y)
@@ -42,4 +46,3 @@ class Parser(num_reader.NumReader):
             self.ParseZ()
         elif c == 'V':
             self.ParseV()
-

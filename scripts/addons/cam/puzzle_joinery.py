@@ -198,7 +198,7 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
             simple.make_active('twist_keep_f')
             simple.rotate(-math.pi / 2)
             simple.move(x=-width / 2)
-           
+
     simple.remove_multiple("_")  # Remove temporary base and holes
     simple.remove_multiple("fingers")  # Remove temporary base and holes
 
@@ -755,4 +755,3 @@ def tile(diameter, tolerance, tile_x_amount, tile_y_amount, stem=1):
     simple.move(x=width/2)
     simple.difference('_', '_base')
     simple.active_name('tile_ ' + str(tile_x_amount) + '_' + str(tile_y_amount))
-

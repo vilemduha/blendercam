@@ -111,8 +111,8 @@ def twist_separator_slot(length, thickness, finger_play=0.00005, percentage=0.5)
     simple.mirrory()
     simple.join_multiple('simple_rectangle')
     simple.active_name('_separator_slot')
-    
-    
+
+
 def interlock_twist_separator(length, thickness, amount, spacing, edge_distance, finger_play=0.00005, percentage=0.5,
                               start='rounded', end='rounded'):
     amount -= 1
@@ -171,7 +171,8 @@ def vertical_finger(length, thickness, finger_play, amount):
     #   amount = amount of fingers
 
     for i in range(amount):
-        mortise(length, thickness, finger_play, 0, i * 2 * length + length / 2, rotation=math.pi / 2)
+        mortise(length, thickness, finger_play, 0, i * 2 *
+                length + length / 2, rotation=math.pi / 2)
         simple.active_name("_height_finger")
 
     simple.join_multiple("_height_finger")
@@ -318,7 +319,7 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
                 mortise_angle = angle(oldp, p)
                 mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
                 mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
-                        math.pi / 4))  # factor for tolerance for the finger
+                    math.pi / 4))  # factor for tolerance for the finger
 
                 if base:
                     mortise(finger_size, finger_thick, finger_tolerance * mad, distance, 0, 0)
@@ -432,7 +433,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 mortise_angle = angle(oldp, p)
                 mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
                 mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
-                        math.pi / 4))  # factor for tolerance for the finger
+                    math.pi / 4))  # factor for tolerance for the finger
                 distance += mad * finger_tolerance  # move finger by the factor mad greater with larger angle difference
                 mortise_point = loop.interpolate(distance)
                 if mad > 2 and double_adaptive:
@@ -440,7 +441,8 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
 
                 hpos.append(distance + finger_sz)  # saves the mortise center
                 if base:
-                    mortise(finger_sz, finger_thick, finger_tolerance * mad, distance + finger_sz, 0, 0)
+                    mortise(finger_sz, finger_thick, finger_tolerance *
+                            mad, distance + finger_sz, 0, 0)
                     simple.active_name("_base")
                 else:
                     mortise(finger_sz, finger_thick, finger_tolerance * mad, mortise_point.x, mortise_point.y,
@@ -450,7 +452,8 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                         simple.remove_multiple("start_here")
                         bpy.ops.mesh.primitive_cylinder_add(radius=finger_thick / 2, depth=0.025, enter_editmode=False,
                                                             align='WORLD',
-                                                            location=(mortise_point.x, mortise_point.y, 0),
+                                                            location=(mortise_point.x,
+                                                                      mortise_point.y, 0),
                                                             scale=(1, 1, 1))
                         simple.active_name("start_here_mortise")
 
@@ -461,7 +464,7 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
 
                 #   adaptive finger length start
                 while finger_sz > min_finger and next_angle_difference > adaptive:
-#                while finger_sz > min_finger and next_angle_difference > adaptive:
+                    #                while finger_sz > min_finger and next_angle_difference > adaptive:
                     finger_sz *= 0.95  # reduce the size of finger by a percentage... the closer to 1.0, the slower
                     distance = old_distance + 3 * oldfinger_sz / 2 + finger_sz / 2
                     mortise_point = loop.interpolate(distance)  # get the next mortise point
@@ -487,7 +490,8 @@ def single_interlock(finger_depth, finger_thick, finger_tolerance, x, y, groove_
     if type == "GROOVE":
         interlock_groove(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle)
     elif type == "TWIST":
-        interlock_twist(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle, percentage=twist_percentage)
+        interlock_twist(finger_depth, finger_thick, finger_tolerance,
+                        x, y, groove_angle, percentage=twist_percentage)
     elif type == "PUZZLE":
         puzzle_joinery.fingers(finger_thick, finger_tolerance)
 
@@ -535,7 +539,8 @@ def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_
 
                 groove_point = loop.interpolate(distance)
 
-                print(j, "groove_angle", round(180 * groove_angle / math.pi), "distance", round(distance * 1000), "mm")
+                print(j, "groove_angle", round(180 * groove_angle / math.pi),
+                      "distance", round(distance * 1000), "mm")
                 single_interlock(finger_depth, finger_thick, finger_tolerance, groove_point.x, groove_point.y,
                                  groove_angle, type, twist_percentage=twist_percentage)
 

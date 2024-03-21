@@ -10,6 +10,8 @@ import sys
 import math
 
 ################################################################################
+
+
 class Parser(nc.Parser):
 
     def __init__(self, writer):
@@ -97,7 +99,7 @@ class Parser(nc.Parser):
     def Parsey(self, name):
         self.files_open(name)
 
-        for_full_machine_sim = True # to do, make derived class to do this
+        for_full_machine_sim = True  # to do, make derived class to do this
         #for_full_machine_sim = False
 
         self.f = None
@@ -135,16 +137,22 @@ class Parser(nc.Parser):
                     self.ParseWord(word)
 
             if (self.move and not self.no_move):
-                if (self.arc==0):
+                if (self.arc == 0):
                     self.add_line(self.x, self.y, self.z, self.a, self.b, self.rapid)
                 else:
                     self.add_arc(self.x, self.y, self.z, self.i, self.j, self.k, self.r, self.arc)
-                if self.x != None: self.oldx = self.x
-                if self.y != None: self.oldy = self.y
-                if self.z != None: self.oldz = self.z
-                if self.a != None: self.olda = self.a
-                if self.b != None: self.oldb = self.b
-                if self.c != None: self.oldc = self.c
+                if self.x != None:
+                    self.oldx = self.x
+                if self.y != None:
+                    self.oldy = self.y
+                if self.z != None:
+                    self.oldz = self.z
+                if self.a != None:
+                    self.olda = self.a
+                if self.b != None:
+                    self.oldb = self.b
+                if self.c != None:
+                    self.oldc = self.c
 
             elif (self.t):
                 self.change_tool(self.t)

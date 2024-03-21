@@ -25,7 +25,8 @@ import shapely
 from shapely import geometry as sgeometry
 from shapely import affinity, prepared
 from shapely import speedups
-import random, time
+import random
+import time
 import mathutils
 from mathutils import Vector
 

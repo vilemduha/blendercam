@@ -4,6 +4,7 @@ import subprocess
 import os
 import sys
 
+
 class BlenderCAMTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -66,25 +67,26 @@ class BlenderCAMTest(unittest.TestCase):
         # Compare the generated and expected gcode for each operation
         for gcode_file in test_case['gcode_files']:
             with self.subTest(operation=f"{test_case['subdir_name']}/{gcode_file}"):
-                generated = self.get_gcode_from_file(gcode_file[1:])                    
+                generated = self.get_gcode_from_file(gcode_file[1:])
                 expected = self.get_gcode_from_file(gcode_file)
-                if sys.platform=='darwin' and os.path.exists(gcode_file+".mac"):
+                if sys.platform == 'darwin' and os.path.exists(gcode_file+".mac"):
                     # bullet physics gives slightly different results on mac sometimes...
                     # this is something we can't fix, so compare against mac generated test
                     # file
-                    print("Using mac test file",len(expected),len(generated))
+                    print("Using mac test file", len(expected), len(generated))
                     expected = self.get_gcode_from_file(gcode_file+".mac")
                     self.assertMultiLineEqual(generated, expected,
-                        msg = "\n"+self.get_diff(gcode_file[1:], gcode_file+".mac"))
+                                              msg="\n"+self.get_diff(gcode_file[1:], gcode_file+".mac"))
                 else:
                     self.assertMultiLineEqual(generated, expected,
-                        msg = "\n"+self.get_diff(gcode_file[1:], gcode_file))
+                                              msg="\n"+self.get_diff(gcode_file[1:], gcode_file))
                 os.remove(gcode_file[1:])  # cleanup generated file unless test fails
+
 
 if __name__ == '__main__':
     # Add a test method for each test case to the TestCase class
     for test_case in BlenderCAMTest.get_test_cases():
-        test_func = lambda self, tc=test_case: self.run_test_case(tc)
+        def test_func(self, tc=test_case): return self.run_test_case(tc)
         setattr(BlenderCAMTest, f'test_{test_case["subdir_name"]}', test_func)
 
     unittest.main()

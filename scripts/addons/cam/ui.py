@@ -34,22 +34,22 @@ from bpy.types import (Panel, Menu, Operator, PropertyGroup, )
 from cam import gcodeimportparser, simple
 from cam.simple import *
 
-from cam.ui_panels.buttons_panel  import CAMButtonsPanel
-from cam.ui_panels.interface      import *
-from cam.ui_panels.info           import *
-from cam.ui_panels.operations     import *
-from cam.ui_panels.cutter         import *
-from cam.ui_panels.machine        import *
-from cam.ui_panels.material       import *
-from cam.ui_panels.chains         import *
-from cam.ui_panels.op_properties  import *
-from cam.ui_panels.movement       import *
-from cam.ui_panels.feedrate       import *
-from cam.ui_panels.optimisation   import *
-from cam.ui_panels.area           import *
-from cam.ui_panels.gcode          import *
-from cam.ui_panels.pack           import *
-from cam.ui_panels.slice          import *
+from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from cam.ui_panels.interface import *
+from cam.ui_panels.info import *
+from cam.ui_panels.operations import *
+from cam.ui_panels.cutter import *
+from cam.ui_panels.machine import *
+from cam.ui_panels.material import *
+from cam.ui_panels.chains import *
+from cam.ui_panels.op_properties import *
+from cam.ui_panels.movement import *
+from cam.ui_panels.feedrate import *
+from cam.ui_panels.optimisation import *
+from cam.ui_panels.area import *
+from cam.ui_panels.gcode import *
+from cam.ui_panels.pack import *
+from cam.ui_panels.slice import *
 
 
 class CAM_UL_orientations(UIList):
@@ -60,8 +60,6 @@ class CAM_UL_orientations(UIList):
         elif self.layout_type in {'GRID'}:
             layout.alignment = 'CENTER'
             layout.label(text="", icon_value=icon)
-
-
 
 
 # panel containing all tools

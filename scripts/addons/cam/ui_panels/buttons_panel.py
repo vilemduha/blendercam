@@ -2,6 +2,8 @@ import bpy
 import inspect
 
 # Panel definitions
+
+
 class CAMButtonsPanel:
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'

@@ -3,6 +3,7 @@ import sys
 
 # same as hpgl2d, but with 0.25mm units, instead of 0.01mm
 
+
 class Parser(hpgl.Parser):
     def __init__(self, writer):
         hpgl.ParserHgpl2d.__init__(self, writer)

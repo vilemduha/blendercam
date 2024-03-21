@@ -42,27 +42,27 @@ except ImportError:
     # pip install required python stuff
     subprocess.check_call([sys.executable, "-m", "ensurepip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "shapely","Equation","opencamlib"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install",
+                           "shapely", "Equation", "opencamlib"])
     # install numba if available for this platform, ignore failure
     subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
 
-
-from bpy.app.handlers import persistent
-from bpy.props import *
-from bpy.types import Menu, Operator, UIList, AddonPreferences
-from bpy_extras.object_utils import object_data_add
 from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, \
     polygon_utils_cam, autoupdate, basrelief  # , post_processors
 from mathutils import *
 from shapely import geometry as sgeometry
+from bpy_extras.object_utils import object_data_add
+from bpy.types import Menu, Operator, UIList, AddonPreferences
+from bpy.props import *
+from bpy.app.handlers import persistent
 
-from cam.ui import *
 from cam.version import __version__
+from cam.ui import *
 
 bl_info = {
     "name": "CAM - gcode generation tools",
-    "author": "Vilem Novak",
-    "version":(1,0,3),
+    "author": "Vilem Novak & Contributors",
+    "version": (1, 0, 5),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
@@ -75,8 +75,9 @@ import cam.constants
 
 was_hidden_dict = {}
 
+
 def updateMachine(self, context):
-    global _IS_LOADING_DEFAULTS    
+    global _IS_LOADING_DEFAULTS
     print('update machine ')
     if not _IS_LOADING_DEFAULTS:
         utils.addMachineAreaObject()
@@ -125,7 +126,6 @@ def updateOperation(self, context):
         print(e)
 
 
-
 class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
     # when defining this in a submodule of a python package.
@@ -153,7 +153,6 @@ class CamAddonPreferences(AddonPreferences):
         default=""
     )
 
-
     just_updated: BoolProperty(
         name="Set to true on update or initial install",
         default=True
@@ -163,8 +162,6 @@ class CamAddonPreferences(AddonPreferences):
         name="Set to new version name if one is found",
         default=""
     )
-
-
 
     default_interface_level: bpy.props.EnumProperty(
         name="Interface level in new file",
@@ -189,19 +186,22 @@ class CamAddonPreferences(AddonPreferences):
         layout.prop(self, "update_source")
         layout.label(text="Choose a preset update source")
 
-        UPDATE_SOURCES=[("https://github.com/vilemduha/blendercam", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
-               ("https://github.com/pppalain/blendercam", "Unstable", "Unstable releases (github.com/pppalain/blendercam)"),
-               # comments for searching in github actions release script to automatically set this repo
-               # if required
-               ## REPO ON NEXT LINE
-               ("https://api.github.com/repos/pppalain/blendercam/commits","Direct from git (may not work)","Get from git commits directly"),
-               ## REPO ON PREV LINE
-               ("","None","Don't do auto update"),
-        ]
-        grid=layout.grid_flow(align=True)
-        for (url,short,long) in UPDATE_SOURCES:
-            op=grid.operator("render.cam_set_update_source",text=short)
-            op.new_source=url
+        UPDATE_SOURCES = [("https://github.com/vilemduha/blendercam", "Stable", "Stable releases (github.com/vilemduja/blendercam)"),
+                          ("https://github.com/pppalain/blendercam", "Unstable",
+                           "Unstable releases (github.com/pppalain/blendercam)"),
+                          # comments for searching in github actions release script to automatically set this repo
+                          # if required
+                          # REPO ON NEXT LINE
+                          ("https://api.github.com/repos/pppalain/blendercam/commits",
+                           "Direct from git (may not work)", "Get from git commits directly"),
+                          # REPO ON PREV LINE
+                          ("", "None", "Don't do auto update"),
+                          ]
+        grid = layout.grid_flow(align=True)
+        for (url, short, long) in UPDATE_SOURCES:
+            op = grid.operator("render.cam_set_update_source", text=short)
+            op.new_source = url
+
 
 class machineSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
@@ -209,7 +209,8 @@ class machineSettings(bpy.types.PropertyGroup):
     post_processor: EnumProperty(name='Post processor',
                                  items=(('ISO', 'Iso', 'exports standardized gcode ISO 6983 (RS-274)'),
                                         ('MACH3', 'Mach3', 'default mach3'),
-                                        ('EMC', 'LinuxCNC - EMC2', 'Linux based CNC control software - formally EMC2'),
+                                        ('EMC', 'LinuxCNC - EMC2',
+                                         'Linux based CNC control software - formally EMC2'),
                                         ('FADAL', 'Fadal', 'Fadal VMC'),
                                         ('GRBL', 'grbl',
                                          'optimized gcode for grbl firmware on Arduino with cnc shield'),
@@ -324,7 +325,8 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
     tolerance: FloatProperty(name="Placement Tolerance",
                              description="Tolerance for placement: smaller value slower placemant",
                              min=0.001, max=0.02, default=0.005, precision=cam.constants.PRECISION, unit="LENGTH")
-    rotate: bpy.props.BoolProperty(name="enable rotation", description="Enable rotation of elements", default=True)
+    rotate: bpy.props.BoolProperty(
+        name="enable rotation", description="Enable rotation of elements", default=True)
     rotate_angle: FloatProperty(name="Placement Angle rotation step",
                                 description="bigger rotation angle,faster placemant", default=0.19635 * 4,
                                 min=math.pi/180,
@@ -337,9 +339,11 @@ class SliceObjectsSettings(bpy.types.PropertyGroup):
     slice_distance: FloatProperty(name="Slicing distance",
                                   description="slices distance in z, should be most often thickness of plywood sheet.",
                                   min=0.001, max=10, default=0.005, precision=cam.constants.PRECISION, unit="LENGTH")
-    slice_above0: bpy.props.BoolProperty(name="Slice above 0", description="only slice model above 0", default=False)
+    slice_above0: bpy.props.BoolProperty(
+        name="Slice above 0", description="only slice model above 0", default=False)
     slice_3d: bpy.props.BoolProperty(name="3d slice", description="for 3d carving", default=False)
-    indexes: bpy.props.BoolProperty(name="add indexes", description="adds index text of layer + index", default=True)
+    indexes: bpy.props.BoolProperty(
+        name="add indexes", description="adds index text of layer + index", default=True)
 
 
 class import_settings(bpy.types.PropertyGroup):
@@ -353,8 +357,9 @@ class import_settings(bpy.types.PropertyGroup):
     max_segment_size: FloatProperty(name="", description="Only Segments bigger then this value get subdivided",
                                     default=0.001, min=0.0001, max=1.0, unit="LENGTH")
 
-def isValid(o,context):
-    valid=True
+
+def isValid(o, context):
+    valid = True
     if o.geometry_source == 'OBJECT':
         if o.object_name not in bpy.data.objects:
             valid = False
@@ -369,11 +374,12 @@ def isValid(o,context):
             valid = False
     return valid
 
+
 def operationValid(self, context):
-    scene=context.scene
+    scene = context.scene
     o = scene.cam_operations[scene.cam_active_operation]
     o.changed = True
-    o.valid = isValid(o,context)
+    o.valid = isValid(o, context)
     invalidmsg = "Invalid source object for operation.\n"
     if o.valid:
         o.info.warnings = ""
@@ -386,20 +392,21 @@ def operationValid(self, context):
     o.update_zbufferimage_tag = True
     print('validity ')
 
-def isChainValid(chain,context):
+
+def isChainValid(chain, context):
     s = context.scene
-    if len(chain.operations)==0:
-        return (False,"")
+    if len(chain.operations) == 0:
+        return (False, "")
     for cho in chain.operations:
         found_op = None
         for so in s.cam_operations:
             if so.name == cho.name:
-                found_op= so
+                found_op = so
         if found_op == None:
-            return (False,f"Couldn't find operation {cho.name}")
-        if cam.isValid(found_op,context) is False:
-            return (False,f"Operation {found_op.name} is not valid")
-    return (True,"")
+            return (False, f"Couldn't find operation {cho.name}")
+        if cam.isValid(found_op, context) is False:
+            return (False, f"Operation {found_op.name} is not valid")
+    return (True, "")
 
 
 def updateOperationValid(self, context):
@@ -462,6 +469,7 @@ def updateStrategy(o, context):
 def updateCutout(o, context):
     pass
 
+
 def updateExact(o, context):
     print('update exact ')
     o.changed = True
@@ -483,6 +491,7 @@ def updateOpencamlib(o, context):
         o.optimisation.use_exact = False
         o.optimisation.use_opencamlib = False
         print('Current operation cannot use opencamlib')
+
 
 def updateBridges(o, context):
     print('update bridges ')
@@ -589,10 +598,12 @@ class camOperation(bpy.types.PropertyGroup):
     curve_object1: bpy.props.StringProperty(name='Curve target',
                                             description='curve which will serve as attractor for the cutter when the cutter follows the curve',
                                             update=operationValid)
-    source_image_name: bpy.props.StringProperty(name='image_source', description='image source', update=operationValid)
+    source_image_name: bpy.props.StringProperty(
+        name='image_source', description='image source', update=operationValid)
     geometry_source: EnumProperty(name='Source of data',
                                   items=(
-                                      ('OBJECT', 'object', 'a'), ('COLLECTION', 'Collection of objects', 'a'),
+                                      ('OBJECT', 'object', 'a'), ('COLLECTION',
+                                                                  'Collection of objects', 'a'),
                                       ('IMAGE', 'Image', 'a')),
                                   description='Geometry source',
                                   default='OBJECT', update=updateOperationValid)
@@ -640,7 +651,8 @@ class camOperation(bpy.types.PropertyGroup):
                                 update=updateStrategy)
     strategy5axis: EnumProperty(name='Strategy',
                                 items=(
-                                    ('INDEXED', 'Indexed 3-axis', 'all 3 axis strategies, just rotated by 4+5th axes'),
+                                    ('INDEXED', 'Indexed 3-axis',
+                                     'all 3 axis strategies, just rotated by 4+5th axes'),
                                 ),
                                 description='5 axis Strategy',
                                 default='INDEXED',
@@ -684,13 +696,14 @@ class camOperation(bpy.types.PropertyGroup):
     # pocket options
     pocket_option: EnumProperty(name='Start Position', items=(
         ('INSIDE', 'Inside', 'a'), ('OUTSIDE', 'Outside', 'a')),
-                                description='Pocket starting position', default='INSIDE', update=updateRest)
+        description='Pocket starting position', default='INSIDE', update=updateRest)
     pocketToCurve: bpy.props.BoolProperty(name="Pocket to curve",
                                           description="generates a curve instead of a path",
                                           default=False, update=updateRest)
     # Cutout
     cut_type: EnumProperty(name='Cut',
-                           items=(('OUTSIDE', 'Outside', 'a'), ('INSIDE', 'Inside', 'a'), ('ONLINE', 'On line', 'a')),
+                           items=(('OUTSIDE', 'Outside', 'a'), ('INSIDE',
+                                                                'Inside', 'a'), ('ONLINE', 'On line', 'a')),
                            description='Type of cutter used', default='OUTSIDE', update=updateRest)
     outlines_count: bpy.props.IntProperty(name="Outlines count", description="Outlines count", default=1,
                                           min=1, max=32, update=updateCutout)
@@ -720,7 +733,8 @@ class camOperation(bpy.types.PropertyGroup):
                                       max=0.035, default=0.005, unit="LENGTH", precision=cam.constants.PRECISION,
                                       update=updateOffsetImage)
 
-    cutter_description: StringProperty(name="Tool Description", default="", update=updateOffsetImage)
+    cutter_description: StringProperty(
+        name="Tool Description", default="", update=updateOffsetImage)
 
     Laser_on: bpy.props.StringProperty(name="Laser ON string", default="M68 E0 Q100")
     Laser_off: bpy.props.StringProperty(name="Laser OFF string", default="M68 E0 Q0")
@@ -758,7 +772,8 @@ class camOperation(bpy.types.PropertyGroup):
                                         subtype="ANGLE", unit="ROTATION", update=updateRotation)
     enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False,
                                      update=updateRotation)
-    A_along_x: bpy.props.BoolProperty(name="A Along X ", description="A Parallel to X", default=True, update=updateRest)
+    A_along_x: bpy.props.BoolProperty(
+        name="A Along X ", description="A Parallel to X", default=True, update=updateRest)
 
     rotation_B: bpy.props.FloatProperty(name="B axis angle", description="Rotate B axis\nto specified angle", default=0,
                                         min=-360, max=360, precision=0,
@@ -772,9 +787,10 @@ class camOperation(bpy.types.PropertyGroup):
 
     # drill only
     drill_type: EnumProperty(name='Holes on', items=(
-        ('MIDDLE_SYMETRIC', 'Middle of symetric curves', 'a'), ('MIDDLE_ALL', 'Middle of all curve parts', 'a'),
+        ('MIDDLE_SYMETRIC', 'Middle of symetric curves',
+         'a'), ('MIDDLE_ALL', 'Middle of all curve parts', 'a'),
         ('ALL_POINTS', 'All points in curve', 'a')), description='Strategy to detect holes to drill',
-                             default='MIDDLE_SYMETRIC', update=updateRest)
+        default='MIDDLE_SYMETRIC', update=updateRest)
     # waterline only
     slice_detail: bpy.props.FloatProperty(name="Distance betwen slices", default=0.001, min=0.00001, max=32,
                                           precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
@@ -802,20 +818,20 @@ class camOperation(bpy.types.PropertyGroup):
     # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 
     minz: bpy.props.FloatProperty(name="Operation depth end",
-        default=-0.01, min=-3, max=3, precision=cam.constants.PRECISION,
-        unit="LENGTH",
-        update=updateRest)
+                                  default=-0.01, min=-3, max=3, precision=cam.constants.PRECISION,
+                                  unit="LENGTH",
+                                  update=updateRest)
 
     minz_from: bpy.props.EnumProperty(name='Set max depth from',
-        description = 'Set maximum operation depth',
-        items=(
-            ('OBJECT', 'Object', 'Set max operation depth from Object'),
-            ('MATERIAL', 'Material', 'Set max operation depth from Material'),
-            ('CUSTOM', 'Custom', 'Custom max depth'),
-            ),
-        default='OBJECT',
-        update=updateRest
-    )
+                                      description='Set maximum operation depth',
+                                      items=(
+                                          ('OBJECT', 'Object', 'Set max operation depth from Object'),
+                                          ('MATERIAL', 'Material', 'Set max operation depth from Material'),
+                                          ('CUSTOM', 'Custom', 'Custom max depth'),
+                                      ),
+                                      default='OBJECT',
+                                      update=updateRest
+                                      )
 
     start_type: bpy.props.EnumProperty(name='Start type',
                                        items=(
@@ -832,9 +848,8 @@ class camOperation(bpy.types.PropertyGroup):
                                   update=updateRest)  # EXPERIMENTAL
 
     first_down: bpy.props.BoolProperty(name="First down",
-        description="First go down on a contour, then go to the next one",
-        default=False, update=cam.utils.update_operation)
-
+                                       description="First go down on a contour, then go to the next one",
+                                       default=False, update=cam.utils.update_operation)
 
     #######################################################
     # Image related
@@ -865,7 +880,6 @@ class camOperation(bpy.types.PropertyGroup):
     #########################################################
     # Toolpath and area related
     #####################################################
-
 
     ambient_behaviour: EnumProperty(name='Ambient', items=(('ALL', 'All', 'a'), ('AROUND', 'Around', 'a')),
                                     description='handling ambient surfaces', default='ALL', update=updateZbufferImage)
@@ -972,19 +986,14 @@ class camOperation(bpy.types.PropertyGroup):
     # material settings
 
 
-
-
-
-
 ##############################################################################
     # MATERIAL SETTINGS
 
     min: bpy.props.FloatVectorProperty(
         name='Operation minimum', default=(0, 0, 0), unit='LENGTH', precision=cam.constants.PRECISION,
-                                       subtype="XYZ")
+        subtype="XYZ")
     max: bpy.props.FloatVectorProperty(name='Operation maximum', default=(0, 0, 0), unit='LENGTH', precision=cam.constants.PRECISION,
                                        subtype="XYZ")
-
 
     # g-code options for operation
     output_header: BoolProperty(name="output g-code header",
@@ -996,16 +1005,16 @@ class camOperation(bpy.types.PropertyGroup):
                                  default="G53 G0")
 
     enable_dust: BoolProperty(name="Dust collector",
-                                description="output user defined g-code command header at start of operation",
-                                default=False)
+                              description="output user defined g-code command header at start of operation",
+                              default=False)
 
     gcode_start_dust_cmd: StringProperty(name="Start dust collector",
-                                 description="commands to start dust collection. Use ; for line breaks",
-                                 default="M100")
+                                         description="commands to start dust collection. Use ; for line breaks",
+                                         default="M100")
 
     gcode_stop_dust_cmd: StringProperty(name="Stop dust collector",
-                                 description="command to stop dust collection. Use ; for line breaks",
-                                 default="M101")
+                                        description="command to stop dust collection. Use ; for line breaks",
+                                        default="M101")
 
     enable_hold: BoolProperty(name="Hold down",
                               description="output hold down command at start of operation",
@@ -1068,8 +1077,10 @@ class camOperation(bpy.types.PropertyGroup):
     update_bullet_collision_tag: bpy.props.BoolProperty(name="mark bullet collisionworld for update",
                                                         description="mark for update", default=True)
 
-    valid: bpy.props.BoolProperty(name="Valid", description="True if operation is ok for calculation", default=True);
-    changedata: bpy.props.StringProperty(name='changedata', description='change data for checking if stuff changed.')
+    valid: bpy.props.BoolProperty(
+        name="Valid", description="True if operation is ok for calculation", default=True)
+    changedata: bpy.props.StringProperty(
+        name='changedata', description='change data for checking if stuff changed.')
 
     # process related data
 
@@ -1078,26 +1089,33 @@ class camOperation(bpy.types.PropertyGroup):
     outtext: bpy.props.StringProperty(name='outtext', description='outtext', default='')
 
 
-class opReference(bpy.types.PropertyGroup):  # this type is defined just to hold reference to operations for chains
+# this type is defined just to hold reference to operations for chains
+class opReference(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty(name="Operation name", default="Operation")
     computing = False  # for UiList display
 
 
-class camChain(bpy.types.PropertyGroup):  # chain is just a set of operations which get connected on export into 1 file.
-    index: bpy.props.IntProperty(name="index", description="index in the hard-defined camChains", default=-1)
+# chain is just a set of operations which get connected on export into 1 file.
+class camChain(bpy.types.PropertyGroup):
+    index: bpy.props.IntProperty(
+        name="index", description="index in the hard-defined camChains", default=-1)
     active_operation: bpy.props.IntProperty(name="active operation", description="active operation in chain",
                                             default=-1)
     name: bpy.props.StringProperty(name="Chain Name", default="Chain")
     filename: bpy.props.StringProperty(name="File name", default="Chain")  # filename of
-    valid: bpy.props.BoolProperty(name="Valid", description="True if whole chain is ok for calculation", default=True);
+    valid: bpy.props.BoolProperty(
+        name="Valid", description="True if whole chain is ok for calculation", default=True)
     computing: bpy.props.BoolProperty(name="Computing right now", description="", default=False)
-    operations: bpy.props.CollectionProperty(type=opReference)  # this is to hold just operation names.
+    # this is to hold just operation names.
+    operations: bpy.props.CollectionProperty(type=opReference)
+
 
 class CAM_CUTTER_MT_presets(Menu):
     bl_label = "Cutter presets"
     preset_subdir = "cam_cutters"
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset
+
 
 class CAM_MACHINE_MT_presets(Menu):
     bl_label = "Machine presets"
@@ -1106,14 +1124,15 @@ class CAM_MACHINE_MT_presets(Menu):
     draw = Menu.draw_preset
 
     @classmethod
-    def post_cb(cls,context):
+    def post_cb(cls, context):
         name = cls.bl_label
         filepath = bpy.utils.preset_find(name,
-                                                 cls.preset_subdir,
-                                                 display_name=True,
-                                                 ext=".py")
-        context.preferences.addons['cam'].preferences.default_machine_preset=filepath
+                                         cls.preset_subdir,
+                                         display_name=True,
+                                         ext=".py")
+        context.preferences.addons['cam'].preferences.default_machine_preset = filepath
         bpy.ops.wm.save_userpref()
+
 
 class AddPresetCamCutter(bl_operators.presets.AddPresetBase, Operator):
     """Add a Cutter Preset"""
@@ -1151,7 +1170,8 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
     bl_label = "Add Operation Preset"
     preset_menu = "CAM_OPERATION_MT_presets"
 
-    preset_defines = ["o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"]
+    preset_defines = [
+        "o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"]
 
     preset_values = ['o.use_layers', 'o.info.duration', 'o.info.chipload', 'o.material.estimate_from_model', 'o.movement.stay_low', 'o.carve_depth',
                      'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material.size',
@@ -1216,7 +1236,9 @@ class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
     bl_idname = 'BLENDERCAM_RENDER'
     bl_label = "Cam"
 
-_IS_LOADING_DEFAULTS=False
+
+_IS_LOADING_DEFAULTS = False
+
 
 @bpy.app.handlers.persistent
 def check_operations_on_load(context):
@@ -1228,14 +1250,16 @@ def check_operations_on_load(context):
             o.computing = False
     # set interface level to previously used level for a new file
     if not bpy.data.filepath:
-        _IS_LOADING_DEFAULTS=True
+        _IS_LOADING_DEFAULTS = True
         s.interface.level = bpy.context.preferences.addons['cam'].preferences.default_interface_level
-        machine_preset=bpy.context.preferences.addons['cam'].preferences.machine_preset=bpy.context.preferences.addons['cam'].preferences.default_machine_preset
-        if len(machine_preset)>0:
-            print("Loading preset:",machine_preset)
+        machine_preset = bpy.context.preferences.addons[
+            'cam'].preferences.machine_preset = bpy.context.preferences.addons['cam'].preferences.default_machine_preset
+        if len(machine_preset) > 0:
+            print("Loading preset:", machine_preset)
             # load last used machine preset
-            bpy.ops.script.execute_preset(filepath=machine_preset,menu_idname="CAM_MACHINE_MT_presets")
-        _IS_LOADING_DEFAULTS=False
+            bpy.ops.script.execute_preset(filepath=machine_preset,
+                                          menu_idname="CAM_MACHINE_MT_presets")
+        _IS_LOADING_DEFAULTS = False
     # check for updated version of the plugin
     bpy.ops.render.cam_check_updates()
     # copy presets if not there yet
@@ -1243,14 +1267,14 @@ def check_operations_on_load(context):
         preset_source_path = Path(__file__).parent / 'presets'
         preset_target_path = Path(bpy.utils.script_path_user()) / 'presets'
 
-        def copy_if_not_exists(src,dst):
-            if Path(dst).exists()==False:
-                shutil.copy2(src,dst)
-        shutil.copytree(preset_source_path,preset_target_path,copy_function=copy_if_not_exists,dirs_exist_ok=True)
+        def copy_if_not_exists(src, dst):
+            if Path(dst).exists() == False:
+                shutil.copy2(src, dst)
+        shutil.copytree(preset_source_path, preset_target_path,
+                        copy_function=copy_if_not_exists, dirs_exist_ok=True)
 
-        bpy.context.preferences.addons['cam'].preferences.just_updated=False
+        bpy.context.preferences.addons['cam'].preferences.just_updated = False
         bpy.ops.wm.save_userpref()
-
 
 
 def get_panels():  # convenience function for bot register and unregister functions
@@ -1404,7 +1428,7 @@ def compatible_panels():
         t.MATERIAL_PT_strand,
         t.MATERIAL_PT_options,
         t.MATERIAL_PT_shadow,
-        
+
         t.MATERIAL_PT_transp_game,
         t.MATERIAL_PT_volume_density,
         t.MATERIAL_PT_volume_shading,
@@ -1571,7 +1595,8 @@ def register():
     s = bpy.types.Scene
 
     s.cam_chains = bpy.props.CollectionProperty(type=camChain)
-    s.cam_active_chain = bpy.props.IntProperty(name="CAM Active Chain", description="The selected chain")
+    s.cam_active_chain = bpy.props.IntProperty(
+        name="CAM Active Chain", description="The selected chain")
 
     s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
 

@@ -20,7 +20,8 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
     }
 
     def draw_use_layers(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         col = self.layout.column(align=True)
         row = col.row(align=True)
         row.prop(self.op, 'use_layers')
@@ -29,14 +30,16 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.draw_first_down(col)
 
     def draw_first_down(self, col):
-        if not self.has_correct_level(): return
-        if self.op.strategy in ['CUTOUT','POCKET','MEDIAL_AXIS']:
+        if not self.has_correct_level():
+            return
+        if self.op.strategy in ['CUTOUT', 'POCKET', 'MEDIAL_AXIS']:
             row = col.row(align=True)
             row.label(text="")
             row.prop(self.op, 'first_down')
 
     def draw_maxz(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'maxz')
         self.layout.prop(self.op.movement, 'free_height')
         if self.op.maxz > self.op.movement.free_height:
@@ -45,7 +48,8 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.label(text='!ERROR! COLLISION!')
 
     def draw_minz(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
             if self.op.strategy == 'CURVE':
                 self.layout.label(text="cannot use depth from object using CURVES")
@@ -75,7 +79,8 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
                 col.prop(self.op, 'source_image_crop_end_y', text='end y')
 
     def draw_ambient(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'PARALLEL', 'CROSS']:
             self.layout.prop(self.op, 'ambient_behaviour')
             if self.op.ambient_behaviour == 'AROUND':
@@ -83,7 +88,8 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.prop(self.op, "ambient_cutter_restrict")
 
     def draw_limit_curve(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'PARALLEL', 'CROSS']:
             self.layout.prop(self.op, 'use_limit_curve')
             if self.op.use_limit_curve:
@@ -97,4 +103,3 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
         self.draw_minz()
         self.draw_ambient()
         self.draw_limit_curve()
-

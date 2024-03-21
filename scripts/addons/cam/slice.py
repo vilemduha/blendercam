@@ -48,7 +48,7 @@ def slicing2d(ob, height):  # April 2020 Alain Pelletier
     return True
 
 
-def slicing3d(ob, start, end):  #  April 2020 Alain Pelletier
+def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
     # let's slice things
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     bpy.ops.object.mode_set(mode='EDIT')  # force edit mode
@@ -111,7 +111,8 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         obslice = bpy.context.view_layer.objects.active  # attribute active object to obslice
         scollection.objects.link(obslice)  # link obslice to scollecton
         if slice3d:
-            slicing3d(obslice, height, height + thickness)  # slice 3d at desired height and stop at desired height
+            # slice 3d at desired height and stop at desired height
+            slicing3d(obslice, height, height + thickness)
         else:
             slicesuccess = slicing2d(obslice, height)  # slice object at desired height
 

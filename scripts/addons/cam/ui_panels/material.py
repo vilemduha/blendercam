@@ -76,8 +76,10 @@ class CAM_MATERIAL_PositionObject(bpy.types.Operator):
         return {'FINISHED'}
 
     def draw(self, context):
-        if not self.interface_level <= int(self.context.scene.interface.level): return
+        if not self.interface_level <= int(self.context.scene.interface.level):
+            return
         self.layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
+
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
     bl_label = "CAM Material size and position"
@@ -91,12 +93,14 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
     }
 
     def draw_estimate_from_image(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.geometry_source not in ['OBJECT', 'COLLECTION']:
             self.layout.label(text='Estimated from image')
 
     def draw_estimate_from_object(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
             self.layout.prop(self.op.material, 'estimate_from_model')
             if self.op.material.estimate_from_model:
@@ -109,7 +113,8 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
 
     # Display Axis alignment section
     def draw_axis_alignment(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
             row_axis = self.layout.row()
             row_axis.prop(self.op.material, 'center_x')

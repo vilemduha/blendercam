@@ -21,4 +21,3 @@ class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
         layout.prop(settings, 'slice_above0')
         layout.prop(settings, 'slice_3d')
         layout.prop(settings, 'indexes')
-

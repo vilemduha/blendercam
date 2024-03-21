@@ -27,42 +27,50 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
     }
 
     def draw_cutter_preset_menu(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         row = self.layout.row(align=True)
         row.menu("CAM_CUTTER_MT_presets", text=bpy.types.CAM_CUTTER_MT_presets.bl_label)
         row.operator("render.cam_preset_cutter_add", text="", icon='ADD')
         row.operator("render.cam_preset_cutter_add", text="", icon='REMOVE').remove_active = True
 
     def draw_cutter_id(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'cutter_id')
 
     def draw_cutter_type(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'cutter_type')
 
     def draw_ball_radius(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.cutter_type in ['BALLCONE']:
             self.layout.prop(self.op, 'ball_radius')
 
     def draw_bull_radius(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.cutter_type in ['BULLNOSE']:
             self.layout.prop(self.op, 'bull_corner_radius')
 
     def draw_cylcone_diameter(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.cutter_type in ['CYLCONE']:
             self.layout.prop(self.op, 'cylcone_diameter')
 
     def draw_cutter_tip_angle(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.cutter_type in ['VCARVE', 'BALLCONE', 'BULLNOSE', 'CYLCONE']:
             self.layout.prop(self.op, 'cutter_tip_angle')
 
     def draw_laser(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.cutter_type in ['LASER']:
             self.layout.prop(self.op, 'Laser_on')
             self.layout.prop(self.op, 'Laser_off')
@@ -70,7 +78,8 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.prop(self.op, 'Laser_delay')
 
     def draw_plasma(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.cutter_type in ['PLASMA']:
             self.layout.prop(self.op, 'Plasma_on')
             self.layout.prop(self.op, 'Plasma_off')
@@ -80,31 +89,39 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.prop(self.op, 'lead_out')
 
     def draw_custom(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.cutter_type in ['CUSTOM']:
             if self.op.optimisation.use_exact:
-                self.layout.label(text='Warning - only convex shapes are supported. ', icon='COLOR_RED')
+                self.layout.label(
+                    text='Warning - only convex shapes are supported. ', icon='COLOR_RED')
                 self.layout.label(text='If your custom cutter is concave,')
                 self.layout.label(text='switch exact mode off.')
             self.layout.prop_search(self.op, "cutter_object_name", bpy.data, "objects")
 
     def draw_cutter_diameter(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'cutter_diameter')
 
     def draw_cutter_flutes(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.cutter_type not in ['LASER', 'PLASMA']:
             self.layout.prop(self.op, 'cutter_flutes')
 
     def draw_cutter_description(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'cutter_description')
 
     def draw_engagement(self):
-        if not self.has_correct_level(): return
-        if self.op.cutter_type in ['LASER', 'PLASMA']: return
-        if self.op.strategy in ['CUTOUT']: return
+        if not self.has_correct_level():
+            return
+        if self.op.cutter_type in ['LASER', 'PLASMA']:
+            return
+        if self.op.strategy in ['CUTOUT']:
+            return
 
         if self.op.cutter_type in ['BALLCONE']:
             engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
@@ -133,5 +150,3 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
         self.draw_cutter_flutes()
         self.draw_cutter_description()
         self.draw_engagement()
-
-

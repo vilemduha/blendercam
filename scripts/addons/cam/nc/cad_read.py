@@ -12,12 +12,11 @@ from . import cad_iso_read as iso
 import sys
 
 
-
 # Override some iso parser methods to interpret arc centers as relative to origin, not relative to start of arc.
 
-#def write_layer(name,number):
-    #FILE.write('-LAYER New %s%s \n' %(name,number))
-    #FILE.write('-LAYER Set %s%s \n' %(name,number))
+# def write_layer(name,number):
+#FILE.write('-LAYER New %s%s \n' %(name,number))
+#FILE.write('-LAYER Set %s%s \n' %(name,number))
 
 
 class CAD_backplot(iso.Parser):
@@ -26,13 +25,13 @@ class CAD_backplot(iso.Parser):
         iso.Parser.__init__(self)
 
     def Parse(self, name, oname=None):
-        self.files_open(name,oname)
+        self.files_open(name, oname)
 
-        #self.begin_ncblock()
-        #self.begin_path(None)
-        #self.add_line(z=500)
-        #self.end_path()
-        #self.end_ncblock()
+        # self.begin_ncblock()
+        # self.begin_path(None)
+        # self.add_line(z=500)
+        # self.end_path()
+        # self.end_ncblock()
 
         path_col = None
         f = None
@@ -45,7 +44,7 @@ class CAD_backplot(iso.Parser):
         oldz = 0.0
         movelist = []
         while (self.readline()):
-        # self.readline returns false if the line is empty - the parsing stops if the line is empty.
+            # self.readline returns false if the line is empty - the parsing stops if the line is empty.
             a = None
             b = None
             c = None
@@ -64,7 +63,7 @@ class CAD_backplot(iso.Parser):
             jout = None
             kout = None
             tool = 0
-            #self.begin_ncblock()
+            # self.begin_ncblock()
 
             move = False
             #arc = 0
@@ -129,7 +128,7 @@ class CAD_backplot(iso.Parser):
                     path_col = "feed"
                     col = "feed"
                 elif (word == 'G82' or word == 'g82'):
-                    drill = True;
+                    drill = True
                     no_move = True
                     path_col = "feed"
                     col = "feed"
@@ -138,7 +137,8 @@ class CAD_backplot(iso.Parser):
                     no_move = True
                     path_col = "feed"
                     col = "feed"
-                elif (word[0] == 'G') : col = "prep"
+                elif (word[0] == 'G'):
+                    col = "prep"
                 elif (word[0] == 'I' or word[0] == 'i'):
                     col = "axis"
                     i = eval(word[1:])
@@ -151,9 +151,12 @@ class CAD_backplot(iso.Parser):
                     col = "axis"
                     k = eval(word[1:])
                     move = True
-                elif (word[0] == 'M') : col = "misc"
-                elif (word[0] == 'N') : col = "blocknum"
-                elif (word[0] == 'O') : col = "program"
+                elif (word[0] == 'M'):
+                    col = "misc"
+                elif (word[0] == 'N'):
+                    col = "blocknum"
+                elif (word[0] == 'O'):
+                    col = "program"
                 elif (word[0] == 'P' or word[0] == 'p'):
                     col = "axis"
                     p = eval(word[1:])
@@ -170,10 +173,10 @@ class CAD_backplot(iso.Parser):
                     col = "axis"
                     s = eval(word[1:])
                     move = True
-                elif (word[0] == 'T') :
+                elif (word[0] == 'T'):
                     col = "tool"
-                    self.set_tool( eval(word[1:]) )
-                    tool =  eval(word[1:])
+                    self.set_tool(eval(word[1:]))
+                    tool = eval(word[1:])
 
                 elif (word[0] == 'X' or word[0] == 'x'):
                     col = "axis"
@@ -187,12 +190,18 @@ class CAD_backplot(iso.Parser):
                     col = "axis"
                     z = eval(word[1:])
                     move = True
-                elif (word[0] == '(') : (col, cdata) = ("comment", True)
-                elif (word[0] == '!') : (col, cdata) = ("comment", True)
-                elif (word[0] == ';') : (col, cdata) = ("comment", True)
-                elif (word[0] == '#') : col = "variable"
-                elif (word[0] == ':') : col = "blocknum"
-                elif (ord(word[0]) <= 32) : cdata = True
+                elif (word[0] == '('):
+                    (col, cdata) = ("comment", True)
+                elif (word[0] == '!'):
+                    (col, cdata) = ("comment", True)
+                elif (word[0] == ';'):
+                    (col, cdata) = ("comment", True)
+                elif (word[0] == '#'):
+                    col = "variable"
+                elif (word[0] == ':'):
+                    col = "blocknum"
+                elif (ord(word[0]) <= 32):
+                    cdata = True
                 #self.add_text(word, col, cdata)
 
             if (drill):
@@ -207,55 +216,63 @@ class CAD_backplot(iso.Parser):
                 self.begin_path("feed")
                 self.add_line(x, y, r)
                 self.end_path()
-            #elif (tool):
-                #write_layer('T',tool)
-
+            # elif (tool):
+                # write_layer('T',tool)
 
             else:
                 if (move and not no_move):
                     self.begin_path(path_col)
-                    #use absolute arc centers for IJK params.
+                    # use absolute arc centers for IJK params.
                     # Subtract old XYZ off to get relative centers as expected:
 
-                    #if path_col == 'rapid':
-                        #FILE.write('-color Red\n')
-                    #else:
-                        #FILE.write('-color Green\n')
+                    # if path_col == 'rapid':
+                    #FILE.write('-color Red\n')
+                    # else:
+                    #FILE.write('-color Green\n')
 
-                    if (arc) :
+                    if (arc):
 
                         z = oldz
-                        if (x != None) and (oldx != None) and (i != None): iout = i
-                        if (y != None) and (oldy != None) and (j != None): jout = j
-                        if (z != None) and (oldz != None) and (k != None): kout = k
+                        if (x != None) and (oldx != None) and (i != None):
+                            iout = i
+                        if (y != None) and (oldy != None) and (j != None):
+                            jout = j
+                        if (z != None) and (oldz != None) and (k != None):
+                            kout = k
                         self.add_arc(x, y, z, iout, jout, kout, r, arc)
-                        #if (arc == -1):
-                            ##FILE.write('arc %s,%s,%s\n' %(x,y,z))
-                            ##FILE.write('c\n')
-                            ##FILE.write('%s,%s,%s\n' %(oldx+i,oldy+j,oldz))
-                            ##FILE.write('%s,%s,%s\n' %(oldx,oldy,z))
+                        # if (arc == -1):
+                        ##FILE.write('arc %s,%s,%s\n' %(x,y,z))
+                        # FILE.write('c\n')
+                        ##FILE.write('%s,%s,%s\n' %(oldx+i,oldy+j,oldz))
+                        ##FILE.write('%s,%s,%s\n' %(oldx,oldy,z))
 
-                        #else:
-                            ##FILE.write('arc %s,%s,%s\n' %(oldx,oldy,z))
-                            ##FILE.write('c\n')
-                            ##FILE.write('%s,%s,%s\n' %(oldx+i,oldy+j,oldz))
-                            ##FILE.write('%s,%s,%s\n' %(x,y,z))
+                        # else:
+                        ##FILE.write('arc %s,%s,%s\n' %(oldx,oldy,z))
+                        # FILE.write('c\n')
+                        ##FILE.write('%s,%s,%s\n' %(oldx+i,oldy+j,oldz))
+                        ##FILE.write('%s,%s,%s\n' %(x,y,z))
 
                     else:
 
                         self.add_line(x, y, z, a, b, c)
-                        if (x == None) : x = oldx
-                        if (y == None) : y = oldy
-                        if (z == None) : z = oldz
-                        scr_line = ('line %s,%s,%s %s,%s,%s \n' %(oldx,oldy,oldz,x,y,z))
-                        #print scr_line
+                        if (x == None):
+                            x = oldx
+                        if (y == None):
+                            y = oldy
+                        if (z == None):
+                            z = oldz
+                        scr_line = ('line %s,%s,%s %s,%s,%s \n' % (oldx, oldy, oldz, x, y, z))
+                        # print scr_line
 
-                        ##FILE.write(scr_line)
+                        # FILE.write(scr_line)
 
                     self.end_path()
-            if (x != None) : oldx = x
-            if (y != None) : oldy = y
-            if (z != None) : oldz = z
+            if (x != None):
+                oldx = x
+            if (y != None):
+                oldy = y
+            if (z != None):
+                oldz = z
 
             #oldx = x
             #oldy = y
@@ -263,13 +280,14 @@ class CAD_backplot(iso.Parser):
             self.end_ncblock()
 
         self.files_close()
-        #FILE.write('\n')
-        #FILE.close()
+        # FILE.write('\n')
+        # FILE.close()
+
 
 ################################################################################
 if __name__ == '__main__':
     parser = CAD_backplot()
-    if len(sys.argv)>2:
-        parser.Parse(sys.argv[1],sys.argv[2])
+    if len(sys.argv) > 2:
+        parser.Parse(sys.argv[1], sys.argv[2])
     else:
         parser.Parse(sys.argv[1])
