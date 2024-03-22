@@ -1,4 +1,6 @@
 import bpy
+from bpy.props import StringProperty
+from bpy.props import FloatProperty
 
 from cam.simple import strInUnits
 from cam.ui_panels.buttons_panel import CAMButtonsPanel
@@ -12,21 +14,25 @@ from cam.version import __version__ as cam_version
 
 class CAM_INFO_Properties(bpy.types.PropertyGroup):
 
-    warnings: bpy.props.StringProperty(
+    warnings: StringProperty(
         name='warnings',
         description='warnings',
         default='',
-        update=cam.utils.update_operation)
+        update=cam.utils.update_operation,
+    )
 
-    chipload: bpy.props.FloatProperty(
+    chipload: FloatProperty(
         name="chipload", description="Calculated chipload",
         default=0.0, unit='LENGTH',
-        precision=cam.constants.CHIPLOAD_PRECISION)
+        precision=cam.constants.CHIPLOAD_PRECISION,
+    )
 
-    duration: bpy.props.FloatProperty(
+    duration: FloatProperty(
         name="Estimated time", default=0.01, min=0.0000,
         max=cam.constants.MAX_OPERATION_TIME,
-        precision=cam.constants.PRECISION, unit="TIME")
+        precision=cam.constants.PRECISION,
+        unit="TIME",
+    )
 
 
 class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -48,7 +54,8 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw_blendercam_version(self):
         if not self.has_correct_level():
             return
-        self.layout.label(text=f'Blendercam version: {".".join([str(x) for x in cam_version])}')
+        self.layout.label(
+            text=f'Blendercam version: {".".join([str(x) for x in cam_version])}')
         if len(bpy.context.preferences.addons['cam'].preferences.new_version_available) > 0:
             self.layout.label(text=f"New version available:")
             self.layout.label(

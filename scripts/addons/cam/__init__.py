@@ -62,7 +62,7 @@ from cam.ui import *
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak & Contributors",
-    "version": (1, 0, 5),
+    "version": (1, 0, 6),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
@@ -136,44 +136,49 @@ class CamAddonPreferences(AddonPreferences):
         default=False,
     )
 
-    update_source: bpy.props.StringProperty(
+    update_source: StringProperty(
         name="Source of updates for the addon",
-        description="This can be either a github repo link in which case it will download the latest release on there, "
-        "or an api link like https://api.github.com/repos/<author>/blendercam/commits to get from a github repository",
+        description="This can be either a github repo link in which case "
+        "it will download the latest release on there, "
+        "or an api link like "
+        "https://api.github.com/repos/<author>/blendercam/commits"
+        " to get from a github repository",
         default="https://github.com/pppalain/blendercam",
     )
 
     last_update_check: IntProperty(
         name="Last update time",
-        default=0
+        default=0,
     )
 
     last_commit_hash: StringProperty(
         name="Hash of last commit from updater",
-        default=""
+        default="",
     )
 
     just_updated: BoolProperty(
         name="Set to true on update or initial install",
-        default=True
+        default=True,
     )
 
     new_version_available: StringProperty(
         name="Set to new version name if one is found",
-        default=""
+        default="",
     )
 
-    default_interface_level: bpy.props.EnumProperty(
+    default_interface_level: EnumProperty(
         name="Interface level in new file",
         description="Choose visible options",
-        items=[('0', "Basic", "Only show essential options"),
-               ('1', "Advanced", "Show advanced options"),
-               ('2', "Complete", "Show all options"),
-               ('3', "Experimental", "Show experimental options")],
+        items=[
+            ('0', "Basic", "Only show essential options"),
+            ('1', "Advanced", "Show advanced options"),
+            ('2', "Complete", "Show all options"),
+            ('3', "Experimental", "Show experimental options")
+        ],
         default='3',
     )
 
-    default_machine_preset: bpy.props.StringProperty(
+    default_machine_preset: StringProperty(
         name="Machine preset in new file",
         description="So that machine preset choice persists between files",
         default='',
@@ -181,7 +186,8 @@ class CamAddonPreferences(AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Use experimental features when you want to help development of Blender CAM:")
+        layout.label(
+            text="Use experimental features when you want to help development of Blender CAM:")
         layout.prop(self, "experimental")
         layout.prop(self, "update_source")
         layout.label(text="Choose a preset update source")
@@ -205,74 +211,161 @@ class CamAddonPreferences(AddonPreferences):
 
 class machineSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
-    # name = bpy.props.StringProperty(name="Machine Name", default="Machine")
-    post_processor: EnumProperty(name='Post processor',
-                                 items=(('ISO', 'Iso', 'exports standardized gcode ISO 6983 (RS-274)'),
-                                        ('MACH3', 'Mach3', 'default mach3'),
-                                        ('EMC', 'LinuxCNC - EMC2',
-                                         'Linux based CNC control software - formally EMC2'),
-                                        ('FADAL', 'Fadal', 'Fadal VMC'),
-                                        ('GRBL', 'grbl',
-                                         'optimized gcode for grbl firmware on Arduino with cnc shield'),
-                                        ('HEIDENHAIN', 'Heidenhain', 'heidenhain'),
-                                        ('HEIDENHAIN530', 'Heidenhain530', 'heidenhain530'),
-                                        ('TNC151', 'Heidenhain TNC151',
-                                         'Post Processor for the Heidenhain TNC151 machine'),
-                                        ('SIEGKX1', 'Sieg KX1', 'Sieg KX1'),
-                                        ('HM50', 'Hafco HM-50', 'Hafco HM-50'),
-                                        ('CENTROID', 'Centroid M40', 'Centroid M40'),
-                                        ('ANILAM', 'Anilam Crusader M', 'Anilam Crusader M'),
-                                        ('GRAVOS', 'Gravos', 'Gravos'),
-                                        ('WIN-PC', 'WinPC-NC', 'German CNC by Burkhard Lewetz'),
-                                        ('SHOPBOT MTC', 'ShopBot MTC', 'ShopBot MTC'),
-                                        ('LYNX_OTTER_O', 'Lynx Otter o', 'Lynx Otter o')),
-                                 description='Post processor',
-                                 default='MACH3')
+    # name = StringProperty(name="Machine Name", default="Machine")
+    post_processor: EnumProperty(
+        name='Post processor',
+        items=(
+            ('ISO', 'Iso', 'exports standardized gcode ISO 6983 (RS-274)'),
+            ('MACH3', 'Mach3', 'default mach3'),
+            ('EMC', 'LinuxCNC - EMC2',
+             'Linux based CNC control software - formally EMC2'),
+            ('FADAL', 'Fadal', 'Fadal VMC'),
+            ('GRBL', 'grbl',
+             'optimized gcode for grbl firmware on Arduino with cnc shield'),
+            ('HEIDENHAIN', 'Heidenhain', 'heidenhain'),
+            ('HEIDENHAIN530', 'Heidenhain530', 'heidenhain530'),
+            ('TNC151', 'Heidenhain TNC151',
+             'Post Processor for the Heidenhain TNC151 machine'),
+            ('SIEGKX1', 'Sieg KX1', 'Sieg KX1'),
+            ('HM50', 'Hafco HM-50', 'Hafco HM-50'),
+            ('CENTROID', 'Centroid M40', 'Centroid M40'),
+            ('ANILAM', 'Anilam Crusader M', 'Anilam Crusader M'),
+            ('GRAVOS', 'Gravos', 'Gravos'),
+            ('WIN-PC', 'WinPC-NC', 'German CNC by Burkhard Lewetz'),
+            ('SHOPBOT MTC', 'ShopBot MTC', 'ShopBot MTC'),
+            ('LYNX_OTTER_O', 'Lynx Otter o', 'Lynx Otter o')
+        ),
+        description='Post processor',
+        default='MACH3',
+    )
     # units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
     # position definitions:
-    use_position_definitions: bpy.props.BoolProperty(name="Use position definitions",
-                                                     description="Define own positions for op start, "
-                                                                 "toolchange, ending position",
-                                                     default=False)
-    starting_position: bpy.props.FloatVectorProperty(name='Start position', default=(0, 0, 0), unit='LENGTH',
-                                                     precision=cam.constants.PRECISION, subtype="XYZ", update=updateMachine)
-    mtc_position: bpy.props.FloatVectorProperty(name='MTC position', default=(0, 0, 0), unit='LENGTH',
-                                                precision=cam.constants.PRECISION, subtype="XYZ", update=updateMachine)
-    ending_position: bpy.props.FloatVectorProperty(name='End position', default=(0, 0, 0), unit='LENGTH',
-                                                   precision=cam.constants.PRECISION, subtype="XYZ", update=updateMachine)
+    use_position_definitions: BoolProperty(
+        name="Use position definitions",
+        description="Define own positions for op start, "
+        "toolchange, ending position",
+        default=False,
+    )
+    starting_position: FloatVectorProperty(
+        name='Start position',
+        default=(0, 0, 0),
+        unit='LENGTH',
+        precision=cam.constants.PRECISION,
+        subtype="XYZ",
+        update=updateMachine,
+    )
+    mtc_position: FloatVectorProperty(
+        name='MTC position',
+        default=(0, 0, 0),
+        unit='LENGTH',
+        precision=cam.constants.PRECISION,
+        subtype="XYZ",
+        update=updateMachine,
+    )
+    ending_position: FloatVectorProperty(
+        name='End position',
+        default=(0, 0, 0),
+        unit='LENGTH',
+        precision=cam.constants.PRECISION,
+        subtype="XYZ",
+        update=updateMachine,
+    )
 
-    working_area: bpy.props.FloatVectorProperty(name='Work Area', default=(0.500, 0.500, 0.100), unit='LENGTH',
-                                                precision=cam.constants.PRECISION, subtype="XYZ", update=updateMachine)
-    feedrate_min: bpy.props.FloatProperty(name="Feedrate minimum /min", default=0.0, min=0.00001, max=320000,
-                                          precision=cam.constants.PRECISION, unit='LENGTH')
-    feedrate_max: bpy.props.FloatProperty(name="Feedrate maximum /min", default=2, min=0.00001, max=320000,
-                                          precision=cam.constants.PRECISION, unit='LENGTH')
-    feedrate_default: bpy.props.FloatProperty(name="Feedrate default /min", default=1.5, min=0.00001, max=320000,
-                                              precision=cam.constants.PRECISION, unit='LENGTH')
-    hourly_rate: bpy.props.FloatProperty(name="Price per hour", default=100, min=0.005, precision=2)
+    working_area: FloatVectorProperty(
+        name='Work Area',
+        default=(0.500, 0.500, 0.100),
+        unit='LENGTH',
+        precision=cam.constants.PRECISION,
+        subtype="XYZ",
+        update=updateMachine,
+    )
+    feedrate_min: FloatProperty(
+        name="Feedrate minimum /min",
+        default=0.0,
+        min=0.00001,
+        max=320000,
+        precision=cam.constants.PRECISION,
+        unit='LENGTH',
+    )
+    feedrate_max: FloatProperty(
+        name="Feedrate maximum /min",
+        default=2,
+        min=0.00001,
+        max=320000,
+        precision=cam.constants.PRECISION,
+        unit='LENGTH',
+    )
+    feedrate_default: FloatProperty(
+        name="Feedrate default /min",
+        default=1.5,
+        min=0.00001,
+        max=320000,
+        precision=cam.constants.PRECISION,
+        unit='LENGTH',
+    )
+    hourly_rate: FloatProperty(
+        name="Price per hour",
+        default=100,
+        min=0.005,
+        precision=2,
+    )
 
     # UNSUPPORTED:
 
-    spindle_min: bpy.props.FloatProperty(name="Spindle speed minimum RPM", default=5000, min=0.00001, max=320000,
-                                         precision=1)
-    spindle_max: bpy.props.FloatProperty(name="Spindle speed maximum RPM", default=30000, min=0.00001, max=320000,
-                                         precision=1)
-    spindle_default: bpy.props.FloatProperty(name="Spindle speed default RPM", default=15000, min=0.00001, max=320000,
-                                             precision=1)
-    spindle_start_time: bpy.props.FloatProperty(name="Spindle start delay seconds",
-                                                description='Wait for the spindle to start spinning before starting '
-                                                            'the feeds , in seconds',
-                                                default=0, min=0.0000, max=320000, precision=1)
+    spindle_min: FloatProperty(
+        name="Spindle speed minimum RPM",
+        default=5000,
+        min=0.00001,
+        max=320000,
+        precision=1,
+    )
+    spindle_max: FloatProperty(
+        name="Spindle speed maximum RPM",
+        default=30000,
+        min=0.00001,
+        max=320000,
+        precision=1,
+    )
+    spindle_default: FloatProperty(
+        name="Spindle speed default RPM",
+        default=15000,
+        min=0.00001,
+        max=320000,
+        precision=1,
+    )
+    spindle_start_time: FloatProperty(
+        name="Spindle start delay seconds",
+        description='Wait for the spindle to start spinning before starting '
+        'the feeds , in seconds',
+        default=0,
+        min=0.0000,
+        max=320000,
+        precision=1,
+    )
 
-    axis4: bpy.props.BoolProperty(name="#4th axis", description="Machine has 4th axis", default=0)
-    axis5: bpy.props.BoolProperty(name="#5th axis", description="Machine has 5th axis", default=0)
+    axis4: BoolProperty(
+        name="#4th axis",
+        description="Machine has 4th axis",
+        default=0,
+    )
+    axis5: BoolProperty(
+        name="#5th axis",
+        description="Machine has 5th axis",
+        default=0,
+    )
 
-    eval_splitting: bpy.props.BoolProperty(name="Split files",
-                                           description="split gcode file with large number of operations",
-                                           default=True)  # split large files
-    split_limit: IntProperty(name="Operations per file",
-                             description="Split files with larger number of operations than this", min=1000,
-                             max=20000000, default=800000)
+    eval_splitting: BoolProperty(
+        name="Split files",
+        description="split gcode file with large number of operations",
+        default=True,
+    )  # split large files
+    split_limit: IntProperty(
+        name="Operations per file",
+        description="Split files with larger number of operations than this",
+        min=1000,
+        max=20000000,
+        default=800000,
+    )
 
     # rotary_axis1 = EnumProperty(name='Axis 1',
     #     items=(
@@ -282,80 +375,179 @@ class machineSettings(bpy.types.PropertyGroup):
     #     description='Number 1 rotational axis',
     #     default='X', update = updateOffsetImage)
 
-    collet_size: bpy.props.FloatProperty(name="#Collet size", description="Collet size for collision detection",
-                                         default=33, min=0.00001, max=320000, precision=cam.constants.PRECISION, unit="LENGTH")
-    # exporter_start = bpy.props.StringProperty(name="exporter start", default="%")
+    collet_size: FloatProperty(
+        name="#Collet size",
+        description="Collet size for collision detection",
+        default=33,
+        min=0.00001,
+        max=320000,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+    )
+    # exporter_start = StringProperty(name="exporter start", default="%")
 
     # post processor options
 
-    output_block_numbers: BoolProperty(name="output block numbers",
-                                       description="output block numbers ie N10 at start of line", default=False)
+    output_block_numbers: BoolProperty(
+        name="output block numbers",
+        description="output block numbers ie N10 at start of line",
+        default=False,
+    )
 
-    start_block_number: IntProperty(name="start block number", description="the starting block number ie 10",
-                                    default=10)
+    start_block_number: IntProperty(
+        name="start block number",
+        description="the starting block number ie 10",
+        default=10,
+    )
 
-    block_number_increment: IntProperty(name="block number increment",
-                                        description="how much the block number should increment for the next line",
-                                        default=10)
+    block_number_increment: IntProperty(
+        name="block number increment",
+        description="how much the block number should "
+        "increment for the next line",
+        default=10,
+    )
 
-    output_tool_definitions: BoolProperty(name="output tool definitions", description="output tool definitions",
-                                          default=True)
+    output_tool_definitions: BoolProperty(
+        name="output tool definitions",
+        description="output tool definitions",
+        default=True,
+    )
 
-    output_tool_change: BoolProperty(name="output tool change commands",
-                                     description="output tool change commands ie: Tn M06", default=True)
+    output_tool_change: BoolProperty(
+        name="output tool change commands",
+        description="output tool change commands ie: Tn M06",
+        default=True,
+    )
 
-    output_g43_on_tool_change: BoolProperty(name="output G43 on tool change",
-                                            description="output G43 on tool change line", default=False)
+    output_g43_on_tool_change: BoolProperty(
+        name="output G43 on tool change",
+        description="output G43 on tool change line",
+        default=False,
+    )
 
 
 class PackObjectsSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
-    sheet_fill_direction: EnumProperty(name='Fill direction',
-                                       items=(('X', 'X', 'Fills sheet in X axis direction'),
-                                              ('Y', 'Y', 'Fills sheet in Y axis direction')),
-                                       description='Fill direction of the packer algorithm',
-                                       default='Y')
-    sheet_x: FloatProperty(name="X size", description="Sheet size", min=0.001, max=10, default=0.5,
-                           precision=cam.constants.PRECISION, unit="LENGTH")
-    sheet_y: FloatProperty(name="Y size", description="Sheet size", min=0.001, max=10, default=0.5,
-                           precision=cam.constants.PRECISION, unit="LENGTH")
-    distance: FloatProperty(name="Minimum distance",
-                            description="minimum distance between objects(should be at least cutter diameter!)",
-                            min=0.001, max=10, default=0.01, precision=cam.constants.PRECISION, unit="LENGTH")
-    tolerance: FloatProperty(name="Placement Tolerance",
-                             description="Tolerance for placement: smaller value slower placemant",
-                             min=0.001, max=0.02, default=0.005, precision=cam.constants.PRECISION, unit="LENGTH")
-    rotate: bpy.props.BoolProperty(
-        name="enable rotation", description="Enable rotation of elements", default=True)
-    rotate_angle: FloatProperty(name="Placement Angle rotation step",
-                                description="bigger rotation angle,faster placemant", default=0.19635 * 4,
-                                min=math.pi/180,
-                                max=math.pi, precision=5,
-                                subtype="ANGLE", unit="ROTATION")
+    sheet_fill_direction: EnumProperty(
+        name='Fill direction',
+        items=(
+            ('X', 'X', 'Fills sheet in X axis direction'),
+            ('Y', 'Y', 'Fills sheet in Y axis direction')
+        ),
+        description='Fill direction of the packer algorithm',
+        default='Y',
+    )
+    sheet_x: FloatProperty(
+        name="X size",
+        description="Sheet size",
+        min=0.001,
+        max=10,
+        default=0.5,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+    )
+    sheet_y: FloatProperty(
+        name="Y size",
+        description="Sheet size",
+        min=0.001,
+        max=10,
+        default=0.5,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+    )
+    distance: FloatProperty(
+        name="Minimum distance",
+        description="minimum distance between objects(should be "
+        "at least cutter diameter!)",
+        min=0.001,
+        max=10,
+        default=0.01,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+    )
+    tolerance: FloatProperty(
+        name="Placement Tolerance",
+        description="Tolerance for placement: smaller value slower placemant",
+        min=0.001,
+        max=0.02,
+        default=0.005,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+    )
+    rotate: BoolProperty(
+        name="enable rotation",
+        description="Enable rotation of elements",
+        default=True,
+    )
+    rotate_angle: FloatProperty(
+        name="Placement Angle rotation step",
+        description="bigger rotation angle,faster placemant",
+        default=0.19635 * 4,
+        min=math.pi/180,
+        max=math.pi,
+        precision=5,
+        subtype="ANGLE",
+        unit="ROTATION",
+    )
 
 
 class SliceObjectsSettings(bpy.types.PropertyGroup):
     """stores all data for machines"""
-    slice_distance: FloatProperty(name="Slicing distance",
-                                  description="slices distance in z, should be most often thickness of plywood sheet.",
-                                  min=0.001, max=10, default=0.005, precision=cam.constants.PRECISION, unit="LENGTH")
-    slice_above0: bpy.props.BoolProperty(
-        name="Slice above 0", description="only slice model above 0", default=False)
-    slice_3d: bpy.props.BoolProperty(name="3d slice", description="for 3d carving", default=False)
-    indexes: bpy.props.BoolProperty(
-        name="add indexes", description="adds index text of layer + index", default=True)
+    slice_distance: FloatProperty(
+        name="Slicing distance",
+        description="slices distance in z, should be most often "
+        "thickness of plywood sheet.",
+        min=0.001,
+        max=10,
+        default=0.005,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+    )
+    slice_above0: BoolProperty(
+        name="Slice above 0",
+        description="only slice model above 0",
+        default=False,
+    )
+    slice_3d: BoolProperty(
+        name="3d slice",
+        description="for 3d carving",
+        default=False,
+    )
+    indexes: BoolProperty(
+        name="add indexes",
+        description="adds index text of layer + index",
+        default=True,
+    )
 
 
 class import_settings(bpy.types.PropertyGroup):
-    split_layers: BoolProperty(name="Split Layers", description="Save every layer as single Objects in Collection",
-                               default=False)
-    subdivide: BoolProperty(name="Subdivide",
-                            description="Only Subdivide gcode segments that are bigger than 'Segment length' ",
-                            default=False)
-    output: bpy.props.EnumProperty(name="output type", items=(
-        ('mesh', 'Mesh', 'Make a mesh output'), ('curve', 'Curve', 'Make curve output')), default='curve')
-    max_segment_size: FloatProperty(name="", description="Only Segments bigger then this value get subdivided",
-                                    default=0.001, min=0.0001, max=1.0, unit="LENGTH")
+    split_layers: BoolProperty(
+        name="Split Layers",
+        description="Save every layer as single Objects in Collection",
+        default=False,
+    )
+    subdivide: BoolProperty(
+        name="Subdivide",
+        description="Only Subdivide gcode segments that are "
+        "bigger than 'Segment length' ",
+        default=False,
+    )
+    output: EnumProperty(
+        name="output type",
+        items=(
+            ('mesh', 'Mesh', 'Make a mesh output'),
+            ('curve', 'Curve', 'Make curve output')
+        ),
+        default='curve',
+    )
+    max_segment_size: FloatProperty(
+        name="",
+        description="Only Segments bigger then this value get subdivided",
+        default=0.001,
+        min=0.0001,
+        max=1.0,
+        unit="LENGTH",
+    )
 
 
 def isValid(o, context):
@@ -546,7 +738,8 @@ def getStrategyList(scene, context):
         ('OUTLINEFILL', 'Outline Fill',
          'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
         ('CARVE', 'Project curve to surface', 'Engrave the curve path to surface'),
-        ('WATERLINE', 'Waterline - Roughing -below zero', 'Waterline paths - constant z below zero'),
+        ('WATERLINE', 'Waterline - Roughing -below zero',
+         'Waterline paths - constant z below zero'),
         ('CURVE', 'Curve to Path', 'Curve object gets converted directly to path'),
         ('MEDIAL_AXIS', 'Medial axis',
          'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
@@ -562,411 +755,954 @@ def getStrategyList(scene, context):
 
 class camOperation(bpy.types.PropertyGroup):
 
-    material: bpy.props.PointerProperty(type=CAM_MATERIAL_Properties)
-    info: bpy.props.PointerProperty(type=CAM_INFO_Properties)
-    optimisation: bpy.props.PointerProperty(type=CAM_OPTIMISATION_Properties)
-    movement: bpy.props.PointerProperty(type=CAM_MOVEMENT_Properties)
+    material: PointerProperty(
+        type=CAM_MATERIAL_Properties
+    )
+    info: PointerProperty(
+        type=CAM_INFO_Properties
+    )
+    optimisation: PointerProperty(
+        type=CAM_OPTIMISATION_Properties
+    )
+    movement: PointerProperty(
+        type=CAM_MOVEMENT_Properties
+    )
 
-    name: bpy.props.StringProperty(name="Operation Name", default="Operation", update=updateRest)
-    filename: bpy.props.StringProperty(name="File name", default="Operation", update=updateRest)
-    auto_export: bpy.props.BoolProperty(name="Auto export",
-                                        description="export files immediately after path calculation", default=True)
-    remove_redundant_points: bpy.props.BoolProperty(
+    name: StringProperty(
+        name="Operation Name",
+        default="Operation",
+        update=updateRest,
+    )
+    filename: StringProperty(
+        name="File name",
+        default="Operation",
+        update=updateRest,
+    )
+    auto_export: BoolProperty(
+        name="Auto export",
+        description="export files immediately after path calculation",
+        default=True,
+    )
+    remove_redundant_points: BoolProperty(
         name="Symplify Gcode",
         description="Remove redundant points sharing the same angle"
                     " as the start vector",
-        default=False)
-    simplify_tol: bpy.props.IntProperty(name="Tolerance", description='lower number means more precise', default=50,
-                                        min=1, max=1000)
-    hide_all_others: bpy.props.BoolProperty(
+        default=False,
+    )
+    simplify_tol: IntProperty(
+        name="Tolerance",
+        description='lower number means more precise',
+        default=50,
+        min=1,
+        max=1000,
+    )
+    hide_all_others: BoolProperty(
         name="Hide all others",
         description="Hide all other tool pathes except toolpath"
                     " assotiated with selected CAM operation",
-        default=False)
-    parent_path_to_object: bpy.props.BoolProperty(
+        default=False,
+    )
+    parent_path_to_object: BoolProperty(
         name="Parent path to object",
         description="Parent generated CAM path to source object",
-        default=False)
-    object_name: bpy.props.StringProperty(name='Object', description='object handled by this operation',
-                                          update=updateOperationValid)
-    collection_name: bpy.props.StringProperty(name='Collection',
-                                              description='Object collection handled by this operation',
-                                              update=updateOperationValid)
-    curve_object: bpy.props.StringProperty(name='Curve source',
-                                           description='curve which will be sampled along the 3d object',
-                                           update=operationValid)
-    curve_object1: bpy.props.StringProperty(name='Curve target',
-                                            description='curve which will serve as attractor for the cutter when the cutter follows the curve',
-                                            update=operationValid)
-    source_image_name: bpy.props.StringProperty(
-        name='image_source', description='image source', update=operationValid)
-    geometry_source: EnumProperty(name='Source of data',
-                                  items=(
-                                      ('OBJECT', 'object', 'a'), ('COLLECTION',
-                                                                  'Collection of objects', 'a'),
-                                      ('IMAGE', 'Image', 'a')),
-                                  description='Geometry source',
-                                  default='OBJECT', update=updateOperationValid)
-    cutter_type: EnumProperty(name='Cutter',
-                              items=(
-                                  ('END', 'End', 'end - flat cutter'),
-                                  ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
-                                  ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
-                                  ('VCARVE', 'V-carve', 'v carve cutter'),
-                                  ('BALLCONE', 'Ballcone', 'Ball with a Cone for Parallel - X'),
-                                  ('CYLCONE', 'Cylinder cone', 'Cylinder end with a Cone for Parallel - X'),
-                                  ('LASER', 'Laser', 'Laser cutter'),
-                                  ('PLASMA', 'Plasma', 'Plasma cutter'),
-                                  ('CUSTOM', 'Custom-EXPERIMENTAL', 'modelled cutter - not well tested yet.')),
-                              description='Type of cutter used',
-                              default='END', update=updateZbufferImage)
-    cutter_object_name: bpy.props.StringProperty(name='Cutter object',
-                                                 description='object used as custom cutter for this operation',
-                                                 update=updateZbufferImage)
+        default=False,
+    )
+    object_name: StringProperty(
+        name='Object',
+        description='object handled by this operation',
+        update=updateOperationValid,
+    )
+    collection_name: StringProperty(
+        name='Collection',
+        description='Object collection handled by this operation',
+        update=updateOperationValid,
+    )
+    curve_object: StringProperty(
+        name='Curve source',
+        description='curve which will be sampled along the 3d object',
+        update=operationValid,
+    )
+    curve_object1: StringProperty(
+        name='Curve target',
+        description='curve which will serve as attractor for the '
+        'cutter when the cutter follows the curve',
+        update=operationValid,
+    )
+    source_image_name: StringProperty(
+        name='image_source',
+        description='image source',
+        update=operationValid,
+    )
+    geometry_source: EnumProperty(
+        name='Source of data',
+        items=(
+            ('OBJECT', 'object', 'a'),
+            ('COLLECTION', 'Collection of objects', 'a'),
+            ('IMAGE', 'Image', 'a')
+        ),
+        description='Geometry source',
+        default='OBJECT',
+        update=updateOperationValid,
+    )
+    cutter_type: EnumProperty(
+        name='Cutter',
+        items=(
+            ('END', 'End', 'end - flat cutter'),
+            ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
+            ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
+            ('VCARVE', 'V-carve', 'v carve cutter'),
+            ('BALLCONE', 'Ballcone', 'Ball with a Cone for Parallel - X'),
+            ('CYLCONE', 'Cylinder cone',
+             'Cylinder end with a Cone for Parallel - X'),
+            ('LASER', 'Laser', 'Laser cutter'),
+            ('PLASMA', 'Plasma', 'Plasma cutter'),
+            ('CUSTOM', 'Custom-EXPERIMENTAL',
+             'modelled cutter - not well tested yet.')
+        ),
+        description='Type of cutter used',
+        default='END',
+        update=updateZbufferImage,
+    )
+    cutter_object_name: StringProperty(
+        name='Cutter object',
+        description='object used as custom cutter for this operation',
+        update=updateZbufferImage,
+    )
 
-    machine_axes: EnumProperty(name='Number of axes',
-                               items=(
-                                   ('3', '3 axis', 'a'),
-                                   ('4', '#4 axis - EXPERIMENTAL', 'a'),
-                                   ('5', '#5 axis - EXPERIMENTAL', 'a')),
-                               description='How many axes will be used for the operation',
-                               default='3', update=updateStrategy)
-    strategy: EnumProperty(name='Strategy',
-                           items=getStrategyList,
-                           description='Strategy',
-                           update=updateStrategy)
+    machine_axes: EnumProperty(
+        name='Number of axes',
+        items=(
+            ('3', '3 axis', 'a'),
+            ('4', '#4 axis - EXPERIMENTAL', 'a'),
+            ('5', '#5 axis - EXPERIMENTAL', 'a')
+        ),
+        description='How many axes will be used for the operation',
+        default='3',
+        update=updateStrategy,
+    )
+    strategy: EnumProperty(
+        name='Strategy',
+        items=getStrategyList,
+        description='Strategy',
+        update=updateStrategy,
+    )
 
-    strategy4axis: EnumProperty(name='4 axis Strategy',
-                                items=(
-                                    ('PARALLELR', 'Parallel around 1st rotary axis',
-                                     'Parallel lines around first rotary axis'),
-                                    ('PARALLEL', 'Parallel along 1st rotary axis',
-                                     'Parallel lines along first rotary axis'),
-                                    ('HELIX', 'Helix around 1st rotary axis', 'Helix around rotary axis'),
-                                    ('INDEXED', 'Indexed 3-axis',
-                                     'all 3 axis strategies, just applied to the 4th axis'),
-                                    ('CROSS', 'Cross', 'Cross paths')),
-                                description='#Strategy',
-                                default='PARALLEL',
-                                update=updateStrategy)
-    strategy5axis: EnumProperty(name='Strategy',
-                                items=(
-                                    ('INDEXED', 'Indexed 3-axis',
-                                     'all 3 axis strategies, just rotated by 4+5th axes'),
-                                ),
-                                description='5 axis Strategy',
-                                default='INDEXED',
-                                update=updateStrategy)
+    strategy4axis: EnumProperty(
+        name='4 axis Strategy',
+        items=(
+            ('PARALLELR', 'Parallel around 1st rotary axis',
+             'Parallel lines around first rotary axis'),
+            ('PARALLEL', 'Parallel along 1st rotary axis',
+             'Parallel lines along first rotary axis'),
+            ('HELIX', 'Helix around 1st rotary axis',
+             'Helix around rotary axis'),
+            ('INDEXED', 'Indexed 3-axis',
+             'all 3 axis strategies, just applied to the 4th axis'),
+            ('CROSS', 'Cross', 'Cross paths')
+        ),
+        description='#Strategy',
+        default='PARALLEL',
+        update=updateStrategy,
+    )
+    strategy5axis: EnumProperty(
+        name='Strategy',
+        items=(
+            ('INDEXED', 'Indexed 3-axis',
+             'all 3 axis strategies, just rotated by 4+5th axes'),
+        ),
+        description='5 axis Strategy',
+        default='INDEXED',
+        update=updateStrategy,
+    )
 
-    rotary_axis_1: EnumProperty(name='Rotary axis',
-                                items=(
-                                    ('X', 'X', ''),
-                                    ('Y', 'Y', ''),
-                                    ('Z', 'Z', ''),
-                                ),
-                                description='Around which axis rotates the first rotary axis',
-                                default='X',
-                                update=updateStrategy)
-    rotary_axis_2: EnumProperty(name='Rotary axis 2',
-                                items=(
-                                    ('X', 'X', ''),
-                                    ('Y', 'Y', ''),
-                                    ('Z', 'Z', ''),
-                                ),
-                                description='Around which axis rotates the second rotary axis',
-                                default='Z',
-                                update=updateStrategy)
+    rotary_axis_1: EnumProperty(
+        name='Rotary axis',
+        items=(
+            ('X', 'X', ''),
+            ('Y', 'Y', ''),
+            ('Z', 'Z', ''),
+        ),
+        description='Around which axis rotates the first rotary axis',
+        default='X',
+        update=updateStrategy,
+    )
+    rotary_axis_2: EnumProperty(
+        name='Rotary axis 2',
+        items=(
+            ('X', 'X', ''),
+            ('Y', 'Y', ''),
+            ('Z', 'Z', ''),
+        ),
+        description='Around which axis rotates the second rotary axis',
+        default='Z',
+        update=updateStrategy,
+    )
 
-    skin: FloatProperty(name="Skin", description="Material to leave when roughing ", min=0.0, max=1.0, default=0.0,
-                        precision=cam.constants.PRECISION, unit="LENGTH", update=updateOffsetImage)
-    inverse: bpy.props.BoolProperty(name="Inverse milling", description="Male to female model conversion",
-                                    default=False, update=updateOffsetImage)
-    array: bpy.props.BoolProperty(name="Use array",
-                                  description="Create a repetitive array for producing the same thing manytimes",
-                                  default=False, update=updateRest)
-    array_x_count: bpy.props.IntProperty(name="X count", description="X count", default=1, min=1, max=32000,
-                                         update=updateRest)
-    array_y_count: bpy.props.IntProperty(name="Y count", description="Y count", default=1, min=1, max=32000,
-                                         update=updateRest)
-    array_x_distance: FloatProperty(name="X distance", description="distance between operation origins", min=0.00001,
-                                    max=1.0, default=0.01, precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
-    array_y_distance: FloatProperty(name="Y distance", description="distance between operation origins", min=0.00001,
-                                    max=1.0, default=0.01, precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
+    skin: FloatProperty(
+        name="Skin",
+        description="Material to leave when roughing ",
+        min=0.0,
+        max=1.0,
+        default=0.0,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateOffsetImage,
+    )
+    inverse: BoolProperty(
+        name="Inverse milling",
+        description="Male to female model conversion",
+        default=False,
+        update=updateOffsetImage,
+    )
+    array: BoolProperty(
+        name="Use array",
+        description="Create a repetitive array for producing the "
+        "same thing many times",
+        default=False,
+        update=updateRest,
+    )
+    array_x_count: IntProperty(
+        name="X count",
+        description="X count",
+        default=1,
+        min=1,
+        max=32000,
+        update=updateRest,
+    )
+    array_y_count: IntProperty(
+        name="Y count",
+        description="Y count",
+        default=1,
+        min=1,
+        max=32000,
+        update=updateRest,
+    )
+    array_x_distance: FloatProperty(
+        name="X distance",
+        description="distance between operation origins",
+        min=0.00001,
+        max=1.0,
+        default=0.01,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
+    array_y_distance: FloatProperty(
+        name="Y distance",
+        description="distance between operation origins",
+        min=0.00001,
+        max=1.0,
+        default=0.01,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
 
     # pocket options
-    pocket_option: EnumProperty(name='Start Position', items=(
-        ('INSIDE', 'Inside', 'a'), ('OUTSIDE', 'Outside', 'a')),
-        description='Pocket starting position', default='INSIDE', update=updateRest)
-    pocketToCurve: bpy.props.BoolProperty(name="Pocket to curve",
-                                          description="generates a curve instead of a path",
-                                          default=False, update=updateRest)
+    pocket_option: EnumProperty(
+        name='Start Position',
+        items=(
+            ('INSIDE', 'Inside', 'a'),
+            ('OUTSIDE', 'Outside', 'a')
+        ),
+        description='Pocket starting position',
+        default='INSIDE',
+        update=updateRest,
+    )
+    pocketToCurve: BoolProperty(
+        name="Pocket to curve",
+        description="generates a curve instead of a path",
+        default=False,
+        update=updateRest,
+    )
     # Cutout
-    cut_type: EnumProperty(name='Cut',
-                           items=(('OUTSIDE', 'Outside', 'a'), ('INSIDE',
-                                                                'Inside', 'a'), ('ONLINE', 'On line', 'a')),
-                           description='Type of cutter used', default='OUTSIDE', update=updateRest)
-    outlines_count: bpy.props.IntProperty(name="Outlines count", description="Outlines count", default=1,
-                                          min=1, max=32, update=updateCutout)
-    straight: bpy.props.BoolProperty(name="Overshoot Style",
-                                     description="Use overshoot cutout instead of conventional rounded",
-                                     default=False, update=updateRest)
+    cut_type: EnumProperty(
+        name='Cut',
+        items=(
+            ('OUTSIDE', 'Outside', 'a'),
+            ('INSIDE', 'Inside', 'a'),
+            ('ONLINE', 'On line', 'a')
+        ),
+        description='Type of cutter used',
+        default='OUTSIDE',
+        update=updateRest,
+    )
+    outlines_count: IntProperty(
+        name="Outlines count",
+        description="Outlines count",
+        default=1,
+        min=1,
+        max=32,
+        update=updateCutout,
+    )
+    straight: BoolProperty(
+        name="Overshoot Style",
+        description="Use overshoot cutout instead of conventional rounded",
+        default=False,
+        update=updateRest,
+    )
     # cutter
-    cutter_id: IntProperty(name="Tool number", description="For machines which support tool change based on tool id",
-                           min=0, max=10000, default=1, update=updateRest)
-    cutter_diameter: FloatProperty(name="Cutter diameter", description="Cutter diameter = 2x cutter radius",
-                                   min=0.000001, max=10, default=0.003, precision=cam.constants.PRECISION, unit="LENGTH",
-                                   update=updateOffsetImage)
-    cylcone_diameter: FloatProperty(name="Bottom Diameter", description="Bottom diameter",
-                                    min=0.000001, max=10, default=0.003, precision=cam.constants.PRECISION, unit="LENGTH",
-                                    update=updateOffsetImage)
-    cutter_length: FloatProperty(name="#Cutter length", description="#not supported#Cutter length", min=0.0, max=100.0,
-                                 default=25.0, precision=cam.constants.PRECISION, unit="LENGTH", update=updateOffsetImage)
-    cutter_flutes: IntProperty(name="Cutter flutes", description="Cutter flutes", min=1, max=20, default=2,
-                               update=updateChipload)
-    cutter_tip_angle: FloatProperty(name="Cutter v-carve angle", description="Cutter v-carve angle", min=0.0,
-                                    max=180.0, default=60.0, precision=cam.constants.PRECISION, update=updateOffsetImage)
-    ball_radius: FloatProperty(name="Ball radius", description="Radius of", min=0.0,
-                               max=0.035, default=0.001, unit="LENGTH", precision=cam.constants.PRECISION, update=updateOffsetImage)
+    cutter_id: IntProperty(
+        name="Tool number",
+        description="For machines which support tool change based on tool id",
+        min=0,
+        max=10000,
+        default=1,
+        update=updateRest,
+    )
+    cutter_diameter: FloatProperty(
+        name="Cutter diameter",
+        description="Cutter diameter = 2x cutter radius",
+        min=0.000001,
+        max=10,
+        default=0.003,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateOffsetImage,
+    )
+    cylcone_diameter: FloatProperty(
+        name="Bottom Diameter",
+        description="Bottom diameter",
+        min=0.000001,
+        max=10,
+        default=0.003,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateOffsetImage,
+    )
+    cutter_length: FloatProperty(
+        name="#Cutter length",
+        description="#not supported#Cutter length",
+        min=0.0,
+        max=100.0,
+        default=25.0,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateOffsetImage,
+    )
+    cutter_flutes: IntProperty(
+        name="Cutter flutes",
+        description="Cutter flutes",
+        min=1,
+        max=20,
+        default=2,
+        update=updateChipload,
+    )
+    cutter_tip_angle: FloatProperty(
+        name="Cutter v-carve angle",
+        description="Cutter v-carve angle",
+        min=0.0,
+        max=180.0,
+        default=60.0,
+        precision=cam.constants.PRECISION,
+        update=updateOffsetImage,
+    )
+    ball_radius: FloatProperty(
+        name="Ball radius",
+        description="Radius of",
+        min=0.0,
+        max=0.035,
+        default=0.001,
+        unit="LENGTH",
+        precision=cam.constants.PRECISION,
+        update=updateOffsetImage,
+    )
     # ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
     #                                 max=0.1, default=0.017, unit="LENGTH", precision=cam.constants.PRECISION, update=updateOffsetImage)
-    bull_corner_radius: FloatProperty(name="Bull Corner Radius", description="Radius tool bit corner", min=0.0,
-                                      max=0.035, default=0.005, unit="LENGTH", precision=cam.constants.PRECISION,
-                                      update=updateOffsetImage)
+    bull_corner_radius: FloatProperty(
+        name="Bull Corner Radius",
+        description="Radius tool bit corner",
+        min=0.0,
+        max=0.035,
+        default=0.005,
+        unit="LENGTH",
+        precision=cam.constants.PRECISION,
+        update=updateOffsetImage,
+    )
 
     cutter_description: StringProperty(
-        name="Tool Description", default="", update=updateOffsetImage)
+        name="Tool Description",
+        default="",
+        update=updateOffsetImage,
+    )
 
-    Laser_on: bpy.props.StringProperty(name="Laser ON string", default="M68 E0 Q100")
-    Laser_off: bpy.props.StringProperty(name="Laser OFF string", default="M68 E0 Q0")
-    Laser_cmd: bpy.props.StringProperty(name="Laser command", default="M68 E0 Q")
-    Laser_delay: bpy.props.FloatProperty(name="Laser ON Delay",
-                                         description="time after fast move to turn on laser and let machine stabilize",
-                                         default=0.2)
-    Plasma_on: bpy.props.StringProperty(name="Plasma ON string", default="M03")
-    Plasma_off: bpy.props.StringProperty(name="Plasma OFF string", default="M05")
-    Plasma_delay: bpy.props.FloatProperty(name="Plasma ON Delay",
-                                          description="time after fast move to turn on Plasma and let machine stabilize",
-                                          default=0.1)
-    Plasma_dwell: bpy.props.FloatProperty(name="Plasma dwell time", description="Time to dwell and warm up the torch",
-                                          default=0.0)
+    Laser_on: StringProperty(
+        name="Laser ON string",
+        default="M68 E0 Q100",
+    )
+    Laser_off: StringProperty(
+        name="Laser OFF string",
+        default="M68 E0 Q0",
+    )
+    Laser_cmd: StringProperty(
+        name="Laser command",
+        default="M68 E0 Q",
+    )
+    Laser_delay: FloatProperty(
+        name="Laser ON Delay",
+        description="time after fast move to turn on laser and "
+        "let machine stabilize",
+        default=0.2,
+    )
+    Plasma_on: StringProperty(
+        name="Plasma ON string",
+        default="M03",
+    )
+    Plasma_off: StringProperty(
+        name="Plasma OFF string",
+        default="M05",
+    )
+    Plasma_delay: FloatProperty(
+        name="Plasma ON Delay",
+        description="time after fast move to turn on Plasma and "
+        "let machine stabilize",
+        default=0.1,
+    )
+    Plasma_dwell: FloatProperty(
+        name="Plasma dwell time",
+        description="Time to dwell and warm up the torch",
+        default=0.0,
+    )
 
     # steps
-    dist_between_paths: bpy.props.FloatProperty(name="Distance between toolpaths", default=0.001, min=0.00001, max=32,
-                                                precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
-    dist_along_paths: bpy.props.FloatProperty(name="Distance along toolpaths", default=0.0002, min=0.00001, max=32,
-                                              precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
-    parallel_angle: bpy.props.FloatProperty(name="Angle of paths", default=0, min=-360, max=360, precision=0,
-                                            subtype="ANGLE", unit="ROTATION", update=updateRest)
-    old_rotation_A: bpy.props.FloatProperty(name="A axis angle",
-                                            description="old value of Rotate A axis\nto specified angle", default=0,
-                                            min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION",
-                                            update=updateRest)
+    dist_between_paths: FloatProperty(
+        name="Distance between toolpaths",
+        default=0.001,
+        min=0.00001,
+        max=32,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
+    dist_along_paths: FloatProperty(
+        name="Distance along toolpaths",
+        default=0.0002,
+        min=0.00001,
+        max=32,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
+    parallel_angle: FloatProperty(
+        name="Angle of paths",
+        default=0,
+        min=-360,
+        max=360,
+        precision=0,
+        subtype="ANGLE",
+        unit="ROTATION",
+        update=updateRest,
+    )
 
-    old_rotation_B: bpy.props.FloatProperty(name="A axis angle",
-                                            description="old value of Rotate A axis\nto specified angle", default=0,
-                                            min=-360, max=360, precision=0, subtype="ANGLE", unit="ROTATION",
-                                            update=updateRest)
+    old_rotation_A: FloatProperty(
+        name="A axis angle",
+        description="old value of Rotate A axis\nto specified angle",
+        default=0,
+        min=-360,
+        max=360,
+        precision=0,
+        subtype="ANGLE",
+        unit="ROTATION",
+        update=updateRest,
+    )
 
-    rotation_A: bpy.props.FloatProperty(name="A axis angle", description="Rotate A axis\nto specified angle", default=0,
-                                        min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
-    enable_A: bpy.props.BoolProperty(name="Enable A axis", description="Rotate A axis", default=False,
-                                     update=updateRotation)
-    A_along_x: bpy.props.BoolProperty(
-        name="A Along X ", description="A Parallel to X", default=True, update=updateRest)
+    old_rotation_B: FloatProperty(
+        name="A axis angle",
+        description="old value of Rotate A axis\nto specified angle",
+        default=0,
+        min=-360,
+        max=360,
+        precision=0,
+        subtype="ANGLE",
+        unit="ROTATION",
+        update=updateRest,
+    )
 
-    rotation_B: bpy.props.FloatProperty(name="B axis angle", description="Rotate B axis\nto specified angle", default=0,
-                                        min=-360, max=360, precision=0,
-                                        subtype="ANGLE", unit="ROTATION", update=updateRotation)
-    enable_B: bpy.props.BoolProperty(name="Enable B axis", description="Rotate B axis", default=False,
-                                     update=updateRotation)
+    rotation_A: FloatProperty(
+        name="A axis angle",
+        description="Rotate A axis\nto specified angle",
+        default=0,
+        min=-360,
+        max=360,
+        precision=0,
+        subtype="ANGLE",
+        unit="ROTATION",
+        update=updateRotation,
+    )
+    enable_A: BoolProperty(
+        name="Enable A axis",
+        description="Rotate A axis",
+        default=False,
+        update=updateRotation,
+    )
+    A_along_x: BoolProperty(
+        name="A Along X ",
+        description="A Parallel to X",
+        default=True,
+        update=updateRest,
+    )
+
+    rotation_B: FloatProperty(
+        name="B axis angle",
+        description="Rotate B axis\nto specified angle",
+        default=0,
+        min=-360,
+        max=360,
+        precision=0,
+        subtype="ANGLE",
+        unit="ROTATION",
+        update=updateRotation,
+    )
+    enable_B: BoolProperty(
+        name="Enable B axis",
+        description="Rotate B axis",
+        default=False,
+        update=updateRotation,
+    )
 
     # carve only
-    carve_depth: bpy.props.FloatProperty(name="Carve depth", default=0.001, min=-.100, max=32, precision=cam.constants.PRECISION,
-                                         unit="LENGTH", update=updateRest)
+    carve_depth: FloatProperty(
+        name="Carve depth",
+        default=0.001,
+        min=-.100,
+        max=32,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
 
     # drill only
-    drill_type: EnumProperty(name='Holes on', items=(
-        ('MIDDLE_SYMETRIC', 'Middle of symetric curves',
-         'a'), ('MIDDLE_ALL', 'Middle of all curve parts', 'a'),
-        ('ALL_POINTS', 'All points in curve', 'a')), description='Strategy to detect holes to drill',
-        default='MIDDLE_SYMETRIC', update=updateRest)
+    drill_type: EnumProperty(
+        name='Holes on',
+        items=(
+            ('MIDDLE_SYMETRIC', 'Middle of symetric curves', 'a'),
+            ('MIDDLE_ALL', 'Middle of all curve parts', 'a'),
+            ('ALL_POINTS', 'All points in curve', 'a')
+        ),
+        description='Strategy to detect holes to drill',
+        default='MIDDLE_SYMETRIC',
+        update=updateRest,
+    )
     # waterline only
-    slice_detail: bpy.props.FloatProperty(name="Distance betwen slices", default=0.001, min=0.00001, max=32,
-                                          precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
-    waterline_fill: bpy.props.BoolProperty(name="Fill areas between slices",
-                                           description="Fill areas between slices in waterline mode", default=True,
-                                           update=updateRest)
-    waterline_project: bpy.props.BoolProperty(name="Project paths - not recomended",
-                                              description="Project paths in areas between slices", default=True,
-                                              update=updateRest)
+    slice_detail: FloatProperty(
+        name="Distance betwen slices",
+        default=0.001,
+        min=0.00001,
+        max=32,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
+    waterline_fill: BoolProperty(
+        name="Fill areas between slices",
+        description="Fill areas between slices in waterline mode",
+        default=True,
+        update=updateRest,
+    )
+    waterline_project: BoolProperty(
+        name="Project paths - not recomended",
+        description="Project paths in areas between slices",
+        default=True,
+        update=updateRest,
+    )
 
     # movement and ramps
-    use_layers: bpy.props.BoolProperty(name="Use Layers", description="Use layers for roughing", default=True,
-                                       update=updateRest)
-    stepdown: bpy.props.FloatProperty(name="", description="Layer height", default=0.01, min=0.00001, max=32, precision=cam.constants.PRECISION,
-                                      unit="LENGTH", update=updateRest)
-    lead_in: bpy.props.FloatProperty(name="Lead in radius",
-                                     description="Lead out radius for torch or laser to turn off",
-                                     min=0.00, max=1, default=0.0, precision=cam.constants.PRECISION, unit="LENGTH")
-    lead_out: bpy.props.FloatProperty(name="Lead out radius",
-                                      description="Lead out radius for torch or laser to turn off",
-                                      min=0.00, max=1, default=0.0, precision=cam.constants.PRECISION, unit="LENGTH")
-    profile_start: bpy.props.IntProperty(name="Start point", description="Start point offset", min=0, default=0,
-                                         update=updateRest)
+    use_layers: BoolProperty(
+        name="Use Layers",
+        description="Use layers for roughing",
+        default=True,
+        update=updateRest,
+    )
+    stepdown: FloatProperty(
+        name="",
+        description="Layer height",
+        default=0.01,
+        min=0.00001,
+        max=32,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
+    lead_in: FloatProperty(
+        name="Lead in radius",
+        description="Lead out radius for torch or laser to turn off",
+        min=0.00,
+        max=1,
+        default=0.0,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+    )
+    lead_out: FloatProperty(
+        name="Lead out radius",
+        description="Lead out radius for torch or laser to turn off",
+        min=0.00,
+        max=1,
+        default=0.0,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+    )
+    profile_start: IntProperty(
+        name="Start point",
+        description="Start point offset",
+        min=0,
+        default=0,
+        update=updateRest,
+    )
 
-    # helix_angle: bpy.props.FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
+    # helix_angle: FloatProperty(name="Helix ramp angle", default=3*math.pi/180, min=0.00001, max=math.pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 
-    minz: bpy.props.FloatProperty(name="Operation depth end",
-                                  default=-0.01, min=-3, max=3, precision=cam.constants.PRECISION,
-                                  unit="LENGTH",
-                                  update=updateRest)
+    minz: FloatProperty(
+        name="Operation depth end",
+        default=-0.01,
+        min=-3,
+        max=3,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
 
-    minz_from: bpy.props.EnumProperty(name='Set max depth from',
-                                      description='Set maximum operation depth',
-                                      items=(
-                                          ('OBJECT', 'Object', 'Set max operation depth from Object'),
-                                          ('MATERIAL', 'Material', 'Set max operation depth from Material'),
-                                          ('CUSTOM', 'Custom', 'Custom max depth'),
-                                      ),
-                                      default='OBJECT',
-                                      update=updateRest
-                                      )
+    minz_from: EnumProperty(
+        name='Set max depth from',
+        description='Set maximum operation depth',
+        items=(
+            ('OBJECT', 'Object', 'Set max operation depth from Object'),
+            ('MATERIAL', 'Material', 'Set max operation depth from Material'),
+            ('CUSTOM', 'Custom', 'Custom max depth'),
+        ),
+        default='OBJECT',
+        update=updateRest,
+    )
 
-    start_type: bpy.props.EnumProperty(name='Start type',
-                                       items=(
-                                           ('ZLEVEL', 'Z level', 'Starts on a given Z level'),
-                                           ('OPERATIONRESULT', 'Rest milling',
-                                            'For rest milling, operations have to be put in chain for this to work well.'),
-                                       ),
-                                       description='Starting depth',
-                                       default='ZLEVEL',
-                                       update=updateStrategy)
+    start_type: EnumProperty(
+        name='Start type',
+        items=(
+            ('ZLEVEL', 'Z level', 'Starts on a given Z level'),
+            ('OPERATIONRESULT', 'Rest milling',
+             'For rest milling, operations have to be '
+             'put in chain for this to work well.'),
+        ),
+        description='Starting depth',
+        default='ZLEVEL',
+        update=updateStrategy,
+    )
 
-    maxz: bpy.props.FloatProperty(name="Operation depth start", description='operation starting depth', default=0,
-                                  min=-3, max=10, precision=cam.constants.PRECISION, unit="LENGTH",
-                                  update=updateRest)  # EXPERIMENTAL
+    maxz: FloatProperty(
+        name="Operation depth start",
+        description='operation starting depth',
+        default=0,
+        min=-3,
+        max=10,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )  # EXPERIMENTAL
 
-    first_down: bpy.props.BoolProperty(name="First down",
-                                       description="First go down on a contour, then go to the next one",
-                                       default=False, update=cam.utils.update_operation)
+    first_down: BoolProperty(
+        name="First down",
+        description="First go down on a contour, then go to the next one",
+        default=False,
+        update=cam.utils.update_operation,
+    )
 
     #######################################################
     # Image related
     ####################################################
 
-    source_image_scale_z: bpy.props.FloatProperty(name="Image source depth scale", default=0.01, min=-1, max=1,
-                                                  precision=cam.constants.PRECISION, unit="LENGTH", update=updateZbufferImage)
-    source_image_size_x: bpy.props.FloatProperty(name="Image source x size", default=0.1, min=-10, max=10,
-                                                 precision=cam.constants.PRECISION, unit="LENGTH", update=updateZbufferImage)
-    source_image_offset: bpy.props.FloatVectorProperty(name='Image offset', default=(0, 0, 0), unit='LENGTH',
-                                                       precision=cam.constants.PRECISION, subtype="XYZ", update=updateZbufferImage)
-    source_image_crop: bpy.props.BoolProperty(name="Crop source image",
-                                              description="Crop source image - the position of the sub-rectangle is relative to the whole image, so it can be used for e.g. finishing just a part of an image",
-                                              default=False, update=updateZbufferImage)
-    source_image_crop_start_x: bpy.props.FloatProperty(name='crop start x', default=0, min=0, max=100,
-                                                       precision=cam.constants.PRECISION, subtype='PERCENTAGE',
-                                                       update=updateZbufferImage)
-    source_image_crop_start_y: bpy.props.FloatProperty(name='crop start y', default=0, min=0, max=100,
-                                                       precision=cam.constants.PRECISION, subtype='PERCENTAGE',
-                                                       update=updateZbufferImage)
-    source_image_crop_end_x: bpy.props.FloatProperty(name='crop end x', default=100, min=0, max=100,
-                                                     precision=cam.constants.PRECISION, subtype='PERCENTAGE',
-                                                     update=updateZbufferImage)
-    source_image_crop_end_y: bpy.props.FloatProperty(name='crop end y', default=100, min=0, max=100,
-                                                     precision=cam.constants.PRECISION, subtype='PERCENTAGE',
-                                                     update=updateZbufferImage)
+    source_image_scale_z: FloatProperty(
+        name="Image source depth scale",
+        default=0.01,
+        min=-1,
+        max=1,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateZbufferImage,
+    )
+    source_image_size_x: FloatProperty(
+        name="Image source x size",
+        default=0.1,
+        min=-10,
+        max=10,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateZbufferImage,
+    )
+    source_image_offset: FloatVectorProperty(
+        name='Image offset',
+        default=(0, 0, 0),
+        unit='LENGTH',
+        precision=cam.constants.PRECISION,
+        subtype="XYZ",
+        update=updateZbufferImage,
+    )
+
+    source_image_crop: BoolProperty(
+        name="Crop source image",
+        description="Crop source image - the position of the sub-rectangle "
+        "is relative to the whole image, so it can be used for e.g. "
+        "finishing just a part of an image",
+        default=False,
+        update=updateZbufferImage,
+    )
+    source_image_crop_start_x: FloatProperty(
+        name='crop start x',
+        default=0,
+        min=0,
+        max=100,
+        precision=cam.constants.PRECISION,
+        subtype='PERCENTAGE',
+        update=updateZbufferImage,
+    )
+    source_image_crop_start_y: FloatProperty(
+        name='crop start y',
+        default=0,
+        min=0,
+        max=100,
+        precision=cam.constants.PRECISION,
+        subtype='PERCENTAGE',
+        update=updateZbufferImage,
+    )
+    source_image_crop_end_x: FloatProperty(
+        name='crop end x',
+        default=100,
+        min=0,
+        max=100,
+        precision=cam.constants.PRECISION,
+        subtype='PERCENTAGE',
+        update=updateZbufferImage,
+    )
+    source_image_crop_end_y: FloatProperty(
+        name='crop end y',
+        default=100,
+        min=0,
+        max=100,
+        precision=cam.constants.PRECISION,
+        subtype='PERCENTAGE',
+        update=updateZbufferImage,
+    )
 
     #########################################################
     # Toolpath and area related
     #####################################################
 
-    ambient_behaviour: EnumProperty(name='Ambient', items=(('ALL', 'All', 'a'), ('AROUND', 'Around', 'a')),
-                                    description='handling ambient surfaces', default='ALL', update=updateZbufferImage)
+    ambient_behaviour: EnumProperty(
+        name='Ambient',
+        items=(('ALL', 'All', 'a'), ('AROUND', 'Around', 'a')),
+        description='handling ambient surfaces',
+        default='ALL',
+        update=updateZbufferImage,
+    )
 
-    ambient_radius: FloatProperty(name="Ambient radius",
-                                  description="Radius around the part which will be milled if ambient is set to Around",
-                                  min=0.0, max=100.0, default=0.01, precision=cam.constants.PRECISION, unit="LENGTH",
-                                  update=updateRest)
+    ambient_radius: FloatProperty(
+        name="Ambient radius",
+        description="Radius around the part which will be milled if "
+        "ambient is set to Around",
+        min=0.0,
+        max=100.0,
+        default=0.01,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
     # ambient_cutter = EnumProperty(name='Borders',items=(('EXTRAFORCUTTER', 'Extra for cutter', "Extra space for cutter is cut around the segment"),('ONBORDER', "Cutter on edge", "Cutter goes exactly on edge of ambient with it's middle") ,('INSIDE', "Inside segment", 'Cutter stays within segment')	 ),description='handling of ambient and cutter size',default='INSIDE')
-    use_limit_curve: bpy.props.BoolProperty(name="Use limit curve", description="A curve limits the operation area",
-                                            default=False, update=updateRest)
-    ambient_cutter_restrict: bpy.props.BoolProperty(name="Cutter stays in ambient limits",
-                                                    description="Cutter doesn't get out from ambient limits otherwise goes on the border exactly",
-                                                    default=True,
-                                                    update=updateRest)  # restricts cutter inside ambient only
-    limit_curve: bpy.props.StringProperty(name='Limit curve',
-                                          description='curve used to limit the area of the operation',
-                                          update=updateRest)
+    use_limit_curve: BoolProperty(
+        name="Use limit curve",
+        description="A curve limits the operation area",
+        default=False,
+        update=updateRest,
+    )
+    ambient_cutter_restrict: BoolProperty(
+        name="Cutter stays in ambient limits",
+        description="Cutter doesn't get out from ambient limits otherwise "
+        "goes on the border exactly",
+        default=True,
+        update=updateRest,
+    )  # restricts cutter inside ambient only
+    limit_curve: StringProperty(
+        name='Limit curve',
+        description='curve used to limit the area of the operation',
+        update=updateRest,
+    )
 
     # feeds
-    feedrate: FloatProperty(name="Feedrate", description="Feedrate in units per minute", min=0.00005, max=50.0, default=1.0,
-                            precision=cam.constants.PRECISION, unit="LENGTH", update=updateChipload)
-    plunge_feedrate: FloatProperty(name="Plunge speed ", description="% of feedrate", min=0.1, max=100.0, default=50.0,
-                                   precision=1, subtype='PERCENTAGE', update=updateRest)
-    plunge_angle: bpy.props.FloatProperty(name="Plunge angle",
-                                          description="What angle is allready considered to plunge",
-                                          default=math.pi / 6, min=0, max=math.pi * 0.5, precision=0, subtype="ANGLE",
-                                          unit="ROTATION", update=updateRest)
-    spindle_rpm: FloatProperty(name="Spindle rpm", description="Spindle speed ", min=0, max=60000, default=12000,
-                               update=updateChipload)
+    feedrate: FloatProperty(
+        name="Feedrate",
+        description="Feedrate in units per minute",
+        min=0.00005,
+        max=50.0,
+        default=1.0,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateChipload,
+    )
+    plunge_feedrate: FloatProperty(
+        name="Plunge speed ",
+        description="% of feedrate",
+        min=0.1,
+        max=100.0,
+        default=50.0,
+        precision=1,
+        subtype='PERCENTAGE',
+        update=updateRest,
+    )
+    plunge_angle: FloatProperty(
+        name="Plunge angle",
+        description="What angle is allready considered to plunge",
+        default=math.pi / 6,
+        min=0,
+        max=math.pi * 0.5,
+        precision=0,
+        subtype="ANGLE",
+        unit="ROTATION",
+        update=updateRest,
+    )
+    spindle_rpm: FloatProperty(
+        name="Spindle rpm",
+        description="Spindle speed ",
+        min=0,
+        max=60000,
+        default=12000,
+        update=updateChipload,
+    )
 
     # optimization and performance
 
-    do_simulation_feedrate: bpy.props.BoolProperty(name="Adjust feedrates with simulation EXPERIMENTAL",
-                                                   description="Adjust feedrates with simulation", default=False,
-                                                   update=updateRest)
+    do_simulation_feedrate: BoolProperty(
+        name="Adjust feedrates with simulation EXPERIMENTAL",
+        description="Adjust feedrates with simulation",
+        default=False,
+        update=updateRest,
+    )
 
-    dont_merge: bpy.props.BoolProperty(name="Dont merge outlines when cutting",
-                                       description="this is usefull when you want to cut around everything",
-                                       default=False, update=updateRest)
+    dont_merge: BoolProperty(
+        name="Dont merge outlines when cutting",
+        description="this is usefull when you want to cut around everything",
+        default=False,
+        update=updateRest,
+    )
 
-    pencil_threshold: bpy.props.FloatProperty(name="Pencil threshold", default=0.00002, min=0.00000001, max=1,
-                                              precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
-    crazy_threshold1: bpy.props.FloatProperty(name="min engagement", default=0.02, min=0.00000001, max=100,
-                                              precision=cam.constants.PRECISION, update=updateRest)
-    crazy_threshold5: bpy.props.FloatProperty(name="optimal engagement", default=0.3, min=0.00000001, max=100,
-                                              precision=cam.constants.PRECISION, update=updateRest)
-    crazy_threshold2: bpy.props.FloatProperty(name="max engagement", default=0.5, min=0.00000001, max=100,
-                                              precision=cam.constants.PRECISION, update=updateRest)
-    crazy_threshold3: bpy.props.FloatProperty(name="max angle", default=2, min=0.00000001, max=100,
-                                              precision=cam.constants.PRECISION, update=updateRest)
-    crazy_threshold4: bpy.props.FloatProperty(name="test angle step", default=0.05, min=0.00000001, max=100,
-                                              precision=cam.constants.PRECISION, update=updateRest)
+    pencil_threshold: FloatProperty(
+        name="Pencil threshold",
+        default=0.00002,
+        min=0.00000001,
+        max=1,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
+
+    crazy_threshold1: FloatProperty(
+        name="min engagement",
+        default=0.02,
+        min=0.00000001,
+        max=100,
+        precision=cam.constants.PRECISION,
+        update=updateRest,
+    )
+    crazy_threshold5: FloatProperty(
+        name="optimal engagement",
+        default=0.3,
+        min=0.00000001,
+        max=100,
+        precision=cam.constants.PRECISION,
+        update=updateRest,
+    )
+    crazy_threshold2: FloatProperty(
+        name="max engagement",
+        default=0.5,
+        min=0.00000001,
+        max=100,
+        precision=cam.constants.PRECISION,
+        update=updateRest,
+    )
+    crazy_threshold3: FloatProperty(
+        name="max angle",
+        default=2,
+        min=0.00000001,
+        max=100,
+        precision=cam.constants.PRECISION,
+        update=updateRest,
+    )
+    crazy_threshold4: FloatProperty(
+        name="test angle step",
+        default=0.05,
+        min=0.00000001,
+        max=100,
+        precision=cam.constants.PRECISION,
+        update=updateRest,
+    )
     # Add pocket operation to medial axis
-    add_pocket_for_medial: bpy.props.BoolProperty(name="Add pocket operation",
-                                                  description="clean unremoved material after medial axis",
-                                                  default=True,
-                                                  update=updateRest)
+    add_pocket_for_medial: BoolProperty(
+        name="Add pocket operation",
+        description="clean unremoved material after medial axis",
+        default=True,
+        update=updateRest,
+    )
 
-    add_mesh_for_medial: bpy.props.BoolProperty(name="Add Medial mesh",
-                                                description="Medial operation returns mesh for editing and further processing",
-                                                default=False,
-                                                update=updateRest)
+    add_mesh_for_medial: BoolProperty(
+        name="Add Medial mesh",
+        description="Medial operation returns mesh for editing and "
+        "further processing",
+        default=False,
+        update=updateRest,
+    )
     ####
-    medial_axis_threshold: bpy.props.FloatProperty(name="Long vector threshold", default=0.001, min=0.00000001,
-                                                   max=100, precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
-    medial_axis_subdivision: bpy.props.FloatProperty(name="Fine subdivision", default=0.0002, min=0.00000001, max=100,
-                                                     precision=cam.constants.PRECISION, unit="LENGTH", update=updateRest)
+    medial_axis_threshold: FloatProperty(
+        name="Long vector threshold",
+        default=0.001,
+        min=0.00000001,
+        max=100,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
+    medial_axis_subdivision: FloatProperty(
+        name="Fine subdivision",
+        default=0.0002,
+        min=0.00000001,
+        max=100,
+        precision=cam.constants.PRECISION,
+        unit="LENGTH",
+        update=updateRest,
+    )
     # calculations
 
     # bridges
-    use_bridges: bpy.props.BoolProperty(name="Use bridges", description="use bridges in cutout", default=False,
-                                        update=updateBridges)
-    bridges_width: bpy.props.FloatProperty(name='width of bridges', default=0.002, unit='LENGTH', precision=cam.constants.PRECISION,
-                                           update=updateBridges)
-    bridges_height: bpy.props.FloatProperty(name='height of bridges',
-                                            description="Height from the bottom of the cutting operation",
-                                            default=0.0005, unit='LENGTH', precision=cam.constants.PRECISION, update=updateBridges)
-    bridges_collection_name: bpy.props.StringProperty(name='Bridges Collection',
-                                                      description='Collection of curves used as bridges',
-                                                      update=operationValid)
-    use_bridge_modifiers: BoolProperty(name="use bridge modifiers",
-                                       description="include bridge curve modifiers using render level when calculating operation, does not effect original bridge data",
-                                       default=True, update=updateBridges)
+    use_bridges: BoolProperty(
+        name="Use bridges",
+        description="use bridges in cutout",
+        default=False,
+        update=updateBridges,
+    )
+    bridges_width: FloatProperty(
+        name='width of bridges',
+        default=0.002,
+        unit='LENGTH',
+        precision=cam.constants.PRECISION,
+        update=updateBridges,
+    )
+    bridges_height: FloatProperty(
+        name='height of bridges',
+        description="Height from the bottom of the cutting operation",
+        default=0.0005,
+        unit='LENGTH',
+        precision=cam.constants.PRECISION,
+        update=updateBridges,
+    )
+    bridges_collection_name: StringProperty(
+        name='Bridges Collection',
+        description='Collection of curves used as bridges',
+        update=operationValid,
+    )
+    use_bridge_modifiers: BoolProperty(
+        name="use bridge modifiers",
+        description="include bridge curve modifiers using render level when "
+        "calculating operation, does not effect original bridge data",
+        default=True,
+        update=updateBridges,
+    )
 
     # commented this - auto bridges will be generated, but not as a setting of the operation
-    # bridges_placement = bpy.props.EnumProperty(name='Bridge placement',
+    # bridges_placement = EnumProperty(name='Bridge placement',
     #     items=(
     #         ('AUTO','Automatic', 'Automatic bridges with a set distance'),
     #         ('MANUAL','Manual', 'Manual placement of bridges'),
@@ -975,12 +1711,16 @@ class camOperation(bpy.types.PropertyGroup):
     #     default='AUTO',
     #     update = updateStrategy)
     #
-    # bridges_per_curve = bpy.props.IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
-    # bridges_max_distance = bpy.props.FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=cam.constants.PRECISION, update = updateBridges)
+    # bridges_per_curve = IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
+    # bridges_max_distance = FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=cam.constants.PRECISION, update = updateBridges)
 
-    use_modifiers: BoolProperty(name="use mesh modifiers",
-                                description="include mesh modifiers using render level when calculating operation, does not effect original mesh",
-                                default=True, update=operationValid)
+    use_modifiers: BoolProperty(
+        name="use mesh modifiers",
+        description="include mesh modifiers using render level when "
+        "calculating operation, does not effect original mesh",
+        default=True,
+        update=operationValid,
+    )
     # optimisation panel
 
     # material settings
@@ -989,69 +1729,111 @@ class camOperation(bpy.types.PropertyGroup):
 ##############################################################################
     # MATERIAL SETTINGS
 
-    min: bpy.props.FloatVectorProperty(
-        name='Operation minimum', default=(0, 0, 0), unit='LENGTH', precision=cam.constants.PRECISION,
-        subtype="XYZ")
-    max: bpy.props.FloatVectorProperty(name='Operation maximum', default=(0, 0, 0), unit='LENGTH', precision=cam.constants.PRECISION,
-                                       subtype="XYZ")
+    min: FloatVectorProperty(
+        name='Operation minimum',
+        default=(0, 0, 0),
+        unit='LENGTH',
+        precision=cam.constants.PRECISION,
+        subtype="XYZ",
+    )
+    max: FloatVectorProperty(
+        name='Operation maximum',
+        default=(0, 0, 0),
+        unit='LENGTH',
+        precision=cam.constants.PRECISION,
+        subtype="XYZ",
+    )
 
     # g-code options for operation
-    output_header: BoolProperty(name="output g-code header",
-                                description="output user defined g-code command header at start of operation",
-                                default=False)
+    output_header: BoolProperty(
+        name="output g-code header",
+        description="output user defined g-code command header"
+        " at start of operation",
+        default=False,
+    )
 
-    gcode_header: StringProperty(name="g-code header",
-                                 description="g-code commands at start of operation. Use ; for line breaks",
-                                 default="G53 G0")
+    gcode_header: StringProperty(
+        name="g-code header",
+        description="g-code commands at start of operation."
+        " Use ; for line breaks",
+        default="G53 G0",
+    )
 
-    enable_dust: BoolProperty(name="Dust collector",
-                              description="output user defined g-code command header at start of operation",
-                              default=False)
+    enable_dust: BoolProperty(
+        name="Dust collector",
+        description="output user defined g-code command header"
+        " at start of operation",
+        default=False,
+    )
 
-    gcode_start_dust_cmd: StringProperty(name="Start dust collector",
-                                         description="commands to start dust collection. Use ; for line breaks",
-                                         default="M100")
+    gcode_start_dust_cmd: StringProperty(
+        name="Start dust collector",
+        description="commands to start dust collection. Use ; for line breaks",
+        default="M100",
+    )
 
-    gcode_stop_dust_cmd: StringProperty(name="Stop dust collector",
-                                        description="command to stop dust collection. Use ; for line breaks",
-                                        default="M101")
+    gcode_stop_dust_cmd: StringProperty(
+        name="Stop dust collector",
+        description="command to stop dust collection. Use ; for line breaks",
+        default="M101",
+    )
 
-    enable_hold: BoolProperty(name="Hold down",
-                              description="output hold down command at start of operation",
-                              default=False)
+    enable_hold: BoolProperty(
+        name="Hold down",
+        description="output hold down command at start of operation",
+        default=False,
+    )
 
-    gcode_start_hold_cmd: StringProperty(name="g-code header",
-                                         description="g-code commands at start of operation. Use ; for line breaks",
-                                         default="M102")
+    gcode_start_hold_cmd: StringProperty(
+        name="g-code header",
+        description="g-code commands at start of operation."
+        " Use ; for line breaks",
+        default="M102",
+    )
 
-    gcode_stop_hold_cmd: StringProperty(name="g-code header",
-                                        description="g-code commands at end operation. Use ; for line breaks",
-                                        default="M103")
+    gcode_stop_hold_cmd: StringProperty(
+        name="g-code header",
+        description="g-code commands at end operation. Use ; for line breaks",
+        default="M103",
+    )
 
-    enable_mist: BoolProperty(name="Mist",
-                              description="Mist command at start of operation",
-                              default=False)
+    enable_mist: BoolProperty(
+        name="Mist",
+        description="Mist command at start of operation",
+        default=False,
+    )
 
-    gcode_start_mist_cmd: StringProperty(name="g-code header",
-                                         description="g-code commands at start of operation. Use ; for line breaks",
-                                         default="M104")
+    gcode_start_mist_cmd: StringProperty(
+        name="g-code header",
+        description="g-code commands at start of operation."
+        " Use ; for line breaks",
+        default="M104",
+    )
 
-    gcode_stop_mist_cmd: StringProperty(name="g-code header",
-                                        description="g-code commands at end operation. Use ; for line breaks",
-                                        default="M105")
+    gcode_stop_mist_cmd: StringProperty(
+        name="g-code header",
+        description="g-code commands at end operation. Use ; for line breaks",
+        default="M105",
+    )
 
-    output_trailer: BoolProperty(name="output g-code trailer",
-                                 description="output user defined g-code command trailer at end of operation",
-                                 default=False)
+    output_trailer: BoolProperty(
+        name="output g-code trailer",
+        description="output user defined g-code command trailer"
+        " at end of operation",
+        default=False,
+    )
 
-    gcode_trailer: StringProperty(name="g-code trailer",
-                                  description="g-code commands at end of operation. Use ; for line breaks",
-                                  default="M02")
+    gcode_trailer: StringProperty(
+        name="g-code trailer",
+        description="g-code commands at end of operation."
+        " Use ; for line breaks",
+        default="M02",
+    )
 
     # internal properties
     ###########################################
 
-    # testing = bpy.props.IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
+    # testing = IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
     offset_image = numpy.array([], dtype=float)
     zbuffer_image = numpy.array([], dtype=float)
 
@@ -1060,54 +1842,116 @@ class camOperation(bpy.types.PropertyGroup):
     operation_limit = sgeometry.Polygon()
     borderwidth = 50
     object = None
-    path_object_name: bpy.props.StringProperty(name='Path object', description='actual cnc path')
+    path_object_name: StringProperty(
+        name='Path object',
+        description='actual cnc path'
+    )
 
     # update and tags and related
 
-    changed: bpy.props.BoolProperty(name="True if any of the operation settings has changed",
-                                    description="mark for update", default=False)
-    update_zbufferimage_tag: bpy.props.BoolProperty(name="mark zbuffer image for update",
-                                                    description="mark for update", default=True)
-    update_offsetimage_tag: bpy.props.BoolProperty(name="mark offset image for update", description="mark for update",
-                                                   default=True)
-    update_silhouete_tag: bpy.props.BoolProperty(name="mark silhouete image for update", description="mark for update",
-                                                 default=True)
-    update_ambient_tag: bpy.props.BoolProperty(name="mark ambient polygon for update", description="mark for update",
-                                               default=True)
-    update_bullet_collision_tag: bpy.props.BoolProperty(name="mark bullet collisionworld for update",
-                                                        description="mark for update", default=True)
+    changed: BoolProperty(
+        name="True if any of the operation settings has changed",
+        description="mark for update",
+        default=False,
+    )
+    update_zbufferimage_tag: BoolProperty(
+        name="mark zbuffer image for update",
+        description="mark for update",
+        default=True,
+    )
+    update_offsetimage_tag: BoolProperty(
+        name="mark offset image for update",
+        description="mark for update",
+        default=True,
+    )
+    update_silhouete_tag: BoolProperty(
+        name="mark silhouete image for update",
+        description="mark for update",
+        default=True,
+    )
+    update_ambient_tag: BoolProperty(
+        name="mark ambient polygon for update",
+        description="mark for update",
+        default=True,
+    )
+    update_bullet_collision_tag: BoolProperty(
+        name="mark bullet collisionworld for update",
+        description="mark for update",
+        default=True,
+    )
 
-    valid: bpy.props.BoolProperty(
-        name="Valid", description="True if operation is ok for calculation", default=True)
-    changedata: bpy.props.StringProperty(
-        name='changedata', description='change data for checking if stuff changed.')
+    valid: BoolProperty(
+        name="Valid",
+        description="True if operation is ok for calculation",
+        default=True,
+    )
+    changedata: StringProperty(
+        name='changedata',
+        description='change data for checking if stuff changed.',
+    )
 
     # process related data
 
-    computing: bpy.props.BoolProperty(name="Computing right now", description="", default=False)
-    pid: bpy.props.IntProperty(name="process id", description="Background process id", default=-1)
-    outtext: bpy.props.StringProperty(name='outtext', description='outtext', default='')
+    computing: BoolProperty(
+        name="Computing right now",
+        description="",
+        default=False,
+    )
+    pid: IntProperty(
+        name="process id",
+        description="Background process id",
+        default=-1,
+    )
+    outtext: StringProperty(
+        name='outtext',
+        description='outtext',
+        default='',
+    )
 
 
 # this type is defined just to hold reference to operations for chains
 class opReference(bpy.types.PropertyGroup):
-    name: bpy.props.StringProperty(name="Operation name", default="Operation")
+    name: StringProperty(
+        name="Operation name",
+        default="Operation",
+    )
     computing = False  # for UiList display
 
 
 # chain is just a set of operations which get connected on export into 1 file.
 class camChain(bpy.types.PropertyGroup):
-    index: bpy.props.IntProperty(
-        name="index", description="index in the hard-defined camChains", default=-1)
-    active_operation: bpy.props.IntProperty(name="active operation", description="active operation in chain",
-                                            default=-1)
-    name: bpy.props.StringProperty(name="Chain Name", default="Chain")
-    filename: bpy.props.StringProperty(name="File name", default="Chain")  # filename of
-    valid: bpy.props.BoolProperty(
-        name="Valid", description="True if whole chain is ok for calculation", default=True)
-    computing: bpy.props.BoolProperty(name="Computing right now", description="", default=False)
+    index: IntProperty(
+        name="index",
+        description="index in the hard-defined camChains",
+        default=-1,
+    )
+    active_operation: IntProperty(
+        name="active operation",
+        description="active operation in chain",
+        default=-1,
+    )
+    name: StringProperty(
+        name="Chain Name",
+        default="Chain",
+    )
+    filename: StringProperty(
+        name="File name",
+        default="Chain",
+    )  # filename of
+    valid: BoolProperty(
+        name="Valid",
+        description="True if whole chain is ok for calculation",
+        default=True,
+    )
+    computing: BoolProperty(
+        name="Computing right now",
+        description="",
+        default=False,
+    )
     # this is to hold just operation names.
-    operations: bpy.props.CollectionProperty(type=opReference)
+    operations: CollectionProperty(
+        type=opReference,
+    )
 
 
 class CAM_CUTTER_MT_presets(Menu):
@@ -1594,28 +2438,47 @@ def register():
 
     s = bpy.types.Scene
 
-    s.cam_chains = bpy.props.CollectionProperty(type=camChain)
-    s.cam_active_chain = bpy.props.IntProperty(
-        name="CAM Active Chain", description="The selected chain")
+    s.cam_chains = CollectionProperty(
+        type=camChain,
+    )
+    s.cam_active_chain = IntProperty(
+        name="CAM Active Chain",
+        description="The selected chain",
+    )
 
-    s.cam_operations = bpy.props.CollectionProperty(type=camOperation)
+    s.cam_operations = CollectionProperty(
+        type=camOperation,
+    )
 
-    s.cam_active_operation = bpy.props.IntProperty(name="CAM Active Operation", description="The selected operation",
-                                                   update=updateOperation)
-    s.cam_machine = bpy.props.PointerProperty(type=machineSettings)
+    s.cam_active_operation = IntProperty(
+        name="CAM Active Operation",
+        description="The selected operation",
+        update=updateOperation,
+    )
+    s.cam_machine = PointerProperty(
+        type=machineSettings,
+    )
 
-    s.cam_import_gcode = bpy.props.PointerProperty(type=import_settings)
+    s.cam_import_gcode = PointerProperty(
+        type=import_settings,
+    )
 
-    s.cam_text = bpy.props.StringProperty()
+    s.cam_text = StringProperty()
     bpy.app.handlers.frame_change_pre.append(ops.timer_update)
     bpy.app.handlers.load_post.append(check_operations_on_load)
     # bpy.types.INFO_HT_header.append(header_info)
 
-    s.cam_pack = bpy.props.PointerProperty(type=PackObjectsSettings)
+    s.cam_pack = PointerProperty(
+        type=PackObjectsSettings,
+    )
 
-    s.cam_slice = bpy.props.PointerProperty(type=SliceObjectsSettings)
+    s.cam_slice = PointerProperty(
+        type=SliceObjectsSettings,
+    )
 
-    bpy.types.Scene.interface = bpy.props.PointerProperty(type=CAM_INTERFACE_Properties)
+    bpy.types.Scene.interface = PointerProperty(
+        type=CAM_INTERFACE_Properties,
+    )
 
     basrelief.register()
 
