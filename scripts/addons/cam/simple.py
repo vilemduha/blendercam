@@ -31,7 +31,12 @@ import bpy
 import mathutils
 from mathutils import *
 from math import *
-from shapely.geometry import Point, LineString, Polygon, MultiLineString
+from shapely.geometry import (
+    Point,
+    LineString,
+    Polygon,
+    multilinestring
+)
 
 
 def tuple_add(t, t1):  # add two tuples as Vectors
@@ -320,7 +325,8 @@ def remove_doubles():
 def add_overcut(diametre, overcut=True):
     if overcut:
         name = bpy.context.active_object.name
-        bpy.ops.object.curve_overcuts(diameter=diametre, threshold=math.pi/2.05)
+        bpy.ops.object.curve_overcuts(
+            diameter=diametre, threshold=math.pi/2.05)
         overcut_name = bpy.context.active_object.name
         make_active(name)
         bpy.ops.object.delete()
@@ -377,4 +383,5 @@ def active_to_coords():
 
 # returns shapely polygon from active object
 def active_to_shapely_poly():
-    return Polygon(active_to_coords())  # convert coordinates to shapely Polygon datastructure
+    # convert coordinates to shapely Polygon datastructure
+    return Polygon(active_to_coords())

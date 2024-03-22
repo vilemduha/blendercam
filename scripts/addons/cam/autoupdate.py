@@ -1,5 +1,5 @@
 from datetime import date
-from cam.version import __version__ as current_version
+from .version import __version__ as current_version
 from urllib.request import urlopen
 import json
 import pathlib

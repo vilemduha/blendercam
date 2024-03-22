@@ -20,9 +20,14 @@
 # ***** END GPL LICENCE BLOCK *****
 
 import bpy
-from bpy.props import *
+from bpy.props import (
+    EnumProperty,
+    FloatProperty,
+    IntProperty,
+    StringProperty,
+)
 
-from cam import utils, parametric
+from . import utils, parametric
 import math
 from Equation import Expression
 import numpy as np

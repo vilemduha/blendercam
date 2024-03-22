@@ -1,6 +1,6 @@
 
 import bpy
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -30,9 +30,11 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
         if not self.has_correct_level():
             return
         row = self.layout.row(align=True)
-        row.menu("CAM_CUTTER_MT_presets", text=bpy.types.CAM_CUTTER_MT_presets.bl_label)
+        row.menu("CAM_CUTTER_MT_presets",
+                 text=bpy.types.CAM_CUTTER_MT_presets.bl_label)
         row.operator("render.cam_preset_cutter_add", text="", icon='ADD')
-        row.operator("render.cam_preset_cutter_add", text="", icon='REMOVE').remove_active = True
+        row.operator("render.cam_preset_cutter_add", text="",
+                     icon='REMOVE').remove_active = True
 
     def draw_cutter_id(self):
         if not self.has_correct_level():
@@ -97,7 +99,8 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
                     text='Warning - only convex shapes are supported. ', icon='COLOR_RED')
                 self.layout.label(text='If your custom cutter is concave,')
                 self.layout.label(text='switch exact mode off.')
-            self.layout.prop_search(self.op, "cutter_object_name", bpy.data, "objects")
+            self.layout.prop_search(
+                self.op, "cutter_object_name", bpy.data, "objects")
 
     def draw_cutter_diameter(self):
         if not self.has_correct_level():
@@ -124,9 +127,11 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
             return
 
         if self.op.cutter_type in ['BALLCONE']:
-            engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
+            engagement = round(
+                100 * self.op.dist_between_paths / self.op.ball_radius, 1)
         else:
-            engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
+            engagement = round(
+                100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
 
         self.layout.label(text=f"Cutter engagement: {engagement}%")
 

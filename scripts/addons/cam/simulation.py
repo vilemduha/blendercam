@@ -25,13 +25,12 @@ import bpy
 import mathutils
 import math
 import time
-from bpy.props import *
-from cam import utils
+from . import utils
 import numpy as np
 
-from cam import simple
-from cam import image_utils
-from cam.async_op import progress_async
+from . import simple
+from . import image_utils
+from .async_op import progress_async
 
 
 def createSimulationObject(name, operations, i):
@@ -353,7 +352,8 @@ def getCutterArray(operation, pixsize):
                 if v.length <= cutter_r:
                     z = -(v.length - ball_r) * s - Ball_R + D_ofset
                     if v.length <= ball_r:
-                        z = math.sin(math.acos(v.length / Ball_R)) * Ball_R - Ball_R
+                        z = math.sin(math.acos(v.length / Ball_R)
+                                     ) * Ball_R - Ball_R
                     car.itemset((a, b), z)
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[operation.cutter_object_name]
@@ -389,13 +389,15 @@ def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):
     and optionally returning the volume that has been milled. This is now used for feedrate tweaking."""
     m = int(cutterArray.shape[0] / 2)
     size = cutterArray.shape[0]
-    if xs > m and xs < si.shape[0] - m and ys > m and ys < si.shape[1] - m:  # whole cutter in image there
+    # whole cutter in image there
+    if xs > m and xs < si.shape[0] - m and ys > m and ys < si.shape[1] - m:
         if getvolume:
             volarray = si[xs - m:xs - m + size, ys - m:ys - m + size].copy()
         si[xs - m:xs - m + size, ys - m:ys - m + size] = np.minimum(si[xs - m:xs - m + size, ys - m:ys - m + size],
                                                                     cutterArray + z)
         if getvolume:
-            volarray = si[xs - m:xs - m + size, ys - m:ys - m + size] - volarray
+            volarray = si[xs - m:xs - m + size,
+                          ys - m:ys - m + size] - volarray
             vsum = abs(volarray.sum())
             # print(vsum)
             return vsum

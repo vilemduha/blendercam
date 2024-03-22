@@ -1,6 +1,6 @@
 
 import bpy
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -30,9 +30,11 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, bpy.types.Panel):
         if not self.has_correct_level():
             return
         row = self.layout.row(align=True)
-        row.menu("CAM_MACHINE_MT_presets", text=bpy.types.CAM_MACHINE_MT_presets.bl_label)
+        row.menu("CAM_MACHINE_MT_presets",
+                 text=bpy.types.CAM_MACHINE_MT_presets.bl_label)
         row.operator("render.cam_preset_machine_add", text="", icon='ADD')
-        row.operator("render.cam_preset_machine_add", text="", icon='REMOVE').remove_active = True
+        row.operator("render.cam_preset_machine_add", text="",
+                     icon='REMOVE').remove_active = True
 
     def draw_post_processor(self):
         if not self.has_correct_level():

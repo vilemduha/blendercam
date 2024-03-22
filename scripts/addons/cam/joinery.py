@@ -23,11 +23,19 @@
 
 
 import bpy
-from bpy.props import *
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
 
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, puzzle_joinery
+from . import (
+    utils,
+    pack,
+    polygon_utils_cam,
+    simple,
+    gcodepath,
+    bridges,
+    parametric,
+    puzzle_joinery
+)
 import shapely
 from shapely.geometry import Point, LineString, Polygon
 import mathutils
@@ -94,7 +102,8 @@ def twist_line(length, thickness, finger_play, percentage, amount, distance, cen
     spacing = distance / amount
     while amount > 0:
         position = spacing * amount
-        interlock_twist(length, thickness, finger_play, percentage=percentage, cx=position)
+        interlock_twist(length, thickness, finger_play,
+                        percentage=percentage, cx=position)
         print('twistline', amount, distance, position)
         amount -= 1
 
@@ -143,13 +152,16 @@ def horizontal_finger(length, thickness, finger_play, amount, center=True):
                 mortise(length, thickness, finger_play, 0, thickness / 2)
                 simple.active_name("_width_finger")
             else:
-                mortise(length, thickness, finger_play, i * 2 * length, thickness / 2)
+                mortise(length, thickness, finger_play,
+                        i * 2 * length, thickness / 2)
                 simple.active_name("_width_finger")
-                mortise(length, thickness, finger_play, -i * 2 * length, thickness / 2)
+                mortise(length, thickness, finger_play, -
+                        i * 2 * length, thickness / 2)
                 simple.active_name("_width_finger")
     else:
         for i in range(amount):
-            mortise(length, thickness, finger_play, length / 2 + 2 * i * length, 0)
+            mortise(length, thickness, finger_play,
+                    length / 2 + 2 * i * length, 0)
             simple.active_name("_width_finger")
 
     simple.join_multiple("_width_finger")
@@ -229,7 +241,8 @@ def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
     #   creates pockets pocket using mortise function for kerf bending
     dist = 3 * finger_width / 2
     while dist < length:
-        mortise(height - 2 * finger_thick, pocket_width, 0, dist, 0, math.pi / 2)
+        mortise(height - 2 * finger_thick,
+                pocket_width, 0, dist, 0, math.pi / 2)
         simple.active_name("_flex_pocket")
         dist += finger_width * 2
 
@@ -240,7 +253,8 @@ def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
 def make_variable_flex_pocket(height, finger_thick, pocket_width, locations):
     #   creates pockets pocket using mortise function for kerf bending
     for dist in locations:
-        mortise(height + 2 * finger_thick, pocket_width, 0, dist, 0, math.pi / 2)
+        mortise(height + 2 * finger_thick,
+                pocket_width, 0, dist, 0, math.pi / 2)
         simple.active_name("_flex_pocket")
 
     simple.join_multiple("_flex_pocket")
@@ -262,7 +276,8 @@ def create_flex_side(length, height, finger_thick, top_bottom=False):
     else:
         simple.make_active("base")
         fingers = bpy.context.active_object
-        bpy.ops.transform.translate(value=(0.0, height / 2 - finger_thick / 2 + 0.0003, 0.0))
+        bpy.ops.transform.translate(
+            value=(0.0, height / 2 - finger_thick / 2 + 0.0003, 0.0))
 
     bpy.ops.curve.simple(align='WORLD', location=(length / 2 + 0.00025, 0, 0), rotation=(0, 0, 0),
                          Simple_Type='Rectangle', Simple_width=length, Simple_length=height, shape='3D',
@@ -317,12 +332,14 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
         if not_start:
             while distance <= pd:
                 mortise_angle = angle(oldp, p)
-                mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
+                mortise_angle_difference = abs(
+                    mortise_angle - old_mortise_angle)
                 mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
                     math.pi / 4))  # factor for tolerance for the finger
 
                 if base:
-                    mortise(finger_size, finger_thick, finger_tolerance * mad, distance, 0, 0)
+                    mortise(finger_size, finger_thick,
+                            finger_tolerance * mad, distance, 0, 0)
                     simple.active_name("_base")
                 else:
                     mortise_point = loop.interpolate(distance)
@@ -431,10 +448,12 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
         if not_start:
             while distance <= pd:
                 mortise_angle = angle(oldp, p)
-                mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
+                mortise_angle_difference = abs(
+                    mortise_angle - old_mortise_angle)
                 mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
                     math.pi / 4))  # factor for tolerance for the finger
-                distance += mad * finger_tolerance  # move finger by the factor mad greater with larger angle difference
+                # move finger by the factor mad greater with larger angle difference
+                distance += mad * finger_tolerance
                 mortise_point = loop.interpolate(distance)
                 if mad > 2 and double_adaptive:
                     hpos.append(distance)  # saves the mortise center
@@ -465,12 +484,15 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 #   adaptive finger length start
                 while finger_sz > min_finger and next_angle_difference > adaptive:
                     #                while finger_sz > min_finger and next_angle_difference > adaptive:
-                    finger_sz *= 0.95  # reduce the size of finger by a percentage... the closer to 1.0, the slower
+                    # reduce the size of finger by a percentage... the closer to 1.0, the slower
+                    finger_sz *= 0.95
                     distance = old_distance + 3 * oldfinger_sz / 2 + finger_sz / 2
-                    mortise_point = loop.interpolate(distance)  # get the next mortise point
+                    mortise_point = loop.interpolate(
+                        distance)  # get the next mortise point
                     next_mortise_angle = angle((old_mortise_point.x, old_mortise_point.y),
                                                (mortise_point.x, mortise_point.y))  # calculate next angle
-                    next_angle_difference = abs(next_mortise_angle - mortise_angle)
+                    next_angle_difference = abs(
+                        next_mortise_angle - mortise_angle)
 
                 oldfinger_sz = finger_sz
                 old_mortise_angle = mortise_angle
@@ -488,7 +510,8 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
 def single_interlock(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle, type, amount=1,
                      twist_percentage=0.5):
     if type == "GROOVE":
-        interlock_groove(finger_depth, finger_thick, finger_tolerance, x, y, groove_angle)
+        interlock_groove(finger_depth, finger_thick,
+                         finger_tolerance, x, y, groove_angle)
     elif type == "TWIST":
         interlock_twist(finger_depth, finger_thick, finger_tolerance,
                         x, y, groove_angle, percentage=twist_percentage)

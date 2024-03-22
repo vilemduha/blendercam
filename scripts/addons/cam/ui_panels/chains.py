@@ -1,9 +1,9 @@
 
 import bpy
 from bpy.types import UIList
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from .buttons_panel import CAMButtonsPanel
 
-import cam
+from ..utils import isChainValid
 
 
 class CAM_UL_operations(UIList):
@@ -47,7 +47,8 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
         row = layout.row()
         scene = bpy.context.scene
 
-        row.template_list("CAM_UL_chains", '', scene, "cam_chains", scene, 'cam_active_chain')
+        row.template_list("CAM_UL_chains", '', scene,
+                          "cam_chains", scene, 'cam_active_chain')
         col = row.column(align=True)
         col.operator("scene.cam_chain_add", icon='ADD', text="")
         col.operator("scene.cam_chain_remove", icon='REMOVE', text="")
@@ -60,21 +61,28 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
                 row.template_list("CAM_UL_operations", '', chain,
                                   "operations", chain, 'active_operation')
                 col = row.column(align=True)
-                col.operator("scene.cam_chain_operation_add", icon='ADD', text="")
-                col.operator("scene.cam_chain_operation_remove", icon='REMOVE', text="")
+                col.operator("scene.cam_chain_operation_add",
+                             icon='ADD', text="")
+                col.operator("scene.cam_chain_operation_remove",
+                             icon='REMOVE', text="")
                 if len(chain.operations) > 0:
-                    col.operator("scene.cam_chain_operation_up", icon='TRIA_UP', text="")
-                    col.operator("scene.cam_chain_operation_down", icon='TRIA_DOWN', text="")
+                    col.operator("scene.cam_chain_operation_up",
+                                 icon='TRIA_UP', text="")
+                    col.operator("scene.cam_chain_operation_down",
+                                 icon='TRIA_DOWN', text="")
 
                 if not chain.computing:
                     layout.operator("object.calculate_cam_paths_chain",
                                     text="Calculate chain paths & Export Gcode")
-                    layout.operator("object.cam_export_paths_chain", text="Export chain gcode")
-                    layout.operator("object.cam_simulate_chain", text="Simulate this chain")
+                    layout.operator("object.cam_export_paths_chain",
+                                    text="Export chain gcode")
+                    layout.operator("object.cam_simulate_chain",
+                                    text="Simulate this chain")
 
-                    valid, reason = cam.isChainValid(chain, context)
+                    valid, reason = isChainValid(chain, context)
                     if not valid:
-                        layout.label(icon="ERROR", text=f"Can't compute chain - reason:\n")
+                        layout.label(
+                            icon="ERROR", text=f"Can't compute chain - reason:\n")
                         layout.label(text=reason)
                 else:
                     layout.label(text='chain is currently computing')

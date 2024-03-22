@@ -19,26 +19,49 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# blender operators definitions are in this file. They mostly call the functions from utils.py
+# blender operators definitions are in this file. They mostly call the functions from py
 
 
 import bpy
-from bpy.props import *
+from bpy.props import (
+    EnumProperty,
+    StringProperty,
+
+)
 from bpy_extras.io_utils import ImportHelper
 
 import subprocess
 import os
 import threading
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, simulation
-from cam.async_op import AsyncOperatorMixin, AsyncCancelledException
+from . import (
+    utils,
+    pack,
+    polygon_utils_cam,
+    simple,
+    gcodepath,
+    bridges,
+    simulation,
+)
+from .utils import (
+    was_hidden_dict,
+    reload_pathss,
+    isValid,
+    isChainValid,
+    silhoueteOffset,
+    getBoundsWorldspace,
+    addMachineAreaObject,
+)
+from .async_op import (
+    AsyncOperatorMixin,
+    AsyncCancelledException,
+)
 import shapely
 import mathutils
 import math
 import textwrap
 import traceback
 
-import cam
-from cam.exception import *
+from .exception import *
 
 
 class threadCom:  # object passed to threads to read background process stdout info
@@ -83,7 +106,7 @@ def timer_update(context):
 
                     o = s.cam_operations[tcom.opname]
                     o.computing = False
-                    utils.reload_paths(o)
+                    reload_paths(o)
                     update_zbufferimage_tag = False
                     update_offsetimage_tag = False
                 else:
@@ -110,7 +133,7 @@ class PathsBackground(bpy.types.Operator):
         bpath = bpy.app.binary_path
         fpath = bpy.data.filepath
 
-        for p in bpy.utils.script_paths():
+        for p in bpy.script_paths():
             scriptpath = p + os.sep + 'addons' + os.sep + 'cam' + os.sep + 'backgroundop.py'
             print(scriptpath)
             if os.path.isfile(scriptpath):
@@ -231,7 +254,7 @@ class CalculatePath(bpy.types.Operator, AsyncOperatorMixin):
         s = context.scene
         o = s.cam_operations[s.cam_active_operation]
         if o is not None:
-            if cam.isValid(o, context):
+            if isValid(o, context):
                 return True
         return False
 
@@ -318,7 +341,7 @@ class PathsChain(bpy.types.Operator, AsyncOperatorMixin):
     def poll(cls, context):
         s = context.scene
         chain = s.cam_chains[s.cam_active_chain]
-        return cam.isChainValid(chain, context)[0]
+        return isChainValid(chain, context)[0]
 
     async def execute_async(self, context):
         s = context.scene
@@ -357,7 +380,7 @@ class PathExportChain(bpy.types.Operator):
     def poll(cls, context):
         s = context.scene
         chain = s.cam_chains[s.cam_active_chain]
-        return cam.isChainValid(chain, context)[0]
+        return isChainValid(chain, context)[0]
 
     def execute(self, context):
         s = bpy.context.scene
@@ -441,7 +464,7 @@ class CAMSimulateChain(bpy.types.Operator, AsyncOperatorMixin):
     def poll(cls, context):
         s = context.scene
         chain = s.cam_chains[s.cam_active_chain]
-        return cam.isChainValid(chain, context)[0]
+        return isChainValid(chain, context)[0]
 
     operation: StringProperty(
         name="Operation",
@@ -623,7 +646,7 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     ob = bpy.data.objects[sname]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
-    utils.silhoueteOffset(ob, -new_cutter_diameter/2, 1, 0.3)
+    silhoueteOffset(ob, -new_cutter_diameter/2, 1, 0.3)
     bpy.context.active_object.name = 'medial_pocket'
 
     if not mpocket_exists:     # create a pocket operation if it does not exist already
@@ -660,7 +683,7 @@ class CamOperationAdd(bpy.types.Operator):
                         "Please add an object to base the operation on.")
             return {'CANCELLED'}
 
-        minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
+        minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace([ob])
         s.cam_operations.add()
         o = s.cam_operations[-1]
         o.object_name = ob.name
@@ -672,7 +695,7 @@ class CamOperationAdd(bpy.types.Operator):
         o.filename = o.name
 
         if s.objects.get('CAM_machine') is None:
-            utils.addMachineAreaObject()
+            addMachineAreaObject()
 
         return {'FINISHED'}
 
@@ -751,9 +774,9 @@ class CamOperationRemove(bpy.types.Operator):
             pass
 
         ao = scene.cam_operations[scene.cam_active_operation]
-        print(cam.was_hidden_dict)
-        if ao.name in cam.was_hidden_dict:
-            del cam.was_hidden_dict[ao.name]
+        print(was_hidden_dict)
+        if ao.name in was_hidden_dict:
+            del was_hidden_dict[ao.name]
 
         scene.cam_operations.remove(scene.cam_active_operation)
         if scene.cam_active_operation > 0:

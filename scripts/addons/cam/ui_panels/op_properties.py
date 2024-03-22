@@ -1,6 +1,6 @@
 
 import bpy
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -38,9 +38,11 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
             return
 
         if self.op.cutter_type in ['BALLCONE']:
-            engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
+            engagement = round(
+                100 * self.op.dist_between_paths / self.op.ball_radius, 1)
         else:
-            engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
+            engagement = round(
+                100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
 
         if engagement > 50:
             self.layout.label(text="Warning: High cutter engagement")
@@ -200,9 +202,11 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
             if self.op.use_bridges:
                 self.layout.prop(self.op, 'bridges_width')
                 self.layout.prop(self.op, 'bridges_height')
-                self.layout.prop_search(self.op, "bridges_collection_name", bpy.data, "collections")
+                self.layout.prop_search(
+                    self.op, "bridges_collection_name", bpy.data, "collections")
                 self.layout.prop(self.op, 'use_bridge_modifiers')
-            self.layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
+            self.layout.operator("scene.cam_bridges_add",
+                                 text="Autogenerate bridges")
 
     def draw_skin(self):
         if not self.has_correct_level():

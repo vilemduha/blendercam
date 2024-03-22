@@ -27,38 +27,37 @@ import mathutils
 import math
 from math import *
 from mathutils import *
-from bpy.props import *
 
 import numpy
 
-from cam import chunk
-from cam.chunk import *
-from cam import USE_PROFILER
+from . import chunk
+from .chunk import *
+from .utils import USE_PROFILER
 
-from cam import collision
-from cam.collision import *
+from . import collision
+from .collision import *
 
-from cam import simple
-from cam.simple import *
+from . import simple
+from .simple import *
 
-from cam.async_op import progress_async
+from .async_op import progress_async
 
-from cam import bridges
-from cam.bridges import *
+from . import bridges
+from .bridges import *
 
-from cam import utils
-from cam import strategy
+from . import utils
+from . import strategy
 
-from cam import pattern
-from cam.pattern import *
+from . import pattern
+from .pattern import *
 
-from cam import polygon_utils_cam
-from cam.polygon_utils_cam import *
+from . import polygon_utils_cam
+from .polygon_utils_cam import *
 
-from cam import image_utils
-from cam.image_utils import *
-from cam.opencamlib.opencamlib import *
-from cam.nc import iso
+from . import image_utils
+from .image_utils import *
+from .opencamlib.opencamlib import *
+from .nc import iso
 
 
 def pointonline(a, b, c, tolerence):
@@ -66,7 +65,8 @@ def pointonline(a, b, c, tolerence):
     c = c - a
     dot_pr = b.dot(c)  # b dot c
     norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
-    angle = (numpy.rad2deg(numpy.arccos(dot_pr / norms)))  # find angle between the two vectors
+    # find angle between the two vectors
+    angle = (numpy.rad2deg(numpy.arccos(dot_pr / norms)))
     if angle > tolerence:
         return False
     else:
@@ -197,7 +197,8 @@ def exportGcodePath(filename, vertslist, operations):
         return c
 
     c = startNewFile()
-    last_cutter = None  # [o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
+    # [o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
+    last_cutter = None
 
     processedops = 0
     last = Vector((0, 0, 0))
@@ -237,7 +238,8 @@ def exportGcodePath(filename, vertslist, operations):
 
         c.flush_nc()
 
-        last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
+        last_cutter = [o.cutter_id, o.cutter_diameter,
+                       o.cutter_type, o.cutter_flutes]
         if o.cutter_type not in ['LASER', 'PLASMA']:
             if o.enable_hold:
                 c.write('(Hold Down)\n')
@@ -304,7 +306,8 @@ def exportGcodePath(filename, vertslist, operations):
             fadjust = True
 
         if m.use_position_definitions:  # dhull
-            last = Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
+            last = Vector(
+                (m.starting_position.x, m.starting_position.y, m.starting_position.z))
 
         lastrot = Euler((0, 0, 0))
         duration = 0.0
@@ -398,7 +401,8 @@ def exportGcodePath(filename, vertslist, operations):
                         if not cut:
                             if o.cutter_type == 'LASER':
                                 c.write("(*************dwell->laser on)\n")
-                                c.write("G04 P" + str(round(o.Laser_delay, 2)) + "\n")
+                                c.write(
+                                    "G04 P" + str(round(o.Laser_delay, 2)) + "\n")
                                 c.write(o.Laser_on + '\n')
                             elif o.cutter_type == 'PLASMA':
                                 c.write("(*************dwell->PLASMA on)\n")
@@ -437,7 +441,8 @@ def exportGcodePath(filename, vertslist, operations):
                         c.rapid(x=vx, y=vy, z=vz)
                         #  this is to evaluate operation time and adds a feedrate for fast moves
                         if vz is not None:
-                            f = plungefeedrate * fadjustval * 0.35  # compensate for multiple fast move accelerations
+                            # compensate for multiple fast move accelerations
+                            f = plungefeedrate * fadjustval * 0.35
                         if vx is not None or vy is not None:
                             f = freefeedrate * 0.8  # compensate for free feedrate acceleration
                 else:
@@ -462,7 +467,8 @@ def exportGcodePath(filename, vertslist, operations):
 
             processedops += 1
             if split and processedops > m.split_limit:
-                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_height * unitcorr)
+                c.rapid(x=last.x * unitcorr, y=last.y *
+                        unitcorr, z=free_height * unitcorr)
                 # @v=(ch.points[-1][0],ch.points[-1][1],free_height)
                 c.program_end()
                 findex += 1
@@ -481,8 +487,10 @@ def exportGcodePath(filename, vertslist, operations):
                     c.flush_nc()
 
                 c.feedrate(unitcorr * o.feedrate)
-                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_height * unitcorr)
-                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=last.z * unitcorr)
+                c.rapid(x=last.x * unitcorr, y=last.y *
+                        unitcorr, z=free_height * unitcorr)
+                c.rapid(x=last.x * unitcorr, y=last.y *
+                        unitcorr, z=last.z * unitcorr)
                 processedops = 0
 
         if o.remove_redundant_points and o.strategy != "DRILL":
@@ -639,14 +647,16 @@ async def getPath3axis(context, operation):
             pathSamples = []
             ob = bpy.data.objects[o.curve_object]
             pathSamples.extend(curveToChunks(ob))
-            pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
+            # sort before sampling
+            pathSamples = await utils.sortChunks(pathSamples, o)
             pathSamples = chunksRefine(pathSamples, o)
         elif o.strategy == 'PENCIL':
             await prepareArea(o)
             utils.getAmbient(o)
             pathSamples = getOffsetImageCavities(o, o.offset_image)
             pathSamples = limitChunks(pathSamples, o)
-            pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
+            # sort before sampling
+            pathSamples = await utils.sortChunks(pathSamples, o)
         elif o.strategy == 'CRAZY':
             await prepareArea(o)
             # pathSamples = crazyStrokeImage(o)

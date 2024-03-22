@@ -21,13 +21,35 @@
 
 
 import bpy
-from bpy.props import *
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+    IntProperty,
+)
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, joinery, \
-    curvecamtools, puzzle_joinery, involute_gear
+from . import (
+    utils,
+    pack,
+    polygon_utils_cam,
+    simple,
+    gcodepath,
+    bridges,
+    parametric,
+    joinery,
+    curvecamtools,
+    puzzle_joinery,
+    involute_gear
+)
 import shapely
-from shapely.geometry import Point, LineString, Polygon, MultiLineString, MultiPoint
+from shapely.geometry import (
+    Point,
+    LineString,
+    Polygon,
+    MultiLineString,
+    MultiPoint
+)
 import mathutils
 import math
 from Equation import Expression

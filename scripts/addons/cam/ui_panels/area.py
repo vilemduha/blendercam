@@ -1,6 +1,6 @@
 
 import bpy
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
@@ -52,7 +52,8 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
             return
         if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
             if self.op.strategy == 'CURVE':
-                self.layout.label(text="cannot use depth from object using CURVES")
+                self.layout.label(
+                    text="cannot use depth from object using CURVES")
 
             row = self.layout.row(align=True)
             row.label(text='Set max depth from')
@@ -66,8 +67,10 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
             if self.op.source_image_name != '':
                 i = bpy.data.images[self.op.source_image_name]
                 if i is not None:
-                    sy = int((self.op.source_image_size_x / i.size[0]) * i.size[1] * 1000000) / 1000
-                    self.layout.label(text='image size on y axis: ' + strInUnits(sy, 8))
+                    sy = int((self.op.source_image_size_x /
+                              i.size[0]) * i.size[1] * 1000000) / 1000
+                    self.layout.label(
+                        text='image size on y axis: ' + strInUnits(sy, 8))
                     self.layout.separator()
             self.layout.prop(self.op, 'source_image_offset')
             col = self.layout.column(align=True)
@@ -93,7 +96,8 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
         if self.op.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES', 'PARALLEL', 'CROSS']:
             self.layout.prop(self.op, 'use_limit_curve')
             if self.op.use_limit_curve:
-                self.layout.prop_search(self.op, "limit_curve", bpy.data, "objects")
+                self.layout.prop_search(
+                    self.op, "limit_curve", bpy.data, "objects")
 
     def draw(self, context):
         self.context = context

@@ -68,9 +68,17 @@ import bpy
 from bpy.props import *
 from bpy.types import Operator
 
-from cam import utils, polygon_utils_cam, simple
+from . import (
+    utils,
+    polygon_utils_cam,
+    simple,
+)
 import shapely
-from shapely.geometry import Point, LineString, Polygon
+from shapely.geometry import (
+    Point,
+    LineString,
+    Polygon
+)
 import mathutils
 import math
 

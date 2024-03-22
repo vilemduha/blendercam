@@ -20,7 +20,11 @@
 # ***** END GPL LICENCE BLOCK *****
 
 import bpy
-from cam import utils, simple, polygon_utils_cam
+from . import (
+    utils,
+    simple,
+    polygon_utils_cam
+)
 import shapely
 from shapely import geometry as sgeometry
 from shapely import affinity, prepared
@@ -67,7 +71,8 @@ def packCurves():
     rotate = packsettings.rotate
     rotate_angle = packsettings.rotate_angle
 
-    polyfield = []  # in this, position, rotation, and actual poly will be stored.
+    # in this, position, rotation, and actual poly will be stored.
+    polyfield = []
     for ob in bpy.context.selected_objects:
         simple.activate(ob)
         bpy.ops.object.make_single_user(type='SELECTED_OBJECTS')
@@ -123,7 +128,8 @@ def packCurves():
             p = porig
 
             if rotate:
-                ptrans = affinity.rotate(p, rot, origin=rotcenter, use_radians=True)
+                ptrans = affinity.rotate(
+                    p, rot, origin=rotcenter, use_radians=True)
                 ptrans = affinity.translate(ptrans, x, y)
             else:
                 ptrans = affinity.translate(p, x, y)
@@ -162,7 +168,8 @@ def packCurves():
                 # print(iter)
 
                 # reset polygon to best position here:
-                ptrans = affinity.rotate(porig, best[2], rotcenter, use_radians=True)
+                ptrans = affinity.rotate(
+                    porig, best[2], rotcenter, use_radians=True)
                 ptrans = affinity.translate(ptrans, best[0], best[1])
 
                 print(best[0], best[1], itera)
@@ -190,5 +197,6 @@ def packCurves():
         i += 1
     t = time.time() - t
 
-    polygon_utils_cam.shapelyToCurve('test', sgeometry.MultiPolygon(placedpolys), 0)
+    polygon_utils_cam.shapelyToCurve(
+        'test', sgeometry.MultiPolygon(placedpolys), 0)
     print(t)
