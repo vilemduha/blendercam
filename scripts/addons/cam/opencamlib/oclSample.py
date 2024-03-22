@@ -11,9 +11,9 @@ import tempfile
 from io_mesh_stl import blender_utils
 import mathutils
 import math
-from cam.simple import activate
-from cam.exception import *
-from cam.async_op import progress_async
+from ..simple import activate
+from ..exception import *
+from ..async_op import progress_async
 
 OCL_SCALE = 1000.0
 
@@ -59,9 +59,11 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
     cutter = None
 
     if op_cutter_type == 'END':
-        cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
+        cutter = ocl.CylCutter(
+            (op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'BALLNOSE':
-        cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
+        cutter = ocl.BallCutter(
+            (op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'VCARVE':
         cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2)
                                 * 1000, op_cutter_tip_angle, cutter_length)
@@ -89,7 +91,8 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
 
     for chunk in chunks:
         for coord in chunk.get_points_np():
-            bdc.appendPoint(ocl.CLPoint(coord[0] * 1000, coord[1] * 1000, op_minz * 1000))
+            bdc.appendPoint(ocl.CLPoint(
+                coord[0] * 1000, coord[1] * 1000, op_minz * 1000))
     await progress_async("OpenCAMLib sampling")
     bdc.run()
 

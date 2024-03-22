@@ -13,16 +13,17 @@ import tempfile
 import numpy as np
 
 from subprocess import call
-from cam.collision import BULLET_SCALE
-from cam import simple
-from cam.chunk import camPathChunk
-from cam.simple import *
-from cam.async_op import progress_async
+from ..collision import BULLET_SCALE
+from .. import simple
+from .. import utils
+from ..chunk import camPathChunk
+from ..simple import *
+from ..async_op import progress_async
 from shapely import geometry as sgeometry
-from .oclSample import get_oclSTL
-from cam import utils
-
-from cam.opencamlib.oclSample import ocl_sample
+from .oclSample import (
+    get_oclSTL,
+    ocl_sample
+)
 
 OCL_SCALE = 1000.0
 
@@ -84,14 +85,17 @@ def exportModelsToSTL(operation):
         bpy.ops.object.duplicate(linked=False)
         # collision_object = bpy.context.scene.objects.active
         # bpy.context.scene.objects.selected = collision_object
-        file_name = os.path.join(tempfile.gettempdir(), "model{0}.stl".format(str(file_number)))
-        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        file_name = os.path.join(
+            tempfile.gettempdir(), "model{0}.stl".format(str(file_number)))
+        bpy.ops.object.transform_apply(
+            location=True, rotation=True, scale=True)
         bpy.ops.transform.resize(value=(OCL_SCALE, OCL_SCALE, OCL_SCALE), constraint_axis=(False, False, False),
                                  orient_type='GLOBAL', mirror=False, use_proportional_edit=False,
                                  proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False,
                                  snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0),
                                  texture_space=False, release_confirm=False)
-        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        bpy.ops.object.transform_apply(
+            location=True, rotation=True, scale=True)
         bpy.ops.export_mesh.stl(check_existing=True, filepath=file_name, filter_glob="*.stl", use_selection=True,
                                 ascii=False, use_mesh_modifiers=True, axis_forward='Y', axis_up='Z', global_scale=1.0)
         bpy.ops.object.delete()
@@ -119,7 +123,8 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
 
     sample_index = 0
     for chunk, i_start, i_length in chunks_to_resample:
-        z = np.array([p.z for p in samples[sample_index:sample_index+i_length]]) / OCL_SCALE
+        z = np.array(
+            [p.z for p in samples[sample_index:sample_index+i_length]]) / OCL_SCALE
         pts = chunk.get_points_np()
         pt_z = pts[i_start:i_start+i_length, 2]
         pt_z = np.where(z > pt_z, z, pt_z)
@@ -149,7 +154,8 @@ def oclGetMedialAxis(operation, chunks):
     oclWaterlineHeightsToOCL(operation)
     operationSettingsToOCL(operation)
     curvesToOCL(operation)
-    call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "ocl.py")])
+    call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(),
+                                   "addons", "cam", "opencamlib", "ocl.py")])
     waterlineChunksFromOCL(operation, chunks)
 
 
@@ -164,12 +170,15 @@ async def oclGetWaterline(operation, chunks):
         op_cutter_tip_angle = operation['cutter_tip_angle']
 
     cutter = None
-    cutter_length = 150  # TODO: automatically determine necessary cutter length depending on object size
+    # TODO: automatically determine necessary cutter length depending on object size
+    cutter_length = 150
 
     if op_cutter_type == 'END':
-        cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
+        cutter = ocl.CylCutter(
+            (op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'BALLNOSE':
-        cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
+        cutter = ocl.BallCutter(
+            (op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
     elif op_cutter_type == 'VCARVE':
         cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2)
                                 * 1000, op_cutter_tip_angle, cutter_length)
@@ -192,7 +201,8 @@ async def oclGetWaterline(operation, chunks):
         for l in wl_loops:
             inpoints = []
             for p in l:
-                inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
+                inpoints.append(
+                    (p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
             inpoints.append(inpoints[0])
             chunk = camPathChunk(inpoints=inpoints)
             chunk.closed = True
