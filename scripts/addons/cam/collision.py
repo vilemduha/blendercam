@@ -50,8 +50,7 @@ def getCutterBullet(o):
                                             rotation=(0, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
-        bpy.ops.object.transform_apply(
-            location=False, rotation=False, scale=True)
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
@@ -65,8 +64,7 @@ def getCutterBullet(o):
                                               location=CUTTER_OFFSET, rotation=(0, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
-        bpy.ops.object.transform_apply(
-            location=False, rotation=False, scale=True)
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
@@ -85,8 +83,7 @@ def getCutterBullet(o):
                                         rotation=(math.pi, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
-        bpy.ops.object.transform_apply(
-            location=False, rotation=False, scale=True)
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
@@ -103,8 +100,7 @@ def getCutterBullet(o):
                                         location=CUTTER_OFFSET, rotation=(math.pi, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
-        bpy.ops.object.transform_apply(
-            location=False, rotation=False, scale=True)
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter = bpy.context.active_object
@@ -129,8 +125,7 @@ def getCutterBullet(o):
         bpy.ops.object.editmode_toggle()
         bpy.ops.object.convert(target='MESH')
         bpy.ops.transform.rotate(value=-math.pi / 2, orient_axis='X')
-        bpy.ops.object.transform_apply(
-            location=True, rotation=True, scale=True)
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         ob = bpy.context.active_object
         ob.name = "BallConeTool"
         ob_scr = ob.modifiers.new(type='SCREW', name='scr')
@@ -142,8 +137,7 @@ def getCutterBullet(o):
         bpy.data.objects['BallConeTool'].select_set(True)
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
-        bpy.ops.object.transform_apply(
-            location=False, rotation=False, scale=True)
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
         bpy.ops.rigidbody.object_add(type='ACTIVE')
         cutter.location = CUTTER_OFFSET
@@ -157,8 +151,7 @@ def getCutterBullet(o):
         cutter = bpy.context.active_object
         scale = o.cutter_diameter / cutob.dimensions.x
         cutter.scale *= BULLET_SCALE * scale
-        bpy.ops.object.transform_apply(
-            location=False, rotation=False, scale=True)
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN', center='BOUNDS')
 
         # print(cutter.dimensions,scale)
@@ -196,8 +189,7 @@ def subdivideLongEdges(ob, threshold):
             # bpy.ops.mesh.tris_convert_to_quads()
 
             bpy.ops.mesh.select_all(action='DESELECT')
-            bpy.ops.mesh.select_mode(
-                use_extend=False, use_expand=False, type='EDGE')
+            bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE')
             bpy.ops.object.editmode_toggle()
             for i in subdivides:
                 m.edges[i].select = True
@@ -270,8 +262,7 @@ def prepareBulletCollision(o):
                                  use_proportional_edit=False, proportional_edit_falloff='SMOOTH', proportional_size=1,
                                  texture_space=False, release_confirm=False)
         collisionob.location = collisionob.location * BULLET_SCALE
-        bpy.ops.object.transform_apply(
-            location=True, rotation=True, scale=True)
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         bpy.context.view_layer.objects.active = collisionob
         if active_collection in collisionob.users_collection:
             active_collection.objects.unlink(collisionob)
@@ -336,8 +327,7 @@ def getSampleBulletNAxis(cutter, startpoint, endpoint, rotation, cutter_compensa
     cutterVec.rotate(Euler(rotation))
     start = (startpoint * BULLET_SCALE + cutterVec).to_tuple()
     end = (endpoint * BULLET_SCALE + cutterVec).to_tuple()
-    pos = bpy.context.scene.rigidbody_world.convex_sweep_test(
-        cutter, start, end)
+    pos = bpy.context.scene.rigidbody_world.convex_sweep_test(cutter, start, end)
 
     if pos[3] == 1:
         pos = Vector(pos[0])

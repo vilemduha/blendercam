@@ -19,7 +19,7 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-# blender operators definitions are in this file. They mostly call the functions from py
+# blender operators definitions are in this file. They mostly call the functions from utils.py
 
 
 import bpy
@@ -133,7 +133,7 @@ class PathsBackground(bpy.types.Operator):
         bpath = bpy.app.binary_path
         fpath = bpy.data.filepath
 
-        for p in bpy.script_paths():
+        for p in bpy.utils.script_paths():
             scriptpath = p + os.sep + 'addons' + os.sep + 'cam' + os.sep + 'backgroundop.py'
             print(scriptpath)
             if os.path.isfile(scriptpath):

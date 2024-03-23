@@ -89,8 +89,7 @@ try:
 except ImportError:
     # pip install required python stuff
     subprocess.check_call([sys.executable, "-m", "ensurepip"])
-    subprocess.check_call([sys.executable, "-m", "pip",
-                           "install", "--upgrade", " pip"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install",
                            "shapely", "Equation", "opencamlib"])
     # install numba if available for this platform, ignore failure
@@ -101,12 +100,12 @@ from shapely import geometry as sgeometry  # noqa
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak & Contributors",
-    "version":(1,0,7),
+    "version": (1, 0, 7),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
     "warning": "",
-    "doc_url": "https://blendercom/",
+    "doc_url": "https://blendercam.com/",
     "tracker_url": "",
     "category": "Scene"}
 

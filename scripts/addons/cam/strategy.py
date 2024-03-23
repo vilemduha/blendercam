@@ -266,8 +266,7 @@ async def proj_curve(s, o):
 
     from cam import chunk
     if targetCurve.type != 'CURVE':
-        raise CamException(
-            'Projection target and source have to be curve objects!')
+        raise CamException('Projection target and source have to be curve objects!')
 
     if 1:
         extend_up = 0.1
@@ -329,8 +328,7 @@ async def pocket(o):
     print("cutter offset", c_offset)
 
     p = utils.getObjectOutline(c_offset, o, False)
-    approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) /
-               o.dist_between_paths) / 2
+    approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
     print("approximative:" + str(approxn))
     print(o)
 
@@ -388,8 +386,7 @@ async def pocket(o):
 
         # helix_enter first try here TODO: check if helix radius is not out of operation area.
         if o.movement.helix_enter:
-            helix_radius = c_offset * o.movement.helix_diameter * \
-                0.01  # 90 percent of cutter radius
+            helix_radius = c_offset * o.movement.helix_diameter * 0.01  # 90 percent of cutter radius
             helix_circumference = helix_radius * pi * 2
 
             revheight = helix_circumference * tan(o.movement.ramp_in_angle)
@@ -398,8 +395,7 @@ async def pocket(o):
                     # TODO:intercept closest next point when it should stay low
                     p = ch.get_point(0)
                     # first thing to do is to check if helix enter can really enter.
-                    checkc = Circle(helix_radius + c_offset,
-                                    o.optimisation.circle_detail)
+                    checkc = Circle(helix_radius + c_offset, o.optimisation.circle_detail)
                     checkc = affinity.translate(checkc, p[0], p[1])
                     covers = False
                     for poly in o.silhouete:
@@ -410,8 +406,7 @@ async def pocket(o):
                     if covers:
                         revolutions = (l[0] - p[2]) / revheight
                         # print(revolutions)
-                        h = Helix(
-                            helix_radius, o.optimisation.circle_detail, l[0], p, revolutions)
+                        h = Helix(helix_radius, o.optimisation.circle_detail, l[0], p, revolutions)
                         # invert helix if not the typical direction
                         if (o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW') or (
                                 o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW'):
@@ -531,12 +526,9 @@ async def drill(o):
         if ob.type == 'CURVE':
             ob.data.dimensions = '3D'
         try:
-            bpy.ops.object.transform_apply(
-                location=True, rotation=False, scale=False)
-            bpy.ops.object.transform_apply(
-                location=False, rotation=True, scale=False)
-            bpy.ops.object.transform_apply(
-                location=False, rotation=False, scale=True)
+            bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
+            bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+            bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
         except:
             pass
@@ -548,8 +540,7 @@ async def drill(o):
                 maxx, minx, maxy, miny, maxz, minz = -10000, 10000, -10000, 10000, -10000, 10000
                 for p in c.points:
                     if o.drill_type == 'ALL_POINTS':
-                        chunks.append(camPathChunk(
-                            [(p.co.x + l.x, p.co.y + l.y, p.co.z + l.z)]))
+                        chunks.append(camPathChunk([(p.co.x + l.x, p.co.y + l.y, p.co.z + l.z)]))
                     minx = min(p.co.x, minx)
                     maxx = max(p.co.x, maxx)
                     miny = min(p.co.y, miny)
@@ -558,8 +549,7 @@ async def drill(o):
                     maxz = max(p.co.z, maxz)
                 for p in c.bezier_points:
                     if o.drill_type == 'ALL_POINTS':
-                        chunks.append(camPathChunk(
-                            [(p.co.x + l.x, p.co.y + l.y, p.co.z + l.z)]))
+                        chunks.append(camPathChunk([(p.co.x + l.x, p.co.y + l.y, p.co.z + l.z)]))
                     minx = min(p.co.x, minx)
                     maxx = max(p.co.x, maxx)
                     miny = min(p.co.y, miny)
@@ -573,8 +563,7 @@ async def drill(o):
                 center = (cx, cy)
                 aspect = (maxx - minx) / (maxy - miny)
                 if (1.3 > aspect > 0.7 and o.drill_type == 'MIDDLE_SYMETRIC') or o.drill_type == 'MIDDLE_ALL':
-                    chunks.append(camPathChunk(
-                        [(center[0] + l.x, center[1] + l.y, cz + l.z)]))
+                    chunks.append(camPathChunk([(center[0] + l.x, center[1] + l.y, cz + l.z)]))
 
         elif ob.type == 'MESH':
             for v in ob.data.vertices:
@@ -639,8 +628,7 @@ async def medial_axis(o):
     elif o.cutter_type == 'BALLNOSE':
         maxdepth = - new_cutter_diameter / 2 - o.skin
     else:
-        raise CamException(
-            "Only Ballnose and V-carve cutters are supported for meial axis.")
+        raise CamException("Only Ballnose and V-carve cutters are supported for meial axis.")
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
@@ -661,8 +649,7 @@ async def medial_axis(o):
         # just a multipolygon
         mpoly = polys
     else:
-        raise CamException(
-            "Failed getting object silhouette. Is input curve closed?")
+        raise CamException("Failed getting object silhouette. Is input curve closed?")
 
     mpoly_boundary = mpoly.boundary
     ipol = 0
@@ -724,8 +711,7 @@ async def medial_axis(o):
                 vertr.append((False, newIdx))
                 if o.cutter_type == 'VCARVE':
                     # start the z depth calc from the "start depth" of the operation.
-                    z = o.maxz - \
-                        mpoly.boundary.distance(sgeometry.Point(p)) * slope
+                    z = o.maxz - mpoly.boundary.distance(sgeometry.Point(p)) * slope
                     if z < maxdepth:
                         z = maxdepth
                 elif o.cutter_type == 'BALL' or o.cutter_type == 'BALLNOSE':
@@ -821,13 +807,11 @@ def getLayers(operation, startdepth, enddepth):
     if operation.use_layers:
         layers = []
         n = math.ceil((startdepth - enddepth) / operation.stepdown)
-        print("start " + str(startdepth) + " end " +
-              str(enddepth) + " n " + str(n))
+        print("start " + str(startdepth) + " end " + str(enddepth) + " n " + str(n))
 
         layerstart = operation.maxz
         for x in range(0, n):
-            layerend = round(
-                max(startdepth - ((x + 1) * operation.stepdown), enddepth), 6)
+            layerend = round(max(startdepth - ((x + 1) * operation.stepdown), enddepth), 6)
             if int(layerstart * 10 ** 8) != int(layerend * 10 ** 8):
                 # it was possible that with precise same end of operation,
                 # last layer was done 2x on exactly same level...
@@ -850,8 +834,7 @@ def chunksToMesh(chunks, o):
 
     if o.machine_axes == '3':
         if m.use_position_definitions:
-            origin = (m.starting_position.x, m.starting_position.y,
-                      m.starting_position.z)  # dhull
+            origin = (m.starting_position.x, m.starting_position.y, m.starting_position.z)  # dhull
         else:
             origin = (0, 0, free_height)
 

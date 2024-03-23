@@ -78,8 +78,7 @@ def positionObject(operation):
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
 
-    minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(
-        [ob], operation.use_modifiers)
+    minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace([ob], operation.use_modifiers)
     totx = maxx - minx
     toty = maxy - miny
     totz = maxz - minz
@@ -101,8 +100,7 @@ def positionObject(operation):
         ob.location.z -= minz + totz / 2
 
     if ob.type != 'CURVE':
-        bpy.ops.object.transform_apply(
-            location=True, rotation=False, scale=False)
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     # addMaterialAreaObject()
 
 
@@ -156,8 +154,7 @@ def getBoundsWorldspace(obs, use_modifiers=False):
             bpy.ops.outliner.orphans_purge()
         else:
             if not hasattr(ob.data, "splines"):
-                raise CamException(
-                    "Can't do CAM operation on the selected object type")
+                raise CamException("Can't do CAM operation on the selected object type")
             # for coord in bb:
             for c in ob.data.splines:
                 for p in c.bezier_points:
@@ -262,8 +259,7 @@ def getBounds(o):
     # print('kolikrat sem rpijde')
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION' or o.geometry_source == 'CURVE':
         print("valid geometry")
-        minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(
-            o.objects, o.use_modifiers)
+        minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
 
         if o.minz_from == 'OBJECT':
             if minz == 10000000:
@@ -368,18 +364,14 @@ def samplePathLow(o, ch1, ch2, dosample):
 
                 cutterdepth = o.cutter_shape.dimensions.z / 2
                 for p in bpath_points:
-                    z = getSampleBullet(
-                        o.cutter_shape, p[0], p[1], cutterdepth, 1, o.minz)
+                    z = getSampleBullet(o.cutter_shape, p[0], p[1], cutterdepth, 1, o.minz)
                     if z > p[2]:
                         p[2] = z
             else:
                 for p in bpath_points:
-                    xs = (p[0] - o.min.x) / pixsize + \
-                        o.borderwidth + pixsize / 2  # -m
-                    ys = (p[1] - o.min.y) / pixsize + \
-                        o.borderwidth + pixsize / 2  # -m
-                    z = getSampleImage(
-                        (xs, ys), o.offset_image, o.minz) + o.skin
+                    xs = (p[0] - o.min.x) / pixsize + o.borderwidth + pixsize / 2  # -m
+                    ys = (p[1] - o.min.y) / pixsize + o.borderwidth + pixsize / 2  # -m
+                    z = getSampleImage((xs, ys), o.offset_image, o.minz) + o.skin
                     if z > p[2]:
                         p[2] = z
     return camPathChunk(bpath_points)
@@ -458,8 +450,7 @@ async def sampleChunks(o, pathSamples, layers):
 
         # for t in range(0,threads):
         our_points = patternchunk.get_points_np()
-        ambient_contains = shapely.contains(
-            o.ambient, shapely.points(our_points[:, 0:2]))
+        ambient_contains = shapely.contains(o.ambient, shapely.points(our_points[:, 0:2]))
         for s, in_ambient in zip(our_points, ambient_contains):
             if o.strategy != 'WATERLINE' and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
@@ -539,8 +530,7 @@ async def sampleChunks(o, pathSamples, layers):
                             v1 = lastsample
                             v2 = newsample
                             if o.movement.protect_vertical:
-                                v1, v2 = isVerticalLimit(
-                                    v1, v2, o.movement.protect_vertical_limit)
+                                v1, v2 = isVerticalLimit(v1, v2, o.movement.protect_vertical_limit)
                             v1 = Vector(v1)
                             v2 = Vector(v2)
                             # print(v1,v2)
@@ -555,16 +545,12 @@ async def sampleChunks(o, pathSamples, layers):
                                     layeractivechunks[ls].points.insert(-1,
                                                                         betweensample.to_tuple())
                                 else:
-                                    layeractivechunks[ls].points.append(
-                                        betweensample.to_tuple())
-                                layeractivechunks[ls +
-                                                  1].points.append(betweensample.to_tuple())
+                                    layeractivechunks[ls].points.append(betweensample.to_tuple())
+                                layeractivechunks[ls + 1].points.append(betweensample.to_tuple())
                             else:
                                 # print(v1,v2,betweensample,lastlayer,currentlayer)
-                                layeractivechunks[ls].points.insert(
-                                    -1, betweensample.to_tuple())
-                                layeractivechunks[ls + 1].points.insert(
-                                    0, betweensample.to_tuple())
+                                layeractivechunks[ls].points.insert(-1, betweensample.to_tuple())
+                                layeractivechunks[ls + 1].points.insert(0, betweensample.to_tuple())
 
                             li += 1
                     # this chunk is terminated, and allready in layerchunks /
@@ -717,8 +703,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
                 bpy.context.scene.frame_set(2)
                 bpy.context.scene.frame_set(0)
 
-            newsample = getSampleBulletNAxis(
-                cutter, startp, endp, rotation, cutterdepth)
+            newsample = getSampleBulletNAxis(cutter, startp, endp, rotation, cutterdepth)
 
             # print('totok',startp,endp,rotation,newsample)
             ################################
@@ -766,11 +751,9 @@ async def sampleChunksNAxis(o, pathSamples, layers):
                             for ls in r:
                                 splitdistance = layers[ls][1]
 
-                                ratio = (splitdistance - lastdistance) / \
-                                    (distance - lastdistance)
+                                ratio = (splitdistance - lastdistance) / (distance - lastdistance)
                                 # print(ratio)
-                                betweensample = lastsample + \
-                                    (newsample - lastsample) * ratio
+                                betweensample = lastsample + (newsample - lastsample) * ratio
                                 # this probably doesn't work at all!!!! check this algoritm>
                                 betweenrotation = tuple_add(lastrotation,
                                                             tuple_mul(tuple_sub(rotation, lastrotation), ratio))
@@ -778,54 +761,34 @@ async def sampleChunksNAxis(o, pathSamples, layers):
                                 betweenstartpoint = laststartpoint + \
                                     (startp - laststartpoint) * ratio
                                 # here, we need to have also possible endpoints always..
-                                betweenendpoint = lastendpoint + \
-                                    (endp - lastendpoint) * ratio
+                                betweenendpoint = lastendpoint + (endp - lastendpoint) * ratio
                                 if growing:
                                     if li > 0:
-                                        layeractivechunks[ls].points.insert(
-                                            -1, betweensample)
-                                        layeractivechunks[ls].rotations.insert(
-                                            -1, betweenrotation)
+                                        layeractivechunks[ls].points.insert(-1, betweensample)
+                                        layeractivechunks[ls].rotations.insert(-1, betweenrotation)
                                         layeractivechunks[ls].startpoints.insert(
                                             -1, betweenstartpoint)
-                                        layeractivechunks[ls].endpoints.insert(
-                                            -1, betweenendpoint)
+                                        layeractivechunks[ls].endpoints.insert(-1, betweenendpoint)
                                     else:
-                                        layeractivechunks[ls].points.append(
-                                            betweensample)
-                                        layeractivechunks[ls].rotations.append(
-                                            betweenrotation)
-                                        layeractivechunks[ls].startpoints.append(
-                                            betweenstartpoint)
-                                        layeractivechunks[ls].endpoints.append(
-                                            betweenendpoint)
-                                    layeractivechunks[ls +
-                                                      1].points.append(betweensample)
-                                    layeractivechunks[ls +
-                                                      1].rotations.append(betweenrotation)
-                                    layeractivechunks[ls +
-                                                      1].startpoints.append(betweenstartpoint)
-                                    layeractivechunks[ls +
-                                                      1].endpoints.append(betweenendpoint)
+                                        layeractivechunks[ls].points.append(betweensample)
+                                        layeractivechunks[ls].rotations.append(betweenrotation)
+                                        layeractivechunks[ls].startpoints.append(betweenstartpoint)
+                                        layeractivechunks[ls].endpoints.append(betweenendpoint)
+                                    layeractivechunks[ls + 1].points.append(betweensample)
+                                    layeractivechunks[ls + 1].rotations.append(betweenrotation)
+                                    layeractivechunks[ls + 1].startpoints.append(betweenstartpoint)
+                                    layeractivechunks[ls + 1].endpoints.append(betweenendpoint)
                                 else:
 
-                                    layeractivechunks[ls].points.insert(
-                                        -1, betweensample)
-                                    layeractivechunks[ls].rotations.insert(
-                                        -1, betweenrotation)
-                                    layeractivechunks[ls].startpoints.insert(
-                                        -1, betweenstartpoint)
-                                    layeractivechunks[ls].endpoints.insert(
-                                        -1, betweenendpoint)
+                                    layeractivechunks[ls].points.insert(-1, betweensample)
+                                    layeractivechunks[ls].rotations.insert(-1, betweenrotation)
+                                    layeractivechunks[ls].startpoints.insert(-1, betweenstartpoint)
+                                    layeractivechunks[ls].endpoints.insert(-1, betweenendpoint)
 
-                                    layeractivechunks[ls +
-                                                      1].points.append(betweensample)
-                                    layeractivechunks[ls +
-                                                      1].rotations.append(betweenrotation)
-                                    layeractivechunks[ls +
-                                                      1].startpoints.append(betweenstartpoint)
-                                    layeractivechunks[ls +
-                                                      1].endpoints.append(betweenendpoint)
+                                    layeractivechunks[ls + 1].points.append(betweensample)
+                                    layeractivechunks[ls + 1].rotations.append(betweenrotation)
+                                    layeractivechunks[ls + 1].startpoints.append(betweenstartpoint)
+                                    layeractivechunks[ls + 1].endpoints.append(betweenendpoint)
 
                                 # layeractivechunks[ls+1].points.insert(0,betweensample)
                                 li += 1
@@ -941,10 +904,8 @@ def silhoueteOffset(context, offset, style=1, mitrelimit=1.0):
     mp = shapely.ops.unary_union(silhs)
     print("offset attributes:")
     print(offset, style)
-    mp = mp.buffer(offset, cap_style=1, join_style=style,
-                   resolution=16, mitre_limit=mitrelimit)
-    shapelyToCurve(ob.name + '_offset_' +
-                   str(round(offset, 5)), mp, ob.location.z)
+    mp = mp.buffer(offset, cap_style=1, join_style=style, resolution=16, mitre_limit=mitrelimit)
+    shapelyToCurve(ob.name + '_offset_' + str(round(offset, 5)), mp, ob.location.z)
 
     return {'FINISHED'}
 
@@ -1311,8 +1272,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             polys = []
             for ob in objects:
                 if use_modifiers:
-                    ob = ob.evaluated_get(
-                        bpy.context.evaluated_depsgraph_get())
+                    ob = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
                     m = ob.to_mesh()
                 else:
                     m = ob.data
@@ -1443,8 +1403,7 @@ def addOrientationObject(o):
     name = o.name + ' orientation'
     s = bpy.context.scene
     if s.objects.find(name) == -1:
-        bpy.ops.object.empty_add(
-            type='ARROWS', align='WORLD', location=(0, 0, 0))
+        bpy.ops.object.empty_add(type='ARROWS', align='WORLD', location=(0, 0, 0))
 
         ob = bpy.context.active_object
         ob.empty_draw_size = 0.05
@@ -1512,13 +1471,11 @@ def addMachineAreaObject():
         o = bpy.context.active_object
         o.name = 'CAM_machine'
         o.data.name = 'CAM_machine'
-        bpy.ops.object.transform_apply(
-            location=True, rotation=False, scale=False)
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
         # o.type = 'SOLID'
         bpy.ops.object.editmode_toggle()
         bpy.ops.mesh.delete(type='ONLY_FACE')
-        bpy.ops.mesh.select_mode(
-            use_extend=False, use_expand=False, type='EDGE', action='TOGGLE')
+        bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type='EDGE', action='TOGGLE')
         bpy.ops.mesh.select_all(action='TOGGLE')
         bpy.ops.mesh.subdivide(number_cuts=32, smoothness=0, quadcorner='STRAIGHT_CUT', fractal=0,
                                fractal_along_normal=0, seed=0)
@@ -1560,8 +1517,7 @@ def addMaterialAreaObject():
         o = bpy.context.active_object
         o.name = 'CAM_material'
         o.data.name = 'CAM_material'
-        bpy.ops.object.transform_apply(
-            location=True, rotation=False, scale=False)
+        bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 
         # addTranspMat(o, 'blue_transparent', (0.458695, 0.794658, 0.8), 0.1)
         o.display_type = 'BOUNDS'

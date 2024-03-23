@@ -73,10 +73,8 @@ def derive_bezier_handles(a, b, c, d, tb, tc):
     final_c = c - (math.pow(1 - tc, 3) * a) - (math.pow(tc, 3) * d)
 
     # Multiply the inversed matrix with the position vector to get the handle points
-    bezier_b = matrix_determinant * \
-        ((matrix_d * final_b) + (-matrix_b * final_c))
-    bezier_c = matrix_determinant * \
-        ((-matrix_c * final_b) + (matrix_a * final_c))
+    bezier_b = matrix_determinant * ((matrix_d * final_b) + (-matrix_b * final_c))
+    bezier_c = matrix_determinant * ((-matrix_c * final_b) + (matrix_a * final_c))
 
     # Return the handle points
     return bezier_b, bezier_c
@@ -137,8 +135,7 @@ def create_parametric_curve(
 
     if use_cubic:
         points = [
-            function(((i - 3) / (3 * iterations)) *
-                     (max - min) + min, *args, **kwargs)
+            function(((i - 3) / (3 * iterations)) * (max - min) + min, *args, **kwargs)
             for i in range((3 * (iterations + 2)) + 1)
         ]
 
@@ -149,12 +146,9 @@ def create_parametric_curve(
             c = points[(3 * i) + 2]
             d = points[(3 * i) + 3]
 
-            bezier_bx, bezier_cx = derive_bezier_handles(
-                a[0], b[0], c[0], d[0], 1 / 3, 2 / 3)
-            bezier_by, bezier_cy = derive_bezier_handles(
-                a[1], b[1], c[1], d[1], 1 / 3, 2 / 3)
-            bezier_bz, bezier_cz = derive_bezier_handles(
-                a[2], b[2], c[2], d[2], 1 / 3, 2 / 3)
+            bezier_bx, bezier_cx = derive_bezier_handles(a[0], b[0], c[0], d[0], 1 / 3, 2 / 3)
+            bezier_by, bezier_cy = derive_bezier_handles(a[1], b[1], c[1], d[1], 1 / 3, 2 / 3)
+            bezier_bz, bezier_cz = derive_bezier_handles(a[2], b[2], c[2], d[2], 1 / 3, 2 / 3)
 
             points[(3 * i) + 1] = (bezier_bx, bezier_by, bezier_bz)
             points[(3 * i) + 2] = (bezier_cx, bezier_cy, bezier_cz)
@@ -164,16 +158,13 @@ def create_parametric_curve(
             spline.bezier_points[i].co = points[3 * (i + 1)]
 
             spline.bezier_points[i].handle_left_type = 'FREE'
-            spline.bezier_points[i].handle_left = Vector(
-                points[(3 * (i + 1)) - 1])
+            spline.bezier_points[i].handle_left = Vector(points[(3 * (i + 1)) - 1])
 
             spline.bezier_points[i].handle_right_type = 'FREE'
-            spline.bezier_points[i].handle_right = Vector(
-                points[(3 * (i + 1)) + 1])
+            spline.bezier_points[i].handle_right = Vector(points[(3 * (i + 1)) + 1])
 
     else:
-        points = [function(i / iterations, *args, **kwargs)
-                  for i in range(iterations + 1)]
+        points = [function(i / iterations, *args, **kwargs) for i in range(iterations + 1)]
 
         # Set point coordinates, disable handles
         for i in range(iterations + 1):
@@ -245,8 +236,7 @@ def make_edge_loops(*objects):
     if bpy.app.version >= (2, 80):
         ctx['selected_editable_objects'] = mesh_objects
     else:
-        ctx['selected_editable_bases'] = [scene.object_bases[o.name]
-                                          for o in mesh_objects]
+        ctx['selected_editable_bases'] = [scene.object_bases[o.name] for o in mesh_objects]
 
     # Join them together
     bpy.ops.object.join(ctx)

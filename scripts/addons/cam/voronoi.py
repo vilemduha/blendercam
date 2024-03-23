@@ -99,8 +99,7 @@ class Context(object):
                 x1, y1 = self.vertices[edge[1]][0], self.vertices[edge[1]][1]
                 x2, y2 = self.vertices[edge[2]][0], self.vertices[edge[2]][1]
                 pt1, pt2 = (x1, y1), (x2, y2)
-                inExtentP1, inExtentP2 = self.inExtent(
-                    x1, y1), self.inExtent(x2, y2)
+                inExtentP1, inExtentP2 = self.inExtent(x1, y1), self.inExtent(x2, y2)
                 if inExtentP1 and inExtentP2:
                     clipEdges.append((pt1, pt2))
                 elif inExtentP1 and not inExtentP2:
@@ -111,12 +110,10 @@ class Context(object):
                     clipEdges.append((pt1, pt2))
             else:  # infinite line
                 if edge[1] != -1:
-                    x1, y1 = self.vertices[edge[1]
-                                           ][0], self.vertices[edge[1]][1]
+                    x1, y1 = self.vertices[edge[1]][0], self.vertices[edge[1]][1]
                     leftDir = False
                 else:
-                    x1, y1 = self.vertices[edge[2]
-                                           ][0], self.vertices[edge[2]][1]
+                    x1, y1 = self.vertices[edge[2]][0], self.vertices[edge[2]][1]
                     leftDir = True
                 if self.inExtent(x1, y1):
                     pt1 = (x1, y1)
@@ -149,12 +146,10 @@ class Context(object):
                         clipEdges.append((pt1, pt2))
                 else:  # infinite line
                     if edge[1] != -1:
-                        x1, y1 = self.vertices[edge[1]
-                                               ][0], self.vertices[edge[1]][1]
+                        x1, y1 = self.vertices[edge[1]][0], self.vertices[edge[1]][1]
                         leftDir = False
                     else:
-                        x1, y1 = self.vertices[edge[2]
-                                               ][0], self.vertices[edge[2]][1]
+                        x1, y1 = self.vertices[edge[2]][0], self.vertices[edge[2]][1]
                         leftDir = True
                     if self.inExtent(x1, y1):
                         pt1 = (x1, y1)
@@ -328,10 +323,8 @@ class Context(object):
             self.polygons[edge.reg[0].sitenum] = []
         if edge.reg[1].sitenum not in self.polygons:
             self.polygons[edge.reg[1].sitenum] = []
-        self.polygons[edge.reg[0].sitenum].append(
-            (edge.edgenum, sitenumL, sitenumR))
-        self.polygons[edge.reg[1].sitenum].append(
-            (edge.edgenum, sitenumL, sitenumR))
+        self.polygons[edge.reg[0].sitenum].append((edge.edgenum, sitenumL, sitenumR))
+        self.polygons[edge.reg[1].sitenum].append((edge.edgenum, sitenumL, sitenumR))
 
         self.edges.append((edge.edgenum, sitenumL, sitenumR))
 
@@ -536,8 +529,7 @@ class Edge(object):
         self.edgenum = 0
 
     def dump(self):
-        print("(#%d a=%g, b=%g, c=%g)" %
-              (self.edgenum, self.a, self.b, self.c))
+        print("(#%d a=%g, b=%g, c=%g)" % (self.edgenum, self.a, self.b, self.c))
         print("ep", self.ep)
         print("reg", self.reg)
 

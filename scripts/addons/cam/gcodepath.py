@@ -238,8 +238,7 @@ def exportGcodePath(filename, vertslist, operations):
 
         c.flush_nc()
 
-        last_cutter = [o.cutter_id, o.cutter_diameter,
-                       o.cutter_type, o.cutter_flutes]
+        last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
         if o.cutter_type not in ['LASER', 'PLASMA']:
             if o.enable_hold:
                 c.write('(Hold Down)\n')
@@ -306,8 +305,7 @@ def exportGcodePath(filename, vertslist, operations):
             fadjust = True
 
         if m.use_position_definitions:  # dhull
-            last = Vector(
-                (m.starting_position.x, m.starting_position.y, m.starting_position.z))
+            last = Vector((m.starting_position.x, m.starting_position.y, m.starting_position.z))
 
         lastrot = Euler((0, 0, 0))
         duration = 0.0
@@ -401,8 +399,7 @@ def exportGcodePath(filename, vertslist, operations):
                         if not cut:
                             if o.cutter_type == 'LASER':
                                 c.write("(*************dwell->laser on)\n")
-                                c.write(
-                                    "G04 P" + str(round(o.Laser_delay, 2)) + "\n")
+                                c.write("G04 P" + str(round(o.Laser_delay, 2)) + "\n")
                                 c.write(o.Laser_on + '\n')
                             elif o.cutter_type == 'PLASMA':
                                 c.write("(*************dwell->PLASMA on)\n")
@@ -467,8 +464,7 @@ def exportGcodePath(filename, vertslist, operations):
 
             processedops += 1
             if split and processedops > m.split_limit:
-                c.rapid(x=last.x * unitcorr, y=last.y *
-                        unitcorr, z=free_height * unitcorr)
+                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_height * unitcorr)
                 # @v=(ch.points[-1][0],ch.points[-1][1],free_height)
                 c.program_end()
                 findex += 1
@@ -487,10 +483,8 @@ def exportGcodePath(filename, vertslist, operations):
                     c.flush_nc()
 
                 c.feedrate(unitcorr * o.feedrate)
-                c.rapid(x=last.x * unitcorr, y=last.y *
-                        unitcorr, z=free_height * unitcorr)
-                c.rapid(x=last.x * unitcorr, y=last.y *
-                        unitcorr, z=last.z * unitcorr)
+                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_height * unitcorr)
+                c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=last.z * unitcorr)
                 processedops = 0
 
         if o.remove_redundant_points and o.strategy != "DRILL":

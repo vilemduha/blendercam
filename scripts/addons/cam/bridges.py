@@ -63,8 +63,7 @@ def addAutoBridges(o):
     if bridgecollectionname == '' or bpy.data.collections.get(bridgecollectionname) is None:
         bridgecollectionname = 'bridges_' + o.name
         bpy.data.collections.new(bridgecollectionname)
-        bpy.context.collection.children.link(
-            bpy.data.collections[bridgecollectionname])
+        bpy.context.collection.children.link(bpy.data.collections[bridgecollectionname])
     g = bpy.data.collections[bridgecollectionname]
     o.bridges_collection_name = bridgecollectionname
     for ob in o.objects:
@@ -78,14 +77,12 @@ def addAutoBridges(o):
             minx, miny, maxx, maxy = c.bounds
             d1 = c.project(sgeometry.Point(maxx + 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, -math.pi / 2,
-                           o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, -math.pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point(minx - 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, math.pi / 2,
-                           o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, math.pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, maxy + 1000))
@@ -95,8 +92,7 @@ def addAutoBridges(o):
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, miny - 1000))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, math.pi, o.bridges_width,
-                           o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, math.pi, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
 
@@ -120,8 +116,7 @@ def getBridgesPoly(o):
         bridgespoly = sops.unary_union(shapes)
 
         # buffer the poly, so the bridges are not actually milled...
-        o.bridgespolyorig = bridgespoly.buffer(
-            distance=o.cutter_diameter / 2.0)
+        o.bridgespolyorig = bridgespoly.buffer(distance=o.cutter_diameter / 2.0)
         o.bridgespoly_boundary = o.bridgespolyorig.boundary
         o.bridgespoly_boundary_prep = prepared.prep(o.bridgespolyorig.boundary)
         o.bridgespoly = prepared.prep(o.bridgespolyorig)
@@ -183,12 +178,10 @@ def useBridges(ch, o):
                 if not startinside:
                     newpoints.append(chp1)
                 elif startinside:
-                    newpoints.append(
-                        (chp1[0], chp1[1], max(chp1[2], bridgeheight)))
+                    newpoints.append((chp1[0], chp1[1], max(chp1[2], bridgeheight)))
                 cpoints = []
                 if itpoint:
-                    pt = mathutils.Vector(
-                        (intersections.x, intersections.y, intersections.z))
+                    pt = mathutils.Vector((intersections.x, intersections.y, intersections.z))
                     cpoints = [pt]
 
                 elif itmpoint:
@@ -273,8 +266,7 @@ def useBridges(ch, o):
 
     #  verify if vertices have been generated and generate a mesh
     if verts:
-        mesh = bpy.data.meshes.new(
-            name=o.name + "_cut_bridges")  # generate new mesh
+        mesh = bpy.data.meshes.new(name=o.name + "_cut_bridges")  # generate new mesh
         # integrate coordinates and edges
         mesh.from_pydata(verts, edges, faces)
         object_data_add(bpy.context, mesh)      # create object

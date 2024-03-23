@@ -128,8 +128,7 @@ def packCurves():
             p = porig
 
             if rotate:
-                ptrans = affinity.rotate(
-                    p, rot, origin=rotcenter, use_radians=True)
+                ptrans = affinity.rotate(p, rot, origin=rotcenter, use_radians=True)
                 ptrans = affinity.translate(ptrans, x, y)
             else:
                 ptrans = affinity.translate(p, x, y)
@@ -168,8 +167,7 @@ def packCurves():
                 # print(iter)
 
                 # reset polygon to best position here:
-                ptrans = affinity.rotate(
-                    porig, best[2], rotcenter, use_radians=True)
+                ptrans = affinity.rotate(porig, best[2], rotcenter, use_radians=True)
                 ptrans = affinity.translate(ptrans, best[0], best[1])
 
                 print(best[0], best[1], itera)
@@ -197,6 +195,5 @@ def packCurves():
         i += 1
     t = time.time() - t
 
-    polygon_utils_cam.shapelyToCurve(
-        'test', sgeometry.MultiPolygon(placedpolys), 0)
+    polygon_utils_cam.shapelyToCurve('test', sgeometry.MultiPolygon(placedpolys), 0)
     print(t)

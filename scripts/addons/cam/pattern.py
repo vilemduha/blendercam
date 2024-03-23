@@ -154,8 +154,7 @@ def getPathPattern(operation):
     elif o.strategy == 'CROSS':
 
         pathchunks.extend(getPathPatternParallel(o, o.parallel_angle))
-        pathchunks.extend(getPathPatternParallel(
-            o, o.parallel_angle - math.pi / 2.0))
+        pathchunks.extend(getPathPatternParallel(o, o.parallel_angle - math.pi / 2.0))
 
     elif o.strategy == 'BLOCK':
 
@@ -330,8 +329,7 @@ def getPathPattern(operation):
         pathchunks = []
         chunks = []
         for p in polys:
-            p = p.buffer(-o.dist_between_paths / 10,
-                         o.optimisation.circle_detail)
+            p = p.buffer(-o.dist_between_paths / 10, o.optimisation.circle_detail)
             # first, move a bit inside, because otherwise the border samples go crazy very often changin between
             # hit/non hit and making too many jumps in the path.
             chunks.extend(shapelyToChunks(p, 0))
@@ -346,8 +344,7 @@ def getPathPattern(operation):
         for porig in polys:
             p = porig
             while not p.is_empty:
-                p = p.buffer(-o.dist_between_paths,
-                             o.optimisation.circle_detail)
+                p = p.buffer(-o.dist_between_paths, o.optimisation.circle_detail)
                 if not p.is_empty:
 
                     nchunks = shapelyToChunks(p, zlevel)

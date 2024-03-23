@@ -352,8 +352,7 @@ def getCutterArray(operation, pixsize):
                 if v.length <= cutter_r:
                     z = -(v.length - ball_r) * s - Ball_R + D_ofset
                     if v.length <= ball_r:
-                        z = math.sin(math.acos(v.length / Ball_R)
-                                     ) * Ball_R - Ball_R
+                        z = math.sin(math.acos(v.length / Ball_R)) * Ball_R - Ball_R
                     car.itemset((a, b), z)
     elif type == 'CUSTOM':
         cutob = bpy.data.objects[operation.cutter_object_name]
@@ -396,8 +395,7 @@ def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):
         si[xs - m:xs - m + size, ys - m:ys - m + size] = np.minimum(si[xs - m:xs - m + size, ys - m:ys - m + size],
                                                                     cutterArray + z)
         if getvolume:
-            volarray = si[xs - m:xs - m + size,
-                          ys - m:ys - m + size] - volarray
+            volarray = si[xs - m:xs - m + size, ys - m:ys - m + size] - volarray
             vsum = abs(volarray.sum())
             # print(vsum)
             return vsum
