@@ -325,8 +325,7 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
         if not_start:
             while distance <= pd:
                 mortise_angle = angle(oldp, p)
-                mortise_angle_difference = abs(
-                    mortise_angle - old_mortise_angle)
+                mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
                 mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
                     math.pi / 4))  # factor for tolerance for the finger
 

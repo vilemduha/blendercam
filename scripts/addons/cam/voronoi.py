@@ -129,13 +129,10 @@ class Context(object):
             for edge in edges:
                 equation = self.lines[edge[0]]  # line equation
                 if edge[1] != -1 and edge[2] != -1:  # finite line
-                    x1, y1 = self.vertices[edge[1]
-                                           ][0], self.vertices[edge[1]][1]
-                    x2, y2 = self.vertices[edge[2]
-                                           ][0], self.vertices[edge[2]][1]
+                    x1, y1 = self.vertices[edge[1]][0], self.vertices[edge[1]][1]
+                    x2, y2 = self.vertices[edge[2]][0], self.vertices[edge[2]][1]
                     pt1, pt2 = (x1, y1), (x2, y2)
-                    inExtentP1, inExtentP2 = self.inExtent(
-                        x1, y1), self.inExtent(x2, y2)
+                    inExtentP1, inExtentP2 = self.inExtent(x1, y1), self.inExtent(x2, y2)
                     if inExtentP1 and inExtentP2:
                         clipEdges.append((pt1, pt2))
                     elif inExtentP1 and not inExtentP2:

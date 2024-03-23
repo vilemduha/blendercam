@@ -233,8 +233,7 @@ class camPathChunk:
         if self.closed:
             dist_sq = (pos[0]-self.points[:, 0])**2 + (pos[1]-self.points[:, 1])**2
             point_idx = np.argmin(dist_sq)
-            new_points = np.concatenate(
-                (self.points[point_idx:], self.points[:point_idx+1]))
+            new_points = np.concatenate((self.points[point_idx:], self.points[:point_idx+1]))
             self.points = new_points
         else:
             if o.movement.type == 'MEANDER':
@@ -293,8 +292,7 @@ class camPathChunk:
 
     def pop(self, index):
         print("WARNING: Popping from chunk is slow", self, index)
-        self.points = np.concatenate(
-            (self.points[0:index], self.points[index+1:]), axis=0)
+        self.points = np.concatenate((self.points[0:index], self.points[index+1:]), axis=0)
         if len(self.startpoints) > 0:
             self.startpoints.pop(index)
             self.endpoints.pop(index)

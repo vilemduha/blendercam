@@ -567,8 +567,7 @@ async def drill(o):
 
         elif ob.type == 'MESH':
             for v in ob.data.vertices:
-                chunks.append(camPathChunk(
-                    [(v.co.x + l.x, v.co.y + l.y, v.co.z + l.z)]))
+                chunks.append(camPathChunk([(v.co.x + l.x, v.co.y + l.y, v.co.z + l.z)]))
         delob(ob)  # delete temporary object with applied transforms
 
     layers = getLayers(o, o.maxz, checkminz(o))
