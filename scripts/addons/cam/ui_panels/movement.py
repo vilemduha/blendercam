@@ -1,12 +1,17 @@
 import bpy
-from bpy.props import BoolProperty
-from bpy.props import EnumProperty
-from bpy.props import FloatProperty
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+)
 
 import math
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
-import cam.utils
-import cam.constants
+from .buttons_panel import CAMButtonsPanel
+from ..utils import update_operation
+from ..constants import (
+    PRECISION,
+    G64_INCOMPATIBLE_MACHINES
+)
 
 
 class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
@@ -24,7 +29,7 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         ),
         description='movement type',
         default='CLIMB',
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     insideout: EnumProperty(
@@ -35,7 +40,7 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         ),
         description='approach to the piece',
         default='INSIDEOUT',
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     spindle_rotation: EnumProperty(
@@ -46,7 +51,7 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         ),
         description='Spindle rotation direction',
         default='CW',
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     free_height: FloatProperty(
@@ -54,9 +59,9 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         default=0.01,
         min=0.0000,
         max=32,
-        precision=cam.constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     useG64: BoolProperty(
@@ -64,7 +69,7 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         description='Use only if your machine supports '
         'G64 code. LinuxCNC and Mach3 do',
         default=False,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     G64: FloatProperty(
@@ -72,9 +77,9 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         default=0.0001,
         min=0.0000,
         max=0.005,
-        precision=cam.constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     parallel_step_back: BoolProperty(
@@ -83,14 +88,14 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         'material in climb mode, then steps back and goes '
         'between 2 last chunks back',
         default=False,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     helix_enter: BoolProperty(
         name="Helix enter - EXPERIMENTAL",
         description="Enter material in helix",
         default=False,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     ramp_in_angle: FloatProperty(
@@ -101,7 +106,7 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         precision=1,
         subtype="ANGLE",
         unit="ROTATION",
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     helix_diameter: FloatProperty(
@@ -111,7 +116,7 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         max=100,
         precision=1,
         subtype='PERCENTAGE',
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     ramp: BoolProperty(
@@ -119,14 +124,14 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         description="Ramps down the whole contour, so the cutline looks "
         "like helix",
         default=False,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     ramp_out: BoolProperty(
         name="Ramp out - EXPERIMENTAL",
         description="Ramp out to not leave mark on surface",
         default=False,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     ramp_out_angle: FloatProperty(
@@ -137,14 +142,14 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         precision=1,
         subtype="ANGLE",
         unit="ROTATION",
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     retract_tangential: BoolProperty(
         name="Retract tangential - EXPERIMENTAL",
         description="Retract from material in circular motion",
         default=False,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     retract_radius: FloatProperty(
@@ -152,9 +157,9 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         default=0.001,
         min=0.000001,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     retract_height: FloatProperty(
@@ -162,15 +167,15 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         default=0.001,
         min=0.00000,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     stay_low: BoolProperty(
         name="Stay low if possible",
         default=True,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     merge_dist: FloatProperty(
@@ -178,16 +183,16 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         default=0.0,
         min=0.0000,
         max=0.1,
-        precision=cam.constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     protect_vertical: BoolProperty(
         name="Protect vertical",
         description="The path goes only vertically next to steep areas",
         default=True,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     protect_vertical_limit: FloatProperty(
@@ -199,7 +204,7 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
         precision=0,
         subtype="ANGLE",
         unit="ROTATION",
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
 
@@ -245,7 +250,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw_use_g64(self):
         if not self.has_correct_level():
             return
-        if self.context.scene.cam_machine.post_processor not in cam.constants.G64_INCOMPATIBLE_MACHINES:
+        if self.context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
             self.layout.prop(self.op.movement, 'useG64')
             if self.op.movement.useG64:
                 self.layout.prop(self.op.movement, 'G64')

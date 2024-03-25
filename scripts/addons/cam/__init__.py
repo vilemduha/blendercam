@@ -18,11 +18,61 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK ****
+from .ui import *
+from .version import __version__
+from . import (
+    ui,
+    ops,
+    constants,
+    curvecamtools,
+    curvecamequation,
+    curvecamcreate,
+    utils,
+    simple,
+    polygon_utils_cam,
+    autoupdate,
+    basrelief,
+)  # , post_processors
+from .utils import (
+    updateMachine,
+    updateRest,
+    updateOperation,
+    updateOperationValid,
+    operationValid,
+    updateZbufferImage,
+    updateOffsetImage,
+    updateStrategy,
+    updateCutout,
+    updateChipload,
+    updateRotation,
+    update_operation,
+    getStrategyList,
+    updateBridges,
+)
 import bl_operators
 import blf
 import bpy
+from bpy.app.handlers import persistent
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+    FloatVectorProperty,
+    IntProperty,
+    PointerProperty,
+    StringProperty,
+    CollectionProperty,
+)
+from bpy.types import (
+    Menu,
+    Operator,
+    UIList,
+    AddonPreferences,
+)
+from bpy_extras.object_utils import object_data_add
 import bpy.ops
 import math
+from mathutils import *
 import numpy
 import os
 import pickle
@@ -33,8 +83,6 @@ import threading
 import time
 
 from pathlib import Path
-
-USE_PROFILER = False
 
 try:
     import shapely
@@ -47,22 +95,13 @@ except ImportError:
     # install numba if available for this platform, ignore failure
     subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
 
-from cam import ui, ops, curvecamtools, curvecamequation, curvecamcreate, utils, simple, \
-    polygon_utils_cam, autoupdate, basrelief  # , post_processors
-from mathutils import *
-from shapely import geometry as sgeometry
-from bpy_extras.object_utils import object_data_add
-from bpy.types import Menu, Operator, UIList, AddonPreferences
-from bpy.props import *
-from bpy.app.handlers import persistent
-
-from cam.version import __version__
-from cam.ui import *
+from shapely import geometry as sgeometry  # noqa
 
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak & Contributors",
-    "version":(1,0,6),
+    "version": (1, 0, 7),
+
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
@@ -70,60 +109,6 @@ bl_info = {
     "doc_url": "https://blendercam.com/",
     "tracker_url": "",
     "category": "Scene"}
-
-import cam.constants
-
-was_hidden_dict = {}
-
-
-def updateMachine(self, context):
-    global _IS_LOADING_DEFAULTS
-    print('update machine ')
-    if not _IS_LOADING_DEFAULTS:
-        utils.addMachineAreaObject()
-
-
-def updateMaterial(self, context):
-    print('update material')
-    utils.addMaterialAreaObject()
-
-
-def updateOperation(self, context):
-    scene = context.scene
-    ao = scene.cam_operations[scene.cam_active_operation]
-    operationValid(self, context)
-
-    if ao.hide_all_others:
-        for _ao in scene.cam_operations:
-            if _ao.path_object_name in bpy.data.objects:
-                other_obj = bpy.data.objects[_ao.path_object_name]
-                current_obj = bpy.data.objects[ao.path_object_name]
-                if other_obj != current_obj:
-                    other_obj.hide = True
-                    other_obj.select = False
-    else:
-        for path_obj_name in was_hidden_dict:
-            print(was_hidden_dict)
-            if was_hidden_dict[path_obj_name]:
-                # Find object and make it hidde, then reset 'hidden' flag
-                obj = bpy.data.objects[path_obj_name]
-                obj.hide = True
-                obj.select = False
-                was_hidden_dict[path_obj_name] = False
-
-    # try highlighting the object in the 3d view and make it active
-    bpy.ops.object.select_all(action='DESELECT')
-    # highlight the cutting path if it exists
-    try:
-        ob = bpy.data.objects[ao.path_object_name]
-        ob.select_set(state=True, view_layer=None)
-        # Show object if, it's was hidden
-        if ob.hide:
-            ob.hide = False
-            was_hidden_dict[ao.path_object_name] = True
-        bpy.context.scene.objects.active = ob
-    except Exception as e:
-        print(e)
 
 
 class CamAddonPreferences(AddonPreferences):
@@ -250,7 +235,7 @@ class machineSettings(bpy.types.PropertyGroup):
         name='Start position',
         default=(0, 0, 0),
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype="XYZ",
         update=updateMachine,
     )
@@ -258,7 +243,7 @@ class machineSettings(bpy.types.PropertyGroup):
         name='MTC position',
         default=(0, 0, 0),
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype="XYZ",
         update=updateMachine,
     )
@@ -266,7 +251,7 @@ class machineSettings(bpy.types.PropertyGroup):
         name='End position',
         default=(0, 0, 0),
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype="XYZ",
         update=updateMachine,
     )
@@ -275,7 +260,7 @@ class machineSettings(bpy.types.PropertyGroup):
         name='Work Area',
         default=(0.500, 0.500, 0.100),
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype="XYZ",
         update=updateMachine,
     )
@@ -284,7 +269,7 @@ class machineSettings(bpy.types.PropertyGroup):
         default=0.0,
         min=0.00001,
         max=320000,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit='LENGTH',
     )
     feedrate_max: FloatProperty(
@@ -292,7 +277,7 @@ class machineSettings(bpy.types.PropertyGroup):
         default=2,
         min=0.00001,
         max=320000,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit='LENGTH',
     )
     feedrate_default: FloatProperty(
@@ -300,7 +285,7 @@ class machineSettings(bpy.types.PropertyGroup):
         default=1.5,
         min=0.00001,
         max=320000,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit='LENGTH',
     )
     hourly_rate: FloatProperty(
@@ -381,7 +366,7 @@ class machineSettings(bpy.types.PropertyGroup):
         default=33,
         min=0.00001,
         max=320000,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
     )
     # exporter_start = StringProperty(name="exporter start", default="%")
@@ -443,7 +428,7 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
         min=0.001,
         max=10,
         default=0.5,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
     )
     sheet_y: FloatProperty(
@@ -452,7 +437,7 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
         min=0.001,
         max=10,
         default=0.5,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
     )
     distance: FloatProperty(
@@ -462,7 +447,7 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
         min=0.001,
         max=10,
         default=0.01,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
     )
     tolerance: FloatProperty(
@@ -471,7 +456,7 @@ class PackObjectsSettings(bpy.types.PropertyGroup):
         min=0.001,
         max=0.02,
         default=0.005,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
     )
     rotate: BoolProperty(
@@ -500,7 +485,7 @@ class SliceObjectsSettings(bpy.types.PropertyGroup):
         min=0.001,
         max=10,
         default=0.005,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
     )
     slice_above0: BoolProperty(
@@ -548,209 +533,6 @@ class import_settings(bpy.types.PropertyGroup):
         max=1.0,
         unit="LENGTH",
     )
-
-
-def isValid(o, context):
-    valid = True
-    if o.geometry_source == 'OBJECT':
-        if o.object_name not in bpy.data.objects:
-            valid = False
-    if o.geometry_source == 'COLLECTION':
-        if o.collection_name not in bpy.data.collections:
-            valid = False
-        elif len(bpy.data.collections[o.collection_name].objects) == 0:
-            valid = False
-
-    if o.geometry_source == 'IMAGE':
-        if o.source_image_name not in bpy.data.images:
-            valid = False
-    return valid
-
-
-def operationValid(self, context):
-    scene = context.scene
-    o = scene.cam_operations[scene.cam_active_operation]
-    o.changed = True
-    o.valid = isValid(o, context)
-    invalidmsg = "Invalid source object for operation.\n"
-    if o.valid:
-        o.info.warnings = ""
-    else:
-        o.info.warnings = invalidmsg
-
-    if o.geometry_source == 'IMAGE':
-        o.optimisation.use_exact = False
-    o.update_offsetimage_tag = True
-    o.update_zbufferimage_tag = True
-    print('validity ')
-
-
-def isChainValid(chain, context):
-    s = context.scene
-    if len(chain.operations) == 0:
-        return (False, "")
-    for cho in chain.operations:
-        found_op = None
-        for so in s.cam_operations:
-            if so.name == cho.name:
-                found_op = so
-        if found_op == None:
-            return (False, f"Couldn't find operation {cho.name}")
-        if cam.isValid(found_op, context) is False:
-            return (False, f"Operation {found_op.name} is not valid")
-    return (True, "")
-
-
-def updateOperationValid(self, context):
-    updateOperation(self, context)
-
-
-# Update functions start here
-def updateChipload(self, context):
-    """this is very simple computation of chip size, could be very much improved"""
-    print('update chipload ')
-    o = self
-    # Old chipload
-    o.info.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
-    # New chipload with chip thining compensation.
-    # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less
-    # than 50% cutter engagement with cylindrical end mills. formula 1 Nominal Chipload is
-    # " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
-    # formula 2 (.5*(cutter diameter mm devided by dist_between_paths)) divided by square root of
-    # ((cutter diameter mm devided by dist_between_paths)-1) x Nominal Chipload
-    # Nominal Chipload = what you find in end mill data sheats recomended chip load at %50 cutter engagment.
-    # I am sure there is a better way to do this. I dont get consistent result and
-    # I am not sure if there is something wrong with the units going into the formula, my math or my lack of
-    # underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck
-    # we will be one tiny step on the way to a slightly better chipload calculating function.
-
-    # self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(math.sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
-    print(o.info.chipload)
-
-
-def updateOffsetImage(self, context):
-    """refresh offset image tag for rerendering"""
-    updateChipload(self, context)
-    print('update offset')
-    self.changed = True
-    self.update_offsetimage_tag = True
-
-
-def updateZbufferImage(self, context):
-    """changes tags so offset and zbuffer images get updated on calculation time."""
-    # print('updatezbuf')
-    # print(self,context)
-    self.changed = True
-    self.update_zbufferimage_tag = True
-    self.update_offsetimage_tag = True
-    utils.getOperationSources(self)
-
-
-def updateStrategy(o, context):
-    """"""
-    o.changed = True
-    print('update strategy')
-    if o.machine_axes == '5' or (
-            o.machine_axes == '4' and o.strategy4axis == 'INDEXED'):  # INDEXED 4 AXIS DOESN'T EXIST NOW...
-        utils.addOrientationObject(o)
-    else:
-        utils.removeOrientationObject(o)
-    updateExact(o, context)
-
-
-def updateCutout(o, context):
-    pass
-
-
-def updateExact(o, context):
-    print('update exact ')
-    o.changed = True
-    o.update_zbufferimage_tag = True
-    o.update_offsetimage_tag = True
-    if o.optimisation.use_exact:
-        if o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse:
-            o.optimisation.use_opencamlib = False
-            print('Current operation cannot use exact mode')
-    else:
-        o.optimisation.use_opencamlib = False
-
-
-def updateOpencamlib(o, context):
-    print('update opencamlib ')
-    o.changed = True
-    if o.optimisation.use_opencamlib and (
-            o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS'):
-        o.optimisation.use_exact = False
-        o.optimisation.use_opencamlib = False
-        print('Current operation cannot use opencamlib')
-
-
-def updateBridges(o, context):
-    print('update bridges ')
-    o.changed = True
-
-
-def updateRotation(o, context):
-    print('update rotation')
-    if o.enable_B or o.enable_A:
-        print(o, o.rotation_A)
-        ob = bpy.data.objects[o.object_name]
-        ob.select_set(True)
-        bpy.context.view_layer.objects.active = ob
-        if o.A_along_x:  # A parallel with X
-            if o.enable_A:
-                bpy.context.active_object.rotation_euler.x = o.rotation_A
-            if o.enable_B:
-                bpy.context.active_object.rotation_euler.y = o.rotation_B
-        else:  # A parallel with Y
-            if o.enable_A:
-                bpy.context.active_object.rotation_euler.y = o.rotation_A
-            if o.enable_B:
-                bpy.context.active_object.rotation_euler.x = o.rotation_B
-
-
-# def updateRest(o, context):
-#    print('update rest ')
-#    # if o.use_layers:
-# o.movement.parallel_step_back = False
-#    o.changed = True
-
-def updateRest(o, context):
-    print('update rest ')
-    o.changed = True
-
-
-#    if (o.strategy == 'WATERLINE'):
-#        o.use_layers = True
-
-
-def getStrategyList(scene, context):
-    use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
-    items = [
-        ('CUTOUT', 'Profile(Cutout)', 'Cut the silhouete with offset'),
-        ('POCKET', 'Pocket', 'Pocket operation'),
-        ('DRILL', 'Drill', 'Drill operation'),
-        ('PARALLEL', 'Parallel', 'Parallel lines on any angle'),
-        ('CROSS', 'Cross', 'Cross paths'),
-        ('BLOCK', 'Block', 'Block path'),
-        ('SPIRAL', 'Spiral', 'Spiral path'),
-        ('CIRCLES', 'Circles', 'Circles path'),
-        ('OUTLINEFILL', 'Outline Fill',
-         'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
-        ('CARVE', 'Project curve to surface', 'Engrave the curve path to surface'),
-        ('WATERLINE', 'Waterline - Roughing -below zero',
-         'Waterline paths - constant z below zero'),
-        ('CURVE', 'Curve to Path', 'Curve object gets converted directly to path'),
-        ('MEDIAL_AXIS', 'Medial axis',
-         'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
-    ]
-    #   if use_experimental:
-    #       items.extend([('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
-    #                      'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')]);
-    # ('PENCIL', 'Pencil - EXPERIMENTAL','Pencil operation - detects negative corners in the model and mills only those.'),
-    # ('CRAZY', 'Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
-    #                     ('PROJECTED_CURVE', 'Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')])
-    return items
 
 
 class camOperation(bpy.types.PropertyGroup):
@@ -944,7 +726,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.0,
         max=1.0,
         default=0.0,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateOffsetImage,
     )
@@ -983,7 +765,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.00001,
         max=1.0,
         default=0.01,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -993,7 +775,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.00001,
         max=1.0,
         default=0.01,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1056,7 +838,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.000001,
         max=10,
         default=0.003,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateOffsetImage,
     )
@@ -1066,7 +848,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.000001,
         max=10,
         default=0.003,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateOffsetImage,
     )
@@ -1076,7 +858,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.0,
         max=100.0,
         default=25.0,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateOffsetImage,
     )
@@ -1094,7 +876,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.0,
         max=180.0,
         default=60.0,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateOffsetImage,
     )
     ball_radius: FloatProperty(
@@ -1104,11 +886,11 @@ class camOperation(bpy.types.PropertyGroup):
         max=0.035,
         default=0.001,
         unit="LENGTH",
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateOffsetImage,
     )
     # ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
-    #                                 max=0.1, default=0.017, unit="LENGTH", precision=cam.constants.PRECISION, update=updateOffsetImage)
+    #                                 max=0.1, default=0.017, unit="LENGTH", precision=constants.PRECISION, update=updateOffsetImage)
     bull_corner_radius: FloatProperty(
         name="Bull Corner Radius",
         description="Radius tool bit corner",
@@ -1116,7 +898,7 @@ class camOperation(bpy.types.PropertyGroup):
         max=0.035,
         default=0.005,
         unit="LENGTH",
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateOffsetImage,
     )
 
@@ -1170,7 +952,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.001,
         min=0.00001,
         max=32,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1179,7 +961,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.0002,
         min=0.00001,
         max=32,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1266,7 +1048,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.001,
         min=-.100,
         max=32,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1289,7 +1071,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.001,
         min=0.00001,
         max=32,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1319,7 +1101,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.01,
         min=0.00001,
         max=32,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1329,7 +1111,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.00,
         max=1,
         default=0.0,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
     )
     lead_out: FloatProperty(
@@ -1338,7 +1120,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.00,
         max=1,
         default=0.0,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
     )
     profile_start: IntProperty(
@@ -1356,7 +1138,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=-0.01,
         min=-3,
         max=3,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1392,7 +1174,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0,
         min=-3,
         max=10,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )  # EXPERIMENTAL
@@ -1401,7 +1183,7 @@ class camOperation(bpy.types.PropertyGroup):
         name="First down",
         description="First go down on a contour, then go to the next one",
         default=False,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     #######################################################
@@ -1413,7 +1195,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.01,
         min=-1,
         max=1,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateZbufferImage,
     )
@@ -1422,7 +1204,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.1,
         min=-10,
         max=10,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateZbufferImage,
     )
@@ -1430,7 +1212,7 @@ class camOperation(bpy.types.PropertyGroup):
         name='Image offset',
         default=(0, 0, 0),
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype="XYZ",
         update=updateZbufferImage,
     )
@@ -1448,7 +1230,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0,
         min=0,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype='PERCENTAGE',
         update=updateZbufferImage,
     )
@@ -1457,7 +1239,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0,
         min=0,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype='PERCENTAGE',
         update=updateZbufferImage,
     )
@@ -1466,7 +1248,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=100,
         min=0,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype='PERCENTAGE',
         update=updateZbufferImage,
     )
@@ -1475,7 +1257,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=100,
         min=0,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype='PERCENTAGE',
         update=updateZbufferImage,
     )
@@ -1499,7 +1281,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.0,
         max=100.0,
         default=0.01,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1530,7 +1312,7 @@ class camOperation(bpy.types.PropertyGroup):
         min=0.00005,
         max=50.0,
         default=1.0,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateChipload,
     )
@@ -1585,7 +1367,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.00002,
         min=0.00000001,
         max=1,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1595,7 +1377,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.02,
         min=0.00000001,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateRest,
     )
     crazy_threshold5: FloatProperty(
@@ -1603,7 +1385,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.3,
         min=0.00000001,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateRest,
     )
     crazy_threshold2: FloatProperty(
@@ -1611,7 +1393,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.5,
         min=0.00000001,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateRest,
     )
     crazy_threshold3: FloatProperty(
@@ -1619,7 +1401,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=2,
         min=0.00000001,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateRest,
     )
     crazy_threshold4: FloatProperty(
@@ -1627,7 +1409,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.05,
         min=0.00000001,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateRest,
     )
     # Add pocket operation to medial axis
@@ -1651,7 +1433,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.001,
         min=0.00000001,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1660,7 +1442,7 @@ class camOperation(bpy.types.PropertyGroup):
         default=0.0002,
         min=0.00000001,
         max=100,
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         unit="LENGTH",
         update=updateRest,
     )
@@ -1677,7 +1459,7 @@ class camOperation(bpy.types.PropertyGroup):
         name='width of bridges',
         default=0.002,
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateBridges,
     )
     bridges_height: FloatProperty(
@@ -1685,7 +1467,7 @@ class camOperation(bpy.types.PropertyGroup):
         description="Height from the bottom of the cutting operation",
         default=0.0005,
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         update=updateBridges,
     )
     bridges_collection_name: StringProperty(
@@ -1712,7 +1494,7 @@ class camOperation(bpy.types.PropertyGroup):
     #     update = updateStrategy)
     #
     # bridges_per_curve = IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
-    # bridges_max_distance = FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=cam.constants.PRECISION, update = updateBridges)
+    # bridges_max_distance = FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=constants.PRECISION, update = updateBridges)
 
     use_modifiers: BoolProperty(
         name="use mesh modifiers",
@@ -1733,14 +1515,14 @@ class camOperation(bpy.types.PropertyGroup):
         name='Operation minimum',
         default=(0, 0, 0),
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype="XYZ",
     )
     max: FloatVectorProperty(
         name='Operation maximum',
         default=(0, 0, 0),
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=constants.PRECISION,
         subtype="XYZ",
     )
 

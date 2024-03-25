@@ -11,9 +11,9 @@ import tempfile
 from io_mesh_stl import blender_utils
 import mathutils
 import math
-from cam.simple import activate
-from cam.exception import *
-from cam.async_op import progress_async
+from ..simple import activate
+from ..exception import *
+from ..async_op import progress_async
 
 OCL_SCALE = 1000.0
 

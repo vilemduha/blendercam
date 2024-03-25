@@ -29,14 +29,14 @@ import curve_simplify
 import mathutils
 from mathutils import *
 
-from cam import simple
-from cam.simple import *
-from cam import chunk
-from cam.chunk import *
-from cam import simulation
-from cam.async_op import progress_async
+from . import simple
+from .simple import *
+from . import chunk
+from .chunk import *
+from . import simulation
+from .async_op import progress_async
 
-from cam.numba_wrapper import jit, prange
+from .numba_wrapper import jit, prange
 
 
 def getCircle(r, z):
@@ -215,7 +215,8 @@ def getOffsetImageCavities(o, i):  # for pencil operation mainly
     return chunks
 
 
-def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, another try.
+# search edges for pencil strategy, another try.
+def imageEdgeSearch_online(o, ar, zimage):
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     r = ceil((o.cutter_diameter/12)/o.optimisation.pixsize)   # was commented
     coef = 0.75
@@ -419,7 +420,8 @@ def crazyStrokeImage(o):
     print(indices[0][0], indices[1][0])
     # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
     lastvect = Vector((r, 0, 0))
-    testvect = lastvect.normalized() * r / 2.0  # multiply *2 not to get values <1 pixel
+    # multiply *2 not to get values <1 pixel
+    testvect = lastvect.normalized() * r / 2.0
     rot = Euler((0, 0, 1))
     i = 0
     perc = 0
@@ -431,7 +433,8 @@ def crazyStrokeImage(o):
     print(xs, ys, indices[0][0], indices[1][0], r)
     ar[xs - r:xs - r + d, ys - r:ys - r + d] = ar[xs -
                                                   r:xs - r + d, ys - r:ys - r + d] * cutterArrayNegative
-    anglerange = [-pi, pi]  # range for angle of toolpath vector versus material vector
+    # range for angle of toolpath vector versus material vector
+    anglerange = [-pi, pi]
     testangleinit = 0
     angleincrement = 0.05
     if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW') or (
@@ -471,7 +474,8 @@ def crazyStrokeImage(o):
                 cy = cindices[1].sum() / eatpix
                 v = Vector((cx - r, cy - r))
                 angle = testvect.to_2d().angle_signed(v)
-                if anglerange[0] < angle < anglerange[1]:  # this could be righthanded milling? lets see :)
+                # this could be righthanded milling? lets see :)
+                if anglerange[0] < angle < anglerange[1]:
                     if toomuchpix > eatpix > satisfypix:
                         success = True
             if success:
@@ -616,7 +620,8 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     print(indices[0][0], indices[1][0])
     # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
     lastvect = Vector((r, 0, 0))
-    testvect = lastvect.normalized() * r / 4.0  # multiply *2 not to get values <1 pixel
+    # multiply *2 not to get values <1 pixel
+    testvect = lastvect.normalized() * r / 4.0
     rot = Euler((0, 0, 1))
     i = 0
     itests = 0
@@ -678,7 +683,8 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                             # lets see :)
                             # print(xs,ys,angle)
                             foundsolutions.append([testvect.copy(), eatpix])
-                            if len(foundsolutions) >= 10:  # or totpix < startpix*0.025:
+                            # or totpix < startpix*0.025:
+                            if len(foundsolutions) >= 10:
                                 success = True
             itests += 1
             totaltests += 1
@@ -694,7 +700,8 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                         closest = abs(s[1] - optimalpix)
                 # print('closest',closest)
 
-                testvect = bestsolution[0]  # v1#+(v2-v1)*ratio#rewriting with interpolated vect.
+                # v1#+(v2-v1)*ratio#rewriting with interpolated vect.
+                testvect = bestsolution[0]
                 xs = int(nchunk.points[-1][0] + testvect.x)
                 ys = int(nchunk.points[-1][1] + testvect.y)
                 nchunk.points.append([xs, ys])
@@ -943,7 +950,8 @@ def imageToChunks(o, image, with_border=False):
                             ch.append(v)
                             done = True
                             verts.remove(v)
-                            if v[0] == ch[0][0] and v[1] == ch[0][1]:  # or len(verts)<=1:
+                            # or len(verts)<=1:
+                            if v[0] == ch[0][0] and v[1] == ch[0][1]:
                                 closed = True
 
             if closed:
@@ -1226,7 +1234,8 @@ def renderSampleImage(o):
         maxa = numpy.max(rawimage)
         mina = numpy.min(rawimage)
         neg = o.source_image_scale_z < 0
-        if o.strategy == 'WATERLINE':  # waterline strategy needs image border to have ok ambient.
+        # waterline strategy needs image border to have ok ambient.
+        if o.strategy == 'WATERLINE':
             a = numpy.full(shape=(
                 2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]), fill_value=1-neg, dtype=numpy.float)
         else:  # other operations like parallel need to reach the border
@@ -1238,11 +1247,13 @@ def renderSampleImage(o):
 
         if o.source_image_scale_z < 0:
             # negative images place themselves under the 0 plane by inverting through scale multiplication
-            a = (a - mina)  # first, put the image down, se we know the image minimum is on 0
+            # first, put the image down, se we know the image minimum is on 0
+            a = (a - mina)
             a *= o.source_image_scale_z
 
         else:  # place positive images under 0 plane, this is logical
-            a = (a - mina)  # first, put the image down, se we know the image minimum is on 0
+            # first, put the image down, se we know the image minimum is on 0
+            a = (a - mina)
             a *= o.source_image_scale_z
             a -= (maxa - mina) * o.source_image_scale_z
 

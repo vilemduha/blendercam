@@ -22,8 +22,8 @@
 import bpy
 import time
 
-from cam import simple
-from cam.simple import *
+from . import simple
+from .simple import *
 
 
 BULLET_SCALE = 10000

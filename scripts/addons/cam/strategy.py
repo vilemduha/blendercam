@@ -22,25 +22,28 @@
 # here is the strategy functionality of Blender CAM. The functions here are called with operators defined in ops.py.
 
 import bpy
-from bpy.props import *
 import time
 import math
 from math import *
 from bpy_extras import object_utils
-from cam import chunk
-from cam.chunk import *
-from cam import collision
-from cam.collision import *
-from cam import simple
-from cam.simple import *
-from cam import pattern
-from cam.pattern import *
-from cam import utils, bridges, ops
-from cam.utils import *
-from cam import polygon_utils_cam
-from cam.polygon_utils_cam import *
-from cam import image_utils
-from cam.image_utils import *
+from . import (
+    chunk,
+    collision,
+    simple,
+    pattern,
+    utils,
+    bridges,
+    ops,
+    polygon_utils_cam,
+    image_utils
+)
+from .chunk import *
+from .collision import *
+from .simple import *
+from .pattern import *
+from .utils import *
+from .polygon_utils_cam import *
+from .image_utils import *
 
 from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
@@ -213,8 +216,10 @@ async def curve(o):
         raise CamException("All objects must be curves for this operation.")
 
     for ob in o.objects:
-        pathSamples.extend(curveToChunks(ob))  # make the chunks from curve here
-    pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
+        # make the chunks from curve here
+        pathSamples.extend(curveToChunks(ob))
+    # sort before sampling
+    pathSamples = await utils.sortChunks(pathSamples, o)
     pathSamples = chunksRefine(pathSamples, o)  # simplify
 
     # layers here
@@ -225,7 +230,8 @@ async def curve(o):
         chunks = []
         for layer in layers:
             for ch in pathSamples:
-                extendorder.append([ch.copy(), layer])  # include layer information to chunk list
+                # include layer information to chunk list
+                extendorder.append([ch.copy(), layer])
 
         for chl in extendorder:  # Set offset Z for all chunks according to the layer information,
             chunk = chl[0]
@@ -233,7 +239,8 @@ async def curve(o):
             print('layer: ' + str(layer[1]))
             chunk.offsetZ(o.maxz * 2 - o.minz + layer[1])
             chunk.clampZ(o.minz)  # safety to not cut lower than minz
-            chunk.clampmaxZ(o.movement.free_height)  # safety, not higher than free movement height
+            # safety, not higher than free movement height
+            chunk.clampmaxZ(o.movement.free_height)
 
         for chl in extendorder:  # strip layer information from extendorder and transfer them to chunks
             chunks.append(chl[0])
@@ -243,7 +250,8 @@ async def curve(o):
     else:  # no layers, old curve
         for ch in pathSamples:
             ch.clampZ(o.minz)  # safety to not cut lower than minz
-            ch.clampmaxZ(o.movement.free_height)  # safety, not higher than free movement height
+            # safety, not higher than free movement height
+            ch.clampmaxZ(o.movement.free_height)
         chunksToMesh(pathSamples, o)
 
 
@@ -384,7 +392,8 @@ async def pocket(o):
             revheight = helix_circumference * tan(o.movement.ramp_in_angle)
             for chi, ch in enumerate(lchunks):
                 if not chunksFromCurve[chi].children:
-                    p = ch.get_point(0)  # TODO:intercept closest next point when it should stay low
+                    # TODO:intercept closest next point when it should stay low
+                    p = ch.get_point(0)
                     # first thing to do is to check if helix enter can really enter.
                     checkc = Circle(helix_radius + c_offset, o.optimisation.circle_detail)
                     checkc = affinity.translate(checkc, p[0], p[1])
@@ -443,7 +452,8 @@ async def pocket(o):
                     h = Helix(o.movement.retract_radius, o.optimisation.circle_detail,
                               p[2] + o.movement.retract_height, p, revolutions)
 
-                    e = Euler((0, 0, rotangle + pi))  # angle to rotate whole retract move
+                    # angle to rotate whole retract move
+                    e = Euler((0, 0, rotangle + pi))
                     rothelix = []
                     c = []  # polygon for outlining and checking collisions.
                     for p in h:  # rotate helix to go from tangent of vector
@@ -592,7 +602,7 @@ async def medial_axis(o):
 
     simple.remove_multiple("medialMesh")
 
-    from cam.voronoi import Site, computeVoronoiDiagram
+    from .voronoi import Site, computeVoronoiDiagram
 
     chunks = []
 
@@ -891,7 +901,8 @@ def chunksToMesh(chunks, o):
                         or (o.machine_axes == '4' and vect.length < o.dist_between_paths * 2.5):
                     # case of neighbouring paths
                     lift = False
-                if abs(vect.x) < e and abs(vect.y) < e:  # case of stepdown by cutting.
+                # case of stepdown by cutting.
+                if abs(vect.x) < e and abs(vect.y) < e:
                     lift = False
 
             if lift:

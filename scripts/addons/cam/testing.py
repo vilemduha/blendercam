@@ -22,8 +22,8 @@
 import sys
 import bpy
 
-from cam import simple, utils
-from cam.simple import *
+from . import simple, utils
+from .simple import *
 
 
 def addTestCurve(loc):

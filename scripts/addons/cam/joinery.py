@@ -23,11 +23,19 @@
 
 
 import bpy
-from bpy.props import *
 from bpy.types import Operator
 from bpy_extras.io_utils import ImportHelper
 
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, puzzle_joinery
+from . import (
+    utils,
+    pack,
+    polygon_utils_cam,
+    simple,
+    gcodepath,
+    bridges,
+    parametric,
+    puzzle_joinery
+)
 import shapely
 from shapely.geometry import Point, LineString, Polygon
 import mathutils
@@ -434,7 +442,8 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 mortise_angle_difference = abs(mortise_angle - old_mortise_angle)
                 mad = (1 + 6 * min(mortise_angle_difference, math.pi / 4) / (
                     math.pi / 4))  # factor for tolerance for the finger
-                distance += mad * finger_tolerance  # move finger by the factor mad greater with larger angle difference
+                # move finger by the factor mad greater with larger angle difference
+                distance += mad * finger_tolerance
                 mortise_point = loop.interpolate(distance)
                 if mad > 2 and double_adaptive:
                     hpos.append(distance)  # saves the mortise center
@@ -465,7 +474,8 @@ def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, fi
                 #   adaptive finger length start
                 while finger_sz > min_finger and next_angle_difference > adaptive:
                     #                while finger_sz > min_finger and next_angle_difference > adaptive:
-                    finger_sz *= 0.95  # reduce the size of finger by a percentage... the closer to 1.0, the slower
+                    # reduce the size of finger by a percentage... the closer to 1.0, the slower
+                    finger_sz *= 0.95
                     distance = old_distance + 3 * oldfinger_sz / 2 + finger_sz / 2
                     mortise_point = loop.interpolate(distance)  # get the next mortise point
                     next_mortise_angle = angle((old_mortise_point.x, old_mortise_point.y),

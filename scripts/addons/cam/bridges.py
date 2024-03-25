@@ -21,11 +21,10 @@
 # here is the bridges functionality of Blender CAM. The functions here are called with operators defined from ops.py.
 
 import bpy
-from bpy.props import *
 from bpy_extras.object_utils import AddObjectHelper, object_data_add
 
-from cam import utils
-from cam import simple
+from . import utils
+from . import simple
 
 import mathutils
 import math
@@ -149,7 +148,8 @@ def useBridges(ch, o):
             i1 = vi
             i2 = vi
             chp1 = ch_points[i1]
-            chp2 = ch_points[i1]  # Vector(v1)#this is for case of last point and not closed chunk..
+            # Vector(v1)#this is for case of last point and not closed chunk..
+            chp2 = ch_points[i1]
             if vi + 1 < len(ch_points):
                 i2 = vi + 1
                 chp2 = ch_points[vi + 1]  # Vector(ch_points[vi+1])
@@ -245,7 +245,8 @@ def useBridges(ch, o):
             if isedge == 1:     # This is to subdivide  edges which are longer than the width of the bridge
                 edgelength = math.hypot(x - x2, y - y2)
                 if edgelength > o.bridges_width:
-                    verts.append(((x + x2)/2, (y + y2)/2, o.minz))  # make new vertex
+                    # make new vertex
+                    verts.append(((x + x2)/2, (y + y2)/2, o.minz))
 
                     isedge += 1
                     edge = [count - 2, count - 1]
@@ -266,10 +267,12 @@ def useBridges(ch, o):
     #  verify if vertices have been generated and generate a mesh
     if verts:
         mesh = bpy.data.meshes.new(name=o.name + "_cut_bridges")  # generate new mesh
-        mesh.from_pydata(verts, edges, faces)   # integrate coordinates and edges
+        # integrate coordinates and edges
+        mesh.from_pydata(verts, edges, faces)
         object_data_add(bpy.context, mesh)      # create object
         bpy.ops.object.convert(target='CURVE')  # convert mesh to curve
-        simple.join_multiple(o.name + '_cut_bridges')   # join all the new cut bridges curves
+        # join all the new cut bridges curves
+        simple.join_multiple(o.name + '_cut_bridges')
         simple.remove_doubles()     # remove overlapping vertices
 
 

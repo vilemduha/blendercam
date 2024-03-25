@@ -21,35 +21,39 @@
 
 import sys
 import bpy
-from bpy.types import UIList, Operator
 from bpy_extras.io_utils import ImportHelper
-from bpy.props import (StringProperty,
-                       BoolProperty,
-                       PointerProperty,
-                       FloatProperty,
-                       )
+from bpy.props import (
+    StringProperty,
+)
+from bpy.types import (
+    Panel,
+    Menu,
+    Operator,
+    UIList
+)
 
-from bpy.types import (Panel, Menu, Operator, PropertyGroup, )
+from . import (
+    gcodeimportparser,
+    simple
+)
+from .simple import *
 
-from cam import gcodeimportparser, simple
-from cam.simple import *
-
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
-from cam.ui_panels.interface import *
-from cam.ui_panels.info import *
-from cam.ui_panels.operations import *
-from cam.ui_panels.cutter import *
-from cam.ui_panels.machine import *
-from cam.ui_panels.material import *
-from cam.ui_panels.chains import *
-from cam.ui_panels.op_properties import *
-from cam.ui_panels.movement import *
-from cam.ui_panels.feedrate import *
-from cam.ui_panels.optimisation import *
-from cam.ui_panels.area import *
-from cam.ui_panels.gcode import *
-from cam.ui_panels.pack import *
-from cam.ui_panels.slice import *
+from .ui_panels.buttons_panel import CAMButtonsPanel
+from .ui_panels.interface import *
+from .ui_panels.info import *
+from .ui_panels.operations import *
+from .ui_panels.cutter import *
+from .ui_panels.machine import *
+from .ui_panels.material import *
+from .ui_panels.chains import *
+from .ui_panels.op_properties import *
+from .ui_panels.movement import *
+from .ui_panels.feedrate import *
+from .ui_panels.optimisation import *
+from .ui_panels.area import *
+from .ui_panels.gcode import *
+from .ui_panels.pack import *
+from .ui_panels.slice import *
 
 
 class CAM_UL_orientations(UIList):

@@ -23,11 +23,15 @@ import time
 import mathutils
 from mathutils import *
 
-from cam import simple, chunk, utils
-from cam.simple import *
-from cam.chunk import *
-from cam import polygon_utils_cam
-from cam.polygon_utils_cam import *
+from . import (
+    simple,
+    chunk,
+    utils,
+    polygon_utils_cam
+)
+from .simple import *
+from .chunk import *
+from .polygon_utils_cam import *
 import shapely
 from shapely import geometry as sgeometry
 import numpy
@@ -58,7 +62,8 @@ def getPathPatternParallel(o, angle):
             chunk = camPathChunkBuilder([])
             v = Vector((a * pathd, int(-dim / pathstep) * pathstep, 0))
             v.rotate(e)
-            v += vm  # shifting for the rotation, so pattern rotates around middle...
+            # shifting for the rotation, so pattern rotates around middle...
+            v += vm
             for b in range(int(-dim / pathstep), int(dim / pathstep)):
                 v += dirvect
 

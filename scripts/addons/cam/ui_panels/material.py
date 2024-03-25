@@ -1,12 +1,17 @@
 import bpy
-from bpy.props import BoolProperty
-from bpy.props import EnumProperty
-from bpy.props import FloatProperty
-from bpy.props import FloatVectorProperty
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+    FloatVectorProperty,
+)
 
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
-import cam.utils
-import cam.constants
+from .buttons_panel import CAMButtonsPanel
+from ..utils import (
+    update_material,
+    positionObject
+)
+from ..constants import PRECISION
 
 
 class CAM_MATERIAL_Properties(bpy.types.PropertyGroup):
@@ -15,31 +20,36 @@ class CAM_MATERIAL_Properties(bpy.types.PropertyGroup):
         name="Estimate cut area from model",
         description="Estimate cut area based on model geometry",
         default=True,
-        update=cam.utils.update_material,
+        update=update_material,
     )
 
     radius_around_model: FloatProperty(
         name='Radius around model',
         description="Increase cut area around the model on X and "
         "Y by this amount",
-        default=0.0, unit='LENGTH', precision=cam.constants.PRECISION,
-        update=cam.utils.update_material,
+        default=0.0,
+        unit='LENGTH',
+        precision=PRECISION,
+        update=update_material,
     )
 
     center_x: BoolProperty(
         name="Center on X axis",
         description="Position model centered on X",
-        default=False, update=cam.utils.update_material,
+        default=False,
+        update=update_material,
     )
 
     center_y: BoolProperty(
         name="Center on Y axis",
         description="Position model centered on Y",
-        default=False, update=cam.utils.update_material,
+        default=False,
+        update=update_material,
     )
 
     z_position: EnumProperty(
-        name="Z placement", items=(
+        name="Z placement",
+        items=(
             ('ABOVE', 'Above', 'Place object vertically above the XY plane'),
             ('BELOW', 'Below', 'Place object vertically below the XY plane'),
             ('CENTERED', 'Centered',
@@ -47,14 +57,17 @@ class CAM_MATERIAL_Properties(bpy.types.PropertyGroup):
         ),
         description="Position below Zero",
         default='BELOW',
-        update=cam.utils.update_material,
+        update=update_material,
     )
 
     # material_origin
     origin: FloatVectorProperty(
-        name='Material origin', default=(0, 0, 0), unit='LENGTH',
-        precision=cam.constants.PRECISION, subtype="XYZ",
-        update=cam.utils.update_material,
+        name='Material origin',
+        default=(0, 0, 0),
+        unit='LENGTH',
+        precision=PRECISION,
+        subtype="XYZ",
+        update=update_material,
     )
 
     # material_size
@@ -63,9 +76,9 @@ class CAM_MATERIAL_Properties(bpy.types.PropertyGroup):
         default=(0.200, 0.200, 0.100),
         min=0,
         unit='LENGTH',
-        precision=cam.constants.PRECISION,
+        precision=PRECISION,
         subtype="XYZ",
-        update=cam.utils.update_material,
+        update=update_material,
     )
 
 
@@ -82,7 +95,7 @@ class CAM_MATERIAL_PositionObject(bpy.types.Operator):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
         if operation.object_name in bpy.data.objects:
-            cam.utils.positionObject(operation)
+            positionObject(operation)
         else:
             print('no object assigned')
         return {'FINISHED'}

@@ -4,7 +4,14 @@ import numpy
 import math
 import re
 from math import *
-from bpy.props import *
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+    IntProperty,
+    PointerProperty,
+    StringProperty,
+)
 
 
 # ////////////////////////////////////////////////////////////////////

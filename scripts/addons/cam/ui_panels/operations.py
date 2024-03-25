@@ -1,6 +1,6 @@
 
 import bpy
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from .buttons_panel import CAMButtonsPanel
 
 # Operations panel
 # This panel displays the list of operations created by the user

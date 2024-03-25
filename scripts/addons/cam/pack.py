@@ -20,7 +20,11 @@
 # ***** END GPL LICENCE BLOCK *****
 
 import bpy
-from cam import utils, simple, polygon_utils_cam
+from . import (
+    utils,
+    simple,
+    polygon_utils_cam
+)
 import shapely
 from shapely import geometry as sgeometry
 from shapely import affinity, prepared
@@ -67,7 +71,8 @@ def packCurves():
     rotate = packsettings.rotate
     rotate_angle = packsettings.rotate_angle
 
-    polyfield = []  # in this, position, rotation, and actual poly will be stored.
+    # in this, position, rotation, and actual poly will be stored.
+    polyfield = []
     for ob in bpy.context.selected_objects:
         simple.activate(ob)
         bpy.ops.object.make_single_user(type='SELECTED_OBJECTS')

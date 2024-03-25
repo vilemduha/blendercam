@@ -13,16 +13,17 @@ import tempfile
 import numpy as np
 
 from subprocess import call
-from cam.collision import BULLET_SCALE
-from cam import simple
-from cam.chunk import camPathChunk
-from cam.simple import *
-from cam.async_op import progress_async
+from ..collision import BULLET_SCALE
+from .. import simple
+from .. import utils
+from ..chunk import camPathChunk
+from ..simple import *
+from ..async_op import progress_async
 from shapely import geometry as sgeometry
-from .oclSample import get_oclSTL
-from cam import utils
-
-from cam.opencamlib.oclSample import ocl_sample
+from .oclSample import (
+    get_oclSTL,
+    ocl_sample
+)
 
 OCL_SCALE = 1000.0
 
@@ -164,7 +165,8 @@ async def oclGetWaterline(operation, chunks):
         op_cutter_tip_angle = operation['cutter_tip_angle']
 
     cutter = None
-    cutter_length = 150  # TODO: automatically determine necessary cutter length depending on object size
+    # TODO: automatically determine necessary cutter length depending on object size
+    cutter_length = 150
 
     if op_cutter_type == 'END':
         cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)

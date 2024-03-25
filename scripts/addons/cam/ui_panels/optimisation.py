@@ -1,11 +1,19 @@
 import bpy
-from bpy.props import BoolProperty
-from bpy.props import FloatProperty
-from bpy.props import IntProperty
+from bpy.props import (
+    BoolProperty,
+    FloatProperty,
+    IntProperty,
+)
 
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
-import cam.utils
-import cam.constants
+from .buttons_panel import CAMButtonsPanel
+from ..utils import (
+    update_operation,
+    update_exact_mode,
+    update_zbuffer_image,
+    update_opencamlib,
+    opencamlib_version,
+)
+from ..constants import PRECISION
 
 
 class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
@@ -14,7 +22,7 @@ class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
         name="Reduce path points",
         description="Reduce path points",
         default=True,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     optimize_threshold: FloatProperty(
@@ -23,7 +31,7 @@ class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
         min=0.000000001,
         max=1000,
         precision=20,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     use_exact: BoolProperty(
@@ -31,7 +39,7 @@ class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
         description="Exact mode allows greater precision, but is slower "
         "with complex meshes",
         default=True,
-        update=cam.utils.update_exact_mode,
+        update=update_exact_mode,
     )
 
     imgres_limit: IntProperty(
@@ -41,7 +49,7 @@ class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
         max=512,
         description="Limits total memory usage and prevents crashes. "
         "Increase it if you know what are doing",
-        update=cam.utils.update_zbuffer_image,
+        update=update_zbuffer_image,
     )
 
     pixsize: FloatProperty(
@@ -49,16 +57,16 @@ class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
         default=0.0001,
         min=0.00001,
         max=0.1,
-        precision=cam.constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
-        update=cam.utils.update_zbuffer_image,
+        update=update_zbuffer_image,
     )
 
     use_opencamlib: BoolProperty(
         name="Use OpenCAMLib",
         description="Use OpenCAMLib to sample paths or get waterline shape",
         default=False,
-        update=cam.utils.update_opencamlib,
+        update=update_opencamlib,
     )
 
     exact_subdivide_edges: BoolProperty(
@@ -66,7 +74,7 @@ class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
         description="This can avoid some collision issues when "
         "importing CAD models",
         default=False,
-        update=cam.utils.update_exact_mode,
+        update=update_exact_mode,
     )
 
     circle_detail: IntProperty(
@@ -74,7 +82,7 @@ class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
         default=64,
         min=12,
         max=512,
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     simulation_detail: FloatProperty(
@@ -82,9 +90,9 @@ class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
         default=0.0002,
         min=0.00001,
         max=0.01,
-        precision=cam.constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
 
@@ -135,9 +143,9 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
         if not (self.exact_possible and self.op.optimisation.use_exact):
             return
 
-        opencamlib_version = cam.utils.opencamlib_version()
+        ocl_version = opencamlib_version()
 
-        if opencamlib_version is None:
+        if ocl_version is None:
             self.layout.label(text="Opencamlib is not available ")
             self.layout.prop(self.op.optimisation, 'exact_subdivide_edges')
         else:

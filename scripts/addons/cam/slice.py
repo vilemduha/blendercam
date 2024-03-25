@@ -24,7 +24,7 @@
 
 import bpy
 
-from cam import utils
+from . import utils
 
 
 def slicing2d(ob, height):  # April 2020 Alain Pelletier
@@ -93,7 +93,8 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
     if above0 and minz < 0:
         start_height = 0
 
-    layeramt = 1 + int((maxz - start_height) // thickness)  # calculate amount of layers needed
+    # calculate amount of layers needed
+    layeramt = 1 + int((maxz - start_height) // thickness)
 
     for layer in range(layeramt):
         height = round(layer * thickness, 6)  # height of current layer
@@ -108,13 +109,15 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         bpy.ops.object.duplicate()  # make a copy of object to be sliced
         bpy.context.view_layer.objects.active.name = slicename  # change the name of object
 
-        obslice = bpy.context.view_layer.objects.active  # attribute active object to obslice
+        # attribute active object to obslice
+        obslice = bpy.context.view_layer.objects.active
         scollection.objects.link(obslice)  # link obslice to scollecton
         if slice3d:
             # slice 3d at desired height and stop at desired height
             slicing3d(obslice, height, height + thickness)
         else:
-            slicesuccess = slicing2d(obslice, height)  # slice object at desired height
+            # slice object at desired height
+            slicesuccess = slicing2d(obslice, height)
 
         if indexes and slicesuccess:
             # text objects

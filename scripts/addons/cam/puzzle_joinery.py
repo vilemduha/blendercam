@@ -23,12 +23,24 @@
 from typing import Any
 
 import bpy
-from bpy.props import *
 from bpy.types import Operator
 
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, joinery
+from . import (
+    utils,
+    pack,
+    polygon_utils_cam,
+    simple,
+    gcodepath,
+    bridges,
+    parametric,
+    joinery,
+)
 import shapely
-from shapely.geometry import Point, LineString, Polygon
+from shapely.geometry import (
+    Point,
+    LineString,
+    Polygon,
+)
 import mathutils
 import math
 
@@ -315,7 +327,8 @@ def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=
     # tthick = thicknest of the twist material
     # which = which joint to generate, Male Female MaleFemale M, F, MF
 
-    length -= (radius * 2 + thick)  # adjust length to include 2x radius + thick
+    # adjust length to include 2x radius + thick
+    length -= (radius * 2 + thick)
 
     # generate base rectangle
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
@@ -372,7 +385,8 @@ def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, 
         which = 'MM'
     elif which == 'F':
         which = 'FF'
-    length -= (radius * 2 + thick)  # adjust length to include 2x radius + thick
+    # adjust length to include 2x radius + thick
+    length -= (radius * 2 + thick)
 
     # generate base rectangle
     #  Generate male section and join to the base
@@ -680,7 +694,8 @@ def open_curve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, 
     simple.union('tmprect')
     dilated = line.buffer(thick/2)  # expand shapely object to thickness
     utils.shapelyToCurve('tmp_curve', dilated, 0.0)
-    simple.difference('tmp', 'tmp_curve')   # truncate curve at both ends with the rectangles
+    # truncate curve at both ends with the rectangles
+    simple.difference('tmp', 'tmp_curve')
 
     fingers(diameter, tolerance, amount, stem=stem)
     simple.make_active('fingers')

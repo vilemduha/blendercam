@@ -28,23 +28,27 @@ import mathutils
 import math
 from math import *
 from mathutils import *
-from bpy.props import *
 from bpy_extras import object_utils
 
 import sys
 import numpy
 import pickle
 
-from cam.chunk import *
-from cam.collision import *
-from cam.simple import *
-from cam.pattern import *
-from cam.polygon_utils_cam import *
-from cam.image_utils import *
-from cam.exception import *
+from .chunk import *
+from .collision import *
+from .simple import *
+from .pattern import *
+from .polygon_utils_cam import *
+from .image_utils import *
+from .exception import *
 
-from cam.async_op import progress_async
-from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
+from .async_op import progress_async
+from .opencamlib.opencamlib import (
+    oclSample,
+    oclSamplePoints,
+    oclResampleChunks,
+    oclGetWaterline
+)
 
 from shapely.geometry import polygon as spolygon
 from shapely.geometry import MultiPolygon
@@ -53,37 +57,6 @@ from shapely import geometry as sgeometry
 
 # from shapely.geometry import * not possible until Polygon libs gets out finally..
 SHAPELY = True
-
-
-# The following functions are temporary
-# until all content in __init__.py is cleaned up
-
-def update_material(self, context):
-    addMaterialAreaObject()
-
-
-def update_operation(self, context):
-    from . import updateRest
-    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateRest(active_op, bpy.context)
-
-
-def update_exact_mode(self, context):
-    from . import updateExact
-    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateExact(active_op, bpy.context)
-
-
-def update_opencamlib(self, context):
-    from . import updateOpencamlib
-    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateOpencamlib(active_op, bpy.context)
-
-
-def update_zbuffer_image(self, context):
-    from . import updateZbufferImage
-    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateZbufferImage(active_op, bpy.context)
 
 
 # Import OpencamLib
@@ -424,7 +397,8 @@ async def sampleChunks(o, pathSamples, layers):
             cutter = o.cutter_shape
             cutterdepth = cutter.dimensions.z / 2
     else:
-        if o.strategy != 'WATERLINE':  # or prepare offset image, but not in some strategies.
+        # or prepare offset image, but not in some strategies.
+        if o.strategy != 'WATERLINE':
             await prepareArea(o)
 
         pixsize = o.optimisation.pixsize
@@ -693,7 +667,8 @@ async def sampleChunksNAxis(o, pathSamples, layers):
         # for t in range(0,threads):
         # print(len(patternchunk.startpoints),len( patternchunk.endpoints))
         spl = len(patternchunk.startpoints)
-        for si in range(0, spl):  # ,startp in enumerate(patternchunk.startpoints):
+        # ,startp in enumerate(patternchunk.startpoints):
+        for si in range(0, spl):
             # #TODO: seems we are writing into the source chunk ,
             #  and that is why we need to write endpoints everywhere too?
 
@@ -721,9 +696,11 @@ async def sampleChunksNAxis(o, pathSamples, layers):
                 if o.cutter_type == 'VCARVE':  # Bullet cone is always pointing Up Z in the object
                     cutter.rotation_euler.x += pi
                 cutter.update_tag()
-                bpy.context.scene.frame_set(1)  # this has to be :( it resets the rigidbody world.
+                # this has to be :( it resets the rigidbody world.
+                bpy.context.scene.frame_set(1)
                 # No other way to update it probably now :(
-                bpy.context.scene.frame_set(2)  # actually 2 frame jumps are needed.
+                # actually 2 frame jumps are needed.
+                bpy.context.scene.frame_set(2)
                 bpy.context.scene.frame_set(0)
 
             newsample = getSampleBulletNAxis(cutter, startp, endp, rotation, cutterdepth)
@@ -732,7 +709,8 @@ async def sampleChunksNAxis(o, pathSamples, layers):
             ################################
             # handling samples
             ############################################
-            if newsample is not None:  # this is weird, but will leave it this way now.. just prototyping here.
+            # this is weird, but will leave it this way now.. just prototyping here.
+            if newsample is not None:
                 sampled = True
             else:  # TODO: why was this here?
                 newsample = startp
@@ -885,7 +863,8 @@ def extendChunks5axis(chunks, o):
         cutterstart = Vector((m.starting_position.x, m.starting_position.y,
                               max(o.max.z, m.starting_position.z)))  # start point for casting
     else:
-        cutterstart = Vector((0, 0, max(o.max.z, free_height)))  # start point for casting
+        # start point for casting
+        cutterstart = Vector((0, 0, max(o.max.z, free_height)))
     cutterend = Vector((0, 0, o.min.z))
     oriname = o.name + ' orientation'
     ori = s.objects[oriname]
@@ -983,7 +962,8 @@ def polygonConvexHull(context):
     simple.select_multiple('_tmp')  # delete temporary mesh
     simple.select_multiple('ConvexHull')  # delete old hull
 
-    points = sgeometry.MultiPoint(coords)  # convert coordinates to shapely MultiPoint datastructure
+    # convert coordinates to shapely MultiPoint datastructure
+    points = sgeometry.MultiPoint(coords)
 
     hull = points.convex_hull
     shapelyToCurve('ConvexHull', hull, 0.0)
@@ -1078,7 +1058,8 @@ def getClosest(o, pos, chunks):
     ch = None
     for chtest in chunks:
         cango = True
-        for child in chtest.children:  # here was chtest.getNext==chtest, was doing recursion error and slowing down.
+        # here was chtest.getNext==chtest, was doing recursion error and slowing down.
+        for child in chtest.children:
             if not child.sorted:
                 cango = False
                 break
@@ -1155,7 +1136,8 @@ async def sortChunks(chunks, o, last_pos=None):
     return sortedchunks
 
 
-def getVectorRight(lastv, verts):  # most right vector from a set regarding angle..
+# most right vector from a set regarding angle..
+def getVectorRight(lastv, verts):
     defa = 100
     v1 = Vector(lastv[0])
     v2 = Vector(lastv[1])
@@ -1683,7 +1665,8 @@ def rotTo2axes(e, axescombination):
     # if axes
     if axescombination == 'CA':
         v2d = Vector((v.x, v.y))
-        a1base = Vector((0, -1))  # ?is this right?It should be vector defining 0 rotation
+        # ?is this right?It should be vector defining 0 rotation
+        a1base = Vector((0, -1))
         if v2d.length > 0:
             cangle = a1base.angle_signed(v2d)
         else:
@@ -1696,7 +1679,8 @@ def rotTo2axes(e, axescombination):
 
     elif axescombination == 'CB':
         v2d = Vector((v.x, v.y))
-        a1base = Vector((1, 0))  # ?is this right?It should be vector defining 0 rotation
+        # ?is this right?It should be vector defining 0 rotation
+        a1base = Vector((1, 0))
         if v2d.length > 0:
             cangle = a1base.angle_signed(v2d)
         else:
@@ -1778,3 +1762,295 @@ def reload_pathss(o):
 
     if old_pathmesh is not None:
         bpy.data.meshes.remove(old_pathmesh)
+
+
+# Moved from init - the following code was moved here to permit the import fix
+USE_PROFILER = False
+
+was_hidden_dict = {}
+
+
+def updateMachine(self, context):
+    global _IS_LOADING_DEFAULTS
+    print('update machine ')
+    if not _IS_LOADING_DEFAULTS:
+        addMachineAreaObject()
+
+
+def updateMaterial(self, context):
+    print('update material')
+    addMaterialAreaObject()
+
+
+def updateOperation(self, context):
+    scene = context.scene
+    ao = scene.cam_operations[scene.cam_active_operation]
+    operationValid(self, context)
+
+    if ao.hide_all_others:
+        for _ao in scene.cam_operations:
+            if _ao.path_object_name in bpy.data.objects:
+                other_obj = bpy.data.objects[_ao.path_object_name]
+                current_obj = bpy.data.objects[ao.path_object_name]
+                if other_obj != current_obj:
+                    other_obj.hide = True
+                    other_obj.select = False
+    else:
+        for path_obj_name in was_hidden_dict:
+            print(was_hidden_dict)
+            if was_hidden_dict[path_obj_name]:
+                # Find object and make it hidde, then reset 'hidden' flag
+                obj = bpy.data.objects[path_obj_name]
+                obj.hide = True
+                obj.select = False
+                was_hidden_dict[path_obj_name] = False
+
+    # try highlighting the object in the 3d view and make it active
+    bpy.ops.object.select_all(action='DESELECT')
+    # highlight the cutting path if it exists
+    try:
+        ob = bpy.data.objects[ao.path_object_name]
+        ob.select_set(state=True, view_layer=None)
+        # Show object if, it's was hidden
+        if ob.hide:
+            ob.hide = False
+            was_hidden_dict[ao.path_object_name] = True
+        bpy.context.scene.objects.active = ob
+    except Exception as e:
+        print(e)
+
+# Moved from init - part 2
+
+
+def isValid(o, context):
+    valid = True
+    if o.geometry_source == 'OBJECT':
+        if o.object_name not in bpy.data.objects:
+            valid = False
+    if o.geometry_source == 'COLLECTION':
+        if o.collection_name not in bpy.data.collections:
+            valid = False
+        elif len(bpy.data.collections[o.collection_name].objects) == 0:
+            valid = False
+
+    if o.geometry_source == 'IMAGE':
+        if o.source_image_name not in bpy.data.images:
+            valid = False
+    return valid
+
+
+def operationValid(self, context):
+    scene = context.scene
+    o = scene.cam_operations[scene.cam_active_operation]
+    o.changed = True
+    o.valid = isValid(o, context)
+    invalidmsg = "Invalid source object for operation.\n"
+    if o.valid:
+        o.info.warnings = ""
+    else:
+        o.info.warnings = invalidmsg
+
+    if o.geometry_source == 'IMAGE':
+        o.optimisation.use_exact = False
+    o.update_offsetimage_tag = True
+    o.update_zbufferimage_tag = True
+    print('validity ')
+
+
+def isChainValid(chain, context):
+    s = context.scene
+    if len(chain.operations) == 0:
+        return (False, "")
+    for cho in chain.operations:
+        found_op = None
+        for so in s.cam_operations:
+            if so.name == cho.name:
+                found_op = so
+        if found_op == None:
+            return (False, f"Couldn't find operation {cho.name}")
+        if isValid(found_op, context) is False:
+            return (False, f"Operation {found_op.name} is not valid")
+    return (True, "")
+
+
+def updateOperationValid(self, context):
+    updateOperation(self, context)
+
+
+# Update functions start here
+def updateChipload(self, context):
+    """this is very simple computation of chip size, could be very much improved"""
+    print('update chipload ')
+    o = self
+    # Old chipload
+    o.info.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
+    # New chipload with chip thining compensation.
+    # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less
+    # than 50% cutter engagement with cylindrical end mills. formula 1 Nominal Chipload is
+    # " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
+    # formula 2 (.5*(cutter diameter mm devided by dist_between_paths)) divided by square root of
+    # ((cutter diameter mm devided by dist_between_paths)-1) x Nominal Chipload
+    # Nominal Chipload = what you find in end mill data sheats recomended chip load at %50 cutter engagment.
+    # I am sure there is a better way to do this. I dont get consistent result and
+    # I am not sure if there is something wrong with the units going into the formula, my math or my lack of
+    # underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck
+    # we will be one tiny step on the way to a slightly better chipload calculating function.
+
+    # self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(math.sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
+    print(o.info.chipload)
+
+
+def updateOffsetImage(self, context):
+    """refresh offset image tag for rerendering"""
+    updateChipload(self, context)
+    print('update offset')
+    self.changed = True
+    self.update_offsetimage_tag = True
+
+
+def updateZbufferImage(self, context):
+    """changes tags so offset and zbuffer images get updated on calculation time."""
+    # print('updatezbuf')
+    # print(self,context)
+    self.changed = True
+    self.update_zbufferimage_tag = True
+    self.update_offsetimage_tag = True
+    getOperationSources(self)
+
+
+def updateStrategy(o, context):
+    """"""
+    o.changed = True
+    print('update strategy')
+    if o.machine_axes == '5' or (
+            o.machine_axes == '4' and o.strategy4axis == 'INDEXED'):  # INDEXED 4 AXIS DOESN'T EXIST NOW...
+        addOrientationObject(o)
+    else:
+        removeOrientationObject(o)
+    updateExact(o, context)
+
+
+def updateCutout(o, context):
+    pass
+
+
+def updateExact(o, context):
+    print('update exact ')
+    o.changed = True
+    o.update_zbufferimage_tag = True
+    o.update_offsetimage_tag = True
+    if o.optimisation.use_exact:
+        if o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse:
+            o.optimisation.use_opencamlib = False
+            print('Current operation cannot use exact mode')
+    else:
+        o.optimisation.use_opencamlib = False
+
+
+def updateOpencamlib(o, context):
+    print('update opencamlib ')
+    o.changed = True
+    if o.optimisation.use_opencamlib and (
+            o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS'):
+        o.optimisation.use_exact = False
+        o.optimisation.use_opencamlib = False
+        print('Current operation cannot use opencamlib')
+
+
+def updateBridges(o, context):
+    print('update bridges ')
+    o.changed = True
+
+
+def updateRotation(o, context):
+    print('update rotation')
+    if o.enable_B or o.enable_A:
+        print(o, o.rotation_A)
+        ob = bpy.data.objects[o.object_name]
+        ob.select_set(True)
+        bpy.context.view_layer.objects.active = ob
+        if o.A_along_x:  # A parallel with X
+            if o.enable_A:
+                bpy.context.active_object.rotation_euler.x = o.rotation_A
+            if o.enable_B:
+                bpy.context.active_object.rotation_euler.y = o.rotation_B
+        else:  # A parallel with Y
+            if o.enable_A:
+                bpy.context.active_object.rotation_euler.y = o.rotation_A
+            if o.enable_B:
+                bpy.context.active_object.rotation_euler.x = o.rotation_B
+
+
+# def updateRest(o, context):
+#    print('update rest ')
+#    # if o.use_layers:
+# o.movement.parallel_step_back = False
+#    o.changed = True
+
+def updateRest(o, context):
+    print('update rest ')
+    o.changed = True
+
+
+#    if (o.strategy == 'WATERLINE'):
+#        o.use_layers = True
+
+
+def getStrategyList(scene, context):
+    use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
+    items = [
+        ('CUTOUT', 'Profile(Cutout)', 'Cut the silhouete with offset'),
+        ('POCKET', 'Pocket', 'Pocket operation'),
+        ('DRILL', 'Drill', 'Drill operation'),
+        ('PARALLEL', 'Parallel', 'Parallel lines on any angle'),
+        ('CROSS', 'Cross', 'Cross paths'),
+        ('BLOCK', 'Block', 'Block path'),
+        ('SPIRAL', 'Spiral', 'Spiral path'),
+        ('CIRCLES', 'Circles', 'Circles path'),
+        ('OUTLINEFILL', 'Outline Fill',
+         'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
+        ('CARVE', 'Project curve to surface', 'Engrave the curve path to surface'),
+        ('WATERLINE', 'Waterline - Roughing -below zero',
+         'Waterline paths - constant z below zero'),
+        ('CURVE', 'Curve to Path', 'Curve object gets converted directly to path'),
+        ('MEDIAL_AXIS', 'Medial axis',
+         'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
+    ]
+    #   if use_experimental:
+    #       items.extend([('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
+    #                      'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')]);
+    # ('PENCIL', 'Pencil - EXPERIMENTAL','Pencil operation - detects negative corners in the model and mills only those.'),
+    # ('CRAZY', 'Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
+    #                     ('PROJECTED_CURVE', 'Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')])
+    return items
+
+# The following functions are temporary
+# until all content in __init__.py is cleaned up
+
+
+def update_material(self, context):
+    addMaterialAreaObject()
+
+
+def update_operation(self, context):
+    # from . import updateRest
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateRest(active_op, bpy.context)
+
+
+def update_exact_mode(self, context):
+    # from . import updateExact
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateExact(active_op, bpy.context)
+
+
+def update_opencamlib(self, context):
+    # from . import updateOpencamlib
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateOpencamlib(active_op, bpy.context)
+
+
+def update_zbuffer_image(self, context):
+    # from . import updateZbufferImage
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateZbufferImage(active_op, bpy.context)

@@ -1,12 +1,21 @@
 import bpy
-from bpy.props import StringProperty
-from bpy.props import FloatProperty
+from bpy.props import (
+    StringProperty,
+    FloatProperty
+)
 
-from cam.simple import strInUnits
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
-import cam.utils
-import cam.constants
-from cam.version import __version__ as cam_version
+from .buttons_panel import CAMButtonsPanel
+from ..utils import (
+    update_operation,
+    opencamlib_version
+)
+from ..constants import (
+    PRECISION,
+    CHIPLOAD_PRECISION,
+    MAX_OPERATION_TIME,
+)
+from ..version import __version__ as cam_version
+from ..simple import strInUnits
 
 # Info panel
 # This panel gives general information about the current operation
@@ -18,19 +27,19 @@ class CAM_INFO_Properties(bpy.types.PropertyGroup):
         name='warnings',
         description='warnings',
         default='',
-        update=cam.utils.update_operation,
+        update=update_operation,
     )
 
     chipload: FloatProperty(
         name="chipload", description="Calculated chipload",
         default=0.0, unit='LENGTH',
-        precision=cam.constants.CHIPLOAD_PRECISION,
+        precision=CHIPLOAD_PRECISION,
     )
 
     duration: FloatProperty(
         name="Estimated time", default=0.01, min=0.0000,
-        max=cam.constants.MAX_OPERATION_TIME,
-        precision=cam.constants.PRECISION,
+        max=MAX_OPERATION_TIME,
+        precision=PRECISION,
         unit="TIME",
     )
 
@@ -66,12 +75,12 @@ class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
     def draw_opencamlib_version(self):
         if not self.has_correct_level():
             return
-        opencamlib_version = cam.utils.opencamlib_version()
-        if opencamlib_version is None:
+        ocl_version = opencamlib_version()
+        if ocl_version is None:
             self.layout.label(text="Opencamlib is not installed")
         else:
             self.layout.label(
-                text=f"Opencamlib v{opencamlib_version} installed")
+                text=f"Opencamlib v{ocl_version} installed")
 
     # Display warnings related to the current operation
     def draw_op_warnings(self):

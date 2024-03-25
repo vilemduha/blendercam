@@ -1,9 +1,9 @@
 
 import bpy
 from bpy.types import UIList
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from .buttons_panel import CAMButtonsPanel
 
-import cam
+from ..utils import isChainValid
 
 
 class CAM_UL_operations(UIList):
@@ -72,7 +72,7 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
                     layout.operator("object.cam_export_paths_chain", text="Export chain gcode")
                     layout.operator("object.cam_simulate_chain", text="Simulate this chain")
 
-                    valid, reason = cam.isChainValid(chain, context)
+                    valid, reason = isChainValid(chain, context)
                     if not valid:
                         layout.label(icon="ERROR", text=f"Can't compute chain - reason:\n")
                         layout.label(text=reason)

@@ -1,5 +1,5 @@
 import bpy
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_FEEDRATE_Panel(CAMButtonsPanel, bpy.types.Panel):

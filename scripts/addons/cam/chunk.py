@@ -23,10 +23,10 @@
 import shapely
 from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
-from cam import polygon_utils_cam
-from cam.simple import *
-from cam.exception import CamException
-from cam.numba_wrapper import jit, prange
+from . import polygon_utils_cam
+from .simple import *
+from .exception import CamException
+from .numba_wrapper import jit, prange
 
 import math
 import numpy as np
@@ -101,7 +101,8 @@ class camPathChunk:
         self.poly = None  # get polygon just in time
         self.simppoly = None
         if startpoints:
-            self.startpoints = startpoints  # from where the sweep test begins, but also retract point for given path
+            # from where the sweep test begins, but also retract point for given path
+            self.startpoints = startpoints
         else:
             self.startpoints = []
         if endpoints:
@@ -526,7 +527,8 @@ class camPathChunk:
             if o.movement.ramp_out:
                 zstart = o.maxz
                 zend = self.points[-1][2]
-                if zend < zstart:  # again, sometimes a chunk could theoretically end above the starting level.
+                # again, sometimes a chunk could theoretically end above the starting level.
+                if zend < zstart:
                     stepdown = zstart - zend
 
                     estlength = (zstart - zend) / tan(o.movement.ramp_out_angle)
@@ -541,7 +543,8 @@ class camPathChunk:
                             ramplength = turns * self.length * 2.0
                             zigzaglength = self.length
                             ramppoints = self.points.tolist()
-                            ramppoints.reverse()  # revert points here, we go the other way.
+                            # revert points here, we go the other way.
+                            ramppoints.reverse()
 
                         else:
                             zigzagtraveled = 0.0
@@ -884,7 +887,8 @@ def parentChild(parents, children, o):
                 child.parents.append(parent)
 
 
-def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarchies... ;)
+# this does more cleve chunks to Poly with hierarchies... ;)
+def chunksToShapely(chunks):
     # print ('analyzing paths')
     for ch in chunks:  # first convert chunk to poly
         if len(ch.points) > 2:
@@ -909,7 +913,8 @@ def chunksToShapely(chunks):  # this does more cleve chunks to Poly with hierarc
 
             for parent in ch.parents:
                 if len(parent.parents) + 1 == len(ch.parents):
-                    ch.nparents = [parent]  # nparents serves as temporary storage for parents,
+                    # nparents serves as temporary storage for parents,
+                    ch.nparents = [parent]
                     # not to get mixed with the first parenting during the check
                     found = True
                     break
@@ -1235,7 +1240,8 @@ def chunksRefineThreshold(chunks, distance, limitdistance):
 
                         newchunk.append((p.x, p.y, p.z))
                     i += 1
-                    vref = v * distance * i  # because of the condition, so it doesn't run again.
+                    # because of the condition, so it doesn't run again.
+                    vref = v * distance * i
                 while i > 0:
                     vref = v * distance * i
                     if vref.length < d:
