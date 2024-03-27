@@ -62,7 +62,7 @@ jobs:
       with:
         type: 'zip'
         filename: 'blendercam.zip'
-        directory: './scripts/addons'
+        directory: './scripts/addons/cam'
     - name: Write version number
       if: ${{ inputs.version_bump }} != "overwrite previous tag"
       run: |
