@@ -62,7 +62,7 @@ jobs:
       with:
         type: 'zip'
         filename: 'blendercam.zip'
-        directory: './scripts/addons/cam'
+        directory: './scripts/addons'
     - name: Write version number
       if: ${{ inputs.version_bump }} != "overwrite previous tag"
       run: |
@@ -77,7 +77,7 @@ jobs:
     - name: make release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "scripts/addons/cam/blendercam.zip"
+        artifacts: "scripts/addons/blendercam.zip"
         tag: ${{ env.VERSION_TAG }}
         allowUpdates: true
         body: "To install BlenderCAM, download blendercam.zip and *don't* extract it. In blender, go to preferences, add-ons, and select 'install from file' and select the blendercam.zip file you downloaded"
