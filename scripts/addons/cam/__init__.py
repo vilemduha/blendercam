@@ -100,7 +100,7 @@ from pathlib import Path
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak & Contributors",
-    "version":(1,0,10),
+    "version":(1,0,11),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
