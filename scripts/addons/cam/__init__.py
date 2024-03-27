@@ -100,8 +100,7 @@ from shapely import geometry as sgeometry  # noqa
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak & Contributors",
-    "version":(1,0,8),
-
+    "version":(1,0,9),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
