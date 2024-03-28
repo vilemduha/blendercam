@@ -92,24 +92,24 @@ BlenderCAM works on Windows or Linux. Probably on MacOS also.
 
 ## 📒 Files Organisation
 
-```
+```graphql
 .
-├── config
-├── documentation
-├── Examples
+├── config - # 'startup' and 'userpref' blend files
+├── documentation - # Markdown guides and images
+├── Examples - # Bas Relief & Intarsion operation demo files and images
 ├── scripts
 │   └── addons
-│       └── cam
-│           ├── nc
-│           ├── opencamlib
-│           ├── presets
+│       └── cam - # Main Addon Folder
+│           ├── nc - # Post-Processors
+│           ├── opencamlib - # OpenCAMLib functions
+│           ├── presets - # Quick access to pre-defined cutting tools, machines and operations
 │           |   ├── cam_cutters
 │           |   ├── cam_machines
 │           |   └── cam_operations
-|           ├── tests
-|           |   └── test_data
-|           └── ui_panels
-└── static
+|           ├── tests - # Developer Tests
+|           |   └── test_data - # Test output
+|           └── ui_panels - # User Interface
+└── static - # Logo
 
 ```
 
