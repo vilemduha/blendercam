@@ -34,7 +34,10 @@ BlenderCAM is an add-on for the free open-source [Blender 3D package](https://ww
 
 It offers an open source solution for artistic, personal, commercial or industrial CAM _(Computer Aided Machining)_,  a G-Code generation tool.
 
-It has been used for many milling projects, and is actively developed. If you are a developer who would like to help, don't hesitate to fork the project and start generating pull requests.
+It has been used for many milling projects since its creation in 2012, and is actively developed. 
+
+> [!NOTE]
+> If you are a developer who would like to help, check out the [Contributing](#-contributing) section.
 
 ## 👨‍🎓 How to Use (Wiki)
 
@@ -116,11 +119,14 @@ BlenderCAM works on Windows or Linux. Probably on MacOS also.
 
 
 ## 🤝 Contributing
-BlenderCAM has been used for many milling projects, and is actively developed.
+BlenderCAM is in active development.
 
-If you are a developer who would like to help, fork and open pull requests
+Originally created by Vilem Novak, the addon is currently maintained by Alain Pelletier and a team of contributors. 
 
-If you need help or want to discuss about BlenderCAM you can join the [Chat Room #BlenderCAM:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org).
+If you are a developer who would like to contribute to the project, please fork and open pull requests.
+
+> [!TIP]
+> If you need help or want to discuss about BlenderCAM you can join the [Chat Room #BlenderCAM:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org).
 
 ### Contributors
 <a href="https://github.com/pppalain/blendercam/graphs/contributors">
