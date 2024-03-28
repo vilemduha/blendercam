@@ -37,7 +37,7 @@ It offers an open source solution for artistic, personal, commercial or industri
 It has been used for many milling projects since its creation in 2012, and is actively developed. 
 
 > [!NOTE]
-> _If you are a developer who would like to help, check out the section on [Contributing](#-contributing) ._
+> _If you are a developer who would like to help, check out the section on [Contributing](#-contributing)._
 
 ## 👨‍🎓 How to Use (Wiki)
 
