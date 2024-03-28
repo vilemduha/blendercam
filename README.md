@@ -37,7 +37,7 @@ It offers an open source solution for artistic, personal, commercial or industri
 It has been used for many milling projects since its creation in 2012, and is actively developed. 
 
 > [!NOTE]
-> If you are a developer who would like to help, check out the [Contributing](#-contributing) section.
+> _If you are a developer who would like to help, check out the [Contributing](#-contributing) section._
 
 ## 👨‍🎓 How to Use (Wiki)
 
@@ -126,7 +126,7 @@ Originally created by Vilem Novak, the addon is currently maintained by Alain Pe
 If you are a developer who would like to contribute to the project, please fork and open pull requests.
 
 > [!TIP]
-> If you need help or want to discuss about BlenderCAM you can join the [Chat Room #BlenderCAM:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org).
+> _If you need help or want to discuss about BlenderCAM you can join the [Chat Room #BlenderCAM:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org)._
 
 ### Contributors
 <a href="https://github.com/pppalain/blendercam/graphs/contributors">
