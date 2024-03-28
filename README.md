@@ -1,16 +1,15 @@
-
-<center> 
+<div align="center">
 
 ![BlenderCAM](documentation/images/logo.png)
 
-- - - 
+- - -
 
 
-### An open source solution for artistic or industrial CAM with Blender 3D
+### An Open Source Solution for Artistic or Industrial CAM with Blender 3D
 
 
 
-[![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org) 
+[![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org)
 [![Chat on Freenode](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](http://webchat.freenode.net/?channels=%23blendercam)
 [![Chat on Freenode](https://img.shields.io/github/issues/vilemduha/blendercam)](https://github.com/vilemduha/blendercam)
 ![Last commit](https://img.shields.io/github/last-commit/vilemduha/blendercam)
@@ -20,56 +19,62 @@
 
 <br>
 
-[About](#About) • [How to use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contributing](#-contributing) • [License](#-disclaimer) 
+
+[About](#About) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contributing](#-contributing) • [License](#-disclaimer)
+
 
 <br>
 
-![Blendercam](documentation/images/suzanne.gif)
+![BlenderCAM](documentation/images/suzanne.gif)
 
-
-</center>
+</div>
 
 ## 👁️ About
-Blender CAM is an open source solution for artistic, personal, commercial or industrial CAM - Computer aided machining - a g-code generation tool.
+BlenderCAM is an add-on for the free open-source [Blender 3D package](https://www.blender.org/).
 
-Blender CAM is an add-on for the free open-source [Blender 3d package](https://www.blender.org/).
+It offers an open source solution for [CAM _(Computer Aided Machining)_](https://en.wikipedia.org/wiki/Computer-aided_manufacturing) toolpath generation, simulation and [G-code](https://en.wikipedia.org/wiki/G-code) export.
 
-It has been used for many milling projects, and is actively developed. If you are a developer who would like to help, don't hesitate to fork the project and start generating pull requests.
+It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed. 
 
-## 👨‍🎓 How to use (Wiki)
+> [!NOTE]
+> _If you are a developer who would like to help, check out the section on [Contributing](#-contributing)._
 
-![Linux](https://img.shields.io/badge/Plateform-Linux%20|%20Windows-brightgreen.svg)
+## 👨‍🎓 How to Use (Wiki)
 
-Blendercam works on Windows or Linux. Probably on MacOS also.
+![Linux](https://img.shields.io/badge/Platform-Linux%20|%20Windows-brightgreen.svg)
 
-* [BlenderCam Installation](documentation/Blendercam%20Installation.md) 
-* [Getting started](documentation/Getting%20started.md)
-* [Panel descriptions](documentation/Blendercam-Panel-Descriptions.md)
+BlenderCAM works on Windows or Linux.
+
+* [BlenderCAM Installation](documentation/Blendercam%20Installation.md)
+* [Getting Started](documentation/Getting%20started.md)
+* [Panel Descriptions](documentation/Blendercam-Panel-Descriptions.md)
 * [Tools](documentation/Blendercam-Tools.md)
 * [Example of using Profile and Pocket operations](documentation/Profile%20and%20Pocket%20operations.md)
 
+> [!NOTE]
+> BlenderCAM _should_ work on MacOS, but it has not been tested.
 
 ## 👌 Features
 
 |                            | Blender from 2.80 to 4.0.0
 | -------------------------- | :----------------: |
-| Several milling strategies for 2D and 3D          |         ✔️        | 
-| Cutter types: ball, ballcone, endmill flat, v-carve with various angles, user definable             |         ✔️         |  
-| work with 3d data or depth images       |         ✔️         |  
-| Layers and skin for roughing. |         ✔️         |  
-| Inverse milling   |         ✔️         |  
-| Various options for ambient around model  |         ✔️         |  
-| protection of vertical surfaces       |         ✔️         |  
-| Stay low - option for movement       |         ✔️         |  
-| Material size setup  |         ✔️         |  
-| Simulation of 3d operations        |         ✔️         |  
-| Arc retract   |         ✔️         |  
-| Pack curves and slice model   |         ✔️         |  
-| Automatic bridges for cutout operation   |         ✔️         |  
-| Chain export and simulation  |         ✔️         |   
+| Several Milling Strategies for 2D and 3D          |         ✔️        |
+| Cutter Types: Ball, Ballcone, Endmill Flat, V-Carve _(various angles)_, User Defined             |         ✔️         |  
+| Work with 3D Data or Depth Images       |         ✔️         |  
+| Layers and Skin for Roughing |         ✔️         |  
+| Inverse Milling   |         ✔️         |  
+| Various Options for Ambient around Model  |         ✔️         |  
+| Protection of Vertical Surfaces       |         ✔️         |  
+| Stay Low - Option for Movement       |         ✔️         |  
+| Material Size Setup  |         ✔️         |  
+| Simulation of 3D Operations        |         ✔️         |  
+| Arc Retract   |         ✔️         |  
+| Pack Curves and Slice Model   |         ✔️         |  
+| Automatic Bridges for Cutout Operation   |         ✔️         |  
+| Chain Export and Simulation  |         ✔️         |   
 
-### Pending features
-* Helix entry and ramp down are experimental. 
+### Pending Features
+* Helix entry and ramp down are experimental.
 * 4 and 5 axis milling are only manual
 
 
@@ -77,7 +82,7 @@ Blendercam works on Windows or Linux. Probably on MacOS also.
 * GRBL
 * Iso
 * LinuxCNC - EMC2
-* Fadal 
+* Fadal
 * Heidenhain
 * Sieg KX1
 * Hafco HM-50
@@ -90,50 +95,64 @@ Blendercam works on Windows or Linux. Probably on MacOS also.
 * ...
 
 
-## 📒 Files organisation
+## 📒 Files Organisation
 
-```
+```graphql
 .
-├── config                     
+├── config - # 'startup' and 'userpref' blend files
+├── documentation - # Markdown guides and images
+├── Examples - # Bas Relief & Intarsion operation demo files and images
 ├── scripts
-│   ├── addons
-│   │   ├── cam
-│   │   │   ├── nc
-│   │   │   └── opencamlib
-│   │   ├── GPack
-│   │   └── print_3d
-│   │       ├── ini
-│   │       └── machine_profiles
-│   └── presets
-│       ├── cam_cutters
-│       ├── cam_machines
-│       └── cam_operations
-└── static
+│   └── addons
+│       └── cam - # Main Addon Folder
+│           ├── nc - # Post-Processors
+│           ├── opencamlib - # OpenCAMLib functions
+│           ├── presets - # Quick access to pre-defined cutting tools, machines and operations
+│           |   ├── cam_cutters
+│           |   ├── cam_machines
+│           |   └── cam_operations
+|           ├── tests - # Developer Tests
+|           |   └── test_data - # Test output
+|           └── ui_panels - # User Interface
+└── static - # Logo
 
 ```
 
 
 
 ## 🤝 Contributing
-BlenderCAM has been used for many milling projects, and is actively developed.
+#### BlenderCAM is in active development.
 
-If you are a developer who would like to help, fork and open pull requests
+Originally created by [Vilem Novak](https://github.com/vilemduha), the addon is currently maintained by [Alain Pelletier](https://github.com/pppalain) and a team of contributors. 
 
-If you need help or want  to discuss about BlenderCam you can join the [Chat Room #BlenderCam:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org). 
+If you are a developer who would like to contribute to the project, please fork and open pull requests.
+
+> [!TIP]
+> _If you need help or want to discuss about BlenderCAM you can join the [Chat Room #BlenderCAM:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org)._
+
+### Contributors
+<a href="https://github.com/pppalain/blendercam/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=pppalain/blendercam" />
+</a>
+
+### Additional Contributors & Acknowledgements
+Hirutso Enni, Kurt Jensen, Dan Falck, Dan Heeks, Brad Collette, Michael Haberler, dhull, jonathanwin, Leemon Baird, Devon (Gorialis) R, Steven Fortune, Bill Simons, Carson Farmer, domlysz
 
 ## 🤕 DISCLAIMER
-
+> [!WARNING]
 THE AUTHORS OF THIS SOFTWARE ACCEPT ABSOLUTELY NO LIABILITY FOR
-ANY HARM OR LOSS RESULTING FROM ITS USE.  IT IS _EXTREMELY_ UNWISE
-TO RELY ON SOFTWARE ALONE FOR SAFETY.  Any machinery capable of
+ANY HARM OR LOSS RESULTING FROM ITS USE.
+> 
+> IT IS _EXTREMELY_ UNWISE
+TO RELY ON SOFTWARE ALONE FOR SAFETY.
+> 
+> Any machinery capable of
 harming persons must have provisions for completely removing power
-from all motors, etc, before persons enter any danger area.  All
+from all motors, etc, before persons enter any danger area.
+>
+> All
 machinery must be designed to comply with local and national safety
 codes, and the authors of this software can not, and do not, take
 any responsibility for such compliance.
 
 This software is released under the GPLv2.
-
-
-
-
