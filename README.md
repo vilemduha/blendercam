@@ -30,7 +30,7 @@
 </div>
 
 ## 👁️ About
-BlenderCAM is an add-on for the free open-source [Blender 3D package](https://www.blender.org/).
+BlenderCAM is an add-on for the free open-source [Blender 3D package](https://www.blender.org/) .
 
 It offers an open source solution for [CAM _(Computer Aided Machining)_](https://en.wikipedia.org/wiki/Computer-aided_manufacturing) toolpath generation, simulation and [G-code](https://en.wikipedia.org/wiki/G-code) export.
 
