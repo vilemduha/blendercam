@@ -1,5 +1,4 @@
-
-<center>
+<div align="center">
 
 ![BlenderCAM](documentation/images/logo.png)
 
@@ -20,14 +19,15 @@
 
 <br>
 
+
 [About](#About) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contributing](#-contributing) • [License](#-disclaimer)
+
 
 <br>
 
 ![BlenderCAM](documentation/images/suzanne.gif)
 
-
-</center>
+</div>
 
 ## 👁️ About
 BlenderCAM is an add-on for the free open-source [Blender 3D package](https://www.blender.org/).
