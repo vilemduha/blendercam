@@ -136,20 +136,7 @@ If you are a developer who would like to contribute to the project, please fork 
 ### Acknowledgements
 _Additional contributions from:_
 
-- Hirutso Enni
-- Kurt Jensen
-- Dan Falck
-- Dan Heeks
-- Brad Collette
-- Michael Haberler
-- dhull
-- jonathanwin
-- Leemon Baird
-- Devon (Gorialis) R
-- Steven Fortune
-- Bill Simons
-- Carson Farmer
-- domlysz
+Hirutso Enni, Kurt Jensen, Dan Falck, Dan Heeks, Brad Collette, Michael Haberler, dhull, jonathanwin, Leemon Baird, Devon (Gorialis) R, Steven Fortune, Bill Simons, Carson Farmer, domlysz
 
 ## 🤕 DISCLAIMER
 > [!WARNING]
