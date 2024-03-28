@@ -32,9 +32,9 @@
 ## 👁️ About
 BlenderCAM is an add-on for the free open-source [Blender 3D package](https://www.blender.org/).
 
-It offers an open source solution for artistic, personal, commercial or industrial CAM _(Computer Aided Machining)_,  a G-Code generation tool.
+It offers an open source solution for [CAM _(Computer Aided Machining)_](https://en.wikipedia.org/wiki/Computer-aided_manufacturing) toolpath generation, simulation and [G-code](https://en.wikipedia.org/wiki/G-code) export.
 
-It has been used for many milling projects since its creation in 2012, and is actively developed. 
+It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed. 
 
 > [!NOTE]
 > _If you are a developer who would like to help, check out the section on [Contributing](#-contributing)._
@@ -43,7 +43,7 @@ It has been used for many milling projects since its creation in 2012, and is ac
 
 ![Linux](https://img.shields.io/badge/Platform-Linux%20|%20Windows-brightgreen.svg)
 
-BlenderCAM works on Windows or Linux. Probably on MacOS also.
+BlenderCAM works on Windows or Linux.
 
 * [BlenderCAM Installation](documentation/Blendercam%20Installation.md)
 * [Getting Started](documentation/Getting%20started.md)
@@ -51,6 +51,8 @@ BlenderCAM works on Windows or Linux. Probably on MacOS also.
 * [Tools](documentation/Blendercam-Tools.md)
 * [Example of using Profile and Pocket operations](documentation/Profile%20and%20Pocket%20operations.md)
 
+> [!NOTE]
+> BlenderCAM _should_ work on MacOS, but it has not been tested.
 
 ## 👌 Features
 
@@ -119,9 +121,9 @@ BlenderCAM works on Windows or Linux. Probably on MacOS also.
 
 
 ## 🤝 Contributing
-BlenderCAM is in active development.
+#### BlenderCAM is in active development.
 
-Originally created by Vilem Novak, the addon is currently maintained by Alain Pelletier and a team of contributors. 
+Originally created by [Vilem Novak](https://github.com/vilemduha), the addon is currently maintained by [Alain Pelletier](https://github.com/pppalain) and a team of contributors. 
 
 If you are a developer who would like to contribute to the project, please fork and open pull requests.
 
