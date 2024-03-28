@@ -129,12 +129,18 @@ If you need help or want to discuss about BlenderCAM you can join the [Chat Room
 
 
 ## 🤕 DISCLAIMER
-
+> [!WARNING]
 THE AUTHORS OF THIS SOFTWARE ACCEPT ABSOLUTELY NO LIABILITY FOR
-ANY HARM OR LOSS RESULTING FROM ITS USE.  IT IS _EXTREMELY_ UNWISE
-TO RELY ON SOFTWARE ALONE FOR SAFETY.  Any machinery capable of
+ANY HARM OR LOSS RESULTING FROM ITS USE.
+> 
+> IT IS _EXTREMELY_ UNWISE
+TO RELY ON SOFTWARE ALONE FOR SAFETY.
+> 
+> Any machinery capable of
 harming persons must have provisions for completely removing power
-from all motors, etc, before persons enter any danger area.  All
+from all motors, etc, before persons enter any danger area.
+>
+> All
 machinery must be designed to comply with local and national safety
 codes, and the authors of this software can not, and do not, take
 any responsibility for such compliance.
