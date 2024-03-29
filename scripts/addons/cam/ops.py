@@ -44,7 +44,7 @@ from . import (
 )
 from .utils import (
     was_hidden_dict,
-    reload_pathss,
+    reload_paths,
     isValid,
     isChainValid,
     silhoueteOffset,
@@ -193,13 +193,9 @@ async def _calc_path(operator, context):
         ob = bpy.data.objects[o.object_name]
         ob.select_set(True)
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)'''
-    if bpy.context.mode != 'OBJECT':
-        bpy.ops.object.mode_set(mode='OBJECT')	    # force object mode
-    bpy.ops.object.select_all(action='DESELECT')
-    path = bpy.data.objects.get('cam_path_{}'.format(o.name))
-    if path:
-        path.select_set(state=True)
-        bpy.ops.object.delete()
+    mesh = bpy.data.meshes.get(f'cam_path_{o.name}')
+    if mesh:
+        bpy.data.meshes.remove(mesh)
 
     if not o.valid:
         operator.report({'ERROR_INVALID_INPUT'},

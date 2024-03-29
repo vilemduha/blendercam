@@ -1710,7 +1710,7 @@ def rotTo2axes(e, axescombination):
     return (angle1, angle2)
 
 
-def reload_pathss(o):
+def reload_paths(o):
     oname = "cam_path_" + o.name
     s = bpy.context.scene
     # for o in s.objects:
@@ -1769,11 +1769,12 @@ USE_PROFILER = False
 
 was_hidden_dict = {}
 
+_IS_LOADING_DEFAULTS = False
+
 
 def updateMachine(self, context):
-    global _IS_LOADING_DEFAULTS
     print('update machine ')
-    if not _IS_LOADING_DEFAULTS:
+    if not utils._IS_LOADING_DEFAULTS:
         addMachineAreaObject()
 
 
