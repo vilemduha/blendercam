@@ -28,8 +28,9 @@ except ModuleNotFoundError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
     subprocess.check_call([sys.executable, "-m", "pip", "install",
                            "shapely", "Equation", "opencamlib"])
+    # Numba Install temporarily disabled after crash report
     # install numba if available for this platform, ignore failure
-    subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
+    # subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
 
 from shapely import geometry as sgeometry  # noqa
 
@@ -100,7 +101,7 @@ from pathlib import Path
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak & Contributors",
-    "version":(1,0,12),
+    "version": (1, 0, 12),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
