@@ -22,6 +22,7 @@
 
 # here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py.
 
+from typing import Any
 import bpy
 import time
 import mathutils
@@ -61,6 +62,7 @@ SHAPELY = True
 
 # Import OpencamLib
 # Return available OpenCamLib version on success, None otherwise
+
 def opencamlib_version():
     try:
         import ocl
@@ -68,8 +70,8 @@ def opencamlib_version():
         try:
             import opencamlib as ocl
         except ImportError as e:
-            return
-    return(ocl.version())
+            return 'Error'
+    return ocl.version()
 
 
 def positionObject(operation):
@@ -1762,6 +1764,18 @@ def reload_paths(o):
 
     if old_pathmesh is not None:
         bpy.data.meshes.remove(old_pathmesh)
+
+
+def setup_operation_preset():
+    scene = bpy.context.scene
+    cam_operations = scene.cam_operations
+    active_operation = scene.cam_active_operation
+    try:
+        o = cam_operations[active_operation]
+    except IndexError:
+        bpy.ops.scene.cam_operation_add()
+        o = cam_operations[active_operation]
+    return o
 
 
 # Moved from init - the following code was moved here to permit the import fix
