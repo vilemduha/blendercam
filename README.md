@@ -56,7 +56,7 @@ BlenderCAM works on Windows or Linux.
 
 ## 👌 Features
 
-|                            | Blender from 2.80 to 4.0.0
+|                            | Blender from 2.80 to 4.1
 | -------------------------- | :----------------: |
 | Several Milling Strategies for 2D and 3D          |         ✔️        |
 | Cutter Types: Ball, Ballcone, Endmill Flat, V-Carve _(various angles)_, User Defined             |         ✔️         |  
