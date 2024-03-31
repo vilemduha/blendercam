@@ -22,7 +22,6 @@
 
 # here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py.
 
-from typing import Any
 import bpy
 import time
 import mathutils
