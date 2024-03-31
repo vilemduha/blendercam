@@ -65,6 +65,7 @@ from .utils import (
     getStrategyList,
     updateBridges,
 )
+from .ui_panels.movement import CAM_MOVEMENT_Properties
 import bl_operators
 import blf
 import bpy
@@ -101,7 +102,7 @@ from pathlib import Path
 bl_info = {
     "name": "CAM - gcode generation tools",
     "author": "Vilem Novak & Contributors",
-    "version":(1,0,13),
+    "version": (1, 0, 13),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate machining paths for CNC",
@@ -115,6 +116,11 @@ class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
     # when defining this in a submodule of a python package.
     bl_idname = __package__
+
+    op_preset_update: BoolProperty(
+        name="Have the Operation Presets been Updated",
+        default=False,
+    )
 
     experimental: BoolProperty(
         name="Show experimental features",
@@ -1797,27 +1803,109 @@ class AddPresetCamOperation(bl_operators.presets.AddPresetBase, Operator):
     preset_menu = "CAM_OPERATION_MT_presets"
 
     preset_defines = [
-        "o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]"]
+        'import cam',
+        'o = cam.utils.setup_operation_preset()',
+    ]
 
-    preset_values = ['o.use_layers', 'o.info.duration', 'o.info.chipload', 'o.material.estimate_from_model', 'o.movement.stay_low', 'o.carve_depth',
-                     'o.dist_along_paths', 'o.source_image_crop_end_x', 'o.source_image_crop_end_y', 'o.material.size',
-                     'o.material.radius_around_model', 'o.use_limit_curve', 'o.cut_type', 'o.optimisation.use_exact',
-                     'o.optimisation.exact_subdivide_edges', 'o.minz_from', 'o.movement.free_height',
-                     'o.source_image_crop_start_x', 'o.movement.insideout', 'o.movement.movement.spindle_rotation', 'o.skin',
-                     'o.source_image_crop_start_y', 'o.movement.type', 'o.source_image_crop', 'o.limit_curve',
-                     'o.spindle_rpm', 'o.ambient_behaviour', 'o.cutter_type', 'o.source_image_scale_z',
-                     'o.cutter_diameter', 'o.source_image_size_x', 'o.curve_object', 'o.curve_object1',
-                     'o.cutter_flutes', 'o.ambient_radius', 'o.optimisation.simulation_detail', 'o.update_offsetimage_tag',
-                     'o.dist_between_paths', 'o.max', 'o.min', 'o.optimisation.pixsize', 'o.slice_detail', 'o.movement.parallel_step_back',
-                     'o.drill_type', 'o.source_image_name', 'o.dont_merge', 'o.update_silhouete_tag',
-                     'o.material.origin', 'o.inverse', 'o.waterline_fill', 'o.source_image_offset', 'o.optimisation.circle_detail',
-                     'o.strategy', 'o.update_zbufferimage_tag', 'o.stepdown', 'o.feedrate', 'o.cutter_tip_angle',
-                     'o.cutter_id', 'o.path_object_name', 'o.pencil_threshold', 'o.geometry_source',
-                     'o.optimize_threshold', 'o.movement.protect_vertical', 'o.plunge_feedrate', 'o.minz', 'o.info.warnings',
-                     'o.object_name', 'o.optimize', 'o.parallel_angle', 'o.cutter_length',
-                     'o.output_header', 'o.gcode_header', 'o.output_trailer', 'o.gcode_trailer', 'o.use_modifiers',
-                     'o.movement.useG64',
-                     'o.movement.G64', 'o.enable_A', 'o.enable_B', 'o.A_along_x', 'o.rotation_A', 'o.rotation_B', 'o.straight']
+    preset_values = [
+        'o.info.duration',
+        'o.info.chipload',
+        'o.info.warnings',
+
+        'o.material.estimate_from_model',
+        'o.material.size',
+        'o.material.radius_around_model',
+        'o.material.origin',
+
+        'o.movement.stay_low',
+        'o.movement.free_height',
+        'o.movement.insideout',
+        'o.movement.spindle_rotation',
+        'o.movement.type',
+        'o.movement.useG64',
+        'o.movement.G64',
+        'o.movement.parallel_step_back',
+        'o.movement.protect_vertical',
+
+        'o.source_image_name',
+        'o.source_image_offset',
+        'o.source_image_size_x',
+        'o.source_image_crop',
+        'o.source_image_crop_start_x',
+        'o.source_image_crop_start_y',
+        'o.source_image_crop_end_x',
+        'o.source_image_crop_end_y',
+        'o.source_image_scale_z',
+
+        'o.optimisation.optimize',
+        'o.optimisation.optimize_threshold',
+        'o.optimisation.use_exact',
+        'o.optimisation.exact_subdivide_edges',
+        'o.optimisation.simulation_detail',
+        'o.optimisation.pixsize',
+        'o.optimisation.circle_detail',
+
+        'o.cut_type',
+        'o.cutter_tip_angle',
+        'o.cutter_id',
+        'o.cutter_diameter',
+        'o.cutter_type',
+        'o.cutter_flutes',
+        'o.cutter_length',
+
+        'o.ambient_behaviour',
+        'o.ambient_radius',
+
+        'o.curve_object',
+        'o.curve_object1',
+        'o.limit_curve',
+        'o.use_limit_curve',
+
+        'o.feedrate',
+        'o.plunge_feedrate',
+
+        'o.dist_along_paths',
+        'o.dist_between_paths',
+
+        'o.max',
+        'o.min',
+        'o.minz_from',
+        'o.minz',
+
+        'o.skin',
+        'o.spindle_rpm',
+        'o.use_layers',
+        'o.carve_depth',
+
+        'o.update_offsetimage_tag',
+        'o.slice_detail',
+        'o.drill_type',
+        'o.dont_merge',
+        'o.update_silhouete_tag',
+        'o.inverse',
+        'o.waterline_fill',
+        'o.strategy',
+        'o.update_zbufferimage_tag',
+        'o.stepdown',
+        'o.path_object_name',
+        'o.pencil_threshold',
+        'o.geometry_source',
+        'o.object_name',
+        'o.parallel_angle',
+
+        'o.output_header',
+        'o.gcode_header',
+        'o.output_trailer',
+        'o.gcode_trailer',
+        'o.use_modifiers',
+
+        'o.enable_A',
+        'o.enable_B',
+        'o.A_along_x',
+        'o.rotation_A',
+        'o.rotation_B',
+        'o.straight'
+    ]
 
     preset_subdir = "cam_operations"
 
@@ -1861,6 +1949,7 @@ class AddPresetCamMachine(bl_operators.presets.AddPresetBase, Operator):
 class BLENDERCAM_ENGINE(bpy.types.RenderEngine):
     bl_idname = 'BLENDERCAM_RENDER'
     bl_label = "Cam"
+    bl_use_eevee_viewport = True
 
 
 _IS_LOADING_DEFAULTS = False
@@ -1901,6 +1990,13 @@ def check_operations_on_load(context):
 
         bpy.context.preferences.addons['cam'].preferences.just_updated = False
         bpy.ops.wm.save_userpref()
+
+    if not bpy.context.preferences.addons['cam'].preferences.op_preset_update:
+        # Update the Operation presets
+        op_presets_source = os.path.join(preset_source_path, 'cam_operations')
+        op_presets_target = os.path.join(preset_target_path, 'cam_operations')
+        shutil.copytree(preset_source_path, preset_target_path, dirs_exist_ok=True)
+        bpy.context.preferences.addons['cam'].preferences.op_preset_update = True
 
 
 def get_panels():  # convenience function for bot register and unregister functions
@@ -2134,7 +2230,7 @@ classes = [
     ui.CAM_OPTIMISATION_Properties,
     ui.CAM_AREA_Panel,
     ui.CAM_MOVEMENT_Panel,
-    ui.CAM_MOVEMENT_Properties,
+    CAM_MOVEMENT_Properties,
     ui.CAM_FEEDRATE_Panel,
     ui.CAM_CUTTER_Panel,
     ui.CAM_GCODE_Panel,
@@ -2214,7 +2310,7 @@ classes = [
 ]
 
 
-def register():
+def register() -> None:
     for p in classes:
         bpy.utils.register_class(p)
 
@@ -2264,8 +2360,25 @@ def register():
 
     basrelief.register()
 
+    from bl_ui.properties_material import (
+        EEVEE_MATERIAL_PT_context_material,
+        EEVEE_MATERIAL_PT_surface,
+        EEVEE_MATERIAL_PT_settings,
+    )
 
-def unregister():
+    panels = [
+        EEVEE_MATERIAL_PT_context_material,
+        EEVEE_MATERIAL_PT_surface,
+        EEVEE_MATERIAL_PT_settings,
+    ]
+
+    for panel in panels:
+        bpy.utils.unregister_class(panel)
+        panel.COMPAT_ENGINES.add('BLENDERCAM_RENDER')
+        bpy.utils.register_class(panel)
+
+
+def unregister() -> None:
     for p in classes:
         bpy.utils.unregister_class(p)
     s = bpy.types.Scene
@@ -2281,3 +2394,18 @@ def unregister():
     del s.cam_pack
     del s.cam_slice
     basrelief.unregister()
+
+    from bl_ui.properties_material import (
+        EEVEE_MATERIAL_PT_context_material,
+        EEVEE_MATERIAL_PT_surface,
+        EEVEE_MATERIAL_PT_settings,
+    )
+
+    panels = [
+        EEVEE_MATERIAL_PT_context_material,
+        EEVEE_MATERIAL_PT_surface,
+        EEVEE_MATERIAL_PT_settings,
+    ]
+
+    for panel in panels:
+        panel.COMPAT_ENGINES.remove('BLENDERCAM_RENDER')

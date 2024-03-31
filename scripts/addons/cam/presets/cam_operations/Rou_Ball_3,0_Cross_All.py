@@ -1,5 +1,7 @@
 import bpy
-o = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+import cam
+
+o = cam.utils.setup_operation_preset()
 
 o.ambient_behaviour = 'ALL'
 o.ambient_radius = 0.009999999776482582
