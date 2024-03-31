@@ -61,7 +61,6 @@ SHAPELY = True
 
 # Import OpencamLib
 # Return available OpenCamLib version on success, None otherwise
-
 def opencamlib_version():
     try:
         import ocl
@@ -69,7 +68,7 @@ def opencamlib_version():
         try:
             import opencamlib as ocl
         except ImportError as e:
-            return 'Error'
+            return
     return ocl.version()
 
 
