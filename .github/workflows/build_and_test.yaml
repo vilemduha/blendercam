@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest','windows-latest']
-        blender_version: ['3.6.7','4.0.2']
+        blender_version: ['3.6.7','4.1']
         include:
           - os: 'macos-latest'
             blender_version: 'ignored'
