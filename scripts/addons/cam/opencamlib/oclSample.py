@@ -1,4 +1,8 @@
-import os
+from math import (
+    radians,
+    tan
+)
+
 try:
     import ocl
 except ImportError:
@@ -6,13 +10,12 @@ except ImportError:
         import opencamlib as ocl
     except ImportError:
         pass
-import tempfile
 
 from io_mesh_stl import blender_utils
 import mathutils
-import math
+
 from ..simple import activate
-from ..exception import *
+from ..exception import CamException
 from ..async_op import progress_async
 
 OCL_SCALE = 1000.0
@@ -50,9 +53,9 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
     op_minz = operation.minz
-    op_cutter_tip_angle = math.radians(operation.cutter_tip_angle)/2
+    op_cutter_tip_angle = radians(operation.cutter_tip_angle)/2
     if op_cutter_type == "VCARVE":
-        cutter_length = (op_cutter_diameter/math.tan(op_cutter_tip_angle))/2
+        cutter_length = (op_cutter_diameter/tan(op_cutter_tip_angle))/2
     else:
         cutter_length = 10
 
