@@ -705,12 +705,12 @@ def chunksCoherency(chunks):
                 angle = vec.angle(lastvec, vec)
                 # print(angle,i)
                 if angle > 1.07:  # 60 degrees is maximum toleration for pencil paths.
-                    if len(nchunk.points) > 4:  # this is a testing threshold
+                    if len(nchunk_points) > 4:  # this is a testing threshold
                         nchunks.append(nchunk.to_chunk())
                     nchunk = camPathChunkBuilder()
                 lastvec = vec
-            if len(nchunk.points) > 4:  # this is a testing threshold
-                nchunk.points = np.array(nchunk.points)
+            if len(nchunk_points) > 4:  # this is a testing threshold
+                nchunk.points = np.array(nchunk_points)
                 nchunks.append(nchunk)
     return nchunks
 
