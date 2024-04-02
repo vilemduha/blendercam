@@ -20,44 +20,61 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # here is the Gcode generaton
-
-import bpy
+from math import (
+    ceil,
+    floor,
+    pi,
+    sqrt
+)
 import time
-import mathutils
-import math
-from math import *
-from mathutils import *
 
 import numpy
+from shapely.geometry import polygon as spolygon
 
-from . import chunk
-from .chunk import *
-from .utils import USE_PROFILER
+import bpy
+from mathutils import Euler, Vector
 
-from . import collision
-from .collision import *
-
-from . import simple
-from .simple import *
-
-from .async_op import progress_async
-
-from . import bridges
-from .bridges import *
-
-from . import utils
 from . import strategy
-
-from . import pattern
-from .pattern import *
-
-from . import polygon_utils_cam
-from .polygon_utils_cam import *
-
-from . import image_utils
-from .image_utils import *
-from .opencamlib.opencamlib import *
+from .async_op import progress_async
+from .bridges import useBridges
+from .cam_chunk import (
+    curveToChunks,
+    chunksRefine,
+    limitChunks,
+    chunksCoherency,
+    shapelyToChunks,
+    parentChildDist,
+)
+from .image_utils import (
+    crazyStrokeImageBinary,
+    getOffsetImageCavities,
+    imageToShapely,
+    prepareArea,
+)
 from .nc import iso
+from .opencamlib.opencamlib import oclGetWaterline
+from .pattern import (
+    getPathPattern,
+    getPathPattern4axis
+)
+from .simple import (
+    progress,
+    safeFileName,
+    strInUnits
+)
+from .utils import (
+    cleanupIndexed,
+    connectChunksLow,
+    getAmbient,
+    getBounds,
+    getOperationSilhouete,
+    getOperationSources,
+    prepareIndexed,
+    sampleChunks,
+    sampleChunksNAxis,
+    sortChunks,
+    USE_PROFILER,
+)
 
 
 def pointonline(a, b, c, tolerence):
@@ -278,12 +295,12 @@ def exportGcodePath(filename, vertslist, operations):
         if o.enable_A:
             if o.rotation_A == 0:
                 o.rotation_A = 0.0001
-            c.rapid(a=o.rotation_A * 180 / math.pi)
+            c.rapid(a=o.rotation_A * 180 / pi)
 
         if o.enable_B:
             if o.rotation_B == 0:
                 o.rotation_B = 0.0001
-            c.rapid(a=o.rotation_B * 180 / math.pi)
+            c.rapid(a=o.rotation_B * 180 / pi)
 
         c.write('\n')
         c.flush_nc()
@@ -538,7 +555,7 @@ async def getPath(context, operation):  # should do all path calculations.
     operation.update_ambient_tag = True
     operation.update_bullet_collision_tag = True
 
-    utils.getOperationSources(operation)
+    getOperationSources(operation)
 
     operation.info.warnings = ''
     checkMemoryLimit(operation)
@@ -600,7 +617,7 @@ def getChangeData(o):
 
 
 def checkMemoryLimit(o):
-    # utils.getBounds(o)
+    # getBounds(o)
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
     resx = sx / o.optimisation.pixsize
@@ -610,7 +627,7 @@ def checkMemoryLimit(o):
     # print('co se to deje')
     if res > limit:
         ratio = (res / limit)
-        o.optimisation.pixsize = o.optimisation.pixsize * math.sqrt(ratio)
+        o.optimisation.pixsize = o.optimisation.pixsize * sqrt(ratio)
         o.info.warnings += f"Memory limit: sampling resolution reduced to {o.optimisation.pixsize:.2e}\n"
         print('changing sampling resolution to %f' % o.optimisation.pixsize)
 
@@ -620,7 +637,7 @@ def checkMemoryLimit(o):
 async def getPath3axis(context, operation):
     s = bpy.context.scene
     o = operation
-    utils.getBounds(o)
+    getBounds(o)
     tw = time.time()
 
     if o.strategy == 'CUTOUT':
@@ -642,15 +659,15 @@ async def getPath3axis(context, operation):
             ob = bpy.data.objects[o.curve_object]
             pathSamples.extend(curveToChunks(ob))
             # sort before sampling
-            pathSamples = await utils.sortChunks(pathSamples, o)
+            pathSamples = await sortChunks(pathSamples, o)
             pathSamples = chunksRefine(pathSamples, o)
         elif o.strategy == 'PENCIL':
             await prepareArea(o)
-            utils.getAmbient(o)
+            getAmbient(o)
             pathSamples = getOffsetImageCavities(o, o.offset_image)
             pathSamples = limitChunks(pathSamples, o)
             # sort before sampling
-            pathSamples = await utils.sortChunks(pathSamples, o)
+            pathSamples = await sortChunks(pathSamples, o)
         elif o.strategy == 'CRAZY':
             await prepareArea(o)
             # pathSamples = crazyStrokeImage(o)
@@ -660,21 +677,21 @@ async def getPath3axis(context, operation):
 
             pathSamples = crazyStrokeImageBinary(o, millarea, avoidarea)
             #####
-            pathSamples = await utils.sortChunks(pathSamples, o)
+            pathSamples = await sortChunks(pathSamples, o)
             pathSamples = chunksRefine(pathSamples, o)
 
         else:
             if o.strategy == 'OUTLINEFILL':
-                utils.getOperationSilhouete(o)
+                getOperationSilhouete(o)
 
             pathSamples = getPathPattern(o)
 
             if o.strategy == 'OUTLINEFILL':
-                pathSamples = await utils.sortChunks(pathSamples, o)
+                pathSamples = await sortChunks(pathSamples, o)
                 # have to be sorted once before, because of the parenting inside of samplechunks
 
             if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
-                pathSamples = await utils.connectChunksLow(pathSamples, o)
+                pathSamples = await connectChunksLow(pathSamples, o)
 
         # print (minz)
 
@@ -682,7 +699,7 @@ async def getPath3axis(context, operation):
         layers = strategy.getLayers(o, o.maxz, o.min.z)
 
         print("SAMPLE", o.name)
-        chunks.extend(await utils.sampleChunks(o, pathSamples, layers))
+        chunks.extend(await sampleChunks(o, pathSamples, layers))
         print("SAMPLE OK")
         if o.strategy == 'PENCIL':  # and bpy.app.debug_value==-3:
             chunks = chunksCoherency(chunks)
@@ -691,9 +708,9 @@ async def getPath3axis(context, operation):
         # and not o.movement.parallel_step_back:
         if o.strategy in ['PARALLEL', 'CROSS', 'PENCIL', 'OUTLINEFILL']:
             print('sorting')
-            chunks = await utils.sortChunks(chunks, o)
+            chunks = await sortChunks(chunks, o)
             if o.strategy == 'OUTLINEFILL':
-                chunks = await utils.connectChunksLow(chunks, o)
+                chunks = await connectChunksLow(chunks, o)
         if o.movement.ramp:
             for ch in chunks:
                 ch.rampZigZag(ch.zstart, None, o)
@@ -711,7 +728,7 @@ async def getPath3axis(context, operation):
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and o.optimisation.use_opencamlib:
-        utils.getAmbient(o)
+        getAmbient(o)
         chunks = []
         await oclGetWaterline(o, chunks)
         chunks = limitChunks(chunks, o)
@@ -729,7 +746,7 @@ async def getPath3axis(context, operation):
         await prepareArea(o)
         layerstep = 1000000000
         if o.use_layers:
-            layerstep = math.floor(o.stepdown / o.slice_detail)
+            layerstep = floor(o.stepdown / o.slice_detail)
             if layerstep == 0:
                 layerstep = 1
 
@@ -743,7 +760,7 @@ async def getPath3axis(context, operation):
         layerstepinc = 0
 
         slicesfilled = 0
-        utils.getAmbient(o)
+        getAmbient(o)
 
         for h in range(0, nslices):
             layerstepinc += 1
@@ -798,7 +815,7 @@ async def getPath3axis(context, operation):
                         # project paths TODO: path projection during waterline is not working
                         if o.waterline_project:
                             nchunks = chunksRefine(nchunks, o)
-                            nchunks = await utils.sampleChunks(o, nchunks, layers)
+                            nchunks = await sampleChunks(o, nchunks, layers)
 
                         nchunks = limitChunks(nchunks, o, force=True)
                         #########################
@@ -850,7 +867,7 @@ async def getPath3axis(context, operation):
                     o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW'):
                 for chunk in slicechunks:
                     chunk.reverse()
-            slicechunks = await utils.sortChunks(slicechunks, o)
+            slicechunks = await sortChunks(slicechunks, o)
             if topdown:
                 slicechunks.reverse()
             # project chunks in between
@@ -870,7 +887,7 @@ async def getPath3axis(context, operation):
 
 async def getPath4axis(context, operation):
     o = operation
-    utils.getBounds(o)
+    getBounds(o)
     if o.strategy4axis in ['PARALLELR', 'PARALLEL', 'HELIX', 'CROSS']:
         path_samples = getPathPattern4axis(o)
 
@@ -879,5 +896,5 @@ async def getPath4axis(context, operation):
 
         layers = strategy.getLayers(o, 0, depth)
 
-        chunks.extend(await utils.sampleChunksNAxis(o, path_samples, layers))
+        chunks.extend(await sampleChunksNAxis(o, path_samples, layers))
         strategy.chunksToMesh(chunks, o)

@@ -17,13 +17,11 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
-
-import bpy
-import bmesh
 import math
 
-import re
 import numpy as np
+
+import bpy
 
 np.set_printoptions(suppress=True)  # suppress scientific notation in subdivide functions linspace
 

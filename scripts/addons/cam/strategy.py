@@ -20,34 +20,67 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # here is the strategy functionality of Blender CAM. The functions here are called with operators defined in ops.py.
-
-import bpy
-import time
-import math
-from math import *
-from bpy_extras import object_utils
-from . import (
-    chunk,
-    collision,
-    simple,
-    pattern,
-    utils,
-    bridges,
-    ops,
-    polygon_utils_cam,
-    image_utils
+from math import (
+    ceil,
+    pi,
+    radians,
+    sqrt,
+    tan,
 )
-from .chunk import *
-from .collision import *
-from .simple import *
-from .pattern import *
-from .utils import *
-from .polygon_utils_cam import *
-from .image_utils import *
+import sys
+import time
 
+import shapely
 from shapely.geometry import polygon as spolygon
+from shapely.geometry import Point  # Double check this import!
 from shapely import geometry as sgeometry
 from shapely import affinity
+
+import bpy
+from bpy_extras import object_utils
+from mathutils import (
+    Euler,
+    Vector
+)
+
+from .bridges import useBridges
+from .cam_chunk import (
+    camPathChunk,
+    chunksRefine,
+    chunksRefineThreshold,
+    curveToChunks,
+    limitChunks,
+    optimizeChunk,
+    parentChildDist,
+    parentChildPoly,
+    setChunksZ,
+    shapelyToChunks,
+)
+from .collision import cleanupBulletCollision
+from .exception import CamException
+from .polygon_utils_cam import Circle, shapelyToCurve
+from .simple import (
+    activate,
+    delob,
+    join_multiple,
+    progress,
+    remove_multiple,
+)
+from .utils import (
+    Add_Pocket,
+    checkEqual,
+    extendChunks5axis,
+    getObjectOutline,
+    getObjectSilhouete,
+    getOperationSilhouete,
+    getOperationSources,
+    Helix,
+    # Point,
+    sampleChunksNAxis,
+    sortChunks,
+    unique,
+)
+
 
 SHAPELY = True
 
@@ -55,20 +88,20 @@ SHAPELY = True
 # cutout strategy is completely here:
 async def cutout(o):
     max_depth = checkminz(o)
-    cutter_angle = math.radians(o.cutter_tip_angle / 2)
+    cutter_angle = radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2  # cutter ofset
     print("cuttertype:", o.cutter_type, "max_depth:", max_depth)
     if o.cutter_type == 'VCARVE':
-        c_offset = -max_depth * math.tan(cutter_angle)
+        c_offset = -max_depth * tan(cutter_angle)
     elif o.cutter_type == 'CYLCONE':
-        c_offset = -max_depth * math.tan(cutter_angle) + o.cylcone_diameter / 2
+        c_offset = -max_depth * tan(cutter_angle) + o.cylcone_diameter / 2
     elif o.cutter_type == 'BALLCONE':
-        c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
+        c_offset = -max_depth * tan(cutter_angle) + o.ball_radius
     elif o.cutter_type == 'BALLNOSE':
         r = o.cutter_diameter / 2
         print("cutter radius:", r, " skin", o.skin)
         if -max_depth < r:
-            c_offset = math.sqrt(r ** 2 - (r + max_depth) ** 2)
+            c_offset = sqrt(r ** 2 - (r + max_depth) ** 2)
             print("offset:", c_offset)
     if c_offset > o.cutter_diameter / 2:
         c_offset = o.cutter_diameter / 2
@@ -95,14 +128,14 @@ async def cutout(o):
     else:
         chunksFromCurve = []
         if o.cut_type == 'ONLINE':
-            p = utils.getObjectOutline(0, o, True)
+            p = getObjectOutline(0, o, True)
 
         else:
             offset = True
             if o.cut_type == 'INSIDE':
                 offset = False
 
-            p = utils.getObjectOutline(c_offset, o, offset)
+            p = getObjectOutline(c_offset, o, offset)
             if o.outlines_count > 1:
                 for i in range(1, o.outlines_count):
                     chunksFromCurve.extend(shapelyToChunks(p, -1))
@@ -121,7 +154,7 @@ async def cutout(o):
     if not o.dont_merge:
         parentChildPoly(chunksFromCurve, chunksFromCurve, o)
     if o.outlines_count == 1:
-        chunksFromCurve = await utils.sortChunks(chunksFromCurve, o)
+        chunksFromCurve = await sortChunks(chunksFromCurve, o)
 
     if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW') or (
             o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW'):
@@ -164,7 +197,7 @@ async def cutout(o):
 
     if o.use_bridges:  # add bridges to chunks
         print('using bridges')
-        simple.remove_multiple(o.name+'_cut_bridges')
+        remove_multiple(o.name+'_cut_bridges')
         print("old briddge cut removed")
 
         bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
@@ -173,7 +206,7 @@ async def cutout(o):
             chunk = chl[0]
             layer = chl[1]
             if layer[1] < bridgeheight:
-                bridges.useBridges(chunk, o)
+                useBridges(chunk, o)
 
     if o.profile_start > 0:
         print("cutout change profile start")
@@ -211,7 +244,7 @@ async def cutout(o):
 async def curve(o):
     print('operation: curve')
     pathSamples = []
-    utils.getOperationSources(o)
+    getOperationSources(o)
     if not o.onlycurves:
         raise CamException("All objects must be curves for this operation.")
 
@@ -219,7 +252,7 @@ async def curve(o):
         # make the chunks from curve here
         pathSamples.extend(curveToChunks(ob))
     # sort before sampling
-    pathSamples = await utils.sortChunks(pathSamples, o)
+    pathSamples = await sortChunks(pathSamples, o)
     pathSamples = chunksRefine(pathSamples, o)  # simplify
 
     # layers here
@@ -264,7 +297,7 @@ async def proj_curve(s, o):
 
     targetCurve = s.objects[o.curve_object1]
 
-    from cam import chunk
+    from cam import cam_chunk
     if targetCurve.type != 'CURVE':
         raise CamException('Projection target and source have to be curve objects!')
 
@@ -302,7 +335,7 @@ async def proj_curve(s, o):
     ch.set_points(ch_points)
     layers = getLayers(o, 0, ch.depth)
 
-    chunks.extend(utils.sampleChunksNAxis(o, pathSamples, layers))
+    chunks.extend(sampleChunksNAxis(o, pathSamples, layers))
     chunksToMesh(chunks, o)
 
 
@@ -310,24 +343,24 @@ async def pocket(o):
     print('operation: pocket')
     scene = bpy.context.scene
 
-    simple.remove_multiple("3D_poc")
+    remove_multiple("3D_poc")
 
     max_depth = checkminz(o) + o.skin
-    cutter_angle = math.radians(o.cutter_tip_angle / 2)
+    cutter_angle = radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2
     if o.cutter_type == 'VCARVE':
-        c_offset = -max_depth * math.tan(cutter_angle)
+        c_offset = -max_depth * tan(cutter_angle)
     elif o.cutter_type == 'CYLCONE':
-        c_offset = -max_depth * math.tan(cutter_angle) + o.cylcone_diameter / 2
+        c_offset = -max_depth * tan(cutter_angle) + o.cylcone_diameter / 2
     elif o.cutter_type == 'BALLCONE':
-        c_offset = -max_depth * math.tan(cutter_angle) + o.ball_radius
+        c_offset = -max_depth * tan(cutter_angle) + o.ball_radius
     if c_offset > o.cutter_diameter / 2:
         c_offset = o.cutter_diameter / 2
 
     c_offset += o.skin  # add skin
     print("cutter offset", c_offset)
 
-    p = utils.getObjectOutline(c_offset, o, False)
+    p = getObjectOutline(c_offset, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
     print("approximative:" + str(approxn))
     print(o)
@@ -342,7 +375,7 @@ async def pocket(o):
     while not p.is_empty:
         if o.pocketToCurve:
             # make a curve starting with _3dpocket
-            polygon_utils_cam.shapelyToCurve('3dpocket', p, 0.0)
+            shapelyToCurve('3dpocket', p, 0.0)
 
         nchunks = shapelyToChunks(p, o.min.z)
         # print("nchunks")
@@ -372,7 +405,7 @@ async def pocket(o):
         for ch in chunksFromCurve:
             ch.reverse()
 
-    chunksFromCurve = await utils.sortChunks(chunksFromCurve, o)
+    chunksFromCurve = await sortChunks(chunksFromCurve, o)
 
     chunks = []
     layers = getLayers(o, o.maxz, checkminz(o))
@@ -494,10 +527,10 @@ async def pocket(o):
     if o.first_down:
         if o.pocket_option == "OUTSIDE":
             chunks.reverse()
-        chunks = await utils.sortChunks(chunks, o)
+        chunks = await sortChunks(chunks, o)
 
     if o.pocketToCurve:  # make curve instead of a path
-        simple.join_multiple("3dpocket")
+        join_multiple("3dpocket")
 
     else:
         chunksToMesh(chunks, o)  # make normal pocket path
@@ -593,14 +626,14 @@ async def drill(o):
                 newchunk.setZ(o.maxz)
                 chunklayers.append(newchunk)
 
-    chunklayers = await utils.sortChunks(chunklayers, o)
+    chunklayers = await sortChunks(chunklayers, o)
     chunksToMesh(chunklayers, o)
 
 
 async def medial_axis(o):
     print('operation: Medial Axis')
 
-    simple.remove_multiple("medialMesh")
+    remove_multiple("medialMesh")
 
     from .voronoi import Site, computeVoronoiDiagram
 
@@ -608,8 +641,8 @@ async def medial_axis(o):
 
     gpoly = spolygon.Polygon()
     angle = o.cutter_tip_angle
-    slope = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
-    # slope = math.tan((math.pi-angle)/2) #angle in radian
+    slope = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
+    # slope = tan((pi-angle)/2) #angle in radian
     new_cutter_diameter = o.cutter_diameter
     m_o_ob = o.object_name
     if o.cutter_type == 'VCARVE':
@@ -638,7 +671,7 @@ async def medial_axis(o):
             if ob.data.resolution_u < 64:
                 ob.data.resolution_u = 64
 
-    polys = utils.getOperationSilhouete(o)
+    polys = getOperationSilhouete(o)
     if isinstance(polys, list):
         if len(polys) == 1 and isinstance(polys[0], shapely.MultiPolygon):
             mpoly = polys[0]
@@ -758,7 +791,7 @@ async def medial_axis(o):
 
         # generate a mesh from the medial calculations
         if o.add_mesh_for_medial:
-            polygon_utils_cam.shapelyToCurve('medialMesh', lines, 0.0)
+            shapelyToCurve('medialMesh', lines, 0.0)
             bpy.ops.object.convert(target='MESH')
 
     oi = 0
@@ -768,7 +801,7 @@ async def medial_axis(o):
             oi += 1
 
     # bpy.ops.object.join()
-    chunks = await utils.sortChunks(chunks, o)
+    chunks = await sortChunks(chunks, o)
 
     layers = getLayers(o, o.maxz, o.min.z)
 
@@ -782,17 +815,17 @@ async def medial_axis(o):
                 chunklayers.append(newchunk)
 
     if o.first_down:
-        chunklayers = await utils.sortChunks(chunklayers, o)
+        chunklayers = await sortChunks(chunklayers, o)
 
     if o.add_mesh_for_medial:  # make curve instead of a path
-        simple.join_multiple("medialMesh")
+        join_multiple("medialMesh")
 
     chunksToMesh(chunklayers, o)
     # add pocket operation for medial if add pocket checked
     if o.add_pocket_for_medial:
         #        o.add_pocket_for_medial = False
         # export medial axis parameter to pocket op
-        ops.Add_Pocket(None, maxdepth, m_o_ob, new_cutter_diameter)
+        Add_Pocket(None, maxdepth, m_o_ob, new_cutter_diameter)
 
 
 def getLayers(operation, startdepth, enddepth):
@@ -805,7 +838,7 @@ def getLayers(operation, startdepth, enddepth):
                            "and should usually be negative. Set this in the CAM Operation Area panel.")
     if operation.use_layers:
         layers = []
-        n = math.ceil((startdepth - enddepth) / operation.stepdown)
+        n = ceil((startdepth - enddepth) / operation.stepdown)
         print("start " + str(startdepth) + " end " + str(enddepth) + " n " + str(n))
 
         layerstart = operation.maxz

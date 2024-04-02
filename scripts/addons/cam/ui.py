@@ -18,42 +18,21 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
-
-import sys
-import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
     StringProperty,
 )
 from bpy.types import (
     Panel,
-    Menu,
     Operator,
-    UIList
+    UIList,
+    PropertyGroup,
 )
 
-from . import (
-    gcodeimportparser,
-    simple
-)
-from .simple import *
-
-from .ui_panels.buttons_panel import CAMButtonsPanel
-from .ui_panels.interface import *
-from .ui_panels.info import *
-from .ui_panels.operations import *
-from .ui_panels.cutter import *
-from .ui_panels.machine import *
-from .ui_panels.material import *
-from .ui_panels.chains import *
-from .ui_panels.op_properties import *
-from .ui_panels.movement import *
-from .ui_panels.feedrate import *
-from .ui_panels.optimisation import *
-from .ui_panels.area import *
-from .ui_panels.gcode import *
-from .ui_panels.pack import *
-from .ui_panels.slice import *
+from .gcodeimportparser import import_gcode
 
 
 class CAM_UL_orientations(UIList):
@@ -68,7 +47,7 @@ class CAM_UL_orientations(UIList):
 
 # panel containing all tools
 
-class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
+class VIEW3D_PT_tools_curvetools(Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
@@ -87,7 +66,7 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.mesh_get_pockets")
 
 
-class VIEW3D_PT_tools_create(bpy.types.Panel):
+class VIEW3D_PT_tools_create(Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
@@ -115,7 +94,7 @@ class VIEW3D_PT_tools_create(bpy.types.Panel):
 # ------------------------------------------------------------------------
 
 
-class CustomPanel(bpy.types.Panel):
+class CustomPanel(Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
@@ -167,4 +146,34 @@ class WM_OT_gcode_import(Operator, ImportHelper):
 
     def execute(self, context):
         print(self.filepath)
-        return gcodeimportparser.import_gcode(context, self.filepath)
+        return import_gcode(context, self.filepath)
+
+
+class import_settings(PropertyGroup):
+    split_layers: BoolProperty(
+        name="Split Layers",
+        description="Save every layer as single Objects in Collection",
+        default=False,
+    )
+    subdivide: BoolProperty(
+        name="Subdivide",
+        description="Only Subdivide gcode segments that are "
+        "bigger than 'Segment length' ",
+        default=False,
+    )
+    output: EnumProperty(
+        name="output type",
+        items=(
+            ("mesh", "Mesh", "Make a mesh output"),
+            ("curve", "Curve", "Make curve output"),
+        ),
+        default="curve",
+    )
+    max_segment_size: FloatProperty(
+        name="",
+        description="Only Segments bigger then this value get subdivided",
+        default=0.001,
+        min=0.0001,
+        max=1.0,
+        unit="LENGTH",
+    )

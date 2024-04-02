@@ -19,20 +19,21 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 # here is the bridges functionality of Blender CAM. The functions here are called with operators defined from ops.py.
-
-import bpy
-from bpy_extras.object_utils import AddObjectHelper, object_data_add
-
-from . import utils
-from . import simple
-
-import mathutils
-import math
-
+from math import (
+    hypot,
+    pi,
+)
 
 from shapely import ops as sops
 from shapely import geometry as sgeometry
-from shapely import affinity, prepared
+from shapely import prepared
+
+import bpy
+from bpy_extras.object_utils import object_data_add
+from mathutils import Vector
+
+from . import utils
+from . import simple
 
 
 def addBridge(x, y, rot, sizex, sizey):
@@ -77,12 +78,12 @@ def addAutoBridges(o):
             minx, miny, maxx, maxy = c.bounds
             d1 = c.project(sgeometry.Point(maxx + 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, -math.pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, -pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point(minx - 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, math.pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, maxy + 1000))
@@ -92,7 +93,7 @@ def addAutoBridges(o):
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, miny - 1000))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, math.pi, o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, pi, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
 
@@ -153,8 +154,8 @@ def useBridges(ch, o):
             if vi + 1 < len(ch_points):
                 i2 = vi + 1
                 chp2 = ch_points[vi + 1]  # Vector(ch_points[vi+1])
-            v1 = mathutils.Vector(chp1)
-            v2 = mathutils.Vector(chp2)
+            v1 = Vector(chp1)
+            v2 = Vector(chp2)
             if v1.z < bridgeheight or v2.z < bridgeheight:
                 v = v2 - v1
                 p2 = sgeometry.Point(chp2)
@@ -181,13 +182,13 @@ def useBridges(ch, o):
                     newpoints.append((chp1[0], chp1[1], max(chp1[2], bridgeheight)))
                 cpoints = []
                 if itpoint:
-                    pt = mathutils.Vector((intersections.x, intersections.y, intersections.z))
+                    pt = Vector((intersections.x, intersections.y, intersections.z))
                     cpoints = [pt]
 
                 elif itmpoint:
                     cpoints = []
                     for p in intersections.geoms:
-                        pt = mathutils.Vector((p.x, p.y, p.z))
+                        pt = Vector((p.x, p.y, p.z))
                         cpoints.append(pt)
                 # ####sort collisions here :(
                 ncpoints = []
@@ -243,7 +244,7 @@ def useBridges(ch, o):
         if z == bridgeheight:   # find all points with z = bridge height
             count += 1
             if isedge == 1:     # This is to subdivide  edges which are longer than the width of the bridge
-                edgelength = math.hypot(x - x2, y - y2)
+                edgelength = hypot(x - x2, y - y2)
                 if edgelength > o.bridges_width:
                     # make new vertex
                     verts.append(((x + x2)/2, (y + y2)/2, o.minz))

@@ -18,19 +18,30 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
-
-import bpy
+from math import (
+    cos,
+    pi,
+    radians,
+    sin,
+    tan,
+)
 import time
 
-from . import simple
-from .simple import *
+import bpy
+from mathutils import (
+    Euler,
+    Vector,
+)
 
-
-BULLET_SCALE = 10000
-# this is a constant for scaling the rigidbody collision world for higher precision from bullet library
-CUTTER_OFFSET = (-5 * BULLET_SCALE, -5 * BULLET_SCALE, -5 * BULLET_SCALE)
-# the cutter object has to be present in the scene , so we need to put it aside for sweep collisions,
-# otherwise it collides itself.
+from .constants import (
+    BULLET_SCALE,
+    CUTTER_OFFSET,
+)
+from .simple import (
+    activate,
+    delob,
+    progress,
+)
 
 
 def getCutterBullet(o):
@@ -75,12 +86,12 @@ def getCutterBullet(o):
     elif type == 'VCARVE':
 
         angle = o.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  # angles in degrees
+        s = tan(pi * (90 - angle / 2) / 180) / 2  # angles in degrees
         cone_d = o.cutter_diameter * s
         bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=o.cutter_diameter / 2, radius2=0,
                                         depth=cone_d, end_fill_type='NGON',
                                         align='WORLD', enter_editmode=False, location=CUTTER_OFFSET,
-                                        rotation=(math.pi, 0, 0))
+                                        rotation=(pi, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -91,13 +102,13 @@ def getCutterBullet(o):
     elif type == 'CYLCONE':
 
         angle = o.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180) / 2  # angles in degrees
+        s = tan(pi * (90 - angle / 2) / 180) / 2  # angles in degrees
         cylcone_d = (o.cutter_diameter - o.cylcone_diameter) * s
         bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=o.cutter_diameter / 2,
                                         radius2=o.cylcone_diameter / 2,
                                         depth=cylcone_d, end_fill_type='NGON',
                                         align='WORLD', enter_editmode=False,
-                                        location=CUTTER_OFFSET, rotation=(math.pi, 0, 0))
+                                        location=CUTTER_OFFSET, rotation=(pi, 0, 0))
         cutter = bpy.context.active_object
         cutter.scale *= BULLET_SCALE
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
@@ -107,29 +118,29 @@ def getCutterBullet(o):
         cutter.rigid_body.collision_shape = 'CONVEX_HULL'
         cutter.location = CUTTER_OFFSET
     elif type == 'BALLCONE':
-        angle = math.radians(o.cutter_tip_angle)/2
+        angle = radians(o.cutter_tip_angle)/2
         cutter_R = o.cutter_diameter/2
-        Ball_R = o.ball_radius/math.cos(angle)
-        conedepth = (cutter_R - o.ball_radius)/math.tan(angle)
+        Ball_R = o.ball_radius/cos(angle)
+        conedepth = (cutter_R - o.ball_radius)/tan(angle)
         bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0),
                              Simple_Type='Point', use_cyclic_u=False)
         oy = Ball_R
         for i in range(1, 10):
-            ang = -i * (math.pi/2-angle) / 9
-            qx = math.sin(ang) * oy
-            qy = oy - math.cos(ang) * oy
+            ang = -i * (pi/2-angle) / 9
+            qx = sin(ang) * oy
+            qy = oy - cos(ang) * oy
             bpy.ops.curve.vertex_add(location=(qx, qy, 0))
         conedepth += qy
         bpy.ops.curve.vertex_add(location=(-cutter_R, conedepth, 0))
         #bpy.ops.curve.vertex_add(location=(0 , conedepth , 0))
         bpy.ops.object.editmode_toggle()
         bpy.ops.object.convert(target='MESH')
-        bpy.ops.transform.rotate(value=-math.pi / 2, orient_axis='X')
+        bpy.ops.transform.rotate(value=-pi / 2, orient_axis='X')
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         ob = bpy.context.active_object
         ob.name = "BallConeTool"
         ob_scr = ob.modifiers.new(type='SCREW', name='scr')
-        ob_scr.angle = math.radians(-360)
+        ob_scr.angle = radians(-360)
         ob_scr.steps = 32
         ob_scr.merge_threshold = 0
         ob_scr.use_merge_vertices = True

@@ -19,55 +19,44 @@
 #
 # ***** END GPL LICENCE BLOCK *****
 
-import math
-import numpy
+from math import (
+    acos,
+    ceil,
+    cos,
+    floor,
+    pi,
+    radians,
+    sin,
+    tan,
+)
 import os
 import random
 import time
 
+import numpy
+
+import bpy
 import curve_simplify
-import mathutils
-from mathutils import *
+from mathutils import (
+    Euler,
+    Vector,
+)
 
-from . import simple
-from .simple import *
-from . import chunk
-from .chunk import *
-from . import simulation
+from .simple import (
+    progress,
+    getCachePath,
+)
+from .cam_chunk import (
+    parentChildDist,
+    camPathChunkBuilder,
+    camPathChunk,
+    chunksToShapely,
+)
 from .async_op import progress_async
-
-from .numba_wrapper import jit, prange
-
-
-def getCircle(r, z):
-    car = numpy.full(shape=(r*2, r*2), fill_value=-10, dtype=numpy.double)
-    res = 2 * r
-    m = r
-    v = mathutils.Vector((0, 0, 0))
-    for a in range(0, res):
-        v.x = (a + 0.5 - m)
-        for b in range(0, res):
-            v.y = (b + 0.5 - m)
-            if v.length <= r:
-                car[a, b] = z
-    return car
-
-
-def getCircleBinary(r):
-    car = numpy.full(shape=(r*2, r*2), fill_value=False, dtype=bool)
-    res = 2 * r
-    m = r
-    v = mathutils.Vector((0, 0, 0))
-    for a in range(0, res):
-        v.x = (a + 0.5 - m)
-        for b in range(0, res):
-            v.y = (b + 0.5 - m)
-            if (v.length <= r):
-                car.itemset((a, b), True)
-    return car
-
-
-# get cutters for the z-buffer image method
+from .numba_wrapper import (
+    jit,
+    prange,
+)
 
 
 def numpysave(a, iname):
@@ -82,6 +71,37 @@ def numpysave(a, iname):
     r.image_settings.color_depth = '32'
 
     i.save_render(iname)
+
+
+def getCircle(r, z):
+    car = numpy.full(shape=(r*2, r*2), fill_value=-10, dtype=numpy.double)
+    res = 2 * r
+    m = r
+    v = Vector((0, 0, 0))
+    for a in range(0, res):
+        v.x = (a + 0.5 - m)
+        for b in range(0, res):
+            v.y = (b + 0.5 - m)
+            if v.length <= r:
+                car[a, b] = z
+    return car
+
+
+def getCircleBinary(r):
+    car = numpy.full(shape=(r*2, r*2), fill_value=False, dtype=bool)
+    res = 2 * r
+    m = r
+    v = Vector((0, 0, 0))
+    for a in range(0, res):
+        v.x = (a + 0.5 - m)
+        for b in range(0, res):
+            v.y = (b + 0.5 - m)
+            if (v.length <= r):
+                car.itemset((a, b), True)
+    return car
+
+
+# get cutters for the z-buffer image method
 
 
 def numpytoimage(a, iname):
@@ -145,7 +165,7 @@ async def offsetArea(o, samples):
         minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
         sourceArray = samples
-        cutterArray = simulation.getCutterArray(o, o.optimisation.pixsize)
+        cutterArray = getCutterArray(o, o.optimisation.pixsize)
 
         # progress('image size', sourceArray.shape)
 
@@ -162,8 +182,8 @@ async def offsetArea(o, samples):
             sourceArray = -sourceArray + minz
         comparearea = o.offset_image[m: width - cwidth + m, m:height - cwidth + m]
         # i=0
-        cutterArrayNan = np.where(cutterArray > -10, cutterArray,
-                                  np.full(cutterArray.shape, np.nan))
+        cutterArrayNan = numpy.where(cutterArray > -10, cutterArray,
+                                     numpy.full(cutterArray.shape, numpy.nan))
         for y in range(0, 10):
             y1 = (y * comparearea.shape[1])//10
             y2 = ((y+1) * comparearea.shape[1])//10
@@ -187,7 +207,7 @@ def dilateAr(ar, cycles):
 def getOffsetImageCavities(o, i):  # for pencil operation mainly
     """detects areas in the offset image which are 'cavities' - the curvature changes."""
     # i=numpy.logical_xor(lastislice , islice)
-    simple.progress('detect corners in the offset image')
+    progress('detect corners in the offset image')
     vertical = i[:-2, 1:-1] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[2:, 1:-1]
     horizontal = i[1:-1, :-2] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[1:-1, 2:]
     # if bpy.app.debug_value==2:
@@ -196,19 +216,19 @@ def getOffsetImageCavities(o, i):  # for pencil operation mainly
 
     if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge,
         # it has tons of spikes and simply is not better than the old one
-        iname = simple.getCachePath(o) + '_pencilthres.exr'
+        iname = getCachePath(o) + '_pencilthres.exr'
         # numpysave(ar,iname)#save for comparison before
         chunks = imageEdgeSearch_online(o, ar, i)
-        iname = simple.getCachePath(o) + '_pencilthres_comp.exr'
+        iname = getCachePath(o) + '_pencilthres_comp.exr'
         print("new pencil strategy")
 
     # ##crop pixels that are on outer borders
     for chi in range(len(chunks) - 1, -1, -1):
         chunk = chunks[chi]
         chunk.clip_points(o.min.x, o.max.x, o.min.y, o.max.y)
-        # for si in range(len(chunk.points) - 1, -1, -1):
-        #     if not (o.min.x < chunk.points[si][0] < o.max.x and o.min.y < chunk.points[si][1] < o.max.y):
-        #         chunk.points.pop(si)
+        # for si in range(len(points) - 1, -1, -1):
+        #     if not (o.min.x < points[si][0] < o.max.x and o.min.y < points[si][1] < o.max.y):
+        #         points.pop(si)
         if chunk.count() < 2:
             chunks.pop(chi)
 
@@ -247,7 +267,7 @@ def imageEdgeSearch_online(o, ar, zimage):
 
         if perc != int(100 - 100 * totpix / startpix):
             perc = int(100 - 100 * totpix / startpix)
-            simple.progress('pencil path searching', perc)
+            progress('pencil path searching', perc)
         # progress('simulation ',int(100*i/l))
         success = False
         testangulardistance = 0  # distance from initial direction in the list of direction
@@ -272,7 +292,7 @@ def imageEdgeSearch_online(o, ar, zimage):
                     print(testvect)
                     print(itests)
             else:
-                # nchunk.append([xs,ys])#for debugging purpose
+                # nappend([xs,ys])#for debugging purpose
                 # ar.shape[0]
                 test_direction = last_direction
                 if testleftright:
@@ -353,7 +373,7 @@ async def crazyPath(o):
 
     o.millimage = numpy.full(shape=(resx, resy), fill_value=0., dtype=numpy.float)
     # getting inverted cutter
-    o.cutterArray = -simulation.getCutterArray(o, o.optimisation.simulation_detail)
+    o.cutterArray = -getCutterArray(o, o.optimisation.simulation_detail)
 
 
 def buildStroke(start, end, cutterArray):
@@ -768,7 +788,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                     andar = numpy.logical_and(ar, numpy.logical_not(avoidar))
                     indices = andar.nonzero()
                     if len(nchunk.points) > 1:
-                        chunk.parentChildDist([nchunk], chunks, o, distance=r)
+                        parentChildDist([nchunk], chunks, o, distance=r)
                         chunk_builders.append(nchunk)
 
                     if totpix > startpix * 0.001:
@@ -824,7 +844,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
             print(totaltests)
             i = 0
     if len(nchunk.points) > 1:
-        chunk.parentChildDist([nchunk], chunks, o, distance=r)
+        parentChildDist([nchunk], chunks, o, distance=r)
         chunk_builders.append(nchunk)
 
     for ch in chunk_builders:
@@ -1080,7 +1100,7 @@ def _restore_render_settings(pairs, properties):
 
 def renderSampleImage(o):
     t = time.time()
-    simple.progress('getting zbuffer')
+    progress('getting zbuffer')
     # print(o.zbuffer_image)
     o.update_offsetimage_tag = True
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
@@ -1089,8 +1109,8 @@ def renderSampleImage(o):
         sx = o.max.x - o.min.x
         sy = o.max.y - o.min.y
 
-        resx = math.ceil(sx / o.optimisation.pixsize) + 2 * o.borderwidth
-        resy = math.ceil(sy / o.optimisation.pixsize) + 2 * o.borderwidth
+        resx = ceil(sx / o.optimisation.pixsize) + 2 * o.borderwidth
+        resy = ceil(sy / o.optimisation.pixsize) + 2 * o.borderwidth
 
         if not o.update_zbufferimage_tag and len(o.zbuffer_image) == resx and len(o.zbuffer_image[0]) == resy:
             # if we call this accidentally in more functions, which currently happens...
@@ -1228,7 +1248,7 @@ def renderSampleImage(o):
         #o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
 
         o.optimisation.pixsize = o.source_image_size_x / i.size[0]
-        simple.progress('pixel size in the image source', o.optimisation.pixsize)
+        progress('pixel size in the image source', o.optimisation.pixsize)
 
         rawimage = imagetonumpy(i)
         maxa = numpy.max(rawimage)
@@ -1267,7 +1287,7 @@ def renderSampleImage(o):
         print('min image ', numpy.min(a))
         o.zbuffer_image = a
     # progress('got z buffer also with conversion in:')
-    simple.progress(time.time() - t)
+    progress(time.time() - t)
 
     # progress(a)
     o.update_zbufferimage_tag = False
@@ -1281,7 +1301,7 @@ async def prepareArea(o):
     renderSampleImage(o)
     samples = o.zbuffer_image
 
-    iname = simple.getCachePath(o) + '_off.exr'
+    iname = getCachePath(o) + '_off.exr'
 
     if not o.update_offsetimage_tag:
         progress('loading offset image')
@@ -1296,3 +1316,98 @@ async def prepareArea(o):
             samples = numpy.maximum(samples, o.min.z - 0.00001)
         await offsetArea(o, samples)
         numpysave(o.offset_image, iname)
+
+
+def getCutterArray(operation, pixsize):
+    type = operation.cutter_type
+    # print('generating cutter')
+    r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
+    res = ceil((r * 2) / pixsize)
+    m = res / 2.0
+    car = numpy.full(shape=(res, res), fill_value=-10.0, dtype=float)
+
+    v = Vector((0, 0, 0))
+    ps = pixsize
+    if type == 'END':
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    car.itemset((a, b), 0)
+    elif type == 'BALL' or type == 'BALLNOSE':
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    z = sin(acos(v.length / r)) * r - r
+                    car.itemset((a, b), z)  # [a,b]=z
+
+    elif type == 'VCARVE':
+        angle = operation.cutter_tip_angle
+        s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    z = (-v.length * s)
+                    car.itemset((a, b), z)
+    elif type == 'CYLCONE':
+        angle = operation.cutter_tip_angle
+        cyl_r = operation.cylcone_diameter/2
+        s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    z = (-(v.length - cyl_r) * s)
+                    if v.length <= cyl_r:
+                        z = 0
+                    car.itemset((a, b), z)
+    elif type == 'BALLCONE':
+        angle = radians(operation.cutter_tip_angle)/2
+        ball_r = operation.ball_radius
+        cutter_r = operation.cutter_diameter / 2
+        conedepth = (cutter_r - ball_r)/tan(angle)
+        Ball_R = ball_r/cos(angle)
+        D_ofset = ball_r * tan(angle)
+        s = tan(pi/2-angle)
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= cutter_r:
+                    z = -(v.length - ball_r) * s - Ball_R + D_ofset
+                    if v.length <= ball_r:
+                        z = sin(acos(v.length / Ball_R)) * Ball_R - Ball_R
+                    car.itemset((a, b), z)
+    elif type == 'CUSTOM':
+        cutob = bpy.data.objects[operation.cutter_object_name]
+        scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
+        # print(cutob.scale)
+        vstart = Vector((0, 0, -10))
+        vend = Vector((0, 0, 10))
+        print('sampling custom cutter')
+        maxz = -1
+        for a in range(0, res):
+            vstart.x = (a + 0.5 - m) * ps * scale
+            vend.x = vstart.x
+
+            for b in range(0, res):
+                vstart.y = (b + 0.5 - m) * ps * scale
+                vend.y = vstart.y
+                v = vend - vstart
+                c = cutob.ray_cast(vstart, v, distance=1.70141e+38)
+                if c[3] != -1:
+                    z = -c[1][2] / scale
+                    # print(c)
+                    if z > -9:
+                        # print(z)
+                        if z > maxz:
+                            maxz = z
+                        car.itemset((a, b), z)
+        car -= maxz
+    return car

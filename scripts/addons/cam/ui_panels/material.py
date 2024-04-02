@@ -5,16 +5,21 @@ from bpy.props import (
     FloatProperty,
     FloatVectorProperty,
 )
+from bpy.types import (
+    Operator,
+    Panel,
+    PropertyGroup,
+)
 
 from .buttons_panel import CAMButtonsPanel
 from ..utils import (
+    positionObject,
     update_material,
-    positionObject
 )
 from ..constants import PRECISION
 
 
-class CAM_MATERIAL_Properties(bpy.types.PropertyGroup):
+class CAM_MATERIAL_Properties(PropertyGroup):
 
     estimate_from_model: BoolProperty(
         name="Estimate cut area from model",
@@ -84,7 +89,7 @@ class CAM_MATERIAL_Properties(bpy.types.PropertyGroup):
 
 # Position object for CAM operation. Tests object bounds and places them so the object
 # is aligned to be positive from x and y and negative from z."""
-class CAM_MATERIAL_PositionObject(bpy.types.Operator):
+class CAM_MATERIAL_PositionObject(Operator):
 
     bl_idname = "object.material_cam_position"
     bl_label = "position object for CAM operation"
@@ -107,7 +112,7 @@ class CAM_MATERIAL_PositionObject(bpy.types.Operator):
             self, "operation", bpy.context.scene, "cam_operations")
 
 
-class CAM_MATERIAL_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
     bl_label = "CAM Material size and position"
     bl_idname = "WORLD_PT_CAM_MATERIAL"
     panel_interface_level = 0

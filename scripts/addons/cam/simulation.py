@@ -20,17 +20,24 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py.
-
-import bpy
-import mathutils
 import math
 import time
-from . import utils
+
 import numpy as np
 
-from . import simple
-from . import image_utils
+import bpy
+from mathutils import Vector
+
 from .async_op import progress_async
+from .image_utils import (
+    getCutterArray,
+    numpysave,
+)
+from .simple import getSimulationPath
+from .utils import (
+    getBoundsMultiple,
+    getOperationSources,
+)
 
 
 def createSimulationObject(name, operations, i):
@@ -93,16 +100,16 @@ def createSimulationObject(name, operations, i):
 async def doSimulation(name, operations):
     """perform simulation of operations. Currently only for 3 axis"""
     for o in operations:
-        utils.getOperationSources(o)
-    limits = utils.getBoundsMultiple(
+        getOperationSources(o)
+    limits = getBoundsMultiple(
         operations)  # this is here because some background computed operations still didn't have bounds data
     i = await generateSimulationImage(operations, limits)
-#    cp = simple.getCachePath(operations[0])[:-len(operations[0].name)] + name
-    cp = simple.getSimulationPath()+name
+#    cp = getCachePath(operations[0])[:-len(operations[0].name)] + name
+    cp = getSimulationPath()+name
     print('cp=', cp)
     iname = cp + '_sim.exr'
 
-    image_utils.numpysave(i, iname)
+    numpysave(i, iname)
     i = bpy.data.images.load(iname)
     createSimulationObject(name, operations, i)
 
@@ -286,101 +293,6 @@ async def generateSimulationImage(operations, limits):
 
     await progress_async("Simulated:", time.time()-start_time, 's')
     return si
-
-
-def getCutterArray(operation, pixsize):
-    type = operation.cutter_type
-    # print('generating cutter')
-    r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
-    res = math.ceil((r * 2) / pixsize)
-    m = res / 2.0
-    car = np.full(shape=(res, res), fill_value=-10.0, dtype=float)
-
-    v = mathutils.Vector((0, 0, 0))
-    ps = pixsize
-    if type == 'END':
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    car.itemset((a, b), 0)
-    elif type == 'BALL' or type == 'BALLNOSE':
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = math.sin(math.acos(v.length / r)) * r - r
-                    car.itemset((a, b), z)  # [a,b]=z
-
-    elif type == 'VCARVE':
-        angle = operation.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = (-v.length * s)
-                    car.itemset((a, b), z)
-    elif type == 'CYLCONE':
-        angle = operation.cutter_tip_angle
-        cyl_r = operation.cylcone_diameter/2
-        s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = (-(v.length - cyl_r) * s)
-                    if v.length <= cyl_r:
-                        z = 0
-                    car.itemset((a, b), z)
-    elif type == 'BALLCONE':
-        angle = math.radians(operation.cutter_tip_angle)/2
-        ball_r = operation.ball_radius
-        cutter_r = operation.cutter_diameter / 2
-        conedepth = (cutter_r - ball_r)/math.tan(angle)
-        Ball_R = ball_r/math.cos(angle)
-        D_ofset = ball_r * math.tan(angle)
-        s = math.tan(math.pi/2-angle)
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= cutter_r:
-                    z = -(v.length - ball_r) * s - Ball_R + D_ofset
-                    if v.length <= ball_r:
-                        z = math.sin(math.acos(v.length / Ball_R)) * Ball_R - Ball_R
-                    car.itemset((a, b), z)
-    elif type == 'CUSTOM':
-        cutob = bpy.data.objects[operation.cutter_object_name]
-        scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
-        # print(cutob.scale)
-        vstart = mathutils.Vector((0, 0, -10))
-        vend = mathutils.Vector((0, 0, 10))
-        print('sampling custom cutter')
-        maxz = -1
-        for a in range(0, res):
-            vstart.x = (a + 0.5 - m) * ps * scale
-            vend.x = vstart.x
-
-            for b in range(0, res):
-                vstart.y = (b + 0.5 - m) * ps * scale
-                vend.y = vstart.y
-                v = vend - vstart
-                c = cutob.ray_cast(vstart, v, distance=1.70141e+38)
-                if c[3] != -1:
-                    z = -c[1][2] / scale
-                    # print(c)
-                    if z > -9:
-                        # print(z)
-                        if z > maxz:
-                            maxz = z
-                        car.itemset((a, b), z)
-        car -= maxz
-    return car
 
 
 def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):

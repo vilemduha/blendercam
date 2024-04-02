@@ -1,5 +1,6 @@
-
 import bpy
+from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
 
 # Operations panel
@@ -12,7 +13,7 @@ from .buttons_panel import CAMButtonsPanel
 # For each operation, generate the corresponding gcode and export the gcode file
 
 
-class CAM_OPERATIONS_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
     """CAM operations panel"""
     bl_label = "CAM operations"
     bl_idname = "WORLD_PT_CAM_OPERATIONS"

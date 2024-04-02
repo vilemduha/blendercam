@@ -1,13 +1,17 @@
 import bpy
 from bpy.props import (
     StringProperty,
-    FloatProperty
+    FloatProperty,
+)
+from bpy.types import (
+    Panel,
+    PropertyGroup,
 )
 
 from .buttons_panel import CAMButtonsPanel
 from ..utils import (
+    opencamlib_version,
     update_operation,
-    opencamlib_version
 )
 from ..constants import (
     PRECISION,
@@ -21,7 +25,7 @@ from ..simple import strInUnits
 # This panel gives general information about the current operation
 
 
-class CAM_INFO_Properties(bpy.types.PropertyGroup):
+class CAM_INFO_Properties(PropertyGroup):
 
     warnings: StringProperty(
         name='warnings',
@@ -44,7 +48,7 @@ class CAM_INFO_Properties(bpy.types.PropertyGroup):
     )
 
 
-class CAM_INFO_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_INFO_Panel(CAMButtonsPanel, Panel):
     bl_label = "CAM info & warnings"
     bl_idname = "WORLD_PT_CAM_INFO"
     panel_interface_level = 0

@@ -62,35 +62,34 @@
 //and be separated by the sum of their pitch radii, which can be found with pitch_radius(). """
 
 # ported to Blendercam by Alain Pelletier Jan 2022
+from math import (
+    acos,
+    cos,
+    degrees,
+    pi,
+    sin,
+    sqrt
+)
 
+from shapely.geometry import Polygon
 
 import bpy
-from bpy.props import *
-from bpy.types import Operator
 
 from . import (
-    utils,
-    polygon_utils_cam,
     simple,
+    utils,
 )
-import shapely
-from shapely.geometry import (
-    Point,
-    LineString,
-    Polygon
-)
-import mathutils
-import math
-
 
 # convert gear_polar to cartesian coordinates
+
+
 def gear_polar(r, theta):
-    return r * math.sin(theta), r * math.cos(theta)
+    return r * sin(theta), r * cos(theta)
 
 
 # unwind a string this many degrees to go from radius r1 to radius r2
 def gear_iang(r1, r2):
-    return math.sqrt((r2 / r1) * (r2 / r1) - 1) - math.acos(r1 / r2)
+    return sqrt((r2 / r1) * (r2 / r1) - 1) - acos(r1 / r2)
 
 
 #  radius a fraction f up the curved side of the tooth
@@ -113,10 +112,9 @@ def gear_q6(b, s, t, d):
 def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
          pressure_angle=0.3488, clearance=0.0, backlash=0.0, rim_size=0.0005, hub_diameter=0.006, spokes=4):
     simple.deselect()
-    pi = math.pi
     p = mm_per_tooth * number_of_teeth / pi / 2  # radius of pitch circle
     c = p + mm_per_tooth / pi - clearance        # radius of outer circle
-    b = p * math.cos(pressure_angle)  # radius of base circle
+    b = p * cos(pressure_angle)  # radius of base circle
     r = p-(c-p)-clearance   # radius of root circle
     t = mm_per_tooth / 2 - backlash / 2  # tooth thickness at pitch circle
     # angle to where involute meets base circle on each side of tooth
@@ -152,7 +150,7 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
     i = number_of_teeth
     while i > 1:
         simple.duplicate()
-        simple.rotate(2 * math.pi / number_of_teeth)
+        simple.rotate(2 * pi / number_of_teeth)
         i -= 1
     simple.join_multiple('tooth')
     simple.active_name('_teeth')
@@ -200,18 +198,17 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
 
     name = 'gear-' + str(round(mm_per_tooth*1000, 1))
     name += 'mm-pitch-' + str(number_of_teeth)
-    name += 'teeth-PA-' + str(round(math.degrees(pressure_angle), 1))
+    name += 'teeth-PA-' + str(round(degrees(pressure_angle), 1))
     simple.active_name(name)
 
 
 def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3488, backlash=0.0,
          hole_diameter=0.003175, tooth_per_hole=4):
     simple.deselect()
-    pi = math.pi
     mm_per_tooth *= 1000
     a = mm_per_tooth / pi  # addendum
     # tooth side is tilted so top/bottom corners move this amount
-    t = (a * math.sin(pressure_angle))
+    t = (a * sin(pressure_angle))
     a /= 1000
     mm_per_tooth /= 1000
     t /= 1000
@@ -245,5 +242,5 @@ def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3
         simple.difference('_', '_tooth')
 
     name = 'rack-' + str(round(mm_per_tooth * 1000, 1))
-    name += '-PA-' + str(round(math.degrees(pressure_angle), 1))
+    name += '-PA-' + str(round(degrees(pressure_angle), 1))
     simple.active_name(name)

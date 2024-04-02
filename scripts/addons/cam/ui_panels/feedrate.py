@@ -1,8 +1,10 @@
 import bpy
+from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
 
 
-class CAM_FEEDRATE_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
     """CAM feedrate panel"""
     bl_label = "CAM feedrate"
     bl_idname = "WORLD_PT_CAM_FEEDRATE"

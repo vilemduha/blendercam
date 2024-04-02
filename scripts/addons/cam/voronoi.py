@@ -63,7 +63,6 @@
 #############################################################################
 import math
 import sys
-import getopt
 
 TOLERANCE = 1e-9
 BIG_FLOAT = 1e38

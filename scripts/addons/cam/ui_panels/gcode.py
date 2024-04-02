@@ -1,9 +1,10 @@
-
 import bpy
+from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
 
 
-class CAM_GCODE_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_GCODE_Panel(CAMButtonsPanel, Panel):
     """CAM operation g-code options panel"""
     bl_label = "CAM g-code options "
     bl_idname = "WORLD_PT_CAM_GCODE"

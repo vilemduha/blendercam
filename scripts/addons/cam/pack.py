@@ -18,21 +18,36 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
-
-import bpy
-from . import (
-    utils,
-    simple,
-    polygon_utils_cam
-)
-import shapely
-from shapely import geometry as sgeometry
-from shapely import affinity, prepared
-from shapely import speedups
+from math import pi
 import random
 import time
-import mathutils
-from mathutils import Vector
+
+import shapely
+from shapely import geometry as sgeometry
+from shapely import (
+    affinity,
+    prepared,
+    speedups
+)
+
+import bpy
+from bpy.types import PropertyGroup
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+)
+from mathutils import (
+    Euler,
+    Vector
+)
+
+from . import (
+    constants,
+    polygon_utils_cam,
+    simple,
+    utils,
+)
 
 
 # this algorithm takes all selected curves,
@@ -46,7 +61,7 @@ from mathutils import Vector
 
 def srotate(s, r, x, y):
     ncoords = []
-    e = mathutils.Euler((0, 0, r))
+    e = Euler((0, 0, r))
     for p in s.exterior.coords:
         v1 = Vector((p[0], p[1], 0))
         v2 = Vector((x, y, 0))
@@ -197,3 +212,69 @@ def packCurves():
 
     polygon_utils_cam.shapelyToCurve('test', sgeometry.MultiPolygon(placedpolys), 0)
     print(t)
+
+
+class PackObjectsSettings(PropertyGroup):
+    """stores all data for machines"""
+
+    sheet_fill_direction: EnumProperty(
+        name="Fill direction",
+        items=(
+            ("X", "X", "Fills sheet in X axis direction"),
+            ("Y", "Y", "Fills sheet in Y axis direction"),
+        ),
+        description="Fill direction of the packer algorithm",
+        default="Y",
+    )
+    sheet_x: FloatProperty(
+        name="X size",
+        description="Sheet size",
+        min=0.001,
+        max=10,
+        default=0.5,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    sheet_y: FloatProperty(
+        name="Y size",
+        description="Sheet size",
+        min=0.001,
+        max=10,
+        default=0.5,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    distance: FloatProperty(
+        name="Minimum distance",
+        description="minimum distance between objects(should be "
+        "at least cutter diameter!)",
+        min=0.001,
+        max=10,
+        default=0.01,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    tolerance: FloatProperty(
+        name="Placement Tolerance",
+        description="Tolerance for placement: smaller value slower placemant",
+        min=0.001,
+        max=0.02,
+        default=0.005,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    rotate: BoolProperty(
+        name="enable rotation",
+        description="Enable rotation of elements",
+        default=True,
+    )
+    rotate_angle: FloatProperty(
+        name="Placement Angle rotation step",
+        description="bigger rotation angle,faster placemant",
+        default=0.19635 * 4,
+        min=pi / 180,
+        max=pi,
+        precision=5,
+        subtype="ANGLE",
+        unit="ROTATION",
+    )

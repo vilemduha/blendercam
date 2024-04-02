@@ -18,6 +18,10 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
+from math import pi
+
+from Equation import Expression
+import numpy as np
 
 import bpy
 from bpy.props import (
@@ -27,10 +31,7 @@ from bpy.props import (
     StringProperty,
 )
 
-from . import utils, parametric
-import math
-from Equation import Expression
-import numpy as np
+from . import parametric
 
 
 class CamSineCurve(bpy.types.Operator):
@@ -133,9 +134,9 @@ class CamSineCurve(bpy.types.Operator):
     )
     wave_angle_offset: FloatProperty(
         name="angle offset for multiple waves",
-        default=math.pi/2,
-        min=-200*math.pi,
-        max=200*math.pi,
+        default=pi/2,
+        min=-200*pi,
+        max=200*pi,
         precision=4,
         unit="ROTATION",
     )
@@ -184,7 +185,7 @@ class CamSineCurve(bpy.types.Operator):
             return c
 
         for i in range(self.wave_amount):
-            angle_off = self.wave_angle_offset*self.period*i/(2*math.pi)
+            angle_off = self.wave_angle_offset*self.period*i/(2*pi)
             parametric.create_parametric_curve(f, offset=self.wave_distance*i, min=self.mint, max=self.maxt,
                                                use_cubic=True, iterations=self.iteration, angle_offset=angle_off)
 
@@ -381,7 +382,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         Rpr = round(R + r, 6)  # R +r
         Rpror = round(Rpr / r, 6)  # (R+r)/r
         Rmror = round(Rmr / r, 6)  # (R-r)/r
-        maxangle = 2 * math.pi * \
+        maxangle = 2 * pi * \
             ((np.lcm(round(self.R * 1000), round(self.r * 1000)) / (R * 1000)))
 
         if self.typecurve == "hypo":
@@ -487,12 +488,12 @@ class CamCustomCurve(bpy.types.Operator):
 
 
 def triangle(i, T, A):
-    s = str(A*8/(math.pi**2))+'*('
+    s = str(A*8/(pi**2))+'*('
     for n in range(i):
         if n % 2 != 0:
             e = (n-1)/2
             a = round(((-1)**e)/(n**2), 8)
-            b = round(n*math.pi/(T/2), 8)
+            b = round(n*pi/(T/2), 8)
             if n > 1:
                 s += '+'
             s += str(a) + "*sin("+str(b)+"*t) "

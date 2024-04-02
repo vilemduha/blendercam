@@ -18,23 +18,30 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
-
-import time
-import mathutils
-from mathutils import *
-
-from . import (
-    simple,
-    chunk,
-    utils,
-    polygon_utils_cam
+from math import (
+    ceil,
+    floor,
+    pi,
+    sqrt
 )
-from .simple import *
-from .chunk import *
-from .polygon_utils_cam import *
-import shapely
-from shapely import geometry as sgeometry
+import time
+
 import numpy
+
+import bpy
+from mathutils import (
+    Euler,
+    Vector
+)
+
+from .cam_chunk import (
+    camPathChunk,
+    camPathChunkBuilder,
+    chunksRefine,
+    parentChildDist,
+    shapelyToChunks,
+)
+from .simple import progress
 
 
 def getPathPatternParallel(o, angle):
@@ -93,7 +100,7 @@ def getPathPatternParallel(o, angle):
 
         v = Vector((0, 1, 0))
         v.rotate(e)
-        e1 = Euler((0, 0, -math.pi / 2))
+        e1 = Euler((0, 0, -pi / 2))
         v1 = v.copy()
         v1.rotate(e1)
 
@@ -154,7 +161,7 @@ def getPathPattern(operation):
     elif o.strategy == 'CROSS':
 
         pathchunks.extend(getPathPatternParallel(o, o.parallel_angle))
-        pathchunks.extend(getPathPatternParallel(o, o.parallel_angle - math.pi / 2.0))
+        pathchunks.extend(getPathPatternParallel(o, o.parallel_angle - pi / 2.0))
 
     elif o.strategy == 'BLOCK':
 
@@ -228,7 +235,7 @@ def getPathPattern(operation):
 
         # progress(x,y,midx,midy)
         e = Euler((0, 0, 0))
-        pi = math.pi
+        # pi = pi
         chunk.points.append((midx + v.x, midy + v.y, zlevel))
         while midx + v.x > o.min.x or midy + v.y > o.min.y:
             # v.x=x-midx
@@ -268,11 +275,11 @@ def getPathPattern(operation):
         midy = (o.max.y + o.min.y) / 2
         rx = o.max.x - o.min.x
         ry = o.max.y - o.min.y
-        maxr = math.sqrt(rx * rx + ry * ry)
+        maxr = sqrt(rx * rx + ry * ry)
 
         # progress(x,y,midx,midy)
         e = Euler((0, 0, 0))
-        pi = math.pi
+        # pi = pi
         chunk = camPathChunkBuilder([])
         chunk.points.append((midx, midy, zlevel))
         pathchunks.append(chunk.to_chunk())

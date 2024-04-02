@@ -1,9 +1,9 @@
-import bpy
 import inspect
 
+import bpy
+
+
 # Panel definitions
-
-
 class CAMButtonsPanel:
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'

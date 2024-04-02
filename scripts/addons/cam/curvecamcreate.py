@@ -18,7 +18,17 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
+from math import (
+    degrees,
+    hypot,
+    pi,
+    radians
+)
 
+from shapely.geometry import (
+    LineString,
+    MultiLineString,
+)
 
 import bpy
 from bpy.props import (
@@ -28,35 +38,17 @@ from bpy.props import (
     IntProperty,
 )
 from bpy.types import Operator
-from bpy_extras.io_utils import ImportHelper
+
 from . import (
-    utils,
-    pack,
-    polygon_utils_cam,
-    simple,
-    gcodepath,
-    bridges,
-    parametric,
+    involute_gear,
     joinery,
-    curvecamtools,
     puzzle_joinery,
-    involute_gear
+    simple,
+    utils,
 )
-import shapely
-from shapely.geometry import (
-    Point,
-    LineString,
-    Polygon,
-    MultiLineString,
-    MultiPoint
-)
-import mathutils
-import math
-from Equation import Expression
-import numpy as np
 
 
-class CamCurveHatch(bpy.types.Operator):
+class CamCurveHatch(Operator):
     """perform hatch operation on single or multiple curves"""  # by Alain Pelletier September 2021
     bl_idname = "object.curve_hatch"
     bl_label = "CrossHatch curve"
@@ -64,9 +56,9 @@ class CamCurveHatch(bpy.types.Operator):
 
     angle: FloatProperty(
         name="angle",
-        default=0, min=-
-        math.pi/2,
-        max=math.pi/2,
+        default=0,
+        min=-pi/2,
+        max=pi/2,
         precision=4,
         subtype="ANGLE",
     )
@@ -167,7 +159,7 @@ class CamCurveHatch(bpy.types.Operator):
             height = maxy - miny
             width = maxx - minx
             centerx = (minx+maxx) / 2
-            diagonal = math.hypot(width, height)
+            diagonal = hypot(width, height)
             simple.add_bound_rectangle(
                 minx, miny, maxx, maxy, 'crosshatch_bound')
             amount = int(2*diagonal/self.distance) + 1
@@ -224,7 +216,7 @@ class CamCurveHatch(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamCurvePlate(bpy.types.Operator):
+class CamCurvePlate(Operator):
     """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
     bl_idname = "object.curve_plate"
     bl_label = "Sign plate"
@@ -499,7 +491,7 @@ class CamCurvePlate(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamCurveFlatCone(bpy.types.Operator):
+class CamCurveFlatCone(Operator):
     """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
     bl_idname = "object.curve_flat_cone"
     bl_label = "Cone flat calculator"
@@ -563,13 +555,13 @@ class CamCurveFlatCone(bpy.types.Operator):
         z = self.large_d / 2
         x = self.height
         h = x * y / (z - y)
-        a = math.hypot(h, y)
-        ab = math.hypot(x+h, z)
+        a = hypot(h, y)
+        ab = hypot(x+h, z)
         b = ab - a
-        angle = math.pi * 2 * y / a
+        angle = pi * 2 * y / a
 
         # create base
-        bpy.ops.curve.simple(Simple_Type='Segment', Simple_a=ab, Simple_b=a, Simple_endangle=math.degrees(angle),
+        bpy.ops.curve.simple(Simple_Type='Segment', Simple_a=ab, Simple_b=a, Simple_endangle=degrees(angle),
                              use_cyclic_u=True, edit_mode=False)
 
         simple.active_name("_segment")
@@ -596,7 +588,7 @@ class CamCurveFlatCone(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamCurveMortise(bpy.types.Operator):
+class CamCurveMortise(Operator):
     """Generates mortise along a curve"""  # by Alain Pelletier December 2021
     bl_idname = "object.curve_mortise"
     bl_label = "Mortise"
@@ -739,7 +731,7 @@ class CamCurveMortise(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamCurveInterlock(bpy.types.Operator):
+class CamCurveInterlock(Operator):
     """Generates interlock along a curve"""  # by Alain Pelletier December 2021
     bl_idname = "object.curve_interlock"
     bl_label = "Interlock"
@@ -859,7 +851,7 @@ class CamCurveInterlock(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamCurveDrawer(bpy.types.Operator):
+class CamCurveDrawer(Operator):
     """Generates drawers"""  # by Alain Pelletier December 2021 inspired by The Drawinator
     bl_idname = "object.curve_drawer"
     bl_label = "Drawer"
@@ -1045,7 +1037,7 @@ class CamCurveDrawer(bpy.types.Operator):
         simple.active_name('_bot_fingers')
 
         simple.difference('_bot', '_bottom')
-        simple.rotate(math.pi/2)
+        simple.rotate(pi/2)
 
         joinery.finger_pair("_wfb0", 0, self.width -
                             self.drawer_plate_thickness - self.finger_inset * 2)
@@ -1073,7 +1065,7 @@ class CamCurveDrawer(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamCurvePuzzle(bpy.types.Operator):
+class CamCurvePuzzle(Operator):
     """Generates Puzzle joints and interlocks"""  # by Alain Pelletier December 2021
     bl_idname = "object.curve_puzzle"
     bl_label = "Puzzle joints"
@@ -1126,7 +1118,7 @@ class CamCurvePuzzle(bpy.types.Operator):
 
     angle: FloatProperty(
         name="angle A",
-        default=math.pi/4,
+        default=pi/4,
         min=-10,
         max=10,
         subtype="ANGLE",
@@ -1134,7 +1126,7 @@ class CamCurvePuzzle(bpy.types.Operator):
     )
     angleb: FloatProperty(
         name="angle B",
-        default=math.pi/4,
+        default=pi/4,
         min=-10,
         max=10,
         subtype="ANGLE",
@@ -1420,7 +1412,7 @@ class CamCurvePuzzle(bpy.types.Operator):
                                   which=self.gender)
 
         elif self.interlock_type == 'MULTIANGLE':
-            puzzle_joinery.multiangle(self.radius, self.height, math.pi/3, self.diameter, self.finger_tolerance,
+            puzzle_joinery.multiangle(self.radius, self.height, pi/3, self.diameter, self.finger_tolerance,
                                       self.finger_amount,
                                       stem=self.stem_size, twist=self.twist_lock, tneck=self.twist_percent,
                                       tthick=self.twist_thick,
@@ -1466,7 +1458,7 @@ class CamCurvePuzzle(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamCurveGear(bpy.types.Operator):
+class CamCurveGear(Operator):
     """Generates involute Gears // version 1.1 by Leemon Baird, 2011, Leemon@Leemon.com
     http://www.thingiverse.com/thing:5505"""  # ported by Alain Pelletier January 2022
 
@@ -1520,9 +1512,9 @@ class CamCurveGear(bpy.types.Operator):
     )
     pressure_angle: FloatProperty(
         name="Pressure Angle",
-        default=math.radians(20),
+        default=radians(20),
         min=0.001,
-        max=math.pi/2,
+        max=pi/2,
         precision=4,
         subtype="ANGLE",
         unit="ROTATION",

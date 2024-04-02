@@ -4,19 +4,23 @@ from bpy.props import (
     FloatProperty,
     IntProperty,
 )
+from bpy.types import (
+    Panel,
+    PropertyGroup,
+)
 
 from .buttons_panel import CAMButtonsPanel
 from ..utils import (
-    update_operation,
-    update_exact_mode,
-    update_zbuffer_image,
-    update_opencamlib,
     opencamlib_version,
+    update_exact_mode,
+    update_opencamlib,
+    update_operation,
+    update_zbuffer_image,
 )
 from ..constants import PRECISION
 
 
-class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
+class CAM_OPTIMISATION_Properties(PropertyGroup):
 
     optimize: BoolProperty(
         name="Reduce path points",
@@ -96,7 +100,7 @@ class CAM_OPTIMISATION_Properties(bpy.types.PropertyGroup):
     )
 
 
-class CAM_OPTIMISATION_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
     """CAM optimisation panel"""
     bl_label = "CAM optimisation"
     bl_idname = "WORLD_PT_CAM_OPTIMISATION"
