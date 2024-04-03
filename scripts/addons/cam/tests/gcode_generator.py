@@ -1,6 +1,7 @@
-import bpy
 import sys
 import warnings
+
+import bpy
 
 warnings.simplefilter("once")
 

@@ -1,17 +1,18 @@
+import calendar
 from datetime import date
-from .version import __version__ as current_version
-from urllib.request import urlopen
+import io
 import json
+import os
 import pathlib
+import re
+import sys
+from urllib.request import urlopen
 import zipfile
+
 import bpy
 from bpy.props import StringProperty
 
-import re
-import io
-import os
-import sys
-import calendar
+from .version import __version__ as current_version
 
 
 class UpdateChecker(bpy.types.Operator):

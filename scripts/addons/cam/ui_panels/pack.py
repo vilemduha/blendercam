@@ -1,9 +1,10 @@
-
 import bpy
+from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
 
 
-class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_PACK_Panel(CAMButtonsPanel, Panel):
     """CAM material panel"""
     bl_label = "Pack curves on sheet"
     bl_idname = "WORLD_PT_CAM_PACK"

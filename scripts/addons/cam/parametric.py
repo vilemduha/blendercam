@@ -29,10 +29,8 @@
 # the iteration count to your liking.
 #
 # This code has been checked to work on Blender 2.92.
+from math import pow
 
-import math
-from math import sin, cos, pi
-import bmesh
 import bpy
 from mathutils import Vector
 
@@ -60,17 +58,17 @@ def derive_bezier_handles(a, b, c, d, tb, tc):
     """
 
     # Calculate matrix coefficients
-    matrix_a = 3 * math.pow(1 - tb, 2) * tb
-    matrix_b = 3 * (1 - tb) * math.pow(tb, 2)
-    matrix_c = 3 * math.pow(1 - tc, 2) * tc
-    matrix_d = 3 * (1 - tc) * math.pow(tc, 2)
+    matrix_a = 3 * pow(1 - tb, 2) * tb
+    matrix_b = 3 * (1 - tb) * pow(tb, 2)
+    matrix_c = 3 * pow(1 - tc, 2) * tc
+    matrix_d = 3 * (1 - tc) * pow(tc, 2)
 
     # Calculate the matrix determinant
     matrix_determinant = 1 / ((matrix_a * matrix_d) - (matrix_b * matrix_c))
 
     # Calculate the components of the target position vector
-    final_b = b - (math.pow(1 - tb, 3) * a) - (math.pow(tb, 3) * d)
-    final_c = c - (math.pow(1 - tc, 3) * a) - (math.pow(tc, 3) * d)
+    final_b = b - (pow(1 - tb, 3) * a) - (pow(tb, 3) * d)
+    final_c = c - (pow(1 - tc, 3) * a) - (pow(tc, 3) * d)
 
     # Multiply the inversed matrix with the position vector to get the handle points
     bezier_b = matrix_determinant * ((matrix_d * final_b) + (-matrix_b * final_c))
@@ -191,6 +189,8 @@ def make_edge_loops(*objects):
     :param *objects:
         Positional arguments for each object to be converted and merged.
     """
+    context = bpy.context
+    scene = context.scene
 
     mesh_objects = []
     vertex_groups = []

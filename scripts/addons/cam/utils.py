@@ -21,39 +21,68 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py.
-
-import bpy
-import time
-import mathutils
-import math
-from math import *
-from mathutils import *
-from bpy_extras import object_utils
-
-import sys
-import numpy
-import pickle
-
-from .chunk import *
-from .collision import *
-from .simple import *
-from .pattern import *
-from .polygon_utils_cam import *
-from .image_utils import *
-from .exception import *
-
-from .async_op import progress_async
-from .opencamlib.opencamlib import (
-    oclSample,
-    oclSamplePoints,
-    oclResampleChunks,
-    oclGetWaterline
+from math import (
+    ceil,
+    pi
 )
+from pathlib import Path
+import pickle
+import shutil
+import sys
+import time
 
-from shapely.geometry import polygon as spolygon
-from shapely.geometry import MultiPolygon
+import numpy
+import shapely
 from shapely import ops as sops
 from shapely import geometry as sgeometry
+from shapely.geometry import polygon as spolygon
+from shapely.geometry import MultiPolygon
+
+import bpy
+from bpy.app.handlers import persistent
+from bpy_extras import object_utils
+from mathutils import Euler, Vector
+
+from .async_op import progress_async
+from .cam_chunk import (
+    curveToChunks,
+    parentChild,
+    camPathChunk,
+    camPathChunkBuilder,
+    parentChildDist,
+    chunksToShapely
+)
+from .collision import (
+    getSampleBullet,
+    getSampleBulletNAxis,
+    prepareBulletCollision
+)
+from .exception import CamException
+from .image_utils import (
+    imageToChunks,
+    getSampleImage,
+    renderSampleImage,
+    prepareArea,
+)
+from .opencamlib.opencamlib import (
+    oclSample,
+    oclResampleChunks,
+)
+from .polygon_utils_cam import shapelyToCurve
+from .simple import (
+    activate,
+    progress,
+    select_multiple,
+    delob,
+    timingadd,
+    timinginit,
+    timingstart,
+    tuple_add,
+    tuple_mul,
+    tuple_sub,
+    isVerticalLimit,
+    getCachePath
+)
 
 # from shapely.geometry import * not possible until Polygon libs gets out finally..
 SHAPELY = True
@@ -959,8 +988,8 @@ def polygonConvexHull(context):
         c = (v.co.x, v.co.y)
         coords.append(c)
 
-    simple.select_multiple('_tmp')  # delete temporary mesh
-    simple.select_multiple('ConvexHull')  # delete old hull
+    select_multiple('_tmp')  # delete temporary mesh
+    select_multiple('ConvexHull')  # delete old hull
 
     # convert coordinates to shapely MultiPoint datastructure
     points = sgeometry.MultiPoint(coords)
@@ -973,9 +1002,8 @@ def polygonConvexHull(context):
 
 def Helix(r, np, zstart, pend, rev):
     c = []
-    pi = math.pi
-    v = mathutils.Vector((r, 0, zstart))
-    e = mathutils.Euler((0, 0, 2.0 * pi / np))
+    v = Vector((r, 0, zstart))
+    e = Euler((0, 0, 2.0 * pi / np))
     zstep = (zstart - pend[2]) / (np * rev)
     for a in range(0, int(np * rev)):
         c.append((v.x + pend[0], v.y + pend[1], zstart - (a * zstep)))
@@ -1707,7 +1735,7 @@ def rotTo2axes(e, axescombination):
     # print(v)
     # print(bangle)
 
-    return (angle1, angle2)
+    # return (angle1, angle2)
 
 
 def reload_paths(o):
@@ -1786,7 +1814,7 @@ _IS_LOADING_DEFAULTS = False
 
 def updateMachine(self, context):
     print('update machine ')
-    if not utils._IS_LOADING_DEFAULTS:
+    if not _IS_LOADING_DEFAULTS:
         addMachineAreaObject()
 
 
@@ -1909,7 +1937,7 @@ def updateChipload(self, context):
     # underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck
     # we will be one tiny step on the way to a slightly better chipload calculating function.
 
-    # self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(math.sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
+    # self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
     print(o.info.chipload)
 
 
@@ -2067,3 +2095,88 @@ def update_zbuffer_image(self, context):
     # from . import updateZbufferImage
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     updateZbufferImage(active_op, bpy.context)
+
+
+# Moved from init - part 3
+
+@bpy.app.handlers.persistent
+def check_operations_on_load(context):
+    """checks any broken computations on load and reset them."""
+    s = bpy.context.scene
+    for o in s.cam_operations:
+        if o.computing:
+            o.computing = False
+    # set interface level to previously used level for a new file
+    if not bpy.data.filepath:
+        _IS_LOADING_DEFAULTS = True
+        s.interface.level = bpy.context.preferences.addons["cam"].preferences.default_interface_level
+        machine_preset = bpy.context.preferences.addons[
+            "cam"].preferences.machine_preset = bpy.context.preferences.addons["cam"].preferences.default_machine_preset
+        if len(machine_preset) > 0:
+            print("Loading preset:", machine_preset)
+            # load last used machine preset
+            bpy.ops.script.execute_preset(
+                filepath=machine_preset, menu_idname="CAM_MACHINE_MT_presets"
+            )
+        _IS_LOADING_DEFAULTS = False
+    # check for updated version of the plugin
+    bpy.ops.render.cam_check_updates()
+    # copy presets if not there yet
+    if bpy.context.preferences.addons["cam"].preferences.just_updated:
+        preset_source_path = Path(__file__).parent / "presets"
+        preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
+
+        def copy_if_not_exists(src, dst):
+            if Path(dst).exists() == False:
+                shutil.copy2(src, dst)
+
+        shutil.copytree(
+            preset_source_path,
+            preset_target_path,
+            copy_function=copy_if_not_exists,
+            dirs_exist_ok=True,
+        )
+
+        bpy.context.preferences.addons["cam"].preferences.just_updated = False
+        bpy.ops.wm.save_userpref()
+
+    if not bpy.context.preferences.addons["cam"].preferences.op_preset_update:
+        # Update the Operation presets
+        op_presets_source = Path(__file__).parent / "presets" / "cam_operations"
+        op_presets_target = Path(bpy.utils.script_path_user()) / "presets" / "cam_operations"
+        shutil.copytree(op_presets_source, op_presets_target, dirs_exist_ok=True)
+        bpy.context.preferences.addons["cam"].preferences.op_preset_update = True
+
+
+# add pocket op for medial axis and profile cut inside to clean unremoved material
+def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
+    bpy.ops.object.select_all(action='DESELECT')
+    s = bpy.context.scene
+    mpocket_exists = False
+    for ob in s.objects:  # delete old medial pocket
+        if ob.name.startswith("medial_poc"):
+            ob.select_set(True)
+            bpy.ops.object.delete()
+
+    for op in s.cam_operations:  # verify medial pocket operation exists
+        if op.name == "MedialPocket":
+            mpocket_exists = True
+
+    ob = bpy.data.objects[sname]
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    silhoueteOffset(ob, -new_cutter_diameter/2, 1, 0.3)
+    bpy.context.active_object.name = 'medial_pocket'
+
+    if not mpocket_exists:     # create a pocket operation if it does not exist already
+        s.cam_operations.add()
+        o = s.cam_operations[-1]
+        o.object_name = 'medial_pocket'
+        s.cam_active_operation = len(s.cam_operations) - 1
+        o.name = 'MedialPocket'
+        o.filename = o.name
+        o.strategy = 'POCKET'
+        o.use_layers = False
+        o.material.estimate_from_model = False
+        o.material.size[2] = -maxdepth
+        o.minz_from = 'MATERIAL'

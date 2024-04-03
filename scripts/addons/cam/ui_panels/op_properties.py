@@ -1,9 +1,10 @@
-
 import bpy
+from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
 
 
-class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
     """CAM operation properties panel"""
     bl_label = "CAM operation setup"
     bl_idname = "WORLD_PT_CAM_OPERATION"

@@ -1,6 +1,9 @@
 # used by OpenCAMLib sampling
+import os
+from subprocess import call
+import tempfile
 
-import bpy
+import numpy as np
 try:
     import ocl
 except ImportError:
@@ -8,18 +11,14 @@ except ImportError:
         import opencamlib as ocl
     except ImportError:
         pass
-import os
-import tempfile
-import numpy as np
 
-from subprocess import call
-from ..collision import BULLET_SCALE
-from .. import simple
+import bpy
+
+from ..constants import BULLET_SCALE
+from ..simple import activate
 from .. import utils
-from ..chunk import camPathChunk
-from ..simple import *
+from ..cam_chunk import camPathChunk
 from ..async_op import progress_async
-from shapely import geometry as sgeometry
 from .oclSample import (
     get_oclSTL,
     ocl_sample
@@ -146,12 +145,12 @@ def oclWaterlineLayerHeights(operation):
     return layers
 
 
-def oclGetMedialAxis(operation, chunks):
-    oclWaterlineHeightsToOCL(operation)
-    operationSettingsToOCL(operation)
-    curvesToOCL(operation)
-    call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "ocl.py")])
-    waterlineChunksFromOCL(operation, chunks)
+# def oclGetMedialAxis(operation, chunks):
+#     oclWaterlineHeightsToOCL(operation)
+#     operationSettingsToOCL(operation)
+#     curvesToOCL(operation)
+#     call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "ocl.py")])
+#     waterlineChunksFromOCL(operation, chunks)
 
 
 async def oclGetWaterline(operation, chunks):

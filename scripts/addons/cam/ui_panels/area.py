@@ -1,9 +1,11 @@
-
 import bpy
+from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
+from ..simple import strInUnits
 
 
-class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_AREA_Panel(CAMButtonsPanel, Panel):
     """CAM operation area panel"""
     bl_label = "CAM operation area "
     bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
@@ -15,8 +17,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, bpy.types.Panel):
         'draw_minz': 1,
         'draw_ambient': 1,
         'draw_limit_curve': 1,
-        'draw_first_down': 1
-
+        'draw_first_down': 1,
     }
 
     def draw_use_layers(self):

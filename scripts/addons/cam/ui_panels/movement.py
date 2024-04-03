@@ -1,20 +1,25 @@
+from math import pi
+
 import bpy
 from bpy.props import (
     BoolProperty,
     EnumProperty,
     FloatProperty,
 )
+from bpy.types import (
+    Panel,
+    PropertyGroup
+)
 
-import math
 from .buttons_panel import CAMButtonsPanel
 from ..utils import update_operation
 from ..constants import (
     PRECISION,
-    G64_INCOMPATIBLE_MACHINES
+    G64_INCOMPATIBLE_MACHINES,
 )
 
 
-class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
+class CAM_MOVEMENT_Properties(PropertyGroup):
     # movement parallel_step_back
     type: EnumProperty(
         name='Movement type',
@@ -100,9 +105,9 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
 
     ramp_in_angle: FloatProperty(
         name="Ramp in angle",
-        default=math.pi / 6,
+        default=pi / 6,
         min=0,
-        max=math.pi * 0.4999,
+        max=pi * 0.4999,
         precision=1,
         subtype="ANGLE",
         unit="ROTATION",
@@ -136,9 +141,9 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
 
     ramp_out_angle: FloatProperty(
         name="Ramp out angle",
-        default=math.pi / 6,
+        default=pi / 6,
         min=0,
-        max=math.pi * 0.4999,
+        max=pi * 0.4999,
         precision=1,
         subtype="ANGLE",
         unit="ROTATION",
@@ -198,9 +203,9 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
     protect_vertical_limit: FloatProperty(
         name="Verticality limit",
         description="What angle is allready considered vertical",
-        default=math.pi / 45,
+        default=pi / 45,
         min=0,
-        max=math.pi * 0.5,
+        max=pi * 0.5,
         precision=0,
         subtype="ANGLE",
         unit="ROTATION",
@@ -208,7 +213,7 @@ class CAM_MOVEMENT_Properties(bpy.types.PropertyGroup):
     )
 
 
-class CAM_MOVEMENT_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
     """CAM movement panel"""
     bl_label = "CAM movement"
     bl_idname = "WORLD_PT_CAM_MOVEMENT"

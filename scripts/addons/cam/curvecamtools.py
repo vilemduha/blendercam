@@ -20,7 +20,13 @@
 # ***** END GPL LICENCE BLOCK *****
 
 # blender operators definitions are in this file. They mostly call the functions from utils.py
+from math import (
+    pi,
+    tan
+)
 
+import shapely
+from shapely.geometry import LineString
 
 import bpy
 from bpy.props import (
@@ -29,29 +35,17 @@ from bpy.props import (
     FloatProperty,
 )
 from bpy.types import Operator
-from bpy_extras.io_utils import ImportHelper
+from mathutils import Vector
 
 from . import (
-    utils,
-    pack,
     polygon_utils_cam,
     simple,
-    gcodepath,
-    bridges,
-    parametric,
-    gcodeimportparser,
-    joinery
+    utils,
 )
-import shapely
-from shapely.geometry import Point, LineString, Polygon
-import mathutils
-import math
-from Equation import Expression
-import numpy as np
 
 
 # boolean operations for curve objects
-class CamCurveBoolean(bpy.types.Operator):
+class CamCurveBoolean(Operator):
     """perform Boolean operation on two or more curves"""
     bl_idname = "object.curve_boolean"
     bl_label = "Curve Boolean"
@@ -81,7 +75,7 @@ class CamCurveBoolean(bpy.types.Operator):
             return {'CANCELLED'}
 
 
-class CamCurveConvexHull(bpy.types.Operator):
+class CamCurveConvexHull(Operator):
     """perform hull operation on single or multiple curves"""  # by Alain Pelletier april 2021
     bl_idname = "object.convex_hull"
     bl_label = "Convex Hull"
@@ -97,7 +91,7 @@ class CamCurveConvexHull(bpy.types.Operator):
 
 
 # intarsion or joints
-class CamCurveIntarsion(bpy.types.Operator):
+class CamCurveIntarsion(Operator):
     """makes curve cuttable both inside and outside, for intarsion and joints"""
     bl_idname = "object.curve_intarsion"
     bl_label = "Intarsion"
@@ -219,7 +213,7 @@ class CamCurveIntarsion(bpy.types.Operator):
 
 
 # intarsion or joints
-class CamCurveOvercuts(bpy.types.Operator):
+class CamCurveOvercuts(Operator):
     """Adds overcuts for slots"""
     bl_idname = "object.curve_overcuts"
     bl_label = "Add Overcuts"
@@ -235,7 +229,7 @@ class CamCurveOvercuts(bpy.types.Operator):
     )
     threshold: FloatProperty(
         name="threshold",
-        default=math.pi / 2 * .99,
+        default=pi / 2 * .99,
         min=-3.14,
         max=3.14,
         precision=4,
@@ -280,11 +274,11 @@ class CamCurveOvercuts(bpy.types.Operator):
                         if i2 == len(c.coords):
                             i2 = 0
 
-                        v1 = mathutils.Vector(
-                            co) - mathutils.Vector(c.coords[i1])
+                        v1 = Vector(
+                            co) - Vector(c.coords[i1])
                         v1 = v1.xy  # Vector((v1.x,v1.y,0))
-                        v2 = mathutils.Vector(
-                            c.coords[i2]) - mathutils.Vector(co)
+                        v2 = Vector(
+                            c.coords[i2]) - Vector(co)
                         v2 = v2.xy  # v2 = Vector((v2.x,v2.y,0))
                         if not v1.length == 0 and not v2.length == 0:
                             a = v1.angle_signed(v2)
@@ -293,18 +287,18 @@ class CamCurveOvercuts(bpy.types.Operator):
                             if self.invert:  # and ci>0:
                                 sign *= -1
                             if (sign < 0 and a < -self.threshold) or (sign > 0 and a > self.threshold):
-                                p = mathutils.Vector((co[0], co[1]))
+                                p = Vector((co[0], co[1]))
                                 v1.normalize()
                                 v2.normalize()
                                 v = v1 - v2
                                 v.normalize()
                                 p = p - v * diameter / 2
-                                if abs(a) < math.pi / 2:
+                                if abs(a) < pi / 2:
                                     shape = utils.Circle(diameter / 2, 64)
                                     shape = shapely.affinity.translate(
                                         shape, p.x, p.y)
                                 else:
-                                    l = math.tan(a / 2) * diameter / 2
+                                    l = tan(a / 2) * diameter / 2
                                     p1 = p - sign * v * l
                                     l = shapely.geometry.LineString((p, p1))
                                     shape = l.buffer(
@@ -327,7 +321,7 @@ class CamCurveOvercuts(bpy.types.Operator):
 
 
 # Overcut type B
-class CamCurveOvercutsB(bpy.types.Operator):
+class CamCurveOvercutsB(Operator):
     """Adds overcuts for slots"""
     bl_idname = "object.curve_overcuts_b"
     bl_label = "Add Overcuts-B"
@@ -356,7 +350,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
     )
     threshold: FloatProperty(
         name="Max Inside Angle",
-        default=math.pi / 2,
+        default=pi / 2,
         min=-3.14,
         max=3.14,
         description='The maximum angle to be considered as an inside corner',
@@ -397,10 +391,10 @@ class CamCurveOvercutsB(bpy.types.Operator):
         insideCorners = []
         diameter = self.diameter * 1.002  # make bit size slightly larger to allow cutter
         radius = diameter / 2
-        anglethreshold = math.pi - self.threshold
-        centerv = mathutils.Vector((0, 0))
-        extendedv = mathutils.Vector((0, 0))
-        pos = mathutils.Vector((0, 0))
+        anglethreshold = pi - self.threshold
+        centerv = Vector((0, 0))
+        extendedv = Vector((0, 0))
+        pos = Vector((0, 0))
         sign = -1 if self.do_invert else 1
         isTBone = self.style == 'TBONE'
         # indexes in insideCorner tuple
@@ -411,7 +405,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
             # move the overcut shape center position 1 radius in direction v
             pos -= centerv * radius
             print("abs(a)", abs(a))
-            if abs(a) <= math.pi / 2 + 0.0001:
+            if abs(a) <= pi / 2 + 0.0001:
                 print("<=pi/2")
                 shape = utils.Circle(radius, 64)
                 shape = shapely.affinity.translate(shape, pos.x, pos.y)
@@ -440,7 +434,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
             nonlocal centerv, extendedv, sign
             centerv = v1 - v2
             centerv.normalize()
-            extendedv = centerv * math.tan(a / 2) * -sign
+            extendedv = centerv * tan(a / 2) * -sign
             addOvercut(a)
 
         def getCorner(idx, offset):
@@ -482,10 +476,10 @@ class CamCurveOvercutsB(bpy.types.Operator):
                         if i2 == len(c.coords):
                             i2 = 0
 
-                        v1 = mathutils.Vector(
-                            co).xy - mathutils.Vector(c.coords[i1]).xy
-                        v2 = mathutils.Vector(
-                            c.coords[i2]).xy - mathutils.Vector(co).xy
+                        v1 = Vector(
+                            co).xy - Vector(c.coords[i1]).xy
+                        v2 = Vector(
+                            c.coords[i2]).xy - Vector(co).xy
 
                         if not v1.length == 0 and not v2.length == 0:
                             a = v1.angle_signed(v2)
@@ -505,7 +499,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
                             if insideCornerFound:
                                 # an inside corner with an overcut has been found
                                 # which means a new side has been found
-                                pos = mathutils.Vector((co[0], co[1]))
+                                pos = Vector((co[0], co[1]))
                                 v1.normalize()
                                 v2.normalize()
                                 # figure out which direction vector to use
@@ -567,7 +561,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
                             if getCornerDelta(prevCorner[IDX], idx) == 3:
                                 # check if they share the same edge
                                 a1 = v1.angle_signed(
-                                    prevCorner[V2]) * 180.0 / math.pi
+                                    prevCorner[V2]) * 180.0 / pi
                                 print('third won', a1)
                                 if a1 < -135 or a1 > 135:
                                     setOtherEdge(-v2, -v1, a)
@@ -577,7 +571,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
                             if getCornerDelta(idx, nextCorner[IDX]) == 3:
                                 # check if they share the same edge
                                 a1 = v2.angle_signed(
-                                    nextCorner[V1]) * 180.0 / math.pi
+                                    nextCorner[V1]) * 180.0 / pi
                                 print('fourth won', a1)
                                 if a1 < -135 or a1 > 135:
                                     setOtherEdge(v1, v2, a)
@@ -597,7 +591,7 @@ class CamCurveOvercutsB(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamCurveRemoveDoubles(bpy.types.Operator):
+class CamCurveRemoveDoubles(Operator):
     """curve remove doubles - warning, removes beziers!"""
     bl_idname = "object.curve_remove_doubles"
     bl_label = "C-Remove doubles"
@@ -629,7 +623,7 @@ class CamCurveRemoveDoubles(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class CamMeshGetPockets(bpy.types.Operator):
+class CamMeshGetPockets(Operator):
     """Detect pockets in a mesh and extract them as curves"""
     bl_idname = "object.mesh_get_pockets"
     bl_label = "Get pocket surfaces"
@@ -740,7 +734,7 @@ class CamMeshGetPockets(bpy.types.Operator):
 
 
 # this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
-class CamOffsetSilhouete(bpy.types.Operator):
+class CamOffsetSilhouete(Operator):
     """Curve offset operation """
     bl_idname = "object.silhouete_offset"
     bl_label = "Silhouete offset"
@@ -815,7 +809,7 @@ class CamOffsetSilhouete(bpy.types.Operator):
 
 
 # Finds object silhouette, usefull for meshes, since with curves it's not needed.
-class CamObjectSilhouete(bpy.types.Operator):
+class CamObjectSilhouete(Operator):
     """Object silhouete """
     bl_idname = "object.silhouete"
     bl_label = "Object silhouete"

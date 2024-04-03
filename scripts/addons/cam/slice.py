@@ -23,8 +23,16 @@
 # completely rewritten April 2021
 
 import bpy
+from bpy.props import (
+    BoolProperty,
+    FloatProperty,
+)
+from bpy.types import PropertyGroup
 
-from . import utils
+from . import (
+    constants,
+    utils,
+)
 
 
 def slicing2d(ob, height):  # April 2020 Alain Pelletier
@@ -134,3 +142,33 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
     # select all slices
     for obj in bpy.data.collections['Slices'].all_objects:
         obj.select_set(True)
+
+
+class SliceObjectsSettings(PropertyGroup):
+    """stores all data for machines"""
+
+    slice_distance: FloatProperty(
+        name="Slicing distance",
+        description="slices distance in z, should be most often "
+        "thickness of plywood sheet.",
+        min=0.001,
+        max=10,
+        default=0.005,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    slice_above0: BoolProperty(
+        name="Slice above 0",
+        description="only slice model above 0",
+        default=False,
+    )
+    slice_3d: BoolProperty(
+        name="3d slice",
+        description="for 3d carving",
+        default=False,
+    )
+    indexes: BoolProperty(
+        name="add indexes",
+        description="adds index text of layer + index",
+        default=True,
+    )

@@ -1,7 +1,7 @@
-import bpy
 import sys
-
 import types
+
+import bpy
 
 
 @types.coroutine

@@ -1,8 +1,7 @@
-
 import bpy
-from bpy.types import UIList
-from .buttons_panel import CAMButtonsPanel
+from bpy.types import UIList, Panel
 
+from .buttons_panel import CAMButtonsPanel
 from ..utils import isChainValid
 
 
@@ -34,7 +33,7 @@ class CAM_UL_chains(UIList):
             layout.label(text="", icon_value=icon)
 
 
-class CAM_CHAINS_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
     """CAM chains panel"""
     bl_label = "CAM chains"
     bl_idname = "WORLD_PT_CAM_CHAINS"

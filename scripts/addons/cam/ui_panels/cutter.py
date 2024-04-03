@@ -1,9 +1,10 @@
-
 import bpy
+from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
 
 
-class CAM_CUTTER_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
     """CAM cutter panel"""
     bl_label = "CAM Cutter"
     bl_idname = "WORLD_PT_CAM_CUTTER"

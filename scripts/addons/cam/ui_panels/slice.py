@@ -1,9 +1,10 @@
-
 import bpy
+from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
 
 
-class CAM_SLICE_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_SLICE_Panel(CAMButtonsPanel, Panel):
     """CAM slicer panel"""
     bl_label = "Slice model to plywood sheets"
     bl_idname = "WORLD_PT_CAM_SLICE"

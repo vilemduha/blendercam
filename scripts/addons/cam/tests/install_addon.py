@@ -1,8 +1,9 @@
-import tempfile
-import sys
-import subprocess
 import pathlib
 import shutil
+import subprocess
+import sys
+import tempfile
+
 
 INSTALL_CODE = f"""
 import bpy

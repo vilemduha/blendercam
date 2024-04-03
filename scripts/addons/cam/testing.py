@@ -18,12 +18,10 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 # ***** END GPL LICENCE BLOCK *****
-
-import sys
 import bpy
 
-from . import simple, utils
-from .simple import *
+from .gcodepath import getPath
+from .simple import activate
 
 
 def addTestCurve(loc):
@@ -138,7 +136,7 @@ def testOperation(i):
     report = ''
     report += 'testing operation ' + o.name + '\n'
 
-    utils.getPath(bpy.context, o)
+    getPath(bpy.context, o)
 
     newresult = bpy.data.objects[o.path_object_name]
     origname = "test_cam_path_" + o.name

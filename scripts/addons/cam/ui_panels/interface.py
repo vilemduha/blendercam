@@ -1,7 +1,10 @@
 import bpy
 from bpy.props import EnumProperty
+from bpy.types import (
+    Panel,
+    PropertyGroup
+)
 
-import math
 from .buttons_panel import CAMButtonsPanel
 
 
@@ -11,7 +14,7 @@ def update_interface(self, context):
     bpy.ops.wm.save_userpref()
 
 
-class CAM_INTERFACE_Properties(bpy.types.PropertyGroup):
+class CAM_INTERFACE_Properties(PropertyGroup):
     level: EnumProperty(
         name="Interface",
         description="Choose visible options",
@@ -26,7 +29,7 @@ class CAM_INTERFACE_Properties(bpy.types.PropertyGroup):
     )
 
 
-class CAM_INTERFACE_Panel(CAMButtonsPanel, bpy.types.Panel):
+class CAM_INTERFACE_Panel(CAMButtonsPanel, Panel):
     bl_label = "Interface"
     bl_idname = "WORLD_PT_CAM_INTERFACE"
     always_show_panel = True
