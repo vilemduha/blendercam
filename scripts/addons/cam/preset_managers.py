@@ -67,8 +67,11 @@ class AddPresetCamOperation(AddPresetBase, Operator):
     preset_menu = "CAM_OPERATION_MT_presets"
 
     preset_defines = [
-        'import cam',
-        'o = cam.utils.setup_operation_preset()',
+        'from pathlib import Path',
+        'bpy.ops.scene.cam_operation_add()',
+        'scene = bpy.context.scene',
+        'o = scene.cam_operations[scene.cam_active_operation]',
+        "o.name = f'OP_{o.object_name}_{scene.cam_active_operation + 1}_{Path(__file__).stem}'",
     ]
 
     preset_values = [
