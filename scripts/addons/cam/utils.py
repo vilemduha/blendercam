@@ -1792,16 +1792,16 @@ def reload_paths(o):
         bpy.data.meshes.remove(old_pathmesh)
 
 
-def setup_operation_preset():
-    scene = bpy.context.scene
-    cam_operations = scene.cam_operations
-    active_operation = scene.cam_active_operation
-    try:
-        o = cam_operations[active_operation]
-    except IndexError:
-        bpy.ops.scene.cam_operation_add()
-        o = cam_operations[active_operation]
-    return o
+# def setup_operation_preset():
+#     scene = bpy.context.scene
+#     cam_operations = scene.cam_operations
+#     active_operation = scene.cam_active_operation
+#     try:
+#         o = cam_operations[active_operation]
+#     except IndexError:
+#         bpy.ops.scene.cam_operation_add()
+#         o = cam_operations[active_operation]
+#     return o
 
 
 # Moved from init - the following code was moved here to permit the import fix

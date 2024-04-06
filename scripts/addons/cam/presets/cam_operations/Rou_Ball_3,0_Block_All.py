@@ -1,7 +1,10 @@
 import bpy
-import cam
+from pathlib import Path
 
-o = cam.utils.setup_operation_preset()
+bpy.ops.scene.cam_operation_add()
+
+scene = bpy.context.scene
+o = scene.cam_operations[scene.cam_active_operation]
 
 o.ambient_behaviour = 'ALL'
 o.ambient_radius = 0.009999999776482582
@@ -20,7 +23,7 @@ o.dist_between_paths = 0.0024
 o.dont_merge = False
 o.duration = 96.3156509399414
 o.feedrate = 1.0
-o.filename = 'Rou_Ball_3,0_Block'
+o.filename = o.name = f'OP_{o.object_name}_{scene.cam_active_operation + 1}_{Path(__file__).stem}'
 o.free_movement_height = 0.01
 o.geometry_source = 'OBJECT'
 o.inverse = False
@@ -34,7 +37,6 @@ o.min = (0.02779383957386017, 0.014265235513448715, -0.1281193494796753)
 o.minz = -0.1281193494796753
 o.minz_from_ob = True
 o.movement_type = 'MEANDER'
-o.name = 'Rou_Ball_3,0_Block'
 o.object = None
 o.optimize = True
 o.optimize_threshold = 4.999999873689376e-05
