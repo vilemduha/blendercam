@@ -58,7 +58,7 @@ def addBridge(x, y, rot, sizex, sizey):
 
 
 def addAutoBridges(o):
-    """attempt to add auto bridges as set of curves"""
+    """Attempt to Add Auto Bridges as Set of Curves"""
     utils.getOperationSources(o)
     bridgecollectionname = o.bridges_collection_name
     if bridgecollectionname == '' or bpy.data.collections.get(bridgecollectionname) is None:
@@ -124,7 +124,7 @@ def getBridgesPoly(o):
 
 
 def useBridges(ch, o):
-    """this adds bridges to chunks, takes the bridge-objects collection and uses the curves inside it as bridges."""
+    """This Adds Bridges to Chunks, Takes the Bridge-objects Collection and Uses the Curves Inside It as Bridges."""
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:

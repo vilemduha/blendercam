@@ -34,8 +34,8 @@ class CAM_UL_chains(UIList):
 
 
 class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
-    """CAM chains panel"""
-    bl_label = "CAM chains"
+    """CAM Chains Panel"""
+    bl_label = "CAM Chains"
     bl_idname = "WORLD_PT_CAM_CHAINS"
     panel_interface_level = 1
     always_show_panel = True
@@ -67,16 +67,16 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
 
                 if not chain.computing:
                     layout.operator("object.calculate_cam_paths_chain",
-                                    text="Calculate chain paths & Export Gcode")
-                    layout.operator("object.cam_export_paths_chain", text="Export chain gcode")
-                    layout.operator("object.cam_simulate_chain", text="Simulate this chain")
+                                    text="Calculate Chain Paths & Export Gcode")
+                    layout.operator("object.cam_export_paths_chain", text="Export Chain G-code")
+                    layout.operator("object.cam_simulate_chain", text="Simulate This Chain")
 
                     valid, reason = isChainValid(chain, context)
                     if not valid:
-                        layout.label(icon="ERROR", text=f"Can't compute chain - reason:\n")
+                        layout.label(icon="ERROR", text=f"Can't Compute Chain - Reason:\n")
                         layout.label(text=reason)
                 else:
-                    layout.label(text='chain is currently computing')
+                    layout.label(text='Chain Is Currently Computing')
 
                 layout.prop(chain, 'name')
                 layout.prop(chain, 'filename')

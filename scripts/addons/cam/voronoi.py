@@ -581,16 +581,16 @@ class Halfedge(object):
 
     def dump(self):
         print("Halfedge--------------------------")
-        print("left: ", self.left)
-        print("right: ", self.right)
-        print("edge: ", self.edge)
-        print("pm: ", self.pm)
-        print("vertex: "),
+        print("Left: ", self.left)
+        print("Right: ", self.right)
+        print("Edge: ", self.edge)
+        print("PM: ", self.pm)
+        print("Vertex: "),
         if self.vertex:
             self.vertex.dump()
         else:
             print("None")
-        print("ystar: ", self.ystar)
+        print("Ystar: ", self.ystar)
 
     def __lt__(self, other):
         if self.ystar < other.ystar:

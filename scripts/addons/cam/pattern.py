@@ -150,7 +150,7 @@ def getPathPatternParallel(o, angle):
 def getPathPattern(operation):
     o = operation
     t = time.time()
-    progress('building path pattern')
+    progress('Building Path Pattern')
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
     pathchunks = []
@@ -408,7 +408,7 @@ def getPathPattern(operation):
 def getPathPattern4axis(operation):
     o = operation
     t = time.time()
-    progress('building path pattern')
+    progress('Building Path Pattern')
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
     zlevel = 1  # minz#this should do layers...

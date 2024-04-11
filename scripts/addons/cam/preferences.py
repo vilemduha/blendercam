@@ -15,17 +15,17 @@ class CamAddonPreferences(AddonPreferences):
     bl_idname = __package__
 
     op_preset_update: BoolProperty(
-        name="Have the Operation Presets been Updated",
+        name="Have the Operation Presets Been Updated",
         default=False,
     )
 
     experimental: BoolProperty(
-        name="Show experimental features",
+        name="Show Experimental Features",
         default=False,
     )
 
     update_source: StringProperty(
-        name="Source of updates for the addon",
+        name="Source of Updates for the Addon",
         description="This can be either a github repo link in which case "
         "it will download the latest release on there, "
         "or an api link like "
@@ -35,39 +35,39 @@ class CamAddonPreferences(AddonPreferences):
     )
 
     last_update_check: IntProperty(
-        name="Last update time",
+        name="Last Update Time",
         default=0,
     )
 
     last_commit_hash: StringProperty(
-        name="Hash of last commit from updater",
+        name="Hash of Last Commit from Updater",
         default="",
     )
 
     just_updated: BoolProperty(
-        name="Set to true on update or initial install",
+        name="Set to True on Update or Initial Install",
         default=True,
     )
 
     new_version_available: StringProperty(
-        name="Set to new version name if one is found",
+        name="Set to New Version Name if One Is Found",
         default="",
     )
 
     default_interface_level: EnumProperty(
-        name="Interface level in new file",
+        name="Interface Level in New File",
         description="Choose visible options",
         items=[
-            ("0", "Basic", "Only show essential options"),
-            ("1", "Advanced", "Show advanced options"),
-            ("2", "Complete", "Show all options"),
-            ("3", "Experimental", "Show experimental options"),
+            ("0", "Basic", "Only show Essential Options"),
+            ("1", "Advanced", "Show Advanced Options"),
+            ("2", "Complete", "Show All Options"),
+            ("3", "Experimental", "Show Experimental Options"),
         ],
         default="3",
     )
 
     default_machine_preset: StringProperty(
-        name="Machine preset in new file",
+        name="Machine Preset in New File",
         description="So that machine preset choice persists between files",
         default="",
     )
@@ -75,11 +75,11 @@ class CamAddonPreferences(AddonPreferences):
     def draw(self, context):
         layout = self.layout
         layout.label(
-            text="Use experimental features when you want to help development of Blender CAM:"
+            text="Use Experimental Features when you want to help development of BlenderCAM:"
         )
         layout.prop(self, "experimental")
         layout.prop(self, "update_source")
-        layout.label(text="Choose a preset update source")
+        layout.label(text="Choose a Preset Update Source")
 
         UPDATE_SOURCES = [
             (

@@ -98,7 +98,7 @@ def createSimulationObject(name, operations, i):
 
 
 async def doSimulation(name, operations):
-    """perform simulation of operations. Currently only for 3 axis"""
+    """Perform Simulation of Operations. Currently only for 3 Axis"""
     for o in operations:
         getOperationSources(o)
     limits = getBoundsMultiple(
@@ -296,8 +296,8 @@ async def generateSimulationImage(operations, limits):
 
 
 def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):
-    """simulates a cutter cutting into stock, taking away the volume,
-    and optionally returning the volume that has been milled. This is now used for feedrate tweaking."""
+    """Simulates a Cutter Cutting Into Stock, Taking Away the Volume,
+    and Optionally Returning the Volume that Has Been Milled. This Is Now Used for Feedrate Tweaking."""
     m = int(cutterArray.shape[0] / 2)
     size = cutterArray.shape[0]
     # whole cutter in image there

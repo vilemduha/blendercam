@@ -5,8 +5,8 @@ from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
-    """CAM operation properties panel"""
-    bl_label = "CAM operation setup"
+    """CAM Operation Properties Panel"""
+    bl_label = "CAM Operation Setup"
     bl_idname = "WORLD_PT_CAM_OPERATION"
     panel_interface_level = 0
 
@@ -44,9 +44,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
 
         if engagement > 50:
-            self.layout.label(text="Warning: High cutter engagement")
+            self.layout.label(text="Warning: High Cutter Engagement")
 
-        self.layout.label(text=f"Cutter engagement: {engagement}%")
+        self.layout.label(text=f"Cutter Engagement: {engagement}%")
 
     def draw_machine_axis(self):
         if not self.has_correct_level():
@@ -139,14 +139,14 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
         if not self.has_correct_level():
             return
         if self.op.strategy in ['WATERLINE']:
-            self.layout.label(text="OCL doesn't support fill areas")
+            self.layout.label(text="Ocl Doesn't Support Fill Areas")
             if not self.op.optimisation.use_opencamlib:
                 self.layout.prop(self.op, 'slice_detail')
                 self.layout.prop(self.op, 'waterline_fill')
                 if self.op.waterline_fill:
                     self.layout.prop(self.op, 'dist_between_paths')
                     self.layout.prop(self.op, 'waterline_project')
-            self.layout.label(text="Waterline needs a skin margin")
+            self.layout.label(text="Waterline Needs a Skin Margin")
 
     def draw_carve_options(self):
         if not self.has_correct_level():
@@ -203,7 +203,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                 self.layout.prop(self.op, 'bridges_height')
                 self.layout.prop_search(self.op, "bridges_collection_name", bpy.data, "collections")
                 self.layout.prop(self.op, 'use_bridge_modifiers')
-            self.layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
+            self.layout.operator("scene.cam_bridges_add", text="Autogenerate Bridges / Tabs")
 
     def draw_skin(self):
         if not self.has_correct_level():

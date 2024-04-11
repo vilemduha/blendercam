@@ -218,7 +218,7 @@ class PackObjectsSettings(PropertyGroup):
     """stores all data for machines"""
 
     sheet_fill_direction: EnumProperty(
-        name="Fill direction",
+        name="Fill Direction",
         items=(
             ("X", "X", "Fills sheet in X axis direction"),
             ("Y", "Y", "Fills sheet in Y axis direction"),
@@ -227,7 +227,7 @@ class PackObjectsSettings(PropertyGroup):
         default="Y",
     )
     sheet_x: FloatProperty(
-        name="X size",
+        name="X Size",
         description="Sheet size",
         min=0.001,
         max=10,
@@ -236,7 +236,7 @@ class PackObjectsSettings(PropertyGroup):
         unit="LENGTH",
     )
     sheet_y: FloatProperty(
-        name="Y size",
+        name="Y Size",
         description="Sheet size",
         min=0.001,
         max=10,
@@ -245,8 +245,8 @@ class PackObjectsSettings(PropertyGroup):
         unit="LENGTH",
     )
     distance: FloatProperty(
-        name="Minimum distance",
-        description="minimum distance between objects(should be "
+        name="Minimum Distance",
+        description="Minimum distance between objects(should be "
         "at least cutter diameter!)",
         min=0.001,
         max=10,
@@ -264,13 +264,13 @@ class PackObjectsSettings(PropertyGroup):
         unit="LENGTH",
     )
     rotate: BoolProperty(
-        name="enable rotation",
+        name="Enable Rotation",
         description="Enable rotation of elements",
         default=True,
     )
     rotate_angle: FloatProperty(
-        name="Placement Angle rotation step",
-        description="bigger rotation angle,faster placemant",
+        name="Placement Angle Rotation Step",
+        description="Bigger rotation angle, faster placemant",
         default=0.19635 * 4,
         min=pi / 180,
         max=pi,

@@ -43,7 +43,7 @@ def get_oclSTL(operation):
         # FIXME needs to work with collections
     if not found_mesh:
         raise CamException(
-            "This operation requires a mesh or curve object or equivalent (e.g. text, volume).")
+            "This Operation Requires a Mesh or Curve Object or Equivalent (e.g. Text, Volume).")
     return oclSTL
 
 
@@ -78,7 +78,7 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
         cutter = ocl.BullCutter((op_cutter_diameter + operation.skin * 2) *
                                 1000, operation.bull_corner_radius*1000, cutter_length)
     else:
-        print("Cutter unsupported: {0}\n".format(op_cutter_type))
+        print("Cutter Unsupported: {0}\n".format(op_cutter_type))
         quit()
 
     bdc = ocl.BatchDropCutter()
@@ -93,7 +93,7 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
     for chunk in chunks:
         for coord in chunk.get_points_np():
             bdc.appendPoint(ocl.CLPoint(coord[0] * 1000, coord[1] * 1000, op_minz * 1000))
-    await progress_async("OpenCAMLib sampling")
+    await progress_async("OpenCAMLib Sampling")
     bdc.run()
 
     cl_points = bdc.getCLPoints()

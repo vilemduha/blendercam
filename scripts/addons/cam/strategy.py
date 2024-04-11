@@ -110,7 +110,7 @@ async def cutout(o):
         join = 2
     else:
         join = 1
-    print('operation: cutout')
+    print('Operation: Cutout')
     offset = True
     if o.cut_type == 'ONLINE' and o.onlycurves:  # is separate to allow open curves :)
         print('separate')
@@ -196,9 +196,9 @@ async def cutout(o):
     chunks = []
 
     if o.use_bridges:  # add bridges to chunks
-        print('using bridges')
+        print('Using Bridges')
         remove_multiple(o.name+'_cut_bridges')
-        print("old briddge cut removed")
+        print("Old Briddge Cut Removed")
 
         bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
 
@@ -209,7 +209,7 @@ async def cutout(o):
                 useBridges(chunk, o)
 
     if o.profile_start > 0:
-        print("cutout change profile start")
+        print("Cutout Change Profile Start")
         for chl in extendorder:
             chunk = chl[0]
             if chunk.closed:
@@ -217,7 +217,7 @@ async def cutout(o):
 
     # Lead in
     if o.lead_in > 0.0 or o.lead_out > 0:
-        print("cutout leadin")
+        print("Cutout Lead-in")
         for chl in extendorder:
             chunk = chl[0]
             if chunk.closed:
@@ -242,11 +242,11 @@ async def cutout(o):
 
 
 async def curve(o):
-    print('operation: curve')
+    print('Operation: Curve')
     pathSamples = []
     getOperationSources(o)
     if not o.onlycurves:
-        raise CamException("All objects must be curves for this operation.")
+        raise CamException("All Objects Must Be Curves for This Operation.")
 
     for ob in o.objects:
         # make the chunks from curve here
@@ -289,7 +289,7 @@ async def curve(o):
 
 
 async def proj_curve(s, o):
-    print('operation: projected curve')
+    print('Operation: Projected Curve')
     pathSamples = []
     chunks = []
     ob = bpy.data.objects[o.curve_object]
@@ -299,7 +299,7 @@ async def proj_curve(s, o):
 
     from cam import cam_chunk
     if targetCurve.type != 'CURVE':
-        raise CamException('Projection target and source have to be curve objects!')
+        raise CamException('Projection Target and Source Have to Be Curve Objects!')
 
     if 1:
         extend_up = 0.1
@@ -340,7 +340,7 @@ async def proj_curve(s, o):
 
 
 async def pocket(o):
-    print('operation: pocket')
+    print('Operation: Pocket')
     scene = bpy.context.scene
 
     remove_multiple("3D_poc")
@@ -358,11 +358,11 @@ async def pocket(o):
         c_offset = o.cutter_diameter / 2
 
     c_offset += o.skin  # add skin
-    print("cutter offset", c_offset)
+    print("Cutter Offset", c_offset)
 
     p = getObjectOutline(c_offset, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
-    print("approximative:" + str(approxn))
+    print("Approximative:" + str(approxn))
     print(o)
 
     i = 0
@@ -394,7 +394,7 @@ async def pocket(o):
         lastchunks = nchunks
 
         percent = int(i / approxn * 100)
-        progress('outlining polygons ', percent)
+        progress('Outlining Polygons ', percent)
         p = pnew
 
         i += 1
@@ -537,7 +537,7 @@ async def pocket(o):
 
 
 async def drill(o):
-    print('operation: Drill')
+    print('Operation: Drill')
     chunks = []
     for ob in o.objects:
         activate(ob)
@@ -631,7 +631,7 @@ async def drill(o):
 
 
 async def medial_axis(o):
-    print('operation: Medial Axis')
+    print('Operation: Medial Axis')
 
     remove_multiple("medialMesh")
 
@@ -660,7 +660,7 @@ async def medial_axis(o):
     elif o.cutter_type == 'BALLNOSE':
         maxdepth = - new_cutter_diameter / 2 - o.skin
     else:
-        raise CamException("Only Ballnose and V-carve cutters are supported for meial axis.")
+        raise CamException("Only Ballnose and V-carve Cutters Are Supported for Medial Axis.")
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
@@ -681,7 +681,7 @@ async def medial_axis(o):
         # just a multipolygon
         mpoly = polys
     else:
-        raise CamException("Failed getting object silhouette. Is input curve closed?")
+        raise CamException("Failed Getting Object Silhouette. Is Input Curve Closed?")
 
     mpoly_boundary = mpoly.boundary
     ipol = 0
@@ -700,19 +700,19 @@ async def medial_axis(o):
         # verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
         nDupli, nZcolinear = unique(verts)
         nVerts = len(verts)
-        print(str(nDupli) + " duplicates points ignored")
-        print(str(nZcolinear) + " z colinear points excluded")
+        print(str(nDupli) + " Duplicates Points Ignored")
+        print(str(nZcolinear) + " Z Colinear Points Excluded")
         if nVerts < 3:
-            print("Not enough points")
+            print("Not Enough Points")
             return {'FINISHED'}
         # Check colinear
         xValues = [pt[0] for pt in verts]
         yValues = [pt[1] for pt in verts]
         if checkEqual(xValues) or checkEqual(yValues):
-            print("Points are colinear")
+            print("Points Are Colinear")
             return {'FINISHED'}
         # Create diagram
-        print("Tesselation... (" + str(nVerts) + " points)")
+        print("Tesselation... (" + str(nVerts) + " Points)")
         xbuff, ybuff = 5, 5  # %
         zPosition = 0
         vertsPts = [Point(vert[0], vert[1], vert[2]) for vert in verts]
@@ -725,14 +725,14 @@ async def medial_axis(o):
         newIdx = 0
         vertr = []
         filteredPts = []
-        print('filter points')
+        print('Filter Points')
         ipts = 0
         for p in pts:
             ipts = ipts + 1
             if ipts % 500 == 0:
                 sys.stdout.write('\r')
                 # the exact output you're looking for:
-                prog_message = "points: " + str(ipts) + " / " + str(len(pts)) + " " + str(
+                prog_message = "Points: " + str(ipts) + " / " + str(len(pts)) + " " + str(
                     round(100 * ipts / len(pts))) + "%"
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
@@ -761,7 +761,7 @@ async def medial_axis(o):
                 filteredPts.append((p[0], p[1], z))
                 newIdx += 1
 
-        print('filter edges')
+        print('Filter Edges')
         filteredEdgs = []
         ledges = []
         for e in edgesIdx:
@@ -829,17 +829,17 @@ async def medial_axis(o):
 
 
 def getLayers(operation, startdepth, enddepth):
-    """returns a list of layers bounded by startdepth and enddepth
-       uses operation.stepdown to determine number of layers.
+    """Returns a List of Layers Bounded by Startdepth and Enddepth
+       Uses Operation.stepdown to Determine Number of Layers.
     """
     if startdepth < enddepth:
-        raise CamException("Start depth is lower than end depth. "
-                           "If you have set a custom depth end, it must be lower than depth start, "
-                           "and should usually be negative. Set this in the CAM Operation Area panel.")
+        raise CamException("Start Depth Is Lower than End Depth. "
+                           "if You Have Set a Custom Depth End, It Must Be Lower than Depth Start, "
+                           "and Should Usually Be Negative. Set This in the CAM Operation Area Panel.")
     if operation.use_layers:
         layers = []
         n = ceil((startdepth - enddepth) / operation.stepdown)
-        print("start " + str(startdepth) + " end " + str(enddepth) + " n " + str(n))
+        print("Start " + str(startdepth) + " End " + str(enddepth) + " n " + str(n))
 
         layerstart = operation.maxz
         for x in range(0, n):
@@ -856,7 +856,7 @@ def getLayers(operation, startdepth, enddepth):
 
 
 def chunksToMesh(chunks, o):
-    """convert sampled chunks to path, optimization of paths"""
+    """Convert Sampled Chunks to Path, Optimization of Paths"""
     t = time.time()
     s = bpy.context.scene
     m = s.cam_machine
@@ -888,7 +888,7 @@ def chunksToMesh(chunks, o):
                     nchunks.append(ch)
         chunks = nchunks
 
-    progress('building paths from chunks')
+    progress('Building Paths from Chunks')
     e = 0.0001
     lifted = True
 
