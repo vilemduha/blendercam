@@ -46,7 +46,7 @@ def import_gcode(context, filepath):
         model.draw(split_layers=False)
 
     now = time.time()
-    print("importing Gcode took ", round(now - then, 1), "seconds")
+    print("Importing Gcode Took ", round(now - then, 1), "Seconds")
 
     return {'FINISHED'}
 

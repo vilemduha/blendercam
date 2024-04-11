@@ -141,7 +141,7 @@ def testOperation(i):
     newresult = bpy.data.objects[o.path_object_name]
     origname = "test_cam_path_" + o.name
     if origname not in s.objects:
-        report += 'operation test has nothing to compare with, making the new result as comparable result.\n\n'
+        report += 'Operation Test Has Nothing to Compare with, Making the New Result as Comparable Result.\n\n'
         newresult.name = origname
     else:
         testresult = bpy.data.objects[origname]
@@ -149,7 +149,7 @@ def testOperation(i):
         m2 = newresult.data
         test_ok = True
         if len(m1.vertices) != len(m2.vertices):
-            report += "vertex counts don't match\n\n"
+            report += "Vertex Counts Don't Match\n\n"
             test_ok = False
         else:
             different_co_count = 0
@@ -159,12 +159,12 @@ def testOperation(i):
                 if v1.co != v2.co:
                     different_co_count += 1
             if different_co_count > 0:
-                report += 'vertex position is different on %i vertices \n\n' % (different_co_count)
+                report += 'Vertex Position Is Different on %i Vertices \n\n' % (different_co_count)
                 test_ok = False
         if test_ok:
-            report += 'test ok\n\n'
+            report += 'Test Ok\n\n'
         else:
-            report += 'test result is different\n \n '
+            report += 'Test Result Is Different\n \n '
     print(report)
     return report
 

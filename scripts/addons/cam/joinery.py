@@ -311,7 +311,7 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
     old_mortise_angle = 0
     distance = finger_size / 2
     j = 0
-    print("joinery loop length", round(loop_length * 1000), "mm")
+    print("Joinery Loop Length", round(loop_length * 1000), "mm")
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
@@ -527,8 +527,8 @@ def distributed_interlock(loop, loop_length, finger_depth, finger_thick, finger_
         end_distance = loop_length
 
     j = 0
-    print("joinery loop length", round(loop_length * 1000), "mm")
-    print("distance between joints", round(spacing * 1000), "mm")
+    print("Joinery Loop Length", round(loop_length * 1000), "mm")
+    print("Distance Between Joints", round(spacing * 1000), "mm")
 
     for i, p in enumerate(coords):
         if i == 0:

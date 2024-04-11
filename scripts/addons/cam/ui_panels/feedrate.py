@@ -5,8 +5,8 @@ from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
-    """CAM feedrate panel"""
-    bl_label = "CAM feedrate"
+    """CAM Feedrate Panel"""
+    bl_label = "CAM Feedrate"
     bl_idname = "WORLD_PT_CAM_FEEDRATE"
     panel_interface_level = 0
 

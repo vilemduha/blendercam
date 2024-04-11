@@ -145,11 +145,11 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
 
 
 class SliceObjectsSettings(PropertyGroup):
-    """stores all data for machines"""
+    """Stores All Data for Machines"""
 
     slice_distance: FloatProperty(
-        name="Slicing distance",
-        description="slices distance in z, should be most often "
+        name="Slicing Distance",
+        description="Slices distance in z, should be most often "
         "thickness of plywood sheet.",
         min=0.001,
         max=10,
@@ -158,17 +158,17 @@ class SliceObjectsSettings(PropertyGroup):
         unit="LENGTH",
     )
     slice_above0: BoolProperty(
-        name="Slice above 0",
+        name="Slice Above 0",
         description="only slice model above 0",
         default=False,
     )
     slice_3d: BoolProperty(
-        name="3d slice",
-        description="for 3d carving",
+        name="3D Slice",
+        description="For 3D carving",
         default=False,
     )
     indexes: BoolProperty(
-        name="add indexes",
-        description="adds index text of layer + index",
+        name="Add Indexes",
+        description="Adds index text of layer + index",
         default=True,
     )

@@ -5,7 +5,7 @@ from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
-    """CAM machine panel"""
+    """CAM Machine Panel"""
     bl_label = "CAM Machine"
     bl_idname = "WORLD_PT_CAM_MACHINE"
     always_show_panel = True

@@ -7,14 +7,14 @@ from bpy.types import (
 
 
 class CAM_CUTTER_MT_presets(Menu):
-    bl_label = "Cutter presets"
+    bl_label = "Cutter Presets"
     preset_subdir = "cam_cutters"
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset
 
 
 class CAM_MACHINE_MT_presets(Menu):
-    bl_label = "Machine presets"
+    bl_label = "Machine Presets"
     preset_subdir = "cam_machines"
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset
@@ -54,7 +54,7 @@ class AddPresetCamCutter(AddPresetBase, Operator):
 
 
 class CAM_OPERATION_MT_presets(Menu):
-    bl_label = "Operation presets"
+    bl_label = "Operation Presets"
     preset_subdir = "cam_operations"
     preset_operator = "script.execute_preset"
     draw = Menu.draw_preset

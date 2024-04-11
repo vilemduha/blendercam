@@ -10,7 +10,7 @@ from bpy.types import PropertyGroup
 # this type is defined just to hold reference to operations for chains
 class opReference(PropertyGroup):
     name: StringProperty(
-        name="Operation name",
+        name="Operation Name",
         default="Operation",
     )
     computing = False  # for UiList display
@@ -19,13 +19,13 @@ class opReference(PropertyGroup):
 # chain is just a set of operations which get connected on export into 1 file.
 class camChain(PropertyGroup):
     index: IntProperty(
-        name="index",
-        description="index in the hard-defined camChains",
+        name="Index",
+        description="Index in the hard-defined camChains",
         default=-1,
     )
     active_operation: IntProperty(
-        name="active operation",
-        description="active operation in chain",
+        name="Active Operation",
+        description="Active operation in chain",
         default=-1,
     )
     name: StringProperty(
@@ -33,7 +33,7 @@ class camChain(PropertyGroup):
         default="Chain",
     )
     filename: StringProperty(
-        name="File name",
+        name="File Name",
         default="Chain",
     )  # filename of
     valid: BoolProperty(
@@ -42,7 +42,7 @@ class camChain(PropertyGroup):
         default=True,
     )
     computing: BoolProperty(
-        name="Computing right now",
+        name="Computing Right Now",
         description="",
         default=False,
     )

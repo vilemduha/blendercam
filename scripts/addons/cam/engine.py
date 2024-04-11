@@ -25,7 +25,7 @@ from .ui_panels.slice import CAM_SLICE_Panel
 
 class BLENDERCAM_ENGINE(RenderEngine):
     bl_idname = "BLENDERCAM_RENDER"
-    bl_label = "Cam"
+    bl_label = "BlenderCAM"
     bl_use_eevee_viewport = True
 
 

@@ -45,8 +45,8 @@ from .simple import (
 
 
 def getCutterBullet(o):
-    """cutter for rigidbody simulation collisions
-        note that everything is 100x bigger for simulation precision."""
+    """Cutter for Rigidbody Simulation Collisions
+        Note that Everything Is 100x Bigger for Simulation Precision."""
 
     s = bpy.context.scene
     if s.objects.get('cutter') is not None:
@@ -176,7 +176,7 @@ def getCutterBullet(o):
 
 
 def subdivideLongEdges(ob, threshold):
-    print('subdividing long edges')
+    print('Subdividing Long Edges')
     m = ob.data
     scale = (ob.scale.x + ob.scale.y + ob.scale.z) / 3
     subdivides = []
@@ -220,8 +220,8 @@ def subdivideLongEdges(ob, threshold):
 #
 
 def prepareBulletCollision(o):
-    """prepares all objects needed for sampling with bullet collision"""
-    progress('preparing collisions')
+    """Prepares All Objects Needed for Sampling with Bullet Collision"""
+    progress('Preparing Collisions')
 
     print(o.name)
     active_collection = bpy.context.view_layer.active_layer_collection.collection
@@ -332,7 +332,7 @@ def getSampleBullet(cutter, x, y, radius, startz, endz):
 
 
 def getSampleBulletNAxis(cutter, startpoint, endpoint, rotation, cutter_compensation):
-    """fully 3d collision test for NAxis milling"""
+    """Fully 3D Collision Test for N-Axis Milling"""
     cutterVec = Vector((0, 0, 1)) * cutter_compensation
     # cutter compensation vector - cutter physics object has center in the middle, while cam needs the tip position.
     cutterVec.rotate(Euler(rotation))

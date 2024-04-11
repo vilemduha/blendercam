@@ -16,9 +16,9 @@ from .version import __version__ as current_version
 
 
 class UpdateChecker(bpy.types.Operator):
-    """check for updates"""
+    """Check for Updates"""
     bl_idname = "render.cam_check_updates"
-    bl_label = "Check for updates in blendercam plugin"
+    bl_label = "Check for Updates in BlenderCAM Plugin"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -31,7 +31,7 @@ class UpdateChecker(bpy.types.Operator):
         if match:
             update_source = f"https://api.github.com/repos/{match.group(1)}/releases"
 
-        print(f"update check: {update_source}")
+        print(f"Update Check: {update_source}")
         if update_source == "None" or len(update_source) == 0:
             return {'FINISHED'}
 
@@ -46,7 +46,7 @@ class UpdateChecker(bpy.types.Operator):
                 if len(release_list) > 0:
                     release = release_list[0]
                     tag = release["tag_name"]
-                    print(f"Found release: {tag}")
+                    print(f"Found Release: {tag}")
                     match = re.match(r".*(\d+)\.(\s*\d+)\.(\s*\d+)", tag)
                     if match:
                         version_num = tuple(map(int, match.groups()))
@@ -71,13 +71,13 @@ class UpdateChecker(bpy.types.Operator):
 
 
 class Updater(bpy.types.Operator):
-    """update to newer version if possible """
+    """Update to Newer Version if Possible"""
     bl_idname = "render.cam_update_now"
     bl_label = "Update"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
-        print("update check")
+        print("Update Check")
         last_update_check = bpy.context.preferences.addons['cam'].preferences.last_update_check
         today = date.today().toordinal()
         update_source = bpy.context.preferences.addons['cam'].preferences.update_source
@@ -96,7 +96,7 @@ class Updater(bpy.types.Operator):
                 if len(release_list) > 0:
                     release = release_list[0]
                     tag = release["tag_name"]
-                    print(f"Found release: {tag}")
+                    print(f"Found Release: {tag}")
                     match = re.match(r".*(\d+)\.(\s*\d+)\.(\s*\d+)", tag)
                     if match:
                         version_num = tuple(map(int, match.groups()))
@@ -105,7 +105,7 @@ class Updater(bpy.types.Operator):
                         bpy.ops.wm.save_userpref()
 
                         if version_num > current_version:
-                            print("Version is newer, downloading source")
+                            print("Version Is Newer, Downloading Source")
                             zip_url = release["zipball_url"]
                             self.install_zip_from_url(zip_url)
                             return {'FINISHED'}
@@ -166,7 +166,7 @@ class Updater(bpy.types.Operator):
 
 class UpdateSourceOperator(bpy.types.Operator):
     bl_idname = "render.cam_set_update_source"
-    bl_label = "Set blendercam update source"
+    bl_label = "Set BlenderCAM Update Source"
 
     new_source: StringProperty(
         default='',

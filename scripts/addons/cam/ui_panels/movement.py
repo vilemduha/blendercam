@@ -22,14 +22,14 @@ from ..constants import (
 class CAM_MOVEMENT_Properties(PropertyGroup):
     # movement parallel_step_back
     type: EnumProperty(
-        name='Movement type',
+        name='Movement Type',
         items=(
             ('CONVENTIONAL', 'Conventional / Up milling',
-             'cutter rotates against the direction of the feed'),
+             'Cutter rotates against the direction of the feed'),
             ('CLIMB', 'Climb / Down milling',
-             'cutter rotates with the direction of the feed'),
+             'Cutter rotates with the direction of the feed'),
             ('MEANDER', 'Meander / Zig Zag',
-             'cutting is done both with and against the '
+             'Cutting is done both with and against the '
              'rotation of the spindle')
         ),
         description='movement type',
@@ -43,16 +43,16 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
             ('INSIDEOUT', 'Inside out', 'a'),
             ('OUTSIDEIN', 'Outside in', 'a')
         ),
-        description='approach to the piece',
+        description='Approach to the piece',
         default='INSIDEOUT',
         update=update_operation,
     )
 
     spindle_rotation: EnumProperty(
-        name='Spindle rotation',
+        name='Spindle Rotation',
         items=(
-            ('CW', 'Clock wise', 'a'),
-            ('CCW', 'Counter clock wise', 'a')
+            ('CW', 'Clockwise', 'a'),
+            ('CCW', 'Counter clockwise', 'a')
         ),
         description='Spindle rotation direction',
         default='CW',
@@ -60,7 +60,7 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     free_height: FloatProperty(
-        name="Free movement height",
+        name="Free Movement Height",
         default=0.01,
         min=0.0000,
         max=32,
@@ -70,7 +70,7 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     useG64: BoolProperty(
-        name="G64 trajectory",
+        name="G64 Trajectory",
         description='Use only if your machine supports '
         'G64 code. LinuxCNC and Mach3 do',
         default=False,
@@ -88,7 +88,7 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     parallel_step_back: BoolProperty(
-        name="Parallel step back",
+        name="Parallel Step Back",
         description='For roughing and finishing in one pass: mills '
         'material in climb mode, then steps back and goes '
         'between 2 last chunks back',
@@ -97,14 +97,14 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     helix_enter: BoolProperty(
-        name="Helix enter - EXPERIMENTAL",
+        name="Helix Enter - EXPERIMENTAL",
         description="Enter material in helix",
         default=False,
         update=update_operation,
     )
 
     ramp_in_angle: FloatProperty(
-        name="Ramp in angle",
+        name="Ramp-in Angle",
         default=pi / 6,
         min=0,
         max=pi * 0.4999,
@@ -115,7 +115,7 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     helix_diameter: FloatProperty(
-        name='Helix diameter - % of cutter diameter',
+        name='Helix Diameter - % of Cutter Diameter',
         default=90,
         min=10,
         max=100,
@@ -125,7 +125,7 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     ramp: BoolProperty(
-        name="Ramp in - EXPERIMENTAL",
+        name="Ramp-in - EXPERIMENTAL",
         description="Ramps down the whole contour, so the cutline looks "
         "like helix",
         default=False,
@@ -133,14 +133,14 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     ramp_out: BoolProperty(
-        name="Ramp out - EXPERIMENTAL",
+        name="Ramp-out - EXPERIMENTAL",
         description="Ramp out to not leave mark on surface",
         default=False,
         update=update_operation,
     )
 
     ramp_out_angle: FloatProperty(
-        name="Ramp out angle",
+        name="Ramp-out Angle",
         default=pi / 6,
         min=0,
         max=pi * 0.4999,
@@ -151,14 +151,14 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     retract_tangential: BoolProperty(
-        name="Retract tangential - EXPERIMENTAL",
+        name="Retract Tangential - EXPERIMENTAL",
         description="Retract from material in circular motion",
         default=False,
         update=update_operation,
     )
 
     retract_radius: FloatProperty(
-        name='Retract arc radius',
+        name='Retract Arc Radius',
         default=0.001,
         min=0.000001,
         max=100,
@@ -168,7 +168,7 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     retract_height: FloatProperty(
-        name='Retract arc height',
+        name='Retract Arc Height',
         default=0.001,
         min=0.00000,
         max=100,
@@ -178,13 +178,13 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     stay_low: BoolProperty(
-        name="Stay low if possible",
+        name="Stay Low if Possible",
         default=True,
         update=update_operation,
     )
 
     merge_dist: FloatProperty(
-        name="Merge distance - EXPERIMENTAL",
+        name="Merge Distance - EXPERIMENTAL",
         default=0.0,
         min=0.0000,
         max=0.1,
@@ -194,15 +194,15 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
     )
 
     protect_vertical: BoolProperty(
-        name="Protect vertical",
+        name="Protect Vertical",
         description="The path goes only vertically next to steep areas",
         default=True,
         update=update_operation,
     )
 
     protect_vertical_limit: FloatProperty(
-        name="Verticality limit",
-        description="What angle is allready considered vertical",
+        name="Verticality Limit",
+        description="What angle is already considered vertical",
         default=pi / 45,
         min=0,
         max=pi * 0.5,
@@ -214,8 +214,8 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
 
 
 class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
-    """CAM movement panel"""
-    bl_label = "CAM movement"
+    """CAM Movement Panel"""
+    bl_label = "CAM Movement"
     bl_idname = "WORLD_PT_CAM_MOVEMENT"
     panel_interface_level = 0
 
@@ -249,7 +249,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
             return
         self.layout.prop(self.op.movement, 'free_height')
         if self.op.maxz > self.op.movement.free_height:
-            self.layout.label(text='Depth start > Free movement')
+            self.layout.label(text='Depth Start > Free Movement')
             self.layout.label(text='POSSIBLE COLLISION')
 
     def draw_use_g64(self):

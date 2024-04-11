@@ -35,14 +35,14 @@ from . import parametric
 
 
 class CamSineCurve(bpy.types.Operator):
-    """Object sine """  # by Alain Pelletier april 2021
+    """Object Sine """  # by Alain Pelletier april 2021
     bl_idname = "object.sine"
-    bl_label = "Create Periodic wave"
+    bl_label = "Create Periodic Wave"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     #    zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
     axis: EnumProperty(
-        name="displacement axis",
+        name="Displacement Axis",
         items=(
             ('XY', 'Y to displace X axis', 'Y constant; X sine displacement'),
             ('YX', 'X to displace Y axis', 'X constant; Y sine displacement'),
@@ -78,7 +78,7 @@ class CamSineCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     beatperiod: FloatProperty(
-        name="Beat Period offset",
+        name="Beat Period Offset",
         default=0.0,
         min=0.0,
         max=100,
@@ -86,7 +86,7 @@ class CamSineCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     shift: FloatProperty(
-        name="phase shift",
+        name="Phase Shift",
         default=0,
         min=-360,
         max=360,
@@ -94,7 +94,7 @@ class CamSineCurve(bpy.types.Operator):
         unit="ROTATION",
     )
     offset: FloatProperty(
-        name="offset",
+        name="Offset",
         default=0,
         min=-
         1.0,
@@ -103,13 +103,13 @@ class CamSineCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     iteration: IntProperty(
-        name="iteration",
+        name="Iteration",
         default=100,
         min=50,
         max=2000,
     )
     maxt: FloatProperty(
-        name="Wave ends at x",
+        name="Wave Ends at X",
         default=0.5,
         min=-3.0,
         max=3,
@@ -117,7 +117,7 @@ class CamSineCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     mint: FloatProperty(
-        name="Wave starts at x",
+        name="Wave Starts at X",
         default=0,
         min=-3.0,
         max=3,
@@ -125,7 +125,7 @@ class CamSineCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     wave_distance: FloatProperty(
-        name="distance between multiple waves",
+        name="Distance Between Multiple Waves",
         default=0.0,
         min=0.0,
         max=100,
@@ -133,7 +133,7 @@ class CamSineCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     wave_angle_offset: FloatProperty(
-        name="angle offset for multiple waves",
+        name="Angle Offset for Multiple Waves",
         default=pi/2,
         min=-200*pi,
         max=200*pi,
@@ -141,7 +141,7 @@ class CamSineCurve(bpy.types.Operator):
         unit="ROTATION",
     )
     wave_amount: IntProperty(
-        name="amount of multiple waves",
+        name="Amount of Multiple Waves",
         default=1,
         min=1,
         max=2000,
@@ -195,7 +195,7 @@ class CamSineCurve(bpy.types.Operator):
 class CamLissajousCurve(bpy.types.Operator):
     """Lissajous """  # by Alain Pelletier april 2021
     bl_idname = "object.lissajous"
-    bl_label = "Create Lissajous figure"
+    bl_label = "Create Lissajous Figure"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     amplitude_A: FloatProperty(
@@ -264,7 +264,7 @@ class CamLissajousCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     shift: FloatProperty(
-        name="phase shift",
+        name="Phase Shift",
         default=0,
         min=-360,
         max=360,
@@ -273,13 +273,13 @@ class CamLissajousCurve(bpy.types.Operator):
     )
 
     iteration: IntProperty(
-        name="iteration",
+        name="Iteration",
         default=500,
         min=50,
         max=10000,
     )
     maxt: FloatProperty(
-        name="Wave ends at x",
+        name="Wave Ends at X",
         default=11,
         min=-3.0,
         max=1000000,
@@ -287,7 +287,7 @@ class CamLissajousCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     mint: FloatProperty(
-        name="Wave starts at x",
+        name="Wave Starts at X",
         default=0,
         min=-10.0,
         max=3,
@@ -330,20 +330,20 @@ class CamLissajousCurve(bpy.types.Operator):
 
 
 class CamHypotrochoidCurve(bpy.types.Operator):
-    """hypotrochoid """  # by Alain Pelletier april 2021
+    """Hypotrochoid """  # by Alain Pelletier april 2021
     bl_idname = "object.hypotrochoid"
-    bl_label = "Create Spirograph type figure"
+    bl_label = "Create Spirograph Type Figure"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     typecurve: EnumProperty(
-        name="type of curve",
+        name="Type of Curve",
         items=(
-            ('hypo', 'Hypotrochoid', 'inside ring'),
-            ('epi', 'Epicycloid', 'outside inner ring')
+            ('hypo', 'Hypotrochoid', 'Inside ring'),
+            ('epi', 'Epicycloid', 'Outside inner ring')
         ),
     )
     R: FloatProperty(
-        name="Big circle radius",
+        name="Big Circle Radius",
         default=0.25,
         min=0.001,
         max=100,
@@ -351,7 +351,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     r: FloatProperty(
-        name="Small circle radius",
+        name="Small Circle Radius",
         default=0.18,
         min=0.0001,
         max=100,
@@ -359,7 +359,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     d: FloatProperty(
-        name="distance from center of interior circle",
+        name="Distance from Center of Interior Circle",
         default=0.050,
         min=0,
         max=100,
@@ -367,7 +367,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     dip: FloatProperty(
-        name="variable depth from center",
+        name="Variable Depth from Center",
         default=0.00,
         min=-100,
         max=100,
@@ -424,35 +424,35 @@ class CamHypotrochoidCurve(bpy.types.Operator):
 
 
 class CamCustomCurve(bpy.types.Operator):
-    """Object customCurve """  # by Alain Pelletier april 2021
+    """Object Custom Curve """  # by Alain Pelletier april 2021
     bl_idname = "object.customcurve"
-    bl_label = "Create custom curve"
+    bl_label = "Create Custom Curve"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     xstring: StringProperty(
-        name="X equation",
+        name="X Equation",
         description="Equation x=F(t)",
         default="t",
     )
     ystring: StringProperty(
-        name="Y equation",
+        name="Y Equation",
         description="Equation y=F(t)",
         default="0",
     )
     zstring: StringProperty(
-        name="Z equation",
+        name="Z Equation",
         description="Equation z=F(t)",
         default="0.05*sin(2*pi*4*t)",
     )
 
     iteration: IntProperty(
-        name="iteration",
+        name="Iteration",
         default=100,
         min=50,
         max=2000,
     )
     maxt: FloatProperty(
-        name="Wave ends at x",
+        name="Wave Ends at X",
         default=0.5,
         min=-3.0,
         max=10,
@@ -460,7 +460,7 @@ class CamCustomCurve(bpy.types.Operator):
         unit="LENGTH",
     )
     mint: FloatProperty(
-        name="Wave starts at x",
+        name="Wave Starts at X",
         default=0,
         min=-3.0,
         max=3,

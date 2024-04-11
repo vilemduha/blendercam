@@ -49,13 +49,13 @@ from . import (
 
 
 class CamCurveHatch(Operator):
-    """perform hatch operation on single or multiple curves"""  # by Alain Pelletier September 2021
+    """Perform Hatch Operation on Single or Multiple Curves"""  # by Alain Pelletier September 2021
     bl_idname = "object.curve_hatch"
-    bl_label = "CrossHatch curve"
+    bl_label = "CrossHatch Curve"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     angle: FloatProperty(
-        name="angle",
+        name="Angle",
         default=0,
         min=-pi/2,
         max=pi/2,
@@ -63,7 +63,7 @@ class CamCurveHatch(Operator):
         subtype="ANGLE",
     )
     distance: FloatProperty(
-        name="spacing",
+        name="Spacing",
         default=0.015,
         min=0,
         max=3.0,
@@ -87,7 +87,7 @@ class CamCurveHatch(Operator):
         unit="LENGTH",
     )
     amount: IntProperty(
-        name="amount",
+        name="Amount",
         default=10,
         min=1,
         max=10000,
@@ -101,14 +101,14 @@ class CamCurveHatch(Operator):
         default=False,
     )
     contour_separate: BoolProperty(
-        name="Contour separate",
+        name="Contour Separate",
         default=False,
     )
     pocket_type: EnumProperty(
-        name='Type pocket',
+        name='Type Pocket',
         items=(
-            ('BOUNDS', 'makes a bounds rectangle', 'makes a bounding square'),
-            ('POCKET', 'Pocket', 'makes a pocket inside a closed loop')
+            ('BOUNDS', 'Makes a bounds rectangle', 'Makes a bounding square'),
+            ('POCKET', 'Pocket', 'Makes a pocket inside a closed loop')
         ),
         description='Type of pocket',
         default='BOUNDS',
@@ -217,9 +217,9 @@ class CamCurveHatch(Operator):
 
 
 class CamCurvePlate(Operator):
-    """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
+    """Perform Generates Rounded Plate with Mounting Holes"""  # by Alain Pelletier Sept 2021
     bl_idname = "object.curve_plate"
-    bl_label = "Sign plate"
+    bl_label = "Sign Plate"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     radius: FloatProperty(
@@ -231,7 +231,7 @@ class CamCurvePlate(Operator):
         unit="LENGTH",
     )
     width: FloatProperty(
-        name="Width of plate",
+        name="Width of Plate",
         default=0.3048,
         min=0,
         max=3.0,
@@ -239,7 +239,7 @@ class CamCurvePlate(Operator):
         unit="LENGTH",
     )
     height: FloatProperty(
-        name="Height of plate",
+        name="Height of Plate",
         default=0.457,
         min=0,
         max=3.0,
@@ -247,7 +247,7 @@ class CamCurvePlate(Operator):
         unit="LENGTH",
     )
     hole_diameter: FloatProperty(
-        name="Hole diameter",
+        name="Hole Diameter",
         default=0.01,
         min=0,
         max=3.0,
@@ -263,7 +263,7 @@ class CamCurvePlate(Operator):
         unit="LENGTH",
     )
     hole_vdist: FloatProperty(
-        name="Hole Vert distance",
+        name="Hole Vert Distance",
         default=0.400,
         min=0,
         max=3.0,
@@ -271,7 +271,7 @@ class CamCurvePlate(Operator):
         unit="LENGTH",
     )
     hole_hdist: FloatProperty(
-        name="Hole horiz distance",
+        name="Hole Horiz Distance",
         default=0,
         min=0,
         max=3.0,
@@ -279,19 +279,19 @@ class CamCurvePlate(Operator):
         unit="LENGTH",
     )
     hole_hamount: IntProperty(
-        name="Hole horiz amount",
+        name="Hole Horiz Amount",
         default=1,
         min=0,
         max=50,
     )
     resolution: IntProperty(
-        name="Spline resolution",
+        name="Spline Resolution",
         default=50,
         min=3,
         max=150,
     )
     plate_type: EnumProperty(
-        name='Type plate',
+        name='Type Plate',
         items=(
             ('ROUNDED', 'Rounded corner', 'Makes a rounded corner plate'),
             ('COVE', 'Cove corner',
@@ -492,13 +492,13 @@ class CamCurvePlate(Operator):
 
 
 class CamCurveFlatCone(Operator):
-    """perform generates rounded plate with mounting holes"""  # by Alain Pelletier Sept 2021
+    """Perform Generates Rounded Plate with Mounting Holes"""  # by Alain Pelletier Sept 2021
     bl_idname = "object.curve_flat_cone"
-    bl_label = "Cone flat calculator"
+    bl_label = "Cone Flat Calculator"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     small_d: FloatProperty(
-        name="small diameter",
+        name="Small Diameter",
         default=.025,
         min=0,
         max=0.1,
@@ -506,7 +506,7 @@ class CamCurveFlatCone(Operator):
         unit="LENGTH",
     )
     large_d: FloatProperty(
-        name="large diameter",
+        name="Large Diameter",
         default=0.3048,
         min=0,
         max=3.0,
@@ -514,7 +514,7 @@ class CamCurveFlatCone(Operator):
         unit="LENGTH",
     )
     height: FloatProperty(
-        name="Height of cone",
+        name="Height of Cone",
         default=0.457,
         min=0,
         max=3.0,
@@ -522,7 +522,7 @@ class CamCurveFlatCone(Operator):
         unit="LENGTH",
     )
     tab: FloatProperty(
-        name="tab witdh",
+        name="Tab Witdh",
         default=0.01,
         min=0,
         max=0.100,
@@ -530,7 +530,7 @@ class CamCurveFlatCone(Operator):
         unit="LENGTH",
     )
     intake: FloatProperty(
-        name="intake diameter",
+        name="Intake Diameter",
         default=0,
         min=0,
         max=0.200,
@@ -538,7 +538,7 @@ class CamCurveFlatCone(Operator):
         unit="LENGTH",
     )
     intake_skew: FloatProperty(
-        name="intake_skew",
+        name="Intake Skew",
         default=1,
         min=0.1,
         max=4,
@@ -589,13 +589,13 @@ class CamCurveFlatCone(Operator):
 
 
 class CamCurveMortise(Operator):
-    """Generates mortise along a curve"""  # by Alain Pelletier December 2021
+    """Generates Mortise Along a Curve"""  # by Alain Pelletier December 2021
     bl_idname = "object.curve_mortise"
     bl_label = "Mortise"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     finger_size: BoolProperty(
-        name="kurf bending only",
+        name="Kurf Bending only",
         default=False,
     )
     finger_size: FloatProperty(
@@ -615,7 +615,7 @@ class CamCurveMortise(Operator):
         unit="LENGTH",
     )
     finger_tolerance: FloatProperty(
-        name="Finger play room",
+        name="Finger Play Room",
         default=0.000045,
         min=0,
         max=0.003,
@@ -623,28 +623,28 @@ class CamCurveMortise(Operator):
         unit="LENGTH",
     )
     plate_thickness: FloatProperty(
-        name="Drawer plate thickness",
+        name="Drawer Plate Thickness",
         default=0.00477,
         min=0.001,
         max=3.0,
         unit="LENGTH",
     )
     side_height: FloatProperty(
-        name="side height",
+        name="Side Height",
         default=0.05,
         min=0.001,
         max=3.0,
         unit="LENGTH",
     )
     flex_pocket: FloatProperty(
-        name="Flex pocket",
+        name="Flex Pocket",
         default=0.004,
         min=0.000,
         max=1.0,
         unit="LENGTH",
     )
     top_bottom: BoolProperty(
-        name="Side Top & bottom fingers",
+        name="Side Top & Bottom Fingers",
         default=True,
     )
     opencurve: BoolProperty(
@@ -652,7 +652,7 @@ class CamCurveMortise(Operator):
         default=False,
     )
     adaptive: FloatProperty(
-        name="Adaptive angle threshold",
+        name="Adaptive Angle Threshold",
         default=0.0,
         min=0.000,
         max=2,
@@ -660,7 +660,7 @@ class CamCurveMortise(Operator):
         unit="ROTATION",
     )
     double_adaptive: BoolProperty(
-        name="Double adaptive Pockets",
+        name="Double Adaptive Pockets",
         default=False,
     )
 
@@ -732,7 +732,7 @@ class CamCurveMortise(Operator):
 
 
 class CamCurveInterlock(Operator):
-    """Generates interlock along a curve"""  # by Alain Pelletier December 2021
+    """Generates Interlock Along a Curve"""  # by Alain Pelletier December 2021
     bl_idname = "object.curve_interlock"
     bl_label = "Interlock"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
@@ -746,7 +746,7 @@ class CamCurveInterlock(Operator):
         unit="LENGTH",
     )
     finger_tolerance: FloatProperty(
-        name="Finger play room",
+        name="Finger Play Room",
         default=0.000045,
         min=0,
         max=0.003,
@@ -754,7 +754,7 @@ class CamCurveInterlock(Operator):
         unit="LENGTH",
     )
     plate_thickness: FloatProperty(
-        name="Plate thickness",
+        name="Plate Thickness",
         default=0.00477,
         min=0.001,
         max=3.0,
@@ -765,11 +765,11 @@ class CamCurveInterlock(Operator):
         default=False,
     )
     interlock_type: EnumProperty(
-        name='Type of interlock',
+        name='Type of Interlock',
         items=(
-            ('TWIST', 'Twist', 'Iterlock requires 1/4 turn twist'),
+            ('TWIST', 'Twist', 'Interlock requires 1/4 turn twist'),
             ('GROOVE', 'Groove', 'Simple sliding groove'),
-            ('PUZZLE', 'Puzzle interlock', 'puzzle good for flat joints')
+            ('PUZZLE', 'Puzzle Interlock', 'Puzzle good for flat joints')
         ),
         description='Type of interlock',
         default='GROOVE',
@@ -781,7 +781,7 @@ class CamCurveInterlock(Operator):
         max=100,
     )
     tangent_angle: FloatProperty(
-        name="Tangent deviation",
+        name="Tangent Deviation",
         default=0.0,
         min=0.000,
         max=2,
@@ -789,7 +789,7 @@ class CamCurveInterlock(Operator):
         unit="ROTATION",
     )
     fixed_angle: FloatProperty(
-        name="fixed angle",
+        name="Fixed Angle",
         default=0.0,
         min=0.000,
         max=2,
@@ -852,7 +852,7 @@ class CamCurveInterlock(Operator):
 
 
 class CamCurveDrawer(Operator):
-    """Generates drawers"""  # by Alain Pelletier December 2021 inspired by The Drawinator
+    """Generates Drawers"""  # by Alain Pelletier December 2021 inspired by The Drawinator
     bl_idname = "object.curve_drawer"
     bl_label = "Drawer"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
@@ -866,7 +866,7 @@ class CamCurveDrawer(Operator):
         unit="LENGTH",
     )
     width: FloatProperty(
-        name="Width of Drawer",
+        name="Drawer Width",
         default=0.125,
         min=0,
         max=3.0,
@@ -874,7 +874,7 @@ class CamCurveDrawer(Operator):
         unit="LENGTH",
     )
     height: FloatProperty(
-        name="Height of drawer",
+        name="Drawer Height",
         default=0.07,
         min=0,
         max=3.0,
@@ -890,7 +890,7 @@ class CamCurveDrawer(Operator):
         unit="LENGTH",
     )
     finger_tolerance: FloatProperty(
-        name="Finger play room",
+        name="Finger Play Room",
         default=0.000045,
         min=0,
         max=0.003,
@@ -898,7 +898,7 @@ class CamCurveDrawer(Operator):
         unit="LENGTH",
     )
     finger_inset: FloatProperty(
-        name="Finger inset",
+        name="Finger Inset",
         default=0.0,
         min=0.0,
         max=0.01,
@@ -906,7 +906,7 @@ class CamCurveDrawer(Operator):
         unit="LENGTH",
     )
     drawer_plate_thickness: FloatProperty(
-        name="Drawer plate thickness",
+        name="Drawer Plate Thickness",
         default=0.00477,
         min=0.001,
         max=3.0,
@@ -914,7 +914,7 @@ class CamCurveDrawer(Operator):
         unit="LENGTH",
     )
     drawer_hole_diameter: FloatProperty(
-        name="Drawer hole diameter",
+        name="Drawer Hole Diameter",
         default=0.02,
         min=0.00001,
         max=0.5,
@@ -922,7 +922,7 @@ class CamCurveDrawer(Operator):
         unit="LENGTH",
     )
     drawer_hole_offset: FloatProperty(
-        name="Drawer hole offset",
+        name="Drawer Hole Offset",
         default=0.0,
         min=-0.5,
         max=0.5,
@@ -930,11 +930,11 @@ class CamCurveDrawer(Operator):
         unit="LENGTH",
     )
     overcut: BoolProperty(
-        name="Add overcut",
+        name="Add Overcut",
         default=False,
     )
     overcut_diameter: FloatProperty(
-        name="Overcut toool Diameter",
+        name="Overcut Tool Diameter",
         default=0.003175,
         min=-0.001,
         max=0.5,
@@ -1066,13 +1066,13 @@ class CamCurveDrawer(Operator):
 
 
 class CamCurvePuzzle(Operator):
-    """Generates Puzzle joints and interlocks"""  # by Alain Pelletier December 2021
+    """Generates Puzzle Joints and Interlocks"""  # by Alain Pelletier December 2021
     bl_idname = "object.curve_puzzle"
-    bl_label = "Puzzle joints"
+    bl_label = "Puzzle Joints"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     diameter: FloatProperty(
-        name="tool diameter",
+        name="Tool Diameter",
         default=0.003175,
         min=0.001,
         max=3.0,
@@ -1080,7 +1080,7 @@ class CamCurvePuzzle(Operator):
         unit="LENGTH",
     )
     finger_tolerance: FloatProperty(
-        name="Finger play room",
+        name="Finger Play Room",
         default=0.00005,
         min=0,
         max=0.003,
@@ -1094,7 +1094,7 @@ class CamCurvePuzzle(Operator):
         max=100,
     )
     stem_size: IntProperty(
-        name="size of the stem",
+        name="Size of the Stem",
         default=2,
         min=1,
         max=200,
@@ -1108,7 +1108,7 @@ class CamCurvePuzzle(Operator):
         unit="LENGTH",
     )
     height: FloatProperty(
-        name="height or thickness",
+        name="Height or Thickness",
         default=0.025,
         min=0.005,
         max=3.0,
@@ -1117,7 +1117,7 @@ class CamCurvePuzzle(Operator):
     )
 
     angle: FloatProperty(
-        name="angle A",
+        name="Angle A",
         default=pi/4,
         min=-10,
         max=10,
@@ -1125,7 +1125,7 @@ class CamCurvePuzzle(Operator):
         unit="ROTATION",
     )
     angleb: FloatProperty(
-        name="angle B",
+        name="Angle B",
         default=pi/4,
         min=-10,
         max=10,
@@ -1143,7 +1143,7 @@ class CamCurvePuzzle(Operator):
     )
 
     interlock_type: EnumProperty(
-        name='Type of shape',
+        name='Type of Shape',
         items=(
             ('JOINT', 'Joint', 'Puzzle Joint interlock'),
             ('BAR', 'Bar', 'Bar interlock'),
@@ -1161,7 +1161,7 @@ class CamCurvePuzzle(Operator):
         default='CURVET',
     )
     gender: EnumProperty(
-        name='Type gender',
+        name='Type Gender',
         items=(
             ('MF', 'Male-Receptacle', 'Male and receptacle'),
             ('F', 'Receptacle only', 'Receptacle'),
@@ -1171,7 +1171,7 @@ class CamCurvePuzzle(Operator):
         default='MF',
     )
     base_gender: EnumProperty(
-        name='Base gender',
+        name='Base Gender',
         items=(
             ('MF', 'Male - Receptacle', 'Male - Receptacle'),
             ('F', 'Receptacle', 'Receptacle'),
@@ -1181,7 +1181,7 @@ class CamCurvePuzzle(Operator):
         default='M',
     )
     multiangle_gender: EnumProperty(
-        name='Multiangle gender',
+        name='Multiangle Gender',
         items=(
             ('MMF', 'Male Male Receptacle', 'M M F'),
             ('MFF', 'Male Receptacle Receptacle', 'M F F')
@@ -1208,38 +1208,38 @@ class CamCurvePuzzle(Operator):
         unit="LENGTH",
     )
     twist_percent: FloatProperty(
-        name="Twist neck",
+        name="Twist Neck",
         default=0.3,
         min=0.1,
         max=0.9,
         precision=4,
     )
     twist_keep: BoolProperty(
-        name="keep Twist holes",
+        name="Keep Twist Holes",
         default=False,
     )
     twist_line: BoolProperty(
-        name="Add Twist to bar",
+        name="Add Twist to Bar",
         default=False,
     )
     twist_line_amount: IntProperty(
-        name="amount of separators",
+        name="Amount of Separators",
         default=2,
         min=1,
         max=600,
     )
     twist_separator: BoolProperty(
-        name="Add Twist separator",
+        name="Add Twist Separator",
         default=False,
     )
     twist_separator_amount: IntProperty(
-        name="amount of separators",
+        name="Amount of Separators",
         default=2,
         min=2,
         max=600,
     )
     twist_separator_spacing: FloatProperty(
-        name="Separator spacing",
+        name="Separator Spacing",
         default=0.025,
         min=-0.004,
         max=1.0,
@@ -1247,7 +1247,7 @@ class CamCurvePuzzle(Operator):
         unit="LENGTH",
     )
     twist_separator_edge_distance: FloatProperty(
-        name="Separator edge distance",
+        name="Separator Edge Distance",
         default=0.01,
         min=0.0005,
         max=0.1,
@@ -1255,29 +1255,29 @@ class CamCurvePuzzle(Operator):
         unit="LENGTH",
     )
     tile_x_amount: IntProperty(
-        name="amount of x fingers",
+        name="Amount of X Fingers",
         default=2,
         min=1,
         max=600,
     )
     tile_y_amount: IntProperty(
-        name="amount of y fingers",
+        name="Amount of Y Fingers",
         default=2,
         min=1,
         max=600,
     )
     interlock_amount: IntProperty(
-        name="Interlock amount on curve",
+        name="Interlock Amount on Curve",
         default=2,
         min=0,
         max=200,
     )
     overcut: BoolProperty(
-        name="Add overcut",
+        name="Add Overcut",
         default=False,
     )
     overcut_diameter: FloatProperty(
-        name="Overcut toool Diameter",
+        name="Overcut Tool Diameter",
         default=0.003175,
         min=-0.001,
         max=0.5,
@@ -1459,7 +1459,7 @@ class CamCurvePuzzle(Operator):
 
 
 class CamCurveGear(Operator):
-    """Generates involute Gears // version 1.1 by Leemon Baird, 2011, Leemon@Leemon.com
+    """Generates Involute Gears // version 1.1 by Leemon Baird, 2011, Leemon@Leemon.com
     http://www.thingiverse.com/thing:5505"""  # ported by Alain Pelletier January 2022
 
     bl_idname = "object.curve_gear"
@@ -1467,7 +1467,7 @@ class CamCurveGear(Operator):
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     tooth_spacing: FloatProperty(
-        name="distance per tooth",
+        name="Distance per Tooth",
         default=0.010,
         min=0.001,
         max=1.0,
@@ -1475,19 +1475,19 @@ class CamCurveGear(Operator):
         unit="LENGTH",
     )
     tooth_amount: IntProperty(
-        name="Amount of teeth",
+        name="Amount of Teeth",
         default=7,
         min=4,
     )
 
     spoke_amount: IntProperty(
-        name="Amount of spokes",
+        name="Amount of Spokes",
         default=4,
         min=0,
     )
 
     hole_diameter: FloatProperty(
-        name="Hole diameter",
+        name="Hole Diameter",
         default=0.003175,
         min=0,
         max=3.0,
@@ -1495,7 +1495,7 @@ class CamCurveGear(Operator):
         unit="LENGTH",
     )
     rim_size: FloatProperty(
-        name="Rim size",
+        name="Rim Size",
         default=0.003175,
         min=0,
         max=3.0,
@@ -1503,7 +1503,7 @@ class CamCurveGear(Operator):
         unit="LENGTH",
     )
     hub_diameter: FloatProperty(
-        name="Hub diameter",
+        name="Hub Diameter",
         default=0.005,
         min=0,
         max=3.0,
@@ -1544,14 +1544,14 @@ class CamCurveGear(Operator):
         unit="LENGTH",
     )
     rack_tooth_per_hole: IntProperty(
-        name="teeth per mounting hole",
+        name="Teeth per Mounting Hole",
         default=7,
         min=2,
     )
     gear_type: EnumProperty(
-        name='Type of gear',
+        name='Type of Gear',
         items=(
-            ('PINION', 'Pinion', 'circular gear'),
+            ('PINION', 'Pinion', 'Circular Gear'),
             ('RACK', 'Rack', 'Straight Rack')
         ),
         description='Type of gear',

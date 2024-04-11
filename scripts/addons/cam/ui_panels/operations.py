@@ -14,8 +14,8 @@ from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
-    """CAM operations panel"""
-    bl_label = "CAM operations"
+    """CAM Operations Panel"""
+    bl_label = "CAM Operations"
     bl_idname = "WORLD_PT_CAM_OPERATIONS"
     always_show_panel = True
     panel_interface_level = 0
@@ -60,14 +60,14 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
             return
         if self.op.maxz > self.op.movement.free_height:
             self.layout.label(text='!ERROR! COLLISION!')
-            self.layout.label(text='Depth start > Free movement height')
+            self.layout.label(text='Depth Start > Free Movement Height')
             self.layout.label(text='!ERROR! COLLISION!')
             self.layout.prop(self.op.movement, 'free_height')
 
         if not self.op.valid:
-            self.layout.label(text="Select a valid object to calculate the path.")
+            self.layout.label(text="Select a Valid Object to Calculate the Path.")
         # will be disable if not valid
-        self.layout.operator("object.calculate_cam_path", text="Calculate path & export Gcode")
+        self.layout.operator("object.calculate_cam_path", text="Calculate Path & Export Gcode")
 
     def draw_export_gcode(self):
         if not self.has_correct_level():
@@ -82,7 +82,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
         if not self.has_correct_level():
             return
         if self.op.valid:
-            self.layout.operator("object.cam_simulate", text="Simulate this operation")
+            self.layout.operator("object.cam_simulate", text="Simulate This Operation")
 
     def draw_op_name(self):
         if not self.has_correct_level():

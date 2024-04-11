@@ -6,7 +6,7 @@ import bpy
 
 @types.coroutine
 def progress_async(text, n=None, value_type='%'):
-    """function for reporting during the script, works for background operations in the header."""
+    """Function for Reporting During the Script, Works for Background Operations in the Header."""
     throw_exception = yield ('progress', {'text': text, 'n': n, "value_type": value_type})
     if throw_exception is not None:
         raise throw_exception
@@ -65,7 +65,7 @@ class AsyncOperatorMixin:
             self.coroutine = self.execute_async(context)
         try:
             if self._is_cancelled:
-                (msg, args) = self.coroutine.send(AsyncCancelledException("Cancelled with ESC key"))
+                (msg, args) = self.coroutine.send(AsyncCancelledException("Cancelled with ESC Key"))
                 raise StopIteration
             else:
                 (msg, args) = self.coroutine.send(None)
@@ -77,7 +77,7 @@ class AsyncOperatorMixin:
         except StopIteration:
             return False
         except Exception as e:
-            print("Exception thrown in tick:", e)
+            print("Exception Thrown in Tick:", e)
 
     def execute(self, context):
         if bpy.app.background:
@@ -93,9 +93,9 @@ class AsyncOperatorMixin:
 
 
 class AsyncTestOperator(bpy.types.Operator, AsyncOperatorMixin):
-    """test async operator"""
+    """Test Async Operator"""
     bl_idname = "object.cam_async_test_operator"
-    bl_label = "Test operator for async stuff"
+    bl_label = "Test Operator for Async Stuff"
     bl_options = {'REGISTER', 'UNDO', 'BLOCKING'}
 
     async def execute_async(self, context):
