@@ -160,7 +160,7 @@ def _offset_inner_loop(y1, y2, cutterArrayNan, cwidth, sourceArray, width, heigh
 
 
 async def offsetArea(o, samples):
-    """ offsets the whole image with the cutter + skin offsets """
+    """ Offsets the Whole Image with the Cutter + Skin Offsets """
     if o.update_offsetimage_tag:
         minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
@@ -192,7 +192,7 @@ async def offsetArea(o, samples):
             await progress_async('offset depth image', int((y2 * 100) / comparearea.shape[1]))
         o.offset_image[m: width - cwidth + m, m:height - cwidth + m] = comparearea
 
-        print('\nOffset image time ' + str(time.time() - t))
+        print('\nOffset Image Time ' + str(time.time() - t))
 
         o.update_offsetimage_tag = False
     return o.offset_image
@@ -205,9 +205,9 @@ def dilateAr(ar, cycles):
 
 
 def getOffsetImageCavities(o, i):  # for pencil operation mainly
-    """detects areas in the offset image which are 'cavities' - the curvature changes."""
+    """Detects Areas in the Offset Image Which Are 'cavities' - the Curvature Changes."""
     # i=numpy.logical_xor(lastislice , islice)
-    progress('detect corners in the offset image')
+    progress('Detect Corners in the Offset Image')
     vertical = i[:-2, 1:-1] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[2:, 1:-1]
     horizontal = i[1:-1, :-2] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[1:-1, 2:]
     # if bpy.app.debug_value==2:
@@ -267,7 +267,7 @@ def imageEdgeSearch_online(o, ar, zimage):
 
         if perc != int(100 - 100 * totpix / startpix):
             perc = int(100 - 100 * totpix / startpix)
-            progress('pencil path searching', perc)
+            progress('Pencil Path Searching', perc)
         # progress('simulation ',int(100*i/l))
         success = False
         testangulardistance = 0  # distance from initial direction in the list of direction
@@ -286,7 +286,7 @@ def imageEdgeSearch_online(o, ar, zimage):
                 last_direction = test_direction
                 ar[xs, ys] = False
                 if 0:
-                    print('success')
+                    print('Success')
                     print(xs, ys, testlength, testangle)
                     print(lastvect)
                     print(testvect)
@@ -1100,7 +1100,7 @@ def _restore_render_settings(pairs, properties):
 
 def renderSampleImage(o):
     t = time.time()
-    progress('getting zbuffer')
+    progress('Getting Z-Buffer')
     # print(o.zbuffer_image)
     o.update_offsetimage_tag = True
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
@@ -1221,7 +1221,7 @@ def renderSampleImage(o):
                 if backup_settings is not None:
                     _restore_render_settings(SETTINGS_TO_BACKUP, backup_settings)
                 else:
-                    print("Failed to backup scene settings")
+                    print("Failed to Backup Scene Settings")
 
             i = bpy.data.images.load(iname)
             bpy.context.scene.render.engine = 'BLENDERCAM_RENDER'
@@ -1248,7 +1248,7 @@ def renderSampleImage(o):
         #o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
 
         o.optimisation.pixsize = o.source_image_size_x / i.size[0]
-        progress('pixel size in the image source', o.optimisation.pixsize)
+        progress('Pixel Size in the Image Source', o.optimisation.pixsize)
 
         rawimage = imagetonumpy(i)
         maxa = numpy.max(rawimage)
@@ -1304,7 +1304,7 @@ async def prepareArea(o):
     iname = getCachePath(o) + '_off.exr'
 
     if not o.update_offsetimage_tag:
-        progress('loading offset image')
+        progress('Loading Offset Image')
         try:
             o.offset_image = imagetonumpy(bpy.data.images.load(iname))
 
@@ -1390,7 +1390,7 @@ def getCutterArray(operation, pixsize):
         # print(cutob.scale)
         vstart = Vector((0, 0, -10))
         vend = Vector((0, 0, 10))
-        print('sampling custom cutter')
+        print('Sampling Custom Cutter')
         maxz = -1
         for a in range(0, res):
             vstart.x = (a + 0.5 - m) * ps * scale

@@ -5,8 +5,8 @@ from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_SLICE_Panel(CAMButtonsPanel, Panel):
-    """CAM slicer panel"""
-    bl_label = "Slice model to plywood sheets"
+    """CAM Slicer Panel"""
+    bl_label = "Slice Model to Plywood Sheets"
     bl_idname = "WORLD_PT_CAM_SLICE"
     panel_interface_level = 2
 

@@ -71,7 +71,7 @@ def timingprint(tinf):
 
 
 def progress(text, n=None):
-    """function for reporting during the script, works for background operations in the header."""
+    """Function for Reporting During the Script, Works for Background Operations in the Header."""
     text = str(text)
     if n is None:
         n = ''
@@ -82,7 +82,7 @@ def progress(text, n=None):
 
 
 def activate(o):
-    """makes an object active, used many times in blender"""
+    """Makes an Object Active, Used Many Times in Blender"""
     s = bpy.context.scene
     bpy.ops.object.select_all(action='DESELECT')
     o.select_set(state=True)
@@ -91,18 +91,18 @@ def activate(o):
 
 
 def dist2d(v1, v2):
-    """distance between two points in 2d"""
+    """Distance Between Two Points in 2D"""
     return hypot((v1[0] - v2[0]), (v1[1] - v2[1]))
 
 
 def delob(ob):
-    """object deletion for multiple uses"""
+    """Object Deletion for Multiple Uses"""
     activate(ob)
     bpy.ops.object.delete(use_global=False)
 
 
 def dupliob(o, pos):
-    """helper function for visualising cutter positions in bullet simulation"""
+    """Helper Function for Visualising Cutter Positions in Bullet Simulation"""
     activate(o)
     bpy.ops.object.duplicate()
     s = 1.0 / BULLET_SCALE
@@ -123,7 +123,7 @@ def addToGroup(ob, groupname):
 
 
 def compare(v1, v2, vmiddle, e):
-    """comparison for optimisation of paths"""
+    """Comparison for Optimisation of Paths"""
     # e=0.0001
     v1 = Vector(v1)
     v2 = Vector(v2)
@@ -139,7 +139,7 @@ def compare(v1, v2, vmiddle, e):
 
 
 def isVerticalLimit(v1, v2, limit):
-    """test path segment on verticality threshold, for protect_vertical option"""
+    """Test Path Segment on Verticality Threshold, for protect_vertical Option"""
     z = abs(v1[2] - v2[2])
     # verticality=0.05
     # this will be better.

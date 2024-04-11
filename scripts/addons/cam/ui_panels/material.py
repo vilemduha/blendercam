@@ -22,14 +22,14 @@ from ..constants import PRECISION
 class CAM_MATERIAL_Properties(PropertyGroup):
 
     estimate_from_model: BoolProperty(
-        name="Estimate cut area from model",
+        name="Estimate Cut Area from Model",
         description="Estimate cut area based on model geometry",
         default=True,
         update=update_material,
     )
 
     radius_around_model: FloatProperty(
-        name='Radius around model',
+        name='Radius Around Model',
         description="Increase cut area around the model on X and "
         "Y by this amount",
         default=0.0,
@@ -39,21 +39,21 @@ class CAM_MATERIAL_Properties(PropertyGroup):
     )
 
     center_x: BoolProperty(
-        name="Center on X axis",
+        name="Center on X Axis",
         description="Position model centered on X",
         default=False,
         update=update_material,
     )
 
     center_y: BoolProperty(
-        name="Center on Y axis",
+        name="Center on Y Axis",
         description="Position model centered on Y",
         default=False,
         update=update_material,
     )
 
     z_position: EnumProperty(
-        name="Z placement",
+        name="Z Placement",
         items=(
             ('ABOVE', 'Above', 'Place object vertically above the XY plane'),
             ('BELOW', 'Below', 'Place object vertically below the XY plane'),
@@ -67,7 +67,7 @@ class CAM_MATERIAL_Properties(PropertyGroup):
 
     # material_origin
     origin: FloatVectorProperty(
-        name='Material origin',
+        name='Material Origin',
         default=(0, 0, 0),
         unit='LENGTH',
         precision=PRECISION,
@@ -77,7 +77,7 @@ class CAM_MATERIAL_Properties(PropertyGroup):
 
     # material_size
     size: FloatVectorProperty(
-        name='Material size',
+        name='Material Size',
         default=(0.200, 0.200, 0.100),
         min=0,
         unit='LENGTH',
@@ -92,7 +92,7 @@ class CAM_MATERIAL_Properties(PropertyGroup):
 class CAM_MATERIAL_PositionObject(Operator):
 
     bl_idname = "object.material_cam_position"
-    bl_label = "position object for CAM operation"
+    bl_label = "Position Object for CAM Operation"
     bl_options = {'REGISTER', 'UNDO'}
     interface_level = 0
 
@@ -102,7 +102,7 @@ class CAM_MATERIAL_PositionObject(Operator):
         if operation.object_name in bpy.data.objects:
             positionObject(operation)
         else:
-            print('no object assigned')
+            print('No Object Assigned')
         return {'FINISHED'}
 
     def draw(self, context):
@@ -113,7 +113,7 @@ class CAM_MATERIAL_PositionObject(Operator):
 
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
-    bl_label = "CAM Material size and position"
+    bl_label = "CAM Material Size and Position"
     bl_idname = "WORLD_PT_CAM_MATERIAL"
     panel_interface_level = 0
 
@@ -127,7 +127,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
         if not self.has_correct_level():
             return
         if self.op.geometry_source not in ['OBJECT', 'COLLECTION']:
-            self.layout.label(text='Estimated from image')
+            self.layout.label(text='Estimated from Image')
 
     def draw_estimate_from_object(self):
         if not self.has_correct_level():
@@ -136,7 +136,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
             self.layout.prop(self.op.material, 'estimate_from_model')
             if self.op.material.estimate_from_model:
                 row_radius = self.layout.row()
-                row_radius.label(text="Additional radius")
+                row_radius.label(text="Additional Radius")
                 row_radius.prop(self.op.material,
                                 'radius_around_model', text='')
             else:
@@ -153,7 +153,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
             row_axis.prop(self.op.material, 'center_y')
             self.layout.prop(self.op.material, 'z_position')
             self.layout.operator(
-                "object.material_cam_position", text="Position object")
+                "object.material_cam_position", text="Position Object")
 
     def draw(self, context):
         self.context = context

@@ -68,7 +68,7 @@ from .opencamlib.opencamlib import (
     oclSample,
     oclResampleChunks,
 )
-from .polygon_utils_cam import shapelyToCurve
+from .polygon_utils_cam import shapelyToCurve, shapelyToMultipolygon
 from .simple import (
     activate,
     progress,
@@ -287,21 +287,21 @@ def getOperationSources(o):
 def getBounds(o):
     # print('kolikrat sem rpijde')
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION' or o.geometry_source == 'CURVE':
-        print("valid geometry")
+        print("Valid Geometry")
         minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
 
         if o.minz_from == 'OBJECT':
             if minz == 10000000:
                 minz = 0
-            print("minz from object:" + str(minz))
+            print("Minz from Object:" + str(minz))
             o.min.z = minz
             o.minz = o.min.z
         else:
             o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
-            print("not minz from object")
+            print("Not Minz from Object")
 
         if o.material.estimate_from_model:
-            print("Estimate material from model")
+            print("Estimate Material from Model")
 
             o.min.x = minx - o.material.radius_around_model
             o.min.y = miny - o.material.radius_around_model
@@ -310,7 +310,7 @@ def getBounds(o):
             o.max.x = maxx + o.material.radius_around_model
             o.max.y = maxy + o.material.radius_around_model
         else:
-            print("not material from model")
+            print("Not Material from Model")
             o.min.x = o.material.origin.x
             o.min.y = o.material.origin.y
             o.min.z = o.material.origin.z - o.material.size.z
@@ -342,14 +342,14 @@ def getBounds(o):
     s = bpy.context.scene
     m = s.cam_machine
     # make sure this message only shows once and goes away once fixed
-    o.info.warnings.replace('Operation exceeds your machine limits\n', '')
+    o.info.warnings.replace('Operation Exceeds Your Machine Limits\n', '')
     if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y \
             or o.max.z - o.min.z > m.working_area.z:
-        o.info.warnings += 'Operation exceeds your machine limits\n'
+        o.info.warnings += 'Operation Exceeds Your Machine Limits\n'
 
 
 def getBoundsMultiple(operations):
-    """gets bounds of multiple operations, mainly for purpose of simulations or rest milling. highly suboptimal."""
+    """Gets Bounds of Multiple Operations, Mainly for Purpose of Simulations or Rest Milling. Highly Suboptimal."""
     maxx = maxy = maxz = -10000000
     minx = miny = minz = 10000000
     for o in operations:
@@ -458,7 +458,7 @@ async def sampleChunks(o, pathSamples, layers):
         ob = bpy.data.objects[o.object_name]
         zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
 
-    print(f"Total sample points {totlen}")
+    print(f"Total Sample Points {totlen}")
 
     n = 0
     last_percent = -1
@@ -616,7 +616,7 @@ async def sampleChunks(o, pathSamples, layers):
         lastrunchunks = thisrunchunks
 
     # print(len(layerchunks[i]))
-    progress('checking relations between paths')
+    progress('Checking Relations Between Paths')
     timingstart(sortingtime)
 
     if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL':
@@ -665,7 +665,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
     cutterdepth = cutter.dimensions.z / 2
 
     t = time.time()
-    print('sampling paths')
+    print('Sampling Paths')
 
     totlen = 0  # total length of all chunks, to estimate sampling time.
     for chs in pathSamples:
@@ -868,7 +868,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
 
     # print(len(layerchunks[i]))
 
-    progress('checking relations between paths')
+    progress('Checking Relations Between Paths')
     """#this algorithm should also work for n-axis, but now is "sleeping"
     if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
         if len(layers)>1:# sorting help so that upper layers go first always
@@ -1025,7 +1025,7 @@ def overlaps(bb1, bb2):  # true if bb1 is child of bb2
 
 
 async def connectChunksLow(chunks, o):
-    """ connects chunks that are close to each other without lifting, sampling them 'low' """
+    """ Connects Chunks that Are Close to Each Other without Lifting, Sampling Them 'low' """
     if not o.movement.stay_low or (o.strategy == 'CARVE' and o.carve_depth > 0):
         return chunks
 
@@ -1183,7 +1183,7 @@ def getVectorRight(lastv, verts):
 
 def cleanUpDict(ndict):
     # now it should delete all junk first, iterate over lonely verts.
-    print('removing lonely points')
+    print('Removing Lonely Points')
     # found_solitaires=True
     # while found_solitaires:
     found_solitaires = False
@@ -1234,8 +1234,8 @@ def cutloops(csource, parentloop, loops):
 
 
 def getOperationSilhouete(operation):
-    """gets silhouete for the operation
-        uses image thresholding for everything except curves.
+    """Gets Silhouette for the Operation
+        Uses Image Thresholding for Everything Except Curves.
     """
     if operation.update_silhouete_tag:
         image = None
@@ -1255,7 +1255,7 @@ def getOperationSilhouete(operation):
                     totfaces += len(ob.data.polygons)
 
         if (stype == 'OBJECTS' and totfaces > 200000) or stype == 'IMAGE':
-            print('image method')
+            print('Image Method')
             samples = renderSampleImage(operation)
             if stype == 'OBJECTS':
                 i = samples > operation.minz - 0.0000001
@@ -1296,7 +1296,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
         if totfaces < 20000000:  # boolean polygons method originaly was 20 000 poly limit, now limitless,
             # it might become teribly slow, but who cares?
             t = time.time()
-            print('shapely getting silhouette')
+            print('Shapely Getting Silhouette')
             polys = []
             for ob in objects:
                 if use_modifiers:
@@ -1334,7 +1334,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             if totfaces < 20000:
                 p = sops.unary_union(polys)
             else:
-                print('computing in parts')
+                print('Computing in Parts')
                 bigshapes = []
                 i = 1
                 part = 20000
@@ -1346,13 +1346,13 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
                 if (i - 1) * part < totfaces:
                     last_ar = polys[(i - 1) * part:]
                     bigshapes.append(sops.unary_union(last_ar))
-                print('joining')
+                print('Joining')
                 p = sops.unary_union(bigshapes)
 
             print(time.time() - t)
 
             t = time.time()
-            silhouete = [p]  # [polygon_utils_cam.Shapely2Polygon(p)]
+            silhouete = shapelyToMultipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
 
     return silhouete
 
@@ -1427,7 +1427,7 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
 
 
 def addOrientationObject(o):
-    """the orientation object should be used to set up orientations of the object for 4 and 5 axis milling."""
+    """The Orientation Object Should Be Used to Set up Orientations of the Object for 4 and 5 Axis Milling."""
     name = o.name + ' orientation'
     s = bpy.context.scene
     if s.objects.find(name) == -1:
@@ -1588,7 +1588,7 @@ class Point:
 
 
 def unique(L):
-    """Return a list of unhashable elements in s, but without duplicates.
+    """Return a List of Unhashable Elements in S, but without Duplicates.
     [[1, 2], [2, 3], [1, 2]] >>> [[1, 2], [2, 3]]"""
     # For unhashable objects, you can sort the sequence and then scan from the end of the list,
     # deleting duplicates as you go
@@ -1684,9 +1684,9 @@ def cleanupIndexed(operation):
 
 
 def rotTo2axes(e, axescombination):
-    """converts an orientation object rotation to rotation defined by 2 rotational axes on the machine -
-    for indexed machining.
-    attempting to do this for all axes combinations.
+    """Converts an Orientation Object Rotation to Rotation Defined by 2 Rotational Axes on the Machine -
+    for Indexed Machining.
+    Attempting to Do This for All Axes Combinations.
     """
     v = Vector((0, 0, 1))
     v.rotate(e)
@@ -1813,13 +1813,13 @@ _IS_LOADING_DEFAULTS = False
 
 
 def updateMachine(self, context):
-    print('update machine ')
+    print('Update Machine')
     if not _IS_LOADING_DEFAULTS:
         addMachineAreaObject()
 
 
 def updateMaterial(self, context):
-    print('update material')
+    print('Update Material')
     addMaterialAreaObject()
 
 
@@ -1885,7 +1885,7 @@ def operationValid(self, context):
     o = scene.cam_operations[scene.cam_active_operation]
     o.changed = True
     o.valid = isValid(o, context)
-    invalidmsg = "Invalid source object for operation.\n"
+    invalidmsg = "Invalid Source Object for Operation.\n"
     if o.valid:
         o.info.warnings = ""
     else:
@@ -1908,9 +1908,9 @@ def isChainValid(chain, context):
             if so.name == cho.name:
                 found_op = so
         if found_op == None:
-            return (False, f"Couldn't find operation {cho.name}")
+            return (False, f"Couldn't Find Operation {cho.name}")
         if isValid(found_op, context) is False:
-            return (False, f"Operation {found_op.name} is not valid")
+            return (False, f"Operation {found_op.name} Is Not Valid")
     return (True, "")
 
 
@@ -1920,8 +1920,8 @@ def updateOperationValid(self, context):
 
 # Update functions start here
 def updateChipload(self, context):
-    """this is very simple computation of chip size, could be very much improved"""
-    print('update chipload ')
+    """This Is Very Simple Computation of Chip Size, Could Be Very Much Improved"""
+    print('Update Chipload ')
     o = self
     # Old chipload
     o.info.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
@@ -1942,15 +1942,15 @@ def updateChipload(self, context):
 
 
 def updateOffsetImage(self, context):
-    """refresh offset image tag for rerendering"""
+    """Refresh Offset Image Tag for Rerendering"""
     updateChipload(self, context)
-    print('update offset')
+    print('Update Offset')
     self.changed = True
     self.update_offsetimage_tag = True
 
 
 def updateZbufferImage(self, context):
-    """changes tags so offset and zbuffer images get updated on calculation time."""
+    """Changes Tags so Offset and Zbuffer Images Get Updated on Calculation Time."""
     # print('updatezbuf')
     # print(self,context)
     self.changed = True
@@ -1962,7 +1962,7 @@ def updateZbufferImage(self, context):
 def updateStrategy(o, context):
     """"""
     o.changed = True
-    print('update strategy')
+    print('Update Strategy')
     if o.machine_axes == '5' or (
             o.machine_axes == '4' and o.strategy4axis == 'INDEXED'):  # INDEXED 4 AXIS DOESN'T EXIST NOW...
         addOrientationObject(o)
@@ -1976,35 +1976,35 @@ def updateCutout(o, context):
 
 
 def updateExact(o, context):
-    print('update exact ')
+    print('Update Exact ')
     o.changed = True
     o.update_zbufferimage_tag = True
     o.update_offsetimage_tag = True
     if o.optimisation.use_exact:
         if o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse:
             o.optimisation.use_opencamlib = False
-            print('Current operation cannot use exact mode')
+            print('Current Operation Cannot Use Exact Mode')
     else:
         o.optimisation.use_opencamlib = False
 
 
 def updateOpencamlib(o, context):
-    print('update opencamlib ')
+    print('Update OpenCAMLib ')
     o.changed = True
     if o.optimisation.use_opencamlib and (
             o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS'):
         o.optimisation.use_exact = False
         o.optimisation.use_opencamlib = False
-        print('Current operation cannot use opencamlib')
+        print('Current Operation Cannot Use OpenCAMLib')
 
 
 def updateBridges(o, context):
-    print('update bridges ')
+    print('Update Bridges ')
     o.changed = True
 
 
 def updateRotation(o, context):
-    print('update rotation')
+    print('Update Rotation')
     if o.enable_B or o.enable_A:
         print(o, o.rotation_A)
         ob = bpy.data.objects[o.object_name]
@@ -2029,7 +2029,7 @@ def updateRotation(o, context):
 #    o.changed = True
 
 def updateRest(o, context):
-    print('update rest ')
+    print('Update Rest ')
     o.changed = True
 
 
@@ -2101,7 +2101,7 @@ def update_zbuffer_image(self, context):
 
 @bpy.app.handlers.persistent
 def check_operations_on_load(context):
-    """checks any broken computations on load and reset them."""
+    """Checks Any Broken Computations on Load and Reset Them."""
     s = bpy.context.scene
     for o in s.cam_operations:
         if o.computing:
@@ -2113,7 +2113,7 @@ def check_operations_on_load(context):
         machine_preset = bpy.context.preferences.addons[
             "cam"].preferences.machine_preset = bpy.context.preferences.addons["cam"].preferences.default_machine_preset
         if len(machine_preset) > 0:
-            print("Loading preset:", machine_preset)
+            print("Loading Preset:", machine_preset)
             # load last used machine preset
             bpy.ops.script.execute_preset(
                 filepath=machine_preset, menu_idname="CAM_MACHINE_MT_presets"

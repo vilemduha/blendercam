@@ -23,14 +23,14 @@ from ..constants import PRECISION
 class CAM_OPTIMISATION_Properties(PropertyGroup):
 
     optimize: BoolProperty(
-        name="Reduce path points",
+        name="Reduce Path Points",
         description="Reduce path points",
         default=True,
         update=update_operation,
     )
 
     optimize_threshold: FloatProperty(
-        name="Reduction threshold in μm",
+        name="Reduction Threshold in μm",
         default=.2,
         min=0.000000001,
         max=1000,
@@ -39,7 +39,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
     )
 
     use_exact: BoolProperty(
-        name="Use exact mode",
+        name="Use Exact Mode",
         description="Exact mode allows greater precision, but is slower "
         "with complex meshes",
         default=True,
@@ -47,7 +47,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
     )
 
     imgres_limit: IntProperty(
-        name="Maximum resolution in megapixels",
+        name="Maximum Resolution in Megapixels",
         default=16,
         min=1,
         max=512,
@@ -57,7 +57,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
     )
 
     pixsize: FloatProperty(
-        name="sampling raster detail",
+        name="Sampling Raster Detail",
         default=0.0001,
         min=0.00001,
         max=0.1,
@@ -74,7 +74,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
     )
 
     exact_subdivide_edges: BoolProperty(
-        name="Auto subdivide long edges",
+        name="Auto Subdivide Long Edges",
         description="This can avoid some collision issues when "
         "importing CAD models",
         default=False,
@@ -82,7 +82,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
     )
 
     circle_detail: IntProperty(
-        name="Detail of circles used for curve offsets",
+        name="Detail of Circles Used for Curve Offsets",
         default=64,
         min=12,
         max=512,
@@ -90,7 +90,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
     )
 
     simulation_detail: FloatProperty(
-        name="Simulation sampling raster detail",
+        name="Simulation Sampling Raster Detail",
         default=0.0002,
         min=0.00001,
         max=0.01,
@@ -101,8 +101,8 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
 
 
 class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
-    """CAM optimisation panel"""
-    bl_label = "CAM optimisation"
+    """CAM Optimisation Panel"""
+    bl_label = "CAM Optimisation"
     bl_idname = "WORLD_PT_CAM_OPTIMISATION"
     panel_interface_level = 2
 
@@ -150,7 +150,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
         ocl_version = opencamlib_version()
 
         if ocl_version is None:
-            self.layout.label(text="Opencamlib is not available ")
+            self.layout.label(text="OpenCAMLib is not Available ")
             self.layout.prop(self.op.optimisation, 'exact_subdivide_edges')
         else:
             self.layout.prop(self.op.optimisation, 'use_opencamlib')

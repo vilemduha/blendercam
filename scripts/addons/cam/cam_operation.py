@@ -57,17 +57,17 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     filename: StringProperty(
-        name="File name",
+        name="File Name",
         default="Operation",
         update=updateRest,
     )
     auto_export: BoolProperty(
-        name="Auto export",
-        description="export files immediately after path calculation",
+        name="Auto Export",
+        description="Export files immediately after path calculation",
         default=True,
     )
     remove_redundant_points: BoolProperty(
-        name="Symplify Gcode",
+        name="Simplify G-code",
         description="Remove redundant points sharing the same angle"
                     " as the start vector",
         default=False,
@@ -80,19 +80,19 @@ class camOperation(PropertyGroup):
         max=1000,
     )
     hide_all_others: BoolProperty(
-        name="Hide all others",
-        description="Hide all other tool pathes except toolpath"
-                    " assotiated with selected CAM operation",
+        name="Hide All Others",
+        description="Hide all other tool paths except toolpath"
+                    " associated with selected CAM operation",
         default=False,
     )
     parent_path_to_object: BoolProperty(
-        name="Parent path to object",
+        name="Parent Path to Object",
         description="Parent generated CAM path to source object",
         default=False,
     )
     object_name: StringProperty(
         name='Object',
-        description='object handled by this operation',
+        description='Object handled by this operation',
         update=updateOperationValid,
     )
     collection_name: StringProperty(
@@ -101,26 +101,26 @@ class camOperation(PropertyGroup):
         update=updateOperationValid,
     )
     curve_object: StringProperty(
-        name='Curve source',
-        description='curve which will be sampled along the 3d object',
+        name='Curve Source',
+        description='Curve which will be sampled along the 3D object',
         update=operationValid,
     )
     curve_object1: StringProperty(
-        name='Curve target',
-        description='curve which will serve as attractor for the '
+        name='Curve Target',
+        description='Curve which will serve as attractor for the '
         'cutter when the cutter follows the curve',
         update=operationValid,
     )
     source_image_name: StringProperty(
-        name='image_source',
+        name='Image Source',
         description='image source',
         update=operationValid,
     )
     geometry_source: EnumProperty(
-        name='Source of data',
+        name='Data Source',
         items=(
-            ('OBJECT', 'object', 'a'),
-            ('COLLECTION', 'Collection of objects', 'a'),
+            ('OBJECT', 'Object', 'a'),
+            ('COLLECTION', 'Collection of Objects', 'a'),
             ('IMAGE', 'Image', 'a')
         ),
         description='Geometry source',
@@ -130,30 +130,30 @@ class camOperation(PropertyGroup):
     cutter_type: EnumProperty(
         name='Cutter',
         items=(
-            ('END', 'End', 'end - flat cutter'),
-            ('BALLNOSE', 'Ballnose', 'ballnose cutter'),
-            ('BULLNOSE', 'Bullnose', 'bullnose cutter ***placeholder **'),
-            ('VCARVE', 'V-carve', 'v carve cutter'),
+            ('END', 'End', 'End - Flat cutter'),
+            ('BALLNOSE', 'Ballnose', 'Ballnose cutter'),
+            ('BULLNOSE', 'Bullnose', 'Bullnose cutter ***placeholder **'),
+            ('VCARVE', 'V-carve', 'V-carve cutter'),
             ('BALLCONE', 'Ballcone', 'Ball with a Cone for Parallel - X'),
             ('CYLCONE', 'Cylinder cone',
-             'Cylinder end with a Cone for Parallel - X'),
+             'Cylinder End with a Cone for Parallel - X'),
             ('LASER', 'Laser', 'Laser cutter'),
             ('PLASMA', 'Plasma', 'Plasma cutter'),
             ('CUSTOM', 'Custom-EXPERIMENTAL',
-             'modelled cutter - not well tested yet.')
+             'Modelled cutter - not well tested yet.')
         ),
         description='Type of cutter used',
         default='END',
         update=updateZbufferImage,
     )
     cutter_object_name: StringProperty(
-        name='Cutter object',
-        description='object used as custom cutter for this operation',
+        name='Cutter Object',
+        description='Object used as custom cutter for this operation',
         update=updateZbufferImage,
     )
 
     machine_axes: EnumProperty(
-        name='Number of axes',
+        name='Number of Axes',
         items=(
             ('3', '3 axis', 'a'),
             ('4', '#4 axis - EXPERIMENTAL', 'a'),
@@ -171,7 +171,7 @@ class camOperation(PropertyGroup):
     )
 
     strategy4axis: EnumProperty(
-        name='4 axis Strategy',
+        name='4 Axis Strategy',
         items=(
             ('PARALLELR', 'Parallel around 1st rotary axis',
              'Parallel lines around first rotary axis'),
@@ -191,7 +191,7 @@ class camOperation(PropertyGroup):
         name='Strategy',
         items=(
             ('INDEXED', 'Indexed 3-axis',
-             'all 3 axis strategies, just rotated by 4+5th axes'),
+             'All 3 axis strategies, just rotated by 4+5th axes'),
         ),
         description='5 axis Strategy',
         default='INDEXED',
@@ -199,7 +199,7 @@ class camOperation(PropertyGroup):
     )
 
     rotary_axis_1: EnumProperty(
-        name='Rotary axis',
+        name='Rotary Axis',
         items=(
             ('X', 'X', ''),
             ('Y', 'Y', ''),
@@ -210,7 +210,7 @@ class camOperation(PropertyGroup):
         update=updateStrategy,
     )
     rotary_axis_2: EnumProperty(
-        name='Rotary axis 2',
+        name='Rotary Axis 2',
         items=(
             ('X', 'X', ''),
             ('Y', 'Y', ''),
@@ -232,20 +232,20 @@ class camOperation(PropertyGroup):
         update=updateOffsetImage,
     )
     inverse: BoolProperty(
-        name="Inverse milling",
+        name="Inverse Milling",
         description="Male to female model conversion",
         default=False,
         update=updateOffsetImage,
     )
     array: BoolProperty(
-        name="Use array",
+        name="Use Array",
         description="Create a repetitive array for producing the "
         "same thing many times",
         default=False,
         update=updateRest,
     )
     array_x_count: IntProperty(
-        name="X count",
+        name="X Count",
         description="X count",
         default=1,
         min=1,
@@ -253,7 +253,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     array_y_count: IntProperty(
-        name="Y count",
+        name="Y Count",
         description="Y count",
         default=1,
         min=1,
@@ -261,8 +261,8 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     array_x_distance: FloatProperty(
-        name="X distance",
-        description="distance between operation origins",
+        name="X Distance",
+        description="Distance between operation origins",
         min=0.00001,
         max=1.0,
         default=0.01,
@@ -271,8 +271,8 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     array_y_distance: FloatProperty(
-        name="Y distance",
-        description="distance between operation origins",
+        name="Y Distance",
+        description="Distance between operation origins",
         min=0.00001,
         max=1.0,
         default=0.01,
@@ -293,8 +293,8 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     pocketToCurve: BoolProperty(
-        name="Pocket to curve",
-        description="generates a curve instead of a path",
+        name="Pocket to Curve",
+        description="Generates a curve instead of a path",
         default=False,
         update=updateRest,
     )
@@ -304,14 +304,14 @@ class camOperation(PropertyGroup):
         items=(
             ('OUTSIDE', 'Outside', 'a'),
             ('INSIDE', 'Inside', 'a'),
-            ('ONLINE', 'On line', 'a')
+            ('ONLINE', 'On Line', 'a')
         ),
         description='Type of cutter used',
         default='OUTSIDE',
         update=updateRest,
     )
     outlines_count: IntProperty(
-        name="Outlines count",
+        name="Outlines Count",
         description="Outlines count",
         default=1,
         min=1,
@@ -326,7 +326,7 @@ class camOperation(PropertyGroup):
     )
     # cutter
     cutter_id: IntProperty(
-        name="Tool number",
+        name="Tool Number",
         description="For machines which support tool change based on tool id",
         min=0,
         max=10000,
@@ -334,7 +334,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     cutter_diameter: FloatProperty(
-        name="Cutter diameter",
+        name="Cutter Diameter",
         description="Cutter diameter = 2x cutter radius",
         min=0.000001,
         max=10,
@@ -354,7 +354,7 @@ class camOperation(PropertyGroup):
         update=updateOffsetImage,
     )
     cutter_length: FloatProperty(
-        name="#Cutter length",
+        name="#Cutter Length",
         description="#not supported#Cutter length",
         min=0.0,
         max=100.0,
@@ -364,7 +364,7 @@ class camOperation(PropertyGroup):
         update=updateOffsetImage,
     )
     cutter_flutes: IntProperty(
-        name="Cutter flutes",
+        name="Cutter Flutes",
         description="Cutter flutes",
         min=1,
         max=20,
@@ -372,8 +372,8 @@ class camOperation(PropertyGroup):
         update=updateChipload,
     )
     cutter_tip_angle: FloatProperty(
-        name="Cutter v-carve angle",
-        description="Cutter v-carve angle",
+        name="Cutter V-carve Angle",
+        description="Cutter V-carve angle",
         min=0.0,
         max=180.0,
         default=60.0,
@@ -381,7 +381,7 @@ class camOperation(PropertyGroup):
         update=updateOffsetImage,
     )
     ball_radius: FloatProperty(
-        name="Ball radius",
+        name="Ball Radius",
         description="Radius of",
         min=0.0,
         max=0.035,
@@ -410,46 +410,46 @@ class camOperation(PropertyGroup):
     )
 
     Laser_on: StringProperty(
-        name="Laser ON string",
+        name="Laser ON String",
         default="M68 E0 Q100",
     )
     Laser_off: StringProperty(
-        name="Laser OFF string",
+        name="Laser OFF String",
         default="M68 E0 Q0",
     )
     Laser_cmd: StringProperty(
-        name="Laser command",
+        name="Laser Command",
         default="M68 E0 Q",
     )
     Laser_delay: FloatProperty(
         name="Laser ON Delay",
-        description="time after fast move to turn on laser and "
+        description="Time after fast move to turn on laser and "
         "let machine stabilize",
         default=0.2,
     )
     Plasma_on: StringProperty(
-        name="Plasma ON string",
+        name="Plasma ON String",
         default="M03",
     )
     Plasma_off: StringProperty(
-        name="Plasma OFF string",
+        name="Plasma OFF String",
         default="M05",
     )
     Plasma_delay: FloatProperty(
         name="Plasma ON Delay",
-        description="time after fast move to turn on Plasma and "
+        description="Time after fast move to turn on Plasma and "
         "let machine stabilize",
         default=0.1,
     )
     Plasma_dwell: FloatProperty(
-        name="Plasma dwell time",
+        name="Plasma Dwell Time",
         description="Time to dwell and warm up the torch",
         default=0.0,
     )
 
     # steps
     dist_between_paths: FloatProperty(
-        name="Distance between toolpaths",
+        name="Distance Between Toolpaths",
         default=0.001,
         min=0.00001,
         max=32,
@@ -458,7 +458,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     dist_along_paths: FloatProperty(
-        name="Distance along toolpaths",
+        name="Distance Along Toolpaths",
         default=0.0002,
         min=0.00001,
         max=32,
@@ -467,7 +467,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     parallel_angle: FloatProperty(
-        name="Angle of paths",
+        name="Angle of Paths",
         default=0,
         min=-360,
         max=360,
@@ -478,7 +478,7 @@ class camOperation(PropertyGroup):
     )
 
     old_rotation_A: FloatProperty(
-        name="A axis angle",
+        name="A Axis Angle",
         description="old value of Rotate A axis\nto specified angle",
         default=0,
         min=-360,
@@ -490,7 +490,7 @@ class camOperation(PropertyGroup):
     )
 
     old_rotation_B: FloatProperty(
-        name="A axis angle",
+        name="A Axis Angle",
         description="old value of Rotate A axis\nto specified angle",
         default=0,
         min=-360,
@@ -502,7 +502,7 @@ class camOperation(PropertyGroup):
     )
 
     rotation_A: FloatProperty(
-        name="A axis angle",
+        name="A Axis Angle",
         description="Rotate A axis\nto specified angle",
         default=0,
         min=-360,
@@ -513,7 +513,7 @@ class camOperation(PropertyGroup):
         update=updateRotation,
     )
     enable_A: BoolProperty(
-        name="Enable A axis",
+        name="Enable A Axis",
         description="Rotate A axis",
         default=False,
         update=updateRotation,
@@ -526,7 +526,7 @@ class camOperation(PropertyGroup):
     )
 
     rotation_B: FloatProperty(
-        name="B axis angle",
+        name="B Axis Angle",
         description="Rotate B axis\nto specified angle",
         default=0,
         min=-360,
@@ -537,7 +537,7 @@ class camOperation(PropertyGroup):
         update=updateRotation,
     )
     enable_B: BoolProperty(
-        name="Enable B axis",
+        name="Enable B Axis",
         description="Rotate B axis",
         default=False,
         update=updateRotation,
@@ -545,7 +545,7 @@ class camOperation(PropertyGroup):
 
     # carve only
     carve_depth: FloatProperty(
-        name="Carve depth",
+        name="Carve Depth",
         default=0.001,
         min=-.100,
         max=32,
@@ -556,11 +556,11 @@ class camOperation(PropertyGroup):
 
     # drill only
     drill_type: EnumProperty(
-        name='Holes on',
+        name='Holes On',
         items=(
-            ('MIDDLE_SYMETRIC', 'Middle of symetric curves', 'a'),
-            ('MIDDLE_ALL', 'Middle of all curve parts', 'a'),
-            ('ALL_POINTS', 'All points in curve', 'a')
+            ('MIDDLE_SYMETRIC', 'Middle of Symmetric Curves', 'a'),
+            ('MIDDLE_ALL', 'Middle of All Curve Parts', 'a'),
+            ('ALL_POINTS', 'All Points in Curve', 'a')
         ),
         description='Strategy to detect holes to drill',
         default='MIDDLE_SYMETRIC',
@@ -568,7 +568,7 @@ class camOperation(PropertyGroup):
     )
     # waterline only
     slice_detail: FloatProperty(
-        name="Distance betwen slices",
+        name="Distance Between Slices",
         default=0.001,
         min=0.00001,
         max=32,
@@ -577,13 +577,13 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     waterline_fill: BoolProperty(
-        name="Fill areas between slices",
+        name="Fill Areas Between Slices",
         description="Fill areas between slices in waterline mode",
         default=True,
         update=updateRest,
     )
     waterline_project: BoolProperty(
-        name="Project paths - not recomended",
+        name="Project Paths - Not Recomended",
         description="Project paths in areas between slices",
         default=True,
         update=updateRest,
@@ -607,8 +607,8 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     lead_in: FloatProperty(
-        name="Lead in radius",
-        description="Lead out radius for torch or laser to turn off",
+        name="Lead-in Radius",
+        description="Lead in radius for torch or laser to turn off",
         min=0.00,
         max=1,
         default=0.0,
@@ -616,7 +616,7 @@ class camOperation(PropertyGroup):
         unit="LENGTH",
     )
     lead_out: FloatProperty(
-        name="Lead out radius",
+        name="Lead-out Radius",
         description="Lead out radius for torch or laser to turn off",
         min=0.00,
         max=1,
@@ -625,7 +625,7 @@ class camOperation(PropertyGroup):
         unit="LENGTH",
     )
     profile_start: IntProperty(
-        name="Start point",
+        name="Start Point",
         description="Start point offset",
         min=0,
         default=0,
@@ -635,7 +635,7 @@ class camOperation(PropertyGroup):
     # helix_angle: FloatProperty(name="Helix ramp angle", default=3*pi/180, min=0.00001, max=pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
 
     minz: FloatProperty(
-        name="Operation depth end",
+        name="Operation Depth End",
         default=-0.01,
         min=-3,
         max=3,
@@ -645,7 +645,7 @@ class camOperation(PropertyGroup):
     )
 
     minz_from: EnumProperty(
-        name='Set max depth from',
+        name='Max Depth From',
         description='Set maximum operation depth',
         items=(
             ('OBJECT', 'Object', 'Set max operation depth from Object'),
@@ -657,10 +657,10 @@ class camOperation(PropertyGroup):
     )
 
     start_type: EnumProperty(
-        name='Start type',
+        name='Start Type',
         items=(
             ('ZLEVEL', 'Z level', 'Starts on a given Z level'),
-            ('OPERATIONRESULT', 'Rest milling',
+            ('OPERATIONRESULT', 'Rest Milling',
              'For rest milling, operations have to be '
              'put in chain for this to work well.'),
         ),
@@ -670,7 +670,7 @@ class camOperation(PropertyGroup):
     )
 
     maxz: FloatProperty(
-        name="Operation depth start",
+        name="Operation Depth Start",
         description='operation starting depth',
         default=0,
         min=-3,
@@ -681,7 +681,7 @@ class camOperation(PropertyGroup):
     )  # EXPERIMENTAL
 
     first_down: BoolProperty(
-        name="First down",
+        name="First Down",
         description="First go down on a contour, then go to the next one",
         default=False,
         update=update_operation,
@@ -692,7 +692,7 @@ class camOperation(PropertyGroup):
     ####################################################
 
     source_image_scale_z: FloatProperty(
-        name="Image source depth scale",
+        name="Image Source Depth Scale",
         default=0.01,
         min=-1,
         max=1,
@@ -701,7 +701,7 @@ class camOperation(PropertyGroup):
         update=updateZbufferImage,
     )
     source_image_size_x: FloatProperty(
-        name="Image source x size",
+        name="Image Source X Size",
         default=0.1,
         min=-10,
         max=10,
@@ -710,7 +710,7 @@ class camOperation(PropertyGroup):
         update=updateZbufferImage,
     )
     source_image_offset: FloatVectorProperty(
-        name='Image offset',
+        name='Image Offset',
         default=(0, 0, 0),
         unit='LENGTH',
         precision=constants.PRECISION,
@@ -719,7 +719,7 @@ class camOperation(PropertyGroup):
     )
 
     source_image_crop: BoolProperty(
-        name="Crop source image",
+        name="Crop Source Image",
         description="Crop source image - the position of the sub-rectangle "
         "is relative to the whole image, so it can be used for e.g. "
         "finishing just a part of an image",
@@ -727,7 +727,7 @@ class camOperation(PropertyGroup):
         update=updateZbufferImage,
     )
     source_image_crop_start_x: FloatProperty(
-        name='crop start x',
+        name='Crop Start X',
         default=0,
         min=0,
         max=100,
@@ -736,7 +736,7 @@ class camOperation(PropertyGroup):
         update=updateZbufferImage,
     )
     source_image_crop_start_y: FloatProperty(
-        name='crop start y',
+        name='Crop Start Y',
         default=0,
         min=0,
         max=100,
@@ -745,7 +745,7 @@ class camOperation(PropertyGroup):
         update=updateZbufferImage,
     )
     source_image_crop_end_x: FloatProperty(
-        name='crop end x',
+        name='Crop End X',
         default=100,
         min=0,
         max=100,
@@ -754,7 +754,7 @@ class camOperation(PropertyGroup):
         update=updateZbufferImage,
     )
     source_image_crop_end_y: FloatProperty(
-        name='crop end y',
+        name='Crop End Y',
         default=100,
         min=0,
         max=100,
@@ -770,13 +770,13 @@ class camOperation(PropertyGroup):
     ambient_behaviour: EnumProperty(
         name='Ambient',
         items=(('ALL', 'All', 'a'), ('AROUND', 'Around', 'a')),
-        description='handling ambient surfaces',
+        description='Handling ambient surfaces',
         default='ALL',
         update=updateZbufferImage,
     )
 
     ambient_radius: FloatProperty(
-        name="Ambient radius",
+        name="Ambient Radius",
         description="Radius around the part which will be milled if "
         "ambient is set to Around",
         min=0.0,
@@ -788,21 +788,21 @@ class camOperation(PropertyGroup):
     )
     # ambient_cutter = EnumProperty(name='Borders',items=(('EXTRAFORCUTTER', 'Extra for cutter', "Extra space for cutter is cut around the segment"),('ONBORDER', "Cutter on edge", "Cutter goes exactly on edge of ambient with it's middle") ,('INSIDE', "Inside segment", 'Cutter stays within segment')	 ),description='handling of ambient and cutter size',default='INSIDE')
     use_limit_curve: BoolProperty(
-        name="Use limit curve",
+        name="Use Limit Curve",
         description="A curve limits the operation area",
         default=False,
         update=updateRest,
     )
     ambient_cutter_restrict: BoolProperty(
-        name="Cutter stays in ambient limits",
+        name="Cutter Stays in Ambient Limits",
         description="Cutter doesn't get out from ambient limits otherwise "
         "goes on the border exactly",
         default=True,
         update=updateRest,
     )  # restricts cutter inside ambient only
     limit_curve: StringProperty(
-        name='Limit curve',
-        description='curve used to limit the area of the operation',
+        name='Limit Curve',
+        description='Curve used to limit the area of the operation',
         update=updateRest,
     )
 
@@ -818,7 +818,7 @@ class camOperation(PropertyGroup):
         update=updateChipload,
     )
     plunge_feedrate: FloatProperty(
-        name="Plunge speed ",
+        name="Plunge Speed",
         description="% of feedrate",
         min=0.1,
         max=100.0,
@@ -828,8 +828,8 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     plunge_angle: FloatProperty(
-        name="Plunge angle",
-        description="What angle is allready considered to plunge",
+        name="Plunge Angle",
+        description="What angle is already considered to plunge",
         default=pi / 6,
         min=0,
         max=pi * 0.5,
@@ -839,7 +839,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     spindle_rpm: FloatProperty(
-        name="Spindle rpm",
+        name="Spindle RPM",
         description="Spindle speed ",
         min=0,
         max=60000,
@@ -850,21 +850,21 @@ class camOperation(PropertyGroup):
     # optimization and performance
 
     do_simulation_feedrate: BoolProperty(
-        name="Adjust feedrates with simulation EXPERIMENTAL",
+        name="Adjust Feedrates with Simulation EXPERIMENTAL",
         description="Adjust feedrates with simulation",
         default=False,
         update=updateRest,
     )
 
     dont_merge: BoolProperty(
-        name="Dont merge outlines when cutting",
+        name="Don't Merge Outlines when Cutting",
         description="this is usefull when you want to cut around everything",
         default=False,
         update=updateRest,
     )
 
     pencil_threshold: FloatProperty(
-        name="Pencil threshold",
+        name="Pencil Threshold",
         default=0.00002,
         min=0.00000001,
         max=1,
@@ -874,7 +874,7 @@ class camOperation(PropertyGroup):
     )
 
     crazy_threshold1: FloatProperty(
-        name="min engagement",
+        name="Min Engagement",
         default=0.02,
         min=0.00000001,
         max=100,
@@ -882,7 +882,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     crazy_threshold5: FloatProperty(
-        name="optimal engagement",
+        name="Optimal Engagement",
         default=0.3,
         min=0.00000001,
         max=100,
@@ -890,7 +890,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     crazy_threshold2: FloatProperty(
-        name="max engagement",
+        name="Max Engagement",
         default=0.5,
         min=0.00000001,
         max=100,
@@ -898,7 +898,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     crazy_threshold3: FloatProperty(
-        name="max angle",
+        name="Max Angle",
         default=2,
         min=0.00000001,
         max=100,
@@ -906,7 +906,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     crazy_threshold4: FloatProperty(
-        name="test angle step",
+        name="Test Angle Step",
         default=0.05,
         min=0.00000001,
         max=100,
@@ -915,8 +915,8 @@ class camOperation(PropertyGroup):
     )
     # Add pocket operation to medial axis
     add_pocket_for_medial: BoolProperty(
-        name="Add pocket operation",
-        description="clean unremoved material after medial axis",
+        name="Add Pocket Operation",
+        description="Clean unremoved material after medial axis",
         default=True,
         update=updateRest,
     )
@@ -930,7 +930,7 @@ class camOperation(PropertyGroup):
     )
     ####
     medial_axis_threshold: FloatProperty(
-        name="Long vector threshold",
+        name="Long Vector Threshold",
         default=0.001,
         min=0.00000001,
         max=100,
@@ -939,7 +939,7 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
     medial_axis_subdivision: FloatProperty(
-        name="Fine subdivision",
+        name="Fine Subdivision",
         default=0.0002,
         min=0.00000001,
         max=100,
@@ -951,20 +951,20 @@ class camOperation(PropertyGroup):
 
     # bridges
     use_bridges: BoolProperty(
-        name="Use bridges",
-        description="use bridges in cutout",
+        name="Use Bridges / Tabs",
+        description="Use bridges in cutout",
         default=False,
         update=updateBridges,
     )
     bridges_width: FloatProperty(
-        name='width of bridges',
+        name='Bridge / Tab Width',
         default=0.002,
         unit='LENGTH',
         precision=constants.PRECISION,
         update=updateBridges,
     )
     bridges_height: FloatProperty(
-        name='height of bridges',
+        name='Bridge / Tab Height',
         description="Height from the bottom of the cutting operation",
         default=0.0005,
         unit='LENGTH',
@@ -972,13 +972,13 @@ class camOperation(PropertyGroup):
         update=updateBridges,
     )
     bridges_collection_name: StringProperty(
-        name='Bridges Collection',
+        name='Bridges / Tabs Collection',
         description='Collection of curves used as bridges',
         update=operationValid,
     )
     use_bridge_modifiers: BoolProperty(
-        name="use bridge modifiers",
-        description="include bridge curve modifiers using render level when "
+        name="Use Bridge / Tab Modifiers",
+        description="Include bridge curve modifiers using render level when "
         "calculating operation, does not effect original bridge data",
         default=True,
         update=updateBridges,
@@ -998,8 +998,8 @@ class camOperation(PropertyGroup):
     # bridges_max_distance = FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=constants.PRECISION, update = updateBridges)
 
     use_modifiers: BoolProperty(
-        name="use mesh modifiers",
-        description="include mesh modifiers using render level when "
+        name="Use Mesh Modifiers",
+        description="Include mesh modifiers using render level when "
         "calculating operation, does not effect original mesh",
         default=True,
         update=operationValid,
@@ -1013,14 +1013,14 @@ class camOperation(PropertyGroup):
     # MATERIAL SETTINGS
 
     min: FloatVectorProperty(
-        name='Operation minimum',
+        name='Operation Minimum',
         default=(0, 0, 0),
         unit='LENGTH',
         precision=constants.PRECISION,
         subtype="XYZ",
     )
     max: FloatVectorProperty(
-        name='Operation maximum',
+        name='Operation Maximum',
         default=(0, 0, 0),
         unit='LENGTH',
         precision=constants.PRECISION,
@@ -1029,54 +1029,54 @@ class camOperation(PropertyGroup):
 
     # g-code options for operation
     output_header: BoolProperty(
-        name="output g-code header",
-        description="output user defined g-code command header"
+        name="Output G-code Header",
+        description="Output user defined G-code command header"
         " at start of operation",
         default=False,
     )
 
     gcode_header: StringProperty(
-        name="g-code header",
-        description="g-code commands at start of operation."
+        name="G-code Header",
+        description="G-code commands at start of operation."
         " Use ; for line breaks",
         default="G53 G0",
     )
 
     enable_dust: BoolProperty(
-        name="Dust collector",
-        description="output user defined g-code command header"
+        name="Dust Collector",
+        description="Output user defined g-code command header"
         " at start of operation",
         default=False,
     )
 
     gcode_start_dust_cmd: StringProperty(
-        name="Start dust collector",
-        description="commands to start dust collection. Use ; for line breaks",
+        name="Start Dust Collector",
+        description="Commands to start dust collection. Use ; for line breaks",
         default="M100",
     )
 
     gcode_stop_dust_cmd: StringProperty(
-        name="Stop dust collector",
-        description="command to stop dust collection. Use ; for line breaks",
+        name="Stop Dust Collector",
+        description="Command to stop dust collection. Use ; for line breaks",
         default="M101",
     )
 
     enable_hold: BoolProperty(
-        name="Hold down",
-        description="output hold down command at start of operation",
+        name="Hold Down",
+        description="Output hold down command at start of operation",
         default=False,
     )
 
     gcode_start_hold_cmd: StringProperty(
-        name="g-code header",
-        description="g-code commands at start of operation."
+        name="G-code Header",
+        description="G-code commands at start of operation."
         " Use ; for line breaks",
         default="M102",
     )
 
     gcode_stop_hold_cmd: StringProperty(
-        name="g-code header",
-        description="g-code commands at end operation. Use ; for line breaks",
+        name="G-code Header",
+        description="G-code commands at end operation. Use ; for line breaks",
         default="M103",
     )
 
@@ -1087,28 +1087,27 @@ class camOperation(PropertyGroup):
     )
 
     gcode_start_mist_cmd: StringProperty(
-        name="g-code header",
-        description="g-code commands at start of operation."
-        " Use ; for line breaks",
+        name="Start Mist",
+        description="Command to start mist. Use ; for line breaks",
         default="M104",
     )
 
     gcode_stop_mist_cmd: StringProperty(
-        name="g-code header",
-        description="g-code commands at end operation. Use ; for line breaks",
+        name="Stop Mist",
+        description="Command to stop mist. Use ; for line breaks",
         default="M105",
     )
 
     output_trailer: BoolProperty(
-        name="output g-code trailer",
-        description="output user defined g-code command trailer"
+        name="Output G-code Trailer",
+        description="Output user defined g-code command trailer"
         " at end of operation",
         default=False,
     )
 
     gcode_trailer: StringProperty(
-        name="g-code trailer",
-        description="g-code commands at end of operation."
+        name="G-code Trailer",
+        description="G-code commands at end of operation."
         " Use ; for line breaks",
         default="M02",
     )
@@ -1126,40 +1125,40 @@ class camOperation(PropertyGroup):
     borderwidth = 50
     object = None
     path_object_name: StringProperty(
-        name='Path object',
-        description='actual cnc path'
+        name='Path Object',
+        description='Actual CNC path'
     )
 
     # update and tags and related
 
     changed: BoolProperty(
-        name="True if any of the operation settings has changed",
-        description="mark for update",
+        name="True if any of the Operation Settings has Changed",
+        description="Mark for update",
         default=False,
     )
     update_zbufferimage_tag: BoolProperty(
-        name="mark zbuffer image for update",
-        description="mark for update",
+        name="Mark Z-Buffer Image for Update",
+        description="Mark for update",
         default=True,
     )
     update_offsetimage_tag: BoolProperty(
-        name="mark offset image for update",
-        description="mark for update",
+        name="Mark Offset Image for Update",
+        description="Mark for update",
         default=True,
     )
     update_silhouete_tag: BoolProperty(
-        name="mark silhouete image for update",
-        description="mark for update",
+        name="Mark Silhouette Image for Update",
+        description="Mark for update",
         default=True,
     )
     update_ambient_tag: BoolProperty(
-        name="mark ambient polygon for update",
-        description="mark for update",
+        name="Mark Ambient Polygon for Update",
+        description="Mark for update",
         default=True,
     )
     update_bullet_collision_tag: BoolProperty(
-        name="mark bullet collisionworld for update",
-        description="mark for update",
+        name="Mark Bullet Collision World for Update",
+        description="Mark for update",
         default=True,
     )
 
@@ -1169,24 +1168,24 @@ class camOperation(PropertyGroup):
         default=True,
     )
     changedata: StringProperty(
-        name='changedata',
+        name='Changedata',
         description='change data for checking if stuff changed.',
     )
 
     # process related data
 
     computing: BoolProperty(
-        name="Computing right now",
+        name="Computing Right Now",
         description="",
         default=False,
     )
     pid: IntProperty(
-        name="process id",
+        name="Process Id",
         description="Background process id",
         default=-1,
     )
     outtext: StringProperty(
-        name='outtext',
+        name='Outtext',
         description='outtext',
         default='',
     )

@@ -46,19 +46,19 @@ from . import (
 
 # boolean operations for curve objects
 class CamCurveBoolean(Operator):
-    """perform Boolean operation on two or more curves"""
+    """Perform Boolean Operation on Two or More Curves"""
     bl_idname = "object.curve_boolean"
     bl_label = "Curve Boolean"
     bl_options = {'REGISTER', 'UNDO'}
 
     boolean_type: EnumProperty(
-        name='type',
+        name='Type',
         items=(
             ('UNION', 'Union', ''),
             ('DIFFERENCE', 'Difference', ''),
             ('INTERSECT', 'Intersect', '')
         ),
-        description='boolean type',
+        description='Boolean type',
         default='UNION'
     )
 
@@ -76,7 +76,7 @@ class CamCurveBoolean(Operator):
 
 
 class CamCurveConvexHull(Operator):
-    """perform hull operation on single or multiple curves"""  # by Alain Pelletier april 2021
+    """Perform Hull Operation on Single or Multiple Curves"""  # by Alain Pelletier april 2021
     bl_idname = "object.convex_hull"
     bl_label = "Convex Hull"
     bl_options = {'REGISTER', 'UNDO'}
@@ -92,13 +92,13 @@ class CamCurveConvexHull(Operator):
 
 # intarsion or joints
 class CamCurveIntarsion(Operator):
-    """makes curve cuttable both inside and outside, for intarsion and joints"""
+    """Makes Curve Cuttable Both Inside and Outside, for Intarsion and Joints"""
     bl_idname = "object.curve_intarsion"
     bl_label = "Intarsion"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     diameter: FloatProperty(
-        name="cutter diameter",
+        name="Cutter Diameter",
         default=.001,
         min=0,
         max=0.025,
@@ -106,7 +106,7 @@ class CamCurveIntarsion(Operator):
         unit="LENGTH",
     )
     tolerance: FloatProperty(
-        name="cutout Tolerance",
+        name="Cutout Tolerance",
         default=.0001,
         min=0,
         max=0.005,
@@ -114,7 +114,7 @@ class CamCurveIntarsion(Operator):
         unit="LENGTH",
     )
     backlight: FloatProperty(
-        name="Backlight seat",
+        name="Backlight Seat",
         default=0.000,
         min=0,
         max=0.010,
@@ -122,7 +122,7 @@ class CamCurveIntarsion(Operator):
         unit="LENGTH",
     )
     perimeter_cut: FloatProperty(
-        name="Perimeter cut offset",
+        name="Perimeter Cut Offset",
         default=0.000,
         min=0,
         max=0.100,
@@ -130,7 +130,7 @@ class CamCurveIntarsion(Operator):
         unit="LENGTH",
     )
     base_thickness: FloatProperty(
-        name="Base material thickness",
+        name="Base Material Thickness",
         default=0.000,
         min=0,
         max=0.100,
@@ -138,7 +138,7 @@ class CamCurveIntarsion(Operator):
         unit="LENGTH",
     )
     intarsion_thickness: FloatProperty(
-        name="Intarsion material thickness",
+        name="Intarsion Material Thickness",
         default=0.000,
         min=0,
         max=0.100,
@@ -146,7 +146,7 @@ class CamCurveIntarsion(Operator):
         unit="LENGTH",
     )
     backlight_depth_from_top: FloatProperty(
-        name="Backlight well depth",
+        name="Backlight Well Depth",
         default=0.000,
         min=0,
         max=0.100,
@@ -214,13 +214,13 @@ class CamCurveIntarsion(Operator):
 
 # intarsion or joints
 class CamCurveOvercuts(Operator):
-    """Adds overcuts for slots"""
+    """Adds Overcuts for Slots"""
     bl_idname = "object.curve_overcuts"
-    bl_label = "Add Overcuts"
+    bl_label = "Add Overcuts - A"
     bl_options = {'REGISTER', 'UNDO'}
 
     diameter: FloatProperty(
-        name="diameter",
+        name="Diameter",
         default=.003175,
         min=0,
         max=100,
@@ -228,7 +228,7 @@ class CamCurveOvercuts(Operator):
         unit="LENGTH",
     )
     threshold: FloatProperty(
-        name="threshold",
+        name="Threshold",
         default=pi / 2 * .99,
         min=-3.14,
         max=3.14,
@@ -237,7 +237,7 @@ class CamCurveOvercuts(Operator):
         unit="ROTATION",
     )
     do_outer: BoolProperty(
-        name="Outer polygons",
+        name="Outer Polygons",
         default=True,
     )
     invert: BoolProperty(
@@ -322,13 +322,13 @@ class CamCurveOvercuts(Operator):
 
 # Overcut type B
 class CamCurveOvercutsB(Operator):
-    """Adds overcuts for slots"""
+    """Adds Overcuts for Slots"""
     bl_idname = "object.curve_overcuts_b"
-    bl_label = "Add Overcuts-B"
+    bl_label = "Add Overcuts - B"
     bl_options = {'REGISTER', 'UNDO'}
 
     diameter: FloatProperty(
-        name="Tool diameter",
+        name="Tool Diameter",
         default=.003175,
         description='Tool bit diameter used in cut operation',
         min=0,
@@ -337,7 +337,7 @@ class CamCurveOvercutsB(Operator):
         unit="LENGTH",
     )
     style: EnumProperty(
-        name="style",
+        name="Style",
         items=(
             ('OPEDGE', 'opposite edge',
              'place corner overcuts on opposite edges'),
@@ -359,7 +359,7 @@ class CamCurveOvercutsB(Operator):
         unit="ROTATION",
     )
     do_outer: BoolProperty(
-        name="Include outer curve",
+        name="Include Outer Curve",
         description='Include the outer curve if there are curves inside',
         default=True,
     )
@@ -369,7 +369,7 @@ class CamCurveOvercutsB(Operator):
         default=True,
     )
     otherEdge: BoolProperty(
-        name="other edge",
+        name="Other Edge",
         description='change to the other edge for the overcut to be on',
         default=False,
     )
@@ -592,9 +592,9 @@ class CamCurveOvercutsB(Operator):
 
 
 class CamCurveRemoveDoubles(Operator):
-    """curve remove doubles"""
+    """Curve Remove Doubles"""
     bl_idname = "object.curve_remove_doubles"
-    bl_label = "C-Remove doubles"
+    bl_label = "Remove Curve Doubles"
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -604,11 +604,11 @@ class CamCurveRemoveDoubles(Operator):
     def execute(self, context):
         obs = bpy.context.selected_objects
         #bpy.context.object.data.dimensions = '3D'
-        bpy.context.object.data.resolution_u = 32
+        #bpy.context.object.data.resolution_u = 32
         for ob in obs:
             bpy.context.view_layer.objects.active = ob
             if bpy.context.mode == 'OBJECT':
-               bpy.ops.object.editmode_toggle()
+                bpy.ops.object.editmode_toggle()
             bpy.ops.curve.select_all()
             bpy.ops.curve.decimate(ratio=1)
             bpy.ops.curve.remove_double(distance=0.0001)
@@ -618,13 +618,13 @@ class CamCurveRemoveDoubles(Operator):
 
 
 class CamMeshGetPockets(Operator):
-    """Detect pockets in a mesh and extract them as curves"""
+    """Detect Pockets in a Mesh and Extract Them as Curves"""
     bl_idname = "object.mesh_get_pockets"
-    bl_label = "Get pocket surfaces"
+    bl_label = "Get Pocket Surfaces"
     bl_options = {'REGISTER', 'UNDO'}
 
     threshold: FloatProperty(
-        name="horizontal threshold",
+        name="Horizontal Threshold",
         description="How horizontal the surface must be for a pocket: "
         "1.0 perfectly flat, 0.0 is any orientation",
         default=.99,
@@ -633,8 +633,8 @@ class CamMeshGetPockets(Operator):
         precision=4,
     )
     zlimit: FloatProperty(
-        name="z limit",
-        description="maximum z height considered for pocket operation, "
+        name="Z Limit",
+        description="Maximum z height considered for pocket operation, "
         "default is 0.0",
         default=0.0,
         min=-1000.0,
@@ -729,13 +729,13 @@ class CamMeshGetPockets(Operator):
 
 # this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
 class CamOffsetSilhouete(Operator):
-    """Curve offset operation """
+    """Curve Offset Operation """
     bl_idname = "object.silhouete_offset"
-    bl_label = "Silhouete offset"
+    bl_label = "Silhouette Offset"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     offset: FloatProperty(
-        name="offset",
+        name="Offset",
         default=.003,
         min=-100,
         max=100,
@@ -751,7 +751,7 @@ class CamOffsetSilhouete(Operator):
         unit="LENGTH",
     )
     style: EnumProperty(
-        name="type of curve",
+        name="Type of Curve",
         items=(
             ('1', 'Round', ''),
             ('2', 'Mitre', ''),
@@ -759,7 +759,7 @@ class CamOffsetSilhouete(Operator):
         ),
     )
     opencurve: BoolProperty(
-        name="Dialate open curve",
+        name="Dialate Open Curve",
         default=False,
     )
 
@@ -804,9 +804,9 @@ class CamOffsetSilhouete(Operator):
 
 # Finds object silhouette, usefull for meshes, since with curves it's not needed.
 class CamObjectSilhouete(Operator):
-    """Object silhouete """
+    """Object Silhouette"""
     bl_idname = "object.silhouete"
-    bl_label = "Object silhouete"
+    bl_label = "Object Silhouette"
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod

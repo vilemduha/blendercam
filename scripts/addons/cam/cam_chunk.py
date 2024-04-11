@@ -318,7 +318,7 @@ class camPathChunk:
         self.rotations.reverse()
 
     def pop(self, index):
-        print("WARNING: Popping from chunk is slow", self, index)
+        print("WARNING: Popping from Chunk Is Slow", self, index)
         self.points = np.concatenate(
             (self.points[0:index], self.points[index + 1:]), axis=0
         )
@@ -391,7 +391,7 @@ class camPathChunk:
                 self.rotations[at_index:at_index] = rotations
 
     def clip_points(self, minx, maxx, miny, maxy):
-        """remove any points outside this range"""
+        """Remove Any Points Outside This Range"""
         included_values = (self.points[:, 0] >= minx) and (
             (self.points[:, 0] <= maxx)
             and (self.points[:, 1] >= maxy)
@@ -700,12 +700,12 @@ class camPathChunk:
 
         if self.parents:  # if it is inside another parent
             perimeterDirection ^= 1  # toggle with a bitwise XOR
-            print("has parent")
+            print("Has Parent")
 
         if perimeterDirection == 1:
-            print("path direction is Clockwise")
+            print("Path Direction Is Clockwise")
         else:
-            print("path direction is counterclockwise")
+            print("Path Direction Is Counter Clockwise")
         iradius = o.lead_in
         oradius = o.lead_out
         start = self.points[0]
@@ -797,7 +797,7 @@ def _optimize_internal(
         return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]
 
     def _applyVerticalLimit(v1, v2, cos_limit):
-        """test path segment on verticality threshold, for protect_vertical option"""
+        """Test Path Segment on Verticality Threshold, for Protect_vertical Option"""
         z = abs(v1[2] - v2[2])
         if z > 0:
             # don't use this vector because dot product of 0,0,1 is trivially just v2[2]
@@ -1147,7 +1147,7 @@ def meshFromCurveToChunk(object):
     lastvi = 0
     vtotal = len(mesh.vertices)
     perc = 0
-    progress("processing curve - START - Vertices: " + str(vtotal))
+    progress("Processing Curve - START - Vertices: " + str(vtotal))
     for vi in range(0, len(mesh.vertices) - 1):
         co = (mesh.vertices[vi].co + object.location).to_tuple()
         if not dk.isdisjoint([(vi, vi + 1)]) and d[(vi, vi + 1)] == 1:
@@ -1173,7 +1173,7 @@ def meshFromCurveToChunk(object):
                 chunks.append(chunk)
             chunk = camPathChunkBuilder()
 
-    progress("processing curve - FINISHED")
+    progress("Processing Curve - FINISHED")
 
     vi = len(mesh.vertices) - 1
     chunk.points.append(
@@ -1238,7 +1238,7 @@ def meshFromCurve(o, use_modifiers=False):
         bpy.ops.object.convert(target="CURVE", keep_original=False)
     elif co.type != "CURVE":  # curve must be a curve...
         bpy.ops.object.delete()  # delete temporary object
-        raise CamException("Source curve object must be of type CURVE")
+        raise CamException("Source Curve Object Must Be of Type Curve")
     co.data.dimensions = "3D"
     co.data.bevel_depth = 0
     co.data.extrude = 0
@@ -1305,7 +1305,7 @@ def chunkToShapely(chunk):
 
 
 def chunksRefine(chunks, o):
-    """add extra points in between for chunks"""
+    """Add Extra Points in Between for Chunks"""
     for ch in chunks:
         # print('before',len(ch))
         newchunk = []
@@ -1338,7 +1338,7 @@ def chunksRefine(chunks, o):
 
 
 def chunksRefineThreshold(chunks, distance, limitdistance):
-    """add extra points in between for chunks. For medial axis strategy only !"""
+    """Add Extra Points in Between for Chunks. for Medial Axis Strategy only!"""
     for ch in chunks:
         newchunk = []
         v2 = Vector(ch.points[0])

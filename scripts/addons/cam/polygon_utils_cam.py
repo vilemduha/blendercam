@@ -73,7 +73,7 @@ def shapelyToMultipolygon(anydata):
         else:
             return sgeometry.MultiPolygon()
     else:
-        print(anydata.type, 'shapely conversion aborted')
+        print(anydata.type, 'Shapely Conversion Aborted')
         return sgeometry.MultiPolygon()
 
 

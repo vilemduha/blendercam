@@ -91,9 +91,9 @@ def pointonline(a, b, c, tolerence):
 
 
 def exportGcodePath(filename, vertslist, operations):
-    """exports gcode with the heeks nc adopted library."""
+    """Exports G-code with the Heeks NC Adopted Library."""
     print("EXPORT")
-    progress('exporting gcode file')
+    progress('Exporting G-code File')
     t = time.time()
     s = bpy.context.scene
     m = s.cam_machine
@@ -113,7 +113,7 @@ def exportGcodePath(filename, vertslist, operations):
         if totops > m.split_limit:
             split = True
             filesnum = ceil(totops / m.split_limit)
-            print('file will be separated into %i files' % filesnum)
+            print('File Will Be Separated Into %i Files' % filesnum)
     print('1')
 
     basefilename = bpy.data.filepath[:-
@@ -203,7 +203,7 @@ def exportGcodePath(filename, vertslist, operations):
         # start program
         c.program_begin(0, filename)
         c.flush_nc()
-        c.comment('G-code generated with BlenderCAM and NC library')
+        c.comment('G-code Generated with BlenderCAM and NC library')
         # absolute coordinates
         c.absolute()
 
@@ -571,7 +571,7 @@ async def getPath(context, operation):  # should do all path calculations.
             pr.enable()
             await getPath3axis(context, operation)
             pr.disable()
-            pr.dump_stats(time.strftime("blendercam_%Y%m%d_%H%M.prof"))
+            pr.dump_stats(time.strftime("BlenderCAM_%Y%m%d_%H%M.prof"))
         else:
             await getPath3axis(context, operation)
 
@@ -600,8 +600,8 @@ async def getPath(context, operation):  # should do all path calculations.
 
 
 def getChangeData(o):
-    """this is a function to check if object props have changed,
-    to see if image updates are needed in the image based method"""
+    """This Is a Function to Check if Object Props Have Changed,
+    to See if Image Updates Are Needed in the Image Based Method"""
     changedata = ''
     obs = []
     if o.geometry_source == 'OBJECT':
@@ -628,8 +628,8 @@ def checkMemoryLimit(o):
     if res > limit:
         ratio = (res / limit)
         o.optimisation.pixsize = o.optimisation.pixsize * sqrt(ratio)
-        o.info.warnings += f"Memory limit: sampling resolution reduced to {o.optimisation.pixsize:.2e}\n"
-        print('changing sampling resolution to %f' % o.optimisation.pixsize)
+        o.info.warnings += f"Memory limit: Sampling Resolution Reduced to {o.optimisation.pixsize:.2e}\n"
+        print('Changing Sampling Resolution to %f' % o.optimisation.pixsize)
 
 
 # this is the main function.

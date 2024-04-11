@@ -5,7 +5,7 @@ from .buttons_panel import CAMButtonsPanel
 
 
 class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
-    """CAM cutter panel"""
+    """CAM Cutter Panel"""
     bl_label = "CAM Cutter"
     bl_idname = "WORLD_PT_CAM_CUTTER"
     panel_interface_level = 0
@@ -95,9 +95,9 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
         if self.op.cutter_type in ['CUSTOM']:
             if self.op.optimisation.use_exact:
                 self.layout.label(
-                    text='Warning - only convex shapes are supported. ', icon='COLOR_RED')
-                self.layout.label(text='If your custom cutter is concave,')
-                self.layout.label(text='switch exact mode off.')
+                    text='Warning - only Convex Shapes Are Supported. ', icon='COLOR_RED')
+                self.layout.label(text='If Your Custom Cutter Is Concave,')
+                self.layout.label(text='Switch Exact Mode Off.')
             self.layout.prop_search(self.op, "cutter_object_name", bpy.data, "objects")
 
     def draw_cutter_diameter(self):
@@ -129,7 +129,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
         else:
             engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
 
-        self.layout.label(text=f"Cutter engagement: {engagement}%")
+        self.layout.label(text=f"Cutter Engagement: {engagement}%")
 
         if engagement > 50:
             self.layout.label(text="WARNING: CUTTER ENGAGEMENT > 50%")

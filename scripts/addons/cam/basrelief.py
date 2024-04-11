@@ -557,7 +557,7 @@ def numpysave(a, iname):
 
 def numpytoimage(a, iname):
     t = time.time()
-    print('numpy to image - here')
+    print('Numpy to Image - Here')
     t = time.time()
     print(a.shape[0], a.shape[1])
     foundimage = False
@@ -625,7 +625,7 @@ def tonemap(i, exponent):
 
 
 def vert(column, row, z, XYscaling, Zscaling):
-    """ Create a single vert """
+    """ Create a Single Vert """
     return column * XYscaling, row * XYscaling, z * Zscaling
 
 
@@ -641,7 +641,7 @@ def buildMesh(mesh_z, br):
             bpy.data.objects.remove(object)
             print("old basrelief removed")
 
-    print("Building mesh")
+    print("Building Mesh")
     numY = mesh_z.shape[1]
     numX = mesh_z.shape[0]
     print(numX, numY)
@@ -687,24 +687,24 @@ def buildMesh(mesh_z, br):
     bpy.context.active_object.location = (float(
         br.justifyx)*br.widthmm/1000, float(br.justifyy)*br.heightmm/1000, float(br.justifyz)*br.thicknessmm/1000)
 
-    print("faces:" + str(len(ob.data.polygons)))
-    print("vertices:" + str(len(ob.data.vertices)))
+    print("Faces:" + str(len(ob.data.polygons)))
+    print("Vertices:" + str(len(ob.data.vertices)))
     if decimateRatio > 0.95:
-        print("skipping decimate ratio > 0.95")
+        print("Skipping Decimate Ratio > 0.95")
     else:
         m = ob.modifiers.new(name="Foo", type='DECIMATE')
         m.ratio = decimateRatio
-        print("decimating with ratio:"+str(decimateRatio))
+        print("Decimating with Ratio:"+str(decimateRatio))
         bpy.ops.object.modifier_apply(modifier=m.name)
-        print("decimated")
-        print("faces:" + str(len(ob.data.polygons)))
-        print("vertices:" + str(len(ob.data.vertices)))
+        print("Decimated")
+        print("Faces:" + str(len(ob.data.polygons)))
+        print("Vertices:" + str(len(ob.data.vertices)))
 
 # Switches to cycles render to CYCLES to render the sceen then switches it back to BLENDERCAM_RENDER for basRelief
 
 
 def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view_layer):
-    print("rendering scene")
+    print("Rendering Scene")
     scene = bpy.context.scene
     # make sure we're in object mode or else bad things happen
     if bpy.context.active_object:
@@ -745,7 +745,7 @@ def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view
     if our_viewer is not None:
         nodes.remove(our_viewer)
     bpy.context.scene.render.engine = 'BLENDERCAM_RENDER'
-    print("done rendering")
+    print("Done Rendering")
 
 
 def problemAreas(br):
@@ -869,7 +869,7 @@ def relief(br):
     print("Range:", nar.min(), nar.max())
     if nar.min() - nar.max() == 0:
         raise ReliefError(
-            "Input image is blank - check you have the correct view layer or input image set.")
+            "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set.")
 
     gx = nar.copy()
     gx.fill(0)
@@ -994,20 +994,20 @@ def relief(br):
 
 class BasReliefsettings(bpy.types.PropertyGroup):
     use_image_source: BoolProperty(
-        name="Use image source",
+        name="Use Image Source",
         description="",
         default=False,
     )
     source_image_name: StringProperty(
-        name='Image source',
+        name='Image Source',
         description='image source',
     )
     view_layer_name: StringProperty(
-        name='View layer source',
+        name='View Layer Source',
         description='Make a bas-relief from whatever is on this view layer',
     )
     bit_diameter: FloatProperty(
-        name="Diameter of ball end in mm",
+        name="Diameter of Ball End in mm",
         description="Diameter of bit which will be used for carving",
         min=0.01,
         max=50.0,
@@ -1015,7 +1015,7 @@ class BasReliefsettings(bpy.types.PropertyGroup):
         precision=PRECISION,
     )
     pass_per_radius: IntProperty(
-        name="Passes per radius",
+        name="Passes per Radius",
         description="Amount of passes per radius\n(more passes, "
         "more mesh precision)",
         default=2,
@@ -1023,13 +1023,13 @@ class BasReliefsettings(bpy.types.PropertyGroup):
         max=10,
     )
     widthmm: IntProperty(
-        name="Desired width in mm",
+        name="Desired Width in mm",
         default=200,
         min=5,
         max=4000,
     )
     heightmm: IntProperty(
-        name="Desired height in mm",
+        name="Desired Height in mm",
         default=150,
         min=5,
         max=4000,
@@ -1070,7 +1070,7 @@ class BasReliefsettings(bpy.types.PropertyGroup):
     )
 
     depth_exponent: FloatProperty(
-        name="Depth exponent",
+        name="Depth Exponent",
         description="Initial depth map is taken to this power. Higher = "
         "sharper relief",
         min=0.5,
@@ -1080,7 +1080,7 @@ class BasReliefsettings(bpy.types.PropertyGroup):
     )
 
     silhouette_threshold: FloatProperty(
-        name="Silhouette threshold",
+        name="Silhouette Threshold",
         description="Silhouette threshold",
         min=0.000001,
         max=1.0,
@@ -1088,12 +1088,12 @@ class BasReliefsettings(bpy.types.PropertyGroup):
         precision=PRECISION,
     )
     recover_silhouettes: BoolProperty(
-        name="Recover silhouettes",
+        name="Recover Silhouettes",
         description="",
         default=True,
     )
     silhouette_scale: FloatProperty(
-        name="Silhouette scale",
+        name="Silhouette Scale",
         description="Silhouette scale",
         min=0.000001,
         max=5.0,
@@ -1101,15 +1101,15 @@ class BasReliefsettings(bpy.types.PropertyGroup):
         precision=PRECISION,
     )
     silhouette_exponent: IntProperty(
-        name="Silhouette square exponent",
-        description="If lower, true depht distances between objects will be "
+        name="Silhouette Square Exponent",
+        description="If lower, true depth distances between objects will be "
         "more visibe in the relief",
         default=3,
         min=0,
         max=5,
     )
     attenuation: FloatProperty(
-        name="Gradient attenuation",
+        name="Gradient Attenuation",
         description="Gradient attenuation",
         min=0.000001,
         max=100.0,
@@ -1117,39 +1117,39 @@ class BasReliefsettings(bpy.types.PropertyGroup):
         precision=PRECISION,
     )
     min_gridsize: IntProperty(
-        name="Minimum grid size",
+        name="Minimum Grid Size",
         default=16,
         min=2,
         max=512,
     )
     smooth_iterations: IntProperty(
-        name="Smooth iterations",
+        name="Smooth Iterations",
         default=1,
         min=1,
         max=64,
     )
     vcycle_iterations: IntProperty(
-        name="V-cycle iterations",
-        description="set up higher for plananr constraint",
+        name="V-Cycle Iterations",
+        description="Set higher for planar constraint",
         default=2,
         min=1,
         max=128,
     )
     linbcg_iterations: IntProperty(
-        name="Linbcg iterations",
-        description="set lower for flatter relief, and when using "
+        name="LINBCG Iterations",
+        description="Set lower for flatter relief, and when using "
         "planar constraint",
         default=5,
         min=1,
         max=64,
     )
     use_planar: BoolProperty(
-        name="Use planar constraint",
+        name="Use Planar Constraint",
         description="",
         default=False,
     )
     gradient_scaling_mask_use: BoolProperty(
-        name="Scale gradients with mask",
+        name="Scale Gradients with Mask",
         description="",
         default=False,
     )
@@ -1164,16 +1164,16 @@ class BasReliefsettings(bpy.types.PropertyGroup):
     )
 
     gradient_scaling_mask_name: StringProperty(
-        name='Scaling mask name',
-        description='mask name',
+        name='Scaling Mask Name',
+        description='Mask name',
     )
     scale_down_before_use: BoolProperty(
-        name="Scale down image before processing",
+        name="Scale Down Image Before Processing",
         description="",
         default=False,
     )
     scale_down_before: FloatProperty(
-        name="Image scale",
+        name="Image Scale",
         description="Image scale",
         min=0.025,
         max=1.0,
@@ -1181,13 +1181,13 @@ class BasReliefsettings(bpy.types.PropertyGroup):
         precision=PRECISION,
     )
     detail_enhancement_use: BoolProperty(
-        name="Enhance details ",
-        description="enhance details by frequency analysis",
+        name="Enhance Details",
+        description="Enhance details by frequency analysis",
         default=False,
     )
     #detail_enhancement_freq=FloatProperty(name="frequency limit", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
     detail_enhancement_amount: FloatProperty(
-        name="amount",
+        name="Amount",
         description="Image scale",
         min=0.025,
         max=1.0,
@@ -1196,15 +1196,15 @@ class BasReliefsettings(bpy.types.PropertyGroup):
     )
 
     advanced: BoolProperty(
-        name="Advanced options",
-        description="show advanced options",
+        name="Advanced Options",
+        description="Show advanced options",
         default=True,
     )
 
 
 class BASRELIEF_Panel(bpy.types.Panel):
-    """Bas relief panel"""
-    bl_label = "Bas relief"
+    """Bas Relief Panel"""
+    bl_label = "Bas Relief"
     bl_idname = "WORLD_PT_BASRELIEF"
 
     bl_space_type = "PROPERTIES"
@@ -1229,7 +1229,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
 
         # if br:
         # cutter preset
-        layout.operator("scene.calculate_bas_relief", text="Calculate relief")
+        layout.operator("scene.calculate_bas_relief", text="Calculate Relief")
         layout.prop(br, 'advanced')
         layout.prop(br, 'use_image_source')
         if br.use_image_source:
@@ -1238,7 +1238,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
             layout.prop_search(br, 'view_layer_name',
                                bpy.context.scene, "view_layers")
         layout.prop(br, 'depth_exponent')
-        layout.label(text="Project parameters")
+        layout.label(text="Project Parameters")
         layout.prop(br, 'bit_diameter')
         layout.prop(br, 'pass_per_radius')
         layout.prop(br, 'widthmm')
@@ -1293,9 +1293,9 @@ class ReliefError(Exception):
 
 
 class DoBasRelief(bpy.types.Operator):
-    """calculate Bas relief"""
+    """Calculate Bas Relief"""
     bl_idname = "scene.calculate_bas_relief"
-    bl_label = "calculate Bas relief"
+    bl_label = "Calculate Bas Relief"
     bl_options = {'REGISTER', 'UNDO'}
 
     processes = []
@@ -1322,9 +1322,9 @@ class DoBasRelief(bpy.types.Operator):
 
 
 class ProblemAreas(bpy.types.Operator):
-    """find Bas relief Problem areas"""
+    """Find Bas Relief Problem Areas"""
     bl_idname = "scene.problemareas_bas_relief"
-    bl_label = "problem areas Bas relief"
+    bl_label = "Problem Areas Bas Relief"
     bl_options = {'REGISTER', 'UNDO'}
 
     processes = []

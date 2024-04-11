@@ -98,7 +98,7 @@ class CustomPanel(Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
-    bl_label = "Import Gcode"
+    bl_label = "Import G-code"
     bl_idname = "OBJECT_PT_importgcode"
 
     bl_options = {'DEFAULT_CLOSED'}
@@ -119,7 +119,7 @@ class CustomPanel(Panel):
         col = layout.column(align=True)
         col = col.row(align=True)
         col.split()
-        col.label(text="Segment length")
+        col.label(text="Segment Length")
 
         col.prop(isettings, "max_segment_size")
         col.enabled = isettings.subdivide
@@ -131,9 +131,9 @@ class CustomPanel(Panel):
 
 
 class WM_OT_gcode_import(Operator, ImportHelper):
-    """Import Gcode, travel lines don't get drawn"""
+    """Import G-code, Travel Lines Don't Get Drawn"""
     bl_idname = "wm.gcode_import"  # important since its how bpy.ops.import_test.some_data is constructed
-    bl_label = "Import Gcode"
+    bl_label = "Import G-code"
 
     # ImportHelper mixin class uses this
     filename_ext = ".txt"
@@ -162,7 +162,7 @@ class import_settings(PropertyGroup):
         default=False,
     )
     output: EnumProperty(
-        name="output type",
+        name="Output Type",
         items=(
             ("mesh", "Mesh", "Make a mesh output"),
             ("curve", "Curve", "Make curve output"),
@@ -171,7 +171,7 @@ class import_settings(PropertyGroup):
     )
     max_segment_size: FloatProperty(
         name="",
-        description="Only Segments bigger then this value get subdivided",
+        description="Only Segments bigger than this value get subdivided",
         default=0.001,
         min=0.0001,
         max=1.0,
