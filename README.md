@@ -100,7 +100,7 @@ BlenderCAM works on Windows or Linux.
 ```graphql
 .
 ├── config - # 'startup' and 'userpref' blend files
-├── documentation - # Markdown guides and images
+├── documentation - # How to Use (Wiki) - files
 ├── Examples - # Bas Relief & Intarsion operation demo files and images
 ├── scripts
 │   └── addons
@@ -108,12 +108,12 @@ BlenderCAM works on Windows or Linux.
 │           ├── nc - # Post-Processors
 │           ├── opencamlib - # OpenCAMLib functions
 │           ├── presets - # Quick access to pre-defined cutting tools, machines and operations
-│           |   ├── cam_cutters
-│           |   ├── cam_machines
-│           |   └── cam_operations
-|           ├── tests - # Developer Tests
-|           |   └── test_data - # Test output
-|           └── ui_panels - # User Interface
+│           │   ├── cam_cutters
+│           │   ├── cam_machines
+│           │   └── cam_operations
+│           ├── tests - # Developer Tests
+│           │   └── test_data - # Test output
+│           └── ui_panels - # User Interface
 └── static - # Logo
 
 ```
