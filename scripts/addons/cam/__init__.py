@@ -122,6 +122,22 @@ from .ops import (
     timer_update,
 )
 from .pack import PackObjectsSettings
+from .pie_menu.pie_cam import VIEW3D_MT_PIE_CAM
+from .pie_menu.pie_chains import VIEW3D_MT_PIE_Chains
+from .pie_menu.pie_curvecreators import VIEW3D_MT_PIE_CurveCreators
+from .pie_menu.pie_curvetools import VIEW3D_MT_PIE_CurveTools
+from .pie_menu.pie_info import VIEW3D_MT_PIE_Info
+from .pie_menu.pie_machine import VIEW3D_MT_PIE_Machine
+from .pie_menu.pie_material import VIEW3D_MT_PIE_Material
+from .pie_menu.pie_pack_slice_relief import VIEW3D_MT_PIE_PackSliceRelief
+from .pie_menu.active_op.pie_area import VIEW3D_MT_PIE_Area
+from .pie_menu.active_op.pie_cutter import VIEW3D_MT_PIE_Cutter
+from .pie_menu.active_op.pie_feedrate import VIEW3D_MT_PIE_Feedrate
+from .pie_menu.active_op.pie_gcode import VIEW3D_MT_PIE_Gcode
+from .pie_menu.active_op.pie_movement import VIEW3D_MT_PIE_Movement
+from .pie_menu.active_op.pie_operation import VIEW3D_MT_PIE_Operation
+from .pie_menu.active_op.pie_optimisation import VIEW3D_MT_PIE_Optimisation
+from .pie_menu.active_op.pie_setup import VIEW3D_MT_PIE_Setup
 from .preferences import CamAddonPreferences
 from .preset_managers import (
     AddPresetCamCutter,
@@ -181,12 +197,12 @@ from .utils import (
 
 
 bl_info = {
-    "name": "CAM - gcode generation tools",
+    "name": "BlenderCAM - G-code Generation Tools",
     "author": "Vilem Novak & Contributors",
-    "version":(1,0,18),
+    "version": (1, 0, 18),
     "blender": (3, 6, 0),
     "location": "Properties > render",
-    "description": "Generate machining paths for CNC",
+    "description": "Generate Machining Paths for CNC",
     "warning": "",
     "doc_url": "https://blendercam.com/",
     "tracker_url": "",
@@ -314,6 +330,24 @@ classes = [
     CustomPanel,
     WM_OT_gcode_import,
 
+    # .pie_menu and .pie_menu.active_op - placed after .ui in case inheritance is possible
+    VIEW3D_MT_PIE_CAM,
+    VIEW3D_MT_PIE_Machine,
+    VIEW3D_MT_PIE_Material,
+    VIEW3D_MT_PIE_Operation,
+    VIEW3D_MT_PIE_Chains,
+    VIEW3D_MT_PIE_Setup,
+    VIEW3D_MT_PIE_Optimisation,
+    VIEW3D_MT_PIE_Area,
+    VIEW3D_MT_PIE_Movement,
+    VIEW3D_MT_PIE_Feedrate,
+    VIEW3D_MT_PIE_Cutter,
+    VIEW3D_MT_PIE_Gcode,
+    VIEW3D_MT_PIE_Info,
+    VIEW3D_MT_PIE_PackSliceRelief,
+    VIEW3D_MT_PIE_CurveCreators,
+    VIEW3D_MT_PIE_CurveTools,
+
     # .cam_operation - last to allow dependencies to register before it
     camOperation,
 ]
@@ -366,6 +400,19 @@ def register() -> None:
     for panel in get_panels():
         panel.COMPAT_ENGINES.add("BLENDERCAM_RENDER")
 
+    wm = bpy.context.window_manager
+    addon_kc = wm.keyconfigs.addon
+
+    km = addon_kc.keymaps.new(name='Object Mode')
+    kmi = km.keymap_items.new(
+        "wm.call_menu_pie",
+        'C',
+        'PRESS',
+        alt=True,
+    )
+    kmi.properties.name = 'VIEW3D_MT_PIE_CAM'
+    kmi.active = True
+
 
 def unregister() -> None:
     for cls in classes:
@@ -389,3 +436,10 @@ def unregister() -> None:
     for panel in get_panels():
         if 'BLENDERCAM_RENDER' in panel.COMPAT_ENGINES:
             panel.COMPAT_ENGINES.remove('BLENDERCAM_RENDER')
+
+    wm = bpy.context.window_manager
+    active_kc = wm.keyconfigs.active
+
+    for key in active_kc.keymaps['Object Mode'].keymap_items:
+        if (key.idname == 'wm.call_menu' and key.properties.name == 'VIEW3D_MT_PIE_CAM'):
+            active_kc.keymaps['Object Mode'].keymap_items.remove(key)
