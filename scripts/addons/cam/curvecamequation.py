@@ -37,7 +37,7 @@ from . import parametric
 class CamSineCurve(bpy.types.Operator):
     """Object Sine """  # by Alain Pelletier april 2021
     bl_idname = "object.sine"
-    bl_label = "Create Periodic Wave"
+    bl_label = "Periodic Wave"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     #    zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
@@ -195,7 +195,7 @@ class CamSineCurve(bpy.types.Operator):
 class CamLissajousCurve(bpy.types.Operator):
     """Lissajous """  # by Alain Pelletier april 2021
     bl_idname = "object.lissajous"
-    bl_label = "Create Lissajous Figure"
+    bl_label = "Lissajous Figure"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     amplitude_A: FloatProperty(
@@ -332,7 +332,7 @@ class CamLissajousCurve(bpy.types.Operator):
 class CamHypotrochoidCurve(bpy.types.Operator):
     """Hypotrochoid """  # by Alain Pelletier april 2021
     bl_idname = "object.hypotrochoid"
-    bl_label = "Create Spirograph Type Figure"
+    bl_label = "Spirograph Type Figure"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     typecurve: EnumProperty(
@@ -426,7 +426,7 @@ class CamHypotrochoidCurve(bpy.types.Operator):
 class CamCustomCurve(bpy.types.Operator):
     """Object Custom Curve """  # by Alain Pelletier april 2021
     bl_idname = "object.customcurve"
-    bl_label = "Create Custom Curve"
+    bl_label = "Custom Curve"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     xstring: StringProperty(
