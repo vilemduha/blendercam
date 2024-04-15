@@ -18,7 +18,7 @@
 
 - - -
 
-### • [About](#About) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contributing](#-contributing) • [License](#-license) • [Disclaimer](#-disclaimer) •
+### • [About](#About) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer) •
 
 - - - 
 
@@ -119,7 +119,7 @@ BlenderCAM works on Windows or Linux.
 
 
 
-## 🤝 Contributing
+## 🤝 Contribute
 #### BlenderCAM is in active development.
 
 Originally created by [Vilem Novak](https://github.com/vilemduha), the addon is currently maintained by [Alain Pelletier](https://github.com/pppalain) and a team of contributors. 
@@ -143,9 +143,9 @@ Hirutso Enni, Kurt Jensen, Dan Falck, Dan Heeks, Brad Collette, Michael Haberler
 BlenderCAM is licensed under GPLv3, __UNLESS OTHERWISE INDICATED__.
 
 > [!NOTE]
-> Some files in this addon use code from other sources, see the file docstring a the top of each file for attribution and license information.
+> _Some files in this addon use code from other sources, see the file docstring a the top of each file for attribution and license information._
 > 
-> Please ensure that you read and abide by the license terms given for each file.
+> _Please ensure that you read and abide by the license terms given for each file._
 
 ## 🤕 DISCLAIMER
 > [!WARNING]
