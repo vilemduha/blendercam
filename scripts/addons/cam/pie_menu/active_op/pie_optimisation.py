@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_optimisation.py'
+
+'Operation Optimisation' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 

@@ -1,4 +1,8 @@
-# used by OpenCAMLib sampling
+"""BlenderCAM 'oclSample.py'
+
+Functions used by OpenCAMLib sampling.
+"""
+
 import os
 from subprocess import call
 import tempfile

@@ -1,3 +1,8 @@
+"""BlenderCAM 'info.py'
+
+'CAM Info & Warnings' properties and panel in Properties > Render
+"""
+
 import bpy
 from bpy.props import (
     StringProperty,

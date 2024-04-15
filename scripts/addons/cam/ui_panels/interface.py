@@ -1,3 +1,8 @@
+"""BlenderCAM 'interface.py'
+
+'Interface' properties and panel in Properties > Render
+"""
+
 import bpy
 from bpy.props import EnumProperty
 from bpy.types import (

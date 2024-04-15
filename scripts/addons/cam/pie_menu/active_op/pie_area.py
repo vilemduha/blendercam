@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_area.py'
+
+'Operation Area' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 

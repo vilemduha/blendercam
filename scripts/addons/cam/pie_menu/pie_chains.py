@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_chains.py'
+
+'Operations & Chains' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 

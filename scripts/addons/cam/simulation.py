@@ -1,25 +1,8 @@
-# blender CAM utils.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'simulation.py' © 2012 Vilem Novak
 
-# here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py.
+Functions to generate a mesh simulation from CAM Chain / Operation data.
+"""
+
 import math
 import time
 

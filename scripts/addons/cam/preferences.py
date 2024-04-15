@@ -1,3 +1,8 @@
+"""BlenderCAM 'preferences.py'
+
+Class to store all Addon preferences.
+"""
+
 from bpy.props import (
     BoolProperty,
     EnumProperty,

@@ -1,3 +1,8 @@
+"""BlenderCAM 'cutter.py'
+
+'CAM Cutter' panel in Properties > Render
+"""
+
 import bpy
 from bpy.types import Panel
 

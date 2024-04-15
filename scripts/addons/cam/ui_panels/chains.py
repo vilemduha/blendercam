@@ -1,3 +1,8 @@
+"""BlenderCAM 'chains.py'
+
+'CAM Chains' panel in Properties > Render
+"""
+
 import bpy
 from bpy.types import UIList, Panel
 

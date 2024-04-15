@@ -1,3 +1,8 @@
+"""BlenderCAM 'pack.py'
+
+'Pack Curves on Sheet' panel in Properties > Render
+"""
+
 import bpy
 from bpy.types import Panel
 

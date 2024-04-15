@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_curvetools.py'
+
+'Curve Tools' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 

@@ -1,66 +1,63 @@
-# -*- coding: utf-8 -*-
+"""BlenderCAM 'voronoi.py'
 
-#############################################################################
-#
-# Voronoi diagram calculator/ Delaunay triangulator
-#
-# - Voronoi Diagram Sweepline algorithm and C code by Steven Fortune, 1987, http://ect.bell-labs.com/who/sjf/
-# - Python translation to file voronoi.py by Bill Simons, 2005, http://www.oxfish.com/
-# - Additional changes for QGIS by Carson Farmer added November 2010
-# - 2012 Ported to Python 3 and additional clip functions by domlysz at gmail.com
-#
-# Calculate Delaunay triangulation or the Voronoi polygons for a set of
-# 2D input points.
-#
-# Derived from code bearing the following notice:
-#
-#  The author of this software is Steven Fortune.  Copyright (c) 1994 by AT&T
-#  Bell Laboratories.
-#  Permission to use, copy, modify, and distribute this software for any
-#  purpose without fee is hereby granted, provided that this entire notice
-#  is included in all copies of any software which is or includes a copy
-#  or modification of this software and in all copies of the supporting
-#  documentation for such software.
-#  THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED
-#  WARRANTY.  IN PARTICULAR, NEITHER THE AUTHORS NOR AT&T MAKE ANY
-#  REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY
-#  OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
-#
-# Comments were incorporated from Shane O'Sullivan's translation of the
-# original code into C++ (http://mapviewer.skynet.ie/voronoi.html)
-#
-# Steve Fortune's homepage: http://netlib.bell-labs.com/cm/cs/who/sjf/index.html
-#
-#
-#
-# For programmatic use two functions are available:
-#
-#	computeVoronoiDiagram(points, xBuff, yBuff, polygonsOutput=False, formatOutput=False) :
-#	Takes :
-#		- a list of point objects (which must have x and y fields).
-#		- x and y buffer values which are the expansion percentages of the bounding box rectangle including all input points.
-#		Returns :
-#		- With default options :
-#		  A list of 2-tuples, representing the two points of each Voronoi diagram edge.
-#		  Each point contains 2-tuples which are the x,y coordinates of point.
-#		  if formatOutput is True, returns :
-#				- a list of 2-tuples, which are the x,y coordinates of the Voronoi diagram vertices.
-#				- and a list of 2-tuples (v1, v2) representing edges of the Voronoi diagram.
-#				  v1 and v2 are the indices of the vertices at the end of the edge.
-#		- If polygonsOutput option is True, returns :
-#		  A dictionary of polygons, keys are the indices of the input points,
-#		  values contains n-tuples representing the n points of each Voronoi diagram polygon.
-#		  Each point contains 2-tuples which are the x,y coordinates of point.
-#		  if formatOutput is True, returns :
-#				- A list of 2-tuples, which are the x,y coordinates of the Voronoi diagram vertices.
-#				- and a dictionary of input points indices. Values contains n-tuples representing the n points of each Voronoi diagram polygon.
-#				  Each tuple contains the vertex indices of the polygon vertices.
-#
-#	computeDelaunayTriangulation(points):
-#		Takes a list of point objects (which must have x and y fields).
-#		Returns a list of 3-tuples: the indices of the points that form a Delaunay triangle.
-#
-#############################################################################
+Voronoi diagram calculator/ Delaunay triangulator
+
+- Voronoi Diagram Sweepline algorithm and C code by Steven Fortune, 1987, http://ect.bell-labs.com/who/sjf/
+- Python translation to file voronoi.py by Bill Simons, 2005, http://www.oxfish.com/
+- Additional changes for QGIS by Carson Farmer added November 2010
+- 2012 Ported to Python 3 and additional clip functions by domlysz at gmail.com
+
+Calculate Delaunay triangulation or the Voronoi polygons for a set of
+2D input points.
+
+Derived from code bearing the following notice:
+
+The author of this software is Steven Fortune.  Copyright (c) 1994 by AT&T
+Bell Laboratories.
+Permission to use, copy, modify, and distribute this software for any
+purpose without fee is hereby granted, provided that this entire notice
+is included in all copies of any software which is or includes a copy
+or modification of this software and in all copies of the supporting
+documentation for such software.
+THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED
+WARRANTY.  IN PARTICULAR, NEITHER THE AUTHORS NOR AT&T MAKE ANY
+REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY
+OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
+
+Comments were incorporated from Shane O'Sullivan's translation of the
+original code into C++ (http://mapviewer.skynet.ie/voronoi.html)
+
+Steve Fortune's homepage: http://netlib.bell-labs.com/cm/cs/who/sjf/index.html
+
+
+For programmatic use two functions are available:
+
+computeVoronoiDiagram(points, xBuff, yBuff, polygonsOutput=False, formatOutput=False) :
+Takes :
+	- a list of point objects (which must have x and y fields).
+	- x and y buffer values which are the expansion percentages of the bounding box rectangle including all input points.
+	Returns :
+	- With default options :
+	  A list of 2-tuples, representing the two points of each Voronoi diagram edge.
+	  Each point contains 2-tuples which are the x,y coordinates of point.
+	  if formatOutput is True, returns :
+			- a list of 2-tuples, which are the x,y coordinates of the Voronoi diagram vertices.
+			- and a list of 2-tuples (v1, v2) representing edges of the Voronoi diagram.
+			  v1 and v2 are the indices of the vertices at the end of the edge.
+	- If polygonsOutput option is True, returns :
+	  A dictionary of polygons, keys are the indices of the input points,
+	  values contains n-tuples representing the n points of each Voronoi diagram polygon.
+	  Each point contains 2-tuples which are the x,y coordinates of point.
+	  if formatOutput is True, returns :
+			- A list of 2-tuples, which are the x,y coordinates of the Voronoi diagram vertices.
+			- and a dictionary of input points indices. Values contains n-tuples representing the n points of each Voronoi diagram polygon.
+			  Each tuple contains the vertex indices of the polygon vertices.
+
+computeDelaunayTriangulation(points):
+	Takes a list of point objects (which must have x and y fields).
+	Returns a list of 3-tuples: the indices of the points that form a Delaunay triangle.
+"""
+
 import math
 import sys
 

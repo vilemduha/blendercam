@@ -1,3 +1,8 @@
+"""BlenderCAM 'chain.py'
+
+All properties of a CAM Chain (a series of Operations), and the Chain's Operation reference.
+"""
+
 from bpy.props import (
     BoolProperty,
     CollectionProperty,
