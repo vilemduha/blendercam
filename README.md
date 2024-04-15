@@ -124,9 +124,9 @@ BlenderCAM works on Windows or Linux.
 
 Originally created by [Vilem Novak](https://github.com/vilemduha), the addon is currently maintained by [Alain Pelletier](https://github.com/pppalain) and a team of contributors. 
 
-If you wish to contribute to the addon, your code must be GPL or a more permissive license (e.g.: MIT, Public Domain).
-
 If you are a developer who would like to contribute to the project, please fork and open pull requests.
+
+If you wish to contribute to the addon, your code must be GPL or a more permissive license (e.g.: MIT, Public Domain).
 
 > [!TIP]
 > _If you need help or want to discuss about BlenderCAM you can join the [Chat Room #BlenderCAM:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org)._
