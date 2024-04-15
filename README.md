@@ -11,9 +11,11 @@
 
 [![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org)
 [![Chat on Freenode](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](http://webchat.freenode.net/?channels=%23blendercam)
-[![Chat on Freenode](https://img.shields.io/github/issues/vilemduha/blendercam)](https://github.com/vilemduha/blendercam)
+
+[![Issues](https://img.shields.io/github/issues/vilemduha/blendercam)](https://github.com/vilemduha/blendercam)
 ![Last commit](https://img.shields.io/github/last-commit/vilemduha/blendercam)
 ![Contributors](https://img.shields.io/github/contributors/vilemduha/blendercam)
+
 ![Size](https://img.shields.io/github/repo-size/vilemduha/blendercam)
 ![License](https://img.shields.io/github/license/vilemduha/blendercam)
 
