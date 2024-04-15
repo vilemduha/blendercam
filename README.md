@@ -20,7 +20,7 @@
 <br>
 
 
-[About](#About) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contributing](#-contributing) • [License](#-disclaimer)
+[About](#About) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contributing](#-contributing) • [License](#-license) • [Disclaimer](#-disclaimer)
 
 
 <br>
@@ -138,6 +138,15 @@ If you are a developer who would like to contribute to the project, please fork 
 ### Additional Contributors & Acknowledgements
 Hirutso Enni, Kurt Jensen, Dan Falck, Dan Heeks, Brad Collette, Michael Haberler, dhull, jonathanwin, Leemon Baird, Devon (Gorialis) R, Steven Fortune, Bill Simons, Carson Farmer, domlysz
 
+## 🪪 License
+BlenderCAM is licensed under GPLv3, __UNLESS OTHERWISE INDICATED__.
+
+Most files have been written specifically for this addon, though some use code from other sources, see the file docstring a the top of each file for attribution and license information.
+
+If you wish to contribute to the addon, your code must be GPL or a more permissive license (e.g.: MIT, Public Domain).
+
+Please ensure that you read and abide by the license terms given for each file.
+
 ## 🤕 DISCLAIMER
 > [!WARNING]
 THE AUTHORS OF THIS SOFTWARE ACCEPT ABSOLUTELY NO LIABILITY FOR
@@ -154,5 +163,3 @@ from all motors, etc, before persons enter any danger area.
 machinery must be designed to comply with local and national safety
 codes, and the authors of this software can not, and do not, take
 any responsibility for such compliance.
-
-This software is released under the GPLv2.
