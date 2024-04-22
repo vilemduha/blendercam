@@ -1,3 +1,8 @@
+"""BlenderCAM 'oclSample.py'
+
+Functions to sample mesh or curve data for OpenCAMLib processing.
+"""
+
 from math import (
     radians,
     tan

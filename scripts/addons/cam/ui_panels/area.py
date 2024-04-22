@@ -1,3 +1,8 @@
+"""BlenderCAM 'area.py'
+
+'CAM Operation Area' panel in Properties > Render
+"""
+
 import bpy
 from bpy.types import Panel
 

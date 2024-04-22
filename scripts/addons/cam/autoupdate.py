@@ -1,3 +1,8 @@
+"""BlenderCAM 'autoupdate.py'
+
+Classes to check for, download and install BlenderCAM updates.
+"""
+
 import calendar
 from datetime import date
 import io

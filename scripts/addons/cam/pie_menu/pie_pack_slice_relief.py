@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_pack_slice_relief.py'
+
+'Pack, Slice and Bas Relief' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 

@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_gcode.py'
+
+'Operation G-code' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 

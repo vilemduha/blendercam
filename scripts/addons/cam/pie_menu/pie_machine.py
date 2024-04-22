@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_machine.py'
+
+'Machine Settings' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 

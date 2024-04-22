@@ -1,3 +1,8 @@
+"""BlenderCAM 'slice.py'
+
+'Slice Model to Plywood Sheets' panel in Properties > Render
+"""
+
 import bpy
 from bpy.types import Panel
 

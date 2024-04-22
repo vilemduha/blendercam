@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_material.py'
+
+'Material Size & Position' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 

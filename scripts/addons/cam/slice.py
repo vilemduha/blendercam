@@ -1,26 +1,8 @@
-# blender CAM slice.py (c) 2021 Alain Pelletier
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'slice.py' © 2021 Alain Pelletier
 
-# very simple slicing for 3d meshes, useful for plywood cutting.
-# completely rewritten April 2021
+Very simple slicing for 3D meshes, useful for plywood cutting.
+Completely rewritten April 2021.
+"""
 
 import bpy
 from bpy.props import (

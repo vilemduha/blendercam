@@ -1,3 +1,8 @@
+"""BlenderCAM 'machine.py'
+
+'CAM Machine' panel in Properties > Render
+"""
+
 import bpy
 from bpy.types import Panel
 

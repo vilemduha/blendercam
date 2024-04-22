@@ -1,3 +1,8 @@
+"""BlenderCAM 'material.py'
+
+'CAM Material' properties and panel in Properties > Render
+"""
+
 import bpy
 from bpy.props import (
     BoolProperty,

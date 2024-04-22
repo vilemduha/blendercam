@@ -1,23 +1,12 @@
-# blender CAM pack.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'pack.py' © 2012 Vilem Novak
+
+Takes all selected curves, converts them to polygons, offsets them by the pre-set margin
+then chooses a starting location possibly inside the already occupied area and moves and rotates the
+polygon out of the occupied area if one or more positions are found where the poly doesn't overlap,
+it is placed and added to the occupied area - allpoly
+Very slow and STUPID, a collision algorithm would be much much faster...
+"""
+
 from math import pi
 import random
 import time
@@ -48,15 +37,6 @@ from . import (
     simple,
     utils,
 )
-
-
-# this algorithm takes all selected curves,
-# converts them to polygons,
-# offsets them by the pre-set margin
-# then chooses a starting location possibly inside the allready occupied area and moves and rotates the
-# polygon out of the occupied area if one or more positions are found where the poly doesn't overlap,
-# it is placed and added to the occupied area - allpoly
-# this algorithm is very slow and STUPID, a collision algorithm would be much much faster...
 
 
 def srotate(s, r, x, y):

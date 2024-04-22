@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_cam.py'
+
+'BlenderCAM' Pie Menu - Parent to all other CAM Pie Menus
+"""
+
 import bpy
 from bpy.types import Menu
 

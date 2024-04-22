@@ -1,3 +1,8 @@
+"""BlenderCAM 'cam_operation.py'
+
+All properties of a single CAM Operation.
+"""
+
 from math import pi
 
 import numpy

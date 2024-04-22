@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_cutter.py'
+
+'Operation Cutter' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 

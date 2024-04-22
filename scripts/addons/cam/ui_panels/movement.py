@@ -1,3 +1,8 @@
+"""BlenderCAM 'movement.py'
+
+'CAM Movement' properties and panel in Properties > Render
+"""
+
 from math import pi
 
 import bpy

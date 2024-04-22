@@ -1,3 +1,8 @@
+"""BlenderCAM 'machine_settings.py'
+
+All CAM machine properties.
+"""
+
 from bpy.props import (
     BoolProperty,
     EnumProperty,

@@ -1,3 +1,8 @@
+"""BlenderCAM 'engine.py'
+
+Engine definition, options and panels.
+"""
+
 from bl_ui.properties_material import (
     EEVEE_MATERIAL_PT_context_material,
     EEVEE_MATERIAL_PT_settings,

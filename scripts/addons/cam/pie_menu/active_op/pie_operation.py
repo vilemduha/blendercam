@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_operation.py'
+
+'Active Operation' Pie Menu - Parent to all active_op Pie Menus
+"""
+
 import bpy
 from bpy.types import Menu
 

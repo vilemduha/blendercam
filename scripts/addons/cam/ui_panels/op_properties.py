@@ -1,3 +1,8 @@
+"""BlenderCAM 'op_properties.py'
+
+'CAM Operation Setup' panel in Properties > Render
+"""
+
 import bpy
 from bpy.types import Panel
 

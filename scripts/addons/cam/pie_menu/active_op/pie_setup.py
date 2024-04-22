@@ -1,3 +1,8 @@
+"""BlenderCAM 'pie_setup.py'
+
+'Operation Setup' Pie Menu
+"""
+
 import bpy
 from bpy.types import Menu
 
