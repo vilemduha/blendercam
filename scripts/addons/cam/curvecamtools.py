@@ -277,7 +277,7 @@ class CamCurveOvercuts(Operator):
                                 v.normalize()
                                 p = p - v * diameter / 2
                                 if abs(a) < pi / 2:
-                                    shape = utils.Circle(diameter / 2, 64)
+                                    shape = polygon_utils_cam.Circle(diameter / 2, 64)
                                     shape = shapely.affinity.translate(
                                         shape, p.x, p.y)
                                 else:
@@ -390,7 +390,7 @@ class CamCurveOvercutsB(Operator):
             print("abs(a)", abs(a))
             if abs(a) <= pi / 2 + 0.0001:
                 print("<=pi/2")
-                shape = utils.Circle(radius, 64)
+                shape = polygon_utils_cam.Circle(radius, 64)
                 shape = shapely.affinity.translate(shape, pos.x, pos.y)
             else:  # elongate overcut circle to make sure tool bit can fit into slot
                 print(">pi/2")
