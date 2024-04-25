@@ -397,18 +397,6 @@ def register() -> None:
     kmi.properties.name = 'VIEW3D_MT_PIE_CAM'
     kmi.active = True
 
-    addons = bpy.context.preferences.addons
-
-    modules = [
-        "curve_tools",
-        "curve_simplify",
-        "add_curve_extra_objects",
-    ]
-
-    for module in modules:
-        if module not in addons:
-            bpy.ops.preferences.addon_enable(module=module)
-
 
 def unregister() -> None:
     for cls in classes:
