@@ -183,7 +183,7 @@ from .utils import (
 bl_info = {
     "name": "BlenderCAM - G-code Generation Tools",
     "author": "Vilem Novak & Contributors",
-    "version": (1, 0, 19),
+    "version": (1, 0, 20),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate Machining Paths for CNC",
@@ -396,6 +396,18 @@ def register() -> None:
     )
     kmi.properties.name = 'VIEW3D_MT_PIE_CAM'
     kmi.active = True
+
+    addons = bpy.context.preferences.addons
+
+    modules = [
+        "curve_tools",
+        "curve_simplify",
+        "add_curve_extra_objects",
+    ]
+
+    for module in modules:
+        if module not in addons:
+            bpy.ops.preferences.addon_enable(module=module)
 
 
 def unregister() -> None:
