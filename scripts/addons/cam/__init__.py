@@ -183,7 +183,7 @@ from .utils import (
 bl_info = {
     "name": "BlenderCAM - G-code Generation Tools",
     "author": "Vilem Novak & Contributors",
-    "version": (1, 0, 19),
+    "version": (1, 0, 20),
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate Machining Paths for CNC",

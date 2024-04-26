@@ -2085,6 +2085,19 @@ def update_zbuffer_image(self, context):
 @bpy.app.handlers.persistent
 def check_operations_on_load(context):
     """Checks Any Broken Computations on Load and Reset Them."""
+
+    addons = bpy.context.preferences.addons
+
+    modules = [
+        "curve_tools",
+        "curve_simplify",
+        "add_curve_extra_objects",
+    ]
+
+    for module in modules:
+        if module not in addons:
+            bpy.ops.preferences.addon_enable(module=module)
+
     s = bpy.context.scene
     for o in s.cam_operations:
         if o.computing:
