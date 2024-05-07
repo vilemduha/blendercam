@@ -665,6 +665,10 @@ class CamObjectSilhouete(bpy.types.Operator):
     def execute(self, context):  # this is almost same as getobjectoutline, just without the need of operation data
         ob = bpy.context.active_object
         self.silh = utils.getObjectSilhouete('OBJECTS', objects=bpy.context.selected_objects)
+        # sometimes, only self.silh.geoms is iterable for some reason
+        if hasattr(self.silh, 'geoms'):
+            self.silh = self.silh.geoms
+        
         bpy.context.scene.cursor.location = (0, 0, 0)
         # smp=sgeometry.asMultiPolygon(self.silh)
         for smp in self.silh:
