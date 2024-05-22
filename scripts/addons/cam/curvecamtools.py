@@ -752,7 +752,7 @@ class CamOffsetSilhouete(Operator):
 
     # this is almost same as getobjectoutline, just without the need of operation data
     def execute(self, context):
-        bpy.ops.object.curve_remove_doubles()
+        # bpy.ops.object.curve_remove_doubles()
         ob = context.active_object
         if self.opencurve and ob.type == 'CURVE':
             bpy.ops.object.duplicate()
@@ -805,7 +805,7 @@ class CamObjectSilhouete(Operator):
             'OBJECTS', objects=bpy.context.selected_objects)
         bpy.context.scene.cursor.location = (0, 0, 0)
         # smp=sgeometry.asMultiPolygon(self.silh)
-        for smp in self.silh:
+        for smp in self.silh.geoms:
             polygon_utils_cam.shapelyToCurve(
                 ob.name + '_silhouette', smp, 0)  #
         # bpy.ops.object.convert(target='CURVE')

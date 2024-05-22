@@ -49,15 +49,15 @@ def shapelyRemoveDoubles(p, optimize_threshold):
 
 
 def shapelyToMultipolygon(anydata):
-    if anydata.type == 'MultiPolygon':
+    if anydata.geom_type == 'MultiPolygon':
         return anydata
-    elif anydata.type == 'Polygon':
+    elif anydata.geom_type == 'Polygon':
         if not anydata.is_empty:
             return shapely.geometry.MultiPolygon([anydata])
         else:
             return sgeometry.MultiPolygon()
     else:
-        print(anydata.type, 'Shapely Conversion Aborted')
+        print(anydata.geom_type, 'Shapely Conversion Aborted')
         return sgeometry.MultiPolygon()
 
 
