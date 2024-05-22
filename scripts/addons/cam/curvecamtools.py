@@ -809,6 +809,7 @@ class CamObjectSilhouete(Operator):
             polygon_utils_cam.shapelyToCurve(
                 ob.name + '_silhouette', smp, 0)  #
         # bpy.ops.object.convert(target='CURVE')
+        simple.join_multiple(ob.name + '_silhouette')
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
         return {'FINISHED'}
