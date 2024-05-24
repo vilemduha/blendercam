@@ -726,7 +726,7 @@ class CamOffsetSilhouete(Operator):
     mitrelimit: FloatProperty(
         name="Mitre Limit",
         default=.003,
-        min=0.0,
+        min=0.00000001,
         max=20,
         precision=4,
         unit="LENGTH",
@@ -812,6 +812,7 @@ class CamObjectSilhouete(Operator):
         simple.join_multiple(ob.name + '_silhouette')
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+        bpy.ops.object.curve_remove_doubles()
         return {'FINISHED'}
 
 # ---------------------------------------------------
