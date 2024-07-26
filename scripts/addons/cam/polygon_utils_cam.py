@@ -10,7 +10,11 @@ from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
 
 from mathutils import Euler, Vector
-import curve_simplify
+try:
+    import curve_simplify
+except ImportError:
+    pass
+
 
 SHAPELY = True
 

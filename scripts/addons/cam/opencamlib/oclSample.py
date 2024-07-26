@@ -16,7 +16,11 @@ except ImportError:
     except ImportError:
         pass
 
-from io_mesh_stl import blender_utils
+try:
+    from io_mesh_stl import blender_utils
+except ImportError:
+    pass
+
 import mathutils
 
 from ..simple import activate

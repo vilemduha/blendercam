@@ -20,7 +20,11 @@ import time
 import numpy
 
 import bpy
-import curve_simplify
+try:
+    import curve_simplify
+except ImportError:
+    pass
+
 from mathutils import (
     Euler,
     Vector,
