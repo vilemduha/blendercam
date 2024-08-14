@@ -184,6 +184,7 @@ bl_info = {
     "name": "BlenderCAM - G-code Generation Tools",
     "author": "Vilem Novak & Contributors",
     "version":(1,0,25),
+
     "blender": (3, 6, 0),
     "location": "Properties > render",
     "description": "Generate Machining Paths for CNC",
