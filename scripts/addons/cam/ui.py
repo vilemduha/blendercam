@@ -1,55 +1,23 @@
-# blender CAM ui.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'ui.py' © 2012 Vilem Novak
 
-import sys
-import bpy
-from bpy.types import UIList, Operator
+Panels displayed in the 3D Viewport - Curve Tools, Creators and Import G-code
+"""
+
 from bpy_extras.io_utils import ImportHelper
-from bpy.props import (StringProperty,
-                       BoolProperty,
-                       PointerProperty,
-                       FloatProperty,
-                       )
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+    StringProperty,
+)
+from bpy.types import (
+    Panel,
+    Operator,
+    UIList,
+    PropertyGroup,
+)
 
-from bpy.types import (Panel, Menu, Operator, PropertyGroup, )
-
-from cam import gcodeimportparser, simple
-from cam.simple import *
-
-from cam.ui_panels.buttons_panel  import CAMButtonsPanel
-from cam.ui_panels.interface      import *
-from cam.ui_panels.info           import *
-from cam.ui_panels.operations     import *
-from cam.ui_panels.cutter         import *
-from cam.ui_panels.machine        import *
-from cam.ui_panels.material       import *
-from cam.ui_panels.chains         import *
-from cam.ui_panels.op_properties  import *
-from cam.ui_panels.movement       import *
-from cam.ui_panels.feedrate       import *
-from cam.ui_panels.optimisation   import *
-from cam.ui_panels.area           import *
-from cam.ui_panels.gcode          import *
-from cam.ui_panels.pack           import *
-from cam.ui_panels.slice          import *
+from .gcodeimportparser import import_gcode
 
 
 class CAM_UL_orientations(UIList):
@@ -62,11 +30,9 @@ class CAM_UL_orientations(UIList):
             layout.label(text="", icon_value=icon)
 
 
-
-
 # panel containing all tools
 
-class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
+class VIEW3D_PT_tools_curvetools(Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
@@ -85,7 +51,7 @@ class VIEW3D_PT_tools_curvetools(bpy.types.Panel):
         layout.operator("object.mesh_get_pockets")
 
 
-class VIEW3D_PT_tools_create(bpy.types.Panel):
+class VIEW3D_PT_tools_create(Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
@@ -113,11 +79,11 @@ class VIEW3D_PT_tools_create(bpy.types.Panel):
 # ------------------------------------------------------------------------
 
 
-class CustomPanel(bpy.types.Panel):
+class CustomPanel(Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
     bl_context = "objectmode"
-    bl_label = "Import Gcode"
+    bl_label = "Import G-code"
     bl_idname = "OBJECT_PT_importgcode"
 
     bl_options = {'DEFAULT_CLOSED'}
@@ -138,7 +104,7 @@ class CustomPanel(bpy.types.Panel):
         col = layout.column(align=True)
         col = col.row(align=True)
         col.split()
-        col.label(text="Segment length")
+        col.label(text="Segment Length")
 
         col.prop(isettings, "max_segment_size")
         col.enabled = isettings.subdivide
@@ -150,9 +116,9 @@ class CustomPanel(bpy.types.Panel):
 
 
 class WM_OT_gcode_import(Operator, ImportHelper):
-    """Import Gcode, travel lines don't get drawn"""
+    """Import G-code, Travel Lines Don't Get Drawn"""
     bl_idname = "wm.gcode_import"  # important since its how bpy.ops.import_test.some_data is constructed
-    bl_label = "Import Gcode"
+    bl_label = "Import G-code"
 
     # ImportHelper mixin class uses this
     filename_ext = ".txt"
@@ -165,4 +131,34 @@ class WM_OT_gcode_import(Operator, ImportHelper):
 
     def execute(self, context):
         print(self.filepath)
-        return gcodeimportparser.import_gcode(context, self.filepath)
+        return import_gcode(context, self.filepath)
+
+
+class import_settings(PropertyGroup):
+    split_layers: BoolProperty(
+        name="Split Layers",
+        description="Save every layer as single Objects in Collection",
+        default=False,
+    )
+    subdivide: BoolProperty(
+        name="Subdivide",
+        description="Only Subdivide gcode segments that are "
+        "bigger than 'Segment length' ",
+        default=False,
+    )
+    output: EnumProperty(
+        name="Output Type",
+        items=(
+            ("mesh", "Mesh", "Make a mesh output"),
+            ("curve", "Curve", "Make curve output"),
+        ),
+        default="curve",
+    )
+    max_segment_size: FloatProperty(
+        name="",
+        description="Only Segments bigger than this value get subdivided",
+        default=0.001,
+        min=0.0001,
+        max=1.0,
+        unit="LENGTH",
+    )

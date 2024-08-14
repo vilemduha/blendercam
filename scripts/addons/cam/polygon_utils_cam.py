@@ -1,39 +1,28 @@
-# blender CAM polygon_utils_cam.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'polygon_utils_cam.py' © 2012 Vilem Novak
 
-import math
-import mathutils
-import curve_simplify
+Functions to handle shapely operations and conversions - curve, coords, polygon
+"""
+
+from math import pi
 
 import shapely
 from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
+
+from mathutils import Euler, Vector
+try:
+    import curve_simplify
+except ImportError:
+    pass
+
 
 SHAPELY = True
 
 
 def Circle(r, np):
     c = []
-    v = mathutils.Vector((r, 0, 0))
-    e = mathutils.Euler((0, 0, 2.0 * math.pi / np))
+    v = Vector((r, 0, 0))
+    e = Euler((0, 0, 2.0 * pi / np))
     for a in range(0, np):
         c.append((v.x, v.y))
         v.rotate(e)
@@ -50,7 +39,7 @@ def shapelyRemoveDoubles(p, optimize_threshold):
 
         veclist = []
         for v in c:
-            veclist.append(mathutils.Vector((v[0], v[1])))
+            veclist.append(Vector((v[0], v[1])))
         s = curve_simplify.simplify_RDP(veclist, soptions)
         nc = []
         for i in range(0, len(s)):
@@ -64,15 +53,15 @@ def shapelyRemoveDoubles(p, optimize_threshold):
 
 
 def shapelyToMultipolygon(anydata):
-    if anydata.type == 'MultiPolygon':
+    if anydata.geom_type == 'MultiPolygon':
         return anydata
-    elif anydata.type == 'Polygon':
+    elif anydata.geom_type == 'Polygon':
         if not anydata.is_empty:
             return shapely.geometry.MultiPolygon([anydata])
         else:
             return sgeometry.MultiPolygon()
     else:
-        print(anydata.type, 'shapely conversion aborted')
+        print(anydata.geom_type, 'Shapely Conversion Aborted')
         return sgeometry.MultiPolygon()
 
 
@@ -127,7 +116,8 @@ def shapelyToCoords(anydata):
 
 
 def shapelyToCurve(name, p, z):
-    import bpy, bmesh
+    import bpy
+    import bmesh
     from bpy_extras import object_utils
     verts = []
     edges = []

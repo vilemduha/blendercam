@@ -1,37 +1,26 @@
-# blender CAM utils.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'simulation.py' © 2012 Vilem Novak
 
-# here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py.
+Functions to generate a mesh simulation from CAM Chain / Operation data.
+"""
 
-import bpy
-import mathutils
 import math
 import time
-from bpy.props import *
-from cam import utils
+
 import numpy as np
 
-from cam import simple
-from cam import image_utils
-from cam.async_op import progress_async
+import bpy
+from mathutils import Vector
+
+from .async_op import progress_async
+from .image_utils import (
+    getCutterArray,
+    numpysave,
+)
+from .simple import getSimulationPath
+from .utils import (
+    getBoundsMultiple,
+    getOperationSources,
+)
 
 
 def createSimulationObject(name, operations, i):
@@ -42,7 +31,8 @@ def createSimulationObject(name, operations, i):
     if oname in bpy.data.objects:
         ob = bpy.data.objects[oname]
     else:
-        bpy.ops.mesh.primitive_plane_add(align='WORLD', enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_plane_add(
+            align='WORLD', enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0))
         ob = bpy.context.active_object
         ob.name = oname
 
@@ -91,18 +81,18 @@ def createSimulationObject(name, operations, i):
 
 
 async def doSimulation(name, operations):
-    """perform simulation of operations. Currently only for 3 axis"""
+    """Perform Simulation of Operations. Currently only for 3 Axis"""
     for o in operations:
-        utils.getOperationSources(o)
-    limits = utils.getBoundsMultiple(
+        getOperationSources(o)
+    limits = getBoundsMultiple(
         operations)  # this is here because some background computed operations still didn't have bounds data
     i = await generateSimulationImage(operations, limits)
-#    cp = simple.getCachePath(operations[0])[:-len(operations[0].name)] + name
-    cp = simple.getSimulationPath()+name
+#    cp = getCachePath(operations[0])[:-len(operations[0].name)] + name
+    cp = getSimulationPath()+name
     print('cp=', cp)
     iname = cp + '_sim.exr'
 
-    image_utils.numpysave(i, iname)
+    numpysave(i, iname)
     i = bpy.data.images.load(iname)
     createSimulationObject(name, operations, i)
 
@@ -120,13 +110,13 @@ async def generateSimulationImage(operations, limits):
     resy = math.ceil(sy / simulation_detail) + 2 * borderwidth
 
     # create array in which simulation happens, similar to an image to be painted in.
-    si = np.full(shape=(resx,resy),fill_value=maxz,dtype=float)
+    si = np.full(shape=(resx, resy), fill_value=maxz, dtype=float)
 
-    num_operations=len(operations)
+    num_operations = len(operations)
 
-    start_time=time.time()
+    start_time = time.time()
 
-    for op_count,o in enumerate(operations):
+    for op_count, o in enumerate(operations):
         ob = bpy.data.objects["cam_path_{}".format(o.name)]
         m = ob.data
         verts = m.vertices
@@ -160,8 +150,8 @@ async def generateSimulationImage(operations, limits):
         for i, vert in enumerate(verts):
             if perc != int(100 * i / vtotal):
                 perc = int(100 * i / vtotal)
-                total_perc = (perc+ op_count*100) / num_operations
-                await progress_async(f'Simulation',int(total_perc))
+                total_perc = (perc + op_count*100) / num_operations
+                await progress_async(f'Simulation', int(total_perc))
 
             if i > 0:
                 volume = 0
@@ -183,14 +173,17 @@ async def generateSimulationImage(operations, limits):
                         lastxs = xs
                         lastys = ys
                         while v.length < l:
-                            xs = int((lasts.x + v.x - minx) / simulation_detail + borderwidth + simulation_detail / 2)
+                            xs = int((lasts.x + v.x - minx) / simulation_detail +
+                                     borderwidth + simulation_detail / 2)
                             # -middle
-                            ys = int((lasts.y + v.y - miny) / simulation_detail + borderwidth + simulation_detail / 2)
+                            ys = int((lasts.y + v.y - miny) / simulation_detail +
+                                     borderwidth + simulation_detail / 2)
                             # -middle
                             z = lasts.z + v.z
                             # print(z)
                             if lastxs != xs or lastys != ys:
-                                volume_partial = simCutterSpot(xs, ys, z, cutterArray, si, o.do_simulation_feedrate)
+                                volume_partial = simCutterSpot(
+                                    xs, ys, z, cutterArray, si, o.do_simulation_feedrate)
                                 if o.do_simulation_feedrate:
                                     totalvolume += volume
                                     volume += volume_partial
@@ -200,9 +193,12 @@ async def generateSimulationImage(operations, limits):
                                 dropped += 1
                             v.length += simulation_detail
 
-                    xs = int((s.x - minx) / simulation_detail + borderwidth + simulation_detail / 2)  # -middle
-                    ys = int((s.y - miny) / simulation_detail + borderwidth + simulation_detail / 2)  # -middle
-                    volume_partial = simCutterSpot(xs, ys, s.z, cutterArray, si, o.do_simulation_feedrate)
+                    xs = int((s.x - minx) / simulation_detail +
+                             borderwidth + simulation_detail / 2)  # -middle
+                    ys = int((s.y - miny) / simulation_detail +
+                             borderwidth + simulation_detail / 2)  # -middle
+                    volume_partial = simCutterSpot(
+                        xs, ys, s.z, cutterArray, si, o.do_simulation_feedrate)
                 if o.do_simulation_feedrate:  # compute volumes and write data into shapekey.
                     volume += volume_partial
                     totalvolume += volume
@@ -278,111 +274,17 @@ async def generateSimulationImage(operations, limits):
     si = si[borderwidth:-borderwidth, borderwidth:-borderwidth]
     si += -minz
 
-    await progress_async("Simulated:",time.time()-start_time,'s')
+    await progress_async("Simulated:", time.time()-start_time, 's')
     return si
 
 
-def getCutterArray(operation, pixsize):
-    type = operation.cutter_type
-    # print('generating cutter')
-    r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
-    res = math.ceil((r * 2) / pixsize)
-    m = res / 2.0
-    car = np.full(shape=(res,res),fill_value=-10.0,dtype=float)
-
-    v = mathutils.Vector((0, 0, 0))
-    ps = pixsize
-    if type == 'END':
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    car.itemset((a, b), 0)
-    elif type == 'BALL' or type == 'BALLNOSE':
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = math.sin(math.acos(v.length / r)) * r - r
-                    car.itemset((a, b), z)  # [a,b]=z
-
-    elif type == 'VCARVE':
-        angle = operation.cutter_tip_angle
-        s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = (-v.length * s)
-                    car.itemset((a, b), z)
-    elif type == 'CYLCONE':
-        angle = operation.cutter_tip_angle
-        cyl_r = operation.cylcone_diameter/2
-        s = math.tan(math.pi * (90 - angle / 2) / 180)  # angle in degrees
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = (-(v.length - cyl_r) * s)
-                    if v.length <= cyl_r:
-                        z = 0
-                    car.itemset((a, b), z)
-    elif type == 'BALLCONE':
-        angle = math.radians(operation.cutter_tip_angle)/2
-        ball_r = operation.ball_radius
-        cutter_r = operation.cutter_diameter / 2
-        conedepth = (cutter_r - ball_r)/math.tan(angle)
-        Ball_R = ball_r/math.cos(angle)
-        D_ofset = ball_r * math.tan(angle)
-        s = math.tan(math.pi/2-angle)
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= cutter_r:
-                    z = -(v.length - ball_r) * s - Ball_R + D_ofset
-                    if v.length <= ball_r:
-                        z = math.sin(math.acos(v.length / Ball_R)) * Ball_R - Ball_R
-                    car.itemset((a, b), z)
-    elif type == 'CUSTOM':
-        cutob = bpy.data.objects[operation.cutter_object_name]
-        scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
-        # print(cutob.scale)
-        vstart = mathutils.Vector((0, 0, -10))
-        vend = mathutils.Vector((0, 0, 10))
-        print('sampling custom cutter')
-        maxz = -1
-        for a in range(0, res):
-            vstart.x = (a + 0.5 - m) * ps * scale
-            vend.x = vstart.x
-
-            for b in range(0, res):
-                vstart.y = (b + 0.5 - m) * ps * scale
-                vend.y = vstart.y
-                v = vend - vstart
-                c = cutob.ray_cast(vstart, v, distance=1.70141e+38)
-                if c[3] != -1:
-                    z = -c[1][2] / scale
-                    # print(c)
-                    if z > -9:
-                        # print(z)
-                        if z > maxz:
-                            maxz = z
-                        car.itemset((a, b), z)
-        car -= maxz
-    return car
-
-
 def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):
-    """simulates a cutter cutting into stock, taking away the volume,
-    and optionally returning the volume that has been milled. This is now used for feedrate tweaking."""
+    """Simulates a Cutter Cutting Into Stock, Taking Away the Volume,
+    and Optionally Returning the Volume that Has Been Milled. This Is Now Used for Feedrate Tweaking."""
     m = int(cutterArray.shape[0] / 2)
     size = cutterArray.shape[0]
-    if xs > m and xs < si.shape[0] - m and ys > m and ys < si.shape[1] - m:  # whole cutter in image there
+    # whole cutter in image there
+    if xs > m and xs < si.shape[0] - m and ys > m and ys < si.shape[1] - m:
         if getvolume:
             volarray = si[xs - m:xs - m + size, ys - m:ys - m + size].copy()
         si[xs - m:xs - m + size, ys - m:ys - m + size] = np.minimum(si[xs - m:xs - m + size, ys - m:ys - m + size],

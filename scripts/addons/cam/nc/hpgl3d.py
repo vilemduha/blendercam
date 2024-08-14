@@ -8,11 +8,12 @@ from . import nc
 from . import hpgl2d
 import math
 
+
 class Creator(hpgl2d.Creator):
     def __init__(self):
         hpgl2d.Creator.__init__(self)
         self.z = int(0)
-        self.metric() # set self.units_to_mc_units
+        self.metric()  # set self.units_to_mc_units
         self.doing_rapid = True
 
     def program_begin(self, id, name=''):
@@ -42,7 +43,8 @@ class Creator(hpgl2d.Creator):
         # for now, do all rapid moves at V50 ( 50 mm/s )
         mx, my, mz = self.get_machine_xyz(x, y, z)
         if mx != self.x or my != self.y or mz != self.z:
-            if self.doing_rapid == False: self.write('V50.0;')
+            if self.doing_rapid == False:
+                self.write('V50.0;')
             self.write(('Z%i' % mx) + (',%i' % my) + (',%i;\n' % mz))
             self.x = mx
             self.y = my
@@ -54,11 +56,13 @@ class Creator(hpgl2d.Creator):
         # for now, do all feed moves at V10 ( 10 mm/s )
         mx, my, mz = self.get_machine_xyz(x, y, z)
         if mx != self.x or my != self.y or mz != self.z:
-            if self.doing_rapid == True: self.write('V10.0;')
+            if self.doing_rapid == True:
+                self.write('V10.0;')
             self.write(('Z%i' % mx) + (',%i' % my) + (',%i;\n' % mz))
             self.x = mx
             self.y = my
             self.z = mz
             self.doing_rapid = False
+
 
 nc.creator = Creator()

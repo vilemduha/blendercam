@@ -1,34 +1,20 @@
-#!/usr/bin/env python
-# https://github.com/jonathanwin/yagv with no licence
-# code modified from YAGV -yet another gcode viewer
-# will assume release GNU release
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 3
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'gcodeimportparser.py'
 
-import bpy, bmesh
+Code modified from YAGV (Yet Another G-code Viewer) - https://github.com/jonathanwin/yagv
+No license terms found in YAGV repo, will assume GNU release
+"""
+
 import math
 
-import re
 import numpy as np
+
+import bpy
 
 np.set_printoptions(suppress=True)  # suppress scientific notation in subdivide functions linspace
 
 
 def import_gcode(context, filepath):
-    print("running read_some_data...")
+    print("Running read_some_data...")
 
     scene = context.scene
     mytool = scene.cam_import_gcode
@@ -47,7 +33,7 @@ def import_gcode(context, filepath):
         model.draw(split_layers=False)
 
     now = time.time()
-    print("importing Gcode took ", round(now - then, 1), "seconds")
+    print("Importing Gcode Took ", round(now - then, 1), "Seconds")
 
     return {'FINISHED'}
 
@@ -375,7 +361,7 @@ class GcodeModel:
             # some horizontal movement, and positive extruder movement: extrusion
             if (
                     ((seg.coords["X"] != coords["X"]) or (seg.coords["Y"] != coords["Y"]) or (
-                            seg.coords["Z"] != coords["Z"]))):  # != coords["E"]
+                        seg.coords["Z"] != coords["Z"]))):  # != coords["E"]
                 style = "extrude"
             # #force extrude if there is some movement
 
@@ -386,7 +372,8 @@ class GcodeModel:
                 currentLayerIdx += 1
                 seg.style = style
                 seg.layerIdx = currentLayerIdx
-                self.layers.append(layer)  # add layer to list of Layers, used to later draw single layer objects
+                # add layer to list of Layers, used to later draw single layer objects
+                self.layers.append(layer)
                 break
 
             # positive extruder movement of next point in a different Z signals a layer change for this segment
@@ -435,7 +422,8 @@ class GcodeModel:
                 P2 = seg.coords
 
                 # interpolated points
-                interp_coords = np.linspace(list(P1.values()), list(P2.values()), num=subdivs, endpoint=True)
+                interp_coords = np.linspace(list(P1.values()), list(
+                    P2.values()), num=subdivs, endpoint=True)
 
                 for i in range(len(interp_coords)):  # inteprolated points array back to segment object
 
@@ -454,7 +442,8 @@ class GcodeModel:
                         # write segment only if movement changes,
                         # avoid double coordinates due to same start and endpoint of linspace
 
-                        new_seg = Segment(seg.type, new_coords, seg.color, seg.toolnumber, seg.lineNb, seg.line)
+                        new_seg = Segment(seg.type, new_coords, seg.color,
+                                          seg.toolnumber, seg.lineNb, seg.line)
                         new_seg.layerIdx = seg.layerIdx
                         new_seg.style = seg.style
                         subdivided_segs.append(new_seg)

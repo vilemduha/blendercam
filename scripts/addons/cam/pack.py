@@ -1,47 +1,47 @@
-# blender CAM pack.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'pack.py' © 2012 Vilem Novak
 
-import bpy
-from cam import utils, simple, polygon_utils_cam
+Takes all selected curves, converts them to polygons, offsets them by the pre-set margin
+then chooses a starting location possibly inside the already occupied area and moves and rotates the
+polygon out of the occupied area if one or more positions are found where the poly doesn't overlap,
+it is placed and added to the occupied area - allpoly
+Very slow and STUPID, a collision algorithm would be much much faster...
+"""
+
+from math import pi
+import random
+import time
+
 import shapely
 from shapely import geometry as sgeometry
-from shapely import affinity, prepared
-from shapely import speedups
-import random, time
-import mathutils
-from mathutils import Vector
+from shapely import (
+    affinity,
+    prepared,
+    speedups
+)
 
+import bpy
+from bpy.types import PropertyGroup
+from bpy.props import (
+    BoolProperty,
+    EnumProperty,
+    FloatProperty,
+)
+from mathutils import (
+    Euler,
+    Vector
+)
 
-# this algorithm takes all selected curves,
-# converts them to polygons,
-# offsets them by the pre-set margin
-# then chooses a starting location possibly inside the allready occupied area and moves and rotates the
-# polygon out of the occupied area if one or more positions are found where the poly doesn't overlap,
-# it is placed and added to the occupied area - allpoly
-# this algorithm is very slow and STUPID, a collision algorithm would be much much faster...
+from . import (
+    constants,
+    polygon_utils_cam,
+    simple,
+    utils,
+)
 
 
 def srotate(s, r, x, y):
     ncoords = []
-    e = mathutils.Euler((0, 0, r))
+    e = Euler((0, 0, r))
     for p in s.exterior.coords:
         v1 = Vector((p[0], p[1], 0))
         v2 = Vector((x, y, 0))
@@ -66,7 +66,8 @@ def packCurves():
     rotate = packsettings.rotate
     rotate_angle = packsettings.rotate_angle
 
-    polyfield = []  # in this, position, rotation, and actual poly will be stored.
+    # in this, position, rotation, and actual poly will be stored.
+    polyfield = []
     for ob in bpy.context.selected_objects:
         simple.activate(ob)
         bpy.ops.object.make_single_user(type='SELECTED_OBJECTS')
@@ -191,3 +192,69 @@ def packCurves():
 
     polygon_utils_cam.shapelyToCurve('test', sgeometry.MultiPolygon(placedpolys), 0)
     print(t)
+
+
+class PackObjectsSettings(PropertyGroup):
+    """stores all data for machines"""
+
+    sheet_fill_direction: EnumProperty(
+        name="Fill Direction",
+        items=(
+            ("X", "X", "Fills sheet in X axis direction"),
+            ("Y", "Y", "Fills sheet in Y axis direction"),
+        ),
+        description="Fill direction of the packer algorithm",
+        default="Y",
+    )
+    sheet_x: FloatProperty(
+        name="X Size",
+        description="Sheet size",
+        min=0.001,
+        max=10,
+        default=0.5,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    sheet_y: FloatProperty(
+        name="Y Size",
+        description="Sheet size",
+        min=0.001,
+        max=10,
+        default=0.5,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    distance: FloatProperty(
+        name="Minimum Distance",
+        description="Minimum distance between objects(should be "
+        "at least cutter diameter!)",
+        min=0.001,
+        max=10,
+        default=0.01,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    tolerance: FloatProperty(
+        name="Placement Tolerance",
+        description="Tolerance for placement: smaller value slower placemant",
+        min=0.001,
+        max=0.02,
+        default=0.005,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    rotate: BoolProperty(
+        name="Enable Rotation",
+        description="Enable rotation of elements",
+        default=True,
+    )
+    rotate_angle: FloatProperty(
+        name="Placement Angle Rotation Step",
+        description="Bigger rotation angle, faster placemant",
+        default=0.19635 * 4,
+        min=pi / 180,
+        max=pi,
+        precision=5,
+        subtype="ANGLE",
+        unit="ROTATION",
+    )

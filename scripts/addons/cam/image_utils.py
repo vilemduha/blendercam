@@ -1,73 +1,50 @@
-# blender CAM image_utils.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'image_utils.py' © 2012 Vilem Novak
 
-import math
-import numpy
+Functions to render, save, convert and analyze image data.
+"""
+
+from math import (
+    acos,
+    ceil,
+    cos,
+    floor,
+    pi,
+    radians,
+    sin,
+    tan,
+)
 import os
 import random
 import time
 
-import curve_simplify
-import mathutils
-from mathutils import *
+import numpy
 
-from cam import simple
-from cam.simple import *
-from cam import chunk
-from cam.chunk import *
-from cam import simulation
-from cam.async_op import progress_async
+import bpy
+try:
+    import curve_simplify
+except ImportError:
+    pass
 
-from cam.numba_wrapper import jit,prange
+from mathutils import (
+    Euler,
+    Vector,
+)
 
-
-def getCircle(r, z):
-    car = numpy.full(shape=(r*2,r*2),fill_value=-10,dtype=numpy.double)
-    res = 2 * r
-    m = r
-    v = mathutils.Vector((0, 0, 0))
-    for a in range(0, res):
-        v.x = (a + 0.5 - m)
-        for b in range(0, res):
-            v.y = (b + 0.5 - m)
-            if v.length <= r:
-                car[a, b] = z
-    return car
-
-
-def getCircleBinary(r):
-    car = numpy.full(shape=(r*2,r*2),fill_value=False,dtype=bool)
-    res = 2 * r
-    m = r
-    v = mathutils.Vector((0, 0, 0))
-    for a in range(0, res):
-        v.x = (a + 0.5 - m)
-        for b in range(0, res):
-            v.y = (b + 0.5 - m)
-            if (v.length <= r):
-                car.itemset((a, b), True)
-    return car
-
-
-# get cutters for the z-buffer image method
+from .simple import (
+    progress,
+    getCachePath,
+)
+from .cam_chunk import (
+    parentChildDist,
+    camPathChunkBuilder,
+    camPathChunk,
+    chunksToShapely,
+)
+from .async_op import progress_async
+from .numba_wrapper import (
+    jit,
+    prange,
+)
 
 
 def numpysave(a, iname):
@@ -82,6 +59,37 @@ def numpysave(a, iname):
     r.image_settings.color_depth = '32'
 
     i.save_render(iname)
+
+
+def getCircle(r, z):
+    car = numpy.full(shape=(r*2, r*2), fill_value=-10, dtype=numpy.double)
+    res = 2 * r
+    m = r
+    v = Vector((0, 0, 0))
+    for a in range(0, res):
+        v.x = (a + 0.5 - m)
+        for b in range(0, res):
+            v.y = (b + 0.5 - m)
+            if v.length <= r:
+                car[a, b] = z
+    return car
+
+
+def getCircleBinary(r):
+    car = numpy.full(shape=(r*2, r*2), fill_value=False, dtype=bool)
+    res = 2 * r
+    m = r
+    v = Vector((0, 0, 0))
+    for a in range(0, res):
+        v.x = (a + 0.5 - m)
+        for b in range(0, res):
+            v.y = (b + 0.5 - m)
+            if (v.length <= r):
+                car.itemset((a, b), True)
+    return car
+
+
+# get cutters for the z-buffer image method
 
 
 def numpytoimage(a, iname):
@@ -118,7 +126,7 @@ def imagetonumpy(i):
 
     width = i.size[0]
     height = i.size[1]
-    na = numpy.full(shape=(width*height*4,),fill_value=-10,dtype=numpy.double)
+    na = numpy.full(shape=(width*height*4,), fill_value=-10, dtype=numpy.double)
 
     p = i.pixels[:]
     # these 2 lines are about 15% faster than na[:]=i.pixels[:].... whyyyyyyyy!!?!?!?!?!
@@ -132,26 +140,27 @@ def imagetonumpy(i):
     return na
 
 
-@jit(nopython=True,parallel=True,fastmath=False,cache=True)
-def _offset_inner_loop(y1,y2,cutterArrayNan,cwidth,sourceArray,width,height,comparearea):
-    for y in prange(y1,y2):
-        for x in range(0,width-cwidth):
-            comparearea[x,y] = numpy.nanmax(sourceArray[x:x+cwidth,y:y+cwidth] + cutterArrayNan)
+@jit(nopython=True, parallel=True, fastmath=False, cache=True)
+def _offset_inner_loop(y1, y2, cutterArrayNan, cwidth, sourceArray, width, height, comparearea):
+    for y in prange(y1, y2):
+        for x in range(0, width-cwidth):
+            comparearea[x, y] = numpy.nanmax(sourceArray[x:x+cwidth, y:y+cwidth] + cutterArrayNan)
+
 
 async def offsetArea(o, samples):
-    """ offsets the whole image with the cutter + skin offsets """
+    """ Offsets the Whole Image with the Cutter + Skin Offsets """
     if o.update_offsetimage_tag:
         minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
         sourceArray = samples
-        cutterArray = simulation.getCutterArray(o, o.optimisation.pixsize)
+        cutterArray = getCutterArray(o, o.optimisation.pixsize)
 
         # progress('image size', sourceArray.shape)
 
         width = len(sourceArray)
         height = len(sourceArray[0])
         cwidth = len(cutterArray)
-        o.offset_image= numpy.full(shape=(width,height),fill_value=-10.0,dtype=numpy.double)
+        o.offset_image = numpy.full(shape=(width, height), fill_value=-10.0, dtype=numpy.double)
 
         t = time.time()
 
@@ -161,15 +170,17 @@ async def offsetArea(o, samples):
             sourceArray = -sourceArray + minz
         comparearea = o.offset_image[m: width - cwidth + m, m:height - cwidth + m]
         # i=0
-        cutterArrayNan=np.where(cutterArray>-10,cutterArray,np.full(cutterArray.shape,np.nan))
-        for y in range(0,10):
+        cutterArrayNan = numpy.where(cutterArray > -10, cutterArray,
+                                     numpy.full(cutterArray.shape, numpy.nan))
+        for y in range(0, 10):
             y1 = (y * comparearea.shape[1])//10
             y2 = ((y+1) * comparearea.shape[1])//10
-            _offset_inner_loop(y1,y2,cutterArrayNan,cwidth,sourceArray,width,height,comparearea)
+            _offset_inner_loop(y1, y2, cutterArrayNan, cwidth,
+                               sourceArray, width, height, comparearea)
             await progress_async('offset depth image', int((y2 * 100) / comparearea.shape[1]))
         o.offset_image[m: width - cwidth + m, m:height - cwidth + m] = comparearea
 
-        print('\nOffset image time ' + str(time.time() - t))
+        print('\nOffset Image Time ' + str(time.time() - t))
 
         o.update_offsetimage_tag = False
     return o.offset_image
@@ -182,9 +193,9 @@ def dilateAr(ar, cycles):
 
 
 def getOffsetImageCavities(o, i):  # for pencil operation mainly
-    """detects areas in the offset image which are 'cavities' - the curvature changes."""
+    """Detects Areas in the Offset Image Which Are 'cavities' - the Curvature Changes."""
     # i=numpy.logical_xor(lastislice , islice)
-    simple.progress('detect corners in the offset image')
+    progress('Detect Corners in the Offset Image')
     vertical = i[:-2, 1:-1] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[2:, 1:-1]
     horizontal = i[1:-1, :-2] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[1:-1, 2:]
     # if bpy.app.debug_value==2:
@@ -193,26 +204,27 @@ def getOffsetImageCavities(o, i):  # for pencil operation mainly
 
     if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge,
         # it has tons of spikes and simply is not better than the old one
-        iname = simple.getCachePath(o) + '_pencilthres.exr'
+        iname = getCachePath(o) + '_pencilthres.exr'
         # numpysave(ar,iname)#save for comparison before
         chunks = imageEdgeSearch_online(o, ar, i)
-        iname = simple.getCachePath(o) + '_pencilthres_comp.exr'
+        iname = getCachePath(o) + '_pencilthres_comp.exr'
         print("new pencil strategy")
 
     # ##crop pixels that are on outer borders
     for chi in range(len(chunks) - 1, -1, -1):
         chunk = chunks[chi]
-        chunk.clip_points(o.min.x,o.max.x,o.min.y,o.max.y)
-        # for si in range(len(chunk.points) - 1, -1, -1):
-        #     if not (o.min.x < chunk.points[si][0] < o.max.x and o.min.y < chunk.points[si][1] < o.max.y):
-        #         chunk.points.pop(si)
+        chunk.clip_points(o.min.x, o.max.x, o.min.y, o.max.y)
+        # for si in range(len(points) - 1, -1, -1):
+        #     if not (o.min.x < points[si][0] < o.max.x and o.min.y < points[si][1] < o.max.y):
+        #         points.pop(si)
         if chunk.count() < 2:
             chunks.pop(chi)
 
     return chunks
 
 
-def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, another try.
+# search edges for pencil strategy, another try.
+def imageEdgeSearch_online(o, ar, zimage):
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     r = ceil((o.cutter_diameter/12)/o.optimisation.pixsize)   # was commented
     coef = 0.75
@@ -243,7 +255,7 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
 
         if perc != int(100 - 100 * totpix / startpix):
             perc = int(100 - 100 * totpix / startpix)
-            simple.progress('pencil path searching', perc)
+            progress('Pencil Path Searching', perc)
         # progress('simulation ',int(100*i/l))
         success = False
         testangulardistance = 0  # distance from initial direction in the list of direction
@@ -262,13 +274,13 @@ def imageEdgeSearch_online(o, ar, zimage):  # search edges for pencil strategy, 
                 last_direction = test_direction
                 ar[xs, ys] = False
                 if 0:
-                    print('success')
+                    print('Success')
                     print(xs, ys, testlength, testangle)
                     print(lastvect)
                     print(testvect)
                     print(itests)
             else:
-                # nchunk.append([xs,ys])#for debugging purpose
+                # nappend([xs,ys])#for debugging purpose
                 # ar.shape[0]
                 test_direction = last_direction
                 if testleftright:
@@ -347,8 +359,9 @@ async def crazyPath(o):
     resx = ceil(sx / o.optimisation.simulation_detail) + 2 * o.borderwidth
     resy = ceil(sy / o.optimisation.simulation_detail) + 2 * o.borderwidth
 
-    o.millimage = numpy.full(shape=(resx,resy),fill_value=0.,dtype=numpy.float)
-    o.cutterArray = -simulation.getCutterArray(o, o.optimisation.simulation_detail)  # getting inverted cutter
+    o.millimage = numpy.full(shape=(resx, resy), fill_value=0., dtype=numpy.float)
+    # getting inverted cutter
+    o.cutterArray = -getCutterArray(o, o.optimisation.simulation_detail)
 
 
 def buildStroke(start, end, cutterArray):
@@ -357,7 +370,7 @@ def buildStroke(start, end, cutterArray):
     size_y = abs(end[1] - start[1]) + cutterArray.size[0]
     r = cutterArray.size[0] / 2
 
-    strokeArray = numpy.full(shape=(size_x,size_y),fill_value=-10.0,dtype=numpy.float)
+    strokeArray = numpy.full(shape=(size_x, size_y), fill_value=-10.0, dtype=numpy.float)
     samplesx = numpy.round(numpy.linspace(start[0], end[0], strokelength))
     samplesy = numpy.round(numpy.linspace(start[1], end[1], strokelength))
     samplesz = numpy.round(numpy.linspace(start[2], end[2], strokelength))
@@ -384,7 +397,8 @@ def crazyStrokeImage(o):
     # this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
-    r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)  # ceil((o.cutter_diameter/12)/o.optimisation.pixsize)
+    # ceil((o.cutter_diameter/12)/o.optimisation.pixsize)
+    r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)
     d = 2 * r
     coef = 0.75
 
@@ -396,7 +410,8 @@ def crazyStrokeImage(o):
     cutterArrayNegative = -cutterArray
 
     cutterimagepix = cutterArray.sum()
-    satisfypix = cutterimagepix * o.crazy_threshold1  # a threshold which says if it is valuable to cut in a direction
+    # a threshold which says if it is valuable to cut in a direction
+    satisfypix = cutterimagepix * o.crazy_threshold1
     toomuchpix = cutterimagepix * o.crazy_threshold2
     indices = ar.nonzero()  # first get white pixels
     startpix = ar.sum()  #
@@ -411,8 +426,10 @@ def crazyStrokeImage(o):
     nchunk = camPathChunkBuilder([(xs, ys)])  # startposition
     print(indices)
     print(indices[0][0], indices[1][0])
-    lastvect = Vector((r, 0, 0))  # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
-    testvect = lastvect.normalized() * r / 2.0  # multiply *2 not to get values <1 pixel
+    # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
+    lastvect = Vector((r, 0, 0))
+    # multiply *2 not to get values <1 pixel
+    testvect = lastvect.normalized() * r / 2.0
     rot = Euler((0, 0, 1))
     i = 0
     perc = 0
@@ -422,8 +439,10 @@ def crazyStrokeImage(o):
     maxtotaltests = 1000000
 
     print(xs, ys, indices[0][0], indices[1][0], r)
-    ar[xs - r:xs - r + d, ys - r:ys - r + d] = ar[xs - r:xs - r + d, ys - r:ys - r + d] * cutterArrayNegative
-    anglerange = [-pi, pi]  # range for angle of toolpath vector versus material vector
+    ar[xs - r:xs - r + d, ys - r:ys - r + d] = ar[xs -
+                                                  r:xs - r + d, ys - r:ys - r + d] * cutterArrayNegative
+    # range for angle of toolpath vector versus material vector
+    anglerange = [-pi, pi]
     testangleinit = 0
     angleincrement = 0.05
     if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW') or (
@@ -463,13 +482,15 @@ def crazyStrokeImage(o):
                 cy = cindices[1].sum() / eatpix
                 v = Vector((cx - r, cy - r))
                 angle = testvect.to_2d().angle_signed(v)
-                if anglerange[0] < angle < anglerange[1]:  # this could be righthanded milling? lets see :)
+                # this could be righthanded milling? lets see :)
+                if anglerange[0] < angle < anglerange[1]:
                     if toomuchpix > eatpix > satisfypix:
                         success = True
             if success:
                 nchunk.points.append([xs, ys])
                 lastvect = testvect
-                ar[xs - r:xs - r + d, ys - r:ys - r + d] = ar[xs - r:xs - r + d, ys - r:ys - r + d] * (-cutterArray)
+                ar[xs - r:xs - r + d, ys - r:ys - r + d] = ar[xs -
+                                                              r:xs - r + d, ys - r:ys - r + d] * (-cutterArray)
                 totpix -= eatpix
                 itests = 0
                 if 0:
@@ -531,7 +552,7 @@ def crazyStrokeImage(o):
                         ys = r
                     nchunk = camPathChunkBuilder([(xs, ys)])  # startposition
                     ar[xs - r:xs - r + d, ys - r:ys - r + d] = ar[xs - r:xs - r + d,
-                                                               ys - r:ys - r + d] * cutterArrayNegative
+                                                                  ys - r:ys - r + d] * cutterArrayNegative
                     r = random.random() * 2 * pi
                     e = Euler((0, 0, r))
                     testvect = lastvect.normalized() * 4  # multiply *2 not to get values <1 pixel
@@ -569,7 +590,8 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     ar[:, :o.borderwidth] = 0
     ar[:, -o.borderwidth:] = 0
 
-    r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)  # ceil((o.cutter_diameter/12)/o.optimisation.pixsize)
+    # ceil((o.cutter_diameter/12)/o.optimisation.pixsize)
+    r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)
     d = 2 * r
     coef = 0.75
     maxarx = ar.shape[0]
@@ -581,9 +603,11 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     cutterimagepix = cutterArray.sum()
 
     anglelimit = o.crazy_threshold3
-    satisfypix = cutterimagepix * o.crazy_threshold1  # a threshold which says if it is valuable to cut in a direction
+    # a threshold which says if it is valuable to cut in a direction
+    satisfypix = cutterimagepix * o.crazy_threshold1
     toomuchpix = cutterimagepix * o.crazy_threshold2  # same, but upper limit
-    optimalpix = cutterimagepix * o.crazy_threshold5  # (satisfypix+toomuchpix)/2.0# the ideal eating ratio
+    # (satisfypix+toomuchpix)/2.0# the ideal eating ratio
+    optimalpix = cutterimagepix * o.crazy_threshold5
     indices = ar.nonzero()  # first get white pixels
 
     startpix = ar.sum()  #
@@ -602,8 +626,10 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     nchunk = camPathChunkBuilder([(xs, ys)])  # startposition
     print(indices)
     print(indices[0][0], indices[1][0])
-    lastvect = Vector((r, 0, 0))  # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
-    testvect = lastvect.normalized() * r / 4.0  # multiply *2 not to get values <1 pixel
+    # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
+    lastvect = Vector((r, 0, 0))
+    # multiply *2 not to get values <1 pixel
+    testvect = lastvect.normalized() * r / 4.0
     rot = Euler((0, 0, 1))
     i = 0
     itests = 0
@@ -665,7 +691,8 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                             # lets see :)
                             # print(xs,ys,angle)
                             foundsolutions.append([testvect.copy(), eatpix])
-                            if len(foundsolutions) >= 10:  # or totpix < startpix*0.025:
+                            # or totpix < startpix*0.025:
+                            if len(foundsolutions) >= 10:
                                 success = True
             itests += 1
             totaltests += 1
@@ -681,13 +708,15 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                         closest = abs(s[1] - optimalpix)
                 # print('closest',closest)
 
-                testvect = bestsolution[0]  # v1#+(v2-v1)*ratio#rewriting with interpolated vect.
+                # v1#+(v2-v1)*ratio#rewriting with interpolated vect.
+                testvect = bestsolution[0]
                 xs = int(nchunk.points[-1][0] + testvect.x)
                 ys = int(nchunk.points[-1][1] + testvect.y)
                 nchunk.points.append([xs, ys])
                 lastvect = testvect
 
-                ar[xs - r:xs + r, ys - r:ys + r] = ar[xs - r:xs + r, ys - r:ys + r] * cutterArrayNegative
+                ar[xs - r:xs + r, ys - r:ys + r] = ar[xs -
+                                                      r:xs + r, ys - r:ys + r] * cutterArrayNegative
                 totpix -= bestsolution[1]
                 itests = 0
                 # if 0:
@@ -747,7 +776,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                     andar = numpy.logical_and(ar, numpy.logical_not(avoidar))
                     indices = andar.nonzero()
                     if len(nchunk.points) > 1:
-                        chunk.parentChildDist([nchunk], chunks, o, distance=r)
+                        parentChildDist([nchunk], chunks, o, distance=r)
                         chunk_builders.append(nchunk)
 
                     if totpix > startpix * 0.001:
@@ -781,7 +810,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
 
                                     nchunk = camPathChunk([(xs, ys)])  # startposition
                                     ar[xs - r:xs + r, ys - r:ys + r] = ar[xs - r:xs + r,
-                                                                       ys - r:ys + r] * cutterArrayNegative
+                                                                          ys - r:ys + r] * cutterArrayNegative
                                     # lastvect=Vector((r,0,0))#vector is 3d,
                                     # blender somehow doesn't rotate 2d vectors with angles.
                                     randomrot = random.random() * 2 * pi
@@ -803,7 +832,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
             print(totaltests)
             i = 0
     if len(nchunk.points) > 1:
-        chunk.parentChildDist([nchunk], chunks, o, distance=r)
+        parentChildDist([nchunk], chunks, o, distance=r)
         chunk_builders.append(nchunk)
 
     for ch in chunk_builders:
@@ -929,7 +958,8 @@ def imageToChunks(o, image, with_border=False):
                             ch.append(v)
                             done = True
                             verts.remove(v)
-                            if v[0] == ch[0][0] and v[1] == ch[0][1]:  # or len(verts)<=1:
+                            # or len(verts)<=1:
+                            if v[0] == ch[0][0] and v[1] == ch[0][1]:
                                 closed = True
 
             if closed:
@@ -968,7 +998,8 @@ def imageToChunks(o, image, with_border=False):
 
         # print('directsimplify')
         reduxratio = 1.25  # was 1.25
-        soptions = ['distance', 'distance', o.optimisation.pixsize * reduxratio, 5, o.optimisation.pixsize * reduxratio]
+        soptions = ['distance', 'distance', o.optimisation.pixsize *
+                    reduxratio, 5, o.optimisation.pixsize * reduxratio]
         nchunks = []
         for i, ch in enumerate(vecchunks):
 
@@ -992,6 +1023,7 @@ def imageToShapely(o, i, with_border=False):
 
     return polys
 
+
 def getSampleImage(s, sarray, minz):
     x = s[0]
     y = s[1]
@@ -1002,10 +1034,10 @@ def getSampleImage(s, sarray, minz):
         maxx = minx + 1
         miny = floor(y)
         maxy = miny + 1
-        s1a=sarray[minx,miny]
-        s2a=sarray[maxx,miny]
-        s1b=sarray[minx,maxy]
-        s2b=sarray[maxx,maxy]
+        s1a = sarray[minx, miny]
+        s2a = sarray[maxx, miny]
+        s1b = sarray[minx, maxy]
+        s2b = sarray[maxx, maxy]
         # s1a = sarray.item(minx, miny)  # most optimal access to array so far
         # s2a = sarray.item(maxx, miny)
         # s1b = sarray.item(minx, maxy)
@@ -1029,32 +1061,34 @@ def getResolution(o):
 
 
 def _backup_render_settings(pairs):
-    properties=[]
-    for owner,struct_name in pairs:
-        obj = getattr(owner,struct_name)
-        if isinstance(obj,bpy.types.bpy_struct):
+    properties = []
+    for owner, struct_name in pairs:
+        obj = getattr(owner, struct_name)
+        if isinstance(obj, bpy.types.bpy_struct):
             # structure, backup all properties
-            obj_value={}
+            obj_value = {}
             for k in dir(obj):
                 if not k.startswith("_"):
-                    obj_value[k]=getattr(obj,k)
+                    obj_value[k] = getattr(obj, k)
             properties.append(obj_value)
         else:
             # simple value
             properties.append(obj)
 
-def _restore_render_settings(pairs,properties):
-    for (owner,struct_name),obj_value in zip(pairs,properties):
-        obj = getattr(owner,struct_name)
-        if isinstance(obj,bpy.types.bpy_struct):
-            for k,v in obj_value.items():
-                setattr(obj,k,v)
+
+def _restore_render_settings(pairs, properties):
+    for (owner, struct_name), obj_value in zip(pairs, properties):
+        obj = getattr(owner, struct_name)
+        if isinstance(obj, bpy.types.bpy_struct):
+            for k, v in obj_value.items():
+                setattr(obj, k, v)
         else:
-            setattr(owner,struct_name,obj_value)
+            setattr(owner, struct_name, obj_value)
+
 
 def renderSampleImage(o):
     t = time.time()
-    simple.progress('getting zbuffer')
+    progress('Getting Z-Buffer')
     # print(o.zbuffer_image)
     o.update_offsetimage_tag = True
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION':
@@ -1063,8 +1097,8 @@ def renderSampleImage(o):
         sx = o.max.x - o.min.x
         sy = o.max.y - o.min.y
 
-        resx = math.ceil(sx / o.optimisation.pixsize) + 2 * o.borderwidth
-        resy = math.ceil(sy / o.optimisation.pixsize) + 2 * o.borderwidth
+        resx = ceil(sx / o.optimisation.pixsize) + 2 * o.borderwidth
+        resy = ceil(sy / o.optimisation.pixsize) + 2 * o.borderwidth
 
         if not o.update_zbufferimage_tag and len(o.zbuffer_image) == resx and len(o.zbuffer_image[0]) == resy:
             # if we call this accidentally in more functions, which currently happens...
@@ -1076,11 +1110,11 @@ def renderSampleImage(o):
             try:
                 i = bpy.data.images.load(iname)
                 if i.size[0] != resx or i.size[1] != resy:
-                    print("Z buffer size changed:",i.size,resx,resy)
+                    print("Z buffer size changed:", i.size, resx, resy)
                     o.update_zbufferimage_tag = True
-                    
+
             except:
-                
+
                 o.update_zbufferimage_tag = True
         if o.update_zbufferimage_tag:
             s = bpy.context.scene
@@ -1090,22 +1124,22 @@ def renderSampleImage(o):
             r = s.render
 
             SETTINGS_TO_BACKUP = [
-                (s.render,"resolution_x"),
-                (s.render,"resolution_x"),
-                (s.cycles,"samples"),
-                (s,"camera"),
-                (vl,"samples"),
-                (vl.cycles,"use_denoising"),
-                (s.world,"mist_settings"),
-                (r,"resolution_x"),
-                (r,"resolution_y"),
-                (r,"resolution_percentage"),
+                (s.render, "resolution_x"),
+                (s.render, "resolution_x"),
+                (s.cycles, "samples"),
+                (s, "camera"),
+                (vl, "samples"),
+                (vl.cycles, "use_denoising"),
+                (s.world, "mist_settings"),
+                (r, "resolution_x"),
+                (r, "resolution_y"),
+                (r, "resolution_percentage"),
             ]
             for ob in s.objects:
-                SETTINGS_TO_BACKUP.append((ob,"hide_render"))
-            backup_settings=None
+                SETTINGS_TO_BACKUP.append((ob, "hide_render"))
+            backup_settings = None
             try:
-                backup_settings=_backup_render_settings(SETTINGS_TO_BACKUP)
+                backup_settings = _backup_render_settings(SETTINGS_TO_BACKUP)
                 # prepare nodes first
                 r.resolution_x = resx
                 r.resolution_y = resy
@@ -1113,19 +1147,19 @@ def renderSampleImage(o):
                 # it renders okay on github actions
                 r.engine = 'CYCLES'
                 s.cycles.samples = 1
-                vl.samples=1
-                vl.cycles.use_denoising=False
+                vl.samples = 1
+                vl.cycles.use_denoising = False
 
                 n.links.clear()
                 n.nodes.clear()
-                node_in = n.nodes.new('CompositorNodeRLayers')            
-                s.view_layers[node_in.layer].use_pass_mist=True
-                mist_settings=s.world.mist_settings
-                s.world.mist_settings.depth=10.0 
-                s.world.mist_settings.start=0
-                s.world.mist_settings.falloff="LINEAR"
-                s.world.mist_settings.height=0
-                s.world.mist_settings.intensity=0
+                node_in = n.nodes.new('CompositorNodeRLayers')
+                s.view_layers[node_in.layer].use_pass_mist = True
+                mist_settings = s.world.mist_settings
+                s.world.mist_settings.depth = 10.0
+                s.world.mist_settings.start = 0
+                s.world.mist_settings.falloff = "LINEAR"
+                s.world.mist_settings.height = 0
+                s.world.mist_settings.intensity = 0
                 node_out = n.nodes.new("CompositorNodeOutputFile")
                 node_out.base_path = os.path.dirname(iname)
                 node_out.format.file_format = 'OPEN_EXR'
@@ -1136,19 +1170,20 @@ def renderSampleImage(o):
                 ###################
 
                 # resize operation image
-                o.offset_image= numpy.full(shape=(resx,resy),fill_value=-10,dtype=numpy.double)
+                o.offset_image = numpy.full(shape=(resx, resy), fill_value=-10, dtype=numpy.double)
 
                 # various settings for  faster render
                 r.resolution_percentage = 100
 
                 # add a new camera settings
                 bpy.ops.object.camera_add(align='WORLD', enter_editmode=False, location=(0, 0, 0),
-                                        rotation=(0, 0, 0))
+                                          rotation=(0, 0, 0))
                 camera = bpy.context.active_object
                 bpy.context.scene.camera = camera
 
                 camera.data.type = 'ORTHO'
-                camera.data.ortho_scale = max(resx * o.optimisation.pixsize, resy * o.optimisation.pixsize)
+                camera.data.ortho_scale = max(
+                    resx * o.optimisation.pixsize, resy * o.optimisation.pixsize)
                 camera.location = (o.min.x + sx / 2, o.min.y + sy / 2, 1)
                 camera.rotation_euler = (0, 0, 0)
                 camera.data.clip_end = 10.0
@@ -1169,21 +1204,19 @@ def renderSampleImage(o):
                 camera.select_set(True)
                 bpy.ops.object.delete()
 
-                os.replace(iname+"%04d.exr"%(s.frame_current),iname)
+                os.replace(iname+"%04d.exr" % (s.frame_current), iname)
             finally:
                 if backup_settings is not None:
-                    _restore_render_settings(SETTINGS_TO_BACKUP,backup_settings)
+                    _restore_render_settings(SETTINGS_TO_BACKUP, backup_settings)
                 else:
-                    print("Failed to backup scene settings")
-
+                    print("Failed to Backup Scene Settings")
 
             i = bpy.data.images.load(iname)
             bpy.context.scene.render.engine = 'BLENDERCAM_RENDER'
 
-
         a = imagetonumpy(i)
         a = 10.0 * a
-        a= 1.0 - a
+        a = 1.0 - a
         o.zbuffer_image = a
         o.update_zbufferimage_tag = False
 
@@ -1203,27 +1236,32 @@ def renderSampleImage(o):
         #o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
 
         o.optimisation.pixsize = o.source_image_size_x / i.size[0]
-        simple.progress('pixel size in the image source', o.optimisation.pixsize)
+        progress('Pixel Size in the Image Source', o.optimisation.pixsize)
 
         rawimage = imagetonumpy(i)
         maxa = numpy.max(rawimage)
         mina = numpy.min(rawimage)
         neg = o.source_image_scale_z < 0
-        if o.strategy == 'WATERLINE':  # waterline strategy needs image border to have ok ambient.
-            a = numpy.full(shape=(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]),fill_value=1-neg,dtype=numpy.float)
+        # waterline strategy needs image border to have ok ambient.
+        if o.strategy == 'WATERLINE':
+            a = numpy.full(shape=(
+                2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]), fill_value=1-neg, dtype=numpy.float)
         else:  # other operations like parallel need to reach the border
-            a = numpy.full(shape=(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]),fill_value=neg,dtype=numpy.float)
+            a = numpy.full(shape=(
+                2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]), fill_value=neg, dtype=numpy.float)
         # 2*o.borderwidth
         a[o.borderwidth:-o.borderwidth, o.borderwidth:-o.borderwidth] = rawimage
         a = a[sx:ex + o.borderwidth * 2, sy:ey + o.borderwidth * 2]
 
         if o.source_image_scale_z < 0:
             # negative images place themselves under the 0 plane by inverting through scale multiplication
-            a = (a - mina)  # first, put the image down, se we know the image minimum is on 0
+            # first, put the image down, se we know the image minimum is on 0
+            a = (a - mina)
             a *= o.source_image_scale_z
 
         else:  # place positive images under 0 plane, this is logical
-            a = (a - mina)  # first, put the image down, se we know the image minimum is on 0
+            # first, put the image down, se we know the image minimum is on 0
+            a = (a - mina)
             a *= o.source_image_scale_z
             a -= (maxa - mina) * o.source_image_scale_z
 
@@ -1237,7 +1275,7 @@ def renderSampleImage(o):
         print('min image ', numpy.min(a))
         o.zbuffer_image = a
     # progress('got z buffer also with conversion in:')
-    simple.progress(time.time() - t)
+    progress(time.time() - t)
 
     # progress(a)
     o.update_zbufferimage_tag = False
@@ -1251,10 +1289,10 @@ async def prepareArea(o):
     renderSampleImage(o)
     samples = o.zbuffer_image
 
-    iname = simple.getCachePath(o) + '_off.exr'
+    iname = getCachePath(o) + '_off.exr'
 
     if not o.update_offsetimage_tag:
-        progress('loading offset image')
+        progress('Loading Offset Image')
         try:
             o.offset_image = imagetonumpy(bpy.data.images.load(iname))
 
@@ -1266,3 +1304,98 @@ async def prepareArea(o):
             samples = numpy.maximum(samples, o.min.z - 0.00001)
         await offsetArea(o, samples)
         numpysave(o.offset_image, iname)
+
+
+def getCutterArray(operation, pixsize):
+    type = operation.cutter_type
+    # print('generating cutter')
+    r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
+    res = ceil((r * 2) / pixsize)
+    m = res / 2.0
+    car = numpy.full(shape=(res, res), fill_value=-10.0, dtype=float)
+
+    v = Vector((0, 0, 0))
+    ps = pixsize
+    if type == 'END':
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    car.itemset((a, b), 0)
+    elif type == 'BALL' or type == 'BALLNOSE':
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    z = sin(acos(v.length / r)) * r - r
+                    car.itemset((a, b), z)  # [a,b]=z
+
+    elif type == 'VCARVE':
+        angle = operation.cutter_tip_angle
+        s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    z = (-v.length * s)
+                    car.itemset((a, b), z)
+    elif type == 'CYLCONE':
+        angle = operation.cutter_tip_angle
+        cyl_r = operation.cylcone_diameter/2
+        s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= r:
+                    z = (-(v.length - cyl_r) * s)
+                    if v.length <= cyl_r:
+                        z = 0
+                    car.itemset((a, b), z)
+    elif type == 'BALLCONE':
+        angle = radians(operation.cutter_tip_angle)/2
+        ball_r = operation.ball_radius
+        cutter_r = operation.cutter_diameter / 2
+        conedepth = (cutter_r - ball_r)/tan(angle)
+        Ball_R = ball_r/cos(angle)
+        D_ofset = ball_r * tan(angle)
+        s = tan(pi/2-angle)
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+                if v.length <= cutter_r:
+                    z = -(v.length - ball_r) * s - Ball_R + D_ofset
+                    if v.length <= ball_r:
+                        z = sin(acos(v.length / Ball_R)) * Ball_R - Ball_R
+                    car.itemset((a, b), z)
+    elif type == 'CUSTOM':
+        cutob = bpy.data.objects[operation.cutter_object_name]
+        scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
+        # print(cutob.scale)
+        vstart = Vector((0, 0, -10))
+        vend = Vector((0, 0, 10))
+        print('Sampling Custom Cutter')
+        maxz = -1
+        for a in range(0, res):
+            vstart.x = (a + 0.5 - m) * ps * scale
+            vend.x = vstart.x
+
+            for b in range(0, res):
+                vstart.y = (b + 0.5 - m) * ps * scale
+                vend.y = vstart.y
+                v = vend - vstart
+                c = cutob.ray_cast(vstart, v, distance=1.70141e+38)
+                if c[3] != -1:
+                    z = -c[1][2] / scale
+                    # print(c)
+                    if z > -9:
+                        # print(z)
+                        if z > maxz:
+                            maxz = z
+                        car.itemset((a, b), z)
+        car -= maxz
+    return car

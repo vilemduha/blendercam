@@ -5,6 +5,7 @@
 from . import nc
 from . import iso
 
+
 class Creator(iso.Creator):
     def __init__(self):
         iso.Creator.__init__(self)
@@ -16,10 +17,10 @@ class Creator(iso.Creator):
     # This version of COMMENT removes comments from the resultant GCode
     # Note: The Anilam hates comments when importing code.
 
-    def COMMENT(self,comment): return('')
+    def COMMENT(self, comment): return('')
 
     def program_begin(self, id, comment):
-        self.write('%\n');  # Start of file token that Anilam Crusader M likes
+        self.write('%\n')  # Start of file token that Anilam Crusader M likes
         # No Comments for the Anilam crusaher M, please......
         #self.write( ('(' + comment + ')' + '\n') )
 
@@ -28,41 +29,41 @@ class Creator(iso.Creator):
         self.write('%\n')     # EOF signal for Anilam Crusader M
 
     ############################################################################
-    ##  Settings
+    # Settings
 
     def imperial(self):
-        self.write( self.IMPERIAL() + '\n')
+        self.write(self.IMPERIAL() + '\n')
         self.fmt.number_of_decimal_places = 4
 
     def metric(self):
-        self.write( self.METRIC() + '\n' )
+        self.write(self.METRIC() + '\n')
         self.fmt.number_of_decimal_places = 3
 
     def absolute(self):
-        self.write( self.ABSOLUTE() + '\n')
+        self.write(self.ABSOLUTE() + '\n')
 
     def incremental(self):
-        self.write( self.INCREMENTAL() + '\n' )
+        self.write(self.INCREMENTAL() + '\n')
 
     def polar(self, on=True):
-        if (on) :
-            self.write(self.POLAR_ON() + '\n' )
-        else :
-            self.write(self.POLAR_OFF() + '\n' )
+        if (on):
+            self.write(self.POLAR_ON() + '\n')
+        else:
+            self.write(self.POLAR_OFF() + '\n')
 
     def set_plane(self, plane):
-        if (plane == 0) :
+        if (plane == 0):
             self.write('G17\n')
-        elif (plane == 1) :
+        elif (plane == 1):
             self.write('G18\n')
-        elif (plane == 2) :
+        elif (plane == 2):
             self.write('G19\n')
 
     def comment(self, text):
-       pass
+        pass
 
     ############################################################################
-    ##  Tools
+    # Tools
 
     def tool_change(self, id):
         self.write(('T%i' % id) + '\n')
@@ -83,11 +84,13 @@ class Creator(iso.Creator):
     # These are selected by values from 1 to 9 inclusive.
     def workplane(self, id):
         if ((id >= 1) and (id <= 6)):
-            self.write( (self.WORKPLANE() % (id + self.WORKPLANE_BASE())) + '\n')
+            self.write((self.WORKPLANE() % (id + self.WORKPLANE_BASE())) + '\n')
         if ((id >= 7) and (id <= 9)):
-            self.write( ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + ('.%i' % (id - 6))) + '\n')
+            self.write(((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + ('.%i' % (id - 6))) + '\n')
 
-    def drill(self, x=None, y=None, dwell=None, depthparams = None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance = None):
-        self.write('(Canned drill cycle ops are not yet supported here on this Anilam Crusader M postprocessor)')
+    def drill(self, x=None, y=None, dwell=None, depthparams=None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
+        self.write(
+            '(Canned drill cycle ops are not yet supported here on this Anilam Crusader M postprocessor)')
+
 
 nc.creator = Creator()

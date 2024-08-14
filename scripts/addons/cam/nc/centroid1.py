@@ -15,7 +15,6 @@ import datetime
 now = datetime.datetime.now()
 
 
-
 ################################################################################
 class Creator(iso_modal.Creator):
 
@@ -26,23 +25,25 @@ class Creator(iso_modal.Creator):
         self.useCrcCenterline = True
         self.absolute_flag = True
         self.prev_g91 = ''
-        self.safe_z =None
+        self.safe_z = None
+
     def SPINDLE(self, format, speed): return(self.SPACE() + 'S' + (format % speed))
 ################################################################################
-#cutter comp
+# cutter comp
 
-    #def crc_on(self):
+    # def crc_on(self):
     #    self.useCrc = True
     #    self.useCrcCenterline = True
 
-    #def crc_off(self):
+    # def crc_off(self):
     #    self.useCrc = False
 
 ################################################################################
 # general
 
     def comment(self, text):
-        self.write(';' + text +'\n')
+        self.write(';' + text + '\n')
+
     def write_blocknum(self):
         pass
 
@@ -69,7 +70,6 @@ class Creator(iso_modal.Creator):
         self.write(';time:'+str(now)+'\n')
         self.write('G17 G20 G80 G40 G90\n')
 
-
     def program_end(self):
         self.write('M05\n')
         self.write('M25\n')
@@ -79,9 +79,9 @@ class Creator(iso_modal.Creator):
 
     def program_stop(self, optional=False):
         self.write_blocknum()
-        if (optional) :
+        if (optional):
             self.write(self.STOP_OPTIONAL() + '\n')
-        else :
+        else:
             self.write('M05\n')
             self.write('M25\n')
             self.write(self.STOP() + '\n')
@@ -94,16 +94,18 @@ class Creator(iso_modal.Creator):
         if ((id >= 1) and (id <= 6)):
             self.g_list.append(self.WORKPLANE() % (id + self.WORKPLANE_BASE()))
         if ((id >= 7) and (id <= 9)):
-            self.g_list.append(((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + ('.%i' % (id - 6))))
+            self.g_list.append(
+                ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + ('.%i' % (id - 6))))
         self.prev_g0123 = ''
 
 ################################################################################
 # clearance plane
 
-    def clearanceplane(self,z=None):
+    def clearanceplane(self, z=None):
         self.safe_z = z
 ################################################################################
 # return to home
+
     def rapid_home(self, x=None, y=None, z=None, a=None, b=None, c=None):
         """Rapid relative to home position"""
         self.write('M05\n')
@@ -121,14 +123,13 @@ class Creator(iso_modal.Creator):
         self.t = id
         self.write('M25\n')
         if self.safe_z == None:
-            self.write('G43 H'+ str(id) + ' Z')
+            self.write('G43 H' + str(id) + ' Z')
             self.write('1.0')
-            self.write ('\n')
+            self.write('\n')
         else:
-            self.write('G43 H'+ str(id) + ' Z')
+            self.write('G43 H' + str(id) + ' Z')
             self.write(str(self.safe_z))
-            self.write ('\n')
-
+            self.write('\n')
 
     def tool_defn(self, id, name='', params=None):
         #self.write('G43 \n')
@@ -136,7 +137,6 @@ class Creator(iso_modal.Creator):
 
     def write_spindle(self):
         pass
-
 
     def spindle(self, s, clockwise):
         if s < 0:
@@ -146,12 +146,12 @@ class Creator(iso_modal.Creator):
         self.s = self.SPINDLE(self.FORMAT_ANG(), s)
         if clockwise:
            #self.s =  self.SPINDLE_CW() + self.s
-            self.s =  self.SPINDLE_CW()
-            self.write(self.s +  '\n')
+            self.s = self.SPINDLE_CW()
+            self.write(self.s + '\n')
             self.write('G04 P2.0 \n')
 
         else:
-            self.s =  self.SPINDLE_CCW() + self.s
+            self.s = self.SPINDLE_CCW() + self.s
 
     def end_canned_cycle(self):
         self.write_blocknum()
@@ -164,5 +164,6 @@ class Creator(iso_modal.Creator):
         self.write('M05\n')
         self.write('M25\n')
         self.write('G00 X-1.0 Y1.0\n')
+
 
 nc.creator = Creator()

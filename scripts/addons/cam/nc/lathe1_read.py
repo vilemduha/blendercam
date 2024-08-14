@@ -10,31 +10,34 @@ import re
 import sys
 
 ################################################################################
+
+
 class Parser(nc.Parser):
 
     def __init__(self, writer):
         nc.Parser.__init__(self, writer)
 
-        self.pattern_main = re.compile('([(!;].*|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+-])?\d*(?:\.\d*)?)')
+        self.pattern_main = re.compile(
+            '([(!;].*|\s+|[a-zA-Z0-9_:](?:[+-])?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:[+-])?\d*(?:\.\d*)?)')
 
-        #if ( or ! or ; at least one space or a letter followed by some character or not followed by a +/- followed by decimal, with a possible decimal point
-         #  followed by a possible deimcal, or a letter followed by # with a decimal . deimcal
+        # if ( or ! or ; at least one space or a letter followed by some character or not followed by a +/- followed by decimal, with a possible decimal point
+        #  followed by a possible deimcal, or a letter followed by # with a decimal . deimcal
         # add your character here > [(!;] for comments char
         # then look for the 'comment' function towards the end of the file and add another elif
 
     def Parse(self, name, oname=None):
-        self.files_open(name,oname)
+        self.files_open(name, oname)
 
-        #self.begin_ncblock()
-        #self.begin_path(None)
-        #self.add_line(z=500)
-        #self.end_path()
-        #self.end_ncblock()
+        # self.begin_ncblock()
+        # self.begin_path(None)
+        # self.add_line(z=500)
+        # self.end_path()
+        # self.end_ncblock()
 
         path_col = None
         f = None
         arc = 0
-        uw  = 0
+        uw = 0
         while (self.readline()):
 
             a = None
@@ -113,7 +116,7 @@ class Parser(nc.Parser):
                     path_col = "feed"
                     col = "feed"
                 elif (word == 'G82' or word == 'g82'):
-                    drill = True;
+                    drill = True
                     no_move = True
                     path_col = "feed"
                     col = "feed"
@@ -126,7 +129,8 @@ class Parser(nc.Parser):
                     self.absolute()
                 elif (word == 'G91' or word == 'g91'):
                     self.incremental()
-                elif (word[0] == 'G') : col = "prep"
+                elif (word[0] == 'G'):
+                    col = "prep"
                 elif (word[0] == 'I' or word[0] == 'i'):
                     col = "axis"
                     i = eval(word[1:])
@@ -139,9 +143,12 @@ class Parser(nc.Parser):
                     col = "axis"
                     k = eval(word[1:])
                     move = True
-                elif (word[0] == 'M') : col = "misc"
-                elif (word[0] == 'N') : col = "blocknum"
-                elif (word[0] == 'O') : col = "program"
+                elif (word[0] == 'M'):
+                    col = "misc"
+                elif (word[0] == 'N'):
+                    col = "blocknum"
+                elif (word[0] == 'O'):
+                    col = "program"
                 elif (word[0] == 'P' or word[0] == 'p'):
                     col = "axis"
                     p = eval(word[1:])
@@ -158,9 +165,9 @@ class Parser(nc.Parser):
                     col = "axis"
                     s = eval(word[1:])
                     move = True
-                elif (word[0] == 'T') :
+                elif (word[0] == 'T'):
                     col = "tool"
-                    self.set_tool( eval(word[1:]) )
+                    self.set_tool(eval(word[1:]))
                 elif (word[0] == 'X' or word[0] == 'x'):
                     col = "axis"
                     x = eval(word[1:])
@@ -173,24 +180,30 @@ class Parser(nc.Parser):
                     col = "axis"
                     u = eval(word[1:])
                     move = True
-                    uw=1
+                    uw = 1
 
                 elif (word[0] == 'W' or word[0] == 'w'):
                     col = "axis"
                     w = eval(word[1:])
                     move = True
-                    uw=1
+                    uw = 1
 
                 elif (word[0] == 'Z' or word[0] == 'z'):
                     col = "axis"
                     z = eval(word[1:])
                     move = True
-                elif (word[0] == '(') : (col, cdata) = ("comment", True)
-                elif (word[0] == '!') : (col, cdata) = ("comment", True)
-                elif (word[0] == ';') : (col, cdata) = ("comment", True)
-                elif (word[0] == '#') : col = "variable"
-                elif (word[0] == ':') : col = "blocknum"
-                elif (ord(word[0]) <= 32) : cdata = True
+                elif (word[0] == '('):
+                    (col, cdata) = ("comment", True)
+                elif (word[0] == '!'):
+                    (col, cdata) = ("comment", True)
+                elif (word[0] == ';'):
+                    (col, cdata) = ("comment", True)
+                elif (word[0] == '#'):
+                    col = "variable"
+                elif (word[0] == ':'):
+                    col = "blocknum"
+                elif (ord(word[0]) <= 32):
+                    cdata = True
                 self.add_text(word, col, cdata)
 
             if (drill):
@@ -208,17 +221,18 @@ class Parser(nc.Parser):
             else:
                 if (move and not no_move):
                     self.begin_path(path_col)
-                    if (arc==-1):
+                    if (arc == -1):
                         self.add_arc(x, y, z, i, j, k, r, arc)
-                    elif (arc==1):
-                        #self.add_arc(x, y, z, i, j, k, -r, arc) #if you want to use arcs with R values uncomment the first part of this line and comment the next one
+                    elif (arc == 1):
+                        # self.add_arc(x, y, z, i, j, k, -r, arc) #if you want to use arcs with R values uncomment the first part of this line and comment the next one
                         self.add_arc(x, y, z, i, j, k, r, arc)
-                    #else     : self.add_line(x, y, z, a, b, c)
-                    elif(uw==1):
-                        self.add_lathe_increment_line(u,w)
+                    # else     : self.add_line(x, y, z, a, b, c)
+                    elif(uw == 1):
+                        self.add_lathe_increment_line(u, w)
 
-                    else     : self.add_line(x, y, z, a, b, c)
-   	            self.end_path()
+                    else:
+                        self.add_line(x, y, z, a, b, c)
+                    self.end_path()
 
             self.end_ncblock()
 

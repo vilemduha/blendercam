@@ -9,6 +9,8 @@ from . import iso_modal
 import math
 
 ################################################################################
+
+
 class Creator(iso_modal.Creator):
 
     def __init__(self):
@@ -21,12 +23,12 @@ class Creator(iso_modal.Creator):
         self.waiting_t = None
         self.waiting_for_program_begin = False
 
-    ######## Codes
+    # Codes
 
     def SPACE(self): return(' ')
     def TOOL(self): return('T%i')
 
-    ######## Overridden functions
+    # Overridden functions
 
     def write_blocknum(self):
         self.write(self.BLOCK() % self.n)
@@ -50,8 +52,8 @@ class Creator(iso_modal.Creator):
         self.write(' G71\n')
         self.fmt.number_of_decimal_places = 3
 
-
     # no tool definition lines wanted
+
     def tool_defn(self, id, name='', params=None):
         pass
 
@@ -86,5 +88,6 @@ class Creator(iso_modal.Creator):
     def workplane(self, id):
         pass
 ################################################################################
+
 
 nc.creator = Creator()

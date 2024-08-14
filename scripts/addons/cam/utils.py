@@ -1,89 +1,74 @@
+"""BlenderCAM 'utils.py' © 2012 Vilem Novak
 
-# blender CAM utils.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+Main functionality of BlenderCAM.
+The functions here are called with operators defined in 'ops.py'
+"""
 
-# here is the main functionality of Blender CAM. The functions here are called with operators defined in ops.py.
-
-import bpy
-import time
-import mathutils
-import math
-from math import *
-from mathutils import *
-from bpy.props import *
-from bpy_extras import object_utils
-
-import sys
-import numpy
+from math import (
+    ceil,
+    pi
+)
+from pathlib import Path
 import pickle
+import shutil
+import sys
+import time
 
-from cam.chunk import *
-from cam.collision import *
-from cam.simple import *
-from cam.pattern import *
-from cam.polygon_utils_cam import *
-from cam.image_utils import *
-from cam.exception import *
-
-from cam.async_op import progress_async
-from cam.opencamlib.opencamlib import oclSample, oclSamplePoints, oclResampleChunks, oclGetWaterline
-
-from shapely.geometry import polygon as spolygon
-from shapely.geometry import MultiPolygon
+import numpy
+import shapely
 from shapely import ops as sops
 from shapely import geometry as sgeometry
+from shapely.geometry import polygon as spolygon
+from shapely.geometry import MultiPolygon
+
+import bpy
+from bpy.app.handlers import persistent
+from bpy_extras import object_utils
+from mathutils import Euler, Vector
+
+from .async_op import progress_async
+from .cam_chunk import (
+    curveToChunks,
+    parentChild,
+    camPathChunk,
+    camPathChunkBuilder,
+    parentChildDist,
+    chunksToShapely
+)
+from .collision import (
+    getSampleBullet,
+    getSampleBulletNAxis,
+    prepareBulletCollision
+)
+from .exception import CamException
+from .image_utils import (
+    imageToChunks,
+    getSampleImage,
+    renderSampleImage,
+    prepareArea,
+)
+from .opencamlib.opencamlib import (
+    oclSample,
+    oclResampleChunks,
+)
+from .polygon_utils_cam import shapelyToCurve, shapelyToMultipolygon
+from .simple import (
+    activate,
+    progress,
+    select_multiple,
+    delob,
+    timingadd,
+    timinginit,
+    timingstart,
+    tuple_add,
+    tuple_mul,
+    tuple_sub,
+    isVerticalLimit,
+    getCachePath
+)
 
 # from shapely.geometry import * not possible until Polygon libs gets out finally..
 SHAPELY = True
-
-
-# The following functions are temporary
-# until all content in __init__.py is cleaned up
-
-def update_material(self, context):
-    addMaterialAreaObject()
-
-def update_operation(self, context):
-    from . import updateRest
-    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateRest(active_op, bpy.context)
-
-def update_exact_mode(self, context):
-    from . import updateExact
-    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateExact(active_op, bpy.context)
-
-def update_opencamlib(self, context):
-    from . import updateOpencamlib
-    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateOpencamlib(active_op, bpy.context)
-
-def update_zbuffer_image(self, context):
-    from . import updateZbufferImage
-    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateZbufferImage(active_op, bpy.context)
-
-
-
-
 
 
 # Import OpencamLib
@@ -96,7 +81,8 @@ def opencamlib_version():
             import opencamlib as ocl
         except ImportError as e:
             return
-    return(ocl.version())
+    return ocl.version()
+
 
 def positionObject(operation):
     ob = bpy.data.objects[operation.object_name]
@@ -179,7 +165,7 @@ def getBoundsWorldspace(obs, use_modifiers=False):
             bpy.ops.object.delete()
             bpy.ops.outliner.orphans_purge()
         else:
-            if not hasattr(ob.data,"splines"):
+            if not hasattr(ob.data, "splines"):
                 raise CamException("Can't do CAM operation on the selected object type")
             # for coord in bb:
             for c in ob.data.splines:
@@ -284,21 +270,21 @@ def getOperationSources(o):
 def getBounds(o):
     # print('kolikrat sem rpijde')
     if o.geometry_source == 'OBJECT' or o.geometry_source == 'COLLECTION' or o.geometry_source == 'CURVE':
-        print("valid geometry")
+        print("Valid Geometry")
         minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
 
         if o.minz_from == 'OBJECT':
             if minz == 10000000:
                 minz = 0
-            print("minz from object:" + str(minz))
+            print("Minz from Object:" + str(minz))
             o.min.z = minz
             o.minz = o.min.z
         else:
             o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
-            print("not minz from object")
+            print("Not Minz from Object")
 
         if o.material.estimate_from_model:
-            print("Estimate material from model")
+            print("Estimate Material from Model")
 
             o.min.x = minx - o.material.radius_around_model
             o.min.y = miny - o.material.radius_around_model
@@ -307,7 +293,7 @@ def getBounds(o):
             o.max.x = maxx + o.material.radius_around_model
             o.max.y = maxy + o.material.radius_around_model
         else:
-            print("not material from model")
+            print("Not Material from Model")
             o.min.x = o.material.origin.x
             o.min.y = o.material.origin.y
             o.min.z = o.material.origin.z - o.material.size.z
@@ -339,14 +325,14 @@ def getBounds(o):
     s = bpy.context.scene
     m = s.cam_machine
     # make sure this message only shows once and goes away once fixed
-    o.info.warnings.replace('Operation exceeds your machine limits\n','')
+    o.info.warnings.replace('Operation Exceeds Your Machine Limits\n', '')
     if o.max.x - o.min.x > m.working_area.x or o.max.y - o.min.y > m.working_area.y \
             or o.max.z - o.min.z > m.working_area.z:
-        o.info.warnings += 'Operation exceeds your machine limits\n'
+        o.info.warnings += 'Operation Exceeds Your Machine Limits\n'
 
 
 def getBoundsMultiple(operations):
-    """gets bounds of multiple operations, mainly for purpose of simulations or rest milling. highly suboptimal."""
+    """Gets Bounds of Multiple Operations, Mainly for Purpose of Simulations or Rest Milling. Highly Suboptimal."""
     maxx = maxy = maxz = -10000000
     minx = miny = minz = 10000000
     for o in operations:
@@ -423,7 +409,8 @@ async def sampleChunks(o, pathSamples, layers):
             cutter = o.cutter_shape
             cutterdepth = cutter.dimensions.z / 2
     else:
-        if o.strategy != 'WATERLINE':  # or prepare offset image, but not in some strategies.
+        # or prepare offset image, but not in some strategies.
+        if o.strategy != 'WATERLINE':
             await prepareArea(o)
 
         pixsize = o.optimisation.pixsize
@@ -454,8 +441,7 @@ async def sampleChunks(o, pathSamples, layers):
         ob = bpy.data.objects[o.object_name]
         zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
 
-    print(f"Total sample points {totlen}")
-
+    print(f"Total Sample Points {totlen}")
 
     n = 0
     last_percent = -1
@@ -475,9 +461,9 @@ async def sampleChunks(o, pathSamples, layers):
         # threads_count=4
 
         # for t in range(0,threads):
-        our_points=patternchunk.get_points_np()
-        ambient_contains=shapely.contains(o.ambient,shapely.points(our_points[:,0:2]))
-        for s,in_ambient in zip(our_points,ambient_contains):
+        our_points = patternchunk.get_points_np()
+        ambient_contains = shapely.contains(o.ambient, shapely.points(our_points[:, 0:2]))
+        for s, in_ambient in zip(our_points, ambient_contains):
             if o.strategy != 'WATERLINE' and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
                 await progress_async('sampling paths ', last_percent)
@@ -500,7 +486,8 @@ async def sampleChunks(o, pathSamples, layers):
                         z = getSampleBullet(cutter, x, y, cutterdepth, 1,
                                             lastsample[2] - o.dist_along_paths)  # first try to the last sample
                         if z < minz - 1:
-                            z = getSampleBullet(cutter, x, y, cutterdepth, lastsample[2] - o.dist_along_paths, minz)
+                            z = getSampleBullet(cutter, x, y, cutterdepth,
+                                                lastsample[2] - o.dist_along_paths, minz)
                     else:
                         z = getSampleBullet(cutter, x, y, cutterdepth, 1, minz)
 
@@ -534,7 +521,8 @@ async def sampleChunks(o, pathSamples, layers):
                                 lastlayer = i2
 
                     currentlayer = i
-                    if lastlayer is not None and lastlayer != currentlayer:  # and lastsample[2]!=newsample[2]:
+                    # and lastsample[2]!=newsample[2]:
+                    if lastlayer is not None and lastlayer != currentlayer:
                         # #sampling for sorted paths in layers- to go to the border of the sampled layer at least...
                         # there was a bug here, but should be fixed.
                         if currentlayer < lastlayer:
@@ -566,7 +554,8 @@ async def sampleChunks(o, pathSamples, layers):
 
                             if growing:
                                 if li > 0:
-                                    layeractivechunks[ls].points.insert(-1, betweensample.to_tuple())
+                                    layeractivechunks[ls].points.insert(-1,
+                                                                        betweensample.to_tuple())
                                 else:
                                     layeractivechunks[ls].points.append(betweensample.to_tuple())
                                 layeractivechunks[ls + 1].points.append(betweensample.to_tuple())
@@ -587,17 +576,16 @@ async def sampleChunks(o, pathSamples, layers):
 
                 if terminatechunk:
                     if len(ch.points) > 0:
-                        as_chunk=ch.to_chunk()
+                        as_chunk = ch.to_chunk()
                         layerchunks[i].append(as_chunk)
                         thisrunchunks[i].append(as_chunk)
                         layeractivechunks[i] = camPathChunkBuilder([])
             lastsample = newsample
 
-
         for i, l in enumerate(layers):
             ch = layeractivechunks[i]
             if len(ch.points) > 0:
-                as_chunk=ch.to_chunk()
+                as_chunk = ch.to_chunk()
                 layerchunks[i].append(as_chunk)
                 thisrunchunks[i].append(as_chunk)
                 layeractivechunks[i] = camPathChunkBuilder([])
@@ -611,7 +599,7 @@ async def sampleChunks(o, pathSamples, layers):
         lastrunchunks = thisrunchunks
 
     # print(len(layerchunks[i]))
-    progress('checking relations between paths')
+    progress('Checking Relations Between Paths')
     timingstart(sortingtime)
 
     if o.strategy == 'PARALLEL' or o.strategy == 'CROSS' or o.strategy == 'OUTLINEFILL':
@@ -627,7 +615,8 @@ async def sampleChunks(o, pathSamples, layers):
                     if not ch1.parents:
                         children.append(ch1)
 
-                parentChild(parents, children, o)  # parent only last and first chunk, before it did this for all.
+                # parent only last and first chunk, before it did this for all.
+                parentChild(parents, children, o)
     timingadd(sortingtime)
     chunks = []
 
@@ -659,7 +648,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
     cutterdepth = cutter.dimensions.z / 2
 
     t = time.time()
-    print('sampling paths')
+    print('Sampling Paths')
 
     totlen = 0  # total length of all chunks, to estimate sampling time.
     for chs in pathSamples:
@@ -675,7 +664,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
         lastrunchunks.append([])
     n = 0
 
-    last_percent=-1
+    last_percent = -1
     lastz = minz
     for patternchunk in pathSamples:
         # print (patternchunk.endpoints)
@@ -690,14 +679,15 @@ async def sampleChunksNAxis(o, pathSamples, layers):
         # for t in range(0,threads):
         # print(len(patternchunk.startpoints),len( patternchunk.endpoints))
         spl = len(patternchunk.startpoints)
-        for si in range(0, spl):  # ,startp in enumerate(patternchunk.startpoints):
+        # ,startp in enumerate(patternchunk.startpoints):
+        for si in range(0, spl):
             # #TODO: seems we are writing into the source chunk ,
             #  and that is why we need to write endpoints everywhere too?
 
-            percent=int(100 * n / totlen)
-            if percent!=last_percent:
+            percent = int(100 * n / totlen)
+            if percent != last_percent:
                 await progress_async('sampling paths', percent)
-                last_percent=percent
+                last_percent = percent
             n += 1
             sampled = False
             # print(si)
@@ -718,9 +708,11 @@ async def sampleChunksNAxis(o, pathSamples, layers):
                 if o.cutter_type == 'VCARVE':  # Bullet cone is always pointing Up Z in the object
                     cutter.rotation_euler.x += pi
                 cutter.update_tag()
-                bpy.context.scene.frame_set(1)  # this has to be :( it resets the rigidbody world.
+                # this has to be :( it resets the rigidbody world.
+                bpy.context.scene.frame_set(1)
                 # No other way to update it probably now :(
-                bpy.context.scene.frame_set(2)  # actually 2 frame jumps are needed.
+                # actually 2 frame jumps are needed.
+                bpy.context.scene.frame_set(2)
                 bpy.context.scene.frame_set(0)
 
             newsample = getSampleBulletNAxis(cutter, startp, endp, rotation, cutterdepth)
@@ -729,7 +721,8 @@ async def sampleChunksNAxis(o, pathSamples, layers):
             ################################
             # handling samples
             ############################################
-            if newsample is not None:  # this is weird, but will leave it this way now.. just prototyping here.
+            # this is weird, but will leave it this way now.. just prototyping here.
+            if newsample is not None:
                 sampled = True
             else:  # TODO: why was this here?
                 newsample = startp
@@ -777,14 +770,16 @@ async def sampleChunksNAxis(o, pathSamples, layers):
                                 betweenrotation = tuple_add(lastrotation,
                                                             tuple_mul(tuple_sub(rotation, lastrotation), ratio))
                                 # startpoint = retract point, it has to be always available...
-                                betweenstartpoint = laststartpoint + (startp - laststartpoint) * ratio
+                                betweenstartpoint = laststartpoint + \
+                                    (startp - laststartpoint) * ratio
                                 # here, we need to have also possible endpoints always..
                                 betweenendpoint = lastendpoint + (endp - lastendpoint) * ratio
                                 if growing:
                                     if li > 0:
                                         layeractivechunks[ls].points.insert(-1, betweensample)
                                         layeractivechunks[ls].rotations.insert(-1, betweenrotation)
-                                        layeractivechunks[ls].startpoints.insert(-1, betweenstartpoint)
+                                        layeractivechunks[ls].startpoints.insert(
+                                            -1, betweenstartpoint)
                                         layeractivechunks[ls].endpoints.insert(-1, betweenendpoint)
                                     else:
                                         layeractivechunks[ls].points.append(betweensample)
@@ -836,11 +831,11 @@ async def sampleChunksNAxis(o, pathSamples, layers):
             laststartpoint = startp
             lastendpoint = endp
 
-        # convert everything to actual chunks 
-        # rather than chunkBuilders 
+        # convert everything to actual chunks
+        # rather than chunkBuilders
         for i, l in enumerate(layers):
-            layeractivechunks[i]=layeractivechunks[i].to_chunk() if layeractivechunks[i] is not None else None
-
+            layeractivechunks[i] = layeractivechunks[i].to_chunk(
+            ) if layeractivechunks[i] is not None else None
 
         for i, l in enumerate(layers):
             ch = layeractivechunks[i]
@@ -856,7 +851,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
 
     # print(len(layerchunks[i]))
 
-    progress('checking relations between paths')
+    progress('Checking Relations Between Paths')
     """#this algorithm should also work for n-axis, but now is "sleeping"
     if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
         if len(layers)>1:# sorting help so that upper layers go first always
@@ -880,7 +875,8 @@ def extendChunks5axis(chunks, o):
         cutterstart = Vector((m.starting_position.x, m.starting_position.y,
                               max(o.max.z, m.starting_position.z)))  # start point for casting
     else:
-        cutterstart = Vector((0, 0, max(o.max.z, free_height)))  # start point for casting
+        # start point for casting
+        cutterstart = Vector((0, 0, max(o.max.z, free_height)))
     cutterend = Vector((0, 0, o.min.z))
     oriname = o.name + ' orientation'
     ori = s.objects[oriname]
@@ -964,7 +960,7 @@ def polygonConvexHull(context):
 
     bpy.ops.object.duplicate()
     bpy.ops.object.join()
-    bpy.context.object.data.dimensions = '3D'  #  force curve to be a 3D curve
+    bpy.context.object.data.dimensions = '3D'  # force curve to be a 3D curve
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     bpy.context.active_object.name = "_tmp"
 
@@ -975,10 +971,11 @@ def polygonConvexHull(context):
         c = (v.co.x, v.co.y)
         coords.append(c)
 
-    simple.select_multiple('_tmp')  # delete temporary mesh
-    simple.select_multiple('ConvexHull')  # delete old hull
+    select_multiple('_tmp')  # delete temporary mesh
+    select_multiple('ConvexHull')  # delete old hull
 
-    points = sgeometry.MultiPoint(coords)  # convert coordinates to shapely MultiPoint datastructure
+    # convert coordinates to shapely MultiPoint datastructure
+    points = sgeometry.MultiPoint(coords)
 
     hull = points.convex_hull
     shapelyToCurve('ConvexHull', hull, 0.0)
@@ -988,9 +985,8 @@ def polygonConvexHull(context):
 
 def Helix(r, np, zstart, pend, rev):
     c = []
-    pi = math.pi
-    v = mathutils.Vector((r, 0, zstart))
-    e = mathutils.Euler((0, 0, 2.0 * pi / np))
+    v = Vector((r, 0, zstart))
+    e = Euler((0, 0, 2.0 * pi / np))
     zstep = (zstart - pend[2]) / (np * rev)
     for a in range(0, int(np * rev)):
         c.append((v.x + pend[0], v.y + pend[1], zstart - (a * zstep)))
@@ -1012,7 +1008,7 @@ def overlaps(bb1, bb2):  # true if bb1 is child of bb2
 
 
 async def connectChunksLow(chunks, o):
-    """ connects chunks that are close to each other without lifting, sampling them 'low' """
+    """ Connects Chunks that Are Close to Each Other without Lifting, Sampling Them 'low' """
     if not o.movement.stay_low or (o.strategy == 'CARVE' and o.carve_depth > 0):
         return chunks
 
@@ -1061,7 +1057,7 @@ async def connectChunksLow(chunks, o):
             pos = lastch.get_point(-1)
 
     if o.optimisation.use_opencamlib and o.optimisation.use_exact and o.strategy != 'CUTOUT' and o.strategy != 'POCKET' and o.strategy != 'WATERLINE':
-        await oclResampleChunks(o, chunks_to_resample,use_cached_mesh=True)
+        await oclResampleChunks(o, chunks_to_resample, use_cached_mesh=True)
 
     return connectedchunks
 
@@ -1073,7 +1069,8 @@ def getClosest(o, pos, chunks):
     ch = None
     for chtest in chunks:
         cango = True
-        for child in chtest.children:  # here was chtest.getNext==chtest, was doing recursion error and slowing down.
+        # here was chtest.getNext==chtest, was doing recursion error and slowing down.
+        for child in chtest.children:
             if not child.sorted:
                 cango = False
                 break
@@ -1085,22 +1082,23 @@ def getClosest(o, pos, chunks):
     return ch
 
 
-async def sortChunks(chunks, o,last_pos=None):
+async def sortChunks(chunks, o, last_pos=None):
     if o.strategy != 'WATERLINE':
         await progress_async('sorting paths')
-    sys.setrecursionlimit(100000)  # the getNext() function of CamPathChunk was running out of recursion limits.
+    # the getNext() function of CamPathChunk was running out of recursion limits.
+    sys.setrecursionlimit(100000)
     sortedchunks = []
     chunks_to_resample = []
 
     lastch = None
-    last_progress_time=time.time()
-    total= len(chunks)
+    last_progress_time = time.time()
+    total = len(chunks)
     i = len(chunks)
     pos = (0, 0, 0) if last_pos is None else last_pos
-    while len(chunks) > 0:        
-        if o.strategy != 'WATERLINE' and time.time()-last_progress_time>0.1:
-            await progress_async("Sorting paths",100.0*(total-len(chunks))/total)
-            last_progress_time=time.time()
+    while len(chunks) > 0:
+        if o.strategy != 'WATERLINE' and time.time()-last_progress_time > 0.1:
+            await progress_async("Sorting paths", 100.0*(total-len(chunks))/total)
+            last_progress_time = time.time()
         ch = None
         if len(sortedchunks) == 0 or len(
                 lastch.parents) == 0:  # first chunk or when there are no parents -> parents come after children here...
@@ -1149,7 +1147,8 @@ async def sortChunks(chunks, o,last_pos=None):
     return sortedchunks
 
 
-def getVectorRight(lastv, verts):  # most right vector from a set regarding angle..
+# most right vector from a set regarding angle..
+def getVectorRight(lastv, verts):
     defa = 100
     v1 = Vector(lastv[0])
     v2 = Vector(lastv[1])
@@ -1166,7 +1165,8 @@ def getVectorRight(lastv, verts):  # most right vector from a set regarding angl
 
 
 def cleanUpDict(ndict):
-    print('removing lonely points')  # now it should delete all junk first, iterate over lonely verts.
+    # now it should delete all junk first, iterate over lonely verts.
+    print('Removing Lonely Points')
     # found_solitaires=True
     # while found_solitaires:
     found_solitaires = False
@@ -1217,8 +1217,8 @@ def cutloops(csource, parentloop, loops):
 
 
 def getOperationSilhouete(operation):
-    """gets silhouete for the operation
-        uses image thresholding for everything except curves.
+    """Gets Silhouette for the Operation
+        Uses Image Thresholding for Everything Except Curves.
     """
     if operation.update_silhouete_tag:
         image = None
@@ -1238,7 +1238,7 @@ def getOperationSilhouete(operation):
                     totfaces += len(ob.data.polygons)
 
         if (stype == 'OBJECTS' and totfaces > 200000) or stype == 'IMAGE':
-            print('image method')
+            print('Image Method')
             samples = renderSampleImage(operation)
             if stype == 'OBJECTS':
                 i = samples > operation.minz - 0.0000001
@@ -1246,7 +1246,8 @@ def getOperationSilhouete(operation):
                 # #the small number solves issue with totally flat meshes, which people tend to mill instead of
                 # proper pockets. then the minimum was also maximum, and it didn't detect contour.
             else:
-                i = samples > numpy.min(operation.zbuffer_image)  # this fixes another numeric imprecision.
+                # this fixes another numeric imprecision.
+                i = samples > numpy.min(operation.zbuffer_image)
 
             chunks = imageToChunks(operation, i)
             operation.silhouete = chunksToShapely(chunks)
@@ -1278,7 +1279,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
         if totfaces < 20000000:  # boolean polygons method originaly was 20 000 poly limit, now limitless,
             # it might become teribly slow, but who cares?
             t = time.time()
-            print('shapely getting silhouette')
+            print('Shapely Getting Silhouette')
             polys = []
             for ob in objects:
                 if use_modifiers:
@@ -1316,7 +1317,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             if totfaces < 20000:
                 p = sops.unary_union(polys)
             else:
-                print('computing in parts')
+                print('Computing in Parts')
                 bigshapes = []
                 i = 1
                 part = 20000
@@ -1328,13 +1329,13 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
                 if (i - 1) * part < totfaces:
                     last_ar = polys[(i - 1) * part:]
                     bigshapes.append(sops.unary_union(last_ar))
-                print('joining')
+                print('Joining')
                 p = sops.unary_union(bigshapes)
 
             print(time.time() - t)
 
             t = time.time()
-            silhouete = [p]  # [polygon_utils_cam.Shapely2Polygon(p)]
+            silhouete = shapelyToMultipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
 
     return silhouete
 
@@ -1348,7 +1349,8 @@ def getAmbient(o):
 
         if o.ambient_behaviour == 'AROUND':
             r = o.ambient_radius - m
-            o.ambient = getObjectOutline(r, o, True)  # in this method we need ambient from silhouete
+            # in this method we need ambient from silhouete
+            o.ambient = getObjectOutline(r, o, True)
         else:
             o.ambient = spolygon.Polygon(((o.min.x + m, o.min.y + m), (o.min.x + m, o.max.y - m),
                                           (o.max.x - m, o.max.y - m), (o.max.x - m, o.min.y + m)))
@@ -1360,7 +1362,8 @@ def getAmbient(o):
                 o.limit_poly = shapely.ops.unary_union(polys)
 
                 if o.ambient_cutter_restrict:
-                    o.limit_poly = o.limit_poly.buffer(o.cutter_diameter / 2, resolution=o.optimisation.circle_detail)
+                    o.limit_poly = o.limit_poly.buffer(
+                        o.cutter_diameter / 2, resolution=o.optimisation.circle_detail)
             o.ambient = o.ambient.intersection(o.limit_poly)
     o.update_ambient_tag = False
 
@@ -1394,7 +1397,8 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
         # print(p1.type, len(polygons))
         i += 1
         if radius > 0:
-            p1 = p1.buffer(radius * offset, resolution=o.optimisation.circle_detail, join_style=join, mitre_limit=2)
+            p1 = p1.buffer(radius * offset, resolution=o.optimisation.circle_detail,
+                           join_style=join, mitre_limit=2)
         outlines.append(p1)
 
     # print(outlines)
@@ -1406,7 +1410,7 @@ def getObjectOutline(radius, o, Offset):  # FIXME: make this one operation indep
 
 
 def addOrientationObject(o):
-    """the orientation object should be used to set up orientations of the object for 4 and 5 axis milling."""
+    """The Orientation Object Should Be Used to Set up Orientations of the Object for 4 and 5 Axis Milling."""
     name = o.name + ' orientation'
     s = bpy.context.scene
     if s.objects.find(name) == -1:
@@ -1473,7 +1477,8 @@ def addMachineAreaObject():
         # need to be in metric units when adding machine mesh object
         # in order for location to work properly
         s.unit_settings.system = 'METRIC'
-        bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(
+            align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
         o = bpy.context.active_object
         o.name = 'CAM_machine'
         o.data.name = 'CAM_machine'
@@ -1487,7 +1492,8 @@ def addMachineAreaObject():
                                fractal_along_normal=0, seed=0)
         bpy.ops.mesh.select_nth(nth=2, offset=0)
         bpy.ops.mesh.delete(type='EDGE')
-        bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(
+            align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
 
         bpy.ops.object.editmode_toggle()
         # addTranspMat(o, "violet_transparent", (0.800000, 0.530886, 0.725165), 0.1)
@@ -1506,6 +1512,7 @@ def addMachineAreaObject():
     # else:
     #     bpy.context.scene.objects.active = None
 
+
 def addMaterialAreaObject():
     s = bpy.context.scene
     operation = s.cam_operations[s.cam_active_operation]
@@ -1516,7 +1523,8 @@ def addMaterialAreaObject():
     if s.objects.get('CAM_material') is not None:
         o = s.objects['CAM_material']
     else:
-        bpy.ops.mesh.primitive_cube_add(align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
+        bpy.ops.mesh.primitive_cube_add(
+            align='WORLD', enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0))
         o = bpy.context.active_object
         o.name = 'CAM_material'
         o.data.name = 'CAM_material'
@@ -1563,13 +1571,14 @@ class Point:
 
 
 def unique(L):
-    """Return a list of unhashable elements in s, but without duplicates.
+    """Return a List of Unhashable Elements in S, but without Duplicates.
     [[1, 2], [2, 3], [1, 2]] >>> [[1, 2], [2, 3]]"""
     # For unhashable objects, you can sort the sequence and then scan from the end of the list,
     # deleting duplicates as you go
     nDupli = 0
     nZcolinear = 0
-    L.sort()  # sort() brings the equal elements together; then duplicates are easy to weed out in a single pass.
+    # sort() brings the equal elements together; then duplicates are easy to weed out in a single pass.
+    L.sort()
     last = L[-1]
     for i in range(len(L) - 2, -1, -1):
         if last[:2] == L[i][:2]:  # XY coordinates compararison
@@ -1650,23 +1659,25 @@ def cleanupIndexed(operation):
     path.rotation_euler = ori.rotation_euler
 
     print(ori.matrix_world, operation.orientation_matrix)
-    for i, ob in enumerate(operation.objects):  # TODO: fix this here wrong order can cause objects out of place
+    # TODO: fix this here wrong order can cause objects out of place
+    for i, ob in enumerate(operation.objects):
         ob.parent = operation.parents[i]
     for i, ob in enumerate(operation.objects):
         ob.matrix_world = operation.matrices[i]
 
 
 def rotTo2axes(e, axescombination):
-    """converts an orientation object rotation to rotation defined by 2 rotational axes on the machine -
-    for indexed machining.
-    attempting to do this for all axes combinations.
+    """Converts an Orientation Object Rotation to Rotation Defined by 2 Rotational Axes on the Machine -
+    for Indexed Machining.
+    Attempting to Do This for All Axes Combinations.
     """
     v = Vector((0, 0, 1))
     v.rotate(e)
     # if axes
     if axescombination == 'CA':
         v2d = Vector((v.x, v.y))
-        a1base = Vector((0, -1))  # ?is this right?It should be vector defining 0 rotation
+        # ?is this right?It should be vector defining 0 rotation
+        a1base = Vector((0, -1))
         if v2d.length > 0:
             cangle = a1base.angle_signed(v2d)
         else:
@@ -1679,7 +1690,8 @@ def rotTo2axes(e, axescombination):
 
     elif axescombination == 'CB':
         v2d = Vector((v.x, v.y))
-        a1base = Vector((1, 0))  # ?is this right?It should be vector defining 0 rotation
+        # ?is this right?It should be vector defining 0 rotation
+        a1base = Vector((1, 0))
         if v2d.length > 0:
             cangle = a1base.angle_signed(v2d)
         else:
@@ -1706,10 +1718,10 @@ def rotTo2axes(e, axescombination):
     # print(v)
     # print(bangle)
 
-    return (angle1, angle2)
+    # return (angle1, angle2)
 
 
-def reload_pathss(o):
+def reload_paths(o):
     oname = "cam_path_" + o.name
     s = bpy.context.scene
     # for o in s.objects:
@@ -1761,3 +1773,407 @@ def reload_pathss(o):
 
     if old_pathmesh is not None:
         bpy.data.meshes.remove(old_pathmesh)
+
+
+# def setup_operation_preset():
+#     scene = bpy.context.scene
+#     cam_operations = scene.cam_operations
+#     active_operation = scene.cam_active_operation
+#     try:
+#         o = cam_operations[active_operation]
+#     except IndexError:
+#         bpy.ops.scene.cam_operation_add()
+#         o = cam_operations[active_operation]
+#     return o
+
+
+# Moved from init - the following code was moved here to permit the import fix
+USE_PROFILER = False
+
+was_hidden_dict = {}
+
+_IS_LOADING_DEFAULTS = False
+
+
+def updateMachine(self, context):
+    print('Update Machine')
+    if not _IS_LOADING_DEFAULTS:
+        addMachineAreaObject()
+
+
+def updateMaterial(self, context):
+    print('Update Material')
+    addMaterialAreaObject()
+
+
+def updateOperation(self, context):
+    scene = context.scene
+    ao = scene.cam_operations[scene.cam_active_operation]
+    operationValid(self, context)
+
+    if ao.hide_all_others:
+        for _ao in scene.cam_operations:
+            if _ao.path_object_name in bpy.data.objects:
+                other_obj = bpy.data.objects[_ao.path_object_name]
+                current_obj = bpy.data.objects[ao.path_object_name]
+                if other_obj != current_obj:
+                    other_obj.hide = True
+                    other_obj.select = False
+    else:
+        for path_obj_name in was_hidden_dict:
+            print(was_hidden_dict)
+            if was_hidden_dict[path_obj_name]:
+                # Find object and make it hidde, then reset 'hidden' flag
+                obj = bpy.data.objects[path_obj_name]
+                obj.hide = True
+                obj.select = False
+                was_hidden_dict[path_obj_name] = False
+
+    # try highlighting the object in the 3d view and make it active
+    bpy.ops.object.select_all(action='DESELECT')
+    # highlight the cutting path if it exists
+    try:
+        ob = bpy.data.objects[ao.path_object_name]
+        ob.select_set(state=True, view_layer=None)
+        # Show object if, it's was hidden
+        if ob.hide:
+            ob.hide = False
+            was_hidden_dict[ao.path_object_name] = True
+        bpy.context.scene.objects.active = ob
+    except Exception as e:
+        print(e)
+
+# Moved from init - part 2
+
+
+def isValid(o, context):
+    valid = True
+    if o.geometry_source == 'OBJECT':
+        if not o.object_name.endswith('_cut_bridges'):  #  let empty bridge cut be valid
+            if o.object_name not in bpy.data.objects:
+                valid = False
+    if o.geometry_source == 'COLLECTION':
+        if o.collection_name not in bpy.data.collections:
+            valid = False
+        elif len(bpy.data.collections[o.collection_name].objects) == 0:
+            valid = False
+
+    if o.geometry_source == 'IMAGE':
+        if o.source_image_name not in bpy.data.images:
+            valid = False
+    return valid
+
+
+def operationValid(self, context):
+    scene = context.scene
+    o = scene.cam_operations[scene.cam_active_operation]
+    o.changed = True
+    o.valid = isValid(o, context)
+    invalidmsg = "Invalid Source Object for Operation.\n"
+    if o.valid:
+        o.info.warnings = ""
+    else:
+        o.info.warnings = invalidmsg
+
+    if o.geometry_source == 'IMAGE':
+        o.optimisation.use_exact = False
+    o.update_offsetimage_tag = True
+    o.update_zbufferimage_tag = True
+    print('validity ')
+
+
+def isChainValid(chain, context):
+    s = context.scene
+    if len(chain.operations) == 0:
+        return (False, "")
+    for cho in chain.operations:
+        found_op = None
+        for so in s.cam_operations:
+            if so.name == cho.name:
+                found_op = so
+        if found_op == None:
+            return (False, f"Couldn't Find Operation {cho.name}")
+        if isValid(found_op, context) is False:
+            return (False, f"Operation {found_op.name} Is Not Valid")
+    return (True, "")
+
+
+def updateOperationValid(self, context):
+    updateOperation(self, context)
+
+
+# Update functions start here
+def updateChipload(self, context):
+    """This Is Very Simple Computation of Chip Size, Could Be Very Much Improved"""
+    print('Update Chipload ')
+    o = self
+    # Old chipload
+    o.info.chipload = (o.feedrate / (o.spindle_rpm * o.cutter_flutes))
+    # New chipload with chip thining compensation.
+    # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less
+    # than 50% cutter engagement with cylindrical end mills. formula 1 Nominal Chipload is
+    # " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
+    # formula 2 (.5*(cutter diameter mm devided by dist_between_paths)) divided by square root of
+    # ((cutter diameter mm devided by dist_between_paths)-1) x Nominal Chipload
+    # Nominal Chipload = what you find in end mill data sheats recomended chip load at %50 cutter engagment.
+    # I am sure there is a better way to do this. I dont get consistent result and
+    # I am not sure if there is something wrong with the units going into the formula, my math or my lack of
+    # underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck
+    # we will be one tiny step on the way to a slightly better chipload calculating function.
+
+    # self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
+    print(o.info.chipload)
+
+
+def updateOffsetImage(self, context):
+    """Refresh Offset Image Tag for Rerendering"""
+    updateChipload(self, context)
+    print('Update Offset')
+    self.changed = True
+    self.update_offsetimage_tag = True
+
+
+def updateZbufferImage(self, context):
+    """Changes Tags so Offset and Zbuffer Images Get Updated on Calculation Time."""
+    # print('updatezbuf')
+    # print(self,context)
+    self.changed = True
+    self.update_zbufferimage_tag = True
+    self.update_offsetimage_tag = True
+    getOperationSources(self)
+
+
+def updateStrategy(o, context):
+    """"""
+    o.changed = True
+    print('Update Strategy')
+    if o.machine_axes == '5' or (
+            o.machine_axes == '4' and o.strategy4axis == 'INDEXED'):  # INDEXED 4 AXIS DOESN'T EXIST NOW...
+        addOrientationObject(o)
+    else:
+        removeOrientationObject(o)
+    updateExact(o, context)
+
+
+def updateCutout(o, context):
+    pass
+
+
+def updateExact(o, context):
+    print('Update Exact ')
+    o.changed = True
+    o.update_zbufferimage_tag = True
+    o.update_offsetimage_tag = True
+    if o.optimisation.use_exact:
+        if o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS' or o.inverse:
+            o.optimisation.use_opencamlib = False
+            print('Current Operation Cannot Use Exact Mode')
+    else:
+        o.optimisation.use_opencamlib = False
+
+
+def updateOpencamlib(o, context):
+    print('Update OpenCAMLib ')
+    o.changed = True
+    if o.optimisation.use_opencamlib and (
+            o.strategy == 'POCKET' or o.strategy == 'MEDIAL_AXIS'):
+        o.optimisation.use_exact = False
+        o.optimisation.use_opencamlib = False
+        print('Current Operation Cannot Use OpenCAMLib')
+
+
+def updateBridges(o, context):
+    print('Update Bridges ')
+    o.changed = True
+
+
+def updateRotation(o, context):
+    print('Update Rotation')
+    if o.enable_B or o.enable_A:
+        print(o, o.rotation_A)
+        ob = bpy.data.objects[o.object_name]
+        ob.select_set(True)
+        bpy.context.view_layer.objects.active = ob
+        if o.A_along_x:  # A parallel with X
+            if o.enable_A:
+                bpy.context.active_object.rotation_euler.x = o.rotation_A
+            if o.enable_B:
+                bpy.context.active_object.rotation_euler.y = o.rotation_B
+        else:  # A parallel with Y
+            if o.enable_A:
+                bpy.context.active_object.rotation_euler.y = o.rotation_A
+            if o.enable_B:
+                bpy.context.active_object.rotation_euler.x = o.rotation_B
+
+
+# def updateRest(o, context):
+#    print('update rest ')
+#    # if o.use_layers:
+# o.movement.parallel_step_back = False
+#    o.changed = True
+
+def updateRest(o, context):
+    print('Update Rest ')
+    o.changed = True
+
+
+#    if (o.strategy == 'WATERLINE'):
+#        o.use_layers = True
+
+
+def getStrategyList(scene, context):
+    use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
+    items = [
+        ('CUTOUT', 'Profile(Cutout)', 'Cut the silhouete with offset'),
+        ('POCKET', 'Pocket', 'Pocket operation'),
+        ('DRILL', 'Drill', 'Drill operation'),
+        ('PARALLEL', 'Parallel', 'Parallel lines on any angle'),
+        ('CROSS', 'Cross', 'Cross paths'),
+        ('BLOCK', 'Block', 'Block path'),
+        ('SPIRAL', 'Spiral', 'Spiral path'),
+        ('CIRCLES', 'Circles', 'Circles path'),
+        ('OUTLINEFILL', 'Outline Fill',
+         'Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface'),
+        ('CARVE', 'Project curve to surface', 'Engrave the curve path to surface'),
+        ('WATERLINE', 'Waterline - Roughing -below zero',
+         'Waterline paths - constant z below zero'),
+        ('CURVE', 'Curve to Path', 'Curve object gets converted directly to path'),
+        ('MEDIAL_AXIS', 'Medial axis',
+         'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')
+    ]
+    #   if use_experimental:
+    #       items.extend([('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
+    #                      'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')]);
+    # ('PENCIL', 'Pencil - EXPERIMENTAL','Pencil operation - detects negative corners in the model and mills only those.'),
+    # ('CRAZY', 'Crazy path - EXPERIMENTAL', 'Crazy paths - dont even think about using this!'),
+    #                     ('PROJECTED_CURVE', 'Projected curve - EXPERIMENTAL', 'project 1 curve towards other curve')])
+    return items
+
+# The following functions are temporary
+# until all content in __init__.py is cleaned up
+
+
+def update_material(self, context):
+    addMaterialAreaObject()
+
+
+def update_operation(self, context):
+    # from . import updateRest
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateRest(active_op, bpy.context)
+
+
+def update_exact_mode(self, context):
+    # from . import updateExact
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateExact(active_op, bpy.context)
+
+
+def update_opencamlib(self, context):
+    # from . import updateOpencamlib
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateOpencamlib(active_op, bpy.context)
+
+
+def update_zbuffer_image(self, context):
+    # from . import updateZbufferImage
+    active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
+    updateZbufferImage(active_op, bpy.context)
+
+
+# Moved from init - part 3
+
+@bpy.app.handlers.persistent
+def check_operations_on_load(context):
+    """Checks Any Broken Computations on Load and Reset Them."""
+
+    addons = bpy.context.preferences.addons
+
+    modules = [
+        "curve_tools",
+        "curve_simplify",
+        "add_curve_extra_objects",
+    ]
+
+    for module in modules:
+        if module not in addons:
+            bpy.ops.preferences.addon_enable(module=module)
+
+    s = bpy.context.scene
+    for o in s.cam_operations:
+        if o.computing:
+            o.computing = False
+    # set interface level to previously used level for a new file
+    if not bpy.data.filepath:
+        _IS_LOADING_DEFAULTS = True
+        s.interface.level = bpy.context.preferences.addons["cam"].preferences.default_interface_level
+        machine_preset = bpy.context.preferences.addons[
+            "cam"].preferences.machine_preset = bpy.context.preferences.addons["cam"].preferences.default_machine_preset
+        if len(machine_preset) > 0:
+            print("Loading Preset:", machine_preset)
+            # load last used machine preset
+            bpy.ops.script.execute_preset(
+                filepath=machine_preset, menu_idname="CAM_MACHINE_MT_presets"
+            )
+        _IS_LOADING_DEFAULTS = False
+    # check for updated version of the plugin
+    bpy.ops.render.cam_check_updates()
+    # copy presets if not there yet
+    if bpy.context.preferences.addons["cam"].preferences.just_updated:
+        preset_source_path = Path(__file__).parent / "presets"
+        preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
+
+        def copy_if_not_exists(src, dst):
+            if Path(dst).exists() == False:
+                shutil.copy2(src, dst)
+
+        shutil.copytree(
+            preset_source_path,
+            preset_target_path,
+            copy_function=copy_if_not_exists,
+            dirs_exist_ok=True,
+        )
+
+        bpy.context.preferences.addons["cam"].preferences.just_updated = False
+        bpy.ops.wm.save_userpref()
+
+    if not bpy.context.preferences.addons["cam"].preferences.op_preset_update:
+        # Update the Operation presets
+        op_presets_source = Path(__file__).parent / "presets" / "cam_operations"
+        op_presets_target = Path(bpy.utils.script_path_user()) / "presets" / "cam_operations"
+        shutil.copytree(op_presets_source, op_presets_target, dirs_exist_ok=True)
+        bpy.context.preferences.addons["cam"].preferences.op_preset_update = True
+
+
+# add pocket op for medial axis and profile cut inside to clean unremoved material
+def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
+    bpy.ops.object.select_all(action='DESELECT')
+    s = bpy.context.scene
+    mpocket_exists = False
+    for ob in s.objects:  # delete old medial pocket
+        if ob.name.startswith("medial_poc"):
+            ob.select_set(True)
+            bpy.ops.object.delete()
+
+    for op in s.cam_operations:  # verify medial pocket operation exists
+        if op.name == "MedialPocket":
+            mpocket_exists = True
+
+    ob = bpy.data.objects[sname]
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    silhoueteOffset(ob, -new_cutter_diameter/2, 1, 0.3)
+    bpy.context.active_object.name = 'medial_pocket'
+
+    if not mpocket_exists:     # create a pocket operation if it does not exist already
+        s.cam_operations.add()
+        o = s.cam_operations[-1]
+        o.object_name = 'medial_pocket'
+        s.cam_active_operation = len(s.cam_operations) - 1
+        o.name = 'MedialPocket'
+        o.filename = o.name
+        o.strategy = 'POCKET'
+        o.use_layers = False
+        o.material.estimate_from_model = False
+        o.material.size[2] = -maxdepth
+        o.minz_from = 'MATERIAL'

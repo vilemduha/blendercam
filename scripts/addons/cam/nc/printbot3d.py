@@ -8,6 +8,8 @@ from . import iso_modal
 import math
 
 ################################################################################
+
+
 class CreatorPrintbot(iso_modal.CreatorIsoModal):
 
     def __init__(self):
@@ -20,7 +22,7 @@ class CreatorPrintbot(iso_modal.CreatorIsoModal):
         pass
 
     def set_plane(self, plane):
-         pass
+        pass
 
     def workplane(self, id):
         pass
@@ -38,7 +40,7 @@ class CreatorPrintbot(iso_modal.CreatorIsoModal):
         self.spindle(flowrate, True)
 
     def extruder_temp(self, temp):
-         self.write((maker.codes.EXTRUDER_TEMP(temp)) + ('\n'))
+        self.write((maker.codes.EXTRUDER_TEMP(temp)) + ('\n'))
 
 # General
     def rapid(x=None, y=None, z=None, a=None, b=None, c=None):
@@ -49,5 +51,6 @@ class CreatorPrintbot(iso_modal.CreatorIsoModal):
         iso_modal.CreatorIsoModal.feed(self, x, y, z)
 
 ################################################################################
+
 
 nc.creator = CreatorPrintbot()

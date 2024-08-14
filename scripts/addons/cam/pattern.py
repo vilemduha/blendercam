@@ -1,36 +1,32 @@
-# blender CAM pattern.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'pattern.py' © 2012 Vilem Novak
 
+Functions to read CAM path patterns and return CAM path chunks.
+"""
+
+from math import (
+    ceil,
+    floor,
+    pi,
+    sqrt
+)
 import time
-import mathutils
-from mathutils import *
 
-from cam import simple, chunk, utils
-from cam.simple import *
-from cam.chunk import *
-from cam import polygon_utils_cam
-from cam.polygon_utils_cam import *
-import shapely
-from shapely import geometry as sgeometry
 import numpy
+
+import bpy
+from mathutils import (
+    Euler,
+    Vector
+)
+
+from .cam_chunk import (
+    camPathChunk,
+    camPathChunkBuilder,
+    chunksRefine,
+    parentChildDist,
+    shapelyToChunks,
+)
+from .simple import progress
 
 
 def getPathPatternParallel(o, angle):
@@ -58,7 +54,8 @@ def getPathPatternParallel(o, angle):
             chunk = camPathChunkBuilder([])
             v = Vector((a * pathd, int(-dim / pathstep) * pathstep, 0))
             v.rotate(e)
-            v += vm  # shifting for the rotation, so pattern rotates around middle...
+            # shifting for the rotation, so pattern rotates around middle...
+            v += vm
             for b in range(int(-dim / pathstep), int(dim / pathstep)):
                 v += dirvect
 
@@ -88,16 +85,18 @@ def getPathPatternParallel(o, angle):
 
         v = Vector((0, 1, 0))
         v.rotate(e)
-        e1 = Euler((0, 0, -math.pi / 2))
+        e1 = Euler((0, 0, -pi / 2))
         v1 = v.copy()
         v1.rotate(e1)
 
         axis_across_paths = numpy.array((numpy.arange(int(-dim / pathd), int(dim / pathd)) * pathd * v1.x + xm,
-                                         numpy.arange(int(-dim / pathd), int(dim / pathd)) * pathd * v1.y + ym,
+                                         numpy.arange(int(-dim / pathd),
+                                                      int(dim / pathd)) * pathd * v1.y + ym,
                                          numpy.arange(int(-dim / pathd), int(dim / pathd)) * 0))
 
         axis_along_paths = numpy.array((numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.x,
-                                        numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.y,
+                                        numpy.arange(int(-dim / pathstep),
+                                                     int(dim / pathstep)) * pathstep * v.y,
                                         numpy.arange(int(-dim / pathstep),
                                                      int(dim / pathstep)) * 0 + zlevel))  # rotate this first
         progress(axis_along_paths)
@@ -136,7 +135,7 @@ def getPathPatternParallel(o, angle):
 def getPathPattern(operation):
     o = operation
     t = time.time()
-    progress('building path pattern')
+    progress('Building Path Pattern')
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
     pathchunks = []
@@ -147,7 +146,7 @@ def getPathPattern(operation):
     elif o.strategy == 'CROSS':
 
         pathchunks.extend(getPathPatternParallel(o, o.parallel_angle))
-        pathchunks.extend(getPathPatternParallel(o, o.parallel_angle - math.pi / 2.0))
+        pathchunks.extend(getPathPatternParallel(o, o.parallel_angle - pi / 2.0))
 
     elif o.strategy == 'BLOCK':
 
@@ -221,7 +220,7 @@ def getPathPattern(operation):
 
         # progress(x,y,midx,midy)
         e = Euler((0, 0, 0))
-        pi = math.pi
+        # pi = pi
         chunk.points.append((midx + v.x, midy + v.y, zlevel))
         while midx + v.x > o.min.x or midy + v.y > o.min.y:
             # v.x=x-midx
@@ -247,7 +246,7 @@ def getPathPattern(operation):
 
             if (o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CW') or (
                     o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CCW'):
-                    ##TODO
+                # TODO
                 chunk.flipX(o.max.x+o.min.x)
                 # for si in range(0, len(chunk.points)):
                 #     s = chunk.points[si]
@@ -261,11 +260,11 @@ def getPathPattern(operation):
         midy = (o.max.y + o.min.y) / 2
         rx = o.max.x - o.min.x
         ry = o.max.y - o.min.y
-        maxr = math.sqrt(rx * rx + ry * ry)
+        maxr = sqrt(rx * rx + ry * ry)
 
         # progress(x,y,midx,midy)
         e = Euler((0, 0, 0))
-        pi = math.pi
+        # pi = pi
         chunk = camPathChunkBuilder([])
         chunk.points.append((midx, midy, zlevel))
         pathchunks.append(chunk.to_chunk())
@@ -289,7 +288,7 @@ def getPathPattern(operation):
                 else:
                     if len(chunk.points) > 0:
                         chunk.closed = False
-                        chunk=chunk.to_chunk()
+                        chunk = chunk.to_chunk()
                         pathchunks.append(chunk)
                         currentstepchunks.append(chunk)
                         chunk = camPathChunkBuilder([])
@@ -299,7 +298,7 @@ def getPathPattern(operation):
                 chunk.points.append(firstchunk.points[0])
                 if chunk == firstchunk:
                     chunk.closed = True
-                chunk=chunk.to_chunk()
+                chunk = chunk.to_chunk()
                 pathchunks.append(chunk)
                 currentstepchunks.append(chunk)
                 chunk = camPathChunkBuilder([])
@@ -394,7 +393,7 @@ def getPathPattern(operation):
 def getPathPattern4axis(operation):
     o = operation
     t = time.time()
-    progress('building path pattern')
+    progress('Building Path Pattern')
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
     zlevel = 1  # minz#this should do layers...
@@ -541,7 +540,7 @@ def getPathPattern4axis(operation):
                 cutterstart.rotate(e)
                 cutterend.rotate(e)
 
-            chunk=chunk.to_chunk()
+            chunk = chunk.to_chunk()
             chunk.depth = radiusend - radius
 
         pathchunks.append(chunk)

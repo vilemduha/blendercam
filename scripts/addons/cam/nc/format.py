@@ -1,10 +1,13 @@
 import math
 
+
 class Format:
-    def __init__(self, number_of_decimal_places = 3, add_leading_zeros = 1, add_trailing_zeros = False, dp_wanted = True, add_plus = False, no_minus = False, round_down = False):
+    def __init__(self, number_of_decimal_places=3, add_leading_zeros=1, add_trailing_zeros=False, dp_wanted=True, add_plus=False, no_minus=False, round_down=False):
         self.number_of_decimal_places = number_of_decimal_places
-        self.add_leading_zeros = add_leading_zeros # fill the start of the number with zeros, so there are at least this number of digits before the decimal point
-        self.add_trailing_zeros = add_trailing_zeros # fill the end of the number with zeros, as defined by "number_of_decimal_places"
+        # fill the start of the number with zeros, so there are at least this number of digits before the decimal point
+        self.add_leading_zeros = add_leading_zeros
+        # fill the end of the number with zeros, as defined by "number_of_decimal_places"
+        self.add_trailing_zeros = add_trailing_zeros
         self.dp_wanted = dp_wanted
         self.add_plus = add_plus
         self.no_minus = no_minus
@@ -17,8 +20,10 @@ class Format:
         s = format(f, 'f')
 
         if self.round_down == False:
-            if f < 0: f = f - .5
-            else: f = f + .5
+            if f < 0:
+                f = f - .5
+            else:
+                f = f + .5
             s = format(float(number), 'f')
 
         if math.fabs(f) < 1.0:
@@ -52,13 +57,15 @@ class Format:
                 s += '+'
         s += before_dp
         if len(after_dp):
-            if self.dp_wanted: s += '.'
+            if self.dp_wanted:
+                s += '.'
             s += after_dp
 
         return s
 
+
 class Address:
-    def __init__(self, text, fmt = Format(), modal = True):
+    def __init__(self, text, fmt=Format(), modal=True):
         self.text = text
         self.fmt = fmt
         self.modal = modal
@@ -69,7 +76,8 @@ class Address:
         self.str = self.text + self.fmt.string(number)
 
     def write(self, writer):
-        if self.str == None: return ''
+        if self.str == None:
+            return ''
         if self.modal:
             if self.str != self.previous:
                 writer.write(writer.SPACE() + self.str)
@@ -78,8 +86,9 @@ class Address:
             writer.write(writer.SPACE() + self.str)
         self.str = None
 
+
 class AddressPlusMinus(Address):
-    def __init__(self, text, fmt = Format(), modal = True):
+    def __init__(self, text, fmt=Format(), modal=True):
         Address.__init__(self, text, fmt, modal)
         self.str2 = None
         self.previous2 = None
@@ -93,7 +102,8 @@ class AddressPlusMinus(Address):
 
     def write(self, writer):
         Address.write(self, writer)
-        if self.str2 == None: return ''
+        if self.str2 == None:
+            return ''
         if self.modal:
             if self.str2 != self.previous2:
                 writer.write(writer.SPACE() + self.str2)

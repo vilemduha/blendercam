@@ -1,39 +1,24 @@
-# blender CAM utils.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
-# here is the bridges functionality of Blender CAM. The functions here are called with operators defined from ops.py.
+"""BlenderCAM 'bridges.py' © 2012 Vilem Novak
 
-import bpy
-from bpy.props import *
-from bpy_extras.object_utils import AddObjectHelper, object_data_add
+Functions to add Bridges / Tabs to meshes or curves.
+Called with Operators defined in 'ops.py'
+"""
 
-from cam import utils
-from cam import simple
-
-import mathutils
-import math
-
+from math import (
+    hypot,
+    pi,
+)
 
 from shapely import ops as sops
 from shapely import geometry as sgeometry
-from shapely import affinity, prepared
+from shapely import prepared
+
+import bpy
+from bpy_extras.object_utils import object_data_add
+from mathutils import Vector
+
+from . import utils
+from . import simple
 
 
 def addBridge(x, y, rot, sizex, sizey):
@@ -58,7 +43,7 @@ def addBridge(x, y, rot, sizex, sizey):
 
 
 def addAutoBridges(o):
-    """attempt to add auto bridges as set of curves"""
+    """Attempt to Add Auto Bridges as Set of Curves"""
     utils.getOperationSources(o)
     bridgecollectionname = o.bridges_collection_name
     if bridgecollectionname == '' or bpy.data.collections.get(bridgecollectionname) is None:
@@ -78,12 +63,12 @@ def addAutoBridges(o):
             minx, miny, maxx, maxy = c.bounds
             d1 = c.project(sgeometry.Point(maxx + 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, -math.pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, -pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point(minx - 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, math.pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, maxy + 1000))
@@ -93,7 +78,7 @@ def addAutoBridges(o):
             bpy.context.collection.objects.unlink(bo)
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, miny - 1000))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, math.pi, o.bridges_width, o.cutter_diameter * 1)
+            bo = addBridge(p.x, p.y, pi, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
 
@@ -124,7 +109,7 @@ def getBridgesPoly(o):
 
 
 def useBridges(ch, o):
-    """this adds bridges to chunks, takes the bridge-objects collection and uses the curves inside it as bridges."""
+    """This Adds Bridges to Chunks, Takes the Bridge-objects Collection and Uses the Curves Inside It as Bridges."""
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
@@ -138,7 +123,7 @@ def useBridges(ch, o):
 
         vi = 0
         newpoints = []
-        ch_points=ch.get_points_np()
+        ch_points = ch.get_points_np()
         p1 = sgeometry.Point(ch_points[0])
         startinside = o.bridgespoly.contains(p1)
         interrupted = False
@@ -149,12 +134,13 @@ def useBridges(ch, o):
             i1 = vi
             i2 = vi
             chp1 = ch_points[i1]
-            chp2 = ch_points[i1]  # Vector(v1)#this is for case of last point and not closed chunk..
+            # Vector(v1)#this is for case of last point and not closed chunk..
+            chp2 = ch_points[i1]
             if vi + 1 < len(ch_points):
                 i2 = vi + 1
                 chp2 = ch_points[vi + 1]  # Vector(ch_points[vi+1])
-            v1 = mathutils.Vector(chp1)
-            v2 = mathutils.Vector(chp2)
+            v1 = Vector(chp1)
+            v2 = Vector(chp2)
             if v1.z < bridgeheight or v2.z < bridgeheight:
                 v = v2 - v1
                 p2 = sgeometry.Point(chp2)
@@ -169,7 +155,6 @@ def useBridges(ch, o):
                 if o.bridgespoly_boundary_prep.intersects(l):
                     intersections = o.bridgespoly_boundary.intersection(l)
 
-
                 else:
                     intersections = sgeometry.GeometryCollection()
 
@@ -182,13 +167,13 @@ def useBridges(ch, o):
                     newpoints.append((chp1[0], chp1[1], max(chp1[2], bridgeheight)))
                 cpoints = []
                 if itpoint:
-                    pt = mathutils.Vector((intersections.x, intersections.y, intersections.z))
+                    pt = Vector((intersections.x, intersections.y, intersections.z))
                     cpoints = [pt]
 
                 elif itmpoint:
                     cpoints = []
                     for p in intersections.geoms:
-                        pt = mathutils.Vector((p.x, p.y, p.z))
+                        pt = Vector((p.x, p.y, p.z))
                         cpoints.append(pt)
                 # ####sort collisions here :(
                 ncpoints = []
@@ -244,9 +229,10 @@ def useBridges(ch, o):
         if z == bridgeheight:   # find all points with z = bridge height
             count += 1
             if isedge == 1:     # This is to subdivide  edges which are longer than the width of the bridge
-                edgelength = math.hypot(x - x2, y - y2)
+                edgelength = hypot(x - x2, y - y2)
                 if edgelength > o.bridges_width:
-                    verts.append(((x + x2)/2, (y + y2)/2, o.minz))  # make new vertex
+                    # make new vertex
+                    verts.append(((x + x2)/2, (y + y2)/2, o.minz))
 
                     isedge += 1
                     edge = [count - 2, count - 1]
@@ -267,10 +253,12 @@ def useBridges(ch, o):
     #  verify if vertices have been generated and generate a mesh
     if verts:
         mesh = bpy.data.meshes.new(name=o.name + "_cut_bridges")  # generate new mesh
-        mesh.from_pydata(verts, edges, faces)   # integrate coordinates and edges
+        # integrate coordinates and edges
+        mesh.from_pydata(verts, edges, faces)
         object_data_add(bpy.context, mesh)      # create object
         bpy.ops.object.convert(target='CURVE')  # convert mesh to curve
-        simple.join_multiple(o.name + '_cut_bridges')   # join all the new cut bridges curves
+        # join all the new cut bridges curves
+        simple.join_multiple(o.name + '_cut_bridges')
         simple.remove_doubles()     # remove overlapping vertices
 
 

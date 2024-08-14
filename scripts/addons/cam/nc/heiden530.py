@@ -13,6 +13,7 @@ import math
 from .format import Format
 from .format import *
 
+
 class Creator(iso.Creator):
     def __init__(self):
         iso.Creator.__init__(self)
@@ -34,15 +35,14 @@ class Creator(iso.Creator):
         self.shift_y = 0.0
         self.shift_z = 0.0
 
-
     ############################################################################
-    ##  Codes
+    # Codes
 
     def SPACE(self): return(' ')
     def NEW_LINE(self): return('\n')
 
     def BLOCK(self): return('%i')
-    def COMMENT(self,comment): return( (';%s' % comment ) )
+    def COMMENT(self, comment): return((';%s' % comment))
 
     def BEGIN_PGM(self): return('BEGIN PGM %i')
     def END_PGM(self): return('END PGM %i')
@@ -65,7 +65,7 @@ class Creator(iso.Creator):
     def Z(self): return('Z')
 
     ############################################################################
-    ##  Internals
+    # Internals
 
     def write_blocknum(self):
         self.write(self.BLOCK() % self.n)
@@ -76,7 +76,7 @@ class Creator(iso.Creator):
         self.write(self.NEW_LINE())
 
     ############################################################################
-    ##  Programs
+    # Programs
 
     def program_begin(self, id, name=''):
         self.program_id = id
@@ -99,7 +99,7 @@ class Creator(iso.Creator):
         self.write(self.NEW_LINE())
 
     ############################################################################
-    ##  Settings
+    # Settings
 
     def absolute(self):
         pass
@@ -111,7 +111,7 @@ class Creator(iso.Creator):
         pass
 
     ############################################################################
-    ##  Tools
+    # Tools
 
     def tool_change(self, id):
         self.t = id
@@ -122,9 +122,9 @@ class Creator(iso.Creator):
         self.write(self.TOOL() % self.t)
 
     ############################################################################
-    ##  Moves
+    # Moves
 
-    def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None ):
+    def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
 
         self.write_blocknum()
 
@@ -135,14 +135,14 @@ class Creator(iso.Creator):
 
         if (x != None):
             dx = x - self.x
-            if (self.absolute_flag ):
+            if (self.absolute_flag):
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
         if (y != None):
             dy = y - self.y
-            if (self.absolute_flag ):
+            if (self.absolute_flag):
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
@@ -150,7 +150,7 @@ class Creator(iso.Creator):
             self.y = y
         if (z != None):
             dz = z - self.z
-            if (self.absolute_flag ):
+            if (self.absolute_flag):
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(dz)))
@@ -162,8 +162,8 @@ class Creator(iso.Creator):
 
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
 
-		(x, y, z, a, b, c,axis_count)=self.filter_xyz(x, y, z)
-		if axis_count==0: return
+		(x, y, z, a, b, c, axis_count) = self.filter_xyz(x, y, z)
+		if axis_count == 0: return
 
         self.write_blocknum()
 
@@ -201,7 +201,7 @@ class Creator(iso.Creator):
         self.write_misc()
 
     ############################################################################
-    ##  Misc
+    # Misc
 
     def comment(self, text):
         self.write((self.COMMENT(text) + '\n'))

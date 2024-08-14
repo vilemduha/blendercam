@@ -1,36 +1,24 @@
-# blender CAM ops.py (c) 2021 Alain Pelletier
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'puzzle_joinery.py' © 2021 Alain Pelletier
 
-# blender operators definitions are in this file. They mostly call the functions from curvecamcreate.py
-from typing import Any
+Functions to add various puzzle joints as curves.
+"""
+
+from math import (
+    cos,
+    degrees,
+    pi,
+    sin,
+    sqrt,
+    tan,
+)
 
 import bpy
-from bpy.props import *
-from bpy.types import Operator
 
-from cam import utils, pack, polygon_utils_cam, simple, gcodepath, bridges, parametric, joinery
-import shapely
-from shapely.geometry import Point, LineString, Polygon
-import mathutils
-import math
+from . import (
+    joinery,
+    simple,
+    utils,
+)
 
 DT = 1.025
 
@@ -122,7 +110,7 @@ def twistf(name, length, diameter, tolerance, twist, tneck, tthick, twist_keep=F
     # add twist lock to receptacle
     if twist:
         joinery.interlock_twist(length, tthick, tolerance, cx=0, cy=0, rotation=0, percentage=tneck)
-        simple.rotate(math.pi / 2)
+        simple.rotate(pi / 2)
         simple.move(y=-tthick / 2 + 2 * diameter + 2 * tolerance)
         simple.active_name('xtemptwist')
         if twist_keep:
@@ -139,7 +127,7 @@ def twistm(name, length, diameter, tolerance, twist, tneck, tthick, angle, twist
     global DT
     if twist:
         joinery.interlock_twist(length, tthick, tolerance, cx=0, cy=0, rotation=0, percentage=tneck)
-        simple.rotate(math.pi / 2)
+        simple.rotate(pi / 2)
         simple.move(y=-tthick / 2 + 2 * diameter * DT)
         simple.rotate(angle)
         simple.move(x=x, y=y)
@@ -178,27 +166,27 @@ def bar(width, thick, diameter, tolerance, amount=0, stem=1, twist=False, tneck=
 
     if which == 'MM' or which == 'M' or which == 'MF':
         simple.rename('fingers', '_tmpfingers')
-        simple.rotate(-math.pi / 2)
+        simple.rotate(-pi / 2)
         simple.move(x=width / 2)
         simple.rename('tmprect', '_tmprect')
         simple.union('_tmp')
         simple.active_name("tmprect")
-        twistm('tmprect', thick, diameter, tolerance, twist, tneck, tthick, -math.pi / 2,
+        twistm('tmprect', thick, diameter, tolerance, twist, tneck, tthick, -pi / 2,
                x=width / 2, twist_keep=twist_keep)
 
     twistf('receptacle', thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
     simple.rename('receptacle', '_tmpreceptacle')
     if which == 'FF' or which == 'F' or which == 'MF':
-        simple.rotate(-math.pi / 2)
+        simple.rotate(-pi / 2)
         simple.move(x=-width / 2)
         simple.rename('tmprect', '_tmprect')
         simple.difference('_tmp', '_tmprect')
         simple.active_name("tmprect")
         if twist_keep:
             simple.make_active('twist_keep_f')
-            simple.rotate(-math.pi / 2)
+            simple.rotate(-pi / 2)
             simple.move(x=-width / 2)
-           
+
     simple.remove_multiple("_")  # Remove temporary base and holes
     simple.remove_multiple("fingers")  # Remove temporary base and holes
 
@@ -247,13 +235,13 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
     # generate arc
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Segment',
                          Simple_a=radius - thick / 2,
-                         Simple_b=radius + thick / 2, Simple_startangle=-0.0001, Simple_endangle=math.degrees(angle),
+                         Simple_b=radius + thick / 2, Simple_startangle=-0.0001, Simple_endangle=degrees(angle),
                          Simple_radius=radius, use_cyclic_u=False, edit_mode=False)
     bpy.context.active_object.name = "tmparc"
 
     simple.rename('fingers', '_tmpfingers')
 
-    simple.rotate(math.pi)
+    simple.rotate(pi)
     simple.move(x=radius)
     bpy.ops.object.origin_set(type='ORIGIN_CURSOR', center='MEDIAN')
 
@@ -261,7 +249,7 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
     if which == 'MF' or which == 'M':
         simple.union('_tmp')
         simple.active_name("base")
-        twistm('base', thick, diameter, tolerance, twist, tneck, tthick, math.pi, x=radius)
+        twistm('base', thick, diameter, tolerance, twist, tneck, tthick, pi, x=radius)
         simple.rename('base', '_tmparc')
 
     simple.rename('receptacle', '_tmpreceptacle')
@@ -281,13 +269,13 @@ def arc(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twist=False
         simple.rotate(-angle)
         simple.mirrory()
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
-        simple.rotate(-math.pi / 2)
+        simple.rotate(-pi / 2)
         simple.move(y=radius)
         simple.rename('PUZZLE_arc', 'PUZZLE_arc_male')
     elif which == 'F':
         simple.mirrorx()
         simple.move(x=radius)
-        simple.rotate(math.pi / 2)
+        simple.rotate(pi / 2)
         simple.rename('PUZZLE_arc', 'PUZZLE_arc_receptacle')
     else:
         simple.move(x=-radius)
@@ -315,7 +303,8 @@ def arcbararc(length, radius, thick, angle, angleb, diameter, tolerance, amount=
     # tthick = thicknest of the twist material
     # which = which joint to generate, Male Female MaleFemale M, F, MF
 
-    length -= (radius * 2 + thick)  # adjust length to include 2x radius + thick
+    # adjust length to include 2x radius + thick
+    length -= (radius * 2 + thick)
 
     # generate base rectangle
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Rectangle',
@@ -372,7 +361,8 @@ def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, 
         which = 'MM'
     elif which == 'F':
         which = 'FF'
-    length -= (radius * 2 + thick)  # adjust length to include 2x radius + thick
+    # adjust length to include 2x radius + thick
+    length -= (radius * 2 + thick)
 
     # generate base rectangle
     #  Generate male section and join to the base
@@ -384,7 +374,7 @@ def arcbar(length, radius, thick, angle, diameter, tolerance, amount=0, stem=1, 
     if which == 'FF' or which == 'FM':
         bar(length, thick, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
             which='F', twist_keep=twist_keep, twist_line=twist_line, twist_line_amount=twist_line_amount)
-        simple.rotate(math.pi)
+        simple.rotate(pi)
         simple.active_name('tmprect')
 
     # Generate female section and join to base
@@ -429,7 +419,7 @@ def multiangle(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twis
     r_exterior = radius + thick / 2
     r_interior = radius - thick / 2
 
-    height = math.sqrt(r_exterior * r_exterior - radius * radius) + r_interior / 4
+    height = sqrt(r_exterior * r_exterior - radius * radius) + r_interior / 4
 
     bpy.ops.curve.simple(align='WORLD', location=(0, height, 0),
                          rotation=(0, 0, 0), Simple_Type='Rectangle',
@@ -439,7 +429,7 @@ def multiangle(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twis
 
     bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle', Simple_sides=4,
                          Simple_radius=r_interior, shape='3D', use_cyclic_u=True, edit_mode=False)
-    simple.move(y=radius * math.tan(angle))
+    simple.move(y=radius * tan(angle))
     simple.active_name('tmpCircle')
 
     arc(radius, thick, angle, diameter, tolerance, amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick,
@@ -454,7 +444,7 @@ def multiangle(radius, thick, angle, diameter, tolerance, amount=0, stem=1, twis
             which='M')
         simple.active_name('tmp_arc')
         simple.mirrory()
-        simple.rotate(math.pi / 2)
+        simple.rotate(pi / 2)
     simple.union("tmp_")
     simple.difference('tmp', 'tmp_')
     simple.active_name('multiAngle60')
@@ -521,11 +511,11 @@ def curved_t(length, thick, radius, diameter, tolerance, amount=0, stem=1, twist
     simple.active_name("tmp_rect")
 
     if base_gender == 'MF':
-        arc(radius, thick, math.pi / 2, diameter, tolerance,
+        arc(radius, thick, pi / 2, diameter, tolerance,
             amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='M')
         simple.move(-radius)
         simple.active_name('tmp_arc')
-        arc(radius, thick, math.pi / 2, diameter, tolerance,
+        arc(radius, thick, pi / 2, diameter, tolerance,
             amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which='F')
         simple.move(radius)
         simple.mirrory()
@@ -536,7 +526,7 @@ def curved_t(length, thick, radius, diameter, tolerance, amount=0, stem=1, twist
         simple.union('tmp_arc')
         simple.difference('tmp_', 'tmp_arc')
     else:
-        arc(radius, thick, math.pi / 2, diameter, tolerance,
+        arc(radius, thick, pi / 2, diameter, tolerance,
             amount=amount, stem=stem, twist=twist, tneck=tneck, tthick=tthick, which=base_gender)
         simple.active_name('tmp_arc')
         simple.difference('tmp_', 'tmp_arc')
@@ -601,16 +591,16 @@ def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, t
         simple.make_active('fingers')
         simple.duplicate()
         simple.active_name('tmpfingers')
-        simple.rotate(angle - math.pi / 2)
-        h = thick / math.cos(angle)
+        simple.rotate(angle - pi / 2)
+        h = thick / cos(angle)
         h /= 2
-        simple.move(x=length / 2 + h * math.sin(angle), y=-thick / 2)
+        simple.move(x=length / 2 + h * sin(angle), y=-thick / 2)
         if which == 'M':
             simple.rename('fingers', 'tmpfingers')
-            simple.rotate(angleb - math.pi / 2)
-            h = thick / math.cos(angleb)
+            simple.rotate(angleb - pi / 2)
+            h = thick / cos(angleb)
             h /= 2
-            simple.move(x=length / 2 + h * math.sin(angleb), y=-thick / 2)
+            simple.move(x=length / 2 + h * sin(angleb), y=-thick / 2)
             simple.mirrorx()
 
         simple.union('tmp')
@@ -622,17 +612,17 @@ def mitre(length, thick, angle, angleb, diameter, tolerance, amount=0, stem=1, t
         simple.mirrory()
         simple.duplicate()
         simple.active_name('tmpreceptacle')
-        simple.rotate(angleb - math.pi / 2)
-        h = thick / math.cos(angleb)
+        simple.rotate(angleb - pi / 2)
+        h = thick / cos(angleb)
         h /= 2
-        simple.move(x=length / 2 + h * math.sin(angleb), y=-thick / 2)
+        simple.move(x=length / 2 + h * sin(angleb), y=-thick / 2)
         simple.mirrorx()
         if which == 'F':
             simple.rename('receptacle', 'tmpreceptacle2')
-            simple.rotate(angle - math.pi / 2)
-            h = thick / math.cos(angle)
+            simple.rotate(angle - pi / 2)
+            h = thick / cos(angle)
             h /= 2
-            simple.move(x=length / 2 + h * math.sin(angle), y=-thick / 2)
+            simple.move(x=length / 2 + h * sin(angle), y=-thick / 2)
         simple.difference('tmp', 'tmprect')
 
     simple.remove_multiple('receptacle')
@@ -659,8 +649,8 @@ def open_curve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, 
 
     coords = list(line.coords)
 
-    start_angle = joinery.angle(coords[0], coords[1]) + math.pi/2
-    end_angle = joinery.angle(coords[-1], coords[-2]) + math.pi/2
+    start_angle = joinery.angle(coords[0], coords[1]) + pi/2
+    end_angle = joinery.angle(coords[-1], coords[-2]) + pi/2
     p_start = coords[0]
     p_end = coords[-1]
 
@@ -680,7 +670,8 @@ def open_curve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, 
     simple.union('tmprect')
     dilated = line.buffer(thick/2)  # expand shapely object to thickness
     utils.shapelyToCurve('tmp_curve', dilated, 0.0)
-    simple.difference('tmp', 'tmp_curve')   # truncate curve at both ends with the rectangles
+    # truncate curve at both ends with the rectangles
+    simple.difference('tmp', 'tmp_curve')
 
     fingers(diameter, tolerance, amount, stem=stem)
     simple.make_active('fingers')
@@ -694,18 +685,18 @@ def open_curve(line, thick, diameter, tolerance, amount=0, stem=1, twist=False, 
 
     twistf('receptacle', thick, diameter, tolerance, twist, t_neck, t_thick, twist_keep=twist_keep)
     simple.rename('receptacle', 'tmp')
-    simple.rotate(start_angle+math.pi)
+    simple.rotate(start_angle+pi)
     simple.move(x=p_start[0], y=p_start[1])
     simple.difference('tmp', 'tmp_curve')
     if twist_keep:
         simple.make_active('twist_keep_f')
-        simple.rotate(start_angle + math.pi)
+        simple.rotate(start_angle + pi)
         simple.move(x=p_start[0], y=p_start[1])
 
     if twist_amount > 0 and twist:
         twist_start = line.length / (twist_amount+1)
         joinery.distributed_interlock(line, line.length, thick, t_thick, tolerance, twist_amount,
-                                      tangent=math.pi/2, fixed_angle=0, start=twist_start, end=twist_start,
+                                      tangent=pi/2, fixed_angle=0, start=twist_start, end=twist_start,
                                       closed=False, type='TWIST', twist_percentage=t_neck)
         if twist_keep:
             simple.duplicate()
@@ -746,13 +737,12 @@ def tile(diameter, tolerance, tile_x_amount, tile_y_amount, stem=1):
     simple.rename('base', '_base')
     simple.remove_doubles()
     simple.rename('fingers', '_fingers')
-    simple.rotate(math.pi/2)
+    simple.rotate(pi/2)
     simple.move(x=-width/2)
     simple.union('_')
     simple.active_name('_base')
     simple.rename('receptacle', '_receptacle')
-    simple.rotate(math.pi/2)
+    simple.rotate(pi/2)
     simple.move(x=width/2)
     simple.difference('_', '_base')
     simple.active_name('tile_ ' + str(tile_x_amount) + '_' + str(tile_y_amount))
-

@@ -1,11 +1,17 @@
+"""BlenderCAM 'pack.py'
+
+'Pack Curves on Sheet' panel in Properties > Render
+"""
 
 import bpy
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from bpy.types import Panel
+
+from .buttons_panel import CAMButtonsPanel
 
 
-class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):
-    """CAM material panel"""
-    bl_label = "Pack curves on sheet"
+class CAM_PACK_Panel(CAMButtonsPanel, Panel):
+    """CAM Pack Panel"""
+    bl_label = "Pack Curves on Sheet"
     bl_idname = "WORLD_PT_CAM_PACK"
     panel_interface_level = 2
 
@@ -15,8 +21,8 @@ class CAM_PACK_Panel(CAMButtonsPanel, bpy.types.Panel):
         layout = self.layout
         scene = bpy.context.scene
         settings = scene.cam_pack
-        layout.label(text='warning - algorithm is slow.')
-        layout.label(text='only for curves now.')
+        layout.label(text='Warning - Algorithm Is Slow.')
+        layout.label(text='Only for Curves Now.')
 
         layout.operator("object.cam_pack_objects")
         layout.prop(settings, 'sheet_fill_direction')

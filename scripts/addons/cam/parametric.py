@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
+"""BlenderCAM 'parametric.py' © 2019 Devon (Gorialis) R
 
-"""
 MIT License
-
-Copyright (c) 2019 Devon (Gorialis) R
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +18,8 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-"""
 
-"""
+Summary:
 Create a Blender curve from a 3D parametric function.
 This allows for a 3D plot to be made of the function, which can be converted into a mesh.
 
@@ -33,12 +28,10 @@ suit this to your own function, scroll down to the bottom and edit the `f(t)` fu
 the iteration count to your liking.
 
 This code has been checked to work on Blender 2.92.
-
 """
 
-import math
-from math import sin, cos, pi
-import bmesh
+from math import pow
+
 import bpy
 from mathutils import Vector
 
@@ -66,17 +59,17 @@ def derive_bezier_handles(a, b, c, d, tb, tc):
     """
 
     # Calculate matrix coefficients
-    matrix_a = 3 * math.pow(1 - tb, 2) * tb
-    matrix_b = 3 * (1 - tb) * math.pow(tb, 2)
-    matrix_c = 3 * math.pow(1 - tc, 2) * tc
-    matrix_d = 3 * (1 - tc) * math.pow(tc, 2)
+    matrix_a = 3 * pow(1 - tb, 2) * tb
+    matrix_b = 3 * (1 - tb) * pow(tb, 2)
+    matrix_c = 3 * pow(1 - tc, 2) * tc
+    matrix_d = 3 * (1 - tc) * pow(tc, 2)
 
     # Calculate the matrix determinant
     matrix_determinant = 1 / ((matrix_a * matrix_d) - (matrix_b * matrix_c))
 
     # Calculate the components of the target position vector
-    final_b = b - (math.pow(1 - tb, 3) * a) - (math.pow(tb, 3) * d)
-    final_c = c - (math.pow(1 - tc, 3) * a) - (math.pow(tc, 3) * d)
+    final_b = b - (pow(1 - tb, 3) * a) - (pow(tb, 3) * d)
+    final_c = c - (pow(1 - tc, 3) * a) - (pow(tc, 3) * d)
 
     # Multiply the inversed matrix with the position vector to get the handle points
     bezier_b = matrix_determinant * ((matrix_d * final_b) + (-matrix_b * final_c))
@@ -182,7 +175,7 @@ def create_parametric_curve(
     curve_object = bpy.data.objects.new('Parametric', curve)
     context = bpy.context
     scene = context.scene
-    link_object = scene.collection.objects.link 
+    link_object = scene.collection.objects.link
     link_object(curve_object)
 
     # Return the new object
@@ -197,6 +190,8 @@ def make_edge_loops(*objects):
     :param *objects:
         Positional arguments for each object to be converted and merged.
     """
+    context = bpy.context
+    scene = context.scene
 
     mesh_objects = []
     vertex_groups = []
@@ -246,4 +241,3 @@ def make_edge_loops(*objects):
 
     # Join them together
     bpy.ops.object.join(ctx)
-

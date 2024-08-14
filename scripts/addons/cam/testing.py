@@ -1,33 +1,17 @@
-# blender CAM testing.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'testing.py' © 2012 Vilem Novak
 
-import sys
+Functions for automated testing.
+"""
+
 import bpy
 
-from cam import simple, utils
-from cam.simple import *
+from .gcodepath import getPath
+from .simple import activate
 
 
 def addTestCurve(loc):
-    bpy.ops.curve.primitive_bezier_circle_add(radius=.05, align='WORLD', enter_editmode=False, location=loc)
+    bpy.ops.curve.primitive_bezier_circle_add(
+        radius=.05, align='WORLD', enter_editmode=False, location=loc)
     bpy.ops.object.editmode_toggle()
     bpy.ops.curve.duplicate()
     bpy.ops.transform.resize(value=(0.5, 0.5, 0.5), constraint_axis=(False, False, False),
@@ -121,7 +105,7 @@ def testWaterline(pos):
 
 
 def testSimulation():
-    pass;
+    pass
 
 
 def cleanUp():
@@ -137,12 +121,12 @@ def testOperation(i):
     report = ''
     report += 'testing operation ' + o.name + '\n'
 
-    utils.getPath(bpy.context, o)
+    getPath(bpy.context, o)
 
     newresult = bpy.data.objects[o.path_object_name]
     origname = "test_cam_path_" + o.name
     if origname not in s.objects:
-        report += 'operation test has nothing to compare with, making the new result as comparable result.\n\n'
+        report += 'Operation Test Has Nothing to Compare with, Making the New Result as Comparable Result.\n\n'
         newresult.name = origname
     else:
         testresult = bpy.data.objects[origname]
@@ -150,7 +134,7 @@ def testOperation(i):
         m2 = newresult.data
         test_ok = True
         if len(m1.vertices) != len(m2.vertices):
-            report += "vertex counts don't match\n\n"
+            report += "Vertex Counts Don't Match\n\n"
             test_ok = False
         else:
             different_co_count = 0
@@ -160,12 +144,12 @@ def testOperation(i):
                 if v1.co != v2.co:
                     different_co_count += 1
             if different_co_count > 0:
-                report += 'vertex position is different on %i vertices \n\n' % (different_co_count)
+                report += 'Vertex Position Is Different on %i Vertices \n\n' % (different_co_count)
                 test_ok = False
         if test_ok:
-            report += 'test ok\n\n'
+            report += 'Test Ok\n\n'
         else:
-            report += 'test result is different\n \n '
+            report += 'Test Result Is Different\n \n '
     print(report)
     return report
 

@@ -6,6 +6,7 @@ import time
 
 now = datetime.datetime.now()
 
+
 class Creator(iso_modal.Creator):
     def __init__(self):
         iso_modal.Creator.__init__(self)
@@ -16,21 +17,25 @@ class Creator(iso_modal.Creator):
 
     def SPACE_STR(self): return ' '
 
-    def TOOL(self): return('T%i' + self.SPACE() )
+    def TOOL(self): return('T%i' + self.SPACE())
 
 
 ############################################################################
-## Internal
+# Internal
+
+
     def write_spindle(self): return ''
 
 ############################################################################
-## Programs
+# Programs
 
     def program_begin(self, id, comment):
         if (self.useCrc == False):
-            self.write( ('(Created with win-pc post processor ' + str(now.strftime("%Y/%m/%d %H:%M")) + ')' + '\n') )
+            self.write(('(Created with win-pc post processor ' +
+                        str(now.strftime("%Y/%m/%d %H:%M")) + ')' + '\n'))
         else:
-            self.write( ('(Created with win-pc Cutter Radius Compensation post processor ' + str(now.strftime("%Y/%m/%d %H:%M")) + ')' + '\n') )
+            self.write(('(Created with win-pc Cutter Radius Compensation post processor ' +
+                        str(now.strftime("%Y/%m/%d %H:%M")) + ')' + '\n'))
         #self.rapid( x=0.0, y=0.0, z=30.0 )
 
     def program_end(self):
@@ -38,7 +43,7 @@ class Creator(iso_modal.Creator):
         #self.rapid( x=0.0, y=0.0, z=30.0 )
 
 ############################################################################
-##  Settings
+# Settings
 
     def tool_defn(self, id, name='', params=None):
         #self.write('G43 \n')
@@ -55,18 +60,22 @@ class Creator(iso_modal.Creator):
 # These are selected by values from 1 to 9 inclusive.
     def workplane(self, id):
         if ((id >= 1) and (id <= 6)):
-            self.write( (self.WORKPLANE() % (id + self.WORKPLANE_BASE())) + '\t (Select Relative Coordinate System)\n')
+            self.write((self.WORKPLANE() % (id + self.WORKPLANE_BASE())) +
+                       '\t (Select Relative Coordinate System)\n')
         if ((id >= 7) and (id <= 9)):
-            self.write( ((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + ('.%i' % (id - 6))) + '\t (Select Relative Coordinate System)\n')
+            self.write(((self.WORKPLANE() % (6 + self.WORKPLANE_BASE())) + ('.%i' %
+                                                                            (id - 6))) + '\t (Select Relative Coordinate System)\n')
 
 
 ############################################################################
-##  Moves
+# Moves
 
 ############################################################################
 ##  Rates + Modes
 
-## All feedrates are given in mm/s
+# All feedrates are given in mm/s
+
+
     def feedrate(self, f):
         self.f.set(f/60)
         self.fhv = False
@@ -86,10 +95,12 @@ class Creator(iso_modal.Creator):
 
 
 ############################################################################
-## Probe routines
-    def report_probe_results(self, x1=None, y1=None, z1=None, x2=None, y2=None, z2=None, x3=None, y3=None, z3=None, x4=None, y4=None, z4=None, x5=None, y5=None, z5=None, x6=None, y6=None, z6=None, xml_file_name=None ):
+# Probe routines
+
+
+    def report_probe_results(self, x1=None, y1=None, z1=None, x2=None, y2=None, z2=None, x3=None, y3=None, z3=None, x4=None, y4=None, z4=None, x5=None, y5=None, z5=None, x6=None, y6=None, z6=None, xml_file_name=None):
         if (xml_file_name != None):
-            self.comment('Generate an XML document describing the probed coordinates found');
+            self.comment('Generate an XML document describing the probed coordinates found')
             self.write_blocknum()
             self.write('(LOGOPEN,')
             self.write(xml_file_name)
@@ -261,7 +272,7 @@ class Creator(iso_modal.Creator):
             self.write_blocknum()
             self.write('(LOGCLOSE)\n')
 
-    def open_log_file(self, xml_file_name=None ):
+    def open_log_file(self, xml_file_name=None):
         self.write_blocknum()
         self.write('(LOGOPEN,')
         self.write(xml_file_name)
@@ -298,8 +309,9 @@ class Creator(iso_modal.Creator):
             self.write_blocknum()
             self.write('(LOG,</POINT>)\n')
 
-    def log_message(self, message=None ):
+    def log_message(self, message=None):
         self.write_blocknum()
         self.write('(LOG,' + message + ')\n')
+
 
 nc.creator = Creator()

@@ -1,11 +1,17 @@
+"""BlenderCAM 'op_properties.py'
+
+'CAM Operation Setup' panel in Properties > Render
+"""
 
 import bpy
-from cam.ui_panels.buttons_panel import CAMButtonsPanel
+from bpy.types import Panel
+
+from .buttons_panel import CAMButtonsPanel
 
 
-class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
-    """CAM operation properties panel"""
-    bl_label = "CAM operation setup"
+class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
+    """CAM Operation Properties Panel"""
+    bl_label = "CAM Operation Setup"
     bl_idname = "WORLD_PT_CAM_OPERATION"
     panel_interface_level = 0
 
@@ -34,7 +40,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
     # Displays percentage of the cutter which is engaged with the material
     # Displays a warning for engagements greater than 50%
     def draw_cutter_engagement(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
 
         if self.op.cutter_type in ['BALLCONE']:
             engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
@@ -42,16 +49,18 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
             engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
 
         if engagement > 50:
-            self.layout.label(text="Warning: High cutter engagement")
+            self.layout.label(text="Warning: High Cutter Engagement")
 
-        self.layout.label(text=f"Cutter engagement: {engagement}%")
+        self.layout.label(text=f"Cutter Engagement: {engagement}%")
 
     def draw_machine_axis(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'machine_axes')
 
     def draw_strategy(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.machine_axes == '4':
             self.layout.prop(self.op, 'strategy4axis')
             if self.op.strategy4axis == 'INDEXED':
@@ -67,7 +76,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.prop(self.op, 'strategy')
 
     def draw_enable_A_B_axis(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'enable_A')
         if self.op.enable_A:
             self.layout.prop(self.op, 'rotation_A')
@@ -81,26 +91,30 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
         if self.op.enable_B:
             self.layout.prop(self.op, 'rotation_B')
 
-
     def draw_cutout_type(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'cut_type')
 
     def draw_overshoot(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'straight')
 
     def draw_startpoint(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'profile_start')
 
     def draw_lead_in_out(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'lead_in')
         self.layout.prop(self.op, 'lead_out')
 
     def draw_outlines(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'outlines_count')
         if self.op.outlines_count > 1:
             self.layout.prop(self.op, 'dist_between_paths')
@@ -108,11 +122,13 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.layout.prop(self.op.movement, 'insideout')
 
     def draw_merge(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'dont_merge')
 
     def draw_cutout_options(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy in ['CUTOUT']:
             self.draw_cutout_type()
             self.draw_overshoot()
@@ -124,43 +140,45 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.draw_outlines()
             self.draw_merge()
 
-
     def draw_waterline_options(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy in ['WATERLINE']:
-            self.layout.label(text="OCL doesn't support fill areas")
+            self.layout.label(text="Ocl Doesn't Support Fill Areas")
             if not self.op.optimisation.use_opencamlib:
                 self.layout.prop(self.op, 'slice_detail')
                 self.layout.prop(self.op, 'waterline_fill')
                 if self.op.waterline_fill:
                     self.layout.prop(self.op, 'dist_between_paths')
                     self.layout.prop(self.op, 'waterline_project')
-            self.layout.label(text="Waterline needs a skin margin")
+            self.layout.label(text="Waterline Needs a Skin Margin")
 
     def draw_carve_options(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy in ['CARVE']:
             self.layout.prop(self.op, 'carve_depth')
             self.layout.prop(self.op, 'dist_along_paths')
 
     def draw_medial_axis_options(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy in ['MEDIAL_AXIS']:
             self.layout.prop(self.op, 'medial_axis_threshold')
             self.layout.prop(self.op, 'medial_axis_subdivision')
             self.layout.prop(self.op, 'add_pocket_for_medial')
             self.layout.prop(self.op, 'add_mesh_for_medial')
 
-
     def draw_drill_options(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy in ['DRILL']:
             self.layout.prop(self.op, 'drill_type')
             self.draw_enable_A_B_axis()
 
-
     def draw_pocket_options(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy in ['POCKET']:
             self.layout.prop(self.op, 'pocket_option')
             self.layout.prop(self.op, 'pocketToCurve')
@@ -168,20 +186,21 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
             self.draw_cutter_engagement()
             self.draw_enable_A_B_axis()
 
-
     def draw_default_options(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy not in ['CUTOUT', 'CURVE', 'WATERLINE', 'CARVE', 'MEDIAL_AXIS', 'DRILL', 'POCKET']:
             self.layout.prop(self.op, 'dist_between_paths')
             self.draw_cutter_engagement()
             self.layout.prop(self.op, 'dist_along_paths')
-            if self.op.strategy in ['PARALLEL','CROSS']:
+            if self.op.strategy in ['PARALLEL', 'CROSS']:
                 self.layout.prop(self.op, 'parallel_angle')
                 self.draw_enable_A_B_axis()
             self.layout.prop(self.op, 'inverse')
 
     def draw_bridges_options(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.strategy not in ['POCKET', 'DRILL', 'CURVE', 'MEDIAL_AXIS']:
             self.layout.prop(self.op, 'use_bridges')
             if self.op.use_bridges:
@@ -189,14 +208,16 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                 self.layout.prop(self.op, 'bridges_height')
                 self.layout.prop_search(self.op, "bridges_collection_name", bpy.data, "collections")
                 self.layout.prop(self.op, 'use_bridge_modifiers')
-            self.layout.operator("scene.cam_bridges_add", text="Autogenerate bridges")
+            self.layout.operator("scene.cam_bridges_add", text="Autogenerate Bridges / Tabs")
 
     def draw_skin(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         self.layout.prop(self.op, 'skin')
 
     def draw_array(self):
-        if not self.has_correct_level(): return
+        if not self.has_correct_level():
+            return
         if self.op.machine_axes == '3':
             self.layout.prop(self.op, 'array')
             if self.op.array:
@@ -204,7 +225,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, bpy.types.Panel):
                 self.layout.prop(self.op, 'array_x_distance')
                 self.layout.prop(self.op, 'array_y_count')
                 self.layout.prop(self.op, 'array_y_distance')
-
 
     def draw(self, context):
         self.context = context

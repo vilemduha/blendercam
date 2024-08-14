@@ -1,37 +1,23 @@
-# blender CAM simple.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'simple.py' © 2012 Vilem Novak
 
-# Solves: No module named 'shapely' (even if it is installed)
-#help('modules')
+Various helper functions, less complex than those found in the 'utils' files.
+"""
 
-import math
-import sys
+from math import (
+    hypot,
+    pi,
+)
 import os
 import string
+import sys
 import time
+
+from shapely.geometry import Polygon
+
 import bpy
-import mathutils
-from mathutils import *
-from math import *
-from shapely.geometry import Point, LineString, Polygon, MultiLineString
+from mathutils import Vector
+
+from .constants import BULLET_SCALE
 
 
 def tuple_add(t, t1):  # add two tuples as Vectors
@@ -70,7 +56,7 @@ def timingprint(tinf):
 
 
 def progress(text, n=None):
-    """function for reporting during the script, works for background operations in the header."""
+    """Function for Reporting During the Script, Works for Background Operations in the Header."""
     text = str(text)
     if n is None:
         n = ''
@@ -81,7 +67,7 @@ def progress(text, n=None):
 
 
 def activate(o):
-    """makes an object active, used many times in blender"""
+    """Makes an Object Active, Used Many Times in Blender"""
     s = bpy.context.scene
     bpy.ops.object.select_all(action='DESELECT')
     o.select_set(state=True)
@@ -90,18 +76,18 @@ def activate(o):
 
 
 def dist2d(v1, v2):
-    """distance between two points in 2d"""
-    return math.hypot((v1[0] - v2[0]), (v1[1] - v2[1]))
+    """Distance Between Two Points in 2D"""
+    return hypot((v1[0] - v2[0]), (v1[1] - v2[1]))
 
 
 def delob(ob):
-    """object deletion for multiple uses"""
+    """Object Deletion for Multiple Uses"""
     activate(ob)
     bpy.ops.object.delete(use_global=False)
 
 
 def dupliob(o, pos):
-    """helper function for visualising cutter positions in bullet simulation"""
+    """Helper Function for Visualising Cutter Positions in Bullet Simulation"""
     activate(o)
     bpy.ops.object.duplicate()
     s = 1.0 / BULLET_SCALE
@@ -122,7 +108,7 @@ def addToGroup(ob, groupname):
 
 
 def compare(v1, v2, vmiddle, e):
-    """comparison for optimisation of paths"""
+    """Comparison for Optimisation of Paths"""
     # e=0.0001
     v1 = Vector(v1)
     v2 = Vector(v2)
@@ -138,7 +124,7 @@ def compare(v1, v2, vmiddle, e):
 
 
 def isVerticalLimit(v1, v2, limit):
-    """test path segment on verticality threshold, for protect_vertical option"""
+    """Test Path Segment on Verticality Threshold, for protect_vertical Option"""
     z = abs(v1[2] - v2[2])
     # verticality=0.05
     # this will be better.
@@ -256,6 +242,7 @@ def union(name):
     remove_multiple(name)
     rename('unionboolean', name)
 
+
 def intersect(name):
     select_multiple(name)
     bpy.ops.object.curve_boolean(boolean_type='INTERSECT')
@@ -263,6 +250,8 @@ def intersect(name):
 
 # boolean difference of objects starting with name result is object from basename.
 # all objects starting with name will be deleted and the result will be basename
+
+
 def difference(name, basename):
     #   name is the series to select
     #   basename is what the base you want to cut including name
@@ -317,7 +306,7 @@ def remove_doubles():
 def add_overcut(diametre, overcut=True):
     if overcut:
         name = bpy.context.active_object.name
-        bpy.ops.object.curve_overcuts(diameter=diametre, threshold=math.pi/2.05)
+        bpy.ops.object.curve_overcuts(diameter=diametre, threshold=pi/2.05)
         overcut_name = bpy.context.active_object.name
         make_active(name)
         bpy.ops.object.delete()
@@ -374,4 +363,5 @@ def active_to_coords():
 
 # returns shapely polygon from active object
 def active_to_shapely_poly():
-    return Polygon(active_to_coords())  # convert coordinates to shapely Polygon datastructure
+    # convert coordinates to shapely Polygon datastructure
+    return Polygon(active_to_coords())

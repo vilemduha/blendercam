@@ -1,30 +1,20 @@
-# blender CAM slice.py (c) 2021 Alain Pelletier
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'slice.py' © 2021 Alain Pelletier
 
-# very simple slicing for 3d meshes, useful for plywood cutting.
-# completely rewritten April 2021
+Very simple slicing for 3D meshes, useful for plywood cutting.
+Completely rewritten April 2021.
+"""
 
 import bpy
+from bpy.props import (
+    BoolProperty,
+    FloatProperty,
+)
+from bpy.types import PropertyGroup
 
-from cam import utils
+from . import (
+    constants,
+    utils,
+)
 
 
 def slicing2d(ob, height):  # April 2020 Alain Pelletier
@@ -48,7 +38,7 @@ def slicing2d(ob, height):  # April 2020 Alain Pelletier
     return True
 
 
-def slicing3d(ob, start, end):  #  April 2020 Alain Pelletier
+def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
     # let's slice things
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     bpy.ops.object.mode_set(mode='EDIT')  # force edit mode
@@ -93,7 +83,8 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
     if above0 and minz < 0:
         start_height = 0
 
-    layeramt = 1 + int((maxz - start_height) // thickness)  # calculate amount of layers needed
+    # calculate amount of layers needed
+    layeramt = 1 + int((maxz - start_height) // thickness)
 
     for layer in range(layeramt):
         height = round(layer * thickness, 6)  # height of current layer
@@ -108,12 +99,15 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         bpy.ops.object.duplicate()  # make a copy of object to be sliced
         bpy.context.view_layer.objects.active.name = slicename  # change the name of object
 
-        obslice = bpy.context.view_layer.objects.active  # attribute active object to obslice
+        # attribute active object to obslice
+        obslice = bpy.context.view_layer.objects.active
         scollection.objects.link(obslice)  # link obslice to scollecton
         if slice3d:
-            slicing3d(obslice, height, height + thickness)  # slice 3d at desired height and stop at desired height
+            # slice 3d at desired height and stop at desired height
+            slicing3d(obslice, height, height + thickness)
         else:
-            slicesuccess = slicing2d(obslice, height)  # slice object at desired height
+            # slice object at desired height
+            slicesuccess = slicing2d(obslice, height)
 
         if indexes and slicesuccess:
             # text objects
@@ -130,3 +124,33 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
     # select all slices
     for obj in bpy.data.collections['Slices'].all_objects:
         obj.select_set(True)
+
+
+class SliceObjectsSettings(PropertyGroup):
+    """Stores All Data for Machines"""
+
+    slice_distance: FloatProperty(
+        name="Slicing Distance",
+        description="Slices distance in z, should be most often "
+        "thickness of plywood sheet.",
+        min=0.001,
+        max=10,
+        default=0.005,
+        precision=constants.PRECISION,
+        unit="LENGTH",
+    )
+    slice_above0: BoolProperty(
+        name="Slice Above 0",
+        description="only slice model above 0",
+        default=False,
+    )
+    slice_3d: BoolProperty(
+        name="3D Slice",
+        description="For 3D carving",
+        default=False,
+    )
+    indexes: BoolProperty(
+        name="Add Indexes",
+        description="Adds index text of layer + index",
+        default=True,
+    )

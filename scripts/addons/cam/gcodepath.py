@@ -1,71 +1,73 @@
-# blender CAM gcodepath.py (c) 2012 Vilem Novak
-#
-# ***** BEGIN GPL LICENSE BLOCK *****
-#
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software Foundation,
-# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-#
-# ***** END GPL LICENCE BLOCK *****
+"""BlenderCAM 'gcodepath.py' © 2012 Vilem Novak
 
-# here is the Gcode generaton
+Generate and Export G-Code based on scene, machine, chain, operation and path settings.
+"""
 
-import bpy
+# G-code Generaton
+from math import (
+    ceil,
+    floor,
+    pi,
+    sqrt
+)
 import time
-import mathutils
-import math
-from math import *
-from mathutils import *
-from bpy.props import *
 
 import numpy
+from shapely.geometry import polygon as spolygon
 
-from cam import chunk
-from cam.chunk import *
-from cam import USE_PROFILER
+import bpy
+from mathutils import Euler, Vector
 
-from cam import collision
-from cam.collision import *
+from . import strategy
+from .async_op import progress_async
+from .bridges import useBridges
+from .cam_chunk import (
+    curveToChunks,
+    chunksRefine,
+    limitChunks,
+    chunksCoherency,
+    shapelyToChunks,
+    parentChildDist,
+)
+from .image_utils import (
+    crazyStrokeImageBinary,
+    getOffsetImageCavities,
+    imageToShapely,
+    prepareArea,
+)
+from .nc import iso
+from .opencamlib.opencamlib import oclGetWaterline
+from .pattern import (
+    getPathPattern,
+    getPathPattern4axis
+)
+from .simple import (
+    progress,
+    safeFileName,
+    strInUnits
+)
+from .utils import (
+    cleanupIndexed,
+    connectChunksLow,
+    getAmbient,
+    getBounds,
+    getOperationSilhouete,
+    getOperationSources,
+    prepareIndexed,
+    sampleChunks,
+    sampleChunksNAxis,
+    sortChunks,
+    USE_PROFILER,
+)
 
-from cam import simple
-from cam.simple import *
-
-from cam.async_op import progress_async
-
-from cam import bridges
-from cam.bridges import *
-
-from cam import utils
-from cam import strategy
-
-from cam import pattern
-from cam.pattern import *
-
-from cam import polygon_utils_cam
-from cam.polygon_utils_cam import *
-
-from cam import image_utils
-from cam.image_utils import *
-from cam.opencamlib.opencamlib import *
-from cam.nc import iso
 
 def pointonline(a, b, c, tolerence):
     b = b - a  # convert to vector by subtracting origin
     c = c - a
     dot_pr = b.dot(c)  # b dot c
     norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
-    angle = (numpy.rad2deg(numpy.arccos(dot_pr / norms)))  # find angle between the two vectors
+    # find angle between the two vectors
+    angle = (numpy.rad2deg(numpy.arccos(dot_pr / norms)))
     if angle > tolerence:
         return False
     else:
@@ -73,9 +75,9 @@ def pointonline(a, b, c, tolerence):
 
 
 def exportGcodePath(filename, vertslist, operations):
-    """exports gcode with the heeks nc adopted library."""
+    """Exports G-code with the Heeks NC Adopted Library."""
     print("EXPORT")
-    progress('exporting gcode file')
+    progress('Exporting G-code File')
     t = time.time()
     s = bpy.context.scene
     m = s.cam_machine
@@ -95,10 +97,11 @@ def exportGcodePath(filename, vertslist, operations):
         if totops > m.split_limit:
             split = True
             filesnum = ceil(totops / m.split_limit)
-            print('file will be separated into %i files' % filesnum)
+            print('File Will Be Separated Into %i Files' % filesnum)
     print('1')
 
-    basefilename = bpy.data.filepath[:-len(bpy.path.basename(bpy.data.filepath))] + safeFileName(filename)
+    basefilename = bpy.data.filepath[:-
+                                     len(bpy.path.basename(bpy.data.filepath))] + safeFileName(filename)
 
     extension = '.tap'
     if m.post_processor == 'ISO':
@@ -158,7 +161,7 @@ def exportGcodePath(filename, vertslist, operations):
         if split:
             fileindex = '_' + str(findex)
         filename = basefilename + fileindex + extension
-        print("writing: ",filename)
+        print("writing: ", filename)
         c = postprocessor.Creator()
 
         # process user overrides for post processor settings
@@ -184,7 +187,7 @@ def exportGcodePath(filename, vertslist, operations):
         # start program
         c.program_begin(0, filename)
         c.flush_nc()
-        c.comment('G-code generated with BlenderCAM and NC library')
+        c.comment('G-code Generated with BlenderCAM and NC library')
         # absolute coordinates
         c.absolute()
 
@@ -195,7 +198,8 @@ def exportGcodePath(filename, vertslist, operations):
         return c
 
     c = startNewFile()
-    last_cutter = None  # [o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
+    # [o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
+    last_cutter = None
 
     processedops = 0
     last = Vector((0, 0, 0))
@@ -275,12 +279,12 @@ def exportGcodePath(filename, vertslist, operations):
         if o.enable_A:
             if o.rotation_A == 0:
                 o.rotation_A = 0.0001
-            c.rapid(a=o.rotation_A * 180 / math.pi)
+            c.rapid(a=o.rotation_A * 180 / pi)
 
         if o.enable_B:
             if o.rotation_B == 0:
                 o.rotation_B = 0.0001
-            c.rapid(a=o.rotation_B * 180 / math.pi)
+            c.rapid(a=o.rotation_B * 180 / pi)
 
         c.write('\n')
         c.flush_nc()
@@ -323,7 +327,7 @@ def exportGcodePath(filename, vertslist, operations):
             # skip the first vertex if this is a chained operation
             # ie: outputting more than one operation
             # otherwise the machine gets sent back to 0,0 for each operation which is unecessary
-            shapes += 1  #  Count amount of shapes
+            shapes += 1  # Count amount of shapes
             if i > 0 and vi == 0:
                 continue
             v = vert.co
@@ -435,9 +439,10 @@ def exportGcodePath(filename, vertslist, operations):
                         c.rapid(x=vx, y=vy, z=vz)
                         #  this is to evaluate operation time and adds a feedrate for fast moves
                         if vz is not None:
-                            f = plungefeedrate * fadjustval * 0.35  #  compensate for multiple fast move accelerations
+                            # compensate for multiple fast move accelerations
+                            f = plungefeedrate * fadjustval * 0.35
                         if vx is not None or vy is not None:
-                            f = freefeedrate * 0.8  #  compensate for free feedrate acceleration
+                            f = freefeedrate * 0.8  # compensate for free feedrate acceleration
                 else:
                     c.rapid(x=vx, y=vy, z=vz, a=ra, b=rb)
 
@@ -451,7 +456,7 @@ def exportGcodePath(filename, vertslist, operations):
                     c.feed(x=vx, y=vy, z=vz)
                 else:
                     c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
-            cut_distance+=vect.length * unitcorr
+            cut_distance += vect.length * unitcorr
             vector_duration = vect.length / f
             duration += vector_duration
             last = v
@@ -494,7 +499,7 @@ def exportGcodePath(filename, vertslist, operations):
                 c.write(aline + '\n')
 
     o.info.duration = duration * unitcorr
-    print("total time:",round(o.info.duration * 60),"seconds")
+    print("total time:", round(o.info.duration * 60), "seconds")
     if bpy.context.scene.unit_settings.system == 'METRIC':
         unit_distance = 'm'
         cut_distance /= 1000
@@ -502,7 +507,7 @@ def exportGcodePath(filename, vertslist, operations):
         unit_distance = 'feet'
         cut_distance /= 12
 
-    print("cut distance:", round(cut_distance,3), unit_distance)
+    print("cut distance:", round(cut_distance, 3), unit_distance)
     if enable_dust:
         c.write(stop_dust + '\n')
     if enable_hold:
@@ -534,7 +539,7 @@ async def getPath(context, operation):  # should do all path calculations.
     operation.update_ambient_tag = True
     operation.update_bullet_collision_tag = True
 
-    utils.getOperationSources(operation)
+    getOperationSources(operation)
 
     operation.info.warnings = ''
     checkMemoryLimit(operation)
@@ -542,14 +547,16 @@ async def getPath(context, operation):  # should do all path calculations.
     print(operation.machine_axes)
 
     if operation.machine_axes == '3':
-        if USE_PROFILER == True: # profiler
-            import cProfile, pstats, io
+        if USE_PROFILER == True:  # profiler
+            import cProfile
+            import pstats
+            import io
             pr = cProfile.Profile()
             pr.enable()
             await getPath3axis(context, operation)
             pr.disable()
-            pr.dump_stats(time.strftime("blendercam_%Y%m%d_%H%M.prof"))
-        else:        
+            pr.dump_stats(time.strftime("BlenderCAM_%Y%m%d_%H%M.prof"))
+        else:
             await getPath3axis(context, operation)
 
     elif (operation.machine_axes == '5' and operation.strategy5axis == 'INDEXED') or (
@@ -577,8 +584,8 @@ async def getPath(context, operation):  # should do all path calculations.
 
 
 def getChangeData(o):
-    """this is a function to check if object props have changed,
-    to see if image updates are needed in the image based method"""
+    """This Is a Function to Check if Object Props Have Changed,
+    to See if Image Updates Are Needed in the Image Based Method"""
     changedata = ''
     obs = []
     if o.geometry_source == 'OBJECT':
@@ -594,7 +601,7 @@ def getChangeData(o):
 
 
 def checkMemoryLimit(o):
-    # utils.getBounds(o)
+    # getBounds(o)
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
     resx = sx / o.optimisation.pixsize
@@ -604,9 +611,9 @@ def checkMemoryLimit(o):
     # print('co se to deje')
     if res > limit:
         ratio = (res / limit)
-        o.optimisation.pixsize = o.optimisation.pixsize * math.sqrt(ratio)
-        o.info.warnings += f"Memory limit: sampling resolution reduced to {o.optimisation.pixsize:.2e}\n"
-        print('changing sampling resolution to %f' % o.optimisation.pixsize)
+        o.optimisation.pixsize = o.optimisation.pixsize * sqrt(ratio)
+        o.info.warnings += f"Memory limit: Sampling Resolution Reduced to {o.optimisation.pixsize:.2e}\n"
+        print('Changing Sampling Resolution to %f' % o.optimisation.pixsize)
 
 
 # this is the main function.
@@ -614,7 +621,7 @@ def checkMemoryLimit(o):
 async def getPath3axis(context, operation):
     s = bpy.context.scene
     o = operation
-    utils.getBounds(o)
+    getBounds(o)
     tw = time.time()
 
     if o.strategy == 'CUTOUT':
@@ -635,14 +642,16 @@ async def getPath3axis(context, operation):
             pathSamples = []
             ob = bpy.data.objects[o.curve_object]
             pathSamples.extend(curveToChunks(ob))
-            pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
+            # sort before sampling
+            pathSamples = await sortChunks(pathSamples, o)
             pathSamples = chunksRefine(pathSamples, o)
         elif o.strategy == 'PENCIL':
             await prepareArea(o)
-            utils.getAmbient(o)
+            getAmbient(o)
             pathSamples = getOffsetImageCavities(o, o.offset_image)
             pathSamples = limitChunks(pathSamples, o)
-            pathSamples = await utils.sortChunks(pathSamples, o)  # sort before sampling
+            # sort before sampling
+            pathSamples = await sortChunks(pathSamples, o)
         elif o.strategy == 'CRAZY':
             await prepareArea(o)
             # pathSamples = crazyStrokeImage(o)
@@ -652,21 +661,21 @@ async def getPath3axis(context, operation):
 
             pathSamples = crazyStrokeImageBinary(o, millarea, avoidarea)
             #####
-            pathSamples = await utils.sortChunks(pathSamples, o)
+            pathSamples = await sortChunks(pathSamples, o)
             pathSamples = chunksRefine(pathSamples, o)
 
         else:
             if o.strategy == 'OUTLINEFILL':
-                utils.getOperationSilhouete(o)
+                getOperationSilhouete(o)
 
             pathSamples = getPathPattern(o)
 
             if o.strategy == 'OUTLINEFILL':
-                pathSamples = await utils.sortChunks(pathSamples, o)
+                pathSamples = await sortChunks(pathSamples, o)
                 # have to be sorted once before, because of the parenting inside of samplechunks
 
             if o.strategy in ['BLOCK', 'SPIRAL', 'CIRCLES']:
-                pathSamples = await utils.connectChunksLow(pathSamples, o)
+                pathSamples = await connectChunksLow(pathSamples, o)
 
         # print (minz)
 
@@ -674,17 +683,18 @@ async def getPath3axis(context, operation):
         layers = strategy.getLayers(o, o.maxz, o.min.z)
 
         print("SAMPLE", o.name)
-        chunks.extend(await utils.sampleChunks(o, pathSamples, layers))
+        chunks.extend(await sampleChunks(o, pathSamples, layers))
         print("SAMPLE OK")
         if o.strategy == 'PENCIL':  # and bpy.app.debug_value==-3:
             chunks = chunksCoherency(chunks)
             print('coherency check')
 
-        if o.strategy in ['PARALLEL', 'CROSS', 'PENCIL', 'OUTLINEFILL']:  # and not o.movement.parallel_step_back:
+        # and not o.movement.parallel_step_back:
+        if o.strategy in ['PARALLEL', 'CROSS', 'PENCIL', 'OUTLINEFILL']:
             print('sorting')
-            chunks = await utils.sortChunks(chunks, o)
+            chunks = await sortChunks(chunks, o)
             if o.strategy == 'OUTLINEFILL':
-                chunks = await utils.connectChunksLow(chunks, o)
+                chunks = await connectChunksLow(chunks, o)
         if o.movement.ramp:
             for ch in chunks:
                 ch.rampZigZag(ch.zstart, None, o)
@@ -702,7 +712,7 @@ async def getPath3axis(context, operation):
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'WATERLINE' and o.optimisation.use_opencamlib:
-        utils.getAmbient(o)
+        getAmbient(o)
         chunks = []
         await oclGetWaterline(o, chunks)
         chunks = limitChunks(chunks, o)
@@ -720,7 +730,7 @@ async def getPath3axis(context, operation):
         await prepareArea(o)
         layerstep = 1000000000
         if o.use_layers:
-            layerstep = math.floor(o.stepdown / o.slice_detail)
+            layerstep = floor(o.stepdown / o.slice_detail)
             if layerstep == 0:
                 layerstep = 1
 
@@ -734,7 +744,7 @@ async def getPath3axis(context, operation):
         layerstepinc = 0
 
         slicesfilled = 0
-        utils.getAmbient(o)
+        getAmbient(o)
 
         for h in range(0, nslices):
             layerstepinc += 1
@@ -779,7 +789,8 @@ async def getPath3axis(context, operation):
                             o.inverse and not poly.is_empty and slicesfilled == 1):  # first slice fill
                         restpoly = lastslice
 
-                    restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
+                    restpoly = restpoly.buffer(-o.dist_between_paths,
+                                               resolution=o.optimisation.circle_detail)
 
                     fillz = z
                     i = 0
@@ -788,7 +799,7 @@ async def getPath3axis(context, operation):
                         # project paths TODO: path projection during waterline is not working
                         if o.waterline_project:
                             nchunks = chunksRefine(nchunks, o)
-                            nchunks = await utils.sampleChunks(o, nchunks, layers)
+                            nchunks = await sampleChunks(o, nchunks, layers)
 
                         nchunks = limitChunks(nchunks, o, force=True)
                         #########################
@@ -796,7 +807,8 @@ async def getPath3axis(context, operation):
                         parentChildDist(lastchunks, nchunks, o)
                         lastchunks = nchunks
                         # slicechunks.extend(polyToChunks(restpoly,z))
-                        restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
+                        restpoly = restpoly.buffer(-o.dist_between_paths,
+                                                   resolution=o.optimisation.circle_detail)
 
                         i += 1
                 # print(i)
@@ -814,10 +826,12 @@ async def getPath3axis(context, operation):
                     if o.inverse and poly.is_empty and slicesfilled > 0:
                         restpoly = bound_rectangle.difference(lastslice)
 
-                    restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
+                    restpoly = restpoly.buffer(-o.dist_between_paths,
+                                               resolution=o.optimisation.circle_detail)
 
                     i = 0
-                    while not restpoly.is_empty:  # 'GeometryCollection':#len(restpoly.boundary.coords)>0:
+                    # 'GeometryCollection':#len(restpoly.boundary.coords)>0:
+                    while not restpoly.is_empty:
                         # print(i)
                         nchunks = shapelyToChunks(restpoly, fillz)
                         #########################
@@ -825,7 +839,8 @@ async def getPath3axis(context, operation):
                         slicechunks.extend(nchunks)
                         parentChildDist(lastchunks, nchunks, o)
                         lastchunks = nchunks
-                        restpoly = restpoly.buffer(-o.dist_between_paths, resolution=o.optimisation.circle_detail)
+                        restpoly = restpoly.buffer(-o.dist_between_paths,
+                                                   resolution=o.optimisation.circle_detail)
                         i += 1
 
                 percent = int(h / nslices * 100)
@@ -836,7 +851,7 @@ async def getPath3axis(context, operation):
                     o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW'):
                 for chunk in slicechunks:
                     chunk.reverse()
-            slicechunks = await utils.sortChunks(slicechunks, o)
+            slicechunks = await sortChunks(slicechunks, o)
             if topdown:
                 slicechunks.reverse()
             # project chunks in between
@@ -847,16 +862,16 @@ async def getPath3axis(context, operation):
         strategy.chunksToMesh(chunks, o)
 
     elif o.strategy == 'DRILL':
-        await  strategy.drill(o)
+        await strategy.drill(o)
 
     elif o.strategy == 'MEDIAL_AXIS':
         await strategy.medial_axis(o)
-    await progress_async(f"Done",time.time() - tw,"s")
+    await progress_async(f"Done", time.time() - tw, "s")
 
 
 async def getPath4axis(context, operation):
     o = operation
-    utils.getBounds(o)
+    getBounds(o)
     if o.strategy4axis in ['PARALLELR', 'PARALLEL', 'HELIX', 'CROSS']:
         path_samples = getPathPattern4axis(o)
 
@@ -865,5 +880,5 @@ async def getPath4axis(context, operation):
 
         layers = strategy.getLayers(o, 0, depth)
 
-        chunks.extend(await utils.sampleChunksNAxis(o, path_samples, layers))
+        chunks.extend(await sampleChunksNAxis(o, path_samples, layers))
         strategy.chunksToMesh(chunks, o)
