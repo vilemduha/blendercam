@@ -30,7 +30,7 @@
 </center>
 
 ## 👁️ About
-Blender CAM is an open source solution for artistic, personal, commercial or industrial CAM - Computer aided machining - a g-code generation tool.
+[**Blender CAM**](https://blendercam.com/) is an open source solution for artistic, personal, commercial or industrial CAM - Computer aided machining - a g-code generation tool.
 
 Blender CAM is an add-on for the free open-source [Blender 3d package](https://www.blender.org/).
 
@@ -38,9 +38,9 @@ It has been used for many milling projects, and is actively developed. If you ar
 
 ## 👨‍🎓 How to use (Wiki)
 
-![Linux](https://img.shields.io/badge/Plateform-Linux%20|%20Windows-brightgreen.svg)
+![Linux](https://img.shields.io/badge/Plateform-Linux%20|%20MacOS%20|%20Windows-brightgreen.svg)
 
-Blendercam works on Windows or Linux. Probably on MacOS also.
+Blendercam works on Windows or Linux and MacOS.
 
 * [BlenderCam Installation](documentation/Blendercam%20Installation.md) 
 * [Getting started](documentation/Getting%20started.md)
@@ -48,7 +48,7 @@ Blendercam works on Windows or Linux. Probably on MacOS also.
 * [Tools](documentation/Blendercam-Tools.md)
 * [Example of using Profile and Pocket operations](documentation/Profile%20and%20Pocket%20operations.md)
 
-
+(The full [documentation](https://blendercam.com/documentation/) can also be found on the website)
 ## 👌 Features
 
 |                            | Blender from 2.80 to 4.0.0
