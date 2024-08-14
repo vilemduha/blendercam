@@ -1,4 +1,4 @@
-"""BlenderCAM 'engine.py'
+"""CNCCAM 'engine.py'
 
 Engine definition, options and panels.
 """
@@ -28,9 +28,9 @@ from .ui_panels.pack import CAM_PACK_Panel
 from .ui_panels.slice import CAM_SLICE_Panel
 
 
-class BLENDERCAM_ENGINE(RenderEngine):
-    bl_idname = "BLENDERCAM_RENDER"
-    bl_label = "BlenderCAM"
+class CNCCAM_ENGINE(RenderEngine):
+    bl_idname = "CNCCAM_RENDER"
+    bl_label = "CNC CAM"
     bl_use_eevee_viewport = True
 
 

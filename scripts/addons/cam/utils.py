@@ -1849,8 +1849,9 @@ def updateOperation(self, context):
 def isValid(o, context):
     valid = True
     if o.geometry_source == 'OBJECT':
-        if o.object_name not in bpy.data.objects:
-            valid = False
+        if not o.object_name.endswith('_cut_bridges'):  #  let empty bridge cut be valid
+            if o.object_name not in bpy.data.objects:
+                valid = False
     if o.geometry_source == 'COLLECTION':
         if o.collection_name not in bpy.data.collections:
             valid = False

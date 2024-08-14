@@ -72,7 +72,7 @@ from .curvecamtools import (
     CamObjectSilhouete,
 )
 from .engine import (
-    BLENDERCAM_ENGINE,
+    CNCCAM_ENGINE,
     get_panels,
 )
 from .machine_settings import machineSettings
@@ -234,7 +234,7 @@ classes = [
     CamObjectSilhouete,
 
     # .engine
-    BLENDERCAM_ENGINE,
+    CNCCAM_ENGINE,
 
     # .machine_settings
     machineSettings,
@@ -382,7 +382,7 @@ def register() -> None:
     )
 
     for panel in get_panels():
-        panel.COMPAT_ENGINES.add("BLENDERCAM_RENDER")
+        panel.COMPAT_ENGINES.add("CNCCAM_RENDER")
 
     wm = bpy.context.window_manager
     addon_kc = wm.keyconfigs.addon
@@ -418,8 +418,8 @@ def unregister() -> None:
     del scene.cam_slice
 
     for panel in get_panels():
-        if 'BLENDERCAM_RENDER' in panel.COMPAT_ENGINES:
-            panel.COMPAT_ENGINES.remove('BLENDERCAM_RENDER')
+        if 'CNCCAM_RENDER' in panel.COMPAT_ENGINES:
+            panel.COMPAT_ENGINES.remove('CNCCAM_RENDER')
 
     wm = bpy.context.window_manager
     active_kc = wm.keyconfigs.active
