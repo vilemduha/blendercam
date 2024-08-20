@@ -301,7 +301,7 @@ def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiteratio
         IU.append(None)
         VF.append(None)
         PLANAR.append(None)
-    VF[0] = numpy.zeros((xmax, ymax), dtype=numpy.float)
+    VF[0] = numpy.zeros((xmax, ymax), dtype=numpy.float64)
     # numpy.fill(pix)!? TODO
 
     RHS[0] = F.copy()
@@ -315,10 +315,10 @@ def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiteratio
         # calculate size of next level
         sx = int(sx/2)
         sy = int(sy/2)
-        PLANAR[k+1] = numpy.zeros((sx, sy), dtype=numpy.float)
-        RHS[k+1] = numpy.zeros((sx, sy), dtype=numpy.float)
-        IU[k+1] = numpy.zeros((sx, sy), dtype=numpy.float)
-        VF[k+1] = numpy.zeros((sx, sy), dtype=numpy.float)
+        PLANAR[k+1] = numpy.zeros((sx, sy), dtype=numpy.float64)
+        RHS[k+1] = numpy.zeros((sx, sy), dtype=numpy.float64)
+        IU[k+1] = numpy.zeros((sx, sy), dtype=numpy.float64)
+        VF[k+1] = numpy.zeros((sx, sy), dtype=numpy.float64)
 
         # restrict from level k to level k+1 (coarser-grid)
         restrictbuf(PLANAR[k], PLANAR[k+1])
@@ -600,7 +600,7 @@ def imagetonumpy(i):
     x = 0
     y = 0
     count = 0
-    na = numpy.array((0.1), dtype=float)
+    na = numpy.array((0.1), dtype=float64)
 
     size = width*height
     na.resize(size*4)
