@@ -72,11 +72,6 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         tcollection = bpy.data.collections.new("Text")
         bpy.context.scene.collection.children.link(tcollection)
 
-    # show object information
-    print(ob)
-    print(ob.dimensions)
-    print(ob.location)
-
     bpy.ops.object.mode_set(mode='OBJECT')  # force object mode
     minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
 
