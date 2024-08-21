@@ -56,6 +56,7 @@ def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 
     bpy.ops.object.select_all(action='DESELECT')  # deselect everything
+    return True
 
 
 def sliceObject(ob):  # April 2020 Alain Pelletier
@@ -104,7 +105,7 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         scollection.objects.link(obslice)  # link obslice to scollecton
         if slice3d:
             # slice 3d at desired height and stop at desired height
-            slicing3d(obslice, height, height + thickness)
+            slicesuccess = slicing3d(obslice, height, height + thickness)
         else:
             # slice object at desired height
             slicesuccess = slicing2d(obslice, height)
