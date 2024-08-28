@@ -73,7 +73,7 @@ SHAPELY = True
 async def cutout(o):
     max_depth = checkminz(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
-    c_offset = o.cutter_diameter / 2  # cutter ofset
+    c_offset = o.cutter_diameter / 2  # cutter offset
     bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
     print("cuttertype:", o.cutter_type, "max_depth:", max_depth)
     if o.cutter_type == 'VCARVE':
@@ -97,11 +97,18 @@ async def cutout(o):
         join = 1
     print('Operation: Cutout')
     offset = True
+
+    if o.onlycurves:   # remove doubles for curves :)
+        for ob in o.objects:
+            activate(ob)
+            bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+
     if o.cut_type == 'ONLINE' and o.onlycurves:  # is separate to allow open curves :)
         print('separate')
         chunksFromCurve = []
         for ob in o.objects:
             chunksFromCurve.extend(curveToChunks(ob, o.use_modifiers))
+
         # chunks always have polys now
         # for ch in chunksFromCurve:
         #     # print(ch.points)
@@ -357,6 +364,12 @@ async def pocket(o):
     centers = None
     firstoutline = p  # for testing in the end.
     prest = p.buffer(-c_offset, o.optimisation.circle_detail)
+
+    if o.onlycurves:   # remove doubles for curves :)
+        for ob in o.objects:
+            activate(ob)
+            bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+
     while not p.is_empty:
         if o.pocketToCurve:
             # make a curve starting with _3dpocket
@@ -649,6 +662,11 @@ async def medial_axis(o):
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
+
+    if o.onlycurves:   # remove doubles for curves :)
+        for ob in o.objects:
+            activate(ob)
+            bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
 
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
