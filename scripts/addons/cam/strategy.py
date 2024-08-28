@@ -74,6 +74,7 @@ async def cutout(o):
     max_depth = checkminz(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2  # cutter ofset
+    bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
     print("cuttertype:", o.cutter_type, "max_depth:", max_depth)
     if o.cutter_type == 'VCARVE':
         c_offset = -max_depth * tan(cutter_angle)
