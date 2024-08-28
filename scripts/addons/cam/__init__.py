@@ -69,7 +69,7 @@ from .curvecamtools import (
     CamCurveRemoveDoubles,
     CamMeshGetPockets,
     CamOffsetSilhouete,
-    CamObjectSilhouete,
+    #CamObjectSilhouete,
 )
 from .engine import (
     CNCCAM_ENGINE,
@@ -231,7 +231,7 @@ classes = [
     CamCurveRemoveDoubles,
     CamMeshGetPockets,
     CamOffsetSilhouete,
-    CamObjectSilhouete,
+    #CamObjectSilhouete,
 
     # .engine
     CNCCAM_ENGINE,
