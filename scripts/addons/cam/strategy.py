@@ -351,6 +351,10 @@ async def pocket(o):
 
     c_offset += o.skin  # add skin
     print("Cutter Offset", c_offset)
+    if o.onlycurves:   # remove doubles for curves :)
+        for ob in o.objects:
+            activate(ob)
+            bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
 
     p = getObjectOutline(c_offset, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
@@ -364,11 +368,6 @@ async def pocket(o):
     centers = None
     firstoutline = p  # for testing in the end.
     prest = p.buffer(-c_offset, o.optimisation.circle_detail)
-
-    if o.onlycurves:   # remove doubles for curves :)
-        for ob in o.objects:
-            activate(ob)
-            bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
 
     while not p.is_empty:
         if o.pocketToCurve:
