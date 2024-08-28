@@ -33,7 +33,7 @@ class VIEW3D_MT_PIE_CurveTools(Menu):
         # Bottom
         box = pie.box()
         column = box.column(align=True)
-        column.operator("object.silhouete")
+        #column.operator("object.silhouete")
         column.operator("object.silhouete_offset")
         column.operator("object.curve_remove_doubles")
         column.operator("object.mesh_get_pockets")
