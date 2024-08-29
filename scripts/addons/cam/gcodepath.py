@@ -154,7 +154,7 @@ def exportGcodePath(filename, vertslist, operations):
         unitcorr = 1
     rotcorr = 180.0 / pi
 
-    use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
+    use_experimental = bpy.context.preferences.addons[__package__].preferences.experimental
 
     def startNewFile():
         fileindex = ''

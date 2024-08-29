@@ -1,26 +1,15 @@
 """BlenderCAM '__init__.py' © 2012 Vilem Novak
 
-Import Modules, bl_info, Register and Unregister Classes
+Import Modules, Register and Unregister Classes
 """
 
 # Python Standard Library
 import subprocess
 import sys
 
-# pip Packages
-try:
-    import shapely
-except ModuleNotFoundError:
-    # pip install required python stuff
-    subprocess.check_call([sys.executable, "-m", "ensurepip"])
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", " pip"])
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "shapely", "Equation", "opencamlib"]
-    )
-
-    # Numba Install temporarily disabled after crash report
-    # install numba if available for this platform, ignore failure
-    # subprocess.run([sys.executable, "-m", "pip", "install", "numba"])
+# pip Wheels
+import shapely
+import opencamlib
 
 # Blender Library
 import bpy
@@ -69,7 +58,7 @@ from .curvecamtools import (
     CamCurveRemoveDoubles,
     CamMeshGetPockets,
     CamOffsetSilhouete,
-    #CamObjectSilhouete,
+    # CamObjectSilhouete,
 )
 from .engine import (
     CNCCAM_ENGINE,
@@ -180,20 +169,6 @@ from .utils import (
 )
 
 
-bl_info = {
-    "name": "BlenderCAM - G-code Generation Tools",
-    "author": "Vilem Novak & Contributors",
-    "version":(1,0,32),
-    "blender": (3, 6, 0),
-    "location": "Properties > render",
-    "description": "Generate Machining Paths for CNC",
-    "warning": "",
-    "doc_url": "https://blendercam.com/",
-    "tracker_url": "",
-    "category": "Scene",
-}
-
-
 classes = [
     # CamBackgroundMonitor
 
@@ -231,7 +206,7 @@ classes = [
     CamCurveRemoveDoubles,
     CamMeshGetPockets,
     CamOffsetSilhouete,
-    #CamObjectSilhouete,
+    # CamObjectSilhouete,
 
     # .engine
     CNCCAM_ENGINE,
