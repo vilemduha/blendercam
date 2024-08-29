@@ -15,7 +15,8 @@ from .buttons_panel import CAMButtonsPanel
 
 def update_interface(self, context):
     # set default for new files
-    context.preferences.addons['cam'].preferences.default_interface_level = context.scene.interface.level
+    addon_prefs = context.preferences.addons["bl_ext.user_default.blendercam"].preferences
+    addon_prefs.default_interface_level = context.scene.interface.level
     bpy.ops.wm.save_userpref()
 
 
