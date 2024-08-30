@@ -51,7 +51,7 @@ jobs:
         toml_file=Path("scripts","addons","cam","blender_manifest.toml")
         toml_text=toml_file.read_text()
         version_regex= r'version\s=\s"[0-9]+\.[0-9]+\.[0-9]+"'
-        toml_text = re.sub(version_regex,f'version = "{major}.{minor}.{patch}"',init_text)
+        toml_text = re.sub(version_regex,f'version = "{major}.{minor}.{patch}"',toml_text)
         toml_file.write_text(toml_text)
         
         env_file = Path(os.getenv('GITHUB_ENV'))  
