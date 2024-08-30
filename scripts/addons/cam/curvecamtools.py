@@ -827,7 +827,7 @@ class CamOffsetSilhouete(Operator):
 
             dilated = line.buffer(self.offset, cap_style=1, resolution=16,
                                   mitre_limit=self.mitrelimit)  # use shapely to expand
-            polygon_utils_cam.shape2lyToCurve("dilation", dilated, 0)
+            polygon_utils_cam.shapelyToCurve("dilation", dilated, 0)
         else:
             utils.silhoueteOffset(context, self.offset,
                                   int(self.style), self.mitrelimit)
