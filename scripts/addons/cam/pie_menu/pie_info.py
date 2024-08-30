@@ -11,9 +11,10 @@ class VIEW3D_MT_PIE_Info(Menu):
     bl_label = "∴    Info    ∴"
 
     def draw(self, context):
+        addon_prefs = context.preferences.addons[__package__].preferences
         layout = self.layout
         scene = context.scene
-        preferences = context.preferences.addons['cam'].preferences
+        preferences = addon_prefs
         no_operation = len(scene.cam_operations) < 1
         if not no_operation:
             operation = scene.cam_operations[scene.cam_active_operation]

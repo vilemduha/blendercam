@@ -48,11 +48,11 @@ jobs:
           patch=0
         v_file.write_text(f"__version__=({major},{minor},{patch})")
         # update in bl_info structure (which can't be dynamic because blender...)
-        init_file=Path("scripts","addons","cam","__init__.py")
-        init_text=init_file.read_text()
-        version_regex= r"\"version\"\s*:\s*\(([\d\s,]+)\)"
-        init_text = re.sub(version_regex,f'"version":({major},{minor},{patch})',init_text)
-        init_file.write_text(init_text)
+        toml_file=Path("scripts","addons","cam","blender_manifest.toml")
+        toml_text=toml_file.read_text()
+        version_regex= r'version\s=\s"[0-9]+\.[0-9]+\.[0-9]+"'
+        toml_text = re.sub(version_regex,f'version = "{major}.{minor}.{patch}"',init_text)
+        toml_file.write_text(toml_text)
         
         env_file = Path(os.getenv('GITHUB_ENV'))  
         env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")

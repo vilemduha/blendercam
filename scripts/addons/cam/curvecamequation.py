@@ -3,9 +3,8 @@
 Operators to create a number of geometric shapes with curves.
 """
 
-from math import pi
+from math import pi, sin, cos, sqrt
 
-from Equation import Expression
 import numpy as np
 
 import bpy
@@ -15,17 +14,18 @@ from bpy.props import (
     IntProperty,
     StringProperty,
 )
+from bpy.types import Operator
 
 from . import parametric
 
 
-class CamSineCurve(bpy.types.Operator):
+class CamSineCurve(Operator):
     """Object Sine """  # by Alain Pelletier april 2021
     bl_idname = "object.sine"
     bl_label = "Periodic Wave"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    #    zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
+    # zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
     axis: EnumProperty(
         name="Displacement Axis",
         items=(
@@ -133,51 +133,64 @@ class CamSineCurve(bpy.types.Operator):
     )
 
     def execute(self, context):
+        amp = self.amplitude
+        period = self.period
+        beatperiod = self.beatperiod
+        offset = self.offset
+        shift = self.shift
 
         # z=Asin(B(x+C))+D
         if self.wave == 'sine':
-            zstring = ssine(self.amplitude, self.period,
-                            dc_offset=self.offset, phase_shift=self.shift)
+            zstring = ssine(amp, period, dc_offset=offset, phase_shift=shift)
             if self.beatperiod != 0:
-                zstring += "+"+ssine(self.amplitude, self.period+self.beatperiod, dc_offset=self.offset,
-                                     phase_shift=self.shift)
-        elif self.wave == 'triangle':  # build triangle wave from fourier series
-            zstring = str(round(self.offset, 6)) + \
-                "+(" + str(triangle(80, self.period, self.amplitude))+")"
+                zstring += f"+ {ssine(amp, period+beatperiod, dc_offset=offset, phase_shift=shift)}"
+
+        # build triangle wave from fourier series
+        elif self.wave == 'triangle':
+            zstring = f"{round(offset, 6) + triangle(80, period, amp)}"
             if self.beatperiod != 0:
-                zstring += '+' + \
-                    str(triangle(80, self.period+self.beatperiod, self.amplitude))
+                zstring += f"+ {triangle(80, period+beatperiod, amp)}"
+
         elif self.wave == 'cycloid':
-            zstring = "abs("+ssine(self.amplitude, self.period,
-                                   dc_offset=self.offset, phase_shift=self.shift)+")"
+            zstring = f"abs({ssine(amp, period, dc_offset=offset, phase_shift=shift)})"
+
         elif self.wave == 'invcycloid':
-            zstring = "-1*abs("+ssine(self.amplitude, self.period,
-                                      dc_offset=self.offset, phase_shift=self.shift)+")"
+            zstring = f"-1 * abs({ssine(amp, period, dc_offset=offset, phase_shift=shift)})"
 
         print(zstring)
-        e = Expression(zstring, ["t"])  # make equation from string
+        # make equation from string
+
+        def e(t):
+            return eval(zstring)
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0, angle_offset: float = 0.0):
             if self.axis == "XY":
-                c = (e(t+angle_offset)+offset, t, 0)
+                c = (e(t + angle_offset) + offset, t, 0)
             elif self.axis == "YX":
-                c = (t, e(t+angle_offset)+offset, 0)
+                c = (t, e(t + angle_offset) + offset, 0)
             elif self.axis == "ZX":
-                c = (t, offset, e(t+angle_offset))
+                c = (t, offset, e(t + angle_offset))
             elif self.axis == "ZY":
-                c = (offset, t, e(t+angle_offset))
+                c = (offset, t, e(t + angle_offset))
             return c
 
         for i in range(self.wave_amount):
-            angle_off = self.wave_angle_offset*self.period*i/(2*pi)
-            parametric.create_parametric_curve(f, offset=self.wave_distance*i, min=self.mint, max=self.maxt,
-                                               use_cubic=True, iterations=self.iteration, angle_offset=angle_off)
+            angle_off = self.wave_angle_offset * period * i / (2 * pi)
+            parametric.create_parametric_curve(
+                f,
+                offset=self.wave_distance * i,
+                min=self.mint,
+                max=self.maxt,
+                use_cubic=True,
+                iterations=self.iteration,
+                angle_offset=angle_off
+            )
 
         return {'FINISHED'}
 
 
-class CamLissajousCurve(bpy.types.Operator):
+class CamLissajousCurve(Operator):
     """Lissajous """  # by Alain Pelletier april 2021
     bl_idname = "object.lissajous"
     bl_label = "Lissajous Figure"
@@ -284,37 +297,48 @@ class CamLissajousCurve(bpy.types.Operator):
         # x=Asin(at+delta ),y=Bsin(bt)
 
         if self.waveA == 'sine':
-            xstring = ssine(self.amplitude_A, self.period_A,
-                            phase_shift=self.shift)
+            xstring = ssine(self.amplitude_A, self.period_A, phase_shift=self.shift)
         elif self.waveA == 'triangle':
-            xstring = str(triangle(100, self.period_A, self.amplitude_A))
+            xstring = f"{triangle(100, self.period_A, self.amplitude_A)}"
 
         if self.waveB == 'sine':
             ystring = ssine(self.amplitude_B, self.period_B)
-
         elif self.waveB == 'triangle':
-            ystring = str(triangle(100, self.period_B, self.amplitude_B))
+            ystring = f"{triangle(100, self.period_B, self.amplitude_B)}"
 
         zstring = ssine(self.amplitude_Z, self.period_Z)
 
-        print("x= " + str(xstring))
-        print("y= " + str(ystring))
-        x = Expression(xstring, ["t"])  # make equation from string
-        y = Expression(ystring, ["t"])  # make equation from string
-        z = Expression(zstring, ["t"])
+        # make equation from string
+        def x(t):
+            return eval(xstring)
+
+        def y(t):
+            return eval(ystring)
+
+        def z(t):
+            return eval(zstring)
+
+        print(f"x= {xstring}")
+        print(f"y= {ystring}")
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
             c = (x(t), y(t), z(t))
             return c
 
-        parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True,
-                                           iterations=self.iteration)
+        parametric.create_parametric_curve(
+            f,
+            offset=0.0,
+            min=self.mint,
+            max=self.maxt,
+            use_cubic=True,
+            iterations=self.iteration
+        )
 
         return {'FINISHED'}
 
 
-class CamHypotrochoidCurve(bpy.types.Operator):
+class CamHypotrochoidCurve(Operator):
     """Hypotrochoid """  # by Alain Pelletier april 2021
     bl_idname = "object.hypotrochoid"
     bl_label = "Spirograph Type Figure"
@@ -367,33 +391,33 @@ class CamHypotrochoidCurve(bpy.types.Operator):
         Rpr = round(R + r, 6)  # R +r
         Rpror = round(Rpr / r, 6)  # (R+r)/r
         Rmror = round(Rmr / r, 6)  # (R-r)/r
-        maxangle = 2 * pi * \
-            ((np.lcm(round(self.R * 1000), round(self.r * 1000)) / (R * 1000)))
+        maxangle = 2 * pi * ((np.lcm(round(self.R * 1000), round(self.r * 1000)) / (R * 1000)))
 
         if self.typecurve == "hypo":
-            xstring = str(Rmr) + "*cos(t)+" + str(d) + \
-                "*cos(" + str(Rmror) + "*t)"
-            ystring = str(Rmr) + "*sin(t)-" + str(d) + \
-                "*sin(" + str(Rmror) + "*t)"
+            xstring = f"{Rmr} * cos(t) + {d} * cos({Rmror} * t)"
+            ystring = f"{Rmr} * sin(t) - {d} * sin({Rmror} * t)"
         else:
-            xstring = str(Rpr) + "*cos(t)-" + str(d) + \
-                "*cos(" + str(Rpror) + "*t)"
-            ystring = str(Rpr) + "*sin(t)-" + str(d) + \
-                "*sin(" + str(Rpror) + "*t)"
+            xstring = f"{Rpr} * cos(t) - {d} * cos({Rpror} * t)"
+            ystring = f"{Rpr} * sin(t) - {d} * sin({Rpror} * t)"
 
-        zstring = '(' + str(round(self.dip, 6)) + \
-            '*(sqrt(((' + xstring + ')**2)+((' + ystring + ')**2))))'
+        zstring = f"({round(self.dip, 6)} * (sqrt((({xstring})**2) + (({ystring})**2))))"
 
-        print("x= " + str(xstring))
-        print("y= " + str(ystring))
-        print("z= " + str(zstring))
-        print("maxangle " + str(maxangle))
+        # make equation from string
+        def x(t):
+            return eval(xstring)
 
-        x = Expression(xstring, ["t"])  # make equation from string
-        y = Expression(ystring, ["t"])  # make equation from string
-        z = Expression(zstring, ["t"])  # make equation from string
+        def y(t):
+            return eval(ystring)
+
+        def z(t):
+            return eval(zstring)
+
+        print(f"x= {xstring}")
+        print(f"y= {ystring}")
+        print(f"z= {zstring}")
+        print(f"maxangle {maxangle}")
+
         # build function to be passed to create parametric curve ()
-
         def f(t, offset: float = 0.0):
             c = (x(t), y(t), z(t))
             return c
@@ -403,12 +427,18 @@ class CamHypotrochoidCurve(bpy.types.Operator):
             print("limiting calculations to 10000 points")
             iter = 10000
         parametric.create_parametric_curve(
-            f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=iter)
+            f,
+            offset=0.0,
+            min=0,
+            max=maxangle,
+            use_cubic=True,
+            iterations=iter
+        )
 
         return {'FINISHED'}
 
 
-class CamCustomCurve(bpy.types.Operator):
+class CamCustomCurve(Operator):
     """Object Custom Curve """  # by Alain Pelletier april 2021
     bl_idname = "object.customcurve"
     bl_label = "Custom Curve"
@@ -457,23 +487,36 @@ class CamCustomCurve(bpy.types.Operator):
         print("x= " + self.xstring)
         print("y= " + self.ystring)
         print("z= " + self.zstring)
-        ex = Expression(self.xstring, ["t"])  # make equation from string
-        ey = Expression(self.ystring, ["t"])  # make equation from string
-        ez = Expression(self.zstring, ["t"])  # make equation from string
+
+        # make equation from string
+        def ex(t):
+            return eval(self.xstring)
+
+        def ey(t):
+            return eval(self.ystring)
+
+        def ez(t):
+            return eval(self.zstring)
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
             c = (ex(t), ey(t), ez(t))
             return c
 
-        parametric.create_parametric_curve(f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True,
-                                           iterations=self.iteration)
+        parametric.create_parametric_curve(
+            f,
+            offset=0.0,
+            min=self.mint,
+            max=self.maxt,
+            use_cubic=True,
+            iterations=self.iteration
+        )
 
         return {'FINISHED'}
 
 
 def triangle(i, T, A):
-    s = str(A*8/(pi**2))+'*('
+    s = f"{A * 8 / (pi**2)} * ("
     for n in range(i):
         if n % 2 != 0:
             e = (n-1)/2
@@ -481,11 +524,19 @@ def triangle(i, T, A):
             b = round(n*pi/(T/2), 8)
             if n > 1:
                 s += '+'
-            s += str(a) + "*sin("+str(b)+"*t) "
+            s += f"{a} * sin({b} * t)"
     s += ')'
     return s
 
 
 def ssine(A, T, dc_offset=0, phase_shift=0):
-    return str(round(dc_offset, 6)) + "+" + str(round(A, 6)) + "*sin((2*pi/" + str(
-        round(T, 6)) + ")*(t+" + str(round(phase_shift, 6)) + "))"
+    args = [
+        dc_offset,
+        phase_shift,
+        A,
+        T
+    ]
+    for arg in args:
+        arg = round(arg, 6)
+
+    return f"{dc_offset} + {A} * sin((2 * pi / {T}) * (t + {phase_shift}))"

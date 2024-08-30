@@ -1849,7 +1849,7 @@ def updateOperation(self, context):
 def isValid(o, context):
     valid = True
     if o.geometry_source == 'OBJECT':
-        if not o.object_name.endswith('_cut_bridges'):  #  let empty bridge cut be valid
+        if not o.object_name.endswith('_cut_bridges'):  # let empty bridge cut be valid
             if o.object_name not in bpy.data.objects:
                 valid = False
     if o.geometry_source == 'COLLECTION':
@@ -2022,7 +2022,7 @@ def updateRest(o, context):
 
 
 def getStrategyList(scene, context):
-    use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
+    use_experimental = bpy.context.preferences.addons[__package__].preferences.experimental
     items = [
         ('CUTOUT', 'Profile(Cutout)', 'Cut the silhouete with offset'),
         ('POCKET', 'Pocket', 'Pocket operation'),
@@ -2089,15 +2089,27 @@ def check_operations_on_load(context):
 
     addons = bpy.context.preferences.addons
 
+    addon_prefs = bpy.context.preferences.addons[__package__].preferences
+
     modules = [
+        # Objects & Tools
+        "extra_mesh_objects",
+        "extra_curve_objectes",
+        "simplify_curves_plus",
         "curve_tools",
-        "curve_simplify",
-        "add_curve_extra_objects",
+        "print3d_toolbox",
+        # File Formats
+        "stl_format_legacy",
+        "import_autocad_dxf_format_dxf",
+        "export_autocad_dxf_format_dxf"
     ]
 
     for module in modules:
         if module not in addons:
-            bpy.ops.preferences.addon_enable(module=module)
+            try:
+                addons[f'bl_ext.blender_org.{module}']
+            except KeyError:
+                bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
 
     s = bpy.context.scene
     for o in s.cam_operations:
@@ -2106,9 +2118,8 @@ def check_operations_on_load(context):
     # set interface level to previously used level for a new file
     if not bpy.data.filepath:
         _IS_LOADING_DEFAULTS = True
-        s.interface.level = bpy.context.preferences.addons["cam"].preferences.default_interface_level
-        machine_preset = bpy.context.preferences.addons[
-            "cam"].preferences.machine_preset = bpy.context.preferences.addons["cam"].preferences.default_machine_preset
+        s.interface.level = addon_prefs.default_interface_level
+        machine_preset = addon_prefs.machine_preset = addon_prefs.default_machine_preset
         if len(machine_preset) > 0:
             print("Loading Preset:", machine_preset)
             # load last used machine preset
@@ -2119,7 +2130,7 @@ def check_operations_on_load(context):
     # check for updated version of the plugin
     bpy.ops.render.cam_check_updates()
     # copy presets if not there yet
-    if bpy.context.preferences.addons["cam"].preferences.just_updated:
+    if addon_prefs.just_updated:
         preset_source_path = Path(__file__).parent / "presets"
         preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
 
@@ -2134,15 +2145,15 @@ def check_operations_on_load(context):
             dirs_exist_ok=True,
         )
 
-        bpy.context.preferences.addons["cam"].preferences.just_updated = False
+        addon_prefs.just_updated = False
         bpy.ops.wm.save_userpref()
 
-    if not bpy.context.preferences.addons["cam"].preferences.op_preset_update:
+    if not addon_prefs.op_preset_update:
         # Update the Operation presets
         op_presets_source = Path(__file__).parent / "presets" / "cam_operations"
         op_presets_target = Path(bpy.utils.script_path_user()) / "presets" / "cam_operations"
         shutil.copytree(op_presets_source, op_presets_target, dirs_exist_ok=True)
-        bpy.context.preferences.addons["cam"].preferences.op_preset_update = True
+        addon_prefs.op_preset_update = True
 
 
 # add pocket op for medial axis and profile cut inside to clean unremoved material
