@@ -74,7 +74,6 @@ async def cutout(o):
     max_depth = checkminz(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2  # cutter offset
-    bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
     print("cuttertype:", o.cutter_type, "max_depth:", max_depth)
     if o.cutter_type == 'VCARVE':
         c_offset = -max_depth * tan(cutter_angle)
@@ -98,11 +97,14 @@ async def cutout(o):
     print('Operation: Cutout')
     offset = True
 
-    if o.onlycurves:   # remove doubles for curves :)
-        for ob in o.objects:
-            activate(ob)
-            bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
-
+    for ob in o.objects:
+        if ob.type == 'CURVE':
+            if ob.data.splines[0].type == 'BEZIER':
+                activate(ob)
+                bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+            else:
+                bpy.ops.object.curve_remove_doubles()
+            
     if o.cut_type == 'ONLINE' and o.onlycurves:  # is separate to allow open curves :)
         print('separate')
         chunksFromCurve = []
@@ -351,10 +353,13 @@ async def pocket(o):
 
     c_offset += o.skin  # add skin
     print("Cutter Offset", c_offset)
-    if o.onlycurves:   # remove doubles for curves :)
-        for ob in o.objects:
-            activate(ob)
-            bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+    for ob in o.objects:
+        if ob.type == 'CURVE':
+            if ob.data.splines[0].type == 'BEZIER':
+                activate(ob)
+                bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+            else:
+                bpy.ops.object.curve_remove_doubles()
 
     p = getObjectOutline(c_offset, o, False)
     approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
@@ -662,10 +667,13 @@ async def medial_axis(o):
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
 
-    if o.onlycurves:   # remove doubles for curves :)
-        for ob in o.objects:
-            activate(ob)
-            bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+    for ob in o.objects:
+        if ob.type == 'CURVE':
+            if ob.data.splines[0].type == 'BEZIER':
+                activate(ob)
+                bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+            else:
+                bpy.ops.object.curve_remove_doubles()
 
     for ob in o.objects:
         if ob.type == 'CURVE' or ob.type == 'FONT':
