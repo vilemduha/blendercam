@@ -626,7 +626,7 @@ class CamCurveRemoveDoubles(Operator):
                     bpy.ops.object.convert(target='MESH')
                     bpy.ops.object.editmode_toggle()
                     bpy.ops.mesh.select_all(action='TOGGLE')
-                    bpy.ops.mesh.remove_doubles()
+                    bpy.ops.mesh.remove_doubles(threshold= self.merg_distance)
                     bpy.ops.object.editmode_toggle()
                     bpy.ops.object.convert(target='CURVE')
                     if mode:
@@ -638,8 +638,7 @@ class CamCurveRemoveDoubles(Operator):
         obj = context.active_object
         if obj.type == 'CURVE' and obj.data.splines[0].type == 'BEZIER':
                 layout.prop(self, "keep_bezier", text="Keep Bezier")
-                if self.keep_bezier:
-                    layout.prop(self, "merg_distance", text="Merge Distance")
+        layout.prop(self, "merg_distance", text="Merge Distance")
 
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
@@ -801,6 +800,11 @@ class CamOffsetSilhouete(Operator):
     def execute(self, context):
         # bpy.ops.object.curve_remove_doubles()
         ob = context.active_object
+        if ob.type == 'CURVE':
+            if ob.data.splines[0].type == 'BEZIER':
+                bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+            else:
+                bpy.ops.object.curve_remove_doubles()
         if self.opencurve and ob.type == 'CURVE':
             bpy.ops.object.duplicate()
             obj = context.active_object
