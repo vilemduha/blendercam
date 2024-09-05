@@ -7,6 +7,9 @@ import tempfile
 
 INSTALL_CODE = f"""
 import bpy
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="stl_format_legacy")
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="simplify_curves_plus")
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")
 bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}', repo='user_default')
 bpy.ops.wm.save_userpref()
 bpy.context.scene.render.engine = 'CNCCAM_RENDER'
