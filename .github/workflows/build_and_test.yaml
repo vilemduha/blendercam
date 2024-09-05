@@ -8,20 +8,20 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest','windows-latest']
-        blender_version: ['3.6.7','4.1']
-        include:
-          - os: 'macos-latest'
-            blender_version: 'ignored'
+        blender_version: ['4.2.1']
+        # include:
+        #   - os: 'macos-latest'
+        #     blender_version: '4.2.1'
     runs-on: ${{matrix.os}}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.1.1
-    - name: Install bash 4(macOS)
-      if: runner.os == 'macOS'
-      run: brew install bash
-    - name: Install blender (macOS)
-      if: runner.os == 'macOS'
-      run: brew install --cask blender
+    # - name: Install bash 4(macOS)
+    #   if: runner.os == 'macOS'
+    #   run: brew install bash
+    # - name: Install blender (macOS)
+    #   if: runner.os == 'macOS'
+    #   run: brew install --cask blender
     - name: Cache blender
       id: cache-blender
       if: runner.os != 'macOS'
