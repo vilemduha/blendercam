@@ -7,10 +7,8 @@ import tempfile
 
 INSTALL_CODE = f"""
 import bpy
-bpy.ops.preferences.addon_install(filepath='{sys.argv[1]}')
-bpy.ops.preferences.addon_enable(module='cam')
+bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}')
 bpy.ops.wm.save_userpref()
-import cam
 """
 
 NUM_RETRIES = 10
