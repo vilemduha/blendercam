@@ -17,7 +17,7 @@ except ImportError:
         pass
 
 try:
-    from io_mesh_stl import blender_utils
+    from bl_ext.blender_org.stl_format_legacy import blender_utils
 except ImportError:
     pass
 

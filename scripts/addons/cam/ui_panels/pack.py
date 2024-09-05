@@ -15,7 +15,7 @@ class CAM_PACK_Panel(CAMButtonsPanel, Panel):
     bl_idname = "WORLD_PT_CAM_PACK"
     panel_interface_level = 2
 
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+    COMPAT_ENGINES = {'CNCCAM_RENDER'}
 
     def draw(self, context):
         layout = self.layout

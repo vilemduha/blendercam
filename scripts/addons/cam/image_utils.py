@@ -21,7 +21,7 @@ import numpy
 
 import bpy
 try:
-    import curve_simplify
+    import bl_ext.blender_org.simplify_curves_plus as curve_simplify
 except ImportError:
     pass
 
@@ -1212,7 +1212,7 @@ def renderSampleImage(o):
                     print("Failed to Backup Scene Settings")
 
             i = bpy.data.images.load(iname)
-            bpy.context.scene.render.engine = 'BLENDERCAM_RENDER'
+            bpy.context.scene.render.engine = 'CNCCAM_RENDER'
 
         a = imagetonumpy(i)
         a = 10.0 * a

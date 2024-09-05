@@ -433,7 +433,7 @@ async def pocket(o):
                     checkc = Circle(helix_radius + c_offset, o.optimisation.circle_detail)
                     checkc = affinity.translate(checkc, p[0], p[1])
                     covers = False
-                    for poly in o.silhouete:
+                    for poly in o.silhouete.geoms:
                         if poly.contains(checkc):
                             covers = True
                             break
@@ -512,7 +512,7 @@ async def pocket(o):
                     rothelix.reverse()
 
                     covers = False
-                    for poly in o.silhouete:
+                    for poly in o.silhouete.geoms:
                         if poly.contains(coutline):
                             covers = True
                             break
