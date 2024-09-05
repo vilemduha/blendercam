@@ -7,6 +7,7 @@ warnings.simplefilter("once")
 
 # Get the scene
 s = bpy.context.scene
+s.render.engine = 'CNCCAM_RENDER'
 
 for i, operation in enumerate(s.cam_operations):
     # Set the active operation using the index
