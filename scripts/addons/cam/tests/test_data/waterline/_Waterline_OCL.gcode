@@ -1,6 +1,6 @@
-(Created with grbl post processor 2024/01/29 13:47)
+(Created with grbl post processor 2024/09/04 23:06)
 G21
-(G-code generated with BlenderCAM and NC library)
+(G-code Generated with BlenderCAM and NC library)
 G17G90
 S12000M03
 G00 Z10.0
