@@ -11,7 +11,7 @@ from shapely import geometry as sgeometry
 
 from mathutils import Euler, Vector
 try:
-    import curve_simplify
+    import bl_ext.blender_org.simplify_curves_plus as curve_simplify
 except ImportError:
     pass
 
