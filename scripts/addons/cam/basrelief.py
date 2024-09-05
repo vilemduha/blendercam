@@ -750,7 +750,7 @@ def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view
         nodes.remove(our_renderer)
     if our_viewer is not None:
         nodes.remove(our_viewer)
-    bpy.context.scene.render.engine = 'BLENDERCAM_RENDER'
+    bpy.context.scene.render.engine = 'CNCCAM_RENDER'
     print("Done Rendering")
 
 
@@ -1217,7 +1217,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
     bl_region_type = "WINDOW"
     bl_context = "render"
 
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+    COMPAT_ENGINES = {'CNCCAM_RENDER'}
 
     # def draw_header(self, context):
     #   self.layout.menu("CAM_CUTTER_MT_presets", text="CAM Cutter")
