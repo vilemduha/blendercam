@@ -512,7 +512,7 @@ async def pocket(o):
                     rothelix.reverse()
 
                     covers = False
-                    for poly in o.silhouete:
+                    for poly in o.silhouete.geoms:
                         if poly.contains(coutline):
                             covers = True
                             break
