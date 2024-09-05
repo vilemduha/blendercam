@@ -1,6 +1,6 @@
-N10O0(d:\temp\Op_Plane_1.tap)
+N10O0(C:\Users\User\Downloads\blendercam-master\scripts\addons\cam\tests\test_data\4axistest\Op_Plane_1.tap)
 N20G21
-N30(G-code generated with BlenderCAM and NC library)
+N30(G-code Generated with BlenderCAM and NC library)
 N40G17G90
 N50T2M06
 N60(Tool: D = 6.0 mm  type BALLNOSE flutes 2)
