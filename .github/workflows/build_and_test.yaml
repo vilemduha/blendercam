@@ -8,10 +8,10 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest','windows-latest']
-        blender_version: ['3.6.7','4.1']
+        blender_version: ['4.2.1']
         include:
           - os: 'macos-latest'
-            blender_version: 'ignored'
+            blender_version: '4.2.1'
     runs-on: ${{matrix.os}}
     steps:
     - name: Checkout repository
