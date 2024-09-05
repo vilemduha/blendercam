@@ -7,8 +7,9 @@ import tempfile
 
 INSTALL_CODE = f"""
 import bpy
-bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}')
+bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}', repo='user_default')
 bpy.ops.wm.save_userpref()
+bpy.context.scene.render.engine = 'CNCCAM_RENDER'
 """
 
 NUM_RETRIES = 10
