@@ -35,7 +35,7 @@
 It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed. 
 
 > [!NOTE]
-> _If you are a developer who would like to help, check out the section on [Contributing](#-contributing)._
+> _If you are a developer who would like to help, check out the section on [Contributing](#-contribute)._
 
 ## 👨‍🎓 How to Use (Wiki)
 
