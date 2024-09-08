@@ -34,11 +34,38 @@ PYTHON_BIN = None
 
 
 def pointSamplesFromOCL(points, samples):
+    """Update the z-coordinate of points based on corresponding sample values.
+
+    This function iterates over a list of points and updates the
+    z-coordinate of each point using the z value from the corresponding
+    sample. The z value is scaled by a predefined constant, OCL_SCALE. It is
+    assumed that the length of the points list matches the length of the
+    samples list.
+
+    Args:
+        points (list): A list of points, where each point is expected to be
+            a list or array with at least three elements.
+        samples (list): A list of sample objects, where each sample is
+            expected to have a z attribute.
+    """
     for index, point in enumerate(points):
         point[2] = samples[index].z / OCL_SCALE
 
 
 def chunkPointSamplesFromOCL(chunks, samples):
+    """Chunk point samples from OCL.
+
+    This function processes a list of chunks and corresponding samples,
+    extracting the z-values from the samples and scaling them according to a
+    predefined constant (OCL_SCALE). It sets the scaled z-values for each
+    chunk based on the number of points in that chunk.
+
+    Args:
+        chunks (list): A list of chunk objects that have a method `count()`
+            and a method `setZ()`.
+        samples (list): A list of sample objects from which z-values are
+            extracted.
+    """
     s_index = 0
     for ch in chunks:
         ch_points = ch.count()
@@ -59,6 +86,19 @@ def chunkPointSamplesFromOCL(chunks, samples):
 
 
 def chunkPointsResampleFromOCL(chunks, samples):
+    """Resample the Z values of points in chunks based on provided samples.
+
+    This function iterates through a list of chunks and resamples the Z
+    values of the points in each chunk using the corresponding samples. It
+    first counts the number of points in each chunk, then extracts the Z
+    values from the samples, scales them by a predefined constant
+    (OCL_SCALE), and sets the resampled Z values back to the chunk.
+
+    Args:
+        chunks (list): A list of chunk objects, each containing points that need
+            to be resampled.
+        samples (list): A list of sample objects from which Z values are extracted.
+    """
     s_index = 0
     for ch in chunks:
         ch_points = ch.count()
@@ -82,6 +122,19 @@ def chunkPointsResampleFromOCL(chunks, samples):
 
 
 def exportModelsToSTL(operation):
+    """Export models to STL format.
+
+    This function takes an operation containing a collection of collision
+    objects and exports each object as an STL file. It duplicates each
+    object, applies transformations, and resizes them according to a
+    predefined scale before exporting them to the temporary directory. The
+    exported files are named sequentially as "model0.stl", "model1.stl",
+    etc. After exporting, the function deletes the duplicated objects to
+    clean up the scene.
+
+    Args:
+        operation: An object containing a collection of collision objects to be exported.
+    """
     file_number = 0
     for collision_object in operation.objects:
         activate(collision_object)
@@ -103,16 +156,68 @@ def exportModelsToSTL(operation):
 
 
 async def oclSamplePoints(operation, points):
+    """Sample points using an operation and process the results.
+
+    This asynchronous function takes an operation and a set of points,
+    samples the points using the specified operation, and then processes the
+    sampled points. The function relies on an external sampling function and
+    a processing function to handle the sampling and post-processing of the
+    data.
+
+    Args:
+        operation (str): The operation to be performed on the points.
+        points (list): A list of points to be sampled.
+    """
+
     samples = await ocl_sample(operation, points)
     pointSamplesFromOCL(points, samples)
 
 
 async def oclSample(operation, chunks):
+    """Perform an operation on a set of chunks and process the resulting
+    samples.
+
+    This asynchronous function calls the `ocl_sample` function to obtain
+    samples based on the provided operation and chunks. After retrieving the
+    samples, it processes them using the `chunkPointSamplesFromOCL`
+    function. This is useful for handling large datasets in a chunked
+    manner, allowing for efficient sampling and processing.
+
+    Args:
+        operation (str): The operation to be performed on the chunks.
+        chunks (list): A list of data chunks to be processed.
+
+    Returns:
+        None: This function does not return a value.
+    """
+
     samples = await ocl_sample(operation, chunks)
     chunkPointSamplesFromOCL(chunks, samples)
 
 
 async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
+    """Resample chunks of data using OpenCL operations.
+
+    This function takes a list of chunks to resample and performs an OpenCL
+    sampling operation on them. It first prepares a temporary chunk that
+    collects points from the specified chunks. Then, it calls the
+    `ocl_sample` function to perform the sampling operation. After obtaining
+    the samples, it updates the z-coordinates of the points in each chunk
+    based on the sampled values.
+
+    Args:
+        operation (OperationType): The OpenCL operation to be performed.
+        chunks_to_resample (list): A list of tuples, where each tuple contains
+            a chunk object and its corresponding start index and length for
+            resampling.
+        use_cached_mesh (bool): A flag indicating whether to use cached mesh
+            data during the sampling process.
+
+    Returns:
+        None: This function does not return a value but modifies the input
+            chunks in place.
+    """
+
     tmp_chunks = list()
     tmp_chunks.append(camPathChunk(inpoints=[]))
     for chunk, i_start, i_length in chunks_to_resample:
@@ -137,6 +242,23 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
 
 
 def oclWaterlineLayerHeights(operation):
+    """Generate a list of waterline layer heights for a given operation.
+
+    This function calculates the heights of waterline layers based on the
+    specified parameters of the operation. It starts from the maximum height
+    and decrements by a specified step until it reaches the minimum height.
+    The resulting list of heights can be used for further processing in
+    operations that require layered depth information.
+
+    Args:
+        operation (object): An object containing the properties `minz`,
+            `maxz`, and `stepdown` which define the
+            minimum height, maximum height, and step size
+            for layer generation, respectively.
+
+    Returns:
+        list: A list of waterline layer heights from maximum to minimum.
+    """
     layers = []
     l_last = operation.minz
     l_step = operation.stepdown
@@ -158,6 +280,23 @@ def oclWaterlineLayerHeights(operation):
 
 
 async def oclGetWaterline(operation, chunks):
+    """Generate waterline paths for a given machining operation.
+
+    This function calculates the waterline paths based on the provided
+    machining operation and its parameters. It determines the appropriate
+    cutter type and dimensions, sets up the waterline object with the
+    corresponding STL file, and processes each layer to generate the
+    machining paths. The resulting paths are stored in the provided chunks
+    list. The function also handles different cutter types, including end
+    mills, ball nose cutters, and V-carve cutters.
+
+    Args:
+        operation (Operation): An object representing the machining operation,
+            containing details such as cutter type, diameter, and minimum Z height.
+        chunks (list): A list that will be populated with the generated
+            machining path chunks.
+    """
+
     layers = oclWaterlineLayerHeights(operation)
     oclSTL = get_oclSTL(operation)
 

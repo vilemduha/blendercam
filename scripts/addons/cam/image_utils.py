@@ -48,6 +48,18 @@ from .numba_wrapper import (
 
 
 def numpysave(a, iname):
+    """Save a NumPy array as an image file in OpenEXR format.
+
+    This function converts a NumPy array into an image and saves it using
+    Blender's rendering capabilities. It sets the image format to OpenEXR
+    with black and white color mode and a color depth of 32 bits. The image
+    is saved to the specified filename.
+
+    Args:
+        a (numpy.ndarray): The NumPy array to be converted and saved as an image.
+        iname (str): The file path where the image will be saved.
+    """
+
     inamebase = bpy.path.basename(iname)
 
     i = numpytoimage(a, inamebase)
@@ -62,6 +74,24 @@ def numpysave(a, iname):
 
 
 def getCircle(r, z):
+    """Generate a 2D array representing a circle.
+
+    This function creates a 2D NumPy array filled with a specified value for
+    points that fall within a circle of a given radius. The circle is
+    centered in the array, and the function uses the Euclidean distance to
+    determine which points are inside the circle. The resulting array has
+    dimensions that are twice the radius, ensuring that the entire circle
+    fits within the array.
+
+    Args:
+        r (int): The radius of the circle.
+        z (float): The value to fill the points inside the circle.
+
+    Returns:
+        numpy.ndarray: A 2D array where points inside the circle are filled
+        with the value `z`, and points outside are filled with -10.
+    """
+
     car = numpy.full(shape=(r*2, r*2), fill_value=-10, dtype=numpy.double)
     res = 2 * r
     m = r
@@ -76,6 +106,22 @@ def getCircle(r, z):
 
 
 def getCircleBinary(r):
+    """Generate a binary representation of a circle in a 2D grid.
+
+    This function creates a 2D boolean array where the elements inside a
+    circle of radius `r` are set to `True`, and the elements outside the
+    circle are set to `False`. The circle is centered in the middle of the
+    array, which has dimensions of (2*r, 2*r). The function iterates over
+    each point in the grid and checks if it lies within the specified
+    radius.
+
+    Args:
+        r (int): The radius of the circle.
+
+    Returns:
+        numpy.ndarray: A 2D boolean array representing the circle.
+    """
+
     car = numpy.full(shape=(r*2, r*2), fill_value=False, dtype=bool)
     res = 2 * r
     m = r
@@ -93,6 +139,22 @@ def getCircleBinary(r):
 
 
 def numpytoimage(a, iname):
+    """Convert a NumPy array to a Blender image.
+
+    This function takes a NumPy array and converts it into a Blender image.
+    It first checks if an image with the specified name and dimensions
+    already exists in Blender. If it does not exist, a new image is created
+    with the specified name and dimensions. The pixel data from the NumPy
+    array is then reshaped and assigned to the image's pixel buffer.
+
+    Args:
+        a (numpy.ndarray): A 2D NumPy array representing the image data.
+        iname (str): The name to assign to the created or found image.
+
+    Returns:
+        bpy.types.Image: The Blender image object that was created or found.
+    """
+
     print('numpy to image', iname)
     t = time.time()
     print(a.shape[0], a.shape[1])
@@ -122,6 +184,21 @@ def numpytoimage(a, iname):
 
 
 def imagetonumpy(i):
+    """Convert a Blender image to a NumPy array.
+
+    This function takes a Blender image object and converts its pixel data
+    into a NumPy array. It retrieves the pixel data, reshapes it, and swaps
+    the axes to match the expected format for further processing. The
+    function also measures the time taken for the conversion and prints it
+    to the console.
+
+    Args:
+        i (Image): A Blender image object containing pixel data.
+
+    Returns:
+        numpy.ndarray: A 2D NumPy array representing the image pixels.
+    """
+
     t = time.time()
 
     width = i.size[0]
@@ -142,13 +219,52 @@ def imagetonumpy(i):
 
 @jit(nopython=True, parallel=True, fastmath=False, cache=True)
 def _offset_inner_loop(y1, y2, cutterArrayNan, cwidth, sourceArray, width, height, comparearea):
+    """Offset the inner loop for processing a specified area in a 2D array.
+
+    This function iterates over a specified range of rows and columns in a
+    2D array, calculating the maximum value from a source array combined
+    with a cutter array for each position in the defined area. The results
+    are stored in the comparearea array, which is updated with the maximum
+    values found.
+
+    Args:
+        y1 (int): The starting index for the row iteration.
+        y2 (int): The ending index for the row iteration.
+        cutterArrayNan (numpy.ndarray): A 2D array used for modifying the source array.
+        cwidth (int): The width of the area to consider for the maximum calculation.
+        sourceArray (numpy.ndarray): The source 2D array from which maximum values are derived.
+        width (int): The width of the source array.
+        height (int): The height of the source array.
+        comparearea (numpy.ndarray): A 2D array where the calculated maximum values are stored.
+
+    Returns:
+        None: This function modifies the comparearea in place and does not return a
+            value.
+    """
+
     for y in prange(y1, y2):
         for x in range(0, width-cwidth):
             comparearea[x, y] = numpy.nanmax(sourceArray[x:x+cwidth, y:y+cwidth] + cutterArrayNan)
 
 
 async def offsetArea(o, samples):
-    """ Offsets the Whole Image with the Cutter + Skin Offsets """
+    """Offsets the whole image with the cutter and skin offsets.
+
+    This function modifies the offset image based on the provided cutter and
+    skin offsets. It calculates the dimensions of the source and cutter
+    arrays, initializes an offset image, and processes the image in
+    segments. The function handles the inversion of the source array if
+    specified and updates the offset image accordingly. Progress is reported
+    asynchronously during processing.
+
+    Args:
+        o: An object containing properties such as `update_offsetimage_tag`,
+            `min`, `max`, `inverse`, and `offset_image`.
+        samples (numpy.ndarray): A 2D array representing the source image data.
+
+    Returns:
+        numpy.ndarray: The updated offset image after applying the cutter and skin offsets.
+    """
     if o.update_offsetimage_tag:
         minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
@@ -187,13 +303,49 @@ async def offsetArea(o, samples):
 
 
 def dilateAr(ar, cycles):
+    """Dilate a binary array using a specified number of cycles.
+
+    This function performs a dilation operation on a 2D binary array. For
+    each cycle, it updates the array by applying a logical OR operation
+    between the current array and its neighboring elements. The dilation
+    effect expands the boundaries of the foreground (True) pixels in the
+    binary array.
+
+    Args:
+        ar (numpy.ndarray): A 2D binary array (numpy array) where
+            dilation will be applied.
+        cycles (int): The number of dilation cycles to perform.
+
+    Returns:
+        None: The function modifies the input array in place and does not
+            return a value.
+    """
+
     for c in range(cycles):
         ar[1:-1, :] = numpy.logical_or(ar[1:-1, :], ar[:-2, :])
         ar[:, 1:-1] = numpy.logical_or(ar[:, 1:-1], ar[:, :-2])
 
 
 def getOffsetImageCavities(o, i):  # for pencil operation mainly
-    """Detects Areas in the Offset Image Which Are 'cavities' - the Curvature Changes."""
+    """Detects areas in the offset image which are 'cavities' due to curvature
+    changes.
+
+    This function analyzes the input image to identify regions where the
+    curvature changes, indicating the presence of cavities. It computes
+    vertical and horizontal differences in pixel values to detect edges and
+    applies a threshold to filter out insignificant changes. The resulting
+    areas are then processed to remove any chunks that do not meet the
+    minimum criteria for cavity detection. The function returns a list of
+    valid chunks that represent the detected cavities.
+
+    Args:
+        o: An object containing parameters and thresholds for the detection
+            process.
+        i (numpy.ndarray): A 2D array representing the image data to be analyzed.
+
+    Returns:
+        list: A list of detected chunks representing the cavities in the image.
+    """
     # i=numpy.logical_xor(lastislice , islice)
     progress('Detect Corners in the Offset Image')
     vertical = i[:-2, 1:-1] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[2:, 1:-1]
@@ -225,6 +377,28 @@ def getOffsetImageCavities(o, i):  # for pencil operation mainly
 
 # search edges for pencil strategy, another try.
 def imageEdgeSearch_online(o, ar, zimage):
+    """Search for edges in an image using a pencil strategy.
+
+    This function implements an edge detection algorithm that simulates a
+    pencil-like movement across the image represented by a 2D array. It
+    identifies white pixels and builds chunks of points based on the
+    detected edges. The algorithm iteratively explores possible directions
+    to find and track the edges until a specified condition is met, such as
+    exhausting the available white pixels or reaching a maximum number of
+    tests.
+
+    Args:
+        o (object): An object containing parameters such as min, max coordinates, cutter
+            diameter,
+            border width, and optimisation settings.
+        ar (numpy.ndarray): A 2D array representing the image where edge detection is to be
+            performed.
+        zimage (numpy.ndarray): A 2D array representing the z-coordinates corresponding to the image.
+
+    Returns:
+        list: A list of chunks representing the detected edges in the image.
+    """
+
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     r = ceil((o.cutter_diameter/12)/o.optimisation.pixsize)   # was commented
     coef = 0.75
@@ -350,6 +524,23 @@ def imageEdgeSearch_online(o, ar, zimage):
 
 
 async def crazyPath(o):
+    """Execute a greedy adaptive algorithm for path planning.
+
+    This function prepares an area based on the provided object `o`,
+    calculates the dimensions of the area, and initializes a mill image and
+    cutter array. The dimensions are determined by the maximum and minimum
+    coordinates of the object, adjusted by the simulation detail and border
+    width. The function is currently a stub and requires further
+    implementation.
+
+    Args:
+        o (object): An object containing properties such as max, min, optimisation, and
+            borderwidth.
+
+    Returns:
+        None: This function does not return a value.
+    """
+
     # TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm.
     #  started another thing below.
     await prepareArea(o)
@@ -365,6 +556,25 @@ async def crazyPath(o):
 
 
 def buildStroke(start, end, cutterArray):
+    """Build a stroke array based on start and end points.
+
+    This function generates a 2D stroke array that represents a stroke from
+    a starting point to an ending point. It calculates the length of the
+    stroke and creates a grid that is filled based on the positions defined
+    by the start and end coordinates. The function uses a cutter array to
+    determine how the stroke interacts with the grid.
+
+    Args:
+        start (tuple): A tuple representing the starting coordinates (x, y, z).
+        end (tuple): A tuple representing the ending coordinates (x, y, z).
+        cutterArray: An object that contains size information used to modify
+            the stroke array.
+
+    Returns:
+        numpy.ndarray: A 2D array representing the stroke, filled with
+            calculated values based on the input parameters.
+    """
+
     strokelength = max(abs(end[0] - start[0]), abs(end[1] - start[1]))
     size_x = abs(end[0] - start[0]) + cutterArray.size[0]
     size_y = abs(end[1] - start[1]) + cutterArray.size[0]
@@ -394,6 +604,26 @@ def testStrokeBinary(img, stroke):
 
 
 def crazyStrokeImage(o):
+    """Generate a toolpath for a milling operation using a crazy stroke
+    strategy.
+
+    This function computes a path for a milling cutter based on the provided
+    parameters and the offset image. It utilizes a circular cutter
+    representation and evaluates potential cutting positions based on
+    various thresholds. The algorithm iteratively tests different angles and
+    lengths for the cutter's movement until the desired cutting area is
+    achieved or the maximum number of tests is reached.
+
+    Args:
+        o (object): An object containing parameters such as cutter diameter,
+            optimization settings, movement type, and thresholds for
+            determining cutting effectiveness.
+
+    Returns:
+        list: A list of chunks representing the computed toolpath for the milling
+            operation.
+    """
+
     # this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
@@ -577,6 +807,27 @@ def crazyStrokeImage(o):
 
 
 def crazyStrokeImageBinary(o, ar, avoidar):
+    """Perform a milling operation using a binary image representation.
+
+    This function implements a strategy for milling by navigating through a
+    binary image. It starts from a defined point and attempts to move in
+    various directions, evaluating the cutter load to determine the
+    appropriate path. The algorithm continues until it either exhausts the
+    available pixels to cut or reaches a predefined limit on the number of
+    tests. The function modifies the input array to represent the areas that
+    have been milled and returns the generated path as a list of chunks.
+
+    Args:
+        o (object): An object containing parameters for the milling operation, including
+            cutter diameter, thresholds, and movement type.
+        ar (numpy.ndarray): A 2D binary array representing the image to be milled.
+        avoidar (numpy.ndarray): A 2D binary array indicating areas to avoid during milling.
+
+    Returns:
+        list: A list of chunks representing the path taken during the milling
+            operation.
+    """
+
     # this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
     # works like this:
     # start 'somewhere'
@@ -845,6 +1096,28 @@ def crazyStrokeImageBinary(o, ar, avoidar):
 
 
 def imageToChunks(o, image, with_border=False):
+    """Convert an image into chunks based on detected edges.
+
+    This function processes a given image to identify edges and convert them
+    into polychunks, which are essentially collections of connected edge
+    segments. It utilizes the properties of the input object `o` to
+    determine the boundaries and size of the chunks. The function can
+    optionally include borders in the edge detection process. The output is
+    a list of chunks that represent the detected polygons in the image.
+
+    Args:
+        o (object): An object containing properties such as min, max, borderwidth,
+            and optimisation settings.
+        image (numpy.ndarray): A 2D array representing the image to be processed,
+            expected to be in a format compatible with uint8.
+        with_border (bool?): A flag indicating whether to include borders
+            in the edge detection. Defaults to False.
+
+    Returns:
+        list: A list of chunks, where each chunk is represented as a collection of
+            points that outline the detected edges in the image.
+    """
+
     t = time.time()
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pixsize = o.optimisation.pixsize
@@ -1018,6 +1291,24 @@ def imageToChunks(o, image, with_border=False):
 
 
 def imageToShapely(o, i, with_border=False):
+    """Convert an image to Shapely polygons.
+
+    This function takes an image and converts it into a series of Shapely
+    polygon objects. It first processes the image into chunks and then
+    transforms those chunks into polygon geometries. The `with_border`
+    parameter allows for the inclusion of borders in the resulting polygons.
+
+    Args:
+        o: The input image to be processed.
+        i: Additional input parameters for processing the image.
+        with_border (bool): A flag indicating whether to include
+            borders in the resulting polygons. Defaults to False.
+
+    Returns:
+        list: A list of Shapely polygon objects created from the
+            image chunks.
+    """
+
     polychunks = imageToChunks(o, i, with_border)
     polys = chunksToShapely(polychunks)
 
@@ -1025,6 +1316,24 @@ def imageToShapely(o, i, with_border=False):
 
 
 def getSampleImage(s, sarray, minz):
+    """Get a sample image value from a 2D array based on given coordinates.
+
+    This function retrieves a value from a 2D array by performing bilinear
+    interpolation based on the provided coordinates. It checks if the
+    coordinates are within the bounds of the array and calculates the
+    interpolated value accordingly. If the coordinates are out of bounds, it
+    returns -10.
+
+    Args:
+        s (tuple): A tuple containing the x and y coordinates (float).
+        sarray (numpy.ndarray): A 2D array from which to sample the image values.
+        minz (float): A minimum threshold value (not used in the current implementation).
+
+    Returns:
+        float: The interpolated value from the 2D array, or -10 if the coordinates are
+            out of bounds.
+    """
+
     x = s[0]
     y = s[1]
     if (x < 0 or x > len(sarray) - 1) or (y < 0 or y > len(sarray[0]) - 1):
@@ -1050,6 +1359,25 @@ def getSampleImage(s, sarray, minz):
 
 
 def getResolution(o):
+    """Calculate the resolution based on the dimensions of an object.
+
+    This function computes the resolution in both x and y directions by
+    determining the width and height of the object, adjusting for pixel size
+    and border width. The resolution is calculated by dividing the
+    dimensions by the pixel size and adding twice the border width to each
+    dimension.
+
+    Args:
+        o (object): An object with attributes `max`, `min`, `optimisation`,
+            and `borderwidth`. The `max` and `min` attributes should
+            have `x` and `y` properties representing the coordinates,
+            while `optimisation` should have a `pixsize` attribute.
+
+    Returns:
+        None: This function does not return a value; it performs calculations
+            to determine resolution.
+    """
+
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
 
@@ -1061,6 +1389,25 @@ def getResolution(o):
 
 
 def _backup_render_settings(pairs):
+    """Backup the render settings of Blender objects.
+
+    This function iterates over a list of pairs consisting of owners and
+    their corresponding structure names. It retrieves the properties of each
+    structure and stores them in a backup list. If the structure is a
+    Blender object, it saves all its properties that do not start with an
+    underscore. For simple values, it directly appends them to the
+    properties list. This is useful for preserving render settings that
+    Blender does not allow direct access to during rendering.
+
+    Args:
+        pairs (list): A list of tuples where each tuple contains an owner and a structure
+            name.
+
+    Returns:
+        list: A list containing the backed-up properties of the specified Blender
+            objects.
+    """
+
     properties = []
     for owner, struct_name in pairs:
         obj = getattr(owner, struct_name)
@@ -1077,6 +1424,22 @@ def _backup_render_settings(pairs):
 
 
 def _restore_render_settings(pairs, properties):
+    """Restore render settings for a given owner and structure.
+
+    This function takes pairs of owners and structure names along with their
+    corresponding properties. It iterates through these pairs, retrieves the
+    appropriate object from the owner using the structure name, and sets the
+    properties on the object. If the object is an instance of
+    `bpy.types.bpy_struct`, it updates its attributes; otherwise, it
+    directly sets the value on the owner.
+
+    Args:
+        pairs (list): A list of tuples where each tuple contains an owner and a structure
+            name.
+        properties (list): A list of dictionaries containing property names and their corresponding
+            values.
+    """
+
     for (owner, struct_name), obj_value in zip(pairs, properties):
         obj = getattr(owner, struct_name)
         if isinstance(obj, bpy.types.bpy_struct):
@@ -1087,6 +1450,22 @@ def _restore_render_settings(pairs, properties):
 
 
 def renderSampleImage(o):
+    """Render a sample image based on the provided object settings.
+
+    This function generates a Z-buffer image for a given object by either
+    rendering it from scratch or loading an existing image from the cache.
+    It handles different geometry sources and applies various settings to
+    ensure the image is rendered correctly. The function also manages backup
+    and restoration of render settings to maintain the scene's integrity
+    during the rendering process.
+
+    Args:
+        o (object): An object containing various properties and settings
+
+    Returns:
+        numpy.ndarray: The generated or loaded Z-buffer image as a NumPy array.
+    """
+
     t = time.time()
     progress('Getting Z-Buffer')
     # print(o.zbuffer_image)
@@ -1285,6 +1664,21 @@ def renderSampleImage(o):
 # return numpy.array([])
 
 async def prepareArea(o):
+    """Prepare the area for rendering by processing the offset image.
+
+    This function handles the preparation of the area by rendering a sample
+    image and managing the offset image based on the provided options. It
+    checks if the offset image needs to be updated and loads it if
+    necessary. If the inverse option is set, it adjusts the samples
+    accordingly before calling the offsetArea function. Finally, it saves
+    the processed offset image.
+
+    Args:
+        o (object): An object containing various properties and methods
+            required for preparing the area, including flags for
+            updating the offset image and rendering options.
+    """
+
     # if not o.use_exact:
     renderSampleImage(o)
     samples = o.zbuffer_image
@@ -1307,6 +1701,23 @@ async def prepareArea(o):
 
 
 def getCutterArray(operation, pixsize):
+    """Generate a cutter array based on the specified operation and pixel size.
+
+    This function calculates a 2D array representing the cutter shape based
+    on the cutter type defined in the operation object. The cutter can be of
+    various types such as 'END', 'BALL', 'VCARVE', 'CYLCONE', 'BALLCONE', or
+    'CUSTOM'. The function uses geometric calculations to fill the array
+    with appropriate values based on the cutter's dimensions and properties.
+
+    Args:
+        operation (object): An object containing properties of the cutter, including
+            cutter type, diameter, tip angle, and other relevant parameters.
+        pixsize (float): The size of each pixel in the generated cutter array.
+
+    Returns:
+        numpy.ndarray: A 2D array filled with values representing the cutter shape.
+    """
+
     type = operation.cutter_type
     # print('generating cutter')
     r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize

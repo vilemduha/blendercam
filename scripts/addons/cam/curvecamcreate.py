@@ -104,6 +104,19 @@ class CamCurveHatch(Operator):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
 
     def draw(self, context):
+        """Draw the layout properties for the given context.
+
+        This method sets up the user interface layout by adding various
+        properties such as angle, distance, offset, height, and pocket type.
+        Depending on the selected pocket type, it conditionally adds additional
+        properties like hull and contour. This allows for a dynamic and
+        customizable interface based on user selections.
+
+        Args:
+            context: The context in which the layout is drawn, typically
+                provided by the calling environment.
+        """
+
         layout = self.layout
         layout.prop(self, 'angle')
         layout.prop(self, 'distance')
@@ -123,6 +136,25 @@ class CamCurveHatch(Operator):
                 layout.prop(self, 'contour')
 
     def execute(self, context):
+        """Execute the crosshatch generation process based on the provided context.
+
+        This method performs a series of operations to create a crosshatch
+        pattern from the active object in the given context. It begins by
+        removing any existing crosshatch elements, setting the object's origin,
+        and determining its dimensions. Depending on the specified parameters,
+        it generates a convex hull, calculates the necessary coordinates for the
+        crosshatch lines, and applies transformations such as rotation and
+        translation. The method also handles intersections with specified bounds
+        or curves and can create contours based on additional settings.
+
+        Args:
+            context (bpy.context): The Blender context containing the active object
+
+        Returns:
+            dict: A dictionary indicating the completion status of the operation,
+            typically {'FINISHED'}.
+        """
+
         simple.remove_multiple("crosshatch")
         ob = context.active_object
         ob.select_set(True)
@@ -289,6 +321,18 @@ class CamCurvePlate(Operator):
     )
 
     def draw(self, context):
+        """Draw the UI layout for plate properties.
+
+        This method creates a user interface layout for configuring various
+        properties of a plate, including its type, dimensions, hole
+        specifications, and resolution. It dynamically adds properties to the
+        layout based on the selected plate type, allowing users to input
+        relevant parameters.
+
+        Args:
+            context: The context in which the UI is being drawn.
+        """
+
         layout = self.layout
         layout.prop(self, 'plate_type')
         layout.prop(self, 'width')
@@ -304,6 +348,23 @@ class CamCurvePlate(Operator):
             layout.prop(self, 'radius')
 
     def execute(self, context):
+        """Execute the creation of a plate based on specified parameters.
+
+        This function generates a plate shape in Blender based on the defined
+        attributes such as width, height, radius, and plate type. It supports
+        different plate types including rounded, oval, cove, and bevel. The
+        function also handles the creation of holes in the plate if specified.
+        It utilizes Blender's curve operations to create the geometry and
+        applies various transformations to achieve the desired shape.
+
+        Args:
+            context (bpy.context): The Blender context in which the operation is performed.
+
+        Returns:
+            dict: A dictionary indicating the result of the operation, typically
+                {'FINISHED'} if successful.
+        """
+
         left = -self.width / 2 + self.radius
         bottom = -self.height / 2 + self.radius
         right = -left
@@ -536,6 +597,25 @@ class CamCurveFlatCone(Operator):
     )
 
     def execute(self, context):
+        """Execute the construction of a geometric shape in Blender.
+
+        This method performs a series of operations to create a geometric shape
+        based on specified dimensions and parameters. It calculates various
+        dimensions needed for the shape, including height and angles, and then
+        uses Blender's operations to create segments, rectangles, and ellipses.
+        The function also handles the positioning and rotation of these shapes
+        within the 3D space of Blender.
+
+        Args:
+            context: The context in which the operation is executed, typically containing
+                information about the current
+                scene and active objects in Blender.
+
+        Returns:
+            dict: A dictionary indicating the completion status of the operation,
+                typically {'FINISHED'}.
+        """
+
         y = self.small_d / 2
         z = self.large_d / 2
         x = self.height
@@ -654,6 +734,22 @@ class CamCurveMortise(Operator):
         return context.active_object is not None and (context.active_object.type in ['CURVE', 'FONT'])
 
     def execute(self, context):
+        """Execute the joinery process based on the provided context.
+
+        This function performs a series of operations to duplicate the active
+        object, convert it to a mesh, and then process its geometry to create
+        joinery features. It extracts vertex coordinates, converts them into a
+        LineString data structure, and applies either variable or fixed finger
+        joinery based on the specified parameters. The function also handles the
+        creation of flexible sides and pockets if required.
+
+        Args:
+            context (bpy.context): The context in which the operation is executed.
+
+        Returns:
+            dict: A dictionary indicating the completion status of the operation.
+        """
+
         o1 = bpy.context.active_object
 
         bpy.context.object.data.resolution_u = 60
@@ -783,6 +879,25 @@ class CamCurveInterlock(Operator):
     )
 
     def execute(self, context):
+        """Execute the joinery operation based on the selected objects in the
+        context.
+
+        This function checks the selected objects in the provided context and
+        performs different operations depending on the type of the active
+        object. If the active object is a curve or font and there are selected
+        objects, it duplicates the object, converts it to a mesh, and processes
+        its vertices to create a LineString representation. The function then
+        calculates lengths and applies distributed interlock joinery based on
+        the specified parameters. If no valid objects are selected, it defaults
+        to a single interlock operation at the cursor's location.
+
+        Args:
+            context (bpy.context): The context containing selected objects and active object.
+
+        Returns:
+            dict: A dictionary indicating the operation's completion status.
+        """
+
         print(len(context.selected_objects),
               "selected object", context.selected_objects)
         if len(context.selected_objects) > 0 and (context.active_object.type in ['CURVE', 'FONT']):
@@ -928,6 +1043,20 @@ class CamCurveDrawer(Operator):
     )
 
     def draw(self, context):
+        """Draw the user interface properties for the object.
+
+        This method is responsible for rendering the layout of various
+        properties related to the object's dimensions and specifications. It
+        adds properties such as depth, width, height, finger size, finger
+        tolerance, finger inset, drawer plate thickness, drawer hole diameter,
+        drawer hole offset, and overcut diameter to the layout. The overcut
+        diameter property is only added if the overcut option is enabled.
+
+        Args:
+            context: The context in which the drawing occurs, typically containing
+                information about the current state and environment.
+        """
+
         layout = self.layout
         layout.prop(self, 'depth')
         layout.prop(self, 'width')
@@ -943,6 +1072,25 @@ class CamCurveDrawer(Operator):
             layout.prop(self, 'overcut_diameter')
 
     def execute(self, context):
+        """Execute the drawer creation process in Blender.
+
+        This method orchestrates the creation of a drawer by calculating the
+        necessary dimensions for the finger joints, creating the base plate, and
+        generating the drawer components such as the back, front, sides, and
+        bottom. It utilizes various helper functions to perform operations like
+        boolean differences and transformations to achieve the desired geometry.
+        The method also handles the placement of the drawer components in the 3D
+        space.
+
+        Args:
+            context (bpy.context): The Blender context that provides access to the current scene and
+                objects.
+
+        Returns:
+            dict: A dictionary indicating the completion status of the operation,
+                typically {'FINISHED'}.
+        """
+
         height_finger_amt = int(joinery.finger_amount(
             self.height, self.finger_size))
         height_finger = (self.height + 0.0004) / height_finger_amt
@@ -1271,6 +1419,24 @@ class CamCurvePuzzle(Operator):
     )
 
     def draw(self, context):
+        """Draws the user interface layout for interlock type properties.
+
+        This method is responsible for creating and displaying the layout of
+        various properties related to different interlock types in the user
+        interface. It dynamically adjusts the layout based on the selected
+        interlock type, allowing users to input relevant parameters such as
+        dimensions, tolerances, and other characteristics specific to the chosen
+        interlock type.
+
+        Args:
+            context: The context in which the layout is being drawn, typically
+                provided by the user interface framework.
+
+        Returns:
+            None: This method does not return any value; it modifies the layout
+                directly.
+        """
+
         layout = self.layout
         layout.prop(self, 'interlock_type')
         layout.label(text='Puzzle Joint Definition')
@@ -1330,6 +1496,25 @@ class CamCurvePuzzle(Operator):
             layout.prop(self, 'overcut_diameter')
 
     def execute(self, context):
+        """Execute the puzzle joinery process based on the provided context.
+
+        This method processes the selected objects in the given context to
+        perform various types of puzzle joinery operations. It first checks if
+        there are any selected objects and if the active object is a curve. If
+        so, it duplicates the object, applies transformations, and converts it
+        to a mesh. The method then extracts vertex coordinates and performs
+        different joinery operations based on the specified interlock type.
+        Supported interlock types include 'FINGER', 'JOINT', 'BAR', 'ARC',
+        'CURVEBARCURVE', 'CURVEBAR', 'MULTIANGLE', 'T', 'CURVET', 'CORNER',
+        'TILE', and 'OPENCURVE'.
+
+        Args:
+            context (Context): The context containing selected objects and the active object.
+
+        Returns:
+            dict: A dictionary indicating the completion status of the operation.
+        """
+
         curve_detected = False
         print(len(context.selected_objects),
               "selected object", context.selected_objects)
@@ -1544,6 +1729,19 @@ class CamCurveGear(Operator):
     )
 
     def draw(self, context):
+        """Draw the user interface properties for gear settings.
+
+        This method sets up the layout for various gear parameters based on the
+        selected gear type. It dynamically adds properties to the layout for
+        different gear types, allowing users to input specific values for gear
+        design. The properties include gear type, tooth spacing, tooth amount,
+        hole diameter, pressure angle, and backlash. Additional properties are
+        displayed if the gear type is 'PINION' or 'RACK'.
+
+        Args:
+            context: The context in which the layout is being drawn.
+        """
+
         layout = self.layout
         layout.prop(self, 'gear_type')
         layout.prop(self, 'tooth_spacing')
@@ -1561,6 +1759,23 @@ class CamCurveGear(Operator):
             layout.prop(self, 'rack_tooth_per_hole')
 
     def execute(self, context):
+        """Execute the gear generation process based on the specified gear type.
+
+        This method checks the type of gear to be generated (either 'PINION' or
+        'RACK') and calls the appropriate function from the `involute_gear`
+        module to create the gear or rack with the specified parameters. The
+        parameters include tooth spacing, number of teeth, hole diameter,
+        pressure angle, clearance, backlash, rim size, hub diameter, and spoke
+        amount for pinion gears, and additional parameters for rack gears.
+
+        Args:
+            context: The context in which the execution is taking place.
+
+        Returns:
+            dict: A dictionary indicating that the operation has finished with a key
+                'FINISHED'.
+        """
+
         if self.gear_type == 'PINION':
             involute_gear.gear(mm_per_tooth=self.tooth_spacing, number_of_teeth=self.tooth_amount,
                                hole_diameter=self.hole_diameter, pressure_angle=self.pressure_angle,

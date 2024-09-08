@@ -110,6 +110,35 @@ def gear_q6(b, s, t, d):
 
 def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
          pressure_angle=0.3488, clearance=0.0, backlash=0.0, rim_size=0.0005, hub_diameter=0.006, spokes=4):
+    """Generate a 3D gear model based on specified parameters.
+
+    This function creates a 3D representation of a gear using the provided
+    parameters such as the circular pitch, number of teeth, hole diameter,
+    pressure angle, clearance, backlash, rim size, hub diameter, and the
+    number of spokes. The gear is constructed by calculating various radii
+    and angles based on the input parameters and then using geometric
+    operations to form the final shape. The resulting gear is named
+    according to its specifications.
+
+    Args:
+        mm_per_tooth (float): The circular pitch of the gear in millimeters (default is 0.003).
+        number_of_teeth (int): The total number of teeth on the gear (default is 5).
+        hole_diameter (float): The diameter of the central hole in millimeters (default is 0.003175).
+        pressure_angle (float): The angle that controls the shape of the tooth sides in radians (default
+            is 0.3488).
+        clearance (float): The gap between the top of a tooth and the bottom of a valley on a
+            meshing gear in millimeters (default is 0.0).
+        backlash (float): The gap between two meshing teeth along the circumference of the pitch
+            circle in millimeters (default is 0.0).
+        rim_size (float): The size of the rim around the gear in millimeters (default is 0.0005).
+        hub_diameter (float): The diameter of the hub in millimeters (default is 0.006).
+        spokes (int): The number of spokes on the gear (default is 4).
+
+    Returns:
+        None: This function does not return a value but modifies the Blender scene to
+            include the generated gear model.
+    """
+
     simple.deselect()
     p = mm_per_tooth * number_of_teeth / pi / 2  # radius of pitch circle
     c = p + mm_per_tooth / pi - clearance        # radius of outer circle
@@ -203,6 +232,26 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
 
 def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3488, backlash=0.0,
          hole_diameter=0.003175, tooth_per_hole=4):
+    """Generate a rack gear profile based on specified parameters.
+
+    This function creates a rack gear by calculating the geometry based on
+    the provided parameters such as millimeters per tooth, number of teeth,
+    height, pressure angle, backlash, hole diameter, and teeth per hole. It
+    constructs the gear shape using the Shapely library and duplicates the
+    tooth to create the full rack. If a hole diameter is specified, it also
+    creates holes along the rack. The resulting gear is named based on the
+    input parameters.
+
+    Args:
+        mm_per_tooth (float): The distance in millimeters for each tooth. Default is 0.01.
+        number_of_teeth (int): The total number of teeth on the rack. Default is 11.
+        height (float): The height of the rack. Default is 0.012.
+        pressure_angle (float): The pressure angle in radians. Default is 0.3488.
+        backlash (float): The backlash distance in millimeters. Default is 0.0.
+        hole_diameter (float): The diameter of the holes in millimeters. Default is 0.003175.
+        tooth_per_hole (int): The number of teeth per hole. Default is 4.
+    """
+
     simple.deselect()
     mm_per_tooth *= 1000
     a = mm_per_tooth / pi  # addendum

@@ -71,6 +71,25 @@ SHAPELY = True
 
 # cutout strategy is completely here:
 async def cutout(o):
+    """Perform a cutout operation based on the provided parameters.
+
+    This function calculates the necessary cutter offset based on the cutter
+    type and its parameters. It processes a list of objects to determine how
+    to cut them based on their geometry and the specified cutting type. The
+    function handles different cutter types such as 'VCARVE', 'CYLCONE',
+    'BALLCONE', and 'BALLNOSE', applying specific calculations for each. It
+    also manages the layering and movement strategies for the cutting
+    operation, including options for lead-ins, ramps, and bridges.
+
+    Args:
+        o (object): An object containing parameters for the cutout operation,
+            including cutter type, diameter, depth, and other settings.
+
+    Returns:
+        None: This function does not return a value but performs operations
+            on the provided object.
+    """
+
     max_depth = checkminz(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2  # cutter offset
@@ -236,6 +255,27 @@ async def cutout(o):
 
 
 async def curve(o):
+    """Process and convert curve objects into mesh chunks.
+
+    This function takes an operation object and processes the curves
+    contained within it. It first checks if all objects are curves; if not,
+    it raises an exception. The function then converts the curves into
+    chunks, sorts them, and refines them. If layers are to be used, it
+    applies layer information to the chunks, adjusting their Z-offsets
+    accordingly. Finally, it converts the processed chunks into a mesh.
+
+    Args:
+        o (Operation): An object containing operation parameters, including a list of
+            objects, flags for layer usage, and movement constraints.
+
+    Returns:
+        None: This function does not return a value; it performs operations on the
+            input.
+
+    Raises:
+        CamException: If not all objects in the operation are curves.
+    """
+
     print('Operation: Curve')
     pathSamples = []
     getOperationSources(o)
@@ -283,6 +323,27 @@ async def curve(o):
 
 
 async def proj_curve(s, o):
+    """Project a curve onto another curve object.
+
+    This function takes a source object and a target object, both of which
+    are expected to be curve objects. It projects the points of the source
+    curve onto the target curve, adjusting the start and end points based on
+    specified extensions. The resulting projected points are stored in the
+    source object's path samples.
+
+    Args:
+        s (object): The source object containing the curve to be projected.
+        o (object): An object containing references to the curve objects
+            involved in the projection.
+
+    Returns:
+        None: This function does not return a value; it modifies the
+            source object's path samples in place.
+
+    Raises:
+        CamException: If the target curve is not of type 'CURVE'.
+    """
+
     print('Operation: Projected Curve')
     pathSamples = []
     chunks = []
@@ -334,6 +395,23 @@ async def proj_curve(s, o):
 
 
 async def pocket(o):
+    """Perform pocketing operation based on the provided parameters.
+
+    This function executes a pocketing operation using the specified
+    parameters from the object `o`. It calculates the cutter offset based on
+    the cutter type and depth, processes curves, and generates the necessary
+    chunks for the pocketing operation. The function also handles various
+    movement types and optimizations, including helix entry and retract
+    movements.
+
+    Args:
+        o (object): An object containing parameters for the pocketing
+
+    Returns:
+        None: The function modifies the scene and generates geometry
+        based on the pocketing operation.
+    """
+
     print('Operation: Pocket')
     scene = bpy.context.scene
 
@@ -539,6 +617,27 @@ async def pocket(o):
 
 
 async def drill(o):
+    """Perform a drilling operation on the specified objects.
+
+    This function iterates through the objects in the provided context,
+    activating each object and applying transformations. It duplicates the
+    objects and processes them based on their type (CURVE or MESH). For
+    CURVE objects, it calculates the bounding box and center points of the
+    splines and bezier points, and generates chunks based on the specified
+    drill type. For MESH objects, it generates chunks from the vertices. The
+    function also manages layers and chunk depths for the drilling
+    operation.
+
+    Args:
+        o (object): An object containing properties and methods required
+            for the drilling operation, including a list of
+            objects to drill, drill type, and depth parameters.
+
+    Returns:
+        None: This function does not return a value but performs operations
+            that modify the state of the Blender context.
+    """
+
     print('Operation: Drill')
     chunks = []
     for ob in o.objects:
@@ -633,6 +732,30 @@ async def drill(o):
 
 
 async def medial_axis(o):
+    """Generate the medial axis for a given operation.
+
+    This function computes the medial axis of the specified operation, which
+    involves processing various cutter types and their parameters. It starts
+    by removing any existing medial mesh, then calculates the maximum depth
+    based on the cutter type and its properties. The function refines curves
+    and computes the Voronoi diagram for the points derived from the
+    operation's silhouette. It filters points and edges based on their
+    positions relative to the computed shapes, and generates a mesh
+    representation of the medial axis. Finally, it handles layers and
+    optionally adds a pocket operation if specified.
+
+    Args:
+        o (Operation): An object containing parameters for the operation, including
+            cutter type, dimensions, and other relevant properties.
+
+    Returns:
+        dict: A dictionary indicating the completion status of the operation.
+
+    Raises:
+        CamException: If an unsupported cutter type is provided or if the input curve
+            is not closed.
+    """
+
     print('Operation: Medial Axis')
 
     remove_multiple("medialMesh")
@@ -839,8 +962,28 @@ async def medial_axis(o):
 
 
 def getLayers(operation, startdepth, enddepth):
-    """Returns a List of Layers Bounded by Startdepth and Enddepth
-       Uses Operation.stepdown to Determine Number of Layers.
+    """Returns a list of layers bounded by start depth and end depth.
+
+    This function calculates the layers between the specified start and end
+    depths based on the step down value defined in the operation. If the
+    operation is set to use layers, it computes the number of layers by
+    dividing the difference between start and end depths by the step down
+    value. The function raises an exception if the start depth is lower than
+    the end depth.
+
+    Args:
+        operation (object): An object that contains the properties `use_layers`,
+            `stepdown`, and `maxz` which are used to determine
+            how layers are generated.
+        startdepth (float): The starting depth for layer calculation.
+        enddepth (float): The ending depth for layer calculation.
+
+    Returns:
+        list: A list of layers, where each layer is represented as a list
+            containing the start and end depths of that layer.
+
+    Raises:
+        CamException: If the start depth is lower than the end depth.
     """
     if startdepth < enddepth:
         raise CamException("Start Depth Is Lower than End Depth. "
@@ -866,7 +1009,23 @@ def getLayers(operation, startdepth, enddepth):
 
 
 def chunksToMesh(chunks, o):
-    """Convert Sampled Chunks to Path, Optimization of Paths"""
+    """Convert sampled chunks into a mesh path for a given optimization object.
+
+    This function takes a list of sampled chunks and converts them into a
+    mesh path based on the specified optimization parameters. It handles
+    different machine axes configurations and applies optimizations as
+    needed. The resulting mesh is created in the Blender context, and the
+    function also manages the lifting and dropping of the cutter based on
+    the chunk positions.
+
+    Args:
+        chunks (list): A list of chunk objects to be converted into a mesh.
+        o (object): An object containing optimization parameters and settings.
+
+    Returns:
+        None: The function creates a mesh in the Blender context but does not return a
+            value.
+    """
     t = time.time()
     s = bpy.context.scene
     m = s.cam_machine
@@ -1010,6 +1169,19 @@ def chunksToMesh(chunks, o):
 
 
 def checkminz(o):
+    """Check the minimum value based on the specified condition.
+
+    This function evaluates the 'minz_from' attribute of the input object
+    'o'. If 'minz_from' is set to 'MATERIAL', it returns the value of
+    'min.z'. Otherwise, it returns the value of 'minz'.
+
+    Args:
+        o (object): An object that has attributes 'minz_from', 'min', and 'minz'.
+
+    Returns:
+        The minimum value, which can be either 'o.min.z' or 'o.minz' depending
+            on the condition.
+    """
     if o.minz_from == 'MATERIAL':
         return o.min.z
     else:

@@ -22,6 +22,25 @@ from . import simple
 
 
 def addBridge(x, y, rot, sizex, sizey):
+    """Add a bridge mesh object to the scene.
+
+    This function creates a bridge by adding a primitive plane to the
+    Blender scene, adjusting its dimensions, and then converting it into a
+    curve. The bridge is positioned based on the provided coordinates and
+    rotation. The size of the bridge is determined by the `sizex` and
+    `sizey` parameters.
+
+    Args:
+        x (float): The x-coordinate for the bridge's location.
+        y (float): The y-coordinate for the bridge's location.
+        rot (float): The rotation angle around the z-axis in radians.
+        sizex (float): The width of the bridge.
+        sizey (float): The height of the bridge.
+
+    Returns:
+        bpy.types.Object: The created bridge object.
+    """
+
     bpy.ops.mesh.primitive_plane_add(size=sizey*2, calc_uvs=True, enter_editmode=False, align='WORLD',
                                      location=(0, 0, 0), rotation=(0, 0, 0))
     b = bpy.context.active_object
@@ -43,7 +62,25 @@ def addBridge(x, y, rot, sizex, sizey):
 
 
 def addAutoBridges(o):
-    """Attempt to Add Auto Bridges as Set of Curves"""
+    """Attempt to add auto bridges as a set of curves.
+
+    This function creates a collection of bridges based on the provided
+    object. It checks if a collection for bridges already exists; if not, it
+    creates a new one. The function then iterates through the objects in the
+    input object, processing curves and meshes to generate bridge
+    geometries. For each geometry, it calculates the necessary points and
+    adds bridges at various orientations based on the geometry's bounds.
+
+    Args:
+        o (object): An object containing properties such as
+            bridges_collection_name, bridges_width, and cutter_diameter,
+            along with a list of objects to process.
+
+    Returns:
+        None: This function does not return a value but modifies the
+            Blender context by adding bridge objects to the specified
+            collection.
+    """
     utils.getOperationSources(o)
     bridgecollectionname = o.bridges_collection_name
     if bridgecollectionname == '' or bpy.data.collections.get(bridgecollectionname) is None:
@@ -84,6 +121,20 @@ def addAutoBridges(o):
 
 
 def getBridgesPoly(o):
+    """Generate and prepare bridge polygons from a Blender object.
+
+    This function checks if the provided object has an attribute for bridge
+    polygons. If not, it retrieves the bridge collection, selects all curve
+    objects within that collection, duplicates them, and joins them into a
+    single object. The resulting shape is then converted to a Shapely
+    geometry. The function buffers the resulting polygon to account for the
+    cutter diameter and prepares the boundary and polygon for further
+    processing.
+
+    Args:
+        o (object): An object containing properties related to bridge
+    """
+
     if not hasattr(o, 'bridgespolyorig'):
         bridgecollectionname = o.bridges_collection_name
         bridgecollection = bpy.data.collections[bridgecollectionname]
@@ -109,7 +160,25 @@ def getBridgesPoly(o):
 
 
 def useBridges(ch, o):
-    """This Adds Bridges to Chunks, Takes the Bridge-objects Collection and Uses the Curves Inside It as Bridges."""
+    """Add bridges to chunks using a collection of bridge objects.
+
+    This function takes a collection of bridge objects and uses the curves
+    within it to create bridges over the specified chunks. It calculates the
+    necessary points for the bridges based on the height and geometry of the
+    chunks and the bridge objects. The function also handles intersections
+    with the bridge polygon and adjusts the points accordingly. Finally, it
+    generates a mesh for the bridges and converts it into a curve object in
+    Blender.
+
+    Args:
+        ch (Chunk): The chunk object to which bridges will be added.
+        o (ObjectOptions): An object containing options such as bridge height,
+            collection name, and other parameters.
+
+    Returns:
+        None: The function modifies the chunk object in place and does not return a
+            value.
+    """
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
@@ -263,6 +332,21 @@ def useBridges(ch, o):
 
 
 def auto_cut_bridge(o):
+    """Automatically processes a bridge collection.
+
+    This function retrieves a bridge collection by its name from the
+    provided object and checks if there are any objects within that
+    collection. If there are objects present, it prints "bridges" to the
+    console. This function is useful for managing and processing bridge
+    collections in a 3D environment.
+
+    Args:
+        o (object): An object that contains the attribute
+
+    Returns:
+        None: This function does not return any value.
+    """
+
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
