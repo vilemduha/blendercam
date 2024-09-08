@@ -31,7 +31,7 @@ jobs:
       - name: make the sphinx docs
         run: |
           make -C scripts/addons/docs clean 
-          sphinx-apidoc -f -o scripts/addons/docs acripts/addons/cam
+          sphinx-apidoc -f -o scripts/addons/docs scripts/addons/cam
           make -C scripts/addons/docs html
 
       - name: Init new repo in dist folder and commit generated files
