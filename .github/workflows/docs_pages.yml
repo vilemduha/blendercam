@@ -30,9 +30,9 @@ jobs:
 
       - name: make the sphinx docs
         run: |
-          make -C docs clean 
-          sphinx-apidoc -f -o docs cam
-          make -C docs html
+          make -C scripts/addons/docs clean 
+          sphinx-apidoc -f -o scripts/addons/docs acripts/addons/cam
+          make -C scripts/addons/docs html
 
       - name: Init new repo in dist folder and commit generated files
         run: |
@@ -50,4 +50,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
           force: true
-          directory: .docs/build/html
+          directory: .scripts/addons/docs/build/html
