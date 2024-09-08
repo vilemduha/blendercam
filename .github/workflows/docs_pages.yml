@@ -39,7 +39,6 @@ jobs:
           git init
           touch .nojekyll
           git add -A
-          git config --global --add safe.directory /__w/blendercam/blendercam
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -m 'deploy'
