@@ -50,4 +50,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
           force: true
-          directory: .scripts/addons/docs/_build/html
+          directory: .docs/_build/html
