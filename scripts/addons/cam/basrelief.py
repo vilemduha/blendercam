@@ -47,7 +47,26 @@ def copy_compbuf_data(inbuf, outbuf):
     outbuf[:] = inbuf[:]
 
 
-def restrictbuf(inbuf, outbuf):  # scale down array....
+def restrictbuf(inbuf, outbuf):
+    """Restrict the resolution of an input buffer to match an output buffer.
+
+    This function scales down the input buffer `inbuf` to fit the dimensions
+    of the output buffer `outbuf`. It computes the average of the
+    neighboring pixels in the input buffer to create a downsampled version
+    in the output buffer. The method used for downsampling can vary based on
+    the dimensions of the input and output buffers, utilizing either a
+    simple averaging method or a more complex numpy-based approach.
+
+    Args:
+        inbuf (numpy.ndarray): The input buffer to be downsampled, expected to be
+            a 2D array.
+        outbuf (numpy.ndarray): The output buffer where the downsampled result will
+            be stored, also expected to be a 2D array.
+
+    Returns:
+        None: The function modifies `outbuf` in place.
+    """
+  # scale down array....
 
     inx = inbuf.shape[0]
     iny = inbuf.shape[1]
@@ -132,6 +151,21 @@ def restrictbuf(inbuf, outbuf):  # scale down array....
 
 
 def prolongate(inbuf, outbuf):
+    """Prolongate an input buffer to a larger output buffer.
+
+    This function takes an input buffer and enlarges it to fit the
+    dimensions of the output buffer. It uses different methods to achieve
+    this based on the scaling factors derived from the input and output
+    dimensions. The function can handle specific cases where the scaling
+    factors are exactly 0.5, as well as a general case that applies a
+    bilinear interpolation technique for resizing.
+
+    Args:
+        inbuf (numpy.ndarray): The input buffer to be enlarged, expected to be a 2D array.
+        outbuf (numpy.ndarray): The output buffer where the enlarged data will be stored,
+            expected to be a 2D array of larger dimensions than inbuf.
+    """
+
 
     inx = inbuf.shape[0]
     iny = inbuf.shape[1]
@@ -221,6 +255,24 @@ def idx(r, c, cols):
 
 # smooth u using f at level
 def smooth(U, F, linbcgiterations, planar):
+    """Smooth a matrix U using a filter F at a specified level.
+
+    This function applies a smoothing operation on the input matrix U using
+    the filter F. It utilizes the linear Biconjugate Gradient method for the
+    smoothing process. The number of iterations for the linear BCG method is
+    specified by linbcgiterations, and the planar parameter indicates
+    whether the operation is to be performed in a planar manner.
+
+    Args:
+        U (numpy.ndarray): The input matrix to be smoothed.
+        F (numpy.ndarray): The filter used for smoothing.
+        linbcgiterations (int): The number of iterations for the linear BCG method.
+        planar (bool): A flag indicating whether to perform the operation in a planar manner.
+
+    Returns:
+        None: This function modifies the input matrix U in place.
+    """
+
 
     iter = 0
     err = 0
@@ -234,6 +286,24 @@ def smooth(U, F, linbcgiterations, planar):
 
 
 def calculate_defect(D, U, F):
+    """Calculate the defect of a grid based on the input fields.
+
+    This function computes the defect values for a grid by comparing the
+    input field `F` with the values in the grid `U`. The defect is
+    calculated using finite difference approximations, taking into account
+    the neighboring values in the grid. The results are stored in the output
+    array `D`, which is modified in place.
+
+    Args:
+        D (ndarray): A 2D array where the defect values will be stored.
+        U (ndarray): A 2D array representing the current state of the grid.
+        F (ndarray): A 2D array representing the target field to compare against.
+
+    Returns:
+        None: The function modifies the array `D` in place and does not return a
+            value.
+    """
+
 
     sx = F.shape[0]
     sy = F.shape[1]
@@ -277,6 +347,40 @@ def add_correction(U, C):
 
 
 def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiterations, mins, levels, useplanar, planar):
+    """Solve a partial differential equation using a multigrid method.
+
+    This function implements a multigrid algorithm to solve a given partial
+    differential equation (PDE). It operates on a grid of varying
+    resolutions, applying smoothing and correction steps iteratively to
+    converge towards the solution. The algorithm consists of several key
+    phases: restriction of the right-hand side to coarser grids, solving on
+    the coarsest grid, and then interpolating corrections back to finer
+    grids. The process is repeated for a specified number of V-cycle
+    iterations.
+
+    Args:
+        F (numpy.ndarray): The right-hand side of the PDE represented as a 2D array.
+        U (numpy.ndarray): The initial guess for the solution, which will be updated in place.
+        vcycleiterations (int): The number of V-cycle iterations to perform.
+        linbcgiterations (int): The number of iterations for the linear solver used in smoothing.
+        smoothiterations (int): The number of smoothing iterations to apply at each level.
+        mins (int): Minimum grid size (not used in the current implementation).
+        levels (int): The number of levels in the multigrid hierarchy.
+        useplanar (bool): A flag indicating whether to use planar information during the solution
+            process.
+        planar (numpy.ndarray): A 2D array indicating planar information for the grid.
+
+    Returns:
+        None: The function modifies the input array U in place to contain the final
+            solution.
+
+    Note:
+        The function assumes that the input arrays F and U have compatible
+        shapes
+        and that the planar array is appropriately defined for the problem
+        context.
+    """
+
 
     xmax = F.shape[0]
     ymax = F.shape[1]
@@ -422,6 +526,23 @@ def asolve(b, x):
 
 
 def atimes(x, res):
+    """Apply a discrete Laplacian operator to a 2D array.
+
+    This function computes the discrete Laplacian of a given 2D array `x`
+    and stores the result in the `res` array. The Laplacian is calculated
+    using finite difference methods, which involve summing the values of
+    neighboring elements and applying specific boundary conditions for the
+    edges and corners of the array.
+
+    Args:
+        x (numpy.ndarray): A 2D array representing the input values.
+        res (numpy.ndarray): A 2D array where the result will be stored. It must have the same shape
+            as `x`.
+
+    Returns:
+        None: The result is stored directly in the `res` array.
+    """
+
     res[1:-1, 1:-1] = x[:-2, 1:-1]+x[2:, 1:-1] + \
         x[1:-1, :-2]+x[1:-1, 2:] - 4*x[1:-1, 1:-1]
     # sides
@@ -437,6 +558,26 @@ def atimes(x, res):
 
 
 def snrm(n, sx, itol):
+    """Calculate the square root of the sum of squares or the maximum absolute
+    value.
+
+    This function computes a value based on the input parameters. If the
+    tolerance level (itol) is less than or equal to 3, it calculates the
+    square root of the sum of squares of the input array (sx). If the
+    tolerance level is greater than 3, it returns the maximum absolute value
+    from the input array.
+
+    Args:
+        n (int): An integer parameter, though it is not used in the current
+            implementation.
+        sx (numpy.ndarray): A numpy array of numeric values.
+        itol (int): An integer that determines which calculation to perform.
+
+    Returns:
+        float: The square root of the sum of squares if itol <= 3, otherwise the
+            maximum absolute value.
+    """
+
 
     if (itol <= 3):
         temp = sx*sx
@@ -453,6 +594,32 @@ def snrm(n, sx, itol):
 
 
 def linbcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
+    """Solve a linear system using the Biconjugate Gradient Method.
+
+    This function implements the Biconjugate Gradient Method as described in
+    Numerical Recipes in C. It iteratively refines the solution to a linear
+    system of equations defined by the matrix-vector product. The method is
+    particularly useful for large, sparse systems where direct methods are
+    inefficient. The function takes various parameters to control the
+    iteration process and convergence criteria.
+
+    Args:
+        n (int): The size of the linear system.
+        b (numpy.ndarray): The right-hand side vector of the linear system.
+        x (numpy.ndarray): The initial guess for the solution vector.
+        itol (int): The type of norm to use for convergence checks.
+        tol (float): The tolerance for convergence.
+        itmax (int): The maximum number of iterations allowed.
+        iter (int): The current iteration count (should be initialized to 0).
+        err (float): The error estimate (should be initialized).
+        rows (int): The number of rows in the matrix.
+        cols (int): The number of columns in the matrix.
+        planar (bool): A flag indicating if the problem is planar.
+
+    Returns:
+        None: The solution is stored in the input array `x`.
+    """
+
 
     p = numpy.zeros((cols, rows))
     pp = numpy.zeros((cols, rows))
@@ -548,6 +715,18 @@ def linbcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
 
 
 def numpysave(a, iname):
+    """Save a NumPy array as an image file in OpenEXR format.
+
+    This function takes a NumPy array and saves it as an image file using
+    Blender's rendering capabilities. It configures the image settings to
+    use the OpenEXR format with black and white color mode and a color depth
+    of 32 bits. The rendered image is saved to the specified filename.
+
+    Args:
+        a (numpy.ndarray): The NumPy array to be saved as an image.
+        iname (str): The filename (including path) where the image will be saved.
+    """
+
     inamebase = bpy.path.basename(iname)
 
     i = numpytoimage(a, inamebase)
@@ -562,6 +741,24 @@ def numpysave(a, iname):
 
 
 def numpytoimage(a, iname):
+    """Convert a NumPy array to a Blender image.
+
+    This function takes a NumPy array and converts it into a Blender image.
+    It first checks if an image with the specified name and dimensions
+    already exists in Blender. If it does, that image is used; otherwise, a
+    new image is created with the specified name and dimensions. The
+    function then reshapes the NumPy array to match the image format and
+    assigns the pixel data to the image.
+
+    Args:
+        a (numpy.ndarray): A 2D NumPy array representing the pixel data of the image.
+        iname (str): The name to assign to the Blender image.
+
+    Returns:
+        bpy.types.Image: The Blender image created or modified with the pixel data from the NumPy
+            array.
+    """
+
     t = time.time()
     print('Numpy to Image - Here')
     t = time.time()
@@ -592,6 +789,25 @@ def numpytoimage(a, iname):
 
 
 def imagetonumpy(i):
+    """Convert an image to a NumPy array.
+
+    This function takes an image object and converts its pixel data into a
+    NumPy array. It first retrieves the pixel data from the image, then
+    reshapes and rearranges it to match the image's dimensions. The
+    resulting array is structured such that the height and width of the
+    image are preserved, and the color channels are appropriately ordered.
+
+    Args:
+        i (Image): An image object that contains pixel data.
+
+    Returns:
+        numpy.ndarray: A 2D NumPy array representing the pixel data of the image.
+
+    Note:
+        The function optimizes performance by directly accessing pixel data
+        instead of using slower methods.
+    """
+
     t = time.time()
     inc = 0
 
@@ -618,6 +834,23 @@ def imagetonumpy(i):
 
 
 def tonemap(i, exponent):
+    """Apply tone mapping to an image array.
+
+    This function performs tone mapping on the input image array by first
+    filtering out values that are excessively high, which may indicate that
+    the depth buffer was not written correctly. It then normalizes the
+    values between the minimum and maximum heights, and finally applies an
+    exponentiation to adjust the brightness of the image.
+
+    Args:
+        i (numpy.ndarray): A numpy array representing the image data.
+        exponent (float): The exponent used for adjusting the brightness
+            of the normalized image.
+
+    Returns:
+        None: The function modifies the input array in place.
+    """
+
     # if depth buffer never got written it gets set
     # to a great big value (10000000000.0)
     # filter out anything within an order of magnitude of it
@@ -631,11 +864,43 @@ def tonemap(i, exponent):
 
 
 def vert(column, row, z, XYscaling, Zscaling):
-    """ Create a Single Vert """
+    """Create a single vertex in 3D space.
+
+    This function calculates the 3D coordinates of a vertex based on the
+    provided column and row values, as well as scaling factors for the X-Y
+    and Z dimensions. The resulting coordinates are scaled accordingly to
+    fit within a specified 3D space.
+
+    Args:
+        column (float): The column value representing the X coordinate.
+        row (float): The row value representing the Y coordinate.
+        z (float): The Z coordinate value.
+        XYscaling (float): The scaling factor for the X and Y coordinates.
+        Zscaling (float): The scaling factor for the Z coordinate.
+
+    Returns:
+        tuple: A tuple containing the scaled X, Y, and Z coordinates.
+    """
     return column * XYscaling, row * XYscaling, z * Zscaling
 
 
 def buildMesh(mesh_z, br):
+    """Build a 3D mesh from a height map and apply transformations.
+
+    This function constructs a 3D mesh based on the provided height map
+    (mesh_z) and applies various transformations such as scaling and
+    positioning based on the parameters defined in the br object. It first
+    removes any existing BasReliefMesh objects from the scene, then creates
+    a new mesh from the height data, and finally applies decimation if the
+    specified ratio is within acceptable limits.
+
+    Args:
+        mesh_z (numpy.ndarray): A 2D array representing the height values
+            for the mesh vertices.
+        br (object): An object containing properties for width, height,
+            thickness, justification, and decimation ratio.
+    """
+
     global rows
     global size
     scale = 1
@@ -710,6 +975,26 @@ def buildMesh(mesh_z, br):
 
 
 def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view_layer):
+    """Render a scene using Blender's Cycles engine.
+
+    This function switches the rendering engine to Cycles, sets up the
+    necessary nodes for depth rendering if specified, and configures the
+    render resolution based on the provided parameters. It ensures that the
+    scene is in object mode before rendering and restores the original
+    rendering engine after the process is complete.
+
+    Args:
+        width (int): The width of the render in pixels.
+        height (int): The height of the render in pixels.
+        bit_diameter (float): The diameter used to calculate the number of passes.
+        passes_per_radius (int): The number of passes per radius for rendering.
+        make_nodes (bool): A flag indicating whether to create render nodes.
+        view_layer (str): The name of the view layer to be rendered.
+
+    Returns:
+        None: This function does not return any value.
+    """
+
     print("Rendering Scene")
     scene = bpy.context.scene
     # make sure we're in object mode or else bad things happen
@@ -755,6 +1040,47 @@ def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view
 
 
 def problemAreas(br):
+    """Process image data to identify problem areas based on silhouette
+    thresholds.
+
+    This function analyzes an image and computes gradients to detect and
+    recover silhouettes based on specified parameters. It utilizes various
+    settings from the provided `br` object to adjust the processing,
+    including silhouette thresholds, scaling factors, and iterations for
+    smoothing and recovery. The function also handles image scaling and
+    applies a gradient mask if specified. The resulting data is then
+    converted back into an image format for further use.
+
+    Args:
+        br (object): An object containing various parameters for processing, including:
+            - use_image_source (bool): Flag to determine if a specific image source
+            should be used.
+            - source_image_name (str): Name of the source image if
+            `use_image_source` is True.
+            - silhouette_threshold (float): Threshold for silhouette detection.
+            - recover_silhouettes (bool): Flag to indicate if silhouettes should be
+            recovered.
+            - silhouette_scale (float): Scaling factor for silhouette recovery.
+            - min_gridsize (int): Minimum grid size for processing.
+            - smooth_iterations (int): Number of iterations for smoothing.
+            - vcycle_iterations (int): Number of iterations for V-cycle processing.
+            - linbcg_iterations (int): Number of iterations for linear BCG
+            processing.
+            - use_planar (bool): Flag to indicate if planar processing should be
+            used.
+            - gradient_scaling_mask_use (bool): Flag to indicate if a gradient
+            scaling mask should be used.
+            - gradient_scaling_mask_name (str): Name of the gradient scaling mask
+            image.
+            - depth_exponent (float): Exponent for depth adjustment.
+            - silhouette_exponent (int): Exponent for silhouette recovery.
+            - attenuation (float): Attenuation factor for processing.
+
+    Returns:
+        None: The function does not return a value but processes the image data and
+            saves the result.
+    """
+
     t = time.time()
     if br.use_image_source:
         i = bpy.data.images[br.source_image_name]
@@ -841,6 +1167,50 @@ def problemAreas(br):
 
 
 def relief(br):
+    """Process an image to enhance relief features.
+
+    This function takes an input image and applies various processing
+    techniques to enhance the relief features based on the provided
+    parameters. It utilizes gradient calculations, silhouette recovery, and
+    optional detail enhancement through Fourier transforms. The processed
+    image is then used to build a mesh representation.
+
+    Args:
+        br (object): An object containing various parameters for the relief processing,
+            including:
+            - use_image_source (bool): Whether to use a specified image source.
+            - source_image_name (str): The name of the source image.
+            - silhouette_threshold (float): Threshold for silhouette detection.
+            - recover_silhouettes (bool): Flag to indicate if silhouettes should be
+            recovered.
+            - silhouette_scale (float): Scale factor for silhouette recovery.
+            - min_gridsize (int): Minimum grid size for processing.
+            - smooth_iterations (int): Number of iterations for smoothing.
+            - vcycle_iterations (int): Number of iterations for V-cycle processing.
+            - linbcg_iterations (int): Number of iterations for linear BCG
+            processing.
+            - use_planar (bool): Flag to indicate if planar processing should be
+            used.
+            - gradient_scaling_mask_use (bool): Flag to indicate if a gradient
+            scaling mask should be used.
+            - gradient_scaling_mask_name (str): Name of the gradient scaling mask
+            image.
+            - depth_exponent (float): Exponent for depth adjustment.
+            - attenuation (float): Attenuation factor for the processing.
+            - detail_enhancement_use (bool): Flag to indicate if detail enhancement
+            should be applied.
+            - detail_enhancement_freq (float): Frequency for detail enhancement.
+            - detail_enhancement_amount (float): Amount of detail enhancement to
+            apply.
+
+    Returns:
+        None: The function processes the image and builds a mesh but does not return a
+            value.
+
+    Raises:
+        ReliefError: If the input image is blank or invalid.
+    """
+
     t = time.time()
 
     if br.use_image_source:
@@ -1223,10 +1593,41 @@ class BASRELIEF_Panel(bpy.types.Panel):
     #   self.layout.menu("CAM_CUTTER_MT_presets", text="CAM Cutter")
     @classmethod
     def poll(cls, context):
+        """Check if the current render engine is compatible.
+
+        This class method checks whether the render engine specified in the
+        provided context is included in the list of compatible engines. It
+        accesses the render settings from the context and verifies if the engine
+        is part of the predefined compatible engines.
+
+        Args:
+            context (Context): The context containing the scene and render settings.
+
+        Returns:
+            bool: True if the render engine is compatible, False otherwise.
+        """
+
         rd = context.scene.render
         return rd.engine in cls.COMPAT_ENGINES
 
     def draw(self, context):
+        """Draw the user interface for the bas relief settings.
+
+        This method constructs the layout for the bas relief settings in the
+        Blender user interface. It includes various properties and options that
+        allow users to configure the bas relief calculations, such as selecting
+        images, adjusting parameters, and setting justification options. The
+        layout is dynamically updated based on user selections, providing a
+        comprehensive interface for manipulating bas relief settings.
+
+        Args:
+            context (bpy.context): The context in which the UI is being drawn.
+
+        Returns:
+            None: This method does not return any value; it modifies the layout
+            directly.
+        """
+
         layout = self.layout
         # print(dir(layout))
         s = bpy.context.scene
@@ -1307,6 +1708,21 @@ class DoBasRelief(bpy.types.Operator):
     processes = []
 
     def execute(self, context):
+        """Execute the relief rendering process based on the provided context.
+
+        This function retrieves the scene and its associated bas relief
+        settings. It checks if an image source is being used and sets the view
+        layer name accordingly. The function then attempts to render the scene
+        and generate the relief. If any errors occur during these processes,
+        they are reported, and the operation is canceled.
+
+        Args:
+            context: The context in which the function is executed.
+
+        Returns:
+            dict: A dictionary indicating the result of the operation, either
+        """
+
         s = bpy.context.scene
         br = s.basreliefsettings
         if not br.use_image_source and br.view_layer_name == "":
@@ -1340,6 +1756,23 @@ class ProblemAreas(bpy.types.Operator):
     #	return context.active_object is not None
 
     def execute(self, context):
+        """Execute the operation related to the bas relief settings in the current
+        scene.
+
+        This method retrieves the current scene from the Blender context and
+        accesses the bas relief settings. It then calls the `problemAreas`
+        function to perform operations related to those settings. The method
+        concludes by returning a status indicating that the operation has
+        finished successfully.
+
+        Args:
+            context (bpy.context): The current Blender context, which provides access
+
+        Returns:
+            dict: A dictionary with a status key indicating the operation result,
+            specifically {'FINISHED'}.
+        """
+
         s = bpy.context.scene
         br = s.basreliefsettings
         problemAreas(br)
@@ -1347,6 +1780,19 @@ class ProblemAreas(bpy.types.Operator):
 
 
 def get_panels():
+    """Retrieve a tuple of panel settings and related components.
+
+    This function returns a tuple containing various components related to
+    Bas Relief settings. The components include BasReliefsettings,
+    BASRELIEF_Panel, DoBasRelief, and ProblemAreas, which are likely used in
+    the context of a graphical user interface or a specific application
+    domain.
+
+    Returns:
+        tuple: A tuple containing the BasReliefsettings, BASRELIEF_Panel,
+        DoBasRelief, and ProblemAreas components.
+    """
+
     return(
         BasReliefsettings,
         BASRELIEF_Panel,
@@ -1356,6 +1802,17 @@ def get_panels():
 
 
 def register():
+    """Register the necessary classes and properties for the add-on.
+
+    This function registers all the panels defined in the add-on by
+    iterating through the list of panels returned by the `get_panels()`
+    function. It also adds a new property, `basreliefsettings`, to the
+    `Scene` type, which is a pointer property that references the
+    `BasReliefsettings` class. This setup is essential for the proper
+    functioning of the add-on, allowing users to access and modify the
+    settings related to bas relief.
+    """
+
     for p in get_panels():
         bpy.utils.register_class(p)
     s = bpy.types.Scene
@@ -1365,6 +1822,15 @@ def register():
 
 
 def unregister():
+    """Unregister all panels and remove basreliefsettings from the Scene type.
+
+    This function iterates through all registered panels and unregisters
+    each one using Blender's utility functions. Additionally, it removes the
+    basreliefsettings attribute from the Scene type, ensuring that any
+    settings related to bas relief are no longer accessible in the current
+    Blender session.
+    """
+
     for p in get_panels():
         bpy.utils.unregister_class(p)
     s = bpy.types.Scene

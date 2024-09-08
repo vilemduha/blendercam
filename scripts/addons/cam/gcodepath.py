@@ -62,6 +62,28 @@ from .utils import (
 
 
 def pointonline(a, b, c, tolerence):
+    """Determine if the angle between two vectors is within a specified
+    tolerance.
+
+    This function checks if the angle formed by two vectors, defined by
+    points `b` and `c` relative to point `a`, is less than or equal to a
+    given tolerance. It converts the points into vectors, calculates the dot
+    product, and then computes the angle between them using the arccosine
+    function. If the angle exceeds the specified tolerance, the function
+    returns False; otherwise, it returns True.
+
+    Args:
+        a (numpy.ndarray): The origin point as a vector.
+        b (numpy.ndarray): The first point as a vector.
+        c (numpy.ndarray): The second point as a vector.
+        tolerence (float): The maximum allowable angle (in degrees) between the vectors.
+
+    Returns:
+        bool: True if the angle between vectors b and c is within the specified
+            tolerance,
+            False otherwise.
+    """
+
     b = b - a  # convert to vector by subtracting origin
     c = c - a
     dot_pr = b.dot(c)  # b dot c
@@ -75,7 +97,24 @@ def pointonline(a, b, c, tolerence):
 
 
 def exportGcodePath(filename, vertslist, operations):
-    """Exports G-code with the Heeks NC Adopted Library."""
+    """Exports G-code using the Heeks NC Adopted Library.
+
+    This function generates G-code from a list of vertices and operations
+    specified by the user. It handles various post-processor settings based
+    on the machine configuration and can split the output into multiple
+    files if the total number of operations exceeds a specified limit. The
+    G-code is tailored for different machine types and includes options for
+    tool changes, spindle control, and various movement commands.
+
+    Args:
+        filename (str): The name of the file to which the G-code will be exported.
+        vertslist (list): A list of mesh objects containing vertex data.
+        operations (list): A list of operations to be performed, each containing
+            specific parameters for G-code generation.
+
+    Returns:
+        None: This function does not return a value; it writes the G-code to a file.
+    """
     print("EXPORT")
     progress('Exporting G-code File')
     t = time.time()
@@ -157,6 +196,20 @@ def exportGcodePath(filename, vertslist, operations):
     use_experimental = bpy.context.preferences.addons[__package__].preferences.experimental
 
     def startNewFile():
+        """Start a new file for G-code generation.
+
+        This function initializes a new file for G-code output based on the
+        specified parameters. It constructs the filename using a base name, an
+        optional index, and a file extension. The function also configures the
+        post-processor settings based on user overrides and the selected unit
+        system (metric or imperial). Finally, it begins the G-code program and
+        sets the necessary configurations for the output.
+
+        Returns:
+            Creator: An instance of the post-processor Creator class configured for
+            G-code generation.
+        """
+
         fileindex = ''
         if split:
             fileindex = '_' + str(findex)
@@ -520,7 +573,23 @@ def exportGcodePath(filename, vertslist, operations):
     print(time.time() - t)
 
 
-async def getPath(context, operation):  # should do all path calculations.
+async def getPath(context, operation):
+    """Calculate the path for a given operation in a specified context.
+
+    This function performs various calculations to determine the path based
+    on the operation's parameters and context. It checks for changes in the
+    operation's data and updates relevant tags accordingly. Depending on the
+    number of machine axes specified in the operation, it calls different
+    functions to handle 3-axis, 4-axis, or 5-axis operations. Additionally,
+    if automatic export is enabled, it exports the generated G-code path.
+
+    Args:
+        context: The context in which the operation is being performed.
+        operation: An object representing the operation with various
+            attributes such as machine_axes, strategy, and
+            auto_export.
+    """
+  # should do all path calculations.
     t = time.process_time()
     # print('ahoj0')
 
@@ -584,8 +653,23 @@ async def getPath(context, operation):  # should do all path calculations.
 
 
 def getChangeData(o):
-    """This Is a Function to Check if Object Props Have Changed,
-    to See if Image Updates Are Needed in the Image Based Method"""
+    """Check if object properties have changed to determine if image updates
+    are needed.
+
+    This function inspects the properties of objects specified by the input
+    parameter to see if any changes have occurred. It concatenates the
+    location, rotation, and dimensions of the relevant objects into a single
+    string, which can be used to determine if an image update is necessary
+    based on changes in the object's state.
+
+    Args:
+        o (object): An object containing properties that specify the geometry source
+            and relevant object or collection names.
+
+    Returns:
+        str: A string representation of the location, rotation, and dimensions of
+            the specified objects.
+    """
     changedata = ''
     obs = []
     if o.geometry_source == 'OBJECT':
@@ -601,6 +685,23 @@ def getChangeData(o):
 
 
 def checkMemoryLimit(o):
+    """Check and adjust the memory limit for an object.
+
+    This function calculates the resolution of an object based on its
+    dimensions and the specified pixel size. If the calculated resolution
+    exceeds the defined memory limit, it adjusts the pixel size accordingly
+    to reduce the resolution. A warning message is appended to the object's
+    info if the pixel size is modified.
+
+    Args:
+        o (object): An object containing properties such as max, min, optimisation, and
+            info.
+
+    Returns:
+        None: This function modifies the object's properties in place and does not
+            return a value.
+    """
+
     # getBounds(o)
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
@@ -619,6 +720,29 @@ def checkMemoryLimit(o):
 # this is the main function.
 # FIXME: split strategies into separate file!
 async def getPath3axis(context, operation):
+    """Generate a machining path based on the specified operation strategy.
+
+    This function evaluates the provided operation's strategy and generates
+    the corresponding machining path. It supports various strategies such as
+    'CUTOUT', 'CURVE', 'PROJECTED_CURVE', 'POCKET', and others. Depending on
+    the strategy, it performs specific calculations and manipulations on the
+    input data to create a path that can be used for machining operations.
+    The function handles different strategies by calling appropriate methods
+    from the `strategy` module and processes the path samples accordingly.
+    It also manages the generation of chunks, which represent segments of
+    the machining path, and applies any necessary transformations based on
+    the operation's parameters.
+
+    Args:
+        context (bpy.context): The Blender context containing scene information.
+        operation (Operation): An object representing the machining operation,
+            which includes strategy and other relevant parameters.
+
+    Returns:
+        None: This function does not return a value but modifies the state of
+        the operation and context directly.
+    """
+
     s = bpy.context.scene
     o = operation
     getBounds(o)
@@ -870,6 +994,25 @@ async def getPath3axis(context, operation):
 
 
 async def getPath4axis(context, operation):
+    """Generate a path for a specified axis based on the given operation.
+
+    This function retrieves the bounds of the operation and checks the
+    strategy associated with the axis. If the strategy is one of the
+    specified types ('PARALLELR', 'PARALLEL', 'HELIX', 'CROSS'), it
+    generates path samples and processes them into chunks for meshing. The
+    function utilizes various helper functions to achieve this, including
+    obtaining layers and sampling chunks.
+
+    Args:
+        context: The context in which the operation is executed.
+        operation: An object that contains the strategy and other
+            necessary parameters for generating the path.
+
+    Returns:
+        None: This function does not return a value but modifies
+            the state of the operation by processing chunks for meshing.
+    """
+
     o = operation
     getBounds(o)
     if o.strategy4axis in ['PARALLELR', 'PARALLEL', 'HELIX', 'CROSS']:

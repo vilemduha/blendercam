@@ -24,6 +24,20 @@ from .utils import (
 
 
 def createSimulationObject(name, operations, i):
+    """Create a simulation object in Blender.
+
+    This function creates a simulation object in Blender with the specified
+    name and operations. If an object with the given name already exists, it
+    retrieves that object; otherwise, it creates a new plane object and
+    applies several modifiers to it. The function also sets the object's
+    location and scale based on the provided operations and assigns a
+    texture to the object.
+
+    Args:
+        name (str): The name of the simulation object to be created.
+        operations (list): A list of operation objects that contain bounding box information.
+        i: The image to be used as a texture for the simulation object.
+    """
     oname = 'csim_' + name
 
     o = operations[0]
@@ -81,7 +95,18 @@ def createSimulationObject(name, operations, i):
 
 
 async def doSimulation(name, operations):
-    """Perform Simulation of Operations. Currently only for 3 Axis"""
+    """Perform simulation of operations for a 3-axis system.
+
+    This function iterates through a list of operations, retrieves the
+    necessary sources for each operation, and computes the bounds for the
+    operations. It then generates a simulation image based on the operations
+    and their limits, saves the image to a specified path, and finally
+    creates a simulation object in Blender using the generated image.
+
+    Args:
+        name (str): The name to be used for the simulation object.
+        operations (list): A list of operations to be simulated.
+    """
     for o in operations:
         getOperationSources(o)
     limits = getBoundsMultiple(
@@ -98,6 +123,29 @@ async def doSimulation(name, operations):
 
 
 async def generateSimulationImage(operations, limits):
+    """Generate a simulation image based on provided operations and limits.
+
+    This function creates a 2D simulation image by processing a series of
+    operations that define how the simulation should be conducted. It uses
+    the limits provided to determine the boundaries of the simulation area.
+    The function calculates the necessary resolution for the simulation
+    image based on the specified simulation detail and border width. It
+    iterates through each operation, simulating the effect of each operation
+    on the image, and updates the shape keys of the corresponding Blender
+    object to reflect the simulation results. The final output is a 2D array
+    representing the simulated image.
+
+    Args:
+        operations (list): A list of operation objects that contain details
+            about the simulation, including feed rates and other parameters.
+        limits (tuple): A tuple containing the minimum and maximum coordinates
+            (minx, miny, minz, maxx, maxy, maxz) that define the simulation
+            boundaries.
+
+    Returns:
+        np.ndarray: A 2D array representing the simulated image.
+    """
+
     minx, miny, minz, maxx, maxy, maxz = limits
     # print(minx,miny,minz,maxx,maxy,maxz)
     sx = maxx - minx
@@ -279,8 +327,28 @@ async def generateSimulationImage(operations, limits):
 
 
 def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):
-    """Simulates a Cutter Cutting Into Stock, Taking Away the Volume,
-    and Optionally Returning the Volume that Has Been Milled. This Is Now Used for Feedrate Tweaking."""
+    """Simulates a cutter cutting into stock and optionally returns the volume
+    removed.
+
+    This function takes the position of a cutter and modifies a stock image
+    by simulating the cutting process. It updates the stock image based on
+    the cutter's dimensions and position, ensuring that the stock does not
+    go below a certain level defined by the cutter's height. If requested,
+    it also calculates and returns the volume of material that has been
+    milled away.
+
+    Args:
+        xs (int): The x-coordinate of the cutter's position.
+        ys (int): The y-coordinate of the cutter's position.
+        z (float): The height of the cutter.
+        cutterArray (numpy.ndarray): A 2D array representing the cutter's shape.
+        si (numpy.ndarray): A 2D array representing the stock image to be modified.
+        getvolume (bool?): If True, the function returns the volume removed. Defaults to False.
+
+    Returns:
+        float: The volume of material removed if `getvolume` is True; otherwise,
+            returns 0.
+    """
     m = int(cutterArray.shape[0] / 2)
     size = cutterArray.shape[0]
     # whole cutter in image there
