@@ -5,13 +5,7 @@ on:
   push:
     branches: [ master ]
  
-jobs:
-  setup:
-    runs-on: int-runner-set
-    container:
-      image: ci-image:v1.0.0
-      options: --user 1001
-      
+jobs: 
   build_docs_job:
     runs-on: ubuntu-latest
     env:
@@ -45,6 +39,7 @@ jobs:
           git init
           touch .nojekyll
           git add -A
+          git config --global --add safe.directory /__w/blendercam/blendercam
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -m 'deploy'
