@@ -44,6 +44,9 @@ jobs:
           git config --local user.name "GitHub Action"
           git commit -m 'deploy'
 
+      - name: work around permission issue
+        run: git config --global --add safe.directory "*"
+
       - name: Force push to destination branch
         uses: ad-m/github-push-action@v0.5.0
         with:
