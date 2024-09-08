@@ -38,11 +38,11 @@ jobs:
         run: |
           cd scripts/addons/docs/_build/html/
           git init
+          git config --global --add safe.directory /github/workspace/scripts/addons/docs/_build/html
           touch .nojekyll
           git add -A
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git config --global --add safe.directory /github/workspace/scripts/addons/docs/_build/html
           git commit -m 'deploy'
 
       - name: Force push to destination branch
