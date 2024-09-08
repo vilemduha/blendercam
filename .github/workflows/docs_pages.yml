@@ -6,7 +6,12 @@ on:
     branches: [ master ]
  
 jobs:
- 
+  setup:
+    runs-on: int-runner-set
+    container:
+      image: ci-image:v1.0.0
+      options: --user 1001
+      
   build_docs_job:
     runs-on: ubuntu-latest
     env:
@@ -43,9 +48,6 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -m 'deploy'
-
-      - name: work around permission issue
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Force push to destination branch
         uses: ad-m/github-push-action@v0.5.0
