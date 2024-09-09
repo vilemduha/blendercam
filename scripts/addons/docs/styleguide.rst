@@ -1,4 +1,4 @@
 Style Guide
 ===========
 
-Use this style!
+(coming soon)
