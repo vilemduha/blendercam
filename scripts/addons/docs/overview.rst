@@ -4,7 +4,7 @@ Overview
 BlenderCAM's code can be broken down into categories:
 
 1. Core Functions
-2. Extra Function
+2. Extra Functions
 3. Reference Files
 4. User Interface
 5. Dependencies
