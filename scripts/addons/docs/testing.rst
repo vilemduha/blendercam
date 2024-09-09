@@ -1,4 +1,3 @@
 Test Suite
 ===========
-
-This is how tests work
+(coming soon)
