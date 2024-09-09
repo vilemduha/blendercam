@@ -30,8 +30,21 @@ from .simple import (
 
 
 def getCutterBullet(o):
-    """Cutter for Rigidbody Simulation Collisions
-        Note that Everything Is 100x Bigger for Simulation Precision."""
+    """Create a cutter for Rigidbody simulation collisions.
+
+    This function generates a 3D cutter object based on the specified cutter
+    type and parameters. It supports various cutter types including 'END',
+    'BALLNOSE', 'VCARVE', 'CYLCONE', 'BALLCONE', and 'CUSTOM'. The function
+    also applies rigid body physics to the created cutter for realistic
+    simulation in Blender.
+
+    Args:
+        o (object): An object containing properties such as cutter_type, cutter_diameter,
+            cutter_tip_angle, ball_radius, and cutter_object_name.
+
+    Returns:
+        bpy.types.Object: The created cutter object with rigid body properties applied.
+    """
 
     s = bpy.context.scene
     if s.objects.get('cutter') is not None:
@@ -161,6 +174,21 @@ def getCutterBullet(o):
 
 
 def subdivideLongEdges(ob, threshold):
+    """Subdivide edges of a mesh object that exceed a specified length.
+
+    This function iteratively checks the edges of a given mesh object and
+    subdivides those that are longer than a specified threshold. The process
+    involves toggling the edit mode of the object, selecting the long edges,
+    and applying a subdivision operation. The function continues to
+    subdivide until no edges exceed the threshold.
+
+    Args:
+        ob (bpy.types.Object): The Blender object containing the mesh to be
+            subdivided.
+        threshold (float): The length threshold above which edges will be
+            subdivided.
+    """
+
     print('Subdividing Long Edges')
     m = ob.data
     scale = (ob.scale.x + ob.scale.y + ob.scale.z) / 3
@@ -205,7 +233,21 @@ def subdivideLongEdges(ob, threshold):
 #
 
 def prepareBulletCollision(o):
-    """Prepares All Objects Needed for Sampling with Bullet Collision"""
+    """Prepares all objects needed for sampling with Bullet collision.
+
+    This function sets up the Bullet physics simulation by preparing the
+    specified objects for collision detection. It begins by cleaning up any
+    existing rigid bodies that are not part of the 'machine' object. Then,
+    it duplicates the collision objects, converts them to mesh if they are
+    curves or fonts, and applies necessary modifiers. The function also
+    handles the subdivision of long edges and configures the rigid body
+    properties for each object. Finally, it scales the 'machine' objects to
+    the simulation scale and steps through the simulation frames to ensure
+    that all objects are up to date.
+
+    Args:
+        o (Object): An object containing properties and settings for
+    """
     progress('Preparing Collisions')
 
     print(o.name)
@@ -283,6 +325,22 @@ def prepareBulletCollision(o):
 
 
 def cleanupBulletCollision(o):
+    """Clean up bullet collision objects in the scene.
+
+    This function checks for the presence of a 'machine' object in the
+    Blender scene and removes any rigid body objects that are not part of
+    the 'machine'. If the 'machine' object is present, it scales the machine
+    objects up to the simulation scale and adjusts their locations
+    accordingly.
+
+    Args:
+        o: An object that may be used in the cleanup process (specific usage not
+            detailed).
+
+    Returns:
+        None: This function does not return a value.
+    """
+
     if bpy.data.objects.find('machine') > -1:
         machinepresent = True
     else:
@@ -303,7 +361,27 @@ def cleanupBulletCollision(o):
 
 
 def getSampleBullet(cutter, x, y, radius, startz, endz):
-    """Collision Test for 3 Axis Milling. Is Simplified Compared to the Full 3D Test"""
+    """Perform a collision test for a 3-axis milling cutter.
+
+    This function simplifies the collision detection process compared to a
+    full 3D test. It utilizes the Blender Python API to perform a convex
+    sweep test on the cutter's position within a specified 3D space. The
+    function checks for collisions between the cutter and other objects in
+    the scene, adjusting for the cutter's radius to determine the effective
+    position of the cutter tip.
+
+    Args:
+        cutter (object): The milling cutter object used for the collision test.
+        x (float): The x-coordinate of the cutter's position.
+        y (float): The y-coordinate of the cutter's position.
+        radius (float): The radius of the cutter, used to adjust the collision detection.
+        startz (float): The starting z-coordinate for the collision test.
+        endz (float): The ending z-coordinate for the collision test.
+
+    Returns:
+        float: The adjusted z-coordinate of the cutter tip if a collision is detected;
+            otherwise, returns a value 10 units below the specified endz.
+    """
     scene = bpy.context.scene
     pos = scene.rigidbody_world.convex_sweep_test(cutter, (x * BULLET_SCALE, y * BULLET_SCALE, startz * BULLET_SCALE),
                                                   (x * BULLET_SCALE, y * BULLET_SCALE, endz * BULLET_SCALE))
@@ -317,7 +395,27 @@ def getSampleBullet(cutter, x, y, radius, startz, endz):
 
 
 def getSampleBulletNAxis(cutter, startpoint, endpoint, rotation, cutter_compensation):
-    """Fully 3D Collision Test for N-Axis Milling"""
+    """Perform a fully 3D collision test for N-Axis milling.
+
+    This function computes the collision detection between a cutter and a
+    specified path in a 3D space. It takes into account the cutter's
+    rotation and compensation to accurately determine if a collision occurs
+    during the milling process. The function uses Bullet physics for the
+    collision detection and returns the adjusted position of the cutter if a
+    collision is detected.
+
+    Args:
+        cutter (object): The cutter object used in the milling operation.
+        startpoint (Vector): The starting point of the milling path.
+        endpoint (Vector): The ending point of the milling path.
+        rotation (Euler): The rotation applied to the cutter.
+        cutter_compensation (float): The compensation factor for the cutter's position.
+
+    Returns:
+        Vector or None: The adjusted position of the cutter if a collision is
+            detected;
+            otherwise, returns None.
+    """
     cutterVec = Vector((0, 0, 1)) * cutter_compensation
     # cutter compensation vector - cutter physics object has center in the middle, while cam needs the tip position.
     cutterVec.rotate(Euler(rotation))

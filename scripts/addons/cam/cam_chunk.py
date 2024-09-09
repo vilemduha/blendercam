@@ -1,5 +1,5 @@
 """BlenderCAM 'chunk.py' © 2012 Vilem Novak
-
+ 
 Classes and Functions to build, store and optimize CAM path chunks.
 """
 
