@@ -1126,7 +1126,13 @@ class CamOperationCopy(Operator):
         o = scene.cam_operations[scene.cam_active_operation]
 
         for k in copyop.keys():
-            o[k] = copyop[k]
+            value = copyop[k]
+            if isinstance(value, bpy.types.PropertyGroup):
+                for subkey in value.keys():
+                    o[k][subkey] = value[subkey]
+            elif isinstance(value, (int, float, str, bool, list)):
+                o[k] = value
+       
         o.computing = False
 
         # ###get digits in the end
