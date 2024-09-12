@@ -151,8 +151,8 @@ def twist_separator_slot(length, thickness, finger_play=0.00005, percentage=0.5)
     """Generates a slot for interlocking twist separator.
 
     Args:
-        length (float): Length of groove
-        thickness (float): thickness of groove
+        length (float): Length of slot
+        thickness (float): thickness of slot
         finger_play (float): tolerance for proper fit
         percentage (float): percentage amount the twist will take (between 0 and 1)
         """
@@ -208,13 +208,7 @@ def horizontal_finger(length, thickness, finger_play, amount, center=True):
         finger_play (float): tolerance for proper fit
         center (bool): centered of not
         """
-    #   creates _wfa counterpart _wfb
-    #   _wfa is centered at 0,0
-    #   _wfb is _wfa offset by one length
-    #   takes in the
-    #   length = length of the mortise
-    #   thickness = thickness of the material
-    #   fingerplay = tolerance in length of the finger for smooth fit
+
     if center:
         for i in range(amount):
             if i == 0:
@@ -250,15 +244,6 @@ def vertical_finger(length, thickness, finger_play, amount):
         amount (int): quantity of fingers
         finger_play (float): tolerance for proper fit
         """
-
-    #   creates _vfa and it's counterpart _vfb
-    #   _vfa is starts at 0,0
-    #   _wfb is _wfa offset vertically by one length
-    #   takes in the
-    #   length = length of the mortise
-    #   thickness = thickness of the material
-    #   fingerplay = tolerance in length of the finger for smooth fit
-    #   amount = amount of fingers
 
     for i in range(amount):
         mortise(length, thickness, finger_play, 0, i * 2 *
@@ -326,7 +311,16 @@ def create_base_plate(height, width, depth):
 
 
 def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
-    #   creates pockets pocket using mortise function for kerf bending
+    """creates pockets using mortise function for kerf bending
+
+    Args:
+        length (float): Length of pocket
+        height (float): height of pocket
+        finger_thick (float): thickness of finger
+        finger_width (float): width of finger
+        pocket_width (float): width of pocket
+    """
+
     dist = 3 * finger_width / 2
     while dist < length:
         mortise(height - 2 * finger_thick, pocket_width, 0, dist, 0, pi / 2)
@@ -338,7 +332,15 @@ def make_flex_pocket(length, height, finger_thick, finger_width, pocket_width):
 
 
 def make_variable_flex_pocket(height, finger_thick, pocket_width, locations):
-    #   creates pockets pocket using mortise function for kerf bending
+    """creates pockets pocket using mortise function for kerf bending
+
+    Args:
+        height (float): height of the side
+        finger_thick (float): thickness of the finger
+        pocket_width (float): width of pocket
+        locations (tuple): coordinates for pocket
+        """
+
     for dist in locations:
         mortise(height + 2 * finger_thick, pocket_width, 0, dist, 0, pi / 2)
         simple.active_name("_flex_pocket")
@@ -348,15 +350,14 @@ def make_variable_flex_pocket(height, finger_thick, pocket_width, locations):
 
 
 def create_flex_side(length, height, finger_thick, top_bottom=False):
-    #   assumes the base fingers were created and exist
-    #   crates a flex side for mortise on curve
-    #   length = length of curve
-    #   height = height of side
-    #   finger_length = lenght of finger or mortise
-    #   finger_thick = finger thickness or thickness of material
-    #   finger_tol = Play for finger 0 is very tight
-    #   top_bottom = fingers on top and bottom if true, just on bottom if false
-    #   flex_pocket = width of pocket on the flex side.  This is for kerf bending.
+    """ crates a flex side for mortise on curve. Assumes the base fingers were created and exist
+
+    Args:
+        length (float): length of curve
+        height (float): height of side
+        finger_thick (float): finger thickness or thickness of material
+        top_bottom (bool): fingers on top and bottom if true, just on bottom if false
+    """
     if top_bottom:
         fingers = finger_pair("base", 0, height - finger_thick)
     else:
@@ -406,12 +407,16 @@ def angle_difference(a, b, c):
 
 
 def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance, base=False):
-    #   distributes mortises of a fixed distance
-    #   dynamically changes the finger tolerance with the angle differences
-    #   loop = takes in a shapely shape
-    #   finger_size = size of the mortise
-    #   finger_thick = thickness of the material
-    #   finger_tolerance = minimum finger tolerance
+    """distributes mortises of a fixed distance.  Dynamically changes the finger tolerance with the angle differences
+
+    Args:
+        loop (list of tuples): takes in a shapely shape
+        loop_length (float): length of loop
+        finger_size (float): size of the mortise
+        finger_thick (float): thickness of the material
+        finger_tolerance (float): minimum finger tolerance
+        base (bool): if base exists, it will join with it
+    """
 
     coords = list(loop.coords)
     old_mortise_angle = 0
@@ -533,14 +538,19 @@ def dslope_array(loop, resolution=0.001):
 
 def variable_finger(loop, loop_length, min_finger, finger_size, finger_thick, finger_tolerance, adaptive, base=False,
                     double_adaptive=False):
-    #   distributes mortises of a fixed distance
-    #   dynamically changes the finger tolerance with the angle differences
-    #   loop = takes in a shapely shape
-    #   finger_size = size of the mortise
-    #   finger_thick = thickness of the material
-    #   finger_tolerance = minimum finger tolerance
-    #   adaptive = angle threshold to reduce finger size
+    """Distributes mortises of a fixed distance. Dynamically changes the finger tolerance with the angle differences
 
+    Args:
+        loop (list of tuples): takes in a shapely shape
+        loop_length (float): length of loop
+        finger_size (float): size of the mortise
+        finger_thick (float): thickness of the material
+        min_finger (float): minimum finger size
+        finger_tolerance (float): minimum finger tolerance
+        adaptive (float): angle threshold to reduce finger size
+        base (bool): join with base if true
+        double_adaptive (bool): uses double adaptive algorithm if true
+"""
     coords = list(loop.coords)
     old_mortise_angle = 0
     distance = min_finger / 2
