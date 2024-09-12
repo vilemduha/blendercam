@@ -625,7 +625,7 @@ def difference(name, basename):
 
 # duplicate active object or duplicate move
 # if x or y not the default, duplicate move will be executed
-def duplicate(x=0, y=0):
+def duplicate(x=0.0, y=0.0):
     """Duplicate an active object or move it based on the provided coordinates.
 
     This function duplicates the currently active object in Blender. If both
@@ -634,12 +634,12 @@ def duplicate(x=0, y=0):
     by the specified x and y offsets.
 
     Args:
-        x (float?): The x-coordinate offset for the duplication.
+        x (float): The x-coordinate offset for the duplication.
             Defaults to 0.
-        y (float?): The y-coordinate offset for the duplication.
+        y (float): The y-coordinate offset for the duplication.
             Defaults to 0.
     """
-    if x == 0 and y == 0:
+    if x == 0.0 and y == 0.0:
         bpy.ops.object.duplicate()
     else:
         bpy.ops.object.duplicate_move(OBJECT_OT_duplicate={"linked": False, "mode": 'TRANSLATION'},
@@ -683,8 +683,8 @@ def move(x=0.0, y=0.0):
     object's location.
 
     Args:
-        x (float?): The distance to move the object along the x-axis. Defaults to 0.0.
-        y (float?): The distance to move the object along the y-axis. Defaults to 0.0.
+        x (float): The distance to move the object along the x-axis. Defaults to 0.0.
+        y (float): The distance to move the object along the y-axis. Defaults to 0.0.
     """
     bpy.ops.transform.translate(value=(x, y, 0.0))
     bpy.ops.object.transform_apply(location=True)
@@ -758,14 +758,10 @@ def add_bound_rectangle(xmin, ymin, xmax, ymax, name='bounds_rectangle'):
         ymin (float): The minimum y-coordinate of the rectangle.
         xmax (float): The maximum x-coordinate of the rectangle.
         ymax (float): The maximum y-coordinate of the rectangle.
-        name (str?): The name of the resulting rectangle object. Defaults to
+        name (str): The name of the resulting rectangle object. Defaults to
             'bounds_rectangle'.
     """
-    # xmin = minimum corner x value
-    # ymin = minimum corner y value
-    # xmax = maximum corner x value
-    # ymax = maximum corner y value
-    # name = name of the resulting object
+
     xsize = xmax - xmin
     ysize = ymax - ymin
 
