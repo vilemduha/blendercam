@@ -100,13 +100,6 @@ def gear_q7(f, r, b, r2, t, s):
 def gear_q6(b, s, t, d):
     return gear_polar(d, s * (gear_iang(b, d) + t))
 
-# mm_per_tooth = this is the "circular pitch", the circumference of the pitch circle divided by the number of teeth
-# number_of_teeth = total number of teeth around the entire perimeter
-# hole_diameter =  diameter of the hole in the center, in mm
-# pressure_angle = Controls how straight or bulged the tooth sides are. In radians.
-# clearance = gap between top of a tooth on one gear and bottom of valley on a meshing gear( in millimeters)
-# backlash = gap between two meshing teeth, in the direction along the  circumference of the pitch circle
-
 
 def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
          pressure_angle=0.3488, clearance=0.0, backlash=0.0, rim_size=0.0005, hub_diameter=0.006, spokes=4):

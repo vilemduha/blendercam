@@ -538,7 +538,7 @@ class CamCurvePlate(Operator):
 
 
 class CamCurveFlatCone(Operator):
-    """Perform Generates Rounded Plate with Mounting Holes"""  # by Alain Pelletier Sept 2021
+    """Generates cone from flat stock"""  # by Alain Pelletier Sept 2021
     bl_idname = "object.curve_flat_cone"
     bl_label = "Cone Flat Calculator"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}

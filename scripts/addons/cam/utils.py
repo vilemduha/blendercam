@@ -1823,7 +1823,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
                 print('Joining')
                 p = sops.unary_union(bigshapes)
 
-            print(time.time() - t)
+            print("time:",time.time() - t)
 
             t = time.time()
             silhouete = shapelyToMultipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
