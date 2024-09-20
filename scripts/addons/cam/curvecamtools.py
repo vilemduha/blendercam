@@ -842,7 +842,7 @@ class CamOffsetSilhouete(Operator):
         return context.window_manager.invoke_props_dialog(self)
 
     # Finds object silhouette, usefull for meshes, since with curves it's not needed.
-'''class CamObjectSilhouete(Operator):
+class CamObjectSilhouete(Operator):
     """Object Silhouette"""
     bl_idname = "object.silhouete"
     bl_label = "Object Silhouette"
@@ -871,7 +871,7 @@ class CamOffsetSilhouete(Operator):
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
         bpy.ops.object.curve_remove_doubles()
-        return {'FINISHED'}'''
+        return {'FINISHED'}
     # ---------------------------------------------------
 
 
