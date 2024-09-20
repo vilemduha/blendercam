@@ -608,29 +608,27 @@ class CamCurveRemoveDoubles(Operator):
     def execute(self, context):
         obj = bpy.context.selected_objects
         for ob in obj:
-            if ob.type == 'CURVE' and ob.data.splines[0].type == 'BEZIER':
-                if self.keep_bezier:
-                    bpy.ops.curvetools.operatorsplinesremoveshort()
-                    bpy.context.view_layer.objects.active = ob
-                    ob.data.resolution_u = 64
-                    if bpy.context.mode == 'OBJECT':
+            if ob.type == 'CURVE':
+                if ob.data.splines[0].type == 'BEZIER':
+                    if self.keep_bezier:
+                        bpy.ops.curvetools.operatorsplinesremoveshort()
+                        bpy.context.view_layer.objects.active = ob
+                        ob.data.resolution_u = 64
+                        if bpy.context.mode == 'OBJECT':
+                            bpy.ops.object.editmode_toggle()
+                        bpy.ops.curve.select_all()
+                        bpy.ops.curve.remove_double(distance=self.merg_distance)
                         bpy.ops.object.editmode_toggle()
-                    bpy.ops.curve.select_all()
-                    bpy.ops.curve.remove_double(distance=self.merg_distance)
-                    bpy.ops.object.editmode_toggle()
                 else:
-                    mode = False
-                    if ob.type == 'CURVE' and bpy.context.mode == 'EDIT_CURVE':
+                    if bpy.context.mode == 'EDIT_CURVE':
                         bpy.ops.object.editmode_toggle()
-                        mode = True
                     bpy.ops.object.convert(target='MESH')
                     bpy.ops.object.editmode_toggle()
-                    bpy.ops.mesh.select_all(action='TOGGLE')
+                    bpy.ops.mesh.select_all(action='SELECT')
                     bpy.ops.mesh.remove_doubles(threshold= self.merg_distance)
                     bpy.ops.object.editmode_toggle()
                     bpy.ops.object.convert(target='CURVE')
-                    if mode:
-                        bpy.ops.object.editmode_toggle()
+                       
         return {'FINISHED'}
 
     def draw(self, context):
@@ -844,36 +842,36 @@ class CamOffsetSilhouete(Operator):
         return context.window_manager.invoke_props_dialog(self)
 
     # Finds object silhouette, usefull for meshes, since with curves it's not needed.
-    '''class CamObjectSilhouete(Operator):
-        """Object Silhouette"""
-        bl_idname = "object.silhouete"
-        bl_label = "Object Silhouette"
-        bl_options = {'REGISTER', 'UNDO'}
+'''class CamObjectSilhouete(Operator):
+    """Object Silhouette"""
+    bl_idname = "object.silhouete"
+    bl_label = "Object Silhouette"
+    bl_options = {'REGISTER', 'UNDO'}
 
-        @classmethod
-        def poll(cls, context):
-            #        return context.active_object is not None and (context.active_object.type == 'CURVE'
-            #        or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
-            return context.active_object is not None and (
-                context.active_object.type == 'FONT' or
-                context.active_object.type == 'MESH')
+    @classmethod
+    def poll(cls, context):
+        #        return context.active_object is not None and (context.active_object.type == 'CURVE'
+        #        or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
+        return context.active_object is not None and (
+            context.active_object.type == 'FONT' or
+            context.active_object.type == 'MESH')
 
-        # this is almost same as getobjectoutline, just without the need of operation data
-        def execute(self, context):
-            ob = bpy.context.active_object
-            self.silh = utils.getObjectSilhouete(
-                'OBJECTS', objects=bpy.context.selected_objects)
-            bpy.context.scene.cursor.location = (0, 0, 0)
-            # smp=sgeometry.asMultiPolygon(self.silh)
-            for smp in self.silh.geoms:
-                polygon_utils_cam.shapelyToCurve(
-                    ob.name + '_silhouette', smp, 0)  #
-            # bpy.ops.object.convert(target='CURVE')
-            simple.join_multiple(ob.name + '_silhouette')
-            bpy.context.scene.cursor.location = ob.location
-            bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
-            bpy.ops.object.curve_remove_doubles()
-            return {'FINISHED'}'''
+    # this is almost same as getobjectoutline, just without the need of operation data
+    def execute(self, context):
+        ob = bpy.context.active_object
+        self.silh = utils.getObjectSilhouete(
+            'OBJECTS', objects=bpy.context.selected_objects)
+        bpy.context.scene.cursor.location = (0, 0, 0)
+        # smp=sgeometry.asMultiPolygon(self.silh)
+        for smp in self.silh.geoms:
+            polygon_utils_cam.shapelyToCurve(
+                ob.name + '_silhouette', smp, 0)  #
+        # bpy.ops.object.convert(target='CURVE')
+        simple.join_multiple(ob.name + '_silhouette')
+        bpy.context.scene.cursor.location = ob.location
+        bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+        bpy.ops.object.curve_remove_doubles()
+        return {'FINISHED'}'''
     # ---------------------------------------------------
 
 
