@@ -171,7 +171,7 @@ async def generateSimulationImage(operations, limits):
 
         if o.do_simulation_feedrate:
             kname = 'feedrates'
-            m.use_customdata_edge_crease = True
+            m.attributes.new(".edge_creases","FLOAT","EDGE")
 
             if m.shape_keys is None or m.shape_keys.key_blocks.find(kname) == -1:
                 ob.shape_key_add()
@@ -317,7 +317,7 @@ async def generateSimulationImage(operations, limits):
                 else:
                     d.co.z = scale_graph * 1
                 if i < totverts - 1:
-                    m.edges[i].crease = d.co.y / (normal_load * 4)
+                    m.attributes[".edge_creases"].data[i].value = d.co.y / (normal_load * 4)
 
     si = si[borderwidth:-borderwidth, borderwidth:-borderwidth]
     si += -minz
