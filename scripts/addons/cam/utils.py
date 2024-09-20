@@ -1754,7 +1754,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
         shapely.geometry.MultiPolygon: The computed silhouette as a Shapely MultiPolygon.
     """
 
-    # o=operation
+    print("stype",stype)
     if stype == 'CURVES':  # curve conversion to polygon format
         allchunks = []
         for ob in objects:
@@ -1768,11 +1768,11 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             totfaces += len(ob.data.polygons)
 
         if totfaces < 20000000:  # boolean polygons method originaly was 20 000 poly limit, now limitless,
-            # it might become teribly slow, but who cares?
             t = time.time()
             print('Shapely Getting Silhouette')
             polys = []
             for ob in objects:
+                print("object",ob)
                 if use_modifiers:
                     ob = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
                     m = ob.to_mesh()
