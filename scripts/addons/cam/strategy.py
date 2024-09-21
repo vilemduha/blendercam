@@ -118,7 +118,7 @@ async def cutout(o):
 
     for ob in o.objects:
         if ob.type == 'CURVE':
-            if ob.data.splines[0].type == 'BEZIER':
+            if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
                 activate(ob)
                 bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
             else:
@@ -433,7 +433,7 @@ async def pocket(o):
     print("Cutter Offset", c_offset)
     for ob in o.objects:
         if ob.type == 'CURVE':
-            if ob.data.splines[0].type == 'BEZIER':
+            if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
                 activate(ob)
                 bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
             else:
@@ -792,7 +792,7 @@ async def medial_axis(o):
 
     for ob in o.objects:
         if ob.type == 'CURVE':
-            if ob.data.splines[0].type == 'BEZIER':
+            if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
                 activate(ob)
                 bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
             else:
