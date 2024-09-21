@@ -609,16 +609,16 @@ class CamCurveRemoveDoubles(Operator):
         obj = bpy.context.selected_objects
         for ob in obj:
             if ob.type == 'CURVE':
-                if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
-                    if self.keep_bezier:
-                        bpy.ops.curvetools.operatorsplinesremoveshort()
-                        bpy.context.view_layer.objects.active = ob
-                        ob.data.resolution_u = 64
-                        if bpy.context.mode == 'OBJECT':
+                if self.keep_bezier:
+                    if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
+                            bpy.ops.curvetools.operatorsplinesremoveshort()
+                            bpy.context.view_layer.objects.active = ob
+                            ob.data.resolution_u = 64
+                            if bpy.context.mode == 'OBJECT':
+                                bpy.ops.object.editmode_toggle()
+                            bpy.ops.curve.select_all()
+                            bpy.ops.curve.remove_double(distance=self.merg_distance)
                             bpy.ops.object.editmode_toggle()
-                        bpy.ops.curve.select_all()
-                        bpy.ops.curve.remove_double(distance=self.merg_distance)
-                        bpy.ops.object.editmode_toggle()
                 else:
                     if bpy.context.mode == 'EDIT_CURVE':
                         bpy.ops.object.editmode_toggle()
