@@ -1159,7 +1159,7 @@ def silhoueteOffset(context, offset, style=1, mitrelimit=1.0):
     print(offset, style)
     mp = mp.buffer(offset, cap_style=1, join_style=style, resolution=16, mitre_limit=mitrelimit)
     shapelyToCurve(ob.name + '_offset_' + str(round(offset, 5)), mp, ob.location.z)
-
+    bpy.ops.object.curve_remove_doubles()
     return {'FINISHED'}
 
 
@@ -1804,7 +1804,7 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
                                 # polys.append(p)
                                 polys.append(p.buffer(e, resolution=0))
                         id += 1
-
+            ob.select_set(False)
             if totfaces < 20000:
                 p = sops.unary_union(polys)
             else:

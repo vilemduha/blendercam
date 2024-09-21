@@ -798,9 +798,11 @@ class CamOffsetSilhouete(Operator):
     def execute(self, context):
         # bpy.ops.object.curve_remove_doubles()
         ob = context.active_object
+        if ob.type == 'FONT':
+            bpy.context.object.data.resolution_u = 64
         if ob.type == 'CURVE':
             if ob.data.splines[0].type == 'BEZIER':
-                bpy.context.object.data.resolution_u = 100
+                bpy.context.object.data.resolution_u = 64
                 bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
             else:
                 bpy.ops.object.curve_remove_doubles()
@@ -809,7 +811,6 @@ class CamOffsetSilhouete(Operator):
             obj = context.active_object
             bpy.ops.object.transform_apply(
                 location=True, rotation=True, scale=True)  # apply all transforms
-            bpy.context.object.data.resolution_u = 100
             bpy.ops.object.convert(target='MESH')
             bpy.context.active_object.name = "temp_mesh"
 
