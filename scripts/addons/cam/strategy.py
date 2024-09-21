@@ -121,6 +121,12 @@ async def cutout(o):
             if ob.data.splines[0].type == 'BEZIER':
                 activate(ob)
                 bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+            elif len(ob.data.splines[0].points) <= 2:
+                bpy.ops.object.curve_remove_doubles()
+                bpy.ops.object.editmode_toggle()
+                bpy.ops.curve.select_all(action='SELECT')
+                bpy.ops.curve.subdivide()
+                bpy.ops.object.editmode_toggle()
             else:
                 bpy.ops.object.curve_remove_doubles()
             
