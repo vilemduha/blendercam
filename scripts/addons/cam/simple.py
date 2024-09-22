@@ -862,5 +862,5 @@ def subdivide_short_lines(co):
             for pt in sp.points:
                 pt.select = True
             bpy.ops.curve.subdivide()
-        bpy.ops.object.editmode_toggle()
+    bpy.ops.object.editmode_toggle()
     bpy.ops.object.select_all(action='SELECT')
