@@ -32,63 +32,123 @@ from . import (
     utils,
 )
 
+def generate_crosshatch(context, angle, distance, offset, height, pocket_type, hull, contour, contour_separate):
+    """Execute the crosshatch generation process based on the provided context.
 
+    This method performs a series of operations to create a crosshatch
+    pattern from the active object in the given context. It begins by
+    removing any existing crosshatch elements, setting the object's origin,
+    and determining its dimensions. Depending on the specified parameters,
+    it generates a convex hull, calculates the necessary coordinates for the
+    crosshatch lines, and applies transformations such as rotation and
+    translation. The method also handles intersections with specified bounds
+    or curves and can create contours based on additional settings.
+
+    Args:
+        context (bpy.context): The Blender context containing the active object
+
+    Returns:
+        dict: A dictionary indicating the completion status of the operation,
+        typically {'FINISHED'}.
+    """    
+    simple.remove_multiple("crosshatch")
+    ob = context.active_object
+    ob.select_set(True)
+
+    if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
+        bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+    else:
+        bpy.ops.object.curve_remove_doubles()
+    
+    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+    depth = ob.location[2]
+
+    if hull:
+        bpy.ops.object.convex_hull()
+        simple.active_name('crosshatch_hull')
+    
+    from shapely import affinity
+    shapes = utils.curveToShapely(bpy.context.active_object)
+
+    coords = []
+    minx, miny, maxx, maxy = shapes.bounds
+    minx -= offset
+    miny -= offset
+    maxx += offset
+    maxy += offset
+    centery = (miny + maxy) / 2
+    length = maxy - miny
+    width = maxx - minx
+    centerx = (minx + maxx) / 2
+    diagonal = hypot(width, length)
+    simple.add_bound_rectangle(minx, miny, maxx, maxy, 'crosshatch_bound')
+    amount = int(2 * diagonal / distance) + 1
+
+    for x in range(amount):
+        distance_val = x * distance - diagonal
+        coords.append(((distance_val, diagonal + 0.5), (distance_val, -diagonal - 0.5)))
+
+    # Create a multilinestring shapely object
+    lines = MultiLineString(coords)
+    rotated = affinity.rotate(lines, angle, use_radians=True)  # Rotate using shapely
+    rotated_minx, rotated_miny, rotated_maxx, rotated_maxy = rotated.bounds
+    rotated_centerx = (rotated_minx + rotated_maxx) / 2
+    rotated_centery = (rotated_miny + rotated_maxy) / 2
+    x_offset = centerx - rotated_centerx
+    y_offset = centery - rotated_centery
+    translated = affinity.translate(rotated, xoff=x_offset, yoff=y_offset)  # Move using shapely
+
+    simple.make_active('crosshatch_bound')
+    bounds = simple.active_to_shapely_poly()
+
+    if pocket_type == 'BOUNDS':
+        # Shapely detects intersections with the square bounds
+        xing = translated.intersection(bounds)
+    else:
+        xing = translated.intersection(shapes.buffer(offset))  # Shapely detects intersections
+
+    utils.shapelyToCurve('crosshatch_lines', xing, height)
+
+    # Remove temporary shapes
+    simple.remove_multiple('crosshatch_bound')
+    simple.remove_multiple('crosshatch_hull')
+    simple.select_multiple('crosshatch')
+    bpy.ops.object.editmode_toggle()
+    bpy.ops.curve.select_all(action='SELECT')
+    bpy.ops.curve.subdivide()
+    bpy.ops.object.editmode_toggle()
+    simple.join_multiple('crosshatch')
+    simple.remove_doubles()
+
+    # Add contour
+    if contour:
+        simple.deselect()
+        bpy.context.view_layer.objects.active = ob
+        ob.select_set(True)
+        bpy.ops.object.silhouete_offset(offset=offset)
+        if contour_separate:
+            simple.active_name('contour_hatch')
+            simple.deselect()
+        else:
+            simple.active_name('crosshatch_contour')
+            simple.join_multiple('crosshatch')
+            simple.remove_doubles()
+
+    return {'FINISHED'}
 class CamCurveHatch(Operator):
     """Perform Hatch Operation on Single or Multiple Curves"""  # by Alain Pelletier September 2021
     bl_idname = "object.curve_hatch"
     bl_label = "CrossHatch Curve"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
-    angle: FloatProperty(
-        name="Angle",
-        default=0,
-        min=-pi/2,
-        max=pi/2,
-        precision=4,
-        subtype="ANGLE",
-    )
-    distance: FloatProperty(
-        name="Spacing",
-        default=0.015,
-        min=0,
-        max=3.0,
-        precision=4,
-        unit="LENGTH",
-    )
-    offset: FloatProperty(
-        name="Margin",
-        default=0.001,
-        min=-1.0,
-        max=3.0,
-        precision=4,
-        unit="LENGTH",
-    )
-    height: FloatProperty(
-        name="Height",
-        default=0.000,
-        min=-1.0,
-        max=1.0,
-        precision=4,
-        unit="LENGTH",
-    )
-    amount: IntProperty(
-        name="Amount",
-        default=10,
-        min=1,
-        max=10000,
-    )
-    hull: BoolProperty(
-        name="Convex Hull",
-        default=False,
-    )
-    contour: BoolProperty(
-        name="Contour Curve",
-        default=False,
-    )
-    contour_separate: BoolProperty(
-        name="Contour Separate",
-        default=False,
-    )
+    angle: FloatProperty(default=0, min=-pi/2, max=pi/2, precision=4, subtype="ANGLE")
+    distance: FloatProperty(default=0.003, min=0, max=3.0, precision=4, unit="LENGTH")
+    offset: FloatProperty(default=0, min=-1.0, max=3.0, precision=4, unit="LENGTH")
+    height: FloatProperty(default=0.000, min=-1.0, max=1.0, precision=4, unit="LENGTH")
+    amount: IntProperty(default=10, min=1, max=10000)
+    hull: BoolProperty(default=False)
+    contour: BoolProperty(default=False)
+    contour_separate: BoolProperty(default=False)
     pocket_type: EnumProperty(
         name='Type Pocket',
         items=(
@@ -96,13 +156,17 @@ class CamCurveHatch(Operator):
             ('POCKET', 'Pocket', 'Makes a pocket inside a closed loop')
         ),
         description='Type of pocket',
-        default='BOUNDS',
+        default='POCKET',
     )
 
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
-
+    def invoke(self, context, event):
+        """Set height to the active object's Z location when the operator is invoked."""
+        if context.active_object is not None:
+            self.height = context.active_object.location.z
+        return self.execute(context)
     def draw(self, context):
         """Draw the layout properties for the given context.
 
@@ -116,13 +180,11 @@ class CamCurveHatch(Operator):
             context: The context in which the layout is drawn, typically
                 provided by the calling environment.
         """
-
         layout = self.layout
         layout.prop(self, 'angle')
         layout.prop(self, 'distance')
         layout.prop(self, 'offset')
         layout.prop(self, 'height')
-
         layout.prop(self, 'pocket_type')
         if self.pocket_type == 'POCKET':
             if self.hull:
@@ -136,101 +198,17 @@ class CamCurveHatch(Operator):
                 layout.prop(self, 'contour')
 
     def execute(self, context):
-        """Execute the crosshatch generation process based on the provided context.
-
-        This method performs a series of operations to create a crosshatch
-        pattern from the active object in the given context. It begins by
-        removing any existing crosshatch elements, setting the object's origin,
-        and determining its dimensions. Depending on the specified parameters,
-        it generates a convex hull, calculates the necessary coordinates for the
-        crosshatch lines, and applies transformations such as rotation and
-        translation. The method also handles intersections with specified bounds
-        or curves and can create contours based on additional settings.
-
-        Args:
-            context (bpy.context): The Blender context containing the active object
-
-        Returns:
-            dict: A dictionary indicating the completion status of the operation,
-            typically {'FINISHED'}.
-        """
-
-        simple.remove_multiple("crosshatch")
-        ob = context.active_object
-        ob.select_set(True)
-        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
-        depth = ob.location[2]
-        if self.hull:
-            bpy.ops.object.convex_hull()
-            simple.active_name('crosshatch_hull')
-        from shapely import affinity
-        shapes = utils.curveToShapely(bpy.context.active_object)
-        for s in shapes.geoms:
-            coords = []
-            minx, miny, maxx, maxy = s.bounds
-            minx -= self.offset
-            miny -= self.offset
-            maxx += self.offset
-            maxy += self.offset
-            centery = (miny + maxy) / 2
-            height = maxy - miny
-            width = maxx - minx
-            centerx = (minx+maxx) / 2
-            diagonal = hypot(width, height)
-            simple.add_bound_rectangle(
-                minx, miny, maxx, maxy, 'crosshatch_bound')
-            amount = int(2*diagonal/self.distance) + 1
-
-            for x in range(amount):
-                distance = x * self.distance - diagonal
-                coords.append(((distance, diagonal + 0.5),
-                               (distance, -diagonal - 0.5)))
-
-            # create a multilinestring shapely object
-            lines = MultiLineString(coords)
-            rotated = affinity.rotate(
-                lines, self.angle, use_radians=True)  # rotate using shapely
-            translated = affinity.translate(
-                rotated, xoff=centerx, yoff=centery)  # move using shapely
-
-            simple.make_active('crosshatch_bound')
-            bounds = simple.active_to_shapely_poly()
-
-            if self.pocket_type == 'BOUNDS':
-                # Shapely detects intersections with the square bounds
-                xing = translated.intersection(bounds)
-            else:
-                xing = translated.intersection(s.buffer(self.offset))
-                # Shapely detects intersections with the original curve or hull
-
-            utils.shapelyToCurve('crosshatch_lines', xing, self.height)
-
-        # remove temporary shapes
-        simple.remove_multiple('crosshatch_bound')
-        simple.remove_multiple('crosshatch_hull')
-        simple.select_multiple('crosshatch')
-        bpy.ops.object.editmode_toggle()
-        bpy.ops.curve.select_all(action='SELECT')
-        bpy.ops.curve.subdivide()
-        bpy.ops.object.editmode_toggle()
-        simple.join_multiple('crosshatch')
-        simple.remove_doubles()
-
-        # add contour
-        if self.contour:
-            simple.deselect()
-            bpy.context.view_layer.objects.active = ob
-            ob.select_set(True)
-            bpy.ops.object.silhouete_offset(offset=self.offset)
-            if self.contour_separate:
-                simple.active_name('contour_hatch')
-                simple.deselect()
-            else:
-                simple.active_name('crosshatch_contour')
-                simple.join_multiple('crosshatch')
-                simple.remove_doubles()
-
-        return {'FINISHED'}
+        return generate_crosshatch(
+            context,
+            self.angle,
+            self.distance,
+            self.offset,
+            self.height,
+            self.pocket_type,
+            self.hull,
+            self.contour,
+            self.contour_separate
+        )
 
 
 class CamCurvePlate(Operator):
