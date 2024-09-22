@@ -609,16 +609,16 @@ class CamCurveRemoveDoubles(Operator):
         obj = bpy.context.selected_objects
         for ob in obj:
             if ob.type == 'CURVE':
-                if ob.data.splines[0].type == 'BEZIER':
-                    if self.keep_bezier:
-                        bpy.ops.curvetools.operatorsplinesremoveshort()
-                        bpy.context.view_layer.objects.active = ob
-                        ob.data.resolution_u = 64
-                        if bpy.context.mode == 'OBJECT':
+                if self.keep_bezier:
+                    if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
+                            bpy.ops.curvetools.operatorsplinesremoveshort()
+                            bpy.context.view_layer.objects.active = ob
+                            ob.data.resolution_u = 64
+                            if bpy.context.mode == 'OBJECT':
+                                bpy.ops.object.editmode_toggle()
+                            bpy.ops.curve.select_all()
+                            bpy.ops.curve.remove_double(distance=self.merg_distance)
                             bpy.ops.object.editmode_toggle()
-                        bpy.ops.curve.select_all()
-                        bpy.ops.curve.remove_double(distance=self.merg_distance)
-                        bpy.ops.object.editmode_toggle()
                 else:
                     if bpy.context.mode == 'EDIT_CURVE':
                         bpy.ops.object.editmode_toggle()
@@ -634,7 +634,8 @@ class CamCurveRemoveDoubles(Operator):
     def draw(self, context):
         layout = self.layout
         obj = context.active_object
-        if obj.type == 'CURVE' and obj.data.splines[0].type == 'BEZIER':
+        if obj.type == 'CURVE': 
+            if obj.data.splines and obj.data.splines[0].type == 'BEZIER':
                 layout.prop(self, "keep_bezier", text="Keep Bezier")
         layout.prop(self, "merg_distance", text="Merge Distance")
 
@@ -801,7 +802,7 @@ class CamOffsetSilhouete(Operator):
         if ob.type == 'FONT':
             bpy.context.object.data.resolution_u = 64
         if ob.type == 'CURVE':
-            if ob.data.splines[0].type == 'BEZIER':
+            if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
                 bpy.context.object.data.resolution_u = 64
                 bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
             else:
