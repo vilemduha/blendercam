@@ -854,14 +854,13 @@ def subdivide_short_lines(co):
     Args:
         co (Object): A curve object to be analyzed and modified.
     """
-    if bpy.context.active_object.mode != 'EDIT':
-        bpy.ops.object.mode_set(mode="EDIT")
+
+    bpy.ops.object.mode_set(mode="EDIT")
     for sp in co.data.splines:
-        if len(sp.points) <= 2 and sp.type != 'BEZIER':
+        if len(sp.points) == 2 and sp.type != 'BEZIER':
             bpy.ops.curve.select_all(action='DESELECT')
             for pt in sp.points:
                 pt.select = True
             bpy.ops.curve.subdivide()
-    if bpy.context.active_object.mode == 'EDIT':
         bpy.ops.object.editmode_toggle()
     bpy.ops.object.select_all(action='SELECT')
