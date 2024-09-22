@@ -841,3 +841,27 @@ def active_to_shapely_poly():
     """
     # convert coordinates to shapely Polygon datastructure
     return Polygon(active_to_coords())
+
+
+#checks for curve splines shorter than three points and subdivides if necessary
+def subdivide_short_lines(co):
+    """Subdivide all polylines to have at least three points.
+
+    This function iterates through the splines of a curve, checks if they are not bezier 
+    and if they have less or equal to two points. If so, each spline is subdivided to get
+    at least three points.
+
+    Args:
+        co (Object): A curve object to be analyzed and modified.
+    """
+    if bpy.context.active_object.mode != 'EDIT':
+        bpy.ops.object.mode_set(mode="EDIT")
+    for sp in co.data.splines:
+        if len(sp.points) <= 2 and sp.type != 'BEZIER':
+            bpy.ops.curve.select_all(action='DESELECT')
+            for pt in sp.points:
+                pt.select = True
+            bpy.ops.curve.subdivide()
+    if bpy.context.active_object.mode == 'EDIT':
+        bpy.ops.object.editmode_toggle()
+    bpy.ops.object.select_all(action='SELECT')

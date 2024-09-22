@@ -49,6 +49,7 @@ from .simple import (
     join_multiple,
     progress,
     remove_multiple,
+    subdivide_short_lines,
 )
 from .utils import (
     Add_Pocket,
@@ -121,14 +122,10 @@ async def cutout(o):
             if ob.data.splines[0].type == 'BEZIER':
                 activate(ob)
                 bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
-            elif len(ob.data.splines[0].points) <= 2:
-                bpy.ops.object.curve_remove_doubles()
-                bpy.ops.object.editmode_toggle()
-                bpy.ops.curve.select_all(action='SELECT')
-                bpy.ops.curve.subdivide()
-                bpy.ops.object.editmode_toggle()
             else:
                 bpy.ops.object.curve_remove_doubles()
+            #make sure all polylines are at least three points long
+            subdivide_short_lines(ob)
             
     if o.cut_type == 'ONLINE' and o.onlycurves:  # is separate to allow open curves :)
         print('separate')
@@ -289,6 +286,8 @@ async def curve(o):
         raise CamException("All Objects Must Be Curves for This Operation.")
 
     for ob in o.objects:
+        #make sure all polylines are at least three points long
+        subdivide_short_lines(ob)
         # make the chunks from curve here
         pathSamples.extend(curveToChunks(ob))
     # sort before sampling
