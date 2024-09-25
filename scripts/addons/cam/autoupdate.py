@@ -132,7 +132,7 @@ class Updater(bpy.types.Operator):
         return {'FINISHED'}
 
     def install_zip_from_url(self, zip_url):
-        addon_prefs = context.preferences.addons[__package__].preferences
+        addon_prefs = bpy.context.preferences.addons[__package__].preferences
         with urlopen(zip_url) as zip_response:
             zip_body = zip_response.read()
             buffer = io.BytesIO(zip_body)
