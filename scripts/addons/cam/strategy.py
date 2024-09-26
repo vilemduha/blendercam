@@ -65,7 +65,9 @@ from .utils import (
     sortChunks,
     unique,
 )
-
+from .curvecamcreate import(
+    generate_crosshatch
+)
 
 SHAPELY = True
 
@@ -443,46 +445,59 @@ async def pocket(o):
                 bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
             else:
                 bpy.ops.object.curve_remove_doubles()
-
-    p = getObjectOutline(c_offset, o, False)
-    approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
-    print("Approximative:" + str(approxn))
-    print(o)
-
-    i = 0
-    chunks = []
     chunksFromCurve = []
-    lastchunks = []
-    centers = None
-    firstoutline = p  # for testing in the end.
-    prest = p.buffer(-c_offset, o.optimisation.circle_detail)
-
-    while not p.is_empty:
-        if o.pocketToCurve:
-            # make a curve starting with _3dpocket
-            shapelyToCurve('3dpocket', p, 0.0)
-
-        nchunks = shapelyToChunks(p, o.min.z)
-        # print("nchunks")
-        pnew = p.buffer(-o.dist_between_paths, o.optimisation.circle_detail)
-        if pnew.is_empty:
-
-            # test if the last curve will leave material
-            pt = p.buffer(-c_offset, o.optimisation.circle_detail)
-            if not pt.is_empty:
-                pnew = pt
-        # print("pnew")
-
-        nchunks = limitChunks(nchunks, o)
+    # Parallel lines is disabled until finish
+    use_parallel =False
+    if use_parallel:
+        angle = 45 
+        distance = o.dist_between_paths
+        offset = -c_offset
+        pocket_shape = ""
+        # Call the crosshatch generation function
+        crosshatch_result = generate_crosshatch(bpy.context, angle, distance, offset, pocket_shape)
+        
+        # Convert crosshatch result into chunks
+        nchunks = shapelyToChunks(crosshatch_result, o.min.z)
         chunksFromCurve.extend(nchunks)
-        parentChildDist(lastchunks, nchunks, o)
-        lastchunks = nchunks
+    else:
+        p = getObjectOutline(c_offset, o, False)
+        approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
+        print("Approximative:" + str(approxn))
+        print(o)
 
-        percent = int(i / approxn * 100)
-        progress('Outlining Polygons ', percent)
-        p = pnew
+        i = 0
+        chunks = []
+        lastchunks = []
+        centers = None
+        firstoutline = p  # for testing in the end.
+        prest = p.buffer(-c_offset, o.optimisation.circle_detail)
 
-        i += 1
+        while not p.is_empty:
+            if o.pocketToCurve:
+                # make a curve starting with _3dpocket
+                shapelyToCurve('3dpocket', p, 0.0)
+
+            nchunks = shapelyToChunks(p, o.min.z)
+            # print("nchunks")
+            pnew = p.buffer(-o.dist_between_paths, o.optimisation.circle_detail)
+            if pnew.is_empty:
+
+                # test if the last curve will leave material
+                pt = p.buffer(-c_offset, o.optimisation.circle_detail)
+                if not pt.is_empty:
+                    pnew = pt
+            # print("pnew")
+
+            nchunks = limitChunks(nchunks, o)
+            chunksFromCurve.extend(nchunks)
+            parentChildDist(lastchunks, nchunks, o)
+            lastchunks = nchunks
+
+            percent = int(i / approxn * 100)
+            progress('Outlining Polygons ', percent)
+            p = pnew
+
+            i += 1
 
     # if (o.poc)#TODO inside outside!
     if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
