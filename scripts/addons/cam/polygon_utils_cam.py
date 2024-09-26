@@ -186,7 +186,7 @@ def shapelyToCoords(anydata):
     return seq
 
 
-def shapelyToCurve(name, p, z):
+def shapelyToCurve(name, p, z, cyclic = True):
     """Create a 3D curve object in Blender from a Shapely geometry.
 
     This function takes a Shapely geometry and converts it into a 3D curve
@@ -236,6 +236,6 @@ def shapelyToCurve(name, p, z):
     objectdata.select_set(state=True)
 
     for c in objectdata.data.splines:
-        c.use_cyclic_u = True
+        c.use_cyclic_u = cyclic
 
     return objectdata  # bpy.context.active_object

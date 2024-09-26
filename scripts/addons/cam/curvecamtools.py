@@ -777,16 +777,37 @@ class CamOffsetSilhouete(Operator):
         unit="LENGTH",
     )
     style: EnumProperty(
-        name="Type of Curve",
+        name="Corner Type",
         items=(
             ('1', 'Round', ''),
             ('2', 'Mitre', ''),
             ('3', 'Bevel', '')
         ),
     )
-    opencurve: BoolProperty(
-        name="Dialate Open Curve",
-        default=False,
+    caps: EnumProperty(
+        name="Cap Type",
+        items=(
+            ('round', 'Round', ''),
+            ('square', 'Square', ''),
+            ('flat', 'Flat', '')
+        ),
+    )
+    align: EnumProperty(
+        name="Alignment",
+        items=(
+            ('worldxy', 'World XY', ''),
+            ('bottom', 'Base Bottom', ''),
+            ('top', 'Base Top', '')
+        ),
+    )
+    opentype: EnumProperty(
+        name="Curve Type",
+        items=(
+            ('dilate', 'Dilate open curve', ''),
+            ('leaveopen', 'Leave curve open', ''),
+            ('closecurve', 'Close curve', '')
+        ),
+        default='closecurve'
     )
 
     @classmethod
@@ -794,6 +815,21 @@ class CamOffsetSilhouete(Operator):
         return context.active_object is not None and (
             context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or
             context.active_object.type == 'MESH')
+
+    def isStraight(self, geom):
+        assert geom.geom_type == "LineString", geom.geom_type
+        length = geom.length
+        start_pt = geom.interpolate(0)
+        end_pt = geom.interpolate(1, normalized=True)
+        straight_dist = start_pt.distance(end_pt)
+        if straight_dist == 0.0:
+            if length == 0.0:
+                return True
+            return False
+        elif length / straight_dist == 1:
+            return True
+        else:
+            return False
 
     # this is almost same as getobjectoutline, just without the need of operation data
     def execute(self, context):
@@ -807,39 +843,78 @@ class CamOffsetSilhouete(Operator):
                 bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
             else:
                 bpy.ops.object.curve_remove_doubles()
-        if self.opencurve and ob.type == 'CURVE':
-            bpy.ops.object.duplicate()
-            obj = context.active_object
-            bpy.ops.object.transform_apply(
-                location=True, rotation=True, scale=True)  # apply all transforms
-            bpy.ops.object.convert(target='MESH')
-            bpy.context.active_object.name = "temp_mesh"
 
-            coords = []
-            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                coords.append((v.co.x, v.co.y))
+        bpy.ops.object.duplicate()
+        obj = context.active_object
+        obj.data.dimensions = '3D'
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)  # apply all transforms
+        bpy.ops.object.convert(target='MESH')
+        bpy.context.active_object.name = "temp_mesh"
 
-            simple.remove_multiple('temp_mesh')  # delete temporary mesh
-            simple.remove_multiple('dilation')  # delete old dilation objects
+        #get the Z align point from the base
+        if self.align == 'top':
+            point = max([(bpy.context.object.matrix_world @ v.co).z for v in bpy.context.object.data.vertices])
+        elif self.align == 'bottom':
+            point = min([(bpy.context.object.matrix_world @ v.co).z for v in bpy.context.object.data.vertices])
+        else:
+            point = 0
 
-            # convert coordinates to shapely LineString datastructure
-            line = LineString(coords)
+        # extract X,Y coordinates from the vertices data and put them into a LineString object
+        coords = []
+        for v in obj.data.vertices:  
+            coords.append((v.co.x, v.co.y))
+        simple.remove_multiple('temp_mesh')  # delete temporary mesh
+        simple.remove_multiple('dilation')  # delete old dilation objects
+
+        # convert coordinates to shapely LineString datastructure
+        line = LineString(coords)
+
+        #if curve is a straight segment, change offset type to dilate
+        if self.isStraight(line) and self.opentype != 'leaveopen':
+            self.opentype = 'dilate'
+
+        #make the dilate or open curve offset
+        if (self.opentype != 'closecurve') and ob.type == 'CURVE':
             print("line length=", round(line.length * 1000), 'mm')
 
-            dilated = line.buffer(self.offset, cap_style=1, resolution=16,
-                                  mitre_limit=self.mitrelimit)  # use shapely to expand
-            polygon_utils_cam.shapelyToCurve("dilation", dilated, 0)
+            if self.style == '3':
+                style="bevel"
+            elif self.style == '2':
+                style="mitre"
+            else:
+                style="round"
+
+            if self.opentype == 'leaveopen':
+                new_shape = shapely.offset_curve(line, self.offset, join_style=style)  # use shapely to expand without closing the curve
+                name = "Offset: " + "%.2f" % round(self.offset * 1000) + 'mm - ' + ob.name
+            else:
+                new_shape = line.buffer(self.offset, cap_style=self.caps, resolution=16, join_style=style, mitre_limit=self.mitrelimit)  # use shapely to expand, closing the curve
+                name = "Dilation: " + "%.2f" % round(self.offset * 1000) + 'mm - ' + ob.name
+
+            #create the actual offset object based on the Shapely offset
+            polygon_utils_cam.shapelyToCurve(name, new_shape, 0, self.opentype != 'leaveopen')
+
+            #position the object according to the calculated point
+            bpy.context.object.location.z = point
+
+        #if curve is not a straight line and neither dilate or leave open are selected, create a normal offset
         else:
+            bpy.context.view_layer.objects.active = ob
             utils.silhoueteOffset(context, self.offset,
                                   int(self.style), self.mitrelimit)
         return {'FINISHED'}
+    
     def draw(self, context):
         layout = self.layout
         layout.prop(self, "offset", text="Offset")
-        layout.prop(self, "style", text="Type of Curve")
+        layout.prop(self, "opentype", text="Type")
+        layout.prop(self, "style", text="Corner")
         if self.style == '2':
             layout.prop(self, "mitrelimit", text="Mitre Limit")
-        layout.prop(self, "opencurve", text="Dialate Open Curve")
+        if self.opentype == 'dilate':
+            layout.prop(self, "caps", text="Cap")
+        if self.opentype != 'closecurve':
+            layout.prop(self, "align", text="Align")
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 
