@@ -297,12 +297,37 @@ class camOperation(PropertyGroup):
         default='INSIDE',
         update=updateRest,
     )
+
+    pocketType: EnumProperty(
+        name='pocket type',
+        items=(
+            ('PERIMETER', 'Perimeter', 'a'),
+            ('PARALLEL', 'Parallel', 'a'),
+        ),
+        description='Type of pocket',
+        default='PERIMETER',
+        update=updateRest,
+    )
+    parallelPocketAngle: FloatProperty(
+        name="Parallel Pocket Angle",
+        description="Angle for parallel pocket",
+        min=0.0,
+        max=180.0,
+        default=45.0,
+        precision=constants.PRECISION,
+        update=updateRest,
+    )
+
+
+
+
     pocketToCurve: BoolProperty(
         name="Pocket to Curve",
         description="Generates a curve instead of a path",
         default=False,
         update=updateRest,
     )
+
     # Cutout
     cut_type: EnumProperty(
         name='Cut',

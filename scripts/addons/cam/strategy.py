@@ -121,7 +121,7 @@ async def cutout(o):
         if ob.type == 'CURVE':
             if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
                 activate(ob)
-                bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+                bpy.ops.object.curve_remove_doubles(distance=0.0001, keep_bezier=True)
             else:
                 bpy.ops.object.curve_remove_doubles()
             #make sure all polylines are at least three points long
