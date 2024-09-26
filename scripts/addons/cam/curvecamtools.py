@@ -902,7 +902,6 @@ class CamOffsetSilhouete(Operator):
             bpy.context.view_layer.objects.active = ob
             utils.silhoueteOffset(context, self.offset,
                                   int(self.style), self.mitrelimit)
-        print (bpy.context.object)
         return {'FINISHED'}
     
     def draw(self, context):
