@@ -13,6 +13,7 @@ from math import (
 from shapely.geometry import (
     LineString,
     MultiLineString,
+    box,
 )
 
 import bpy
@@ -31,8 +32,6 @@ from . import (
     simple,
     utils,
 )
-
-from shapely.geometry import box
 
 def generate_crosshatch(context, angle, distance, offset, pocket_shape):
     """Execute the crosshatch generation process based on the provided context.
@@ -59,12 +58,13 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape):
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
     depth = ob.location[2]
 
-    if pocket_shape == 'HULL':
-        bpy.ops.object.convex_hull()
-    
-    from shapely import affinity
     shapes = utils.curveToShapely(bpy.context.active_object)
 
+    if pocket_shape == 'HULL':
+        shapes = shapes.convex_hull
+    
+    from shapely import affinity
+    
     coords = []
     minx, miny, maxx, maxy = shapes.bounds
     minx -= offset
@@ -77,7 +77,6 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape):
     centerx = (minx + maxx) / 2
     diagonal = hypot(width, length)
     
-    # Create a Shapely bounding box instead of a Blender rectangle
     bound_rectangle = box(minx, miny, maxx, maxy)
     amount = int(2 * diagonal / distance) + 1
 
@@ -119,16 +118,18 @@ class CamCurveHatch(Operator):
         description='Type of pocket shape',
         default='POCKET',
     )
+    contour: BoolProperty(
+        name="Contour Curve",
+        default=False,
+    )
+    contour_separate: BoolProperty(
+        name="Contour Separate",
+        default=False,
+    )
 
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
-
-    def invoke(self, context, event):
-        """Set height to the active object's Z location when the operator is invoked."""
-        if context.active_object is not None:
-            self.height = context.active_object.location.z
-        return self.execute(context)
 
     def draw(self, context):
         """Draw the layout properties for the given context."""
@@ -137,8 +138,14 @@ class CamCurveHatch(Operator):
         layout.prop(self, 'distance')
         layout.prop(self, 'offset')
         layout.prop(self, 'pocket_shape')
+        layout.prop(self, 'contour')
+        if self.contour:
+            layout.prop(self, 'contour_separate')
 
     def execute(self, context):
+        ob = context.active_object
+        ob.select_set(True)
+        depth = ob.location[2]
         xing = generate_crosshatch(
             context,
             self.angle,
@@ -146,8 +153,20 @@ class CamCurveHatch(Operator):
             self.offset,
             self.pocket_shape,
         )
-        utils.shapelyToCurve('crosshatch_lines', xing, self.height)
+        utils.shapelyToCurve('crosshatch_lines', xing, depth)
         bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+        if self.contour:
+            simple.deselect()
+            bpy.context.view_layer.objects.active = ob
+            ob.select_set(True)
+            bpy.ops.object.silhouete_offset(offset=self.offset)
+            if self.contour_separate:
+                simple.active_name('contour_hatch')
+                simple.deselect()
+            else:
+                simple.active_name('crosshatch_contour')
+                simple.join_multiple('crosshatch')
+                simple.remove_doubles()
         return {'FINISHED'}
 class CamCurvePlate(Operator):
     """Perform Generates Rounded Plate with Mounting Holes"""  # by Alain Pelletier Sept 2021
