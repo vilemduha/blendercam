@@ -46,7 +46,6 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape):
     Returns:
         shapely.geometry.MultiLineString: The resulting intersection geometry of the crosshatch.
     """    
-    simple.remove_multiple("crosshatch")
     ob = context.active_object
     ob.select_set(True)
 
@@ -103,6 +102,7 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape):
 
     # Return the intersection result
     return xing
+
 class CamCurveHatch(Operator):
     """Perform Hatch Operation on Single or Multiple Curves"""  # by Alain Pelletier September 2021
     bl_idname = "object.curve_hatch"
@@ -122,6 +122,12 @@ class CamCurveHatch(Operator):
         name="Contour Curve",
         default=False,
     )
+
+    xhatch: BoolProperty(
+        name="Crosshatch #",
+        default=False,
+    )
+
     contour_separate: BoolProperty(
         name="Contour Separate",
         default=False,
@@ -139,14 +145,18 @@ class CamCurveHatch(Operator):
         layout.prop(self, 'offset')
         layout.prop(self, 'pocket_shape')
         layout.prop(self, 'contour')
+        layout.prop(self, 'xhatch')
         if self.contour:
             layout.prop(self, 'contour_separate')
 
     def execute(self, context):
         ob = context.active_object
+        obname = ob.name
         ob.select_set(True)
+        simple.remove_multiple("crosshatch")
         depth = ob.location[2]
         xingOffset = self.offset
+
         if self.contour:
             xingOffset -= self.distance/2  #  contour does not touch the crosshatch
         xing = generate_crosshatch(
@@ -157,6 +167,18 @@ class CamCurveHatch(Operator):
             self.pocket_shape,
         )
         utils.shapelyToCurve('crosshatch_lines', xing, depth)
+
+        if self.xhatch:
+            simple.make_active(obname)
+            xingra = generate_crosshatch(
+                context,
+                self.angle + 1.570796327,
+                self.distance,
+                xingOffset,
+                self.pocket_shape,
+            )
+            utils.shapelyToCurve('crosshatch_lines_ra', xingra, depth)
+
         bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
         if self.contour:
             simple.deselect()
