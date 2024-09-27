@@ -192,6 +192,9 @@ class CamCurveHatch(Operator):
                 simple.active_name('crosshatch_contour')
                 simple.join_multiple('crosshatch')
                 simple.remove_doubles()
+        else:
+            simple.join_multiple('crosshatch')
+            simple.remove_doubles()
         return {'FINISHED'}
 class CamCurvePlate(Operator):
     """Perform Generates Rounded Plate with Mounting Holes"""  # by Alain Pelletier Sept 2021
