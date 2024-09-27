@@ -311,7 +311,7 @@ class camOperation(PropertyGroup):
     parallelPocketAngle: FloatProperty(
         name="Parallel Pocket Angle",
         description="Angle for parallel pocket",
-        min=0.0,
+        min=-180,
         max=180.0,
         default=45.0,
         precision=constants.PRECISION,

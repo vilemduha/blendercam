@@ -33,7 +33,7 @@ from . import (
     utils,
 )
 
-def generate_crosshatch(context, angle, distance, offset, pocket_shape):
+def generate_crosshatch(context, angle, distance, offset, pocket_shape, ob = None):
     """Execute the crosshatch generation process based on the provided context.
 
     Args:
@@ -45,10 +45,12 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape):
 
     Returns:
         shapely.geometry.MultiLineString: The resulting intersection geometry of the crosshatch.
-    """    
-    ob = context.active_object
+    """  
+    if ob is None : 
+        ob = context.active_object
+    else:
+        bpy.context.view_layer.objects.active = ob
     ob.select_set(True)
-
     if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
         bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
     else:
@@ -57,7 +59,7 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape):
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
     depth = ob.location[2]
 
-    shapes = utils.curveToShapely(bpy.context.active_object)
+    shapes = utils.curveToShapely(ob)
 
     if pocket_shape == 'HULL':
         shapes = shapes.convex_hull
@@ -144,10 +146,11 @@ class CamCurveHatch(Operator):
         layout.prop(self, 'distance')
         layout.prop(self, 'offset')
         layout.prop(self, 'pocket_shape')
-        layout.prop(self, 'contour')
         layout.prop(self, 'xhatch')
-        if self.contour:
-            layout.prop(self, 'contour_separate')
+        if self.pocket_shape=='POCKET':
+            layout.prop(self, 'contour')
+            if self.contour:
+                layout.prop(self, 'contour_separate')
 
     def execute(self, context):
         ob = context.active_object
@@ -172,7 +175,7 @@ class CamCurveHatch(Operator):
             simple.make_active(obname)
             xingra = generate_crosshatch(
                 context,
-                self.angle + 1.570796327,
+                self.angle + pi/2,
                 self.distance,
                 xingOffset,
                 self.pocket_shape,

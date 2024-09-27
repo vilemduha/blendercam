@@ -438,6 +438,8 @@ async def pocket(o):
 
     c_offset += o.skin  # add skin
     print("Cutter Offset", c_offset)
+    obname = o.object_name
+    c_ob =bpy.data.objects[obname]
     for ob in o.objects:
         if ob.type == 'CURVE':
             if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
@@ -446,19 +448,26 @@ async def pocket(o):
             else:
                 bpy.ops.object.curve_remove_doubles()
     chunksFromCurve = []
-    # Parallel lines is disabled until finish
-    use_parallel =False
-    if use_parallel:
-        angle = 45 
-        distance = o.dist_between_paths
-        offset = -c_offset
-        pocket_shape = ""
-        # Call the crosshatch generation function
-        crosshatch_result = generate_crosshatch(bpy.context, angle, distance, offset, pocket_shape)
-        
-        # Convert crosshatch result into chunks
+    angle = radians(o.parallelPocketAngle) 
+    distance = o.dist_between_paths
+    p_l_offset= -c_offset*1.2
+    pocket_shape = ""
+    n_angle= angle-pi/2
+    if o.pocketType == 'PARALLEL':
+        crosshatch_result = generate_crosshatch(bpy.context, angle, distance, p_l_offset, pocket_shape, c_ob)
         nchunks = shapelyToChunks(crosshatch_result, o.min.z)
         chunksFromCurve.extend(nchunks)
+
+        if o.parallelPocketCrosshatch:
+            crosshatch_result = generate_crosshatch(bpy.context, n_angle, distance, p_l_offset, pocket_shape, c_ob)
+            nchunks = shapelyToChunks(crosshatch_result, o.min.z)
+            chunksFromCurve.extend(nchunks)
+        
+        if o.parallelPocketContour:
+            p = getObjectOutline(c_offset, o, False)
+            nchunks = shapelyToChunks(p, o.min.z)
+            chunksFromCurve.extend(nchunks)
+
     else:
         p = getObjectOutline(c_offset, o, False)
         approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
