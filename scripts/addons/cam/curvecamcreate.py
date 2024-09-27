@@ -146,11 +146,14 @@ class CamCurveHatch(Operator):
         ob = context.active_object
         ob.select_set(True)
         depth = ob.location[2]
+        xingOffset = self.offset
+        if self.contour:
+            xingOffset -= self.distance/2  #  contour does not touch the crosshatch
         xing = generate_crosshatch(
             context,
             self.angle,
             self.distance,
-            self.offset,
+            xingOffset,
             self.pocket_shape,
         )
         utils.shapelyToCurve('crosshatch_lines', xing, depth)
