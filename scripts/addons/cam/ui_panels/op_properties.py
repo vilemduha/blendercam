@@ -181,6 +181,10 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             return
         if self.op.strategy in ['POCKET']:
             self.layout.prop(self.op, 'pocket_option')
+            self.layout.prop(self.op, 'pocketType')
+            if self.op.pocketType == 'PARALLEL':
+                self.layout.prop(self.op, 'parallelPocketAngle')
+
             self.layout.prop(self.op, 'pocketToCurve')
             self.layout.prop(self.op, 'dist_between_paths')
             self.draw_cutter_engagement()
