@@ -318,6 +318,21 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
 
+    parallelPocketCrosshatch: BoolProperty(
+        name="Crosshatch #",
+        description="Crosshatch X finish",
+        default=False,
+        update=updateRest,
+    )
+
+    parallelPocketContour: BoolProperty(
+        name="Contour Finish",
+        description="Contour path finish",
+        default=False,
+        update=updateRest,
+    )
+
+
 
 
 
