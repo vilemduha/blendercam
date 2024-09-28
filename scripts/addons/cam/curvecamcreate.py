@@ -52,7 +52,7 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape, ob = Non
         bpy.context.view_layer.objects.active = ob
     ob.select_set(True)
     if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
-        bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+        bpy.ops.object.curve_remove_doubles(merge_distance=0.0001, keep_bezier=True)
     else:
         bpy.ops.object.curve_remove_doubles()
     

@@ -587,7 +587,7 @@ class CamCurveRemoveDoubles(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
 
-    merg_distance: FloatProperty(
+    merge_distance: FloatProperty(
         name="Merge distance",
         default=0.0001,
         min=0.0,
@@ -617,7 +617,7 @@ class CamCurveRemoveDoubles(Operator):
                             if bpy.context.mode == 'OBJECT':
                                 bpy.ops.object.editmode_toggle()
                             bpy.ops.curve.select_all()
-                            bpy.ops.curve.remove_double(distance=self.merg_distance)
+                            bpy.ops.curve.remove_double(distance=self.merge_distance)
                             bpy.ops.object.editmode_toggle()
                 else:
                     if bpy.context.mode == 'EDIT_CURVE':
@@ -625,7 +625,7 @@ class CamCurveRemoveDoubles(Operator):
                     bpy.ops.object.convert(target='MESH')
                     bpy.ops.object.editmode_toggle()
                     bpy.ops.mesh.select_all(action='SELECT')
-                    bpy.ops.mesh.remove_doubles(threshold= self.merg_distance)
+                    bpy.ops.mesh.remove_doubles(threshold= self.merge_distance)
                     bpy.ops.object.editmode_toggle()
                     bpy.ops.object.convert(target='CURVE')
                        
@@ -840,7 +840,7 @@ class CamOffsetSilhouete(Operator):
         if ob.type == 'CURVE':
             if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
                 bpy.context.object.data.resolution_u = 64
-                bpy.ops.object.curve_remove_doubles(merg_distance=0.0001, keep_bezier=True)
+                bpy.ops.object.curve_remove_doubles(merge_distance=0.0001, keep_bezier=True)
             else:
                 bpy.ops.object.curve_remove_doubles()
 
