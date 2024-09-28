@@ -183,6 +183,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             self.layout.prop(self.op, 'pocket_option')
             self.layout.prop(self.op, 'pocketType')
             if self.op.pocketType == 'PARALLEL':
+                self.layout.label(text="Warning: Experimental", icon='ERROR')
                 self.layout.prop(self.op, 'parallelPocketAngle')
                 self.layout.prop(self.op, 'parallelPocketCrosshatch')
                 self.layout.prop(self.op, 'parallelPocketContour')
