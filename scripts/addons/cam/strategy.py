@@ -496,11 +496,11 @@ async def pocket(o):
 
             nchunks = shapelyToChunks(p, o.min.z)
             # print("nchunks")
-            pnew = p.buffer(-o.dist_between_paths, o.optimisation.circle_detail)
+            pnew = p.buffer(-o.dist_between_paths, o.optimisation.circle_detail,join_style=join, mitre_limit=2)
             if pnew.is_empty:
 
                 # test if the last curve will leave material
-                pt = p.buffer(-c_offset, o.optimisation.circle_detail)
+                pt = p.buffer(-c_offset, o.optimisation.circle_detail,join_style=join, mitre_limit=2)
                 if not pt.is_empty:
                     pnew = pt
             # print("pnew")
