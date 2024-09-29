@@ -418,7 +418,10 @@ async def pocket(o):
         None: The function modifies the scene and generates geometry
         based on the pocketing operation.
     """
-
+    if o.straight:
+        join = 2
+    else:
+        join = 1
     print('Operation: Pocket')
     scene = bpy.context.scene
 
@@ -453,23 +456,28 @@ async def pocket(o):
     offset= -c_offset
     pocket_shape = ""
     n_angle= angle-pi/2
+    pr = getObjectOutline(0, o, False)
     if o.pocketType == 'PARALLEL':
         if o.parallelPocketContour:
             offset= -(c_offset+distance/2)
-            p = getObjectOutline(c_offset, o, False)
+            p = pr.buffer(-c_offset, resolution = o.optimisation.circle_detail,
+                           join_style = join, mitre_limit = 2)
             nchunks = shapelyToChunks(p, o.min.z)
             chunksFromCurve.extend(nchunks)
-        crosshatch_result = generate_crosshatch(bpy.context, angle, distance, offset, pocket_shape, c_ob)
+        crosshatch_result = generate_crosshatch(bpy.context, angle, distance,
+                             offset, pocket_shape, join, c_ob)
         nchunks = shapelyToChunks(crosshatch_result, o.min.z)
         chunksFromCurve.extend(nchunks)
 
         if o.parallelPocketCrosshatch:
-            crosshatch_result = generate_crosshatch(bpy.context, n_angle, distance, offset, pocket_shape, c_ob)
+            crosshatch_result = generate_crosshatch(bpy.context, n_angle,
+            distance, offset, pocket_shape,join,c_ob)
             nchunks = shapelyToChunks(crosshatch_result, o.min.z)
             chunksFromCurve.extend(nchunks)
         
     else:
-        p = getObjectOutline(c_offset, o, False)
+        p = pr.buffer(-c_offset, resolution = o.optimisation.circle_detail,
+                           join_style = join, mitre_limit = 2)
         approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.dist_between_paths) / 2
         print("Approximative:" + str(approxn))
         print(o)

@@ -33,7 +33,8 @@ from . import (
     utils,
 )
 
-def generate_crosshatch(context, angle, distance, offset, pocket_shape, ob = None):
+def generate_crosshatch(context, angle, distance, offset,
+                         pocket_shape,join, ob = None):
     """Execute the crosshatch generation process based on the provided context.
 
     Args:
@@ -100,7 +101,7 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape, ob = Non
     if pocket_shape == 'BOUNDS':
         xing = translated.intersection(bounds)  # Intersection with bounding box
     else:
-        xing = translated.intersection(shapes.buffer(offset))  # Intersection with shapes or hull
+        xing = translated.intersection(shapes.buffer(offset,join_style=join))  # Intersection with shapes or hull
 
     # Return the intersection result
     return xing
@@ -135,6 +136,11 @@ class CamCurveHatch(Operator):
         default=False,
     )
 
+    straight: BoolProperty(
+        name="Overshoot Style",
+        description="Use overshoot cutout instead of conventional rounded",
+        default=True,
+    )
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and context.active_object.type in ['CURVE', 'FONT']
@@ -148,11 +154,16 @@ class CamCurveHatch(Operator):
         layout.prop(self, 'pocket_shape')
         layout.prop(self, 'xhatch')
         if self.pocket_shape=='POCKET':
+            layout.prop(self, 'straight')
             layout.prop(self, 'contour')
             if self.contour:
                 layout.prop(self, 'contour_separate')
 
     def execute(self, context):
+        if self.straight:
+            join = 2
+        else:
+            join = 1
         ob = context.active_object
         obname = ob.name
         ob.select_set(True)
@@ -168,6 +179,7 @@ class CamCurveHatch(Operator):
             self.distance,
             xingOffset,
             self.pocket_shape,
+            join,
         )
         utils.shapelyToCurve('crosshatch_lines', xing, depth)
 
@@ -179,6 +191,7 @@ class CamCurveHatch(Operator):
                 self.distance,
                 xingOffset,
                 self.pocket_shape,
+                join,
             )
             utils.shapelyToCurve('crosshatch_lines_ra', xingra, depth)
 

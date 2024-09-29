@@ -361,7 +361,7 @@ class camOperation(PropertyGroup):
     straight: BoolProperty(
         name="Overshoot Style",
         description="Use overshoot cutout instead of conventional rounded",
-        default=False,
+        default=True,
         update=updateRest,
     )
     # cutter
