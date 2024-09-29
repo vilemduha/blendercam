@@ -161,7 +161,7 @@ class CamCurveHatch(Operator):
         xingOffset = self.offset
 
         if self.contour:
-            xingOffset -= self.distance/2  #  contour does not touch the crosshatch
+            xingOffset = self.offset - self.distance/2  #  contour does not touch the crosshatch
         xing = generate_crosshatch(
             context,
             self.angle,
@@ -183,6 +183,7 @@ class CamCurveHatch(Operator):
             utils.shapelyToCurve('crosshatch_lines_ra', xingra, depth)
 
         bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='MEDIAN')
+        simple.join_multiple('crosshatch')
         if self.contour:
             simple.deselect()
             bpy.context.view_layer.objects.active = ob

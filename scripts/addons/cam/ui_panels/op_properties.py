@@ -180,15 +180,15 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
         if not self.has_correct_level():
             return
         if self.op.strategy in ['POCKET']:
-            self.layout.prop(self.op, 'pocket_option')
             self.layout.prop(self.op, 'pocketType')
             if self.op.pocketType == 'PARALLEL':
                 self.layout.label(text="Warning: Experimental", icon='ERROR')
-                self.layout.prop(self.op, 'parallelPocketAngle')
                 self.layout.prop(self.op, 'parallelPocketCrosshatch')
                 self.layout.prop(self.op, 'parallelPocketContour')
-
-            self.layout.prop(self.op, 'pocketToCurve')
+                self.layout.prop(self.op, 'parallelPocketAngle')
+            else:
+                self.layout.prop(self.op, 'pocket_option')
+                self.layout.prop(self.op, 'pocketToCurve')
             self.layout.prop(self.op, 'dist_between_paths')
             self.draw_cutter_engagement()
             self.draw_enable_A_B_axis()

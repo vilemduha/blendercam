@@ -455,7 +455,7 @@ async def pocket(o):
     n_angle= angle-pi/2
     if o.pocketType == 'PARALLEL':
         if o.parallelPocketContour:
-            offset= -(c_offset+distance)
+            offset= -(c_offset+distance/2)
             p = getObjectOutline(c_offset, o, False)
             nchunks = shapelyToChunks(p, o.min.z)
             chunksFromCurve.extend(nchunks)
