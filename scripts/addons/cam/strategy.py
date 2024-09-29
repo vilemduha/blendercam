@@ -450,15 +450,13 @@ async def pocket(o):
     chunksFromCurve = []
     angle = radians(o.parallelPocketAngle) 
     distance = o.dist_between_paths
-    offset= -c_offset
+    offset= -(c_offset+distance/2)
     pocket_shape = ""
     n_angle= angle-pi/2
     if o.pocketType == 'PARALLEL':
-        if o.parallelPocketContour:
-            offset= -(c_offset+distance)
-            p = getObjectOutline(c_offset, o, False)
-            nchunks = shapelyToChunks(p, o.min.z)
-            chunksFromCurve.extend(nchunks)
+        p = getObjectOutline(c_offset, o, False)
+        nchunks = shapelyToChunks(p, o.min.z)
+        chunksFromCurve.extend(nchunks)
         crosshatch_result = generate_crosshatch(bpy.context, angle, distance, offset, pocket_shape, c_ob)
         nchunks = shapelyToChunks(crosshatch_result, o.min.z)
         chunksFromCurve.extend(nchunks)

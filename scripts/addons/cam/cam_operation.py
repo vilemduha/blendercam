@@ -325,17 +325,6 @@ class camOperation(PropertyGroup):
         update=updateRest,
     )
 
-    parallelPocketContour: BoolProperty(
-        name="Contour Finish",
-        description="Contour path finish",
-        default=False,
-        update=updateRest,
-    )
-
-
-
-
-
     pocketToCurve: BoolProperty(
         name="Pocket to Curve",
         description="Generates a curve instead of a path",
