@@ -589,8 +589,8 @@ class CamCurveRemoveDoubles(Operator):
 
     merge_distance: FloatProperty(
         name="Merge distance",
-        default=0,
-        min=0.0001,
+        default=0.0001,
+        min=0,
         max=.01,
         
     )
