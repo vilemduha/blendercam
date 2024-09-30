@@ -95,7 +95,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
         if not self.has_correct_level():
             return
         self.layout.prop(self.op, 'cut_type')
-
+        
     def draw_overshoot(self):
         if not self.has_correct_level():
             return
@@ -131,7 +131,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             return
         if self.op.strategy in ['CUTOUT']:
             self.draw_cutout_type()
-            self.draw_overshoot()
+            if self.op.cut_type in ['OUTSIDE', 'INSIDE']:
+                self.draw_overshoot()
             self.draw_startpoint()
             self.draw_lead_in_out()
 
@@ -180,9 +181,10 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
         if not self.has_correct_level():
             return
         if self.op.strategy in ['POCKET']:
+            self.draw_overshoot()
             self.layout.prop(self.op, 'pocketType')
             if self.op.pocketType == 'PARALLEL':
-                self.layout.label(text="Warning: Experimental", icon='ERROR')
+                self.layout.label(text="Warning:Parallel pocket Experimental", icon='ERROR')
                 self.layout.prop(self.op, 'parallelPocketCrosshatch')
                 self.layout.prop(self.op, 'parallelPocketContour')
                 self.layout.prop(self.op, 'parallelPocketAngle')
