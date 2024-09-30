@@ -847,7 +847,8 @@ class CamOffsetSilhouete(Operator):
 
         bpy.ops.object.duplicate()
         obj = context.active_object
-        obj.data.dimensions = '3D'
+        if context.active_object.type != 'MESH':
+            obj.data.dimensions = '3D'
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)  # apply all transforms
         bpy.ops.object.convert(target='MESH')
         bpy.context.active_object.name = "temp_mesh"
