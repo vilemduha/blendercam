@@ -16,33 +16,32 @@ The easiest way to "install" is not to install but instead just tell Blender whe
 
 
 ## Obtaining Blender
-Blendercam is an addon of Blender. It works now with Blender version 2.83, 2.92, 2.93, 3.0 - 3.4.
+CNC CAM is an extension Blender. It works now with Blender version 4.21 .
 
 You can download blender from here:
 https://www.blender.org/download/
 
 ## Dependencies
 
-Blendercam depends on the following python modules. If they are not available in the python that your blender uses, the addon will auto-install
+CNC CAM is an extension Blender depends on the following python modules. If they are not available in the python that your blender uses, the addon will auto-install
 these modules on first load.
 
 | Python dependencies        | Version           |
 | ------------- |:-------------:|
 | shapely  | >= 1.5 |
 | numpy    | ...      |
-| Equation | ...      |
 | libgeos_c | libgeos-c1v5|
 | opencamlib | >= 2022.12 |
 
 
-## Install (or update) Blendercam addon
+## Install (or update) CNC CAM is an extension Blender
 The first step is to get the addon from the github repository. You can either do this with git, or by downloading and extracting a zip file. 
 
 ### Install (and update) using Git
  1. If you have git installed on your machine, go to the root of this repository, and click the green 'Code' button and copy the https url.
- 2. Open a command shell and change directory to where you want to install blendercam
+ 2. Open a command shell and change directory to where you want to install CNC CAM is an extension Blender
  3. Type `git clone <GIT URL>`, where `<GIT URL>` is the url you copied above.
- 4. git will make a subdirectory called `blendercam` in the current directory then download the most recent version of blendercam from github.
+ 4. git will make a subdirectory called `CNCCAM` in the current directory then download the most recent version of blendercam from github.
  5. If in future you want to update to the latest version, in a command shell change directory to the blendercam directory and type `git pull`.
 
  ![git clone](https://cloud.githubusercontent.com/assets/648108/12068782/8942a84a-afeb-11e5-86c4-31a60475fd27.png)
