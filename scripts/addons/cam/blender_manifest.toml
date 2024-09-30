@@ -1,7 +1,7 @@
-schema_version = "1.0.44"
+schema_version = "1.0.45"
 
 id = "blendercam"
-version = "1.0.44"
+version = "1.0.45"
 name = "BlenderCAM"
 tagline = "G-code Generation Tools"
 maintainer = "Alain Pelletier and Contributors"
