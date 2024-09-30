@@ -589,8 +589,8 @@ class CamCurveRemoveDoubles(Operator):
 
     merge_distance: FloatProperty(
         name="Merge distance",
-        default=0.0001,
-        min=0.0,
+        default=0,
+        min=0.0001,
         max=.01,
         
     )
@@ -620,6 +620,7 @@ class CamCurveRemoveDoubles(Operator):
                             bpy.ops.curve.remove_double(distance=self.merge_distance)
                             bpy.ops.object.editmode_toggle()
                 else:
+                    self.merge_distance = 0
                     if bpy.context.mode == 'EDIT_CURVE':
                         bpy.ops.object.editmode_toggle()
                     bpy.ops.object.convert(target='MESH')
@@ -637,7 +638,7 @@ class CamCurveRemoveDoubles(Operator):
         if obj.type == 'CURVE': 
             if obj.data.splines and obj.data.splines[0].type == 'BEZIER':
                 layout.prop(self, "keep_bezier", text="Keep Bezier")
-        layout.prop(self, "merg_distance", text="Merge Distance")
+        layout.prop(self, "merge_distance", text="Merge Distance")
 
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
