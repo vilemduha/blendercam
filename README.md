@@ -68,6 +68,7 @@ CNC CAM extension for Blender (formerly Blendercam) works on Windows or Linux an
 | Pack Curves and Slice Model   |         ✔️         |  
 | Automatic Bridges for Cutout Operation   |         ✔️         |  
 | Chain Export and Simulation  |         ✔️         |   
+| Adaptive milling speed  |         ✔️         |   
 
 ### Pending Features
 * Helix entry and ramp down are experimental.
