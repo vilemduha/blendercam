@@ -15,7 +15,7 @@ class CAMButtonsPanel:
     bl_region_type = 'WINDOW'
     bl_context = "render"
     always_show_panel = False
-    COMPAT_ENGINES = {'BLENDERCAM_RENDER'}
+    COMPAT_ENGINES = {'CNCCAM_RENDER'}
 
     # COMPAT_ENGINES must be defined in each subclass, external engines can add themselves here
 
@@ -35,7 +35,7 @@ class CAMButtonsPanel:
 
     @classmethod
     def active_operation_index(cls):
-        return(bpy.context.scene.cam_active_operation)
+        return (bpy.context.scene.cam_active_operation)
 
     @classmethod
     def active_operation(cls):
@@ -44,14 +44,15 @@ class CAMButtonsPanel:
             active_op = bpy.context.scene.cam_operations[cls.active_operation_index()]
         except IndexError:
             pass
-        return(active_op)
+        return (active_op)
 
     def __init__(self):
         self.op = self.active_operation()
-        self.use_experimental = bpy.context.preferences.addons['cam'].preferences.experimental
+        addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.blendercam"].preferences
+        self.use_experimental = addon_prefs.experimental
 
     def operations_count(self):
-        return(len(bpy.context.scene.cam_operations))
+        return (len(bpy.context.scene.cam_operations))
 
     def has_operations(self):
         return (self.operations_count() > 0)
@@ -62,7 +63,7 @@ class CAMButtonsPanel:
 
         caller_function = inspect.stack()[1][3]
 
-        if not caller_function in self.prop_level:
+        if caller_function not in self.prop_level:
             return True
 
         return self.prop_level[caller_function] <= int(self.context.scene.interface.level)

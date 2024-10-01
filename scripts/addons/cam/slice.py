@@ -17,7 +17,25 @@ from . import (
 )
 
 
-def slicing2d(ob, height):  # April 2020 Alain Pelletier
+def slicing2d(ob, height):
+    """Slice a 3D object at a specified height and convert it to a curve.
+
+    This function applies transformations to the given object, switches to
+    edit mode, selects all vertices, and performs a bisect operation to
+    slice the object at the specified height. After slicing, it resets the
+    object's location and applies transformations again before converting
+    the object to a curve. If the conversion fails (for instance, if the
+    mesh was empty), the function deletes the mesh and returns False.
+    Otherwise, it returns True.
+
+    Args:
+        ob (bpy.types.Object): The Blender object to be sliced and converted.
+        height (float): The height at which to slice the object.
+
+    Returns:
+        bool: True if the conversion to curve was successful, False otherwise.
+    """
+  # April 2020 Alain Pelletier
     # let's slice things
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     bpy.ops.object.mode_set(mode='EDIT')  # force edit mode
@@ -38,7 +56,25 @@ def slicing2d(ob, height):  # April 2020 Alain Pelletier
     return True
 
 
-def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
+def slicing3d(ob, start, end):
+    """Slice a 3D object along specified planes.
+
+    This function applies transformations to a given object and slices it in
+    the Z-axis between two specified values, `start` and `end`. It first
+    ensures that the object is in edit mode and selects all vertices before
+    performing the slicing operations using the `bisect` method. After
+    slicing, it resets the object's location and applies the transformations
+    to maintain the changes.
+
+    Args:
+        ob (Object): The 3D object to be sliced.
+        start (float): The starting Z-coordinate for the slice.
+        end (float): The ending Z-coordinate for the slice.
+
+    Returns:
+        bool: True if the slicing operation was successful.
+    """
+  # April 2020 Alain Pelletier
     # let's slice things
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     bpy.ops.object.mode_set(mode='EDIT')  # force edit mode
@@ -56,9 +92,23 @@ def slicing3d(ob, start, end):  # April 2020 Alain Pelletier
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 
     bpy.ops.object.select_all(action='DESELECT')  # deselect everything
+    return True
 
 
-def sliceObject(ob):  # April 2020 Alain Pelletier
+def sliceObject(ob):
+    """Slice a 3D object into layers based on a specified thickness.
+
+    This function takes a 3D object and slices it into multiple layers
+    according to the specified thickness. It creates a new collection for
+    the slices and optionally creates text labels for each slice if the
+    indexes parameter is set. The slicing can be done in either 2D or 3D
+    based on the user's selection. The function also handles the positioning
+    of the slices based on the object's bounding box.
+
+    Args:
+        ob (bpy.types.Object): The 3D object to be sliced.
+    """
+  # April 2020 Alain Pelletier
     # get variables from menu
     thickness = bpy.context.scene.cam_slice.slice_distance
     slice3d = bpy.context.scene.cam_slice.slice_3d
@@ -70,11 +120,6 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
     if indexes:
         tcollection = bpy.data.collections.new("Text")
         bpy.context.scene.collection.children.link(tcollection)
-
-    # show object information
-    print(ob)
-    print(ob.dimensions)
-    print(ob.location)
 
     bpy.ops.object.mode_set(mode='OBJECT')  # force object mode
     minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
@@ -104,7 +149,7 @@ def sliceObject(ob):  # April 2020 Alain Pelletier
         scollection.objects.link(obslice)  # link obslice to scollecton
         if slice3d:
             # slice 3d at desired height and stop at desired height
-            slicing3d(obslice, height, height + thickness)
+            slicesuccess = slicing3d(obslice, height, height + thickness)
         else:
             # slice object at desired height
             slicesuccess = slicing2d(obslice, height)

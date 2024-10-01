@@ -56,6 +56,8 @@ class CamCurveBoolean(Operator):
         else:
             self.report({'ERROR'}, 'at least 2 curves must be selected')
             return {'CANCELLED'}
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
 
 
 class CamCurveConvexHull(Operator):
@@ -193,6 +195,8 @@ class CamCurveIntarsion(Operator):
             o4.select_set(True)
         o3.select_set(True)
         return {'FINISHED'}
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
 
 
 # intarsion or joints
@@ -301,7 +305,8 @@ class CamCurveOvercuts(Operator):
         utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
 
         return {'FINISHED'}
-
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
 
 # Overcut type B
 class CamCurveOvercutsB(Operator):
@@ -572,30 +577,71 @@ class CamCurveOvercutsB(Operator):
 
         utils.shapelyToCurve(o1.name + '_overcuts', fs, o1.location.z)
         return {'FINISHED'}
-
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
 
 class CamCurveRemoveDoubles(Operator):
     """Curve Remove Doubles"""
     bl_idname = "object.curve_remove_doubles"
     bl_label = "Remove Curve Doubles"
     bl_options = {'REGISTER', 'UNDO'}
+    
+
+    merge_distance: FloatProperty(
+        name="Merge distance",
+        default=0.0001,
+        min=0,
+        max=.01,
+        
+    )
+
+    keep_bezier: BoolProperty(
+        name="Keep bezier",
+        default=False,
+    )
+    
 
     @classmethod
     def poll(cls, context):
         return context.active_object is not None and (context.active_object.type == 'CURVE')
 
     def execute(self, context):
-        obs = bpy.context.selected_objects
-        for ob in obs:
-            bpy.context.view_layer.objects.active = ob
-            if bpy.context.mode == 'OBJECT':
-                bpy.ops.object.editmode_toggle()
-            bpy.ops.curve.select_all()
-            bpy.ops.curve.spline_type_set(type='BEZIER')
-            bpy.ops.curve.remove_double(distance=0.00001)
-            bpy.ops.object.editmode_toggle()
-
+        obj = bpy.context.selected_objects
+        for ob in obj:
+            if ob.type == 'CURVE':
+                if self.keep_bezier:
+                    if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
+                            bpy.ops.curvetools.operatorsplinesremoveshort()
+                            bpy.context.view_layer.objects.active = ob
+                            ob.data.resolution_u = 64
+                            if bpy.context.mode == 'OBJECT':
+                                bpy.ops.object.editmode_toggle()
+                            bpy.ops.curve.select_all()
+                            bpy.ops.curve.remove_double(distance=self.merge_distance)
+                            bpy.ops.object.editmode_toggle()
+                else:
+                    self.merge_distance = 0
+                    if bpy.context.mode == 'EDIT_CURVE':
+                        bpy.ops.object.editmode_toggle()
+                    bpy.ops.object.convert(target='MESH')
+                    bpy.ops.object.editmode_toggle()
+                    bpy.ops.mesh.select_all(action='SELECT')
+                    bpy.ops.mesh.remove_doubles(threshold= self.merge_distance)
+                    bpy.ops.object.editmode_toggle()
+                    bpy.ops.object.convert(target='CURVE')
+                       
         return {'FINISHED'}
+
+    def draw(self, context):
+        layout = self.layout
+        obj = context.active_object
+        if obj.type == 'CURVE': 
+            if obj.data.splines and obj.data.splines[0].type == 'BEZIER':
+                layout.prop(self, "keep_bezier", text="Keep Bezier")
+        layout.prop(self, "merge_distance", text="Merge Distance")
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
 
 
 class CamMeshGetPockets(Operator):
@@ -712,7 +758,7 @@ class CamMeshGetPockets(Operator):
 class CamOffsetSilhouete(Operator):
     """Curve Offset Operation """
     bl_idname = "object.silhouete_offset"
-    bl_label = "Silhouette Offset"
+    bl_label = "Silhouette & Offset"
     bl_options = {'REGISTER', 'UNDO', 'PRESET'}
 
     offset: FloatProperty(
@@ -725,23 +771,44 @@ class CamOffsetSilhouete(Operator):
     )
     mitrelimit: FloatProperty(
         name="Mitre Limit",
-        default=.003,
+        default=2,
         min=0.00000001,
         max=20,
         precision=4,
         unit="LENGTH",
     )
     style: EnumProperty(
-        name="Type of Curve",
+        name="Corner Type",
         items=(
             ('1', 'Round', ''),
             ('2', 'Mitre', ''),
             ('3', 'Bevel', '')
         ),
     )
-    opencurve: BoolProperty(
-        name="Dialate Open Curve",
-        default=False,
+    caps: EnumProperty(
+        name="Cap Type",
+        items=(
+            ('round', 'Round', ''),
+            ('square', 'Square', ''),
+            ('flat', 'Flat', '')
+        ),
+    )
+    align: EnumProperty(
+        name="Alignment",
+        items=(
+            ('worldxy', 'World XY', ''),
+            ('bottom', 'Base Bottom', ''),
+            ('top', 'Base Top', '')
+        ),
+    )
+    opentype: EnumProperty(
+        name="Curve Type",
+        items=(
+            ('dilate', 'Dilate open curve', ''),
+            ('leaveopen', 'Leave curve open', ''),
+            ('closecurve', 'Close curve', '')
+        ),
+        default='closecurve'
     )
 
     @classmethod
@@ -750,40 +817,110 @@ class CamOffsetSilhouete(Operator):
             context.active_object.type == 'CURVE' or context.active_object.type == 'FONT' or
             context.active_object.type == 'MESH')
 
+    def isStraight(self, geom):
+        assert geom.geom_type == "LineString", geom.geom_type
+        length = geom.length
+        start_pt = geom.interpolate(0)
+        end_pt = geom.interpolate(1, normalized=True)
+        straight_dist = start_pt.distance(end_pt)
+        if straight_dist == 0.0:
+            if length == 0.0:
+                return True
+            return False
+        elif length / straight_dist == 1:
+            return True
+        else:
+            return False
+
     # this is almost same as getobjectoutline, just without the need of operation data
     def execute(self, context):
         # bpy.ops.object.curve_remove_doubles()
         ob = context.active_object
-        if self.opencurve and ob.type == 'CURVE':
-            bpy.ops.object.duplicate()
-            obj = context.active_object
-            bpy.ops.object.transform_apply(
-                location=True, rotation=True, scale=True)  # apply all transforms
-            bpy.context.object.data.resolution_u = 60
-            bpy.ops.object.convert(target='MESH')
-            bpy.context.active_object.name = "temp_mesh"
+        if ob.type == 'FONT':
+            bpy.context.object.data.resolution_u = 64
+        if ob.type == 'CURVE':
+            if ob.data.splines and ob.data.splines[0].type == 'BEZIER':
+                bpy.context.object.data.resolution_u = 64
+                bpy.ops.object.curve_remove_doubles(merge_distance=0.0001, keep_bezier=True)
+            else:
+                bpy.ops.object.curve_remove_doubles()
 
-            coords = []
-            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                coords.append((v.co.x, v.co.y))
+        bpy.ops.object.duplicate()
+        obj = context.active_object
+        if context.active_object.type != 'MESH':
+            obj.data.dimensions = '3D'
+        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)  # apply all transforms
+        bpy.ops.object.convert(target='MESH')
+        bpy.context.active_object.name = "temp_mesh"
 
-            simple.remove_multiple('temp_mesh')  # delete temporary mesh
-            simple.remove_multiple('dilation')  # delete old dilation objects
+        #get the Z align point from the base
+        if self.align == 'top':
+            point = max([(bpy.context.object.matrix_world @ v.co).z for v in bpy.context.object.data.vertices])
+        elif self.align == 'bottom':
+            point = min([(bpy.context.object.matrix_world @ v.co).z for v in bpy.context.object.data.vertices])
+        else:
+            point = 0
 
-            # convert coordinates to shapely LineString datastructure
-            line = LineString(coords)
+        # extract X,Y coordinates from the vertices data and put them into a LineString object
+        coords = []
+        for v in obj.data.vertices:  
+            coords.append((v.co.x, v.co.y))
+        simple.remove_multiple('temp_mesh')  # delete temporary mesh
+        simple.remove_multiple('dilation')  # delete old dilation objects
+
+        # convert coordinates to shapely LineString datastructure
+        line = LineString(coords)
+
+        #if curve is a straight segment, change offset type to dilate
+        if self.isStraight(line) and self.opentype != 'leaveopen':
+            self.opentype = 'dilate'
+
+        #make the dilate or open curve offset
+        if (self.opentype != 'closecurve') and ob.type == 'CURVE':
             print("line length=", round(line.length * 1000), 'mm')
 
-            dilated = line.buffer(self.offset, cap_style=1, resolution=16,
-                                  mitre_limit=self.mitrelimit)  # use shapely to expand
-            polygon_utils_cam.shapelyToCurve("dilation", dilated, 0)
+            if self.style == '3':
+                style="bevel"
+            elif self.style == '2':
+                style="mitre"
+            else:
+                style="round"
+
+            if self.opentype == 'leaveopen':
+                new_shape = shapely.offset_curve(line, self.offset, join_style=style)  # use shapely to expand without closing the curve
+                name = "Offset: " + "%.2f" % round(self.offset * 1000) + 'mm - ' + ob.name
+            else:
+                new_shape = line.buffer(self.offset, cap_style=self.caps, resolution=16, join_style=style, mitre_limit=self.mitrelimit)  # use shapely to expand, closing the curve
+                name = "Dilation: " + "%.2f" % round(self.offset * 1000) + 'mm - ' + ob.name
+
+            #create the actual offset object based on the Shapely offset
+            polygon_utils_cam.shapelyToCurve(name, new_shape, 0, self.opentype != 'leaveopen')
+
+            #position the object according to the calculated point
+            bpy.context.object.location.z = point
+
+        #if curve is not a straight line and neither dilate or leave open are selected, create a normal offset
         else:
+            bpy.context.view_layer.objects.active = ob
             utils.silhoueteOffset(context, self.offset,
                                   int(self.style), self.mitrelimit)
         return {'FINISHED'}
+    
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "offset", text="Offset")
+        layout.prop(self, "opentype", text="Type")
+        layout.prop(self, "style", text="Corner")
+        if self.style == '2':
+            layout.prop(self, "mitrelimit", text="Mitre Limit")
+        if self.opentype == 'dilate':
+            layout.prop(self, "caps", text="Cap")
+        if self.opentype != 'closecurve':
+            layout.prop(self, "align", text="Align")
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self)
 
-
-# Finds object silhouette, usefull for meshes, since with curves it's not needed.
+    # Finds object silhouette, usefull for meshes, since with curves it's not needed.
 class CamObjectSilhouete(Operator):
     """Object Silhouette"""
     bl_idname = "object.silhouete"
@@ -814,5 +951,6 @@ class CamObjectSilhouete(Operator):
         bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
         bpy.ops.object.curve_remove_doubles()
         return {'FINISHED'}
+    # ---------------------------------------------------
 
-# ---------------------------------------------------
+

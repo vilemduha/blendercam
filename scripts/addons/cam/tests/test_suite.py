@@ -66,7 +66,7 @@ class BlenderCAMTest(unittest.TestCase):
 
         # Compare the generated and expected gcode for each operation
         for gcode_file in test_case['gcode_files']:
-            with self.subTest(operation=f"{test_case['subdir_name']}/{gcode_file}"):
+            with self.subTest(operation=f"{test_case['subdir_name']}//{gcode_file}"):
                 generated = self.get_gcode_from_file(gcode_file[1:])
                 expected = self.get_gcode_from_file(gcode_file)
                 if sys.platform == 'darwin' and os.path.exists(gcode_file+".mac"):

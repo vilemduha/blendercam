@@ -1,6 +1,6 @@
-(Created with grbl post processor 2024/01/26 13:10)
+(Created with grbl post processor 2024/09/04 23:03)
 G21
-(G-code generated with BlenderCAM and NC library)
+(G-code Generated with BlenderCAM and NC library)
 G17G90
 (Tool: D = 10.0 mm  type END flutes 2)
 S12000M03

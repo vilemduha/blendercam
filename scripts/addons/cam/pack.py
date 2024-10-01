@@ -40,6 +40,24 @@ from . import (
 
 
 def srotate(s, r, x, y):
+    """Rotate a polygon's coordinates around a specified point.
+
+    This function takes a polygon and rotates its exterior coordinates
+    around a given point (x, y) by a specified angle (r) in radians. It uses
+    the Euler rotation to compute the new coordinates for each point in the
+    polygon's exterior. The resulting coordinates are then used to create a
+    new polygon.
+
+    Args:
+        s (shapely.geometry.Polygon): The polygon to be rotated.
+        r (float): The angle of rotation in radians.
+        x (float): The x-coordinate of the point around which to rotate.
+        y (float): The y-coordinate of the point around which to rotate.
+
+    Returns:
+        shapely.geometry.Polygon: A new polygon with the rotated coordinates.
+    """
+
     ncoords = []
     e = Euler((0, 0, r))
     for p in s.exterior.coords:
@@ -53,6 +71,23 @@ def srotate(s, r, x, y):
 
 
 def packCurves():
+    """Pack selected curves into a defined area based on specified settings.
+
+    This function organizes selected curve objects in Blender by packing
+    them into a specified area defined by the camera pack settings. It
+    calculates the optimal positions for each curve while considering
+    parameters such as sheet size, fill direction, distance, tolerance, and
+    rotation. The function utilizes geometric operations to ensure that the
+    curves do not overlap and fit within the defined boundaries. The packed
+    curves are then transformed and their properties are updated
+    accordingly.  The function performs the following steps: 1. Activates
+    speedup features if available. 2. Retrieves packing settings from the
+    current scene. 3. Processes each selected object to create polygons from
+    curves. 4. Attempts to place each polygon within the defined area while
+    avoiding    overlaps and respecting the specified fill direction. 5.
+    Outputs the final arrangement of polygons.
+    """
+
     if speedups.available:
         speedups.enable()
     t = time.time()

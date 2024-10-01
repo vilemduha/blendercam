@@ -7,10 +7,13 @@ import tempfile
 
 INSTALL_CODE = f"""
 import bpy
-bpy.ops.preferences.addon_install(filepath='{sys.argv[1]}')
-bpy.ops.preferences.addon_enable(module='cam')
+bpy.context.preferences.system.use_online_access = True
+bpy.ops.extensions.repo_sync_all(use_active_only=False)
+bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}', repo='user_default')
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="stl_format_legacy")
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="simplify_curves_plus")
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")
 bpy.ops.wm.save_userpref()
-import cam
 """
 
 NUM_RETRIES = 10

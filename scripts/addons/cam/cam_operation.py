@@ -297,12 +297,47 @@ class camOperation(PropertyGroup):
         default='INSIDE',
         update=updateRest,
     )
+
+    pocketType: EnumProperty(
+        name='pocket type',
+        items=(
+            ('PERIMETER', 'Perimeter', 'a'),
+            ('PARALLEL', 'Parallel', 'a'),
+        ),
+        description='Type of pocket',
+        default='PERIMETER',
+        update=updateRest,
+    )
+    parallelPocketAngle: FloatProperty(
+        name="Parallel Pocket Angle",
+        description="Angle for parallel pocket",
+        min=-180,
+        max=180.0,
+        default=45.0,
+        precision=constants.PRECISION,
+        update=updateRest,
+    )
+
+    parallelPocketCrosshatch: BoolProperty(
+        name="Crosshatch #",
+        description="Crosshatch X finish",
+        default=False,
+        update=updateRest,
+    )
+    parallelPocketContour: BoolProperty(
+        name="Contour Finish",
+        description="Contour path finish",
+        default=False,
+        update=updateRest,
+    )
+
     pocketToCurve: BoolProperty(
         name="Pocket to Curve",
         description="Generates a curve instead of a path",
         default=False,
         update=updateRest,
     )
+
     # Cutout
     cut_type: EnumProperty(
         name='Cut',
@@ -326,7 +361,7 @@ class camOperation(PropertyGroup):
     straight: BoolProperty(
         name="Overshoot Style",
         description="Use overshoot cutout instead of conventional rounded",
-        default=False,
+        default=True,
         update=updateRest,
     )
     # cutter

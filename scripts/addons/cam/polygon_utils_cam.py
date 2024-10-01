@@ -11,7 +11,7 @@ from shapely import geometry as sgeometry
 
 from mathutils import Euler, Vector
 try:
-    import curve_simplify
+    import bl_ext.blender_org.simplify_curves_plus as curve_simplify
 except ImportError:
     pass
 
@@ -20,6 +20,22 @@ SHAPELY = True
 
 
 def Circle(r, np):
+    """Generate a circle defined by a given radius and number of points.
+
+    This function creates a polygon representing a circle by generating a
+    list of points based on the specified radius and the number of points
+    (np). It uses vector rotation to calculate the coordinates of each point
+    around the circle. The resulting points are then used to create a
+    polygon object.
+
+    Args:
+        r (float): The radius of the circle.
+        np (int): The number of points to generate around the circle.
+
+    Returns:
+        spolygon.Polygon: A polygon object representing the circle.
+    """
+
     c = []
     v = Vector((r, 0, 0))
     e = Euler((0, 0, 2.0 * pi / np))
@@ -32,6 +48,23 @@ def Circle(r, np):
 
 
 def shapelyRemoveDoubles(p, optimize_threshold):
+    """Remove duplicate points from the boundary of a shape.
+
+    This function simplifies the boundary of a given shape by removing
+    duplicate points using the Ramer-Douglas-Peucker algorithm. It iterates
+    through each contour of the shape, applies the simplification, and adds
+    the resulting contours to a new shape. The optimization threshold can be
+    adjusted to control the level of simplification.
+
+    Args:
+        p (Shape): The shape object containing boundaries to be simplified.
+        optimize_threshold (float): A threshold value that influences the
+            simplification process.
+
+    Returns:
+        Shape: A new shape object with simplified boundaries.
+    """
+
     optimize_threshold *= 0.000001
 
     soptions = ['distance', 'distance', 0.0, 5, optimize_threshold, 5, optimize_threshold]
@@ -53,6 +86,26 @@ def shapelyRemoveDoubles(p, optimize_threshold):
 
 
 def shapelyToMultipolygon(anydata):
+    """Convert a Shapely geometry to a MultiPolygon.
+
+    This function takes a Shapely geometry object and converts it to a
+    MultiPolygon. If the input geometry is already a MultiPolygon, it
+    returns it as is. If the input is a Polygon and not empty, it wraps the
+    Polygon in a MultiPolygon. If the input is an empty Polygon, it returns
+    an empty MultiPolygon. For any other geometry type, it prints a message
+    indicating that the conversion was aborted and returns an empty
+    MultiPolygon.
+
+    Args:
+        anydata (shapely.geometry.base.BaseGeometry): A Shapely geometry object
+
+    Returns:
+        shapely.geometry.MultiPolygon: A MultiPolygon representation of the input
+        geometry.
+    """
+    print("geometry type: ", anydata.geom_type)
+    print("anydata empty? ", anydata.is_empty)
+    ## bug: empty mesh circle makes anydata empty: geometry type 'GeometryCollection'
     if anydata.geom_type == 'MultiPolygon':
         return anydata
     elif anydata.geom_type == 'Polygon':
@@ -61,11 +114,29 @@ def shapelyToMultipolygon(anydata):
         else:
             return sgeometry.MultiPolygon()
     else:
-        print(anydata.geom_type, 'Shapely Conversion Aborted')
+        print('Shapely Conversion Aborted')
         return sgeometry.MultiPolygon()
 
 
 def shapelyToCoords(anydata):
+    """Convert a Shapely geometry object to a list of coordinates.
+
+    This function takes a Shapely geometry object and extracts its
+    coordinates based on the geometry type. It handles various types of
+    geometries including Polygon, MultiPolygon, LineString, MultiLineString,
+    and GeometryCollection. If the geometry is empty or of type MultiPoint,
+    it returns an empty list. The coordinates are returned in a nested list
+    format, where each sublist corresponds to the exterior or interior
+    coordinates of the geometries.
+
+    Args:
+        anydata (shapely.geometry.base.BaseGeometry): A Shapely geometry object
+
+    Returns:
+        list: A list of coordinates extracted from the input geometry.
+        The structure of the list depends on the geometry type.
+    """
+
     p = anydata
     seq = []
     # print(p.type)
@@ -115,7 +186,25 @@ def shapelyToCoords(anydata):
     return seq
 
 
-def shapelyToCurve(name, p, z):
+def shapelyToCurve(name, p, z, cyclic = True):
+    """Create a 3D curve object in Blender from a Shapely geometry.
+
+    This function takes a Shapely geometry and converts it into a 3D curve
+    object in Blender. It extracts the coordinates from the Shapely geometry
+    and creates a new curve object with the specified name. The curve is
+    created in the 3D space at the given z-coordinate, with a default weight
+    for the points.
+
+    Args:
+        name (str): The name of the curve object to be created.
+        p (shapely.geometry): A Shapely geometry object from which to extract
+            coordinates.
+        z (float): The z-coordinate for all points of the curve.
+
+    Returns:
+        bpy.types.Object: The newly created curve object in Blender.
+    """
+
     import bpy
     import bmesh
     from bpy_extras import object_utils
@@ -147,6 +236,6 @@ def shapelyToCurve(name, p, z):
     objectdata.select_set(state=True)
 
     for c in objectdata.data.splines:
-        c.use_cyclic_u = True
+        c.use_cyclic_u = cyclic
 
     return objectdata  # bpy.context.active_object

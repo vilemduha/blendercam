@@ -73,14 +73,15 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
 
     # Draw blendercam version (and whether there are updates available)
     def draw_blendercam_version(self):
+        addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.blendercam"].preferences
         if not self.has_correct_level():
             return
         self.layout.label(
             text=f'BlenderCAM v{".".join([str(x) for x in cam_version])}')
-        if len(bpy.context.preferences.addons['cam'].preferences.new_version_available) > 0:
+        if len(addon_prefs.new_version_available) > 0:
             self.layout.label(text=f"New Version Available:")
             self.layout.label(
-                text=f"  {bpy.context.preferences.addons['cam'].preferences.new_version_available}")
+                text=f"  {addon_prefs.new_version_available}")
             self.layout.operator("render.cam_update_now")
 
     # Display the OpenCamLib version

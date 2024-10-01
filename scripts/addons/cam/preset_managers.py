@@ -26,12 +26,13 @@ class CAM_MACHINE_MT_presets(Menu):
 
     @classmethod
     def post_cb(cls, context):
+        addon_prefs = context.preferences.addons[__package__].preferences
         name = cls.bl_label
         filepath = bpy.utils.preset_find(name,
                                          cls.preset_subdir,
                                          display_name=True,
                                          ext=".py")
-        context.preferences.addons['cam'].preferences.default_machine_preset = filepath
+        addon_prefs.default_machine_preset = filepath
         bpy.ops.wm.save_userpref()
 
 

@@ -1,5 +1,5 @@
 """BlenderCAM 'chunk.py' © 2012 Vilem Novak
-
+ 
 Classes and Functions to build, store and optimize CAM path chunks.
 """
 
@@ -1226,6 +1226,7 @@ def meshFromCurve(o, use_modifiers=False):
     co.data.dimensions = "3D"
     co.data.bevel_depth = 0
     co.data.extrude = 0
+    co.data.resolution_u = 100
 
     # first, convert to mesh to avoid parenting issues with hooks, then apply locrotscale.
     bpy.ops.object.convert(target="MESH", keep_original=False)
