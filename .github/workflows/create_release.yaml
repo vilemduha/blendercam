@@ -80,4 +80,4 @@ jobs:
         artifacts: "scripts/addons/CNCCAM.zip"
         tag: ${{ env.VERSION_TAG }}
         allowUpdates: true
-        body: "To install CNC CAM extension for Blender, download CNCCAM.zip and *don't* extract it. In blender, go to preferences, Get Extensions, and select 'install from disk' and select the blendercam.zip file you downloaded"
+        body: "To install CNC CAM extension for Blender, download CNCCAM.zip and *don't* extract it. In blender, go to preferences, Get Extensions, and select 'install from disk' and select the CNCCAM.zip file you downloaded"
