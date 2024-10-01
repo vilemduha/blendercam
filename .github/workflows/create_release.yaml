@@ -61,7 +61,7 @@ jobs:
       uses: thedoctor0/zip-release@0.7.5
       with:
         type: 'zip'
-        filename: 'blendercam.zip'
+        filename: 'CNCCAM.zip'
         directory: './scripts/addons'
     - name: Write version number
       if: ${{ inputs.version_bump }} != "overwrite previous tag"
@@ -80,4 +80,4 @@ jobs:
         artifacts: "scripts/addons/blendercam.zip"
         tag: ${{ env.VERSION_TAG }}
         allowUpdates: true
-        body: "To install BlenderCAM, download blendercam.zip and *don't* extract it. In blender, go to preferences, Get Extensions, and select 'install from disk' and select the blendercam.zip file you downloaded"
+        body: "To install CNC CAM extension for Blender, download blendercam.zip and *don't* extract it. In blender, go to preferences, Get Extensions, and select 'install from disk' and select the blendercam.zip file you downloaded"
