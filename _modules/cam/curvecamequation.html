@@ -1,0 +1,1119 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cam.curvecamequation &#8212; BlenderCAM 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=e842dffb"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/cam/curvecamequation';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo_blendercam.png" class="logo__image only-light" alt="BlenderCAM 1.0.38 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo_blendercam.png" class="logo__image only-dark" alt="BlenderCAM 1.0.38 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../styleguide.html">Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflows.html">Workflows &amp; Actions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/cam/index.html">cam</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/autoupdate/index.html">cam.autoupdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/basrelief/index.html">cam.basrelief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_chunk/index.html">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_operation/index.html">cam.cam_operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/chain/index.html">cam.chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamcreate/index.html">cam.curvecamcreate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamequation/index.html">cam.curvecamequation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamtools/index.html">cam.curvecamtools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodeimportparser/index.html">cam.gcodeimportparser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodepath/index.html">cam.gcodepath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/image_utils/index.html">cam.image_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/machine_settings/index.html">cam.machine_settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/numba_wrapper/index.html">cam.numba_wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ops/index.html">cam.ops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pack/index.html">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/polygon_utils_cam/index.html">cam.polygon_utils_cam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/preset_managers/index.html">cam.preset_managers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simple/index.html">cam.simple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/testing/index.html">cam.testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ui/index.html">cam.ui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/utils/index.html">cam.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for cam.curvecamequation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;BlenderCAM &#39;curvecamequation.py&#39; © 2021, 2022 Alain Pelletier</span>
+
+<span class="sd">Operators to create a number of geometric shapes with curves.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sqrt</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">from</span> <span class="nn">bpy.props</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">EnumProperty</span><span class="p">,</span>
+    <span class="n">FloatProperty</span><span class="p">,</span>
+    <span class="n">IntProperty</span><span class="p">,</span>
+    <span class="n">StringProperty</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bpy.types</span> <span class="kn">import</span> <span class="n">Operator</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">parametric</span>
+
+
+<div class="viewcode-block" id="CamSineCurve">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamequation.CamSineCurve">[docs]</a>
+<span class="k">class</span> <span class="nc">CamSineCurve</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object Sine &quot;&quot;&quot;</span>  <span class="c1"># by Alain Pelletier april 2021</span>
+<div class="viewcode-block" id="CamSineCurve.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.sine&quot;</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Periodic Wave&quot;</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">,</span> <span class="s1">&#39;PRESET&#39;</span><span class="p">}</span></div>
+
+
+    <span class="c1"># zstring: StringProperty(name=&quot;Z equation&quot;, description=&quot;Equation for z=F(u,v)&quot;, default=&quot;0.05*sin(2*pi*4*t)&quot; )</span>
+<div class="viewcode-block" id="CamSineCurve.axis">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.axis">[docs]</a>
+    <span class="n">axis</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Displacement Axis&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;XY&#39;</span><span class="p">,</span> <span class="s1">&#39;Y to displace X axis&#39;</span><span class="p">,</span> <span class="s1">&#39;Y constant; X sine displacement&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;YX&#39;</span><span class="p">,</span> <span class="s1">&#39;X to displace Y axis&#39;</span><span class="p">,</span> <span class="s1">&#39;X constant; Y sine displacement&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;ZX&#39;</span><span class="p">,</span> <span class="s1">&#39;X to displace Z axis&#39;</span><span class="p">,</span> <span class="s1">&#39;X constant; Y sine displacement&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;ZY&#39;</span><span class="p">,</span> <span class="s1">&#39;Y to displace Z axis&#39;</span><span class="p">,</span> <span class="s1">&#39;X constant; Y sine displacement&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ZX&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.wave">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.wave">[docs]</a>
+    <span class="n">wave</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wave&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span> <span class="s1">&#39;Sine Wave&#39;</span><span class="p">,</span> <span class="s1">&#39;Sine Wave&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;triangle&#39;</span><span class="p">,</span> <span class="s1">&#39;Triangle Wave&#39;</span><span class="p">,</span> <span class="s1">&#39;triangle wave&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;cycloid&#39;</span><span class="p">,</span> <span class="s1">&#39;Cycloid&#39;</span><span class="p">,</span> <span class="s1">&#39;Sine wave rectification&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;invcycloid&#39;</span><span class="p">,</span> <span class="s1">&#39;Inverse Cycloid&#39;</span><span class="p">,</span> <span class="s1">&#39;Sine wave rectification&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.amplitude">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.amplitude">[docs]</a>
+    <span class="n">amplitude</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.01</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.period">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.period">[docs]</a>
+    <span class="n">period</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Period&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.beatperiod">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.beatperiod">[docs]</a>
+    <span class="n">beatperiod</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Beat Period Offset&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.shift">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.shift">[docs]</a>
+    <span class="n">shift</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Phase Shift&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mi">360</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ROTATION&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.offset">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.offset">[docs]</a>
+    <span class="n">offset</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Offset&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span>
+        <span class="mf">1.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.iteration">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.iteration">[docs]</a>
+    <span class="n">iteration</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Iteration&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.maxt">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.maxt">[docs]</a>
+    <span class="n">maxt</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wave Ends at X&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.mint">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.mint">[docs]</a>
+    <span class="n">mint</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wave Starts at X&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.wave_distance">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.wave_distance">[docs]</a>
+    <span class="n">wave_distance</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Distance Between Multiple Waves&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.wave_angle_offset">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.wave_angle_offset">[docs]</a>
+    <span class="n">wave_angle_offset</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Angle Offset for Multiple Waves&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mi">200</span><span class="o">*</span><span class="n">pi</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">200</span><span class="o">*</span><span class="n">pi</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ROTATION&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamSineCurve.wave_amount">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamSineCurve.wave_amount">[docs]</a>
+    <span class="n">wave_amount</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Amount of Multiple Waves&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamSineCurve.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamequation.CamSineCurve.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amplitude</span>
+        <span class="n">period</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">period</span>
+        <span class="n">beatperiod</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beatperiod</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift</span>
+
+        <span class="c1"># z=Asin(B(x+C))+D</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">==</span> <span class="s1">&#39;sine&#39;</span><span class="p">:</span>
+            <span class="n">zstring</span> <span class="o">=</span> <span class="n">ssine</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">dc_offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span> <span class="n">phase_shift</span><span class="o">=</span><span class="n">shift</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">beatperiod</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">zstring</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;+ </span><span class="si">{</span><span class="n">ssine</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="o">+</span><span class="n">beatperiod</span><span class="p">,</span><span class="w"> </span><span class="n">dc_offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span><span class="w"> </span><span class="n">phase_shift</span><span class="o">=</span><span class="n">shift</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># build triangle wave from fourier series</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">==</span> <span class="s1">&#39;triangle&#39;</span><span class="p">:</span>
+            <span class="n">zstring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">triangle</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">amp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">beatperiod</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">zstring</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;+ </span><span class="si">{</span><span class="n">triangle</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="o">+</span><span class="n">beatperiod</span><span class="p">,</span><span class="w"> </span><span class="n">amp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">==</span> <span class="s1">&#39;cycloid&#39;</span><span class="p">:</span>
+            <span class="n">zstring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;abs(</span><span class="si">{</span><span class="n">ssine</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">dc_offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span><span class="w"> </span><span class="n">phase_shift</span><span class="o">=</span><span class="n">shift</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave</span> <span class="o">==</span> <span class="s1">&#39;invcycloid&#39;</span><span class="p">:</span>
+            <span class="n">zstring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;-1 * abs(</span><span class="si">{</span><span class="n">ssine</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">dc_offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span><span class="w"> </span><span class="n">phase_shift</span><span class="o">=</span><span class="n">shift</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">zstring</span><span class="p">)</span>
+        <span class="c1"># make equation from string</span>
+
+        <span class="k">def</span> <span class="nf">e</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">zstring</span><span class="p">)</span>
+
+        <span class="c1"># build function to be passed to create parametric curve ()</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">angle_offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">==</span> <span class="s2">&quot;XY&quot;</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span><span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="n">angle_offset</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">==</span> <span class="s2">&quot;YX&quot;</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">e</span><span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="n">angle_offset</span><span class="p">)</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">==</span> <span class="s2">&quot;ZX&quot;</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">e</span><span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="n">angle_offset</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">==</span> <span class="s2">&quot;ZY&quot;</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">e</span><span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="n">angle_offset</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">c</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wave_amount</span><span class="p">):</span>
+            <span class="n">angle_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wave_angle_offset</span> <span class="o">*</span> <span class="n">period</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span><span class="p">)</span>
+            <span class="n">parametric</span><span class="o">.</span><span class="n">create_parametric_curve</span><span class="p">(</span>
+                <span class="n">f</span><span class="p">,</span>
+                <span class="n">offset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wave_distance</span> <span class="o">*</span> <span class="n">i</span><span class="p">,</span>
+                <span class="nb">min</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mint</span><span class="p">,</span>
+                <span class="nb">max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maxt</span><span class="p">,</span>
+                <span class="n">use_cubic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">iterations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iteration</span><span class="p">,</span>
+                <span class="n">angle_offset</span><span class="o">=</span><span class="n">angle_off</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CamLissajousCurve">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamequation.CamLissajousCurve">[docs]</a>
+<span class="k">class</span> <span class="nc">CamLissajousCurve</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lissajous &quot;&quot;&quot;</span>  <span class="c1"># by Alain Pelletier april 2021</span>
+<div class="viewcode-block" id="CamLissajousCurve.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.lissajous&quot;</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Lissajous Figure&quot;</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">,</span> <span class="s1">&#39;PRESET&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamLissajousCurve.amplitude_A">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.amplitude_A">[docs]</a>
+    <span class="n">amplitude_A</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Amplitude A&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.waveA">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.waveA">[docs]</a>
+    <span class="n">waveA</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wave X&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span> <span class="s1">&#39;Sine Wave&#39;</span><span class="p">,</span> <span class="s1">&#39;Sine Wave&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;triangle&#39;</span><span class="p">,</span> <span class="s1">&#39;Triangle Wave&#39;</span><span class="p">,</span> <span class="s1">&#39;triangle wave&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamLissajousCurve.amplitude_B">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.amplitude_B">[docs]</a>
+    <span class="n">amplitude_B</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Amplitude B&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.waveB">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.waveB">[docs]</a>
+    <span class="n">waveB</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wave Y&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span> <span class="s1">&#39;Sine Wave&#39;</span><span class="p">,</span> <span class="s1">&#39;Sine Wave&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;triangle&#39;</span><span class="p">,</span> <span class="s1">&#39;Triangle Wave&#39;</span><span class="p">,</span> <span class="s1">&#39;triangle wave&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sine&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.period_A">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.period_A">[docs]</a>
+    <span class="n">period_A</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Period A&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.period_B">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.period_B">[docs]</a>
+    <span class="n">period_B</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Period B&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.period_Z">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.period_Z">[docs]</a>
+    <span class="n">period_Z</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Period Z&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.amplitude_Z">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.amplitude_Z">[docs]</a>
+    <span class="n">amplitude_Z</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Amplitude Z&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.shift">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.shift">[docs]</a>
+    <span class="n">shift</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Phase Shift&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mi">360</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ROTATION&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamLissajousCurve.iteration">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.iteration">[docs]</a>
+    <span class="n">iteration</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Iteration&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.maxt">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.maxt">[docs]</a>
+    <span class="n">maxt</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wave Ends at X&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamLissajousCurve.mint">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamLissajousCurve.mint">[docs]</a>
+    <span class="n">mint</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wave Starts at X&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamLissajousCurve.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamequation.CamLissajousCurve.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="c1"># x=Asin(at+delta ),y=Bsin(bt)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveA</span> <span class="o">==</span> <span class="s1">&#39;sine&#39;</span><span class="p">:</span>
+            <span class="n">xstring</span> <span class="o">=</span> <span class="n">ssine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amplitude_A</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">period_A</span><span class="p">,</span> <span class="n">phase_shift</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shift</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveA</span> <span class="o">==</span> <span class="s1">&#39;triangle&#39;</span><span class="p">:</span>
+            <span class="n">xstring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">triangle</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">period_A</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">amplitude_A</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveB</span> <span class="o">==</span> <span class="s1">&#39;sine&#39;</span><span class="p">:</span>
+            <span class="n">ystring</span> <span class="o">=</span> <span class="n">ssine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amplitude_B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">period_B</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">waveB</span> <span class="o">==</span> <span class="s1">&#39;triangle&#39;</span><span class="p">:</span>
+            <span class="n">ystring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">triangle</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">period_B</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">amplitude_B</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">zstring</span> <span class="o">=</span> <span class="n">ssine</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amplitude_Z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">period_Z</span><span class="p">)</span>
+
+        <span class="c1"># make equation from string</span>
+        <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">xstring</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">ystring</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">zstring</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x= </span><span class="si">{</span><span class="n">xstring</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y= </span><span class="si">{</span><span class="n">ystring</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># build function to be passed to create parametric curve ()</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">y</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">z</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">c</span>
+
+        <span class="n">parametric</span><span class="o">.</span><span class="n">create_parametric_curve</span><span class="p">(</span>
+            <span class="n">f</span><span class="p">,</span>
+            <span class="n">offset</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="nb">min</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mint</span><span class="p">,</span>
+            <span class="nb">max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maxt</span><span class="p">,</span>
+            <span class="n">use_cubic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">iterations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iteration</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CamHypotrochoidCurve">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamequation.CamHypotrochoidCurve">[docs]</a>
+<span class="k">class</span> <span class="nc">CamHypotrochoidCurve</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hypotrochoid &quot;&quot;&quot;</span>  <span class="c1"># by Alain Pelletier april 2021</span>
+<div class="viewcode-block" id="CamHypotrochoidCurve.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamHypotrochoidCurve.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.hypotrochoid&quot;</span></div>
+
+<div class="viewcode-block" id="CamHypotrochoidCurve.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamHypotrochoidCurve.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Spirograph Type Figure&quot;</span></div>
+
+<div class="viewcode-block" id="CamHypotrochoidCurve.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamHypotrochoidCurve.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">,</span> <span class="s1">&#39;PRESET&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamHypotrochoidCurve.typecurve">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamHypotrochoidCurve.typecurve">[docs]</a>
+    <span class="n">typecurve</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Type of Curve&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;hypo&#39;</span><span class="p">,</span> <span class="s1">&#39;Hypotrochoid&#39;</span><span class="p">,</span> <span class="s1">&#39;Inside ring&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;epi&#39;</span><span class="p">,</span> <span class="s1">&#39;Epicycloid&#39;</span><span class="p">,</span> <span class="s1">&#39;Outside inner ring&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamHypotrochoidCurve.R">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamHypotrochoidCurve.R">[docs]</a>
+    <span class="n">R</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Big Circle Radius&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamHypotrochoidCurve.r">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamHypotrochoidCurve.r">[docs]</a>
+    <span class="n">r</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Small Circle Radius&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamHypotrochoidCurve.d">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamHypotrochoidCurve.d">[docs]</a>
+    <span class="n">d</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Distance from Center of Interior Circle&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.050</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamHypotrochoidCurve.dip">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamHypotrochoidCurve.dip">[docs]</a>
+    <span class="n">dip</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Variable Depth from Center&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.00</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamHypotrochoidCurve.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamequation.CamHypotrochoidCurve.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">Rmr</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">R</span> <span class="o">-</span> <span class="n">r</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># R-r</span>
+        <span class="n">Rpr</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">R</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># R +r</span>
+        <span class="n">Rpror</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">Rpr</span> <span class="o">/</span> <span class="n">r</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># (R+r)/r</span>
+        <span class="n">Rmror</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">Rmr</span> <span class="o">/</span> <span class="n">r</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># (R-r)/r</span>
+        <span class="n">maxangle</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">lcm</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">typecurve</span> <span class="o">==</span> <span class="s2">&quot;hypo&quot;</span><span class="p">:</span>
+            <span class="n">xstring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Rmr</span><span class="si">}</span><span class="s2"> * cos(t) + </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2"> * cos(</span><span class="si">{</span><span class="n">Rmror</span><span class="si">}</span><span class="s2"> * t)&quot;</span>
+            <span class="n">ystring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Rmr</span><span class="si">}</span><span class="s2"> * sin(t) - </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2"> * sin(</span><span class="si">{</span><span class="n">Rmror</span><span class="si">}</span><span class="s2"> * t)&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">xstring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Rpr</span><span class="si">}</span><span class="s2"> * cos(t) - </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2"> * cos(</span><span class="si">{</span><span class="n">Rpror</span><span class="si">}</span><span class="s2"> * t)&quot;</span>
+            <span class="n">ystring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Rpr</span><span class="si">}</span><span class="s2"> * sin(t) - </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s2"> * sin(</span><span class="si">{</span><span class="n">Rpror</span><span class="si">}</span><span class="s2"> * t)&quot;</span>
+
+        <span class="n">zstring</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dip</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2"> * (sqrt(((</span><span class="si">{</span><span class="n">xstring</span><span class="si">}</span><span class="s2">)**2) + ((</span><span class="si">{</span><span class="n">ystring</span><span class="si">}</span><span class="s2">)**2))))&quot;</span>
+
+        <span class="c1"># make equation from string</span>
+        <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">xstring</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">y</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">ystring</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">z</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">zstring</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x= </span><span class="si">{</span><span class="n">xstring</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y= </span><span class="si">{</span><span class="n">ystring</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;z= </span><span class="si">{</span><span class="n">zstring</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;maxangle </span><span class="si">{</span><span class="n">maxangle</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># build function to be passed to create parametric curve ()</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">y</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">z</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">c</span>
+
+        <span class="nb">iter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">maxangle</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">iter</span> <span class="o">&gt;</span> <span class="mi">10000</span><span class="p">:</span>  <span class="c1"># do not calculate more than 10000 points</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;limiting calculations to 10000 points&quot;</span><span class="p">)</span>
+            <span class="nb">iter</span> <span class="o">=</span> <span class="mi">10000</span>
+        <span class="n">parametric</span><span class="o">.</span><span class="n">create_parametric_curve</span><span class="p">(</span>
+            <span class="n">f</span><span class="p">,</span>
+            <span class="n">offset</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="nb">max</span><span class="o">=</span><span class="n">maxangle</span><span class="p">,</span>
+            <span class="n">use_cubic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">iterations</span><span class="o">=</span><span class="nb">iter</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CamCustomCurve">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamequation.CamCustomCurve">[docs]</a>
+<span class="k">class</span> <span class="nc">CamCustomCurve</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object Custom Curve &quot;&quot;&quot;</span>  <span class="c1"># by Alain Pelletier april 2021</span>
+<div class="viewcode-block" id="CamCustomCurve.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamCustomCurve.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.customcurve&quot;</span></div>
+
+<div class="viewcode-block" id="CamCustomCurve.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamCustomCurve.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Custom Curve&quot;</span></div>
+
+<div class="viewcode-block" id="CamCustomCurve.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamCustomCurve.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">,</span> <span class="s1">&#39;PRESET&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamCustomCurve.xstring">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamCustomCurve.xstring">[docs]</a>
+    <span class="n">xstring</span><span class="p">:</span> <span class="n">StringProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;X Equation&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Equation x=F(t)&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;t&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCustomCurve.ystring">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamCustomCurve.ystring">[docs]</a>
+    <span class="n">ystring</span><span class="p">:</span> <span class="n">StringProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Y Equation&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Equation y=F(t)&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCustomCurve.zstring">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamCustomCurve.zstring">[docs]</a>
+    <span class="n">zstring</span><span class="p">:</span> <span class="n">StringProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Z Equation&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Equation z=F(t)&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;0.05*sin(2*pi*4*t)&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamCustomCurve.iteration">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamCustomCurve.iteration">[docs]</a>
+    <span class="n">iteration</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Iteration&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCustomCurve.maxt">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamCustomCurve.maxt">[docs]</a>
+    <span class="n">maxt</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wave Ends at X&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCustomCurve.mint">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.CamCustomCurve.mint">[docs]</a>
+    <span class="n">mint</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wave Starts at X&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamCustomCurve.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamequation.CamCustomCurve.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x= &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">xstring</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;y= &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ystring</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;z= &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">zstring</span><span class="p">)</span>
+
+        <span class="c1"># make equation from string</span>
+        <span class="k">def</span> <span class="nf">ex</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xstring</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">ey</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ystring</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">ez</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zstring</span><span class="p">)</span>
+
+        <span class="c1"># build function to be passed to create parametric curve ()</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">ex</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">ey</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">ez</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">c</span>
+
+        <span class="n">parametric</span><span class="o">.</span><span class="n">create_parametric_curve</span><span class="p">(</span>
+            <span class="n">f</span><span class="p">,</span>
+            <span class="n">offset</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="nb">min</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mint</span><span class="p">,</span>
+            <span class="nb">max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">maxt</span><span class="p">,</span>
+            <span class="n">use_cubic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">iterations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iteration</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="triangle">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.triangle">[docs]</a>
+<span class="k">def</span> <span class="nf">triangle</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">A</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2"> * (&quot;</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">e</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="mi">8</span><span class="p">)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">pi</span><span class="o">/</span><span class="p">(</span><span class="n">T</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="mi">8</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;+&#39;</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2"> * sin(</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2"> * t)&quot;</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;)&#39;</span>
+    <span class="k">return</span> <span class="n">s</span></div>
+
+
+
+<div class="viewcode-block" id="ssine">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamequation/index.html#cam.curvecamequation.ssine">[docs]</a>
+<span class="k">def</span> <span class="nf">ssine</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">dc_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">phase_shift</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">dc_offset</span><span class="p">,</span>
+        <span class="n">phase_shift</span><span class="p">,</span>
+        <span class="n">A</span><span class="p">,</span>
+        <span class="n">T</span>
+    <span class="p">]</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dc_offset</span><span class="si">}</span><span class="s2"> + </span><span class="si">{</span><span class="n">A</span><span class="si">}</span><span class="s2"> * sin((2 * pi / </span><span class="si">{</span><span class="n">T</span><span class="si">}</span><span class="s2">) * (t + </span><span class="si">{</span><span class="n">phase_shift</span><span class="si">}</span><span class="s2">))&quot;</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

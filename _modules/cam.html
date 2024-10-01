@@ -1,0 +1,816 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cam &#8212; BlenderCAM 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=e842dffb"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/cam';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo_blendercam.png" class="logo__image only-light" alt="BlenderCAM 1.0.38 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo_blendercam.png" class="logo__image only-dark" alt="BlenderCAM 1.0.38 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../styleguide.html">Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workflows.html">Workflows &amp; Actions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/cam/index.html">cam</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/autoupdate/index.html">cam.autoupdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/basrelief/index.html">cam.basrelief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/cam_chunk/index.html">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/cam_operation/index.html">cam.cam_operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/chain/index.html">cam.chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/curvecamcreate/index.html">cam.curvecamcreate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/curvecamequation/index.html">cam.curvecamequation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/curvecamtools/index.html">cam.curvecamtools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/gcodeimportparser/index.html">cam.gcodeimportparser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/gcodepath/index.html">cam.gcodepath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/image_utils/index.html">cam.image_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/machine_settings/index.html">cam.machine_settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/numba_wrapper/index.html">cam.numba_wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/ops/index.html">cam.ops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/pack/index.html">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/polygon_utils_cam/index.html">cam.polygon_utils_cam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/preset_managers/index.html">cam.preset_managers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/simple/index.html">cam.simple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/testing/index.html">cam.testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/ui/index.html">cam.ui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/utils/index.html">cam.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/cam/voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for cam</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;BlenderCAM &#39;__init__.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Import Modules, Register and Unregister Classes</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Python Standard Library</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># pip Wheels</span>
+<span class="kn">import</span> <span class="nn">shapely</span>
+<span class="kn">import</span> <span class="nn">opencamlib</span>
+
+<span class="c1"># Blender Library</span>
+<span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">from</span> <span class="nn">bpy.props</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CollectionProperty</span><span class="p">,</span>
+    <span class="n">IntProperty</span><span class="p">,</span>
+    <span class="n">PointerProperty</span><span class="p">,</span>
+    <span class="n">StringProperty</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bpy_extras.object_utils</span> <span class="kn">import</span> <span class="n">object_data_add</span>
+
+<span class="c1"># Relative Imports - from &#39;cam&#39; module</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">basrelief</span>
+<span class="kn">from</span> <span class="nn">.autoupdate</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">UpdateChecker</span><span class="p">,</span>
+    <span class="n">Updater</span><span class="p">,</span>
+    <span class="n">UpdateSourceOperator</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.cam_operation</span> <span class="kn">import</span> <span class="n">camOperation</span>
+<span class="kn">from</span> <span class="nn">.chain</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">camChain</span><span class="p">,</span>
+    <span class="n">opReference</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.curvecamcreate</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CamCurveDrawer</span><span class="p">,</span>
+    <span class="n">CamCurveFlatCone</span><span class="p">,</span>
+    <span class="n">CamCurveGear</span><span class="p">,</span>
+    <span class="n">CamCurveHatch</span><span class="p">,</span>
+    <span class="n">CamCurveInterlock</span><span class="p">,</span>
+    <span class="n">CamCurveMortise</span><span class="p">,</span>
+    <span class="n">CamCurvePlate</span><span class="p">,</span>
+    <span class="n">CamCurvePuzzle</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.curvecamequation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CamCustomCurve</span><span class="p">,</span>
+    <span class="n">CamHypotrochoidCurve</span><span class="p">,</span>
+    <span class="n">CamLissajousCurve</span><span class="p">,</span>
+    <span class="n">CamSineCurve</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.curvecamtools</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CamCurveBoolean</span><span class="p">,</span>
+    <span class="n">CamCurveConvexHull</span><span class="p">,</span>
+    <span class="n">CamCurveIntarsion</span><span class="p">,</span>
+    <span class="n">CamCurveOvercuts</span><span class="p">,</span>
+    <span class="n">CamCurveOvercutsB</span><span class="p">,</span>
+    <span class="n">CamCurveRemoveDoubles</span><span class="p">,</span>
+    <span class="n">CamMeshGetPockets</span><span class="p">,</span>
+    <span class="n">CamOffsetSilhouete</span><span class="p">,</span>
+    <span class="n">CamObjectSilhouete</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.engine</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CNCCAM_ENGINE</span><span class="p">,</span>
+    <span class="n">get_panels</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.machine_settings</span> <span class="kn">import</span> <span class="n">machineSettings</span>
+<span class="kn">from</span> <span class="nn">.ops</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CalculatePath</span><span class="p">,</span>
+    <span class="c1"># bridges related</span>
+    <span class="n">CamBridgesAdd</span><span class="p">,</span>
+    <span class="n">CamChainAdd</span><span class="p">,</span>
+    <span class="n">CamChainRemove</span><span class="p">,</span>
+    <span class="n">CamChainOperationAdd</span><span class="p">,</span>
+    <span class="n">CamChainOperationRemove</span><span class="p">,</span>
+    <span class="n">CamChainOperationUp</span><span class="p">,</span>
+    <span class="n">CamChainOperationDown</span><span class="p">,</span>
+    <span class="n">CamOperationAdd</span><span class="p">,</span>
+    <span class="n">CamOperationCopy</span><span class="p">,</span>
+    <span class="n">CamOperationRemove</span><span class="p">,</span>
+    <span class="n">CamOperationMove</span><span class="p">,</span>
+    <span class="c1"># 5 axis ops</span>
+    <span class="n">CamOrientationAdd</span><span class="p">,</span>
+    <span class="c1"># shape packing</span>
+    <span class="n">CamPackObjects</span><span class="p">,</span>
+    <span class="n">CamSliceObjects</span><span class="p">,</span>
+    <span class="n">CAMSimulate</span><span class="p">,</span>
+    <span class="n">CAMSimulateChain</span><span class="p">,</span>
+    <span class="n">KillPathsBackground</span><span class="p">,</span>
+    <span class="n">PathsAll</span><span class="p">,</span>
+    <span class="n">PathsBackground</span><span class="p">,</span>
+    <span class="n">PathsChain</span><span class="p">,</span>
+    <span class="n">PathExport</span><span class="p">,</span>
+    <span class="n">PathExportChain</span><span class="p">,</span>
+    <span class="n">timer_update</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.pack</span> <span class="kn">import</span> <span class="n">PackObjectsSettings</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.pie_cam</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_CAM</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.pie_chains</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Chains</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.pie_curvecreators</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_CurveCreators</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.pie_curvetools</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_CurveTools</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.pie_info</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Info</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.pie_machine</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Machine</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.pie_material</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Material</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.pie_pack_slice_relief</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_PackSliceRelief</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.active_op.pie_area</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Area</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.active_op.pie_cutter</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Cutter</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.active_op.pie_feedrate</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Feedrate</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.active_op.pie_gcode</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Gcode</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.active_op.pie_movement</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Movement</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.active_op.pie_operation</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Operation</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.active_op.pie_optimisation</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Optimisation</span>
+<span class="kn">from</span> <span class="nn">.pie_menu.active_op.pie_setup</span> <span class="kn">import</span> <span class="n">VIEW3D_MT_PIE_Setup</span>
+<span class="kn">from</span> <span class="nn">.preferences</span> <span class="kn">import</span> <span class="n">CamAddonPreferences</span>
+<span class="kn">from</span> <span class="nn">.preset_managers</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AddPresetCamCutter</span><span class="p">,</span>
+    <span class="n">AddPresetCamMachine</span><span class="p">,</span>
+    <span class="n">AddPresetCamOperation</span><span class="p">,</span>
+    <span class="n">CAM_CUTTER_MT_presets</span><span class="p">,</span>
+    <span class="n">CAM_MACHINE_MT_presets</span><span class="p">,</span>
+    <span class="n">CAM_OPERATION_MT_presets</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.slice</span> <span class="kn">import</span> <span class="n">SliceObjectsSettings</span>
+<span class="kn">from</span> <span class="nn">.ui</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CustomPanel</span><span class="p">,</span>
+    <span class="n">import_settings</span><span class="p">,</span>
+    <span class="n">VIEW3D_PT_tools_curvetools</span><span class="p">,</span>
+    <span class="n">VIEW3D_PT_tools_create</span><span class="p">,</span>
+    <span class="n">WM_OT_gcode_import</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.area</span> <span class="kn">import</span> <span class="n">CAM_AREA_Panel</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.chains</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CAM_CHAINS_Panel</span><span class="p">,</span>
+    <span class="n">CAM_UL_chains</span><span class="p">,</span>
+    <span class="n">CAM_UL_operations</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.cutter</span> <span class="kn">import</span> <span class="n">CAM_CUTTER_Panel</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.feedrate</span> <span class="kn">import</span> <span class="n">CAM_FEEDRATE_Panel</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.gcode</span> <span class="kn">import</span> <span class="n">CAM_GCODE_Panel</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.info</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CAM_INFO_Panel</span><span class="p">,</span>
+    <span class="n">CAM_INFO_Properties</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.interface</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CAM_INTERFACE_Panel</span><span class="p">,</span>
+    <span class="n">CAM_INTERFACE_Properties</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.machine</span> <span class="kn">import</span> <span class="n">CAM_MACHINE_Panel</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.material</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CAM_MATERIAL_Panel</span><span class="p">,</span>
+    <span class="n">CAM_MATERIAL_PositionObject</span><span class="p">,</span>
+    <span class="n">CAM_MATERIAL_Properties</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.movement</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CAM_MOVEMENT_Panel</span><span class="p">,</span>
+    <span class="n">CAM_MOVEMENT_Properties</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.op_properties</span> <span class="kn">import</span> <span class="n">CAM_OPERATION_PROPERTIES_Panel</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.operations</span> <span class="kn">import</span> <span class="n">CAM_OPERATIONS_Panel</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.optimisation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CAM_OPTIMISATION_Panel</span><span class="p">,</span>
+    <span class="n">CAM_OPTIMISATION_Properties</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.pack</span> <span class="kn">import</span> <span class="n">CAM_PACK_Panel</span>
+<span class="kn">from</span> <span class="nn">.ui_panels.slice</span> <span class="kn">import</span> <span class="n">CAM_SLICE_Panel</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">check_operations_on_load</span><span class="p">,</span>
+    <span class="n">updateOperation</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="classes">
+<a class="viewcode-back" href="../autoapi/cam/index.html#cam.classes">[docs]</a>
+<span class="n">classes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># CamBackgroundMonitor</span>
+
+    <span class="c1"># .autoupdate</span>
+    <span class="n">UpdateSourceOperator</span><span class="p">,</span>
+    <span class="n">Updater</span><span class="p">,</span>
+    <span class="n">UpdateChecker</span><span class="p">,</span>
+
+    <span class="c1"># .chain</span>
+    <span class="n">opReference</span><span class="p">,</span>
+    <span class="n">camChain</span><span class="p">,</span>
+
+    <span class="c1"># .curvecamcreate</span>
+    <span class="n">CamCurveDrawer</span><span class="p">,</span>
+    <span class="n">CamCurveFlatCone</span><span class="p">,</span>
+    <span class="n">CamCurveGear</span><span class="p">,</span>
+    <span class="n">CamCurveHatch</span><span class="p">,</span>
+    <span class="n">CamCurveInterlock</span><span class="p">,</span>
+    <span class="n">CamCurveMortise</span><span class="p">,</span>
+    <span class="n">CamCurvePlate</span><span class="p">,</span>
+    <span class="n">CamCurvePuzzle</span><span class="p">,</span>
+
+    <span class="c1"># .curvecamequation</span>
+    <span class="n">CamCustomCurve</span><span class="p">,</span>
+    <span class="n">CamHypotrochoidCurve</span><span class="p">,</span>
+    <span class="n">CamLissajousCurve</span><span class="p">,</span>
+    <span class="n">CamSineCurve</span><span class="p">,</span>
+
+    <span class="c1"># .curvecamtools</span>
+    <span class="n">CamCurveBoolean</span><span class="p">,</span>
+    <span class="n">CamCurveConvexHull</span><span class="p">,</span>
+    <span class="n">CamCurveIntarsion</span><span class="p">,</span>
+    <span class="n">CamCurveOvercuts</span><span class="p">,</span>
+    <span class="n">CamCurveOvercutsB</span><span class="p">,</span>
+    <span class="n">CamCurveRemoveDoubles</span><span class="p">,</span>
+    <span class="n">CamMeshGetPockets</span><span class="p">,</span>
+    <span class="n">CamOffsetSilhouete</span><span class="p">,</span>
+    <span class="n">CamObjectSilhouete</span><span class="p">,</span>
+
+    <span class="c1"># .engine</span>
+    <span class="n">CNCCAM_ENGINE</span><span class="p">,</span>
+
+    <span class="c1"># .machine_settings</span>
+    <span class="n">machineSettings</span><span class="p">,</span>
+
+    <span class="c1"># .ops</span>
+    <span class="n">CalculatePath</span><span class="p">,</span>
+    <span class="c1"># bridges related</span>
+    <span class="n">CamBridgesAdd</span><span class="p">,</span>
+    <span class="n">CamChainAdd</span><span class="p">,</span>
+    <span class="n">CamChainRemove</span><span class="p">,</span>
+    <span class="n">CamChainOperationAdd</span><span class="p">,</span>
+    <span class="n">CamChainOperationRemove</span><span class="p">,</span>
+    <span class="n">CamChainOperationUp</span><span class="p">,</span>
+    <span class="n">CamChainOperationDown</span><span class="p">,</span>
+    <span class="n">CamOperationAdd</span><span class="p">,</span>
+    <span class="n">CamOperationCopy</span><span class="p">,</span>
+    <span class="n">CamOperationRemove</span><span class="p">,</span>
+    <span class="n">CamOperationMove</span><span class="p">,</span>
+    <span class="c1"># 5 axis ops</span>
+    <span class="n">CamOrientationAdd</span><span class="p">,</span>
+    <span class="c1"># shape packing</span>
+    <span class="n">CamPackObjects</span><span class="p">,</span>
+    <span class="n">CamSliceObjects</span><span class="p">,</span>
+    <span class="n">CAMSimulate</span><span class="p">,</span>
+    <span class="n">CAMSimulateChain</span><span class="p">,</span>
+    <span class="n">KillPathsBackground</span><span class="p">,</span>
+    <span class="n">PathsAll</span><span class="p">,</span>
+    <span class="n">PathsBackground</span><span class="p">,</span>
+    <span class="n">PathsChain</span><span class="p">,</span>
+    <span class="n">PathExport</span><span class="p">,</span>
+    <span class="n">PathExportChain</span><span class="p">,</span>
+
+    <span class="c1"># .pack</span>
+    <span class="n">PackObjectsSettings</span><span class="p">,</span>
+
+    <span class="c1"># .preferences</span>
+    <span class="n">CamAddonPreferences</span><span class="p">,</span>
+
+    <span class="c1"># .preset_managers</span>
+    <span class="n">CAM_CUTTER_MT_presets</span><span class="p">,</span>
+    <span class="n">CAM_OPERATION_MT_presets</span><span class="p">,</span>
+    <span class="n">CAM_MACHINE_MT_presets</span><span class="p">,</span>
+    <span class="n">AddPresetCamCutter</span><span class="p">,</span>
+    <span class="n">AddPresetCamOperation</span><span class="p">,</span>
+    <span class="n">AddPresetCamMachine</span><span class="p">,</span>
+
+    <span class="c1"># .slice</span>
+    <span class="n">SliceObjectsSettings</span><span class="p">,</span>
+
+    <span class="c1"># .ui and .ui_panels - the order will affect the layout</span>
+    <span class="n">import_settings</span><span class="p">,</span>
+    <span class="n">CAM_UL_operations</span><span class="p">,</span>
+    <span class="n">CAM_UL_chains</span><span class="p">,</span>
+    <span class="n">CAM_INTERFACE_Panel</span><span class="p">,</span>
+    <span class="n">CAM_INTERFACE_Properties</span><span class="p">,</span>
+    <span class="n">CAM_CHAINS_Panel</span><span class="p">,</span>
+    <span class="n">CAM_OPERATIONS_Panel</span><span class="p">,</span>
+    <span class="n">CAM_INFO_Properties</span><span class="p">,</span>
+    <span class="n">CAM_INFO_Panel</span><span class="p">,</span>
+    <span class="n">CAM_MATERIAL_Panel</span><span class="p">,</span>
+    <span class="n">CAM_MATERIAL_Properties</span><span class="p">,</span>
+    <span class="n">CAM_MATERIAL_PositionObject</span><span class="p">,</span>
+    <span class="n">CAM_OPERATION_PROPERTIES_Panel</span><span class="p">,</span>
+    <span class="n">CAM_OPTIMISATION_Panel</span><span class="p">,</span>
+    <span class="n">CAM_OPTIMISATION_Properties</span><span class="p">,</span>
+    <span class="n">CAM_AREA_Panel</span><span class="p">,</span>
+    <span class="n">CAM_MOVEMENT_Panel</span><span class="p">,</span>
+    <span class="n">CAM_MOVEMENT_Properties</span><span class="p">,</span>
+    <span class="n">CAM_FEEDRATE_Panel</span><span class="p">,</span>
+    <span class="n">CAM_CUTTER_Panel</span><span class="p">,</span>
+    <span class="n">CAM_GCODE_Panel</span><span class="p">,</span>
+    <span class="n">CAM_MACHINE_Panel</span><span class="p">,</span>
+    <span class="n">CAM_PACK_Panel</span><span class="p">,</span>
+    <span class="n">CAM_SLICE_Panel</span><span class="p">,</span>
+    <span class="n">VIEW3D_PT_tools_curvetools</span><span class="p">,</span>
+    <span class="n">VIEW3D_PT_tools_create</span><span class="p">,</span>
+    <span class="n">CustomPanel</span><span class="p">,</span>
+    <span class="n">WM_OT_gcode_import</span><span class="p">,</span>
+
+    <span class="c1"># .pie_menu and .pie_menu.active_op - placed after .ui in case inheritance is possible</span>
+    <span class="n">VIEW3D_MT_PIE_CAM</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Machine</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Material</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Operation</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Chains</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Setup</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Optimisation</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Area</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Movement</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Feedrate</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Cutter</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Gcode</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_Info</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_PackSliceRelief</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_CurveCreators</span><span class="p">,</span>
+    <span class="n">VIEW3D_MT_PIE_CurveTools</span><span class="p">,</span>
+
+    <span class="c1"># .cam_operation - last to allow dependencies to register before it</span>
+    <span class="n">camOperation</span><span class="p">,</span>
+<span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="register">
+<a class="viewcode-back" href="../autoapi/cam/index.html#cam.register">[docs]</a>
+<span class="k">def</span> <span class="nf">register</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">register_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+    <span class="n">basrelief</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">frame_change_pre</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timer_update</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">load_post</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">check_operations_on_load</span><span class="p">)</span>
+    <span class="c1"># bpy.types.INFO_HT_header.append(header_info)</span>
+
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Scene</span>
+
+    <span class="n">scene</span><span class="o">.</span><span class="n">cam_active_chain</span> <span class="o">=</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CAM Active Chain&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The selected chain&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">cam_active_operation</span> <span class="o">=</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;CAM Active Operation&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The selected operation&quot;</span><span class="p">,</span>
+        <span class="n">update</span><span class="o">=</span><span class="n">updateOperation</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">cam_chains</span> <span class="o">=</span> <span class="n">CollectionProperty</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">camChain</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">cam_import_gcode</span> <span class="o">=</span> <span class="n">PointerProperty</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">import_settings</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">cam_machine</span> <span class="o">=</span> <span class="n">PointerProperty</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">machineSettings</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span> <span class="o">=</span> <span class="n">CollectionProperty</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">camOperation</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">cam_pack</span> <span class="o">=</span> <span class="n">PointerProperty</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">PackObjectsSettings</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">cam_slice</span> <span class="o">=</span> <span class="n">PointerProperty</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">SliceObjectsSettings</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">cam_text</span> <span class="o">=</span> <span class="n">StringProperty</span><span class="p">()</span>
+    <span class="n">scene</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">PointerProperty</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">CAM_INTERFACE_Properties</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">panel</span> <span class="ow">in</span> <span class="n">get_panels</span><span class="p">():</span>
+        <span class="n">panel</span><span class="o">.</span><span class="n">COMPAT_ENGINES</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;CNCCAM_RENDER&quot;</span><span class="p">)</span>
+
+    <span class="n">wm</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">window_manager</span>
+    <span class="n">addon_kc</span> <span class="o">=</span> <span class="n">wm</span><span class="o">.</span><span class="n">keyconfigs</span><span class="o">.</span><span class="n">addon</span>
+
+    <span class="n">km</span> <span class="o">=</span> <span class="n">addon_kc</span><span class="o">.</span><span class="n">keymaps</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Object Mode&#39;</span><span class="p">)</span>
+    <span class="n">kmi</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">keymap_items</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+        <span class="s2">&quot;wm.call_menu_pie&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;C&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PRESS&#39;</span><span class="p">,</span>
+        <span class="n">alt</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">kmi</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;VIEW3D_MT_PIE_CAM&#39;</span>
+    <span class="n">kmi</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="unregister">
+<a class="viewcode-back" href="../autoapi/cam/index.html#cam.unregister">[docs]</a>
+<span class="k">def</span> <span class="nf">unregister</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">unregister_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+    <span class="n">basrelief</span><span class="o">.</span><span class="n">unregister</span><span class="p">()</span>
+
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Scene</span>
+
+    <span class="c1"># cam chains are defined hardly now.</span>
+    <span class="k">del</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_chains</span>
+    <span class="k">del</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_active_chain</span>
+    <span class="k">del</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span>
+    <span class="k">del</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_active_operation</span>
+    <span class="k">del</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_machine</span>
+    <span class="k">del</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_import_gcode</span>
+    <span class="k">del</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_text</span>
+    <span class="k">del</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_pack</span>
+    <span class="k">del</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_slice</span>
+
+    <span class="k">for</span> <span class="n">panel</span> <span class="ow">in</span> <span class="n">get_panels</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;CNCCAM_RENDER&#39;</span> <span class="ow">in</span> <span class="n">panel</span><span class="o">.</span><span class="n">COMPAT_ENGINES</span><span class="p">:</span>
+            <span class="n">panel</span><span class="o">.</span><span class="n">COMPAT_ENGINES</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;CNCCAM_RENDER&#39;</span><span class="p">)</span>
+
+    <span class="n">wm</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">window_manager</span>
+    <span class="n">active_kc</span> <span class="o">=</span> <span class="n">wm</span><span class="o">.</span><span class="n">keyconfigs</span><span class="o">.</span><span class="n">active</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">active_kc</span><span class="o">.</span><span class="n">keymaps</span><span class="p">[</span><span class="s1">&#39;Object Mode&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keymap_items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">idname</span> <span class="o">==</span> <span class="s1">&#39;wm.call_menu&#39;</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;VIEW3D_MT_PIE_CAM&#39;</span><span class="p">):</span>
+            <span class="n">active_kc</span><span class="o">.</span><span class="n">keymaps</span><span class="p">[</span><span class="s1">&#39;Object Mode&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keymap_items</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,672 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cam.ui &#8212; BlenderCAM 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=e842dffb"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/cam/ui';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo_blendercam.png" class="logo__image only-light" alt="BlenderCAM 1.0.38 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo_blendercam.png" class="logo__image only-dark" alt="BlenderCAM 1.0.38 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../styleguide.html">Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflows.html">Workflows &amp; Actions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/cam/index.html">cam</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/autoupdate/index.html">cam.autoupdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/basrelief/index.html">cam.basrelief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_chunk/index.html">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_operation/index.html">cam.cam_operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/chain/index.html">cam.chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamcreate/index.html">cam.curvecamcreate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamequation/index.html">cam.curvecamequation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamtools/index.html">cam.curvecamtools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodeimportparser/index.html">cam.gcodeimportparser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodepath/index.html">cam.gcodepath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/image_utils/index.html">cam.image_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/machine_settings/index.html">cam.machine_settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/numba_wrapper/index.html">cam.numba_wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ops/index.html">cam.ops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pack/index.html">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/polygon_utils_cam/index.html">cam.polygon_utils_cam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/preset_managers/index.html">cam.preset_managers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simple/index.html">cam.simple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/testing/index.html">cam.testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ui/index.html">cam.ui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/utils/index.html">cam.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for cam.ui</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;BlenderCAM &#39;ui.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Panels displayed in the 3D Viewport - Curve Tools, Creators and Import G-code</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">bpy_extras.io_utils</span> <span class="kn">import</span> <span class="n">ImportHelper</span>
+<span class="kn">from</span> <span class="nn">bpy.props</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BoolProperty</span><span class="p">,</span>
+    <span class="n">EnumProperty</span><span class="p">,</span>
+    <span class="n">FloatProperty</span><span class="p">,</span>
+    <span class="n">StringProperty</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bpy.types</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Panel</span><span class="p">,</span>
+    <span class="n">Operator</span><span class="p">,</span>
+    <span class="n">UIList</span><span class="p">,</span>
+    <span class="n">PropertyGroup</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.gcodeimportparser</span> <span class="kn">import</span> <span class="n">import_gcode</span>
+
+
+<div class="viewcode-block" id="CAM_UL_orientations">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CAM_UL_orientations">[docs]</a>
+<span class="k">class</span> <span class="nc">CAM_UL_orientations</span><span class="p">(</span><span class="n">UIList</span><span class="p">):</span>
+<div class="viewcode-block" id="CAM_UL_orientations.draw_item">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CAM_UL_orientations.draw_item">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">icon</span><span class="p">,</span> <span class="n">active_data</span><span class="p">,</span> <span class="n">active_propname</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout_type</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;DEFAULT&#39;</span><span class="p">,</span> <span class="s1">&#39;COMPACT&#39;</span><span class="p">}:</span>
+
+            <span class="n">layout</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">translate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">icon_value</span><span class="o">=</span><span class="n">icon</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout_type</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;GRID&#39;</span><span class="p">}:</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="s1">&#39;CENTER&#39;</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">icon_value</span><span class="o">=</span><span class="n">icon</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># panel containing all tools</span>
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_curvetools">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_curvetools">[docs]</a>
+<span class="k">class</span> <span class="nc">VIEW3D_PT_tools_curvetools</span><span class="p">(</span><span class="n">Panel</span><span class="p">):</span>
+<div class="viewcode-block" id="VIEW3D_PT_tools_curvetools.bl_space_type">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_curvetools.bl_space_type">[docs]</a>
+    <span class="n">bl_space_type</span> <span class="o">=</span> <span class="s1">&#39;VIEW_3D&#39;</span></div>
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_curvetools.bl_region_type">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_curvetools.bl_region_type">[docs]</a>
+    <span class="n">bl_region_type</span> <span class="o">=</span> <span class="s1">&#39;TOOLS&#39;</span></div>
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_curvetools.bl_context">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_curvetools.bl_context">[docs]</a>
+    <span class="n">bl_context</span> <span class="o">=</span> <span class="s2">&quot;objectmode&quot;</span></div>
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_curvetools.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_curvetools.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Curve CAM Tools&quot;</span></div>
+
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_curvetools.draw">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_curvetools.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_boolean&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.convex_hull&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_intarsion&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_overcuts&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_overcuts_b&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.silhouete&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.silhouete_offset&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_remove_doubles&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.mesh_get_pockets&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_create">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_create">[docs]</a>
+<span class="k">class</span> <span class="nc">VIEW3D_PT_tools_create</span><span class="p">(</span><span class="n">Panel</span><span class="p">):</span>
+<div class="viewcode-block" id="VIEW3D_PT_tools_create.bl_space_type">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_create.bl_space_type">[docs]</a>
+    <span class="n">bl_space_type</span> <span class="o">=</span> <span class="s1">&#39;VIEW_3D&#39;</span></div>
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_create.bl_region_type">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_create.bl_region_type">[docs]</a>
+    <span class="n">bl_region_type</span> <span class="o">=</span> <span class="s1">&#39;TOOLS&#39;</span></div>
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_create.bl_context">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_create.bl_context">[docs]</a>
+    <span class="n">bl_context</span> <span class="o">=</span> <span class="s2">&quot;objectmode&quot;</span></div>
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_create.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_create.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Curve CAM Creators&quot;</span></div>
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_create.bl_option">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_create.bl_option">[docs]</a>
+    <span class="n">bl_option</span> <span class="o">=</span> <span class="s1">&#39;DEFAULT_CLOSED&#39;</span></div>
+
+
+<div class="viewcode-block" id="VIEW3D_PT_tools_create.draw">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.VIEW3D_PT_tools_create.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_plate&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_drawer&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_mortise&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_interlock&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_puzzle&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.sine&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.lissajous&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.hypotrochoid&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.customcurve&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_hatch&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_gear&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;object.curve_flat_cone&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<span class="c1"># Gcode import panel---------------------------------------------------------------</span>
+<span class="c1"># ------------------------------------------------------------------------</span>
+<span class="c1">#    Panel in Object Mode</span>
+<span class="c1"># ------------------------------------------------------------------------</span>
+
+
+<div class="viewcode-block" id="CustomPanel">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CustomPanel">[docs]</a>
+<span class="k">class</span> <span class="nc">CustomPanel</span><span class="p">(</span><span class="n">Panel</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomPanel.bl_space_type">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CustomPanel.bl_space_type">[docs]</a>
+    <span class="n">bl_space_type</span> <span class="o">=</span> <span class="s1">&#39;VIEW_3D&#39;</span></div>
+
+<div class="viewcode-block" id="CustomPanel.bl_region_type">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CustomPanel.bl_region_type">[docs]</a>
+    <span class="n">bl_region_type</span> <span class="o">=</span> <span class="s1">&#39;TOOLS&#39;</span></div>
+
+<div class="viewcode-block" id="CustomPanel.bl_context">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CustomPanel.bl_context">[docs]</a>
+    <span class="n">bl_context</span> <span class="o">=</span> <span class="s2">&quot;objectmode&quot;</span></div>
+
+<div class="viewcode-block" id="CustomPanel.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CustomPanel.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Import G-code&quot;</span></div>
+
+<div class="viewcode-block" id="CustomPanel.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CustomPanel.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;OBJECT_PT_importgcode&quot;</span></div>
+
+
+<div class="viewcode-block" id="CustomPanel.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CustomPanel.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;DEFAULT_CLOSED&#39;</span><span class="p">}</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CustomPanel.poll">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CustomPanel.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">mode</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;EDIT_MESH&#39;</span><span class="p">}</span>  <span class="c1"># with this poll addon is visibly even when no object is selected</span></div>
+
+
+<div class="viewcode-block" id="CustomPanel.draw">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.CustomPanel.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
+        <span class="n">scene</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+        <span class="n">isettings</span> <span class="o">=</span> <span class="n">scene</span><span class="o">.</span><span class="n">cam_import_gcode</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">isettings</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">isettings</span><span class="p">,</span> <span class="s2">&quot;split_layers&quot;</span><span class="p">)</span>
+
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">isettings</span><span class="p">,</span> <span class="s2">&quot;subdivide&quot;</span><span class="p">)</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Segment Length&quot;</span><span class="p">)</span>
+
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">isettings</span><span class="p">,</span> <span class="s2">&quot;max_segment_size&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">isettings</span><span class="o">.</span><span class="n">subdivide</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">separator</span><span class="p">()</span>
+
+        <span class="n">col</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">column</span><span class="p">()</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">scale_y</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="s2">&quot;wm.gcode_import&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="WM_OT_gcode_import">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.WM_OT_gcode_import">[docs]</a>
+<span class="k">class</span> <span class="nc">WM_OT_gcode_import</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">ImportHelper</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Import G-code, Travel Lines Don&#39;t Get Drawn&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="WM_OT_gcode_import.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.WM_OT_gcode_import.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;wm.gcode_import&quot;</span>  <span class="c1"># important since its how bpy.ops.import_test.some_data is constructed</span></div>
+
+<div class="viewcode-block" id="WM_OT_gcode_import.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.WM_OT_gcode_import.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Import G-code&quot;</span></div>
+
+
+    <span class="c1"># ImportHelper mixin class uses this</span>
+<div class="viewcode-block" id="WM_OT_gcode_import.filename_ext">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.WM_OT_gcode_import.filename_ext">[docs]</a>
+    <span class="n">filename_ext</span> <span class="o">=</span> <span class="s2">&quot;.txt&quot;</span></div>
+
+
+<div class="viewcode-block" id="WM_OT_gcode_import.filter_glob">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.WM_OT_gcode_import.filter_glob">[docs]</a>
+    <span class="n">filter_glob</span><span class="p">:</span> <span class="n">StringProperty</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;*.*&quot;</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;HIDDEN&#39;</span><span class="p">},</span>
+        <span class="n">maxlen</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span>  <span class="c1"># Max internal buffer length, longer would be clamped.</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WM_OT_gcode_import.execute">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.WM_OT_gcode_import.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">import_gcode</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="import_settings">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.import_settings">[docs]</a>
+<span class="k">class</span> <span class="nc">import_settings</span><span class="p">(</span><span class="n">PropertyGroup</span><span class="p">):</span>
+<div class="viewcode-block" id="import_settings.split_layers">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.import_settings.split_layers">[docs]</a>
+    <span class="n">split_layers</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Split Layers&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save every layer as single Objects in Collection&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="import_settings.subdivide">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.import_settings.subdivide">[docs]</a>
+    <span class="n">subdivide</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Subdivide&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Only Subdivide gcode segments that are &quot;</span>
+        <span class="s2">&quot;bigger than &#39;Segment length&#39; &quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="import_settings.output">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.import_settings.output">[docs]</a>
+    <span class="n">output</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Output Type&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s2">&quot;mesh&quot;</span><span class="p">,</span> <span class="s2">&quot;Mesh&quot;</span><span class="p">,</span> <span class="s2">&quot;Make a mesh output&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;curve&quot;</span><span class="p">,</span> <span class="s2">&quot;Curve&quot;</span><span class="p">,</span> <span class="s2">&quot;Make curve output&quot;</span><span class="p">),</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;curve&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="import_settings.max_segment_size">
+<a class="viewcode-back" href="../../autoapi/cam/ui/index.html#cam.import_settings.max_segment_size">[docs]</a>
+    <span class="n">max_segment_size</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Only Segments bigger than this value get subdivided&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

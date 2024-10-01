@@ -1,0 +1,1632 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cam.curvecamtools &#8212; BlenderCAM 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=e842dffb"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/cam/curvecamtools';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo_blendercam.png" class="logo__image only-light" alt="BlenderCAM 1.0.38 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo_blendercam.png" class="logo__image only-dark" alt="BlenderCAM 1.0.38 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../styleguide.html">Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflows.html">Workflows &amp; Actions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/cam/index.html">cam</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/autoupdate/index.html">cam.autoupdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/basrelief/index.html">cam.basrelief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_chunk/index.html">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_operation/index.html">cam.cam_operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/chain/index.html">cam.chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamcreate/index.html">cam.curvecamcreate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamequation/index.html">cam.curvecamequation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamtools/index.html">cam.curvecamtools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodeimportparser/index.html">cam.gcodeimportparser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodepath/index.html">cam.gcodepath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/image_utils/index.html">cam.image_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/machine_settings/index.html">cam.machine_settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/numba_wrapper/index.html">cam.numba_wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ops/index.html">cam.ops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pack/index.html">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/polygon_utils_cam/index.html">cam.polygon_utils_cam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/preset_managers/index.html">cam.preset_managers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simple/index.html">cam.simple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/testing/index.html">cam.testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ui/index.html">cam.ui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/utils/index.html">cam.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for cam.curvecamtools</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;BlenderCAM &#39;curvecamtools.py&#39; © 2012 Vilem Novak, 2021 Alain Pelletier</span>
+
+<span class="sd">Operators that perform various functions on existing curves.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">pi</span><span class="p">,</span>
+    <span class="n">tan</span>
+<span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">shapely</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">LineString</span>
+
+<span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">from</span> <span class="nn">bpy.props</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BoolProperty</span><span class="p">,</span>
+    <span class="n">EnumProperty</span><span class="p">,</span>
+    <span class="n">FloatProperty</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bpy.types</span> <span class="kn">import</span> <span class="n">Operator</span>
+<span class="kn">from</span> <span class="nn">mathutils</span> <span class="kn">import</span> <span class="n">Vector</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">polygon_utils_cam</span><span class="p">,</span>
+    <span class="n">simple</span><span class="p">,</span>
+    <span class="n">utils</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># boolean operations for curve objects</span>
+<div class="viewcode-block" id="CamCurveBoolean">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveBoolean">[docs]</a>
+<span class="k">class</span> <span class="nc">CamCurveBoolean</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Boolean Operation on Two or More Curves&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CamCurveBoolean.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveBoolean.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.curve_boolean&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveBoolean.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveBoolean.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Curve Boolean&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveBoolean.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveBoolean.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamCurveBoolean.boolean_type">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveBoolean.boolean_type">[docs]</a>
+    <span class="n">boolean_type</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Type&#39;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;UNION&#39;</span><span class="p">,</span> <span class="s1">&#39;Union&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;DIFFERENCE&#39;</span><span class="p">,</span> <span class="s1">&#39;Difference&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;INTERSECT&#39;</span><span class="p">,</span> <span class="s1">&#39;Intersect&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Boolean type&#39;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;UNION&#39;</span>
+    <span class="p">)</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CamCurveBoolean.poll">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveBoolean.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;CURVE&#39;</span><span class="p">,</span> <span class="s1">&#39;FONT&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="CamCurveBoolean.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveBoolean.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">selected_objects</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">polygonBoolean</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">boolean_type</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">({</span><span class="s1">&#39;ERROR&#39;</span><span class="p">},</span> <span class="s1">&#39;at least 2 curves must be selected&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;CANCELLED&#39;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="CamCurveBoolean.invoke">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveBoolean.invoke">[docs]</a>
+    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span><span class="o">.</span><span class="n">invoke_props_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CamCurveConvexHull">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveConvexHull">[docs]</a>
+<span class="k">class</span> <span class="nc">CamCurveConvexHull</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Hull Operation on Single or Multiple Curves&quot;&quot;&quot;</span>  <span class="c1"># by Alain Pelletier april 2021</span>
+<div class="viewcode-block" id="CamCurveConvexHull.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveConvexHull.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.convex_hull&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveConvexHull.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveConvexHull.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Convex Hull&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveConvexHull.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveConvexHull.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">}</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CamCurveConvexHull.poll">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveConvexHull.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;CURVE&#39;</span><span class="p">,</span> <span class="s1">&#39;FONT&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="CamCurveConvexHull.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveConvexHull.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">polygonConvexHull</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+</div>
+
+
+
+<span class="c1"># intarsion or joints</span>
+<div class="viewcode-block" id="CamCurveIntarsion">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveIntarsion">[docs]</a>
+<span class="k">class</span> <span class="nc">CamCurveIntarsion</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Makes Curve Cuttable Both Inside and Outside, for Intarsion and Joints&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CamCurveIntarsion.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.curve_intarsion&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveIntarsion.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Intarsion&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveIntarsion.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">,</span> <span class="s1">&#39;PRESET&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamCurveIntarsion.diameter">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.diameter">[docs]</a>
+    <span class="n">diameter</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Cutter Diameter&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.001</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">0.025</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveIntarsion.tolerance">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.tolerance">[docs]</a>
+    <span class="n">tolerance</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Cutout Tolerance&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.0001</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveIntarsion.backlight">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.backlight">[docs]</a>
+    <span class="n">backlight</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Backlight Seat&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.000</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">0.010</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveIntarsion.perimeter_cut">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.perimeter_cut">[docs]</a>
+    <span class="n">perimeter_cut</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Perimeter Cut Offset&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.000</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">0.100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveIntarsion.base_thickness">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.base_thickness">[docs]</a>
+    <span class="n">base_thickness</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Base Material Thickness&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.000</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">0.100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveIntarsion.intarsion_thickness">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.intarsion_thickness">[docs]</a>
+    <span class="n">intarsion_thickness</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Intarsion Material Thickness&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.000</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">0.100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveIntarsion.backlight_depth_from_top">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveIntarsion.backlight_depth_from_top">[docs]</a>
+    <span class="n">backlight_depth_from_top</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Backlight Well Depth&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.000</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">0.100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CamCurveIntarsion.poll">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveIntarsion.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;CURVE&#39;</span><span class="p">,</span> <span class="s1">&#39;FONT&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="CamCurveIntarsion.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveIntarsion.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">selected_objects</span>  <span class="c1"># save original selected items</span>
+
+        <span class="n">simple</span><span class="o">.</span><span class="n">remove_multiple</span><span class="p">(</span><span class="s1">&#39;intarsion_&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">:</span>
+            <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># select original curves</span>
+
+        <span class="c1">#  Perimeter cut largen then intarsion pocket externally, optional</span>
+
+        <span class="c1"># make the diameter 5% larger and compensate for backlight</span>
+        <span class="n">diam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diameter</span> <span class="o">*</span> <span class="mf">1.05</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">backlight</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">silhoueteOffset</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="o">-</span><span class="n">diam</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">o1</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">silhoueteOffset</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">diam</span><span class="p">)</span>
+        <span class="n">o2</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">silhoueteOffset</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="o">-</span><span class="n">diam</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">o3</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="n">o1</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">o2</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">o3</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="c1"># delete o1 and o2 temporary working curves</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">use_global</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">o3</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;intarsion_pocket&quot;</span>  <span class="c1"># this is the pocket for intarsion</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">intarsion_thickness</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">perimeter_cut</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">silhoueteOffset</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">perimeter_cut</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;intarsion_perimeter&quot;</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">base_thickness</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span>  <span class="c1"># deselect new curve</span>
+
+        <span class="n">o3</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">o3</span>
+        <span class="c1">#   intarsion profile is the inside piece of the intarsion</span>
+        <span class="c1"># make smaller curve for material profile</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">silhoueteOffset</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intarsion_thickness</span>
+        <span class="n">o4</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;intarsion_profil&quot;</span>
+        <span class="n">o4</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backlight</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>  <span class="c1"># Make a smaller curve for backlighting purposes</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">silhoueteOffset</span><span class="p">(</span>
+                <span class="n">context</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">tolerance</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">backlight</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;intarsion_backlight&quot;</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">backlight_depth_from_top</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">intarsion_thickness</span>
+            <span class="n">o4</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">o3</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="CamCurveIntarsion.invoke">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveIntarsion.invoke">[docs]</a>
+    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span><span class="o">.</span><span class="n">invoke_props_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># intarsion or joints</span>
+<div class="viewcode-block" id="CamCurveOvercuts">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveOvercuts">[docs]</a>
+<span class="k">class</span> <span class="nc">CamCurveOvercuts</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds Overcuts for Slots&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CamCurveOvercuts.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercuts.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.curve_overcuts&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercuts.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercuts.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Add Overcuts - A&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercuts.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercuts.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamCurveOvercuts.diameter">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercuts.diameter">[docs]</a>
+    <span class="n">diameter</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Diameter&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.003175</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercuts.threshold">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercuts.threshold">[docs]</a>
+    <span class="n">threshold</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Threshold&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">.99</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">3.14</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;ANGLE&quot;</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ROTATION&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercuts.do_outer">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercuts.do_outer">[docs]</a>
+    <span class="n">do_outer</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Outer Polygons&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercuts.invert">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercuts.invert">[docs]</a>
+    <span class="n">invert</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Invert&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CamCurveOvercuts.poll">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveOvercuts.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;CURVE&#39;</span><span class="p">,</span> <span class="s1">&#39;FONT&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="CamCurveOvercuts.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveOvercuts.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_remove_doubles</span><span class="p">()</span>
+        <span class="n">o1</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="n">shapes</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">curveToShapely</span><span class="p">(</span><span class="n">o1</span><span class="p">)</span>
+        <span class="n">negative_overcuts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">positive_overcuts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">diameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diameter</span> <span class="o">*</span> <span class="mf">1.001</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shapes</span><span class="o">.</span><span class="n">geoms</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">orient</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s1">&#39;LineString&#39;</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">MultiLineString</span>
+                <span class="n">loops</span> <span class="o">=</span> <span class="n">MultiLineString</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">boundary</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">loops</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">boundary</span>
+
+            <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">loops</span><span class="o">.</span><span class="n">geoms</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">ci</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_outer</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">co</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">coords</span><span class="p">):</span>
+                        <span class="n">i1</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">i1</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                            <span class="n">i1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+                        <span class="n">i2</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">i2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">coords</span><span class="p">):</span>
+                            <span class="n">i2</span> <span class="o">=</span> <span class="mi">0</span>
+
+                        <span class="n">v1</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span>
+                            <span class="n">co</span><span class="p">)</span> <span class="o">-</span> <span class="n">Vector</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">i1</span><span class="p">])</span>
+                        <span class="n">v1</span> <span class="o">=</span> <span class="n">v1</span><span class="o">.</span><span class="n">xy</span>  <span class="c1"># Vector((v1.x,v1.y,0))</span>
+                        <span class="n">v2</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span>
+                            <span class="n">c</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">i2</span><span class="p">])</span> <span class="o">-</span> <span class="n">Vector</span><span class="p">(</span><span class="n">co</span><span class="p">)</span>
+                        <span class="n">v2</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">xy</span>  <span class="c1"># v2 = Vector((v2.x,v2.y,0))</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">v1</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">v2</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">a</span> <span class="o">=</span> <span class="n">v1</span><span class="o">.</span><span class="n">angle_signed</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
+                            <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span>
+
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">invert</span><span class="p">:</span>  <span class="c1"># and ci&gt;0:</span>
+                                <span class="n">sign</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">sign</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">sign</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">):</span>
+                                <span class="n">p</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">co</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">co</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                                <span class="n">v1</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                                <span class="n">v2</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                                <span class="n">v</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">-</span> <span class="n">v2</span>
+                                <span class="n">v</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                                <span class="n">p</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">v</span> <span class="o">*</span> <span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span>
+                                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+                                    <span class="n">shape</span> <span class="o">=</span> <span class="n">polygon_utils_cam</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span><span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+                                    <span class="n">shape</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">affinity</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span>
+                                        <span class="n">shape</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">l</span> <span class="o">=</span> <span class="n">tan</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span>
+                                    <span class="n">p1</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">l</span>
+                                    <span class="n">l</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">LineString</span><span class="p">((</span><span class="n">p</span><span class="p">,</span> <span class="n">p1</span><span class="p">))</span>
+                                    <span class="n">shape</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span>
+                                        <span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+
+                                <span class="k">if</span> <span class="n">sign</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">negative_overcuts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">positive_overcuts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">negative_overcuts</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">unary_union</span><span class="p">(</span><span class="n">negative_overcuts</span><span class="p">)</span>
+        <span class="n">positive_overcuts</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">unary_union</span><span class="p">(</span><span class="n">positive_overcuts</span><span class="p">)</span>
+
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">unary_union</span><span class="p">(</span><span class="n">shapes</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">positive_overcuts</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">negative_overcuts</span><span class="p">)</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">shapelyToCurve</span><span class="p">(</span><span class="n">o1</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_overcuts&#39;</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">o1</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercuts.invoke">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveOvercuts.invoke">[docs]</a>
+    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span><span class="o">.</span><span class="n">invoke_props_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</div>
+
+
+<span class="c1"># Overcut type B</span>
+<div class="viewcode-block" id="CamCurveOvercutsB">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveOvercutsB">[docs]</a>
+<span class="k">class</span> <span class="nc">CamCurveOvercutsB</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds Overcuts for Slots&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CamCurveOvercutsB.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercutsB.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.curve_overcuts_b&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercutsB.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercutsB.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Add Overcuts - B&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercutsB.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercutsB.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamCurveOvercutsB.diameter">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercutsB.diameter">[docs]</a>
+    <span class="n">diameter</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Tool Diameter&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.003175</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Tool bit diameter used in cut operation&#39;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercutsB.style">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercutsB.style">[docs]</a>
+    <span class="n">style</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Style&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;OPEDGE&#39;</span><span class="p">,</span> <span class="s1">&#39;opposite edge&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;place corner overcuts on opposite edges&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;DOGBONE&#39;</span><span class="p">,</span> <span class="s1">&#39;Dog-bone / Corner Point&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;place overcuts at center of corners&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;TBONE&#39;</span><span class="p">,</span> <span class="s1">&#39;T-bone&#39;</span><span class="p">,</span> <span class="s1">&#39;place corner overcuts on the same edge&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;DOGBONE&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;style of overcut to use&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercutsB.threshold">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercutsB.threshold">[docs]</a>
+    <span class="n">threshold</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Max Inside Angle&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">3.14</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;The maximum angle to be considered as an inside corner&#39;</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">subtype</span><span class="o">=</span><span class="s2">&quot;ANGLE&quot;</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;ROTATION&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercutsB.do_outer">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercutsB.do_outer">[docs]</a>
+    <span class="n">do_outer</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Include Outer Curve&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Include the outer curve if there are curves inside&#39;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercutsB.do_invert">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercutsB.do_invert">[docs]</a>
+    <span class="n">do_invert</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Invert&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;invert overcut operation on all curves&#39;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercutsB.otherEdge">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveOvercutsB.otherEdge">[docs]</a>
+    <span class="n">otherEdge</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Other Edge&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;change to the other edge for the overcut to be on&#39;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CamCurveOvercutsB.poll">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveOvercutsB.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CURVE&#39;</span></div>
+
+
+<div class="viewcode-block" id="CamCurveOvercutsB.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveOvercutsB.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_remove_doubles</span><span class="p">()</span>
+        <span class="n">o1</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="n">shapes</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">curveToShapely</span><span class="p">(</span><span class="n">o1</span><span class="p">)</span>
+        <span class="n">negative_overcuts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">positive_overcuts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># count all the corners including inside and out</span>
+        <span class="n">cornerCnt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># a list of tuples for defining the inside corner</span>
+        <span class="c1"># tuple is: (pos, v1, v2, angle, allCorners list index)</span>
+        <span class="n">insideCorners</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">diameter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diameter</span> <span class="o">*</span> <span class="mf">1.002</span>  <span class="c1"># make bit size slightly larger to allow cutter</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">diameter</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">anglethreshold</span> <span class="o">=</span> <span class="n">pi</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
+        <span class="n">centerv</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">extendedv</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_invert</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">isTBone</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;TBONE&#39;</span>
+        <span class="c1"># indexes in insideCorner tuple</span>
+        <span class="n">POS</span><span class="p">,</span> <span class="n">V1</span><span class="p">,</span> <span class="n">V2</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">IDX</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">addOvercut</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+            <span class="k">nonlocal</span> <span class="n">pos</span><span class="p">,</span> <span class="n">centerv</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">extendedv</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">negative_overcuts</span><span class="p">,</span> <span class="n">positive_overcuts</span>
+            <span class="c1"># move the overcut shape center position 1 radius in direction v</span>
+            <span class="n">pos</span> <span class="o">-=</span> <span class="n">centerv</span> <span class="o">*</span> <span class="n">radius</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;abs(a)&quot;</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">0.0001</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&lt;=pi/2&quot;</span><span class="p">)</span>
+                <span class="n">shape</span> <span class="o">=</span> <span class="n">polygon_utils_cam</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+                <span class="n">shape</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">affinity</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># elongate overcut circle to make sure tool bit can fit into slot</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&gt;pi/2&quot;</span><span class="p">)</span>
+                <span class="n">p1</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="p">(</span><span class="n">extendedv</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">LineString</span><span class="p">((</span><span class="n">pos</span><span class="p">,</span> <span class="n">p1</span><span class="p">))</span>
+                <span class="n">shape</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">sign</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">negative_overcuts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">positive_overcuts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">setOtherEdge</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+            <span class="k">nonlocal</span> <span class="n">centerv</span><span class="p">,</span> <span class="n">extendedv</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">otherEdge</span><span class="p">:</span>
+                <span class="n">centerv</span> <span class="o">=</span> <span class="n">v1</span>
+                <span class="n">extendedv</span> <span class="o">=</span> <span class="n">v2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">centerv</span> <span class="o">=</span> <span class="o">-</span><span class="n">v2</span>
+                <span class="n">extendedv</span> <span class="o">=</span> <span class="o">-</span><span class="n">v1</span>
+            <span class="n">addOvercut</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">setCenterOffset</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+            <span class="k">nonlocal</span> <span class="n">centerv</span><span class="p">,</span> <span class="n">extendedv</span><span class="p">,</span> <span class="n">sign</span>
+            <span class="n">centerv</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">-</span> <span class="n">v2</span>
+            <span class="n">centerv</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+            <span class="n">extendedv</span> <span class="o">=</span> <span class="n">centerv</span> <span class="o">*</span> <span class="n">tan</span><span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="n">sign</span>
+            <span class="n">addOvercut</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">getCorner</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+            <span class="k">nonlocal</span> <span class="n">insideCorners</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="n">offset</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">insideCorners</span><span class="p">):</span>
+                <span class="n">idx</span> <span class="o">-=</span> <span class="nb">len</span><span class="p">(</span><span class="n">insideCorners</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">insideCorners</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="k">def</span> <span class="nf">getCornerDelta</span><span class="p">(</span><span class="n">curidx</span><span class="p">,</span> <span class="n">nextidx</span><span class="p">):</span>
+            <span class="k">nonlocal</span> <span class="n">cornerCnt</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">nextidx</span> <span class="o">-</span> <span class="n">curidx</span>
+            <span class="k">if</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">delta</span> <span class="o">+=</span> <span class="n">cornerCnt</span>
+            <span class="k">return</span> <span class="n">delta</span>
+
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shapes</span><span class="o">.</span><span class="n">geoms</span><span class="p">:</span>
+            <span class="c1"># ensure the shape is counterclockwise</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">orient</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s1">&#39;LineString&#39;</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">shapely</span> <span class="kn">import</span> <span class="n">MultiLineString</span>
+                <span class="n">loops</span> <span class="o">=</span> <span class="n">MultiLineString</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">boundary</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">loops</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">boundary</span>
+
+            <span class="n">outercurve</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_outer</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">loops</span><span class="o">.</span><span class="n">geoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">ci</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">loops</span><span class="o">.</span><span class="n">geoms</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">ci</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">outercurve</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">isTBone</span><span class="p">:</span>
+                        <span class="n">cornerCnt</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">insideCorners</span> <span class="o">=</span> <span class="p">[]</span>
+
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">co</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">coords</span><span class="p">):</span>
+                        <span class="n">i1</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">i1</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                            <span class="n">i1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+                        <span class="n">i2</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">i2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">coords</span><span class="p">):</span>
+                            <span class="n">i2</span> <span class="o">=</span> <span class="mi">0</span>
+
+                        <span class="n">v1</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span>
+                            <span class="n">co</span><span class="p">)</span><span class="o">.</span><span class="n">xy</span> <span class="o">-</span> <span class="n">Vector</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">i1</span><span class="p">])</span><span class="o">.</span><span class="n">xy</span>
+                        <span class="n">v2</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span>
+                            <span class="n">c</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">i2</span><span class="p">])</span><span class="o">.</span><span class="n">xy</span> <span class="o">-</span> <span class="n">Vector</span><span class="p">(</span><span class="n">co</span><span class="p">)</span><span class="o">.</span><span class="n">xy</span>
+
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">v1</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">v2</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">a</span> <span class="o">=</span> <span class="n">v1</span><span class="o">.</span><span class="n">angle_signed</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span>
+                            <span class="n">insideCornerFound</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="n">outsideCornerFound</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">if</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">anglethreshold</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">sign</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">insideCornerFound</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">outsideCornerFound</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="k">elif</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">anglethreshold</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">sign</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">insideCornerFound</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">outsideCornerFound</span> <span class="o">=</span> <span class="kc">True</span>
+
+                            <span class="k">if</span> <span class="n">insideCornerFound</span><span class="p">:</span>
+                                <span class="c1"># an inside corner with an overcut has been found</span>
+                                <span class="c1"># which means a new side has been found</span>
+                                <span class="n">pos</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">co</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">co</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                                <span class="n">v1</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                                <span class="n">v2</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                                <span class="c1"># figure out which direction vector to use</span>
+                                <span class="c1"># v is the main direction vector to move the overcut shape along</span>
+                                <span class="c1"># ev is the direction vector used to elongate the overcut shape</span>
+                                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">!=</span> <span class="s1">&#39;DOGBONE&#39;</span><span class="p">:</span>
+                                    <span class="c1"># t-bone and opposite edge styles get treated nearly the same</span>
+                                    <span class="k">if</span> <span class="n">isTBone</span><span class="p">:</span>
+                                        <span class="n">cornerCnt</span> <span class="o">+=</span> <span class="mi">1</span>
+                                        <span class="c1"># insideCorner tuplet: (pos, v1, v2, angle, corner index)</span>
+                                        <span class="n">insideCorners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                            <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">cornerCnt</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+                                        <span class="c1"># processing of corners for T-Bone are done after all points are processed</span>
+                                        <span class="k">continue</span>
+
+                                    <span class="n">setOtherEdge</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+
+                                <span class="k">else</span><span class="p">:</span>  <span class="c1"># DOGBONE style</span>
+                                    <span class="n">setCenterOffset</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+                            <span class="k">elif</span> <span class="n">isTBone</span> <span class="ow">and</span> <span class="n">outsideCornerFound</span><span class="p">:</span>
+                                <span class="c1"># add an outside corner to the list</span>
+                                <span class="n">cornerCnt</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="c1"># check if t-bone processing required</span>
+                    <span class="c1"># if no inside corners then nothing to do</span>
+                    <span class="k">if</span> <span class="n">isTBone</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">insideCorners</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;corner count&quot;</span><span class="p">,</span> <span class="n">cornerCnt</span><span class="p">,</span>
+                              <span class="s2">&quot;inside corner count&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">insideCorners</span><span class="p">))</span>
+                        <span class="c1"># process all of the inside corners</span>
+                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">corner</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">insideCorners</span><span class="p">):</span>
+                            <span class="n">pos</span><span class="p">,</span> <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">corner</span>
+                            <span class="c1"># figure out which side of the corner to do overcut</span>
+                            <span class="c1"># if prev corner is outside corner</span>
+                            <span class="c1"># calc index distance between current corner and prev</span>
+                            <span class="n">prevCorner</span> <span class="o">=</span> <span class="n">getCorner</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;first:&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">prevCorner</span><span class="p">[</span><span class="n">IDX</span><span class="p">])</span>
+                            <span class="k">if</span> <span class="n">getCornerDelta</span><span class="p">(</span><span class="n">prevCorner</span><span class="p">[</span><span class="n">IDX</span><span class="p">],</span> <span class="n">idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="c1"># make sure there is an outside corner</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="n">getCornerDelta</span><span class="p">(</span>
+                                    <span class="n">getCorner</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)[</span><span class="n">IDX</span><span class="p">],</span> <span class="n">idx</span><span class="p">))</span>
+                                <span class="k">if</span> <span class="n">getCornerDelta</span><span class="p">(</span><span class="n">getCorner</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)[</span><span class="n">IDX</span><span class="p">],</span> <span class="n">idx</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                                    <span class="n">setOtherEdge</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;first won&#39;</span><span class="p">)</span>
+                                    <span class="k">continue</span>
+
+                            <span class="n">nextCorner</span> <span class="o">=</span> <span class="n">getCorner</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;second:&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">nextCorner</span><span class="p">[</span><span class="n">IDX</span><span class="p">])</span>
+                            <span class="k">if</span> <span class="n">getCornerDelta</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">nextCorner</span><span class="p">[</span><span class="n">IDX</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="c1"># make sure there is an outside corner</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="n">getCornerDelta</span><span class="p">(</span>
+                                    <span class="n">idx</span><span class="p">,</span> <span class="n">getCorner</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="n">IDX</span><span class="p">]))</span>
+                                <span class="k">if</span> <span class="n">getCornerDelta</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">getCorner</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="n">IDX</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;second won&#39;</span><span class="p">)</span>
+                                    <span class="n">setOtherEdge</span><span class="p">(</span><span class="o">-</span><span class="n">v2</span><span class="p">,</span> <span class="o">-</span><span class="n">v1</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+                                    <span class="k">continue</span>
+
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;third&#39;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">getCornerDelta</span><span class="p">(</span><span class="n">prevCorner</span><span class="p">[</span><span class="n">IDX</span><span class="p">],</span> <span class="n">idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                                <span class="c1"># check if they share the same edge</span>
+                                <span class="n">a1</span> <span class="o">=</span> <span class="n">v1</span><span class="o">.</span><span class="n">angle_signed</span><span class="p">(</span>
+                                    <span class="n">prevCorner</span><span class="p">[</span><span class="n">V2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">pi</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;third won&#39;</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">a1</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">135</span> <span class="ow">or</span> <span class="n">a1</span> <span class="o">&gt;</span> <span class="mi">135</span><span class="p">:</span>
+                                    <span class="n">setOtherEdge</span><span class="p">(</span><span class="o">-</span><span class="n">v2</span><span class="p">,</span> <span class="o">-</span><span class="n">v1</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+                                    <span class="k">continue</span>
+
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;fourth&#39;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">getCornerDelta</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">nextCorner</span><span class="p">[</span><span class="n">IDX</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                                <span class="c1"># check if they share the same edge</span>
+                                <span class="n">a1</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="n">angle_signed</span><span class="p">(</span>
+                                    <span class="n">nextCorner</span><span class="p">[</span><span class="n">V1</span><span class="p">])</span> <span class="o">*</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">pi</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;fourth won&#39;</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">a1</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">135</span> <span class="ow">or</span> <span class="n">a1</span> <span class="o">&gt;</span> <span class="mi">135</span><span class="p">:</span>
+                                    <span class="n">setOtherEdge</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+                                    <span class="k">continue</span>
+
+                            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;***No Win***&#39;</span><span class="p">)</span>
+                            <span class="c1"># the default if no other rules pass</span>
+                            <span class="n">setCenterOffset</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+        <span class="n">negative_overcuts</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">unary_union</span><span class="p">(</span><span class="n">negative_overcuts</span><span class="p">)</span>
+        <span class="n">positive_overcuts</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">unary_union</span><span class="p">(</span><span class="n">positive_overcuts</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">unary_union</span><span class="p">(</span><span class="n">shapes</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">positive_overcuts</span><span class="p">)</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">negative_overcuts</span><span class="p">)</span>
+
+        <span class="n">utils</span><span class="o">.</span><span class="n">shapelyToCurve</span><span class="p">(</span><span class="n">o1</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_overcuts&#39;</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">o1</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="CamCurveOvercutsB.invoke">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveOvercutsB.invoke">[docs]</a>
+    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span><span class="o">.</span><span class="n">invoke_props_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="CamCurveRemoveDoubles">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveRemoveDoubles">[docs]</a>
+<span class="k">class</span> <span class="nc">CamCurveRemoveDoubles</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Curve Remove Doubles&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CamCurveRemoveDoubles.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveRemoveDoubles.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.curve_remove_doubles&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveRemoveDoubles.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveRemoveDoubles.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Remove Curve Doubles&quot;</span></div>
+
+<div class="viewcode-block" id="CamCurveRemoveDoubles.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveRemoveDoubles.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">}</span></div>
+
+    
+
+<div class="viewcode-block" id="CamCurveRemoveDoubles.merge_distance">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveRemoveDoubles.merge_distance">[docs]</a>
+    <span class="n">merge_distance</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Merge distance&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">.01</span><span class="p">,</span>
+        
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamCurveRemoveDoubles.keep_bezier">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamCurveRemoveDoubles.keep_bezier">[docs]</a>
+    <span class="n">keep_bezier</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Keep bezier&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+    
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CamCurveRemoveDoubles.poll">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveRemoveDoubles.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CURVE&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamCurveRemoveDoubles.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveRemoveDoubles.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">selected_objects</span>
+        <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CURVE&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keep_bezier</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">splines</span> <span class="ow">and</span> <span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">splines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;BEZIER&#39;</span><span class="p">:</span>
+                            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curvetools</span><span class="o">.</span><span class="n">operatorsplinesremoveshort</span><span class="p">()</span>
+                            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">ob</span>
+                            <span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">resolution_u</span> <span class="o">=</span> <span class="mi">64</span>
+                            <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;OBJECT&#39;</span><span class="p">:</span>
+                                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+                            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">select_all</span><span class="p">()</span>
+                            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">curve</span><span class="o">.</span><span class="n">remove_double</span><span class="p">(</span><span class="n">distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">merge_distance</span><span class="p">)</span>
+                            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">merge_distance</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;EDIT_CURVE&#39;</span><span class="p">:</span>
+                        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;MESH&#39;</span><span class="p">)</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;SELECT&#39;</span><span class="p">)</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">remove_doubles</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_distance</span><span class="p">)</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;CURVE&#39;</span><span class="p">)</span>
+                       
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamCurveRemoveDoubles.draw">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveRemoveDoubles.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CURVE&#39;</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">splines</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">splines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;BEZIER&#39;</span><span class="p">:</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;keep_bezier&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Keep Bezier&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;merge_distance&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Merge Distance&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamCurveRemoveDoubles.invoke">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamCurveRemoveDoubles.invoke">[docs]</a>
+    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span><span class="o">.</span><span class="n">invoke_props_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CamMeshGetPockets">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamMeshGetPockets">[docs]</a>
+<span class="k">class</span> <span class="nc">CamMeshGetPockets</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Detect Pockets in a Mesh and Extract Them as Curves&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CamMeshGetPockets.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamMeshGetPockets.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.mesh_get_pockets&quot;</span></div>
+
+<div class="viewcode-block" id="CamMeshGetPockets.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamMeshGetPockets.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Get Pocket Surfaces&quot;</span></div>
+
+<div class="viewcode-block" id="CamMeshGetPockets.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamMeshGetPockets.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamMeshGetPockets.threshold">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamMeshGetPockets.threshold">[docs]</a>
+    <span class="n">threshold</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Horizontal Threshold&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;How horizontal the surface must be for a pocket: &quot;</span>
+        <span class="s2">&quot;1.0 perfectly flat, 0.0 is any orientation&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.99</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamMeshGetPockets.zlimit">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamMeshGetPockets.zlimit">[docs]</a>
+    <span class="n">zlimit</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Z Limit&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Maximum z height considered for pocket operation, &quot;</span>
+        <span class="s2">&quot;default is 0.0&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mf">1000.0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;LENGTH&#39;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CamMeshGetPockets.poll">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamMeshGetPockets.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;MESH&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamMeshGetPockets.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamMeshGetPockets.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">selected_objects</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+        <span class="n">cobs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">obs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;MESH&#39;</span><span class="p">:</span>
+                <span class="n">pockets</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">mw</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">matrix_world</span>
+                <span class="n">mesh</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">data</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_mode</span><span class="p">(</span>
+                    <span class="n">use_extend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_expand</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;FACE&#39;</span><span class="p">)</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">polygons</span><span class="p">:</span>
+                    <span class="c1"># n = mw @ face.normal</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">normal</span><span class="o">.</span><span class="n">to_4d</span><span class="p">()</span>
+                    <span class="n">n</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">mw</span> <span class="o">@</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">to_3d</span><span class="p">()</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">z</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">:</span>
+                        <span class="n">face</span><span class="o">.</span><span class="n">select</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">mw</span> <span class="o">@</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">face</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">co</span><span class="p">)</span><span class="o">.</span><span class="n">z</span>
+                        <span class="k">if</span> <span class="n">z</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">zlimit</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">pockets</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="n">pockets</span><span class="p">[</span><span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">pockets</span><span class="p">[</span><span class="n">z</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pockets</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pockets</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                <span class="n">ao</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pockets</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="n">sf</span> <span class="o">=</span> <span class="n">pockets</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">polygons</span><span class="p">:</span>
+                        <span class="n">face</span><span class="o">.</span><span class="n">select</span> <span class="o">=</span> <span class="kc">False</span>
+
+                    <span class="k">for</span> <span class="n">fi</span> <span class="ow">in</span> <span class="n">sf</span><span class="p">:</span>
+                        <span class="n">face</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">polygons</span><span class="p">[</span><span class="n">fi</span><span class="p">]</span>
+                        <span class="n">face</span><span class="o">.</span><span class="n">select</span> <span class="o">=</span> <span class="kc">True</span>
+
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_mode</span><span class="p">(</span>
+                        <span class="n">use_extend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_expand</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;EDGE&#39;</span><span class="p">)</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">region_to_loop</span><span class="p">()</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">separate</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;SELECTED&#39;</span><span class="p">)</span>
+
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_mode</span><span class="p">(</span>
+                        <span class="n">use_extend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_expand</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;FACE&#39;</span><span class="p">)</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">editmode_toggle</span><span class="p">()</span>
+                    <span class="n">ao</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">selected_objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">cobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">selected_objects</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;CURVE&#39;</span><span class="p">)</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">origin_set</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ORIGIN_GEOMETRY&#39;</span><span class="p">)</span>
+
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">selected_objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="n">ao</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">ao</span>
+            <span class="c1"># bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type=&#39;EDGE&#39;)</span>
+
+            <span class="c1"># turn off selection of all objects in 3d view</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span>
+            <span class="c1"># make new curves more visible by making them selected in the 3d view</span>
+            <span class="c1"># This also allows the active object to still work with the operator</span>
+            <span class="c1"># if the user decides to change the horizontal threshold property</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;multi level pocket &#39;</span><span class="p">)</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">cobs</span><span class="p">:</span>
+                <span class="n">col</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+</div>
+
+
+
+<span class="c1"># this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.</span>
+<div class="viewcode-block" id="CamOffsetSilhouete">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamOffsetSilhouete">[docs]</a>
+<span class="k">class</span> <span class="nc">CamOffsetSilhouete</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Curve Offset Operation &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CamOffsetSilhouete.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamOffsetSilhouete.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.silhouete_offset&quot;</span></div>
+
+<div class="viewcode-block" id="CamOffsetSilhouete.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamOffsetSilhouete.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Silhouette &amp; Offset&quot;</span></div>
+
+<div class="viewcode-block" id="CamOffsetSilhouete.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamOffsetSilhouete.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">,</span> <span class="s1">&#39;PRESET&#39;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CamOffsetSilhouete.offset">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamOffsetSilhouete.offset">[docs]</a>
+    <span class="n">offset</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Offset&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">.003</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=-</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamOffsetSilhouete.mitrelimit">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamOffsetSilhouete.mitrelimit">[docs]</a>
+    <span class="n">mitrelimit</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Mitre Limit&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.00000001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamOffsetSilhouete.style">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamOffsetSilhouete.style">[docs]</a>
+    <span class="n">style</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Corner Type&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;Round&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;Mitre&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;Bevel&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamOffsetSilhouete.caps">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamOffsetSilhouete.caps">[docs]</a>
+    <span class="n">caps</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Cap Type&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;round&#39;</span><span class="p">,</span> <span class="s1">&#39;Round&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;square&#39;</span><span class="p">,</span> <span class="s1">&#39;Square&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;flat&#39;</span><span class="p">,</span> <span class="s1">&#39;Flat&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamOffsetSilhouete.align">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamOffsetSilhouete.align">[docs]</a>
+    <span class="n">align</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Alignment&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;worldxy&#39;</span><span class="p">,</span> <span class="s1">&#39;World XY&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="s1">&#39;Base Bottom&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="s1">&#39;Base Top&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamOffsetSilhouete.opentype">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamOffsetSilhouete.opentype">[docs]</a>
+    <span class="n">opentype</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Curve Type&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;dilate&#39;</span><span class="p">,</span> <span class="s1">&#39;Dilate open curve&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;leaveopen&#39;</span><span class="p">,</span> <span class="s1">&#39;Leave curve open&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;closecurve&#39;</span><span class="p">,</span> <span class="s1">&#39;Close curve&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;closecurve&#39;</span>
+    <span class="p">)</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CamOffsetSilhouete.poll">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamOffsetSilhouete.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CURVE&#39;</span> <span class="ow">or</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;FONT&#39;</span> <span class="ow">or</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;MESH&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CamOffsetSilhouete.isStraight">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamOffsetSilhouete.isStraight">[docs]</a>
+    <span class="k">def</span> <span class="nf">isStraight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">geom</span><span class="o">.</span><span class="n">geom_type</span> <span class="o">==</span> <span class="s2">&quot;LineString&quot;</span><span class="p">,</span> <span class="n">geom</span><span class="o">.</span><span class="n">geom_type</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">length</span>
+        <span class="n">start_pt</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">end_pt</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">straight_dist</span> <span class="o">=</span> <span class="n">start_pt</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">end_pt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">straight_dist</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">length</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">length</span> <span class="o">/</span> <span class="n">straight_dist</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+    <span class="c1"># this is almost same as getobjectoutline, just without the need of operation data</span>
+<div class="viewcode-block" id="CamOffsetSilhouete.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamOffsetSilhouete.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="c1"># bpy.ops.object.curve_remove_doubles()</span>
+        <span class="n">ob</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;FONT&#39;</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">resolution_u</span> <span class="o">=</span> <span class="mi">64</span>
+        <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CURVE&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">splines</span> <span class="ow">and</span> <span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">splines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;BEZIER&#39;</span><span class="p">:</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">resolution_u</span> <span class="o">=</span> <span class="mi">64</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_remove_doubles</span><span class="p">(</span><span class="n">merge_distance</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">keep_bezier</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_remove_doubles</span><span class="p">()</span>
+
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="k">if</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;MESH&#39;</span><span class="p">:</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="s1">&#39;3D&#39;</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># apply all transforms</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;MESH&#39;</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;temp_mesh&quot;</span>
+
+        <span class="c1">#get the Z align point from the base</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">align</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">matrix_world</span> <span class="o">@</span> <span class="n">v</span><span class="o">.</span><span class="n">co</span><span class="p">)</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vertices</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">align</span> <span class="o">==</span> <span class="s1">&#39;bottom&#39;</span><span class="p">:</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">matrix_world</span> <span class="o">@</span> <span class="n">v</span><span class="o">.</span><span class="n">co</span><span class="p">)</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vertices</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">point</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># extract X,Y coordinates from the vertices data and put them into a LineString object</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vertices</span><span class="p">:</span>  
+            <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v</span><span class="o">.</span><span class="n">co</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">co</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+        <span class="n">simple</span><span class="o">.</span><span class="n">remove_multiple</span><span class="p">(</span><span class="s1">&#39;temp_mesh&#39;</span><span class="p">)</span>  <span class="c1"># delete temporary mesh</span>
+        <span class="n">simple</span><span class="o">.</span><span class="n">remove_multiple</span><span class="p">(</span><span class="s1">&#39;dilation&#39;</span><span class="p">)</span>  <span class="c1"># delete old dilation objects</span>
+
+        <span class="c1"># convert coordinates to shapely LineString datastructure</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">LineString</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+
+        <span class="c1">#if curve is a straight segment, change offset type to dilate</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isStraight</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">opentype</span> <span class="o">!=</span> <span class="s1">&#39;leaveopen&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">opentype</span> <span class="o">=</span> <span class="s1">&#39;dilate&#39;</span>
+
+        <span class="c1">#make the dilate or open curve offset</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opentype</span> <span class="o">!=</span> <span class="s1">&#39;closecurve&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CURVE&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;line length=&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">length</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">),</span> <span class="s1">&#39;mm&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+                <span class="n">style</span><span class="o">=</span><span class="s2">&quot;bevel&quot;</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+                <span class="n">style</span><span class="o">=</span><span class="s2">&quot;mitre&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">style</span><span class="o">=</span><span class="s2">&quot;round&quot;</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opentype</span> <span class="o">==</span> <span class="s1">&#39;leaveopen&#39;</span><span class="p">:</span>
+                <span class="n">new_shape</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">offset_curve</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">join_style</span><span class="o">=</span><span class="n">style</span><span class="p">)</span>  <span class="c1"># use shapely to expand without closing the curve</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Offset: &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;mm - &#39;</span> <span class="o">+</span> <span class="n">ob</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_shape</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">cap_style</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">caps</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">join_style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span> <span class="n">mitre_limit</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mitrelimit</span><span class="p">)</span>  <span class="c1"># use shapely to expand, closing the curve</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Dilation: &quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;mm - &#39;</span> <span class="o">+</span> <span class="n">ob</span><span class="o">.</span><span class="n">name</span>
+
+            <span class="c1">#create the actual offset object based on the Shapely offset</span>
+            <span class="n">polygon_utils_cam</span><span class="o">.</span><span class="n">shapelyToCurve</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">new_shape</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opentype</span> <span class="o">!=</span> <span class="s1">&#39;leaveopen&#39;</span><span class="p">)</span>
+
+            <span class="c1">#position the object according to the calculated point</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">point</span>
+
+        <span class="c1">#if curve is not a straight line and neither dilate or leave open are selected, create a normal offset</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">ob</span>
+            <span class="n">utils</span><span class="o">.</span><span class="n">silhoueteOffset</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span>
+                                  <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">mitrelimit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+
+    
+<div class="viewcode-block" id="CamOffsetSilhouete.draw">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamOffsetSilhouete.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Offset&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;opentype&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Type&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Corner&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">:</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;mitrelimit&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Mitre Limit&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opentype</span> <span class="o">==</span> <span class="s1">&#39;dilate&#39;</span><span class="p">:</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;caps&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Cap&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">opentype</span> <span class="o">!=</span> <span class="s1">&#39;closecurve&#39;</span><span class="p">:</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;align&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Align&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CamOffsetSilhouete.invoke">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamOffsetSilhouete.invoke">[docs]</a>
+    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span><span class="o">.</span><span class="n">invoke_props_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</div>
+
+
+    <span class="c1"># Finds object silhouette, usefull for meshes, since with curves it&#39;s not needed.</span>
+<div class="viewcode-block" id="CamObjectSilhouete">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamObjectSilhouete">[docs]</a>
+<span class="k">class</span> <span class="nc">CamObjectSilhouete</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Object Silhouette&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CamObjectSilhouete.bl_idname">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamObjectSilhouete.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.silhouete&quot;</span></div>
+
+<div class="viewcode-block" id="CamObjectSilhouete.bl_label">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamObjectSilhouete.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Object Silhouette&quot;</span></div>
+
+<div class="viewcode-block" id="CamObjectSilhouete.bl_options">
+<a class="viewcode-back" href="../../autoapi/cam/curvecamtools/index.html#cam.curvecamtools.CamObjectSilhouete.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;REGISTER&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDO&#39;</span><span class="p">}</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CamObjectSilhouete.poll">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamObjectSilhouete.poll">[docs]</a>
+    <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="c1">#        return context.active_object is not None and (context.active_object.type == &#39;CURVE&#39;</span>
+        <span class="c1">#        or context.active_object.type == &#39;FONT&#39; or context.active_object.type == &#39;MESH&#39;)</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">.</span><span class="n">active_object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;FONT&#39;</span> <span class="ow">or</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;MESH&#39;</span><span class="p">)</span></div>
+
+
+    <span class="c1"># this is almost same as getobjectoutline, just without the need of operation data</span>
+<div class="viewcode-block" id="CamObjectSilhouete.execute">
+<a class="viewcode-back" href="../../autoapi/cam/index.html#cam.curvecamtools.CamObjectSilhouete.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="n">ob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">silh</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">getObjectSilhouete</span><span class="p">(</span>
+            <span class="s1">&#39;OBJECTS&#39;</span><span class="p">,</span> <span class="n">objects</span><span class="o">=</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">selected_objects</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># smp=sgeometry.asMultiPolygon(self.silh)</span>
+        <span class="k">for</span> <span class="n">smp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">silh</span><span class="o">.</span><span class="n">geoms</span><span class="p">:</span>
+            <span class="n">polygon_utils_cam</span><span class="o">.</span><span class="n">shapelyToCurve</span><span class="p">(</span>
+                <span class="n">ob</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_silhouette&#39;</span><span class="p">,</span> <span class="n">smp</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1">#</span>
+        <span class="c1"># bpy.ops.object.convert(target=&#39;CURVE&#39;)</span>
+        <span class="n">simple</span><span class="o">.</span><span class="n">join_multiple</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_silhouette&#39;</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">location</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">origin_set</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ORIGIN_CURSOR&#39;</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">curve_remove_doubles</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;FINISHED&#39;</span><span class="p">}</span></div>
+</div>
+
+    <span class="c1"># ---------------------------------------------------</span>
+
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

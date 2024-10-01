@@ -1,0 +1,628 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cam.slice &#8212; BlenderCAM 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=e842dffb"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/cam/slice';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo_blendercam.png" class="logo__image only-light" alt="BlenderCAM 1.0.38 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo_blendercam.png" class="logo__image only-dark" alt="BlenderCAM 1.0.38 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../styleguide.html">Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflows.html">Workflows &amp; Actions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/cam/index.html">cam</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/autoupdate/index.html">cam.autoupdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/basrelief/index.html">cam.basrelief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_chunk/index.html">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_operation/index.html">cam.cam_operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/chain/index.html">cam.chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamcreate/index.html">cam.curvecamcreate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamequation/index.html">cam.curvecamequation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamtools/index.html">cam.curvecamtools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodeimportparser/index.html">cam.gcodeimportparser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodepath/index.html">cam.gcodepath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/image_utils/index.html">cam.image_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/machine_settings/index.html">cam.machine_settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/numba_wrapper/index.html">cam.numba_wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ops/index.html">cam.ops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pack/index.html">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/polygon_utils_cam/index.html">cam.polygon_utils_cam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/preset_managers/index.html">cam.preset_managers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simple/index.html">cam.simple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/testing/index.html">cam.testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ui/index.html">cam.ui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/utils/index.html">cam.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for cam.slice</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;BlenderCAM &#39;slice.py&#39; © 2021 Alain Pelletier</span>
+
+<span class="sd">Very simple slicing for 3D meshes, useful for plywood cutting.</span>
+<span class="sd">Completely rewritten April 2021.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">from</span> <span class="nn">bpy.props</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BoolProperty</span><span class="p">,</span>
+    <span class="n">FloatProperty</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bpy.types</span> <span class="kn">import</span> <span class="n">PropertyGroup</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">constants</span><span class="p">,</span>
+    <span class="n">utils</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="slicing2d">
+<a class="viewcode-back" href="../../autoapi/cam/slice/index.html#cam.slicing2d">[docs]</a>
+<span class="k">def</span> <span class="nf">slicing2d</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Slice a 3D object at a specified height and convert it to a curve.</span>
+
+<span class="sd">    This function applies transformations to the given object, switches to</span>
+<span class="sd">    edit mode, selects all vertices, and performs a bisect operation to</span>
+<span class="sd">    slice the object at the specified height. After slicing, it resets the</span>
+<span class="sd">    object&#39;s location and applies transformations again before converting</span>
+<span class="sd">    the object to a curve. If the conversion fails (for instance, if the</span>
+<span class="sd">    mesh was empty), the function deletes the mesh and returns False.</span>
+<span class="sd">    Otherwise, it returns True.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ob (bpy.types.Object): The Blender object to be sliced and converted.</span>
+<span class="sd">        height (float): The height at which to slice the object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the conversion to curve was successful, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+  <span class="c1"># April 2020 Alain Pelletier</span>
+    <span class="c1"># let&#39;s slice things</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;EDIT&#39;</span><span class="p">)</span>  <span class="c1"># force edit mode</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;SELECT&#39;</span><span class="p">)</span>  <span class="c1"># select all vertices</span>
+    <span class="c1"># actual slicing here</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">bisect</span><span class="p">(</span><span class="n">plane_co</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">plane_no</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">use_fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clear_inner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">clear_outer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># slicing done</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">)</span>  <span class="c1"># force object mode</span>
+    <span class="c1"># bring all the slices to 0 level and reset location transform</span>
+    <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">height</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s1">&#39;CURVE&#39;</span><span class="p">)</span>  <span class="c1"># convert it to curve</span>
+    <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;CURVE&#39;</span><span class="p">:</span>  <span class="c1"># conversion failed because mesh was empty so delete mesh</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">use_global</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confirm</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span>  <span class="c1"># deselect everything</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="slicing3d">
+<a class="viewcode-back" href="../../autoapi/cam/slice/index.html#cam.slicing3d">[docs]</a>
+<span class="k">def</span> <span class="nf">slicing3d</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Slice a 3D object along specified planes.</span>
+
+<span class="sd">    This function applies transformations to a given object and slices it in</span>
+<span class="sd">    the Z-axis between two specified values, `start` and `end`. It first</span>
+<span class="sd">    ensures that the object is in edit mode and selects all vertices before</span>
+<span class="sd">    performing the slicing operations using the `bisect` method. After</span>
+<span class="sd">    slicing, it resets the object&#39;s location and applies the transformations</span>
+<span class="sd">    to maintain the changes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ob (Object): The 3D object to be sliced.</span>
+<span class="sd">        start (float): The starting Z-coordinate for the slice.</span>
+<span class="sd">        end (float): The ending Z-coordinate for the slice.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the slicing operation was successful.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+  <span class="c1"># April 2020 Alain Pelletier</span>
+    <span class="c1"># let&#39;s slice things</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;EDIT&#39;</span><span class="p">)</span>  <span class="c1"># force edit mode</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;SELECT&#39;</span><span class="p">)</span>  <span class="c1"># select all vertices</span>
+    <span class="c1"># actual slicing here</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">bisect</span><span class="p">(</span><span class="n">plane_co</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">start</span><span class="p">),</span> <span class="n">plane_no</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">use_fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">clear_inner</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">clear_outer</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;SELECT&#39;</span><span class="p">)</span>  <span class="c1"># select all vertices which</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">bisect</span><span class="p">(</span><span class="n">plane_co</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">end</span><span class="p">),</span> <span class="n">plane_no</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">use_fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clear_inner</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">clear_outer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># slicing done</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">)</span>  <span class="c1"># force object mode</span>
+    <span class="c1"># bring all the slices to 0 level and reset location transform</span>
+    <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">start</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span>  <span class="c1"># deselect everything</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="sliceObject">
+<a class="viewcode-back" href="../../autoapi/cam/slice/index.html#cam.sliceObject">[docs]</a>
+<span class="k">def</span> <span class="nf">sliceObject</span><span class="p">(</span><span class="n">ob</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Slice a 3D object into layers based on a specified thickness.</span>
+
+<span class="sd">    This function takes a 3D object and slices it into multiple layers</span>
+<span class="sd">    according to the specified thickness. It creates a new collection for</span>
+<span class="sd">    the slices and optionally creates text labels for each slice if the</span>
+<span class="sd">    indexes parameter is set. The slicing can be done in either 2D or 3D</span>
+<span class="sd">    based on the user&#39;s selection. The function also handles the positioning</span>
+<span class="sd">    of the slices based on the object&#39;s bounding box.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ob (bpy.types.Object): The 3D object to be sliced.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+  <span class="c1"># April 2020 Alain Pelletier</span>
+    <span class="c1"># get variables from menu</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_slice</span><span class="o">.</span><span class="n">slice_distance</span>
+    <span class="n">slice3d</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_slice</span><span class="o">.</span><span class="n">slice_3d</span>
+    <span class="n">indexes</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_slice</span><span class="o">.</span><span class="n">indexes</span>
+    <span class="n">above0</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_slice</span><span class="o">.</span><span class="n">slice_above0</span>
+    <span class="c1"># setup the collections</span>
+    <span class="n">scollection</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;Slices&quot;</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">scollection</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">indexes</span><span class="p">:</span>
+        <span class="n">tcollection</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;Text&quot;</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">tcollection</span><span class="p">)</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">)</span>  <span class="c1"># force object mode</span>
+    <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">getBoundsWorldspace</span><span class="p">([</span><span class="n">ob</span><span class="p">])</span>
+
+    <span class="n">start_height</span> <span class="o">=</span> <span class="n">minz</span>
+    <span class="k">if</span> <span class="n">above0</span> <span class="ow">and</span> <span class="n">minz</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">start_height</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># calculate amount of layers needed</span>
+    <span class="n">layeramt</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">int</span><span class="p">((</span><span class="n">maxz</span> <span class="o">-</span> <span class="n">start_height</span><span class="p">)</span> <span class="o">//</span> <span class="n">thickness</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">layeramt</span><span class="p">):</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">layer</span> <span class="o">*</span> <span class="n">thickness</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># height of current layer</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">slicename</span> <span class="o">=</span> <span class="s2">&quot;slice_&quot;</span> <span class="o">+</span> <span class="n">t</span>  <span class="c1"># name for the current slice</span>
+        <span class="n">tslicename</span> <span class="o">=</span> <span class="s2">&quot;t_&quot;</span> <span class="o">+</span> <span class="n">t</span>  <span class="c1"># name for the current slice text</span>
+        <span class="n">height</span> <span class="o">+=</span> <span class="n">start_height</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">slicename</span><span class="p">)</span>
+
+        <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># select object to be sliced</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">ob</span>  <span class="c1"># make object to be sliced active</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>  <span class="c1"># make a copy of object to be sliced</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">slicename</span>  <span class="c1"># change the name of object</span>
+
+        <span class="c1"># attribute active object to obslice</span>
+        <span class="n">obslice</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span>
+        <span class="n">scollection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">obslice</span><span class="p">)</span>  <span class="c1"># link obslice to scollecton</span>
+        <span class="k">if</span> <span class="n">slice3d</span><span class="p">:</span>
+            <span class="c1"># slice 3d at desired height and stop at desired height</span>
+            <span class="n">slicesuccess</span> <span class="o">=</span> <span class="n">slicing3d</span><span class="p">(</span><span class="n">obslice</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">height</span> <span class="o">+</span> <span class="n">thickness</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># slice object at desired height</span>
+            <span class="n">slicesuccess</span> <span class="o">=</span> <span class="n">slicing2d</span><span class="p">(</span><span class="n">obslice</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">indexes</span> <span class="ow">and</span> <span class="n">slicesuccess</span><span class="p">:</span>
+            <span class="c1"># text objects</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">text_add</span><span class="p">()</span>  <span class="c1"># new text object</span>
+            <span class="n">textob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+            <span class="n">textob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mf">0.006</span>  <span class="c1"># change size of object</span>
+            <span class="n">textob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">t</span>  <span class="c1"># text content</span>
+            <span class="n">textob</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># text location</span>
+            <span class="n">textob</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">tslicename</span>  <span class="c1"># change the name of object</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span>  <span class="c1"># deselect everything</span>
+            <span class="n">tcollection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">textob</span><span class="p">)</span>  <span class="c1"># add to text collection</span>
+            <span class="n">textob</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">obslice</span>  <span class="c1"># make textob child of obslice</span>
+
+    <span class="c1"># select all slices</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="s1">&#39;Slices&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">all_objects</span><span class="p">:</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SliceObjectsSettings">
+<a class="viewcode-back" href="../../autoapi/cam/slice/index.html#cam.SliceObjectsSettings">[docs]</a>
+<span class="k">class</span> <span class="nc">SliceObjectsSettings</span><span class="p">(</span><span class="n">PropertyGroup</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stores All Data for Machines&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SliceObjectsSettings.slice_distance">
+<a class="viewcode-back" href="../../autoapi/cam/slice/index.html#cam.SliceObjectsSettings.slice_distance">[docs]</a>
+    <span class="n">slice_distance</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Slicing Distance&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Slices distance in z, should be most often &quot;</span>
+        <span class="s2">&quot;thickness of plywood sheet.&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">PRECISION</span><span class="p">,</span>
+        <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;LENGTH&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SliceObjectsSettings.slice_above0">
+<a class="viewcode-back" href="../../autoapi/cam/slice/index.html#cam.SliceObjectsSettings.slice_above0">[docs]</a>
+    <span class="n">slice_above0</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Slice Above 0&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;only slice model above 0&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SliceObjectsSettings.slice_3d">
+<a class="viewcode-back" href="../../autoapi/cam/slice/index.html#cam.SliceObjectsSettings.slice_3d">[docs]</a>
+    <span class="n">slice_3d</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;3D Slice&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;For 3D carving&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SliceObjectsSettings.indexes">
+<a class="viewcode-back" href="../../autoapi/cam/slice/index.html#cam.SliceObjectsSettings.indexes">[docs]</a>
+    <span class="n">indexes</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Add Indexes&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Adds index text of layer + index&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

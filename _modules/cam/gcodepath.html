@@ -1,0 +1,1451 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cam.gcodepath &#8212; BlenderCAM 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=e842dffb"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/cam/gcodepath';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo_blendercam.png" class="logo__image only-light" alt="BlenderCAM 1.0.38 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo_blendercam.png" class="logo__image only-dark" alt="BlenderCAM 1.0.38 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../styleguide.html">Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflows.html">Workflows &amp; Actions</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/cam/index.html">cam</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/autoupdate/index.html">cam.autoupdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/basrelief/index.html">cam.basrelief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_chunk/index.html">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/cam_operation/index.html">cam.cam_operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/chain/index.html">cam.chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamcreate/index.html">cam.curvecamcreate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamequation/index.html">cam.curvecamequation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/curvecamtools/index.html">cam.curvecamtools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodeimportparser/index.html">cam.gcodeimportparser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/gcodepath/index.html">cam.gcodepath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/image_utils/index.html">cam.image_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/machine_settings/index.html">cam.machine_settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/numba_wrapper/index.html">cam.numba_wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ops/index.html">cam.ops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pack/index.html">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/polygon_utils_cam/index.html">cam.polygon_utils_cam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/preset_managers/index.html">cam.preset_managers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simple/index.html">cam.simple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/testing/index.html">cam.testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/ui/index.html">cam.ui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/utils/index.html">cam.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/cam/voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for cam.gcodepath</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;BlenderCAM &#39;gcodepath.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Generate and Export G-Code based on scene, machine, chain, operation and path settings.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># G-code Generaton</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ceil</span><span class="p">,</span>
+    <span class="n">floor</span><span class="p">,</span>
+    <span class="n">pi</span><span class="p">,</span>
+    <span class="n">sqrt</span>
+<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">polygon</span> <span class="k">as</span> <span class="n">spolygon</span>
+
+<span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">from</span> <span class="nn">mathutils</span> <span class="kn">import</span> <span class="n">Euler</span><span class="p">,</span> <span class="n">Vector</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">strategy</span>
+<span class="kn">from</span> <span class="nn">.async_op</span> <span class="kn">import</span> <span class="n">progress_async</span>
+<span class="kn">from</span> <span class="nn">.bridges</span> <span class="kn">import</span> <span class="n">useBridges</span>
+<span class="kn">from</span> <span class="nn">.cam_chunk</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">curveToChunks</span><span class="p">,</span>
+    <span class="n">chunksRefine</span><span class="p">,</span>
+    <span class="n">limitChunks</span><span class="p">,</span>
+    <span class="n">chunksCoherency</span><span class="p">,</span>
+    <span class="n">shapelyToChunks</span><span class="p">,</span>
+    <span class="n">parentChildDist</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.image_utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">crazyStrokeImageBinary</span><span class="p">,</span>
+    <span class="n">getOffsetImageCavities</span><span class="p">,</span>
+    <span class="n">imageToShapely</span><span class="p">,</span>
+    <span class="n">prepareArea</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">iso</span>
+<span class="kn">from</span> <span class="nn">.opencamlib.opencamlib</span> <span class="kn">import</span> <span class="n">oclGetWaterline</span>
+<span class="kn">from</span> <span class="nn">.pattern</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">getPathPattern</span><span class="p">,</span>
+    <span class="n">getPathPattern4axis</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.simple</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">progress</span><span class="p">,</span>
+    <span class="n">safeFileName</span><span class="p">,</span>
+    <span class="n">strInUnits</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">cleanupIndexed</span><span class="p">,</span>
+    <span class="n">connectChunksLow</span><span class="p">,</span>
+    <span class="n">getAmbient</span><span class="p">,</span>
+    <span class="n">getBounds</span><span class="p">,</span>
+    <span class="n">getOperationSilhouete</span><span class="p">,</span>
+    <span class="n">getOperationSources</span><span class="p">,</span>
+    <span class="n">prepareIndexed</span><span class="p">,</span>
+    <span class="n">sampleChunks</span><span class="p">,</span>
+    <span class="n">sampleChunksNAxis</span><span class="p">,</span>
+    <span class="n">sortChunks</span><span class="p">,</span>
+    <span class="n">USE_PROFILER</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="pointonline">
+<a class="viewcode-back" href="../../autoapi/cam/gcodepath/index.html#cam.gcodepath.pointonline">[docs]</a>
+<span class="k">def</span> <span class="nf">pointonline</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">tolerence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine if the angle between two vectors is within a specified</span>
+<span class="sd">    tolerance.</span>
+
+<span class="sd">    This function checks if the angle formed by two vectors, defined by</span>
+<span class="sd">    points `b` and `c` relative to point `a`, is less than or equal to a</span>
+<span class="sd">    given tolerance. It converts the points into vectors, calculates the dot</span>
+<span class="sd">    product, and then computes the angle between them using the arccosine</span>
+<span class="sd">    function. If the angle exceeds the specified tolerance, the function</span>
+<span class="sd">    returns False; otherwise, it returns True.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a (numpy.ndarray): The origin point as a vector.</span>
+<span class="sd">        b (numpy.ndarray): The first point as a vector.</span>
+<span class="sd">        c (numpy.ndarray): The second point as a vector.</span>
+<span class="sd">        tolerence (float): The maximum allowable angle (in degrees) between the vectors.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the angle between vectors b and c is within the specified</span>
+<span class="sd">            tolerance,</span>
+<span class="sd">            False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span>  <span class="c1"># convert to vector by subtracting origin</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="n">a</span>
+    <span class="n">dot_pr</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>  <span class="c1"># b dot c</span>
+    <span class="n">norms</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>  <span class="c1"># find norms</span>
+    <span class="c1"># find angle between the two vectors</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">dot_pr</span> <span class="o">/</span> <span class="n">norms</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">angle</span> <span class="o">&gt;</span> <span class="n">tolerence</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="exportGcodePath">
+<a class="viewcode-back" href="../../autoapi/cam/gcodepath/index.html#cam.gcodepath.exportGcodePath">[docs]</a>
+<span class="k">def</span> <span class="nf">exportGcodePath</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">vertslist</span><span class="p">,</span> <span class="n">operations</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exports G-code using the Heeks NC Adopted Library.</span>
+
+<span class="sd">    This function generates G-code from a list of vertices and operations</span>
+<span class="sd">    specified by the user. It handles various post-processor settings based</span>
+<span class="sd">    on the machine configuration and can split the output into multiple</span>
+<span class="sd">    files if the total number of operations exceeds a specified limit. The</span>
+<span class="sd">    G-code is tailored for different machine types and includes options for</span>
+<span class="sd">    tool changes, spindle control, and various movement commands.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (str): The name of the file to which the G-code will be exported.</span>
+<span class="sd">        vertslist (list): A list of mesh objects containing vertex data.</span>
+<span class="sd">        operations (list): A list of operations to be performed, each containing</span>
+<span class="sd">            specific parameters for G-code generation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value; it writes the G-code to a file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EXPORT&quot;</span><span class="p">)</span>
+    <span class="n">progress</span><span class="p">(</span><span class="s1">&#39;Exporting G-code File&#39;</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_machine</span>
+    <span class="n">enable_dust</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">enable_hold</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">enable_mist</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># find out how many files will be done:</span>
+
+    <span class="n">split</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">totops</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">findex</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">eval_splitting</span><span class="p">:</span>  <span class="c1"># detect whether splitting will happen</span>
+        <span class="k">for</span> <span class="n">mesh</span> <span class="ow">in</span> <span class="n">vertslist</span><span class="p">:</span>
+            <span class="n">totops</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">totops</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">totops</span> <span class="o">&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">split_limit</span><span class="p">:</span>
+            <span class="n">split</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">filesnum</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">totops</span> <span class="o">/</span> <span class="n">m</span><span class="o">.</span><span class="n">split_limit</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;File Will Be Separated Into </span><span class="si">%i</span><span class="s1"> Files&#39;</span> <span class="o">%</span> <span class="n">filesnum</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+
+    <span class="n">basefilename</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="p">[:</span><span class="o">-</span>
+                                     <span class="nb">len</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="p">))]</span> <span class="o">+</span> <span class="n">safeFileName</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.tap&#39;</span>
+    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;ISO&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">iso</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;MACH3&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">mach3</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;EMC&#39;</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.ngc&#39;</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">emc2b</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;FADAL&#39;</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.tap&#39;</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">fadal</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;GRBL&#39;</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.gcode&#39;</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">grbl</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;HM50&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">hm50</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;HEIDENHAIN&#39;</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.H&#39;</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">heiden</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;HEIDENHAIN530&#39;</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.H&#39;</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">heiden530</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;TNC151&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">tnc151</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;SIEGKX1&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">siegkx1</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;CENTROID&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">centroid1</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;ANILAM&#39;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">anilam_crusader_m</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;GRAVOS&#39;</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.nc&#39;</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">gravos</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;WIN-PC&#39;</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.din&#39;</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">winpc</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;SHOPBOT MTC&#39;</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.sbp&#39;</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">shopbot_mtc</span> <span class="k">as</span> <span class="n">postprocessor</span>
+    <span class="k">elif</span> <span class="n">m</span><span class="o">.</span><span class="n">post_processor</span> <span class="o">==</span> <span class="s1">&#39;LYNX_OTTER_O&#39;</span><span class="p">:</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;.nc&#39;</span>
+        <span class="kn">from</span> <span class="nn">.nc</span> <span class="kn">import</span> <span class="n">lynx_otter_o</span> <span class="k">as</span> <span class="n">postprocessor</span>
+
+    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s1">&#39;METRIC&#39;</span><span class="p">:</span>
+        <span class="n">unitcorr</span> <span class="o">=</span> <span class="mf">1000.0</span>
+    <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s1">&#39;IMPERIAL&#39;</span><span class="p">:</span>
+        <span class="n">unitcorr</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">0.0254</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">unitcorr</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">rotcorr</span> <span class="o">=</span> <span class="mf">180.0</span> <span class="o">/</span> <span class="n">pi</span>
+
+    <span class="n">use_experimental</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">addons</span><span class="p">[</span><span class="n">__package__</span><span class="p">]</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">experimental</span>
+
+    <span class="k">def</span> <span class="nf">startNewFile</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a new file for G-code generation.</span>
+
+<span class="sd">        This function initializes a new file for G-code output based on the</span>
+<span class="sd">        specified parameters. It constructs the filename using a base name, an</span>
+<span class="sd">        optional index, and a file extension. The function also configures the</span>
+<span class="sd">        post-processor settings based on user overrides and the selected unit</span>
+<span class="sd">        system (metric or imperial). Finally, it begins the G-code program and</span>
+<span class="sd">        sets the necessary configurations for the output.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Creator: An instance of the post-processor Creator class configured for</span>
+<span class="sd">            G-code generation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">fileindex</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">split</span><span class="p">:</span>
+            <span class="n">fileindex</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">findex</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">basefilename</span> <span class="o">+</span> <span class="n">fileindex</span> <span class="o">+</span> <span class="n">extension</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;writing: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">postprocessor</span><span class="o">.</span><span class="n">Creator</span><span class="p">()</span>
+
+        <span class="c1"># process user overrides for post processor settings</span>
+
+        <span class="k">if</span> <span class="n">use_experimental</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">iso</span><span class="o">.</span><span class="n">Creator</span><span class="p">):</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">output_block_numbers</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">output_block_numbers</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">start_block_number</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">start_block_number</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">block_number_increment</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">block_number_increment</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">output_tool_definitions</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_definitions</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">output_tool_change</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_change</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">output_g43_on_tool_change_line</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">output_g43_on_tool_change</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">file_open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># unit system correction</span>
+        <span class="c1">###############</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s1">&#39;METRIC&#39;</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">metric</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">s</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s1">&#39;IMPERIAL&#39;</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">imperial</span><span class="p">()</span>
+
+        <span class="c1"># start program</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">program_begin</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span><span class="s1">&#39;G-code Generated with BlenderCAM and NC library&#39;</span><span class="p">)</span>
+        <span class="c1"># absolute coordinates</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+
+        <span class="c1"># work-plane, by now always xy,</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">set_plane</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">c</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">startNewFile</span><span class="p">()</span>
+    <span class="c1"># [o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]</span>
+    <span class="n">last_cutter</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">processedops</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">cut_distance</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">operations</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">use_experimental</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">output_header</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_header</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">free_height</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">free_height</span>  <span class="c1"># o.max.z+</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">useG64</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">set_path_control_mode</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">G64</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">mesh</span> <span class="o">=</span> <span class="n">vertslist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">verts</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">[:]</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">!=</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+            <span class="n">rots</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape_keys</span><span class="o">.</span><span class="n">key_blocks</span><span class="p">[</span><span class="s1">&#39;rotations&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span>
+
+        <span class="c1"># spindle rpm and direction</span>
+        <span class="c1">###############</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s1">&#39;CW&#39;</span><span class="p">:</span>
+            <span class="n">spdir_clockwise</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">spdir_clockwise</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># write tool, not working yet probably</span>
+        <span class="c1"># print (last_cutter)</span>
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_change</span> <span class="ow">and</span> <span class="n">last_cutter</span> <span class="o">!=</span> <span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_id</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_flutes</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_change</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">tool_change</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">output_tool_definitions</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span><span class="s1">&#39;Tool: D = </span><span class="si">%s</span><span class="s1"> type </span><span class="si">%s</span><span class="s1"> flutes </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">strInUnits</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_flutes</span><span class="p">))</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+
+        <span class="n">last_cutter</span> <span class="o">=</span> <span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_id</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_flutes</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;LASER&#39;</span><span class="p">,</span> <span class="s1">&#39;PLASMA&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_hold</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;(Hold Down)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_start_hold_cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">enable_hold</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">stop_hold</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_stop_hold_cmd</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_mist</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;(Mist)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_start_mist_cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">enable_mist</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">stop_mist</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_stop_mist_cmd</span>
+
+            <span class="n">c</span><span class="o">.</span><span class="n">spindle</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">spindle_rpm</span><span class="p">,</span> <span class="n">spdir_clockwise</span><span class="p">)</span>  <span class="c1"># start spindle</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">write_spindle</span><span class="p">()</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_dust</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;(Dust collector)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_start_dust_cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">enable_dust</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">stop_dust</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_stop_dust_cmd</span>
+
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">spindle_start_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">dwell</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">spindle_start_time</span><span class="p">)</span>
+
+        <span class="c1">#        c.rapid(z=free_height*1000)  #raise the spindle to safe height</span>
+        <span class="n">fmh</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">free_height</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;LASER&#39;</span><span class="p">,</span> <span class="s1">&#39;PLASMA&#39;</span><span class="p">]:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;G00 Z&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fmh</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_A</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">rotation_A</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">rotation_A</span> <span class="o">=</span> <span class="mf">0.0001</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">rotation_A</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">enable_B</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">rotation_B</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">rotation_B</span> <span class="o">=</span> <span class="mf">0.0001</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">rotation_B</span> <span class="o">*</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">pi</span><span class="p">)</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+
+        <span class="c1"># dhull c.feedrate(unitcorr*o.feedrate)</span>
+
+        <span class="c1"># commands=[]</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_machine</span>
+
+        <span class="n">millfeedrate</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">feedrate</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">feedrate_max</span><span class="p">)</span>
+
+        <span class="n">millfeedrate</span> <span class="o">=</span> <span class="n">unitcorr</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">millfeedrate</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">feedrate_min</span><span class="p">)</span>
+        <span class="n">plungefeedrate</span> <span class="o">=</span> <span class="n">millfeedrate</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">plunge_feedrate</span> <span class="o">/</span> <span class="mi">100</span>
+        <span class="n">freefeedrate</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">feedrate_max</span> <span class="o">*</span> <span class="n">unitcorr</span>
+        <span class="n">fadjust</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">do_simulation_feedrate</span> <span class="ow">and</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape_keys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+                <span class="ow">and</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape_keys</span><span class="o">.</span><span class="n">key_blocks</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;feedrates&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">shapek</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shape_keys</span><span class="o">.</span><span class="n">key_blocks</span><span class="p">[</span><span class="s1">&#39;feedrates&#39;</span><span class="p">]</span>
+            <span class="n">fadjust</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">use_position_definitions</span><span class="p">:</span>  <span class="c1"># dhull</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">m</span><span class="o">.</span><span class="n">starting_position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">starting_position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">starting_position</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+
+        <span class="n">lastrot</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="mf">0.1123456</span>  <span class="c1"># nonsense value, so first feedrate always gets written</span>
+        <span class="n">fadjustval</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># if simulation load data is Not present</span>
+
+        <span class="n">downvector</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">plungelimit</span> <span class="o">=</span> <span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">plunge_angle</span><span class="p">)</span>
+
+        <span class="n">scale_graph</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># warning this has to be same as in export in utils!!!!</span>
+
+        <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">offline</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">online</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">cut</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># active cut variable for laser or plasma</span>
+        <span class="n">shapes</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">vi</span><span class="p">,</span> <span class="n">vert</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">verts</span><span class="p">):</span>
+            <span class="c1"># skip the first vertex if this is a chained operation</span>
+            <span class="c1"># ie: outputting more than one operation</span>
+            <span class="c1"># otherwise the machine gets sent back to 0,0 for each operation which is unecessary</span>
+            <span class="n">shapes</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># Count amount of shapes</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">vi</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">vert</span><span class="o">.</span><span class="n">co</span>
+            <span class="c1"># redundant point on line detection</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">remove_redundant_points</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">!=</span> <span class="s1">&#39;DRILL&#39;</span><span class="p">:</span>
+                <span class="n">nextv</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="k">if</span> <span class="n">ii</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">firstv</span> <span class="o">=</span> <span class="n">v</span>  <span class="c1"># only happens once</span>
+                <span class="k">elif</span> <span class="n">ii</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">middlev</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">pointonline</span><span class="p">(</span><span class="n">firstv</span><span class="p">,</span> <span class="n">middlev</span><span class="p">,</span> <span class="n">nextv</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">simplify_tol</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">):</span>
+                        <span class="n">middlev</span> <span class="o">=</span> <span class="n">nextv</span>
+                        <span class="n">online</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">continue</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># create new start point with the last tested point</span>
+                        <span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">offline</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">firstv</span> <span class="o">=</span> <span class="n">nextv</span>
+                <span class="n">ii</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># end of redundant point on line detection</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">!=</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># we rotate it so we need to copy the vector</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">(</span><span class="n">rots</span><span class="p">[</span><span class="n">vi</span><span class="p">]</span><span class="o">.</span><span class="n">co</span><span class="p">)</span>
+                <span class="c1"># conversion to N-axis coordinates</span>
+                <span class="c1"># this seems to work correctly for 4 axis.</span>
+                <span class="n">rcompensate</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">rcompensate</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">r</span><span class="o">.</span><span class="n">x</span>
+                <span class="n">rcompensate</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">r</span><span class="o">.</span><span class="n">y</span>
+                <span class="n">rcompensate</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="n">r</span><span class="o">.</span><span class="n">z</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">rcompensate</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">lastrot</span><span class="o">.</span><span class="n">x</span><span class="p">:</span>
+                    <span class="n">ra</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+
+                    <span class="n">ra</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">rotcorr</span>
+
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">lastrot</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>
+                    <span class="n">rb</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">rb</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">rotcorr</span>
+
+            <span class="k">if</span> <span class="n">vi</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">==</span> <span class="n">last</span><span class="o">.</span><span class="n">x</span><span class="p">:</span>
+                <span class="n">vx</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vx</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">unitcorr</span>
+            <span class="k">if</span> <span class="n">vi</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">==</span> <span class="n">last</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>
+                <span class="n">vy</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vy</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">unitcorr</span>
+            <span class="k">if</span> <span class="n">vi</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">z</span> <span class="o">==</span> <span class="n">last</span><span class="o">.</span><span class="n">z</span><span class="p">:</span>
+                <span class="n">vz</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vz</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">unitcorr</span>
+
+            <span class="k">if</span> <span class="n">fadjust</span><span class="p">:</span>
+                <span class="n">fadjustval</span> <span class="o">=</span> <span class="n">shapek</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">vi</span><span class="p">]</span><span class="o">.</span><span class="n">co</span><span class="o">.</span><span class="n">z</span> <span class="o">/</span> <span class="n">scale_graph</span>
+
+            <span class="c1"># v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)</span>
+            <span class="n">vect</span> <span class="o">=</span> <span class="n">v</span> <span class="o">-</span> <span class="n">last</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">length</span>
+            <span class="k">if</span> <span class="n">vi</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">l</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">downvector</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">vect</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">plungelimit</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="n">plungefeedrate</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fadjust</span> <span class="ow">and</span> <span class="n">fadjustval</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="n">plungefeedrate</span> <span class="o">*</span> <span class="n">fadjustval</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;LASER&#39;</span><span class="p">,</span> <span class="s1">&#39;PLASMA&#39;</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">cut</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="o">==</span> <span class="s1">&#39;LASER&#39;</span><span class="p">:</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(*************dwell-&gt;laser on)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;G04 P&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">Laser_delay</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">Laser_on</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                            <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="o">==</span> <span class="s1">&#39;PLASMA&#39;</span><span class="p">:</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(*************dwell-&gt;PLASMA on)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">plasma_delay</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">Plasma_delay</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">plasma_delay</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;G04 P&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plasma_delay</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">Plasma_on</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                                <span class="n">plasma_dwell</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">Plasma_dwell</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">plasma_dwell</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                    <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;G04 P&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plasma_dwell</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">cut</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">c</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+
+                    <span class="n">c</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">rb</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">v</span><span class="o">.</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="n">free_height</span> <span class="ow">or</span> <span class="n">vi</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># v.z==last.z==free_height or vi==0</span>
+                <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="n">freefeedrate</span><span class="p">:</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="n">freefeedrate</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;LASER&#39;</span><span class="p">,</span> <span class="s1">&#39;PLASMA&#39;</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">cut</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="o">==</span> <span class="s1">&#39;LASER&#39;</span><span class="p">:</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(**************laser off)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">Laser_off</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                            <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span> <span class="o">==</span> <span class="s1">&#39;PLASMA&#39;</span><span class="p">:</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(**************Plasma off)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">Plasma_off</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                            <span class="n">cut</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">)</span>
+                        <span class="c1">#  this is to evaluate operation time and adds a feedrate for fast moves</span>
+                        <span class="k">if</span> <span class="n">vz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="c1"># compensate for multiple fast move accelerations</span>
+                            <span class="n">f</span> <span class="o">=</span> <span class="n">plungefeedrate</span> <span class="o">*</span> <span class="n">fadjustval</span> <span class="o">*</span> <span class="mf">0.35</span>
+                        <span class="k">if</span> <span class="n">vx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">vy</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">f</span> <span class="o">=</span> <span class="n">freefeedrate</span> <span class="o">*</span> <span class="mf">0.8</span>  <span class="c1"># compensate for free feedrate acceleration</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">rb</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="n">millfeedrate</span> <span class="ow">or</span> <span class="p">(</span><span class="n">fadjust</span> <span class="ow">and</span> <span class="n">fadjustval</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="n">millfeedrate</span> <span class="o">*</span> <span class="n">fadjustval</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">vz</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">ra</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">rb</span><span class="p">)</span>
+            <span class="n">cut_distance</span> <span class="o">+=</span> <span class="n">vect</span><span class="o">.</span><span class="n">length</span> <span class="o">*</span> <span class="n">unitcorr</span>
+            <span class="n">vector_duration</span> <span class="o">=</span> <span class="n">vect</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">f</span>
+            <span class="n">duration</span> <span class="o">+=</span> <span class="n">vector_duration</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">!=</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+                <span class="n">lastrot</span> <span class="o">=</span> <span class="n">r</span>
+
+            <span class="n">processedops</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">split</span> <span class="ow">and</span> <span class="n">processedops</span> <span class="o">&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">split_limit</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">free_height</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">)</span>
+                <span class="c1"># @v=(ch.points[-1][0],ch.points[-1][1],free_height)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">program_end</span><span class="p">()</span>
+                <span class="n">findex</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">file_close</span><span class="p">()</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">startNewFile</span><span class="p">()</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">comment</span><span class="p">(</span><span class="s1">&#39;Tool change - D = </span><span class="si">%s</span><span class="s1"> type </span><span class="si">%s</span><span class="s1"> flutes </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">strInUnits</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_type</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">cutter_flutes</span><span class="p">))</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">tool_change</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_id</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">spindle</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">spindle_rpm</span><span class="p">,</span> <span class="n">spdir_clockwise</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write_spindle</span><span class="p">()</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">spindle_start_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">dwell</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">spindle_start_time</span><span class="p">)</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">flush_nc</span><span class="p">()</span>
+
+                <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">unitcorr</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">feedrate</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">free_height</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">)</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">rapid</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">last</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">unitcorr</span><span class="p">)</span>
+                <span class="n">processedops</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">remove_redundant_points</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">!=</span> <span class="s2">&quot;DRILL&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;online &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">online</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; offline &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">offline</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="nb">round</span><span class="p">(</span><span class="n">online</span> <span class="o">/</span> <span class="p">(</span><span class="n">offline</span> <span class="o">+</span> <span class="n">online</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">% r</span><span class="s2">emoval&quot;</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">feedrate</span><span class="p">(</span><span class="n">unitcorr</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">feedrate</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">output_trailer</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">gcode_trailer</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">aline</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">aline</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">*</span> <span class="n">unitcorr</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;total time:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">duration</span> <span class="o">*</span> <span class="mi">60</span><span class="p">),</span> <span class="s2">&quot;seconds&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">unit_settings</span><span class="o">.</span><span class="n">system</span> <span class="o">==</span> <span class="s1">&#39;METRIC&#39;</span><span class="p">:</span>
+        <span class="n">unit_distance</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
+        <span class="n">cut_distance</span> <span class="o">/=</span> <span class="mi">1000</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">unit_distance</span> <span class="o">=</span> <span class="s1">&#39;feet&#39;</span>
+        <span class="n">cut_distance</span> <span class="o">/=</span> <span class="mi">12</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;cut distance:&quot;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cut_distance</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">unit_distance</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">enable_dust</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stop_dust</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">enable_hold</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stop_hold</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">enable_mist</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stop_mist</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">c</span><span class="o">.</span><span class="n">program_end</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">file_close</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="getPath">
+<a class="viewcode-back" href="../../autoapi/cam/gcodepath/index.html#cam.gcodepath.getPath">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">getPath</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the path for a given operation in a specified context.</span>
+
+<span class="sd">    This function performs various calculations to determine the path based</span>
+<span class="sd">    on the operation&#39;s parameters and context. It checks for changes in the</span>
+<span class="sd">    operation&#39;s data and updates relevant tags accordingly. Depending on the</span>
+<span class="sd">    number of machine axes specified in the operation, it calls different</span>
+<span class="sd">    functions to handle 3-axis, 4-axis, or 5-axis operations. Additionally,</span>
+<span class="sd">    if automatic export is enabled, it exports the generated G-code path.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context: The context in which the operation is being performed.</span>
+<span class="sd">        operation: An object representing the operation with various</span>
+<span class="sd">            attributes such as machine_axes, strategy, and</span>
+<span class="sd">            auto_export.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+  <span class="c1"># should do all path calculations.</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">process_time</span><span class="p">()</span>
+    <span class="c1"># print(&#39;ahoj0&#39;)</span>
+
+    <span class="c1"># these tags are for caching of some of the results. Not working well still</span>
+    <span class="c1"># - although it can save a lot of time during calculation...</span>
+
+    <span class="n">chd</span> <span class="o">=</span> <span class="n">getChangeData</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
+    <span class="c1"># print(chd)</span>
+    <span class="c1"># print(o.changedata)</span>
+    <span class="k">if</span> <span class="n">operation</span><span class="o">.</span><span class="n">changedata</span> <span class="o">!=</span> <span class="n">chd</span><span class="p">:</span>  <span class="c1"># or 1:</span>
+        <span class="n">operation</span><span class="o">.</span><span class="n">update_offsetimage_tag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">operation</span><span class="o">.</span><span class="n">update_zbufferimage_tag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">operation</span><span class="o">.</span><span class="n">changedata</span> <span class="o">=</span> <span class="n">chd</span>
+
+    <span class="n">operation</span><span class="o">.</span><span class="n">update_silhouete_tag</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">operation</span><span class="o">.</span><span class="n">update_ambient_tag</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">operation</span><span class="o">.</span><span class="n">update_bullet_collision_tag</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">getOperationSources</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
+
+    <span class="n">operation</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">checkMemoryLimit</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">machine_axes</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">operation</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">USE_PROFILER</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>  <span class="c1"># profiler</span>
+            <span class="kn">import</span> <span class="nn">cProfile</span>
+            <span class="kn">import</span> <span class="nn">pstats</span>
+            <span class="kn">import</span> <span class="nn">io</span>
+            <span class="n">pr</span> <span class="o">=</span> <span class="n">cProfile</span><span class="o">.</span><span class="n">Profile</span><span class="p">()</span>
+            <span class="n">pr</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+            <span class="k">await</span> <span class="n">getPath3axis</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+            <span class="n">pr</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+            <span class="n">pr</span><span class="o">.</span><span class="n">dump_stats</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;BlenderCAM_%Y%m</span><span class="si">%d</span><span class="s2">_%H%M.prof&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">getPath3axis</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s1">&#39;5&#39;</span> <span class="ow">and</span> <span class="n">operation</span><span class="o">.</span><span class="n">strategy5axis</span> <span class="o">==</span> <span class="s1">&#39;INDEXED&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">operation</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span> <span class="ow">and</span> <span class="n">operation</span><span class="o">.</span><span class="n">strategy4axis</span> <span class="o">==</span> <span class="s1">&#39;INDEXED&#39;</span><span class="p">):</span>
+        <span class="c1"># 5 axis operations are now only 3 axis operations that get rotated...</span>
+        <span class="n">operation</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">prepareIndexed</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>  <span class="c1"># TODO RENAME THIS</span>
+
+        <span class="k">await</span> <span class="n">getPath3axis</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>  <span class="c1"># TODO RENAME THIS</span>
+
+        <span class="n">cleanupIndexed</span><span class="p">(</span><span class="n">operation</span><span class="p">)</span>  <span class="c1"># TODO RENAME THIS</span>
+    <span class="c1"># transform5axisIndexed</span>
+    <span class="k">elif</span> <span class="n">operation</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s1">&#39;4&#39;</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">getPath4axis</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+
+    <span class="c1"># export gcode if automatic.</span>
+    <span class="k">if</span> <span class="n">operation</span><span class="o">.</span><span class="n">auto_export</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cam_path_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">name</span><span class="p">))</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="s2">&quot;cam_path_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span>
+        <span class="n">exportGcodePath</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">data</span><span class="p">],</span> <span class="p">[</span><span class="n">operation</span><span class="p">])</span>
+
+    <span class="n">operation</span><span class="o">.</span><span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">process_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span>
+    <span class="n">progress</span><span class="p">(</span><span class="s1">&#39;total time&#39;</span><span class="p">,</span> <span class="n">t1</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="getChangeData">
+<a class="viewcode-back" href="../../autoapi/cam/gcodepath/index.html#cam.gcodepath.getChangeData">[docs]</a>
+<span class="k">def</span> <span class="nf">getChangeData</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if object properties have changed to determine if image updates</span>
+<span class="sd">    are needed.</span>
+
+<span class="sd">    This function inspects the properties of objects specified by the input</span>
+<span class="sd">    parameter to see if any changes have occurred. It concatenates the</span>
+<span class="sd">    location, rotation, and dimensions of the relevant objects into a single</span>
+<span class="sd">    string, which can be used to determine if an image update is necessary</span>
+<span class="sd">    based on changes in the object&#39;s state.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing properties that specify the geometry source</span>
+<span class="sd">            and relevant object or collection names.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: A string representation of the location, rotation, and dimensions of</span>
+<span class="sd">            the specified objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">changedata</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">geometry_source</span> <span class="o">==</span> <span class="s1">&#39;OBJECT&#39;</span><span class="p">:</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="p">[</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">object_name</span><span class="p">]]</span>
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">geometry_source</span> <span class="o">==</span> <span class="s1">&#39;COLLECTION&#39;</span><span class="p">:</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">objects</span>
+    <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">obs</span><span class="p">:</span>
+        <span class="n">changedata</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+        <span class="n">changedata</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">rotation_euler</span><span class="p">)</span>
+        <span class="n">changedata</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">dimensions</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">changedata</span></div>
+
+
+
+<div class="viewcode-block" id="checkMemoryLimit">
+<a class="viewcode-back" href="../../autoapi/cam/gcodepath/index.html#cam.gcodepath.checkMemoryLimit">[docs]</a>
+<span class="k">def</span> <span class="nf">checkMemoryLimit</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check and adjust the memory limit for an object.</span>
+
+<span class="sd">    This function calculates the resolution of an object based on its</span>
+<span class="sd">    dimensions and the specified pixel size. If the calculated resolution</span>
+<span class="sd">    exceeds the defined memory limit, it adjusts the pixel size accordingly</span>
+<span class="sd">    to reduce the resolution. A warning message is appended to the object&#39;s</span>
+<span class="sd">    info if the pixel size is modified.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing properties such as max, min, optimisation, and</span>
+<span class="sd">            info.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function modifies the object&#39;s properties in place and does not</span>
+<span class="sd">            return a value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># getBounds(o)</span>
+    <span class="n">sx</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">sy</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">resx</span> <span class="o">=</span> <span class="n">sx</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span>
+    <span class="n">resy</span> <span class="o">=</span> <span class="n">sy</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">resx</span> <span class="o">*</span> <span class="n">resy</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">imgres_limit</span> <span class="o">*</span> <span class="mi">1000000</span>
+    <span class="c1"># print(&#39;co se to deje&#39;)</span>
+    <span class="k">if</span> <span class="n">res</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">:</span>
+        <span class="n">ratio</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span> <span class="o">/</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Memory limit: Sampling Resolution Reduced to </span><span class="si">{</span><span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Changing Sampling Resolution to </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># this is the main function.</span>
+<span class="c1"># FIXME: split strategies into separate file!</span>
+<div class="viewcode-block" id="getPath3axis">
+<a class="viewcode-back" href="../../autoapi/cam/gcodepath/index.html#cam.gcodepath.getPath3axis">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">getPath3axis</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a machining path based on the specified operation strategy.</span>
+
+<span class="sd">    This function evaluates the provided operation&#39;s strategy and generates</span>
+<span class="sd">    the corresponding machining path. It supports various strategies such as</span>
+<span class="sd">    &#39;CUTOUT&#39;, &#39;CURVE&#39;, &#39;PROJECTED_CURVE&#39;, &#39;POCKET&#39;, and others. Depending on</span>
+<span class="sd">    the strategy, it performs specific calculations and manipulations on the</span>
+<span class="sd">    input data to create a path that can be used for machining operations.</span>
+<span class="sd">    The function handles different strategies by calling appropriate methods</span>
+<span class="sd">    from the `strategy` module and processes the path samples accordingly.</span>
+<span class="sd">    It also manages the generation of chunks, which represent segments of</span>
+<span class="sd">    the machining path, and applies any necessary transformations based on</span>
+<span class="sd">    the operation&#39;s parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context (bpy.context): The Blender context containing scene information.</span>
+<span class="sd">        operation (Operation): An object representing the machining operation,</span>
+<span class="sd">            which includes strategy and other relevant parameters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value but modifies the state of</span>
+<span class="sd">        the operation and context directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">operation</span>
+    <span class="n">getBounds</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">tw</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;CUTOUT&#39;</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">strategy</span><span class="o">.</span><span class="n">cutout</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;CURVE&#39;</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">strategy</span><span class="o">.</span><span class="n">curve</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;PROJECTED_CURVE&#39;</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">strategy</span><span class="o">.</span><span class="n">proj_curve</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;POCKET&#39;</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">strategy</span><span class="o">.</span><span class="n">pocket</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;PARALLEL&#39;</span><span class="p">,</span> <span class="s1">&#39;CROSS&#39;</span><span class="p">,</span> <span class="s1">&#39;BLOCK&#39;</span><span class="p">,</span> <span class="s1">&#39;SPIRAL&#39;</span><span class="p">,</span> <span class="s1">&#39;CIRCLES&#39;</span><span class="p">,</span> <span class="s1">&#39;OUTLINEFILL&#39;</span><span class="p">,</span> <span class="s1">&#39;CARVE&#39;</span><span class="p">,</span> <span class="s1">&#39;PENCIL&#39;</span><span class="p">,</span> <span class="s1">&#39;CRAZY&#39;</span><span class="p">]:</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;CARVE&#39;</span><span class="p">:</span>
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">ob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">curve_object</span><span class="p">]</span>
+            <span class="n">pathSamples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">curveToChunks</span><span class="p">(</span><span class="n">ob</span><span class="p">))</span>
+            <span class="c1"># sort before sampling</span>
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sortChunks</span><span class="p">(</span><span class="n">pathSamples</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="n">chunksRefine</span><span class="p">(</span><span class="n">pathSamples</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;PENCIL&#39;</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">prepareArea</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+            <span class="n">getAmbient</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="n">getOffsetImageCavities</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span><span class="p">)</span>
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="n">limitChunks</span><span class="p">(</span><span class="n">pathSamples</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+            <span class="c1"># sort before sampling</span>
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sortChunks</span><span class="p">(</span><span class="n">pathSamples</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;CRAZY&#39;</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">prepareArea</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+            <span class="c1"># pathSamples = crazyStrokeImage(o)</span>
+            <span class="c1"># this kind of worked and should work:</span>
+            <span class="n">millarea</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">zbuffer_image</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">minz</span> <span class="o">+</span> <span class="mf">0.000001</span>
+            <span class="n">avoidarea</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">minz</span> <span class="o">+</span> <span class="mf">0.000001</span>
+
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="n">crazyStrokeImageBinary</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">millarea</span><span class="p">,</span> <span class="n">avoidarea</span><span class="p">)</span>
+            <span class="c1">#####</span>
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sortChunks</span><span class="p">(</span><span class="n">pathSamples</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="n">chunksRefine</span><span class="p">(</span><span class="n">pathSamples</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;OUTLINEFILL&#39;</span><span class="p">:</span>
+                <span class="n">getOperationSilhouete</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+            <span class="n">pathSamples</span> <span class="o">=</span> <span class="n">getPathPattern</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;OUTLINEFILL&#39;</span><span class="p">:</span>
+                <span class="n">pathSamples</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sortChunks</span><span class="p">(</span><span class="n">pathSamples</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+                <span class="c1"># have to be sorted once before, because of the parenting inside of samplechunks</span>
+
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;BLOCK&#39;</span><span class="p">,</span> <span class="s1">&#39;SPIRAL&#39;</span><span class="p">,</span> <span class="s1">&#39;CIRCLES&#39;</span><span class="p">]:</span>
+                <span class="n">pathSamples</span> <span class="o">=</span> <span class="k">await</span> <span class="n">connectChunksLow</span><span class="p">(</span><span class="n">pathSamples</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+        <span class="c1"># print (minz)</span>
+
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">getLayers</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">maxz</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SAMPLE&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">chunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="k">await</span> <span class="n">sampleChunks</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">pathSamples</span><span class="p">,</span> <span class="n">layers</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SAMPLE OK&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;PENCIL&#39;</span><span class="p">:</span>  <span class="c1"># and bpy.app.debug_value==-3:</span>
+            <span class="n">chunks</span> <span class="o">=</span> <span class="n">chunksCoherency</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;coherency check&#39;</span><span class="p">)</span>
+
+        <span class="c1"># and not o.movement.parallel_step_back:</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;PARALLEL&#39;</span><span class="p">,</span> <span class="s1">&#39;CROSS&#39;</span><span class="p">,</span> <span class="s1">&#39;PENCIL&#39;</span><span class="p">,</span> <span class="s1">&#39;OUTLINEFILL&#39;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sorting&#39;</span><span class="p">)</span>
+            <span class="n">chunks</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sortChunks</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;OUTLINEFILL&#39;</span><span class="p">:</span>
+                <span class="n">chunks</span> <span class="o">=</span> <span class="k">await</span> <span class="n">connectChunksLow</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">ramp</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">rampZigZag</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">zstart</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="c1"># print(chunks)</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;CARVE&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">offsetZ</span><span class="p">(</span><span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">carve_depth</span><span class="p">)</span>
+<span class="c1">#                for vi in range(0, len(ch.points)):</span>
+<span class="c1">#                    ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">use_bridges</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">bridge_chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+                <span class="n">useBridges</span><span class="p">(</span><span class="n">bridge_chunk</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+        <span class="n">strategy</span><span class="o">.</span><span class="n">chunksToMesh</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;WATERLINE&#39;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">use_opencamlib</span><span class="p">:</span>
+        <span class="n">getAmbient</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">await</span> <span class="n">oclGetWaterline</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">chunks</span><span class="p">)</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="n">limitChunks</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CLIMB&#39;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s1">&#39;CW&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CONVENTIONAL&#39;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s1">&#39;CCW&#39;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+        <span class="n">strategy</span><span class="o">.</span><span class="n">chunksToMesh</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;WATERLINE&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">use_opencamlib</span><span class="p">:</span>
+        <span class="n">topdown</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">await</span> <span class="n">progress_async</span><span class="p">(</span><span class="s1">&#39;retrieving object slices&#39;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">prepareArea</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+        <span class="n">layerstep</span> <span class="o">=</span> <span class="mi">1000000000</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">use_layers</span><span class="p">:</span>
+            <span class="n">layerstep</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">stepdown</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">slice_detail</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">layerstep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">layerstep</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># for projection of filled areas</span>
+        <span class="n">layerstart</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span>  <span class="c1">#</span>
+        <span class="n">layerend</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span>  <span class="c1">#</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="p">[[</span><span class="n">layerstart</span><span class="p">,</span> <span class="n">layerend</span><span class="p">]]</span>
+        <span class="c1">#######################</span>
+        <span class="n">nslices</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">o</span><span class="o">.</span><span class="n">minz</span><span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">maxz</span><span class="p">)</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">slice_detail</span><span class="p">))</span>
+        <span class="n">lastslice</span> <span class="o">=</span> <span class="n">spolygon</span><span class="o">.</span><span class="n">Polygon</span><span class="p">()</span>  <span class="c1"># polyversion</span>
+        <span class="n">layerstepinc</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">slicesfilled</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">getAmbient</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nslices</span><span class="p">):</span>
+            <span class="n">layerstepinc</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">slicechunks</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">minz</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">slice_detail</span>
+            <span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">z</span> <span class="o">+=</span> <span class="mf">0.0000001</span>
+                <span class="c1"># if people do mill flat areas, this helps to reach those...</span>
+                <span class="c1"># otherwise first layer would actually be one slicelevel above min z.</span>
+
+            <span class="n">islice</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span> <span class="o">&gt;</span> <span class="n">z</span>
+            <span class="n">slicepolys</span> <span class="o">=</span> <span class="n">imageToShapely</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">islice</span><span class="p">,</span> <span class="n">with_border</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">poly</span> <span class="o">=</span> <span class="n">spolygon</span><span class="o">.</span><span class="n">Polygon</span><span class="p">()</span>  <span class="c1"># polygversion</span>
+            <span class="n">lastchunks</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">slicepolys</span><span class="o">.</span><span class="n">geoms</span><span class="p">:</span>
+                <span class="n">poly</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># polygversion TODO: why is this added?</span>
+                <span class="n">nchunks</span> <span class="o">=</span> <span class="n">shapelyToChunks</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+                <span class="n">nchunks</span> <span class="o">=</span> <span class="n">limitChunks</span><span class="p">(</span><span class="n">nchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">lastchunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
+                <span class="n">slicechunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">slicepolys</span><span class="o">.</span><span class="n">geoms</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">slicesfilled</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1">#</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">waterline_fill</span><span class="p">:</span>
+                <span class="n">layerstart</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">maxz</span><span class="p">,</span> <span class="n">z</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">slice_detail</span><span class="p">)</span>  <span class="c1">#</span>
+                <span class="n">layerend</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">z</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">slice_detail</span><span class="p">)</span>  <span class="c1">#</span>
+                <span class="n">layers</span> <span class="o">=</span> <span class="p">[[</span><span class="n">layerstart</span><span class="p">,</span> <span class="n">layerend</span><span class="p">]]</span>
+                <span class="c1">#####################################</span>
+                <span class="c1"># fill top slice for normal and first for inverse, fill between polys</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">lastslice</span><span class="o">.</span><span class="n">is_empty</span> <span class="ow">or</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">inverse</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span> <span class="ow">and</span> <span class="n">slicesfilled</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">restpoly</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">lastslice</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>  <span class="c1"># between polys</span>
+                        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">inverse</span><span class="p">:</span>
+                            <span class="n">restpoly</span> <span class="o">=</span> <span class="n">poly</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">lastslice</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">restpoly</span> <span class="o">=</span> <span class="n">lastslice</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
+                    <span class="c1"># print(&#39;filling between&#39;)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">inverse</span> <span class="ow">and</span> <span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span> <span class="ow">and</span> <span class="n">slicesfilled</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                            <span class="n">o</span><span class="o">.</span><span class="n">inverse</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span> <span class="ow">and</span> <span class="n">slicesfilled</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>  <span class="c1"># first slice fill</span>
+                        <span class="n">restpoly</span> <span class="o">=</span> <span class="n">lastslice</span>
+
+                    <span class="n">restpoly</span> <span class="o">=</span> <span class="n">restpoly</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">dist_between_paths</span><span class="p">,</span>
+                                               <span class="n">resolution</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">circle_detail</span><span class="p">)</span>
+
+                    <span class="n">fillz</span> <span class="o">=</span> <span class="n">z</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">while</span> <span class="ow">not</span> <span class="n">restpoly</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+                        <span class="n">nchunks</span> <span class="o">=</span> <span class="n">shapelyToChunks</span><span class="p">(</span><span class="n">restpoly</span><span class="p">,</span> <span class="n">fillz</span><span class="p">)</span>
+                        <span class="c1"># project paths TODO: path projection during waterline is not working</span>
+                        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">waterline_project</span><span class="p">:</span>
+                            <span class="n">nchunks</span> <span class="o">=</span> <span class="n">chunksRefine</span><span class="p">(</span><span class="n">nchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+                            <span class="n">nchunks</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sampleChunks</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">,</span> <span class="n">layers</span><span class="p">)</span>
+
+                        <span class="n">nchunks</span> <span class="o">=</span> <span class="n">limitChunks</span><span class="p">(</span><span class="n">nchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="c1">#########################</span>
+                        <span class="n">slicechunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
+                        <span class="n">parentChildDist</span><span class="p">(</span><span class="n">lastchunks</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+                        <span class="n">lastchunks</span> <span class="o">=</span> <span class="n">nchunks</span>
+                        <span class="c1"># slicechunks.extend(polyToChunks(restpoly,z))</span>
+                        <span class="n">restpoly</span> <span class="o">=</span> <span class="n">restpoly</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">dist_between_paths</span><span class="p">,</span>
+                                                   <span class="n">resolution</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">circle_detail</span><span class="p">)</span>
+
+                        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># print(i)</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="c1">#  fill layers and last slice, last slice with inverse is not working yet</span>
+                <span class="c1">#  - inverse millings end now always on 0 so filling ambient does have no sense.</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">slicesfilled</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">layerstepinc</span> <span class="o">==</span> <span class="n">layerstep</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                        <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">inverse</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span> <span class="ow">and</span> <span class="n">slicesfilled</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                        <span class="n">o</span><span class="o">.</span><span class="n">inverse</span> <span class="ow">and</span> <span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span> <span class="ow">and</span> <span class="n">slicesfilled</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="n">fillz</span> <span class="o">=</span> <span class="n">z</span>
+                    <span class="n">layerstepinc</span> <span class="o">=</span> <span class="mi">0</span>
+
+                    <span class="n">bound_rectangle</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">ambient</span>
+                    <span class="n">restpoly</span> <span class="o">=</span> <span class="n">bound_rectangle</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">inverse</span> <span class="ow">and</span> <span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span> <span class="ow">and</span> <span class="n">slicesfilled</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">restpoly</span> <span class="o">=</span> <span class="n">bound_rectangle</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">lastslice</span><span class="p">)</span>
+
+                    <span class="n">restpoly</span> <span class="o">=</span> <span class="n">restpoly</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">dist_between_paths</span><span class="p">,</span>
+                                               <span class="n">resolution</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">circle_detail</span><span class="p">)</span>
+
+                    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="c1"># &#39;GeometryCollection&#39;:#len(restpoly.boundary.coords)&gt;0:</span>
+                    <span class="k">while</span> <span class="ow">not</span> <span class="n">restpoly</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+                        <span class="c1"># print(i)</span>
+                        <span class="n">nchunks</span> <span class="o">=</span> <span class="n">shapelyToChunks</span><span class="p">(</span><span class="n">restpoly</span><span class="p">,</span> <span class="n">fillz</span><span class="p">)</span>
+                        <span class="c1">#########################</span>
+                        <span class="n">nchunks</span> <span class="o">=</span> <span class="n">limitChunks</span><span class="p">(</span><span class="n">nchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">slicechunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
+                        <span class="n">parentChildDist</span><span class="p">(</span><span class="n">lastchunks</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+                        <span class="n">lastchunks</span> <span class="o">=</span> <span class="n">nchunks</span>
+                        <span class="n">restpoly</span> <span class="o">=</span> <span class="n">restpoly</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">dist_between_paths</span><span class="p">,</span>
+                                                   <span class="n">resolution</span><span class="o">=</span><span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">circle_detail</span><span class="p">)</span>
+                        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="n">percent</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">h</span> <span class="o">/</span> <span class="n">nslices</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">progress_async</span><span class="p">(</span><span class="s1">&#39;waterline layers &#39;</span><span class="p">,</span> <span class="n">percent</span><span class="p">)</span>
+                <span class="n">lastslice</span> <span class="o">=</span> <span class="n">poly</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CONVENTIONAL&#39;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s1">&#39;CCW&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;CLIMB&#39;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s1">&#39;CW&#39;</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">slicechunks</span><span class="p">:</span>
+                    <span class="n">chunk</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <span class="n">slicechunks</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sortChunks</span><span class="p">(</span><span class="n">slicechunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">topdown</span><span class="p">:</span>
+                <span class="n">slicechunks</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <span class="c1"># project chunks in between</span>
+
+            <span class="n">chunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">slicechunks</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">topdown</span><span class="p">:</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="n">strategy</span><span class="o">.</span><span class="n">chunksToMesh</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;DRILL&#39;</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">strategy</span><span class="o">.</span><span class="n">drill</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;MEDIAL_AXIS&#39;</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">strategy</span><span class="o">.</span><span class="n">medial_axis</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">await</span> <span class="n">progress_async</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">tw</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="getPath4axis">
+<a class="viewcode-back" href="../../autoapi/cam/gcodepath/index.html#cam.gcodepath.getPath4axis">[docs]</a>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">getPath4axis</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a path for a specified axis based on the given operation.</span>
+
+<span class="sd">    This function retrieves the bounds of the operation and checks the</span>
+<span class="sd">    strategy associated with the axis. If the strategy is one of the</span>
+<span class="sd">    specified types (&#39;PARALLELR&#39;, &#39;PARALLEL&#39;, &#39;HELIX&#39;, &#39;CROSS&#39;), it</span>
+<span class="sd">    generates path samples and processes them into chunks for meshing. The</span>
+<span class="sd">    function utilizes various helper functions to achieve this, including</span>
+<span class="sd">    obtaining layers and sampling chunks.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        context: The context in which the operation is executed.</span>
+<span class="sd">        operation: An object that contains the strategy and other</span>
+<span class="sd">            necessary parameters for generating the path.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value but modifies</span>
+<span class="sd">            the state of the operation by processing chunks for meshing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">o</span> <span class="o">=</span> <span class="n">operation</span>
+    <span class="n">getBounds</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy4axis</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;PARALLELR&#39;</span><span class="p">,</span> <span class="s1">&#39;PARALLEL&#39;</span><span class="p">,</span> <span class="s1">&#39;HELIX&#39;</span><span class="p">,</span> <span class="s1">&#39;CROSS&#39;</span><span class="p">]:</span>
+        <span class="n">path_samples</span> <span class="o">=</span> <span class="n">getPathPattern4axis</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+        <span class="n">depth</span> <span class="o">=</span> <span class="n">path_samples</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">depth</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">layers</span> <span class="o">=</span> <span class="n">strategy</span><span class="o">.</span><span class="n">getLayers</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span>
+
+        <span class="n">chunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="k">await</span> <span class="n">sampleChunksNAxis</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">path_samples</span><span class="p">,</span> <span class="n">layers</span><span class="p">))</span>
+        <span class="n">strategy</span><span class="o">.</span><span class="n">chunksToMesh</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1093 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>cam.cam_chunk &#8212; BlenderCAM 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=fd3f3429" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=e842dffb"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/cam/cam_chunk/index';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="cam.cam_operation" href="../cam_operation/index.html" />
+    <link rel="prev" title="cam.bridges" href="../bridges/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo_blendercam.png" class="logo__image only-light" alt="BlenderCAM 1.0.38 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/logo_blendercam.png" class="logo__image only-dark" alt="BlenderCAM 1.0.38 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../styleguide.html">Style Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">cam</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../autoupdate/index.html">cam.autoupdate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basrelief/index.html">cam.basrelief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cam_operation/index.html">cam.cam_operation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../chain/index.html">cam.chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../curvecamcreate/index.html">cam.curvecamcreate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../curvecamequation/index.html">cam.curvecamequation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../curvecamtools/index.html">cam.curvecamtools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gcodeimportparser/index.html">cam.gcodeimportparser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gcodepath/index.html">cam.gcodepath</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../image_utils/index.html">cam.image_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../machine_settings/index.html">cam.machine_settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../numba_wrapper/index.html">cam.numba_wrapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ops/index.html">cam.ops</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pack/index.html">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../polygon_utils_cam/index.html">cam.polygon_utils_cam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preset_managers/index.html">cam.preset_managers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../simple/index.html">cam.simple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../testing/index.html">cam.testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ui/index.html">cam.ui</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utils/index.html">cam.utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/autoapi/cam/cam_chunk/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>cam.cam_chunk</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.Rotate_pbyp"><code class="docutils literal notranslate"><span class="pre">Rotate_pbyp()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk._internalXyDistanceTo"><code class="docutils literal notranslate"><span class="pre">_internalXyDistanceTo()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.points"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.points</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.startpoints"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.startpoints</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.endpoints"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.endpoints</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.rotations"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.rotations</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.depth"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.depth</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.to_chunk"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.to_chunk()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk"><code class="docutils literal notranslate"><span class="pre">camPathChunk</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.poly"><code class="docutils literal notranslate"><span class="pre">camPathChunk.poly</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.simppoly"><code class="docutils literal notranslate"><span class="pre">camPathChunk.simppoly</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.closed"><code class="docutils literal notranslate"><span class="pre">camPathChunk.closed</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.children"><code class="docutils literal notranslate"><span class="pre">camPathChunk.children</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.parents"><code class="docutils literal notranslate"><span class="pre">camPathChunk.parents</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.sorted"><code class="docutils literal notranslate"><span class="pre">camPathChunk.sorted</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.length"><code class="docutils literal notranslate"><span class="pre">camPathChunk.length</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.zstart"><code class="docutils literal notranslate"><span class="pre">camPathChunk.zstart</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.zend"><code class="docutils literal notranslate"><span class="pre">camPathChunk.zend</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.update_poly"><code class="docutils literal notranslate"><span class="pre">camPathChunk.update_poly()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.get_point"><code class="docutils literal notranslate"><span class="pre">camPathChunk.get_point()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.get_points"><code class="docutils literal notranslate"><span class="pre">camPathChunk.get_points()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.get_points_np"><code class="docutils literal notranslate"><span class="pre">camPathChunk.get_points_np()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.set_points"><code class="docutils literal notranslate"><span class="pre">camPathChunk.set_points()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.count"><code class="docutils literal notranslate"><span class="pre">camPathChunk.count()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.copy"><code class="docutils literal notranslate"><span class="pre">camPathChunk.copy()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.shift"><code class="docutils literal notranslate"><span class="pre">camPathChunk.shift()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.setZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.setZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.offsetZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.offsetZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.flipX"><code class="docutils literal notranslate"><span class="pre">camPathChunk.flipX()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.isbelowZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.isbelowZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.clampZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.clampZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.clampmaxZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.clampmaxZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.dist"><code class="docutils literal notranslate"><span class="pre">camPathChunk.dist()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.distStart"><code class="docutils literal notranslate"><span class="pre">camPathChunk.distStart()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.xyDistanceWithin"><code class="docutils literal notranslate"><span class="pre">camPathChunk.xyDistanceWithin()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.xyDistanceTo"><code class="docutils literal notranslate"><span class="pre">camPathChunk.xyDistanceTo()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.adaptdist"><code class="docutils literal notranslate"><span class="pre">camPathChunk.adaptdist()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.getNextClosest"><code class="docutils literal notranslate"><span class="pre">camPathChunk.getNextClosest()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.getLength"><code class="docutils literal notranslate"><span class="pre">camPathChunk.getLength()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.reverse"><code class="docutils literal notranslate"><span class="pre">camPathChunk.reverse()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.pop"><code class="docutils literal notranslate"><span class="pre">camPathChunk.pop()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.dedupePoints"><code class="docutils literal notranslate"><span class="pre">camPathChunk.dedupePoints()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.insert"><code class="docutils literal notranslate"><span class="pre">camPathChunk.insert()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.append"><code class="docutils literal notranslate"><span class="pre">camPathChunk.append()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.extend"><code class="docutils literal notranslate"><span class="pre">camPathChunk.extend()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.clip_points"><code class="docutils literal notranslate"><span class="pre">camPathChunk.clip_points()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.rampContour"><code class="docutils literal notranslate"><span class="pre">camPathChunk.rampContour()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.rampZigZag"><code class="docutils literal notranslate"><span class="pre">camPathChunk.rampZigZag()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.changePathStart"><code class="docutils literal notranslate"><span class="pre">camPathChunk.changePathStart()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.breakPathForLeadinLeadout"><code class="docutils literal notranslate"><span class="pre">camPathChunk.breakPathForLeadinLeadout()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.leadContour"><code class="docutils literal notranslate"><span class="pre">camPathChunk.leadContour()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunksCoherency"><code class="docutils literal notranslate"><span class="pre">chunksCoherency()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.setChunksZ"><code class="docutils literal notranslate"><span class="pre">setChunksZ()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk._optimize_internal"><code class="docutils literal notranslate"><span class="pre">_optimize_internal()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.optimizeChunk"><code class="docutils literal notranslate"><span class="pre">optimizeChunk()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.limitChunks"><code class="docutils literal notranslate"><span class="pre">limitChunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.parentChildPoly"><code class="docutils literal notranslate"><span class="pre">parentChildPoly()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.parentChildDist"><code class="docutils literal notranslate"><span class="pre">parentChildDist()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.parentChild"><code class="docutils literal notranslate"><span class="pre">parentChild()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunksToShapely"><code class="docutils literal notranslate"><span class="pre">chunksToShapely()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.meshFromCurveToChunk"><code class="docutils literal notranslate"><span class="pre">meshFromCurveToChunk()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.makeVisible"><code class="docutils literal notranslate"><span class="pre">makeVisible()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.restoreVisibility"><code class="docutils literal notranslate"><span class="pre">restoreVisibility()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.meshFromCurve"><code class="docutils literal notranslate"><span class="pre">meshFromCurve()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.curveToChunks"><code class="docutils literal notranslate"><span class="pre">curveToChunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.shapelyToChunks"><code class="docutils literal notranslate"><span class="pre">shapelyToChunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunkToShapely"><code class="docutils literal notranslate"><span class="pre">chunkToShapely()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunksRefine"><code class="docutils literal notranslate"><span class="pre">chunksRefine()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunksRefineThreshold"><code class="docutils literal notranslate"><span class="pre">chunksRefineThreshold()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-cam.cam_chunk">
+<span id="cam-cam-chunk"></span><h1>cam.cam_chunk<a class="headerlink" href="#module-cam.cam_chunk" title="Link to this heading">#</a></h1>
+<p>BlenderCAM ‘chunk.py’ © 2012 Vilem Novak</p>
+<p>Classes and Functions to build, store and optimize CAM path chunks.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.camPathChunkBuilder" title="cam.cam_chunk.camPathChunkBuilder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camPathChunkBuilder</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.camPathChunk" title="cam.cam_chunk.camPathChunk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">camPathChunk</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.Rotate_pbyp" title="cam.cam_chunk.Rotate_pbyp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rotate_pbyp</span></code></a>(originp, p, ang)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk._internalXyDistanceTo" title="cam.cam_chunk._internalXyDistanceTo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_internalXyDistanceTo</span></code></a>(ourpoints, theirpoints, cutoff)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.chunksCoherency" title="cam.cam_chunk.chunksCoherency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunksCoherency</span></code></a>(chunks)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.setChunksZ" title="cam.cam_chunk.setChunksZ"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setChunksZ</span></code></a>(chunks, z)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk._optimize_internal" title="cam.cam_chunk._optimize_internal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_optimize_internal</span></code></a>(points, keep_points, e, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.optimizeChunk" title="cam.cam_chunk.optimizeChunk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optimizeChunk</span></code></a>(chunk, operation)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.limitChunks" title="cam.cam_chunk.limitChunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">limitChunks</span></code></a>(chunks, o[, force])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.parentChildPoly" title="cam.cam_chunk.parentChildPoly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parentChildPoly</span></code></a>(parents, children, o)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.parentChildDist" title="cam.cam_chunk.parentChildDist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parentChildDist</span></code></a>(parents, children, o[, distance])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.parentChild" title="cam.cam_chunk.parentChild"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parentChild</span></code></a>(parents, children, o)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.chunksToShapely" title="cam.cam_chunk.chunksToShapely"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunksToShapely</span></code></a>(chunks)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.meshFromCurveToChunk" title="cam.cam_chunk.meshFromCurveToChunk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">meshFromCurveToChunk</span></code></a>(object)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.makeVisible" title="cam.cam_chunk.makeVisible"><code class="xref py py-obj docutils literal notranslate"><span class="pre">makeVisible</span></code></a>(o)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.restoreVisibility" title="cam.cam_chunk.restoreVisibility"><code class="xref py py-obj docutils literal notranslate"><span class="pre">restoreVisibility</span></code></a>(o, storage)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.meshFromCurve" title="cam.cam_chunk.meshFromCurve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">meshFromCurve</span></code></a>(o[, use_modifiers])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.curveToChunks" title="cam.cam_chunk.curveToChunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">curveToChunks</span></code></a>(o[, use_modifiers])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.shapelyToChunks" title="cam.cam_chunk.shapelyToChunks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shapelyToChunks</span></code></a>(p, zlevel)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.chunkToShapely" title="cam.cam_chunk.chunkToShapely"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunkToShapely</span></code></a>(chunk)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.cam_chunk.chunksRefine" title="cam.cam_chunk.chunksRefine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunksRefine</span></code></a>(chunks, o)</p></td>
+<td><p>Add Extra Points in Between for Chunks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.cam_chunk.chunksRefineThreshold" title="cam.cam_chunk.chunksRefineThreshold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chunksRefineThreshold</span></code></a>(chunks, distance, limitdistance)</p></td>
+<td><p>Add Extra Points in Between for Chunks. for Medial Axis Strategy only!</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.Rotate_pbyp">
+<span class="sig-name descname"><span class="pre">Rotate_pbyp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">originp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ang</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#Rotate_pbyp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.Rotate_pbyp" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk._internalXyDistanceTo">
+<span class="sig-name descname"><span class="pre">_internalXyDistanceTo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ourpoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theirpoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#_internalXyDistanceTo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk._internalXyDistanceTo" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunkBuilder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">camPathChunkBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunkBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunkBuilder" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunkBuilder.points">
+<span class="sig-name descname"><span class="pre">points</span></span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunkBuilder.points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunkBuilder.points" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunkBuilder.startpoints">
+<span class="sig-name descname"><span class="pre">startpoints</span></span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunkBuilder.startpoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunkBuilder.startpoints" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunkBuilder.endpoints">
+<span class="sig-name descname"><span class="pre">endpoints</span></span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunkBuilder.endpoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunkBuilder.endpoints" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunkBuilder.rotations">
+<span class="sig-name descname"><span class="pre">rotations</span></span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunkBuilder.rotations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunkBuilder.rotations" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunkBuilder.depth">
+<span class="sig-name descname"><span class="pre">depth</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunkBuilder.depth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunkBuilder.depth" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunkBuilder.to_chunk">
+<span class="sig-name descname"><span class="pre">to_chunk</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunkBuilder.to_chunk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunkBuilder.to_chunk" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">camPathChunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inpoints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk" title="Link to this definition">#</a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.poly">
+<span class="sig-name descname"><span class="pre">poly</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.poly" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.simppoly">
+<span class="sig-name descname"><span class="pre">simppoly</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.simppoly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.simppoly" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.closed">
+<span class="sig-name descname"><span class="pre">closed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.closed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.closed" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.children">
+<span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.children"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.children" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.parents">
+<span class="sig-name descname"><span class="pre">parents</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.parents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.parents" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.sorted">
+<span class="sig-name descname"><span class="pre">sorted</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.sorted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.sorted" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.length">
+<span class="sig-name descname"><span class="pre">length</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.length" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.zstart">
+<span class="sig-name descname"><span class="pre">zstart</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.zstart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.zstart" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.zend">
+<span class="sig-name descname"><span class="pre">zend</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.zend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.zend" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.update_poly">
+<span class="sig-name descname"><span class="pre">update_poly</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.update_poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.update_poly" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.get_point">
+<span class="sig-name descname"><span class="pre">get_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.get_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.get_point" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.get_points">
+<span class="sig-name descname"><span class="pre">get_points</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.get_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.get_points" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.get_points_np">
+<span class="sig-name descname"><span class="pre">get_points_np</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.get_points_np"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.get_points_np" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.set_points">
+<span class="sig-name descname"><span class="pre">set_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.set_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.set_points" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.count">
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.copy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.shift">
+<span class="sig-name descname"><span class="pre">shift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.shift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.shift" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.setZ">
+<span class="sig-name descname"><span class="pre">setZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_bigger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.setZ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.setZ" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.offsetZ">
+<span class="sig-name descname"><span class="pre">offsetZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.offsetZ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.offsetZ" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.flipX">
+<span class="sig-name descname"><span class="pre">flipX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_centre</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.flipX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.flipX" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.isbelowZ">
+<span class="sig-name descname"><span class="pre">isbelowZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.isbelowZ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.isbelowZ" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.clampZ">
+<span class="sig-name descname"><span class="pre">clampZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.clampZ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.clampZ" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.clampmaxZ">
+<span class="sig-name descname"><span class="pre">clampmaxZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.clampmaxZ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.clampmaxZ" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.dist">
+<span class="sig-name descname"><span class="pre">dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.dist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.dist" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.distStart">
+<span class="sig-name descname"><span class="pre">distStart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.distStart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.distStart" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.xyDistanceWithin">
+<span class="sig-name descname"><span class="pre">xyDistanceWithin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.xyDistanceWithin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.xyDistanceWithin" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.xyDistanceTo">
+<span class="sig-name descname"><span class="pre">xyDistanceTo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.xyDistanceTo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.xyDistanceTo" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.adaptdist">
+<span class="sig-name descname"><span class="pre">adaptdist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.adaptdist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.adaptdist" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.getNextClosest">
+<span class="sig-name descname"><span class="pre">getNextClosest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.getNextClosest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.getNextClosest" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.getLength">
+<span class="sig-name descname"><span class="pre">getLength</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.getLength"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.getLength" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.reverse">
+<span class="sig-name descname"><span class="pre">reverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.reverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.reverse" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.pop">
+<span class="sig-name descname"><span class="pre">pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.pop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.pop" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.dedupePoints">
+<span class="sig-name descname"><span class="pre">dedupePoints</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.dedupePoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.dedupePoints" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">at_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.insert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.insert" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.append" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.extend">
+<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.extend" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.clip_points">
+<span class="sig-name descname"><span class="pre">clip_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.clip_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.clip_points" title="Link to this definition">#</a></dt>
+<dd><p>Remove Any Points Outside This Range</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.rampContour">
+<span class="sig-name descname"><span class="pre">rampContour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zstart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.rampContour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.rampContour" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.rampZigZag">
+<span class="sig-name descname"><span class="pre">rampZigZag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zstart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zend</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.rampZigZag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.rampZigZag" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.changePathStart">
+<span class="sig-name descname"><span class="pre">changePathStart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.changePathStart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.changePathStart" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.breakPathForLeadinLeadout">
+<span class="sig-name descname"><span class="pre">breakPathForLeadinLeadout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.breakPathForLeadinLeadout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.breakPathForLeadinLeadout" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cam.cam_chunk.camPathChunk.leadContour">
+<span class="sig-name descname"><span class="pre">leadContour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#camPathChunk.leadContour"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.camPathChunk.leadContour" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.chunksCoherency">
+<span class="sig-name descname"><span class="pre">chunksCoherency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#chunksCoherency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.chunksCoherency" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.setChunksZ">
+<span class="sig-name descname"><span class="pre">setChunksZ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#setChunksZ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.setChunksZ" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk._optimize_internal">
+<span class="sig-name descname"><span class="pre">_optimize_internal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_vertical</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_vertical_limit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#_optimize_internal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk._optimize_internal" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.optimizeChunk">
+<span class="sig-name descname"><span class="pre">optimizeChunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#optimizeChunk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.optimizeChunk" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.limitChunks">
+<span class="sig-name descname"><span class="pre">limitChunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#limitChunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.limitChunks" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.parentChildPoly">
+<span class="sig-name descname"><span class="pre">parentChildPoly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">children</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#parentChildPoly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.parentChildPoly" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.parentChildDist">
+<span class="sig-name descname"><span class="pre">parentChildDist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">children</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#parentChildDist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.parentChildDist" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.parentChild">
+<span class="sig-name descname"><span class="pre">parentChild</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">children</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#parentChild"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.parentChild" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.chunksToShapely">
+<span class="sig-name descname"><span class="pre">chunksToShapely</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#chunksToShapely"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.chunksToShapely" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.meshFromCurveToChunk">
+<span class="sig-name descname"><span class="pre">meshFromCurveToChunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#meshFromCurveToChunk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.meshFromCurveToChunk" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.makeVisible">
+<span class="sig-name descname"><span class="pre">makeVisible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#makeVisible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.makeVisible" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.restoreVisibility">
+<span class="sig-name descname"><span class="pre">restoreVisibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#restoreVisibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.restoreVisibility" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.meshFromCurve">
+<span class="sig-name descname"><span class="pre">meshFromCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#meshFromCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.meshFromCurve" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.curveToChunks">
+<span class="sig-name descname"><span class="pre">curveToChunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_modifiers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#curveToChunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.curveToChunks" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.shapelyToChunks">
+<span class="sig-name descname"><span class="pre">shapelyToChunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlevel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#shapelyToChunks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.shapelyToChunks" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.chunkToShapely">
+<span class="sig-name descname"><span class="pre">chunkToShapely</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#chunkToShapely"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.chunkToShapely" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.chunksRefine">
+<span class="sig-name descname"><span class="pre">chunksRefine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#chunksRefine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.chunksRefine" title="Link to this definition">#</a></dt>
+<dd><p>Add Extra Points in Between for Chunks</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.cam_chunk.chunksRefineThreshold">
+<span class="sig-name descname"><span class="pre">chunksRefineThreshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limitdistance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/cam_chunk.html#chunksRefineThreshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.cam_chunk.chunksRefineThreshold" title="Link to this definition">#</a></dt>
+<dd><p>Add Extra Points in Between for Chunks. for Medial Axis Strategy only!</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../bridges/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">cam.bridges</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../cam_operation/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">cam.cam_operation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.Rotate_pbyp"><code class="docutils literal notranslate"><span class="pre">Rotate_pbyp()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk._internalXyDistanceTo"><code class="docutils literal notranslate"><span class="pre">_internalXyDistanceTo()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.points"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.points</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.startpoints"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.startpoints</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.endpoints"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.endpoints</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.rotations"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.rotations</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.depth"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.depth</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunkBuilder.to_chunk"><code class="docutils literal notranslate"><span class="pre">camPathChunkBuilder.to_chunk()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk"><code class="docutils literal notranslate"><span class="pre">camPathChunk</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.poly"><code class="docutils literal notranslate"><span class="pre">camPathChunk.poly</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.simppoly"><code class="docutils literal notranslate"><span class="pre">camPathChunk.simppoly</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.closed"><code class="docutils literal notranslate"><span class="pre">camPathChunk.closed</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.children"><code class="docutils literal notranslate"><span class="pre">camPathChunk.children</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.parents"><code class="docutils literal notranslate"><span class="pre">camPathChunk.parents</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.sorted"><code class="docutils literal notranslate"><span class="pre">camPathChunk.sorted</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.length"><code class="docutils literal notranslate"><span class="pre">camPathChunk.length</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.zstart"><code class="docutils literal notranslate"><span class="pre">camPathChunk.zstart</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.zend"><code class="docutils literal notranslate"><span class="pre">camPathChunk.zend</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.update_poly"><code class="docutils literal notranslate"><span class="pre">camPathChunk.update_poly()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.get_point"><code class="docutils literal notranslate"><span class="pre">camPathChunk.get_point()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.get_points"><code class="docutils literal notranslate"><span class="pre">camPathChunk.get_points()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.get_points_np"><code class="docutils literal notranslate"><span class="pre">camPathChunk.get_points_np()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.set_points"><code class="docutils literal notranslate"><span class="pre">camPathChunk.set_points()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.count"><code class="docutils literal notranslate"><span class="pre">camPathChunk.count()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.copy"><code class="docutils literal notranslate"><span class="pre">camPathChunk.copy()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.shift"><code class="docutils literal notranslate"><span class="pre">camPathChunk.shift()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.setZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.setZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.offsetZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.offsetZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.flipX"><code class="docutils literal notranslate"><span class="pre">camPathChunk.flipX()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.isbelowZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.isbelowZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.clampZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.clampZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.clampmaxZ"><code class="docutils literal notranslate"><span class="pre">camPathChunk.clampmaxZ()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.dist"><code class="docutils literal notranslate"><span class="pre">camPathChunk.dist()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.distStart"><code class="docutils literal notranslate"><span class="pre">camPathChunk.distStart()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.xyDistanceWithin"><code class="docutils literal notranslate"><span class="pre">camPathChunk.xyDistanceWithin()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.xyDistanceTo"><code class="docutils literal notranslate"><span class="pre">camPathChunk.xyDistanceTo()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.adaptdist"><code class="docutils literal notranslate"><span class="pre">camPathChunk.adaptdist()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.getNextClosest"><code class="docutils literal notranslate"><span class="pre">camPathChunk.getNextClosest()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.getLength"><code class="docutils literal notranslate"><span class="pre">camPathChunk.getLength()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.reverse"><code class="docutils literal notranslate"><span class="pre">camPathChunk.reverse()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.pop"><code class="docutils literal notranslate"><span class="pre">camPathChunk.pop()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.dedupePoints"><code class="docutils literal notranslate"><span class="pre">camPathChunk.dedupePoints()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.insert"><code class="docutils literal notranslate"><span class="pre">camPathChunk.insert()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.append"><code class="docutils literal notranslate"><span class="pre">camPathChunk.append()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.extend"><code class="docutils literal notranslate"><span class="pre">camPathChunk.extend()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.clip_points"><code class="docutils literal notranslate"><span class="pre">camPathChunk.clip_points()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.rampContour"><code class="docutils literal notranslate"><span class="pre">camPathChunk.rampContour()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.rampZigZag"><code class="docutils literal notranslate"><span class="pre">camPathChunk.rampZigZag()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.changePathStart"><code class="docutils literal notranslate"><span class="pre">camPathChunk.changePathStart()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.breakPathForLeadinLeadout"><code class="docutils literal notranslate"><span class="pre">camPathChunk.breakPathForLeadinLeadout()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.camPathChunk.leadContour"><code class="docutils literal notranslate"><span class="pre">camPathChunk.leadContour()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunksCoherency"><code class="docutils literal notranslate"><span class="pre">chunksCoherency()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.setChunksZ"><code class="docutils literal notranslate"><span class="pre">setChunksZ()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk._optimize_internal"><code class="docutils literal notranslate"><span class="pre">_optimize_internal()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.optimizeChunk"><code class="docutils literal notranslate"><span class="pre">optimizeChunk()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.limitChunks"><code class="docutils literal notranslate"><span class="pre">limitChunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.parentChildPoly"><code class="docutils literal notranslate"><span class="pre">parentChildPoly()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.parentChildDist"><code class="docutils literal notranslate"><span class="pre">parentChildDist()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.parentChild"><code class="docutils literal notranslate"><span class="pre">parentChild()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunksToShapely"><code class="docutils literal notranslate"><span class="pre">chunksToShapely()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.meshFromCurveToChunk"><code class="docutils literal notranslate"><span class="pre">meshFromCurveToChunk()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.makeVisible"><code class="docutils literal notranslate"><span class="pre">makeVisible()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.restoreVisibility"><code class="docutils literal notranslate"><span class="pre">restoreVisibility()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.meshFromCurve"><code class="docutils literal notranslate"><span class="pre">meshFromCurve()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.curveToChunks"><code class="docutils literal notranslate"><span class="pre">curveToChunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.shapelyToChunks"><code class="docutils literal notranslate"><span class="pre">shapelyToChunks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunkToShapely"><code class="docutils literal notranslate"><span class="pre">chunkToShapely()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunksRefine"><code class="docutils literal notranslate"><span class="pre">chunksRefine()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.cam_chunk.chunksRefineThreshold"><code class="docutils literal notranslate"><span class="pre">chunksRefineThreshold()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
