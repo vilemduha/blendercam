@@ -1,4 +1,4 @@
-"""BlenderCAM 'joinery.py' © 2021 Alain Pelletier
+"""CNC CAM 'joinery.py' © 2021 Alain Pelletier
 
 Functions to create various woodworking joints - mortise, finger etc.
 """

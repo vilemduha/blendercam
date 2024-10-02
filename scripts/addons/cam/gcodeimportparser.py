@@ -1,4 +1,4 @@
-"""BlenderCAM 'gcodeimportparser.py'
+"""CNC CAM 'gcodeimportparser.py'
 
 Code modified from YAGV (Yet Another G-code Viewer) - https://github.com/jonathanwin/yagv
 No license terms found in YAGV repo, will assume GNU release

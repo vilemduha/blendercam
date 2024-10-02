@@ -1,4 +1,4 @@
-"""BlenderCAM 'pattern.py' © 2012 Vilem Novak
+"""CNC CAM 'pattern.py' © 2012 Vilem Novak
 
 Functions to read CAM path patterns and return CAM path chunks.
 """

@@ -1,4 +1,4 @@
-"""BlenderCAM 'curvecamcreate.py' © 2021, 2022 Alain Pelletier
+"""CNC CAM 'curvecamcreate.py' © 2021, 2022 Alain Pelletier
 
 Operators to create a number of predefined curve objects.
 """

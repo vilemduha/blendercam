@@ -1,6 +1,6 @@
-"""BlenderCAM 'autoupdate.py'
+"""CNC CAM 'autoupdate.py'
 
-Classes to check for, download and install BlenderCAM updates.
+Classes to check for, download and install CNC CAM updates.
 """
 
 import calendar
@@ -23,7 +23,7 @@ from .version import __version__ as current_version
 class UpdateChecker(bpy.types.Operator):
     """Check for Updates"""
     bl_idname = "render.cam_check_updates"
-    bl_label = "Check for Updates in BlenderCAM Plugin"
+    bl_label = "Check for Updates in CNC CAM Plugin"
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -172,7 +172,7 @@ class Updater(bpy.types.Operator):
 
 class UpdateSourceOperator(bpy.types.Operator):
     bl_idname = "render.cam_set_update_source"
-    bl_label = "Set BlenderCAM Update Source"
+    bl_label = "Set CNC CAM Update Source"
 
     new_source: StringProperty(
         default='',

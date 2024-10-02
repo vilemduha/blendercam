@@ -1,6 +1,6 @@
-"""BlenderCAM 'constants.py'
+"""CNC CAM 'constants.py'
 
-Package to store all constants of BlenderCAM.
+Package to store all constants of CNC CAM.
 """
 
 # PRECISION is used in most operations

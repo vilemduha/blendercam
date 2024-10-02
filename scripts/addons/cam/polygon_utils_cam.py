@@ -1,4 +1,4 @@
-"""BlenderCAM 'polygon_utils_cam.py' © 2012 Vilem Novak
+"""CNC CAM 'polygon_utils_cam.py' © 2012 Vilem Novak
 
 Functions to handle shapely operations and conversions - curve, coords, polygon
 """

@@ -1,6 +1,6 @@
-"""BlenderCAM 'strategy.py' © 2012 Vilem Novak
+"""CNC CAM 'strategy.py' © 2012 Vilem Novak
 
-Strategy functionality of BlenderCAM - e.g. Cutout, Parallel, Spiral, Waterline
+Strategy functionality of CNC CAM - e.g. Cutout, Parallel, Spiral, Waterline
 The functions here are called with operators defined in 'ops.py'
 """
 

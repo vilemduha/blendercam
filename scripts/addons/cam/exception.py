@@ -1,4 +1,4 @@
-"""BlenderCAM 'exception.py'
+"""CNC CAM 'exception.py'
 
 Generic CAM Exception class.
 """

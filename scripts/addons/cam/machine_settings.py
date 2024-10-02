@@ -1,4 +1,4 @@
-"""BlenderCAM 'machine_settings.py'
+"""CNC CAM 'machine_settings.py'
 
 All CAM machine properties.
 """

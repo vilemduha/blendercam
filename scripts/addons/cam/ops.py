@@ -1,4 +1,4 @@
-"""BlenderCAM 'ops.py' © 2012 Vilem Novak
+"""CNC CAM 'ops.py' © 2012 Vilem Novak
 
 Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
@@ -1015,12 +1015,12 @@ class CamChainOperationRemove(Operator):
 
 
 def fixUnits():
-    """Set up units for BlenderCAM.
+    """Set up units for CNC CAM.
 
     This function configures the unit settings for the current Blender
     scene. It sets the rotation system to degrees and the scale length to
     1.0, ensuring that the units are appropriately configured for use within
-    BlenderCAM.
+    CNC CAM.
     """
     s = bpy.context.scene
 

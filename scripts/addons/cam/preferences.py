@@ -1,4 +1,4 @@
-"""BlenderCAM 'preferences.py'
+"""CNC CAM 'preferences.py'
 
 Class to store all Addon preferences.
 """
@@ -80,7 +80,7 @@ class CamAddonPreferences(AddonPreferences):
     def draw(self, context):
         layout = self.layout
         layout.label(
-            text="Use Experimental Features when you want to help development of BlenderCAM:"
+            text="Use Experimental Features when you want to help development of CNC CAM:"
         )
         layout.prop(self, "experimental")
         layout.prop(self, "update_source")

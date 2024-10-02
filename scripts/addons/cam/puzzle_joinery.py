@@ -1,4 +1,4 @@
-"""BlenderCAM 'puzzle_joinery.py' © 2021 Alain Pelletier
+"""CNC CAM 'puzzle_joinery.py' © 2021 Alain Pelletier
 
 Functions to add various puzzle joints as curves.
 """

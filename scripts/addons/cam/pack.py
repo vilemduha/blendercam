@@ -1,4 +1,4 @@
-"""BlenderCAM 'pack.py' © 2012 Vilem Novak
+"""CNC CAM 'pack.py' © 2012 Vilem Novak
 
 Takes all selected curves, converts them to polygons, offsets them by the pre-set margin
 then chooses a starting location possibly inside the already occupied area and moves and rotates the

@@ -1,4 +1,4 @@
-"""BlenderCAM 'cam_operation.py'
+"""CNC CAM 'cam_operation.py'
 
 All properties of a single CAM Operation.
 """

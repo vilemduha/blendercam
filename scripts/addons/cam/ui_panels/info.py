@@ -1,4 +1,4 @@
-"""BlenderCAM 'info.py'
+"""CNC CAM 'info.py'
 
 'CAM Info & Warnings' properties and panel in Properties > Render
 """
@@ -63,7 +63,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
     always_show_panel = True
 
     prop_level = {
-        'draw_blendercam_version': 0,
+        'draw_cnccam_version': 0,
         'draw_opencamlib_version': 1,
         'draw_op_warnings': 0,
         'draw_op_time': 0,
@@ -71,13 +71,13 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
         'draw_op_money_cost': 1,
     }
 
-    # Draw blendercam version (and whether there are updates available)
-    def draw_blendercam_version(self):
+    # Draw CNC CAM version (and whether there are updates available)
+    def draw_cnccam_version(self):
         addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.blendercam"].preferences
         if not self.has_correct_level():
             return
         self.layout.label(
-            text=f'BlenderCAM v{".".join([str(x) for x in cam_version])}')
+            text=f'CNC CAM v{".".join([str(x) for x in cam_version])}')
         if len(addon_prefs.new_version_available) > 0:
             self.layout.label(text=f"New Version Available:")
             self.layout.label(
@@ -151,7 +151,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
     # Display the Info Panel
     def draw(self, context):
         self.context = context
-        self.draw_blendercam_version()
+        self.draw_cnccam_version()
         self.draw_opencamlib_version()
         if self.op:
             self.draw_op_warnings()

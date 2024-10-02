@@ -1,4 +1,4 @@
-"""BlenderCAM 'collision.py' © 2012 Vilem Novak
+"""CNC CAM 'collision.py' © 2012 Vilem Novak
 
 Functions for Bullet and Cutter collision checks.
 """

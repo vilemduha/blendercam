@@ -971,7 +971,7 @@ def buildMesh(mesh_z, br):
         print("Faces:" + str(len(ob.data.polygons)))
         print("Vertices:" + str(len(ob.data.vertices)))
 
-# Switches to cycles render to CYCLES to render the sceen then switches it back to BLENDERCAM_RENDER for basRelief
+# Switches to cycles render to CYCLES to render the sceen then switches it back to CNCCAM_RENDER for basRelief
 
 
 def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view_layer):

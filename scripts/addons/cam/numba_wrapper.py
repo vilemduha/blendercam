@@ -1,4 +1,4 @@
-"""BlenderCAM 'numba_wrapper.py'
+"""CNC CAM 'numba_wrapper.py'
 
 Patch to ensure functions will run if numba is unavailable.
 """

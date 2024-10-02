@@ -1,4 +1,4 @@
-"""BlenderCAM 'testing.py' © 2012 Vilem Novak
+"""CNC CAM 'testing.py' © 2012 Vilem Novak
 
 Functions for automated testing.
 """

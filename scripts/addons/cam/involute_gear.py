@@ -1,4 +1,4 @@
-"""BlenderCAM 'involute_gear.py' Ported by Alain Pelletier Jan 2022
+"""CNC CAM 'involute_gear.py' Ported by Alain Pelletier Jan 2022
 
 from:
 Public Domain Parametric Involute Spur Gear (and involute helical gear and involute rack)

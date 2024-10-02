@@ -1,6 +1,6 @@
-"""BlenderCAM 'utils.py' © 2012 Vilem Novak
+"""CNC CAM 'utils.py' © 2012 Vilem Novak
 
-Main functionality of BlenderCAM.
+Main functionality of CNC CAM.
 The functions here are called with operators defined in 'ops.py'
 """
 

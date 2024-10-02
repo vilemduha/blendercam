@@ -1,4 +1,4 @@
-"""BlenderCAM 'curvecamequation.py' © 2021, 2022 Alain Pelletier
+"""CNC CAM 'curvecamequation.py' © 2021, 2022 Alain Pelletier
 
 Operators to create a number of geometric shapes with curves.
 """

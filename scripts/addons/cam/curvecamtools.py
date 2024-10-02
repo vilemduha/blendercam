@@ -1,4 +1,4 @@
-"""BlenderCAM 'curvecamtools.py' © 2012 Vilem Novak, 2021 Alain Pelletier
+"""CNC CAM 'curvecamtools.py' © 2012 Vilem Novak, 2021 Alain Pelletier
 
 Operators that perform various functions on existing curves.
 """

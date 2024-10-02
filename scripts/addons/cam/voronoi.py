@@ -1,4 +1,4 @@
-"""BlenderCAM 'voronoi.py'
+"""CNC CAM 'voronoi.py'
 
 Voronoi diagram calculator/ Delaunay triangulator
 

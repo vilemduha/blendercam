@@ -1,4 +1,4 @@
-"""BlenderCAM 'preset_managers.py'
+"""CNC CAM 'preset_managers.py'
 
 Operators and Menus for CAM Machine, Cutter and Operation Presets.
 """

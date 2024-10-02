@@ -1,4 +1,4 @@
-"""BlenderCAM 'slice.py' © 2021 Alain Pelletier
+"""CNC CAM 'slice.py' © 2021 Alain Pelletier
 
 Very simple slicing for 3D meshes, useful for plywood cutting.
 Completely rewritten April 2021.

@@ -1,4 +1,4 @@
-"""BlenderCAM 'simulation.py' © 2012 Vilem Novak
+"""CNC CAM 'simulation.py' © 2012 Vilem Novak
 
 Functions to generate a mesh simulation from CAM Chain / Operation data.
 """

@@ -240,7 +240,7 @@ def exportGcodePath(filename, vertslist, operations):
         # start program
         c.program_begin(0, filename)
         c.flush_nc()
-        c.comment('G-code Generated with BlenderCAM and NC library')
+        c.comment('G-code Generated with CNC CAM and NC library')
         # absolute coordinates
         c.absolute()
 

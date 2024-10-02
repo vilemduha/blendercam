@@ -1,4 +1,4 @@
-"""BlenderCAM 'simple.py' © 2012 Vilem Novak
+"""CNC CAM 'simple.py' © 2012 Vilem Novak
 
 Various helper functions, less complex than those found in the 'utils' files.
 """

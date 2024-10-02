@@ -1,4 +1,4 @@
-"""BlenderCAM 'parametric.py' © 2019 Devon (Gorialis) R
+"""CNC CAM 'parametric.py' © 2019 Devon (Gorialis) R
 
 MIT License
 

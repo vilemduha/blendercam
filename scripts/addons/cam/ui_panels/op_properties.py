@@ -1,4 +1,4 @@
-"""BlenderCAM 'op_properties.py'
+"""CMC CAM 'op_properties.py'
 
 'CAM Operation Setup' panel in Properties > Render
 """
