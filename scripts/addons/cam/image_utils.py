@@ -1,4 +1,4 @@
-"""BlenderCAM 'image_utils.py' © 2012 Vilem Novak
+"""CNC CAM 'image_utils.py' © 2012 Vilem Novak
 
 Functions to render, save, convert and analyze image data.
 """

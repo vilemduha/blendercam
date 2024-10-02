@@ -1,4 +1,4 @@
-"""BlenderCAM '__init__.py' © 2012 Vilem Novak
+"""CNC CAM '__init__.py' © 2012 Vilem Novak
 
 Import Modules, Register and Unregister Classes
 """

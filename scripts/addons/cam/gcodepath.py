@@ -1,4 +1,4 @@
-"""BlenderCAM 'gcodepath.py' © 2012 Vilem Novak
+"""CNC CAM 'gcodepath.py' © 2012 Vilem Novak
 
 Generate and Export G-Code based on scene, machine, chain, operation and path settings.
 """
@@ -624,7 +624,7 @@ async def getPath(context, operation):
             pr.enable()
             await getPath3axis(context, operation)
             pr.disable()
-            pr.dump_stats(time.strftime("BlenderCAM_%Y%m%d_%H%M.prof"))
+            pr.dump_stats(time.strftime("CNCCAM_%Y%m%d_%H%M.prof"))
         else:
             await getPath3axis(context, operation)
 

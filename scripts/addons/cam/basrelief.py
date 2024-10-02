@@ -1,4 +1,4 @@
-"""BlenderCAM 'basrelief.py'
+"""CNC CAM 'basrelief.py'
 
 Module to allow the creation of reliefs from Images or View Layers.
 (https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief)
