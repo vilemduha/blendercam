@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_material.py'
+"""CNC CAM 'pie_material.py'
 
 'Material Size & Position' Pie Menu
 """

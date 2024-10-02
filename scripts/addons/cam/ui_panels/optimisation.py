@@ -1,4 +1,4 @@
-"""BlenderCAM 'optimisation.py'
+"""CNC CAM 'optimisation.py'
 
 'CAM Optimisation' properties and panel in Properties > Render
 """

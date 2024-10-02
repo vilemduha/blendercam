@@ -1,4 +1,4 @@
-"""BlenderCAM 'cutter.py'
+"""CNC CAM 'cutter.py'
 
 'CAM Cutter' panel in Properties > Render
 """

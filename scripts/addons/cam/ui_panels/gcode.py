@@ -1,4 +1,4 @@
-"""BlenderCAM 'gcode.py'
+"""CNC CAM 'gcode.py'
 
 'CAM G-code Options' panel in Properties > Render
 """

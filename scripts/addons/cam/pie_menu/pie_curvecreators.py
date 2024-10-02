@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_curvecreators.py'
+"""CNC CAM 'pie_curvecreators.py'
 
 'Curve Creators' Pie Menu
 """

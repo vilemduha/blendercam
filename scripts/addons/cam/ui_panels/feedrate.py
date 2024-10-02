@@ -1,4 +1,4 @@
-"""BlenderCAM 'feedrate.py'
+"""CNC CAM 'feedrate.py'
 
 'CAM Feedrate' panel in Properties > Render
 """

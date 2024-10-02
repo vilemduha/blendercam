@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_info.py'
+"""CNC CAM 'pie_info.py'
 
 'Info' Pie Menu
 """
@@ -30,7 +30,6 @@ class VIEW3D_MT_PIE_Info(Menu):
             # Left
             box = pie.box()
             column = box.column(align=True)
-    #        column.label(text=f'BlenderCAM v{".".join([str(x) for x in cam_version])}')
             if len(preferences.new_version_available) > 0:
                 column.label(text=f"New Version Available:")
                 column.label(

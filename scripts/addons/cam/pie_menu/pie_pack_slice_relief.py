@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_pack_slice_relief.py'
+"""CNC CAM 'pie_pack_slice_relief.py'
 
 'Pack, Slice and Bas Relief' Pie Menu
 """

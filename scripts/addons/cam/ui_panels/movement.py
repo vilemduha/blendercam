@@ -1,4 +1,4 @@
-"""BlenderCAM 'movement.py'
+"""CNC CAM 'movement.py'
 
 'CAM Movement' properties and panel in Properties > Render
 """

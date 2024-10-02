@@ -1,4 +1,4 @@
-"""BlenderCAM 'area.py'
+"""CNC CAM 'area.py'
 
 'CAM Operation Area' panel in Properties > Render
 """

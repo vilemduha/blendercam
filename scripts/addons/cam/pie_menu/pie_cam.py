@@ -1,6 +1,6 @@
-"""BlenderCAM 'pie_cam.py'
+"""CNC CAM 'pie_cam.py'
 
-'BlenderCAM' Pie Menu - Parent to all other CAM Pie Menus
+'CNC CAM' Pie Menu - Parent to all other CAM Pie Menus
 """
 
 import bpy
@@ -8,7 +8,7 @@ from bpy.types import Menu
 
 
 class VIEW3D_MT_PIE_CAM(Menu):
-    bl_label = "∴    BlenderCAM    ∴"
+    bl_label = "∴    CNC CAM    ∴"
 
     def draw(self, context):
         layout = self.layout

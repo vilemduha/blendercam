@@ -1,4 +1,4 @@
-"""BlenderCAM 'slice.py'
+"""CNC CAM 'slice.py'
 
 'Slice Model to Plywood Sheets' panel in Properties > Render
 """
