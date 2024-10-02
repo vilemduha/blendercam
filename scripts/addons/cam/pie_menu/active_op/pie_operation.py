@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_operation.py'
+"""CNC CAM 'pie_operation.py'
 
 'Active Operation' Pie Menu - Parent to all active_op Pie Menus
 """

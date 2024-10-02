@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_gcode.py'
+"""CNC CAM 'pie_gcode.py'
 
 'Operation G-code' Pie Menu
 """

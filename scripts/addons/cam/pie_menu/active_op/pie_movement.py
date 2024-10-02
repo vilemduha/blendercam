@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_movement.py'
+"""CNC CAM 'pie_movement.py'
 
 'Operation Movement' Pie Menu
 """

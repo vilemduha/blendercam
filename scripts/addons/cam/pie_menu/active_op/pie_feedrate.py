@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_feedrate.py'
+"""CNC CAM 'pie_feedrate.py'
 
 'Operation Feedrate' Pie Menu
 """

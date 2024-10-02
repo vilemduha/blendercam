@@ -1,4 +1,4 @@
-"""BlenderCAM 'bridges.py' © 2012 Vilem Novak
+"""CNC CAM 'bridges.py' © 2012 Vilem Novak
 
 Functions to add Bridges / Tabs to meshes or curves.
 Called with Operators defined in 'ops.py'

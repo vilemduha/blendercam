@@ -1,4 +1,4 @@
-"""BlenderCAM 'async_op.py'
+"""CNC CAM 'async_op.py'
 
 Functions and Classes to allow asynchronous updates.
 Used to report progress during path calculation.

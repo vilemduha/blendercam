@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_area.py'
+"""CNC CAM 'pie_area.py'
 
 'Operation Area' Pie Menu
 """

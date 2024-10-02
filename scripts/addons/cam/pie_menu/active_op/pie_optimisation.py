@@ -1,4 +1,4 @@
-"""BlenderCAM 'pie_optimisation.py'
+"""CNC CAM 'pie_optimisation.py'
 
 'Operation Optimisation' Pie Menu
 """

@@ -1,4 +1,4 @@
-"""BlenderCAM 'oclSample.py'
+"""CNC CAM 'oclSample.py'
 
 Functions used by OpenCAMLib sampling.
 """
