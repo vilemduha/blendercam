@@ -485,37 +485,27 @@ async def pocket(o):
         i = 0
         chunks = []
         lastchunks = []
-        centers = None
-        firstoutline = p  # for testing in the end.
-        prest = p.buffer(-c_offset, o.optimisation.circle_detail)
-
         while not p.is_empty:
             if o.pocketToCurve:
                 # make a curve starting with _3dpocket
                 shapelyToCurve('3dpocket', p, 0.0)
-
             nchunks = shapelyToChunks(p, o.min.z)
             # print("nchunks")
             pnew = p.buffer(-o.dist_between_paths, o.optimisation.circle_detail,join_style=join, mitre_limit=2)
-            if pnew.is_empty:
-
+            if pnew.is_empty or pnew.area < 0.00001:
                 # test if the last curve will leave material
                 pt = p.buffer(-c_offset, o.optimisation.circle_detail,join_style=join, mitre_limit=2)
-                if not pt.is_empty:
+                if not pt.is_empty and pt.area > 0.00001:
                     pnew = pt
-            # print("pnew")
-
             nchunks = limitChunks(nchunks, o)
             chunksFromCurve.extend(nchunks)
             parentChildDist(lastchunks, nchunks, o)
             lastchunks = nchunks
-
             percent = int(i / approxn * 100)
             progress('Outlining Polygons ', percent)
             p = pnew
-
             i += 1
-
+    
     # if (o.poc)#TODO inside outside!
     if (o.movement.type == 'CLIMB' and o.movement.spindle_rotation == 'CW') or (
             o.movement.type == 'CONVENTIONAL' and o.movement.spindle_rotation == 'CCW'):
