@@ -3159,7 +3159,7 @@ def Add_Pocket(maxdepth, sname, new_cutter_diameter):
     ob = bpy.data.objects[sname]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
-    silhoueteOffset(ob, -new_cutter_diameter/2, 1)
+    silhoueteOffset(ob, -new_cutter_diameter/2, 1,2)
     bpy.context.active_object.name = 'medial_pocket'
     m_ob = bpy.context.view_layer.objects.active
     bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
