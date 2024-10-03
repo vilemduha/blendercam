@@ -995,7 +995,7 @@ async def medial_axis(o):
     if o.add_pocket_for_medial:
         #        o.add_pocket_for_medial = False
         # export medial axis parameter to pocket op
-        Add_Pocket(None, maxdepth, m_o_ob, new_cutter_diameter)
+        Add_Pocket(maxdepth, m_o_ob, new_cutter_diameter)
 
 
 def getLayers(operation, startdepth, enddepth):

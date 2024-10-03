@@ -1127,7 +1127,7 @@ def curveToShapely(cob, use_modifiers=False):
 # separate function in blender, so you can offset any curve.
 # FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
 
-def silhoueteOffset(context, offset, style=1, mitrelimit=1.0):
+def silhoueteOffset(context, offset, style, mitrelimit):
     """Offset the silhouette of a curve or font object in Blender.
 
     This function takes an active curve or font object in Blender and
@@ -1152,12 +1152,7 @@ def silhoueteOffset(context, offset, style=1, mitrelimit=1.0):
         silhs = curveToShapely(ob)
     else:
         silhs = getObjectSilhouete('OBJECTS', [ob])
-
-    polys = []
-    mp = shapely.ops.unary_union(silhs)
-    print("offset attributes:")
-    print(offset, style)
-    mp = mp.buffer(offset, cap_style=1, join_style=style, resolution=16, mitre_limit=mitrelimit)
+    mp = silhs.buffer(offset, cap_style=1, join_style=style, resolution=16, mitre_limit=mitrelimit)
     shapelyToCurve(ob.name + '_offset_' + str(round(offset, 5)), mp, ob.location.z)
     bpy.ops.object.curve_remove_doubles()
     return {'FINISHED'}
@@ -3134,7 +3129,7 @@ def check_operations_on_load(context):
 
 
 # add pocket op for medial axis and profile cut inside to clean unremoved material
-def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
+def Add_Pocket(maxdepth, sname, new_cutter_diameter):
     """Add a pocket operation for the medial axis and profile cut.
 
     This function first deselects all objects in the scene and then checks
@@ -3161,13 +3156,14 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
     for op in s.cam_operations:  # verify medial pocket operation exists
         if op.name == "MedialPocket":
             mpocket_exists = True
-
     ob = bpy.data.objects[sname]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
-    silhoueteOffset(ob, -new_cutter_diameter/2, 1, 0.3)
+    silhoueteOffset(ob, -new_cutter_diameter/2, 1)
     bpy.context.active_object.name = 'medial_pocket'
-
+    m_ob = bpy.context.view_layer.objects.active
+    bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY', center='BOUNDS')
+    m_ob.location.z = maxdepth
     if not mpocket_exists:     # create a pocket operation if it does not exist already
         s.cam_operations.add()
         o = s.cam_operations[-1]
@@ -3179,4 +3175,4 @@ def Add_Pocket(self, maxdepth, sname, new_cutter_diameter):
         o.use_layers = False
         o.material.estimate_from_model = False
         o.material.size[2] = -maxdepth
-        o.minz_from = 'MATERIAL'
+
