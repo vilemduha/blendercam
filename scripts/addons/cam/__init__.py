@@ -107,6 +107,7 @@ from .preset_managers import (
 from .slice import SliceObjectsSettings
 from .ui import register as ui_register, unregister as ui_unregister
 from .ui.legacy_ui import import_settings
+from .ui.panels.interface import CAM_INTERFACE_Properties
 from .utils import (
     check_operations_on_load,
     updateOperation,
