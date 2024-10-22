@@ -17,7 +17,7 @@ from bpy.types import (
     PropertyGroup,
 )
 
-from .gcodeimportparser import import_gcode
+from ..gcodeimportparser import import_gcode
 
 
 class CAM_UL_orientations(UIList):
