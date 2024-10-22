@@ -189,8 +189,6 @@ classes = [
     AddPresetCamMachine,
     # .slice
     SliceObjectsSettings,
-    # .cam_operation - last to allow dependencies to register before it
-    camOperation,
 ]
 
 
@@ -200,6 +198,8 @@ def register() -> None:
 
     ui_register()
     basrelief.register()
+    # .cam_operation - last to allow dependencies to register before it
+    bpy.utils.register_class(camOperation)
 
     bpy.app.handlers.frame_change_pre.append(timer_update)
     bpy.app.handlers.load_post.append(check_operations_on_load)
@@ -262,6 +262,7 @@ def unregister() -> None:
 
     ui_unregister()
     basrelief.unregister()
+    bpy.utils.unregister_class(camOperation)
 
     scene = bpy.types.Scene
 
