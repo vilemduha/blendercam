@@ -21,7 +21,7 @@ from .panels.interface import (
     CAM_INTERFACE_Properties,
 )
 from .panels.machine import CAM_MACHINE_Panel
-from .ui_panels.material import (
+from .panels.material import (
     CAATERIAL_Panel,
     CAM_MATERIAL_PositionObject,
     CAM_MATERIAL_Properties,
