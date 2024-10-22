@@ -22,7 +22,7 @@ from .panels.interface import (
 )
 from .panels.machine import CAM_MACHINE_Panel
 from .panels.material import (
-    CAATERIAL_Panel,
+    CAM_MATERIAL_Panel,
     CAM_MATERIAL_PositionObject,
     CAM_MATERIAL_Properties,
 )
