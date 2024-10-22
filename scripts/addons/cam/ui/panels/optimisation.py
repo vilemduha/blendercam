@@ -15,14 +15,14 @@ from bpy.types import (
 )
 
 from .buttons_panel import CAMButtonsPanel
-from ..utils import (
+from ...utils import (
     opencamlib_version,
     update_exact_mode,
     update_opencamlib,
     update_operation,
     update_zbuffer_image,
 )
-from ..constants import PRECISION
+from ...constants import PRECISION
 
 
 class CAM_OPTIMISATION_Properties(PropertyGroup):
@@ -36,7 +36,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
 
     optimize_threshold: FloatProperty(
         name="Reduction Threshold in μm",
-        default=.2,
+        default=0.2,
         min=0.000000001,
         max=1000,
         precision=20,
@@ -45,8 +45,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
 
     use_exact: BoolProperty(
         name="Use Exact Mode",
-        description="Exact mode allows greater precision, but is slower "
-        "with complex meshes",
+        description="Exact mode allows greater precision, but is slower " "with complex meshes",
         default=True,
         update=update_exact_mode,
     )
@@ -80,8 +79,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
 
     exact_subdivide_edges: BoolProperty(
         name="Auto Subdivide Long Edges",
-        description="This can avoid some collision issues when "
-        "importing CAD models",
+        description="This can avoid some collision issues when " "importing CAD models",
         default=False,
         update=update_exact_mode,
     )
@@ -107,6 +105,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
 
 class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
     """CAM Optimisation Panel"""
+
     bl_label = "CAM Optimisation"
     bl_idname = "WORLD_PT_CAM_OPTIMISATION"
     panel_interface_level = 2
@@ -115,26 +114,32 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
         if not self.has_correct_level():
             return
 
-        self.layout.prop(self.op.optimisation, 'optimize')
+        self.layout.prop(self.op.optimisation, "optimize")
         if self.op.optimisation.optimize:
-            self.layout.prop(self.op.optimisation, 'optimize_threshold')
+            self.layout.prop(self.op.optimisation, "optimize_threshold")
 
     def draw_exact_mode(self):
         if not self.has_correct_level():
             return
 
-        if not self.op.geometry_source == 'OBJECT' or self.op.geometry_source == 'COLLECTION':
+        if not self.op.geometry_source == "OBJECT" or self.op.geometry_source == "COLLECTION":
             return
 
         self.exact_possible = self.op.strategy not in [
-            'MEDIAL_AXIS', 'POCKET', 'CUTOUT', 'DRILL', 'PENCIL', 'CURVE']
+            "MEDIAL_AXIS",
+            "POCKET",
+            "CUTOUT",
+            "DRILL",
+            "PENCIL",
+            "CURVE",
+        ]
 
         if self.exact_possible:
-            self.layout.prop(self.op.optimisation, 'use_exact')
+            self.layout.prop(self.op.optimisation, "use_exact")
 
         if not self.exact_possible or not self.op.optimisation.use_exact:
-            self.layout.prop(self.op.optimisation, 'pixsize')
-            self.layout.prop(self.op.optimisation, 'imgres_limit')
+            self.layout.prop(self.op.optimisation, "pixsize")
+            self.layout.prop(self.op.optimisation, "imgres_limit")
 
             sx = self.op.max.x - self.op.min.x
             sy = self.op.max.y - self.op.min.y
@@ -142,7 +147,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
             resy = int(sy / self.op.optimisation.pixsize)
 
             if resx > 0 and resy > 0:
-                resolution = 'Resolution: ' + str(resx) + ' x ' + str(resy)
+                resolution = "Resolution: " + str(resx) + " x " + str(resy)
                 self.layout.label(text=resolution)
 
     def draw_use_opencamlib(self):
@@ -156,42 +161,42 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
 
         if ocl_version is None:
             self.layout.label(text="OpenCAMLib is not Available ")
-            self.layout.prop(self.op.optimisation, 'exact_subdivide_edges')
+            self.layout.prop(self.op.optimisation, "exact_subdivide_edges")
         else:
-            self.layout.prop(self.op.optimisation, 'use_opencamlib')
+            self.layout.prop(self.op.optimisation, "use_opencamlib")
 
     def draw_simulation_detail(self):
         if not self.has_correct_level():
             return
 
-        self.layout.prop(self.op.optimisation, 'simulation_detail')
-        self.layout.prop(self.op.optimisation, 'circle_detail')
+        self.layout.prop(self.op.optimisation, "simulation_detail")
+        self.layout.prop(self.op.optimisation, "circle_detail")
 
     def draw_simplify_gcode(self):
         if not self.has_correct_level():
             return
 
-        if self.op.strategy not in ['DRILL']:
-            self.layout.prop(self.op, 'remove_redundant_points')
+        if self.op.strategy not in ["DRILL"]:
+            self.layout.prop(self.op, "remove_redundant_points")
 
         if self.op.remove_redundant_points:
-            self.layout.prop(self.op, 'simplify_tol')
+            self.layout.prop(self.op, "simplify_tol")
 
     def draw_use_modifiers(self):
         if not self.has_correct_level():
             return
-        if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
-            self.layout.prop(self.op, 'use_modifiers')
+        if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
+            self.layout.prop(self.op, "use_modifiers")
 
     def draw_hide_all_others(self):
         if not self.has_correct_level():
             return
-        self.layout.prop(self.op, 'hide_all_others')
+        self.layout.prop(self.op, "hide_all_others")
 
     def draw_parent_path_to_object(self):
         if not self.has_correct_level():
             return
-        self.layout.prop(self.op, 'parent_path_to_object')
+        self.layout.prop(self.op, "parent_path_to_object")
 
     def draw(self, context):
         self.context = context
