@@ -3,6 +3,8 @@
 Import UI, Register and Unregister Classes
 """
 
+import bpy
+
 from .panels.area import CAM_AREA_Panel
 from .panels.chains import (
     CAM_CHAINS_Panel,
