@@ -17,11 +17,11 @@ from bpy.types import (
 )
 
 from .buttons_panel import CAMButtonsPanel
-from ..utils import (
+from ...utils import (
     positionObject,
     update_material,
 )
-from ..constants import PRECISION
+from ...constants import PRECISION
 
 
 class CAM_MATERIAL_Properties(PropertyGroup):
@@ -34,11 +34,10 @@ class CAM_MATERIAL_Properties(PropertyGroup):
     )
 
     radius_around_model: FloatProperty(
-        name='Radius Around Model',
-        description="Increase cut area around the model on X and "
-        "Y by this amount",
+        name="Radius Around Model",
+        description="Increase cut area around the model on X and " "Y by this amount",
         default=0.0,
-        unit='LENGTH',
+        unit="LENGTH",
         precision=PRECISION,
         update=update_material,
     )
@@ -60,21 +59,20 @@ class CAM_MATERIAL_Properties(PropertyGroup):
     z_position: EnumProperty(
         name="Z Placement",
         items=(
-            ('ABOVE', 'Above', 'Place object vertically above the XY plane'),
-            ('BELOW', 'Below', 'Place object vertically below the XY plane'),
-            ('CENTERED', 'Centered',
-             'Place object vertically centered on the XY plane')
+            ("ABOVE", "Above", "Place object vertically above the XY plane"),
+            ("BELOW", "Below", "Place object vertically below the XY plane"),
+            ("CENTERED", "Centered", "Place object vertically centered on the XY plane"),
         ),
         description="Position below Zero",
-        default='BELOW',
+        default="BELOW",
         update=update_material,
     )
 
     # material_origin
     origin: FloatVectorProperty(
-        name='Material Origin',
+        name="Material Origin",
         default=(0, 0, 0),
-        unit='LENGTH',
+        unit="LENGTH",
         precision=PRECISION,
         subtype="XYZ",
         update=update_material,
@@ -82,10 +80,10 @@ class CAM_MATERIAL_Properties(PropertyGroup):
 
     # material_size
     size: FloatVectorProperty(
-        name='Material Size',
+        name="Material Size",
         default=(0.200, 0.200, 0.100),
         min=0,
-        unit='LENGTH',
+        unit="LENGTH",
         precision=PRECISION,
         subtype="XYZ",
         update=update_material,
@@ -98,7 +96,7 @@ class CAM_MATERIAL_PositionObject(Operator):
 
     bl_idname = "object.material_cam_position"
     bl_label = "Position Object for CAM Operation"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {"REGISTER", "UNDO"}
     interface_level = 0
 
     def execute(self, context):
@@ -107,14 +105,13 @@ class CAM_MATERIAL_PositionObject(Operator):
         if operation.object_name in bpy.data.objects:
             positionObject(operation)
         else:
-            print('No Object Assigned')
-        return {'FINISHED'}
+            print("No Object Assigned")
+        return {"FINISHED"}
 
     def draw(self, context):
         if not self.interface_level <= int(self.context.scene.interface.level):
             return
-        self.layout.prop_search(
-            self, "operation", bpy.context.scene, "cam_operations")
+        self.layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
 
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
@@ -123,42 +120,40 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
     panel_interface_level = 0
 
     prop_level = {
-        'draw_estimate_from_image': 0,
-        'draw_estimate_from_object': 1,
-        'draw_axis_alignment': 0
+        "draw_estimate_from_image": 0,
+        "draw_estimate_from_object": 1,
+        "draw_axis_alignment": 0,
     }
 
     def draw_estimate_from_image(self):
         if not self.has_correct_level():
             return
-        if self.op.geometry_source not in ['OBJECT', 'COLLECTION']:
-            self.layout.label(text='Estimated from Image')
+        if self.op.geometry_source not in ["OBJECT", "COLLECTION"]:
+            self.layout.label(text="Estimated from Image")
 
     def draw_estimate_from_object(self):
         if not self.has_correct_level():
             return
-        if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
-            self.layout.prop(self.op.material, 'estimate_from_model')
+        if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
+            self.layout.prop(self.op.material, "estimate_from_model")
             if self.op.material.estimate_from_model:
                 row_radius = self.layout.row()
                 row_radius.label(text="Additional Radius")
-                row_radius.prop(self.op.material,
-                                'radius_around_model', text='')
+                row_radius.prop(self.op.material, "radius_around_model", text="")
             else:
-                self.layout.prop(self.op.material, 'origin')
-                self.layout.prop(self.op.material, 'size')
+                self.layout.prop(self.op.material, "origin")
+                self.layout.prop(self.op.material, "size")
 
     # Display Axis alignment section
     def draw_axis_alignment(self):
         if not self.has_correct_level():
             return
-        if self.op.geometry_source in ['OBJECT', 'COLLECTION']:
+        if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
             row_axis = self.layout.row()
-            row_axis.prop(self.op.material, 'center_x')
-            row_axis.prop(self.op.material, 'center_y')
-            self.layout.prop(self.op.material, 'z_position')
-            self.layout.operator(
-                "object.material_cam_position", text="Position Object")
+            row_axis.prop(self.op.material, "center_x")
+            row_axis.prop(self.op.material, "center_y")
+            self.layout.prop(self.op.material, "z_position")
+            self.layout.operator("object.material_cam_position", text="Position Object")
 
     def draw(self, context):
         self.context = context

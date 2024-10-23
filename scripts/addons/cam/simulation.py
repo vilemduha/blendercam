@@ -109,8 +109,8 @@ async def doSimulation(name, operations):
     """
     for o in operations:
         getOperationSources(o)
-        o.material.estimate_from_model= True
-    limits = getBoundsMultiple(operations)  # this is here because some background computed operations still didn't have bounds data
+    limits = getBoundsMultiple(
+        operations)  # this is here because some background computed operations still didn't have bounds data
     i = await generateSimulationImage(operations, limits)
 #    cp = getCachePath(operations[0])[:-len(operations[0].name)] + name
     cp = getSimulationPath()+name

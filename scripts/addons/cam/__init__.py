@@ -95,22 +95,6 @@ from .ops import (
     timer_update,
 )
 from .pack import PackObjectsSettings
-from .pie_menu.pie_cam import VIEW3D_MT_PIE_CAM
-from .pie_menu.pie_chains import VIEW3D_MT_PIE_Chains
-from .pie_menu.pie_curvecreators import VIEW3D_MT_PIE_CurveCreators
-from .pie_menu.pie_curvetools import VIEW3D_MT_PIE_CurveTools
-from .pie_menu.pie_info import VIEW3D_MT_PIE_Info
-from .pie_menu.pie_machine import VIEW3D_MT_PIE_Machine
-from .pie_menu.pie_material import VIEW3D_MT_PIE_Material
-from .pie_menu.pie_pack_slice_relief import VIEW3D_MT_PIE_PackSliceRelief
-from .pie_menu.active_op.pie_area import VIEW3D_MT_PIE_Area
-from .pie_menu.active_op.pie_cutter import VIEW3D_MT_PIE_Cutter
-from .pie_menu.active_op.pie_feedrate import VIEW3D_MT_PIE_Feedrate
-from .pie_menu.active_op.pie_gcode import VIEW3D_MT_PIE_Gcode
-from .pie_menu.active_op.pie_movement import VIEW3D_MT_PIE_Movement
-from .pie_menu.active_op.pie_operation import VIEW3D_MT_PIE_Operation
-from .pie_menu.active_op.pie_optimisation import VIEW3D_MT_PIE_Optimisation
-from .pie_menu.active_op.pie_setup import VIEW3D_MT_PIE_Setup
 from .preferences import CamAddonPreferences
 from .preset_managers import (
     AddPresetCamCutter,
@@ -121,48 +105,9 @@ from .preset_managers import (
     CAM_OPERATION_MT_presets,
 )
 from .slice import SliceObjectsSettings
-from .ui import (
-    CustomPanel,
-    import_settings,
-    VIEW3D_PT_tools_curvetools,
-    VIEW3D_PT_tools_create,
-    WM_OT_gcode_import,
-)
-from .ui_panels.area import CAM_AREA_Panel
-from .ui_panels.chains import (
-    CAM_CHAINS_Panel,
-    CAM_UL_chains,
-    CAM_UL_operations,
-)
-from .ui_panels.cutter import CAM_CUTTER_Panel
-from .ui_panels.feedrate import CAM_FEEDRATE_Panel
-from .ui_panels.gcode import CAM_GCODE_Panel
-from .ui_panels.info import (
-    CAM_INFO_Panel,
-    CAM_INFO_Properties,
-)
-from .ui_panels.interface import (
-    CAM_INTERFACE_Panel,
-    CAM_INTERFACE_Properties,
-)
-from .ui_panels.machine import CAM_MACHINE_Panel
-from .ui_panels.material import (
-    CAM_MATERIAL_Panel,
-    CAM_MATERIAL_PositionObject,
-    CAM_MATERIAL_Properties,
-)
-from .ui_panels.movement import (
-    CAM_MOVEMENT_Panel,
-    CAM_MOVEMENT_Properties,
-)
-from .ui_panels.op_properties import CAM_OPERATION_PROPERTIES_Panel
-from .ui_panels.operations import CAM_OPERATIONS_Panel
-from .ui_panels.optimisation import (
-    CAM_OPTIMISATION_Panel,
-    CAM_OPTIMISATION_Properties,
-)
-from .ui_panels.pack import CAM_PACK_Panel
-from .ui_panels.slice import CAM_SLICE_Panel
+from .ui import register as ui_register, unregister as ui_unregister
+from .ui.legacy_ui import import_settings
+from .ui.panels.interface import CAM_INTERFACE_Properties
 from .utils import (
     check_operations_on_load,
     updateOperation,
@@ -171,16 +116,13 @@ from .utils import (
 
 classes = [
     # CamBackgroundMonitor
-
     # .autoupdate
     UpdateSourceOperator,
     Updater,
     UpdateChecker,
-
     # .chain
     opReference,
     camChain,
-
     # .curvecamcreate
     CamCurveDrawer,
     CamCurveFlatCone,
@@ -190,13 +132,11 @@ classes = [
     CamCurveMortise,
     CamCurvePlate,
     CamCurvePuzzle,
-
     # .curvecamequation
     CamCustomCurve,
     CamHypotrochoidCurve,
     CamLissajousCurve,
     CamSineCurve,
-
     # .curvecamtools
     CamCurveBoolean,
     CamCurveConvexHull,
@@ -207,13 +147,10 @@ classes = [
     CamMeshGetPockets,
     CamOffsetSilhouete,
     CamObjectSilhouete,
-
     # .engine
     CNCCAM_ENGINE,
-
     # .machine_settings
     machineSettings,
-
     # .ops
     CalculatePath,
     # bridges related
@@ -241,13 +178,10 @@ classes = [
     PathsChain,
     PathExport,
     PathExportChain,
-
     # .pack
     PackObjectsSettings,
-
     # .preferences
     CamAddonPreferences,
-
     # .preset_managers
     CAM_CUTTER_MT_presets,
     CAM_OPERATION_MT_presets,
@@ -255,60 +189,8 @@ classes = [
     AddPresetCamCutter,
     AddPresetCamOperation,
     AddPresetCamMachine,
-
     # .slice
     SliceObjectsSettings,
-
-    # .ui and .ui_panels - the order will affect the layout
-    import_settings,
-    CAM_UL_operations,
-    CAM_UL_chains,
-    CAM_INTERFACE_Panel,
-    CAM_INTERFACE_Properties,
-    CAM_CHAINS_Panel,
-    CAM_OPERATIONS_Panel,
-    CAM_INFO_Properties,
-    CAM_INFO_Panel,
-    CAM_MATERIAL_Panel,
-    CAM_MATERIAL_Properties,
-    CAM_MATERIAL_PositionObject,
-    CAM_OPERATION_PROPERTIES_Panel,
-    CAM_OPTIMISATION_Panel,
-    CAM_OPTIMISATION_Properties,
-    CAM_AREA_Panel,
-    CAM_MOVEMENT_Panel,
-    CAM_MOVEMENT_Properties,
-    CAM_FEEDRATE_Panel,
-    CAM_CUTTER_Panel,
-    CAM_GCODE_Panel,
-    CAM_MACHINE_Panel,
-    CAM_PACK_Panel,
-    CAM_SLICE_Panel,
-    VIEW3D_PT_tools_curvetools,
-    VIEW3D_PT_tools_create,
-    CustomPanel,
-    WM_OT_gcode_import,
-
-    # .pie_menu and .pie_menu.active_op - placed after .ui in case inheritance is possible
-    VIEW3D_MT_PIE_CAM,
-    VIEW3D_MT_PIE_Machine,
-    VIEW3D_MT_PIE_Material,
-    VIEW3D_MT_PIE_Operation,
-    VIEW3D_MT_PIE_Chains,
-    VIEW3D_MT_PIE_Setup,
-    VIEW3D_MT_PIE_Optimisation,
-    VIEW3D_MT_PIE_Area,
-    VIEW3D_MT_PIE_Movement,
-    VIEW3D_MT_PIE_Feedrate,
-    VIEW3D_MT_PIE_Cutter,
-    VIEW3D_MT_PIE_Gcode,
-    VIEW3D_MT_PIE_Info,
-    VIEW3D_MT_PIE_PackSliceRelief,
-    VIEW3D_MT_PIE_CurveCreators,
-    VIEW3D_MT_PIE_CurveTools,
-
-    # .cam_operation - last to allow dependencies to register before it
-    camOperation,
 ]
 
 
@@ -316,7 +198,10 @@ def register() -> None:
     for cls in classes:
         bpy.utils.register_class(cls)
 
+    ui_register()
     basrelief.register()
+    # .cam_operation - last to allow dependencies to register before it
+    bpy.utils.register_class(camOperation)
 
     bpy.app.handlers.frame_change_pre.append(timer_update)
     bpy.app.handlers.load_post.append(check_operations_on_load)
@@ -362,14 +247,14 @@ def register() -> None:
     wm = bpy.context.window_manager
     addon_kc = wm.keyconfigs.addon
 
-    km = addon_kc.keymaps.new(name='Object Mode')
+    km = addon_kc.keymaps.new(name="Object Mode")
     kmi = km.keymap_items.new(
         "wm.call_menu_pie",
-        'C',
-        'PRESS',
+        "C",
+        "PRESS",
         alt=True,
     )
-    kmi.properties.name = 'VIEW3D_MT_PIE_CAM'
+    kmi.properties.name = "VIEW3D_MT_PIE_CAM"
     kmi.active = True
 
 
@@ -377,7 +262,9 @@ def unregister() -> None:
     for cls in classes:
         bpy.utils.unregister_class(cls)
 
+    ui_unregister()
     basrelief.unregister()
+    bpy.utils.unregister_class(camOperation)
 
     scene = bpy.types.Scene
 
@@ -393,12 +280,12 @@ def unregister() -> None:
     del scene.cam_slice
 
     for panel in get_panels():
-        if 'CNCCAM_RENDER' in panel.COMPAT_ENGINES:
-            panel.COMPAT_ENGINES.remove('CNCCAM_RENDER')
+        if "CNCCAM_RENDER" in panel.COMPAT_ENGINES:
+            panel.COMPAT_ENGINES.remove("CNCCAM_RENDER")
 
     wm = bpy.context.window_manager
     active_kc = wm.keyconfigs.active
 
-    for key in active_kc.keymaps['Object Mode'].keymap_items:
-        if (key.idname == 'wm.call_menu' and key.properties.name == 'VIEW3D_MT_PIE_CAM'):
-            active_kc.keymaps['Object Mode'].keymap_items.remove(key)
+    for key in active_kc.keymaps["Object Mode"].keymap_items:
+        if key.idname == "wm.call_menu" and key.properties.name == "VIEW3D_MT_PIE_CAM":
+            active_kc.keymaps["Object Mode"].keymap_items.remove(key)

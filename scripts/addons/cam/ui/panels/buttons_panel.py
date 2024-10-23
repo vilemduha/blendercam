@@ -1,6 +1,6 @@
 """CNC CAM 'buttons_panel.py'
 
-Parent (Mixin) class for all panels in 'ui_panels'
+Parent (Mixin) class for all panels in 'panels'
 Sets up polling and operations to show / hide panels based on Interface Level
 """
 
@@ -11,11 +11,11 @@ import bpy
 
 # Panel definitions
 class CAMButtonsPanel:
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
     bl_context = "render"
     always_show_panel = False
-    COMPAT_ENGINES = {'CNCCAM_RENDER'}
+    COMPAT_ENGINES = {"CNCCAM_RENDER"}
 
     # COMPAT_ENGINES must be defined in each subclass, external engines can add themselves here
 
@@ -27,7 +27,7 @@ class CAMButtonsPanel:
                 return True
             op = cls.active_operation()
             if op and op.valid:
-                if hasattr(cls, 'panel_interface_level'):
+                if hasattr(cls, "panel_interface_level"):
                     return cls.panel_interface_level <= int(context.scene.interface.level)
                 else:
                     return True
@@ -35,7 +35,7 @@ class CAMButtonsPanel:
 
     @classmethod
     def active_operation_index(cls):
-        return (bpy.context.scene.cam_active_operation)
+        return bpy.context.scene.cam_active_operation
 
     @classmethod
     def active_operation(cls):
@@ -44,7 +44,7 @@ class CAMButtonsPanel:
             active_op = bpy.context.scene.cam_operations[cls.active_operation_index()]
         except IndexError:
             pass
-        return (active_op)
+        return active_op
 
     def __init__(self):
         self.op = self.active_operation()
@@ -52,13 +52,13 @@ class CAMButtonsPanel:
         self.use_experimental = addon_prefs.experimental
 
     def operations_count(self):
-        return (len(bpy.context.scene.cam_operations))
+        return len(bpy.context.scene.cam_operations)
 
     def has_operations(self):
-        return (self.operations_count() > 0)
+        return self.operations_count() > 0
 
     def has_correct_level(self):
-        if not hasattr(self, 'prop_level'):
+        if not hasattr(self, "prop_level"):
             return True
 
         caller_function = inspect.stack()[1][3]
