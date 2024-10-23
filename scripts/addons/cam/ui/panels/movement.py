@@ -31,7 +31,11 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
                 "Conventional / Up milling",
                 "Cutter rotates against the direction of the feed",
             ),
-            ("CLIMB", "Climb / Down milling", "Cutter rotates with the direction of the feed"),
+            (
+                "CLIMB",
+                "Climb / Down milling",
+                "Cutter rotates with the direction of the feed",
+            ),
             (
                 "MEANDER",
                 "Meander / Zig Zag",
@@ -45,7 +49,10 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
 
     insideout: EnumProperty(
         name="Direction",
-        items=(("INSIDEOUT", "Inside out", "a"), ("OUTSIDEIN", "Outside in", "a")),
+        items=(
+            ("INSIDEOUT", "Inside out", "a"),
+            ("OUTSIDEIN", "Outside in", "a"),
+        ),
         description="Approach to the piece",
         default="INSIDEOUT",
         update=update_operation,
@@ -53,7 +60,10 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
 
     spindle_rotation: EnumProperty(
         name="Spindle Rotation",
-        items=(("CW", "Clockwise", "a"), ("CCW", "Counter clockwise", "a")),
+        items=(
+            ("CW", "Clockwise", "a"),
+            ("CCW", "Counter clockwise", "a"),
+        ),
         description="Spindle rotation direction",
         default="CW",
         update=update_operation,
@@ -216,109 +226,73 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "CAM Movement"
     bl_idname = "WORLD_PT_CAM_MOVEMENT"
-    panel_interface_level = 0
-
-    prop_level = {
-        "draw_cut_type": 1,
-        "draw_spindle_rotation": 2,
-        "draw_free_height": 0,
-        "draw_use_g64": 2,
-        "draw_parallel_stepback": 1,
-        "draw_helix_enter": 2,
-        "draw_ramp": 1,
-        "draw_retract_tangential": 2,
-        "draw_stay_low": 1,
-        "draw_protect_vertical": 1,
-    }
-
-    def draw_cut_type(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op.movement, "type")
-        if self.op.movement.type in ["BLOCK", "SPIRAL", "CIRCLES"]:
-            self.layout.prop(self.op.movement, "insideout")
-
-    def draw_spindle_rotation(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op.movement, "spindle_rotation")
-
-    def draw_free_height(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op.movement, "free_height")
-        if self.op.maxz > self.op.movement.free_height:
-            self.layout.label(text="Depth Start > Free Movement")
-            self.layout.label(text="POSSIBLE COLLISION")
-
-    def draw_use_g64(self):
-        if not self.has_correct_level():
-            return
-        if self.context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
-            self.layout.prop(self.op.movement, "useG64")
-            if self.op.movement.useG64:
-                self.layout.prop(self.op.movement, "G64")
-
-    def draw_parallel_stepback(self):
-        if not self.has_correct_level():
-            return
-        if self.op.strategy in ["PARALLEL", "CROSS"]:
-            if not self.op.movement.ramp:
-                self.layout.prop(self.op.movement, "parallel_step_back")
-
-    def draw_helix_enter(self):
-        if not self.has_correct_level():
-            return
-        if self.op.strategy in ["POCKET"]:
-            self.layout.prop(self.op.movement, "helix_enter")
-            if self.op.movement.helix_enter:
-                self.layout.prop(self.op.movement, "ramp_in_angle")
-                self.layout.prop(self.op.movement, "helix_diameter")
-
-    def draw_ramp(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op.movement, "ramp")
-        if self.op.movement.ramp:
-            self.layout.prop(self.op.movement, "ramp_in_angle")
-            self.layout.prop(self.op.movement, "ramp_out")
-            if self.op.movement.ramp_out:
-                self.layout.prop(self.op.movement, "ramp_out_angle")
-
-    def draw_retract_tangential(self):
-        if not self.has_correct_level():
-            return
-        if self.op.strategy in ["POCKET"]:
-            self.layout.prop(self.op.movement, "retract_tangential")
-            if self.op.movement.retract_tangential:
-                self.layout.prop(self.op.movement, "retract_radius")
-                self.layout.prop(self.op.movement, "retract_height")
-
-    def draw_stay_low(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op.movement, "stay_low")
-        if self.op.movement.stay_low:
-            self.layout.prop(self.op.movement, "merge_dist")
-
-    def draw_protect_vertical(self):
-        if not self.has_correct_level():
-            return
-        if self.op.cutter_type not in ["BALLCONE"]:
-            self.layout.prop(self.op.movement, "protect_vertical")
-            if self.op.movement.protect_vertical:
-                self.layout.prop(self.op.movement, "protect_vertical_limit")
 
     def draw(self, context):
-        self.context = context
+        layout = self.layout
+        if self.op is not None:
+            # Cut Type
+            if self.level >= 1:
+                layout.prop(self.op.movement, "type")
+                if self.op.movement.type in ["BLOCK", "SPIRAL", "CIRCLES"]:
+                    layout.prop(self.op.movement, "insideout")
 
-        self.draw_cut_type()
-        self.draw_spindle_rotation()
-        self.draw_free_height()
-        self.draw_use_g64()
-        self.draw_parallel_stepback()
-        self.draw_ramp()
-        self.draw_helix_enter()
-        self.draw_retract_tangential()
-        self.draw_stay_low()
-        self.draw_protect_vertical()
+            # Spindle Rotation
+            if self.level >= 2:
+                layout.prop(self.op.movement, "spindle_rotation")
+
+            # Free Height
+            layout.prop(self.op.movement, "free_height")
+            if self.op.maxz > self.op.movement.free_height:
+                layout.label(text="Depth Start > Free Movement")
+                layout.label(text="POSSIBLE COLLISION")
+
+            # Use G64
+            if self.level >= 2:
+                if context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
+                    layout.prop(self.op.movement, "useG64")
+                    if self.op.movement.useG64:
+                        layout.prop(self.op.movement, "G64")
+
+            # Parallel Stepback
+            if self.level >= 1:
+                if self.op.strategy in ["PARALLEL", "CROSS"]:
+                    if not self.op.movement.ramp:
+                        layout.prop(self.op.movement, "parallel_step_back")
+
+            # Helix Enter
+            if self.level >= 2:
+                if self.op.strategy in ["POCKET"]:
+                    layout.prop(self.op.movement, "helix_enter")
+                    if self.op.movement.helix_enter:
+                        layout.prop(self.op.movement, "ramp_in_angle")
+                        layout.prop(self.op.movement, "helix_diameter")
+
+            # Ramp
+            if self.level >= 1:
+                layout.prop(self.op.movement, "ramp")
+                if self.op.movement.ramp:
+                    layout.prop(self.op.movement, "ramp_in_angle")
+                    layout.prop(self.op.movement, "ramp_out")
+                    if self.op.movement.ramp_out:
+                        layout.prop(self.op.movement, "ramp_out_angle")
+
+            # Retract Tangential
+            if self.level >= 2:
+                if self.op.strategy in ["POCKET"]:
+                    layout.prop(self.op.movement, "retract_tangential")
+                    if self.op.movement.retract_tangential:
+                        layout.prop(self.op.movement, "retract_radius")
+                        layout.prop(self.op.movement, "retract_height")
+
+            # Stay Low
+            if self.level >= 1:
+                layout.prop(self.op.movement, "stay_low")
+                if self.op.movement.stay_low:
+                    layout.prop(self.op.movement, "merge_dist")
+
+            # Protect Vertical
+            if self.level >= 1:
+                if self.op.cutter_type not in ["BALLCONE"]:
+                    layout.prop(self.op.movement, "protect_vertical")
+                    if self.op.movement.protect_vertical:
+                        layout.prop(self.op.movement, "protect_vertical_limit")

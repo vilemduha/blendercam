@@ -110,104 +110,75 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
     bl_idname = "WORLD_PT_CAM_OPTIMISATION"
     panel_interface_level = 2
 
-    def draw_optimize(self):
-        if not self.has_correct_level():
-            return
-
-        self.layout.prop(self.op.optimisation, "optimize")
-        if self.op.optimisation.optimize:
-            self.layout.prop(self.op.optimisation, "optimize_threshold")
-
-    def draw_exact_mode(self):
-        if not self.has_correct_level():
-            return
-
-        if not self.op.geometry_source == "OBJECT" or self.op.geometry_source == "COLLECTION":
-            return
-
-        self.exact_possible = self.op.strategy not in [
-            "MEDIAL_AXIS",
-            "POCKET",
-            "CUTOUT",
-            "DRILL",
-            "PENCIL",
-            "CURVE",
-        ]
-
-        if self.exact_possible:
-            self.layout.prop(self.op.optimisation, "use_exact")
-
-        if not self.exact_possible or not self.op.optimisation.use_exact:
-            self.layout.prop(self.op.optimisation, "pixsize")
-            self.layout.prop(self.op.optimisation, "imgres_limit")
-
-            sx = self.op.max.x - self.op.min.x
-            sy = self.op.max.y - self.op.min.y
-            resx = int(sx / self.op.optimisation.pixsize)
-            resy = int(sy / self.op.optimisation.pixsize)
-
-            if resx > 0 and resy > 0:
-                resolution = "Resolution: " + str(resx) + " x " + str(resy)
-                self.layout.label(text=resolution)
-
-    def draw_use_opencamlib(self):
-        if not self.has_correct_level():
-            return
-
-        if not (self.exact_possible and self.op.optimisation.use_exact):
-            return
-
-        ocl_version = opencamlib_version()
-
-        if ocl_version is None:
-            self.layout.label(text="OpenCAMLib is not Available ")
-            self.layout.prop(self.op.optimisation, "exact_subdivide_edges")
-        else:
-            self.layout.prop(self.op.optimisation, "use_opencamlib")
-
-    def draw_simulation_detail(self):
-        if not self.has_correct_level():
-            return
-
-        self.layout.prop(self.op.optimisation, "simulation_detail")
-        self.layout.prop(self.op.optimisation, "circle_detail")
-
-    def draw_simplify_gcode(self):
-        if not self.has_correct_level():
-            return
-
-        if self.op.strategy not in ["DRILL"]:
-            self.layout.prop(self.op, "remove_redundant_points")
-
-        if self.op.remove_redundant_points:
-            self.layout.prop(self.op, "simplify_tol")
-
-    def draw_use_modifiers(self):
-        if not self.has_correct_level():
-            return
-        if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-            self.layout.prop(self.op, "use_modifiers")
-
-    def draw_hide_all_others(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "hide_all_others")
-
-    def draw_parent_path_to_object(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "parent_path_to_object")
-
     def draw(self, context):
-        self.context = context
+        layout = self.layout
 
-        self.draw_optimize()
-        self.layout.separator()
-        self.draw_exact_mode()
-        self.draw_use_opencamlib()
-        self.layout.separator()
-        self.draw_simulation_detail()
-        self.draw_simplify_gcode()
-        self.draw_use_modifiers()
-        self.draw_hide_all_others()
-        self.draw_parent_path_to_object()
+        if self.level >= 2 and self.op is not None:
+            # Optimize
+            layout.prop(self.op.optimisation, "optimize")
+            if self.op.optimisation.optimize:
+                layout.prop(self.op.optimisation, "optimize_threshold")
+            layout.separator()
+
+            # Exact Mode
+            if not self.op.geometry_source == "OBJECT" or self.op.geometry_source == "COLLECTION":
+                return
+
+            self.exact_possible = self.op.strategy not in [
+                "MEDIAL_AXIS",
+                "POCKET",
+                "CUTOUT",
+                "DRILL",
+                "PENCIL",
+                "CURVE",
+            ]
+
+            if self.exact_possible:
+                layout.prop(self.op.optimisation, "use_exact")
+
+            if not self.exact_possible or not self.op.optimisation.use_exact:
+                layout.prop(self.op.optimisation, "pixsize")
+                layout.prop(self.op.optimisation, "imgres_limit")
+
+                sx = self.op.max.x - self.op.min.x
+                sy = self.op.max.y - self.op.min.y
+                resx = int(sx / self.op.optimisation.pixsize)
+                resy = int(sy / self.op.optimisation.pixsize)
+
+                if resx > 0 and resy > 0:
+                    resolution = "Resolution: " + str(resx) + " x " + str(resy)
+                    layout.label(text=resolution)
+
+            # Use OpenCAMLib
+            if not (self.exact_possible and self.op.optimisation.use_exact):
+                return
+
+            ocl_version = opencamlib_version()
+
+            if ocl_version is None:
+                layout.label(text="OpenCAMLib is not Available ")
+                layout.prop(self.op.optimisation, "exact_subdivide_edges")
+            else:
+                layout.prop(self.op.optimisation, "use_opencamlib")
+            layout.separator()
+
+            # Simulation Detail
+            layout.prop(self.op.optimisation, "simulation_detail")
+            layout.prop(self.op.optimisation, "circle_detail")
+
+            # Simplify Gcode
+            if self.op.strategy not in ["DRILL"]:
+                layout.prop(self.op, "remove_redundant_points")
+
+            if self.op.remove_redundant_points:
+                layout.prop(self.op, "simplify_tol")
+
+            # Use Modifiers
+            if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
+                layout.prop(self.op, "use_modifiers")
+
+            # Hide All Others
+            layout.prop(self.op, "hide_all_others")
+
+            # Parent Path to Object
+            layout.prop(self.op, "parent_path_to_object")
