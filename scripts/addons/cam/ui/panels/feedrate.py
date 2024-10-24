@@ -16,44 +16,20 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
     bl_idname = "WORLD_PT_CAM_FEEDRATE"
     panel_interface_level = 0
 
-    prop_level = {
-        "draw_feedrate": 0,
-        "draw_sim_feedrate": 2,
-        "draw_plunge_feedrate": 1,
-        "draw_plunge_angle": 1,
-        "draw_spindle_rpm": 0,
-    }
-
-    def draw_feedrate(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "feedrate")
-
-    def draw_sim_feedrate(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "do_simulation_feedrate")
-
-    def draw_plunge_feedrate(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "plunge_feedrate")
-
-    def draw_plunge_angle(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "plunge_angle")
-
-    def draw_spindle_rpm(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "spindle_rpm")
-
     def draw(self, context):
-        self.context = context
+        layout = self.layout
+        # Feedrate
+        layout.prop(self.op, "feedrate")
 
-        self.draw_feedrate()
-        self.draw_sim_feedrate()
-        self.draw_plunge_feedrate()
-        self.draw_plunge_angle()
-        self.draw_spindle_rpm()
+        # Sim Feedrate
+        if self.level >= 2:
+            layout.prop(self.op, "do_simulation_feedrate")
+
+        # Plunge Feedrate
+        if self.level >= 1:
+            layout.prop(self.op, "plunge_feedrate")
+            # Plunge Angle
+            layout.prop(self.op, "plunge_angle")
+
+        # Spindle RPM
+        layout.prop(self.op, "spindle_rpm")

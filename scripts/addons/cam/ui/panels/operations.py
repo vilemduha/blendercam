@@ -9,8 +9,8 @@ from bpy.types import Panel
 from .buttons_panel import CAMButtonsPanel
 
 # Operations panel
-# This panel displays the list of operations created by the user
-# Functionnalities are:
+# Displays the list of operations created by the user
+# Functionality:
 # - list Operations
 # - create/delete/duplicate/reorder operations
 # - display preset operations
@@ -23,24 +23,23 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "CAM Operations"
     bl_idname = "WORLD_PT_CAM_OPERATIONS"
-    always_show_panel = True
     panel_interface_level = 0
+    always_show_panel = True
 
-    prop_level = {
-        "draw_presets": 1,
-        "draw_operations_list": 0,
-        "draw_calculate_path": 0,
-        "draw_export_gcode": 1,
-        "draw_simulate_op": 1,
-        "draw_op_name": 1,
-        "draw_op_filename": 0,
-        "draw_operation_source": 0,
-    }
+    def draw(self, context):
+        layout = self.layout
+        # Presets
+        if self.level >= 1:
+            row = layout.row(align=True)
+            row.menu("CAM_OPERATION_MT_presets", text=bpy.types.CAM_OPERATION_MT_presets.bl_label)
+            row.operator("render.cam_preset_operation_add", text="", icon="ADD")
+            row.operator(
+                "render.cam_preset_operation_add", text="", icon="REMOVE"
+            ).remove_active = True
 
-    # Draw the list of operations and the associated buttons:
-    # create, delete, duplicate, reorder
-    def draw_operations_list(self):
-        row = self.layout.row()
+        # Operations List
+        # create, delete, duplicate, reorder
+        row = layout.row()
         row.template_list(
             "CAM_UL_operations",
             "",
@@ -57,99 +56,60 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
         col.operator("scene.cam_operation_move", icon="TRIA_UP", text="").direction = "UP"
         col.operator("scene.cam_operation_move", icon="TRIA_DOWN", text="").direction = "DOWN"
 
-    # Draw the list of preset operations, and preset add and remove buttons
-
-    def draw_presets(self):
-        if not self.has_correct_level():
-            return
-        row = self.layout.row(align=True)
-        row.menu("CAM_OPERATION_MT_presets", text=bpy.types.CAM_OPERATION_MT_presets.bl_label)
-        row.operator("render.cam_preset_operation_add", text="", icon="ADD")
-        row.operator("render.cam_preset_operation_add", text="", icon="REMOVE").remove_active = True
-
-    def draw_calculate_path(self):
-        if not self.has_correct_level():
-            return
-        if self.op.maxz > self.op.movement.free_height:
-            self.layout.label(text="!ERROR! COLLISION!")
-            self.layout.label(text="Depth Start > Free Movement Height")
-            self.layout.label(text="!ERROR! COLLISION!")
-            self.layout.prop(self.op.movement, "free_height")
-
-        if not self.op.valid:
-            self.layout.label(text="Select a Valid Object to Calculate the Path.")
-        # will be disable if not valid
-        self.layout.operator("object.calculate_cam_path", text="Calculate Path & Export Gcode")
-
-    def draw_export_gcode(self):
-        if not self.has_correct_level():
-            return
-        if self.op.valid:
-            if self.op.name is not None:
-                name = f"cam_path_{self.op.name}"
-                if bpy.context.scene.objects.get(name) is not None:
-                    self.layout.operator("object.cam_export", text="Export Gcode ")
-
-    def draw_simulate_op(self):
-        if not self.has_correct_level():
-            return
-        if self.op.valid:
-            self.layout.operator("object.cam_simulate", text="Simulate This Operation")
-
-    def draw_op_name(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "name")
-
-    def draw_op_filename(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "filename")
-
-    # Draw a list of objects which will be used as the source of the operation
-    # FIXME Right now, cameras or lights may be used, which crashes
-    # The user should only be able to choose meshes and curves
-
-    def draw_operation_source(self):
-        if not self.has_correct_level():
-            return
-        self.layout.prop(self.op, "geometry_source")
-
-        if self.op.strategy == "CURVE":
-            if self.op.geometry_source == "OBJECT":
-                self.layout.prop_search(self.op, "object_name", bpy.data, "objects")
-            elif self.op.geometry_source == "COLLECTION":
-                self.layout.prop_search(self.op, "collection_name", bpy.data, "collections")
-        else:
-            if self.op.geometry_source == "OBJECT":
-                self.layout.prop_search(self.op, "object_name", bpy.data, "objects")
-                if self.op.enable_A:
-                    self.layout.prop(self.op, "rotation_A")
-                if self.op.enable_B:
-                    self.layout.prop(self.op, "rotation_B")
-
-            elif self.op.geometry_source == "COLLECTION":
-                self.layout.prop_search(self.op, "collection_name", bpy.data, "collections")
-            else:
-                self.layout.prop_search(self.op, "source_image_name", bpy.data, "images")
-
-        if self.op.strategy in ["CARVE", "PROJECTED_CURVE"]:
-            self.layout.prop_search(self.op, "curve_object", bpy.data, "objects")
-            if self.op.strategy == "PROJECTED_CURVE":
-                self.layout.prop_search(self.op, "curve_object1", bpy.data, "objects")
-
-    def draw(self, context):
-        self.context = context
-
-        self.draw_presets()
-        self.draw_operations_list()
-
         if self.op is None:
             return
 
-        self.draw_calculate_path()
-        self.draw_export_gcode()
-        self.draw_simulate_op()
-        self.draw_op_name()
-        self.draw_op_filename()
-        self.draw_operation_source()
+        # Calculate Path
+        if self.op.maxz > self.op.movement.free_height:
+            layout.label(text="!ERROR! COLLISION!")
+            layout.label(text="Depth Start > Free Movement Height")
+            layout.label(text="!ERROR! COLLISION!")
+            layout.prop(self.op.movement, "free_height")
+
+        if not self.op.valid:
+            layout.label(text="Select a Valid Object to Calculate the Path.")
+        # will be disabled if not valid
+        layout.operator("object.calculate_cam_path", text="Calculate Path & Export Gcode")
+
+        # Export Gcode
+        if self.level >= 1:
+            if self.op.valid:
+                if self.op.name is not None:
+                    name = f"cam_path_{self.op.name}"
+                    if bpy.context.scene.objects.get(name) is not None:
+                        layout.operator("object.cam_export", text="Export Gcode ")
+
+                # Simulate Op
+                layout.operator("object.cam_simulate", text="Simulate This Operation")
+
+                # Op Name
+                layout.prop(self.op, "name")
+
+        # Op Filename
+        layout.prop(self.op, "filename")
+
+        # Op Source
+        layout.prop(self.op, "geometry_source")
+
+        if self.op.strategy == "CURVE":
+            if self.op.geometry_source == "OBJECT":
+                layout.prop_search(self.op, "object_name", bpy.data, "objects")
+            elif self.op.geometry_source == "COLLECTION":
+                layout.prop_search(self.op, "collection_name", bpy.data, "collections")
+        else:
+            if self.op.geometry_source == "OBJECT":
+                layout.prop_search(self.op, "object_name", bpy.data, "objects")
+                if self.op.enable_A:
+                    layout.prop(self.op, "rotation_A")
+                if self.op.enable_B:
+                    layout.prop(self.op, "rotation_B")
+
+            elif self.op.geometry_source == "COLLECTION":
+                layout.prop_search(self.op, "collection_name", bpy.data, "collections")
+            else:
+                layout.prop_search(self.op, "source_image_name", bpy.data, "images")
+
+        if self.op.strategy in ["CARVE", "PROJECTED_CURVE"]:
+            layout.prop_search(self.op, "curve_object", bpy.data, "objects")
+            if self.op.strategy == "PROJECTED_CURVE":
+                layout.prop_search(self.op, "curve_object1", bpy.data, "objects")

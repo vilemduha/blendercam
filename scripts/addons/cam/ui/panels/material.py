@@ -68,7 +68,6 @@ class CAM_MATERIAL_Properties(PropertyGroup):
         update=update_material,
     )
 
-    # material_origin
     origin: FloatVectorProperty(
         name="Material Origin",
         default=(0, 0, 0),
@@ -78,7 +77,6 @@ class CAM_MATERIAL_Properties(PropertyGroup):
         update=update_material,
     )
 
-    # material_size
     size: FloatVectorProperty(
         name="Material Size",
         default=(0.200, 0.200, 0.100),
@@ -97,11 +95,10 @@ class CAM_MATERIAL_PositionObject(Operator):
     bl_idname = "object.material_cam_position"
     bl_label = "Position Object for CAM Operation"
     bl_options = {"REGISTER", "UNDO"}
-    interface_level = 0
 
     def execute(self, context):
-        s = bpy.context.scene
-        operation = s.cam_operations[s.cam_active_operation]
+        scene = context.scene
+        operation = scene.cam_operations[scene.cam_active_operation]
         if operation.object_name in bpy.data.objects:
             positionObject(operation)
         else:
@@ -109,9 +106,8 @@ class CAM_MATERIAL_PositionObject(Operator):
         return {"FINISHED"}
 
     def draw(self, context):
-        if not self.interface_level <= int(self.context.scene.interface.level):
-            return
-        self.layout.prop_search(self, "operation", bpy.context.scene, "cam_operations")
+        layout = self.layout
+        layout.prop_search(self, "operation", context.scene, "cam_operations")
 
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
@@ -119,50 +115,28 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
     bl_idname = "WORLD_PT_CAM_MATERIAL"
     panel_interface_level = 0
 
-    prop_level = {
-        "draw_estimate_from_image": 0,
-        "draw_estimate_from_object": 1,
-        "draw_axis_alignment": 0,
-    }
-
-    def draw_estimate_from_image(self):
-        if not self.has_correct_level():
-            return
+    def draw(self, context):
+        layout = self.layout
+        # Estimate from Image
         if self.op.geometry_source not in ["OBJECT", "COLLECTION"]:
-            self.layout.label(text="Estimated from Image")
+            layout.label(text="Estimated from Image")
 
-    def draw_estimate_from_object(self):
-        if not self.has_correct_level():
-            return
-        if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-            self.layout.prop(self.op.material, "estimate_from_model")
-            if self.op.material.estimate_from_model:
-                row_radius = self.layout.row()
-                row_radius.label(text="Additional Radius")
-                row_radius.prop(self.op.material, "radius_around_model", text="")
-            else:
-                self.layout.prop(self.op.material, "origin")
-                self.layout.prop(self.op.material, "size")
+        # Estimate from Object
+        if self.level >= 1:
+            if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
+                layout.prop(self.op.material, "estimate_from_model")
+                if self.op.material.estimate_from_model:
+                    row_radius = layout.row()
+                    row_radius.label(text="Additional Radius")
+                    row_radius.prop(self.op.material, "radius_around_model", text="")
+                else:
+                    layout.prop(self.op.material, "origin")
+                    layout.prop(self.op.material, "size")
 
-    # Display Axis alignment section
-    def draw_axis_alignment(self):
-        if not self.has_correct_level():
-            return
+        # Axis Alignment
         if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-            row_axis = self.layout.row()
+            row_axis = layout.row()
             row_axis.prop(self.op.material, "center_x")
             row_axis.prop(self.op.material, "center_y")
-            self.layout.prop(self.op.material, "z_position")
-            self.layout.operator("object.material_cam_position", text="Position Object")
-
-    def draw(self, context):
-        self.context = context
-
-        # FIXME: This function displays the progression of a job with a progress bar
-        # Commenting because it makes no sense here
-        # Consider removing it entirely
-        # self.layout.template_running_jobs()
-
-        self.draw_estimate_from_image()
-        self.draw_estimate_from_object()
-        self.draw_axis_alignment()
+            layout.prop(self.op.material, "z_position")
+            layout.operator("object.material_cam_position", text="Position Object")
