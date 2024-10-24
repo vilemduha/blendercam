@@ -113,30 +113,30 @@ class CAM_MATERIAL_PositionObject(Operator):
 class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
     bl_label = "CAM Material Size and Position"
     bl_idname = "WORLD_PT_CAM_MATERIAL"
+    panel_interface_level = 0
 
     def draw(self, context):
         layout = self.layout
-        if self.op is not None:
-            # Estimate from Image
-            if self.op.geometry_source not in ["OBJECT", "COLLECTION"]:
-                layout.label(text="Estimated from Image")
+        # Estimate from Image
+        if self.op.geometry_source not in ["OBJECT", "COLLECTION"]:
+            layout.label(text="Estimated from Image")
 
-            # Estimate from Object
-            if self.level >= 1:
-                if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-                    layout.prop(self.op.material, "estimate_from_model")
-                    if self.op.material.estimate_from_model:
-                        row_radius = layout.row()
-                        row_radius.label(text="Additional Radius")
-                        row_radius.prop(self.op.material, "radius_around_model", text="")
-                    else:
-                        layout.prop(self.op.material, "origin")
-                        layout.prop(self.op.material, "size")
-
-            # Axis Alignment
+        # Estimate from Object
+        if self.level >= 1:
             if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-                row_axis = layout.row()
-                row_axis.prop(self.op.material, "center_x")
-                row_axis.prop(self.op.material, "center_y")
-                layout.prop(self.op.material, "z_position")
-                layout.operator("object.material_cam_position", text="Position Object")
+                layout.prop(self.op.material, "estimate_from_model")
+                if self.op.material.estimate_from_model:
+                    row_radius = layout.row()
+                    row_radius.label(text="Additional Radius")
+                    row_radius.prop(self.op.material, "radius_around_model", text="")
+                else:
+                    layout.prop(self.op.material, "origin")
+                    layout.prop(self.op.material, "size")
+
+        # Axis Alignment
+        if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
+            row_axis = layout.row()
+            row_axis.prop(self.op.material, "center_x")
+            row_axis.prop(self.op.material, "center_y")
+            layout.prop(self.op.material, "z_position")
+            layout.operator("object.material_cam_position", text="Position Object")

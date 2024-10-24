@@ -226,73 +226,73 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "CAM Movement"
     bl_idname = "WORLD_PT_CAM_MOVEMENT"
+    panel_interface_level = 0
 
     def draw(self, context):
         layout = self.layout
-        if self.op is not None:
-            # Cut Type
-            if self.level >= 1:
-                layout.prop(self.op.movement, "type")
-                if self.op.movement.type in ["BLOCK", "SPIRAL", "CIRCLES"]:
-                    layout.prop(self.op.movement, "insideout")
+        # Cut Type
+        if self.level >= 1:
+            layout.prop(self.op.movement, "type")
+            if self.op.movement.type in ["BLOCK", "SPIRAL", "CIRCLES"]:
+                layout.prop(self.op.movement, "insideout")
 
-            # Spindle Rotation
-            if self.level >= 2:
-                layout.prop(self.op.movement, "spindle_rotation")
+        # Spindle Rotation
+        if self.level >= 2:
+            layout.prop(self.op.movement, "spindle_rotation")
 
-            # Free Height
-            layout.prop(self.op.movement, "free_height")
-            if self.op.maxz > self.op.movement.free_height:
-                layout.label(text="Depth Start > Free Movement")
-                layout.label(text="POSSIBLE COLLISION")
+        # Free Height
+        layout.prop(self.op.movement, "free_height")
+        if self.op.maxz > self.op.movement.free_height:
+            layout.label(text="Depth Start > Free Movement")
+            layout.label(text="POSSIBLE COLLISION")
 
-            # Use G64
-            if self.level >= 2:
-                if context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
-                    layout.prop(self.op.movement, "useG64")
-                    if self.op.movement.useG64:
-                        layout.prop(self.op.movement, "G64")
+        # Use G64
+        if self.level >= 2:
+            if context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
+                layout.prop(self.op.movement, "useG64")
+                if self.op.movement.useG64:
+                    layout.prop(self.op.movement, "G64")
 
-            # Parallel Stepback
-            if self.level >= 1:
-                if self.op.strategy in ["PARALLEL", "CROSS"]:
-                    if not self.op.movement.ramp:
-                        layout.prop(self.op.movement, "parallel_step_back")
+        # Parallel Stepback
+        if self.level >= 1:
+            if self.op.strategy in ["PARALLEL", "CROSS"]:
+                if not self.op.movement.ramp:
+                    layout.prop(self.op.movement, "parallel_step_back")
 
-            # Helix Enter
-            if self.level >= 2:
-                if self.op.strategy in ["POCKET"]:
-                    layout.prop(self.op.movement, "helix_enter")
-                    if self.op.movement.helix_enter:
-                        layout.prop(self.op.movement, "ramp_in_angle")
-                        layout.prop(self.op.movement, "helix_diameter")
-
-            # Ramp
-            if self.level >= 1:
-                layout.prop(self.op.movement, "ramp")
-                if self.op.movement.ramp:
+        # Helix Enter
+        if self.level >= 2:
+            if self.op.strategy in ["POCKET"]:
+                layout.prop(self.op.movement, "helix_enter")
+                if self.op.movement.helix_enter:
                     layout.prop(self.op.movement, "ramp_in_angle")
-                    layout.prop(self.op.movement, "ramp_out")
-                    if self.op.movement.ramp_out:
-                        layout.prop(self.op.movement, "ramp_out_angle")
+                    layout.prop(self.op.movement, "helix_diameter")
 
-            # Retract Tangential
-            if self.level >= 2:
-                if self.op.strategy in ["POCKET"]:
-                    layout.prop(self.op.movement, "retract_tangential")
-                    if self.op.movement.retract_tangential:
-                        layout.prop(self.op.movement, "retract_radius")
-                        layout.prop(self.op.movement, "retract_height")
+        # Ramp
+        if self.level >= 1:
+            layout.prop(self.op.movement, "ramp")
+            if self.op.movement.ramp:
+                layout.prop(self.op.movement, "ramp_in_angle")
+                layout.prop(self.op.movement, "ramp_out")
+                if self.op.movement.ramp_out:
+                    layout.prop(self.op.movement, "ramp_out_angle")
 
-            # Stay Low
-            if self.level >= 1:
-                layout.prop(self.op.movement, "stay_low")
-                if self.op.movement.stay_low:
-                    layout.prop(self.op.movement, "merge_dist")
+        # Retract Tangential
+        if self.level >= 2:
+            if self.op.strategy in ["POCKET"]:
+                layout.prop(self.op.movement, "retract_tangential")
+                if self.op.movement.retract_tangential:
+                    layout.prop(self.op.movement, "retract_radius")
+                    layout.prop(self.op.movement, "retract_height")
 
-            # Protect Vertical
-            if self.level >= 1:
-                if self.op.cutter_type not in ["BALLCONE"]:
-                    layout.prop(self.op.movement, "protect_vertical")
-                    if self.op.movement.protect_vertical:
-                        layout.prop(self.op.movement, "protect_vertical_limit")
+        # Stay Low
+        if self.level >= 1:
+            layout.prop(self.op.movement, "stay_low")
+            if self.op.movement.stay_low:
+                layout.prop(self.op.movement, "merge_dist")
+
+        # Protect Vertical
+        if self.level >= 1:
+            if self.op.cutter_type not in ["BALLCONE"]:
+                layout.prop(self.op.movement, "protect_vertical")
+                if self.op.movement.protect_vertical:
+                    layout.prop(self.op.movement, "protect_vertical_limit")

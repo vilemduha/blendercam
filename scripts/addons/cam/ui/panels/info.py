@@ -60,22 +60,27 @@ class CAM_INFO_Properties(PropertyGroup):
 class CAM_INFO_Panel(CAMButtonsPanel, Panel):
     bl_label = "CAM Info & Warnings"
     bl_idname = "WORLD_PT_CAM_INFO"
+    panel_interface_level = 0
+    always_show_panel = True
 
     # Display the Info Panel
     def draw(self, context):
         layout = self.layout
-        if self.op is not None:
-            # CNC CAM Version
-            layout.label(text=f'CNC CAM v{".".join([str(x) for x in cam_version])}')
 
-            # OpenCAMLib Version
-            if self.level >= 1:
-                ocl_version = opencamlib_version()
-                if ocl_version is None:
-                    layout.label(text="OpenCAMLib is not Installed")
-                else:
-                    layout.label(text=f"OpenCAMLib v{ocl_version}")
+        # CNC CAM Version
+        layout.label(text=f'CNC CAM v{".".join([str(x) for x in cam_version])}')
 
+        # OpenCAMLib Version
+        if self.level >= 1:
+            ocl_version = opencamlib_version()
+            if ocl_version is None:
+                layout.label(text="OpenCAMLib is not Installed")
+            else:
+                layout.label(text=f"OpenCAMLib v{ocl_version}")
+
+        if self.op is None:
+            return
+        else:
             # Operation Warnings
             for line in self.op.info.warnings.rstrip("\n").split("\n"):
                 if len(line) > 0:

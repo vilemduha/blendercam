@@ -14,6 +14,8 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "CAM Machine"
     bl_idname = "WORLD_PT_CAM_MACHINE"
+    panel_interface_level = 0
+    always_show_panel = True
 
     def draw(self, context):
         layout = self.layout

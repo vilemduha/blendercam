@@ -14,22 +14,22 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "CAM Feedrate"
     bl_idname = "WORLD_PT_CAM_FEEDRATE"
+    panel_interface_level = 0
 
     def draw(self, context):
         layout = self.layout
-        if self.op is not None:
-            # Feedrate
-            layout.prop(self.op, "feedrate")
+        # Feedrate
+        layout.prop(self.op, "feedrate")
 
-            # Sim Feedrate
-            if self.level >= 2:
-                layout.prop(self.op, "do_simulation_feedrate")
+        # Sim Feedrate
+        if self.level >= 2:
+            layout.prop(self.op, "do_simulation_feedrate")
 
-            # Plunge Feedrate
-            if self.level >= 1:
-                layout.prop(self.op, "plunge_feedrate")
-                # Plunge Angle
-                layout.prop(self.op, "plunge_angle")
+        # Plunge Feedrate
+        if self.level >= 1:
+            layout.prop(self.op, "plunge_feedrate")
+            # Plunge Angle
+            layout.prop(self.op, "plunge_angle")
 
-            # Spindle RPM
-            layout.prop(self.op, "spindle_rpm")
+        # Spindle RPM
+        layout.prop(self.op, "spindle_rpm")

@@ -111,9 +111,8 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
     panel_interface_level = 2
 
     def draw(self, context):
-        layout = self.layout
-
         if self.level >= 2 and self.op is not None:
+            layout = self.layout
             # Optimize
             layout.prop(self.op.optimisation, "optimize")
             if self.op.optimisation.optimize:

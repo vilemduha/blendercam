@@ -14,13 +14,13 @@ class CAM_SLICE_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "Slice Model to Plywood Sheets"
     bl_idname = "WORLD_PT_CAM_SLICE"
+    panel_interface_level = 2
 
     def draw(self, context):
-        layout = self.layout
-        scene = bpy.context.scene
-        settings = scene.cam_slice
-
         if self.level >= 2:
+            layout = self.layout
+            scene = bpy.context.scene
+            settings = scene.cam_slice
             layout.operator("object.cam_slice_objects")
             layout.prop(settings, "slice_distance")
             layout.prop(settings, "slice_above0")

@@ -23,6 +23,8 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "CAM Operations"
     bl_idname = "WORLD_PT_CAM_OPERATIONS"
+    panel_interface_level = 0
+    always_show_panel = True
 
     def draw(self, context):
         layout = self.layout

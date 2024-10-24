@@ -43,6 +43,8 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "CAM Chains"
     bl_idname = "WORLD_PT_CAM_CHAINS"
+    panel_interface_level = 1
+    always_show_panel = True
 
     def draw(self, context):
         if self.level >= 1 and self.op is not None:

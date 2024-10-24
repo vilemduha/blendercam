@@ -14,12 +14,13 @@ class CAM_PACK_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "Pack Curves on Sheet"
     bl_idname = "WORLD_PT_CAM_PACK"
+    panel_interface_level = 2
 
     def draw(self, context):
-        layout = self.layout
-        scene = bpy.context.scene
-        settings = scene.cam_pack
         if self.level >= 2:
+            layout = self.layout
+            scene = bpy.context.scene
+            settings = scene.cam_pack
             layout.operator("object.cam_pack_objects")
             layout.prop(settings, "sheet_fill_direction")
             layout.prop(settings, "sheet_x")

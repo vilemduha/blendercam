@@ -14,11 +14,11 @@ class CAM_GCODE_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "CAM G-code Options"
     bl_idname = "WORLD_PT_CAM_GCODE"
+    panel_interface_level = 1
 
     def draw(self, context):
-        layout = self.layout
-
         if self.level >= 1 and self.op is not None:
+            layout = self.layout
 
             # Output Header
             layout.prop(self.op, "output_header")

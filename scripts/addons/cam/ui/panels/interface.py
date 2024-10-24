@@ -35,6 +35,8 @@ class CAM_INTERFACE_Properties(PropertyGroup):
 class CAM_INTERFACE_Panel(CAMButtonsPanel, Panel):
     bl_label = "Interface"
     bl_idname = "WORLD_PT_CAM_INTERFACE"
+    panel_interface_level = 0
+    always_show_panel = True
 
     def draw(self, context):
         layout = self.layout
