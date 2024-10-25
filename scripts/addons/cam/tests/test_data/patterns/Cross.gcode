@@ -1,6 +1,6 @@
 (Created with grbl post processor 2024/03/23 07:39)
 G21
-(G-code generated with BlenderCAM and NC library)
+(G-code generated with Fabex and NC library)
 G17G90
 (Tool: D = 3.0 mm  type END flutes 2)
 S12000M03
