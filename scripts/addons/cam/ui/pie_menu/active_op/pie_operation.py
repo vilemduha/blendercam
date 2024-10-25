@@ -1,4 +1,4 @@
-"""CNC CAM 'pie_operation.py'
+"""Fabex 'pie_operation.py'
 
 'Active Operation' Pie Menu - Parent to all active_op Pie Menus
 """
@@ -23,59 +23,41 @@ class VIEW3D_MT_PIE_Operation(Menu):
         pie.scale_y = 1.5
 
         # Left
-        pie.operator(
-            "wm.call_menu_pie",
-            text='Area',
-            icon='SHADING_BBOX'
-        ).name = 'VIEW3D_MT_PIE_Area'
+        pie.operator("wm.call_menu_pie", text="Area", icon="SHADING_BBOX").name = (
+            "VIEW3D_MT_PIE_Area"
+        )
         # Right
-        pie.operator(
-            "wm.call_menu_pie",
-            text='Optimisation',
-            icon='MODIFIER'
-        ).name = 'VIEW3D_MT_PIE_Optimisation'
+        pie.operator("wm.call_menu_pie", text="Optimisation", icon="MODIFIER").name = (
+            "VIEW3D_MT_PIE_Optimisation"
+        )
         # Bottom
-        pie.operator(
-            "wm.call_menu_pie",
-            text='Setup',
-            icon='PREFERENCES'
-        ).name = 'VIEW3D_MT_PIE_Setup'
+        pie.operator("wm.call_menu_pie", text="Setup", icon="PREFERENCES").name = (
+            "VIEW3D_MT_PIE_Setup"
+        )
 
         # Top
         box = pie.box()
         box.scale_x = 2
         box.scale_y = 1.5
-        box.emboss = 'NONE'
-        box.operator(
-            "wm.call_menu_pie",
-            text='',
-            icon='HOME'
-        ).name = 'VIEW3D_MT_PIE_CAM'
+        box.emboss = "NONE"
+        box.operator("wm.call_menu_pie", text="", icon="HOME").name = "VIEW3D_MT_PIE_CAM"
 
         # Top Left
-        pie.operator(
-            "wm.call_menu_pie",
-            text='Movement',
-            icon='ANIM_DATA'
-        ).name = 'VIEW3D_MT_PIE_Movement'
+        pie.operator("wm.call_menu_pie", text="Movement", icon="ANIM_DATA").name = (
+            "VIEW3D_MT_PIE_Movement"
+        )
 
         # Top Right
-        pie.operator(
-            "wm.call_menu_pie",
-            text='Feedrate',
-            icon='AUTO'
-        ).name = 'VIEW3D_MT_PIE_Feedrate'
+        pie.operator("wm.call_menu_pie", text="Feedrate", icon="AUTO").name = (
+            "VIEW3D_MT_PIE_Feedrate"
+        )
 
         # Bottom Left
-        pie.operator(
-            "wm.call_menu_pie",
-            text='Cutter',
-            icon='OUTLINER_DATA_GP_LAYER'
-        ).name = 'VIEW3D_MT_PIE_Cutter'
+        pie.operator("wm.call_menu_pie", text="Cutter", icon="OUTLINER_DATA_GP_LAYER").name = (
+            "VIEW3D_MT_PIE_Cutter"
+        )
 
         # Bottom Right
-        pie.operator(
-            "wm.call_menu_pie",
-            text='G-Code Options',
-            icon='EVENT_G'
-        ).name = 'VIEW3D_MT_PIE_Gcode'
+        pie.operator("wm.call_menu_pie", text="G-Code Options", icon="EVENT_G").name = (
+            "VIEW3D_MT_PIE_Gcode"
+        )

@@ -1,4 +1,4 @@
-"""CNC CAM 'area.py'
+"""Fabex 'area.py'
 
 'CAM Operation Area' panel in Properties > Render
 """

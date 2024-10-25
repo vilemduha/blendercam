@@ -1,4 +1,4 @@
-"""CNC CAM 'gcode.py'
+"""Fabex 'gcode.py'
 
 'CAM G-code Options' panel in Properties > Render
 """

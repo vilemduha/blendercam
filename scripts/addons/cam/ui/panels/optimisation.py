@@ -1,4 +1,4 @@
-"""CNC CAM 'optimisation.py'
+"""Fabex 'optimisation.py'
 
 'CAM Optimisation' properties and panel in Properties > Render
 """

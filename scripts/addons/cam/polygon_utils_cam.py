@@ -1,4 +1,4 @@
-"""CNC CAM 'polygon_utils_cam.py' © 2012 Vilem Novak
+"""Fabex 'polygon_utils_cam.py' © 2012 Vilem Novak
 
 Functions to handle shapely operations and conversions - curve, coords, polygon
 """
@@ -10,6 +10,7 @@ from shapely.geometry import polygon as spolygon
 from shapely import geometry as sgeometry
 
 from mathutils import Euler, Vector
+
 try:
     import bl_ext.blender_org.simplify_curves_plus as curve_simplify
 except ImportError:
@@ -67,7 +68,7 @@ def shapelyRemoveDoubles(p, optimize_threshold):
 
     optimize_threshold *= 0.000001
 
-    soptions = ['distance', 'distance', 0.0, 5, optimize_threshold, 5, optimize_threshold]
+    soptions = ["distance", "distance", 0.0, 5, optimize_threshold, 5, optimize_threshold]
     for ci, c in enumerate(p.boundary):  # in range(0,len(p)):
 
         veclist = []
@@ -106,15 +107,15 @@ def shapelyToMultipolygon(anydata):
     print("geometry type: ", anydata.geom_type)
     print("anydata empty? ", anydata.is_empty)
     ## bug: empty mesh circle makes anydata empty: geometry type 'GeometryCollection'
-    if anydata.geom_type == 'MultiPolygon':
+    if anydata.geom_type == "MultiPolygon":
         return anydata
-    elif anydata.geom_type == 'Polygon':
+    elif anydata.geom_type == "Polygon":
         if not anydata.is_empty:
             return shapely.geometry.MultiPolygon([anydata])
         else:
             return sgeometry.MultiPolygon()
     else:
-        print('Shapely Conversion Aborted')
+        print("Shapely Conversion Aborted")
         return sgeometry.MultiPolygon()
 
 
@@ -143,7 +144,7 @@ def shapelyToCoords(anydata):
     # print(p.geom_type)
     if p.is_empty:
         return seq
-    elif p.geom_type == 'Polygon':
+    elif p.geom_type == "Polygon":
 
         # print('polygon')
         clen = len(p.exterior.coords)
@@ -152,7 +153,7 @@ def shapelyToCoords(anydata):
         # print(len(p.interiors))
         for interior in p.interiors:
             seq.append(interior.coords)
-    elif p.geom_type == 'MultiPolygon':
+    elif p.geom_type == "MultiPolygon":
         clen = 0
         seq = []
         for sp in p.geoms:
@@ -161,17 +162,17 @@ def shapelyToCoords(anydata):
             for interior in sp.interiors:
                 seq.append(interior.coords)
 
-    elif p.geom_type == 'MultiLineString':
+    elif p.geom_type == "MultiLineString":
         seq = []
         for linestring in p.geoms:
             seq.append(linestring.coords)
-    elif p.geom_type == 'LineString':
+    elif p.geom_type == "LineString":
         seq = []
         seq.append(p.coords)
 
-    elif p.geom_type == 'MultiPoint':
+    elif p.geom_type == "MultiPoint":
         return
-    elif p.geom_type == 'GeometryCollection':
+    elif p.geom_type == "GeometryCollection":
         # print(dir(p))
         # print(p.geometryType, p.geom_type)
         clen = 0
@@ -186,7 +187,7 @@ def shapelyToCoords(anydata):
     return seq
 
 
-def shapelyToCurve(name, p, z, cyclic = True):
+def shapelyToCurve(name, p, z, cyclic=True):
     """Create a 3D curve object in Blender from a Shapely geometry.
 
     This function takes a Shapely geometry and converts it into a 3D curve
@@ -208,6 +209,7 @@ def shapelyToCurve(name, p, z, cyclic = True):
     import bpy
     import bmesh
     from bpy_extras import object_utils
+
     verts = []
     edges = []
     vi = 0
@@ -218,15 +220,15 @@ def shapelyToCurve(name, p, z, cyclic = True):
     seq = shapelyToCoords(p)
     w = 1  # weight
 
-    curvedata = bpy.data.curves.new(name=name, type='CURVE')
-    curvedata.dimensions = '3D'
+    curvedata = bpy.data.curves.new(name=name, type="CURVE")
+    curvedata.dimensions = "3D"
 
     objectdata = bpy.data.objects.new(name, curvedata)
     objectdata.location = (0, 0, 0)  # object origin
     bpy.context.collection.objects.link(objectdata)
 
     for c in seq:
-        polyline = curvedata.splines.new('POLY')
+        polyline = curvedata.splines.new("POLY")
         polyline.points.add(len(c) - 1)
         for num in range(len(c)):
             x, y = c[num][0], c[num][1]

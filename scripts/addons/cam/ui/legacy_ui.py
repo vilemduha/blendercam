@@ -1,4 +1,4 @@
-"""CNC CAM 'legacy_ui.py' © 2012 Vilem Novak
+"""Fabex 'legacy_ui.py' © 2012 Vilem Novak
 
 Panels displayed in the 3D Viewport - Curve Tools, Creators and Import G-code
 """

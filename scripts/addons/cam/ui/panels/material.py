@@ -1,4 +1,4 @@
-"""CNC CAM 'material.py'
+"""Fabex 'material.py'
 
 'CAM Material' properties and panel in Properties > Render
 """

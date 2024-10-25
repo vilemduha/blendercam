@@ -1,4 +1,4 @@
-"""CNC CAM 'feedrate.py'
+"""Fabex 'feedrate.py'
 
 'CAM Feedrate' panel in Properties > Render
 """

@@ -1,4 +1,4 @@
-"""CNC CAM 'buttons_panel.py'
+"""Fabex 'buttons_panel.py'
 
 Parent (Mixin) class for all panels in 'panels'
 Sets up polling and operations to show / hide panels based on Interface Level
@@ -15,7 +15,7 @@ class CAMButtonsPanel:
     bl_region_type = "WINDOW"
     bl_context = "render"
     always_show_panel = False
-    COMPAT_ENGINES = {"CNCCAM_RENDER"}
+    COMPAT_ENGINES = {"FABEX_RENDER"}
 
     @classmethod
     def poll(cls, context):
@@ -44,7 +44,7 @@ class CAMButtonsPanel:
         self.level = int(context.scene.interface.level)
         self.machine = context.scene.cam_machine
 
-        addon_prefs = context.preferences.addons["bl_ext.user_default.blendercam"].preferences
+        addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
         self.use_experimental = addon_prefs.experimental
 
         operations = context.scene.cam_operations

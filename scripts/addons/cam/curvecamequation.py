@@ -1,4 +1,4 @@
-"""CNC CAM 'curvecamequation.py' © 2021, 2022 Alain Pelletier
+"""Fabex 'curvecamequation.py' © 2021, 2022 Alain Pelletier
 
 Operators to create a number of geometric shapes with curves.
 """
@@ -20,35 +20,36 @@ from . import parametric
 
 
 class CamSineCurve(Operator):
-    """Object Sine """  # by Alain Pelletier april 2021
+    """Object Sine"""  # by Alain Pelletier april 2021
+
     bl_idname = "object.sine"
     bl_label = "Periodic Wave"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+    bl_options = {"REGISTER", "UNDO", "PRESET"}
 
     # zstring: StringProperty(name="Z equation", description="Equation for z=F(u,v)", default="0.05*sin(2*pi*4*t)" )
     axis: EnumProperty(
         name="Displacement Axis",
         items=(
-            ('XY', 'Y to displace X axis', 'Y constant; X sine displacement'),
-            ('YX', 'X to displace Y axis', 'X constant; Y sine displacement'),
-            ('ZX', 'X to displace Z axis', 'X constant; Y sine displacement'),
-            ('ZY', 'Y to displace Z axis', 'X constant; Y sine displacement')
+            ("XY", "Y to displace X axis", "Y constant; X sine displacement"),
+            ("YX", "X to displace Y axis", "X constant; Y sine displacement"),
+            ("ZX", "X to displace Z axis", "X constant; Y sine displacement"),
+            ("ZY", "Y to displace Z axis", "X constant; Y sine displacement"),
         ),
-        default='ZX',
+        default="ZX",
     )
     wave: EnumProperty(
         name="Wave",
         items=(
-            ('sine', 'Sine Wave', 'Sine Wave'),
-            ('triangle', 'Triangle Wave', 'triangle wave'),
-            ('cycloid', 'Cycloid', 'Sine wave rectification'),
-            ('invcycloid', 'Inverse Cycloid', 'Sine wave rectification')
+            ("sine", "Sine Wave", "Sine Wave"),
+            ("triangle", "Triangle Wave", "triangle wave"),
+            ("cycloid", "Cycloid", "Sine wave rectification"),
+            ("invcycloid", "Inverse Cycloid", "Sine wave rectification"),
         ),
-        default='sine',
+        default="sine",
     )
     amplitude: FloatProperty(
         name="Amplitude",
-        default=.01,
+        default=0.01,
         min=0,
         max=10,
         precision=4,
@@ -56,7 +57,7 @@ class CamSineCurve(Operator):
     )
     period: FloatProperty(
         name="Period",
-        default=.5,
+        default=0.5,
         min=0.001,
         max=100,
         precision=4,
@@ -81,8 +82,7 @@ class CamSineCurve(Operator):
     offset: FloatProperty(
         name="Offset",
         default=0,
-        min=-
-        1.0,
+        min=-1.0,
         max=1,
         precision=4,
         unit="LENGTH",
@@ -119,9 +119,9 @@ class CamSineCurve(Operator):
     )
     wave_angle_offset: FloatProperty(
         name="Angle Offset for Multiple Waves",
-        default=pi/2,
-        min=-200*pi,
-        max=200*pi,
+        default=pi / 2,
+        min=-200 * pi,
+        max=200 * pi,
         precision=4,
         unit="ROTATION",
     )
@@ -140,21 +140,21 @@ class CamSineCurve(Operator):
         shift = self.shift
 
         # z=Asin(B(x+C))+D
-        if self.wave == 'sine':
+        if self.wave == "sine":
             zstring = ssine(amp, period, dc_offset=offset, phase_shift=shift)
             if self.beatperiod != 0:
                 zstring += f"+ {ssine(amp, period+beatperiod, dc_offset=offset, phase_shift=shift)}"
 
         # build triangle wave from fourier series
-        elif self.wave == 'triangle':
+        elif self.wave == "triangle":
             zstring = f"{round(offset, 6) + triangle(80, period, amp)}"
             if self.beatperiod != 0:
                 zstring += f"+ {triangle(80, period+beatperiod, amp)}"
 
-        elif self.wave == 'cycloid':
+        elif self.wave == "cycloid":
             zstring = f"abs({ssine(amp, period, dc_offset=offset, phase_shift=shift)})"
 
-        elif self.wave == 'invcycloid':
+        elif self.wave == "invcycloid":
             zstring = f"-1 * abs({ssine(amp, period, dc_offset=offset, phase_shift=shift)})"
 
         print(zstring)
@@ -184,21 +184,22 @@ class CamSineCurve(Operator):
                 max=self.maxt,
                 use_cubic=True,
                 iterations=self.iteration,
-                angle_offset=angle_off
+                angle_offset=angle_off,
             )
 
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 class CamLissajousCurve(Operator):
-    """Lissajous """  # by Alain Pelletier april 2021
+    """Lissajous"""  # by Alain Pelletier april 2021
+
     bl_idname = "object.lissajous"
     bl_label = "Lissajous Figure"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+    bl_options = {"REGISTER", "UNDO", "PRESET"}
 
     amplitude_A: FloatProperty(
         name="Amplitude A",
-        default=.1,
+        default=0.1,
         min=0,
         max=100,
         precision=4,
@@ -206,16 +207,13 @@ class CamLissajousCurve(Operator):
     )
     waveA: EnumProperty(
         name="Wave X",
-        items=(
-            ('sine', 'Sine Wave', 'Sine Wave'),
-            ('triangle', 'Triangle Wave', 'triangle wave')
-        ),
-        default='sine',
+        items=(("sine", "Sine Wave", "Sine Wave"), ("triangle", "Triangle Wave", "triangle wave")),
+        default="sine",
     )
 
     amplitude_B: FloatProperty(
         name="Amplitude B",
-        default=.1,
+        default=0.1,
         min=0,
         max=100,
         precision=4,
@@ -223,11 +221,8 @@ class CamLissajousCurve(Operator):
     )
     waveB: EnumProperty(
         name="Wave Y",
-        items=(
-            ('sine', 'Sine Wave', 'Sine Wave'),
-            ('triangle', 'Triangle Wave', 'triangle wave')
-        ),
-        default='sine',
+        items=(("sine", "Sine Wave", "Sine Wave"), ("triangle", "Triangle Wave", "triangle wave")),
+        default="sine",
     )
     period_A: FloatProperty(
         name="Period A",
@@ -296,14 +291,14 @@ class CamLissajousCurve(Operator):
     def execute(self, context):
         # x=Asin(at+delta ),y=Bsin(bt)
 
-        if self.waveA == 'sine':
+        if self.waveA == "sine":
             xstring = ssine(self.amplitude_A, self.period_A, phase_shift=self.shift)
-        elif self.waveA == 'triangle':
+        elif self.waveA == "triangle":
             xstring = f"{triangle(100, self.period_A, self.amplitude_A)}"
 
-        if self.waveB == 'sine':
+        if self.waveB == "sine":
             ystring = ssine(self.amplitude_B, self.period_B)
-        elif self.waveB == 'triangle':
+        elif self.waveB == "triangle":
             ystring = f"{triangle(100, self.period_B, self.amplitude_B)}"
 
         zstring = ssine(self.amplitude_Z, self.period_Z)
@@ -327,28 +322,24 @@ class CamLissajousCurve(Operator):
             return c
 
         parametric.create_parametric_curve(
-            f,
-            offset=0.0,
-            min=self.mint,
-            max=self.maxt,
-            use_cubic=True,
-            iterations=self.iteration
+            f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration
         )
 
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 class CamHypotrochoidCurve(Operator):
-    """Hypotrochoid """  # by Alain Pelletier april 2021
+    """Hypotrochoid"""  # by Alain Pelletier april 2021
+
     bl_idname = "object.hypotrochoid"
     bl_label = "Spirograph Type Figure"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+    bl_options = {"REGISTER", "UNDO", "PRESET"}
 
     typecurve: EnumProperty(
         name="Type of Curve",
         items=(
-            ('hypo', 'Hypotrochoid', 'Inside ring'),
-            ('epi', 'Epicycloid', 'Outside inner ring')
+            ("hypo", "Hypotrochoid", "Inside ring"),
+            ("epi", "Epicycloid", "Outside inner ring"),
         ),
     )
     R: FloatProperty(
@@ -427,22 +418,18 @@ class CamHypotrochoidCurve(Operator):
             print("limiting calculations to 10000 points")
             iter = 10000
         parametric.create_parametric_curve(
-            f,
-            offset=0.0,
-            min=0,
-            max=maxangle,
-            use_cubic=True,
-            iterations=iter
+            f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=iter
         )
 
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 class CamCustomCurve(Operator):
-    """Object Custom Curve """  # by Alain Pelletier april 2021
+    """Object Custom Curve"""  # by Alain Pelletier april 2021
+
     bl_idname = "object.customcurve"
     bl_label = "Custom Curve"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+    bl_options = {"REGISTER", "UNDO", "PRESET"}
 
     xstring: StringProperty(
         name="X Equation",
@@ -504,38 +491,28 @@ class CamCustomCurve(Operator):
             return c
 
         parametric.create_parametric_curve(
-            f,
-            offset=0.0,
-            min=self.mint,
-            max=self.maxt,
-            use_cubic=True,
-            iterations=self.iteration
+            f, offset=0.0, min=self.mint, max=self.maxt, use_cubic=True, iterations=self.iteration
         )
 
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 def triangle(i, T, A):
     s = f"{A * 8 / (pi**2)} * ("
     for n in range(i):
         if n % 2 != 0:
-            e = (n-1)/2
-            a = round(((-1)**e)/(n**2), 8)
-            b = round(n*pi/(T/2), 8)
+            e = (n - 1) / 2
+            a = round(((-1) ** e) / (n**2), 8)
+            b = round(n * pi / (T / 2), 8)
             if n > 1:
-                s += '+'
+                s += "+"
             s += f"{a} * sin({b} * t)"
-    s += ')'
+    s += ")"
     return s
 
 
 def ssine(A, T, dc_offset=0, phase_shift=0):
-    args = [
-        dc_offset,
-        phase_shift,
-        A,
-        T
-    ]
+    args = [dc_offset, phase_shift, A, T]
     for arg in args:
         arg = round(arg, 6)
 

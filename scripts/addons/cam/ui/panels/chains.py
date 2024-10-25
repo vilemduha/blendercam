@@ -1,4 +1,4 @@
-"""CNC CAM 'chains.py'
+"""Fabex 'chains.py'
 
 'CAM Chains' panel in Properties > Render
 """

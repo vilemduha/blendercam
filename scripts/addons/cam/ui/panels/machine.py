@@ -1,4 +1,4 @@
-"""CNC CAM 'machine.py'
+"""Fabex 'machine.py'
 
 'CAM Machine' panel in Properties > Render
 """

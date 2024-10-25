@@ -1,4 +1,4 @@
-"""CNC CAM 'interface.py'
+"""Fabex 'interface.py'
 
 'Interface' properties and panel in Properties > Render
 """
@@ -12,7 +12,7 @@ from .buttons_panel import CAMButtonsPanel
 
 def update_interface(self, context):
     # set default for new files
-    addon_prefs = context.preferences.addons["bl_ext.user_default.blendercam"].preferences
+    addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
     addon_prefs.default_interface_level = context.scene.interface.level
     bpy.ops.wm.save_userpref()
 

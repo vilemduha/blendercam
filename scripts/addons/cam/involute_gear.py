@@ -1,4 +1,4 @@
-"""CNC CAM 'involute_gear.py' Ported by Alain Pelletier Jan 2022
+"""Fabex 'involute_gear.py' Ported by Alain Pelletier Jan 2022
 
 from:
 Public Domain Parametric Involute Spur Gear (and involute helical gear and involute rack)
@@ -61,14 +61,7 @@ Meshing gears must match in mm_per_tooth, pressure_angle, and twist,
 and be separated by the sum of their pitch radii, which can be found with pitch_radius().
 """
 
-from math import (
-    acos,
-    cos,
-    degrees,
-    pi,
-    sin,
-    sqrt
-)
+from math import acos, cos, degrees, pi, sin, sqrt
 
 from shapely.geometry import Polygon
 
@@ -93,7 +86,7 @@ def gear_iang(r1, r2):
 
 #  radius a fraction f up the curved side of the tooth
 def gear_q7(f, r, b, r2, t, s):
-    return gear_q6(b, s, t, (1-f) * max(b, r) + f * r2)
+    return gear_q6(b, s, t, (1 - f) * max(b, r) + f * r2)
 
 
 # point at radius d on the involute curve
@@ -101,8 +94,17 @@ def gear_q6(b, s, t, d):
     return gear_polar(d, s * (gear_iang(b, d) + t))
 
 
-def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
-         pressure_angle=0.3488, clearance=0.0, backlash=0.0, rim_size=0.0005, hub_diameter=0.006, spokes=4):
+def gear(
+    mm_per_tooth=0.003,
+    number_of_teeth=5,
+    hole_diameter=0.003175,
+    pressure_angle=0.3488,
+    clearance=0.0,
+    backlash=0.0,
+    rim_size=0.0005,
+    hub_diameter=0.006,
+    spokes=4,
+):
     """Generate a 3D gear model based on specified parameters.
 
     This function creates a 3D representation of a gear using the provided
@@ -134,97 +136,149 @@ def gear(mm_per_tooth=0.003, number_of_teeth=5, hole_diameter=0.003175,
 
     simple.deselect()
     p = mm_per_tooth * number_of_teeth / pi / 2  # radius of pitch circle
-    c = p + mm_per_tooth / pi - clearance        # radius of outer circle
+    c = p + mm_per_tooth / pi - clearance  # radius of outer circle
     b = p * cos(pressure_angle)  # radius of base circle
-    r = p-(c-p)-clearance   # radius of root circle
+    r = p - (c - p) - clearance  # radius of root circle
     t = mm_per_tooth / 2 - backlash / 2  # tooth thickness at pitch circle
     # angle to where involute meets base circle on each side of tooth
-    k = - gear_iang(b, p) - t / 2 / p
-    shapely_gear = Polygon([
-        (0, 0),
-        gear_polar(r, k if r < b else -pi / number_of_teeth),
-        gear_q7(0, r, b, c, k, 1),
-        gear_q7(0.1, r, b, c, k, 1),
-        gear_q7(0.2, r, b, c, k, 1),
-        gear_q7(0.3, r, b, c, k, 1),
-        gear_q7(0.4, r, b, c, k, 1),
-        gear_q7(0.5, r, b, c, k, 1),
-        gear_q7(0.6, r, b, c, k, 1),
-        gear_q7(0.7, r, b, c, k, 1),
-        gear_q7(0.8, r, b, c, k, 1),
-        gear_q7(0.9, r, b, c, k, 1),
-        gear_q7(1.0, r, b, c, k, 1),
-        gear_q7(1.0, r, b, c, k, -1),
-        gear_q7(0.9, r, b, c, k, -1),
-        gear_q7(0.8, r, b, c, k, -1),
-        gear_q7(0.7, r, b, c, k, -1),
-        gear_q7(0.6, r, b, c, k, -1),
-        gear_q7(0.5, r, b, c, k, -1),
-        gear_q7(0.4, r, b, c, k, -1),
-        gear_q7(0.3, r, b, c, k, -1),
-        gear_q7(0.2, r, b, c, k, -1),
-        gear_q7(0.1, r, b, c, k, -1),
-        gear_q7(0.0, r, b, c, k, -1),
-        gear_polar(r, -k if r < b else pi / number_of_teeth)
-    ])
-    utils.shapelyToCurve('tooth', shapely_gear, 0.0)
+    k = -gear_iang(b, p) - t / 2 / p
+    shapely_gear = Polygon(
+        [
+            (0, 0),
+            gear_polar(r, k if r < b else -pi / number_of_teeth),
+            gear_q7(0, r, b, c, k, 1),
+            gear_q7(0.1, r, b, c, k, 1),
+            gear_q7(0.2, r, b, c, k, 1),
+            gear_q7(0.3, r, b, c, k, 1),
+            gear_q7(0.4, r, b, c, k, 1),
+            gear_q7(0.5, r, b, c, k, 1),
+            gear_q7(0.6, r, b, c, k, 1),
+            gear_q7(0.7, r, b, c, k, 1),
+            gear_q7(0.8, r, b, c, k, 1),
+            gear_q7(0.9, r, b, c, k, 1),
+            gear_q7(1.0, r, b, c, k, 1),
+            gear_q7(1.0, r, b, c, k, -1),
+            gear_q7(0.9, r, b, c, k, -1),
+            gear_q7(0.8, r, b, c, k, -1),
+            gear_q7(0.7, r, b, c, k, -1),
+            gear_q7(0.6, r, b, c, k, -1),
+            gear_q7(0.5, r, b, c, k, -1),
+            gear_q7(0.4, r, b, c, k, -1),
+            gear_q7(0.3, r, b, c, k, -1),
+            gear_q7(0.2, r, b, c, k, -1),
+            gear_q7(0.1, r, b, c, k, -1),
+            gear_q7(0.0, r, b, c, k, -1),
+            gear_polar(r, -k if r < b else pi / number_of_teeth),
+        ]
+    )
+    utils.shapelyToCurve("tooth", shapely_gear, 0.0)
     i = number_of_teeth
     while i > 1:
         simple.duplicate()
         simple.rotate(2 * pi / number_of_teeth)
         i -= 1
-    simple.join_multiple('tooth')
-    simple.active_name('_teeth')
+    simple.join_multiple("tooth")
+    simple.active_name("_teeth")
 
-    bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
-                         Simple_radius=r, shape='3D', use_cyclic_u=True, edit_mode=False)
-    simple.active_name('_hub')
-    simple.union('_')
-    simple.active_name('_gear')
+    bpy.ops.curve.simple(
+        align="WORLD",
+        location=(0, 0, 0),
+        rotation=(0, 0, 0),
+        Simple_Type="Circle",
+        Simple_radius=r,
+        shape="3D",
+        use_cyclic_u=True,
+        edit_mode=False,
+    )
+    simple.active_name("_hub")
+    simple.union("_")
+    simple.active_name("_gear")
     simple.remove_doubles()
 
     if spokes > 0:
-        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
-                             Simple_radius=r-rim_size, shape='3D', use_cyclic_u=True, edit_mode=False)
-        simple.active_name('_hole')
-        simple.difference('_', '_gear')
-        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
-                             Simple_radius=hub_diameter/2, shape='3D', use_cyclic_u=True, edit_mode=False)
-        simple.active_name('_hub')
-        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
-                             Simple_radius=hole_diameter/2, shape='3D', use_cyclic_u=True, edit_mode=False)
-        simple.active_name('_hub_hole')
-        simple.difference('_hub', '_hub')
+        bpy.ops.curve.simple(
+            align="WORLD",
+            location=(0, 0, 0),
+            rotation=(0, 0, 0),
+            Simple_Type="Circle",
+            Simple_radius=r - rim_size,
+            shape="3D",
+            use_cyclic_u=True,
+            edit_mode=False,
+        )
+        simple.active_name("_hole")
+        simple.difference("_", "_gear")
+        bpy.ops.curve.simple(
+            align="WORLD",
+            location=(0, 0, 0),
+            rotation=(0, 0, 0),
+            Simple_Type="Circle",
+            Simple_radius=hub_diameter / 2,
+            shape="3D",
+            use_cyclic_u=True,
+            edit_mode=False,
+        )
+        simple.active_name("_hub")
+        bpy.ops.curve.simple(
+            align="WORLD",
+            location=(0, 0, 0),
+            rotation=(0, 0, 0),
+            Simple_Type="Circle",
+            Simple_radius=hole_diameter / 2,
+            shape="3D",
+            use_cyclic_u=True,
+            edit_mode=False,
+        )
+        simple.active_name("_hub_hole")
+        simple.difference("_hub", "_hub")
 
-        simple.join_multiple('_')
+        simple.join_multiple("_")
 
-        simple.add_rectangle(r-rim_size-((hub_diameter-hole_diameter)/4 +
-                                         hole_diameter/2), hub_diameter/2, center_x=False)
-        simple.move(x=(hub_diameter-hole_diameter)/4 + hole_diameter/2)
-        simple.active_name('_spoke')
+        simple.add_rectangle(
+            r - rim_size - ((hub_diameter - hole_diameter) / 4 + hole_diameter / 2),
+            hub_diameter / 2,
+            center_x=False,
+        )
+        simple.move(x=(hub_diameter - hole_diameter) / 4 + hole_diameter / 2)
+        simple.active_name("_spoke")
 
         angle = 2 * pi / spokes
         while spokes > 0:
             simple.duplicate()
             simple.rotate(angle)
             spokes -= 1
-        simple.union('_spoke')
+        simple.union("_spoke")
         simple.remove_doubles()
-        simple.union('_')
+        simple.union("_")
     else:
-        bpy.ops.curve.simple(align='WORLD', location=(0, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
-                             Simple_radius=hole_diameter, shape='3D', use_cyclic_u=True, edit_mode=False)
-        simple.active_name('_hole')
-        simple.difference('_', '_gear')
+        bpy.ops.curve.simple(
+            align="WORLD",
+            location=(0, 0, 0),
+            rotation=(0, 0, 0),
+            Simple_Type="Circle",
+            Simple_radius=hole_diameter,
+            shape="3D",
+            use_cyclic_u=True,
+            edit_mode=False,
+        )
+        simple.active_name("_hole")
+        simple.difference("_", "_gear")
 
-    name = 'gear-' + str(round(mm_per_tooth*1000, 1))
-    name += 'mm-pitch-' + str(number_of_teeth)
-    name += 'teeth-PA-' + str(round(degrees(pressure_angle), 1))
+    name = "gear-" + str(round(mm_per_tooth * 1000, 1))
+    name += "mm-pitch-" + str(number_of_teeth)
+    name += "teeth-PA-" + str(round(degrees(pressure_angle), 1))
     simple.active_name(name)
 
 
-def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3488, backlash=0.0,
-         hole_diameter=0.003175, tooth_per_hole=4):
+def rack(
+    mm_per_tooth=0.01,
+    number_of_teeth=11,
+    height=0.012,
+    pressure_angle=0.3488,
+    backlash=0.0,
+    hole_diameter=0.003175,
+    tooth_per_hole=4,
+):
     """Generate a rack gear profile based on specified parameters.
 
     This function creates a rack gear by calculating the geometry based on
@@ -249,39 +303,49 @@ def rack(mm_per_tooth=0.01, number_of_teeth=11, height=0.012, pressure_angle=0.3
     mm_per_tooth *= 1000
     a = mm_per_tooth / pi  # addendum
     # tooth side is tilted so top/bottom corners move this amount
-    t = (a * sin(pressure_angle))
+    t = a * sin(pressure_angle)
     a /= 1000
     mm_per_tooth /= 1000
     t /= 1000
 
-    shapely_gear = Polygon([
-        (-mm_per_tooth * 2/4*1.001, a-height),
-        (-mm_per_tooth * 2/4*1.001 - backlash, -a),
-        (-mm_per_tooth * 1/4 + backlash - t, -a),
-        (-mm_per_tooth * 1/4 + backlash + t, a),
-        (mm_per_tooth * 1/4 - backlash - t, a),
-        (mm_per_tooth * 1/4 - backlash + t, -a),
-        (mm_per_tooth * 2/4*1.001 + backlash, -a),
-        (mm_per_tooth * 2/4*1.001, a-height)
-    ])
+    shapely_gear = Polygon(
+        [
+            (-mm_per_tooth * 2 / 4 * 1.001, a - height),
+            (-mm_per_tooth * 2 / 4 * 1.001 - backlash, -a),
+            (-mm_per_tooth * 1 / 4 + backlash - t, -a),
+            (-mm_per_tooth * 1 / 4 + backlash + t, a),
+            (mm_per_tooth * 1 / 4 - backlash - t, a),
+            (mm_per_tooth * 1 / 4 - backlash + t, -a),
+            (mm_per_tooth * 2 / 4 * 1.001 + backlash, -a),
+            (mm_per_tooth * 2 / 4 * 1.001, a - height),
+        ]
+    )
 
-    utils.shapelyToCurve('_tooth', shapely_gear, 0.0)
+    utils.shapelyToCurve("_tooth", shapely_gear, 0.0)
     i = number_of_teeth
     while i > 1:
         simple.duplicate(x=mm_per_tooth)
         i -= 1
-    simple.union('_tooth')
-    simple.move(y=height/2)
+    simple.union("_tooth")
+    simple.move(y=height / 2)
     if hole_diameter > 0:
-        bpy.ops.curve.simple(align='WORLD', location=(mm_per_tooth/2, 0, 0), rotation=(0, 0, 0), Simple_Type='Circle',
-                             Simple_radius=hole_diameter/2, shape='3D', use_cyclic_u=True, edit_mode=False)
-        simple.active_name('_hole')
-        distance = (number_of_teeth-1) * mm_per_tooth
+        bpy.ops.curve.simple(
+            align="WORLD",
+            location=(mm_per_tooth / 2, 0, 0),
+            rotation=(0, 0, 0),
+            Simple_Type="Circle",
+            Simple_radius=hole_diameter / 2,
+            shape="3D",
+            use_cyclic_u=True,
+            edit_mode=False,
+        )
+        simple.active_name("_hole")
+        distance = (number_of_teeth - 1) * mm_per_tooth
         while distance > tooth_per_hole * mm_per_tooth:
             simple.duplicate(x=tooth_per_hole * mm_per_tooth)
             distance -= tooth_per_hole * mm_per_tooth
-        simple.difference('_', '_tooth')
+        simple.difference("_", "_tooth")
 
-    name = 'rack-' + str(round(mm_per_tooth * 1000, 1))
-    name += '-PA-' + str(round(degrees(pressure_angle), 1))
+    name = "rack-" + str(round(mm_per_tooth * 1000, 1))
+    name += "-PA-" + str(round(degrees(pressure_angle), 1))
     simple.active_name(name)

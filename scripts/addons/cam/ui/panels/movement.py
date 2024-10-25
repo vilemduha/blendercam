@@ -1,4 +1,4 @@
-"""CNC CAM 'movement.py'
+"""Fabex 'movement.py'
 
 'CAM Movement' properties and panel in Properties > Render
 """

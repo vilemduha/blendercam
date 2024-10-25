@@ -1,4 +1,4 @@
-"""CNC CAM 'machine_settings.py'
+"""Fabex 'machine_settings.py'
 
 All CAM machine properties.
 """
@@ -18,70 +18,67 @@ from .utils import updateMachine
 
 class machineSettings(PropertyGroup):
     """stores all data for machines"""
+
     # name = StringProperty(name="Machine Name", default="Machine")
     post_processor: EnumProperty(
-        name='Post Processor',
+        name="Post Processor",
         items=(
-            ('ISO', 'Iso', 'Exports standardized gcode ISO 6983 (RS-274)'),
-            ('MACH3', 'Mach3', 'Default mach3'),
-            ('EMC', 'LinuxCNC - EMC2',
-             'Linux based CNC control software - formally EMC2'),
-            ('FADAL', 'Fadal', 'Fadal VMC'),
-            ('GRBL', 'grbl',
-             'Optimized gcode for grbl firmware on Arduino with cnc shield'),
-            ('HEIDENHAIN', 'Heidenhain', 'Heidenhain'),
-            ('HEIDENHAIN530', 'Heidenhain530', 'Heidenhain530'),
-            ('TNC151', 'Heidenhain TNC151',
-             'Post Processor for the Heidenhain TNC151 machine'),
-            ('SIEGKX1', 'Sieg KX1', 'Sieg KX1'),
-            ('HM50', 'Hafco HM-50', 'Hafco HM-50'),
-            ('CENTROID', 'Centroid M40', 'Centroid M40'),
-            ('ANILAM', 'Anilam Crusader M', 'Anilam Crusader M'),
-            ('GRAVOS', 'Gravos', 'Gravos'),
-            ('WIN-PC', 'WinPC-NC', 'German CNC by Burkhard Lewetz'),
-            ('SHOPBOT MTC', 'ShopBot MTC', 'ShopBot MTC'),
-            ('LYNX_OTTER_O', 'Lynx Otter o', 'Lynx Otter o')
+            ("ISO", "Iso", "Exports standardized gcode ISO 6983 (RS-274)"),
+            ("MACH3", "Mach3", "Default mach3"),
+            ("EMC", "LinuxCNC - EMC2", "Linux based CNC control software - formally EMC2"),
+            ("FADAL", "Fadal", "Fadal VMC"),
+            ("GRBL", "grbl", "Optimized gcode for grbl firmware on Arduino with cnc shield"),
+            ("HEIDENHAIN", "Heidenhain", "Heidenhain"),
+            ("HEIDENHAIN530", "Heidenhain530", "Heidenhain530"),
+            ("TNC151", "Heidenhain TNC151", "Post Processor for the Heidenhain TNC151 machine"),
+            ("SIEGKX1", "Sieg KX1", "Sieg KX1"),
+            ("HM50", "Hafco HM-50", "Hafco HM-50"),
+            ("CENTROID", "Centroid M40", "Centroid M40"),
+            ("ANILAM", "Anilam Crusader M", "Anilam Crusader M"),
+            ("GRAVOS", "Gravos", "Gravos"),
+            ("WIN-PC", "WinPC-NC", "German CNC by Burkhard Lewetz"),
+            ("SHOPBOT MTC", "ShopBot MTC", "ShopBot MTC"),
+            ("LYNX_OTTER_O", "Lynx Otter o", "Lynx Otter o"),
         ),
-        description='Post Processor',
-        default='MACH3',
+        description="Post Processor",
+        default="MACH3",
     )
     # units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
     # position definitions:
     use_position_definitions: BoolProperty(
         name="Use Position Definitions",
-        description="Define own positions for op start, "
-        "toolchange, ending position",
+        description="Define own positions for op start, " "toolchange, ending position",
         default=False,
     )
     starting_position: FloatVectorProperty(
-        name='Start Position',
+        name="Start Position",
         default=(0, 0, 0),
-        unit='LENGTH',
+        unit="LENGTH",
         precision=constants.PRECISION,
         subtype="XYZ",
         update=updateMachine,
     )
     mtc_position: FloatVectorProperty(
-        name='MTC Position',
+        name="MTC Position",
         default=(0, 0, 0),
-        unit='LENGTH',
+        unit="LENGTH",
         precision=constants.PRECISION,
         subtype="XYZ",
         update=updateMachine,
     )
     ending_position: FloatVectorProperty(
-        name='End Position',
+        name="End Position",
         default=(0, 0, 0),
-        unit='LENGTH',
+        unit="LENGTH",
         precision=constants.PRECISION,
         subtype="XYZ",
         update=updateMachine,
     )
 
     working_area: FloatVectorProperty(
-        name='Work Area',
+        name="Work Area",
         default=(0.500, 0.500, 0.100),
-        unit='LENGTH',
+        unit="LENGTH",
         precision=constants.PRECISION,
         subtype="XYZ",
         update=updateMachine,
@@ -92,7 +89,7 @@ class machineSettings(PropertyGroup):
         min=0.00001,
         max=320000,
         precision=constants.PRECISION,
-        unit='LENGTH',
+        unit="LENGTH",
     )
     feedrate_max: FloatProperty(
         name="Feedrate Maximum /min",
@@ -100,7 +97,7 @@ class machineSettings(PropertyGroup):
         min=0.00001,
         max=320000,
         precision=constants.PRECISION,
-        unit='LENGTH',
+        unit="LENGTH",
     )
     feedrate_default: FloatProperty(
         name="Feedrate Default /min",
@@ -108,7 +105,7 @@ class machineSettings(PropertyGroup):
         min=0.00001,
         max=320000,
         precision=constants.PRECISION,
-        unit='LENGTH',
+        unit="LENGTH",
     )
     hourly_rate: FloatProperty(
         name="Price per Hour",
@@ -142,8 +139,8 @@ class machineSettings(PropertyGroup):
     )
     spindle_start_time: FloatProperty(
         name="Spindle Start Delay Seconds",
-        description='Wait for the spindle to start spinning before starting '
-        'the feeds , in seconds',
+        description="Wait for the spindle to start spinning before starting "
+        "the feeds , in seconds",
         default=0,
         min=0.0000,
         max=320000,
@@ -209,8 +206,7 @@ class machineSettings(PropertyGroup):
 
     block_number_increment: IntProperty(
         name="Block Number Increment",
-        description="How much the block number should "
-        "increment for the next line",
+        description="How much the block number should " "increment for the next line",
         default=10,
     )
 

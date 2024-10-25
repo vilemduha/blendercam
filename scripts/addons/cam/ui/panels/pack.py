@@ -1,4 +1,4 @@
-"""CNC CAM 'pack.py'
+"""Fabex 'pack.py'
 
 'Pack Curves on Sheet' panel in Properties > Render
 """

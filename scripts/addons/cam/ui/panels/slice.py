@@ -1,4 +1,4 @@
-"""CNC CAM 'slice.py'
+"""Fabex 'slice.py'
 
 'Slice Model to Plywood Sheets' panel in Properties > Render
 """

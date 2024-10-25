@@ -1,5 +1,5 @@
-"""CNC CAM 'chunk.py' © 2012 Vilem Novak
- 
+"""Fabex 'chunk.py' © 2012 Vilem Novak
+
 Classes and Functions to build, store and optimize CAM path chunks.
 """
 
@@ -72,9 +72,7 @@ class camPathChunkBuilder:
         self.depth = None
 
     def to_chunk(self):
-        chunk = camPathChunk(
-            self.points, self.startpoints, self.endpoints, self.rotations
-        )
+        chunk = camPathChunk(self.points, self.startpoints, self.endpoints, self.rotations)
         if len(self.points) > 2 and np.array_equal(self.points[0], self.points[-1]):
             chunk.closed = True
         if self.depth is not None:
@@ -189,9 +187,7 @@ class camPathChunk:
 
     def dist(self, pos, o):
         if self.closed:
-            dist_sq = (pos[0] - self.points[:, 0]) ** 2 + (
-                pos[1] - self.points[:, 1]
-            ) ** 2
+            dist_sq = (pos[0] - self.points[:, 0]) ** 2 + (pos[1] - self.points[:, 1]) ** 2
             return sqrt(np.min(dist_sq))
         else:
             if o.movement.type == "MEANDER":
@@ -238,13 +234,9 @@ class camPathChunk:
     def adaptdist(self, pos, o):
         # reorders chunk so that it starts at the closest point to pos.
         if self.closed:
-            dist_sq = (pos[0] - self.points[:, 0]) ** 2 + (
-                pos[1] - self.points[:, 1]
-            ) ** 2
+            dist_sq = (pos[0] - self.points[:, 0]) ** 2 + (pos[1] - self.points[:, 1]) ** 2
             point_idx = np.argmin(dist_sq)
-            new_points = np.concatenate(
-                (self.points[point_idx:], self.points[: point_idx + 1])
-            )
+            new_points = np.concatenate((self.points[point_idx:], self.points[: point_idx + 1]))
             self.points = new_points
         else:
             if o.movement.type == "MEANDER":
@@ -303,9 +295,7 @@ class camPathChunk:
 
     def pop(self, index):
         print("WARNING: Popping from Chunk Is Slow", self, index)
-        self.points = np.concatenate(
-            (self.points[0:index], self.points[index + 1:]), axis=0
-        )
+        self.points = np.concatenate((self.points[0:index], self.points[index + 1 :]), axis=0)
         if len(self.startpoints) > 0:
             self.startpoints.pop(index)
             self.endpoints.pop(index)
@@ -328,9 +318,7 @@ class camPathChunk:
             at_index=at_index,
         )
 
-    def append(
-        self, point, startpoint=None, endpoint=None, rotation=None, at_index=None
-    ):
+    def append(self, point, startpoint=None, endpoint=None, rotation=None, at_index=None):
         if at_index is None:
             self.points = np.concatenate((self.points, np.array([point])))
             if startpoint is not None:
@@ -350,9 +338,7 @@ class camPathChunk:
             if rotation is not None:
                 self.rotations[at_index:at_index] = [rotation]
 
-    def extend(
-        self, points, startpoints=None, endpoints=None, rotations=None, at_index=None
-    ):
+    def extend(self, points, startpoints=None, endpoints=None, rotations=None, at_index=None):
         if len(points) == 0:
             return
         if at_index is None:
@@ -453,9 +439,7 @@ class camPathChunk:
                     i = 0
         # ramp out
         if o.movement.ramp_out and (
-            not o.use_layers
-            or not o.first_down
-            or (o.first_down and endpoint is not None)
+            not o.use_layers or not o.first_down or (o.first_down and endpoint is not None)
         ):
             z = zend
             # i=endpoint
@@ -512,9 +496,7 @@ class camPathChunk:
                 else:
                     zigzagtraveled = 0.0
                     haspoints = False
-                    ramppoints = [
-                        (self.points[0][0], self.points[0][1], self.points[0][2])
-                    ]
+                    ramppoints = [(self.points[0][0], self.points[0][1], self.points[0][2])]
                     i = 1
                     while not haspoints:
                         # print(i,zigzaglength,zigzagtraveled)
@@ -602,9 +584,7 @@ class camPathChunk:
                                 p2 = self.points[i]
                                 d = dist2d(p1, p2)
                                 zigzagtraveled += d
-                                if zigzagtraveled >= zigzaglength or i + 1 == len(
-                                    self.points
-                                ):
+                                if zigzagtraveled >= zigzaglength or i + 1 == len(self.points):
                                     ratio = 1 - (zigzagtraveled - zigzaglength) / d
                                     if i + 1 == len(
                                         self.points
@@ -643,9 +623,7 @@ class camPathChunk:
             newstart = o.profile_start
             chunkamt = len(self.points)
             newstart = newstart % chunkamt
-            self.points = np.concatenate(
-                (self.points[newstart:], self.points[:newstart])
-            )
+            self.points = np.concatenate((self.points[newstart:], self.points[:newstart]))
 
     def breakPathForLeadinLeadout(self, o):
         iradius = o.lead_in
@@ -672,7 +650,7 @@ class camPathChunk:
                         (
                             self.points[: i + 1],
                             np.array([[newpointx, newpointy, apoint[2]]]),
-                            self.points[i + 1:],
+                            self.points[i + 1 :],
                         )
                     )
 
@@ -770,9 +748,7 @@ def setChunksZ(chunks, z):
 
 
 @jit(nopython=True, fastmath=True, cache=True)
-def _optimize_internal(
-    points, keep_points, e, protect_vertical, protect_vertical_limit
-):
+def _optimize_internal(points, keep_points, e, protect_vertical, protect_vertical_limit):
     # inlined so that numba can optimize it nicely
     def _mag_sq(v1):
         return v1[0] ** 2 + v1[1] ** 2 + v1[2] ** 2
@@ -842,9 +818,7 @@ def optimizeChunk(chunk, operation):
             endpoints = chunk.endpoints
             naxispoints = True
 
-        protect_vertical = (
-            operation.movement.protect_vertical and operation.machine_axes == "3"
-        )
+        protect_vertical = operation.movement.protect_vertical and operation.machine_axes == "3"
         keep_points = np.full(points.shape[0], True)
         # shape points need to be on line,
         # but we need to protect vertical - which
@@ -866,18 +840,12 @@ def optimizeChunk(chunk, operation):
             chunk.startpoints = [
                 chunk.startpoints[i] for i, b in enumerate(keep_points) if b == True
             ]
-            chunk.endpoints = [
-                chunk.endpoints[i] for i, b in enumerate(keep_points) if b == True
-            ]
-            chunk.rotations = [
-                chunk.rotations[i] for i, b in enumerate(keep_points) if b == True
-            ]
+            chunk.endpoints = [chunk.endpoints[i] for i, b in enumerate(keep_points) if b == True]
+            chunk.rotations = [chunk.rotations[i] for i, b in enumerate(keep_points) if b == True]
     return chunk
 
 
-def limitChunks(
-    chunks, o, force=False
-):  # TODO: this should at least add point on area border...
+def limitChunks(chunks, o, force=False):  # TODO: this should at least add point on area border...
     # but shouldn't be needed at all at the first place...
     if o.use_limit_curve or force:
         nchunks = []
@@ -944,9 +912,7 @@ def parentChildDist(parents, children, o, distance=None):
 
     if distance is None:
         dlim = o.dist_between_paths * 2
-        if (
-            o.strategy == "PARALLEL" or o.strategy == "CROSS"
-        ) and o.movement.parallel_step_back:
+        if (o.strategy == "PARALLEL" or o.strategy == "CROSS") and o.movement.parallel_step_back:
             dlim = dlim * 2
     else:
         dlim = distance
@@ -991,11 +957,7 @@ def chunksToShapely(chunks):
                         # hierarchy works like this: - children get milled first.
                         ppart.parents.append(ptest)
 
-    for (
-        ch
-    ) in (
-        chunks
-    ):  # now make only simple polygons with holes, not more polys inside others
+    for ch in chunks:  # now make only simple polygons with holes, not more polys inside others
         found = False
         if len(ch.parents) % 2 == 1:
 
@@ -1139,15 +1101,12 @@ def meshFromCurveToChunk(object):
         else:
             chunk.points.append(co)
             if len(chunk.points) > 2 and (
-                not (dk.isdisjoint([(vi, lastvi)]))
-                or not (dk.isdisjoint([(lastvi, vi)]))
+                not (dk.isdisjoint([(vi, lastvi)])) or not (dk.isdisjoint([(lastvi, vi)]))
             ):  # this was looping chunks of length of only 2 points...
                 # print('itis')
 
                 chunk.closed = True
-                chunk.points.append(
-                    (mesh.vertices[lastvi].co + object.location).to_tuple()
-                )
+                chunk.points.append((mesh.vertices[lastvi].co + object.location).to_tuple())
                 # add first point to end#originally the z was mesh.vertices[lastvi].co.z+z
             lastvi = vi + 1
             chunk = chunk.to_chunk()

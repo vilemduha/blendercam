@@ -1,4 +1,4 @@
-"""CNC CAM 'info.py'
+"""Fabex 'info.py'
 
 'CAM Info & Warnings' properties and panel in Properties > Render
 """
@@ -67,8 +67,8 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
     def draw(self, context):
         layout = self.layout
 
-        # CNC CAM Version
-        layout.label(text=f'CNC CAM v{".".join([str(x) for x in cam_version])}')
+        # Fabex Version
+        layout.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}')
 
         # OpenCAMLib Version
         if self.level >= 1:
