@@ -1,4 +1,4 @@
-"""CNC CAM 'cutter.py'
+"""Fabex 'cutter.py'
 
 'CAM Cutter' panel in Properties > Render
 """
@@ -18,6 +18,9 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         # Cutter Preset Menu
         if self.level >= 1:
             row = layout.row(align=True)
@@ -27,63 +30,66 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
                 True
             )
 
-        # Cutter ID
-        if self.level >= 2:
-            layout.prop(self.op, "cutter_id")
-
+        box = layout.box()
+        col = box.column(align=True)
         # Cutter Type
-        layout.prop(self.op, "cutter_type")
+        col.prop(self.op, "cutter_type", text="Type")
 
         # Ball Radius
         if self.op.cutter_type in ["BALLCONE"]:
-            layout.prop(self.op, "ball_radius")
+            col.prop(self.op, "ball_radius")
 
         # Bullnose Radius
         if self.op.cutter_type in ["BULLNOSE"]:
-            layout.prop(self.op, "bull_corner_radius")
+            col.prop(self.op, "bull_corner_radius")
 
         # Cyclone Diameter
         if self.op.cutter_type in ["CYLCONE"]:
-            layout.prop(self.op, "cylcone_diameter")
+            col.prop(self.op, "cylcone_diameter")
 
         # Cutter Tip Angle
         if self.op.cutter_type in ["VCARVE", "BALLCONE", "BULLNOSE", "CYLCONE"]:
-            layout.prop(self.op, "cutter_tip_angle")
+            col.prop(self.op, "cutter_tip_angle")
 
         # Laser
         if self.op.cutter_type in ["LASER"]:
-            layout.prop(self.op, "Laser_on")
-            layout.prop(self.op, "Laser_off")
-            layout.prop(self.op, "Laser_cmd")
-            layout.prop(self.op, "Laser_delay")
+            col.prop(self.op, "Laser_on")
+            col.prop(self.op, "Laser_off")
+            col.prop(self.op, "Laser_cmd")
+            col.prop(self.op, "Laser_delay")
 
         # Plasma
         if self.op.cutter_type in ["PLASMA"]:
-            layout.prop(self.op, "Plasma_on")
-            layout.prop(self.op, "Plasma_off")
-            layout.prop(self.op, "Plasma_delay")
-            layout.prop(self.op, "Plasma_dwell")
-            layout.prop(self.op, "lead_in")
-            layout.prop(self.op, "lead_out")
+            col.prop(self.op, "Plasma_on")
+            col.prop(self.op, "Plasma_off")
+            col.prop(self.op, "Plasma_delay")
+            col.prop(self.op, "Plasma_dwell")
+            col.prop(self.op, "lead_in")
+            col.prop(self.op, "lead_out")
 
         # Custom
         if self.op.cutter_type in ["CUSTOM"]:
             if self.op.optimisation.use_exact:
-                layout.label(text="Warning - only Convex Shapes Are Supported. ", icon="COLOR_RED")
-                layout.label(text="If Your Custom Cutter Is Concave,")
-                layout.label(text="Switch Exact Mode Off.")
-            layout.prop_search(self.op, "cutter_object_name", bpy.data, "objects")
+                col.label(text="Warning - only Convex Shapes Are Supported. ", icon="COLOR_RED")
+                col.label(text="If Your Custom Cutter Is Concave,")
+                col.label(text="Switch Exact Mode Off.")
+            col.prop_search(self.op, "cutter_object_name", bpy.data, "objects")
 
         # Cutter Diameter
-        layout.prop(self.op, "cutter_diameter")
+        col.prop(self.op, "cutter_diameter", text="Diameter")
 
         # Cutter Flutes
         if self.level >= 1:
             if self.op.cutter_type not in ["LASER", "PLASMA"]:
-                layout.prop(self.op, "cutter_flutes")
+                col.prop(self.op, "cutter_flutes", text="Flutes")
+
+        # Cutter ID
+        if self.level >= 2:
+            col = box.column(align=True)
+            col.prop(self.op, "cutter_id")
 
             # Cutter Description
-            layout.prop(self.op, "cutter_description")
+            col.prop(self.op, "cutter_description")
 
         # Cutter Engagement
         if self.op.cutter_type in ["LASER", "PLASMA"]:

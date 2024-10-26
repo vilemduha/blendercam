@@ -1,4 +1,4 @@
-"""CNC CAM 'gcode.py'
+"""Fabex 'gcode.py'
 
 'CAM G-code Options' panel in Properties > Render
 """
@@ -19,31 +19,34 @@ class CAM_GCODE_Panel(CAMButtonsPanel, Panel):
     def draw(self, context):
         if self.level >= 1 and self.op is not None:
             layout = self.layout
+            layout.use_property_split = True
+            layout.use_property_decorate = False
 
+            col = layout.column(align=True)
             # Output Header
-            layout.prop(self.op, "output_header")
+            col.prop(self.op, "output_header")
             if self.op.output_header:
-                layout.prop(self.op, "gcode_header")
+                col.prop(self.op, "gcode_header")
 
             # Output Trailer
-            layout.prop(self.op, "output_trailer")
+            col.prop(self.op, "output_trailer")
             if self.op.output_trailer:
-                layout.prop(self.op, "gcode_trailer")
+                col.prop(self.op, "gcode_trailer")
 
             # Enable Dust
-            layout.prop(self.op, "enable_dust")
+            col.prop(self.op, "enable_dust")
             if self.op.enable_dust:
-                layout.prop(self.op, "gcode_start_dust_cmd")
-                layout.prop(self.op, "gcode_stop_dust_cmd")
+                col.prop(self.op, "gcode_start_dust_cmd")
+                col.prop(self.op, "gcode_stop_dust_cmd")
 
             # Enable Hold
-            layout.prop(self.op, "enable_hold")
+            col.prop(self.op, "enable_hold")
             if self.op.enable_hold:
-                layout.prop(self.op, "gcode_start_hold_cmd")
-                layout.prop(self.op, "gcode_stop_hold_cmd")
+                col.prop(self.op, "gcode_start_hold_cmd")
+                col.prop(self.op, "gcode_stop_hold_cmd")
 
             # Enable Mist
-            layout.prop(self.op, "enable_mist")
+            col.prop(self.op, "enable_mist")
             if self.op.enable_mist:
-                layout.prop(self.op, "gcode_start_mist_cmd")
-                layout.prop(self.op, "gcode_stop_mist_cmd")
+                col.prop(self.op, "gcode_start_mist_cmd")
+                col.prop(self.op, "gcode_stop_mist_cmd")

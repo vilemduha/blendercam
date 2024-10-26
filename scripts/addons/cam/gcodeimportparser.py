@@ -1,4 +1,4 @@
-"""CNC CAM 'gcodeimportparser.py'
+"""Fabex 'gcodeimportparser.py'
 
 Code modified from YAGV (Yet Another G-code Viewer) - https://github.com/jonathanwin/yagv
 No license terms found in YAGV repo, will assume GNU release
@@ -37,6 +37,7 @@ def import_gcode(context, filepath):
     scene = context.scene
     mytool = scene.cam_import_gcode
     import time
+
     then = time.time()
 
     parse = GcodeParser()
@@ -53,7 +54,7 @@ def import_gcode(context, filepath):
     now = time.time()
     print("Importing Gcode Took ", round(now - then, 1), "Seconds")
 
-    return {'FINISHED'}
+    return {"FINISHED"}
 
 
 def segments_to_meshdata(segments):
@@ -77,32 +78,38 @@ def segments_to_meshdata(segments):
             - list: A list of edges, where each edge is represented as a list
             of indices corresponding to the vertices.
     """
-  # edges only on extrusion
+    # edges only on extrusion
     segs = segments
     verts = []
     edges = []
-    del_offset = 0  # to travel segs in a row, one gets deleted, need to keep track of index for edges
+    del_offset = (
+        0  # to travel segs in a row, one gets deleted, need to keep track of index for edges
+    )
     for i in range(len(segs)):
         if i >= len(segs) - 1:
 
-            if segs[i].style == 'extrude':
-                verts.append([segs[i].coords['X'], segs[i].coords['Y'], segs[i].coords['Z']])
+            if segs[i].style == "extrude":
+                verts.append([segs[i].coords["X"], segs[i].coords["Y"], segs[i].coords["Z"]])
 
             break
 
         # start of extrusion for first time
-        if segs[i].style == 'travel' and segs[i + 1].style == 'extrude':
-            verts.append([segs[i].coords['X'], segs[i].coords['Y'], segs[i].coords['Z']])
-            verts.append([segs[i + 1].coords['X'], segs[i + 1].coords['Y'], segs[i + 1].coords['Z']])
+        if segs[i].style == "travel" and segs[i + 1].style == "extrude":
+            verts.append([segs[i].coords["X"], segs[i].coords["Y"], segs[i].coords["Z"]])
+            verts.append(
+                [segs[i + 1].coords["X"], segs[i + 1].coords["Y"], segs[i + 1].coords["Z"]]
+            )
             edges.append([i - del_offset, (i - del_offset) + 1])
 
         # mitte, current and next are extrusion, only add next, current is already in vert list
 
-        if segs[i].style == 'extrude' and segs[i + 1].style == 'extrude':
-            verts.append([segs[i + 1].coords['X'], segs[i + 1].coords['Y'], segs[i + 1].coords['Z']])
+        if segs[i].style == "extrude" and segs[i + 1].style == "extrude":
+            verts.append(
+                [segs[i + 1].coords["X"], segs[i + 1].coords["Y"], segs[i + 1].coords["Z"]]
+            )
             edges.append([i - del_offset, (i - del_offset) + 1])
 
-        if segs[i].style == 'travel' and segs[i + 1].style == 'travel':
+        if segs[i].style == "travel" and segs[i + 1].style == "travel":
             del_offset += 1
 
     return verts, edges
@@ -160,8 +167,8 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    if bpy.context.scene.cam_import_gcode.output == 'curve':
-        bpy.ops.object.convert(target='CURVE')
+    if bpy.context.scene.cam_import_gcode.output == "curve":
+        bpy.ops.object.convert(target="CURVE")
 
 
 class GcodeParser:
@@ -189,7 +196,7 @@ class GcodeParser:
         """
 
         # read the gcode file
-        with open(path, 'r') as f:
+        with open(path, "r") as f:
             # init line counter
             self.lineNb = 0
             # for all lines
@@ -214,8 +221,8 @@ class GcodeParser:
         """
 
         # strip comments:
-        bits = self.line.split(';', 1)
-        if (len(bits) > 1):
+        bits = self.line.split(";", 1)
+        if len(bits) > 1:
             GcodeParser.comment = bits[1]
 
         # extract & clean command
@@ -225,8 +232,10 @@ class GcodeParser:
         a_old = ""
         for i in range(len(command)):  # check each character in the line
             a = command[i]
-            if a.isupper() and a_old != ' ' and i > 0:  # add a space if upper case letter and no space is found before
-                s += ' '
+            if (
+                a.isupper() and a_old != " " and i > 0
+            ):  # add a space if upper case letter and no space is found before
+                s += " "
             s += a
             a_old = a
         print(s)
@@ -239,10 +248,10 @@ class GcodeParser:
 
         if code:
             # convert all G01 and G00 to G1 and G0
-            if code == 'G01':
-                code = 'G1'
-            if code == 'G00':
-                code = 'G0'
+            if code == "G01":
+                code = "G1"
+            if code == "G00":
+                code = "G0"
 
             if hasattr(self, "parse_" + code):
                 getattr(self, "parse_" + code)(args)
@@ -253,8 +262,8 @@ class GcodeParser:
                     self.model.toolnumber = int(code[1:])
                     print(self.model.toolnumber)
                     # if code doesn't start with a G but starts with a coordinate add the last command to the line
-                elif code[0] == 'X' or code[0] == 'Y' or code[0] == 'Z':
-                    self.line = self.last_command + ' ' + self.line
+                elif code[0] == "X" or code[0] == "Y" or code[0] == "Z":
+                    self.line = self.last_command + " " + self.line
                     self.parseLine()  # parse this line again with the corrections
                 else:
                     pass
@@ -337,18 +346,9 @@ class GcodeModel:
         # save parser for messages
         self.parser = parser
         # latest coordinates & extrusion relative to offset, feedrate
-        self.relative = {
-            "X": 0.0,
-            "Y": 0.0,
-            "Z": 0.0,
-            "F": 0.0,
-            "E": 0.0}
+        self.relative = {"X": 0.0, "Y": 0.0, "Z": 0.0, "F": 0.0, "E": 0.0}
         # offsets for relative coordinates and position reset (G92)
-        self.offset = {
-            "X": 0.0,
-            "Y": 0.0,
-            "Z": 0.0,
-            "E": 0.0}
+        self.offset = {"X": 0.0, "Y": 0.0, "Z": 0.0, "E": 0.0}
         # if true, args for move (G1) are given relatively (default: absolute)
         self.isRelative = False
         self.color = [0, 0, 0, 0, 0, 0, 0, 0]  # RGBCMYKW
@@ -394,7 +394,7 @@ class GcodeModel:
             "X": self.offset["X"] + coords["X"],
             "Y": self.offset["Y"] + coords["Y"],
             "Z": self.offset["Z"] + coords["Z"],
-            "F": coords["F"]  # no feedrate offset
+            "F": coords["F"],  # no feedrate offset
         }
 
         # if gcode line has no E = travel move
@@ -411,12 +411,16 @@ class GcodeModel:
             self.toolnumber,
             # self.layerIdx,
             self.parser.lineNb,
-            self.parser.line)
+            self.parser.line,
+        )
 
         # only add seg if XYZ changes (skips "G1 Fxxx" only lines and avoids double vertices inside Blender,
         # because XYZ stays the same on such a segment.
-        if seg.coords['X'] != self.relative['X'] + self.offset["X"] or seg.coords['Y'] != self.relative['Y'] + \
-                self.offset["Y"] or seg.coords['Z'] != self.relative['Z'] + self.offset["Z"]:
+        if (
+            seg.coords["X"] != self.relative["X"] + self.offset["X"]
+            or seg.coords["Y"] != self.relative["Y"] + self.offset["Y"]
+            or seg.coords["Z"] != self.relative["Z"] + self.offset["Z"]
+        ):
             self.addSegment(seg)
 
         # update model coords
@@ -473,11 +477,14 @@ class GcodeModel:
         """
 
         col = list(
-            self.color)  # list() creates new list, otherwise you just change reference and all segs have same color
-        extr_idx = int(args['S'])  # e.g. M163 S0 P1
-        weight = args['P']
+            self.color
+        )  # list() creates new list, otherwise you just change reference and all segs have same color
+        extr_idx = int(args["S"])  # e.g. M163 S0 P1
+        weight = args["P"]
         # change CMYKW
-        col[extr_idx + 3] = weight  # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
+        col[extr_idx + 3] = (
+            weight  # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
+        )
         self.color = col
 
         # take RGB values for seg from last comment (above first M163 statement)
@@ -514,14 +521,8 @@ class GcodeModel:
         processing.  Raises:     None
         """
 
-
         # start model at 0, act as prev_coords
-        coords = {
-            "X": 0.0,
-            "Y": 0.0,
-            "Z": 0.0,
-            "F": 0.0,
-            "E": 0.0}
+        coords = {"X": 0.0, "Y": 0.0, "Z": 0.0, "F": 0.0, "E": 0.0}
 
         # first layer at Z=0
         currentLayerIdx = 0
@@ -542,8 +543,10 @@ class GcodeModel:
 
             # some horizontal movement, and positive extruder movement: extrusion
             if (
-                    ((seg.coords["X"] != coords["X"]) or (seg.coords["Y"] != coords["Y"]) or (
-                        seg.coords["Z"] != coords["Z"]))):  # != coords["E"]
+                (seg.coords["X"] != coords["X"])
+                or (seg.coords["Y"] != coords["Y"])
+                or (seg.coords["Z"] != coords["Z"])
+            ):  # != coords["E"]
                 style = "extrude"
             # #force extrude if there is some movement
 
@@ -559,9 +562,13 @@ class GcodeModel:
                 break
 
             # positive extruder movement of next point in a different Z signals a layer change for this segment
-            if self.segments[i].coords["Z"] != currentLayerZ and self.segments[i + 1].coords["E"] > 0:
+            if (
+                self.segments[i].coords["Z"] != currentLayerZ
+                and self.segments[i + 1].coords["E"] > 0
+            ):
                 self.layers.append(
-                    layer)  # layer abschließen, add layer to list of Layers, used to later draw single layer objects
+                    layer
+                )  # layer abschließen, add layer to list of Layers, used to later draw single layer objects
                 layer = []  # start new layer
                 currentLayerZ = seg.coords["Z"]
                 currentLayerIdx += 1
@@ -601,12 +608,7 @@ class GcodeModel:
         subdivided_segs = []
 
         # start model at 0
-        coords = {
-            "X": 0.0,
-            "Y": 0.0,
-            "Z": 0.0,
-            "F": 0.0,  # no interpolation
-            "E": 0.0}
+        coords = {"X": 0.0, "Y": 0.0, "Z": 0.0, "F": 0.0, "E": 0.0}  # no interpolation
 
         for seg in self.segments:
             # calc XYZ distance
@@ -618,18 +620,26 @@ class GcodeModel:
             if seg.distance > subd_threshold:
 
                 subdivs = math.ceil(
-                    seg.distance / subd_threshold)  # ceil makes sure that linspace interval is at least 2
+                    seg.distance / subd_threshold
+                )  # ceil makes sure that linspace interval is at least 2
                 P1 = coords
                 P2 = seg.coords
 
                 # interpolated points
-                interp_coords = np.linspace(list(P1.values()), list(
-                    P2.values()), num=subdivs, endpoint=True)
+                interp_coords = np.linspace(
+                    list(P1.values()), list(P2.values()), num=subdivs, endpoint=True
+                )
 
-                for i in range(len(interp_coords)):  # inteprolated points array back to segment object
+                for i in range(
+                    len(interp_coords)
+                ):  # inteprolated points array back to segment object
 
-                    new_coords = {"X": interp_coords[i][0], "Y": interp_coords[i][1], "Z": interp_coords[i][2],
-                                  "F": seg.coords["F"]}
+                    new_coords = {
+                        "X": interp_coords[i][0],
+                        "Y": interp_coords[i][1],
+                        "Z": interp_coords[i][2],
+                        "F": seg.coords["F"],
+                    }
                     # E/subdivs is for relative extrusion, absolute extrusion need "E":interp_coords[i][4]
                     # print("interp_coords_new:", new_coords)
                     if seg.coords["E"] > 0:
@@ -638,13 +648,17 @@ class GcodeModel:
                         new_coords["E"] = 0
 
                     # make sure P1 hasn't been written before, compare with previous line
-                    if new_coords['X'] != coords['X'] or new_coords['Y'] != coords['Y'] or new_coords['Z'] != \
-                            coords['Z']:
+                    if (
+                        new_coords["X"] != coords["X"]
+                        or new_coords["Y"] != coords["Y"]
+                        or new_coords["Z"] != coords["Z"]
+                    ):
                         # write segment only if movement changes,
                         # avoid double coordinates due to same start and endpoint of linspace
 
-                        new_seg = Segment(seg.type, new_coords, seg.color,
-                                          seg.toolnumber, seg.lineNb, seg.line)
+                        new_seg = Segment(
+                            seg.type, new_coords, seg.color, seg.toolnumber, seg.lineNb, seg.line
+                        )
                         new_seg.layerIdx = seg.layerIdx
                         new_seg.style = seg.style
                         subdivided_segs.append(new_seg)
@@ -707,8 +721,13 @@ class Segment:
             str: A formatted string representing the object's attributes.
         """
 
-        return " <coords=%s, lineNb=%d, style=%s, layerIdx=%d, color=%s" % \
-               (str(self.coords), self.lineNb, self.style, self.layerIdx, str(self.color))
+        return " <coords=%s, lineNb=%d, style=%s, layerIdx=%d, color=%s" % (
+            str(self.coords),
+            self.lineNb,
+            self.style,
+            self.layerIdx,
+            str(self.color),
+        )
 
 
 class Layer:
@@ -722,7 +741,7 @@ class Layer:
         return "<Layer: Z=%f, len(segments)=%d>" % (self.Z, len(self.segments))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     path = "test.gcode"
 
     parser = GcodeParser()

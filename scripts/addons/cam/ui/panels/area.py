@@ -1,4 +1,4 @@
-"""CNC CAM 'area.py'
+"""Fabex 'area.py'
 
 'CAM Operation Area' panel in Properties > Render
 """
@@ -19,18 +19,20 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         # Use Layers
-        col = layout.column(align=True)
-        row = col.row(align=True)
-        row.prop(self.op, "use_layers")
-        if self.op.use_layers:
-            row.prop(self.op, "stepdown")
+        header, panel = layout.panel_prop(self.op, "use_layers")
+        header.label(text="Layers")
+        if panel:
+            col = panel.column(align=True)
+            if self.op.use_layers:
+                col.prop(self.op, "stepdown", text="Layer Height")
 
             # First Down
             if self.level >= 1 and self.op.strategy in ["CUTOUT", "POCKET", "MEDIAL_AXIS"]:
-                row = col.row(align=True)
-                row.label(text="")
-                row.prop(self.op, "first_down")
+                col.prop(self.op, "first_down")
 
         # Max Z
         if self.level >= 1:
@@ -48,11 +50,9 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
                 if self.op.strategy == "CURVE":
                     col.label(text="Cannot Use Depth from Object Using Curves")
 
-                row = col.row(align=True)
-                row.label(text="Set Max Depth from")
-                row.prop(self.op, "minz_from", text="")
+                col.prop(self.op, "minz_from", text="Set Max Depth from")
                 if self.op.minz_from == "CUSTOM":
-                    row.prop(self.op, "minz")
+                    col.prop(self.op, "minz")
 
             else:
                 col.prop(self.op, "source_image_scale_z")

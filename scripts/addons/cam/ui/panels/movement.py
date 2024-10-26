@@ -1,4 +1,4 @@
-"""CNC CAM 'movement.py'
+"""Fabex 'movement.py'
 
 'CAM Movement' properties and panel in Properties > Render
 """
@@ -230,6 +230,9 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         # Cut Type
         if self.level >= 1:
             layout.prop(self.op.movement, "type")
@@ -249,9 +252,11 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
         # Use G64
         if self.level >= 2:
             if context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
-                layout.prop(self.op.movement, "useG64")
-                if self.op.movement.useG64:
-                    layout.prop(self.op.movement, "G64")
+                header, panel = layout.panel_prop(self.op.movement, "useG64")
+                header.label(text="G64 Trajectory")
+                if panel:
+                    col = panel.column(align=True)
+                    col.prop(self.op.movement, "G64")
 
         # Parallel Stepback
         if self.level >= 1:
@@ -269,30 +274,38 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
 
         # Ramp
         if self.level >= 1:
-            layout.prop(self.op.movement, "ramp")
-            if self.op.movement.ramp:
-                layout.prop(self.op.movement, "ramp_in_angle")
-                layout.prop(self.op.movement, "ramp_out")
+            header, panel = layout.panel_prop(self.op.movement, "ramp")
+            header.label(text="Ramp (Experimental)")
+            if panel:
+                col = panel.column(align=True)
+                col.prop(self.op.movement, "ramp_in_angle")
+                col.prop(self.op.movement, "ramp_out")
                 if self.op.movement.ramp_out:
-                    layout.prop(self.op.movement, "ramp_out_angle")
+                    col.prop(self.op.movement, "ramp_out_angle")
 
         # Retract Tangential
         if self.level >= 2:
             if self.op.strategy in ["POCKET"]:
-                layout.prop(self.op.movement, "retract_tangential")
-                if self.op.movement.retract_tangential:
-                    layout.prop(self.op.movement, "retract_radius")
-                    layout.prop(self.op.movement, "retract_height")
+                header, panel = layout.panel_prop(self.op.movement, "retract_tangential")
+                header.label(text="Retract Tangential")
+                if panel:
+                    col = panel.column(align=True)
+                    col.prop(self.op.movement, "retract_radius")
+                    col.prop(self.op.movement, "retract_height")
 
         # Stay Low
         if self.level >= 1:
-            layout.prop(self.op.movement, "stay_low")
-            if self.op.movement.stay_low:
-                layout.prop(self.op.movement, "merge_dist")
+            header, panel = layout.panel_prop(self.op.movement, "stay_low")
+            header.label(text="Stay Low (if possible)")
+            if panel:
+                col = panel.column(align=True)
+                col.prop(self.op.movement, "merge_dist")
 
         # Protect Vertical
         if self.level >= 1:
             if self.op.cutter_type not in ["BALLCONE"]:
-                layout.prop(self.op.movement, "protect_vertical")
-                if self.op.movement.protect_vertical:
-                    layout.prop(self.op.movement, "protect_vertical_limit")
+                header, panel = layout.panel_prop(self.op.movement, "protect_vertical")
+                header.label(text="Protect Vertical")
+                if panel:
+                    col = panel.column(align=True)
+                    col.prop(self.op.movement, "protect_vertical_limit")

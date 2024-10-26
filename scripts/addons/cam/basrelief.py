@@ -1,14 +1,10 @@
-"""CNC CAM 'basrelief.py'
+"""Fabex 'basrelief.py'
 
 Module to allow the creation of reliefs from Images or View Layers.
 (https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief)
 """
 
-from math import (
-    ceil,
-    floor,
-    sqrt
-)
+from math import ceil, floor, sqrt
 import re
 import time
 
@@ -34,7 +30,7 @@ from bpy.props import (
 
 # SMOOTH_IT = 2 #/* minimum 1  */
 # V_CYCLE = 10 #/* number of v-cycles  2*/
-#ITERATIONS = 5
+# ITERATIONS = 5
 
 # // precision
 EPS = 1.0e-32
@@ -66,7 +62,7 @@ def restrictbuf(inbuf, outbuf):
     Returns:
         None: The function modifies `outbuf` in place.
     """
-  # scale down array....
+    # scale down array....
 
     inx = inbuf.shape[0]
     iny = inbuf.shape[1]
@@ -74,59 +70,59 @@ def restrictbuf(inbuf, outbuf):
     outx = outbuf.shape[0]
     outy = outbuf.shape[1]
 
-    dx = inx/outx
-    dy = iny/outy
+    dx = inx / outx
+    dy = iny / outy
 
     filterSize = 0.5
-    xfiltersize = dx*filterSize
+    xfiltersize = dx * filterSize
 
-    sy = dy/2-0.5
+    sy = dy / 2 - 0.5
     if dx == 2 and dy == 2:  # much simpler method
         # if dx<2:
         # restricted=
         # num=restricted.shape[0]*restricted.shape[1]
-        outbuf[:] = (inbuf[::2, ::2]+inbuf[1::2, ::2] +
-                     inbuf[::2, 1::2]+inbuf[1::2, 1::2])/4.0
+        outbuf[:] = (
+            inbuf[::2, ::2] + inbuf[1::2, ::2] + inbuf[::2, 1::2] + inbuf[1::2, 1::2]
+        ) / 4.0
 
     elif NUMPYALG:  # numpy method
         yrange = numpy.arange(0, outy)
         xrange = numpy.arange(0, outx)
 
         w = 0
-        sx = dx/2-0.5
+        sx = dx / 2 - 0.5
 
-        sxrange = xrange*dx+sx
-        syrange = yrange*dy+sy
+        sxrange = xrange * dx + sx
+        syrange = yrange * dy + sy
 
-        sxstartrange = numpy.array(numpy.ceil(sxrange-xfiltersize), dtype=int)
+        sxstartrange = numpy.array(numpy.ceil(sxrange - xfiltersize), dtype=int)
         sxstartrange[sxstartrange < 0] = 0
-        sxendrange = numpy.array(numpy.floor(sxrange+xfiltersize)+1, dtype=int)
+        sxendrange = numpy.array(numpy.floor(sxrange + xfiltersize) + 1, dtype=int)
         sxendrange[sxendrange > inx] = inx
 
-        systartrange = numpy.array(numpy.ceil(syrange-xfiltersize), dtype=int)
+        systartrange = numpy.array(numpy.ceil(syrange - xfiltersize), dtype=int)
         systartrange[systartrange < 0] = 0
-        syendrange = numpy.array(numpy.floor(syrange+xfiltersize)+1, dtype=int)
+        syendrange = numpy.array(numpy.floor(syrange + xfiltersize) + 1, dtype=int)
         syendrange[syendrange > iny] = iny
-        #np.arange(8*6*3).reshape((8, 6, 3))
+        # np.arange(8*6*3).reshape((8, 6, 3))
 
         # 3is the maximum value...?pff.
-        indices = numpy.arange(outx*outy*2*3).reshape((2, outx*outy, 3))
+        indices = numpy.arange(outx * outy * 2 * 3).reshape((2, outx * outy, 3))
 
-        r = sxendrange-sxstartrange
+        r = sxendrange - sxstartrange
 
         indices[0] = sxstartrange.repeat(outy)
 
-        indices[1] = systartrange.repeat(outx).reshape(
-            outx, outy).swapaxes(0, 1).flatten()
+        indices[1] = systartrange.repeat(outx).reshape(outx, outy).swapaxes(0, 1).flatten()
 
         # systartrange=numpy.max(0,numpy.ceil(syrange-xfiltersize))
         # syendrange=numpy.min(numpy.floor(syrange+xfiltersize),iny-1)+1
 
         outbuf.fill(0)
         tempbuf = inbuf[indices[0], indices[1]]
-        tempbuf += inbuf[indices[0]+1, indices[1]]
-        tempbuf += inbuf[indices[0], indices[1]+1]
-        tempbuf += inbuf[indices[0]+1, indices[1]+1]
+        tempbuf += inbuf[indices[0] + 1, indices[1]]
+        tempbuf += inbuf[indices[0], indices[1] + 1]
+        tempbuf += inbuf[indices[0] + 1, indices[1] + 1]
         tempbuf /= 4.0
         outbuf[:] = tempbuf.reshape((outx, outy))
         # outbuf[:,:]=inbuf[]#inbuf[sxstartrange,systartrange] #+ inbuf[sxstartrange+1,systartrange] + inbuf[sxstartrange,systartrange+1] + inbuf[sxstartrange+1,systartrange+1])/4.0
@@ -134,17 +130,23 @@ def restrictbuf(inbuf, outbuf):
     else:  # old method
         for y in range(0, outy):
 
-            sx = dx/2-0.5
+            sx = dx / 2 - 0.5
             for x in range(0, outx):
                 pixVal = 0
                 w = 0
 
                 #
-                for ix in range(max(0, ceil(sx-dx*filterSize)), min(floor(sx+dx*filterSize), inx-1)+1):
-                    for iy in range(max(0, ceil(sy-dx*filterSize)), min(floor(sy+dx*filterSize), iny-1)+1):
+                for ix in range(
+                    max(0, ceil(sx - dx * filterSize)),
+                    min(floor(sx + dx * filterSize), inx - 1) + 1,
+                ):
+                    for iy in range(
+                        max(0, ceil(sy - dx * filterSize)),
+                        min(floor(sy + dx * filterSize), iny - 1) + 1,
+                    ):
                         pixVal += inbuf[ix, iy]
                         w += 1
-                outbuf[x, y] = pixVal/w
+                outbuf[x, y] = pixVal / w
 
                 sx += dx
             sy += dy
@@ -166,18 +168,17 @@ def prolongate(inbuf, outbuf):
             expected to be a 2D array of larger dimensions than inbuf.
     """
 
-
     inx = inbuf.shape[0]
     iny = inbuf.shape[1]
 
     outx = outbuf.shape[0]
     outy = outbuf.shape[1]
 
-    dx = inx/outx
-    dy = iny/outy
+    dx = inx / outx
+    dy = iny / outy
 
     filterSize = 1
-    xfiltersize = dx*filterSize
+    xfiltersize = dx * filterSize
     # outx[:]=
 
     # outbuf.put(inbuf.repeat(4))
@@ -188,27 +189,26 @@ def prolongate(inbuf, outbuf):
         outbuf[1::2, 1::2] = inbuf
         # x=inbuf::.flatten().repeat(2)
     elif NUMPYALG:  # numpy method
-        sy = -dy/2
-        sx = -dx/2
+        sy = -dy / 2
+        sx = -dx / 2
         xrange = numpy.arange(0, outx)
         yrange = numpy.arange(0, outy)
 
-        sxrange = xrange*dx+sx
-        syrange = yrange*dy+sy
+        sxrange = xrange * dx + sx
+        syrange = yrange * dy + sy
 
-        sxstartrange = numpy.array(numpy.ceil(sxrange-xfiltersize), dtype=int)
+        sxstartrange = numpy.array(numpy.ceil(sxrange - xfiltersize), dtype=int)
         sxstartrange[sxstartrange < 0] = 0
-        sxendrange = numpy.array(numpy.floor(sxrange+xfiltersize)+1, dtype=int)
-        sxendrange[sxendrange >= inx] = inx-1
-        systartrange = numpy.array(numpy.ceil(syrange-xfiltersize), dtype=int)
+        sxendrange = numpy.array(numpy.floor(sxrange + xfiltersize) + 1, dtype=int)
+        sxendrange[sxendrange >= inx] = inx - 1
+        systartrange = numpy.array(numpy.ceil(syrange - xfiltersize), dtype=int)
         systartrange[systartrange < 0] = 0
-        syendrange = numpy.array(numpy.floor(syrange+xfiltersize)+1, dtype=int)
-        syendrange[syendrange >= iny] = iny-1
+        syendrange = numpy.array(numpy.floor(syrange + xfiltersize) + 1, dtype=int)
+        syendrange[syendrange >= iny] = iny - 1
 
-        indices = numpy.arange(outx*outy*2).reshape((2, outx*outy))
+        indices = numpy.arange(outx * outy * 2).reshape((2, outx * outy))
         indices[0] = sxstartrange.repeat(outy)
-        indices[1] = systartrange.repeat(outx).reshape(
-            outx, outy).swapaxes(0, 1).flatten()
+        indices[1] = systartrange.repeat(outx).reshape(outx, outy).swapaxes(0, 1).flatten()
 
         # systartrange=numpy.max(0,numpy.ceil(syrange-xfiltersize))
         # syendrange=numpy.min(numpy.floor(syrange+xfiltersize),iny-1)+1
@@ -224,33 +224,37 @@ def prolongate(inbuf, outbuf):
         # outbuf[xrange,yrange]=inbuf[sxstartrange,systartrange]# + inbuf[sxendrange,systartrange] + inbuf[sxstartrange,syendrange] + inbuf[sxendrange,syendrange])/4.0
 
     else:
-        sy = -dy/2
+        sy = -dy / 2
         for y in range(0, outy):
-            sx = -dx/2
+            sx = -dx / 2
             for x in range(0, outx):
                 pixVal = 0
                 weight = 0
 
-                for ix in range(max(0, ceil(sx-filterSize)), min(floor(sx+filterSize), inx-1)+1):
-                    for iy in range(max(0, ceil(sy-filterSize)), min(floor(sy+filterSize), iny-1)+1):
+                for ix in range(
+                    max(0, ceil(sx - filterSize)), min(floor(sx + filterSize), inx - 1) + 1
+                ):
+                    for iy in range(
+                        max(0, ceil(sy - filterSize)), min(floor(sy + filterSize), iny - 1) + 1
+                    ):
                         fx = abs(sx - ix)
                         fy = abs(sy - iy)
 
-                        fval = (1-fx)*(1-fy)
+                        fval = (1 - fx) * (1 - fy)
 
                         pixVal += inbuf[ix, iy] * fval
                         weight += fval
                 # if weight==0:
-                #	print('error' )
-                #	return
-                outbuf[x, y] = pixVal/weight
+                # 	print('error' )
+                # 	return
+                outbuf[x, y] = pixVal / weight
                 sx += dx
             sy += dy
 
 
 def idx(r, c, cols):
 
-    return r*cols+c+1
+    return r * cols + c + 1
 
 
 # smooth u using f at level
@@ -272,7 +276,6 @@ def smooth(U, F, linbcgiterations, planar):
     Returns:
         None: This function modifies the input matrix U in place.
     """
-
 
     iter = 0
     err = 0
@@ -304,28 +307,26 @@ def calculate_defect(D, U, F):
             value.
     """
 
-
     sx = F.shape[0]
     sy = F.shape[1]
 
-    h = 1.0/sqrt(sx*sy*1.0)
-    h2i = 1.0/(h*h)
+    h = 1.0 / sqrt(sx * sy * 1.0)
+    h2i = 1.0 / (h * h)
 
     h2i = 1
-    D[1:-1, 1:-1] = F[1:-1, 1:-1] - U[:-2, 1:-1] - U[2:, 1:-1] - \
-        U[1:-1, :-2] - U[1:-1, 2:] + 4*U[1:-1, 1:-1]
+    D[1:-1, 1:-1] = (
+        F[1:-1, 1:-1] - U[:-2, 1:-1] - U[2:, 1:-1] - U[1:-1, :-2] - U[1:-1, 2:] + 4 * U[1:-1, 1:-1]
+    )
     # sides
-    D[1:-1, 0] = F[1:-1, 0] - U[:-2, 0] - U[2:, 0] - U[1:-1, 1] + 3*U[1:-1, 0]
-    D[1:-1, -1] = F[1:-1, -1] - U[:-2, -1] - \
-        U[2:, -1] - U[1:-1, -2] + 3*U[1:-1, -1]
-    D[0, 1:-1] = F[0, 1:-1] - U[0, :-2] - U[0, :-2] - U[1, 1:-1] + 3*U[0, 1:-1]
-    D[-1, 1:-1] = F[-1, 1:-1] - U[-1, :-2] - \
-        U[-1, :-2] - U[-1, 1:-1] + 3*U[-1, 1:-1]
+    D[1:-1, 0] = F[1:-1, 0] - U[:-2, 0] - U[2:, 0] - U[1:-1, 1] + 3 * U[1:-1, 0]
+    D[1:-1, -1] = F[1:-1, -1] - U[:-2, -1] - U[2:, -1] - U[1:-1, -2] + 3 * U[1:-1, -1]
+    D[0, 1:-1] = F[0, 1:-1] - U[0, :-2] - U[0, :-2] - U[1, 1:-1] + 3 * U[0, 1:-1]
+    D[-1, 1:-1] = F[-1, 1:-1] - U[-1, :-2] - U[-1, :-2] - U[-1, 1:-1] + 3 * U[-1, 1:-1]
     # coners
-    D[0, 0] = F[0, 0] - U[0, 1] - U[1, 0] + 2*U[0, 0]
-    D[0, -1] = F[0, -1] - U[1, -1] - U[0, -2] + 2*U[0, -1]
-    D[-1, 0] = F[-1, 0] - U[-2, 0] - U[-1, 1] + 2*U[-1, 0]
-    D[-1, -1] = F[-1, -1] - U[-2, -1] - U[-1, -2] + 2*U[-1, -1]
+    D[0, 0] = F[0, 0] - U[0, 1] - U[1, 0] + 2 * U[0, 0]
+    D[0, -1] = F[0, -1] - U[1, -1] - U[0, -2] + 2 * U[0, -1]
+    D[-1, 0] = F[-1, 0] - U[-2, 0] - U[-1, 1] + 2 * U[-1, 0]
+    D[-1, -1] = F[-1, -1] - U[-2, -1] - U[-1, -2] + 2 * U[-1, -1]
 
     # for y in range(0,sy):
     # 	for x in range(0,sx):
@@ -342,11 +343,14 @@ def calculate_defect(D, U, F):
 def add_correction(U, C):
     U += C
 
+
 # def alloc_compbuf(xmax,ymax,pix, 1):
-#	ar=numpy.array()
+# 	ar=numpy.array()
 
 
-def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiterations, mins, levels, useplanar, planar):
+def solve_pde_multigrid(
+    F, U, vcycleiterations, linbcgiterations, smoothiterations, mins, levels, useplanar, planar
+):
     """Solve a partial differential equation using a multigrid method.
 
     This function implements a multigrid algorithm to solve a given partial
@@ -381,7 +385,6 @@ def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiteratio
         context.
     """
 
-
     xmax = F.shape[0]
     ymax = F.shape[1]
 
@@ -400,7 +403,7 @@ def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiteratio
     IU = []
     VF = []
     PLANAR = []
-    for a in range(0, levels+1):
+    for a in range(0, levels + 1):
         RHS.append(None)
         IU.append(None)
         VF.append(None)
@@ -417,19 +420,19 @@ def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiteratio
     # print(planar)
     for k in range(0, levels):
         # calculate size of next level
-        sx = int(sx/2)
-        sy = int(sy/2)
-        PLANAR[k+1] = numpy.zeros((sx, sy), dtype=numpy.float64)
-        RHS[k+1] = numpy.zeros((sx, sy), dtype=numpy.float64)
-        IU[k+1] = numpy.zeros((sx, sy), dtype=numpy.float64)
-        VF[k+1] = numpy.zeros((sx, sy), dtype=numpy.float64)
+        sx = int(sx / 2)
+        sy = int(sy / 2)
+        PLANAR[k + 1] = numpy.zeros((sx, sy), dtype=numpy.float64)
+        RHS[k + 1] = numpy.zeros((sx, sy), dtype=numpy.float64)
+        IU[k + 1] = numpy.zeros((sx, sy), dtype=numpy.float64)
+        VF[k + 1] = numpy.zeros((sx, sy), dtype=numpy.float64)
 
         # restrict from level k to level k+1 (coarser-grid)
-        restrictbuf(PLANAR[k], PLANAR[k+1])
-        PLANAR[k+1] = PLANAR[k+1] > 0
+        restrictbuf(PLANAR[k], PLANAR[k + 1])
+        PLANAR[k + 1] = PLANAR[k + 1] > 0
         # numpytoimage(PLANAR[k+1],'planar')
         # print(PLANAR[k+1])
-        restrictbuf(RHS[k], RHS[k+1])
+        restrictbuf(RHS[k], RHS[k + 1])
         # numpytoimage(RHS[k+1],'rhs')
 
     # 2. find exact sollution at the coarsest-grid (k=levels)
@@ -438,30 +441,30 @@ def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiteratio
 
     # 3. nested iterations
 
-    for k in range(levels-1, -1, -1):
-        print('K:', str(k))
+    for k in range(levels - 1, -1, -1):
+        print("K:", str(k))
 
         # 4. interpolate sollution from last coarse-grid to finer-grid
         # interpolate from level k+1 to level k (finer-grid)
-        prolongate(IU[k+1], IU[k])
+        prolongate(IU[k + 1], IU[k])
         # print('k',k)
         # 4.1. first target function is the equation target function
-        #	(following target functions are the defect)
+        # 	(following target functions are the defect)
         copy_compbuf_data(RHS[k], VF[k])
 
-        #print('lanar ')
+        # print('lanar ')
 
         # 5. V-cycle (twice repeated)
 
         for cycle in range(0, vcycleiterations):
-            print('v-cycle iteration:', str(cycle))
+            print("v-cycle iteration:", str(cycle))
 
             # 6. downward stroke of V
             for k2 in range(k, levels):
                 # 7. pre-smoothing of initial sollution using target function
                 #  zero for initial guess at smoothing
                 #  (except for level k when iu contains prolongated result)
-                if(k2 != k):
+                if k2 != k:
                     IU[k2].fill(0.0)
 
                 for i in range(0, smoothiterations):
@@ -478,13 +481,13 @@ def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiteratio
                     IU[k2][PLANAR[k2]] = IU[k2].min()
                 # if k2==0 :
 
-                #	VF[k2][PLANAR[k2]]=0.0
-                #	print(IU[0])
+                # 	VF[k2][PLANAR[k2]]=0.0
+                # 	print(IU[0])
                 calculate_defect(D, IU[k2], VF[k2])
 
                 # 9. restrict deffect as target function for next coarser-grid
                 #  def -> f[k2+1]
-                restrictbuf(D, VF[k2+1])
+                restrictbuf(D, VF[k2 + 1])
 
             # 10. solve on coarsest-grid (target function is the deffect)
             #   iu[levels] should contain sollution for
@@ -492,12 +495,12 @@ def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiteratio
             IU[levels].fill(0.0)  # exact_sollution(VF[levels], IU[levels] )
 
             # 11. upward stroke of V
-            for k2 in range(levels-1, k-1, -1):
-                print('k2: ', str(k2))
+            for k2 in range(levels - 1, k - 1, -1):
+                print("k2: ", str(k2))
                 # 12. interpolate correction from last coarser-grid to finer-grid
                 #   iu[k2+1] -> cor
                 C = numpy.zeros_like(IU[k2])
-                prolongate(IU[k2+1], C)
+                prolongate(IU[k2 + 1], C)
 
                 # 13. add interpolated correction to initial sollution at level k2
                 add_correction(IU[k2], C)
@@ -522,7 +525,7 @@ def solve_pde_multigrid(F, U, vcycleiterations, linbcgiterations, smoothiteratio
 
 
 def asolve(b, x):
-    x[:] = -4*b
+    x[:] = -4 * b
 
 
 def atimes(x, res):
@@ -543,18 +546,17 @@ def atimes(x, res):
         None: The result is stored directly in the `res` array.
     """
 
-    res[1:-1, 1:-1] = x[:-2, 1:-1]+x[2:, 1:-1] + \
-        x[1:-1, :-2]+x[1:-1, 2:] - 4*x[1:-1, 1:-1]
+    res[1:-1, 1:-1] = x[:-2, 1:-1] + x[2:, 1:-1] + x[1:-1, :-2] + x[1:-1, 2:] - 4 * x[1:-1, 1:-1]
     # sides
-    res[1:-1, 0] = x[0:-2, 0]+x[2:, 0]+x[1:-1, 1] - 3*x[1:-1, 0]
-    res[1:-1, -1] = x[0:-2, -1]+x[2:, -1]+x[1:-1, -2] - 3*x[1:-1, -1]
-    res[0, 1:-1] = x[0, :-2] + x[0, 2:] + x[1, 1:-1] - 3*x[0, 1:-1]
-    res[-1, 1:-1] = x[-1, :-2] + x[-1, 2:] + x[-2, 1:-1] - 3*x[-1, 1:-1]
+    res[1:-1, 0] = x[0:-2, 0] + x[2:, 0] + x[1:-1, 1] - 3 * x[1:-1, 0]
+    res[1:-1, -1] = x[0:-2, -1] + x[2:, -1] + x[1:-1, -2] - 3 * x[1:-1, -1]
+    res[0, 1:-1] = x[0, :-2] + x[0, 2:] + x[1, 1:-1] - 3 * x[0, 1:-1]
+    res[-1, 1:-1] = x[-1, :-2] + x[-1, 2:] + x[-2, 1:-1] - 3 * x[-1, 1:-1]
     # corners
-    res[0, 0] = x[1, 0]+x[0, 1]-2*x[0, 0]
-    res[-1, 0] = x[-2, 0]+x[-1, 1]-2*x[-1, 0]
-    res[0, -1] = x[0, -2]+x[1, -1]-2*x[0, -1]
-    res[-1, -1] = x[-1, -2]+x[-2, -1]-2*x[-1, -1]
+    res[0, 0] = x[1, 0] + x[0, 1] - 2 * x[0, 0]
+    res[-1, 0] = x[-2, 0] + x[-1, 1] - 2 * x[-1, 0]
+    res[0, -1] = x[0, -2] + x[1, -1] - 2 * x[0, -1]
+    res[-1, -1] = x[-1, -2] + x[-2, -1] - 2 * x[-1, -1]
 
 
 def snrm(n, sx, itol):
@@ -578,14 +580,14 @@ def snrm(n, sx, itol):
             maximum absolute value.
     """
 
-
-    if (itol <= 3):
-        temp = sx*sx
+    if itol <= 3:
+        temp = sx * sx
         ans = temp.sum()
         return sqrt(ans)
     else:
         temp = numpy.abs(sx)
         return temp.max()
+
 
 # /**
 # * Biconjugate Gradient Method
@@ -620,7 +622,6 @@ def linbcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
         None: The solution is stored in the input array `x`.
     """
 
-
     p = numpy.zeros((cols, rows))
     pp = numpy.zeros((cols, rows))
     r = numpy.zeros((cols, rows))
@@ -630,21 +631,21 @@ def linbcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
 
     iter = 0
     atimes(x, r)
-    r[:] = b-r
+    r[:] = b - r
     rr[:] = r
 
-    atimes(r, rr)	  # minimum residual
+    atimes(r, rr)  # minimum residual
 
     znrm = 1.0
 
-    if (itol == 1):
+    if itol == 1:
         bnrm = snrm(n, b, itol)
 
-    elif (itol == 2):
+    elif itol == 2:
         asolve(b, z)
         bnrm = snrm(n, z, itol)
 
-    elif (itol == 3 or itol == 4):
+    elif itol == 3 or itol == 4:
         asolve(b, z)
         bnrm = snrm(n, z, itol)
         asolve(r, z)
@@ -654,61 +655,61 @@ def linbcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
 
     asolve(r, z)
 
-    while (iter <= itmax):
-        #print('linbcg iteration:', str(iter))
+    while iter <= itmax:
+        # print('linbcg iteration:', str(iter))
         iter += 1
         zm1nrm = znrm
         asolve(rr, zz)
 
         bknum = 0.0
 
-        temp = z*rr
+        temp = z * rr
 
         bknum = temp.sum()  # -z[0]*rr[0]????
 
-        if (iter == 1):
+        if iter == 1:
             p[:] = z
             pp[:] = zz
 
         else:
-            bk = bknum/bkden
-            p = bk*p+z
-            pp = bk*pp+zz
+            bk = bknum / bkden
+            p = bk * p + z
+            pp = bk * pp + zz
         bkden = bknum
         atimes(p, z)
-        temp = z*pp
+        temp = z * pp
         akden = temp.sum()
-        ak = bknum/akden
+        ak = bknum / akden
         atimes(pp, zz)
 
-        x += ak*p
-        r -= ak*z
-        rr -= ak*zz
+        x += ak * p
+        r -= ak * z
+        rr -= ak * zz
 
         asolve(r, z)
 
-        if (itol == 1 or itol == 2):
+        if itol == 1 or itol == 2:
             znrm = 1.0
-            err = snrm(n, r, itol)/bnrm
-        elif (itol == 3 or itol == 4):
+            err = snrm(n, r, itol) / bnrm
+        elif itol == 3 or itol == 4:
             znrm = snrm(n, z, itol)
-            if (abs(zm1nrm-znrm) > EPS*znrm):
-                dxnrm = abs(ak)*snrm(n, p, itol)
-                err = znrm/abs(zm1nrm-znrm)*dxnrm
+            if abs(zm1nrm - znrm) > EPS * znrm:
+                dxnrm = abs(ak) * snrm(n, p, itol)
+                err = znrm / abs(zm1nrm - znrm) * dxnrm
             else:
-                err = znrm/bnrm
+                err = znrm / bnrm
                 continue
             xnrm = snrm(n, x, itol)
 
-            if (err <= 0.5*xnrm):
+            if err <= 0.5 * xnrm:
                 err /= xnrm
             else:
-                err = znrm/bnrm
+                err = znrm / bnrm
                 continue
-        if (err <= tol):
+        if err <= tol:
             break
     # if PLANAR_CONST and planar.shape==rr.shape:
-    #	x[planar]=0.0
+    # 	x[planar]=0.0
 
 
 # --------------------------------------------------------------------
@@ -733,9 +734,9 @@ def numpysave(a, iname):
 
     r = bpy.context.scene.render
 
-    r.image_settings.file_format = 'OPEN_EXR'
-    r.image_settings.color_mode = 'BW'
-    r.image_settings.color_depth = '32'
+    r.image_settings.file_format = "OPEN_EXR"
+    r.image_settings.color_mode = "BW"
+    r.image_settings.color_depth = "32"
 
     i.save_render(iname)
 
@@ -760,31 +761,46 @@ def numpytoimage(a, iname):
     """
 
     t = time.time()
-    print('Numpy to Image - Here')
+    print("Numpy to Image - Here")
     t = time.time()
     print(a.shape[0], a.shape[1])
     foundimage = False
     for image in bpy.data.images:
 
-        if image.name[:len(iname)] == iname and image.size[0] == a.shape[0] and image.size[1] == a.shape[1]:
+        if (
+            image.name[: len(iname)] == iname
+            and image.size[0] == a.shape[0]
+            and image.size[1] == a.shape[1]
+        ):
             i = image
             foundimage = True
     if not foundimage:
-        bpy.ops.image.new(name=iname, width=a.shape[0], height=a.shape[1], color=(
-            0, 0, 0, 1), alpha=True, generated_type='BLANK', float=True)
+        bpy.ops.image.new(
+            name=iname,
+            width=a.shape[0],
+            height=a.shape[1],
+            color=(0, 0, 0, 1),
+            alpha=True,
+            generated_type="BLANK",
+            float=True,
+        )
         for image in bpy.data.images:
 
-            if image.name[:len(iname)] == iname and image.size[0] == a.shape[0] and image.size[1] == a.shape[1]:
+            if (
+                image.name[: len(iname)] == iname
+                and image.size[0] == a.shape[0]
+                and image.size[1] == a.shape[1]
+            ):
                 i = image
 
-    d = a.shape[0]*a.shape[1]
+    d = a.shape[0] * a.shape[1]
     a = a.swapaxes(0, 1)
     a = a.reshape(d)
     a = a.repeat(4)
     a[3::4] = 1
     # i.pixels=a
     i.pixels[:] = a[:]  # this gives big speedup!
-    print('\ntime '+str(time.time()-t))
+    print("\ntime " + str(time.time() - t))
     return i
 
 
@@ -818,8 +834,8 @@ def imagetonumpy(i):
     count = 0
     na = numpy.array((0.1), dtype=float64)
 
-    size = width*height
-    na.resize(size*4)
+    size = width * height
+    na.resize(size * 4)
 
     # these 2 lines are about 15% faster than na=i.pixels[:].... whyyyyyyyy!!?!?!?!?! Blender image data access is evil.
     p = i.pixels[:]
@@ -829,7 +845,7 @@ def imagetonumpy(i):
     na = na.reshape(height, width)
     na = na.swapaxes(0, 1)
 
-    print('\ntime of image to numpy '+str(time.time()-t))
+    print("\ntime of image to numpy " + str(time.time() - t))
     return na
 
 
@@ -859,7 +875,7 @@ def tonemap(i, exponent):
     minheight = i.min()
     i[:] = numpy.clip(i, minheight, maxheight)
 
-    i[:] = ((i-minheight))/(maxheight-minheight)
+    i[:] = ((i - minheight)) / (maxheight - minheight)
     i[:] **= exponent
 
 
@@ -906,7 +922,7 @@ def buildMesh(mesh_z, br):
     scale = 1
     scalez = 1
     decimateRatio = br.decimate_ratio  # get variable from interactive table
-    bpy.ops.object.select_all(action='DESELECT')
+    bpy.ops.object.select_all(action="DESELECT")
     for object in bpy.data.objects:
         if re.search("BasReliefMesh", str(object)):
             bpy.data.objects.remove(object)
@@ -925,12 +941,12 @@ def buildMesh(mesh_z, br):
             verts.append(vert(i, j, col, scale, scalez))
 
     count = 0
-    for i in range(0, numY * (numX-1)):
-        if count < numY-1:
+    for i in range(0, numY * (numX - 1)):
+        if count < numY - 1:
             A = i  # the first vertex
-            B = i+1  # the second vertex
-            C = (i+numY)+1  # the third vertex
-            D = (i+numY)  # the fourth vertex
+            B = i + 1  # the second vertex
+            C = (i + numY) + 1  # the third vertex
+            D = i + numY  # the fourth vertex
 
             face = (A, B, C, D)
             faces.append(face)
@@ -945,33 +961,40 @@ def buildMesh(mesh_z, br):
     mesh.update()
 
     # make object from mesh
-    new_object = bpy.data.objects.new('BasReliefMesh', mesh)
+    new_object = bpy.data.objects.new("BasReliefMesh", mesh)
     scene = bpy.context.scene
     scene.collection.objects.link(new_object)
 
     # mesh object is made - preparing to decimate.
-    ob = bpy.data.objects['BasReliefMesh']
+    ob = bpy.data.objects["BasReliefMesh"]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
     bpy.context.active_object.dimensions = (
-        br.widthmm/1000, br.heightmm/1000, br.thicknessmm/1000)
-    bpy.context.active_object.location = (float(
-        br.justifyx)*br.widthmm/1000, float(br.justifyy)*br.heightmm/1000, float(br.justifyz)*br.thicknessmm/1000)
+        br.widthmm / 1000,
+        br.heightmm / 1000,
+        br.thicknessmm / 1000,
+    )
+    bpy.context.active_object.location = (
+        float(br.justifyx) * br.widthmm / 1000,
+        float(br.justifyy) * br.heightmm / 1000,
+        float(br.justifyz) * br.thicknessmm / 1000,
+    )
 
     print("Faces:" + str(len(ob.data.polygons)))
     print("Vertices:" + str(len(ob.data.vertices)))
     if decimateRatio > 0.95:
         print("Skipping Decimate Ratio > 0.95")
     else:
-        m = ob.modifiers.new(name="Foo", type='DECIMATE')
+        m = ob.modifiers.new(name="Foo", type="DECIMATE")
         m.ratio = decimateRatio
-        print("Decimating with Ratio:"+str(decimateRatio))
+        print("Decimating with Ratio:" + str(decimateRatio))
         bpy.ops.object.modifier_apply(modifier=m.name)
         print("Decimated")
         print("Faces:" + str(len(ob.data.polygons)))
         print("Vertices:" + str(len(ob.data.vertices)))
 
-# Switches to cycles render to CYCLES to render the sceen then switches it back to CNCCAM_RENDER for basRelief
+
+# Switches to cycles render to CYCLES to render the sceen then switches it back to FABEX_RENDER for basRelief
 
 
 def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view_layer):
@@ -999,9 +1022,9 @@ def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view
     scene = bpy.context.scene
     # make sure we're in object mode or else bad things happen
     if bpy.context.active_object:
-        bpy.ops.object.mode_set(mode='OBJECT')
+        bpy.ops.object.mode_set(mode="OBJECT")
 
-    scene.render.engine = 'CYCLES'
+    scene.render.engine = "CYCLES"
     our_viewer = None
     our_renderer = None
     if make_nodes:
@@ -1010,32 +1033,33 @@ def renderScene(width, height, bit_diameter, passes_per_radius, make_nodes, view
             scene.use_nodes = True
         node_tree = scene.node_tree
         nodes = node_tree.nodes
-        our_viewer = node_tree.nodes.new(type='CompositorNodeViewer')
+        our_viewer = node_tree.nodes.new(type="CompositorNodeViewer")
         our_viewer.label = "CAM_basrelief_viewer"
-        our_renderer = node_tree.nodes.new(type='CompositorNodeRLayers')
+        our_renderer = node_tree.nodes.new(type="CompositorNodeRLayers")
         our_renderer.label = "CAM_basrelief_renderlayers"
         our_renderer.layer = view_layer
-        node_tree.links.new(our_renderer.outputs[our_renderer.outputs.find(
-            'Depth')], our_viewer.inputs[our_viewer.inputs.find("Image")])
+        node_tree.links.new(
+            our_renderer.outputs[our_renderer.outputs.find("Depth")],
+            our_viewer.inputs[our_viewer.inputs.find("Image")],
+        )
         scene.view_layers[view_layer].use_pass_z = True
         # set our viewer as active so that it is what gets rendered to viewer node image
         nodes.active = our_viewer
 
     # Set render resolution
-    passes = bit_diameter/(2*passes_per_radius)
-    x = round(width/passes)
-    y = round(height/passes)
+    passes = bit_diameter / (2 * passes_per_radius)
+    x = round(width / passes)
+    y = round(height / passes)
     print(x, y, passes)
     scene.render.resolution_x = x
     scene.render.resolution_y = y
     scene.render.resolution_percentage = 100
-    bpy.ops.render.render(animation=False, write_still=False,
-                          use_viewport=True, layer="", scene="")
+    bpy.ops.render.render(animation=False, write_still=False, use_viewport=True, layer="", scene="")
     if our_renderer is not None:
         nodes.remove(our_renderer)
     if our_viewer is not None:
         nodes.remove(our_viewer)
-    bpy.context.scene.render.engine = 'CNCCAM_RENDER'
+    bpy.context.scene.render.engine = "FABEX_RENDER"
     print("Done Rendering")
 
 
@@ -1100,9 +1124,9 @@ def problemAreas(br):
         # mask=nar=imagetonumpy(m)
 
     # if br.scale_down_before_use:
-    #	i.scale(int(i.size[0]*br.scale_down_before),int(i.size[1]*br.scale_down_before))
-    #	if br.gradient_scaling_mask_use:
-    #		m.scale(int(m.size[0]*br.scale_down_before),int(m.size[1]*br.scale_down_before))
+    # 	i.scale(int(i.size[0]*br.scale_down_before),int(i.size[1]*br.scale_down_before))
+    # 	if br.gradient_scaling_mask_use:
+    # 		m.scale(int(m.size[0]*br.scale_down_before),int(m.size[1]*br.scale_down_before))
 
     nar = imagetonumpy(i)
     # return
@@ -1110,19 +1134,19 @@ def problemAreas(br):
         mask = imagetonumpy(m)
     # put image to scale
     tonemap(nar, br.depth_exponent)
-    nar = 1-nar  # reverse z buffer+ add something
+    nar = 1 - nar  # reverse z buffer+ add something
     print(nar.min(), nar.max())
     gx = nar.copy()
     gx.fill(0)
-    gx[:-1, :] = nar[1:, :]-nar[:-1, :]
+    gx[:-1, :] = nar[1:, :] - nar[:-1, :]
     gy = nar.copy()
     gy.fill(0)
-    gy[:, :-1] = nar[:, 1:]-nar[:, :-1]
+    gy[:, :-1] = nar[:, 1:] - nar[:, :-1]
 
     # it' ok, we can treat neg and positive silh separately here:
     a = br.attenuation
     # numpy.logical_or(silhxplanar,silhyplanar)#
-    planar = nar < (nar.min()+0.0001)
+    planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = numpy.abs(gx)
     for iter in range(0, br.silhouette_exponent):
@@ -1133,37 +1157,37 @@ def problemAreas(br):
 
     # detect and also recover silhouettes:
     silhxpos = gx > silh_thres
-    gx = gx*(-silhxpos)+recover_silh*(silhxpos*silh_thres*silh_scale)*sqrarx
+    gx = gx * (-silhxpos) + recover_silh * (silhxpos * silh_thres * silh_scale) * sqrarx
     silhxneg = gx < -silh_thres
-    gx = gx*(-silhxneg)-recover_silh*(silhxneg*silh_thres*silh_scale)*sqrarx
+    gx = gx * (-silhxneg) - recover_silh * (silhxneg * silh_thres * silh_scale) * sqrarx
     silhx = numpy.logical_or(silhxpos, silhxneg)
-    gx = gx*silhx+(1.0/a*numpy.log(1.+a*(gx)))*(-silhx)  # attenuate
+    gx = gx * silhx + (1.0 / a * numpy.log(1.0 + a * (gx))) * (-silhx)  # attenuate
 
     # if br.fade_distant_objects:
-    #	gx*=(nar)
-    #	gy*=(nar)
+    # 	gx*=(nar)
+    # 	gy*=(nar)
 
     silhypos = gy > silh_thres
-    gy = gy*(-silhypos)+recover_silh*(silhypos*silh_thres*silh_scale)*sqrary
+    gy = gy * (-silhypos) + recover_silh * (silhypos * silh_thres * silh_scale) * sqrary
     silhyneg = gy < -silh_thres
-    gy = gy*(-silhyneg)-recover_silh*(silhyneg*silh_thres*silh_scale)*sqrary
+    gy = gy * (-silhyneg) - recover_silh * (silhyneg * silh_thres * silh_scale) * sqrary
     silhy = numpy.logical_or(silhypos, silhyneg)  # both silh
-    gy = gy*silhy+(1.0/a*numpy.log(1.+a*(gy)))*(-silhy)  # attenuate
+    gy = gy * silhy + (1.0 / a * numpy.log(1.0 + a * (gy))) * (-silhy)  # attenuate
 
     # now scale slopes...
     if br.gradient_scaling_mask_use:
         gx *= mask
         gy *= mask
 
-    divg = gx+gy
+    divg = gx + gy
     divga = numpy.abs(divg)
-    divgp = divga > silh_thres/4.0
-    divgp = 1-divgp
+    divgp = divga > silh_thres / 4.0
+    divgp = 1 - divgp
     for a in range(0, 2):
         atimes(divgp, divga)
         divga = divgp
 
-    numpytoimage(divga, 'problem')
+    numpytoimage(divga, "problem")
 
 
 def relief(br):
@@ -1231,9 +1255,9 @@ def relief(br):
         # mask=nar=imagetonumpy(m)
 
     # if br.scale_down_before_use:
-    #	i.scale(int(i.size[0]*br.scale_down_before),int(i.size[1]*br.scale_down_before))
-    #	if br.gradient_scaling_mask_use:
-    #		m.scale(int(m.size[0]*br.scale_down_before),int(m.size[1]*br.scale_down_before))
+    # 	i.scale(int(i.size[0]*br.scale_down_before),int(i.size[1]*br.scale_down_before))
+    # 	if br.gradient_scaling_mask_use:
+    # 		m.scale(int(m.size[0]*br.scale_down_before),int(m.size[1]*br.scale_down_before))
 
     nar = imagetonumpy(i)
     # return
@@ -1241,23 +1265,24 @@ def relief(br):
         mask = imagetonumpy(m)
     # put image to scale
     tonemap(nar, br.depth_exponent)
-    nar = 1-nar  # reverse z buffer+ add something
+    nar = 1 - nar  # reverse z buffer+ add something
     print("Range:", nar.min(), nar.max())
     if nar.min() - nar.max() == 0:
         raise ReliefError(
-            "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set.")
+            "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set."
+        )
 
     gx = nar.copy()
     gx.fill(0)
-    gx[:-1, :] = nar[1:, :]-nar[:-1, :]
+    gx[:-1, :] = nar[1:, :] - nar[:-1, :]
     gy = nar.copy()
     gy.fill(0)
-    gy[:, :-1] = nar[:, 1:]-nar[:, :-1]
+    gy[:, :-1] = nar[:, 1:] - nar[:, :-1]
 
     # it' ok, we can treat neg and positive silh separately here:
     a = br.attenuation
     # numpy.logical_or(silhxplanar,silhyplanar)#
-    planar = nar < (nar.min()+0.0001)
+    planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = numpy.abs(gx)
     for iter in range(0, br.silhouette_exponent):
@@ -1269,22 +1294,22 @@ def relief(br):
     # detect and also recover silhouettes:
     silhxpos = gx > silh_thres
     print("*** silhxpos is %s" % silhxpos)
-    gx = gx*(~silhxpos)+recover_silh*(silhxpos*silh_thres*silh_scale)*sqrarx
+    gx = gx * (~silhxpos) + recover_silh * (silhxpos * silh_thres * silh_scale) * sqrarx
     silhxneg = gx < -silh_thres
-    gx = gx*(~silhxneg)-recover_silh*(silhxneg*silh_thres*silh_scale)*sqrarx
+    gx = gx * (~silhxneg) - recover_silh * (silhxneg * silh_thres * silh_scale) * sqrarx
     silhx = numpy.logical_or(silhxpos, silhxneg)
-    gx = gx*silhx+(1.0/a*numpy.log(1.+a*(gx)))*(~silhx)  # attenuate
+    gx = gx * silhx + (1.0 / a * numpy.log(1.0 + a * (gx))) * (~silhx)  # attenuate
 
     # if br.fade_distant_objects:
-    #	gx*=(nar)
-    #	gy*=(nar)
+    # 	gx*=(nar)
+    # 	gy*=(nar)
 
     silhypos = gy > silh_thres
-    gy = gy*(~silhypos)+recover_silh*(silhypos*silh_thres*silh_scale)*sqrary
+    gy = gy * (~silhypos) + recover_silh * (silhypos * silh_thres * silh_scale) * sqrary
     silhyneg = gy < -silh_thres
-    gy = gy*(~silhyneg)-recover_silh*(silhyneg*silh_thres*silh_scale)*sqrary
+    gy = gy * (~silhyneg) - recover_silh * (silhyneg * silh_thres * silh_scale) * sqrary
     silhy = numpy.logical_or(silhypos, silhyneg)  # both silh
-    gy = gy*silhy+(1.0/a*numpy.log(1.+a*(gy)))*(~silhy)  # attenuate
+    gy = gy * silhy + (1.0 / a * numpy.log(1.0 + a * (gy))) * (~silhy)  # attenuate
 
     # now scale slopes...
     if br.gradient_scaling_mask_use:
@@ -1298,14 +1323,14 @@ def relief(br):
     # silhy=abs(gy)>silh_thres
     # gy=gy*(-silhy)
 
-    divg = gx+gy
-    divg[1:, :] = divg[1:, :]-gx[:-1, :]  # subtract x
-    divg[:, 1:] = divg[:, 1:]-gy[:, :-1]  # subtract y
+    divg = gx + gy
+    divg[1:, :] = divg[1:, :] - gx[:-1, :]  # subtract x
+    divg[:, 1:] = divg[:, 1:] - gy[:, :-1]  # subtract y
 
     if br.detail_enhancement_use:  # fourier stuff here!disabled by now
         print("detail enhancement")
         rows, cols = gx.shape
-        crow, ccol = int(rows/2), int(cols/2)
+        crow, ccol = int(rows / 2), int(cols / 2)
         # dist=int(br.detail_enhancement_freq*gx.shape[0]/(2))
         # bandwidth=.1
         # dist=
@@ -1313,7 +1338,7 @@ def relief(br):
         divg += divgmin
         divgf = numpy.fft.fft2(divg)
         divgfshift = numpy.fft.fftshift(divgf)
-        #mspectrum = 20*numpy.log(numpy.abs(divgfshift))
+        # mspectrum = 20*numpy.log(numpy.abs(divgfshift))
         # numpytoimage(mspectrum,'mspectrum')
         mask = divg.copy()
         pos = numpy.array((crow, ccol))
@@ -1321,25 +1346,24 @@ def relief(br):
         # bpy.context.scene.view_settings.curve_mapping.initialize()
         # cur=bpy.context.scene.view_settings.curve_mapping.curves[0]
         def filterwindow(x, y, cx=0, cy=0):  # , curve=None):
-            return abs((cx-x))+abs((cy-y))
+            return abs((cx - x)) + abs((cy - y))
             # v=(abs((cx-x)/(cx))+abs((cy-y)/(cy)))
             # return v
 
-        mask = numpy.fromfunction(
-            filterwindow, divg.shape, cx=crow, cy=ccol)  # , curve=cur)
+        mask = numpy.fromfunction(filterwindow, divg.shape, cx=crow, cy=ccol)  # , curve=cur)
         mask = numpy.sqrt(mask)
         # for x in range(mask.shape[0]):
-        #	for y in range(mask.shape[1]):
-        #		mask[x,y]=cur.evaluate(mask[x,y])
+        # 	for y in range(mask.shape[1]):
+        # 		mask[x,y]=cur.evaluate(mask[x,y])
         maskmin = mask.min()
         maskmax = mask.max()
-        mask = (mask-maskmin)/(maskmax-maskmin)
+        mask = (mask - maskmin) / (maskmax - maskmin)
         mask *= br.detail_enhancement_amount
-        mask += 1-mask.max()
+        mask += 1 - mask.max()
         # mask+=1
-        mask[crow-1:crow+1, ccol-1:ccol+1] = 1  # to preserve basic freqencies.
+        mask[crow - 1 : crow + 1, ccol - 1 : ccol + 1] = 1  # to preserve basic freqencies.
         # numpytoimage(mask,'mask')
-        divgfshift = divgfshift*mask
+        divgfshift = divgfshift * mask
         divgfshift = numpy.fft.ifftshift(divgfshift)
         divg = numpy.abs(numpy.fft.ifft2(divgfshift))
         divg -= divgmin
@@ -1348,23 +1372,32 @@ def relief(br):
 
     levels = 0
     mins = min(nar.shape[0], nar.shape[1])
-    while (mins >= MINS):
+    while mins >= MINS:
         levels += 1
-        mins = mins/2
+        mins = mins / 2
 
     target = numpy.zeros_like(divg)
 
-    solve_pde_multigrid(divg, target, vcycleiterations, linbcgiterations,
-                        smoothiterations, mins, levels, useplanar, planar)
+    solve_pde_multigrid(
+        divg,
+        target,
+        vcycleiterations,
+        linbcgiterations,
+        smoothiterations,
+        mins,
+        levels,
+        useplanar,
+        planar,
+    )
 
     tonemap(target, 1)
 
     buildMesh(target, br)
 
-#	ipath=bpy.path.abspath(i.filepath)[:-len(bpy.path.basename(i.filepath))]+br.output_image_name+'.exr'
-#	numpysave(target,ipath)
-    t = time.time()-t
-    print('total time:' + str(t)+'\n')
+    # 	ipath=bpy.path.abspath(i.filepath)[:-len(bpy.path.basename(i.filepath))]+br.output_image_name+'.exr'
+    # 	numpysave(target,ipath)
+    t = time.time() - t
+    print("total time:" + str(t) + "\n")
     # numpytoimage(target,br.output_image_name)
 
 
@@ -1375,12 +1408,12 @@ class BasReliefsettings(bpy.types.PropertyGroup):
         default=False,
     )
     source_image_name: StringProperty(
-        name='Image Source',
-        description='image source',
+        name="Image Source",
+        description="image source",
     )
     view_layer_name: StringProperty(
-        name='View Layer Source',
-        description='Make a bas-relief from whatever is on this view layer',
+        name="View Layer Source",
+        description="Make a bas-relief from whatever is on this view layer",
     )
     bit_diameter: FloatProperty(
         name="Diameter of Ball End in mm",
@@ -1392,8 +1425,7 @@ class BasReliefsettings(bpy.types.PropertyGroup):
     )
     pass_per_radius: IntProperty(
         name="Passes per Radius",
-        description="Amount of passes per radius\n(more passes, "
-        "more mesh precision)",
+        description="Amount of passes per radius\n(more passes, " "more mesh precision)",
         default=2,
         min=1,
         max=10,
@@ -1419,36 +1451,31 @@ class BasReliefsettings(bpy.types.PropertyGroup):
 
     justifyx: EnumProperty(
         name="X",
-        items=[
-            ('1', 'Left', '', 0),
-            ('-0.5', 'Centered', '', 1),
-            ('-1', 'Right', '', 2)
-        ],
-        default='-1',
+        items=[("1", "Left", "", 0), ("-0.5", "Centered", "", 1), ("-1", "Right", "", 2)],
+        default="-1",
     )
     justifyy: EnumProperty(
         name="Y",
         items=[
-            ('1', 'Bottom', '', 0),
-            ('-0.5', 'Centered', '', 2),
-            ('-1', 'Top', '', 1),
+            ("1", "Bottom", "", 0),
+            ("-0.5", "Centered", "", 2),
+            ("-1", "Top", "", 1),
         ],
-        default='-1',
+        default="-1",
     )
     justifyz: EnumProperty(
         name="Z",
         items=[
-            ('-1', 'Below 0', '', 0),
-            ('-0.5', 'Centered', '', 2),
-            ('1', 'Above 0', '', 1),
+            ("-1", "Below 0", "", 0),
+            ("-0.5", "Centered", "", 2),
+            ("1", "Above 0", "", 1),
         ],
-        default='-1',
+        default="-1",
     )
 
     depth_exponent: FloatProperty(
         name="Depth Exponent",
-        description="Initial depth map is taken to this power. Higher = "
-        "sharper relief",
+        description="Initial depth map is taken to this power. Higher = " "sharper relief",
         min=0.5,
         max=10.0,
         default=1.0,
@@ -1513,8 +1540,7 @@ class BasReliefsettings(bpy.types.PropertyGroup):
     )
     linbcg_iterations: IntProperty(
         name="LINBCG Iterations",
-        description="Set lower for flatter relief, and when using "
-        "planar constraint",
+        description="Set lower for flatter relief, and when using " "planar constraint",
         default=5,
         min=1,
         max=64,
@@ -1540,8 +1566,8 @@ class BasReliefsettings(bpy.types.PropertyGroup):
     )
 
     gradient_scaling_mask_name: StringProperty(
-        name='Scaling Mask Name',
-        description='Mask name',
+        name="Scaling Mask Name",
+        description="Mask name",
     )
     scale_down_before_use: BoolProperty(
         name="Scale Down Image Before Processing",
@@ -1553,7 +1579,7 @@ class BasReliefsettings(bpy.types.PropertyGroup):
         description="Image scale",
         min=0.025,
         max=1.0,
-        default=.5,
+        default=0.5,
         precision=PRECISION,
     )
     detail_enhancement_use: BoolProperty(
@@ -1561,13 +1587,13 @@ class BasReliefsettings(bpy.types.PropertyGroup):
         description="Enhance details by frequency analysis",
         default=False,
     )
-    #detail_enhancement_freq=FloatProperty(name="frequency limit", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
+    # detail_enhancement_freq=FloatProperty(name="frequency limit", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
     detail_enhancement_amount: FloatProperty(
         name="Amount",
         description="Image scale",
         min=0.025,
         max=1.0,
-        default=.5,
+        default=0.5,
         precision=PRECISION,
     )
 
@@ -1580,14 +1606,14 @@ class BasReliefsettings(bpy.types.PropertyGroup):
 
 class BASRELIEF_Panel(bpy.types.Panel):
     """Bas Relief Panel"""
+
     bl_label = "Bas Relief"
     bl_idname = "WORLD_PT_BASRELIEF"
 
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "render"
-
-    COMPAT_ENGINES = {'CNCCAM_RENDER'}
+    COMPAT_ENGINES = {"FABEX_RENDER"}
 
     # def draw_header(self, context):
     #   self.layout.menu("CAM_CUTTER_MT_presets", text="CAM Cutter")
@@ -1629,6 +1655,9 @@ class BASRELIEF_Panel(bpy.types.Panel):
         """
 
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         # print(dir(layout))
         s = bpy.context.scene
 
@@ -1637,62 +1666,60 @@ class BASRELIEF_Panel(bpy.types.Panel):
         # if br:
         # cutter preset
         layout.operator("scene.calculate_bas_relief", text="Calculate Relief")
-        layout.prop(br, 'advanced')
-        layout.prop(br, 'use_image_source')
+        layout.prop(br, "advanced")
+        layout.prop(br, "use_image_source")
         if br.use_image_source:
-            layout.prop_search(br, 'source_image_name', bpy.data, "images")
+            layout.prop_search(br, "source_image_name", bpy.data, "images")
         else:
-            layout.prop_search(br, 'view_layer_name',
-                               bpy.context.scene, "view_layers")
-        layout.prop(br, 'depth_exponent')
+            layout.prop_search(br, "view_layer_name", bpy.context.scene, "view_layers")
+        layout.prop(br, "depth_exponent")
         layout.label(text="Project Parameters")
-        layout.prop(br, 'bit_diameter')
-        layout.prop(br, 'pass_per_radius')
-        layout.prop(br, 'widthmm')
-        layout.prop(br, 'heightmm')
-        layout.prop(br, 'thicknessmm')
+        layout.prop(br, "bit_diameter")
+        layout.prop(br, "pass_per_radius")
+        layout.prop(br, "widthmm")
+        layout.prop(br, "heightmm")
+        layout.prop(br, "thicknessmm")
 
         layout.label(text="Justification")
-        layout.prop(br, 'justifyx')
-        layout.prop(br, 'justifyy')
-        layout.prop(br, 'justifyz')
+        layout.prop(br, "justifyx")
+        layout.prop(br, "justifyy")
+        layout.prop(br, "justifyz")
 
         layout.label(text="Silhouette")
-        layout.prop(br, 'silhouette_threshold')
-        layout.prop(br, 'recover_silhouettes')
+        layout.prop(br, "silhouette_threshold")
+        layout.prop(br, "recover_silhouettes")
         if br.recover_silhouettes:
-            layout.prop(br, 'silhouette_scale')
+            layout.prop(br, "silhouette_scale")
             if br.advanced:
-                layout.prop(br, 'silhouette_exponent')
+                layout.prop(br, "silhouette_exponent")
         # layout.template_curve_mapping(br,'curva')
         if br.advanced:
             # layout.prop(br,'attenuation')
-            layout.prop(br, 'min_gridsize')
-            layout.prop(br, 'smooth_iterations')
-        layout.prop(br, 'vcycle_iterations')
-        layout.prop(br, 'linbcg_iterations')
-        layout.prop(br, 'use_planar')
-        layout.prop(br, 'decimate_ratio')
+            layout.prop(br, "min_gridsize")
+            layout.prop(br, "smooth_iterations")
+        layout.prop(br, "vcycle_iterations")
+        layout.prop(br, "linbcg_iterations")
+        layout.prop(br, "use_planar")
+        layout.prop(br, "decimate_ratio")
 
-        layout.prop(br, 'gradient_scaling_mask_use')
+        layout.prop(br, "gradient_scaling_mask_use")
         if br.advanced:
             if br.gradient_scaling_mask_use:
-                layout.prop_search(
-                    br, 'gradient_scaling_mask_name', bpy.data, "images")
-            layout.prop(br, 'detail_enhancement_use')
+                layout.prop_search(br, "gradient_scaling_mask_name", bpy.data, "images")
+            layout.prop(br, "detail_enhancement_use")
             if br.detail_enhancement_use:
                 # layout.prop(br,'detail_enhancement_freq')
-                layout.prop(br, 'detail_enhancement_amount')
+                layout.prop(br, "detail_enhancement_amount")
                 # print(dir(layout))
                 # layout.prop(s.view_settings.curve_mapping,"curves")
-                #layout.label('Frequency scaling:')
+                # layout.label('Frequency scaling:')
                 # s.view_settings.curve_mapping.clip_max_y=2
 
-                #layout.template_curve_mapping(s.view_settings, "curve_mapping")
+                # layout.template_curve_mapping(s.view_settings, "curve_mapping")
 
         # layout.prop(br,'scale_down_before_use')
         # if br.scale_down_before_use:
-        #	layout.prop(br,'scale_down_before')
+        # 	layout.prop(br,'scale_down_before')
 
 
 class ReliefError(Exception):
@@ -1701,9 +1728,10 @@ class ReliefError(Exception):
 
 class DoBasRelief(bpy.types.Operator):
     """Calculate Bas Relief"""
+
     bl_idname = "scene.calculate_bas_relief"
     bl_label = "Calculate Bas Relief"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {"REGISTER", "UNDO"}
 
     processes = []
 
@@ -1729,8 +1757,14 @@ class DoBasRelief(bpy.types.Operator):
             br.view_layer_name = bpy.context.view_layer.name
 
         try:
-            renderScene(br.widthmm, br.heightmm, br.bit_diameter, br.pass_per_radius,
-                        not br.use_image_source, br.view_layer_name)
+            renderScene(
+                br.widthmm,
+                br.heightmm,
+                br.bit_diameter,
+                br.pass_per_radius,
+                not br.use_image_source,
+                br.view_layer_name,
+            )
         except ReliefError as e:
             self.report({"ERROR"}, str(e))
             return {"CANCELLED"}
@@ -1740,20 +1774,21 @@ class DoBasRelief(bpy.types.Operator):
         except ReliefError as e:
             self.report({"ERROR"}, str(e))
             return {"CANCELLED"}
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 class ProblemAreas(bpy.types.Operator):
     """Find Bas Relief Problem Areas"""
+
     bl_idname = "scene.problemareas_bas_relief"
     bl_label = "Problem Areas Bas Relief"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_options = {"REGISTER", "UNDO"}
 
     processes = []
 
     # @classmethod
     # def poll(cls, context):
-    #	return context.active_object is not None
+    # 	return context.active_object is not None
 
     def execute(self, context):
         """Execute the operation related to the bas relief settings in the current
@@ -1776,7 +1811,7 @@ class ProblemAreas(bpy.types.Operator):
         s = bpy.context.scene
         br = s.basreliefsettings
         problemAreas(br)
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 def get_panels():
@@ -1793,12 +1828,7 @@ def get_panels():
         DoBasRelief, and ProblemAreas components.
     """
 
-    return(
-        BasReliefsettings,
-        BASRELIEF_Panel,
-        DoBasRelief,
-        ProblemAreas
-    )
+    return (BasReliefsettings, BASRELIEF_Panel, DoBasRelief, ProblemAreas)
 
 
 def register():

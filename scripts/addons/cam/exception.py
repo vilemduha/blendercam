@@ -1,4 +1,4 @@
-"""CNC CAM 'exception.py'
+"""Fabex 'exception.py'
 
 Generic CAM Exception class.
 """

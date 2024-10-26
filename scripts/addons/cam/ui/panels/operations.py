@@ -1,4 +1,4 @@
-"""CNC CAM 'operations.py'
+"""Fabex 'operations.py'
 
 'CAM Operations' panel in Properties > Render
 """
@@ -28,6 +28,9 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         # Presets
         if self.level >= 1:
             row = layout.row(align=True)
@@ -69,7 +72,8 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
         if not self.op.valid:
             layout.label(text="Select a Valid Object to Calculate the Path.")
         # will be disabled if not valid
-        layout.operator("object.calculate_cam_path", text="Calculate Path & Export Gcode")
+        col = layout.column(align=True)
+        col.operator("object.calculate_cam_path", text="Calculate Path & Export Gcode")
 
         # Export Gcode
         if self.level >= 1:
@@ -77,39 +81,39 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
                 if self.op.name is not None:
                     name = f"cam_path_{self.op.name}"
                     if bpy.context.scene.objects.get(name) is not None:
-                        layout.operator("object.cam_export", text="Export Gcode ")
+                        col.operator("object.cam_export", text="Export Gcode ")
 
                 # Simulate Op
-                layout.operator("object.cam_simulate", text="Simulate This Operation")
+                col.operator("object.cam_simulate", text="Simulate This Operation")
 
-                # Op Name
-                layout.prop(self.op, "name")
-
+        box = layout.box()
+        col = box.column(align=True)
+        # Op Name
+        col.prop(self.op, "name")
         # Op Filename
-        layout.prop(self.op, "filename")
-
+        col.prop(self.op, "filename")
         # Op Source
-        layout.prop(self.op, "geometry_source")
+        col.prop(self.op, "geometry_source")
 
         if self.op.strategy == "CURVE":
             if self.op.geometry_source == "OBJECT":
-                layout.prop_search(self.op, "object_name", bpy.data, "objects")
+                col.prop_search(self.op, "object_name", bpy.data, "objects")
             elif self.op.geometry_source == "COLLECTION":
-                layout.prop_search(self.op, "collection_name", bpy.data, "collections")
+                col.prop_search(self.op, "collection_name", bpy.data, "collections")
         else:
             if self.op.geometry_source == "OBJECT":
-                layout.prop_search(self.op, "object_name", bpy.data, "objects")
+                col.prop_search(self.op, "object_name", bpy.data, "objects")
                 if self.op.enable_A:
-                    layout.prop(self.op, "rotation_A")
+                    col.prop(self.op, "rotation_A")
                 if self.op.enable_B:
-                    layout.prop(self.op, "rotation_B")
+                    col.prop(self.op, "rotation_B")
 
             elif self.op.geometry_source == "COLLECTION":
-                layout.prop_search(self.op, "collection_name", bpy.data, "collections")
+                col.prop_search(self.op, "collection_name", bpy.data, "collections")
             else:
-                layout.prop_search(self.op, "source_image_name", bpy.data, "images")
+                col.prop_search(self.op, "source_image_name", bpy.data, "images")
 
         if self.op.strategy in ["CARVE", "PROJECTED_CURVE"]:
-            layout.prop_search(self.op, "curve_object", bpy.data, "objects")
+            col.prop_search(self.op, "curve_object", bpy.data, "objects")
             if self.op.strategy == "PROJECTED_CURVE":
-                layout.prop_search(self.op, "curve_object1", bpy.data, "objects")
+                col.prop_search(self.op, "curve_object1", bpy.data, "objects")

@@ -1,12 +1,9 @@
-"""CNC CAM 'oclSample.py'
+"""Fabex 'oclSample.py'
 
 Functions to sample mesh or curve data for OpenCAMLib processing.
 """
 
-from math import (
-    radians,
-    tan
-)
+from math import radians, tan
 
 try:
     import ocl
@@ -56,21 +53,41 @@ def get_oclSTL(operation):
     found_mesh = False
     for collision_object in operation.objects:
         activate(collision_object)
-        if collision_object.type == "MESH" or collision_object.type == "CURVE" or collision_object.type == "FONT" or collision_object.type == "SURFACE":
+        if (
+            collision_object.type == "MESH"
+            or collision_object.type == "CURVE"
+            or collision_object.type == "FONT"
+            or collision_object.type == "SURFACE"
+        ):
             found_mesh = True
             global_matrix = mathutils.Matrix.Identity(4)
             faces = blender_utils.faces_from_mesh(
-                collision_object, global_matrix, operation.use_modifiers)
+                collision_object, global_matrix, operation.use_modifiers
+            )
             for face in faces:
-                t = ocl.Triangle(ocl.Point(face[0][0]*OCL_SCALE, face[0][1]*OCL_SCALE, (face[0][2]+operation.skin)*OCL_SCALE),
-                                 ocl.Point(face[1][0]*OCL_SCALE, face[1][1]*OCL_SCALE,
-                                           (face[1][2]+operation.skin)*OCL_SCALE),
-                                 ocl.Point(face[2][0]*OCL_SCALE, face[2][1]*OCL_SCALE, (face[2][2]+operation.skin)*OCL_SCALE))
+                t = ocl.Triangle(
+                    ocl.Point(
+                        face[0][0] * OCL_SCALE,
+                        face[0][1] * OCL_SCALE,
+                        (face[0][2] + operation.skin) * OCL_SCALE,
+                    ),
+                    ocl.Point(
+                        face[1][0] * OCL_SCALE,
+                        face[1][1] * OCL_SCALE,
+                        (face[1][2] + operation.skin) * OCL_SCALE,
+                    ),
+                    ocl.Point(
+                        face[2][0] * OCL_SCALE,
+                        face[2][1] * OCL_SCALE,
+                        (face[2][2] + operation.skin) * OCL_SCALE,
+                    ),
+                )
                 oclSTL.addTriangle(t)
         # FIXME needs to work with collections
     if not found_mesh:
         raise CamException(
-            "This Operation Requires a Mesh or Curve Object or Equivalent (e.g. Text, Volume).")
+            "This Operation Requires a Mesh or Curve Object or Equivalent (e.g. Text, Volume)."
+        )
     return oclSTL
 
 
@@ -101,30 +118,40 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
     op_minz = operation.minz
-    op_cutter_tip_angle = radians(operation.cutter_tip_angle)/2
+    op_cutter_tip_angle = radians(operation.cutter_tip_angle) / 2
     if op_cutter_type == "VCARVE":
-        cutter_length = (op_cutter_diameter/tan(op_cutter_tip_angle))/2
+        cutter_length = (op_cutter_diameter / tan(op_cutter_tip_angle)) / 2
     else:
         cutter_length = 10
 
     cutter = None
 
-    if op_cutter_type == 'END':
+    if op_cutter_type == "END":
         cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
-    elif op_cutter_type == 'BALLNOSE':
+    elif op_cutter_type == "BALLNOSE":
         cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
-    elif op_cutter_type == 'VCARVE':
-        cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2)
-                                * 1000, op_cutter_tip_angle, cutter_length)
-    elif op_cutter_type == 'CYLCONE':
-        cutter = ocl.CylConeCutter((operation.cylcone_diameter/2+operation.skin)*2000,
-                                   (op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle)
-    elif op_cutter_type == 'BALLCONE':
-        cutter = ocl.BallConeCutter((operation.ball_radius + operation.skin) * 2000,
-                                    (op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle)
-    elif op_cutter_type == 'BULLNOSE':
-        cutter = ocl.BullCutter((op_cutter_diameter + operation.skin * 2) *
-                                1000, operation.bull_corner_radius*1000, cutter_length)
+    elif op_cutter_type == "VCARVE":
+        cutter = ocl.ConeCutter(
+            (op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length
+        )
+    elif op_cutter_type == "CYLCONE":
+        cutter = ocl.CylConeCutter(
+            (operation.cylcone_diameter / 2 + operation.skin) * 2000,
+            (op_cutter_diameter + operation.skin * 2) * 1000,
+            op_cutter_tip_angle,
+        )
+    elif op_cutter_type == "BALLCONE":
+        cutter = ocl.BallConeCutter(
+            (operation.ball_radius + operation.skin) * 2000,
+            (op_cutter_diameter + operation.skin * 2) * 1000,
+            op_cutter_tip_angle,
+        )
+    elif op_cutter_type == "BULLNOSE":
+        cutter = ocl.BullCutter(
+            (op_cutter_diameter + operation.skin * 2) * 1000,
+            operation.bull_corner_radius * 1000,
+            cutter_length,
+        )
     else:
         print("Cutter Unsupported: {0}\n".format(op_cutter_type))
         quit()

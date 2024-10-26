@@ -1,4 +1,4 @@
-"""CNC CAM 'machine.py'
+"""Fabex 'machine.py'
 
 'CAM Machine' panel in Properties > Render
 """
@@ -19,6 +19,8 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
 
         # Presets
         if self.level >= 1:
@@ -35,65 +37,78 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
                 icon="REMOVE",
             ).remove_active = True
 
+        col = layout.column(align=True)
         # Post Processor
-        layout.prop(self.machine, "post_processor")
-
-        # Split Files
-        if self.level >= 2:
-            layout.prop(self.machine, "eval_splitting")
-            if self.machine.eval_splitting:
-                layout.prop(self.machine, "split_limit")
-
+        col.prop(self.machine, "post_processor")
         # System
-        layout.prop(bpy.context.scene.unit_settings, "system")
+        col.prop(context.scene.unit_settings, "system")
+        col.prop(context.scene.unit_settings, "length_unit", text="Unit")
 
-        # Position Definitions
+        # Supplemental Axis
+        if self.level >= 3:
+            col.prop(self.machine, "axis4")
+            col.prop(self.machine, "axis5")
+
+        # Collet Size
         if self.level >= 2:
-            layout.prop(self.machine, "use_position_definitions")
-            if self.machine.use_position_definitions:
-                layout.prop(self.machine, "starting_position")
-                layout.prop(self.machine, "mtc_position")
-                layout.prop(self.machine, "ending_position")
+            col.prop(self.machine, "collet_size")
 
         # Working Area
         layout.prop(self.machine, "working_area")
 
+        # Position Definitions
+        if self.level >= 2:
+            header, panel = layout.panel_prop(self.machine, "use_position_definitions")
+            header.label(text="Position Definitions")
+            if panel:
+                panel.prop(self.machine, "starting_position")
+                panel.prop(self.machine, "mtc_position")
+                panel.prop(self.machine, "ending_position")
+
         # Feedrates
         if self.level >= 1:
-            layout.prop(self.machine, "feedrate_min")
-            layout.prop(self.machine, "feedrate_max")
-            layout.prop(self.machine, "feedrate_default")
+            header, panel = layout.panel(idname="feedrate", default_closed=True)
+            header.label(text="Feedrate (/min)")
+            if panel:
+                panel.prop(self.machine, "feedrate_default", text="Default")
+                panel.prop(self.machine, "feedrate_min", text="Minimum")
+                panel.prop(self.machine, "feedrate_max", text="Maximum")
 
         # Spindle Speeds
         # TODO: spindle default and feedrate default should become part of the cutter definition...
-        layout.prop(self.machine, "spindle_min")
-        layout.prop(self.machine, "spindle_max")
-        layout.prop(self.machine, "spindle_start_time")
-        layout.prop(self.machine, "spindle_default")
+        header, panel = layout.panel(idname="spindle", default_closed=True)
+        header.label(text="Spindle Speed (RPM)")
+        if panel:
+            panel.prop(self.machine, "spindle_default", text="Default")
+            panel.prop(self.machine, "spindle_min", text="Minimum")
+            panel.prop(self.machine, "spindle_max", text="Maximum")
+            panel.prop(self.machine, "spindle_start_time", text="Start Delay (seconds)")
 
-        # Tool Options
-        if self.level >= 2:
-            layout.prop(self.machine, "output_tool_definitions")
-            layout.prop(self.machine, "output_tool_change")
-            if self.machine.output_tool_change:
-                layout.prop(self.machine, "output_g43_on_tool_change")
-
-        # Supplemental Axis
-        if self.level >= 3:
-            layout.prop(self.machine, "axis4")
-            layout.prop(self.machine, "axis5")
-
-        # Collet Size
-        if self.level >= 2:
-            layout.prop(self.machine, "collet_size")
-
-        # Block Numbers
-        if self.level >= 2:
-            layout.prop(self.machine, "output_block_numbers")
-            if self.machine.output_block_numbers:
-                layout.prop(self.machine, "start_block_number")
-                layout.prop(self.machine, "block_number_increment")
-
-        # Hourly Rate
+        # Gcode Options
         if self.level >= 1:
+            header, panel = layout.panel(idname="gcode", default_closed=True)
+            header.label(text="Gcode Options")
+            if panel:
+                col = panel.column(align=True)
+                # Tool Options
+                if self.level >= 2:
+                    col.prop(self.machine, "output_tool_definitions")
+                    col.prop(self.machine, "output_tool_change")
+                    if self.machine.output_tool_change:
+                        col.prop(self.machine, "output_g43_on_tool_change")
+
+                # Block Numbers
+                if self.level >= 2:
+                    col.prop(self.machine, "output_block_numbers")
+                    if self.machine.output_block_numbers:
+                        col.prop(self.machine, "start_block_number")
+                        col.prop(self.machine, "block_number_increment")
+
+                # Split Files
+                if self.level >= 2:
+                    col.prop(self.machine, "eval_splitting")
+                    if self.machine.eval_splitting:
+                        col.prop(self.machine, "split_limit")
+
+            # Hourly Rate
             layout.prop(self.machine, "hourly_rate")

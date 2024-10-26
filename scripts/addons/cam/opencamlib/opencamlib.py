@@ -1,4 +1,4 @@
-"""CNC CAM 'oclSample.py'
+"""Fabex 'oclSample.py'
 
 Functions used by OpenCAMLib sampling.
 """
@@ -8,6 +8,7 @@ from subprocess import call
 import tempfile
 
 import numpy as np
+
 try:
     import ocl
 except ImportError:
@@ -23,10 +24,7 @@ from ..simple import activate
 from .. import utils
 from ..cam_chunk import camPathChunk
 from ..async_op import progress_async
-from .oclSample import (
-    get_oclSTL,
-    ocl_sample
-)
+from .oclSample import get_oclSTL, ocl_sample
 
 OCL_SCALE = 1000.0
 
@@ -69,7 +67,7 @@ def chunkPointSamplesFromOCL(chunks, samples):
     s_index = 0
     for ch in chunks:
         ch_points = ch.count()
-        z_vals = np.array([p.z for p in samples[s_index:s_index+ch_points]])
+        z_vals = np.array([p.z for p in samples[s_index : s_index + ch_points]])
         z_vals /= OCL_SCALE
         ch.setZ(z_vals)
         s_index += ch_points
@@ -102,7 +100,7 @@ def chunkPointsResampleFromOCL(chunks, samples):
     s_index = 0
     for ch in chunks:
         ch_points = ch.count()
-        z_vals = np.array([p.z for p in samples[s_index:s_index+ch_points]])
+        z_vals = np.array([p.z for p in samples[s_index : s_index + ch_points]])
         z_vals /= OCL_SCALE
         ch.setZ(z_vals)
         s_index += ch_points
@@ -143,14 +141,34 @@ def exportModelsToSTL(operation):
         # bpy.context.scene.objects.selected = collision_object
         file_name = os.path.join(tempfile.gettempdir(), "model{0}.stl".format(str(file_number)))
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-        bpy.ops.transform.resize(value=(OCL_SCALE, OCL_SCALE, OCL_SCALE), constraint_axis=(False, False, False),
-                                 orient_type='GLOBAL', mirror=False, use_proportional_edit=False,
-                                 proportional_edit_falloff='SMOOTH', proportional_size=1, snap=False,
-                                 snap_target='CLOSEST', snap_point=(0, 0, 0), snap_align=False, snap_normal=(0, 0, 0),
-                                 texture_space=False, release_confirm=False)
+        bpy.ops.transform.resize(
+            value=(OCL_SCALE, OCL_SCALE, OCL_SCALE),
+            constraint_axis=(False, False, False),
+            orient_type="GLOBAL",
+            mirror=False,
+            use_proportional_edit=False,
+            proportional_edit_falloff="SMOOTH",
+            proportional_size=1,
+            snap=False,
+            snap_target="CLOSEST",
+            snap_point=(0, 0, 0),
+            snap_align=False,
+            snap_normal=(0, 0, 0),
+            texture_space=False,
+            release_confirm=False,
+        )
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-        bpy.ops.export_mesh.stl(check_existing=True, filepath=file_name, filter_glob="*.stl", use_selection=True,
-                                ascii=False, use_mesh_modifiers=True, axis_forward='Y', axis_up='Z', global_scale=1.0)
+        bpy.ops.export_mesh.stl(
+            check_existing=True,
+            filepath=file_name,
+            filter_glob="*.stl",
+            use_selection=True,
+            ascii=False,
+            use_mesh_modifiers=True,
+            axis_forward="Y",
+            axis_up="Z",
+            global_scale=1.0,
+        )
         bpy.ops.object.delete()
         file_number += 1
 
@@ -221,16 +239,16 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
     tmp_chunks = list()
     tmp_chunks.append(camPathChunk(inpoints=[]))
     for chunk, i_start, i_length in chunks_to_resample:
-        tmp_chunks[0].extend(chunk.get_points_np()[i_start:i_start+i_length])
+        tmp_chunks[0].extend(chunk.get_points_np()[i_start : i_start + i_length])
         print(i_start, i_length, len(tmp_chunks[0].points))
 
     samples = await ocl_sample(operation, tmp_chunks, use_cached_mesh=use_cached_mesh)
 
     sample_index = 0
     for chunk, i_start, i_length in chunks_to_resample:
-        z = np.array([p.z for p in samples[sample_index:sample_index+i_length]]) / OCL_SCALE
+        z = np.array([p.z for p in samples[sample_index : sample_index + i_length]]) / OCL_SCALE
         pts = chunk.get_points_np()
-        pt_z = pts[i_start:i_start+i_length, 2]
+        pt_z = pts[i_start : i_start + i_length, 2]
         pt_z = np.where(z > pt_z, z, pt_z)
 
         sample_index += i_length
@@ -304,19 +322,20 @@ async def oclGetWaterline(operation, chunks):
     op_cutter_diameter = operation.cutter_diameter
     op_minz = operation.minz
     if op_cutter_type == "VCARVE":
-        op_cutter_tip_angle = operation['cutter_tip_angle']
+        op_cutter_tip_angle = operation["cutter_tip_angle"]
 
     cutter = None
     # TODO: automatically determine necessary cutter length depending on object size
     cutter_length = 150
 
-    if op_cutter_type == 'END':
+    if op_cutter_type == "END":
         cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
-    elif op_cutter_type == 'BALLNOSE':
+    elif op_cutter_type == "BALLNOSE":
         cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
-    elif op_cutter_type == 'VCARVE':
-        cutter = ocl.ConeCutter((op_cutter_diameter + operation.skin * 2)
-                                * 1000, op_cutter_tip_angle, cutter_length)
+    elif op_cutter_type == "VCARVE":
+        cutter = ocl.ConeCutter(
+            (op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length
+        )
     else:
         print("Cutter unsupported: {0}\n".format(op_cutter_type))
         quit()
@@ -328,7 +347,7 @@ async def oclGetWaterline(operation, chunks):
     last_pos = [0, 0, 0]
     for count, height in enumerate(layers):
         layer_chunks = []
-        await progress_async("Waterline", int((100*count)/len(layers)))
+        await progress_async("Waterline", int((100 * count) / len(layers)))
         waterline.reset()
         waterline.setZ(height * OCL_SCALE)
         waterline.run2()
@@ -345,5 +364,6 @@ async def oclGetWaterline(operation, chunks):
         chunks.extend(await utils.sortChunks(layer_chunks, operation, last_pos=last_pos))
         if len(chunks) > 0:
             last_pos = chunks[-1].get_point(-1)
+
 
 # def oclFillMedialAxis(operation):

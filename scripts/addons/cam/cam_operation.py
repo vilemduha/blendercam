@@ -1,4 +1,4 @@
-"""CNC CAM 'cam_operation.py'
+"""Fabex 'cam_operation.py'
 
 All properties of a single CAM Operation.
 """

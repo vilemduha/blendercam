@@ -1,8 +1,8 @@
 schema_version = "1.0.52"
 
-id = "blendercam"
+id = "fabex"
 version = "1.0.52"
-name = "BlenderCAM"
+name = "Fabex CNC (formerly BlenderCAM)"
 tagline = "G-code Generation Tools"
 maintainer = "Alain Pelletier and Contributors"
 type = "add-on"
@@ -18,7 +18,7 @@ license = [
 ]
 
 copyright = [
-  "2012-2024 Vilem Novak, Alain Pelletier",
+  "2012-2024 Vilem Novak, Alain Pelletier & contributors",
 ]
 
 wheels = [

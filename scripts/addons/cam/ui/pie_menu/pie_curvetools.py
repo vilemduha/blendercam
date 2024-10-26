@@ -1,4 +1,4 @@
-"""CNC CAM 'pie_curvetools.py'
+"""Fabex 'pie_curvetools.py'
 
 'Curve Tools' Pie Menu
 """
@@ -43,9 +43,5 @@ class VIEW3D_MT_PIE_CurveTools(Menu):
         box = column.box()
         box.scale_y = 2
         box.scale_x = 2
-        box.emboss = 'NONE'
-        box.operator(
-            "wm.call_menu_pie",
-            text='',
-            icon='HOME'
-        ).name = 'VIEW3D_MT_PIE_CAM'
+        box.emboss = "NONE"
+        box.operator("wm.call_menu_pie", text="", icon="HOME").name = "VIEW3D_MT_PIE_CAM"

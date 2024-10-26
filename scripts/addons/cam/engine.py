@@ -1,4 +1,4 @@
-"""CNCCAM 'engine.py'
+"""Fabex 'engine.py'
 
 Engine definition, options and panels.
 """
@@ -28,9 +28,9 @@ from .ui.panels.pack import CAM_PACK_Panel
 from .ui.panels.slice import CAM_SLICE_Panel
 
 
-class CNCCAM_ENGINE(RenderEngine):
-    bl_idname = "CNCCAM_RENDER"
-    bl_label = "CNC CAM"
+class FABEX_ENGINE(RenderEngine):
+    bl_idname = "FABEX_RENDER"
+    bl_label = "Fabex CNC/CAM"
     bl_use_eevee_viewport = True
 
 

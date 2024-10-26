@@ -1,4 +1,4 @@
-"""CNC CAM 'bridges.py' © 2012 Vilem Novak
+"""Fabex 'bridges.py' © 2012 Vilem Novak
 
 Functions to add Bridges / Tabs to meshes or curves.
 Called with Operators defined in 'ops.py'
@@ -41,20 +41,32 @@ def addBridge(x, y, rot, sizex, sizey):
         bpy.types.Object: The created bridge object.
     """
 
-    bpy.ops.mesh.primitive_plane_add(size=sizey*2, calc_uvs=True, enter_editmode=False, align='WORLD',
-                                     location=(0, 0, 0), rotation=(0, 0, 0))
+    bpy.ops.mesh.primitive_plane_add(
+        size=sizey * 2,
+        calc_uvs=True,
+        enter_editmode=False,
+        align="WORLD",
+        location=(0, 0, 0),
+        rotation=(0, 0, 0),
+    )
     b = bpy.context.active_object
-    b.name = 'bridge'
+    b.name = "bridge"
     # b.show_name=True
     b.dimensions.x = sizex
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
     bpy.ops.object.editmode_toggle()
-    bpy.ops.transform.translate(value=(0, sizey / 2, 0), constraint_axis=(False, True, False),
-                                orient_type='GLOBAL', mirror=False, use_proportional_edit=False,
-                                proportional_edit_falloff='SMOOTH', proportional_size=1)
+    bpy.ops.transform.translate(
+        value=(0, sizey / 2, 0),
+        constraint_axis=(False, True, False),
+        orient_type="GLOBAL",
+        mirror=False,
+        use_proportional_edit=False,
+        proportional_edit_falloff="SMOOTH",
+        proportional_size=1,
+    )
     bpy.ops.object.editmode_toggle()
-    bpy.ops.object.convert(target='CURVE')
+    bpy.ops.object.convert(target="CURVE")
 
     b.location = x, y, 0
     b.rotation_euler.z = rot
@@ -83,18 +95,18 @@ def addAutoBridges(o):
     """
     utils.getOperationSources(o)
     bridgecollectionname = o.bridges_collection_name
-    if bridgecollectionname == '' or bpy.data.collections.get(bridgecollectionname) is None:
-        bridgecollectionname = 'bridges_' + o.name
+    if bridgecollectionname == "" or bpy.data.collections.get(bridgecollectionname) is None:
+        bridgecollectionname = "bridges_" + o.name
         bpy.data.collections.new(bridgecollectionname)
         bpy.context.collection.children.link(bpy.data.collections[bridgecollectionname])
     g = bpy.data.collections[bridgecollectionname]
     o.bridges_collection_name = bridgecollectionname
     for ob in o.objects:
 
-        if ob.type == 'CURVE' or ob.type == 'TEXT':
+        if ob.type == "CURVE" or ob.type == "TEXT":
             curve = utils.curveToShapely(ob)
-        if ob.type == 'MESH':
-            curve = utils.getObjectSilhouete('OBJECTS', [ob])
+        if ob.type == "MESH":
+            curve = utils.getObjectSilhouete("OBJECTS", [ob])
         for c in curve.geoms:
             c = c.exterior
             minx, miny, maxx, maxy = c.bounds
@@ -135,13 +147,13 @@ def getBridgesPoly(o):
         o (object): An object containing properties related to bridge
     """
 
-    if not hasattr(o, 'bridgespolyorig'):
+    if not hasattr(o, "bridgespolyorig"):
         bridgecollectionname = o.bridges_collection_name
         bridgecollection = bpy.data.collections[bridgecollectionname]
-        bpy.ops.object.select_all(action='DESELECT')
+        bpy.ops.object.select_all(action="DESELECT")
 
         for ob in bridgecollection.objects:
-            if ob.type == 'CURVE':
+            if ob.type == "CURVE":
                 ob.select_set(state=True)
         bpy.context.view_layer.objects.active = ob
         bpy.ops.object.duplicate()
@@ -227,8 +239,8 @@ def useBridges(ch, o):
                 else:
                     intersections = sgeometry.GeometryCollection()
 
-                itpoint = intersections.geom_type == 'Point'
-                itmpoint = intersections.geom_type == 'MultiPoint'
+                itpoint = intersections.geom_type == "Point"
+                itmpoint = intersections.geom_type == "MultiPoint"
 
                 if not startinside:
                     newpoints.append(chp1)
@@ -295,13 +307,15 @@ def useBridges(ch, o):
         x = pt[0]
         y = pt[1]
         z = pt[2]
-        if z == bridgeheight:   # find all points with z = bridge height
+        if z == bridgeheight:  # find all points with z = bridge height
             count += 1
-            if isedge == 1:     # This is to subdivide  edges which are longer than the width of the bridge
+            if (
+                isedge == 1
+            ):  # This is to subdivide  edges which are longer than the width of the bridge
                 edgelength = hypot(x - x2, y - y2)
                 if edgelength > o.bridges_width:
                     # make new vertex
-                    verts.append(((x + x2)/2, (y + y2)/2, o.minz))
+                    verts.append(((x + x2) / 2, (y + y2) / 2, o.minz))
 
                     isedge += 1
                     edge = [count - 2, count - 1]
@@ -310,7 +324,7 @@ def useBridges(ch, o):
             else:
                 x2 = x
                 y2 = y
-            verts.append((x, y, o.minz))    # make new vertex
+            verts.append((x, y, o.minz))  # make new vertex
             isedge += 1
             if isedge > 1:  # Two points make an edge
                 edge = [count - 2, count - 1]
@@ -324,11 +338,11 @@ def useBridges(ch, o):
         mesh = bpy.data.meshes.new(name=o.name + "_cut_bridges")  # generate new mesh
         # integrate coordinates and edges
         mesh.from_pydata(verts, edges, faces)
-        object_data_add(bpy.context, mesh)      # create object
-        bpy.ops.object.convert(target='CURVE')  # convert mesh to curve
+        object_data_add(bpy.context, mesh)  # create object
+        bpy.ops.object.convert(target="CURVE")  # convert mesh to curve
         # join all the new cut bridges curves
-        simple.join_multiple(o.name + '_cut_bridges')
-        simple.remove_doubles()     # remove overlapping vertices
+        simple.join_multiple(o.name + "_cut_bridges")
+        simple.remove_doubles()  # remove overlapping vertices
 
 
 def auto_cut_bridge(o):

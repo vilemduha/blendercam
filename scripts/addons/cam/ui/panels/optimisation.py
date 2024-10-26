@@ -1,4 +1,4 @@
-"""CNC CAM 'optimisation.py'
+"""Fabex 'optimisation.py'
 
 'CAM Optimisation' properties and panel in Properties > Render
 """
@@ -113,11 +113,15 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
     def draw(self, context):
         if self.level >= 2 and self.op is not None:
             layout = self.layout
+            layout.use_property_split = True
+            layout.use_property_decorate = False
+
             # Optimize
-            layout.prop(self.op.optimisation, "optimize")
-            if self.op.optimisation.optimize:
-                layout.prop(self.op.optimisation, "optimize_threshold")
-            layout.separator()
+            header, panel = layout.panel_prop(self.op.optimisation, "optimize")
+            header.label(text="Reduce Path Points")
+            if panel:
+                col = panel.column(align=True)
+                col.prop(self.op.optimisation, "optimize_threshold", text="Threshold (μm)")
 
             # Exact Mode
             if not self.op.geometry_source == "OBJECT" or self.op.geometry_source == "COLLECTION":

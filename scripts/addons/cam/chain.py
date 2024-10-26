@@ -1,4 +1,4 @@
-"""CNC CAM 'chain.py'
+"""Fabex 'chain.py'
 
 All properties of a CAM Chain (a series of Operations), and the Chain's Operation reference.
 """

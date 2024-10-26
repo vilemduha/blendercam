@@ -1,4 +1,4 @@
-"""CNC CAM 'material.py'
+"""Fabex 'material.py'
 
 'CAM Material' properties and panel in Properties > Render
 """
@@ -117,26 +117,32 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text="Size")
         # Estimate from Image
         if self.op.geometry_source not in ["OBJECT", "COLLECTION"]:
-            layout.label(text="Estimated from Image")
+            col.label(text="Estimated from Image")
 
         # Estimate from Object
         if self.level >= 1:
             if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-                layout.prop(self.op.material, "estimate_from_model")
+                col.prop(self.op.material, "estimate_from_model")
                 if self.op.material.estimate_from_model:
-                    row_radius = layout.row()
-                    row_radius.label(text="Additional Radius")
-                    row_radius.prop(self.op.material, "radius_around_model", text="")
+                    col.prop(self.op.material, "radius_around_model", text="Additional Radius")
                 else:
-                    layout.prop(self.op.material, "origin")
-                    layout.prop(self.op.material, "size")
+                    col.prop(self.op.material, "origin")
+                    col.prop(self.op.material, "size")
 
         # Axis Alignment
         if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-            row_axis = layout.row()
-            row_axis.prop(self.op.material, "center_x")
-            row_axis.prop(self.op.material, "center_y")
-            layout.prop(self.op.material, "z_position")
-            layout.operator("object.material_cam_position", text="Position Object")
+            box = layout.box()
+            col = box.column(align=True)
+            col.label(text="Position")
+            col.prop(self.op.material, "center_x")
+            col.prop(self.op.material, "center_y")
+            col.prop(self.op.material, "z_position")
+            col.operator("object.material_cam_position", text="Position Object")

@@ -1,4 +1,4 @@
-"""CNC CAM 'chains.py'
+"""Fabex 'chains.py'
 
 'CAM Chains' panel in Properties > Render
 """
@@ -43,12 +43,17 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
 
     bl_label = "CAM Chains"
     bl_idname = "WORLD_PT_CAM_CHAINS"
+    # bl_space_type = "VIEW_3D"
+    # bl_region_type = "UI"
+    # bl_category = "Fabex"
     panel_interface_level = 1
     always_show_panel = True
 
     def draw(self, context):
         if self.level >= 1 and self.op is not None:
             layout = self.layout
+            layout.use_property_split = True
+            layout.use_property_decorate = False
 
             row = layout.row()
             scene = bpy.context.scene
@@ -73,20 +78,23 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
                         col.operator("scene.cam_chain_operation_up", icon="TRIA_UP", text="")
                         col.operator("scene.cam_chain_operation_down", icon="TRIA_DOWN", text="")
 
+                    col = layout.column(align=True)
                     if not chain.computing:
-                        layout.operator(
+                        col.operator(
                             "object.calculate_cam_paths_chain",
                             text="Calculate Chain Paths & Export Gcode",
                         )
-                        layout.operator("object.cam_export_paths_chain", text="Export Chain G-code")
-                        layout.operator("object.cam_simulate_chain", text="Simulate This Chain")
+                        col.operator("object.cam_export_paths_chain", text="Export Chain G-code")
+                        col.operator("object.cam_simulate_chain", text="Simulate This Chain")
 
                         valid, reason = isChainValid(chain, context)
                         if not valid:
-                            layout.label(icon="ERROR", text=f"Can't Compute Chain - Reason:\n")
-                            layout.label(text=reason)
+                            col.label(icon="ERROR", text=f"Can't Compute Chain - Reason:\n")
+                            col.label(text=reason)
                     else:
-                        layout.label(text="Chain Is Currently Computing")
+                        col.label(text="Chain Is Currently Computing")
 
-                    layout.prop(chain, "name")
-                    layout.prop(chain, "filename")
+                    box = layout.box()
+                    col = box.column(align=True)
+                    col.prop(chain, "name")
+                    col.prop(chain, "filename")

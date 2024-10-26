@@ -1,6 +1,6 @@
 (Created with grbl post processor 2024/01/31 15:05)
 G21
-(G-code generated with BlenderCAM and NC library)
+(G-code generated with Fabex and NC library)
 G17G90
 S12000M03
 G00 Z10.0
