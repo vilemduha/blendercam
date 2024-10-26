@@ -18,6 +18,9 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
 
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         # Feedrate
         layout.prop(self.op, "feedrate")
 
@@ -27,9 +30,10 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
 
         # Plunge Feedrate
         if self.level >= 1:
-            layout.prop(self.op, "plunge_feedrate")
+            col = layout.column(align=True)
+            col.prop(self.op, "plunge_feedrate")
             # Plunge Angle
-            layout.prop(self.op, "plunge_angle")
+            col.prop(self.op, "plunge_angle")
 
         # Spindle RPM
         layout.prop(self.op, "spindle_rpm")

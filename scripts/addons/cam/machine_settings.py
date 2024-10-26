@@ -148,12 +148,12 @@ class machineSettings(PropertyGroup):
     )
 
     axis4: BoolProperty(
-        name="#4th Axis",
+        name="4th Axis",
         description="Machine has 4th axis",
         default=0,
     )
     axis5: BoolProperty(
-        name="#5th Axis",
+        name="5th Axis",
         description="Machine has 5th axis",
         default=0,
     )
@@ -180,7 +180,7 @@ class machineSettings(PropertyGroup):
     #     default='X', update = updateOffsetImage)
 
     collet_size: FloatProperty(
-        name="#Collet Size",
+        name="Collet Size",
         description="Collet size for collision detection",
         default=33,
         min=0.00001,

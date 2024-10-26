@@ -1613,7 +1613,6 @@ class BASRELIEF_Panel(bpy.types.Panel):
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "render"
-
     COMPAT_ENGINES = {"FABEX_RENDER"}
 
     # def draw_header(self, context):
@@ -1656,6 +1655,9 @@ class BASRELIEF_Panel(bpy.types.Panel):
         """
 
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+
         # print(dir(layout))
         s = bpy.context.scene
 

@@ -30,7 +30,7 @@ from .ui.panels.slice import CAM_SLICE_Panel
 
 class FABEX_ENGINE(RenderEngine):
     bl_idname = "FABEX_RENDER"
-    bl_label = "Fabex"
+    bl_label = "Fabex CNC/CAM"
     bl_use_eevee_viewport = True
 
 

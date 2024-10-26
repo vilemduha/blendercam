@@ -66,17 +66,20 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
     # Display the Info Panel
     def draw(self, context):
         layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
 
+        col = layout.column(align=True)
         # Fabex Version
-        layout.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}')
+        col.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}')
 
         # OpenCAMLib Version
         if self.level >= 1:
             ocl_version = opencamlib_version()
             if ocl_version is None:
-                layout.label(text="OpenCAMLib is not Installed")
+                col.label(text="OpenCAMLib is not Installed")
             else:
-                layout.label(text=f"OpenCAMLib v{ocl_version}")
+                col.label(text=f"OpenCAMLib v{ocl_version}")
 
         if self.op is None:
             return

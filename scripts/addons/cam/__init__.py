@@ -23,11 +23,6 @@ from bpy_extras.object_utils import object_data_add
 
 # Relative Imports - from 'cam' module
 from . import basrelief
-from .autoupdate import (
-    UpdateChecker,
-    Updater,
-    UpdateSourceOperator,
-)
 from .cam_operation import camOperation
 from .chain import (
     camChain,
