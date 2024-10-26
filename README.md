@@ -1,6 +1,6 @@
 <div align="center">
 
-![CNC CAM extension for Blender](documentation/images/logo.png)
+![Fabex CNC CAM extension for Blender](documentation/images/logo.png)
 
 - - -
 
@@ -21,14 +21,14 @@
 
 - - - 
 
-![CNC CAM extension for Blender](documentation/images/suzanne.gif)
+![Fabex CNC CAM extension for Blender](documentation/images/suzanne.gif)
 
 - - -
 
 </div>
 
 ## 👁️ About
-[**CNC CAM extension for Blender**](https://blendercam.com/) is an open source solution for artistic, personal, commercial or industrial CAM - Computer aided machining - a g-code generation tool.  It was called Blendercam but the name Blender can no longer be used in the name due to Trademark.
+[**Fabex CNC CAM extension for Blender**](https://blendercam.com/) is an open source solution for artistic, personal, commercial or industrial CAM - Computer aided machining - a g-code generation tool.  It was called Blendercam but the name Blender can no longer be used in the name due to Trademark.
 
 
 It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed. 
@@ -40,9 +40,9 @@ It has been used for many milling projects _(artistic, personal, commercial and 
 
 ![Linux](https://img.shields.io/badge/Plateform-Linux%20|%20MacOS%20|%20Windows-brightgreen.svg)
 
-CNC CAM extension for Blender (formerly Blendercam) works on Windows or Linux and MacOS.
+Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Linux and MacOS.
 
-* [CNC CAM extension Installation](documentation/Blendercam%20Installation.md)
+* [Fabex CNC CAM extension Installation](documentation/Blendercam%20Installation.md)
 * [Getting Started](documentation/Getting%20started.md)
 * [Panel Descriptions](documentation/Blendercam-Panel-Descriptions.md)
 * [Tools](documentation/Blendercam-Tools.md)
@@ -117,7 +117,7 @@ CNC CAM extension for Blender (formerly Blendercam) works on Windows or Linux an
 
 
 ## 🤝 Contribute
-#### CNC CAM extension for Blender is in active development.
+#### Fabex CNC CAM extension for Blender is in active development.
 
 Originally created by [Vilem Novak](https://github.com/vilemduha), the addon is currently maintained by [Alain Pelletier](https://github.com/pppalain) and a team of contributors. 
 
@@ -137,7 +137,7 @@ If you wish to contribute to the addon, your code must be GPL or a more permissi
 Hirutso Enni, Kurt Jensen, Dan Falck, Dan Heeks, Brad Collette, Michael Haberler, dhull, jonathanwin, Leemon Baird, Devon (Gorialis) R, Steven Fortune, Bill Simons, Carson Farmer, domlysz, Mihai Moldoveanu
 
 ## 🪪 License
-CNC CAM extension for Blender is licensed under GPLv3, __UNLESS OTHERWISE INDICATED__.
+Fabex CNC CAM extension for Blender is licensed under GPLv3, __UNLESS OTHERWISE INDICATED__.
 
 > [!NOTE]
 > _Some files in this addon use code from other sources, see the file docstring a the top of each file for attribution and license information._
