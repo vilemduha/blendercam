@@ -12,7 +12,7 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
     """CAM Operation Properties Panel"""
 
-    bl_label = "CAM Operation Setup"
+    bl_label = "Operation Setup"
     bl_idname = "WORLD_PT_CAM_OPERATION"
     panel_interface_level = 0
 
@@ -27,6 +27,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                 engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
 
             if engagement > 50:
+                col.alert = True
                 col.label(text="Warning: High Cutter Engagement")
 
             col.label(text=f"Cutter Engagement: {engagement}%")
@@ -78,6 +79,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
         else:
             col.prop(self.op, "strategy")
 
+        layout.label(text=self.op.strategy.title(), icon="SETTINGS")
+
         # Cutout Options
         if self.op.strategy in ["CUTOUT"]:
             box = layout.box()
@@ -93,6 +96,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             col.prop(self.op, "lead_out")
 
         if self.op.strategy in ["CUTOUT", "CURVE"]:
+            if self.op.strategy == "CURVE":
+                box = layout.box()
+                col = box.column(align=True)
             self.draw_enable_A_B_axis(col=col)
             # Outlines
             col.prop(self.op, "outlines_count")
@@ -144,7 +150,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             box = layout.box()
             col = box.column(align=True)
             self.draw_overshoot(col=col)
-            col.prop(self.op, "pocketType")
+            col.prop(self.op, "pocketType", text="Type")
             if self.op.pocketType == "PARALLEL":
                 col.label(text="Warning:Parallel pocket Experimental", icon="ERROR")
                 col.prop(self.op, "parallelPocketCrosshatch")
@@ -177,6 +183,10 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                 self.draw_enable_A_B_axis(col=col)
             col.prop(self.op, "inverse")
 
+        # Skin
+        if self.op.strategy not in ["POCKET", "DRILL", "CURVE", "MEDIAL_AXIS"]:
+            col.prop(self.op, "skin")
+
         # Bridges Options
         if self.level >= 1:
             if self.op.strategy not in ["POCKET", "DRILL", "CURVE", "MEDIAL_AXIS"]:
@@ -200,6 +210,3 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                     col.prop(self.op, "array_x_distance")
                     col.prop(self.op, "array_y_count")
                     col.prop(self.op, "array_y_distance")
-
-            # Skin
-            self.layout.prop(self.op, "skin")

@@ -106,7 +106,7 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
 class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
     """CAM Optimisation Panel"""
 
-    bl_label = "CAM Optimisation"
+    bl_label = "Optimisation"
     bl_idname = "WORLD_PT_CAM_OPTIMISATION"
     panel_interface_level = 2
 
@@ -137,11 +137,13 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
             ]
 
             if self.exact_possible:
-                layout.prop(self.op.optimisation, "use_exact")
+                col = layout.column(align=True)
+                col.prop(self.op.optimisation, "use_exact")
 
             if not self.exact_possible or not self.op.optimisation.use_exact:
-                layout.prop(self.op.optimisation, "pixsize")
-                layout.prop(self.op.optimisation, "imgres_limit")
+                col = layout.column(align=True)
+                col.prop(self.op.optimisation, "pixsize")
+                col.prop(self.op.optimisation, "imgres_limit", text="Max Resolution (MP)")
 
                 sx = self.op.max.x - self.op.min.x
                 sy = self.op.max.y - self.op.min.y
@@ -159,29 +161,33 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
             ocl_version = opencamlib_version()
 
             if ocl_version is None:
-                layout.label(text="OpenCAMLib is not Available ")
-                layout.prop(self.op.optimisation, "exact_subdivide_edges")
+                # col = layout.column(align=True)
+                col.label(text="OpenCAMLib is not Available ")
+                col.prop(self.op.optimisation, "exact_subdivide_edges")
             else:
-                layout.prop(self.op.optimisation, "use_opencamlib")
-            layout.separator()
+                # col = layout.column(align=True)
+                col.prop(self.op.optimisation, "use_opencamlib")
 
             # Simulation Detail
-            layout.prop(self.op.optimisation, "simulation_detail")
-            layout.prop(self.op.optimisation, "circle_detail")
+            box = layout.box()
+            sim_col = box.column(align=True)
+            sim_col.label(text="Detail")
+            sim_col.prop(self.op.optimisation, "simulation_detail", text="Sim Sampling Raster")
+            sim_col.prop(self.op.optimisation, "circle_detail", text="Curve Offset Circle")
 
             # Simplify Gcode
             if self.op.strategy not in ["DRILL"]:
-                layout.prop(self.op, "remove_redundant_points")
+                col.prop(self.op, "remove_redundant_points")
 
             if self.op.remove_redundant_points:
-                layout.prop(self.op, "simplify_tol")
+                col.prop(self.op, "simplify_tol")
 
             # Use Modifiers
             if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-                layout.prop(self.op, "use_modifiers")
+                col.prop(self.op, "use_modifiers")
 
             # Hide All Others
-            layout.prop(self.op, "hide_all_others")
+            col.prop(self.op, "hide_all_others")
 
             # Parent Path to Object
-            layout.prop(self.op, "parent_path_to_object")
+            col.prop(self.op, "parent_path_to_object")

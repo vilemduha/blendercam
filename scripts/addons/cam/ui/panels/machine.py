@@ -12,7 +12,7 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
     """CAM Machine Panel"""
 
-    bl_label = "CAM Machine"
+    bl_label = "Machine"
     bl_idname = "WORLD_PT_CAM_MACHINE"
     panel_interface_level = 0
     always_show_panel = True
@@ -71,8 +71,9 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
             header.label(text="Feedrate (/min)")
             if panel:
                 panel.prop(self.machine, "feedrate_default", text="Default")
-                panel.prop(self.machine, "feedrate_min", text="Minimum")
-                panel.prop(self.machine, "feedrate_max", text="Maximum")
+                col = panel.column(align=True)
+                col.prop(self.machine, "feedrate_min", text="Minimum")
+                col.prop(self.machine, "feedrate_max", text="Maximum")
 
         # Spindle Speeds
         # TODO: spindle default and feedrate default should become part of the cutter definition...
@@ -80,8 +81,9 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
         header.label(text="Spindle Speed (RPM)")
         if panel:
             panel.prop(self.machine, "spindle_default", text="Default")
-            panel.prop(self.machine, "spindle_min", text="Minimum")
-            panel.prop(self.machine, "spindle_max", text="Maximum")
+            col = panel.column(align=True)
+            col.prop(self.machine, "spindle_min", text="Minimum")
+            col.prop(self.machine, "spindle_max", text="Maximum")
             panel.prop(self.machine, "spindle_start_time", text="Start Delay (seconds)")
 
         # Gcode Options
@@ -111,4 +113,8 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
                         col.prop(self.machine, "split_limit")
 
             # Hourly Rate
-            layout.prop(self.machine, "hourly_rate")
+            layout.prop(
+                self.machine,
+                "hourly_rate",
+                text="Price ($/hour)",
+            )

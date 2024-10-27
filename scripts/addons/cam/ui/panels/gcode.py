@@ -12,7 +12,7 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_GCODE_Panel(CAMButtonsPanel, Panel):
     """CAM Operation G-code Options Panel"""
 
-    bl_label = "CAM G-code Options"
+    bl_label = "G-code Options"
     bl_idname = "WORLD_PT_CAM_GCODE"
     panel_interface_level = 1
 

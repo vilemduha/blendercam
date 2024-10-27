@@ -3,8 +3,14 @@
 Import UI, Register and Unregister Classes
 """
 
+from datetime import timedelta
+
 import bpy
 
+from .menus.import_gcode import TOPBAR_MT_import_gcode
+from .menus.curve_creators import VIEW3D_MT_tools_add, VIEW3D_MT_tools_create
+from .menus.curve_tools import VIEW3D_MT_tools_curvetools
+from .menus.viewport import Fabex_SubMenu, Fabex_Menu
 from .panels.area import CAM_AREA_Panel
 from .panels.chains import (
     CAM_CHAINS_Panel,
@@ -14,30 +20,18 @@ from .panels.chains import (
 from .panels.cutter import CAM_CUTTER_Panel
 from .panels.feedrate import CAM_FEEDRATE_Panel
 from .panels.gcode import CAM_GCODE_Panel
-from .panels.info import (
-    CAM_INFO_Panel,
-    CAM_INFO_Properties,
-)
-from .panels.interface import (
-    CAM_INTERFACE_Panel,
-    CAM_INTERFACE_Properties,
-)
+from .panels.info import CAM_INFO_Properties
+from .panels.interface import CAM_INTERFACE_Properties
 from .panels.machine import CAM_MACHINE_Panel
 from .panels.material import (
     CAM_MATERIAL_Panel,
     CAM_MATERIAL_PositionObject,
     CAM_MATERIAL_Properties,
 )
-from .panels.movement import (
-    CAM_MOVEMENT_Panel,
-    CAM_MOVEMENT_Properties,
-)
+from .panels.movement import CAM_MOVEMENT_Panel, CAM_MOVEMENT_Properties
 from .panels.op_properties import CAM_OPERATION_PROPERTIES_Panel
 from .panels.operations import CAM_OPERATIONS_Panel
-from .panels.optimisation import (
-    CAM_OPTIMISATION_Panel,
-    CAM_OPTIMISATION_Properties,
-)
+from .panels.optimisation import CAM_OPTIMISATION_Panel, CAM_OPTIMISATION_Properties
 from .panels.pack import CAM_PACK_Panel
 from .panels.slice import CAM_SLICE_Panel
 from .pie_menu.pie_cam import VIEW3D_MT_PIE_CAM
@@ -57,24 +51,28 @@ from .pie_menu.active_op.pie_operation import VIEW3D_MT_PIE_Operation
 from .pie_menu.active_op.pie_optimisation import VIEW3D_MT_PIE_Optimisation
 from .pie_menu.active_op.pie_setup import VIEW3D_MT_PIE_Setup
 from .legacy_ui import (
-    CustomPanel,
-    import_settings,
     VIEW3D_PT_tools_curvetools,
     VIEW3D_PT_tools_create,
     WM_OT_gcode_import,
 )
 
 classes = [
+    # .menus
+    TOPBAR_MT_import_gcode,
+    VIEW3D_MT_tools_add,
+    VIEW3D_MT_tools_create,
+    VIEW3D_MT_tools_curvetools,
+    Fabex_SubMenu,
+    Fabex_Menu,
     # .viewport_ui and .panels - the order will affect the layout
-    import_settings,
     CAM_UL_operations,
     CAM_UL_chains,
-    CAM_INTERFACE_Panel,
+    # CAM_INTERFACE_Panel,
     CAM_INTERFACE_Properties,
     CAM_CHAINS_Panel,
     CAM_OPERATIONS_Panel,
     CAM_INFO_Properties,
-    CAM_INFO_Panel,
+    # CAM_INFO_Panel,
     CAM_MATERIAL_Panel,
     CAM_MATERIAL_Properties,
     CAM_MATERIAL_PositionObject,
@@ -92,7 +90,6 @@ classes = [
     CAM_SLICE_Panel,
     VIEW3D_PT_tools_curvetools,
     VIEW3D_PT_tools_create,
-    CustomPanel,
     WM_OT_gcode_import,
     # .pie_menu and .pie_menu.active_op - placed after .ui in case inheritance is possible
     VIEW3D_MT_PIE_CAM,
@@ -114,11 +111,91 @@ classes = [
 ]
 
 
+def draw_engine_extras(self, context):
+    layout = self.layout
+    layout.use_property_split = True
+    layout.use_property_decorate = False
+
+    if context.engine == "FABEX_RENDER":
+
+        col = layout.column()
+        col.prop(context.scene.interface, "level")
+
+        operations = context.scene.cam_operations
+        operations_count = len(operations)
+        operation_index = context.scene.cam_active_operation
+        self.op = operations[operation_index] if operations_count > 0 else None
+
+        if self.op is None:
+            return
+        else:
+            if not self.op.info.warnings == "":
+                # Operation Warnings
+                box = layout.box()
+                col = box.column(align=True)
+                col.alert = True
+                col.label(text="Warning!", icon="ERROR")
+                for line in self.op.info.warnings.rstrip("\n").split("\n"):
+                    if len(line) > 0:
+                        col.label(text=line, icon="ERROR")
+
+            # Operation Time Estimate
+            duration = self.op.info.duration
+            seconds = int(duration * 60)
+            if not seconds > 0:
+                return
+
+            time_estimate = str(timedelta(seconds=seconds))
+            split = time_estimate.split(":")
+            split[0] += "h "
+            split[1] += "m "
+            split[2] += "s"
+            time_estimate = split[0] + split[1] + split[2]
+
+            box = layout.box()
+            col = box.column(align=True)
+            col.label(text=f"Operation Duration: {time_estimate}", icon="TIME")
+
+            # Operation Chipload
+            if not self.op.info.chipload > 0:
+                return
+
+            chipload = f"Chipload: {strInUnits(self.op.info.chipload, 4)}/tooth"
+            col.label(text=chipload)
+
+            # Operation Money Cost
+            if self.level >= 1:
+                if not int(self.op.info.duration * 60) > 0:
+                    return
+
+                row = self.layout.row()
+                row.label(text="Hourly Rate")
+                row.prop(bpy.context.scene.cam_machine, "hourly_rate", text="")
+
+                if float(bpy.context.scene.cam_machine.hourly_rate) < 0.01:
+                    return
+
+                cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
+                total_cost = self.op.info.duration * 60 * cost_per_second
+                op_cost = f"Operation Cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
+                layout.label(text=op_cost)
+
+
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
+
+    bpy.types.TOPBAR_MT_file_import.append(TOPBAR_MT_import_gcode.draw)
+    bpy.types.VIEW3D_MT_curve_add.append(VIEW3D_MT_tools_add.draw)
+    bpy.types.VIEW3D_MT_editor_menus.append(Fabex_Menu.draw)
+    bpy.types.RENDER_PT_context.append(draw_engine_extras)
 
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
+
+    bpy.types.TOPBAR_MT_file_import.remove(TOPBAR_MT_import_gcode.draw)
+    bpy.types.VIEW3D_MT_curve_add.remove(VIEW3D_MT_tools_add.draw)
+    bpy.types.VIEW3D_MT_editor_menus.remove(Fabex_Menu.draw)
+    bpy.types.RENDER_PT_context.remove(draw_engine_extras)

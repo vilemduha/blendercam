@@ -3159,34 +3159,32 @@ def check_operations_on_load(context):
             )
         _IS_LOADING_DEFAULTS = False
     # copy presets if not there yet
-    if addon_prefs.just_updated:
-        preset_source_path = Path(__file__).parent / "presets"
-        preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
+    preset_source_path = Path(__file__).parent / "presets"
+    preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
 
-        def copy_if_not_exists(src, dst):
-            """Copy a file from source to destination if it does not already exist.
+    def copy_if_not_exists(src, dst):
+        """Copy a file from source to destination if it does not already exist.
 
-            This function checks if the destination file exists. If it does not, the
-            function copies the source file to the destination using a high-level
-            file operation that preserves metadata.
+        This function checks if the destination file exists. If it does not, the
+        function copies the source file to the destination using a high-level
+        file operation that preserves metadata.
 
-            Args:
-                src (str): The path to the source file to be copied.
-                dst (str): The path to the destination where the file should be copied.
-            """
+        Args:
+            src (str): The path to the source file to be copied.
+            dst (str): The path to the destination where the file should be copied.
+        """
 
-            if Path(dst).exists() == False:
-                shutil.copy2(src, dst)
+        if Path(dst).exists() == False:
+            shutil.copy2(src, dst)
 
-        shutil.copytree(
-            preset_source_path,
-            preset_target_path,
-            copy_function=copy_if_not_exists,
-            dirs_exist_ok=True,
-        )
+    shutil.copytree(
+        preset_source_path,
+        preset_target_path,
+        copy_function=copy_if_not_exists,
+        dirs_exist_ok=True,
+    )
 
-        addon_prefs.just_updated = False
-        bpy.ops.wm.save_userpref()
+    bpy.ops.wm.save_userpref()
 
     if not addon_prefs.op_preset_update:
         # Update the Operation presets

@@ -74,50 +74,6 @@ class VIEW3D_PT_tools_create(Panel):
         layout.operator("object.curve_flat_cone")
 
 
-# Gcode import panel---------------------------------------------------------------
-# ------------------------------------------------------------------------
-#    Panel in Object Mode
-# ------------------------------------------------------------------------
-
-
-class CustomPanel(Panel):
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
-    bl_context = "objectmode"
-    bl_label = "Import G-code"
-    bl_idname = "OBJECT_PT_importgcode"
-
-    bl_options = {"DEFAULT_CLOSED"}
-
-    @classmethod
-    def poll(cls, context):
-        return context.mode in {
-            "OBJECT",
-            "EDIT_MESH",
-        }  # with this poll addon is visibly even when no object is selected
-
-    def draw(self, context):
-        layout = self.layout
-        scene = context.scene
-        isettings = scene.cam_import_gcode
-        layout.prop(isettings, "output")
-        layout.prop(isettings, "split_layers")
-
-        layout.prop(isettings, "subdivide")
-        col = layout.column(align=True)
-        col = col.row(align=True)
-        col.split()
-        col.label(text="Segment Length")
-
-        col.prop(isettings, "max_segment_size")
-        col.enabled = isettings.subdivide
-        col.separator()
-
-        col = layout.column()
-        col.scale_y = 2.0
-        col.operator("wm.gcode_import")
-
-
 class WM_OT_gcode_import(Operator, ImportHelper):
     """Import G-code, Travel Lines Don't Get Drawn"""
 
@@ -135,12 +91,6 @@ class WM_OT_gcode_import(Operator, ImportHelper):
         maxlen=255,  # Max internal buffer length, longer would be clamped.
     )
 
-    def execute(self, context):
-        print(self.filepath)
-        return import_gcode(context, self.filepath)
-
-
-class import_settings(PropertyGroup):
     split_layers: BoolProperty(
         name="Split Layers",
         description="Save every layer as single Objects in Collection",
@@ -167,3 +117,15 @@ class import_settings(PropertyGroup):
         max=1.0,
         unit="LENGTH",
     )
+
+    def execute(self, context):
+        print(self.filepath)
+        context.gcode_output_type = self.output
+        return import_gcode(
+            context,
+            self.filepath,
+            self.output,
+            self.split_layers,
+            self.subdivide,
+            self.max_segment_size,
+        )

@@ -149,9 +149,9 @@ class camOperation(PropertyGroup):
     machine_axes: EnumProperty(
         name="Number of Axes",
         items=(
-            ("3", "3 axis", "a"),
-            ("4", "#4 axis - EXPERIMENTAL", "a"),
-            ("5", "#5 axis - EXPERIMENTAL", "a"),
+            ("3", "3 axis", "a", 0),
+            ("4", "4 axis - EXPERIMENTAL", "a", "EXPERIMENTAL", 1),
+            ("5", "5 axis - EXPERIMENTAL", "a", "EXPERIMENTAL", 2),
         ),
         description="How many axes will be used for the operation",
         default="3",

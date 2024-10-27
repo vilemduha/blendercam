@@ -41,8 +41,9 @@ class CAM_UL_chains(UIList):
 class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
     """CAM Chains Panel"""
 
-    bl_label = "CAM Chains"
+    bl_label = "Chains"
     bl_idname = "WORLD_PT_CAM_CHAINS"
+    bl_options = {"DEFAULT_CLOSED"}
     # bl_space_type = "VIEW_3D"
     # bl_region_type = "UI"
     # bl_category = "Fabex"

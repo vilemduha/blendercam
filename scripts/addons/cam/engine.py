@@ -16,8 +16,10 @@ from .ui.panels.chains import CAM_CHAINS_Panel
 from .ui.panels.cutter import CAM_CUTTER_Panel
 from .ui.panels.feedrate import CAM_FEEDRATE_Panel
 from .ui.panels.gcode import CAM_GCODE_Panel
-from .ui.panels.info import CAM_INFO_Panel
-from .ui.panels.interface import CAM_INTERFACE_Panel
+
+# from .ui.panels.info import CAM_INFO_Panel
+
+# from .ui.panels.interface import CAM_INTERFACE_Panel
 from .ui.panels.machine import CAM_MACHINE_Panel
 from .ui.panels.material import CAM_MATERIAL_Panel
 from .ui.panels.movement import CAM_MOVEMENT_Panel
@@ -67,10 +69,10 @@ def get_panels():
         EEVEE_MATERIAL_PT_context_material,
         EEVEE_MATERIAL_PT_surface,
         EEVEE_MATERIAL_PT_settings,
-        CAM_INTERFACE_Panel,
+        # CAM_INTERFACE_Panel,
         CAM_CHAINS_Panel,
         CAM_OPERATIONS_Panel,
-        CAM_INFO_Panel,
+        # CAM_INFO_Panel,
         CAM_MATERIAL_Panel,
         CAM_OPERATION_PROPERTIES_Panel,
         CAM_OPTIMISATION_Panel,

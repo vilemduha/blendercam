@@ -111,7 +111,7 @@ class CAM_MATERIAL_PositionObject(Operator):
 
 
 class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
-    bl_label = "CAM Material Size and Position"
+    bl_label = "Material Size & Position"
     bl_idname = "WORLD_PT_CAM_MATERIAL"
     panel_interface_level = 0
 
@@ -130,7 +130,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
         # Estimate from Object
         if self.level >= 1:
             if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
-                col.prop(self.op.material, "estimate_from_model")
+                col.prop(self.op.material, "estimate_from_model", text="Size from Model")
                 if self.op.material.estimate_from_model:
                     col.prop(self.op.material, "radius_around_model", text="Additional Radius")
                 else:

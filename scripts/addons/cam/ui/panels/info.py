@@ -15,7 +15,6 @@ from bpy.types import (
 
 from .buttons_panel import CAMButtonsPanel
 from ...utils import (
-    opencamlib_version,
     update_operation,
 )
 from ...constants import (
@@ -23,7 +22,6 @@ from ...constants import (
     CHIPLOAD_PRECISION,
     MAX_OPERATION_TIME,
 )
-from ...version import __version__ as cam_version
 from ...simple import strInUnits
 
 # Info panel
@@ -57,71 +55,61 @@ class CAM_INFO_Properties(PropertyGroup):
     )
 
 
-class CAM_INFO_Panel(CAMButtonsPanel, Panel):
-    bl_label = "CAM Info & Warnings"
-    bl_idname = "WORLD_PT_CAM_INFO"
-    panel_interface_level = 0
-    always_show_panel = True
+# class CAM_INFO_Panel(CAMButtonsPanel, Panel):
+#     bl_label = "Info & Warnings"
+#     bl_idname = "WORLD_PT_CAM_INFO"
+#     panel_interface_level = 0
+#     always_show_panel = True
 
-    # Display the Info Panel
-    def draw(self, context):
-        layout = self.layout
-        layout.use_property_split = True
-        layout.use_property_decorate = False
+#     # Display the Info Panel
+#     def draw(self, context):
+#         layout = self.layout
+#         layout.use_property_split = True
+#         layout.use_property_decorate = False
 
-        col = layout.column(align=True)
-        # Fabex Version
-        col.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}')
+#         if self.op is None:
+#             return
+#         else:
+#             # Operation Warnings
+#             col = layout.column(align=True)
+#             col.alert = True
+#             for line in self.op.info.warnings.rstrip("\n").split("\n"):
+#                 if len(line) > 0:
+#                     col.label(text=line, icon="ERROR")
 
-        # OpenCAMLib Version
-        if self.level >= 1:
-            ocl_version = opencamlib_version()
-            if ocl_version is None:
-                col.label(text="OpenCAMLib is not Installed")
-            else:
-                col.label(text=f"OpenCAMLib v{ocl_version}")
+#             # Operation Time Estimate
+#             if not int(self.op.info.duration * 60) > 0:
+#                 return
 
-        if self.op is None:
-            return
-        else:
-            # Operation Warnings
-            for line in self.op.info.warnings.rstrip("\n").split("\n"):
-                if len(line) > 0:
-                    layout.label(text=line, icon="ERROR")
+#             time_estimate = f"Operation Duration: {int(self.op.info.duration*60)}s "
+#             if self.op.info.duration > 60:
+#                 time_estimate += f" ({int(self.op.info.duration / 60)}h"
+#                 time_estimate += f" {round(self.op.info.duration % 60)}min)"
+#             elif self.op.info.duration > 1:
+#                 time_estimate += f" ({round(self.op.info.duration % 60)}min)"
 
-            # Operation Time Estimate
-            if not int(self.op.info.duration * 60) > 0:
-                return
+#             layout.label(text=time_estimate, icon="SORTTIME")
 
-            time_estimate = f"Operation Duration: {int(self.op.info.duration*60)}s "
-            if self.op.info.duration > 60:
-                time_estimate += f" ({int(self.op.info.duration / 60)}h"
-                time_estimate += f" {round(self.op.info.duration % 60)}min)"
-            elif self.op.info.duration > 1:
-                time_estimate += f" ({round(self.op.info.duration % 60)}min)"
+#             # Operation Chipload
+#             if not self.op.info.chipload > 0:
+#                 return
 
-            layout.label(text=time_estimate)
+#             chipload = f"Chipload: {strInUnits(self.op.info.chipload, 4)}/tooth"
+#             layout.label(text=chipload)
 
-            # Operation Chipload
-            if not self.op.info.chipload > 0:
-                return
+#             # Operation Money Cost
+#             if self.level >= 1:
+#                 if not int(self.op.info.duration * 60) > 0:
+#                     return
 
-            chipload = f"Chipload: {strInUnits(self.op.info.chipload, 4)}/tooth"
-            layout.label(text=chipload)
+#                 row = self.layout.row()
+#                 row.label(text="Hourly Rate")
+#                 row.prop(bpy.context.scene.cam_machine, "hourly_rate", text="")
 
-            # Operation Money Cost
-            if self.level >= 1:
-                if not int(self.op.info.duration * 60) > 0:
-                    return
+#                 if float(bpy.context.scene.cam_machine.hourly_rate) < 0.01:
+#                     return
 
-                row = self.layout.row()
-                row.label(text="Hourly Rate")
-                row.prop(bpy.context.scene.cam_machine, "hourly_rate", text="")
-
-                if float(bpy.context.scene.cam_machine.hourly_rate) < 0.01:
-                    return
-
-                cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
-                total_cost = self.op.info.duration * 60 * cost_per_second
-                op_cost = f"Operation Cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
-                layout.label(text=op_cost)
+#                 cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
+#                 total_cost = self.op.info.duration * 60 * cost_per_second
+#                 op_cost = f"Operation Cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
+#                 layout.label(text=op_cost)

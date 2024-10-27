@@ -1609,7 +1609,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
 
     bl_label = "Bas Relief"
     bl_idname = "WORLD_PT_BASRELIEF"
-
+    bl_options = {"DEFAULT_CLOSED"}
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "render"
@@ -1665,42 +1665,58 @@ class BASRELIEF_Panel(bpy.types.Panel):
 
         # if br:
         # cutter preset
-        layout.operator("scene.calculate_bas_relief", text="Calculate Relief")
-        layout.prop(br, "advanced")
-        layout.prop(br, "use_image_source")
+
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text="Source")
         if br.use_image_source:
-            layout.prop_search(br, "source_image_name", bpy.data, "images")
+            col.prop_search(br, "source_image_name", bpy.data, "images")
         else:
-            layout.prop_search(br, "view_layer_name", bpy.context.scene, "view_layers")
-        layout.prop(br, "depth_exponent")
-        layout.label(text="Project Parameters")
-        layout.prop(br, "bit_diameter")
-        layout.prop(br, "pass_per_radius")
-        layout.prop(br, "widthmm")
-        layout.prop(br, "heightmm")
-        layout.prop(br, "thicknessmm")
+            col.prop_search(br, "view_layer_name", bpy.context.scene, "view_layers")
+        col.prop(br, "use_image_source")
+        col.prop(br, "depth_exponent")
+        col.prop(br, "advanced")
 
-        layout.label(text="Justification")
-        layout.prop(br, "justifyx")
-        layout.prop(br, "justifyy")
-        layout.prop(br, "justifyz")
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text="Parameters")
+        col.prop(br, "bit_diameter", text="Ball End Diameter (mm)")
+        col.prop(br, "pass_per_radius")
+        col.prop(br, "widthmm", text="Desired Width (mm)")
+        col.prop(br, "heightmm", text="Desired Height (mm)")
+        col.prop(br, "thicknessmm", text="Thickness (mm)")
 
-        layout.label(text="Silhouette")
-        layout.prop(br, "silhouette_threshold")
-        layout.prop(br, "recover_silhouettes")
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text="Justification")
+        col.prop(br, "justifyx")
+        col.prop(br, "justifyy")
+        col.prop(br, "justifyz")
+
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text="Silhouette")
+        col.prop(br, "silhouette_threshold", text="Threshold")
+        col.prop(br, "recover_silhouettes")
         if br.recover_silhouettes:
-            layout.prop(br, "silhouette_scale")
+            col.prop(br, "silhouette_scale", text="Scale")
             if br.advanced:
-                layout.prop(br, "silhouette_exponent")
+                col.prop(br, "silhouette_exponent", text="Square Exponent")
         # layout.template_curve_mapping(br,'curva')
+        # layout.prop(br,'attenuation')
+
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text="Iterations")
         if br.advanced:
-            # layout.prop(br,'attenuation')
+            col.prop(br, "smooth_iterations", text="Smooth")
+        col.prop(br, "vcycle_iterations", text="V-Cycle")
+        col.prop(br, "linbcg_iterations", text="LINBCG")
+
+        if br.advanced:
             layout.prop(br, "min_gridsize")
-            layout.prop(br, "smooth_iterations")
-        layout.prop(br, "vcycle_iterations")
-        layout.prop(br, "linbcg_iterations")
-        layout.prop(br, "use_planar")
         layout.prop(br, "decimate_ratio")
+        layout.prop(br, "use_planar")
 
         layout.prop(br, "gradient_scaling_mask_use")
         if br.advanced:
@@ -1720,6 +1736,7 @@ class BASRELIEF_Panel(bpy.types.Panel):
         # layout.prop(br,'scale_down_before_use')
         # if br.scale_down_before_use:
         # 	layout.prop(br,'scale_down_before')
+        layout.operator("scene.calculate_bas_relief", text="Calculate Relief")
 
 
 class ReliefError(Exception):
