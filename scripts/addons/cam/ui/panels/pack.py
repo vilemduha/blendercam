@@ -12,7 +12,11 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_PACK_Panel(CAMButtonsPanel, Panel):
     """CAM Pack Panel"""
 
-    bl_label = "Pack Curves on Sheet"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "render"
+
+    bl_label = "[ Pack Curves on Sheet ]"
     bl_idname = "WORLD_PT_CAM_PACK"
     bl_options = {"DEFAULT_CLOSED"}
     panel_interface_level = 2
@@ -39,4 +43,8 @@ class CAM_PACK_Panel(CAMButtonsPanel, Panel):
         if panel:
             col = panel.column(align=True)
             col.prop(settings, "rotate_angle", text="Placement Angle Step")
-        layout.operator("object.cam_pack_objects")
+
+        box_2 = layout.box()
+        col = box_2.column()
+        col.scale_y = 1.2
+        col.operator("object.cam_pack_objects", icon="FCURVE")

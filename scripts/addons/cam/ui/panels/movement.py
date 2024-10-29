@@ -39,7 +39,7 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
             (
                 "MEANDER",
                 "Meander / Zig Zag",
-                "Cutting is done both with and against the " "rotation of the spindle",
+                "Cutting is done both with and against the rotation of the spindle",
             ),
         ),
         description="movement type",
@@ -224,7 +224,11 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
 class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
     """CAM Movement Panel"""
 
-    bl_label = "Movement"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = "CNC"
+
+    bl_label = "[ Movement ]"
     bl_idname = "WORLD_PT_CAM_MOVEMENT"
     panel_interface_level = 0
 
@@ -236,6 +240,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
         # Cut Type
         if self.level >= 1:
             col = layout.column(align=True)
+            col.scale_y = 1.2
             movement = self.op.movement.type
             if movement == "MEANDER":
                 icon = "ANIM"

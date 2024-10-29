@@ -12,7 +12,11 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
     """CAM Operation Properties Panel"""
 
-    bl_label = "Operation Setup"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = "CNC"
+
+    bl_label = "[ Operation Setup ]"
     bl_idname = "WORLD_PT_CAM_OPERATION"
     panel_interface_level = 0
 
@@ -60,6 +64,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
         layout.use_property_decorate = False
 
         col = layout.column(align=True)
+        col.scale_y = 1.2
         # Machine Axis
         if self.level >= 2:
             col.prop(self.op, "machine_axes")

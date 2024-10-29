@@ -37,6 +37,7 @@ class VIEW3D_PT_tools_curvetools(Panel):
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
     bl_label = "Curve CAM Tools"
+    bl_order = 0
 
     def draw(self, context):
         layout = self.layout
@@ -57,6 +58,7 @@ class VIEW3D_PT_tools_create(Panel):
     bl_context = "objectmode"
     bl_label = "Curve CAM Creators"
     bl_option = "DEFAULT_CLOSED"
+    bl_order = 1
 
     def draw(self, context):
         layout = self.layout

@@ -435,6 +435,7 @@ def getBounds(o):
         or o.max.z - o.min.z > m.working_area.z
     ):
         o.info.warnings += "Operation Exceeds Your Machine Limits\n"
+        bpy.ops.cam.popup("INVOKE_DEFAULT")
 
 
 def getBoundsMultiple(operations):
@@ -2671,6 +2672,7 @@ def operationValid(self, context):
         o.info.warnings = ""
     else:
         o.info.warnings = invalidmsg
+        bpy.ops.cam.popup("INVOKE_DEFAULT")
 
     if o.geometry_source == "IMAGE":
         o.optimisation.use_exact = False
@@ -2983,30 +2985,96 @@ def getStrategyList(scene, context):
 
     use_experimental = bpy.context.preferences.addons[__package__].preferences.experimental
     items = [
-        ("CUTOUT", "Profile(Cutout)", "Cut the silhouete with offset"),
-        ("POCKET", "Pocket", "Pocket operation"),
-        ("DRILL", "Drill", "Drill operation"),
-        ("PARALLEL", "Parallel", "Parallel lines on any angle"),
-        ("CROSS", "Cross", "Cross paths"),
-        ("BLOCK", "Block", "Block path"),
-        ("SPIRAL", "Spiral", "Spiral path"),
-        ("CIRCLES", "Circles", "Circles path"),
+        (
+            "CUTOUT",
+            "Profile (Cutout)",
+            "Cut the silhouete with offset",
+            "MOD_SKIN",
+            0,
+        ),
+        (
+            "POCKET",
+            "Pocket",
+            "Pocket operation",
+            "CLIPUV_DEHLT",
+            1,
+        ),
+        (
+            "DRILL",
+            "Drill",
+            "Drill operation",
+            "DISCLOSURE_TRI_DOWN",
+            2,
+        ),
+        (
+            "PARALLEL",
+            "Parallel",
+            "Parallel lines on any angle",
+            "SNAP_EDGE",
+            3,
+        ),
+        (
+            "CROSS",
+            "Cross",
+            "Cross paths",
+            "ADD",
+            4,
+        ),
+        (
+            "BLOCK",
+            "Block",
+            "Block path",
+            "META_PLANE",
+            5,
+        ),
+        (
+            "SPIRAL",
+            "Spiral",
+            "Spiral path",
+            "FORCE_VORTEX",
+            6,
+        ),
+        (
+            "CIRCLES",
+            "Circles",
+            "Circles path",
+            "MESH_CIRCLE",
+            7,
+        ),
         (
             "OUTLINEFILL",
             "Outline Fill",
             "Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface",
+            "FULLSCREEN_EXIT",
+            8,
         ),
-        ("CARVE", "Project curve to surface", "Engrave the curve path to surface"),
+        (
+            "CARVE",
+            "Project Curve to Surface",
+            "Engrave the curve path to surface",
+            "CON_SHRINKWRAP",
+            9,
+        ),
         (
             "WATERLINE",
-            "Waterline - Roughing -below zero",
+            "Waterline - Roughing (Below Z0)",
             "Waterline paths - constant z below zero",
+            "MOD_OCEAN",
+            10,
         ),
-        ("CURVE", "Curve to Path", "Curve object gets converted directly to path"),
+        (
+            "CURVE",
+            "Curve to Path",
+            "Curve object gets converted directly to path",
+            "CURVE_DATA",
+            11,
+        ),
         (
             "MEDIAL_AXIS",
-            "Medial axis",
+            "Medial Axis",
             "Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ",
+            "SHARPCURVE",
+            12,
         ),
     ]
     #   if use_experimental:

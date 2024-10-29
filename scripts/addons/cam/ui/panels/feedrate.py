@@ -12,7 +12,11 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
     """CAM Feedrate Panel"""
 
-    bl_label = "Feedrate"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = "CNC"
+
+    bl_label = "[ Feedrate ]"
     bl_idname = "WORLD_PT_CAM_FEEDRATE"
     panel_interface_level = 0
 

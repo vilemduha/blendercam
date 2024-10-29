@@ -13,7 +13,7 @@ from bpy.types import (
     AddonPreferences,
 )
 
-from .version import __version__ as cam_version
+# from .version import __version__ as cam_version
 from .utils import opencamlib_version
 
 

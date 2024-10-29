@@ -12,7 +12,11 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
     """CAM Machine Panel"""
 
-    bl_label = "Machine"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "render"
+
+    bl_label = "[ Machine ]"
     bl_idname = "WORLD_PT_CAM_MACHINE"
     panel_interface_level = 0
     always_show_panel = True
@@ -37,24 +41,28 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
                 icon="REMOVE",
             ).remove_active = True
 
-        col = layout.column(align=True)
+        box = layout.box()
+        col = box.column(align=True)
+        col.scale_y = 1.2
         # Post Processor
         col.prop(self.machine, "post_processor")
         # System
-        col.prop(context.scene.unit_settings, "system")
-        col.prop(context.scene.unit_settings, "length_unit", text="Unit")
-
-        # Supplemental Axis
-        if self.level >= 3:
-            col.prop(self.machine, "axis4")
-            col.prop(self.machine, "axis5")
+        row = col.row(align=True)
+        row.prop(context.scene.unit_settings, "system")
+        row.prop(context.scene.unit_settings, "length_unit", text="")
 
         # Collet Size
         if self.level >= 2:
-            col.prop(self.machine, "collet_size")
+            box.prop(self.machine, "collet_size")
 
         # Working Area
-        layout.prop(self.machine, "working_area")
+        box.prop(self.machine, "working_area")
+
+        # Supplemental Axis
+        if self.level >= 3:
+            row = box.row(align=True)
+            row.prop(self.machine, "axis4")
+            row.prop(self.machine, "axis5")
 
         # Position Definitions
         if self.level >= 2:

@@ -106,7 +106,11 @@ class CAM_OPTIMISATION_Properties(PropertyGroup):
 class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
     """CAM Optimisation Panel"""
 
-    bl_label = "Optimisation"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = "CNC"
+
+    bl_label = "[ Optimisation ]"
     bl_idname = "WORLD_PT_CAM_OPTIMISATION"
     panel_interface_level = 2
 

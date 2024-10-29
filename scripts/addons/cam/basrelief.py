@@ -1607,7 +1607,7 @@ class BasReliefsettings(bpy.types.PropertyGroup):
 class BASRELIEF_Panel(bpy.types.Panel):
     """Bas Relief Panel"""
 
-    bl_label = "Bas Relief"
+    bl_label = "[ Bas Relief ]"
     bl_idname = "WORLD_PT_BASRELIEF"
     bl_options = {"DEFAULT_CLOSED"}
     bl_space_type = "PROPERTIES"
@@ -1736,7 +1736,10 @@ class BASRELIEF_Panel(bpy.types.Panel):
         # layout.prop(br,'scale_down_before_use')
         # if br.scale_down_before_use:
         # 	layout.prop(br,'scale_down_before')
-        layout.operator("scene.calculate_bas_relief", text="Calculate Relief")
+        box = layout.box()
+        col = box.column()
+        col.scale_y = 1.2
+        col.operator("scene.calculate_bas_relief", text="Calculate Relief", icon="RNDCURVE")
 
 
 class ReliefError(Exception):

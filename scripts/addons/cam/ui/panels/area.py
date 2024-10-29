@@ -13,7 +13,11 @@ from ...simple import strInUnits
 class CAM_AREA_Panel(CAMButtonsPanel, Panel):
     """CAM Operation Area Panel"""
 
-    bl_label = "Operation Area"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = "CNC"
+
+    bl_label = "[ Operation Area ]"
     bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
     panel_interface_level = 0
 

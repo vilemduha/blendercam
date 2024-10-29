@@ -12,7 +12,11 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
     """CAM Cutter Panel"""
 
-    bl_label = "Cutter"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = "CNC"
+
+    bl_label = "[ Cutter ]"
     bl_idname = "WORLD_PT_CAM_CUTTER"
     panel_interface_level = 0
 

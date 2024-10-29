@@ -5,9 +5,7 @@
 
 import bpy
 from bpy.props import EnumProperty
-from bpy.types import Panel, PropertyGroup
-
-from .buttons_panel import CAMButtonsPanel
+from bpy.types import PropertyGroup
 
 
 def update_interface(self, context):
@@ -30,19 +28,3 @@ class CAM_INTERFACE_Properties(PropertyGroup):
         default="0",
         update=update_interface,
     )
-
-
-# class CAM_INTERFACE_Panel(CAMButtonsPanel, Panel):
-#     bl_label = "Interface"
-#     bl_idname = "WORLD_PT_CAM_INTERFACE"
-#     bl_options = {"HIDE_HEADER"}
-#     panel_interface_level = 0
-#     always_show_panel = True
-
-#     def draw(self, context):
-#         layout = self.layout
-#         layout.use_property_split = True
-#         layout.use_property_decorate = False
-
-#         col = layout.column()
-#         col.prop(context.scene.interface, "level")
