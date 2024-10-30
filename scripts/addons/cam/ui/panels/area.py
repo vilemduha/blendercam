@@ -13,7 +13,11 @@ from ...simple import strInUnits
 class CAM_AREA_Panel(CAMButtonsPanel, Panel):
     """CAM Operation Area Panel"""
 
-    bl_label = "CAM Operation Area"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = "CNC"
+
+    bl_label = "[ Operation Area ]"
     bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
     panel_interface_level = 0
 
@@ -49,8 +53,14 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
             if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
                 if self.op.strategy == "CURVE":
                     col.label(text="Cannot Use Depth from Object Using Curves")
-
-                col.prop(self.op, "minz_from", text="Set Max Depth from")
+                depth = self.op.minz_from
+                if depth == "MATERIAL":
+                    icon = depth
+                elif depth == "OBJECT":
+                    icon = "OBJECT_DATA"
+                else:
+                    icon = "USER"
+                col.prop(self.op, "minz_from", text="Set Max Depth from", icon=icon)
                 if self.op.minz_from == "CUSTOM":
                     col.prop(self.op, "minz")
 

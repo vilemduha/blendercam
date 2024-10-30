@@ -11,9 +11,6 @@ import bpy
 
 # Panel definitions
 class CAMButtonsPanel:
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
-    bl_context = "render"
     always_show_panel = False
     COMPAT_ENGINES = {"FABEX_RENDER"}
 
@@ -51,3 +48,8 @@ class CAMButtonsPanel:
         operations_count = len(operations)
         operation_index = context.scene.cam_active_operation
         self.op = operations[operation_index] if operations_count > 0 else None
+
+        # Auto-title and widen panels when called from pie_menu
+        if not context.area.type == "PROPERTIES" and not context.region.type in ["UI", "TOOLS"]:
+            self.layout.ui_units_x = 20
+            self.layout.label(text=self.bl_label)

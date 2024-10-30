@@ -41,11 +41,13 @@ class CAM_UL_chains(UIList):
 class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
     """CAM Chains Panel"""
 
-    bl_label = "CAM Chains"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "render"
+
+    bl_label = "[ Chains ]"
     bl_idname = "WORLD_PT_CAM_CHAINS"
-    # bl_space_type = "VIEW_3D"
-    # bl_region_type = "UI"
-    # bl_category = "Fabex"
+    bl_options = {"DEFAULT_CLOSED"}
     panel_interface_level = 1
     always_show_panel = True
 
@@ -59,37 +61,54 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
             scene = bpy.context.scene
 
             row.template_list("CAM_UL_chains", "", scene, "cam_chains", scene, "cam_active_chain")
-            col = row.column(align=True)
+            box = row.box()
+            col = box.column(align=True)
+            col.scale_x = col.scale_y = 1.05
             col.operator("scene.cam_chain_add", icon="ADD", text="")
             col.operator("scene.cam_chain_remove", icon="REMOVE", text="")
 
             if len(scene.cam_chains) > 0:
                 chain = scene.cam_chains[scene.cam_active_chain]
-                row = layout.row(align=True)
+                row = layout.row()
 
                 if chain:
                     row.template_list(
                         "CAM_UL_operations", "", chain, "operations", chain, "active_operation"
                     )
-                    col = row.column(align=True)
+                    box = row.box()
+                    col = box.column(align=True)
+                    col.scale_x = col.scale_y = 1.05
                     col.operator("scene.cam_chain_operation_add", icon="ADD", text="")
                     col.operator("scene.cam_chain_operation_remove", icon="REMOVE", text="")
                     if len(chain.operations) > 0:
+                        col.separator()
                         col.operator("scene.cam_chain_operation_up", icon="TRIA_UP", text="")
                         col.operator("scene.cam_chain_operation_down", icon="TRIA_DOWN", text="")
 
-                    col = layout.column(align=True)
+                    box = layout.box()
+                    col = box.column(align=True)
+                    col.scale_y = 1.2
                     if not chain.computing:
                         col.operator(
                             "object.calculate_cam_paths_chain",
                             text="Calculate Chain Paths & Export Gcode",
+                            icon="FILE_CACHE",
                         )
-                        col.operator("object.cam_export_paths_chain", text="Export Chain G-code")
-                        col.operator("object.cam_simulate_chain", text="Simulate This Chain")
+                        col.operator(
+                            "object.cam_export_paths_chain",
+                            text="Export Chain G-code",
+                            icon="EXPORT",
+                        )
+                        col.operator(
+                            "object.cam_simulate_chain",
+                            text="Simulate This Chain",
+                            icon="RESTRICT_INSTANCED_OFF",
+                        )
 
                         valid, reason = isChainValid(chain, context)
                         if not valid:
-                            col.label(icon="ERROR", text=f"Can't Compute Chain - Reason:\n")
+                            col.alert = True
+                            col.label(icon="ERROR", text=f"Can't Compute Chain!")
                             col.label(text=reason)
                     else:
                         col.label(text="Chain Is Currently Computing")

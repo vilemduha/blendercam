@@ -21,7 +21,11 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
     """CAM Operations Panel"""
 
-    bl_label = "CAM Operations"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "render"
+
+    bl_label = "[ Operations ]"
     bl_idname = "WORLD_PT_CAM_OPERATIONS"
     panel_interface_level = 0
     always_show_panel = True
@@ -51,7 +55,9 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
             bpy.context.scene,
             "cam_active_operation",
         )
-        col = row.column(align=True)
+        box = row.box()
+        col = box.column(align=True)
+        col.scale_x = col.scale_y = 1.05
         col.operator("scene.cam_operation_add", icon="ADD", text="")
         col.operator("scene.cam_operation_copy", icon="COPYDOWN", text="")
         col.operator("scene.cam_operation_remove", icon="REMOVE", text="")
@@ -72,8 +78,12 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
         if not self.op.valid:
             layout.label(text="Select a Valid Object to Calculate the Path.")
         # will be disabled if not valid
-        col = layout.column(align=True)
-        col.operator("object.calculate_cam_path", text="Calculate Path & Export Gcode")
+        box = layout.box()
+        col = box.column(align=True)
+        col.scale_y = 1.2
+        col.operator(
+            "object.calculate_cam_path", text="Calculate Path & Export Gcode", icon="FILE_CACHE"
+        )
 
         # Export Gcode
         if self.level >= 1:
@@ -81,10 +91,12 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
                 if self.op.name is not None:
                     name = f"cam_path_{self.op.name}"
                     if bpy.context.scene.objects.get(name) is not None:
-                        col.operator("object.cam_export", text="Export Gcode ")
+                        col.operator("object.cam_export", text="Export Gcode", icon="EXPORT")
 
                 # Simulate Op
-                col.operator("object.cam_simulate", text="Simulate This Operation")
+                col.operator(
+                    "object.cam_simulate", text="Simulate This Operation", icon="MESH_GRID"
+                )
 
         box = layout.box()
         col = box.column(align=True)

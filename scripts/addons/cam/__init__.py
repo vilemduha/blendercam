@@ -101,7 +101,6 @@ from .preset_managers import (
 )
 from .slice import SliceObjectsSettings
 from .ui import register as ui_register, unregister as ui_unregister
-from .ui.legacy_ui import import_settings
 from .ui.panels.interface import CAM_INTERFACE_Properties
 from .utils import (
     check_operations_on_load,
@@ -211,8 +210,9 @@ def register() -> None:
     scene.cam_chains = CollectionProperty(
         type=camChain,
     )
-    scene.cam_import_gcode = PointerProperty(
-        type=import_settings,
+    scene.gcode_output_type = StringProperty(
+        name="Gcode Output Type",
+        default="",
     )
     scene.cam_machine = PointerProperty(
         type=machineSettings,
@@ -264,7 +264,7 @@ def unregister() -> None:
     del scene.cam_operations
     del scene.cam_active_operation
     del scene.cam_machine
-    del scene.cam_import_gcode
+    del scene.gcode_output_type
     del scene.cam_text
     del scene.cam_pack
     del scene.cam_slice

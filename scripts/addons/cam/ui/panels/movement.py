@@ -39,7 +39,7 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
             (
                 "MEANDER",
                 "Meander / Zig Zag",
-                "Cutting is done both with and against the " "rotation of the spindle",
+                "Cutting is done both with and against the rotation of the spindle",
             ),
         ),
         description="movement type",
@@ -224,7 +224,11 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
 class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
     """CAM Movement Panel"""
 
-    bl_label = "CAM Movement"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "UI"
+    bl_category = "CNC"
+
+    bl_label = "[ Movement ]"
     bl_idname = "WORLD_PT_CAM_MOVEMENT"
     panel_interface_level = 0
 
@@ -235,34 +239,30 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
 
         # Cut Type
         if self.level >= 1:
-            layout.prop(self.op.movement, "type")
+            col = layout.column(align=True)
+            col.scale_y = 1.2
+            movement = self.op.movement.type
+            if movement == "MEANDER":
+                icon = "ANIM"
+            elif movement == "CLIMB":
+                icon = "SORT_ASC"
+            else:
+                icon = "SORT_DESC"
+            col.prop(self.op.movement, "type", text="Type", icon=icon)
             if self.op.movement.type in ["BLOCK", "SPIRAL", "CIRCLES"]:
-                layout.prop(self.op.movement, "insideout")
+                col.prop(self.op.movement, "insideout")
 
         # Spindle Rotation
         if self.level >= 2:
-            layout.prop(self.op.movement, "spindle_rotation")
+            rotation = self.op.movement.spindle_rotation
+            icon = "LOOP_FORWARDS" if rotation == "CW" else "LOOP_BACK"
+            col.prop(self.op.movement, "spindle_rotation", text="Spindle Direction", icon=icon)
 
         # Free Height
         layout.prop(self.op.movement, "free_height")
         if self.op.maxz > self.op.movement.free_height:
             layout.label(text="Depth Start > Free Movement")
             layout.label(text="POSSIBLE COLLISION")
-
-        # Use G64
-        if self.level >= 2:
-            if context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
-                header, panel = layout.panel_prop(self.op.movement, "useG64")
-                header.label(text="G64 Trajectory")
-                if panel:
-                    col = panel.column(align=True)
-                    col.prop(self.op.movement, "G64")
-
-        # Parallel Stepback
-        if self.level >= 1:
-            if self.op.strategy in ["PARALLEL", "CROSS"]:
-                if not self.op.movement.ramp:
-                    layout.prop(self.op.movement, "parallel_step_back")
 
         # Helix Enter
         if self.level >= 2:
@@ -272,16 +272,20 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
                     layout.prop(self.op.movement, "ramp_in_angle")
                     layout.prop(self.op.movement, "helix_diameter")
 
-        # Ramp
+        # Parallel Stepback
         if self.level >= 1:
-            header, panel = layout.panel_prop(self.op.movement, "ramp")
-            header.label(text="Ramp (Experimental)")
-            if panel:
-                col = panel.column(align=True)
-                col.prop(self.op.movement, "ramp_in_angle")
-                col.prop(self.op.movement, "ramp_out")
-                if self.op.movement.ramp_out:
-                    col.prop(self.op.movement, "ramp_out_angle")
+            if self.op.strategy in ["PARALLEL", "CROSS"]:
+                if not self.op.movement.ramp:
+                    layout.prop(self.op.movement, "parallel_step_back")
+
+        # Use G64
+        if self.level >= 2:
+            if context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
+                header, panel = layout.panel_prop(self.op.movement, "useG64")
+                header.label(text="G64 Trajectory")
+                if panel:
+                    col = panel.column(align=True)
+                    col.prop(self.op.movement, "G64")
 
         # Retract Tangential
         if self.level >= 2:
@@ -293,14 +297,6 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
                     col.prop(self.op.movement, "retract_radius")
                     col.prop(self.op.movement, "retract_height")
 
-        # Stay Low
-        if self.level >= 1:
-            header, panel = layout.panel_prop(self.op.movement, "stay_low")
-            header.label(text="Stay Low (if possible)")
-            if panel:
-                col = panel.column(align=True)
-                col.prop(self.op.movement, "merge_dist")
-
         # Protect Vertical
         if self.level >= 1:
             if self.op.cutter_type not in ["BALLCONE"]:
@@ -308,4 +304,25 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
                 header.label(text="Protect Vertical")
                 if panel:
                     col = panel.column(align=True)
-                    col.prop(self.op.movement, "protect_vertical_limit")
+                    col.prop(self.op.movement, "protect_vertical_limit", text="Angle Limit")
+
+        if self.level >= 1:
+            header, parent_panel = layout.panel("movement")
+            header.label(text="╼ EXPERIMENTAL ╾", icon="EXPERIMENTAL")
+            if parent_panel:
+                # Ramp
+                header, panel = parent_panel.panel_prop(self.op.movement, "ramp")
+                header.label(text="Ramp")
+                if panel:
+                    col = panel.column(align=True)
+                    col.prop(self.op.movement, "ramp_in_angle")
+                    col.prop(self.op.movement, "ramp_out", text="Ramp Out")
+                    if self.op.movement.ramp_out:
+                        col.prop(self.op.movement, "ramp_out_angle")
+
+                # Stay Low
+                header, panel = parent_panel.panel_prop(self.op.movement, "stay_low")
+                header.label(text="Stay Low (if possible)")
+                if panel:
+                    col = panel.column(align=True)
+                    col.prop(self.op.movement, "merge_dist", text="Merge Distance")

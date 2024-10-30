@@ -264,11 +264,14 @@ async def _calc_path(operator, context):
     if mesh:
         bpy.data.meshes.remove(mesh)
 
+    text = "Operation can't be performed, see Warnings for info"
     if not o.valid:
         operator.report(
-            {"ERROR_INVALID_INPUT"}, "Operation can't be performed, see warnings for info"
+            {"ERROR_INVALID_INPUT"},
+            text,
         )
-        progress_async("Operation can't be performed, see warnings for info")
+        progress_async(text)
+        # bpy.ops.cam.popup(text=text)
         return {"FINISHED", False}
 
     # check for free movement height < maxz and return with error
@@ -278,6 +281,7 @@ async def _calc_path(operator, context):
             "Free Movement Height Is Less than Operation Depth Start \n Correct and Try Again.",
         )
         progress_async("Operation Can't Be Performed, See Warnings for Info")
+        # bpy.ops.cam.popup(text=text)
         return {"FINISHED", False}
 
     if o.computing:
@@ -294,13 +298,16 @@ async def _calc_path(operator, context):
         traceback.print_tb(e.__traceback__)
         error_str = "\n".join(textwrap.wrap(str(e), width=80))
         operator.report({"ERROR"}, error_str)
+        # bpy.ops.cam.popup(text=error_str)
         return {"FINISHED", False}
     except AsyncCancelledException as e:
+        # bpy.ops.cam.popup(text=str(e))
         return {"CANCELLED", False}
     except Exception as e:
         print("FAIL", e)
         traceback.print_tb(e.__traceback__)
         operator.report({"ERROR"}, str(e))
+        # bpy.ops.cam.popup(text=str(e))
         return {"FINISHED", False}
     coll = bpy.data.collections.get("RigidBodyWorld")
     if coll:
@@ -521,8 +528,11 @@ class PathsChain(Operator, AsyncOperatorMixin):
         """
 
         s = context.scene
-        chain = s.cam_chains[s.cam_active_chain]
-        return isChainValid(chain, context)[0]
+        if len(s.cam_chains) > 0:
+            chain = s.cam_chains[s.cam_active_chain]
+            return isChainValid(chain, context)[0]
+        else:
+            return False
 
     async def execute_async(self, context):
         """Execute asynchronous operations for camera path calculations.
@@ -757,8 +767,11 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
         """
 
         s = context.scene
-        chain = s.cam_chains[s.cam_active_chain]
-        return isChainValid(chain, context)[0]
+        if len(s.cam_chains) > 0:
+            chain = s.cam_chains[s.cam_active_chain]
+            return isChainValid(chain, context)[0]
+        else:
+            return False
 
     operation: StringProperty(
         name="Operation",
@@ -1079,6 +1092,9 @@ class CamOperationAdd(Operator):
         Args:
             context: The context in which the operation is executed.
         """
+        # Open Sidebar to show Operation Settings
+        view3d = [a for a in context.screen.areas if a.type == "VIEW_3D"][0]
+        view3d.spaces[0].show_region_ui = True
 
         s = bpy.context.scene
         fixUnits()
@@ -1101,6 +1117,11 @@ class CamOperationAdd(Operator):
 
         if s.objects.get("CAM_machine") is None:
             addMachineAreaObject()
+
+        # ui = [r for r in view3d.regions if r.type == "UI"][0]
+        # ui.active_panel_category = "CNC"
+        # view3d.regions[5].active_panel_category = "CNC"
+        # view3d.tag_redraw()
 
         return {"FINISHED"}
 

@@ -20,44 +20,41 @@ class VIEW3D_MT_PIE_Operation(Menu):
         layout.use_property_decorate = False
 
         pie = layout.menu_pie()
-        pie.scale_y = 1.5
+        pie.scale_y = 2
 
         # Left
-        pie.operator("wm.call_menu_pie", text="Area", icon="SHADING_BBOX").name = (
-            "VIEW3D_MT_PIE_Area"
+        pie.operator("wm.call_panel", text="Area", icon="SHADING_BBOX").name = (
+            "WORLD_PT_CAM_OPERATION_AREA"
         )
         # Right
-        pie.operator("wm.call_menu_pie", text="Optimisation", icon="MODIFIER").name = (
-            "VIEW3D_MT_PIE_Optimisation"
+        pie.operator("wm.call_panel", text="Optimisation", icon="MODIFIER").name = (
+            "WORLD_PT_CAM_OPTIMISATION"
         )
         # Bottom
-        pie.operator("wm.call_menu_pie", text="Setup", icon="PREFERENCES").name = (
-            "VIEW3D_MT_PIE_Setup"
+        pie.operator("wm.call_panel", text="Setup", icon="PREFERENCES").name = (
+            "WORLD_PT_CAM_OPERATION"
         )
 
         # Top
         box = pie.box()
         box.scale_x = 2
-        box.scale_y = 1.5
         box.emboss = "NONE"
         box.operator("wm.call_menu_pie", text="", icon="HOME").name = "VIEW3D_MT_PIE_CAM"
 
         # Top Left
-        pie.operator("wm.call_menu_pie", text="Movement", icon="ANIM_DATA").name = (
-            "VIEW3D_MT_PIE_Movement"
+        pie.operator("wm.call_panel", text="Movement", icon="ANIM_DATA").name = (
+            "WORLD_PT_CAM_MOVEMENT"
         )
 
         # Top Right
-        pie.operator("wm.call_menu_pie", text="Feedrate", icon="AUTO").name = (
-            "VIEW3D_MT_PIE_Feedrate"
-        )
+        pie.operator("wm.call_panel", text="Feedrate", icon="AUTO").name = "WORLD_PT_CAM_FEEDRATE"
 
         # Bottom Left
-        pie.operator("wm.call_menu_pie", text="Cutter", icon="OUTLINER_DATA_GP_LAYER").name = (
-            "VIEW3D_MT_PIE_Cutter"
+        pie.operator("wm.call_panel", text="Cutter", icon="OUTLINER_DATA_GP_LAYER").name = (
+            "WORLD_PT_CAM_CUTTER"
         )
 
         # Bottom Right
-        pie.operator("wm.call_menu_pie", text="G-Code Options", icon="EVENT_G").name = (
-            "VIEW3D_MT_PIE_Gcode"
+        pie.operator("wm.call_panel", text="G-Code Options", icon="EVENT_G").name = (
+            "WORLD_PT_CAM_GCODE"
         )

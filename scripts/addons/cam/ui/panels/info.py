@@ -3,6 +3,8 @@
 'CAM Info & Warnings' properties and panel in Properties > Render
 """
 
+from datetime import timedelta
+
 import bpy
 from bpy.props import (
     StringProperty,
@@ -12,10 +14,8 @@ from bpy.types import (
     Panel,
     PropertyGroup,
 )
-
 from .buttons_panel import CAMButtonsPanel
 from ...utils import (
-    opencamlib_version,
     update_operation,
 )
 from ...constants import (
@@ -23,8 +23,8 @@ from ...constants import (
     CHIPLOAD_PRECISION,
     MAX_OPERATION_TIME,
 )
-from ...version import __version__ as cam_version
 from ...simple import strInUnits
+from ...version import __version__ as cam_version
 
 # Info panel
 # This panel gives general information about the current operation
@@ -58,7 +58,13 @@ class CAM_INFO_Properties(PropertyGroup):
 
 
 class CAM_INFO_Panel(CAMButtonsPanel, Panel):
-    bl_label = "CAM Info & Warnings"
+    bl_space_type = "VIEW_3D"
+    bl_region_type = "TOOLS"
+    # bl_category = "CNC"
+    bl_options = {"HIDE_HEADER"}
+    bl_order = 3
+
+    bl_label = "Info & Warnings"
     bl_idname = "WORLD_PT_CAM_INFO"
     panel_interface_level = 0
     always_show_panel = True
@@ -69,52 +75,59 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
-        col = layout.column(align=True)
-        # Fabex Version
-        col.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}')
-
-        # OpenCAMLib Version
-        if self.level >= 1:
-            ocl_version = opencamlib_version()
-            if ocl_version is None:
-                col.label(text="OpenCAMLib is not Installed")
-            else:
-                col.label(text=f"OpenCAMLib v{ocl_version}")
-
+        main = layout.box()
+        main.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}', icon="INFO")
+        if context.window_manager.progress > 0:
+            col = main.column(align=True)
+            col.scale_y = 2
+            percent = int(context.window_manager.progress * 100)
+            col.progress(
+                factor=context.window_manager.progress,
+                text=f"Processing...{percent}% (Esc to Cancel)",
+            )
         if self.op is None:
             return
         else:
-            # Operation Warnings
-            for line in self.op.info.warnings.rstrip("\n").split("\n"):
-                if len(line) > 0:
-                    layout.label(text=line, icon="ERROR")
+            if not self.op.info.warnings == "":
+                # Operation Warnings
+                box = main.box()
+                col = box.column(align=True)
+                col.alert = True
+                col.label(text="Warning!", icon="ERROR")
+                for line in self.op.info.warnings.rstrip("\n").split("\n"):
+                    if len(line) > 0:
+                        col.label(text=line, icon="ERROR")
 
             # Operation Time Estimate
-            if not int(self.op.info.duration * 60) > 0:
+            duration = self.op.info.duration
+            seconds = int(duration * 60)
+            if not seconds > 0:
                 return
 
-            time_estimate = f"Operation Duration: {int(self.op.info.duration*60)}s "
-            if self.op.info.duration > 60:
-                time_estimate += f" ({int(self.op.info.duration / 60)}h"
-                time_estimate += f" {round(self.op.info.duration % 60)}min)"
-            elif self.op.info.duration > 1:
-                time_estimate += f" ({round(self.op.info.duration % 60)}min)"
+            time_estimate = str(timedelta(seconds=seconds))
+            split = time_estimate.split(":")
+            split[0] += "h "
+            split[1] += "m "
+            split[2] += "s"
+            time_estimate = split[0] + split[1] + split[2]
 
-            layout.label(text=time_estimate)
+            box = main.box()
+            col = box.column(align=True)
+            col.label(text=f"Operation Duration: {time_estimate}", icon="TIME")
 
             # Operation Chipload
             if not self.op.info.chipload > 0:
                 return
 
             chipload = f"Chipload: {strInUnits(self.op.info.chipload, 4)}/tooth"
-            layout.label(text=chipload)
+            col.label(text=chipload)
 
             # Operation Money Cost
             if self.level >= 1:
                 if not int(self.op.info.duration * 60) > 0:
                     return
 
-                row = self.layout.row()
+                row = main.row()
                 row.label(text="Hourly Rate")
                 row.prop(bpy.context.scene.cam_machine, "hourly_rate", text="")
 
@@ -124,4 +137,4 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
                 cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
                 total_cost = self.op.info.duration * 60 * cost_per_second
                 op_cost = f"Operation Cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
-                layout.label(text=op_cost)
+                main.label(text=op_cost)

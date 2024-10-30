@@ -13,6 +13,9 @@ from bpy.types import (
     AddonPreferences,
 )
 
+# from .version import __version__ as cam_version
+from .utils import opencamlib_version
+
 
 class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
@@ -49,5 +52,18 @@ class CamAddonPreferences(AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
+        box = layout.box()
+        col = box.column(align=True)
+        # # Fabex Version
+        # col.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}')
+
+        # OpenCAMLib Version
+        if int(context.scene.interface.level) >= 1:
+            ocl_version = opencamlib_version()
+            if ocl_version is None:
+                col.label(text="OpenCAMLib is not Installed")
+            else:
+                col.label(text=f"OpenCAMLib v{ocl_version}")
+
         layout.label(text="Use Experimental Features when you want to help development of Fabex:")
         layout.prop(self, "experimental")

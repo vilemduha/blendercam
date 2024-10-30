@@ -72,6 +72,7 @@ class AsyncOperatorMixin:
                 else:
                     context.window_manager.event_timer_remove(self.timer)
                     bpy.context.workspace.status_text_set(None)
+                    context.window_manager.progress = 0
                     return {"FINISHED"}
             except Exception as e:
                 context.window_manager.event_timer_remove(self.timer)
@@ -110,6 +111,8 @@ class AsyncOperatorMixin:
 
         if n is not None:
             progress_text = f"{text}: {n:.2f}{value_type}"
+            context.window_manager.progress = n * 0.01
+            [a.tag_redraw() for a in context.screen.areas if a.type == "VIEW_3D"]
         else:
             progress_text = f"{text}"
         bpy.context.workspace.status_text_set(progress_text + " (Press ESC to cancel)")

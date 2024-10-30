@@ -13,7 +13,7 @@ import bpy
 np.set_printoptions(suppress=True)  # suppress scientific notation in subdivide functions linspace
 
 
-def import_gcode(context, filepath):
+def import_gcode(self, context, filepath):
     """Import G-code data into the scene.
 
     This function reads G-code from a specified file and processes it
@@ -35,7 +35,7 @@ def import_gcode(context, filepath):
     print("Running read_some_data...")
 
     scene = context.scene
-    mytool = scene.cam_import_gcode
+    mytool = self
     import time
 
     then = time.time()
@@ -167,7 +167,7 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    if bpy.context.scene.cam_import_gcode.output == "curve":
+    if bpy.context.scene.gcode_output_type == "curve":
         bpy.ops.object.convert(target="CURVE")
 
 

@@ -435,6 +435,7 @@ def getBounds(o):
         or o.max.z - o.min.z > m.working_area.z
     ):
         o.info.warnings += "Operation Exceeds Your Machine Limits\n"
+        bpy.ops.cam.popup("INVOKE_DEFAULT")
 
 
 def getBoundsMultiple(operations):
@@ -2671,6 +2672,7 @@ def operationValid(self, context):
         o.info.warnings = ""
     else:
         o.info.warnings = invalidmsg
+        bpy.ops.cam.popup("INVOKE_DEFAULT")
 
     if o.geometry_source == "IMAGE":
         o.optimisation.use_exact = False
@@ -2983,30 +2985,96 @@ def getStrategyList(scene, context):
 
     use_experimental = bpy.context.preferences.addons[__package__].preferences.experimental
     items = [
-        ("CUTOUT", "Profile(Cutout)", "Cut the silhouete with offset"),
-        ("POCKET", "Pocket", "Pocket operation"),
-        ("DRILL", "Drill", "Drill operation"),
-        ("PARALLEL", "Parallel", "Parallel lines on any angle"),
-        ("CROSS", "Cross", "Cross paths"),
-        ("BLOCK", "Block", "Block path"),
-        ("SPIRAL", "Spiral", "Spiral path"),
-        ("CIRCLES", "Circles", "Circles path"),
+        (
+            "CUTOUT",
+            "Profile (Cutout)",
+            "Cut the silhouete with offset",
+            "MOD_SKIN",
+            0,
+        ),
+        (
+            "POCKET",
+            "Pocket",
+            "Pocket operation",
+            "CLIPUV_DEHLT",
+            1,
+        ),
+        (
+            "DRILL",
+            "Drill",
+            "Drill operation",
+            "DISCLOSURE_TRI_DOWN",
+            2,
+        ),
+        (
+            "PARALLEL",
+            "Parallel",
+            "Parallel lines on any angle",
+            "SNAP_EDGE",
+            3,
+        ),
+        (
+            "CROSS",
+            "Cross",
+            "Cross paths",
+            "ADD",
+            4,
+        ),
+        (
+            "BLOCK",
+            "Block",
+            "Block path",
+            "META_PLANE",
+            5,
+        ),
+        (
+            "SPIRAL",
+            "Spiral",
+            "Spiral path",
+            "FORCE_VORTEX",
+            6,
+        ),
+        (
+            "CIRCLES",
+            "Circles",
+            "Circles path",
+            "MESH_CIRCLE",
+            7,
+        ),
         (
             "OUTLINEFILL",
             "Outline Fill",
             "Detect outline and fill it with paths as pocket. Then sample these paths on the 3d surface",
+            "FULLSCREEN_EXIT",
+            8,
         ),
-        ("CARVE", "Project curve to surface", "Engrave the curve path to surface"),
+        (
+            "CARVE",
+            "Project Curve to Surface",
+            "Engrave the curve path to surface",
+            "CON_SHRINKWRAP",
+            9,
+        ),
         (
             "WATERLINE",
-            "Waterline - Roughing -below zero",
+            "Waterline - Roughing (Below Z0)",
             "Waterline paths - constant z below zero",
+            "MOD_OCEAN",
+            10,
         ),
-        ("CURVE", "Curve to Path", "Curve object gets converted directly to path"),
+        (
+            "CURVE",
+            "Curve to Path",
+            "Curve object gets converted directly to path",
+            "CURVE_DATA",
+            11,
+        ),
         (
             "MEDIAL_AXIS",
-            "Medial axis",
+            "Medial Axis",
             "Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ",
+            "SHARPCURVE",
+            12,
         ),
     ]
     #   if use_experimental:
@@ -3159,34 +3227,32 @@ def check_operations_on_load(context):
             )
         _IS_LOADING_DEFAULTS = False
     # copy presets if not there yet
-    if addon_prefs.just_updated:
-        preset_source_path = Path(__file__).parent / "presets"
-        preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
+    preset_source_path = Path(__file__).parent / "presets"
+    preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
 
-        def copy_if_not_exists(src, dst):
-            """Copy a file from source to destination if it does not already exist.
+    def copy_if_not_exists(src, dst):
+        """Copy a file from source to destination if it does not already exist.
 
-            This function checks if the destination file exists. If it does not, the
-            function copies the source file to the destination using a high-level
-            file operation that preserves metadata.
+        This function checks if the destination file exists. If it does not, the
+        function copies the source file to the destination using a high-level
+        file operation that preserves metadata.
 
-            Args:
-                src (str): The path to the source file to be copied.
-                dst (str): The path to the destination where the file should be copied.
-            """
+        Args:
+            src (str): The path to the source file to be copied.
+            dst (str): The path to the destination where the file should be copied.
+        """
 
-            if Path(dst).exists() == False:
-                shutil.copy2(src, dst)
+        if Path(dst).exists() == False:
+            shutil.copy2(src, dst)
 
-        shutil.copytree(
-            preset_source_path,
-            preset_target_path,
-            copy_function=copy_if_not_exists,
-            dirs_exist_ok=True,
-        )
+    shutil.copytree(
+        preset_source_path,
+        preset_target_path,
+        copy_function=copy_if_not_exists,
+        dirs_exist_ok=True,
+    )
 
-        addon_prefs.just_updated = False
-        bpy.ops.wm.save_userpref()
+    bpy.ops.wm.save_userpref()
 
     if not addon_prefs.op_preset_update:
         # Update the Operation presets

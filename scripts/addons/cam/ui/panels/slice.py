@@ -12,8 +12,13 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_SLICE_Panel(CAMButtonsPanel, Panel):
     """CAM Slicer Panel"""
 
-    bl_label = "Slice Model to Plywood Sheets"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "render"
+
+    bl_label = "[ Slice Model to Sheets ]"
     bl_idname = "WORLD_PT_CAM_SLICE"
+    bl_options = {"DEFAULT_CLOSED"}
     panel_interface_level = 2
     use_property_split = True
 
@@ -24,8 +29,13 @@ class CAM_SLICE_Panel(CAMButtonsPanel, Panel):
 
         scene = bpy.context.scene
         settings = scene.cam_slice
-        layout.operator("object.cam_slice_objects")
-        layout.prop(settings, "slice_distance")
-        layout.prop(settings, "slice_above0")
-        layout.prop(settings, "slice_3d")
-        layout.prop(settings, "indexes")
+        col = layout.column(align=True)
+        col.prop(settings, "slice_distance")
+        col.prop(settings, "slice_above0")
+        col.prop(settings, "slice_3d")
+        col.prop(settings, "indexes")
+
+        box = layout.box()
+        col = box.column()
+        col.scale_y = 1.2
+        col.operator("object.cam_slice_objects", text="Slice Object", icon="ALIGN_JUSTIFY")
