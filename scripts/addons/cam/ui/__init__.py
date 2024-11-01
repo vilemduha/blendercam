@@ -4,6 +4,7 @@ Import UI, Register and Unregister Classes
 """
 
 import bpy
+from bpy.props import PointerProperty
 
 from .menus.import_gcode import TOPBAR_MT_import_gcode
 from .menus.curve_creators import VIEW3D_MT_tools_add, VIEW3D_MT_tools_create
@@ -15,12 +16,13 @@ from .panels.chains import (
     CAM_UL_chains,
     CAM_UL_operations,
 )
+from .panels.basrelief import BasReliefsettings, BASRELIEF_Panel
 from .panels.blank import CAM_BLANK_Panel
 from .panels.cutter import CAM_CUTTER_Panel
 from .panels.feedrate import CAM_FEEDRATE_Panel
 from .panels.gcode import CAM_GCODE_Panel
 from .panels.info import CAM_INFO_Panel, CAM_INFO_Properties
-from .panels.interface import CAM_INTERFACE_Properties
+from .panels.interface import CAM_INTERFACE_Properties, draw_interface
 from .panels.machine import CAM_MACHINE_Panel
 from .panels.material import (
     CAM_MATERIAL_Panel,
@@ -77,6 +79,8 @@ classes = [
     CAM_PACK_Panel,
     CAM_Popup_Panel,
     CAM_SLICE_Panel,
+    BasReliefsettings,
+    BASRELIEF_Panel,
     VIEW3D_PT_tools_curvetools,
     VIEW3D_PT_tools_create,
     WM_OT_gcode_import,
@@ -88,17 +92,6 @@ classes = [
 ]
 
 
-def draw_engine_extras(self, context):
-    layout = self.layout
-    layout.use_property_split = True
-    layout.use_property_decorate = False
-
-    if context.engine == "FABEX_RENDER":
-
-        col = layout.column()
-        col.prop(context.scene.interface, "level")
-
-
 def progress_bar(self, context):
     progress = context.window_manager.progress
     percent = int(progress * 100)
@@ -108,7 +101,7 @@ def progress_bar(self, context):
         row.scale_x = 2
         row.progress(
             factor=progress,
-            text=f"Processing...{percent}% (Esc to Cancel)",
+            text=f"Processing...{percent}%",
         )
 
 
@@ -116,13 +109,18 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-    bpy.types.VIEW3D_HT_header.prepend(progress_bar)
+    bpy.types.VIEW3D_HT_header.append(progress_bar)
     bpy.types.TOPBAR_MT_file_import.append(TOPBAR_MT_import_gcode.draw)
     bpy.types.VIEW3D_MT_curve_add.append(VIEW3D_MT_tools_add.draw)
     bpy.types.VIEW3D_MT_editor_menus.append(Fabex_Menu.draw)
-    bpy.types.RENDER_PT_context.append(draw_engine_extras)
+    bpy.types.RENDER_PT_context.append(draw_interface)
 
     bpy.types.WindowManager.progress = bpy.props.FloatProperty(default=0)
+
+    scene = bpy.types.Scene
+    scene.basreliefsettings = PointerProperty(
+        type=BasReliefsettings,
+    )
 
 
 def unregister():
@@ -133,4 +131,7 @@ def unregister():
     bpy.types.TOPBAR_MT_file_import.remove(TOPBAR_MT_import_gcode.draw)
     bpy.types.VIEW3D_MT_curve_add.remove(VIEW3D_MT_tools_add.draw)
     bpy.types.VIEW3D_MT_editor_menus.remove(Fabex_Menu.draw)
-    bpy.types.RENDER_PT_context.remove(draw_engine_extras)
+    bpy.types.RENDER_PT_context.remove(draw_interface)
+
+    scene = bpy.types.Scene
+    del scene.basreliefsettings

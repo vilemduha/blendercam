@@ -35,6 +35,20 @@ class FABEX_ENGINE(RenderEngine):
     bl_label = "Fabex CNC/CAM"
     bl_use_eevee_viewport = True
 
+    # view3d = [a.spaces[0] for a in context.screen.areas if a.type == "VIEW_3D"][0]
+
+    # shading = view3d.shading
+    # shading.color_type = "OBJECT"
+    # shading.show_shadows = True
+    # shading.show_cavity = True
+    # shading.cavity_type = "BOTH"
+    # shading.cavity_ridge_factor = 2.5
+    # shading.cavity_valley_factor = 2.5
+    # shading.curvature_ridge_factor = 2
+    # shading.curvature_valley_factor = 2
+    # shading.use_dof = True
+    # shading.show_object_outline = True
+
 
 def get_panels():
     """Retrieve a list of panels for the Blender UI.

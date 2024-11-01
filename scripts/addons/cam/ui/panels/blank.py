@@ -10,6 +10,7 @@ from bpy.types import Panel
 class CAM_BLANK_Panel(Panel):
     """CAM Blank Panel"""
 
+    bl_idname = "CAM_PT_blank"
     bl_label = ""
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"

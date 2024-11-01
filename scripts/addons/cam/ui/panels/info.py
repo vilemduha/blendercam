@@ -62,7 +62,6 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "TOOLS"
     # bl_category = "CNC"
     bl_options = {"HIDE_HEADER"}
-    bl_order = 3
 
     bl_label = "Info & Warnings"
     bl_idname = "WORLD_PT_CAM_INFO"
@@ -83,7 +82,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
             percent = int(context.window_manager.progress * 100)
             col.progress(
                 factor=context.window_manager.progress,
-                text=f"Processing...{percent}% (Esc to Cancel)",
+                text=f"Processing...{percent}%",
             )
         if self.op is None:
             return
@@ -93,7 +92,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
                 box = main.box()
                 col = box.column(align=True)
                 col.alert = True
-                col.label(text="Warning!", icon="ERROR")
+                col.label(text="!!! Warning !!!", icon="ERROR")
                 for line in self.op.info.warnings.rstrip("\n").split("\n"):
                     if len(line) > 0:
                         col.label(text=line, icon="ERROR")
@@ -113,28 +112,25 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
 
             box = main.box()
             col = box.column(align=True)
-            col.label(text=f"Operation Duration: {time_estimate}", icon="TIME")
+            col.label(text="Estimates")
+            col.label(text=f"Time: {time_estimate}", icon="TIME")
 
             # Operation Chipload
             if not self.op.info.chipload > 0:
-                return
-
-            chipload = f"Chipload: {strInUnits(self.op.info.chipload, 4)}/tooth"
-            col.label(text=chipload)
+                pass
+            else:
+                chipload = f"Chipload: {strInUnits(self.op.info.chipload, 4)}/tooth"
+                col.label(text=chipload)
 
             # Operation Money Cost
             if self.level >= 1:
                 if not int(self.op.info.duration * 60) > 0:
                     return
 
-                row = main.row()
-                row.label(text="Hourly Rate")
-                row.prop(bpy.context.scene.cam_machine, "hourly_rate", text="")
-
                 if float(bpy.context.scene.cam_machine.hourly_rate) < 0.01:
                     return
 
                 cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
                 total_cost = self.op.info.duration * 60 * cost_per_second
-                op_cost = f"Operation Cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
-                main.label(text=op_cost)
+                op_cost = f"Cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
+                col.label(text=op_cost, icon="TAG")
