@@ -1,7 +1,7 @@
-schema_version = "1.0.53"
+schema_version = "1.0.54"
 
 id = "fabex"
-version = "1.0.53"
+version = "1.0.54"
 name = "Fabex CNC (formerly BlenderCAM)"
 tagline = "G-code Generation Tools"
 maintainer = "Alain Pelletier and Contributors"
