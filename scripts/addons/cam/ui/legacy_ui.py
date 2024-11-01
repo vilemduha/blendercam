@@ -36,44 +36,72 @@ class VIEW3D_PT_tools_curvetools(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
-    bl_label = "Curve CAM Tools"
-    bl_order = 0
+    bl_label = "[ Curve Tools ]"
+    # bl_options = {"HIDE_HEADER"}
 
     def draw(self, context):
+        # if not context.scene.render.engine == "FABEX_RENDER":
+        #     return
+        # else:
         layout = self.layout
-        layout.operator("object.curve_boolean")
-        layout.operator("object.convex_hull")
-        layout.operator("object.curve_intarsion")
-        layout.operator("object.curve_overcuts")
-        layout.operator("object.curve_overcuts_b")
-        layout.operator("object.silhouete")
-        layout.operator("object.silhouete_offset")
-        layout.operator("object.curve_remove_doubles")
-        layout.operator("object.mesh_get_pockets")
+        layout.scale_y = 1.2
+        # header, panel = layout.panel("curve_tools")
+        # header.label(text="Curve Tools", icon="CURVE_DATA")
+        # if panel:
+        col = layout.column()
+        col.operator("object.curve_boolean", icon="MOD_BOOLEAN")
+        col.operator("object.convex_hull", icon="MOD_SOLIDIFY")
+        col.operator("object.curve_intarsion", icon="OUTLINER_DATA_META")
+        column = col.column(align=True)
+        column.operator("object.curve_overcuts", icon="CON_SIZELIKE")
+        column.operator("object.curve_overcuts_b", icon="CON_SIZELIKE")
+        column = col.column(align=True)
+        column.operator("object.silhouete", icon="USER", text="Object Silhouette")
+        column.operator("object.silhouete_offset", icon="COMMUNITY", text="Silhouette Offset")
+        col.operator(
+            "object.curve_remove_doubles", icon="FORCE_CHARGE", text="Remove Curve Doubles"
+        )
+        col.operator("object.mesh_get_pockets", icon="HOLDOUT_ON", text="Get Pocket Surfaces")
+
+        column = col.column(align=True)
+        column.operator(
+            "object.cam_pack_objects", icon="STICKY_UVS_LOC", text="Pack Curves on Sheet"
+        )
+        column.operator("object.cam_slice_objects", icon="ALIGN_FLUSH", text="Slice Model to Sheet")
+
+        col.operator("scene.calculate_bas_relief", icon="RNDCURVE", text="Bas Relief")
 
 
 class VIEW3D_PT_tools_create(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
-    bl_label = "Curve CAM Creators"
-    bl_option = "DEFAULT_CLOSED"
-    bl_order = 1
+    bl_label = "[ Curve Creators ]"
+    # bl_option = "DEFAULT_CLOSED"
+    # bl_options = {"HIDE_HEADER"}
 
     def draw(self, context):
+        # if not context.scene.render.engine == "FABEX_RENDER":
+        #     return
+        # else:
         layout = self.layout
-        layout.operator("object.curve_plate")
-        layout.operator("object.curve_drawer")
-        layout.operator("object.curve_mortise")
-        layout.operator("object.curve_interlock")
-        layout.operator("object.curve_puzzle")
-        layout.operator("object.sine")
-        layout.operator("object.lissajous")
-        layout.operator("object.hypotrochoid")
-        layout.operator("object.customcurve")
-        layout.operator("object.curve_hatch")
-        layout.operator("object.curve_gear")
-        layout.operator("object.curve_flat_cone")
+        layout.scale_y = 1.2
+        # header, panel = layout.panel("curve_tools")
+        # header.label(text="Curve Creators", icon="FCURVE")
+        # if panel:
+        col = layout.column(align=True)
+        col.operator("object.curve_plate", icon="META_PLANE")
+        col.operator("object.curve_drawer", icon="CON_SAMEVOL")
+        col.operator("object.curve_mortise", icon="CHECKBOX_DEHLT")
+        col.operator("object.curve_interlock", icon="REMOVE")
+        col.operator("object.curve_puzzle", icon="HAND")
+        col.operator("object.sine", icon="FORCE_HARMONIC")
+        col.operator("object.lissajous", icon="VIEW_ORTHO")
+        col.operator("object.hypotrochoid", icon="SHADING_WIRE")
+        col.operator("object.customcurve", icon="IPO_BOUNCE")
+        col.operator("object.curve_hatch", icon="OUTLINER_DATA_LIGHTPROBE")
+        col.operator("object.curve_gear", icon="PREFERENCES")
+        col.operator("object.curve_flat_cone", icon="MESH_CONE")
 
 
 class WM_OT_gcode_import(Operator, ImportHelper):

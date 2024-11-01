@@ -435,7 +435,7 @@ def getBounds(o):
         or o.max.z - o.min.z > m.working_area.z
     ):
         o.info.warnings += "Operation Exceeds Your Machine Limits\n"
-        bpy.ops.cam.popup("INVOKE_DEFAULT")
+    bpy.ops.cam.popup("INVOKE_DEFAULT")
 
 
 def getBoundsMultiple(operations):
@@ -2139,6 +2139,22 @@ def addMachineAreaObject():
     # else:
     #     bpy.context.scene.objects.active = None
 
+    # Update Viewport Shading for better previews
+
+    # view3d = [a.spaces[0] for a in bpy.context.screen.areas if a.type == "VIEW_3D"][0]
+
+    # shading = view3d.shading
+    # shading.color_type = "OBJECT"
+    # shading.show_shadows = True
+    # shading.show_cavity = True
+    # shading.cavity_type = "BOTH"
+    # shading.cavity_ridge_factor = 2.5
+    # shading.cavity_valley_factor = 2.5
+    # shading.curvature_ridge_factor = 2
+    # shading.curvature_valley_factor = 2
+    # shading.use_dof = True
+    # shading.show_object_outline = True
+
 
 def addMaterialAreaObject():
     """Add a material area object to the current Blender scene.
@@ -3038,7 +3054,7 @@ def getStrategyList(scene, context):
             "CIRCLES",
             "Circles",
             "Circles path",
-            "MESH_CIRCLE",
+            "ONIONSKIN_ON",
             7,
         ),
         (
@@ -3210,14 +3226,23 @@ def check_operations_on_load(context):
             except KeyError:
                 bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
 
-    s = bpy.context.scene
-    for o in s.cam_operations:
+    scene = bpy.context.scene
+    for o in scene.cam_operations:
         if o.computing:
             o.computing = False
     # set interface level to previously used level for a new file
     if not bpy.data.filepath:
         _IS_LOADING_DEFAULTS = True
-        s.interface.level = addon_prefs.default_interface_level
+
+        scene.interface.level = addon_prefs.default_interface_level
+        scene.interface.shading = addon_prefs.default_shading
+
+        scene.interface.layout = addon_prefs.default_layout
+
+        scene.interface.main_location = addon_prefs.default_main_location
+        scene.interface.operation_location = addon_prefs.default_operation_location
+        scene.interface.tools_location = addon_prefs.default_tools_location
+
         machine_preset = addon_prefs.machine_preset = addon_prefs.default_machine_preset
         if len(machine_preset) > 0:
             print("Loading Preset:", machine_preset)

@@ -22,7 +22,7 @@ from bpy.props import (
 from bpy_extras.object_utils import object_data_add
 
 # Relative Imports - from 'cam' module
-from . import basrelief
+from .basrelief import DoBasRelief, ProblemAreas
 from .cam_operation import camOperation
 from .chain import (
     camChain,
@@ -109,6 +109,9 @@ from .utils import (
 
 
 classes = [
+    # .basrelief
+    DoBasRelief,
+    ProblemAreas,
     # .chain
     opReference,
     camChain,
@@ -188,7 +191,7 @@ def register() -> None:
         bpy.utils.register_class(cls)
 
     ui_register()
-    basrelief.register()
+
     # .cam_operation - last to allow dependencies to register before it
     bpy.utils.register_class(camOperation)
 
@@ -253,7 +256,7 @@ def unregister() -> None:
         bpy.utils.unregister_class(cls)
 
     ui_unregister()
-    basrelief.unregister()
+
     bpy.utils.unregister_class(camOperation)
 
     scene = bpy.types.Scene
