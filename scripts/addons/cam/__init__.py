@@ -271,8 +271,6 @@ def unregister() -> None:
     del scene.cam_machine
     del scene.gcode_output_type
     del scene.cam_text
-    del scene.cam_pack
-    del scene.cam_slice
 
     for panel in get_panels():
         if "FABEX_RENDER" in panel.COMPAT_ENGINES:
