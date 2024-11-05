@@ -16,7 +16,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "WINDOW"
     bl_context = "render"
 
-    bl_label = "[ Machine ]"
+    bl_label = "╠ Machine ╣"
     bl_idname = "WORLD_PT_CAM_MACHINE"
     panel_interface_level = 0
     always_show_panel = True
@@ -97,28 +97,38 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
         # Gcode Options
         if self.level >= 1:
             header, panel = layout.panel(idname="gcode", default_closed=True)
-            header.label(text="Gcode Options")
+            header.label(text="Machine G-code")
             if panel:
-                col = panel.column(align=True)
+                panel.use_property_split = False
+                col = panel.column()
                 # Tool Options
                 if self.level >= 2:
                     col.prop(self.machine, "output_tool_definitions")
-                    col.prop(self.machine, "output_tool_change")
-                    if self.machine.output_tool_change:
-                        col.prop(self.machine, "output_g43_on_tool_change")
+                    subheader, subpanel = col.panel(idname="tool_change", default_closed=False)
+                    subheader.prop(self.machine, "output_tool_change")
+                    if subpanel:
+                        subpanel.enabled = self.machine.output_tool_change
+                        subpanel.prop(self.machine, "output_g43_on_tool_change")
 
                 # Block Numbers
                 if self.level >= 2:
-                    col.prop(self.machine, "output_block_numbers")
-                    if self.machine.output_block_numbers:
-                        col.prop(self.machine, "start_block_number")
-                        col.prop(self.machine, "block_number_increment")
+                    subheader, subpanel = col.panel(idname="block_numbers", default_closed=True)
+                    subheader.prop(self.machine, "output_block_numbers")
+                    if subpanel:
+                        subpanel.enabled = self.machine.output_block_numbers
+                        subpanel.use_property_split = True
+                        column = subpanel.column(align=True)
+                        column.prop(self.machine, "start_block_number")
+                        column.prop(self.machine, "block_number_increment")
 
                 # Split Files
                 if self.level >= 2:
-                    col.prop(self.machine, "eval_splitting")
-                    if self.machine.eval_splitting:
-                        col.prop(self.machine, "split_limit")
+                    subheader, subpanel = col.panel(idname="split", default_closed=False)
+                    subheader.prop(self.machine, "eval_splitting")
+                    if subpanel:
+                        subpanel.enabled = self.machine.eval_splitting
+                        subpanel.use_property_split = True
+                        subpanel.prop(self.machine, "split_limit")
 
             # Hourly Rate
             layout.prop(

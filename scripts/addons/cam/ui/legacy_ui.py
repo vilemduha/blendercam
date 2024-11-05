@@ -36,7 +36,7 @@ class VIEW3D_PT_tools_curvetools(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
-    bl_label = "[ Curve Tools ]"
+    bl_label = "╠ Curve Tools ╣"
     # bl_options = {"HIDE_HEADER"}
 
     def draw(self, context):
@@ -76,7 +76,7 @@ class VIEW3D_PT_tools_create(Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
-    bl_label = "[ Curve Creators ]"
+    bl_label = "╠ Curve Creators ╣"
     # bl_option = "DEFAULT_CLOSED"
     # bl_options = {"HIDE_HEADER"}
 
@@ -97,7 +97,7 @@ class VIEW3D_PT_tools_create(Panel):
         col.operator("object.curve_puzzle", icon="HAND")
         col.operator("object.sine", icon="FORCE_HARMONIC")
         col.operator("object.lissajous", icon="VIEW_ORTHO")
-        col.operator("object.hypotrochoid", icon="SHADING_WIRE")
+        col.operator("object.hypotrochoid", icon="SHADING_WIRE", text="Hypotrochoid Figure")
         col.operator("object.customcurve", icon="IPO_BOUNCE")
         col.operator("object.curve_hatch", icon="OUTLINER_DATA_LIGHTPROBE")
         col.operator("object.curve_gear", icon="PREFERENCES")

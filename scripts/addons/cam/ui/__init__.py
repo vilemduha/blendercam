@@ -16,7 +16,8 @@ from .panels.chains import (
     CAM_UL_chains,
     CAM_UL_operations,
 )
-from .panels.basrelief import BasReliefsettings, BASRELIEF_Panel
+
+# from .panels.basrelief import BasReliefsettings, BASRELIEF_Panel
 from .panels.blank import CAM_BLANK_Panel
 from .panels.cutter import CAM_CUTTER_Panel
 from .panels.feedrate import CAM_FEEDRATE_Panel
@@ -33,9 +34,11 @@ from .panels.movement import CAM_MOVEMENT_Panel, CAM_MOVEMENT_Properties
 from .panels.op_properties import CAM_OPERATION_PROPERTIES_Panel
 from .panels.operations import CAM_OPERATIONS_Panel
 from .panels.optimisation import CAM_OPTIMISATION_Panel, CAM_OPTIMISATION_Properties
-from .panels.pack import CAM_PACK_Panel
+
+# from .panels.pack import CAM_PACK_Panel
 from .panels.popup import CAM_Popup_Panel
-from .panels.slice import CAM_SLICE_Panel
+
+# from .panels.slice import CAM_SLICE_Panel
 from .pie_menu.pie_cam import VIEW3D_MT_PIE_CAM
 from .pie_menu.pie_chains import VIEW3D_MT_PIE_Chains
 from .pie_menu.pie_pack_slice_relief import VIEW3D_MT_PIE_PackSliceRelief
@@ -76,11 +79,11 @@ classes = [
     CAM_CUTTER_Panel,
     CAM_GCODE_Panel,
     CAM_MACHINE_Panel,
-    CAM_PACK_Panel,
+    # CAM_PACK_Panel,
     CAM_Popup_Panel,
-    CAM_SLICE_Panel,
-    BasReliefsettings,
-    BASRELIEF_Panel,
+    # CAM_SLICE_Panel,
+    # BasReliefsettings,
+    # BASRELIEF_Panel,
     VIEW3D_PT_tools_curvetools,
     VIEW3D_PT_tools_create,
     WM_OT_gcode_import,
@@ -117,10 +120,10 @@ def register():
 
     bpy.types.WindowManager.progress = bpy.props.FloatProperty(default=0)
 
-    scene = bpy.types.Scene
-    scene.basreliefsettings = PointerProperty(
-        type=BasReliefsettings,
-    )
+    # scene = bpy.types.Scene
+    # scene.basreliefsettings = PointerProperty(
+    #     type=BasReliefsettings,
+    # )
 
 
 def unregister():
@@ -133,5 +136,5 @@ def unregister():
     bpy.types.VIEW3D_MT_editor_menus.remove(Fabex_Menu.draw)
     bpy.types.RENDER_PT_context.remove(draw_interface)
 
-    scene = bpy.types.Scene
-    del scene.basreliefsettings
+    # scene = bpy.types.Scene
+    # del scene.basreliefsettings

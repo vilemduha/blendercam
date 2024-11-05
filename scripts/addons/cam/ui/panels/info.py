@@ -75,6 +75,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
         layout.use_property_decorate = False
 
         main = layout.box()
+        # main.label(text="╠ INFO ╣", icon="INFO")
         main.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}', icon="INFO")
         if context.window_manager.progress > 0:
             col = main.column(align=True)
@@ -96,6 +97,24 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
                 for line in self.op.info.warnings.rstrip("\n").split("\n"):
                     if len(line) > 0:
                         col.label(text=line, icon="ERROR")
+
+            # Cutter Engagement
+            if not self.op.strategy == "CUTOUT" and not self.op.cutter_type in ["LASER", "PLASMA"]:
+                box = main.box()
+                col = box.column(align=True)
+                # Warns if cutter engagement is greater than 50%
+                if self.op.cutter_type in ["BALLCONE"]:
+                    engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
+                else:
+                    engagement = round(
+                        100 * self.op.dist_between_paths / self.op.cutter_diameter, 1
+                    )
+
+                if engagement > 50:
+                    col.alert = True
+                    col.label(text="Warning: High Cutter Engagement", icon="ERROR")
+
+                col.label(text=f"Cutter Engagement: {engagement}%", icon="MOD_SHRINKWRAP")
 
             # Operation Time Estimate
             duration = self.op.info.duration
@@ -120,7 +139,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
                 pass
             else:
                 chipload = f"Chipload: {strInUnits(self.op.info.chipload, 4)}/tooth"
-                col.label(text=chipload)
+                col.label(text=chipload, icon="DRIVER_ROTATIONAL_DIFFERENCE")
 
             # Operation Money Cost
             if self.level >= 1:

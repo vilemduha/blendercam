@@ -192,7 +192,10 @@ def useBridges(ch, o):
             value.
     """
     bridgecollectionname = o.bridges_collection_name
-    bridgecollection = bpy.data.collections[bridgecollectionname]
+    if bridgecollectionname == "":
+        bridgecollection = bpy.data.collections.new(bridgecollectionname)
+    else:
+        bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
 
         # get bridgepoly

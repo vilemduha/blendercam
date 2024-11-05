@@ -89,6 +89,25 @@ def opencamlib_version():
     return ocl.version()
 
 
+# Import Shapely
+# Return available OpenCamLib version on success, None otherwise
+def shapely_version():
+    """Return the version of the Shapely library.
+
+    This function attempts to import the Shapely library and returns its
+    version. If the library is not available, it will return None.
+
+    Returns:
+        str or None: The version of Shapely if available, None otherwise.
+    """
+
+    try:
+        import shapely
+    except ImportError:
+        return
+    return shapely.__version__
+
+
 def positionObject(operation):
     """Position an object based on specified operation parameters.
 
@@ -435,7 +454,10 @@ def getBounds(o):
         or o.max.z - o.min.z > m.working_area.z
     ):
         o.info.warnings += "Operation Exceeds Your Machine Limits\n"
-    bpy.ops.cam.popup("INVOKE_DEFAULT")
+    if not o.info.warnings == "":
+        addon_prefs = bpy.context.preferences.addons[__package__].preferences
+        if addon_prefs.show_popups:
+            bpy.ops.cam.popup("INVOKE_DEFAULT")
 
 
 def getBoundsMultiple(operations):
@@ -2688,7 +2710,9 @@ def operationValid(self, context):
         o.info.warnings = ""
     else:
         o.info.warnings = invalidmsg
-        bpy.ops.cam.popup("INVOKE_DEFAULT")
+        addon_prefs = bpy.context.preferences.addons[__package__].preferences
+        if addon_prefs.show_popups:
+            bpy.ops.cam.popup("INVOKE_DEFAULT")
 
     if o.geometry_source == "IMAGE":
         o.optimisation.use_exact = False

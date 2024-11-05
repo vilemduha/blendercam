@@ -287,8 +287,8 @@ class camOperation(PropertyGroup):
     pocketType: EnumProperty(
         name="pocket type",
         items=(
-            ("PERIMETER", "Perimeter", "a"),
-            ("PARALLEL", "Parallel", "a"),
+            ("PERIMETER", "Perimeter", "a", "", 0),
+            ("PARALLEL", "Parallel", "a", "EXPERIMENTAL", 1),
         ),
         description="Type of pocket",
         default="PERIMETER",

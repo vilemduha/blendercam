@@ -16,7 +16,7 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "UI"
     bl_category = "CNC"
 
-    bl_label = "[ Feedrate ]"
+    bl_label = "╠ Feedrate ╣"
     bl_idname = "WORLD_PT_CAM_FEEDRATE"
     panel_interface_level = 0
 
@@ -29,7 +29,7 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
         layout.prop(self.op, "feedrate", text="Feedrate (/min)")
 
         # Spindle RPM
-        layout.prop(self.op, "spindle_rpm", text="Spindle Speed (RPM)")
+        layout.prop(self.op, "spindle_rpm", text="Spindle (RPM)")
 
         # Plunge Feedrate
         if self.level >= 1:
@@ -41,11 +41,12 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
             col.prop(self.op, "plunge_angle", text="Angle")
 
         # Sim Feedrate
-        if self.level >= 2:
-            header, panel = layout.panel("sim_feedrate")
+        if self.level >= 3:
+            header, panel = layout.panel("sim_feedrate", default_closed=True)
             header.label(text="╼ EXPERIMENTAL ╾", icon="EXPERIMENTAL")
             if panel:
                 col = panel.column(align=True)
+                col.use_property_split = False
                 col.prop(
                     self.op,
                     "do_simulation_feedrate",

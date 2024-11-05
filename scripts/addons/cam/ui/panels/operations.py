@@ -25,7 +25,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "WINDOW"
     bl_context = "render"
 
-    bl_label = "[ Operations ]"
+    bl_label = "╠ Operations ╣"
     bl_idname = "WORLD_PT_CAM_OPERATIONS"
     panel_interface_level = 0
     always_show_panel = True
@@ -70,9 +70,12 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
 
         # Calculate Path
         if self.op.maxz > self.op.movement.free_height:
-            layout.label(text="!ERROR! COLLISION!")
-            layout.label(text="Depth Start > Free Movement Height")
-            layout.label(text="!ERROR! COLLISION!")
+            box = layout.box()
+            col = box.column(align=True)
+            col.alert = True
+            col.label(text="! ERROR ! COLLISION !", icon="ERROR")
+            col.label(text="Depth Start > Free Movement Height")
+            col.label(text="! ERROR ! COLLISION !", icon="ERROR")
             layout.prop(self.op.movement, "free_height")
 
         if not self.op.valid:

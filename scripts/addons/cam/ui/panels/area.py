@@ -17,7 +17,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "UI"
     bl_category = "CNC"
 
-    bl_label = "[ Operation Area ]"
+    bl_label = "╠ Operation Area ╣"
     bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
     panel_interface_level = 0
 
@@ -25,34 +25,42 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
+        main = layout.column(align=True)
 
-        # Use Layers
-        header, panel = layout.panel_prop(self.op, "use_layers")
-        header.label(text="Layers")
-        if panel:
-            col = panel.column(align=True)
-            if self.op.use_layers:
-                col.prop(self.op, "stepdown", text="Layer Height")
-
-            # First Down
-            if self.level >= 1 and self.op.strategy in ["CUTOUT", "POCKET", "MEDIAL_AXIS"]:
-                col.prop(self.op, "first_down")
+        # Free Height
+        box = main.box()
+        col = box.column(align=True)
+        col.label(text="Z Clearance", icon="CON_FLOOR")
+        col.prop(self.op.movement, "free_height")
+        if self.op.maxz > self.op.movement.free_height:
+            box = col.box()
+            col = box.column(align=True)
+            col.alert = True
+            col.label(text="! POSSIBLE COLLISION !", icon="ERROR")
+            col.label(text="Depth Start > Free Movement")
 
         # Max Z
         if self.level >= 1:
-            col = layout.column(align=True)
-            col.prop(self.op, "maxz")
-            col.prop(self.op.movement, "free_height")
+            box = main.box()
+            col = box.column(align=True)
+            col.label(text="Operation Depth")
+            col.prop(self.op, "maxz", text="Start")
+            # col.prop(self.op.movement, "free_height")
             if self.op.maxz > self.op.movement.free_height:
-                col.label(text="!ERROR! COLLISION!")
-                col.label(text="Depth Start > Free Movement Height")
-                col.label(text="!ERROR! COLLISION!")
+                box = col.box()
+                box.alert = True
+                sub = box.column(align=True)
+                sub.label(text="! ERROR ! COLLISION !", icon="ERROR")
+                sub.label(text="Depth Start > Free Movement Height")
+                sub.label(text="! ERROR ! COLLISION !", icon="ERROR")
 
         # Min Z
         if self.level >= 1:
             if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
                 if self.op.strategy == "CURVE":
-                    col.label(text="Cannot Use Depth from Object Using Curves")
+                    box = col.box()
+                    box.alert = True
+                    box.label(text="Cannot Use Depth from Object Using Curves", icon="ERROR")
                 depth = self.op.minz_from
                 if depth == "MATERIAL":
                     icon = depth
@@ -60,7 +68,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
                     icon = "OBJECT_DATA"
                 else:
                     icon = "USER"
-                col.prop(self.op, "minz_from", text="Set Max Depth from", icon=icon)
+                col.prop(self.op, "minz_from", text="Max", icon=icon)
                 if self.op.minz_from == "CUSTOM":
                     col.prop(self.op, "minz")
 
@@ -85,14 +93,40 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
         # Draw Ambient
         if self.level >= 1:
             if self.op.strategy in ["BLOCK", "SPIRAL", "CIRCLES", "PARALLEL", "CROSS"]:
-                col.prop(self.op, "ambient_behaviour")
+                box = main.box()
+                col = box.column(align=True)
+                col.label(text="Ambient")
+                col.prop(self.op, "ambient_behaviour", text="Surfaces")
                 if self.op.ambient_behaviour == "AROUND":
                     col.prop(self.op, "ambient_radius")
-                col.prop(self.op, "ambient_cutter_restrict")
+                row = col.row()
+                row.use_property_split = False
+                row.prop(self.op, "ambient_cutter_restrict")
 
         # Draw Limit Curve
         if self.level >= 1:
             if self.op.strategy in ["BLOCK", "SPIRAL", "CIRCLES", "PARALLEL", "CROSS"]:
-                col.prop(self.op, "use_limit_curve")
-                if self.op.use_limit_curve:
-                    col.prop_search(self.op, "limit_curve", bpy.data, "objects")
+                main.use_property_split = False
+                col = main.column(align=False)
+                header, panel = col.panel("limit", default_closed=True)
+                header.prop(self.op, "use_limit_curve", text="Limit Curve")
+                if panel:
+                    panel.enabled = self.op.use_limit_curve
+                    col = panel.column(align=True)
+                    col.use_property_split = True
+                    col.prop_search(self.op, "limit_curve", bpy.data, "objects", text="Curve")
+
+        # Use Layers
+        main.use_property_split = False
+        header, panel = main.panel("layers", default_closed=False)
+        header.prop(self.op, "use_layers", text="Layers")
+        if panel:
+            panel.enabled = self.op.use_layers
+            col = panel.column(align=True)
+            col.use_property_split = True
+            col.prop(self.op, "stepdown", text="Layer Height")
+            # First Down
+            if self.level >= 1 and self.op.strategy in ["CUTOUT", "POCKET", "MEDIAL_AXIS"]:
+                row = col.row()
+                row.use_property_split = False
+                row.prop(self.op, "first_down")

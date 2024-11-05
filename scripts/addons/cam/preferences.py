@@ -14,7 +14,7 @@ from bpy.types import (
     AddonPreferences,
 )
 
-from .utils import opencamlib_version
+from .utils import opencamlib_version, shapely_version
 
 
 class CamAddonPreferences(AddonPreferences):
@@ -222,6 +222,22 @@ class CamAddonPreferences(AddonPreferences):
         default="",
     )
 
+    # o_version: StringProperty(
+    #     name="OpenCAMLib",
+    #     default=opencamlib_version() if not None else "OpenCAMLib is not installed",
+    # )
+
+    # s_version: StringProperty(
+    #     name="Shapely",
+    #     default=shapely_version() if not None else "Shapely is not installed",
+    # )
+
+    show_popups: BoolProperty(
+        name="Show Warning Popups",
+        description="Shows a Popup window when there is a warning",
+        default=True,
+    )
+
     def draw(self, context):
         layout = self.layout
         layout.use_property_split = True
@@ -229,21 +245,32 @@ class CamAddonPreferences(AddonPreferences):
 
         box = layout.box()
         col = box.column(align=True)
-        col.label(text="User Layout Preset", icon="DESKTOP")
-        col.label(text="Panel Locations")
+        col.label(text="User Interface", icon="DESKTOP")
+        col.label(text="User Panel Layout")
         col.prop(context.scene.interface, "main_location", text="Main")
         col.prop(context.scene.interface, "operation_location", text="Operation")
         col.prop(context.scene.interface, "tools_location", text="Tools")
+        col = box.column(align=True)
+        col.label(text="Warning Popups", icon="WINDOW")
+        col.prop(self, "show_popups")
 
         box = layout.box()
         col = box.column(align=True)
         col.label(text="Library", icon="ASSET_MANAGER")
+        # col.prop(self, "o_version")
+        # col.prop(self, "s_version")
         # OpenCAMLib Version
         ocl_version = opencamlib_version()
         if ocl_version is None:
             col.label(text="OpenCAMLib is not Installed")
         else:
             col.label(text=f"OpenCAMLib v{ocl_version}")
+        # Shapely Version
+        shape_version = shapely_version()
+        if shape_version is None:
+            col.label(text="Shapely is not Installed")
+        else:
+            col.label(text=f"Shapely v{shape_version}")
 
         box = layout.box()
         col = box.column(align=True)
