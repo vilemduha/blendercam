@@ -20,17 +20,13 @@ class VIEW3D_MT_PIE_PackSliceRelief(Menu):
         pie.scale_y = 2
 
         # Left
-        pie.operator("wm.call_panel", text="Pack", icon="PACKAGE").name = "WORLD_PT_CAM_PACK"
-
+        pie.operator("object.cam_pack_objects", text="Pack", icon="PACKAGE")
+        
         # Right
-        pie.operator("wm.call_panel", text="Slice", icon="ALIGN_JUSTIFY").name = (
-            "WORLD_PT_CAM_SLICE"
-        )
-
+        pie.operator("object.cam_slice_objects", text="Slice", icon="ALIGN_JUSTIFY")
+        
         # Bottom
-        pie.operator("wm.call_panel", text="Bas Relief", icon="RNDCURVE").name = (
-            "WORLD_PT_BASRELIEF"
-        )
+        pie.operator("scene.calculate_bas_relief", text="Bas Relief", icon="RNDCURVE")
 
         # Top
         column = pie.column()
