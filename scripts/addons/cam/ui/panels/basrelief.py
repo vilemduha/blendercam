@@ -223,7 +223,7 @@ class BasReliefsettings(PropertyGroup):
 class BASRELIEF_Panel(Panel):
     """Bas Relief Panel"""
 
-    bl_label = "[ Bas Relief ]"
+    bl_label = "╠ Bas Relief ╣"
     bl_idname = "WORLD_PT_BASRELIEF"
     bl_options = {"DEFAULT_CLOSED"}
     bl_space_type = "PROPERTIES"
@@ -231,8 +231,6 @@ class BASRELIEF_Panel(Panel):
     bl_context = "render"
     COMPAT_ENGINES = {"FABEX_RENDER"}
 
-    # def draw_header(self, context):
-    #   self.layout.menu("CAM_CUTTER_MT_presets", text="CAM Cutter")
     @classmethod
     def poll(cls, context):
         """Check if the current render engine is compatible.

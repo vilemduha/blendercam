@@ -127,7 +127,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "WINDOW"
     bl_context = "render"
 
-    bl_label = "[ Material ]"
+    bl_label = "╠ Material ╣"
     bl_idname = "WORLD_PT_CAM_MATERIAL"
     panel_interface_level = 0
 
@@ -149,7 +149,9 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
                 box = layout.box()
                 col = box.column(align=True)
                 col.label(text="Size")
-                col.prop(self.op.material, "estimate_from_model", text="Size from Model")
+                row = col.row()
+                row.use_property_split = False
+                row.prop(self.op.material, "estimate_from_model", text="Size from Model")
                 if self.op.material.estimate_from_model:
                     col.prop(self.op.material, "radius_around_model", text="Additional Radius")
                 else:
@@ -161,8 +163,12 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
             box = layout.box()
             col = box.column(align=True)
             col.label(text="Position")
-            col.prop(self.op.material, "center_x")
-            col.prop(self.op.material, "center_y")
+            row = col.row()
+            row.use_property_split = False
+            row.prop(self.op.material, "center_x")
+            row = col.row()
+            row.use_property_split = False
+            row.prop(self.op.material, "center_y")
             col.prop(self.op.material, "z_position")
 
             box = layout.box()

@@ -89,7 +89,8 @@ from .ops import (
     PathExportChain,
     timer_update,
 )
-from .pack import PackObjectsSettings
+
+# from .pack import PackObjectsSettings
 from .preferences import CamAddonPreferences
 from .preset_managers import (
     AddPresetCamCutter,
@@ -99,7 +100,8 @@ from .preset_managers import (
     CAM_MACHINE_MT_presets,
     CAM_OPERATION_MT_presets,
 )
-from .slice import SliceObjectsSettings
+
+# from .slice import SliceObjectsSettings
 from .ui import register as ui_register, unregister as ui_unregister
 from .ui.panels.interface import CAM_INTERFACE_Properties
 from .utils import (
@@ -171,7 +173,7 @@ classes = [
     PathExport,
     PathExportChain,
     # .pack
-    PackObjectsSettings,
+    # PackObjectsSettings,
     # .preferences
     CamAddonPreferences,
     # .preset_managers
@@ -182,7 +184,7 @@ classes = [
     AddPresetCamOperation,
     AddPresetCamMachine,
     # .slice
-    SliceObjectsSettings,
+    # SliceObjectsSettings,
 ]
 
 
@@ -223,12 +225,12 @@ def register() -> None:
     scene.cam_operations = CollectionProperty(
         type=camOperation,
     )
-    scene.cam_pack = PointerProperty(
-        type=PackObjectsSettings,
-    )
-    scene.cam_slice = PointerProperty(
-        type=SliceObjectsSettings,
-    )
+    # scene.cam_pack = PointerProperty(
+    #     type=PackObjectsSettings,
+    # )
+    # scene.cam_slice = PointerProperty(
+    #     type=SliceObjectsSettings,
+    # )
     scene.cam_text = StringProperty()
     scene.interface = PointerProperty(
         type=CAM_INTERFACE_Properties,

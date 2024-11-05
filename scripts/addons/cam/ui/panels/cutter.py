@@ -16,7 +16,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "UI"
     bl_category = "CNC"
 
-    bl_label = "[ Cutter ]"
+    bl_label = "╠ Cutter ╣"
     bl_idname = "WORLD_PT_CAM_CUTTER"
     panel_interface_level = 0
 
@@ -93,7 +93,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
             col.prop(self.op, "cutter_id")
 
             # Cutter Description
-            col.prop(self.op, "cutter_description")
+            col.prop(self.op, "cutter_description", text="Description")
 
         # Cutter Engagement
         if self.op.cutter_type in ["LASER", "PLASMA"]:
@@ -101,12 +101,18 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
         if self.op.strategy in ["CUTOUT"]:
             return
 
-        if self.op.cutter_type in ["BALLCONE"]:
-            engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
-        else:
-            engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
+        # Cutter Engagement
+        if self.op is not None:
+            box = layout.box()
+            col = box.column(align=True)
+            # Warns if cutter engagement is greater than 50%
+            if self.op.cutter_type in ["BALLCONE"]:
+                engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
+            else:
+                engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
 
-        layout.label(text=f"Cutter Engagement: {engagement}%")
+            if engagement > 50:
+                col.alert = True
+                col.label(text="Warning: High Engagement", icon="ERROR")
 
-        if engagement > 50:
-            layout.label(text="WARNING: CUTTER ENGAGEMENT > 50%")
+            col.label(text=f"Engagement: {engagement}%", icon="MOD_SHRINKWRAP")
