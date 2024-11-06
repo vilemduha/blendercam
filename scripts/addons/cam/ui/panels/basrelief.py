@@ -223,7 +223,7 @@ class BasReliefsettings(PropertyGroup):
 class BASRELIEF_Panel(Panel):
     """Bas Relief Panel"""
 
-    bl_label = "╠ Bas Relief ╣"
+    bl_label = "[ Bas Relief ]"
     bl_idname = "WORLD_PT_BASRELIEF"
     bl_options = {"DEFAULT_CLOSED"}
     bl_space_type = "PROPERTIES"

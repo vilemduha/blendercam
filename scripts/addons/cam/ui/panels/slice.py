@@ -16,7 +16,7 @@ class CAM_SLICE_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "WINDOW"
     bl_context = "render"
 
-    bl_label = "╠ Slice ╣"
+    bl_label = "[ Slice ]"
     bl_idname = "WORLD_PT_CAM_SLICE"
     bl_options = {"DEFAULT_CLOSED"}
     panel_interface_level = 2

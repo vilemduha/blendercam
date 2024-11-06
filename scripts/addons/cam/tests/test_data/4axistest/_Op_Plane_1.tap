@@ -1,4 +1,4 @@
-N10O0(C:\Users\User\Downloads\blendercam-master\scripts\addons\cam\tests\test_data\4axistest\Op_Plane_1.tap)
+N10O0(/home/spex/Downloads/blendercam-fabex-ui-update/scripts/addons/cam/tests/test_data/4axistest/Op_Plane_1.tap)
 N20G21
 N30(G-code Generated with Fabex and NC library)
 N40G17G90

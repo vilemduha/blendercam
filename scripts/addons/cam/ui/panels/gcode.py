@@ -16,7 +16,7 @@ class CAM_GCODE_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "UI"
     bl_category = "CNC"
 
-    bl_label = "╠ Operation G-code ╣"
+    bl_label = "[ Operation G-code ]"
     bl_idname = "WORLD_PT_CAM_GCODE"
     panel_interface_level = 1
 

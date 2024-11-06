@@ -16,7 +16,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "UI"
     bl_category = "CNC"
 
-    bl_label = "╠ Cutter ╣"
+    bl_label = "[ Cutter ]"
     bl_idname = "WORLD_PT_CAM_CUTTER"
     panel_interface_level = 0
 

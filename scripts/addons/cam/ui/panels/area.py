@@ -17,7 +17,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "UI"
     bl_category = "CNC"
 
-    bl_label = "╠ Operation Area ╣"
+    bl_label = "[ Operation Area ]"
     bl_idname = "WORLD_PT_CAM_OPERATION_AREA"
     panel_interface_level = 0
 

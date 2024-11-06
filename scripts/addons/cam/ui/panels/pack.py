@@ -16,7 +16,7 @@ class CAM_PACK_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "WINDOW"
     bl_context = "render"
 
-    bl_label = "╠ Pack ╣"
+    bl_label = "[ Pack ]"
     bl_idname = "WORLD_PT_CAM_PACK"
     bl_options = {"DEFAULT_CLOSED"}
     panel_interface_level = 2
