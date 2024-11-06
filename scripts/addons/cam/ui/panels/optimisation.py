@@ -110,7 +110,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "UI"
     bl_category = "CNC"
 
-    bl_label = "╠ Optimisation ╣"
+    bl_label = "[ Optimisation ]"
     bl_idname = "WORLD_PT_CAM_OPTIMISATION"
     panel_interface_level = 2
 
