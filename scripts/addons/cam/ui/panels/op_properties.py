@@ -16,7 +16,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
     bl_region_type = "UI"
     bl_category = "CNC"
 
-    bl_label = "╠ Operation Setup ╣"
+    bl_label = "[ Operation Setup ]"
     bl_idname = "WORLD_PT_CAM_OPERATION"
     panel_interface_level = 0
 
