@@ -131,9 +131,6 @@ def update_layout(self, context):
             bpy.types.WORLD_PT_CAM_OPERATION,
             bpy.types.WORLD_PT_CAM_OPERATIONS,
             bpy.types.WORLD_PT_CAM_OPTIMISATION,
-            # bpy.types.WORLD_PT_CAM_PACK,
-            # bpy.types.WORLD_PT_CAM_SLICE,
-            # bpy.types.WORLD_PT_BASRELIEF,
             bpy.types.VIEW3D_PT_tools_curvetools,
             bpy.types.VIEW3D_PT_tools_create,
         ]
@@ -149,9 +146,6 @@ def update_layout(self, context):
         CAM_OPERATIONS_Panel,
         CAM_MATERIAL_Panel,
         CAM_MACHINE_Panel,
-        # CAM_PACK_Panel,
-        # CAM_SLICE_Panel,
-        # BASRELIEF_Panel,
     ]
     operation_classes = [
         CAM_OPERATION_PROPERTIES_Panel,
@@ -277,9 +271,6 @@ def update_user_layout(self, context):
     addon_prefs.user_tools_location = tools_location
 
     bpy.ops.wm.save_userpref()
-
-
-#    update_layout(self, context)
 
 
 class CAM_INTERFACE_Properties(PropertyGroup):

@@ -20,24 +20,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
     bl_idname = "WORLD_PT_CAM_OPERATION"
     panel_interface_level = 0
 
-    # def draw_cutter_engagement(self, col):
-    #     if self.op is not None:
-    #         # layout = self.layout
-    #         box = col.box()
-    #         sub = box.column(align=True)
-    #         # Cutter Engagement
-    #         # Warns if cutter engagement is greater than 50%
-    #         if self.op.cutter_type in ["BALLCONE"]:
-    #             engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
-    #         else:
-    #             engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
-
-    #         if engagement > 50:
-    #             sub.alert = True
-    #             sub.label(text="Warning: High Cutter Engagement", icon="ERROR")
-
-    #         sub.label(text=f"Cutter Engagement: {engagement}%", icon="MOD_SHRINKWRAP")
-
     def draw_overshoot(self, col):
         # layout = self.layout
         # Overshoot
@@ -201,8 +183,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             sub = box.column(align=True)
             sub.label(text="Toolpath Distance")
             sub.prop(self.op, "dist_between_paths", text="Between")
-            # self.draw_cutter_engagement(col=col)
-            # self.draw_enable_A_B_axis(col=col)
 
         # Default Options
         if self.op.strategy not in [
@@ -227,11 +207,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             col.label(text="Toolpath Distance")
             col.prop(self.op, "dist_between_paths", text="Between")
             col.prop(self.op, "dist_along_paths", text="Along")
-            # self.draw_cutter_engagement(col=col)
-
-        # # Skin
-        # if self.op.strategy not in ["POCKET", "DRILL", "CURVE", "MEDIAL_AXIS"]:
-        #     col.prop(self.op, "skin")
 
         # A & B, Array, Bridges Options
         if self.level >= 1:
@@ -257,8 +232,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                         row = col.row()
                         row.use_property_split = True
                         row.prop(self.op, "rotation_A")
-                        # row = col.row()
-                        # row.use_property_split = False
                         col.prop(self.op, "A_along_x")
                         if self.op.A_along_x:
                             col.label(text="Ⓐ || Ⓧ  -  Ⓑ || Ⓨ")
@@ -306,19 +279,3 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                     )
                     col.prop(self.op, "use_bridge_modifiers", text="Use Modifiers")
                     col.operator("scene.cam_bridges_add", text="Autogenerate")
-
-        # # Cutter Engagement
-        # if self.op is not None and not self.op.strategy == "CUTOUT":
-        #     box = layout.box()
-        #     col = box.column(align=True)
-        #     # Warns if cutter engagement is greater than 50%
-        #     if self.op.cutter_type in ["BALLCONE"]:
-        #         engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
-        #     else:
-        #         engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
-
-        #     if engagement > 50:
-        #         col.alert = True
-        #         col.label(text="Warning: High Cutter Engagement", icon="ERROR")
-
-        #     col.label(text=f"Cutter Engagement: {engagement}%", icon="MOD_SHRINKWRAP")
