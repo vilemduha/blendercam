@@ -27,12 +27,6 @@ class CamAddonPreferences(AddonPreferences):
         default=False,
     )
 
-    experimental: BoolProperty(
-        name="Show Experimental Features",
-        description="Use these features when you want to help development of Fabex",
-        default=False,
-    )
-
     default_interface_level: EnumProperty(
         name="Interface Level in New File",
         description="Choose visible options",
@@ -271,8 +265,3 @@ class CamAddonPreferences(AddonPreferences):
             col.label(text="Shapely is not Installed")
         else:
             col.label(text=f"Shapely v{shape_version}")
-
-        box = layout.box()
-        col = box.column(align=True)
-        col.label(text="Experimental", icon="EXPERIMENTAL")
-        col.prop(self, "experimental")

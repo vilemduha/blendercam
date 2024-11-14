@@ -41,9 +41,6 @@ class CAMButtonsPanel:
         self.level = int(context.scene.interface.level)
         self.machine = context.scene.cam_machine
 
-        addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
-        self.use_experimental = addon_prefs.experimental
-
         operations = context.scene.cam_operations
         operations_count = len(operations)
         operation_index = context.scene.cam_active_operation

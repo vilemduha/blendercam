@@ -16,10 +16,6 @@ from .ui.panels.chains import CAM_CHAINS_Panel
 from .ui.panels.cutter import CAM_CUTTER_Panel
 from .ui.panels.feedrate import CAM_FEEDRATE_Panel
 from .ui.panels.gcode import CAM_GCODE_Panel
-
-# from .ui.panels.info import CAM_INFO_Panel
-
-# from .ui.panels.interface import CAM_INTERFACE_Panel
 from .ui.panels.machine import CAM_MACHINE_Panel
 from .ui.panels.material import CAM_MATERIAL_Panel
 from .ui.panels.movement import CAM_MOVEMENT_Panel
@@ -34,20 +30,6 @@ class FABEX_ENGINE(RenderEngine):
     bl_idname = "FABEX_RENDER"
     bl_label = "Fabex CNC/CAM"
     bl_use_eevee_viewport = True
-
-    # view3d = [a.spaces[0] for a in context.screen.areas if a.type == "VIEW_3D"][0]
-
-    # shading = view3d.shading
-    # shading.color_type = "OBJECT"
-    # shading.show_shadows = True
-    # shading.show_cavity = True
-    # shading.cavity_type = "BOTH"
-    # shading.cavity_ridge_factor = 2.5
-    # shading.cavity_valley_factor = 2.5
-    # shading.curvature_ridge_factor = 2
-    # shading.curvature_valley_factor = 2
-    # shading.use_dof = True
-    # shading.show_object_outline = True
 
 
 def get_panels():
@@ -83,10 +65,8 @@ def get_panels():
         EEVEE_MATERIAL_PT_context_material,
         EEVEE_MATERIAL_PT_surface,
         EEVEE_MATERIAL_PT_settings,
-        # CAM_INTERFACE_Panel,
         CAM_CHAINS_Panel,
         CAM_OPERATIONS_Panel,
-        # CAM_INFO_Panel,
         CAM_MATERIAL_Panel,
         CAM_OPERATION_PROPERTIES_Panel,
         CAM_OPTIMISATION_Panel,

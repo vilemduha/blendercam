@@ -182,8 +182,6 @@ def exportGcodePath(filename, vertslist, operations):
         unitcorr = 1
     rotcorr = 180.0 / pi
 
-    use_experimental = bpy.context.preferences.addons[__package__].preferences.experimental
-
     def startNewFile():
         """Start a new file for G-code generation.
 
@@ -208,7 +206,7 @@ def exportGcodePath(filename, vertslist, operations):
 
         # process user overrides for post processor settings
 
-        if use_experimental and isinstance(c, iso.Creator):
+        if isinstance(c, iso.Creator):
             c.output_block_numbers = m.output_block_numbers
             c.start_block_number = m.start_block_number
             c.block_number_increment = m.block_number_increment
@@ -248,7 +246,7 @@ def exportGcodePath(filename, vertslist, operations):
     cut_distance = 0
     for i, o in enumerate(operations):
 
-        if use_experimental and o.output_header:
+        if o.output_header:
             lines = o.gcode_header.split(";")
             for aline in lines:
                 c.write(aline + "\n")

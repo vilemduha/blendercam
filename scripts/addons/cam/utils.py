@@ -3023,7 +3023,6 @@ def getStrategyList(scene, context):
             name, and description.
     """
 
-    use_experimental = bpy.context.preferences.addons[__package__].preferences.experimental
     items = [
         (
             "CUTOUT",
@@ -3117,7 +3116,6 @@ def getStrategyList(scene, context):
             12,
         ),
     ]
-    #   if use_experimental:
     #       items.extend([('MEDIAL_AXIS', 'Medial axis - EXPERIMENTAL',
     #                      'Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ')]);
     # ('PENCIL', 'Pencil - EXPERIMENTAL','Pencil operation - detects negative corners in the model and mills only those.'),
