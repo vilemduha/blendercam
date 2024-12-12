@@ -1,4 +1,4 @@
-"""Fabex 'curvecamcreate.py' © 2021, 2022 Alain Pelletier
+"""Fabex 'curve_cam_create.py' © 2021, 2022 Alain Pelletier
 
 Operators to create a number of predefined curve objects.
 """

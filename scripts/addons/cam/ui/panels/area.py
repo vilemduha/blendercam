@@ -44,7 +44,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
             box = main.box()
             col = box.column(align=True)
             col.label(text="Operation Depth")
-            col.prop(self.op, "maxz", text="Start")
+            col.prop(self.op, "max_z", text="Start")
             # col.prop(self.op.movement, "free_height")
             if self.op.max_z > self.op.movement.free_height:
                 box = col.box()
@@ -68,7 +68,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
                     icon = "OBJECT_DATA"
                 else:
                     icon = "USER"
-                col.prop(self.op, "minz_from", text="Max", icon=icon)
+                col.prop(self.op, "min_z_from", text="Max", icon=icon)
                 if self.op.min_z_from == "CUSTOM":
                     col.prop(self.op, "minz")
 

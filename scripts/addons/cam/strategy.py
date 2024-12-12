@@ -73,7 +73,7 @@ from .utils import (
     sort_chunks,
     unique,
 )
-from .curvecamcreate import generate_crosshatch
+from .curve_cam_create import generate_crosshatch
 
 SHAPELY = True
 

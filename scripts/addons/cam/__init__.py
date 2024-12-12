@@ -117,7 +117,7 @@ classes = [
     # .chain
     OpReference,
     CamChain,
-    # .curvecamcreate
+    # .curve_cam_create
     CamCurveDrawer,
     CamCurveFlatCone,
     CamCurveGear,
@@ -126,12 +126,12 @@ classes = [
     CamCurveMortise,
     CamCurvePlate,
     CamCurvePuzzle,
-    # .curvecamequation
+    # .curve_cam_equation
     CamCustomCurve,
     CamHypotrochoidCurve,
     CamLissajousCurve,
     CamSineCurve,
-    # .curvecamtools
+    # .curve_cam_tools
     CamCurveBoolean,
     CamCurveConvexHull,
     CamCurveIntarsion,

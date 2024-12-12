@@ -1,4 +1,4 @@
-"""Fabex 'curvecamequation.py' © 2021, 2022 Alain Pelletier
+"""Fabex 'curve_cam_equation.py' © 2021, 2022 Alain Pelletier
 
 Operators to create a number of geometric shapes with curves.
 """

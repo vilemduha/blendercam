@@ -514,7 +514,7 @@ def sample_path_low(o, ch1, ch2, dosample):
         dosample (bool): A flag indicating whether to perform sampling along the generated path.
 
     Returns:
-        camPathChunk: An object representing the generated path points.
+        CamPathChunk: An object representing the generated path points.
     """
 
     v1 = Vector(ch1.get_point(-1))
@@ -1529,7 +1529,7 @@ async def sort_chunks(chunks, o, last_pos=None):
             ch = get_closest(o, pos, chunks)
         elif len(lastch.parents) > 0:  # looks in parents for next candidate, recursively
             for parent in lastch.parents:
-                ch = parent.getNextClosest(o, pos)
+                ch = parent.get_next_closest(o, pos)
                 if ch is not None:
                     break
             if ch is None:

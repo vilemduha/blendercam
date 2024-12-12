@@ -22,7 +22,7 @@ import bpy
 from ..constants import BULLET_SCALE
 from ..simple import activate
 from .. import utils
-from ..cam_chunk import camPathChunk
+from ..cam_chunk import CamPathChunk
 from ..async_op import progress_async
 from .oclSample import get_oclSTL, ocl_sample
 
@@ -237,7 +237,7 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
     """
 
     tmp_chunks = list()
-    tmp_chunks.append(camPathChunk(inpoints=[]))
+    tmp_chunks.append(CamPathChunk(inpoints=[]))
     for chunk, i_start, i_length in chunks_to_resample:
         tmp_chunks[0].extend(chunk.get_points_np()[i_start : i_start + i_length])
         print(i_start, i_length, len(tmp_chunks[0].points))
@@ -357,7 +357,7 @@ async def oclGetWaterline(operation, chunks):
             for p in l:
                 inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
             inpoints.append(inpoints[0])
-            chunk = camPathChunk(inpoints=inpoints)
+            chunk = CamPathChunk(inpoints=inpoints)
             chunk.closed = True
             layer_chunks.append(chunk)
         # sort chunks so that ordering is stable

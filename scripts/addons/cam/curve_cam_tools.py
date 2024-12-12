@@ -1,4 +1,4 @@
-"""Fabex 'curvecamtools.py' © 2012 Vilem Novak, 2021 Alain Pelletier
+"""Fabex 'curve_cam_tools.py' © 2012 Vilem Novak, 2021 Alain Pelletier
 
 Operators that perform various functions on existing curves.
 """

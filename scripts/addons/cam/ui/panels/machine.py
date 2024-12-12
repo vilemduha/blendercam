@@ -61,8 +61,8 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
         # Supplemental Axis
         if self.level >= 3:
             row = box.row(align=True)
-            row.prop(self.machine, "axis4")
-            row.prop(self.machine, "axis5")
+            row.prop(self.machine, "axis_4")
+            row.prop(self.machine, "axis_5")
 
         # Position Definitions
         if self.level >= 2:

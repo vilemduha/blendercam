@@ -213,7 +213,7 @@ def export_gcode_path(filename, vertslist, operations):
 
         c.output_tool_definitions = m.output_tool_definitions
         c.output_tool_change = m.output_tool_change
-        c.output_g43_on_tool_change_line = m.output_g43_on_tool_change
+        c.output_G43_on_tool_change_line = m.output_G43_on_tool_change
 
         c.file_open(filename)
 
