@@ -140,7 +140,12 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
         default=False,
         update=update_operation,
     )
-
+    zig_zag_ramp: BoolProperty(
+        name="Zigzag_ramp - EXPERIMENTAL",
+        description="Ramps down the whole contour, so the cutline looks " "like zigzag_",
+        default=False,
+        update=update_operation,
+    )
     ramp_out: BoolProperty(
         name="Ramp-out - EXPERIMENTAL",
         description="Ramp out to not leave mark on surface",
@@ -349,6 +354,8 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
                 if panel:
                     subcol = panel.column(align=True)
                     subcol.enabled = self.op.movement.ramp
+                    row = subcol.row()
+                    row.prop(self.op.movement, "Zigzag_ramp", text="Zigzag Ramp")
                     row = subcol.row()
                     row.use_property_split = True
                     row.prop(self.op.movement, "ramp_in_angle", text="In Angle")

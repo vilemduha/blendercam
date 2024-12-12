@@ -266,12 +266,16 @@ async def cutout(o):
         for chl in extendorder:
             chunk = chl[0]
             layer = chl[1]
-            if chunk.closed:
-                chunk.ramp_contour(layer[0], layer[1], o)
-                chunks.append(chunk)
-            else:
+            if o.movement.zig_zag_ramp:
                 chunk.ramp_zig_zag(layer[0], layer[1], o)
                 chunks.append(chunk)
+            else:
+                if chunk.closed:
+                    chunk.ramp_contour(layer[0], layer[1], o)
+                    chunks.append(chunk)
+                else:
+                    chunk.ramp_zig_zag(layer[0], layer[1], o)
+                    chunks.append(chunk)
     else:
         for chl in extendorder:
             chunks.append(chl[0])
