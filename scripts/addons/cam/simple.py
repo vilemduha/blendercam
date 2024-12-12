@@ -39,7 +39,7 @@ def tuple_add(t, t1):  # add two tuples as Vectors
     return t[0] + t1[0], t[1] + t1[1], t[2] + t1[2]
 
 
-def tuple_sub(t, t1):  # sub two tuples as Vectors
+def tuple_subtract(t, t1):  # sub two tuples as Vectors
     """Subtract two tuples element-wise.
 
     This function takes two tuples of three elements each and performs an
@@ -57,7 +57,7 @@ def tuple_sub(t, t1):  # sub two tuples as Vectors
     return t[0] - t1[0], t[1] - t1[1], t[2] - t1[2]
 
 
-def tuple_mul(t, c):  # multiply two tuples with a number
+def tuple_multiply(t, c):  # multiply two tuples with a number
     """Multiply each element of a tuple by a given number.
 
     This function takes a tuple containing three elements and a numeric
@@ -92,7 +92,7 @@ def tuple_length(t):  # get length of vector, but passed in as tuple.
 
 
 # timing functions for optimisation purposes...
-def timinginit():
+def timing_init():
     """Initialize timing metrics.
 
     This function sets up the initial state for timing functions by
@@ -107,7 +107,7 @@ def timinginit():
     return [0, 0]
 
 
-def timingstart(tinf):
+def timing_start(tinf):
     """Start timing by recording the current time.
 
     This function updates the second element of the provided list with the
@@ -122,7 +122,7 @@ def timingstart(tinf):
     tinf[1] = t
 
 
-def timingadd(tinf):
+def timing_add(tinf):
     """Update the timing information.
 
     This function updates the first element of the `tinf` list by adding the
@@ -136,7 +136,7 @@ def timingadd(tinf):
     tinf[0] += t - tinf[1]
 
 
-def timingprint(tinf):
+def timing_print(tinf):
     """Print the timing information.
 
     This function takes a tuple containing timing information and prints it
@@ -202,7 +202,7 @@ def activate(o):
     bpy.context.view_layer.objects.active = o
 
 
-def dist2d(v1, v2):
+def distance_2d(v1, v2):
     """Calculate the distance between two points in 2D space.
 
     This function computes the Euclidean distance between two points
@@ -220,7 +220,7 @@ def dist2d(v1, v2):
     return hypot((v1[0] - v2[0]), (v1[1] - v2[1]))
 
 
-def delob(ob):
+def delete_object(ob):
     """Delete an object in Blender for multiple uses.
 
     This function activates the specified object and then deletes it using
@@ -235,7 +235,7 @@ def delob(ob):
     bpy.ops.object.delete(use_global=False)
 
 
-def dupliob(o, pos):
+def duplicate_object(o, pos):
     """Helper function for visualizing cutter positions in bullet simulation.
 
     This function duplicates the specified object and resizes it according
@@ -265,7 +265,7 @@ def dupliob(o, pos):
     o.location = pos
 
 
-def addToGroup(ob, groupname):
+def add_to_group(ob, groupname):
     """Add an object to a specified group in Blender.
 
     This function activates the given object and checks if the specified
@@ -318,7 +318,7 @@ def compare(v1, v2, vmiddle, e):
     return False
 
 
-def isVerticalLimit(v1, v2, limit):
+def is_vertical_limit(v1, v2, limit):
     """Test Path Segment on Verticality Threshold for protect_vertical option.
 
     This function evaluates the verticality of a path segment defined by two
@@ -360,7 +360,7 @@ def isVerticalLimit(v1, v2, limit):
     return v1, v2
 
 
-def getCachePath(o):
+def get_cache_path(o):
     """Get the cache path for a given object.
 
     This function constructs a cache path based on the current Blender
@@ -385,7 +385,7 @@ def getCachePath(o):
     return iname
 
 
-def getSimulationPath():
+def get_simulation_path():
     """Get the simulation path for temporary camera files.
 
     This function retrieves the file path of the current Blender project and
@@ -402,7 +402,7 @@ def getSimulationPath():
     return iname
 
 
-def safeFileName(name):  # for export gcode
+def safe_filename(name):  # for export gcode
     """Generate a safe file name from the given string.
 
     This function takes a string input and removes any characters that are
@@ -422,7 +422,7 @@ def safeFileName(name):  # for export gcode
     return filename
 
 
-def strInUnits(x, precision=5):
+def unit_value_to_string(x, precision=5):
     """Convert a value to a string representation in the current unit system.
 
     This function takes a numeric value and converts it to a string
@@ -656,7 +656,7 @@ def duplicate(x=0.0, y=0.0):
 
 
 # Mirror active object along the x axis
-def mirrorx():
+def mirror_x():
     """Mirror the active object along the x-axis.
 
     This function utilizes Blender's operator to mirror the currently active
@@ -673,7 +673,7 @@ def mirrorx():
 
 
 # mirror active object along y axis
-def mirrory():
+def mirror_y():
     """Mirror the active object along the Y axis.
 
     This function uses Blender's operator to perform a mirror transformation

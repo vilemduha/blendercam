@@ -33,13 +33,13 @@ from mathutils import (
 
 from .simple import (
     progress,
-    getCachePath,
+    get_cache_path,
 )
 from .cam_chunk import (
-    parentChildDist,
-    camPathChunkBuilder,
-    camPathChunk,
-    chunksToShapely,
+    parent_child_distance,
+    CamPathChunkBuilder,
+    CamPathChunk,
+    chunks_to_shapely,
 )
 from .async_op import progress_async
 from .numba_wrapper import (
@@ -48,7 +48,7 @@ from .numba_wrapper import (
 )
 
 
-def numpysave(a, iname):
+def numpy_save(a, iname):
     """Save a NumPy array as an image file in OpenEXR format.
 
     This function converts a NumPy array into an image and saves it using
@@ -63,7 +63,7 @@ def numpysave(a, iname):
 
     inamebase = bpy.path.basename(iname)
 
-    i = numpytoimage(a, inamebase)
+    i = numpy_to_image(a, inamebase)
 
     r = bpy.context.scene.render
 
@@ -74,7 +74,7 @@ def numpysave(a, iname):
     i.save_render(iname)
 
 
-def getCircle(r, z):
+def get_circle(r, z):
     """Generate a 2D array representing a circle.
 
     This function creates a 2D NumPy array filled with a specified value for
@@ -106,7 +106,7 @@ def getCircle(r, z):
     return car
 
 
-def getCircleBinary(r):
+def get_circle_binary(r):
     """Generate a binary representation of a circle in a 2D grid.
 
     This function creates a 2D boolean array where the elements inside a
@@ -139,7 +139,7 @@ def getCircleBinary(r):
 # get cutters for the z-buffer image method
 
 
-def numpytoimage(a, iname):
+def numpy_to_image(a, iname):
     """Convert a NumPy array to a Blender image.
 
     This function takes a NumPy array and converts it into a Blender image.
@@ -199,7 +199,7 @@ def numpytoimage(a, iname):
     return i
 
 
-def imagetonumpy(i):
+def image_to_numpy(i):
     """Convert a Blender image to a NumPy array.
 
     This function takes a Blender image object and converts its pixel data
@@ -265,7 +265,7 @@ def _offset_inner_loop(y1, y2, cutterArrayNan, cwidth, sourceArray, width, heigh
             )
 
 
-async def offsetArea(o, samples):
+async def offset_area(o, samples):
     """Offsets the whole image with the cutter and skin offsets.
 
     This function modifies the offset image based on the provided cutter and
@@ -276,18 +276,18 @@ async def offsetArea(o, samples):
     asynchronously during processing.
 
     Args:
-        o: An object containing properties such as `update_offsetimage_tag`,
+        o: An object containing properties such as `update_offset_image_tag`,
             `min`, `max`, `inverse`, and `offset_image`.
         samples (numpy.ndarray): A 2D array representing the source image data.
 
     Returns:
         numpy.ndarray: The updated offset image after applying the cutter and skin offsets.
     """
-    if o.update_offsetimage_tag:
+    if o.update_offset_image_tag:
         minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
         sourceArray = samples
-        cutterArray = getCutterArray(o, o.optimisation.pixsize)
+        cutterArray = get_cutter_array(o, o.optimisation.pixsize)
 
         # progress('image size', sourceArray.shape)
 
@@ -318,11 +318,11 @@ async def offsetArea(o, samples):
 
         print("\nOffset Image Time " + str(time.time() - t))
 
-        o.update_offsetimage_tag = False
+        o.update_offset_image_tag = False
     return o.offset_image
 
 
-def dilateAr(ar, cycles):
+def dilate_array(ar, cycles):
     """Dilate a binary array using a specified number of cycles.
 
     This function performs a dilation operation on a 2D binary array. For
@@ -346,7 +346,7 @@ def dilateAr(ar, cycles):
         ar[:, 1:-1] = numpy.logical_or(ar[:, 1:-1], ar[:, :-2])
 
 
-def getOffsetImageCavities(o, i):  # for pencil operation mainly
+def get_offset_image_cavities(o, i):  # for pencil operation mainly
     """Detects areas in the offset image which are 'cavities' due to curvature
     changes.
 
@@ -376,10 +376,10 @@ def getOffsetImageCavities(o, i):  # for pencil operation mainly
 
     if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge,
         # it has tons of spikes and simply is not better than the old one
-        iname = getCachePath(o) + "_pencilthres.exr"
+        iname = get_cache_path(o) + "_pencilthres.exr"
         # numpysave(ar,iname)#save for comparison before
-        chunks = imageEdgeSearch_online(o, ar, i)
-        iname = getCachePath(o) + "_pencilthres_comp.exr"
+        chunks = image_edge_search_on_line(o, ar, i)
+        iname = get_cache_path(o) + "_pencilthres_comp.exr"
         print("new pencil strategy")
 
     # ##crop pixels that are on outer borders
@@ -396,7 +396,7 @@ def getOffsetImageCavities(o, i):  # for pencil operation mainly
 
 
 # search edges for pencil strategy, another try.
-def imageEdgeSearch_online(o, ar, zimage):
+def image_edge_search_on_line(o, ar, zimage):
     """Search for edges in an image using a pencil strategy.
 
     This function implements an edge detection algorithm that simulates a
@@ -433,7 +433,7 @@ def imageEdgeSearch_online(o, ar, zimage):
     chunk_builders = []
     xs = indices[0][0]
     ys = indices[1][0]
-    nchunk = camPathChunkBuilder([(xs, ys, zimage[xs, ys])])  # startposition
+    nchunk = CamPathChunkBuilder([(xs, ys, zimage[xs, ys])])  # startposition
     dindex = 0  # index in the directions list
     last_direction = directions[dindex]
     test_direction = directions[dindex]
@@ -493,11 +493,11 @@ def imageEdgeSearch_online(o, ar, zimage):
                     if len(indices[0] > 0):
                         xs = indices[0][0]
                         ys = indices[1][0]
-                        nchunk = camPathChunkBuilder([(xs, ys, zimage[xs, ys])])  # startposition
+                        nchunk = CamPathChunkBuilder([(xs, ys, zimage[xs, ys])])  # startposition
 
                         ar[xs, ys] = False
                     else:
-                        nchunk = camPathChunkBuilder([])
+                        nchunk = CamPathChunkBuilder([])
 
                     test_direction = directions[3]
                     last_direction = directions[3]
@@ -546,7 +546,7 @@ def imageEdgeSearch_online(o, ar, zimage):
     return [c.to_chunk() for c in chunk_builders]
 
 
-async def crazyPath(o):
+async def crazy_path(o):
     """Execute a greedy adaptive algorithm for path planning.
 
     This function prepares an area based on the provided object `o`,
@@ -566,7 +566,7 @@ async def crazyPath(o):
 
     # TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm.
     #  started another thing below.
-    await prepareArea(o)
+    await prepare_area(o)
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
 
@@ -575,10 +575,10 @@ async def crazyPath(o):
 
     o.millimage = numpy.full(shape=(resx, resy), fill_value=0.0, dtype=numpy.float)
     # getting inverted cutter
-    o.cutterArray = -getCutterArray(o, o.optimisation.simulation_detail)
+    o.cutterArray = -get_cutter_array(o, o.optimisation.simulation_detail)
 
 
-def buildStroke(start, end, cutterArray):
+def build_stroke(start, end, cutterArray):
     """Build a stroke array based on start and end points.
 
     This function generates a 2D stroke array that represents a stroke from
@@ -618,19 +618,19 @@ def buildStroke(start, end, cutterArray):
     return strokeArray
 
 
-def testStroke():
+def test_stroke():
     pass
 
 
-def applyStroke():
+def apply_stroke():
     pass
 
 
-def testStrokeBinary(img, stroke):
+def test_stroke_binary(img, stroke):
     pass  # buildstroke()
 
 
-def crazyStrokeImage(o):
+def crazy_stroke_image(o):
     """Generate a toolpath for a milling operation using a crazy stroke
     strategy.
 
@@ -663,13 +663,13 @@ def crazyStrokeImage(o):
     maxarx = ar.shape[0]
     maxary = ar.shape[1]
 
-    cutterArray = getCircleBinary(r)
+    cutterArray = get_circle_binary(r)
     cutterArrayNegative = -cutterArray
 
     cutterimagepix = cutterArray.sum()
     # a threshold which says if it is valuable to cut in a direction
-    satisfypix = cutterimagepix * o.crazy_threshold1
-    toomuchpix = cutterimagepix * o.crazy_threshold2
+    satisfypix = cutterimagepix * o.crazy_threshold_1
+    toomuchpix = cutterimagepix * o.crazy_threshold_2
     indices = ar.nonzero()  # first get white pixels
     startpix = ar.sum()  #
     totpix = startpix
@@ -680,7 +680,7 @@ def crazyStrokeImage(o):
     ys = indices[1][0] - r
     if ys < r:
         ys = r
-    nchunk = camPathChunkBuilder([(xs, ys)])  # startposition
+    nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
     print(indices)
     print(indices[0][0], indices[1][0])
     # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
@@ -777,7 +777,7 @@ def crazyStrokeImage(o):
                 else:  # climb/conv.
                     testangle += angleincrement
 
-                if abs(testangle) > o.crazy_threshold3:  # /testlength
+                if abs(testangle) > o.crazy_threshold_3:  # /testlength
                     testangle = testangleinit
                     testlength += r / 4.0
                 if nchunk.points[-1][0] + testvect.x < r:
@@ -811,7 +811,7 @@ def crazyStrokeImage(o):
                     ys = indices[1][0] - r
                     if ys < r:
                         ys = r
-                    nchunk = camPathChunkBuilder([(xs, ys)])  # startposition
+                    nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
                     ar[xs - r : xs - r + d, ys - r : ys - r + d] = (
                         ar[xs - r : xs - r + d, ys - r : ys - r + d] * cutterArrayNegative
                     )
@@ -841,7 +841,7 @@ def crazyStrokeImage(o):
     return [c.to_chunk() for c in chunk_builders]
 
 
-def crazyStrokeImageBinary(o, ar, avoidar):
+def crazy_stroke_image_binary(o, ar, avoidar):
     """Perform a milling operation using a binary image representation.
 
     This function implements a strategy for milling by navigating through a
@@ -883,17 +883,17 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     maxarx = ar.shape[0]
     maxary = ar.shape[1]
 
-    cutterArray = getCircleBinary(r)
+    cutterArray = get_circle_binary(r)
     cutterArrayNegative = -cutterArray
 
     cutterimagepix = cutterArray.sum()
 
-    anglelimit = o.crazy_threshold3
+    anglelimit = o.crazy_threshold_3
     # a threshold which says if it is valuable to cut in a direction
-    satisfypix = cutterimagepix * o.crazy_threshold1
-    toomuchpix = cutterimagepix * o.crazy_threshold2  # same, but upper limit
+    satisfypix = cutterimagepix * o.crazy_threshold_1
+    toomuchpix = cutterimagepix * o.crazy_threshold_2  # same, but upper limit
     # (satisfypix+toomuchpix)/2.0# the ideal eating ratio
-    optimalpix = cutterimagepix * o.crazy_threshold5
+    optimalpix = cutterimagepix * o.crazy_threshold_5
     indices = ar.nonzero()  # first get white pixels
 
     startpix = ar.sum()  #
@@ -909,7 +909,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     if ys < r:
         ys = r
 
-    nchunk = camPathChunkBuilder([(xs, ys)])  # startposition
+    nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
     print(indices)
     print(indices[0][0], indices[1][0])
     # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
@@ -933,7 +933,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
     # range for angle of toolpath vector versus material vector -
     # probably direction negative to the force applied on cutter by material.
     testangleinit = 0
-    angleincrement = o.crazy_threshold4
+    angleincrement = o.crazy_threshold_4
 
     if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW") or (
         o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW"
@@ -1042,7 +1042,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                 else:  # climb/conv.
                     testangle += angleincrement
 
-                if (abs(testangle) > o.crazy_threshold3 and len(nchunk.points) > 1) or abs(
+                if (abs(testangle) > o.crazy_threshold_3 and len(nchunk.points) > 1) or abs(
                     testangle
                 ) > 2 * pi:  # /testlength
                     testangle = testangleinit
@@ -1075,7 +1075,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                     andar = numpy.logical_and(ar, numpy.logical_not(avoidar))
                     indices = andar.nonzero()
                     if len(nchunk.points) > 1:
-                        parentChildDist([nchunk], chunks, o, distance=r)
+                        parent_child_distance([nchunk], chunks, o, distance=r)
                         chunk_builders.append(nchunk)
 
                     if totpix > startpix * 0.001:
@@ -1110,7 +1110,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
                                     found = True
                                     # print(xs,ys,indices[0][index],indices[1][index])
 
-                                    nchunk = camPathChunk([(xs, ys)])  # startposition
+                                    nchunk = CamPathChunk([(xs, ys)])  # startposition
                                     ar[xs - r : xs + r, ys - r : ys + r] = (
                                         ar[xs - r : xs + r, ys - r : ys + r] * cutterArrayNegative
                                     )
@@ -1137,7 +1137,7 @@ def crazyStrokeImageBinary(o, ar, avoidar):
             print(totaltests)
             i = 0
     if len(nchunk.points) > 1:
-        parentChildDist([nchunk], chunks, o, distance=r)
+        parent_child_distance([nchunk], chunks, o, distance=r)
         chunk_builders.append(nchunk)
 
     for ch in chunk_builders:
@@ -1146,13 +1146,13 @@ def crazyStrokeImageBinary(o, ar, avoidar):
             ch[i] = (
                 (ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                 (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny,
-                o.minz,
+                o.min_z,
             )
 
     return [c.to_chunk for c in chunk_builders]
 
 
-def imageToChunks(o, image, with_border=False):
+def image_to_chunks(o, image, with_border=False):
     """Convert an image into chunks based on detected edges.
 
     This function processes a given image to identify edges and convert them
@@ -1348,7 +1348,7 @@ def imageToChunks(o, image, with_border=False):
 
             s = curve_simplify.simplify_RDP(ch, soptions)
             # print(s)
-            nch = camPathChunkBuilder([])
+            nch = CamPathChunkBuilder([])
             for i in range(0, len(s)):
                 nch.points.append((ch[s[i]].x, ch[s[i]].y))
 
@@ -1360,7 +1360,7 @@ def imageToChunks(o, image, with_border=False):
         return []
 
 
-def imageToShapely(o, i, with_border=False):
+def image_to_shapely(o, i, with_border=False):
     """Convert an image to Shapely polygons.
 
     This function takes an image and converts it into a series of Shapely
@@ -1379,13 +1379,13 @@ def imageToShapely(o, i, with_border=False):
             image chunks.
     """
 
-    polychunks = imageToChunks(o, i, with_border)
-    polys = chunksToShapely(polychunks)
+    polychunks = image_to_chunks(o, i, with_border)
+    polys = chunks_to_shapely(polychunks)
 
     return polys
 
 
-def getSampleImage(s, sarray, minz):
+def get_sample_image(s, sarray, minz):
     """Get a sample image value from a 2D array based on given coordinates.
 
     This function retrieves a value from a 2D array by performing bilinear
@@ -1428,7 +1428,7 @@ def getSampleImage(s, sarray, minz):
         return z
 
 
-def getResolution(o):
+def get_resolution(o):
     """Calculate the resolution based on the dimensions of an object.
 
     This function computes the resolution in both x and y directions by
@@ -1520,7 +1520,7 @@ def _restore_render_settings(pairs, properties):
             setattr(owner, struct_name, obj_value)
 
 
-def renderSampleImage(o):
+def render_sample_image(o):
     """Render a sample image based on the provided object settings.
 
     This function generates a Z-buffer image for a given object by either
@@ -1540,7 +1540,7 @@ def renderSampleImage(o):
     t = time.time()
     progress("Getting Z-Buffer")
     # print(o.zbuffer_image)
-    o.update_offsetimage_tag = True
+    o.update_offset_image_tag = True
     if o.geometry_source == "OBJECT" or o.geometry_source == "COLLECTION":
         pixsize = o.optimisation.pixsize
 
@@ -1551,7 +1551,7 @@ def renderSampleImage(o):
         resy = ceil(sy / o.optimisation.pixsize) + 2 * o.borderwidth
 
         if (
-            not o.update_zbufferimage_tag
+            not o.update_z_buffer_image_tag
             and len(o.zbuffer_image) == resx
             and len(o.zbuffer_image[0]) == resy
         ):
@@ -1559,18 +1559,18 @@ def renderSampleImage(o):
             # print('has zbuffer')
             return o.zbuffer_image
         # ###setup image name
-        iname = getCachePath(o) + "_z.exr"
-        if not o.update_zbufferimage_tag:
+        iname = get_cache_path(o) + "_z.exr"
+        if not o.update_z_buffer_image_tag:
             try:
                 i = bpy.data.images.load(iname)
                 if i.size[0] != resx or i.size[1] != resy:
                     print("Z buffer size changed:", i.size, resx, resy)
-                    o.update_zbufferimage_tag = True
+                    o.update_z_buffer_image_tag = True
 
             except:
 
-                o.update_zbufferimage_tag = True
-        if o.update_zbufferimage_tag:
+                o.update_z_buffer_image_tag = True
+        if o.update_z_buffer_image_tag:
             s = bpy.context.scene
             s.use_nodes = True
             vl = bpy.context.view_layer
@@ -1670,11 +1670,11 @@ def renderSampleImage(o):
             i = bpy.data.images.load(iname)
             bpy.context.scene.render.engine = "FABEX_RENDER"
 
-        a = imagetonumpy(i)
+        a = image_to_numpy(i)
         a = 10.0 * a
         a = 1.0 - a
         o.zbuffer_image = a
-        o.update_zbufferimage_tag = False
+        o.update_z_buffer_image_tag = False
 
     else:
         i = bpy.data.images[o.source_image_name]
@@ -1694,7 +1694,7 @@ def renderSampleImage(o):
         o.optimisation.pixsize = o.source_image_size_x / i.size[0]
         progress("Pixel Size in the Image Source", o.optimisation.pixsize)
 
-        rawimage = imagetonumpy(i)
+        rawimage = image_to_numpy(i)
         maxa = numpy.max(rawimage)
         mina = numpy.min(rawimage)
         neg = o.source_image_scale_z < 0
@@ -1729,7 +1729,7 @@ def renderSampleImage(o):
 
         a += o.source_image_offset.z  # after that, image gets offset.
 
-        o.minz = numpy.min(a)  # TODO: I really don't know why this is here...
+        o.min_z = numpy.min(a)  # TODO: I really don't know why this is here...
         o.min.z = numpy.min(a)
         print("min z ", o.min.z)
         print("max z ", o.max.z)
@@ -1740,14 +1740,14 @@ def renderSampleImage(o):
     progress(time.time() - t)
 
     # progress(a)
-    o.update_zbufferimage_tag = False
+    o.update_z_buffer_image_tag = False
     return o.zbuffer_image
 
 
 # return numpy.array([])
 
 
-async def prepareArea(o):
+async def prepare_area(o):
     """Prepare the area for rendering by processing the offset image.
 
     This function handles the preparation of the area by rendering a sample
@@ -1764,27 +1764,27 @@ async def prepareArea(o):
     """
 
     # if not o.use_exact:
-    renderSampleImage(o)
+    render_sample_image(o)
     samples = o.zbuffer_image
 
-    iname = getCachePath(o) + "_off.exr"
+    iname = get_cache_path(o) + "_off.exr"
 
-    if not o.update_offsetimage_tag:
+    if not o.update_offset_image_tag:
         progress("Loading Offset Image")
         try:
-            o.offset_image = imagetonumpy(bpy.data.images.load(iname))
+            o.offset_image = image_to_numpy(bpy.data.images.load(iname))
 
         except:
-            o.update_offsetimage_tag = True
+            o.update_offset_image_tag = True
 
-    if o.update_offsetimage_tag:
+    if o.update_offset_image_tag:
         if o.inverse:
             samples = numpy.maximum(samples, o.min.z - 0.00001)
-        await offsetArea(o, samples)
-        numpysave(o.offset_image, iname)
+        await offset_area(o, samples)
+        numpy_save(o.offset_image, iname)
 
 
-def getCutterArray(operation, pixsize):
+def get_cutter_array(operation, pixsize):
     """Generate a cutter array based on the specified operation and pixel size.
 
     This function calculates a 2D array representing the cutter shape based

@@ -41,13 +41,13 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
 
         # Strategy
         if self.op.machine_axes == "4":
-            col.prop(self.op, "strategy4axis")
-            if self.op.strategy4axis == "INDEXED":
+            col.prop(self.op, "strategy_4_axis")
+            if self.op.strategy_4_axis == "INDEXED":
                 col.prop(self.op, "strategy")
             col.prop(self.op, "rotary_axis_1")
         elif self.op.machine_axes == "5":
-            col.prop(self.op, "strategy5axis")
-            if self.op.strategy5axis == "INDEXED":
+            col.prop(self.op, "strategy_5_axis")
+            if self.op.strategy_5_axis == "INDEXED":
                 col.prop(self.op, "strategy")
             col.prop(self.op, "rotary_axis_1")
             col.prop(self.op, "rotary_axis_2")
@@ -97,7 +97,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                 box = subcol.box()
                 sub = box.column(align=True)
                 sub.label(text="Toolpath Distance")
-                sub.prop(self.op, "dist_between_paths", text="Between")
+                sub.prop(self.op, "distance_between_paths", text="Between")
                 # self.draw_cutter_engagement(col=col)
 
         # Waterline Options
@@ -125,7 +125,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                     box = col.box()
                     sub = box.column(align=True)
                     sub.label(text="Toolpath Distance")
-                    sub.prop(self.op, "dist_between_paths", text="Between")
+                    sub.prop(self.op, "distance_between_paths", text="Between")
 
         # Carve Options
         if self.op.strategy in ["CARVE"]:
@@ -135,7 +135,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             box = col.box()
             sub = box.column(align=True)
             sub.label(text="Toolpath Distance")
-            sub.prop(self.op, "dist_along_paths", text="Along")
+            sub.prop(self.op, "distance_along_paths", text="Along")
 
         # Medial Axis Options
         if self.op.strategy in ["MEDIAL_AXIS"]:
@@ -161,28 +161,28 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
         if self.op.strategy in ["POCKET"]:
             # box = layout.box()
             col = box.column(align=True)
-            if self.op.pocketType == "PARALLEL":
+            if self.op.pocket_type == "PARALLEL":
                 warnbox = col.box()
                 warnbox.alert = True
                 warnbox.label(text="! Warning ! Experimental !", icon="ERROR")
-            col.prop(self.op, "pocketType", text="Type")
-            if self.op.pocketType == "PARALLEL":
-                col.prop(self.op, "parallelPocketAngle", text="Angle")
+            col.prop(self.op, "pocket_type", text="Type")
+            if self.op.pocket_type == "PARALLEL":
+                col.prop(self.op, "parallel_pocket_angle", text="Angle")
                 subcol = col.column(align=True)
                 subcol.use_property_split = False
-                subcol.prop(self.op, "parallelPocketCrosshatch", text="Crosshatch")
-                subcol.prop(self.op, "parallelPocketContour")
+                subcol.prop(self.op, "parallel_pocket_crosshatch", text="Crosshatch")
+                subcol.prop(self.op, "parallel_pocket_contour")
 
             else:
                 col.prop(self.op, "pocket_option")
                 self.draw_overshoot(col=col)
                 row = col.row()
                 row.use_property_split = False
-                row.prop(self.op, "pocketToCurve")
+                row.prop(self.op, "pocket_to_curve")
             box = col.box()
             sub = box.column(align=True)
             sub.label(text="Toolpath Distance")
-            sub.prop(self.op, "dist_between_paths", text="Between")
+            sub.prop(self.op, "distance_between_paths", text="Between")
 
         # Default Options
         if self.op.strategy not in [
@@ -205,8 +205,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
             box = col.box()
             col = box.column(align=True)
             col.label(text="Toolpath Distance")
-            col.prop(self.op, "dist_between_paths", text="Between")
-            col.prop(self.op, "dist_along_paths", text="Along")
+            col.prop(self.op, "distance_between_paths", text="Between")
+            col.prop(self.op, "distance_along_paths", text="Along")
 
         # A & B, Array, Bridges Options
         if self.level >= 1:
@@ -227,23 +227,23 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                     subheader, subpanel = panel.panel("a_axis", default_closed=True)
                     subheader.prop(self.op, "enable_A", text="A Axis")
                     if subpanel:
-                        subpanel.enabled = self.op.enable_A
+                        subpanel.enabled = self.op.enable_a_axis
                         col = subpanel.column(align=True)
                         row = col.row()
                         row.use_property_split = True
-                        row.prop(self.op, "rotation_A")
+                        row.prop(self.op, "rotation_a")
                         col.prop(self.op, "A_along_x")
-                        if self.op.A_along_x:
+                        if self.op.a_along_x:
                             col.label(text="Ⓐ || Ⓧ  -  Ⓑ || Ⓨ")
                         else:
                             col.label(text="Ⓐ || Ⓨ  -  Ⓑ || Ⓧ")
                     subheader, subpanel = panel.panel("b_axis", default_closed=True)
                     subheader.prop(self.op, "enable_B", text="B Axis")
                     if subpanel:
-                        subpanel.enabled = self.op.enable_B
+                        subpanel.enabled = self.op.enable_b_axis
                         col = subpanel.column(align=True)
                         col.use_property_split = True
-                        col.prop(self.op, "rotation_B")
+                        col.prop(self.op, "rotation_b")
 
             # Array
             if self.op.machine_axes == "3":

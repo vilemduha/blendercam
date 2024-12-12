@@ -7,7 +7,7 @@ import bpy
 from bpy.types import Panel
 
 from .buttons_panel import CAMButtonsPanel
-from ...simple import strInUnits
+from ...simple import unit_value_to_string
 
 
 class CAM_AREA_Panel(CAMButtonsPanel, Panel):
@@ -32,7 +32,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
         col = box.column(align=True)
         col.label(text="Z Clearance", icon="CON_FLOOR")
         col.prop(self.op.movement, "free_height")
-        if self.op.maxz > self.op.movement.free_height:
+        if self.op.max_z > self.op.movement.free_height:
             box = col.box()
             col = box.column(align=True)
             col.alert = True
@@ -46,7 +46,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
             col.label(text="Operation Depth")
             col.prop(self.op, "maxz", text="Start")
             # col.prop(self.op.movement, "free_height")
-            if self.op.maxz > self.op.movement.free_height:
+            if self.op.max_z > self.op.movement.free_height:
                 box = col.box()
                 box.alert = True
                 sub = box.column(align=True)
@@ -61,7 +61,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
                     box = col.box()
                     box.alert = True
                     box.label(text="Cannot Use Depth from Object Using Curves", icon="ERROR")
-                depth = self.op.minz_from
+                depth = self.op.min_z_from
                 if depth == "MATERIAL":
                     icon = depth
                 elif depth == "OBJECT":
@@ -69,7 +69,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
                 else:
                     icon = "USER"
                 col.prop(self.op, "minz_from", text="Max", icon=icon)
-                if self.op.minz_from == "CUSTOM":
+                if self.op.min_z_from == "CUSTOM":
                     col.prop(self.op, "minz")
 
             else:
@@ -80,7 +80,7 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
                     if i is not None:
                         size_x = self.op.source_image_size_x / i.size[0]
                         size_y = int(x_size * i.size[1] * 1000000) / 1000
-                        col.label(text="Image Size on Y Axis: " + strInUnits(size_y, 8))
+                        col.label(text="Image Size on Y Axis: " + unit_value_to_string(size_y, 8))
                         col.separator()
                 col.prop(self.op, "source_image_offset")
                 col.prop(self.op, "source_image_crop", text="Crop Source Image")

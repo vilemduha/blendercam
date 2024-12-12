@@ -13,7 +13,7 @@ from bpy.types import PropertyGroup
 
 
 # this type is defined just to hold reference to operations for chains
-class opReference(PropertyGroup):
+class OpReference(PropertyGroup):
     name: StringProperty(
         name="Operation Name",
         default="Operation",
@@ -22,7 +22,7 @@ class opReference(PropertyGroup):
 
 
 # chain is just a set of operations which get connected on export into 1 file.
-class camChain(PropertyGroup):
+class CamChain(PropertyGroup):
     index: IntProperty(
         name="Index",
         description="Index in the hard-defined camChains",
@@ -53,5 +53,5 @@ class camChain(PropertyGroup):
     )
     # this is to hold just operation names.
     operations: CollectionProperty(
-        type=opReference,
+        type=OpReference,
     )

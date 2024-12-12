@@ -20,7 +20,7 @@ except ImportError:
 SHAPELY = True
 
 
-def Circle(r, np):
+def circle(r, np):
     """Generate a circle defined by a given radius and number of points.
 
     This function creates a polygon representing a circle by generating a
@@ -48,7 +48,7 @@ def Circle(r, np):
     return p
 
 
-def shapelyRemoveDoubles(p, optimize_threshold):
+def shapely_remove_doubles(p, optimize_threshold):
     """Remove duplicate points from the boundary of a shape.
 
     This function simplifies the boundary of a given shape by removing
@@ -86,7 +86,7 @@ def shapelyRemoveDoubles(p, optimize_threshold):
     return pnew
 
 
-def shapelyToMultipolygon(anydata):
+def shapely_to_multipolygon(anydata):
     """Convert a Shapely geometry to a MultiPolygon.
 
     This function takes a Shapely geometry object and converts it to a
@@ -119,7 +119,7 @@ def shapelyToMultipolygon(anydata):
         return sgeometry.MultiPolygon()
 
 
-def shapelyToCoords(anydata):
+def shapely_to_coordinates(anydata):
     """Convert a Shapely geometry object to a list of coordinates.
 
     This function takes a Shapely geometry object and extracts its
@@ -187,7 +187,7 @@ def shapelyToCoords(anydata):
     return seq
 
 
-def shapelyToCurve(name, p, z, cyclic=True):
+def shapely_to_curve(name, p, z, cyclic=True):
     """Create a 3D curve object in Blender from a Shapely geometry.
 
     This function takes a Shapely geometry and converts it into a 3D curve
@@ -217,7 +217,7 @@ def shapelyToCurve(name, p, z, cyclic=True):
     # for c in p.exterior.coords:
 
     # print(p.type)
-    seq = shapelyToCoords(p)
+    seq = shapely_to_coordinates(p)
     w = 1  # weight
 
     curvedata = bpy.data.curves.new(name=name, type="CURVE")

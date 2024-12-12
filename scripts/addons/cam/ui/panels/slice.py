@@ -31,7 +31,7 @@ class CAM_SLICE_Panel(CAMButtonsPanel, Panel):
         settings = scene.cam_slice
         col = layout.column(align=True)
         col.prop(settings, "slice_distance")
-        col.prop(settings, "slice_above0")
+        col.prop(settings, "slice_above_0")
         col.prop(settings, "slice_3d")
         col.prop(settings, "indexes")
 

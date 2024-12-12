@@ -17,7 +17,7 @@ from . import (
 )
 
 
-def slicing2d(ob, height):
+def slicing_2d(ob, height):
     """Slice a 3D object at a specified height and convert it to a curve.
 
     This function applies transformations to the given object, switches to
@@ -63,7 +63,7 @@ def slicing2d(ob, height):
     return True
 
 
-def slicing3d(ob, start, end):
+def slicing_3d(ob, start, end):
     """Slice a 3D object along specified planes.
 
     This function applies transformations to a given object and slices it in

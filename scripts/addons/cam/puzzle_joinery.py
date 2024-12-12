@@ -42,9 +42,7 @@ def finger(diameter, stem=2):
         None: This function does not return any value.
     """
 
-    # diameter = diameter of the tool for joint creation
     # DT = Bit diameter tolerance
-    # stem = amount of radius the stem or neck of the joint will have
     global DT
     RESOLUTION = 12  # Data resolution
     cube_sx = diameter * DT * (2 + stem - 1)
@@ -87,7 +85,7 @@ def finger(diameter, stem=2):
     bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="MEDIAN")
 
     simple.duplicate()
-    simple.mirrorx()
+    simple.mirror_x()
 
     simple.union("ftmp")
     simple.rename("ftmp", "_sum")
@@ -112,7 +110,7 @@ def finger(diameter, stem=2):
     bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="MEDIAN")
 
     simple.duplicate()
-    simple.mirrorx()
+    simple.mirror_x()
     simple.union("_circ")
 
     simple.difference("_", "_sum")
@@ -137,11 +135,7 @@ def fingers(diameter, inside, amount=1, stem=1):
             to 1.
     """
 
-    # diameter = diameter of the tool for joint creation
-    # inside = Tolerance in the joint receptacle
     global DT  # Bit diameter tolerance
-    # stem = amount of radius the stem or neck of the joint will have
-    # amount = the amount of fingers
 
     xtranslate = -(4 + 2 * (stem - 1)) * (amount - 1) * diameter * DT / 2
     finger(diameter, stem=stem)  # generate male finger
@@ -167,7 +161,7 @@ def fingers(diameter, inside, amount=1, stem=1):
         simple.move(y=-inside)
 
 
-def twistf(name, length, diameter, tolerance, twist, tneck, tthick, twist_keep=False):
+def twist_female(name, length, diameter, tolerance, twist, tneck, tthick, twist_keep=False):
     """Add a twist lock to a receptacle.
 
     This function modifies the receptacle by adding a twist lock feature if
@@ -205,7 +199,7 @@ def twistf(name, length, diameter, tolerance, twist, tneck, tthick, twist_keep=F
         simple.active_name(name)
 
 
-def twistm(
+def twist_male(
     name, length, diameter, tolerance, twist, tneck, tthick, angle, twist_keep=False, x=0, y=0
 ):
     """Add a twist lock to a male connector.
@@ -302,17 +296,6 @@ def bar(
             model in Blender.
     """
 
-    # width = length of the bar
-    # thick = thickness of the bar
-    # diameter = diameter of the tool for joint creation
-    # tolerance = Tolerance in the joint
-    # amount = amount of fingers in the joint 0 means auto generate
-    # stem = amount of radius the stem or neck of the joint will have
-    # twist = twist lock addition
-    # tneck = percentage the twist neck will have compared to thick
-    # tthick = thicknest of the twist material
-    # Which M,F, MF, MM, FF
-
     global DT
     if amount == 0:
         amount = round(thick / ((4 + 2 * (stem - 1)) * diameter * DT)) - 1
@@ -337,7 +320,7 @@ def bar(
         simple.rename("tmprect", "_tmprect")
         simple.union("_tmp")
         simple.active_name("tmprect")
-        twistm(
+        twist_male(
             "tmprect",
             thick,
             diameter,
@@ -350,7 +333,9 @@ def bar(
             twist_keep=twist_keep,
         )
 
-    twistf("receptacle", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
+    twist_female(
+        "receptacle", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep
+    )
     simple.rename("receptacle", "_tmpreceptacle")
     if which == "FF" or which == "F" or which == "MF":
         simple.rotate(-pi / 2)
@@ -421,18 +406,6 @@ def arc(
             directly.
     """
 
-    # radius = radius of the curve
-    # thick = thickness of the bar
-    # angle = angle of the arc
-    # diameter = diameter of the tool for joint creation
-    # tolerance = Tolerance in the joint
-    # amount = amount of fingers in the joint 0 means auto generate
-    # stem = amount of radius the stem or neck of the joint will have
-    # twist = twist lock addition
-    # tneck = percentage the twist neck will have compared to thick
-    # tthick = thicknest of the twist material
-    # which = which joint to generate, Male Female MaleFemale M, F, MF
-
     global DT  # diameter tolerance for diameter of finger creation
 
     if angle == 0:  # angle cannot be 0
@@ -447,8 +420,10 @@ def arc(
         amount = round(thick / ((4 + 2 * (stem - 1)) * diameter * DT)) - 1
 
     fingers(diameter, tolerance, amount, stem=stem)
-    twistf("receptacle", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
-    twistf("testing", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
+    twist_female(
+        "receptacle", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep
+    )
+    twist_female("testing", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
     print("generating arc")
     # generate arc
     bpy.ops.curve.simple(
@@ -476,11 +451,11 @@ def arc(
     if which == "MF" or which == "M":
         simple.union("_tmp")
         simple.active_name("base")
-        twistm("base", thick, diameter, tolerance, twist, tneck, tthick, pi, x=radius)
+        twist_male("base", thick, diameter, tolerance, twist, tneck, tthick, pi, x=radius)
         simple.rename("base", "_tmparc")
 
     simple.rename("receptacle", "_tmpreceptacle")
-    simple.mirrory()
+    simple.mirror_y()
     simple.move(x=radius)
     bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="MEDIAN")
     simple.rotate(angle)
@@ -494,13 +469,13 @@ def arc(
     simple.make_active("PUZZLE_arc")
     if which == "M":
         simple.rotate(-angle)
-        simple.mirrory()
+        simple.mirror_y()
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=False)
         simple.rotate(-pi / 2)
         simple.move(y=radius)
         simple.rename("PUZZLE_arc", "PUZZLE_arc_male")
     elif which == "F":
-        simple.mirrorx()
+        simple.mirror_x()
         simple.move(x=radius)
         simple.rotate(pi / 2)
         simple.rename("PUZZLE_arc", "PUZZLE_arc_receptacle")
@@ -509,12 +484,12 @@ def arc(
     # bpy.ops.object.transform_apply(location=True, rotation=False, scale=False, properties=False)
     #
     if negative:  # mirror if angle is negative
-        simple.mirrory()
+        simple.mirror_y()
     #
     # bpy.ops.object.curve_remove_doubles()
 
 
-def arcbararc(
+def arc_bar_arc(
     length,
     radius,
     thick,
@@ -566,20 +541,6 @@ def arcbararc(
         None: This function does not return a value but modifies the Blender scene
             directly.
     """
-
-    # length is the total width of the segments including 2 * radius and thick
-    # radius = radius of the curve
-    # thick = thickness of the bar
-    # angle = angle of the female part
-    # angleb = angle of the male part
-    # diameter = diameter of the tool for joint creation
-    # tolerance = Tolerance in the joint
-    # amount = amount of fingers in the joint 0 means auto generate
-    # stem = amount of radius the stem or neck of the joint will have
-    # twist = twist lock addition
-    # tneck = percentage the twist neck will have compared to thick
-    # tthick = thicknest of the twist material
-    # which = which joint to generate, Male Female MaleFemale M, F, MF
 
     # adjust length to include 2x radius + thick
     length -= radius * 2 + thick
@@ -651,7 +612,7 @@ def arcbararc(
     simple.make_active("arcBarArc")
 
 
-def arcbar(
+def arc_bar(
     length,
     radius,
     thick,
@@ -698,18 +659,6 @@ def arcbar(
         twist_line_amount (int?): Amount of twist line. Defaults to 2.
     """
 
-    # length is the total width of the segments including 2 * radius and thick
-    # radius = radius of the curve
-    # thick = thickness of the bar
-    # angle = angle of the female part
-    # diameter = diameter of the tool for joint creation
-    # tolerance = Tolerance in the joint
-    # amount = amount of fingers in the joint 0 means auto generate
-    # stem = amount of radius the stem or neck of the joint will have
-    # twist = twist lock addition
-    # tneck = percentage the twist neck will have compared to thick
-    # tthick = thicknest of the twist material
-    # which = which joint to generate, Male Female MaleFemale M, F, MF
     if which == "M":
         which = "MM"
     elif which == "F":
@@ -913,7 +862,7 @@ def multiangle(
     simple.active_name("tmp_arc")
     if combination == "MFF":
         simple.duplicate()
-        simple.mirrorx()
+        simple.mirror_x()
     elif combination == "MMF":
         arc(
             radius,
@@ -929,7 +878,7 @@ def multiangle(
             which="M",
         )
         simple.active_name("tmp_arc")
-        simple.mirrory()
+        simple.mirror_y()
         simple.rotate(pi / 2)
     simple.union("tmp_")
     simple.difference("tmp", "tmp_")
@@ -1011,7 +960,7 @@ def t(
 
     if combination == "M":
         simple.make_active("fingers")
-        simple.mirrory()
+        simple.mirror_y()
         simple.active_name("tmp")
         simple.union("tmp")
 
@@ -1024,7 +973,7 @@ def t(
 
     if combination == "F":
         simple.make_active("receptacle")
-        simple.mirrory()
+        simple.mirror_y()
         simple.active_name("tmp")
         simple.difference("tmp", "tmp")
 
@@ -1134,11 +1083,11 @@ def curved_t(
             which="F",
         )
         simple.move(radius)
-        simple.mirrory()
+        simple.mirror_y()
         simple.active_name("tmp_arc")
         simple.union("tmp_arc")
         simple.duplicate()
-        simple.mirrorx()
+        simple.mirror_x()
         simple.union("tmp_arc")
         simple.difference("tmp_", "tmp_arc")
     else:
@@ -1162,7 +1111,7 @@ def curved_t(
         else:
             simple.move(radius)
         simple.duplicate()
-        simple.mirrorx()
+        simple.mirror_x()
 
     simple.union("tmp")
     simple.active_name("curved_t")
@@ -1267,7 +1216,7 @@ def mitre(
     simple.move(x=2 * thick)
     simple.rotate(angleb)
     simple.move(x=length / 2)
-    simple.mirrorx()
+    simple.mirror_x()
     simple.active_name("tmpmitreleft")
     simple.difference("tmp", "tmprect")
     simple.make_active("tmprect")
@@ -1289,7 +1238,7 @@ def mitre(
             h = thick / cos(angleb)
             h /= 2
             simple.move(x=length / 2 + h * sin(angleb), y=-thick / 2)
-            simple.mirrorx()
+            simple.mirror_x()
 
         simple.union("tmp")
         simple.active_name("tmprect")
@@ -1297,14 +1246,14 @@ def mitre(
     # Generate female section and join to base
     if which == "MF" or which == "F":
         simple.make_active("receptacle")
-        simple.mirrory()
+        simple.mirror_y()
         simple.duplicate()
         simple.active_name("tmpreceptacle")
         simple.rotate(angleb - pi / 2)
         h = thick / cos(angleb)
         h /= 2
         simple.move(x=length / 2 + h * sin(angleb), y=-thick / 2)
-        simple.mirrorx()
+        simple.mirror_x()
         if which == "F":
             simple.rename("receptacle", "tmpreceptacle2")
             simple.rotate(angle - pi / 2)
@@ -1413,7 +1362,7 @@ def open_curve(
     simple.move(x=p_end[0], y=p_end[1])
     simple.union("tmprect")
     dilated = line.buffer(thick / 2)  # expand shapely object to thickness
-    utils.shapelyToCurve("tmp_curve", dilated, 0.0)
+    utils.shapely_to_curve("tmp_curve", dilated, 0.0)
     # truncate curve at both ends with the rectangles
     simple.difference("tmp", "tmp_curve")
 
@@ -1424,7 +1373,7 @@ def open_curve(
     simple.active_name("tmp_fingers")
     simple.union("tmp_")
     simple.active_name("tmp_curve")
-    twistm(
+    twist_male(
         "tmp_curve",
         thick,
         diameter,
@@ -1438,7 +1387,9 @@ def open_curve(
         twist_keep=twist_keep,
     )
 
-    twistf("receptacle", thick, diameter, tolerance, twist, t_neck, t_thick, twist_keep=twist_keep)
+    twist_female(
+        "receptacle", thick, diameter, tolerance, twist, t_neck, t_thick, twist_keep=twist_keep
+    )
     simple.rename("receptacle", "tmp")
     simple.rotate(start_angle + pi)
     simple.move(x=p_start[0], y=p_start[1])

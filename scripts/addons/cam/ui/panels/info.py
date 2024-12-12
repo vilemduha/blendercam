@@ -23,7 +23,7 @@ from ...constants import (
     CHIPLOAD_PRECISION,
     MAX_OPERATION_TIME,
 )
-from ...simple import strInUnits
+from ...simple import unit_value_to_string
 from ...version import __version__ as cam_version
 
 # Info panel
@@ -104,10 +104,12 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
                 col = box.column(align=True)
                 # Warns if cutter engagement is greater than 50%
                 if self.op.cutter_type in ["BALLCONE"]:
-                    engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
+                    engagement = round(
+                        100 * self.op.distance_between_paths / self.op.ball_radius, 1
+                    )
                 else:
                     engagement = round(
-                        100 * self.op.dist_between_paths / self.op.cutter_diameter, 1
+                        100 * self.op.distance_between_paths / self.op.cutter_diameter, 1
                     )
 
                 if engagement > 50:
@@ -138,7 +140,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
             if not self.op.info.chipload > 0:
                 pass
             else:
-                chipload = f"Chipload: {strInUnits(self.op.info.chipload, 4)}/tooth"
+                chipload = f"Chipload: {unit_value_to_string(self.op.info.chipload, 4)}/tooth"
                 col.label(text=chipload, icon="DRIVER_ROTATIONAL_DIFFERENCE")
 
             # Operation Money Cost

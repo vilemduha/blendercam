@@ -69,7 +69,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
             return
 
         # Calculate Path
-        if self.op.maxz > self.op.movement.free_height:
+        if self.op.max_z > self.op.movement.free_height:
             box = layout.box()
             col = box.column(align=True)
             col.alert = True
@@ -118,10 +118,10 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
         else:
             if self.op.geometry_source == "OBJECT":
                 col.prop_search(self.op, "object_name", bpy.data, "objects")
-                if self.op.enable_A:
-                    col.prop(self.op, "rotation_A")
-                if self.op.enable_B:
-                    col.prop(self.op, "rotation_B")
+                if self.op.enable_a_axis:
+                    col.prop(self.op, "rotation_a")
+                if self.op.enable_b_axis:
+                    col.prop(self.op, "rotation_b")
 
             elif self.op.geometry_source == "COLLECTION":
                 col.prop_search(self.op, "collection_name", bpy.data, "collections")

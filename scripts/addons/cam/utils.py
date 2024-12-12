@@ -25,39 +25,39 @@ from mathutils import Euler, Vector
 
 from .async_op import progress_async
 from .cam_chunk import (
-    curveToChunks,
-    parentChild,
-    camPathChunk,
-    camPathChunkBuilder,
-    parentChildDist,
-    chunksToShapely,
+    curve_to_chunks,
+    parent_child,
+    CamPathChunk,
+    CamPathChunkBuilder,
+    parent_child_distance,
+    chunks_to_shapely,
 )
-from .collision import getSampleBullet, getSampleBulletNAxis, prepareBulletCollision
+from .collision import get_sample_bullet, get_sample_bullet_n_axis, prepare_bullet_collision
 from .exception import CamException
 from .image_utils import (
-    imageToChunks,
-    getSampleImage,
-    renderSampleImage,
-    prepareArea,
+    image_to_chunks,
+    get_sample_image,
+    render_sample_image,
+    prepare_area,
 )
 from .opencamlib.opencamlib import (
     oclSample,
     oclResampleChunks,
 )
-from .polygon_utils_cam import shapelyToCurve, shapelyToMultipolygon
+from .polygon_utils_cam import shapely_to_curve, shapely_to_multipolygon
 from .simple import (
     activate,
     progress,
     select_multiple,
-    delob,
-    timingadd,
-    timinginit,
-    timingstart,
+    delete_object,
+    timing_add,
+    timing_init,
+    timing_start,
     tuple_add,
-    tuple_mul,
-    tuple_sub,
-    isVerticalLimit,
-    getCachePath,
+    tuple_multiply,
+    tuple_subtract,
+    is_vertical_limit,
+    get_cache_path,
 )
 
 # from shapely.geometry import * not possible until Polygon libs gets out finally..
@@ -108,7 +108,7 @@ def shapely_version():
     return shapely.__version__
 
 
-def positionObject(operation):
+def position_object(operation):
     """Position an object based on specified operation parameters.
 
     This function adjusts the location of a Blender object according to the
@@ -129,7 +129,7 @@ def positionObject(operation):
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
 
-    minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace([ob], operation.use_modifiers)
+    minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace([ob], operation.use_modifiers)
     totx = maxx - minx
     toty = maxy - miny
     totz = maxz - minz
@@ -155,7 +155,7 @@ def positionObject(operation):
     # addMaterialAreaObject()
 
 
-def getBoundsWorldspace(obs, use_modifiers=False):
+def get_bounds_worldspace(obs, use_modifiers=False):
     """Get the bounding box of a list of objects in world space.
 
     This function calculates the minimum and maximum coordinates that
@@ -256,7 +256,7 @@ def getBoundsWorldspace(obs, use_modifiers=False):
     return minx, miny, minz, maxx, maxy, maxz
 
 
-def getSplineBounds(ob, curve):
+def get_spline_bounds(ob, curve):
     """Get the bounding box of a spline object.
 
     This function calculates the minimum and maximum coordinates (x, y, z)
@@ -305,7 +305,7 @@ def getSplineBounds(ob, curve):
     return minx, miny, minz, maxx, maxy, maxz
 
 
-def getOperationSources(o):
+def get_operation_sources(o):
     """Get operation sources based on the geometry source type.
 
     This function retrieves and sets the operation sources for a given
@@ -319,8 +319,8 @@ def getOperationSources(o):
 
     Args:
         o (Object): An object containing properties such as geometry_source,
-            object_name, collection_name, rotation_A, rotation_B,
-            enable_A, enable_B, old_rotation_A, old_rotation_B,
+            object_name, collection_name, rotation_a, rotation_b,
+            enable_A, enable_B, old_rotation_a, old_rotation_b,
             A_along_x, and optimisation.
 
     Returns:
@@ -334,23 +334,23 @@ def getOperationSources(o):
         o.objects = [ob]
         ob.select_set(True)
         bpy.context.view_layer.objects.active = ob
-        if o.enable_B or o.enable_A:
-            if o.old_rotation_A != o.rotation_A or o.old_rotation_B != o.rotation_B:
-                o.old_rotation_A = o.rotation_A
-                o.old_rotation_B = o.rotation_B
+        if o.enable_b_axis or o.enable_a_axis:
+            if o.old_rotation_a != o.rotation_a or o.old_rotation_b != o.rotation_b:
+                o.old_rotation_a = o.rotation_a
+                o.old_rotation_b = o.rotation_b
                 ob = bpy.data.objects[o.object_name]
                 ob.select_set(True)
                 bpy.context.view_layer.objects.active = ob
-                if o.A_along_x:  # A parallel with X
-                    if o.enable_A:
-                        bpy.context.active_object.rotation_euler.x = o.rotation_A
-                    if o.enable_B:
-                        bpy.context.active_object.rotation_euler.y = o.rotation_B
+                if o.a_along_x:  # A parallel with X
+                    if o.enable_a_axis:
+                        bpy.context.active_object.rotation_euler.x = o.rotation_a
+                    if o.enable_b_axis:
+                        bpy.context.active_object.rotation_euler.y = o.rotation_b
                 else:  # A parallel with Y
-                    if o.enable_A:
-                        bpy.context.active_object.rotation_euler.y = o.rotation_A
-                    if o.enable_B:
-                        bpy.context.active_object.rotation_euler.x = o.rotation_B
+                    if o.enable_a_axis:
+                        bpy.context.active_object.rotation_euler.y = o.rotation_a
+                    if o.enable_b_axis:
+                        bpy.context.active_object.rotation_euler.x = o.rotation_b
 
     elif o.geometry_source == "COLLECTION":
         collection = bpy.data.collections[o.collection_name]
@@ -367,7 +367,7 @@ def getOperationSources(o):
         o.onlycurves = False
 
 
-def getBounds(o):
+def get_bounds(o):
     """Calculate the bounding box for a given object.
 
     This function determines the minimum and maximum coordinates of an
@@ -393,16 +393,16 @@ def getBounds(o):
         or o.geometry_source == "CURVE"
     ):
         print("Valid Geometry")
-        minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace(o.objects, o.use_modifiers)
+        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(o.objects, o.use_modifiers)
 
-        if o.minz_from == "OBJECT":
+        if o.min_z_from == "OBJECT":
             if minz == 10000000:
                 minz = 0
             print("Minz from Object:" + str(minz))
             o.min.z = minz
-            o.minz = o.min.z
+            o.min_z = o.min.z
         else:
-            o.min.z = o.minz  # max(bb[0][2]+l.z,o.minz)#
+            o.min.z = o.min_z  # max(bb[0][2]+l.z,o.min_z)#
             print("Not Minz from Object")
 
         if o.material.estimate_from_model:
@@ -410,7 +410,7 @@ def getBounds(o):
 
             o.min.x = minx - o.material.radius_around_model
             o.min.y = miny - o.material.radius_around_model
-            o.max.z = max(o.maxz, maxz)
+            o.max.z = max(o.max_z, maxz)
 
             o.max.x = maxx + o.material.radius_around_model
             o.max.y = maxy + o.material.radius_around_model
@@ -442,7 +442,7 @@ def getBounds(o):
         o.max.x = o.source_image_offset.x + ex * o.optimisation.pixsize
         o.min.y = o.source_image_offset.y + sy * o.optimisation.pixsize
         o.max.y = o.source_image_offset.y + ey * o.optimisation.pixsize
-        o.min.z = o.source_image_offset.z + o.minz
+        o.min.z = o.source_image_offset.z + o.min_z
         o.max.z = o.source_image_offset.z
     s = bpy.context.scene
     m = s.cam_machine
@@ -460,7 +460,7 @@ def getBounds(o):
             bpy.ops.cam.popup("INVOKE_DEFAULT")
 
 
-def getBoundsMultiple(operations):
+def get_bounds_multiple(operations):
     """Gets bounds of multiple operations for simulations or rest milling.
 
     This function iterates through a list of operations to determine the
@@ -482,7 +482,7 @@ def getBoundsMultiple(operations):
     maxx = maxy = maxz = -10000000
     minx = miny = minz = 10000000
     for o in operations:
-        getBounds(o)
+        get_bounds(o)
         maxx = max(maxx, o.max.x)
         maxy = max(maxy, o.max.y)
         maxz = max(maxz, o.max.z)
@@ -493,7 +493,7 @@ def getBoundsMultiple(operations):
     return minx, miny, minz, maxx, maxy, maxz
 
 
-def samplePathLow(o, ch1, ch2, dosample):
+def sample_path_low(o, ch1, ch2, dosample):
     """Generate a sample path between two channels.
 
     This function computes a series of points that form a path between two
@@ -529,7 +529,7 @@ def samplePathLow(o, ch1, ch2, dosample):
     i = 0
     while vref.length < d:
         i += 1
-        vref = v * o.dist_along_paths * i
+        vref = v * o.distance_along_paths * i
         if vref.length < d:
             p = v1 + vref
             bpath_points.append([p.x, p.y, p.z])
@@ -540,27 +540,27 @@ def samplePathLow(o, ch1, ch2, dosample):
         if not (o.optimisation.use_opencamlib and o.optimisation.use_exact):
             if o.optimisation.use_exact:
                 if o.update_bullet_collision_tag:
-                    prepareBulletCollision(o)
+                    prepare_bullet_collision(o)
                     o.update_bullet_collision_tag = False
 
                 cutterdepth = o.cutter_shape.dimensions.z / 2
                 for p in bpath_points:
-                    z = getSampleBullet(o.cutter_shape, p[0], p[1], cutterdepth, 1, o.minz)
+                    z = get_sample_bullet(o.cutter_shape, p[0], p[1], cutterdepth, 1, o.min_z)
                     if z > p[2]:
                         p[2] = z
             else:
                 for p in bpath_points:
                     xs = (p[0] - o.min.x) / pixsize + o.borderwidth + pixsize / 2  # -m
                     ys = (p[1] - o.min.y) / pixsize + o.borderwidth + pixsize / 2  # -m
-                    z = getSampleImage((xs, ys), o.offset_image, o.minz) + o.skin
+                    z = get_sample_image((xs, ys), o.offset_image, o.min_z) + o.skin
                     if z > p[2]:
                         p[2] = z
-    return camPathChunk(bpath_points)
+    return CamPathChunk(bpath_points)
 
 
 # def threadedSampling():#not really possible at all without running more blenders for same operation :( python!
 # samples in both modes now - image and bullet collision too.
-async def sampleChunks(o, pathSamples, layers):
+async def sample_chunks(o, pathSamples, layers):
     """Sample chunks of paths based on the provided parameters.
 
     This function processes the given path samples and layers to generate
@@ -585,7 +585,7 @@ async def sampleChunks(o, pathSamples, layers):
 
     #
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-    getAmbient(o)
+    get_ambient(o)
 
     if o.optimisation.use_exact:  # prepare collision world
         if o.optimisation.use_opencamlib:
@@ -593,7 +593,7 @@ async def sampleChunks(o, pathSamples, layers):
             cutterdepth = 0
         else:
             if o.update_bullet_collision_tag:
-                prepareBulletCollision(o)
+                prepare_bullet_collision(o)
 
                 o.update_bullet_collision_tag = False
             # print (o.ambient)
@@ -602,7 +602,7 @@ async def sampleChunks(o, pathSamples, layers):
     else:
         # or prepare offset image, but not in some strategies.
         if o.strategy != "WATERLINE":
-            await prepareArea(o)
+            await prepare_area(o)
 
         pixsize = o.optimisation.pixsize
 
@@ -618,13 +618,13 @@ async def sampleChunks(o, pathSamples, layers):
     for ch in pathSamples:
         totlen += ch.count()
     layerchunks = []
-    minz = o.minz - 0.000001  # correction for image method problems
+    minz = o.min_z - 0.000001  # correction for image method problems
     layeractivechunks = []
     lastrunchunks = []
 
     for l in layers:
         layerchunks.append([])
-        layeractivechunks.append(camPathChunkBuilder([]))
+        layeractivechunks.append(CamPathChunkBuilder([]))
         lastrunchunks.append([])
 
     zinvert = 0
@@ -637,10 +637,10 @@ async def sampleChunks(o, pathSamples, layers):
     n = 0
     last_percent = -1
     # timing for optimisation
-    samplingtime = timinginit()
-    sortingtime = timinginit()
-    totaltime = timinginit()
-    timingstart(totaltime)
+    samplingtime = timing_init()
+    sortingtime = timing_init()
+    totaltime = timing_init()
+    timing_start(totaltime)
     lastz = minz
     for patternchunk in pathSamples:
         thisrunchunks = []
@@ -674,23 +674,28 @@ async def sampleChunks(o, pathSamples, layers):
 
                     if lastsample is not None:  # this is an optimalization,
                         # search only for near depths to the last sample. Saves about 30% of sampling time.
-                        z = getSampleBullet(
-                            cutter, x, y, cutterdepth, 1, lastsample[2] - o.dist_along_paths
+                        z = get_sample_bullet(
+                            cutter, x, y, cutterdepth, 1, lastsample[2] - o.distance_along_paths
                         )  # first try to the last sample
                         if z < minz - 1:
-                            z = getSampleBullet(
-                                cutter, x, y, cutterdepth, lastsample[2] - o.dist_along_paths, minz
+                            z = get_sample_bullet(
+                                cutter,
+                                x,
+                                y,
+                                cutterdepth,
+                                lastsample[2] - o.distance_along_paths,
+                                minz,
                             )
                     else:
-                        z = getSampleBullet(cutter, x, y, cutterdepth, 1, minz)
+                        z = get_sample_bullet(cutter, x, y, cutterdepth, 1, minz)
 
                 # print(z)
                 else:
-                    timingstart(samplingtime)
+                    timing_start(samplingtime)
                     xs = (x - minx) / pixsize + coordoffset
                     ys = (y - miny) / pixsize + coordoffset
-                    timingadd(samplingtime)
-                    z = getSampleImage((xs, ys), o.offset_image, minz) + o.skin
+                    timing_add(samplingtime)
+                    z = get_sample_image((xs, ys), o.offset_image, minz) + o.skin
 
                 ################################
                 # handling samples
@@ -735,7 +740,9 @@ async def sampleChunks(o, pathSamples, layers):
                             v1 = lastsample
                             v2 = newsample
                             if o.movement.protect_vertical:
-                                v1, v2 = isVerticalLimit(v1, v2, o.movement.protect_vertical_limit)
+                                v1, v2 = is_vertical_limit(
+                                    v1, v2, o.movement.protect_vertical_limit
+                                )
                             v1 = Vector(v1)
                             v2 = Vector(v2)
                             # print(v1,v2)
@@ -773,7 +780,7 @@ async def sampleChunks(o, pathSamples, layers):
                         as_chunk = ch.to_chunk()
                         layerchunks[i].append(as_chunk)
                         thisrunchunks[i].append(as_chunk)
-                        layeractivechunks[i] = camPathChunkBuilder([])
+                        layeractivechunks[i] = CamPathChunkBuilder([])
             lastsample = newsample
 
         for i, l in enumerate(layers):
@@ -782,19 +789,19 @@ async def sampleChunks(o, pathSamples, layers):
                 as_chunk = ch.to_chunk()
                 layerchunks[i].append(as_chunk)
                 thisrunchunks[i].append(as_chunk)
-                layeractivechunks[i] = camPathChunkBuilder([])
+                layeractivechunks[i] = CamPathChunkBuilder([])
 
             # PARENTING
             if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "OUTLINEFILL":
-                timingstart(sortingtime)
-                parentChildDist(thisrunchunks[i], lastrunchunks[i], o)
-                timingadd(sortingtime)
+                timing_start(sortingtime)
+                parent_child_distance(thisrunchunks[i], lastrunchunks[i], o)
+                timing_add(sortingtime)
 
         lastrunchunks = thisrunchunks
 
     # print(len(layerchunks[i]))
     progress("Checking Relations Between Paths")
-    timingstart(sortingtime)
+    timing_start(sortingtime)
 
     if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "OUTLINEFILL":
         if len(layers) > 1:  # sorting help so that upper layers go first always
@@ -810,8 +817,8 @@ async def sampleChunks(o, pathSamples, layers):
                         children.append(ch1)
 
                 # parent only last and first chunk, before it did this for all.
-                parentChild(parents, children, o)
-    timingadd(sortingtime)
+                parent_child(parents, children, o)
+    timing_add(sortingtime)
     chunks = []
 
     for i, l in enumerate(layers):
@@ -820,14 +827,14 @@ async def sampleChunks(o, pathSamples, layers):
                 ch.zstart = layers[i][0]
                 ch.zend = layers[i][1]
         chunks.extend(layerchunks[i])
-    timingadd(totaltime)
+    timing_add(totaltime)
     print(samplingtime)
     print(sortingtime)
     print(totaltime)
     return chunks
 
 
-async def sampleChunksNAxis(o, pathSamples, layers):
+async def sample_chunks_n_axis(o, pathSamples, layers):
     """Sample chunks along a specified axis based on provided paths and layers.
 
     This function processes a set of path samples and organizes them into
@@ -856,9 +863,9 @@ async def sampleChunksNAxis(o, pathSamples, layers):
 
     # prepare collision world
     if o.update_bullet_collision_tag:
-        prepareBulletCollision(o)
+        prepare_bullet_collision(o)
         # print('getting ambient')
-        getAmbient(o)
+        get_ambient(o)
         o.update_bullet_collision_tag = False
     # print (o.ambient)
     cutter = o.cutter_shape
@@ -871,13 +878,13 @@ async def sampleChunksNAxis(o, pathSamples, layers):
     for chs in pathSamples:
         totlen += len(chs.startpoints)
     layerchunks = []
-    minz = o.minz
+    minz = o.min_z
     layeractivechunks = []
     lastrunchunks = []
 
     for l in layers:
         layerchunks.append([])
-        layeractivechunks.append(camPathChunkBuilder([]))
+        layeractivechunks.append(CamPathChunkBuilder([]))
         lastrunchunks.append([])
     n = 0
 
@@ -932,7 +939,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
                 bpy.context.scene.frame_set(2)
                 bpy.context.scene.frame_set(0)
 
-            newsample = getSampleBulletNAxis(cutter, startp, endp, rotation, cutterdepth)
+            newsample = get_sample_bullet_n_axis(cutter, startp, endp, rotation, cutterdepth)
 
             # print('totok',startp,endp,rotation,newsample)
             ################################
@@ -990,7 +997,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
                                 # this probably doesn't work at all!!!! check this algoritm>
                                 betweenrotation = tuple_add(
                                     lastrotation,
-                                    tuple_mul(tuple_sub(rotation, lastrotation), ratio),
+                                    tuple_multiply(tuple_subtract(rotation, lastrotation), ratio),
                                 )
                                 # startpoint = retract point, it has to be always available...
                                 betweenstartpoint = (
@@ -1068,10 +1075,10 @@ async def sampleChunksNAxis(o, pathSamples, layers):
             if ch.count() > 0:
                 layerchunks[i].append(ch)
                 thisrunchunks[i].append(ch)
-                layeractivechunks[i] = camPathChunkBuilder([])
+                layeractivechunks[i] = CamPathChunkBuilder([])
 
             if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "OUTLINEFILL":
-                parentChildDist(thisrunchunks[i], lastrunchunks[i], o)
+                parent_child_distance(thisrunchunks[i], lastrunchunks[i], o)
 
         lastrunchunks = thisrunchunks
 
@@ -1092,7 +1099,7 @@ async def sampleChunksNAxis(o, pathSamples, layers):
     return chunks
 
 
-def extendChunks5axis(chunks, o):
+def extend_chunks_5_axis(chunks, o):
     """Extend chunks with 5-axis cutter start and end points.
 
     This function modifies the provided chunks by appending calculated start
@@ -1137,7 +1144,7 @@ def extendChunks5axis(chunks, o):
             )  # TODO: this is a placeholder. It does 99.9% probably write total nonsense.
 
 
-def curveToShapely(cob, use_modifiers=False):
+def curve_to_shapely(cob, use_modifiers=False):
     """Convert a curve object to Shapely polygons.
 
     This function takes a curve object and converts it into a list of
@@ -1156,8 +1163,8 @@ def curveToShapely(cob, use_modifiers=False):
         list: A list of Shapely polygons created from the curve object.
     """
 
-    chunks = curveToChunks(cob, use_modifiers)
-    polys = chunksToShapely(chunks)
+    chunks = curve_to_chunks(cob, use_modifiers)
+    polys = chunks_to_shapely(chunks)
     return polys
 
 
@@ -1165,7 +1172,7 @@ def curveToShapely(cob, use_modifiers=False):
 # FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
 
 
-def silhoueteOffset(context, offset, style, mitrelimit):
+def silhouette_offset(context, offset, style, mitrelimit):
     """Offset the silhouette of a curve or font object in Blender.
 
     This function takes an active curve or font object in Blender and
@@ -1187,16 +1194,16 @@ def silhoueteOffset(context, offset, style, mitrelimit):
     bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
     if ob.type == "CURVE" or ob.type == "FONT":
-        silhs = curveToShapely(ob)
+        silhs = curve_to_shapely(ob)
     else:
-        silhs = getObjectSilhouete("OBJECTS", [ob])
+        silhs = get_object_silhouette("OBJECTS", [ob])
     mp = silhs.buffer(offset, cap_style=1, join_style=style, resolution=16, mitre_limit=mitrelimit)
-    shapelyToCurve(ob.name + "_offset_" + str(round(offset, 5)), mp, ob.location.z)
+    shapely_to_curve(ob.name + "_offset_" + str(round(offset, 5)), mp, ob.location.z)
     bpy.ops.object.curve_remove_doubles()
     return {"FINISHED"}
 
 
-def polygonBoolean(context, boolean_type):
+def polygon_boolean(context, boolean_type):
     """Perform a boolean operation on selected polygons.
 
     This function takes the active object and applies a specified boolean
@@ -1222,11 +1229,11 @@ def polygonBoolean(context, boolean_type):
     for ob1 in bpy.context.selected_objects:
         if ob1 != ob:
             obs.append(ob1)
-    plist = curveToShapely(ob)
+    plist = curve_to_shapely(ob)
     p1 = MultiPolygon(plist)
     polys = []
     for o in obs:
-        plist = curveToShapely(o)
+        plist = curve_to_shapely(o)
         p2 = MultiPolygon(plist)
         polys.append(p2)
     # print(polys)
@@ -1240,7 +1247,7 @@ def polygonBoolean(context, boolean_type):
         for p2 in polys:
             p1 = p1.intersection(p2)
 
-    shapelyToCurve("boolean", p1, ob.location.z)
+    shapely_to_curve("boolean", p1, ob.location.z)
     # bpy.ops.object.convert(target='CURVE')
     # bpy.context.scene.cursor_location=ob.location
     # bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
@@ -1248,7 +1255,7 @@ def polygonBoolean(context, boolean_type):
     return {"FINISHED"}
 
 
-def polygonConvexHull(context):
+def polygon_convex_hull(context):
     """Generate the convex hull of a polygon from the given context.
 
     This function duplicates the current object, joins it, and converts it
@@ -1288,12 +1295,12 @@ def polygonConvexHull(context):
     points = sgeometry.MultiPoint(coords)
 
     hull = points.convex_hull
-    shapelyToCurve("ConvexHull", hull, 0.0)
+    shapely_to_curve("ConvexHull", hull, 0.0)
 
     return {"FINISHED"}
 
 
-def Helix(r, np, zstart, pend, rev):
+def helix(r, np, zstart, pend, rev):
     """Generate a helix of points in 3D space.
 
     This function calculates a series of points that form a helix based on
@@ -1327,7 +1334,7 @@ def Helix(r, np, zstart, pend, rev):
     return c
 
 
-def comparezlevel(x):
+def compare_z_level(x):
     return x[5]
 
 
@@ -1355,7 +1362,7 @@ def overlaps(bb1, bb2):
         return True
 
 
-async def connectChunksLow(chunks, o):
+async def connect_chunks_low(chunks, o):
     """Connects chunks that are close to each other without lifting, sampling
     them 'low'.
 
@@ -1379,12 +1386,12 @@ async def connectChunksLow(chunks, o):
 
     connectedchunks = []
     chunks_to_resample = []  # for OpenCAMLib sampling
-    mergedist = 3 * o.dist_between_paths
+    mergedist = 3 * o.distance_between_paths
     if (
         o.strategy == "PENCIL"
     ):  # this is bigger for pencil path since it goes on the surface to clean up the rests,
         # and can go to close points on the surface without fear of going deep into material.
-        mergedist = 10 * o.dist_between_paths
+        mergedist = 10 * o.distance_between_paths
 
     if o.strategy == "MEDIAL_AXIS":
         mergedist = 1 * o.medial_axis_subdivision
@@ -1401,15 +1408,15 @@ async def connectChunksLow(chunks, o):
 
     for ch in chunks:
         if ch.count() > 0:
-            if lastch is not None and (ch.distStart(pos, o) < mergedist):
+            if lastch is not None and (ch.distanceance_start(pos, o) < mergedist):
                 # CARVE should lift allways, when it goes below surface...
-                # print(mergedist,ch.dist(pos,o))
+                # print(mergedist,ch.distance(pos,o))
                 if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "PENCIL":
                     # for these paths sorting happens after sampling, thats why they need resample the connection
-                    between = samplePathLow(o, lastch, ch, True)
+                    between = sample_path_low(o, lastch, ch, True)
                 else:
                     # print('addbetwee')
-                    between = samplePathLow(
+                    between = sample_path_low(
                         o, lastch, ch, False
                     )  # other paths either dont use sampling or are sorted before it.
                 if (
@@ -1442,7 +1449,7 @@ async def connectChunksLow(chunks, o):
     return connectedchunks
 
 
-def getClosest(o, pos, chunks):
+def get_closest(o, pos, chunks):
     """Find the closest chunk to a given position.
 
     This function iterates through a list of chunks and determines which
@@ -1472,14 +1479,14 @@ def getClosest(o, pos, chunks):
                 cango = False
                 break
         if cango:
-            d = chtest.dist(pos, o)
+            d = chtest.distance(pos, o)
             if d < mind:
                 ch = chtest
                 mind = d
     return ch
 
 
-async def sortChunks(chunks, o, last_pos=None):
+async def sort_chunks(chunks, o, last_pos=None):
     """Sort a list of chunks based on a specified strategy.
 
     This function sorts a list of chunks according to the provided options
@@ -1519,19 +1526,19 @@ async def sortChunks(chunks, o, last_pos=None):
         if (
             len(sortedchunks) == 0 or len(lastch.parents) == 0
         ):  # first chunk or when there are no parents -> parents come after children here...
-            ch = getClosest(o, pos, chunks)
+            ch = get_closest(o, pos, chunks)
         elif len(lastch.parents) > 0:  # looks in parents for next candidate, recursively
             for parent in lastch.parents:
                 ch = parent.getNextClosest(o, pos)
                 if ch is not None:
                     break
             if ch is None:
-                ch = getClosest(o, pos, chunks)
+                ch = get_closest(o, pos, chunks)
 
         if ch is not None:  # found next chunk, append it to list
             # only adaptdist the chunk if it has not been sorted before
             if not ch.sorted:
-                ch.adaptdist(pos, o)
+                ch.adapt_distance(pos, o)
                 ch.sorted = True
             # print(len(ch.parents),'children')
             chunks.remove(ch)
@@ -1560,12 +1567,12 @@ async def sortChunks(chunks, o, last_pos=None):
     if o.strategy != "DRILL" and o.strategy != "OUTLINEFILL":
         # THIS SHOULD AVOID ACTUALLY MOST STRATEGIES, THIS SHOULD BE DONE MANUALLY,
         # BECAUSE SOME STRATEGIES GET SORTED TWICE.
-        sortedchunks = await connectChunksLow(sortedchunks, o)
+        sortedchunks = await connect_chunks_low(sortedchunks, o)
     return sortedchunks
 
 
 # most right vector from a set regarding angle..
-def getVectorRight(lastv, verts):
+def get_vector_right(lastv, verts):
     """Get the index of the vector that is most to the right based on angle.
 
     This function calculates the angle between a reference vector (formed by
@@ -1600,7 +1607,7 @@ def getVectorRight(lastv, verts):
     return returnvec
 
 
-def cleanUpDict(ndict):
+def dict_cleanup(ndict):
     """Remove lonely points from a dictionary.
 
     This function iterates over the keys of the provided dictionary and
@@ -1635,13 +1642,13 @@ def cleanUpDict(ndict):
                 if len(ndict[v]) <= 1:
                     for v1 in ndict[v]:
                         newcheck.append(v)
-                    dictRemove(ndict, v)
+                    dict_remove(ndict, v)
             removed += 1
             found_solitaires = True
     print(removed)
 
 
-def dictRemove(dict, val):
+def dict_remove(dict, val):
     """Remove a key and its associated values from a dictionary.
 
     This function takes a dictionary and a key (val) as input. It iterates
@@ -1660,7 +1667,7 @@ def dictRemove(dict, val):
     dict.pop(val)
 
 
-def addLoop(parentloop, start, end):
+def add_loop(parentloop, start, end):
     """Add a loop to a parent loop structure.
 
     This function recursively checks if the specified start and end values
@@ -1683,12 +1690,12 @@ def addLoop(parentloop, start, end):
     added = False
     for l in parentloop[2]:
         if l[0] < start and l[1] > end:
-            addLoop(l, start, end)
+            add_loop(l, start, end)
             return
     parentloop[2].append([start, end, []])
 
 
-def cutloops(csource, parentloop, loops):
+def cut_loops(csource, parentloop, loops):
     """Cut loops from a source code segment.
 
     This function takes a source code segment and a parent loop defined by
@@ -1721,10 +1728,10 @@ def cutloops(csource, parentloop, loops):
         copy = copy[: l[0] - parentloop[0]] + copy[l[1] - parentloop[0] :]
     loops.append(copy)
     for l in parentloop[2]:
-        cutloops(csource, l, loops)
+        cut_loops(csource, l, loops)
 
 
-def getOperationSilhouete(operation):
+def get_operation_silhouette(operation):
     """Gets the silhouette for the given operation.
 
     This function determines the silhouette of an operation using image
@@ -1760,9 +1767,9 @@ def getOperationSilhouete(operation):
 
         if (stype == "OBJECTS" and totfaces > 200000) or stype == "IMAGE":
             print("Image Method")
-            samples = renderSampleImage(operation)
+            samples = render_sample_image(operation)
             if stype == "OBJECTS":
-                i = samples > operation.minz - 0.0000001
+                i = samples > operation.min_z - 0.0000001
                 # numpy.min(operation.zbuffer_image)-0.0000001#
                 # #the small number solves issue with totally flat meshes, which people tend to mill instead of
                 # proper pockets. then the minimum was also maximum, and it didn't detect contour.
@@ -1770,13 +1777,13 @@ def getOperationSilhouete(operation):
                 # this fixes another numeric imprecision.
                 i = samples > numpy.min(operation.zbuffer_image)
 
-            chunks = imageToChunks(operation, i)
-            operation.silhouete = chunksToShapely(chunks)
+            chunks = image_to_chunks(operation, i)
+            operation.silhouete = chunks_to_shapely(chunks)
         # print(operation.silhouete)
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
             print("object method for retrieving silhouette")  #
-            operation.silhouete = getObjectSilhouete(
+            operation.silhouete = get_object_silhouette(
                 stype, objects=operation.objects, use_modifiers=operation.use_modifiers
             )
 
@@ -1784,7 +1791,7 @@ def getOperationSilhouete(operation):
     return operation.silhouete
 
 
-def getObjectSilhouete(stype, objects=None, use_modifiers=False):
+def get_object_silhouette(stype, objects=None, use_modifiers=False):
     """Get the silhouette of objects based on the specified type.
 
     This function computes the silhouette of a given set of objects in
@@ -1808,9 +1815,9 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
     if stype == "CURVES":  # curve conversion to polygon format
         allchunks = []
         for ob in objects:
-            chunks = curveToChunks(ob)
+            chunks = curve_to_chunks(ob)
             allchunks.extend(chunks)
-        silhouete = chunksToShapely(allchunks)
+        silhouete = chunks_to_shapely(allchunks)
 
     elif stype == "OBJECTS":
         totfaces = 0
@@ -1878,12 +1885,12 @@ def getObjectSilhouete(stype, objects=None, use_modifiers=False):
             print("time:", time.time() - t)
 
             t = time.time()
-            silhouete = shapelyToMultipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
+            silhouete = shapely_to_multipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
 
     return silhouete
 
 
-def getAmbient(o):
+def get_ambient(o):
     """Calculate and update the ambient geometry based on the provided object.
 
     This function computes the ambient shape for a given object based on its
@@ -1910,7 +1917,7 @@ def getAmbient(o):
         if o.ambient_behaviour == "AROUND":
             r = o.ambient_radius - m
             # in this method we need ambient from silhouete
-            o.ambient = getObjectOutline(r, o, True)
+            o.ambient = get_object_outline(r, o, True)
         else:
             o.ambient = spolygon.Polygon(
                 (
@@ -1924,7 +1931,7 @@ def getAmbient(o):
         if o.use_limit_curve:
             if o.limit_curve != "":
                 limit_curve = bpy.data.objects[o.limit_curve]
-                polys = curveToShapely(limit_curve)
+                polys = curve_to_shapely(limit_curve)
                 o.limit_poly = shapely.ops.unary_union(polys)
 
                 if o.ambient_cutter_restrict:
@@ -1935,7 +1942,7 @@ def getAmbient(o):
     o.update_ambient_tag = False
 
 
-def getObjectOutline(radius, o, Offset):
+def get_object_outline(radius, o, Offset):
     """Get the outline of a geometric object based on specified parameters.
 
     This function generates an outline for a given geometric object by
@@ -1956,7 +1963,7 @@ def getObjectOutline(radius, o, Offset):
     # FIXME: make this one operation independent
     # circle detail, optimize, optimize thresold.
 
-    polygons = getOperationSilhouete(o)
+    polygons = get_operation_silhouette(o)
 
     i = 0
     # print('offseting polygons')
@@ -1998,7 +2005,7 @@ def getObjectOutline(radius, o, Offset):
     return outline
 
 
-def addOrientationObject(o):
+def add_orientation_object(o):
     """Set up orientation for a milling object.
 
     This function creates an orientation object in the Blender scene for
@@ -2044,7 +2051,7 @@ def addOrientationObject(o):
 # def addCutterOrientationObject(o):
 
 
-def removeOrientationObject(o):
+def remove_orientation_object(o):
     """Remove an orientation object from the current Blender scene.
 
     This function constructs the name of the orientation object based on the
@@ -2059,10 +2066,10 @@ def removeOrientationObject(o):
     name = o.name + " orientation"
     if bpy.context.scene.objects.find(name) > -1:
         ob = bpy.context.scene.objects[name]
-        delob(ob)
+        delete_object(ob)
 
 
-def addTranspMat(ob, mname, color, alpha):
+def add_transparent_material(ob, mname, color, alpha):
     """Add a transparent material to a given object.
 
     This function checks if a material with the specified name already
@@ -2093,7 +2100,7 @@ def addTranspMat(ob, mname, color, alpha):
             ob.data.materials.append(mat)
 
 
-def addMachineAreaObject():
+def add_machine_area_object():
     """Add a machine area object to the current Blender scene.
 
     This function checks if a machine object named 'CAM_machine' already
@@ -2178,7 +2185,7 @@ def addMachineAreaObject():
     # shading.show_object_outline = True
 
 
-def addMaterialAreaObject():
+def add_material_area_object():
     """Add a material area object to the current Blender scene.
 
     This function checks if a material area object named 'CAM_material'
@@ -2196,8 +2203,8 @@ def addMaterialAreaObject():
 
     s = bpy.context.scene
     operation = s.cam_operations[s.cam_active_operation]
-    getOperationSources(operation)
-    getBounds(operation)
+    get_operation_sources(operation)
+    get_bounds(operation)
 
     ao = bpy.context.active_object
     if s.objects.get("CAM_material") is not None:
@@ -2232,7 +2239,7 @@ def addMaterialAreaObject():
     #     bpy.context.scene.objects.active = None
 
 
-def getContainer():
+def get_container():
     """Get or create a container object for camera objects.
 
     This function checks if a container object named 'CAM_OBJECTS' exists in
@@ -2306,11 +2313,11 @@ def unique(L):
     # input list will automatically update and doesn't need to be returned
 
 
-def checkEqual(lst):
+def check_equal(lst):
     return lst[1:] == lst[:-1]
 
 
-def prepareIndexed(o):
+def prepare_indexed(o):
     """Prepare and index objects in the given collection.
 
     This function stores the world matrices and parent relationships of the
@@ -2343,7 +2350,7 @@ def prepareIndexed(o):
     oriname = o.name + " orientation"
     ori = s.objects[oriname]
     o.orientation_matrix = ori.matrix_world.copy()
-    o.rotationaxes = rotTo2axes(ori.rotation_euler, "CA")
+    o.rotationaxes = rotation_to_2_axes(ori.rotation_euler, "CA")
     ori.select = True
     s.objects.active = ori
     # we parent all objects to the orientation object
@@ -2372,7 +2379,7 @@ def prepareIndexed(o):
     #     ob.rotation_euler.rotate(rot)
 
 
-def cleanupIndexed(operation):
+def cleanup_indexed(operation):
     """Clean up indexed operations by updating object orientations and paths.
 
     This function takes an operation object and updates the orientation of a
@@ -2405,7 +2412,7 @@ def cleanupIndexed(operation):
         ob.matrix_world = operation.matrices[i]
 
 
-def rotTo2axes(e, axescombination):
+def rotation_to_2_axes(e, axescombination):
     """Converts an Orientation Object Rotation to Rotation Defined by 2
     Rotational Axes on the Machine.
 
@@ -2496,7 +2503,7 @@ def reload_paths(o):
         old_pathmesh = s.objects[oname].data
         ob = s.objects[oname]
 
-    picklepath = getCachePath(o) + ".pickle"
+    picklepath = get_cache_path(o) + ".pickle"
     f = open(picklepath, "rb")
     d = pickle.load(f)
     f.close()
@@ -2560,7 +2567,7 @@ was_hidden_dict = {}
 _IS_LOADING_DEFAULTS = False
 
 
-def updateMachine(self, context):
+def update_machine(self, context):
     """Update the machine with the given context.
 
     This function is responsible for updating the machine state based on the
@@ -2574,10 +2581,10 @@ def updateMachine(self, context):
 
     print("Update Machine")
     if not _IS_LOADING_DEFAULTS:
-        addMachineAreaObject()
+        add_machine_area_object()
 
 
-def updateMaterial(self, context):
+def update_material(self, context):
     """Update the material in the given context.
 
     This method is responsible for updating the material based on the
@@ -2591,10 +2598,10 @@ def updateMaterial(self, context):
     """
 
     print("Update Material")
-    addMaterialAreaObject()
+    add_material_area_object()
 
 
-def updateOperation(self, context):
+def update_operation(self, context):
     """Update the visibility and selection state of camera operations in the
     scene.
 
@@ -2612,7 +2619,7 @@ def updateOperation(self, context):
 
     scene = context.scene
     ao = scene.cam_operations[scene.cam_active_operation]
-    operationValid(self, context)
+    operation_valid(self, context)
 
     if ao.hide_all_others:
         for _ao in scene.cam_operations:
@@ -2650,7 +2657,7 @@ def updateOperation(self, context):
 # Moved from init - part 2
 
 
-def isValid(o, context):
+def source_valid(o, context):
     """Check the validity of a geometry source.
 
     This function verifies if the provided geometry source is valid based on
@@ -2689,7 +2696,7 @@ def isValid(o, context):
     return valid
 
 
-def operationValid(self, context):
+def operation_valid(self, context):
     """Validate the current camera operation in the given context.
 
     This method checks if the active camera operation is valid based on the
@@ -2704,7 +2711,7 @@ def operationValid(self, context):
     scene = context.scene
     o = scene.cam_operations[scene.cam_active_operation]
     o.changed = True
-    o.valid = isValid(o, context)
+    o.valid = source_valid(o, context)
     invalidmsg = "Invalid Source Object for Operation.\n"
     if o.valid:
         o.info.warnings = ""
@@ -2716,12 +2723,12 @@ def operationValid(self, context):
 
     if o.geometry_source == "IMAGE":
         o.optimisation.use_exact = False
-    o.update_offsetimage_tag = True
-    o.update_zbufferimage_tag = True
+    o.update_offset_image_tag = True
+    o.update_z_buffer_image_tag = True
     print("validity ")
 
 
-def isChainValid(chain, context):
+def chain_valid(chain, context):
     """Check the validity of a chain of operations within a given context.
 
     This function verifies if all operations in the provided chain are valid
@@ -2752,17 +2759,17 @@ def isChainValid(chain, context):
                 found_op = so
         if found_op == None:
             return (False, f"Couldn't Find Operation {cho.name}")
-        if isValid(found_op, context) is False:
+        if source_valid(found_op, context) is False:
             return (False, f"Operation {found_op.name} Is Not Valid")
     return (True, "")
 
 
-def updateOperationValid(self, context):
-    updateOperation(self, context)
+def update_operation_valid(self, context):
+    update_operation(self, context)
 
 
 # Update functions start here
-def updateChipload(self, context):
+def update_chipload(self, context):
     """Update the chipload based on feedrate, spindle RPM, and cutter
     parameters.
 
@@ -2792,19 +2799,19 @@ def updateChipload(self, context):
     # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less
     # than 50% cutter engagement with cylindrical end mills. formula 1 Nominal Chipload is
     # " feedrate mm/minute = spindle rpm x chipload x cutter diameter mm x cutter_flutes "
-    # formula 2 (.5*(cutter diameter mm devided by dist_between_paths)) divided by square root of
-    # ((cutter diameter mm devided by dist_between_paths)-1) x Nominal Chipload
+    # formula 2 (.5*(cutter diameter mm devided by distance_between_paths)) divided by square root of
+    # ((cutter diameter mm devided by distance_between_paths)-1) x Nominal Chipload
     # Nominal Chipload = what you find in end mill data sheats recomended chip load at %50 cutter engagment.
     # I am sure there is a better way to do this. I dont get consistent result and
     # I am not sure if there is something wrong with the units going into the formula, my math or my lack of
     # underestanding of python or programming in genereal. Hopefuly some one can have a look at this and with any luck
     # we will be one tiny step on the way to a slightly better chipload calculating function.
 
-    # self.chipload = ((0.5*(o.cutter_diameter/o.dist_between_paths))/(sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.dist_between_paths)-1)))
+    # self.chipload = ((0.5*(o.cutter_diameter/o.distance_between_paths))/(sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.distance_between_paths)-1)))
     print(o.info.chipload)
 
 
-def updateOffsetImage(self, context):
+def update_offset_image(self, context):
     """Refresh the Offset Image Tag for re-rendering.
 
     This method updates the chip load and marks the offset image tag for re-
@@ -2814,13 +2821,13 @@ def updateOffsetImage(self, context):
     Args:
         context: The context in which the update is performed.
     """
-    updateChipload(self, context)
+    update_chipload(self, context)
     print("Update Offset")
     self.changed = True
-    self.update_offsetimage_tag = True
+    self.update_offset_image_tag = True
 
 
-def updateZbufferImage(self, context):
+def update_Z_buffer_image(self, context):
     """Update the Z-buffer and offset image tags for recalculation.
 
     This method modifies the internal state to indicate that the Z-buffer
@@ -2835,18 +2842,18 @@ def updateZbufferImage(self, context):
     # print('updatezbuf')
     # print(self,context)
     self.changed = True
-    self.update_zbufferimage_tag = True
-    self.update_offsetimage_tag = True
-    getOperationSources(self)
+    self.update_z_buffer_image_tag = True
+    self.update_offset_image_tag = True
+    get_operation_sources(self)
 
 
-def updateStrategy(o, context):
+def update_strategy(o, context):
     """Update the strategy of the given object.
 
     This function modifies the state of the object `o` by setting its
     `changed` attribute to True and printing a message indicating that the
     strategy is being updated. Depending on the value of `machine_axes` and
-    `strategy4axis`, it either adds or removes an orientation object
+    `strategy_4_axis`, it either adds or removes an orientation object
     associated with `o`. Finally, it calls the `updateExact` function to
     perform further updates based on the provided context.
 
@@ -2859,19 +2866,19 @@ def updateStrategy(o, context):
     o.changed = True
     print("Update Strategy")
     if o.machine_axes == "5" or (
-        o.machine_axes == "4" and o.strategy4axis == "INDEXED"
+        o.machine_axes == "4" and o.strategy_4_axis == "INDEXED"
     ):  # INDEXED 4 AXIS DOESN'T EXIST NOW...
-        addOrientationObject(o)
+        add_orientation_object(o)
     else:
-        removeOrientationObject(o)
-    updateExact(o, context)
+        remove_orientation_object(o)
+    update_exact(o, context)
 
 
-def updateCutout(o, context):
+def update_cutout(o, context):
     pass
 
 
-def updateExact(o, context):
+def update_exact(o, context):
     """Update the state of an object for exact operations.
 
     This function modifies the properties of the given object `o` to
@@ -2891,8 +2898,8 @@ def updateExact(o, context):
 
     print("Update Exact ")
     o.changed = True
-    o.update_zbufferimage_tag = True
-    o.update_offsetimage_tag = True
+    o.update_z_buffer_image_tag = True
+    o.update_offset_image_tag = True
     if o.optimisation.use_exact:
         if o.strategy == "POCKET" or o.strategy == "MEDIAL_AXIS" or o.inverse:
             o.optimisation.use_opencamlib = False
@@ -2901,7 +2908,7 @@ def updateExact(o, context):
         o.optimisation.use_opencamlib = False
 
 
-def updateOpencamlib(o, context):
+def update_opencamlib(o, context):
     """Update the OpenCAMLib settings for a given operation.
 
     This function modifies the properties of the provided operation object
@@ -2927,7 +2934,7 @@ def updateOpencamlib(o, context):
         print("Current Operation Cannot Use OpenCAMLib")
 
 
-def updateBridges(o, context):
+def update_bridges(o, context):
     """Update the status of bridges.
 
     This function marks the bridge object as changed, indicating that an
@@ -2944,7 +2951,7 @@ def updateBridges(o, context):
     o.changed = True
 
 
-def updateRotation(o, context):
+def update_rotation(o, context):
     """Update the rotation of a specified object in Blender.
 
     This function modifies the rotation of a Blender object based on the
@@ -2959,21 +2966,21 @@ def updateRotation(o, context):
     """
 
     print("Update Rotation")
-    if o.enable_B or o.enable_A:
-        print(o, o.rotation_A)
+    if o.enable_b_axis or o.enable_a_axis:
+        print(o, o.rotation_a)
         ob = bpy.data.objects[o.object_name]
         ob.select_set(True)
         bpy.context.view_layer.objects.active = ob
-        if o.A_along_x:  # A parallel with X
-            if o.enable_A:
-                bpy.context.active_object.rotation_euler.x = o.rotation_A
-            if o.enable_B:
-                bpy.context.active_object.rotation_euler.y = o.rotation_B
+        if o.a_along_x:  # A parallel with X
+            if o.enable_a_axis:
+                bpy.context.active_object.rotation_euler.x = o.rotation_a
+            if o.enable_b_axis:
+                bpy.context.active_object.rotation_euler.y = o.rotation_b
         else:  # A parallel with Y
-            if o.enable_A:
-                bpy.context.active_object.rotation_euler.y = o.rotation_A
-            if o.enable_B:
-                bpy.context.active_object.rotation_euler.x = o.rotation_B
+            if o.enable_a_axis:
+                bpy.context.active_object.rotation_euler.y = o.rotation_a
+            if o.enable_b_axis:
+                bpy.context.active_object.rotation_euler.x = o.rotation_b
 
 
 # def updateRest(o, context):
@@ -2983,7 +2990,7 @@ def updateRotation(o, context):
 #    o.changed = True
 
 
-def updateRest(o, context):
+def update_rest(o, context):
     """Update the state of the object.
 
     This function modifies the given object by setting its 'changed'
@@ -3003,7 +3010,7 @@ def updateRest(o, context):
 #        o.use_layers = True
 
 
-def getStrategyList(scene, context):
+def get_strategy_list(scene, context):
     """Get a list of available strategies for operations.
 
     This function retrieves a predefined list of operation strategies that
@@ -3129,7 +3136,7 @@ def getStrategyList(scene, context):
 
 
 def update_material(self, context):
-    addMaterialAreaObject()
+    add_material_area_object()
 
 
 def update_operation(self, context):
@@ -3146,7 +3153,7 @@ def update_operation(self, context):
 
     # from . import updateRest
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateRest(active_op, bpy.context)
+    update_rest(active_op, bpy.context)
 
 
 def update_exact_mode(self, context):
@@ -3164,7 +3171,7 @@ def update_exact_mode(self, context):
 
     # from . import updateExact
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateExact(active_op, bpy.context)
+    update_exact(active_op, bpy.context)
 
 
 def update_opencamlib(self, context):
@@ -3183,7 +3190,7 @@ def update_opencamlib(self, context):
 
     # from . import updateOpencamlib
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateOpencamlib(active_op, bpy.context)
+    update_opencamlib(active_op, bpy.context)
 
 
 def update_zbuffer_image(self, context):
@@ -3200,7 +3207,7 @@ def update_zbuffer_image(self, context):
 
     # from . import updateZbufferImage
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    updateZbufferImage(active_op, bpy.context)
+    update_Z_buffer_image(active_op, bpy.context)
 
 
 # Moved from init - part 3
@@ -3310,7 +3317,7 @@ def check_operations_on_load(context):
 
 
 # add pocket op for medial axis and profile cut inside to clean unremoved material
-def Add_Pocket(maxdepth, sname, new_cutter_diameter):
+def add_pocket(maxdepth, sname, new_cutter_diameter):
     """Add a pocket operation for the medial axis and profile cut.
 
     This function first deselects all objects in the scene and then checks
@@ -3340,7 +3347,7 @@ def Add_Pocket(maxdepth, sname, new_cutter_diameter):
     ob = bpy.data.objects[sname]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
-    silhoueteOffset(ob, -new_cutter_diameter / 2, 1, 2)
+    silhouette_offset(ob, -new_cutter_diameter / 2, 1, 2)
     bpy.context.active_object.name = "medial_pocket"
     m_ob = bpy.context.view_layer.objects.active
     bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")

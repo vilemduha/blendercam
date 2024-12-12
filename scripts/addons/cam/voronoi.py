@@ -87,7 +87,7 @@ class Context(object):
         self.polygons = {}  # a dict of site:[edges] pairs
 
     ########Clip functions########
-    def getClipEdges(self):
+    def get_clip_edges(self):
         """Get the clipped edges based on the current extent.
 
         This function iterates through the edges of a geometric shape and
@@ -110,14 +110,14 @@ class Context(object):
                 x1, y1 = self.vertices[edge[1]][0], self.vertices[edge[1]][1]
                 x2, y2 = self.vertices[edge[2]][0], self.vertices[edge[2]][1]
                 pt1, pt2 = (x1, y1), (x2, y2)
-                inExtentP1, inExtentP2 = self.inExtent(x1, y1), self.inExtent(x2, y2)
+                inExtentP1, inExtentP2 = self.in_extent(x1, y1), self.in_extent(x2, y2)
                 if inExtentP1 and inExtentP2:
                     clipEdges.append((pt1, pt2))
                 elif inExtentP1 and not inExtentP2:
-                    pt2 = self.clipLine(x1, y1, equation, leftDir=False)
+                    pt2 = self.clip_line(x1, y1, equation, leftDir=False)
                     clipEdges.append((pt1, pt2))
                 elif not inExtentP1 and inExtentP2:
-                    pt1 = self.clipLine(x2, y2, equation, leftDir=True)
+                    pt1 = self.clip_line(x2, y2, equation, leftDir=True)
                     clipEdges.append((pt1, pt2))
             else:  # infinite line
                 if edge[1] != -1:
@@ -126,13 +126,13 @@ class Context(object):
                 else:
                     x1, y1 = self.vertices[edge[2]][0], self.vertices[edge[2]][1]
                     leftDir = True
-                if self.inExtent(x1, y1):
+                if self.in_extent(x1, y1):
                     pt1 = (x1, y1)
-                    pt2 = self.clipLine(x1, y1, equation, leftDir)
+                    pt2 = self.clip_line(x1, y1, equation, leftDir)
                     clipEdges.append((pt1, pt2))
         return clipEdges
 
-    def getClipPolygons(self, closePoly):
+    def get_clip_polygons(self, closePoly):
         """Get clipped polygons based on the provided edges.
 
         This function processes a set of polygons defined by their edges and
@@ -161,14 +161,14 @@ class Context(object):
                     x1, y1 = self.vertices[edge[1]][0], self.vertices[edge[1]][1]
                     x2, y2 = self.vertices[edge[2]][0], self.vertices[edge[2]][1]
                     pt1, pt2 = (x1, y1), (x2, y2)
-                    inExtentP1, inExtentP2 = self.inExtent(x1, y1), self.inExtent(x2, y2)
+                    inExtentP1, inExtentP2 = self.in_extent(x1, y1), self.in_extent(x2, y2)
                     if inExtentP1 and inExtentP2:
                         clipEdges.append((pt1, pt2))
                     elif inExtentP1 and not inExtentP2:
-                        pt2 = self.clipLine(x1, y1, equation, leftDir=False)
+                        pt2 = self.clip_line(x1, y1, equation, leftDir=False)
                         clipEdges.append((pt1, pt2))
                     elif not inExtentP1 and inExtentP2:
-                        pt1 = self.clipLine(x2, y2, equation, leftDir=True)
+                        pt1 = self.clip_line(x2, y2, equation, leftDir=True)
                         clipEdges.append((pt1, pt2))
                 else:  # infinite line
                     if edge[1] != -1:
@@ -177,12 +177,12 @@ class Context(object):
                     else:
                         x1, y1 = self.vertices[edge[2]][0], self.vertices[edge[2]][1]
                         leftDir = True
-                    if self.inExtent(x1, y1):
+                    if self.in_extent(x1, y1):
                         pt1 = (x1, y1)
-                        pt2 = self.clipLine(x1, y1, equation, leftDir)
+                        pt2 = self.clip_line(x1, y1, equation, leftDir)
                         clipEdges.append((pt1, pt2))
             # create polygon definition from edges and check if polygon is completely closed
-            polyPts, complete = self.orderPts(clipEdges)
+            polyPts, complete = self.order_points(clipEdges)
             if not complete:
                 startPt = polyPts[0]
                 endPt = polyPts[-1]
@@ -215,7 +215,7 @@ class Context(object):
             poly[inPtsIdx] = polyPts
         return poly
 
-    def clipLine(self, x1, y1, equation, leftDir):
+    def clip_line(self, x1, y1, equation, leftDir):
         """Clip a line segment defined by its endpoints against a bounding box.
 
         This function calculates the intersection points of a line defined by
@@ -270,7 +270,7 @@ class Context(object):
                 pt = max(intersectPts)
             return pt
 
-    def inExtent(self, x, y):
+    def in_extent(self, x, y):
         """Check if a point is within the defined extent.
 
         This function determines whether the given coordinates (x, y) fall
@@ -289,7 +289,7 @@ class Context(object):
         xmin, xmax, ymin, ymax = self.extent
         return x >= xmin and x <= xmax and y >= ymin and y <= ymax
 
-    def orderPts(self, edges):
+    def order_points(self, edges):
         """Order points to form a polygon.
 
         This function takes a list of edges, where each edge is represented as a
@@ -346,7 +346,7 @@ class Context(object):
             del edges[i]
         return poly, complete
 
-    def setClipBuffer(self, xpourcent, ypourcent):
+    def set_clip_buffer(self, xpourcent, ypourcent):
         """Set the clipping buffer based on percentage adjustments.
 
         This function modifies the clipping extent of an object by adjusting its
@@ -374,7 +374,7 @@ class Context(object):
 
     # End clip functions########
 
-    def outSite(self, s):
+    def out_site(self, s):
         """Handle output for a site object.
 
         This function processes the output based on the current settings of the
@@ -396,7 +396,7 @@ class Context(object):
         elif self.doPrint:
             print("s %f %f" % (s.x, s.y))
 
-    def outVertex(self, s):
+    def out_vertex(self, s):
         """Add a vertex to the list of vertices.
 
         This function appends the coordinates of a given vertex to the internal
@@ -420,7 +420,7 @@ class Context(object):
         elif self.doPrint:
             print("v %f %f" % (s.x, s.y))
 
-    def outTriple(self, s1, s2, s3):
+    def out_triple(self, s1, s2, s3):
         """Add a triangle defined by three site numbers to the list of triangles.
 
         This function takes three site objects, extracts their site numbers, and
@@ -445,7 +445,7 @@ class Context(object):
         elif self.triangulate and self.doPrint:
             print("%d %d %d" % (s1.sitenum, s2.sitenum, s3.sitenum))
 
-    def outBisector(self, edge):
+    def out_bisector(self, edge):
         """Process and log the outbisector of a given edge.
 
         This function appends the parameters of the edge (a, b, c) to the lines
@@ -470,7 +470,7 @@ class Context(object):
         elif self.doPrint:
             print("l %f %f %f" % (edge.a, edge.b, edge.c))
 
-    def outEdge(self, edge):
+    def out_edge(self, edge):
         """Process an edge and update the associated polygons and edges.
 
         This function takes an edge as input and retrieves the site numbers
@@ -536,26 +536,26 @@ def voronoi(siteList, context):
     siteIter = siteList.iterator()
 
     bottomsite = siteIter.next()
-    context.outSite(bottomsite)
+    context.out_site(bottomsite)
     newsite = siteIter.next()
     minpt = Site(-BIG_FLOAT, -BIG_FLOAT)
     while True:
-        if not priorityQ.isEmpty():
-            minpt = priorityQ.getMinPt()
+        if not priorityQ.is_empty():
+            minpt = priorityQ.get_min_point()
 
-        if newsite and (priorityQ.isEmpty() or newsite < minpt):
+        if newsite and (priorityQ.is_empty() or newsite < minpt):
             # newsite is smallest -  this is a site event
-            context.outSite(newsite)
+            context.out_site(newsite)
 
             # get first Halfedge to the LEFT and RIGHT of the new site
-            lbnd = edgeList.leftbnd(newsite)
+            lbnd = edgeList.left_bnd(newsite)
             rbnd = lbnd.right
 
             # if this halfedge has no edge, bot = bottom site (whatever that is)
             # create a new edge that bisects
             bot = lbnd.rightreg(bottomsite)
             edge = Edge.bisect(bot, newsite)
-            context.outBisector(edge)
+            context.out_bisector(edge)
 
             # create a new Halfedge, setting its pm field to 0 and insert
             # this new bisector edge between the left and right vectors in
@@ -584,13 +584,13 @@ def voronoi(siteList, context):
 
             newsite = siteIter.next()
 
-        elif not priorityQ.isEmpty():
+        elif not priorityQ.is_empty():
             # intersection is smallest - this is a vector (circle) event
 
             # pop the Halfedge with the lowest vector off the ordered list of
             # vectors.  Get the Halfedge to the left and right of the above HE
             # and also the Halfedge to the right of the right HE
-            lbnd = priorityQ.popMinHalfedge()
+            lbnd = priorityQ.pop_min_halfedge()
             llbnd = lbnd.left
             rbnd = lbnd.right
             rrbnd = rbnd.right
@@ -602,20 +602,20 @@ def voronoi(siteList, context):
 
             # output the triple of sites, stating that a circle goes through them
             mid = lbnd.rightreg(bottomsite)
-            context.outTriple(bot, top, mid)
+            context.out_triple(bot, top, mid)
 
             # get the vertex that caused this event and set the vertex number
             # couldn't do this earlier since we didn't know when it would be processed
             v = lbnd.vertex
-            siteList.setSiteNumber(v)
-            context.outVertex(v)
+            siteList.set_site_number(v)
+            context.out_vertex(v)
 
             # set the endpoint of the left and right Halfedge to be this vector
             if lbnd.edge.setEndpoint(lbnd.pm, v):
-                context.outEdge(lbnd.edge)
+                context.out_edge(lbnd.edge)
 
             if rbnd.edge.setEndpoint(rbnd.pm, v):
-                context.outEdge(rbnd.edge)
+                context.out_edge(rbnd.edge)
 
             # delete the lowest HE, remove all vertex events to do with the
             # right HE and delete the right HE
@@ -633,7 +633,7 @@ def voronoi(siteList, context):
             # Create an Edge (or line) that is between the two Sites.  This
             # creates the formula of the line, and assigns a line number to it
             edge = Edge.bisect(bot, top)
-            context.outBisector(edge)
+            context.out_bisector(edge)
 
             # create a HE from the edge
             bisector = Halfedge(edge, pm)
@@ -644,7 +644,7 @@ def voronoi(siteList, context):
             # Site, then this endpoint is put in position 0; otherwise in pos 1
             edgeList.insert(llbnd, bisector)
             if edge.setEndpoint(Edge.RE - pm, v):
-                context.outEdge(edge)
+                context.out_edge(edge)
 
             # if left HE and the new bisector don't intersect, then delete
             # the left HE, and reinsert it
@@ -662,13 +662,13 @@ def voronoi(siteList, context):
 
     he = edgeList.leftend.right
     while he is not edgeList.rightend:
-        context.outEdge(he.edge)
+        context.out_edge(he.edge)
         he = he.right
     Edge.EDGE_NUM = 0  # CF
 
 
 # ------------------------------------------------------------------
-def isEqual(a, b, relativeError=TOLERANCE):
+def is_equal(a, b, relativeError=TOLERANCE):
     """Check if two values are nearly equal within a specified relative error.
 
     This function determines if the absolute difference between two values
@@ -809,7 +809,7 @@ class Edge(object):
         print("ep", self.ep)
         print("reg", self.reg)
 
-    def setEndpoint(self, lrFlag, site):
+    def set_endpoint(self, lrFlag, site):
         """Set the endpoint for a given flag.
 
         This function assigns a site to the specified endpoint flag. It checks
@@ -961,7 +961,7 @@ class Halfedge(object):
         if self.ystar == other.ystar and self.vertex.x == other.vertex.x:
             return True
 
-    def leftreg(self, default):
+    def left_reg(self, default):
         """Retrieve the left registration value based on the edge state.
 
         This function checks the state of the edge attribute. If the edge is not
@@ -982,7 +982,7 @@ class Halfedge(object):
         else:
             return self.edge.reg[Edge.RE]
 
-    def rightreg(self, default):
+    def right_reg(self, default):
         """Retrieve the appropriate registration value based on the edge state.
 
         This function checks if the current edge is set. If it is not set, it
@@ -1006,7 +1006,7 @@ class Halfedge(object):
             return self.edge.reg[Edge.LE]
 
     # returns True if p is to right of halfedge self
-    def isPointRightOf(self, pt):
+    def is_point_right_of(self, pt):
         """Determine if a point is to the right of a half-edge.
 
         This function checks whether the given point `pt` is located to the
@@ -1093,7 +1093,7 @@ class Halfedge(object):
             return None
 
         d = e1.a * e2.b - e1.b * e2.a
-        if isEqual(d, 0.0):
+        if is_equal(d, 0.0):
             return None
 
         xint = (e1.c * e2.b - e2.c * e1.b) / d
@@ -1164,7 +1164,7 @@ class EdgeList(object):
         he.edge = Edge.DELETED
 
     # Get entry from hash table, pruning any deleted nodes
-    def gethash(self, b):
+    def get_hash(self, b):
         """Retrieve an entry from the hash table, ignoring deleted nodes.
 
         This function checks if the provided index is within the valid range of
@@ -1189,7 +1189,7 @@ class EdgeList(object):
         self.hash[b] = None
         return None
 
-    def leftbnd(self, pt):
+    def left_bnd(self, pt):
         """Find the left boundary half-edge for a given point.
 
         This function computes the appropriate half-edge that is to the left of
@@ -1216,14 +1216,14 @@ class EdgeList(object):
         if bucket >= self.hashsize:
             bucket = self.hashsize - 1
 
-        he = self.gethash(bucket)
+        he = self.get_hash(bucket)
         if he is None:
             i = 1
             while True:
-                he = self.gethash(bucket - i)
+                he = self.get_hash(bucket - i)
                 if he is not None:
                     break
-                he = self.gethash(bucket + i)
+                he = self.get_hash(bucket + i)
                 if he is not None:
                     break
                 i += 1
@@ -1270,7 +1270,7 @@ class PriorityQueue(object):
         """
         return self.count
 
-    def isEmpty(self):
+    def is_empty(self):
         """Check if the object is empty.
 
         This method determines whether the object contains any elements by
@@ -1303,7 +1303,7 @@ class PriorityQueue(object):
         """
         he.vertex = site
         he.ystar = site.y + offset
-        last = self.hash[self.getBucket(he)]
+        last = self.hash[self.get_bucket(he)]
         next = last.qnext
         while (next is not None) and he > next:
             last = next
@@ -1326,14 +1326,14 @@ class PriorityQueue(object):
             he (Element): The element to be deleted from the data structure.
         """
         if he.vertex is not None:
-            last = self.hash[self.getBucket(he)]
+            last = self.hash[self.get_bucket(he)]
             while last.qnext is not he:
                 last = last.qnext
             last.qnext = he.qnext
             self.count -= 1
             he.vertex = None
 
-    def getBucket(self, he):
+    def get_bucket(self, he):
         """Get the appropriate bucket index for a given value.
 
         This function calculates the bucket index based on the provided value
@@ -1360,7 +1360,7 @@ class PriorityQueue(object):
             self.minidx = bucket
         return bucket
 
-    def getMinPt(self):
+    def get_min_point(self):
         """Retrieve the minimum point from a hash table.
 
         This function iterates through the hash table starting from the current
@@ -1378,7 +1378,7 @@ class PriorityQueue(object):
         y = he.ystar
         return Site(x, y)
 
-    def popMinHalfedge(self):
+    def pop_min_halfedge(self):
         """Remove and return the minimum half-edge from the data structure.
 
         This function retrieves the minimum half-edge from a hash table, updates
@@ -1413,7 +1413,7 @@ class SiteList(object):
             self.__sites.append(Site(pt.x, pt.y, i))
         self.__sites.sort()
 
-    def setSiteNumber(self, site):
+    def set_site_number(self, site):
         """Set the site number for a given site.
 
         This function assigns a unique site number to the provided site object.
@@ -1577,7 +1577,7 @@ class SiteList(object):
 
 
 # ------------------------------------------------------------------
-def computeVoronoiDiagram(
+def compute_voronoi_diagram(
     points, xBuff=0, yBuff=0, polygonsOutput=False, formatOutput=False, closePoly=True
 ):
     """Compute the Voronoi diagram for a set of points.
@@ -1619,24 +1619,24 @@ def computeVoronoiDiagram(
     siteList = SiteList(points)
     context = Context()
     voronoi(siteList, context)
-    context.setClipBuffer(xBuff, yBuff)
+    context.set_clip_buffer(xBuff, yBuff)
     if not polygonsOutput:
-        clipEdges = context.getClipEdges()
+        clipEdges = context.get_clip_edges()
         if formatOutput:
-            vertices, edgesIdx = formatEdgesOutput(clipEdges)
+            vertices, edgesIdx = format_edges_output(clipEdges)
             return vertices, edgesIdx
         else:
             return clipEdges
     else:
-        clipPolygons = context.getClipPolygons(closePoly)
+        clipPolygons = context.get_clip_polygons(closePoly)
         if formatOutput:
-            vertices, polyIdx = formatPolygonsOutput(clipPolygons)
+            vertices, polyIdx = format_polygons_output(clipPolygons)
             return vertices, polyIdx
         else:
             return clipPolygons
 
 
-def formatEdgesOutput(edges):
+def format_edges_output(edges):
     """Format edges output for a list of edges.
 
     This function takes a list of edges, where each edge is represented as a
@@ -1668,7 +1668,7 @@ def formatEdgesOutput(edges):
     return list(pts), edgesIdx
 
 
-def formatPolygonsOutput(polygons):
+def format_polygons_output(polygons):
     """Format the output of polygons into a standardized structure.
 
     This function takes a dictionary of polygons, where each polygon is
@@ -1707,7 +1707,7 @@ def formatPolygonsOutput(polygons):
 
 
 # ------------------------------------------------------------------
-def computeDelaunayTriangulation(points):
+def compute_delaunay_triangulation(points):
     """Compute the Delaunay triangulation for a set of points.
 
     This function takes a list of point objects, each of which must have 'x'
@@ -1743,4 +1743,4 @@ def computeDelaunayTriangulation(points):
 #     points = MultiPoint(rcoord)
 #     voronoi = shapely.ops.voronoi_diagram(points, tolerance=0, edges=False)
 #
-#     utils.shapelyToCurve('voronoi', voronoi, 0)
+#     utils.shapely_to_curve('voronoi', voronoi, 0)

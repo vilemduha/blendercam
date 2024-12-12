@@ -183,7 +183,7 @@ def twist_separator_slot(length, thickness, finger_play=0.00005, percentage=0.5)
     simple.add_rectangle(thickness + finger_play / 2, length, center_y=False)
     simple.move(y=((length * percentage - finger_play / 2) / 2))
     simple.duplicate()
-    simple.mirrory()
+    simple.mirror_y()
     simple.join_multiple("simple_rectangle")
     simple.active_name("_separator_slot")
 
@@ -592,12 +592,12 @@ def slope_array(loop):
         oldp = p
     derivative = LineString(sarray)
     dderivative = LineString(dsarray)
-    utils.shapelyToCurve("-derivative", derivative, 0.0)
-    utils.shapelyToCurve("-doublederivative", dderivative, 0.0)
+    utils.shapely_to_curve("-derivative", derivative, 0.0)
+    utils.shapely_to_curve("-doublederivative", dderivative, 0.0)
     return sarray
 
 
-def dslope_array(loop, resolution=0.001):
+def d_slope_array(loop, resolution=0.001):
     """Returns a double derivative array or slope of the slope
 
     Args:
@@ -625,7 +625,7 @@ def dslope_array(loop, resolution=0.001):
             dsarray.append((distance, slope * -0.1))
         oldp = p
     dderivative = LineString(dsarray)
-    utils.shapelyToCurve("doublederivative", dderivative, 0.0)
+    utils.shapely_to_curve("doublederivative", dderivative, 0.0)
     return sarray
 
 

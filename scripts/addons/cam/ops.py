@@ -32,7 +32,7 @@ from mathutils import Euler, Vector
 
 from . import (
     bridges,
-    gcodepath,
+    gcode_path,
     pack,
     polygon_utils_cam,
     simple,
@@ -46,14 +46,14 @@ from .async_op import (
 )
 from .constants import PRECISION
 from .exception import CamException
-from .pack import packCurves
+from .pack import pack_curves
 from .utils import (
-    addMachineAreaObject,
-    getBoundsWorldspace,
-    isChainValid,
-    isValid,
+    add_machine_area_object,
+    get_bounds_worldspace,
+    chain_valid,
+    source_valid,
     reload_paths,
-    silhoueteOffset,
+    silhouette_offset,
     was_hidden_dict,
 )
 
@@ -61,12 +61,12 @@ from .utils import (
 class threadCom:  # object passed to threads to read background process stdout info
     def __init__(self, o, proc):
         self.opname = o.name
-        self.outtext = ""
+        self.out_text = ""
         self.proc = proc
         self.lasttext = ""
 
 
-def threadread(tcom):
+def thread_read(tcom):
     """Reads the standard output of a background process in a non-blocking
     manner.
 
@@ -90,7 +90,7 @@ def threadread(tcom):
     s = inline.find("progress{")
     if s > -1:
         e = inline.find("}")
-        tcom.outtext = inline[s + 9 : e]
+        tcom.out_text = inline[s + 9 : e]
 
 
 @bpy.app.handlers.persistent
@@ -119,10 +119,10 @@ def timer_update(context):
             if not readthread.is_alive():
                 readthread.join()
                 # readthread.
-                tcom.lasttext = tcom.outtext
-                if tcom.outtext != "":
-                    print(tcom.opname, tcom.outtext)
-                    tcom.outtext = ""
+                tcom.lasttext = tcom.out_text
+                if tcom.out_text != "":
+                    print(tcom.opname, tcom.out_text)
+                    tcom.out_text = ""
 
                 if "finished" in tcom.lasttext:
                     processes.remove(p)
@@ -130,14 +130,14 @@ def timer_update(context):
                     o = s.cam_operations[tcom.opname]
                     o.computing = False
                     reload_paths(o)
-                    update_zbufferimage_tag = False
-                    update_offsetimage_tag = False
+                    update_z_buffer_image_tag = False
+                    update_offset_image_tag = False
                 else:
-                    readthread = threading.Thread(target=threadread, args=([tcom]), daemon=True)
+                    readthread = threading.Thread(target=thread_read, args=([tcom]), daemon=True)
                     readthread.start()
                     p[0] = readthread
             o = s.cam_operations[tcom.opname]  # changes
-            o.outtext = tcom.lasttext  # changes
+            o.out_text = tcom.lasttext  # changes
 
 
 class PathsBackground(Operator):
@@ -185,7 +185,7 @@ class PathsBackground(Operator):
         )
 
         tcom = threadCom(o, proc)
-        readthread = threading.Thread(target=threadread, args=([tcom]), daemon=True)
+        readthread = threading.Thread(target=thread_read, args=([tcom]), daemon=True)
         readthread.start()
         # self.__class__.cam_processes=[]
         if not hasattr(bpy.ops.object.calculate_cam_paths_background.__class__, "cam_processes"):
@@ -269,7 +269,7 @@ async def _calc_path(operator, context):
         for ob in obc.objects:
             ob.hide_set(False)
     if o.strategy == "CARVE":
-        curvob = bpy.data.objects[o.curve_object]
+        curvob = bpy.data.objects[o.curve_source]
         curvob.hide_set(False)
     """if o.strategy == 'WATERLINE':
         ob = bpy.data.objects[o.object_name]
@@ -290,7 +290,7 @@ async def _calc_path(operator, context):
         return {"FINISHED", False}
 
     # check for free movement height < maxz and return with error
-    if o.movement.free_height < o.maxz:
+    if o.movement.free_height < o.max_z:
         operator.report(
             {"ERROR_INVALID_INPUT"},
             "Free Movement Height Is Less than Operation Depth Start \n Correct and Try Again.",
@@ -307,7 +307,7 @@ async def _calc_path(operator, context):
     if o.use_layers:
         o.movement.parallel_step_back = False
     try:
-        await gcodepath.getPath(context, o)
+        await gcode_path.get_path(context, o)
         print("Got Path Okay")
     except CamException as e:
         traceback.print_tb(e.__traceback__)
@@ -357,7 +357,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         s = context.scene
         o = s.cam_operations[s.cam_active_operation]
         if o is not None:
-            if isValid(o, context):
+            if source_valid(o, context):
                 return True
         return False
 
@@ -507,7 +507,7 @@ class CamPackObjects(Operator):
         """Execute the operation in the given context.
 
         This function sets the Blender object mode to 'OBJECT', retrieves the
-        currently selected objects, and calls the `packCurves` function from the
+        currently selected objects, and calls the `pack_curves` function from the
         `pack` module. It is typically used to finalize operations on selected
         objects in Blender.
 
@@ -542,8 +542,8 @@ class CamPackObjects(Operator):
             bpy.ops.object.location_clear()
             bpy.ops.object.rotation_clear()
 
-            chunks = utils.curveToChunks(ob)
-            npolys = utils.chunksToShapely(chunks)
+            chunks = utils.curve_to_chunks(ob)
+            npolys = utils.chunks_to_shapely(chunks)
             # add all polys in silh to one poly
             poly = shapely.ops.unary_union(npolys)
 
@@ -663,7 +663,7 @@ class CamPackObjects(Operator):
             i += 1
         t = time.time() - t
 
-        polygon_utils_cam.shapelyToCurve("test", sgeometry.MultiPolygon(placedpolys), 0)
+        polygon_utils_cam.shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
         print(t)
         # layout.
         return {"FINISHED"}
@@ -711,7 +711,7 @@ class CamSliceObjects(Operator):
         precision=PRECISION,
         unit="LENGTH",
     )
-    slice_above0: BoolProperty(
+    slice_above_0: BoolProperty(
         name="Slice Above 0",
         description="only slice model above 0",
         default=False,
@@ -745,7 +745,7 @@ class CamSliceObjects(Operator):
             ob (bpy.types.Object): The 3D object to be sliced.
         """
 
-        from .slice import slicing2d, slicing3d
+        from .slice import slicing_2d, slicing_3d
 
         ob = bpy.context.active_object
 
@@ -754,7 +754,7 @@ class CamSliceObjects(Operator):
         thickness = self.slice_distance
         slice3d = self.slice_3d
         indexes = self.indexes
-        above0 = self.slice_above0
+        above0 = self.slice_above_0
         # setup the collections
         scollection = bpy.data.collections.new("Slices")
         bpy.context.scene.collection.children.link(scollection)
@@ -763,7 +763,7 @@ class CamSliceObjects(Operator):
             bpy.context.scene.collection.children.link(tcollection)
 
         bpy.ops.object.mode_set(mode="OBJECT")  # force object mode
-        minx, miny, minz, maxx, maxy, maxz = utils.getBoundsWorldspace([ob])
+        minx, miny, minz, maxx, maxy, maxz = utils.get_bounds_worldspace([ob])
 
         start_height = minz
         if above0 and minz < 0:
@@ -790,10 +790,10 @@ class CamSliceObjects(Operator):
             scollection.objects.link(obslice)  # link obslice to scollecton
             if slice3d:
                 # slice 3d at desired height and stop at desired height
-                slicesuccess = slicing3d(obslice, height, height + thickness)
+                slicesuccess = slicing_3d(obslice, height, height + thickness)
             else:
                 # slice object at desired height
-                slicesuccess = slicing2d(obslice, height)
+                slicesuccess = slicing_2d(obslice, height)
 
             if indexes and slicesuccess:
                 # text objects
@@ -819,12 +819,12 @@ class CamSliceObjects(Operator):
 
         col = layout.column(align=True)
         col.prop(self, "slice_distance")
-        col.prop(self, "slice_above0")
+        col.prop(self, "slice_above_0")
         col.prop(self, "slice_3d")
         col.prop(self, "indexes")
 
 
-def getChainOperations(chain):
+def get_chain_operations(chain):
     """Return chain operations associated with a given chain object.
 
     This function iterates through the operations of the provided chain
@@ -872,7 +872,7 @@ class PathsChain(Operator, AsyncOperatorMixin):
         s = context.scene
         if len(s.cam_chains) > 0:
             chain = s.cam_chains[s.cam_active_chain]
-            return isChainValid(chain, context)[0]
+            return chain_valid(chain, context)[0]
         else:
             return False
 
@@ -896,7 +896,7 @@ class PathsChain(Operator, AsyncOperatorMixin):
         s = context.scene
         bpy.ops.object.mode_set(mode="OBJECT")  # force object mode
         chain = s.cam_chains[s.cam_active_chain]
-        chainops = getChainOperations(chain)
+        chainops = get_chain_operations(chain)
         meshes = []
         try:
             for i in range(0, len(chainops)):
@@ -913,7 +913,7 @@ class PathsChain(Operator, AsyncOperatorMixin):
 
         for o in chainops:
             meshes.append(bpy.data.objects["cam_path_{}".format(o.name)].data)
-        gcodepath.exportGcodePath(chain.filename, meshes, chainops)
+        gcode_path.export_gcode_path(chain.filename, meshes, chainops)
         return {"FINISHED"}
 
 
@@ -942,7 +942,7 @@ class PathExportChain(Operator):
 
         s = context.scene
         chain = s.cam_chains[s.cam_active_chain]
-        return isChainValid(chain, context)[0]
+        return chain_valid(chain, context)[0]
 
     def execute(self, context):
         """Execute the camera path export process.
@@ -964,7 +964,7 @@ class PathExportChain(Operator):
         s = bpy.context.scene
 
         chain = s.cam_chains[s.cam_active_chain]
-        chainops = getChainOperations(chain)
+        chainops = get_chain_operations(chain)
         meshes = []
 
         # if len(chainops)<4:
@@ -972,7 +972,7 @@ class PathExportChain(Operator):
         for o in chainops:
             # bpy.ops.object.calculate_cam_paths_background()
             meshes.append(bpy.data.objects["cam_path_{}".format(o.name)].data)
-        gcodepath.exportGcodePath(chain.filename, meshes, chainops)
+        gcode_path.export_gcode_path(chain.filename, meshes, chainops)
         return {"FINISHED"}
 
 
@@ -1010,7 +1010,7 @@ class PathExport(Operator):
             operation,
         )
 
-        gcodepath.exportGcodePath(
+        gcode_path.export_gcode_path(
             operation.filename,
             [bpy.data.objects["cam_path_{}".format(operation.name)].data],
             [operation],
@@ -1059,7 +1059,7 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
 
         if operation_name in bpy.data.objects:
             try:
-                await simulation.doSimulation(operation_name, [operation])
+                await simulation.do_simulation(operation_name, [operation])
             except AsyncCancelledException as e:
                 return {"CANCELLED"}
         else:
@@ -1111,7 +1111,7 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
         s = context.scene
         if len(s.cam_chains) > 0:
             chain = s.cam_chains[s.cam_active_chain]
-            return isChainValid(chain, context)[0]
+            return chain_valid(chain, context)[0]
         else:
             return False
 
@@ -1141,7 +1141,7 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
 
         s = bpy.context.scene
         chain = s.cam_chains[s.cam_active_chain]
-        chainops = getChainOperations(chain)
+        chainops = get_chain_operations(chain)
 
         canSimulate = True
         for operation in chainops:
@@ -1150,7 +1150,7 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
             print("operation name " + str(operation.name))
         if canSimulate:
             try:
-                await simulation.doSimulation(chain.name, chainops)
+                await simulation.do_simulation(chain.name, chainops)
             except AsyncCancelledException as e:
                 return {"CANCELLED"}
         else:
@@ -1394,7 +1394,7 @@ class CamChainOperationRemove(Operator):
         return {"FINISHED"}
 
 
-def fixUnits():
+def fix_units():
     """Set up units for Fabex.
 
     This function configures the unit settings for the current Blender
@@ -1440,18 +1440,18 @@ class CamOperationAdd(Operator):
             view3d.spaces[0].show_region_ui = True
 
         s = bpy.context.scene
-        fixUnits()
+        fix_units()
 
         ob = bpy.context.active_object
         if ob is None:
             self.report({"ERROR_INVALID_INPUT"}, "Please Add an Object to Base the Operation on.")
             return {"CANCELLED"}
 
-        minx, miny, minz, maxx, maxy, maxz = getBoundsWorldspace([ob])
+        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace([ob])
         s.cam_operations.add()
         o = s.cam_operations[-1]
         o.object_name = ob.name
-        o.minz = minz
+        o.min_z = minz
 
         s.cam_active_operation = len(s.cam_operations) - 1
 
@@ -1459,7 +1459,7 @@ class CamOperationAdd(Operator):
         o.filename = o.name
 
         if s.objects.get("CAM_machine") is None:
-            addMachineAreaObject()
+            add_machine_area_object()
 
         return {"FINISHED"}
 
@@ -1498,7 +1498,7 @@ class CamOperationCopy(Operator):
         # main(context)
         scene = bpy.context.scene
 
-        fixUnits()
+        fix_units()
 
         scene = bpy.context.scene
         if len(scene.cam_operations) == 0:
@@ -1687,7 +1687,7 @@ class CamOrientationAdd(Operator):
         oriob = bpy.context.active_object
         oriob.empty_draw_size = 0.02  # 2 cm
 
-        simple.addToGroup(oriob, gname)
+        simple.add_to_group(oriob, gname)
         oriob.name = "ori_" + o.name + "." + str(len(bpy.data.collections[gname].objects)).zfill(3)
 
         return {"FINISHED"}
@@ -1723,5 +1723,5 @@ class CamBridgesAdd(Operator):
         s = bpy.context.scene
         a = s.cam_active_operation
         o = s.cam_operations[a]
-        bridges.addAutoBridges(o)
+        bridges.add_auto_bridges(o)
         return {"FINISHED"}

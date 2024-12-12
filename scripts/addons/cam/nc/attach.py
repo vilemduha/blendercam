@@ -5,6 +5,7 @@
 #
 
 import recreator
+
 try:
     import ocl
     import ocl_funcs
@@ -25,7 +26,7 @@ class Creator(recreator.Redirector):
 
         self.stl = None
         self.cutter = None
-        self.minz = None
+        self.min_z = None
         self.path = None
         self.pdcf = None
         self.material_allowance = 0.0
@@ -39,36 +40,36 @@ class Creator(recreator.Redirector):
             self.pdcf.setSTL(self.stl)
             self.pdcf.setCutter(self.cutter)
             self.pdcf.setSampling(0.1)
-            self.pdcf.setZ(self.minz/units)
+            self.pdcf.setZ(self.min_z / units)
 
     def z2(self, z):
         path = ocl.Path()
         # use a line with no length
         path.append(ocl.Line(ocl.Point(self.x, self.y, self.z), ocl.Point(self.x, self.y, self.z)))
         self.setPdcfIfNotSet()
-        if (self.z > self.minz):
+        if self.z > self.min_z:
             # Adjust Z if we have gotten a higher limit (Fix pocketing loosing steps when using attach?)
             self.pdcf.setZ(self.z)
         else:
-            self.pdcf.setZ(self.minz/units)  # Else use minz
+            self.pdcf.setZ(self.min_z / units)  # Else use minz
         self.pdcf.setPath(path)
         self.pdcf.run()
         plist = self.pdcf.getCLPoints()
         p = plist[0]
-        return p.z + self.material_allowance/units
+        return p.z + self.material_allowance / units
 
     def cut_path(self):
         if self.path == None:
             return
         self.setPdcfIfNotSet()
 
-        if (self.z > self.minz):
+        if self.z > self.min_z:
             # Adjust Z if we have gotten a higher limit (Fix pocketing loosing steps when using attach?)
             self.pdcf.setZ(self.z)
         else:
-            self.pdcf.setZ(self.minz/units)  # Else use minz
+            self.pdcf.setZ(self.min_z / units)  # Else use minz
 
-       # get the points on the surface
+        # get the points on the surface
         self.pdcf.setPath(self.path)
 
         self.pdcf.run()
@@ -85,7 +86,9 @@ class Creator(recreator.Redirector):
         i = 0
         for p in plist:
             if i > 0:
-                self.original.feed(p.x/units, p.y/units, p.z/units + self.material_allowance/units)
+                self.original.feed(
+                    p.x / units, p.y / units, p.z / units + self.material_allowance / units
+                )
             i = i + 1
 
         self.path = ocl.Path()
@@ -120,11 +123,15 @@ class Creator(recreator.Redirector):
         # add an arc to the path
         if self.path == None:
             self.path = ocl.Path()
-        self.path.append(ocl.Arc(ocl.Point(px, py, pz), ocl.Point(
-            self.x, self.y, self.z), ocl.Point(i, j, pz), ccw))
+        self.path.append(
+            ocl.Arc(
+                ocl.Point(px, py, pz), ocl.Point(self.x, self.y, self.z), ocl.Point(i, j, pz), ccw
+            )
+        )
 
     def set_ocl_cutter(self, cutter):
         self.cutter = cutter
+
 
 ################################################################################
 

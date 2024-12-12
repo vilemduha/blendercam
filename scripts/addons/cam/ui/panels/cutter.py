@@ -107,9 +107,11 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
             col = box.column(align=True)
             # Warns if cutter engagement is greater than 50%
             if self.op.cutter_type in ["BALLCONE"]:
-                engagement = round(100 * self.op.dist_between_paths / self.op.ball_radius, 1)
+                engagement = round(100 * self.op.distance_between_paths / self.op.ball_radius, 1)
             else:
-                engagement = round(100 * self.op.dist_between_paths / self.op.cutter_diameter, 1)
+                engagement = round(
+                    100 * self.op.distance_between_paths / self.op.cutter_diameter, 1
+                )
 
             if engagement > 50:
                 col.alert = True

@@ -7,7 +7,7 @@ import bpy
 from bpy.types import UIList, Panel
 
 from .buttons_panel import CAMButtonsPanel
-from ...utils import isChainValid
+from ...utils import chain_valid
 
 
 class CAM_UL_operations(UIList):
@@ -18,7 +18,7 @@ class CAM_UL_operations(UIList):
             layout.label(text=item.name, translate=False, icon_value=icon)
             icon = "LOCKED" if operation.computing else "UNLOCKED"
             if operation.computing:
-                layout.label(text=operation.outtext)  # "computing" )
+                layout.label(text=operation.out_text)  # "computing" )
         elif self.layout_type in {"GRID"}:
             layout.alignment = "CENTER"
             layout.label(text="", icon_value=icon)
@@ -105,7 +105,7 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
                             icon="RESTRICT_INSTANCED_OFF",
                         )
 
-                        valid, reason = isChainValid(chain, context)
+                        valid, reason = chain_valid(chain, context)
                         if not valid:
                             col.alert = True
                             col.label(icon="ERROR", text=f"Can't Compute Chain!")

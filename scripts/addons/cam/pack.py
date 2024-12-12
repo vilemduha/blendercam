@@ -32,7 +32,7 @@ from . import (
 )
 
 
-def srotate(s, r, x, y):
+def s_rotate(s, r, x, y):
     """Rotate a polygon's coordinates around a specified point.
 
     This function takes a polygon and rotates its exterior coordinates
@@ -63,7 +63,7 @@ def srotate(s, r, x, y):
     return sgeometry.Polygon(ncoords)
 
 
-def packCurves():
+def pack_curves():
     """Pack selected curves into a defined area based on specified settings.
 
     This function organizes selected curve objects in Blender by packing
@@ -104,8 +104,8 @@ def packCurves():
         bpy.ops.object.location_clear()
         bpy.ops.object.rotation_clear()
 
-        chunks = utils.curveToChunks(ob)
-        npolys = utils.chunksToShapely(chunks)
+        chunks = utils.curve_to_chunks(ob)
+        npolys = utils.chunks_to_shapely(chunks)
         # add all polys in silh to one poly
         poly = shapely.ops.unary_union(npolys)
 
@@ -225,5 +225,5 @@ def packCurves():
         i += 1
     t = time.time() - t
 
-    polygon_utils_cam.shapelyToCurve("test", sgeometry.MultiPolygon(placedpolys), 0)
+    polygon_utils_cam.shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
     print(t)

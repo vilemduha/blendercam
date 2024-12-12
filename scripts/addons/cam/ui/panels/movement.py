@@ -264,7 +264,7 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
         boxcol = box.column(align=True)
         boxcol.label(text="Z Clearance", icon="CON_FLOOR")
         boxcol.prop(self.op.movement, "free_height")
-        if self.op.maxz > self.op.movement.free_height:
+        if self.op.max_z > self.op.movement.free_height:
             box = boxcol.box()
             subcol = box.column(align=True)
             subcol.alert = True

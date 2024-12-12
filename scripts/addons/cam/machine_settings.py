@@ -1,5 +1,6 @@
 """Fabex 'machine_settings.py'
 
+
 All CAM machine properties.
 """
 
@@ -13,10 +14,10 @@ from bpy.props import (
 from bpy.types import PropertyGroup
 
 from . import constants
-from .utils import updateMachine
+from .utils import update_machine
 
 
-class machineSettings(PropertyGroup):
+class MachineSettings(PropertyGroup):
     """stores all data for machines"""
 
     # name = StringProperty(name="Machine Name", default="Machine")
@@ -56,7 +57,7 @@ class machineSettings(PropertyGroup):
         unit="LENGTH",
         precision=constants.PRECISION,
         subtype="XYZ",
-        update=updateMachine,
+        update=update_machine,
     )
     mtc_position: FloatVectorProperty(
         name="MTC Position",
@@ -64,7 +65,7 @@ class machineSettings(PropertyGroup):
         unit="LENGTH",
         precision=constants.PRECISION,
         subtype="XYZ",
-        update=updateMachine,
+        update=update_machine,
     )
     ending_position: FloatVectorProperty(
         name="End Position",
@@ -72,7 +73,7 @@ class machineSettings(PropertyGroup):
         unit="LENGTH",
         precision=constants.PRECISION,
         subtype="XYZ",
-        update=updateMachine,
+        update=update_machine,
     )
 
     working_area: FloatVectorProperty(
@@ -81,7 +82,7 @@ class machineSettings(PropertyGroup):
         unit="LENGTH",
         precision=constants.PRECISION,
         subtype="XYZ",
-        update=updateMachine,
+        update=update_machine,
     )
     feedrate_min: FloatProperty(
         name="Feedrate Minimum /min",
@@ -147,12 +148,13 @@ class machineSettings(PropertyGroup):
         precision=1,
     )
 
-    axis4: BoolProperty(
+    axis_4: BoolProperty(
         name="4th Axis",
         description="Machine has 4th axis",
         default=0,
     )
-    axis5: BoolProperty(
+
+    axis_5: BoolProperty(
         name="5th Axis",
         description="Machine has 5th axis",
         default=0,
@@ -222,7 +224,7 @@ class machineSettings(PropertyGroup):
         default=True,
     )
 
-    output_g43_on_tool_change: BoolProperty(
+    output_G43_on_tool_change: BoolProperty(
         name="Output G43 on Tool Change",
         description="Output G43 on tool change line",
         default=False,

@@ -278,9 +278,9 @@ def oclWaterlineLayerHeights(operation):
         list: A list of waterline layer heights from maximum to minimum.
     """
     layers = []
-    l_last = operation.minz
+    l_last = operation.min_z
     l_step = operation.stepdown
-    l_first = operation.maxz - l_step
+    l_first = operation.max_z - l_step
     l_depth = l_first
     while l_depth > (l_last + 0.0000001):
         layers.append(l_depth)
@@ -320,7 +320,7 @@ async def oclGetWaterline(operation, chunks):
 
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
-    op_minz = operation.minz
+    op_minz = operation.min_z
     if op_cutter_type == "VCARVE":
         op_cutter_tip_angle = operation["cutter_tip_angle"]
 

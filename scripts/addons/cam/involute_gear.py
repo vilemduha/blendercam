@@ -171,7 +171,7 @@ def gear(
             gear_polar(r, -k if r < b else pi / number_of_teeth),
         ]
     )
-    utils.shapelyToCurve("tooth", shapely_gear, 0.0)
+    utils.shapely_to_curve("tooth", shapely_gear, 0.0)
     i = number_of_teeth
     while i > 1:
         simple.duplicate()
@@ -321,7 +321,7 @@ def rack(
         ]
     )
 
-    utils.shapelyToCurve("_tooth", shapely_gear, 0.0)
+    utils.shapely_to_curve("_tooth", shapely_gear, 0.0)
     i = number_of_teeth
     while i > 1:
         simple.duplicate(x=mm_per_tooth)

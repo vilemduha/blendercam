@@ -117,7 +117,7 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
 
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
-    op_minz = operation.minz
+    op_minz = operation.min_z
     op_cutter_tip_angle = radians(operation.cutter_tip_angle) / 2
     if op_cutter_type == "VCARVE":
         cutter_length = (op_cutter_diameter / tan(op_cutter_tip_angle)) / 2

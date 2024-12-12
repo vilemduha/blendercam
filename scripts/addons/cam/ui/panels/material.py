@@ -18,7 +18,7 @@ from bpy.types import (
 
 from .buttons_panel import CAMButtonsPanel
 from ...utils import (
-    positionObject,
+    position_object,
     update_material,
 )
 from ...constants import PRECISION
@@ -112,7 +112,7 @@ class CAM_MATERIAL_PositionObject(Operator):
         scene = context.scene
         operation = scene.cam_operations[scene.cam_active_operation]
         if operation.object_name in bpy.data.objects:
-            positionObject(operation)
+            position_object(operation)
         else:
             print("No Object Assigned")
         return {"FINISHED"}
