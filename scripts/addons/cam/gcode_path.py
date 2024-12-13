@@ -64,7 +64,7 @@ def point_on_line(a, b, c, tolerance):
         a (numpy.ndarray): The origin point as a vector.
         b (numpy.ndarray): The first point as a vector.
         c (numpy.ndarray): The second point as a vector.
-        tolerence (float): The maximum allowable angle (in degrees) between the vectors.
+        tolerance (float): The maximum allowable angle (in degrees) between the vectors.
 
     Returns:
         bool: True if the angle between vectors b and c is within the specified

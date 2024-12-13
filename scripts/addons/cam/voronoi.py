@@ -597,7 +597,7 @@ def voronoi(siteList, context):
 
             # get the Site to the left of the left HE and to the right of
             # the right HE which it bisects
-            bot = lbnd.leftreg(bottomsite)
+            bot = lbnd.left_reg(bottomsite)
             top = rbnd.right_reg(bottomsite)
 
             # output the triple of sites, stating that a circle goes through them
