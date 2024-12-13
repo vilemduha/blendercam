@@ -611,10 +611,10 @@ def voronoi(siteList, context):
             context.out_vertex(v)
 
             # set the endpoint of the left and right Halfedge to be this vector
-            if lbnd.edge.setEndpoint(lbnd.pm, v):
+            if lbnd.edge.set_endpoint(lbnd.pm, v):
                 context.out_edge(lbnd.edge)
 
-            if rbnd.edge.setEndpoint(rbnd.pm, v):
+            if rbnd.edge.set_endpoint(rbnd.pm, v):
                 context.out_edge(rbnd.edge)
 
             # delete the lowest HE, remove all vertex events to do with the
@@ -643,7 +643,7 @@ def voronoi(siteList, context):
             # If the site to the left of this bisector is higher than the right
             # Site, then this endpoint is put in position 0; otherwise in pos 1
             edgeList.insert(llbnd, bisector)
-            if edge.setEndpoint(Edge.RE - pm, v):
+            if edge.set_endpoint(Edge.RE - pm, v):
                 context.out_edge(edge)
 
             # if left HE and the new bisector don't intersect, then delete
