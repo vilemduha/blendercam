@@ -553,7 +553,7 @@ def voronoi(siteList, context):
 
             # if this halfedge has no edge, bot = bottom site (whatever that is)
             # create a new edge that bisects
-            bot = lbnd.rightreg(bottomsite)
+            bot = lbnd.right_reg(bottomsite)
             edge = Edge.bisect(bot, newsite)
             context.out_bisector(edge)
 
@@ -598,10 +598,10 @@ def voronoi(siteList, context):
             # get the Site to the left of the left HE and to the right of
             # the right HE which it bisects
             bot = lbnd.leftreg(bottomsite)
-            top = rbnd.rightreg(bottomsite)
+            top = rbnd.right_reg(bottomsite)
 
             # output the triple of sites, stating that a circle goes through them
-            mid = lbnd.rightreg(bottomsite)
+            mid = lbnd.right_reg(bottomsite)
             context.out_triple(bot, top, mid)
 
             # get the vertex that caused this event and set the vertex number

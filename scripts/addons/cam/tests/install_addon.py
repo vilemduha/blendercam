@@ -25,8 +25,14 @@ with tempfile.TemporaryDirectory() as td:
     # blender 4.0 installing addon crashes sometimes on mac github actions...
     for x in range(NUM_RETRIES):
         try:
-            subprocess.run([shutil.which('blender'), '-b', '-P', str(file)], shell=False,
-                           check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            subprocess.run(
+                [shutil.which("blender"), "-b", "-P", str(file)],
+                shell=False,
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
             print("installed addon okay")
             sys.exit(0)
         except subprocess.CalledProcessError as e:
@@ -37,7 +43,7 @@ with tempfile.TemporaryDirectory() as td:
             print("------------------------------")
             for line in str(e.output):
                 if line.startswith("Writing: "):
-                    crash_file = pathlib.Path(line[len("Writing: "):])
+                    crash_file = pathlib.Path(line[len("Writing: ") :])
                     if crash_file.exists():
                         print("Crash log:\n================")
                         print(crash_file.read_text())

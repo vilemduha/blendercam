@@ -349,7 +349,7 @@ async def oclGetWaterline(operation, chunks):
         layer_chunks = []
         await progress_async("Waterline", int((100 * count) / len(layers)))
         waterline.reset()
-        waterline.set_z(height * OCL_SCALE)
+        waterline.setZ(height * OCL_SCALE)
         waterline.run2()
         wl_loops = waterline.getLoops()
         for l in wl_loops:
