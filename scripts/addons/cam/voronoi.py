@@ -1229,14 +1229,14 @@ class EdgeList(object):
                 i += 1
 
         # Now search linear list of halfedges for the corect one
-        if (he is self.leftend) or (he is not self.rightend and he.isPointRightOf(pt)):
+        if (he is self.leftend) or (he is not self.rightend and he.is_point_right_of(pt)):
             he = he.right
-            while he is not self.rightend and he.isPointRightOf(pt):
+            while he is not self.rightend and he.is_point_right_of(pt):
                 he = he.right
             he = he.left
         else:
             he = he.left
-            while he is not self.leftend and not he.isPointRightOf(pt):
+            while he is not self.leftend and not he.is_point_right_of(pt):
                 he = he.left
 
         # Update hash table and reference counts
