@@ -361,7 +361,7 @@ def get_path_pattern(operation):
                 o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW"
             ):
                 chunk.reverse()
-    # pathchunks=sortChunks(pathchunks,o)not until they get hierarchy parents!
+    # pathchunks=sort_chunks(pathchunks,o)not until they get hierarchy parents!
     elif o.strategy == "OUTLINEFILL":
 
         polys = o.silhouete.geoms

@@ -40,7 +40,7 @@ class Creator(recreator.Redirector):
             self.pdcf.setSTL(self.stl)
             self.pdcf.setCutter(self.cutter)
             self.pdcf.setSampling(0.1)
-            self.pdcf.setZ(self.min_z / units)
+            self.pdcf.set_z(self.min_z / units)
 
     def z2(self, z):
         path = ocl.Path()
@@ -49,9 +49,9 @@ class Creator(recreator.Redirector):
         self.setPdcfIfNotSet()
         if self.z > self.min_z:
             # Adjust Z if we have gotten a higher limit (Fix pocketing loosing steps when using attach?)
-            self.pdcf.setZ(self.z)
+            self.pdcf.set_z(self.z)
         else:
-            self.pdcf.setZ(self.min_z / units)  # Else use minz
+            self.pdcf.set_z(self.min_z / units)  # Else use minz
         self.pdcf.setPath(path)
         self.pdcf.run()
         plist = self.pdcf.getCLPoints()
@@ -65,9 +65,9 @@ class Creator(recreator.Redirector):
 
         if self.z > self.min_z:
             # Adjust Z if we have gotten a higher limit (Fix pocketing loosing steps when using attach?)
-            self.pdcf.setZ(self.z)
+            self.pdcf.set_z(self.z)
         else:
-            self.pdcf.setZ(self.min_z / units)  # Else use minz
+            self.pdcf.set_z(self.min_z / units)  # Else use minz
 
         # get the points on the surface
         self.pdcf.setPath(self.path)

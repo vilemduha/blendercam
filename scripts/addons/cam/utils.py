@@ -1408,7 +1408,7 @@ async def connect_chunks_low(chunks, o):
 
     for ch in chunks:
         if ch.count() > 0:
-            if lastch is not None and (ch.distanceance_start(pos, o) < mergedist):
+            if lastch is not None and (ch.distance_start(pos, o) < mergedist):
                 # CARVE should lift allways, when it goes below surface...
                 # print(mergedist,ch.distance(pos,o))
                 if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "PENCIL":

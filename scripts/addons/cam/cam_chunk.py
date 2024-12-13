@@ -270,7 +270,7 @@ class CamPathChunk:
                         cango = False
 
                 if cango:
-                    d = chtest.dist(pos, o)
+                    d = chtest.distance(pos, o)
                     if d < mind:
                         ch = chtest
                         mind = d

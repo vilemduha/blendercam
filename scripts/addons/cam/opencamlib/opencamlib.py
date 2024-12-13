@@ -60,7 +60,7 @@ def chunkPointSamplesFromOCL(chunks, samples):
 
     Args:
         chunks (list): A list of chunk objects that have a method `count()`
-            and a method `setZ()`.
+            and a method `set_z()`.
         samples (list): A list of sample objects from which z-values are
             extracted.
     """
@@ -69,7 +69,7 @@ def chunkPointSamplesFromOCL(chunks, samples):
         ch_points = ch.count()
         z_vals = np.array([p.z for p in samples[s_index : s_index + ch_points]])
         z_vals /= OCL_SCALE
-        ch.setZ(z_vals)
+        ch.set_z(z_vals)
         s_index += ch_points
         # p_index = 0
         # for point in ch.points:
@@ -102,7 +102,7 @@ def chunkPointsResampleFromOCL(chunks, samples):
         ch_points = ch.count()
         z_vals = np.array([p.z for p in samples[s_index : s_index + ch_points]])
         z_vals /= OCL_SCALE
-        ch.setZ(z_vals)
+        ch.set_z(z_vals)
         s_index += ch_points
 
     # s_index = 0
@@ -349,7 +349,7 @@ async def oclGetWaterline(operation, chunks):
         layer_chunks = []
         await progress_async("Waterline", int((100 * count) / len(layers)))
         waterline.reset()
-        waterline.setZ(height * OCL_SCALE)
+        waterline.set_z(height * OCL_SCALE)
         waterline.run2()
         wl_loops = waterline.getLoops()
         for l in wl_loops:
@@ -361,7 +361,7 @@ async def oclGetWaterline(operation, chunks):
             chunk.closed = True
             layer_chunks.append(chunk)
         # sort chunks so that ordering is stable
-        chunks.extend(await utils.sortChunks(layer_chunks, operation, last_pos=last_pos))
+        chunks.extend(await utils.sort_chunks(layer_chunks, operation, last_pos=last_pos))
         if len(chunks) > 0:
             last_pos = chunks[-1].get_point(-1)
 
