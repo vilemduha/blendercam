@@ -364,7 +364,7 @@ def get_path_pattern(operation):
     # pathchunks=sort_chunks(pathchunks,o)not until they get hierarchy parents!
     elif o.strategy == "OUTLINEFILL":
 
-        polys = o.silhouete.geoms
+        polys = o.silhouette.geoms
         pathchunks = []
         chunks = []
         for p in polys:

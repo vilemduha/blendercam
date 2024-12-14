@@ -156,7 +156,7 @@ def fingers(diameter, inside, amount=1, stem=1):
 
     # Receptacle is made using the silhouette offset from the fingers
     if inside > 0:
-        bpy.ops.object.silhouete_offset(offset=inside, style="1")
+        bpy.ops.object.silhouette_offset(offset=inside, style="1")
         simple.active_name("receptacle")
         simple.move(y=-inside)
 

@@ -611,7 +611,7 @@ async def pocket(o):
 
                     checkc = affinity.translate(checkc, p[0], p[1])
                     covers = False
-                    for poly in o.silhouete.geoms:
+                    for poly in o.silhouette.geoms:
                         if poly.contains(checkc):
                             covers = True
                             break
@@ -697,7 +697,7 @@ async def pocket(o):
                     rothelix.reverse()
 
                     covers = False
-                    for poly in o.silhouete.geoms:
+                    for poly in o.silhouette.geoms:
                         if poly.contains(coutline):
                             covers = True
                             break
@@ -1054,7 +1054,7 @@ async def medial_axis(o):
         lines = shapely.ops.linemerge(ledges)
         # print(lines.type)
 
-        if bufpoly.type == "Polygon" or bufpoly.type == "MultiPolygon":
+        if bufpoly.geom_type == "Polygon" or bufpoly.geom_type == "MultiPolygon":
             lines = lines.difference(bufpoly)
 
             chunks.extend(shapely_to_chunks(bufpoly, maxdepth))

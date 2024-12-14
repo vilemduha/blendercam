@@ -755,7 +755,7 @@ class CamMeshGetPockets(Operator):
 class CamOffsetSilhouete(Operator):
     """Curve Offset Operation"""
 
-    bl_idname = "object.silhouete_offset"
+    bl_idname = "object.silhouette_offset"
     bl_label = "Silhouette & Offset"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
@@ -934,7 +934,7 @@ class CamOffsetSilhouete(Operator):
 class CamObjectSilhouete(Operator):
     """Object Silhouette"""
 
-    bl_idname = "object.silhouete"
+    bl_idname = "object.silhouette"
     bl_label = "Object Silhouette"
     bl_options = {"REGISTER", "UNDO"}
 

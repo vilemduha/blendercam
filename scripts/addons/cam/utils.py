@@ -1748,7 +1748,7 @@ def get_operation_silhouette(operation):
     Returns:
         Silhouette: The computed silhouette for the operation.
     """
-    if operation.update_silhouete_tag:
+    if operation.update_silhouette_tag:
         image = None
         objects = None
         if operation.geometry_source == "OBJECT" or operation.geometry_source == "COLLECTION":
@@ -1778,17 +1778,17 @@ def get_operation_silhouette(operation):
                 i = samples > numpy.min(operation.zbuffer_image)
 
             chunks = image_to_chunks(operation, i)
-            operation.silhouete = chunks_to_shapely(chunks)
-        # print(operation.silhouete)
+            operation.silhouette = chunks_to_shapely(chunks)
+        # print(operation.silhouette)
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
             print("object method for retrieving silhouette")  #
-            operation.silhouete = get_object_silhouette(
+            operation.silhouette = get_object_silhouette(
                 stype, objects=operation.objects, use_modifiers=operation.use_modifiers
             )
 
-        operation.update_silhouete_tag = False
-    return operation.silhouete
+        operation.update_silhouette_tag = False
+    return operation.silhouette
 
 
 def get_object_silhouette(stype, objects=None, use_modifiers=False):
@@ -1817,7 +1817,7 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
         for ob in objects:
             chunks = curve_to_chunks(ob)
             allchunks.extend(chunks)
-        silhouete = chunks_to_shapely(allchunks)
+        silhouette = chunks_to_shapely(allchunks)
 
     elif stype == "OBJECTS":
         totfaces = 0
@@ -1885,9 +1885,9 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
             print("time:", time.time() - t)
 
             t = time.time()
-            silhouete = shapely_to_multipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
+            silhouette = shapely_to_multipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
 
-    return silhouete
+    return silhouette
 
 
 def get_ambient(o):
@@ -1916,7 +1916,7 @@ def get_ambient(o):
 
         if o.ambient_behaviour == "AROUND":
             r = o.ambient_radius - m
-            # in this method we need ambient from silhouete
+            # in this method we need ambient from silhouette
             o.ambient = get_object_outline(r, o, True)
         else:
             o.ambient = spolygon.Polygon(
@@ -3034,7 +3034,7 @@ def get_strategy_list(scene, context):
         (
             "CUTOUT",
             "Profile (Cutout)",
-            "Cut the silhouete with offset",
+            "Cut the silhouette with offset",
             "MOD_SKIN",
             0,
         ),

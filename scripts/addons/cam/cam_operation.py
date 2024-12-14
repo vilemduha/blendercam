@@ -1123,7 +1123,7 @@ class CamOperation(PropertyGroup):
     offset_image = numpy.array([], dtype=float)
     zbuffer_image = numpy.array([], dtype=float)
 
-    silhouete = sgeometry.Polygon()
+    silhouette = sgeometry.Polygon()
     ambient = sgeometry.Polygon()
     operation_limit = sgeometry.Polygon()
     borderwidth = 50
@@ -1147,7 +1147,7 @@ class CamOperation(PropertyGroup):
         description="Mark for update",
         default=True,
     )
-    update_silhouete_tag: BoolProperty(
+    update_silhouette_tag: BoolProperty(
         name="Mark Silhouette Image for Update",
         description="Mark for update",
         default=True,

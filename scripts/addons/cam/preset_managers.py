@@ -141,7 +141,7 @@ class AddPresetCamOperation(AddPresetBase, Operator):
         "o.slice_detail",
         "o.drill_type",
         "o.dont_merge",
-        "o.update_silhouete_tag",
+        "o.update_silhouette_tag",
         "o.inverse",
         "o.waterline_fill",
         "o.strategy",

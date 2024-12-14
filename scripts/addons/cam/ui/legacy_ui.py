@@ -56,8 +56,8 @@ class VIEW3D_PT_tools_curvetools(Panel):
         column.operator("object.curve_overcuts", icon="CON_SIZELIKE")
         column.operator("object.curve_overcuts_b", icon="CON_SIZELIKE")
         column = col.column(align=True)
-        column.operator("object.silhouete", icon="USER", text="Object Silhouette")
-        column.operator("object.silhouete_offset", icon="COMMUNITY", text="Silhouette Offset")
+        column.operator("object.silhouette", icon="USER", text="Object Silhouette")
+        column.operator("object.silhouette_offset", icon="COMMUNITY", text="Silhouette Offset")
         col.operator(
             "object.curve_remove_doubles", icon="FORCE_CHARGE", text="Remove Curve Doubles"
         )

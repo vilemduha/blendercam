@@ -207,7 +207,7 @@ class CamCurveHatch(Operator):
             simple.deselect()
             bpy.context.view_layer.objects.active = ob
             ob.select_set(True)
-            bpy.ops.object.silhouete_offset(offset=self.offset)
+            bpy.ops.object.silhouette_offset(offset=self.offset)
             if self.contour_separate:
                 simple.active_name("contour_hatch")
                 simple.deselect()

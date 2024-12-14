@@ -610,7 +610,7 @@ async def get_path(context, operation):
         operation.update_z_buffer_image_tag = True
         operation.change_data = chd
 
-    operation.update_silhouete_tag = True
+    operation.update_silhouette_tag = True
     operation.update_ambient_tag = True
     operation.update_bullet_collision_tag = True
 
