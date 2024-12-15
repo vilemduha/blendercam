@@ -19,16 +19,12 @@ except ImportError:
 
 import bpy
 
-from ..constants import BULLET_SCALE
+from ..constants import BULLET_SCALE, OCL_SCALE, PYTHON_BIN
 from ..simple import activate
 from .. import utils
 from ..cam_chunk import CamPathChunk
-from ..async_op import progress_async
+from ..operators.async_op import progress_async
 from .oclSample import get_oclSTL, ocl_sample
-
-OCL_SCALE = 1000.0
-
-PYTHON_BIN = None
 
 
 def pointSamplesFromOCL(points, samples):

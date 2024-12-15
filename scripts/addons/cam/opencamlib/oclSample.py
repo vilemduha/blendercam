@@ -20,13 +20,10 @@ except ImportError:
 
 import mathutils
 
+from ..constants import OCL_SCALE, _PREVIOUS_OCL_MESH
 from ..simple import activate
 from ..exception import CamException
-from ..async_op import progress_async
-
-OCL_SCALE = 1000.0
-
-_PREVIOUS_OCL_MESH = None
+from ..operators.async_op import progress_async
 
 
 def get_oclSTL(operation):

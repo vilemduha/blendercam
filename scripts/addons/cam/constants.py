@@ -42,3 +42,9 @@ if sys.version > "3":
     PY3 = True
 else:
     PY3 = False
+
+OCL_SCALE = 1000.0
+
+PYTHON_BIN = None
+
+_PREVIOUS_OCL_MESH = None

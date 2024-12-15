@@ -20,7 +20,7 @@ from . import (
     utils,
 )
 
-from .constansts import DT
+from .constants import DT
 
 
 def finger(diameter, stem=2):
