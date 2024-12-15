@@ -41,7 +41,7 @@ from .cam_chunk import (
     CamPathChunk,
     chunks_to_shapely,
 )
-from .async_op import progress_async
+from .operators.async_op import progress_async
 from .numba_wrapper import (
     jit,
     prange,

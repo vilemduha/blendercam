@@ -20,7 +20,7 @@ from . import (
     utils,
 )
 
-DT = 1.025
+from .constansts import DT
 
 
 def finger(diameter, stem=2):
@@ -801,19 +801,6 @@ def multiangle(
             Blender.
     """
 
-    # length is the total width of the segments including 2 * radius and thick
-    # radius = radius of the curve
-    # thick = thickness of the bar
-    # angle = angle of the female part
-    # diameter = diameter of the tool for joint creation
-    # tolerance = Tolerance in the joint
-    # amount = amount of fingers in the joint 0 means auto generate
-    # stem = amount of radius the stem or neck of the joint will have
-    # twist = twist lock addition
-    # tneck = percentage the twist neck will have compared to thick
-    # tthick = thicknest of the twist material
-    # which = which joint to generate, Male Female MaleFemale M, F, MF
-
     r_exterior = radius + thick / 2
     r_interior = radius - thick / 2
 
@@ -1157,20 +1144,6 @@ def mitre(
         which (str?): Specifies which joint to generate ('M', 'F', 'MF'). Defaults to 'MF'.
     """
 
-    # length is the total width of the segments including 2 * radius and thick
-    # radius = radius of the curve
-    # thick = thickness of the bar
-    # angle = angle of the female part
-    # angleb = angle of the male part
-    # diameter = diameter of the tool for joint creation
-    # tolerance = Tolerance in the joint
-    # amount = amount of fingers in the joint 0 means auto generate
-    # stem = amount of radius the stem or neck of the joint will have
-    # twist = twist lock addition
-    # tneck = percentage the twist neck will have compared to thick
-    # tthick = thicknest of the twist material
-    # which = which joint to generate, Male Female MaleFemale M, F, MF
-
     # generate base rectangle
     bpy.ops.curve.simple(
         align="WORLD",
@@ -1315,21 +1288,6 @@ def open_curve(
         None: This function does not return a value but modifies the geometry in the
             Blender context.
     """
-
-    # puts puzzle connectors at the end of an open curve
-    # optionally puts twist lock connectors at the puzzle connection
-    # optionally puts twist lock connectors along the open curve
-    # line = shapely linestring
-    # thick = thickness of the bar
-    # diameter = diameter of the tool for joint creation
-    # tolerance = Tolerance in the joint
-    # amount = amount of fingers in the joint 0 means auto generate
-    # stem = amount of radius the stem or neck of the joint will have
-    # twist = twist lock addition
-    # twist_amount = twist amount distributed on the curve not counting the joint twist locks
-    # tneck = percentage the twist neck will have compared to thick
-    # tthick = thicknest of the twist material
-    # Which M,F, MF, MM, FF
 
     coords = list(line.coords)
 

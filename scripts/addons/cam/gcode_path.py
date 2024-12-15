@@ -14,7 +14,7 @@ import bpy
 from mathutils import Euler, Vector
 
 from . import strategy
-from .async_op import progress_async
+from .operators.async_op import progress_async
 from .bridges import use_bridges
 from .cam_chunk import (
     curve_to_chunks,

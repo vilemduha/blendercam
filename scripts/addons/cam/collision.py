@@ -259,10 +259,6 @@ def subdivide_long_edges(ob, threshold):
         iter += 1
 
 
-# n=0
-#
-
-
 def prepare_bullet_collision(o):
     """Prepares all objects needed for sampling with Bullet collision.
 

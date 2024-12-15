@@ -20,7 +20,7 @@ from bpy.props import (
 )
 from bpy.types import Operator
 
-from . import (
+from .. import (
     involute_gear,
     joinery,
     puzzle_joinery,

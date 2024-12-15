@@ -59,18 +59,14 @@ computeDelaunayTriangulation(points):
 """
 
 import math
-import sys
 
-TOLERANCE = 1e-9
-BIG_FLOAT = 1e38
-
-if sys.version > "3":
-    PY3 = True
-else:
-    PY3 = False
+from .constants import (
+    TOLERANCE,
+    BIG_FLOAT,
+    PY3,
+)
 
 
-# ------------------------------------------------------------------
 class Context(object):
     def __init__(self):
         """Init function."""
@@ -511,7 +507,6 @@ class Context(object):
                 print("%d" % sitenumR)
 
 
-# ------------------------------------------------------------------
 def voronoi(siteList, context):
     """Generate a Voronoi diagram from a list of sites.
 
@@ -667,7 +662,6 @@ def voronoi(siteList, context):
     Edge.EDGE_NUM = 0  # CF
 
 
-# ------------------------------------------------------------------
 def is_equal(a, b, relativeError=TOLERANCE):
     """Check if two values are nearly equal within a specified relative error.
 
@@ -689,7 +683,6 @@ def is_equal(a, b, relativeError=TOLERANCE):
     return (norm < relativeError) or (abs(a - b) < (relativeError * norm))
 
 
-# ------------------------------------------------------------------
 class Site(object):
     def __init__(self, x=0.0, y=0.0, sitenum=0):
         """Init function."""
@@ -773,7 +766,6 @@ class Site(object):
         return math.sqrt(dx * dx + dy * dy)
 
 
-# ------------------------------------------------------------------
 class Edge(object):
     LE = 0  # left end indice --> edge.ep[Edge.LE]
     RE = 1  # right end indice
@@ -877,7 +869,6 @@ class Edge(object):
         return newedge
 
 
-# ------------------------------------------------------------------
 class Halfedge(object):
     def __init__(self, edge=None, pm=Edge.LE):
         """Init function."""
@@ -1064,7 +1055,6 @@ class Halfedge(object):
         else:
             return not above
 
-    # --------------------------
     # create a new site where the Halfedges el1 and el2 intersect
     def intersect(self, other):
         """Create a new site where two edges intersect.
@@ -1114,7 +1104,6 @@ class Halfedge(object):
         return Site(xint, yint)
 
 
-# ------------------------------------------------------------------
 class EdgeList(object):
     def __init__(self, xmin, xmax, nsites):
         """Init function."""
@@ -1245,7 +1234,6 @@ class EdgeList(object):
         return he
 
 
-# ------------------------------------------------------------------
 class PriorityQueue(object):
     def __init__(self, ymin, ymax, nsites):
         """Init function."""
@@ -1396,7 +1384,6 @@ class PriorityQueue(object):
         return curr
 
 
-# ------------------------------------------------------------------
 class SiteList(object):
     def __init__(self, pointList):
         """Init function."""
@@ -1576,7 +1563,6 @@ class SiteList(object):
     extent = property(_getextent)
 
 
-# ------------------------------------------------------------------
 def compute_voronoi_diagram(
     points, xBuff=0, yBuff=0, polygonsOutput=False, formatOutput=False, closePoly=True
 ):
@@ -1728,19 +1714,3 @@ def compute_delaunay_triangulation(points):
     context.triangulate = True
     voronoi(siteList, context)
     return context.triangles
-
-
-# -----------------------------------------------------------------------------
-# def shapely_voronoi(amount):
-#     import random
-#
-#     rcoord = []
-#     x = 0
-#     while x < self.amount:
-#         rcoord.append((width * random.random(), height * random.random(), 0.02 * random.random()))
-#         x += 1
-#
-#     points = MultiPoint(rcoord)
-#     voronoi = shapely.ops.voronoi_diagram(points, tolerance=0, edges=False)
-#
-#     utils.shapely_to_curve('voronoi', voronoi, 0)

@@ -3,6 +3,8 @@
 Package to store all constants of Fabex.
 """
 
+import sys
+
 # PRECISION is used in most operations
 PRECISION = 5
 
@@ -18,3 +20,25 @@ BULLET_SCALE = 10000
 # Cutter object must be present in the scene, so we need to put it aside for sweep collisions,
 # otherwise it collides with itself.
 CUTTER_OFFSET = (-5 * BULLET_SCALE, -5 * BULLET_SCALE, -5 * BULLET_SCALE)
+
+EPS = 1.0e-32
+
+NUMPYALG = False
+
+SHAPELY = True
+
+DT = 1.025
+
+USE_PROFILER = False
+
+was_hidden_dict = {}
+
+_IS_LOADING_DEFAULTS = False
+
+TOLERANCE = 1e-9
+BIG_FLOAT = 1e38
+
+if sys.version > "3":
+    PY3 = True
+else:
+    PY3 = False

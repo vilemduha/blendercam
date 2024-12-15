@@ -17,7 +17,7 @@ except ImportError:
     pass
 
 
-SHAPELY = True
+from .constants import SHAPELY
 
 
 def circle(r, np):

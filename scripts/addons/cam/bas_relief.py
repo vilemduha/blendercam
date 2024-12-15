@@ -22,24 +22,8 @@ from bpy.props import (
     StringProperty,
 )
 
-from .constants import PRECISION
-
-# ////////////////////////////////////////////////////////////////////
-# // Full Multigrid Algorithm for solving partial differential equations
-# //////////////////////////////////////////////////////////////////////
-# MODYF = 0 #/* 1 or 0 (1 is better) */
-# MINS = 16	#/* minimum size 4 6 or 100 */
-
-
-# SMOOTH_IT = 2 #/* minimum 1  */
-# V_CYCLE = 10 #/* number of v-cycles  2*/
-# ITERATIONS = 5
-
-# // precision
-EPS = 1.0e-32
-PRECISION = 5
-NUMPYALG = False
-# PLANAR_CONST=True
+from .constants import PRECISION, EPS, NUMPYALG
+from .exception import ReliefError
 
 
 def copy_compbuf_data(inbuf, outbuf):
@@ -592,12 +576,6 @@ def snrm(n, sx, itol):
         return temp.max()
 
 
-# /**
-# * Biconjugate Gradient Method
-# * from Numerical Recipes in C
-# */
-
-
 def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
     """Solve a linear system using the Biconjugate Gradient Method.
 
@@ -711,11 +689,6 @@ def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
                 continue
         if err <= tol:
             break
-    # if PLANAR_CONST and planar.shape==rr.shape:
-    # 	x[planar]=0.0
-
-
-# --------------------------------------------------------------------
 
 
 def numpy_save(a, iname):
@@ -1404,10 +1377,6 @@ def relief(br):
     # numpytoimage(target,br.output_image_name)
 
 
-class ReliefError(Exception):
-    pass
-
-
 class DoBasRelief(bpy.types.Operator):
     """Calculate Bas Relief"""
 
@@ -1747,22 +1716,7 @@ class DoBasRelief(bpy.types.Operator):
                 layout.prop_search(self, "gradient_scaling_mask_name", bpy.data, "images")
             layout.prop(self, "detail_enhancement_use")
             if self.detail_enhancement_use:
-                # layout.prop(self,'detail_enhancement_freq')
                 layout.prop(self, "detail_enhancement_amount")
-                # print(dir(layout))
-                # layout.prop(s.view_settings.curve_mapping,"curves")
-                # layout.label('Frequency scaling:')
-                # s.view_settings.curve_mapping.clip_max_y=2
-
-                # layout.template_curve_mapping(s.view_settings, "curve_mapping")
-
-        # layout.prop(self,'scale_down_before_use')
-        # if self.scale_down_before_use:
-        # 	layout.prop(self,'scale_down_before')
-        # box = layout.box()
-        # col = box.column()
-        # col.scale_y = 1.2
-        # col.operator("scene.calculate_bas_relief", text="Calculate Relief", icon="RNDCURVE")
 
 
 class ProblemAreas(bpy.types.Operator):

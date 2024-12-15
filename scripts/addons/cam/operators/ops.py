@@ -30,7 +30,7 @@ from bpy.types import (
 )
 from mathutils import Euler, Vector
 
-from . import (
+from .. import (
     bridges,
     gcode_path,
     pack,
@@ -44,10 +44,10 @@ from .async_op import (
     AsyncOperatorMixin,
     progress_async,
 )
-from .constants import PRECISION
-from .exception import CamException
-from .pack import pack_curves
-from .utils import (
+from ..constants import PRECISION
+from ..exception import CamException
+from ..pack import pack_curves
+from ..utils import (
     add_machine_area_object,
     get_bounds_worldspace,
     chain_valid,

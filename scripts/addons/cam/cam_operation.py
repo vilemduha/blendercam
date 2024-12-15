@@ -41,12 +41,20 @@ from .ui.panels.movement import CAM_MOVEMENT_Properties
 from .ui.panels.optimisation import CAM_OPTIMISATION_Properties
 
 
-class CamOperation(PropertyGroup):
+class CAM_OPERATION_Properties(PropertyGroup):
+
+    #######################
+    # Imported Properties #
+    #######################
 
     material: PointerProperty(type=CAM_MATERIAL_Properties)
     info: PointerProperty(type=CAM_INFO_Properties)
     optimisation: PointerProperty(type=CAM_OPTIMISATION_Properties)
     movement: PointerProperty(type=CAM_MOVEMENT_Properties)
+
+    ########################
+    # Property Definitions #
+    ########################
 
     name: StringProperty(
         name="Operation Name",
@@ -270,7 +278,11 @@ class CamOperation(PropertyGroup):
         unit="LENGTH",
         update=update_rest,
     )
-    # pocket options
+
+    ##########
+    # Pocket #
+    ##########
+
     pocket_option: EnumProperty(
         name="Start Position",
         items=(("INSIDE", "Inside", "a"), ("OUTSIDE", "Outside", "a")),
@@ -315,7 +327,11 @@ class CamOperation(PropertyGroup):
         default=False,
         update=update_rest,
     )
-    # Cutout
+
+    ##########
+    # Cutout #
+    ##########
+
     cut_type: EnumProperty(
         name="Cut",
         items=(("OUTSIDE", "Outside", "a"), ("INSIDE", "Inside", "a"), ("ONLINE", "On Line", "a")),
@@ -337,7 +353,11 @@ class CamOperation(PropertyGroup):
         default=True,
         update=update_rest,
     )
-    # cutter
+
+    ##########
+    # Cutter #
+    ##########
+
     cutter_id: IntProperty(
         name="Tool Number",
         description="For machines which support tool change based on tool id",
@@ -403,8 +423,6 @@ class CamOperation(PropertyGroup):
         precision=constants.PRECISION,
         update=update_offset_image,
     )
-    # ball_cone_flute: FloatProperty(name="BallCone Flute Length", description="length of flute", min=0.0,
-    #                                 max=0.1, default=0.017, unit="LENGTH", precision=constants.PRECISION, update=updateOffsetImage)
     bull_corner_radius: FloatProperty(
         name="Bull Corner Radius",
         description="Radius tool bit corner",
@@ -415,12 +433,15 @@ class CamOperation(PropertyGroup):
         precision=constants.PRECISION,
         update=update_offset_image,
     )
-
     cutter_description: StringProperty(
         name="Tool Description",
         default="",
         update=update_offset_image,
     )
+
+    ##################
+    # Laser & Plasma #
+    ##################
 
     laser_on: StringProperty(
         name="Laser ON String",
@@ -458,7 +479,10 @@ class CamOperation(PropertyGroup):
         default=0.0,
     )
 
-    # steps
+    #########
+    # Steps #
+    #########
+
     distance_between_paths: FloatProperty(
         name="Distance Between Toolpaths",
         default=0.001,
@@ -487,7 +511,6 @@ class CamOperation(PropertyGroup):
         unit="ROTATION",
         update=update_rest,
     )
-
     old_rotation_a: FloatProperty(
         name="A Axis Angle",
         description="old value of Rotate A axis\nto specified angle",
@@ -499,7 +522,6 @@ class CamOperation(PropertyGroup):
         unit="ROTATION",
         update=update_rest,
     )
-
     old_rotation_b: FloatProperty(
         name="A Axis Angle",
         description="old value of Rotate A axis\nto specified angle",
@@ -511,7 +533,6 @@ class CamOperation(PropertyGroup):
         unit="ROTATION",
         update=update_rest,
     )
-
     rotation_a: FloatProperty(
         name="A Axis Angle",
         description="Rotate A axis\nto specified angle",
@@ -535,7 +556,6 @@ class CamOperation(PropertyGroup):
         default=True,
         update=update_rest,
     )
-
     rotation_b: FloatProperty(
         name="B Axis Angle",
         description="Rotate B axis\nto specified angle",
@@ -554,7 +574,10 @@ class CamOperation(PropertyGroup):
         update=update_rotation,
     )
 
-    # carve only
+    #########
+    # Carve #
+    #########
+
     carve_depth: FloatProperty(
         name="Carve Depth",
         default=0.001,
@@ -565,7 +588,10 @@ class CamOperation(PropertyGroup):
         update=update_rest,
     )
 
-    # drill only
+    #########
+    # Drill #
+    #########
+
     drill_type: EnumProperty(
         name="Holes On",
         items=(
@@ -577,7 +603,11 @@ class CamOperation(PropertyGroup):
         default="MIDDLE_SYMETRIC",
         update=update_rest,
     )
-    # waterline only
+
+    #############
+    # Waterline #
+    #############
+
     slice_detail: FloatProperty(
         name="Distance Between Slices",
         default=0.001,
@@ -600,7 +630,10 @@ class CamOperation(PropertyGroup):
         update=update_rest,
     )
 
-    # movement and ramps
+    ####################
+    # Movement & Ramps #
+    ####################
+
     use_layers: BoolProperty(
         name="Use Layers",
         description="Use layers for roughing",
@@ -642,9 +675,6 @@ class CamOperation(PropertyGroup):
         default=0,
         update=update_rest,
     )
-
-    # helix_angle: FloatProperty(name="Helix ramp angle", default=3*pi/180, min=0.00001, max=pi*0.4999,precision=1, subtype="ANGLE" , unit="ROTATION" , update = updateRest)
-
     min_z: FloatProperty(
         name="Operation Depth End",
         default=-0.01,
@@ -654,7 +684,6 @@ class CamOperation(PropertyGroup):
         unit="LENGTH",
         update=update_rest,
     )
-
     min_z_from: EnumProperty(
         name="Max Depth From",
         description="Set maximum operation depth",
@@ -666,7 +695,6 @@ class CamOperation(PropertyGroup):
         default="OBJECT",
         update=update_rest,
     )
-
     start_type: EnumProperty(
         name="Start Type",
         items=(
@@ -681,7 +709,6 @@ class CamOperation(PropertyGroup):
         default="ZLEVEL",
         update=update_strategy,
     )
-
     max_z: FloatProperty(
         name="Operation Depth Start",
         description="operation starting depth",
@@ -692,7 +719,6 @@ class CamOperation(PropertyGroup):
         unit="LENGTH",
         update=update_rest,
     )  # EXPERIMENTAL
-
     first_down: BoolProperty(
         name="First Down",
         description="First go down on a contour, then go to the next one",
@@ -700,9 +726,9 @@ class CamOperation(PropertyGroup):
         update=update_operation,
     )
 
-    #######################################################
-    # Image related
-    ####################################################
+    #########
+    # Image #
+    #########
 
     source_image_scale_z: FloatProperty(
         name="Image Source Depth Scale",
@@ -776,9 +802,9 @@ class CamOperation(PropertyGroup):
         update=update_Z_buffer_image,
     )
 
-    #########################################################
-    # Toolpath and area related
-    #####################################################
+    #####################
+    # Toolpath and Area #
+    #####################
 
     ambient_behaviour: EnumProperty(
         name="Ambient",
@@ -787,7 +813,6 @@ class CamOperation(PropertyGroup):
         default="ALL",
         update=update_Z_buffer_image,
     )
-
     ambient_radius: FloatProperty(
         name="Ambient Radius",
         description="Radius around the part which will be milled if " "ambient is set to Around",
@@ -798,7 +823,6 @@ class CamOperation(PropertyGroup):
         unit="LENGTH",
         update=update_rest,
     )
-    # ambient_cutter = EnumProperty(name='Borders',items=(('EXTRAFORCUTTER', 'Extra for cutter', "Extra space for cutter is cut around the segment"),('ONBORDER', "Cutter on edge", "Cutter goes exactly on edge of ambient with it's middle") ,('INSIDE', "Inside segment", 'Cutter stays within segment')	 ),description='handling of ambient and cutter size',default='INSIDE')
     use_limit_curve: BoolProperty(
         name="Use Limit Curve",
         description="A curve limits the operation area",
@@ -818,7 +842,10 @@ class CamOperation(PropertyGroup):
         update=update_rest,
     )
 
-    # feeds
+    #########
+    # Feeds #
+    #########
+
     feedrate: FloatProperty(
         name="Feedrate",
         description="Feedrate in units per minute",
@@ -859,7 +886,9 @@ class CamOperation(PropertyGroup):
         update=update_chipload,
     )
 
-    # optimization and performance
+    ##############################
+    # Optimisation & Performance #
+    ##############################
 
     do_simulation_feedrate: BoolProperty(
         name="Adjust Feedrates with Simulation EXPERIMENTAL",
@@ -867,14 +896,12 @@ class CamOperation(PropertyGroup):
         default=False,
         update=update_rest,
     )
-
     dont_merge: BoolProperty(
         name="Don't Merge Outlines when Cutting",
         description="this is usefull when you want to cut around everything",
         default=False,
         update=update_rest,
     )
-
     pencil_threshold: FloatProperty(
         name="Pencil Threshold",
         default=0.00002,
@@ -884,7 +911,6 @@ class CamOperation(PropertyGroup):
         unit="LENGTH",
         update=update_rest,
     )
-
     crazy_threshold_1: FloatProperty(
         name="Min Engagement",
         default=0.02,
@@ -925,21 +951,23 @@ class CamOperation(PropertyGroup):
         precision=constants.PRECISION,
         update=update_rest,
     )
-    # Add pocket operation to medial axis
+
+    ##########
+    # Medial #
+    ##########
+
     add_pocket_for_medial: BoolProperty(
         name="Add Pocket Operation",
         description="Clean unremoved material after medial axis",
         default=True,
         update=update_rest,
     )
-
     add_mesh_for_medial: BoolProperty(
         name="Add Medial mesh",
         description="Medial operation returns mesh for editing and " "further processing",
         default=False,
         update=update_rest,
     )
-    ####
     medial_axis_threshold: FloatProperty(
         name="Long Vector Threshold",
         default=0.001,
@@ -958,9 +986,11 @@ class CamOperation(PropertyGroup):
         unit="LENGTH",
         update=update_rest,
     )
-    # calculations
 
-    # bridges
+    ###########
+    # Bridges #
+    ###########
+
     use_bridges: BoolProperty(
         name="Use Bridges / Tabs",
         description="Use bridges in cutout",
@@ -994,20 +1024,6 @@ class CamOperation(PropertyGroup):
         default=True,
         update=update_bridges,
     )
-
-    # commented this - auto bridges will be generated, but not as a setting of the operation
-    # bridges_placement = EnumProperty(name='Bridge placement',
-    #     items=(
-    #         ('AUTO','Automatic', 'Automatic bridges with a set distance'),
-    #         ('MANUAL','Manual', 'Manual placement of bridges'),
-    #         ),
-    #     description='Bridge placement',
-    #     default='AUTO',
-    #     update = updateStrategy)
-    #
-    # bridges_per_curve = IntProperty(name="minimum bridges per curve", description="", default=4, min=1, max=512, update = updateBridges)
-    # bridges_max_distance = FloatProperty(name = 'Maximum distance between bridges', default=0.08, unit='LENGTH', precision=constants.PRECISION, update = updateBridges)
-
     use_modifiers: BoolProperty(
         name="Use Mesh Modifiers",
         description="Include mesh modifiers using render level when "
@@ -1015,12 +1031,10 @@ class CamOperation(PropertyGroup):
         default=True,
         update=operation_valid,
     )
-    # optimisation panel
 
-    # material settings
-
-    ##############################################################################
-    # MATERIAL SETTINGS
+    ############
+    # Material #
+    ############
 
     min: FloatVectorProperty(
         name="Operation Minimum",
@@ -1037,92 +1051,82 @@ class CamOperation(PropertyGroup):
         subtype="XYZ",
     )
 
-    # g-code options for operation
+    #########
+    # Gcode #
+    #########
+
     output_header: BoolProperty(
         name="Output G-code Header",
         description="Output user defined G-code command header" " at start of operation",
         default=False,
     )
-
     gcode_header: StringProperty(
         name="G-code Header",
         description="G-code commands at start of operation." " Use ; for line breaks",
         default="G53 G0",
     )
-
     enable_dust: BoolProperty(
         name="Dust Collector",
         description="Output user defined g-code command header" " at start of operation",
         default=False,
     )
-
     gcode_start_dust_cmd: StringProperty(
         name="Start Dust Collector",
         description="Commands to start dust collection. Use ; for line breaks",
         default="M100",
     )
-
     gcode_stop_dust_cmd: StringProperty(
         name="Stop Dust Collector",
         description="Command to stop dust collection. Use ; for line breaks",
         default="M101",
     )
-
     enable_hold: BoolProperty(
         name="Hold Down",
         description="Output hold down command at start of operation",
         default=False,
     )
-
     gcode_start_hold_cmd: StringProperty(
         name="G-code Header",
         description="G-code commands at start of operation." " Use ; for line breaks",
         default="M102",
     )
-
     gcode_stop_hold_cmd: StringProperty(
         name="G-code Header",
         description="G-code commands at end operation. Use ; for line breaks",
         default="M103",
     )
-
     enable_mist: BoolProperty(
         name="Mist",
         description="Mist command at start of operation",
         default=False,
     )
-
     gcode_start_mist_cmd: StringProperty(
         name="Start Mist",
         description="Command to start mist. Use ; for line breaks",
         default="M104",
     )
-
     gcode_stop_mist_cmd: StringProperty(
         name="Stop Mist",
         description="Command to stop mist. Use ; for line breaks",
         default="M105",
     )
-
     output_trailer: BoolProperty(
         name="Output G-code Trailer",
         description="Output user defined g-code command trailer" " at end of operation",
         default=False,
     )
-
     gcode_trailer: StringProperty(
         name="G-code Trailer",
         description="G-code commands at end of operation." " Use ; for line breaks",
         default="M02",
     )
 
-    # internal properties
-    ###########################################
+    ############
+    # Internal #
+    ############
 
-    # testing = IntProperty(name="developer testing ", description="This is just for script authors for help in coding, keep 0", default=0, min=0, max=512)
     offset_image = numpy.array([], dtype=float)
     zbuffer_image = numpy.array([], dtype=float)
-
     silhouette = sgeometry.Polygon()
     ambient = sgeometry.Polygon()
     operation_limit = sgeometry.Polygon()
@@ -1130,7 +1134,9 @@ class CamOperation(PropertyGroup):
     object = None
     path_object_name: StringProperty(name="Path Object", description="Actual CNC path")
 
-    # update and tags and related
+    #################
+    # Update & Tags #
+    #################
 
     changed: BoolProperty(
         name="True if any of the Operation Settings has Changed",
@@ -1162,7 +1168,6 @@ class CamOperation(PropertyGroup):
         description="Mark for update",
         default=True,
     )
-
     valid: BoolProperty(
         name="Valid",
         description="True if operation is ok for calculation",
@@ -1173,7 +1178,9 @@ class CamOperation(PropertyGroup):
         description="change data for checking if stuff changed.",
     )
 
-    # process related data
+    ###########
+    # Process #
+    ###########
 
     computing: BoolProperty(
         name="Computing Right Now",

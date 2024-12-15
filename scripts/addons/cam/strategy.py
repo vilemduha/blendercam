@@ -26,8 +26,6 @@ from mathutils import Euler, Vector
 
 
 from .bridges import use_bridges
-
-
 from .cam_chunk import (
     CamPathChunk,
     chunks_refine,
@@ -40,17 +38,10 @@ from .cam_chunk import (
     set_chunks_z,
     shapely_to_chunks,
 )
-
-
 from .collision import cleanup_bullet_collision
-
-
+from .constants import SHAPELY
 from .exception import CamException
-
-
 from .polygon_utils_cam import circle, shapely_to_curve
-
-
 from .simple import (
     activate,
     delete_object,
@@ -73,9 +64,7 @@ from .utils import (
     sort_chunks,
     unique,
 )
-from .curve_cam_create import generate_crosshatch
-
-SHAPELY = True
+from .operators.curve_cam_create import generate_crosshatch
 
 
 # cutout strategy is completely here:

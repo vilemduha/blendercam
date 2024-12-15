@@ -23,12 +23,12 @@ from bpy_extras.object_utils import object_data_add
 
 # Relative Imports - from 'cam' module
 from .bas_relief import DoBasRelief, ProblemAreas
-from .cam_operation import CamOperation
+from .cam_operation import CAM_OPERATION_Properties
 from .chain import (
-    CamChain,
-    OpReference,
+    CAM_CHAIN_Properties,
+    CAM_OP_REFERENCE_Properties,
 )
-from .curve_cam_create import (
+from .operators.curve_cam_create import (
     CamCurveDrawer,
     CamCurveFlatCone,
     CamCurveGear,
@@ -38,13 +38,13 @@ from .curve_cam_create import (
     CamCurvePlate,
     CamCurvePuzzle,
 )
-from .curve_cam_equation import (
+from .operators.curve_cam_equation import (
     CamCustomCurve,
     CamHypotrochoidCurve,
     CamLissajousCurve,
     CamSineCurve,
 )
-from .curve_cam_tools import (
+from .operators.curve_cam_tools import (
     CamCurveBoolean,
     CamCurveConvexHull,
     CamCurveIntarsion,
@@ -53,14 +53,14 @@ from .curve_cam_tools import (
     CamCurveRemoveDoubles,
     CamMeshGetPockets,
     CamOffsetSilhouete,
-    CamObjectSilhouete,
+    CamObjectSilhouette,
 )
 from .engine import (
     FABEX_ENGINE,
     get_panels,
 )
 from .machine_settings import MachineSettings
-from .ops import (
+from .operators.ops import (
     CalculatePath,
     # bridges related
     CamBridgesAdd,
@@ -115,8 +115,8 @@ classes = [
     DoBasRelief,
     ProblemAreas,
     # .chain
-    OpReference,
-    CamChain,
+    CAM_OP_REFERENCE_Properties,
+    CAM_CHAIN_Properties,
     # .curve_cam_create
     CamCurveDrawer,
     CamCurveFlatCone,
@@ -140,7 +140,7 @@ classes = [
     CamCurveRemoveDoubles,
     CamMeshGetPockets,
     CamOffsetSilhouete,
-    CamObjectSilhouete,
+    CamObjectSilhouette,
     # .engine
     FABEX_ENGINE,
     # .machine_settings
@@ -191,7 +191,7 @@ def register() -> None:
     ui_register()
 
     # .cam_operation - last to allow dependencies to register before it
-    bpy.utils.register_class(CamOperation)
+    bpy.utils.register_class(CAM_OPERATION_Properties)
 
     bpy.app.handlers.frame_change_pre.append(timer_update)
     bpy.app.handlers.load_post.append(check_operations_on_load)
@@ -209,7 +209,7 @@ def register() -> None:
         update=update_operation,
     )
     scene.cam_chains = CollectionProperty(
-        type=CamChain,
+        type=CAM_CHAIN_Properties,
     )
     scene.gcode_output_type = StringProperty(
         name="Gcode Output Type",
@@ -219,7 +219,7 @@ def register() -> None:
         type=MachineSettings,
     )
     scene.cam_operations = CollectionProperty(
-        type=CamOperation,
+        type=CAM_OPERATION_Properties,
     )
     scene.cam_text = StringProperty()
     scene.interface = PointerProperty(
@@ -249,7 +249,7 @@ def unregister() -> None:
 
     ui_unregister()
 
-    bpy.utils.unregister_class(CamOperation)
+    bpy.utils.unregister_class(CAM_OPERATION_Properties)
 
     scene = bpy.types.Scene
 

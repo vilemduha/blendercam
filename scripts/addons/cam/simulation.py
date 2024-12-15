@@ -10,7 +10,7 @@ import numpy as np
 import bpy
 from mathutils import Vector
 
-from .async_op import progress_async
+from .operators.async_op import progress_async
 from .image_utils import (
     get_cutter_array,
     numpy_save,

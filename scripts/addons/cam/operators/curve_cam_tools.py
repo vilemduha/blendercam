@@ -17,7 +17,7 @@ from bpy.props import (
 from bpy.types import Operator
 from mathutils import Vector
 
-from . import (
+from .. import (
     polygon_utils_cam,
     simple,
     utils,
@@ -931,7 +931,7 @@ class CamOffsetSilhouete(Operator):
     # Finds object silhouette, usefull for meshes, since with curves it's not needed.
 
 
-class CamObjectSilhouete(Operator):
+class CamObjectSilhouette(Operator):
     """Object Silhouette"""
 
     bl_idname = "object.silhouette"
@@ -940,8 +940,6 @@ class CamObjectSilhouete(Operator):
 
     @classmethod
     def poll(cls, context):
-        #        return context.active_object is not None and (context.active_object.type == 'CURVE'
-        #        or context.active_object.type == 'FONT' or context.active_object.type == 'MESH')
         return context.active_object is not None and (
             context.active_object.type == "FONT" or context.active_object.type == "MESH"
         )
@@ -951,14 +949,12 @@ class CamObjectSilhouete(Operator):
         ob = bpy.context.active_object
         self.silh = utils.get_object_silhouette("OBJECTS", objects=bpy.context.selected_objects)
         bpy.context.scene.cursor.location = (0, 0, 0)
-        # smp=sgeometry.asMultiPolygon(self.silh)
+
         for smp in self.silh.geoms:
-            polygon_utils_cam.shapely_to_curve(ob.name + "_silhouette", smp, 0)  #
-        # bpy.ops.object.convert(target='CURVE')
+            polygon_utils_cam.shapely_to_curve(ob.name + "_silhouette", smp, 0)
+
         simple.join_multiple(ob.name + "_silhouette")
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type="ORIGIN_CURSOR")
         bpy.ops.object.curve_remove_doubles()
         return {"FINISHED"}
-
-    # ---------------------------------------------------

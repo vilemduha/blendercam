@@ -16,7 +16,7 @@ from bpy.props import (
 )
 from bpy.types import Operator
 
-from . import parametric
+from .. import parametric
 
 
 class CamSineCurve(Operator):

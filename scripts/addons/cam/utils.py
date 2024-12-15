@@ -23,7 +23,7 @@ from bpy.app.handlers import persistent
 from bpy_extras import object_utils
 from mathutils import Euler, Vector
 
-from .async_op import progress_async
+from .operators.async_op import progress_async
 from .cam_chunk import (
     curve_to_chunks,
     parent_child,
@@ -33,6 +33,12 @@ from .cam_chunk import (
     chunks_to_shapely,
 )
 from .collision import get_sample_bullet, get_sample_bullet_n_axis, prepare_bullet_collision
+from .constants import (
+    SHAPELY,
+    USE_PROFILER,
+    was_hidden_dict,
+    _IS_LOADING_DEFAULTS,
+)
 from .exception import CamException
 from .image_utils import (
     image_to_chunks,
@@ -59,9 +65,6 @@ from .simple import (
     is_vertical_limit,
     get_cache_path,
 )
-
-# from shapely.geometry import * not possible until Polygon libs gets out finally..
-SHAPELY = True
 
 
 # Import OpencamLib
@@ -2168,22 +2171,6 @@ def add_machine_area_object():
     # else:
     #     bpy.context.scene.objects.active = None
 
-    # Update Viewport Shading for better previews
-
-    # view3d = [a.spaces[0] for a in bpy.context.screen.areas if a.type == "VIEW_3D"][0]
-
-    # shading = view3d.shading
-    # shading.color_type = "OBJECT"
-    # shading.show_shadows = True
-    # shading.show_cavity = True
-    # shading.cavity_type = "BOTH"
-    # shading.cavity_ridge_factor = 2.5
-    # shading.cavity_valley_factor = 2.5
-    # shading.curvature_ridge_factor = 2
-    # shading.curvature_valley_factor = 2
-    # shading.use_dof = True
-    # shading.show_object_outline = True
-
 
 def add_material_area_object():
     """Add a material area object to the current Blender scene.
@@ -2366,18 +2353,6 @@ def prepare_indexed(o):
 
         bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
 
-    # rot=ori.matrix_world.inverted()
-    # #rot.x=-rot.x
-    # #rot.y=-rot.y
-    # #rot.z=-rot.z
-    # rotationaxes = rotTo2axes(ori.rotation_euler,'CA')
-    #
-    # #bpy.context.space_data.pivot_point = 'CURSOR'
-    # #bpy.context.space_data.pivot_point = 'CURSOR'
-    #
-    # for ob in o.objects:
-    #     ob.rotation_euler.rotate(rot)
-
 
 def cleanup_indexed(operation):
     """Clean up indexed operations by updating object orientations and paths.
@@ -2464,21 +2439,6 @@ def rotation_to_2_axes(e, axescombination):
 
         return (cangle, bangle)
 
-    # v2d=((v[a[0]],v[a[1]]))
-    # angle1=a1base.angle(v2d)#C for ca
-    # print(angle1)
-    # if axescombination[0]=='C':
-    #     e1=Vector((0,0,-angle1))
-    # elif axescombination[0]=='A':#TODO: finish this after prototyping stage
-    #     pass;
-    # v.rotate(e1)
-    # vbase=Vector(0,1,0)
-    # bangle=v.angle(vzbase)
-    # print(v)
-    # print(bangle)
-
-    # return (angle1, angle2)
-
 
 def reload_paths(o):
     """Reload the camera path data from a pickle file.
@@ -2508,17 +2468,6 @@ def reload_paths(o):
     d = pickle.load(f)
     f.close()
 
-    # passed=False
-    # while not passed:
-    #     try:
-    #         f=open(picklepath,'rb')
-    #         d=pickle.load(f)
-    #         f.close()
-    #         passed=True
-    #     except:
-    #         print('sleep')
-    #         time.sleep(1)
-
     o.info.warnings = d["warnings"]
     o.info.duration = d["duration"]
     verts = d["path"]
@@ -2545,26 +2494,6 @@ def reload_paths(o):
 
     if old_pathmesh is not None:
         bpy.data.meshes.remove(old_pathmesh)
-
-
-# def setup_operation_preset():
-#     scene = bpy.context.scene
-#     cam_operations = scene.cam_operations
-#     active_operation = scene.cam_active_operation
-#     try:
-#         o = cam_operations[active_operation]
-#     except IndexError:
-#         bpy.ops.scene.cam_operation_add()
-#         o = cam_operations[active_operation]
-#     return o
-
-
-# Moved from init - the following code was moved here to permit the import fix
-USE_PROFILER = False
-
-was_hidden_dict = {}
-
-_IS_LOADING_DEFAULTS = False
 
 
 def update_machine(self, context):
