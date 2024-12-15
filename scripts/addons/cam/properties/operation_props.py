@@ -35,10 +35,10 @@ from .utils import (
     update_strategy,
     update_Z_buffer_image,
 )
-from .ui.panels.info import CAM_INFO_Properties
-from .ui.panels.material import CAM_MATERIAL_Properties
-from .ui.panels.movement import CAM_MOVEMENT_Properties
-from .ui.panels.optimisation import CAM_OPTIMISATION_Properties
+from .info_props import CAM_INFO_Properties
+from .material_props import CAM_MATERIAL_Properties
+from .movement_props import CAM_MOVEMENT_Properties
+from .optimisation_props import CAM_OPTIMISATION_Properties
 
 
 class CAM_OPERATION_Properties(PropertyGroup):

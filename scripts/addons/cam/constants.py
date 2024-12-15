@@ -27,6 +27,7 @@ NUMPYALG = False
 
 SHAPELY = True
 
+# DT = Bit diameter tolerance
 DT = 1.025
 
 USE_PROFILER = False

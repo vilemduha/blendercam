@@ -23,10 +23,9 @@ from bpy_extras.object_utils import object_data_add
 
 # Relative Imports - from 'cam' module
 from .bas_relief import DoBasRelief, ProblemAreas
-from .cam_operation import CAM_OPERATION_Properties
-from .chain import (
-    CAM_CHAIN_Properties,
-    CAM_OP_REFERENCE_Properties,
+from .engine import (
+    FABEX_ENGINE,
+    get_panels,
 )
 from .operators.curve_cam_create import (
     CamCurveDrawer,
@@ -55,11 +54,7 @@ from .operators.curve_cam_tools import (
     CamOffsetSilhouete,
     CamObjectSilhouette,
 )
-from .engine import (
-    FABEX_ENGINE,
-    get_panels,
-)
-from .machine_settings import MachineSettings
+from .operators.position_object import CAM_MATERIAL_PositionObject
 from .operators.ops import (
     CalculatePath,
     # bridges related
@@ -90,7 +85,16 @@ from .operators.ops import (
     timer_update,
 )
 
-# from .pack import PackObjectsSettings
+from .properties.operation_props import CAM_OPERATION_Properties
+from properties.chain_props import (
+    CAM_CHAIN_Properties,
+    CAM_OP_REFERENCE_Properties,
+)
+from .properties.info_props import CAM_INFO_Properties
+from .properties.machine_props import CAM_MACHINE_Properties
+from .properties.material_props import CAM_MATERIAL_Properties
+from .properties.movement_props import CAM_MOVEMENT_Properties
+from .properties.optimisation_props import CAM_OPTIMISATION_Properties
 from .preferences import CamAddonPreferences
 from .preset_managers import (
     AddPresetCamCutter,
@@ -101,8 +105,9 @@ from .preset_managers import (
     CAM_OPERATION_MT_presets,
 )
 
-# from .slice import SliceObjectsSettings
 from .ui import register as ui_register, unregister as ui_unregister
+
+# Import Interface Properties to create a PointerProperty in register()
 from .ui.panels.interface import CAM_INTERFACE_Properties
 from .utils import (
     check_operations_on_load,
@@ -117,6 +122,10 @@ classes = [
     # .chain
     CAM_OP_REFERENCE_Properties,
     CAM_CHAIN_Properties,
+    CAM_INFO_Properties,
+    CAM_MATERIAL_Properties,
+    CAM_MOVEMENT_Properties,
+    CAM_OPTIMISATION_Properties,
     # .curve_cam_create
     CamCurveDrawer,
     CamCurveFlatCone,
@@ -144,9 +153,10 @@ classes = [
     # .engine
     FABEX_ENGINE,
     # .machine_settings
-    MachineSettings,
+    CAM_MACHINE_Properties,
     # .ops
     CalculatePath,
+    CAM_MATERIAL_PositionObject,
     # bridges related
     CamBridgesAdd,
     CamChainAdd,
@@ -216,7 +226,7 @@ def register() -> None:
         default="",
     )
     scene.cam_machine = PointerProperty(
-        type=MachineSettings,
+        type=CAM_MACHINE_Properties,
     )
     scene.cam_operations = CollectionProperty(
         type=CAM_OPERATION_Properties,

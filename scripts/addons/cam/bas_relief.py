@@ -23,6 +23,7 @@ from bpy.props import (
 )
 
 from .constants import PRECISION, EPS, NUMPYALG
+from .image_utils import image_to_numpy, numpy_save, numpy_to_image
 
 
 class ReliefError(Exception):
@@ -68,9 +69,6 @@ def restrict_buffer(inbuf, outbuf):
 
     sy = dy / 2 - 0.5
     if dx == 2 and dy == 2:  # much simpler method
-        # if dx<2:
-        # restricted=
-        # num=restricted.shape[0]*restricted.shape[1]
         outbuf[:] = (
             inbuf[::2, ::2] + inbuf[1::2, ::2] + inbuf[::2, 1::2] + inbuf[1::2, 1::2]
         ) / 4.0
@@ -94,19 +92,14 @@ def restrict_buffer(inbuf, outbuf):
         systartrange[systartrange < 0] = 0
         syendrange = numpy.array(numpy.floor(syrange + xfiltersize) + 1, dtype=int)
         syendrange[syendrange > iny] = iny
-        # np.arange(8*6*3).reshape((8, 6, 3))
 
-        # 3is the maximum value...?pff.
+        # 3 is the maximum value...?pff.
         indices = numpy.arange(outx * outy * 2 * 3).reshape((2, outx * outy, 3))
 
         r = sxendrange - sxstartrange
 
         indices[0] = sxstartrange.repeat(outy)
-
         indices[1] = systartrange.repeat(outx).reshape(outx, outy).swapaxes(0, 1).flatten()
-
-        # systartrange=numpy.max(0,numpy.ceil(syrange-xfiltersize))
-        # syendrange=numpy.min(numpy.floor(syrange+xfiltersize),iny-1)+1
 
         outbuf.fill(0)
         tempbuf = inbuf[indices[0], indices[1]]
@@ -115,7 +108,6 @@ def restrict_buffer(inbuf, outbuf):
         tempbuf += inbuf[indices[0] + 1, indices[1] + 1]
         tempbuf /= 4.0
         outbuf[:] = tempbuf.reshape((outx, outy))
-        # outbuf[:,:]=inbuf[]#inbuf[sxstartrange,systartrange] #+ inbuf[sxstartrange+1,systartrange] + inbuf[sxstartrange,systartrange+1] + inbuf[sxstartrange+1,systartrange+1])/4.0
 
     else:  # old method
         for y in range(0, outy):
@@ -169,15 +161,12 @@ def prolongate(inbuf, outbuf):
 
     filterSize = 1
     xfiltersize = dx * filterSize
-    # outx[:]=
 
-    # outbuf.put(inbuf.repeat(4))
     if dx == 0.5 and dy == 0.5:
         outbuf[::2, ::2] = inbuf
         outbuf[1::2, ::2] = inbuf
         outbuf[::2, 1::2] = inbuf
         outbuf[1::2, 1::2] = inbuf
-        # x=inbuf::.flatten().repeat(2)
     elif NUMPYALG:  # numpy method
         sy = -dy / 2
         sx = -dx / 2
@@ -200,18 +189,9 @@ def prolongate(inbuf, outbuf):
         indices[0] = sxstartrange.repeat(outy)
         indices[1] = systartrange.repeat(outx).reshape(outx, outy).swapaxes(0, 1).flatten()
 
-        # systartrange=numpy.max(0,numpy.ceil(syrange-xfiltersize))
-        # syendrange=numpy.min(numpy.floor(syrange+xfiltersize),iny-1)+1
-        # outbuf.fill(0)
         tempbuf = inbuf[indices[0], indices[1]]
-        # tempbuf+=inbuf[indices[0]+1,indices[1]]
-        # tempbuf+=inbuf[indices[0],indices[1]+1]
-        # tempbuf+=inbuf[indices[0]+1,indices[1]+1]
         tempbuf /= 4.0
         outbuf[:] = tempbuf.reshape((outx, outy))
-
-        # outbuf.fill(0)
-        # outbuf[xrange,yrange]=inbuf[sxstartrange,systartrange]# + inbuf[sxendrange,systartrange] + inbuf[sxstartrange,syendrange] + inbuf[sxendrange,syendrange])/4.0
 
     else:
         sy = -dy / 2
@@ -234,20 +214,15 @@ def prolongate(inbuf, outbuf):
 
                         pixVal += inbuf[ix, iy] * fval
                         weight += fval
-                # if weight==0:
-                # 	print('error' )
-                # 	return
                 outbuf[x, y] = pixVal / weight
                 sx += dx
             sy += dy
 
 
 def idx(r, c, cols):
-
     return r * cols + c + 1
 
 
-# smooth u using f at level
 def smooth(U, F, linbcgiterations, planar):
     """Smooth a matrix U using a filter F at a specified level.
 
@@ -312,30 +287,15 @@ def calculate_defect(D, U, F):
     D[1:-1, -1] = F[1:-1, -1] - U[:-2, -1] - U[2:, -1] - U[1:-1, -2] + 3 * U[1:-1, -1]
     D[0, 1:-1] = F[0, 1:-1] - U[0, :-2] - U[0, :-2] - U[1, 1:-1] + 3 * U[0, 1:-1]
     D[-1, 1:-1] = F[-1, 1:-1] - U[-1, :-2] - U[-1, :-2] - U[-1, 1:-1] + 3 * U[-1, 1:-1]
-    # coners
+    # corners
     D[0, 0] = F[0, 0] - U[0, 1] - U[1, 0] + 2 * U[0, 0]
     D[0, -1] = F[0, -1] - U[1, -1] - U[0, -2] + 2 * U[0, -1]
     D[-1, 0] = F[-1, 0] - U[-2, 0] - U[-1, 1] + 2 * U[-1, 0]
     D[-1, -1] = F[-1, -1] - U[-2, -1] - U[-1, -2] + 2 * U[-1, -1]
 
-    # for y in range(0,sy):
-    # 	for x in range(0,sx):
-    #
-    # 		w = max(0,x-1)
-    # 		n = max(0,y-1)
-    # 		e = min(sx, x+1)
-    # 		s = min(sy, y+1)
-    #
-    #
-    # 		D[x,y] = F[x,y] -( U[e,y] + U[w,y] + U[x,n]	+ U[x,s] - 4.0*U[x,y])
-
 
 def add_correction(U, C):
     U += C
-
-
-# def alloc_compbuf(xmax,ymax,pix, 1):
-# 	ar=numpy.array()
 
 
 def solve_pde_multigrid(
@@ -640,7 +600,6 @@ def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
     asolve(r, z)
 
     while iter <= itmax:
-        # print('linbcg iteration:', str(iter))
         iter += 1
         zm1nrm = znrm
         asolve(rr, zz)
@@ -694,138 +653,138 @@ def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
             break
 
 
-def numpy_save(a, iname):
-    """Save a NumPy array as an image file in OpenEXR format.
+# def numpy_save(a, iname):
+#     """Save a NumPy array as an image file in OpenEXR format.
 
-    This function takes a NumPy array and saves it as an image file using
-    Blender's rendering capabilities. It configures the image settings to
-    use the OpenEXR format with black and white color mode and a color depth
-    of 32 bits. The rendered image is saved to the specified filename.
+#     This function takes a NumPy array and saves it as an image file using
+#     Blender's rendering capabilities. It configures the image settings to
+#     use the OpenEXR format with black and white color mode and a color depth
+#     of 32 bits. The rendered image is saved to the specified filename.
 
-    Args:
-        a (numpy.ndarray): The NumPy array to be saved as an image.
-        iname (str): The filename (including path) where the image will be saved.
-    """
+#     Args:
+#         a (numpy.ndarray): The NumPy array to be saved as an image.
+#         iname (str): The filename (including path) where the image will be saved.
+#     """
 
-    inamebase = bpy.path.basename(iname)
+#     inamebase = bpy.path.basename(iname)
 
-    i = numpy_to_image(a, inamebase)
+#     i = numpy_to_image(a, inamebase)
 
-    r = bpy.context.scene.render
+#     r = bpy.context.scene.render
 
-    r.image_settings.file_format = "OPEN_EXR"
-    r.image_settings.color_mode = "BW"
-    r.image_settings.color_depth = "32"
+#     r.image_settings.file_format = "OPEN_EXR"
+#     r.image_settings.color_mode = "BW"
+#     r.image_settings.color_depth = "32"
 
-    i.save_render(iname)
-
-
-def numpy_to_image(a, iname):
-    """Convert a NumPy array to a Blender image.
-
-    This function takes a NumPy array and converts it into a Blender image.
-    It first checks if an image with the specified name and dimensions
-    already exists in Blender. If it does, that image is used; otherwise, a
-    new image is created with the specified name and dimensions. The
-    function then reshapes the NumPy array to match the image format and
-    assigns the pixel data to the image.
-
-    Args:
-        a (numpy.ndarray): A 2D NumPy array representing the pixel data of the image.
-        iname (str): The name to assign to the Blender image.
-
-    Returns:
-        bpy.types.Image: The Blender image created or modified with the pixel data from the NumPy
-            array.
-    """
-
-    t = time.time()
-    print("Numpy to Image - Here")
-    t = time.time()
-    print(a.shape[0], a.shape[1])
-    foundimage = False
-    for image in bpy.data.images:
-
-        if (
-            image.name[: len(iname)] == iname
-            and image.size[0] == a.shape[0]
-            and image.size[1] == a.shape[1]
-        ):
-            i = image
-            foundimage = True
-    if not foundimage:
-        bpy.ops.image.new(
-            name=iname,
-            width=a.shape[0],
-            height=a.shape[1],
-            color=(0, 0, 0, 1),
-            alpha=True,
-            generated_type="BLANK",
-            float=True,
-        )
-        for image in bpy.data.images:
-
-            if (
-                image.name[: len(iname)] == iname
-                and image.size[0] == a.shape[0]
-                and image.size[1] == a.shape[1]
-            ):
-                i = image
-
-    d = a.shape[0] * a.shape[1]
-    a = a.swapaxes(0, 1)
-    a = a.reshape(d)
-    a = a.repeat(4)
-    a[3::4] = 1
-    # i.pixels=a
-    i.pixels[:] = a[:]  # this gives big speedup!
-    print("\ntime " + str(time.time() - t))
-    return i
+#     i.save_render(iname)
 
 
-def image_to_numpy(i):
-    """Convert an image to a NumPy array.
+# def numpy_to_image(a, iname):
+#     """Convert a NumPy array to a Blender image.
 
-    This function takes an image object and converts its pixel data into a
-    NumPy array. It first retrieves the pixel data from the image, then
-    reshapes and rearranges it to match the image's dimensions. The
-    resulting array is structured such that the height and width of the
-    image are preserved, and the color channels are appropriately ordered.
+#     This function takes a NumPy array and converts it into a Blender image.
+#     It first checks if an image with the specified name and dimensions
+#     already exists in Blender. If it does, that image is used; otherwise, a
+#     new image is created with the specified name and dimensions. The
+#     function then reshapes the NumPy array to match the image format and
+#     assigns the pixel data to the image.
 
-    Args:
-        i (Image): An image object that contains pixel data.
+#     Args:
+#         a (numpy.ndarray): A 2D NumPy array representing the pixel data of the image.
+#         iname (str): The name to assign to the Blender image.
 
-    Returns:
-        numpy.ndarray: A 2D NumPy array representing the pixel data of the image.
+#     Returns:
+#         bpy.types.Image: The Blender image created or modified with the pixel data from the NumPy
+#             array.
+#     """
 
-    Note:
-        The function optimizes performance by directly accessing pixel data
-        instead of using slower methods.
-    """
+#     t = time.time()
+#     print("Numpy to Image - Here")
+#     t = time.time()
+#     print(a.shape[0], a.shape[1])
+#     foundimage = False
+#     for image in bpy.data.images:
 
-    t = time.time()
-    inc = 0
+#         if (
+#             image.name[: len(iname)] == iname
+#             and image.size[0] == a.shape[0]
+#             and image.size[1] == a.shape[1]
+#         ):
+#             i = image
+#             foundimage = True
+#     if not foundimage:
+#         bpy.ops.image.new(
+#             name=iname,
+#             width=a.shape[0],
+#             height=a.shape[1],
+#             color=(0, 0, 0, 1),
+#             alpha=True,
+#             generated_type="BLANK",
+#             float=True,
+#         )
+#         for image in bpy.data.images:
 
-    width = i.size[0]
-    height = i.size[1]
-    x = 0
-    y = 0
-    count = 0
-    na = numpy.array((0.1), dtype=numpy.float64)
+#             if (
+#                 image.name[: len(iname)] == iname
+#                 and image.size[0] == a.shape[0]
+#                 and image.size[1] == a.shape[1]
+#             ):
+#                 i = image
 
-    size = width * height
-    na.resize(size * 4)
+#     d = a.shape[0] * a.shape[1]
+#     a = a.swapaxes(0, 1)
+#     a = a.reshape(d)
+#     a = a.repeat(4)
+#     a[3::4] = 1
+#     # i.pixels=a
+#     i.pixels[:] = a[:]  # this gives big speedup!
+#     print("\ntime " + str(time.time() - t))
+#     return i
 
-    # these 2 lines are about 15% faster than na=i.pixels[:].... whyyyyyyyy!!?!?!?!?! Blender image data access is evil.
-    p = i.pixels[:]
-    na[:] = p
-    # na=numpy.array(i.pixels[:])#this was terribly slow... at least I know why now, it probably
-    na = na[::4]
-    na = na.reshape(height, width)
-    na = na.swapaxes(0, 1)
 
-    print("\ntime of image to numpy " + str(time.time() - t))
-    return na
+# def image_to_numpy(i):
+#     """Convert an image to a NumPy array.
+
+#     This function takes an image object and converts its pixel data into a
+#     NumPy array. It first retrieves the pixel data from the image, then
+#     reshapes and rearranges it to match the image's dimensions. The
+#     resulting array is structured such that the height and width of the
+#     image are preserved, and the color channels are appropriately ordered.
+
+#     Args:
+#         i (Image): An image object that contains pixel data.
+
+#     Returns:
+#         numpy.ndarray: A 2D NumPy array representing the pixel data of the image.
+
+#     Note:
+#         The function optimizes performance by directly accessing pixel data
+#         instead of using slower methods.
+#     """
+
+#     t = time.time()
+#     inc = 0
+
+#     width = i.size[0]
+#     height = i.size[1]
+#     x = 0
+#     y = 0
+#     count = 0
+#     na = numpy.array((0.1), dtype=numpy.float64)
+
+#     size = width * height
+#     na.resize(size * 4)
+
+#     # these 2 lines are about 15% faster than na=i.pixels[:].... whyyyyyyyy!!?!?!?!?! Blender image data access is evil.
+#     p = i.pixels[:]
+#     na[:] = p
+#     # na=numpy.array(i.pixels[:])#this was terribly slow... at least I know why now, it probably
+#     na = na[::4]
+#     na = na.reshape(height, width)
+#     na = na.swapaxes(0, 1)
+
+#     print("\ntime of image to numpy " + str(time.time() - t))
+#     return na
 
 
 def tonemap(i, exponent):
@@ -974,8 +933,6 @@ def build_mesh(mesh_z, br):
 
 
 # Switches to cycles render to CYCLES to render the sceen then switches it back to FABEX_RENDER for basRelief
-
-
 def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, view_layer):
     """Render a scene using Blender's Cycles engine.
 
@@ -1097,18 +1054,10 @@ def problem_areas(br):
     vcycleiterations = br.vcycle_iterations
     linbcgiterations = br.linbcg_iterations
     useplanar = br.use_planar
-    # scale down before:
     if br.gradient_scaling_mask_use:
         m = bpy.data.images[br.gradient_scaling_mask_name]
-        # mask=nar=imagetonumpy(m)
-
-    # if br.scale_down_before_use:
-    # 	i.scale(int(i.size[0]*br.scale_down_before),int(i.size[1]*br.scale_down_before))
-    # 	if br.gradient_scaling_mask_use:
-    # 		m.scale(int(m.size[0]*br.scale_down_before),int(m.size[1]*br.scale_down_before))
 
     nar = image_to_numpy(i)
-    # return
     if br.gradient_scaling_mask_use:
         mask = image_to_numpy(m)
     # put image to scale
@@ -1124,7 +1073,6 @@ def problem_areas(br):
 
     # it' ok, we can treat neg and positive silh separately here:
     a = br.attenuation
-    # numpy.logical_or(silhxplanar,silhyplanar)#
     planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
     sqrarx = numpy.abs(gx)
@@ -1141,10 +1089,6 @@ def problem_areas(br):
     gx = gx * (-silhxneg) - recover_silh * (silhxneg * silh_thres * silh_scale) * sqrarx
     silhx = numpy.logical_or(silhxpos, silhxneg)
     gx = gx * silhx + (1.0 / a * numpy.log(1.0 + a * (gx))) * (-silhx)  # attenuate
-
-    # if br.fade_distant_objects:
-    # 	gx*=(nar)
-    # 	gy*=(nar)
 
     silhypos = gy > silh_thres
     gy = gy * (-silhypos) + recover_silh * (silhypos * silh_thres * silh_scale) * sqrary
@@ -1228,15 +1172,8 @@ def relief(br):
     vcycleiterations = br.vcycle_iterations
     linbcgiterations = br.linbcg_iterations
     useplanar = br.use_planar
-    # scale down before:
     if br.gradient_scaling_mask_use:
         m = bpy.data.images[br.gradient_scaling_mask_name]
-        # mask=nar=imagetonumpy(m)
-
-    # if br.scale_down_before_use:
-    # 	i.scale(int(i.size[0]*br.scale_down_before),int(i.size[1]*br.scale_down_before))
-    # 	if br.gradient_scaling_mask_use:
-    # 		m.scale(int(m.size[0]*br.scale_down_before),int(m.size[1]*br.scale_down_before))
 
     nar = image_to_numpy(i)
     # return
@@ -1279,10 +1216,6 @@ def relief(br):
     silhx = numpy.logical_or(silhxpos, silhxneg)
     gx = gx * silhx + (1.0 / a * numpy.log(1.0 + a * (gx))) * (~silhx)  # attenuate
 
-    # if br.fade_distant_objects:
-    # 	gx*=(nar)
-    # 	gy*=(nar)
-
     silhypos = gy > silh_thres
     gy = gy * (~silhypos) + recover_silh * (silhypos * silh_thres * silh_scale) * sqrary
     silhyneg = gy < -silh_thres
@@ -1295,13 +1228,6 @@ def relief(br):
         gx *= mask
         gy *= mask
 
-    #
-    # print(silhx)
-    # silhx=abs(gx)>silh_thres
-    # gx=gx*(-silhx)
-    # silhy=abs(gy)>silh_thres
-    # gy=gy*(-silhy)
-
     divg = gx + gy
     divg[1:, :] = divg[1:, :] - gx[:-1, :]  # subtract x
     divg[:, 1:] = divg[:, 1:] - gy[:, :-1]  # subtract y
@@ -1310,38 +1236,28 @@ def relief(br):
         print("detail enhancement")
         rows, cols = gx.shape
         crow, ccol = int(rows / 2), int(cols / 2)
-        # dist=int(br.detail_enhancement_freq*gx.shape[0]/(2))
-        # bandwidth=.1
-        # dist=
+
         divgmin = divg.min()
         divg += divgmin
         divgf = numpy.fft.fft2(divg)
         divgfshift = numpy.fft.fftshift(divgf)
-        # mspectrum = 20*numpy.log(numpy.abs(divgfshift))
-        # numpytoimage(mspectrum,'mspectrum')
         mask = divg.copy()
         pos = numpy.array((crow, ccol))
 
-        # bpy.context.scene.view_settings.curve_mapping.initialize()
-        # cur=bpy.context.scene.view_settings.curve_mapping.curves[0]
-        def filterwindow(x, y, cx=0, cy=0):  # , curve=None):
+        def filterwindow(x, y, cx=0, cy=0):
             return abs((cx - x)) + abs((cy - y))
-            # v=(abs((cx-x)/(cx))+abs((cy-y)/(cy)))
-            # return v
 
-        mask = numpy.fromfunction(filterwindow, divg.shape, cx=crow, cy=ccol)  # , curve=cur)
+        mask = numpy.fromfunction(filterwindow, divg.shape, cx=crow, cy=ccol)
         mask = numpy.sqrt(mask)
-        # for x in range(mask.shape[0]):
-        # 	for y in range(mask.shape[1]):
-        # 		mask[x,y]=cur.evaluate(mask[x,y])
+
         maskmin = mask.min()
         maskmax = mask.max()
         mask = (mask - maskmin) / (maskmax - maskmin)
         mask *= br.detail_enhancement_amount
         mask += 1 - mask.max()
-        # mask+=1
+
         mask[crow - 1 : crow + 1, ccol - 1 : ccol + 1] = 1  # to preserve basic freqencies.
-        # numpytoimage(mask,'mask')
+
         divgfshift = divgfshift * mask
         divgfshift = numpy.fft.ifftshift(divgfshift)
         divg = numpy.abs(numpy.fft.ifft2(divgfshift))
@@ -1373,11 +1289,8 @@ def relief(br):
 
     build_mesh(target, br)
 
-    # 	ipath=bpy.path.abspath(i.filepath)[:-len(bpy.path.basename(i.filepath))]+br.output_image_name+'.exr'
-    # 	numpysave(target,ipath)
     t = time.time() - t
     print("total time:" + str(t) + "\n")
-    # numpytoimage(target,br.output_image_name)
 
 
 class DoBasRelief(bpy.types.Operator):

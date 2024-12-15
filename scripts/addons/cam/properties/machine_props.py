@@ -17,29 +17,93 @@ from . import constants
 from .utils import update_machine
 
 
-class MachineSettings(PropertyGroup):
+class CAM_MACHINE_Properties(PropertyGroup):
     """stores all data for machines"""
 
     # name = StringProperty(name="Machine Name", default="Machine")
     post_processor: EnumProperty(
         name="Post Processor",
         items=(
-            ("ISO", "Iso", "Exports standardized gcode ISO 6983 (RS-274)"),
-            ("MACH3", "Mach3", "Default mach3"),
-            ("EMC", "LinuxCNC - EMC2", "Linux based CNC control software - formally EMC2"),
-            ("FADAL", "Fadal", "Fadal VMC"),
-            ("GRBL", "grbl", "Optimized gcode for grbl firmware on Arduino with cnc shield"),
-            ("HEIDENHAIN", "Heidenhain", "Heidenhain"),
-            ("HEIDENHAIN530", "Heidenhain530", "Heidenhain530"),
-            ("TNC151", "Heidenhain TNC151", "Post Processor for the Heidenhain TNC151 machine"),
-            ("SIEGKX1", "Sieg KX1", "Sieg KX1"),
-            ("HM50", "Hafco HM-50", "Hafco HM-50"),
-            ("CENTROID", "Centroid M40", "Centroid M40"),
-            ("ANILAM", "Anilam Crusader M", "Anilam Crusader M"),
-            ("GRAVOS", "Gravos", "Gravos"),
-            ("WIN-PC", "WinPC-NC", "German CNC by Burkhard Lewetz"),
-            ("SHOPBOT MTC", "ShopBot MTC", "ShopBot MTC"),
-            ("LYNX_OTTER_O", "Lynx Otter o", "Lynx Otter o"),
+            (
+                "ISO",
+                "Iso",
+                "Exports standardized gcode ISO 6983 (RS-274)",
+            ),
+            (
+                "MACH3",
+                "Mach3",
+                "Default mach3",
+            ),
+            (
+                "EMC",
+                "LinuxCNC - EMC2",
+                "Linux based CNC control software - formally EMC2",
+            ),
+            (
+                "FADAL",
+                "Fadal",
+                "Fadal VMC",
+            ),
+            (
+                "GRBL",
+                "grbl",
+                "Optimized gcode for grbl firmware on Arduino with cnc shield",
+            ),
+            (
+                "HEIDENHAIN",
+                "Heidenhain",
+                "Heidenhain",
+            ),
+            (
+                "HEIDENHAIN530",
+                "Heidenhain530",
+                "Heidenhain530",
+            ),
+            (
+                "TNC151",
+                "Heidenhain TNC151",
+                "Post Processor for the Heidenhain TNC151 machine",
+            ),
+            (
+                "SIEGKX1",
+                "Sieg KX1",
+                "Sieg KX1",
+            ),
+            (
+                "HM50",
+                "Hafco HM-50",
+                "Hafco HM-50",
+            ),
+            (
+                "CENTROID",
+                "Centroid M40",
+                "Centroid M40",
+            ),
+            (
+                "ANILAM",
+                "Anilam Crusader M",
+                "Anilam Crusader M",
+            ),
+            (
+                "GRAVOS",
+                "Gravos",
+                "Gravos",
+            ),
+            (
+                "WIN-PC",
+                "WinPC-NC",
+                "German CNC by Burkhard Lewetz",
+            ),
+            (
+                "SHOPBOT MTC",
+                "ShopBot MTC",
+                "ShopBot MTC",
+            ),
+            (
+                "LYNX_OTTER_O",
+                "Lynx Otter o",
+                "Lynx Otter o",
+            ),
         ),
         description="Post Processor",
         default="MACH3",
@@ -48,7 +112,7 @@ class MachineSettings(PropertyGroup):
     # position definitions:
     use_position_definitions: BoolProperty(
         name="Use Position Definitions",
-        description="Define own positions for op start, " "toolchange, ending position",
+        description="Define own positions for op start, toolchange, ending position",
         default=False,
     )
     starting_position: FloatVectorProperty(
@@ -172,14 +236,6 @@ class MachineSettings(PropertyGroup):
         max=20000000,
         default=800000,
     )
-
-    # rotary_axis1 = EnumProperty(name='Axis 1',
-    #     items=(
-    #         ('X', 'X', 'x'),
-    #         ('Y', 'Y', 'y'),
-    #         ('Z', 'Z', 'z')),
-    #     description='Number 1 rotational axis',
-    #     default='X', update = updateOffsetImage)
 
     collet_size: FloatProperty(
         name="Collet Size",

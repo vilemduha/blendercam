@@ -45,9 +45,6 @@ class VIEW3D_PT_tools_curvetools(Panel):
         # else:
         layout = self.layout
         layout.scale_y = 1.2
-        # header, panel = layout.panel("curve_tools")
-        # header.label(text="Curve Tools", icon="CURVE_DATA")
-        # if panel:
         col = layout.column()
         col.operator("object.curve_boolean", icon="MOD_BOOLEAN")
         col.operator("object.convex_hull", icon="MOD_SOLIDIFY")
@@ -86,9 +83,6 @@ class VIEW3D_PT_tools_create(Panel):
         # else:
         layout = self.layout
         layout.scale_y = 1.2
-        # header, panel = layout.panel("curve_tools")
-        # header.label(text="Curve Creators", icon="FCURVE")
-        # if panel:
         col = layout.column(align=True)
         col.operator("object.curve_plate", icon="META_PLANE")
         col.operator("object.curve_drawer", icon="CON_SAMEVOL")
@@ -107,9 +101,8 @@ class VIEW3D_PT_tools_create(Panel):
 class WM_OT_gcode_import(Operator, ImportHelper):
     """Import G-code, Travel Lines Don't Get Drawn"""
 
-    bl_idname = (
-        "wm.gcode_import"  # important since its how bpy.ops.import_test.some_data is constructed
-    )
+    # important since its how bpy.ops.import_test.some_data is constructed
+    bl_idname = "wm.gcode_import"
     bl_label = "Import G-code"
 
     # ImportHelper mixin class uses this
@@ -120,7 +113,6 @@ class WM_OT_gcode_import(Operator, ImportHelper):
         options={"HIDDEN"},
         maxlen=255,  # Max internal buffer length, longer would be clamped.
     )
-
     split_layers: BoolProperty(
         name="Split Layers",
         description="Save every layer as single Objects in Collection",
