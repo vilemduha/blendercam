@@ -23,7 +23,10 @@ from bpy.props import (
 )
 
 from .constants import PRECISION, EPS, NUMPYALG
-from .exception import ReliefError
+
+
+class ReliefError(Exception):
+    pass
 
 
 def copy_compbuf_data(inbuf, outbuf):
