@@ -86,7 +86,7 @@ from .operators.ops import (
 )
 
 from .properties.operation_props import CAM_OPERATION_Properties
-from properties.chain_props import (
+from .properties.chain_props import (
     CAM_CHAIN_Properties,
     CAM_OP_REFERENCE_Properties,
 )
@@ -97,29 +97,22 @@ from .properties.movement_props import CAM_MOVEMENT_Properties
 from .properties.optimisation_props import CAM_OPTIMISATION_Properties
 from .preferences import CamAddonPreferences
 from .preset_managers import (
-    AddPresetCamCutter,
-    AddPresetCamMachine,
-    AddPresetCamOperation,
     CAM_CUTTER_MT_presets,
-    CAM_MACHINE_MT_presets,
     CAM_OPERATION_MT_presets,
+    CAM_MACHINE_MT_presets,
+    AddPresetCamCutter,
+    AddPresetCamOperation,
+    AddPresetCamMachine,
 )
 
 from .ui import register as ui_register, unregister as ui_unregister
-
-# Import Interface Properties to create a PointerProperty in register()
 from .ui.panels.interface import CAM_INTERFACE_Properties
 from .utils import (
     check_operations_on_load,
     update_operation,
 )
 
-
-classes = [
-    # .basrelief
-    DoBasRelief,
-    ProblemAreas,
-    # .chain
+classes = (
     CAM_OP_REFERENCE_Properties,
     CAM_CHAIN_Properties,
     CAM_INFO_Properties,
@@ -191,7 +184,7 @@ classes = [
     AddPresetCamCutter,
     AddPresetCamOperation,
     AddPresetCamMachine,
-]
+)
 
 
 def register() -> None:

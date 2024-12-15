@@ -20,8 +20,8 @@ from bpy.props import (
 from bpy.types import (
     PropertyGroup,
 )
-from . import constants
-from .utils import (
+from .. import constants
+from ..utils import (
     get_strategy_list,
     operation_valid,
     update_operation,

@@ -13,8 +13,8 @@ from bpy.props import (
 )
 from bpy.types import PropertyGroup
 
-from . import constants
-from .utils import update_machine
+from ..constants import PRECISION
+from ..utils import update_machine
 
 
 class CAM_MACHINE_Properties(PropertyGroup):
@@ -119,7 +119,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
         name="Start Position",
         default=(0, 0, 0),
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="XYZ",
         update=update_machine,
     )
@@ -127,7 +127,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
         name="MTC Position",
         default=(0, 0, 0),
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="XYZ",
         update=update_machine,
     )
@@ -135,7 +135,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
         name="End Position",
         default=(0, 0, 0),
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="XYZ",
         update=update_machine,
     )
@@ -144,7 +144,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
         name="Work Area",
         default=(0.500, 0.500, 0.100),
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="XYZ",
         update=update_machine,
     )
@@ -153,7 +153,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
         default=0.0,
         min=0.00001,
         max=320000,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
     )
     feedrate_max: FloatProperty(
@@ -161,7 +161,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
         default=2,
         min=0.00001,
         max=320000,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
     )
     feedrate_default: FloatProperty(
@@ -169,7 +169,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
         default=1.5,
         min=0.00001,
         max=320000,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
     )
     hourly_rate: FloatProperty(
@@ -243,7 +243,7 @@ class CAM_MACHINE_Properties(PropertyGroup):
         default=33,
         min=0.00001,
         max=320000,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
     )
     # exporter_start = StringProperty(name="exporter start", default="%")
