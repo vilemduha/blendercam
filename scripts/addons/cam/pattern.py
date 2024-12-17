@@ -14,11 +14,13 @@ from mathutils import Euler, Vector
 from .cam_chunk import (
     CamPathChunk,
     CamPathChunkBuilder,
-    chunks_refine,
-    parent_child_distance,
     shapely_to_chunks,
 )
-from .simple import progress
+from .utilities.chunk_utils import (
+    chunks_refine,
+    parent_child_distance,
+)
+from .utilities.simple_utils import progress
 
 
 def get_path_pattern_parallel(o, angle):
@@ -611,8 +613,5 @@ def get_path_pattern_4_axis(operation):
             chunk.depth = radiusend - radius
 
         pathchunks.append(chunk)
-    # print(chunk.startpoints)
-    # print(pathchunks)
-    # sprint(len(pathchunks))
-    # print(o.strategy_4_axis)
+
     return pathchunks

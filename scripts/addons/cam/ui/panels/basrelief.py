@@ -17,7 +17,7 @@ from bpy.props import (
 from ...constants import PRECISION
 
 
-class BasReliefsettings(PropertyGroup):
+class BasReliefSettings(PropertyGroup):
     use_image_source: BoolProperty(
         name="Use Image Source",
         description="",

@@ -24,12 +24,11 @@ from bpy.props import (
 )
 from mathutils import Euler, Vector
 
-from . import (
-    constants,
-    polygon_utils_cam,
-    simple,
-    utils,
-)
+from . import constants
+from .cam_chunk import curve_to_chunks
+from .utilities.shapely_utils import shapely_to_curve
+from .utilities.simple_utils import activate
+from .utilities.chunk_utils import chunks_to_shapely
 
 
 def s_rotate(s, r, x, y):
@@ -97,15 +96,15 @@ def pack_curves():
     # in this, position, rotation, and actual poly will be stored.
     polyfield = []
     for ob in bpy.context.selected_objects:
-        simple.activate(ob)
+        activate(ob)
         bpy.ops.object.make_single_user(type="SELECTED_OBJECTS")
         bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY")
         z = ob.location.z
         bpy.ops.object.location_clear()
         bpy.ops.object.rotation_clear()
 
-        chunks = utils.curve_to_chunks(ob)
-        npolys = utils.chunks_to_shapely(chunks)
+        chunks = curve_to_chunks(ob)
+        npolys = chunks_to_shapely(chunks)
         # add all polys in silh to one poly
         poly = shapely.ops.unary_union(npolys)
 

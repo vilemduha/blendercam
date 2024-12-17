@@ -11,11 +11,6 @@ from bpy.props import (
 )
 from bpy.types import PropertyGroup
 
-from . import (
-    constants,
-    utils,
-)
-
 
 def slicing_2d(ob, height):
     """Slice a 3D object at a specified height and convert it to a curve.

@@ -7,7 +7,7 @@ import bpy
 from bpy.types import UIList, Panel
 
 from .buttons_panel import CAMButtonsPanel
-from ...utils import chain_valid
+from ...utilities.operation_utils import chain_valid
 
 
 class CAM_UL_operations(UIList):

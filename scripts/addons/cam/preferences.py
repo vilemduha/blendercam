@@ -14,7 +14,7 @@ from bpy.types import (
     AddonPreferences,
 )
 
-from .utils import opencamlib_version, shapely_version
+from .utilities.version_utils import opencamlib_version, shapely_version
 
 
 class CamAddonPreferences(AddonPreferences):

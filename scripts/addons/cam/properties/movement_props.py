@@ -13,7 +13,7 @@ from bpy.props import (
 )
 from bpy.types import PropertyGroup
 
-from ..utils import update_operation
+from ..utilities.operation_utils import update_operation
 from ..constants import (
     PRECISION,
     G64_INCOMPATIBLE_MACHINES,

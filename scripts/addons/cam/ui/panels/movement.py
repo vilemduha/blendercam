@@ -9,6 +9,7 @@ import bpy
 from bpy.types import Panel
 
 from .buttons_panel import CAMButtonsPanel
+from ...constants import G64_INCOMPATIBLE_MACHINES
 
 
 class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):

@@ -21,18 +21,20 @@ from bpy.types import (
     PropertyGroup,
 )
 from .. import constants
-from ..utils import (
+from ..utilities.strategy_utils import (
     get_strategy_list,
+    update_strategy,
+    update_cutout,
+)
+from ..utilities.operation_utils import (
     operation_valid,
     update_operation,
     update_bridges,
     update_chipload,
-    update_cutout,
     update_offset_image,
     update_operation_valid,
     update_rest,
     update_rotation,
-    update_strategy,
     update_Z_buffer_image,
 )
 from .info_props import CAM_INFO_Properties

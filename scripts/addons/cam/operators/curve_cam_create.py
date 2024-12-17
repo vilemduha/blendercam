@@ -24,8 +24,30 @@ from .. import (
     involute_gear,
     joinery,
     puzzle_joinery,
-    simple,
-    utils,
+)
+from ..cam_chunk import (
+    curve_to_shapely,
+    polygon_boolean,
+    polygon_convex_hull,
+)
+from ..utilities.simple_utils import (
+    remove_multiple,
+    select_multiple,
+    join_multiple,
+    make_active,
+    deselect,
+    active_name,
+    remove_doubles,
+    active_name,
+    rename,
+    duplicate,
+    add_overcut,
+    move,
+    difference,
+    union,
+)
+from ..utilities.shapely_utils import (
+    shapely_to_curve,
 )
 
 
@@ -55,7 +77,7 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob
     bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="MEDIAN")
     depth = ob.location[2]
 
-    shapes = utils.curve_to_shapely(ob)
+    shapes = curve_to_shapely(ob)
 
     if pocket_shape == "HULL":
         shapes = shapes.convex_hull
@@ -173,7 +195,7 @@ class CamCurveHatch(Operator):
         ob = context.active_object
         obname = ob.name
         ob.select_set(True)
-        simple.remove_multiple("crosshatch")
+        remove_multiple("crosshatch")
         depth = ob.location[2]
         xingOffset = self.offset
 
@@ -187,10 +209,10 @@ class CamCurveHatch(Operator):
             self.pocket_shape,
             join,
         )
-        utils.shapely_to_curve("crosshatch_lines", xing, depth)
+        shapely_to_curve("crosshatch_lines", xing, depth)
 
         if self.xhatch:
-            simple.make_active(obname)
+            make_active(obname)
             xingra = generate_crosshatch(
                 context,
                 self.angle + pi / 2,
@@ -199,25 +221,25 @@ class CamCurveHatch(Operator):
                 self.pocket_shape,
                 join,
             )
-            utils.shapely_to_curve("crosshatch_lines_ra", xingra, depth)
+            shapely_to_curve("crosshatch_lines_ra", xingra, depth)
 
         bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="MEDIAN")
-        simple.join_multiple("crosshatch")
+        join_multiple("crosshatch")
         if self.contour:
-            simple.deselect()
+            deselect()
             bpy.context.view_layer.objects.active = ob
             ob.select_set(True)
             bpy.ops.object.silhouette_offset(offset=self.offset)
             if self.contour_separate:
-                simple.active_name("contour_hatch")
-                simple.deselect()
+                active_name("contour_hatch")
+                deselect()
             else:
-                simple.active_name("crosshatch_contour")
-                simple.join_multiple("crosshatch")
-                simple.remove_doubles()
+                active_name("crosshatch_contour")
+                join_multiple("crosshatch")
+                remove_doubles()
         else:
-            simple.join_multiple("crosshatch")
-            simple.remove_doubles()
+            join_multiple("crosshatch")
+            remove_doubles()
         return {"FINISHED"}
 
 
@@ -367,7 +389,7 @@ class CamCurvePlate(Operator):
                 location=(left, bottom, 0),
                 scale=(1, 1, 1),
             )
-            simple.active_name("_circ_LB")
+            active_name("_circ_LB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(
                 radius=self.radius,
@@ -376,7 +398,7 @@ class CamCurvePlate(Operator):
                 location=(right, bottom, 0),
                 scale=(1, 1, 1),
             )
-            simple.active_name("_circ_RB")
+            active_name("_circ_RB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(
                 radius=self.radius,
@@ -385,7 +407,7 @@ class CamCurvePlate(Operator):
                 location=(left, top, 0),
                 scale=(1, 1, 1),
             )
-            simple.active_name("_circ_LT")
+            active_name("_circ_LT")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(
                 radius=self.radius,
@@ -394,15 +416,15 @@ class CamCurvePlate(Operator):
                 location=(right, top, 0),
                 scale=(1, 1, 1),
             )
-            simple.active_name("_circ_RT")
+            active_name("_circ_RT")
             bpy.context.object.data.resolution_u = self.resolution
 
             # select the circles for the four corners
-            simple.select_multiple("_circ")
+            select_multiple("_circ")
             # perform hull operation on the four corner circles
-            utils.polygon_convex_hull(context)
-            simple.active_name("plate_base")
-            simple.remove_multiple("_circ")  # remove corner circles
+            polygon_convex_hull(context)
+            active_name("plate_base")
+            remove_multiple("_circ")  # remove corner circles
 
         elif self.plate_type == "OVAL":
             bpy.ops.curve.simple(
@@ -416,7 +438,7 @@ class CamCurvePlate(Operator):
                 edit_mode=False,
             )
             bpy.context.object.data.resolution_u = self.resolution
-            simple.active_name("plate_base")
+            active_name("plate_base")
 
         elif self.plate_type == "COVE":
             bpy.ops.curve.primitive_bezier_circle_add(
@@ -426,7 +448,7 @@ class CamCurvePlate(Operator):
                 location=(left - self.radius, bottom - self.radius, 0),
                 scale=(1, 1, 1),
             )
-            simple.active_name("_circ_LB")
+            active_name("_circ_LB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(
                 radius=self.radius,
@@ -435,7 +457,7 @@ class CamCurvePlate(Operator):
                 location=(right + self.radius, bottom - self.radius, 0),
                 scale=(1, 1, 1),
             )
-            simple.active_name("_circ_RB")
+            active_name("_circ_RB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(
                 radius=self.radius,
@@ -444,7 +466,7 @@ class CamCurvePlate(Operator):
                 location=(left - self.radius, top + self.radius, 0),
                 scale=(1, 1, 1),
             )
-            simple.active_name("_circ_LT")
+            active_name("_circ_LT")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.primitive_bezier_circle_add(
                 radius=self.radius,
@@ -453,10 +475,10 @@ class CamCurvePlate(Operator):
                 location=(right + self.radius, top + self.radius, 0),
                 scale=(1, 1, 1),
             )
-            simple.active_name("_circ_RT")
+            active_name("_circ_RT")
             bpy.context.object.data.resolution_u = self.resolution
 
-            simple.join_multiple("_circ")
+            join_multiple("_circ")
 
             bpy.ops.curve.simple(
                 align="WORLD",
@@ -467,10 +489,10 @@ class CamCurvePlate(Operator):
                 use_cyclic_u=True,
                 edit_mode=False,
             )
-            simple.active_name("_base")
+            active_name("_base")
 
-            simple.difference("_", "_base")
-            simple.rename("_base", "plate_base")
+            difference("_", "_base")
+            rename("_base", "plate_base")
 
         elif self.plate_type == "BEVEL":
             bpy.ops.curve.simple(
@@ -484,7 +506,7 @@ class CamCurvePlate(Operator):
                 use_cyclic_u=True,
                 edit_mode=False,
             )
-            simple.active_name("_bev_LB")
+            active_name("_bev_LB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.simple(
                 align="WORLD",
@@ -497,7 +519,7 @@ class CamCurvePlate(Operator):
                 use_cyclic_u=True,
                 edit_mode=False,
             )
-            simple.active_name("_bev_RB")
+            active_name("_bev_RB")
             bpy.context.object.data.resolution_u = self.resolution
             bpy.ops.curve.simple(
                 align="WORLD",
@@ -511,7 +533,7 @@ class CamCurvePlate(Operator):
                 edit_mode=False,
             )
 
-            simple.active_name("_bev_LT")
+            active_name("_bev_LT")
             bpy.context.object.data.resolution_u = self.resolution
 
             bpy.ops.curve.simple(
@@ -526,10 +548,10 @@ class CamCurvePlate(Operator):
                 edit_mode=False,
             )
 
-            simple.active_name("_bev_RT")
+            active_name("_bev_RT")
             bpy.context.object.data.resolution_u = self.resolution
 
-            simple.join_multiple("_bev")
+            join_multiple("_bev")
 
             bpy.ops.curve.simple(
                 align="WORLD",
@@ -540,10 +562,10 @@ class CamCurvePlate(Operator):
                 use_cyclic_u=True,
                 edit_mode=False,
             )
-            simple.active_name("_base")
+            active_name("_base")
 
-            simple.difference("_", "_base")
-            simple.rename("_base", "plate_base")
+            difference("_", "_base")
+            rename("_base", "plate_base")
 
         if self.hole_diameter > 0 or self.hole_hamount > 0:
             bpy.ops.curve.primitive_bezier_circle_add(
@@ -553,7 +575,7 @@ class CamCurvePlate(Operator):
                 location=(0, self.hole_tolerance / 2, 0),
                 scale=(1, 1, 1),
             )
-            simple.active_name("_hole_Top")
+            active_name("_hole_Top")
             bpy.context.object.data.resolution_u = int(self.resolution / 4)
             if self.hole_tolerance > 0:
                 bpy.ops.curve.primitive_bezier_circle_add(
@@ -563,19 +585,19 @@ class CamCurvePlate(Operator):
                     location=(0, -self.hole_tolerance / 2, 0),
                     scale=(1, 1, 1),
                 )
-                simple.active_name("_hole_Bottom")
+                active_name("_hole_Bottom")
                 bpy.context.object.data.resolution_u = int(self.resolution / 4)
 
             # select everything starting with _hole and perform a convex hull on them
-            simple.select_multiple("_hole")
-            utils.polygon_convex_hull(context)
-            simple.active_name("plate_hole")
-            simple.move(y=-self.hole_vdist / 2)
-            simple.duplicate(y=self.hole_vdist)
+            select_multiple("_hole")
+            polygon_convex_hull(context)
+            active_name("plate_hole")
+            move(y=-self.hole_vdist / 2)
+            duplicate(y=self.hole_vdist)
 
-            simple.remove_multiple("_hole")  # remove temporary holes
+            remove_multiple("_hole")  # remove temporary holes
 
-            simple.join_multiple("plate_hole")  # join the holes together
+            join_multiple("plate_hole")  # join the holes together
 
             # horizontal holes
             if self.hole_hamount > 1:
@@ -583,9 +605,9 @@ class CamCurvePlate(Operator):
                     for x in range(int((self.hole_hamount - 1) / 2)):
                         # calculate the distance from the middle
                         dist = self.hole_hdist * (x + 1)
-                        simple.duplicate()
+                        duplicate()
                         bpy.context.object.location[0] = dist
-                        simple.duplicate()
+                        duplicate()
                         bpy.context.object.location[0] = -dist
                 else:
                     for x in range(int(self.hole_hamount / 2)):
@@ -596,26 +618,26 @@ class CamCurvePlate(Operator):
                             x == 0
                         ):  # special case where the original hole only needs to move and not duplicate
                             bpy.context.object.location[0] = dist
-                            simple.duplicate()
+                            duplicate()
                             bpy.context.object.location[0] = -dist
                         else:
-                            simple.duplicate()
+                            duplicate()
                             bpy.context.object.location[0] = dist
-                            simple.duplicate()
+                            duplicate()
                             bpy.context.object.location[0] = -dist
-                simple.join_multiple("plate_hole")  # join the holes together
+                join_multiple("plate_hole")  # join the holes together
 
             # select everything starting with plate_
-            simple.select_multiple("plate_")
+            select_multiple("plate_")
 
             # Make the plate base active
             bpy.context.view_layer.objects.active = bpy.data.objects["plate_base"]
             # Remove holes from the base
-            utils.polygon_boolean(context, "DIFFERENCE")
-            simple.remove_multiple("plate_")  # Remove temporary base and holes
-            simple.remove_multiple("_")
+            polygon_boolean(context, "DIFFERENCE")
+            remove_multiple("plate_")  # Remove temporary base and holes
+            remove_multiple("_")
 
-        simple.active_name("plate")
+        active_name("plate")
         bpy.context.active_object.select_set(True)
         bpy.ops.object.curve_remove_doubles()
 
@@ -721,7 +743,7 @@ class CamCurveFlatCone(Operator):
             edit_mode=False,
         )
 
-        simple.active_name("_segment")
+        active_name("_segment")
 
         bpy.ops.curve.simple(
             align="WORLD",
@@ -735,7 +757,7 @@ class CamCurveFlatCone(Operator):
             shape="3D",
         )
 
-        simple.active_name("_segment")
+        active_name("_segment")
         if self.intake > 0:
             bpy.ops.curve.simple(
                 align="WORLD",
@@ -748,14 +770,14 @@ class CamCurveFlatCone(Operator):
                 edit_mode=False,
                 shape="3D",
             )
-            simple.move(x=ab - 3 * self.intake / 2)
-            simple.rotate(angle / 2)
+            move(x=ab - 3 * self.intake / 2)
+            rotate(angle / 2)
 
         bpy.context.object.data.resolution_u = self.resolution
 
-        simple.union("_segment")
+        union("_segment")
 
-        simple.active_name("flat_cone")
+        active_name("flat_cone")
 
         return {"FINISHED"}
 
@@ -866,7 +888,7 @@ class CamCurveMortise(Operator):
         bpy.ops.object.duplicate()
         obj = context.active_object
         bpy.ops.object.convert(target="MESH")
-        simple.active_name("_temp_mesh")
+        active_name("_temp_mesh")
 
         if self.opencurve:
             coords = []
@@ -874,9 +896,9 @@ class CamCurveMortise(Operator):
                 coords.append((v.co.x, v.co.y))
             # convert coordinates to shapely LineString datastructure
             line = LineString(coords)
-            simple.remove_multiple("-converted")
-            utils.shapely_to_curve("-converted_curve", line, 0.0)
-        shapes = utils.curve_to_shapely(o1)
+            remove_multiple("-converted")
+            shapely_to_curve("-converted_curve", line, 0.0)
+        shapes = curve_to_shapely(o1)
 
         for s in shapes.geoms:
             if s.boundary.type == "LineString":
@@ -948,7 +970,7 @@ class CamCurveMortise(Operator):
                             self.finger_size,
                             self.flex_pocket,
                         )
-        simple.remove_multiple("_")
+        remove_multiple("_")
         return {"FINISHED"}
 
 
@@ -1044,10 +1066,10 @@ class CamCurveInterlock(Operator):
             o1 = bpy.context.active_object
 
             bpy.context.object.data.resolution_u = 60
-            simple.duplicate()
+            duplicate()
             obj = context.active_object
             bpy.ops.object.convert(target="MESH")
-            simple.active_name("_temp_mesh")
+            active_name("_temp_mesh")
 
             if self.opencurve:
                 coords = []
@@ -1055,9 +1077,9 @@ class CamCurveInterlock(Operator):
                     coords.append((v.co.x, v.co.y))
                 # convert coordinates to shapely LineString datastructure
                 line = LineString(coords)
-                simple.remove_multiple("-converted")
-                utils.shapely_to_curve("-converted_curve", line, 0.0)
-            shapes = utils.curve_to_shapely(o1)
+                remove_multiple("-converted")
+                shapely_to_curve("-converted_curve", line, 0.0)
+            shapes = curve_to_shapely(o1)
 
             for s in shapes.geoms:
                 if s.boundary.type == "LineString":
@@ -1265,7 +1287,7 @@ class CamCurveDrawer(Operator):
         joinery.horizontal_finger(
             width_finger, self.drawer_plate_thickness, self.finger_tolerance, width_finger_amt * 2
         )
-        simple.make_active("_wfb")
+        make_active("_wfb")
 
         bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="MEDIAN")
 
@@ -1273,16 +1295,16 @@ class CamCurveDrawer(Operator):
         finger_pair = joinery.finger_pair(
             "_vfa", self.width - self.drawer_plate_thickness - self.finger_inset * 2, 0
         )
-        simple.make_active("_wfa")
+        make_active("_wfa")
         fronth = bpy.context.active_object
-        simple.make_active("_back")
+        make_active("_back")
         finger_pair.select_set(True)
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type="DIFFERENCE")
-        simple.remove_multiple("_finger_pair")
-        simple.active_name("drawer_back")
-        simple.remove_doubles()
-        simple.add_overcut(self.overcut_diameter, self.overcut)
+        remove_multiple("_finger_pair")
+        active_name("drawer_back")
+        remove_doubles()
+        add_overcut(self.overcut_diameter, self.overcut)
 
         #   make drawer front
         bpy.ops.curve.primitive_bezier_circle_add(
@@ -1292,19 +1314,19 @@ class CamCurveDrawer(Operator):
             location=(0, self.height + self.drawer_hole_offset, 0),
             scale=(1, 1, 1),
         )
-        simple.active_name("_circ")
+        active_name("_circ")
         front_hole = bpy.context.active_object
-        simple.make_active("drawer_back")
+        make_active("drawer_back")
         front_hole.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type="DIFFERENCE")
-        simple.active_name("drawer_front")
-        simple.remove_doubles()
-        simple.add_overcut(self.overcut_diameter, self.overcut)
+        active_name("drawer_front")
+        remove_doubles()
+        add_overcut(self.overcut_diameter, self.overcut)
 
         #   place back and front side by side
-        simple.make_active("drawer_front")
+        make_active("drawer_front")
         bpy.ops.transform.transform(mode="TRANSLATION", value=(0.0, 2 * self.height, 0.0, 0.0))
-        simple.make_active("drawer_back")
+        make_active("drawer_back")
 
         bpy.ops.transform.transform(
             mode="TRANSLATION", value=(self.width + 0.01, 2 * self.height, 0.0, 0.0)
@@ -1312,56 +1334,56 @@ class CamCurveDrawer(Operator):
         #   make side
 
         finger_pair = joinery.finger_pair("_vfb", self.depth - self.drawer_plate_thickness, 0)
-        simple.make_active("_side")
+        make_active("_side")
         finger_pair.select_set(True)
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type="DIFFERENCE")
-        simple.active_name("drawer_side")
-        simple.remove_doubles()
-        simple.add_overcut(self.overcut_diameter, self.overcut)
-        simple.remove_multiple("_finger_pair")
+        active_name("drawer_side")
+        remove_doubles()
+        add_overcut(self.overcut_diameter, self.overcut)
+        remove_multiple("_finger_pair")
 
         #   make bottom
-        simple.make_active("_wfb")
+        make_active("_wfb")
         bpy.ops.object.duplicate_move(
             OBJECT_OT_duplicate={"linked": False, "mode": "TRANSLATION"},
             TRANSFORM_OT_translate={"value": (0, -self.drawer_plate_thickness / 2, 0.0)},
         )
-        simple.active_name("_wfb0")
+        active_name("_wfb0")
         joinery.finger_pair("_wfb0", 0, self.depth - self.drawer_plate_thickness)
-        simple.active_name("_bot_fingers")
+        active_name("_bot_fingers")
 
-        simple.difference("_bot", "_bottom")
-        simple.rotate(pi / 2)
+        difference("_bot", "_bottom")
+        rotate(pi / 2)
 
         joinery.finger_pair(
             "_wfb0", 0, self.width - self.drawer_plate_thickness - self.finger_inset * 2
         )
-        simple.active_name("_bot_fingers")
-        simple.difference("_bot", "_bottom")
+        active_name("_bot_fingers")
+        difference("_bot", "_bottom")
 
-        simple.active_name("drawer_bottom")
+        active_name("drawer_bottom")
 
-        simple.remove_doubles()
-        simple.add_overcut(self.overcut_diameter, self.overcut)
+        remove_doubles()
+        add_overcut(self.overcut_diameter, self.overcut)
 
         # cleanup all temp polygons
-        simple.remove_multiple("_")
+        remove_multiple("_")
 
         #   move side and bottom to location
-        simple.make_active("drawer_side")
+        make_active("drawer_side")
         bpy.ops.transform.transform(
             mode="TRANSLATION",
             value=(self.depth / 2 + 3 * self.width / 2 + 0.02, 2 * self.height, 0.0, 0.0),
         )
 
-        simple.make_active("drawer_bottom")
+        make_active("drawer_bottom")
         bpy.ops.transform.transform(
             mode="TRANSLATION",
             value=(self.depth / 2 + 3 * self.width / 2 + 0.02, self.width / 2, 0.0, 0.0),
         )
 
-        simple.select_multiple("drawer")
+        select_multiple("drawer")
         return {"FINISHED"}
 
 
@@ -1689,7 +1711,7 @@ class CamCurvePuzzle(Operator):
         if len(context.selected_objects) > 0 and context.active_object.type == "CURVE":
             curve_detected = True
             # bpy.context.object.data.resolution_u = 60
-            simple.duplicate()
+            duplicate()
             bpy.ops.object.transform_apply(location=True)
             obj = context.active_object
             bpy.ops.object.convert(target="MESH")
@@ -1698,16 +1720,16 @@ class CamCurvePuzzle(Operator):
             coords = []
             for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
                 coords.append((v.co.x, v.co.y))
-            simple.remove_multiple("_tmp")
+            remove_multiple("_tmp")
             # convert coordinates to shapely LineString datastructure
             line = LineString(coords)
-            simple.remove_multiple("_")
+            remove_multiple("_")
 
         if self.interlock_type == "FINGER":
             puzzle_joinery.finger(self.diameter, self.finger_tolerance, stem=self.stem_size)
-            simple.rename("_puzzle", "receptacle")
+            rename("_puzzle", "receptacle")
             puzzle_joinery.finger(self.diameter, 0, stem=self.stem_size)
-            simple.rename("_puzzle", "finger")
+            rename("_puzzle", "finger")
 
         if self.interlock_type == "JOINT":
             if self.finger_amount == 0:  # cannot be 0 in joints
@@ -1888,8 +1910,8 @@ class CamCurvePuzzle(Operator):
                 twist_keep=self.twist_keep,
             )
 
-        simple.remove_doubles()
-        simple.add_overcut(self.overcut_diameter, self.overcut)
+        remove_doubles()
+        add_overcut(self.overcut_diameter, self.overcut)
 
         if self.twist_lock and self.twist_separator:
             joinery.interlock_twist_separator(
@@ -1901,8 +1923,8 @@ class CamCurvePuzzle(Operator):
                 finger_play=self.finger_tolerance,
                 percentage=self.twist_percent,
             )
-            simple.remove_doubles()
-            simple.add_overcut(self.overcut_diameter, self.overcut)
+            remove_doubles()
+            add_overcut(self.overcut_diameter, self.overcut)
         return {"FINISHED"}
 
 

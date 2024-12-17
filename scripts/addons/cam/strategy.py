@@ -28,21 +28,31 @@ from mathutils import Euler, Vector
 from .bridges import use_bridges
 from .cam_chunk import (
     CamPathChunk,
-    chunks_refine,
-    chunks_refine_threshold,
     curve_to_chunks,
     limit_chunks,
-    optimize_chunk,
-    parent_child_distance,
-    parent_child_poly,
-    set_chunks_z,
     shapely_to_chunks,
+    sample_chunks_n_axis,
+    silhouette_offset,
+    get_object_silhouette,
+    get_object_outline,
+    get_operation_silhouette,
+    sort_chunks,
 )
 from .collision import cleanup_bullet_collision
 from .constants import SHAPELY
 from .exception import CamException
-from .polygon_utils_cam import circle, shapely_to_curve
-from .simple import (
+from .utilities.chunk_utils import (
+    chunks_refine,
+    optimize_chunk,
+    chunks_refine_threshold,
+    parent_child_distance,
+    parent_child_poly,
+    set_chunks_z,
+    extend_chunks_5_axis,
+)
+from .utilities.geom_utils import circle, helix
+from .utilities.shapely_utils import shapely_to_curve
+from .utilities.simple_utils import (
     activate,
     delete_object,
     join_multiple,
@@ -50,21 +60,58 @@ from .simple import (
     remove_multiple,
     subdivide_short_lines,
 )
-from .utils import (
-    add_pocket,
-    check_equal,
-    extend_chunks_5_axis,
-    get_object_outline,
-    get_object_silhouette,
-    get_operation_silhouette,
-    get_operation_sources,
-    helix,
-    # Point,
-    sample_chunks_n_axis,
-    sort_chunks,
-    unique,
-)
+from .utilities.compare_utils import check_equal, unique
+from .utilities.operation_utils import get_operation_sources
 from .operators.curve_cam_create import generate_crosshatch
+
+
+# add pocket op for medial axis and profile cut inside to clean unremoved material
+def add_pocket(maxdepth, sname, new_cutter_diameter):
+    """Add a pocket operation for the medial axis and profile cut.
+
+    This function first deselects all objects in the scene and then checks
+    for any existing medial pocket objects, deleting them if found. It
+    verifies whether a medial pocket operation already exists in the camera
+    operations. If it does not exist, it creates a new pocket operation with
+    the specified parameters. The function also modifies the selected
+    object's silhouette offset based on the new cutter diameter.
+
+    Args:
+        maxdepth (float): The maximum depth of the pocket to be created.
+        sname (str): The name of the object to which the pocket will be added.
+        new_cutter_diameter (float): The diameter of the new cutter to be used.
+    """
+
+    bpy.ops.object.select_all(action="DESELECT")
+    s = bpy.context.scene
+    mpocket_exists = False
+    for ob in s.objects:  # delete old medial pocket
+        if ob.name.startswith("medial_poc"):
+            ob.select_set(True)
+            bpy.ops.object.delete()
+
+    for op in s.cam_operations:  # verify medial pocket operation exists
+        if op.name == "MedialPocket":
+            mpocket_exists = True
+    ob = bpy.data.objects[sname]
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    silhouette_offset(ob, -new_cutter_diameter / 2, 1, 2)
+    bpy.context.active_object.name = "medial_pocket"
+    m_ob = bpy.context.view_layer.objects.active
+    bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
+    m_ob.location.z = maxdepth
+    if not mpocket_exists:  # create a pocket operation if it does not exist already
+        s.cam_operations.add()
+        o = s.cam_operations[-1]
+        o.object_name = "medial_pocket"
+        s.cam_active_operation = len(s.cam_operations) - 1
+        o.name = "MedialPocket"
+        o.filename = o.name
+        o.strategy = "POCKET"
+        o.use_layers = False
+        o.material.estimate_from_model = False
+        o.material.size[2] = -maxdepth
 
 
 # cutout strategy is completely here:

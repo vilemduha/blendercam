@@ -8,15 +8,6 @@ from bpy.types import Panel
 
 from .buttons_panel import CAMButtonsPanel
 
-# Operations panel
-# Displays the list of operations created by the user
-# Functionality:
-# - list Operations
-# - create/delete/duplicate/reorder operations
-# - display preset operations
-#
-# For each operation, generate the corresponding gcode and export the gcode file
-
 
 class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
     """CAM Operations Panel"""

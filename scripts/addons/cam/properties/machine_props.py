@@ -14,7 +14,7 @@ from bpy.props import (
 from bpy.types import PropertyGroup
 
 from ..constants import PRECISION
-from ..utils import update_machine
+from ..utilities.machine_utils import update_machine
 
 
 class CAM_MACHINE_Properties(PropertyGroup):

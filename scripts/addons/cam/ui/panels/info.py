@@ -8,7 +8,7 @@ from datetime import timedelta
 import bpy
 from bpy.types import Panel
 from .buttons_panel import CAMButtonsPanel
-from ...simple import unit_value_to_string
+from ...utilities.simple_utils import unit_value_to_string
 from ...version import __version__ as cam_version
 
 

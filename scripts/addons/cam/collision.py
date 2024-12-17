@@ -22,7 +22,7 @@ from .constants import (
     BULLET_SCALE,
     CUTTER_OFFSET,
 )
-from .simple import (
+from .utilities.simple_utils import (
     activate,
     delete_object,
     progress,

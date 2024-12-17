@@ -10,16 +10,14 @@ import numpy as np
 import bpy
 from mathutils import Vector
 
-from .operators.async_op import progress_async
-from .image_utils import (
+from .utilities.async_utils import progress_async
+from .utilities.image_utils import (
     get_cutter_array,
     numpy_save,
 )
-from .simple import get_simulation_path
-from .utils import (
-    get_bounds_multiple,
-    get_operation_sources,
-)
+from .utilities.simple_utils import get_simulation_path
+from .utilities.bounds_utils import get_bounds_multiple
+from .utilities.operation_utils import get_operation_sources
 
 
 def create_simulation_object(name, operations, i):

@@ -13,10 +13,14 @@ from bpy.types import (
     PropertyGroup,
 )
 
-from ..utils import (
+from ..utilities.version_utils import (
     opencamlib_version,
+)
+from ..utilities.strategy_utils import (
     update_exact_mode,
     update_opencamlib,
+)
+from ..utilities.operation_utils import (
     update_operation,
     update_zbuffer_image,
 )

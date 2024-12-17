@@ -33,28 +33,32 @@ from mathutils import Euler, Vector
 from .. import (
     bridges,
     gcode_path,
-    pack,
-    polygon_utils_cam,
-    simple,
     simulation,
-    utils,
 )
 from .async_op import (
     AsyncCancelledException,
     AsyncOperatorMixin,
-    progress_async,
 )
-from ..constants import PRECISION
+from ..cam_chunk import (
+    curve_to_chunks,
+    silhouette_offset,
+)
+from ..constants import PRECISION, was_hidden_dict
 from ..exception import CamException
 from ..pack import pack_curves
-from ..utils import (
-    add_machine_area_object,
-    get_bounds_worldspace,
+from ..slice import slicing_2d, slicing_3d
+from ..utilities.async_utils import progress_async
+from ..utilities.chunk_utils import chunks_to_shapely
+from ..utilities.shapely_utils import (
+    shapely_to_curve,
+)
+from ..utilities.simple_utils import activate, add_to_group
+from ..utilities.machine_utils import add_machine_area_object
+from ..utilities.bounds_utils import get_bounds_worldspace
+from ..utilities.operation_utils import (
     chain_valid,
     source_valid,
     reload_paths,
-    silhouette_offset,
-    was_hidden_dict,
 )
 
 
@@ -535,15 +539,15 @@ class CamPackObjects(Operator):
         # in this, position, rotation, and actual poly will be stored.
         polyfield = []
         for ob in bpy.context.selected_objects:
-            simple.activate(ob)
+            activate(ob)
             bpy.ops.object.make_single_user(type="SELECTED_OBJECTS")
             bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY")
             z = ob.location.z
             bpy.ops.object.location_clear()
             bpy.ops.object.rotation_clear()
 
-            chunks = utils.curve_to_chunks(ob)
-            npolys = utils.chunks_to_shapely(chunks)
+            chunks = curve_to_chunks(ob)
+            npolys = chunks_to_shapely(chunks)
             # add all polys in silh to one poly
             poly = shapely.ops.unary_union(npolys)
 
@@ -663,7 +667,7 @@ class CamPackObjects(Operator):
             i += 1
         t = time.time() - t
 
-        polygon_utils_cam.shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
+        shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
         print(t)
         # layout.
         return {"FINISHED"}
@@ -745,8 +749,6 @@ class CamSliceObjects(Operator):
             ob (bpy.types.Object): The 3D object to be sliced.
         """
 
-        from .slice import slicing_2d, slicing_3d
-
         ob = bpy.context.active_object
 
         # April 2020 Alain Pelletier
@@ -763,7 +765,7 @@ class CamSliceObjects(Operator):
             bpy.context.scene.collection.children.link(tcollection)
 
         bpy.ops.object.mode_set(mode="OBJECT")  # force object mode
-        minx, miny, minz, maxx, maxy, maxz = utils.get_bounds_worldspace([ob])
+        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace([ob])
 
         start_height = minz
         if above0 and minz < 0:
@@ -1687,7 +1689,7 @@ class CamOrientationAdd(Operator):
         oriob = bpy.context.active_object
         oriob.empty_draw_size = 0.02  # 2 cm
 
-        simple.add_to_group(oriob, gname)
+        add_to_group(oriob, gname)
         oriob.name = "ori_" + o.name + "." + str(len(bpy.data.collections[gname].objects)).zfill(3)
 
         return {"FINISHED"}

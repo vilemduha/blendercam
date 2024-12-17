@@ -17,8 +17,13 @@ import bpy
 from bpy_extras.object_utils import object_data_add
 from mathutils import Vector
 
-from . import utils
-from . import simple
+from .utilities.simple_utils import join_multiple, remove_doubles
+from .utilities.operation_utils import get_operation_sources
+from .cam_chunk import (
+    curve_to_shapely,
+    get_object_silhouette,
+    get_operation_silhouette,
+)
 
 
 def add_bridge(x, y, rot, size_x, size_y):
@@ -93,7 +98,7 @@ def add_auto_bridges(o):
             Blender context by adding bridge objects to the specified
             collection.
     """
-    utils.get_operation_sources(o)
+    get_operation_sources(o)
     bridgecollectionname = o.bridges_collection_name
     if bridgecollectionname == "" or bpy.data.collections.get(bridgecollectionname) is None:
         bridgecollectionname = "bridges_" + o.name
@@ -104,9 +109,9 @@ def add_auto_bridges(o):
     for ob in o.objects:
 
         if ob.type == "CURVE" or ob.type == "TEXT":
-            curve = utils.curve_to_shapely(ob)
+            curve = curve_to_shapely(ob)
         if ob.type == "MESH":
-            curve = utils.get_object_silhouette("OBJECTS", [ob])
+            curve = get_object_silhouette("OBJECTS", [ob])
         for c in curve.geoms:
             c = c.exterior
             minx, miny, maxx, maxy = c.bounds
@@ -163,7 +168,7 @@ def get_bridges_poly(o):
         bpy.ops.object.duplicate()
         bpy.ops.object.join()
         ob = bpy.context.active_object
-        shapes = utils.curve_to_shapely(ob, o.use_bridge_modifiers)
+        shapes = curve_to_shapely(ob, o.use_bridge_modifiers)
         ob.select_set(state=True)
         bpy.ops.object.delete(use_global=False)
         bridgespoly = sops.unary_union(shapes)
@@ -348,8 +353,8 @@ def use_bridges(ch, o):
         object_data_add(bpy.context, mesh)  # create object
         bpy.ops.object.convert(target="CURVE")  # convert mesh to curve
         # join all the new cut bridges curves
-        simple.join_multiple(o.name + "_cut_bridges")
-        simple.remove_doubles()  # remove overlapping vertices
+        join_multiple(o.name + "_cut_bridges")
+        remove_doubles()  # remove overlapping vertices
 
 
 def auto_cut_bridge(o):

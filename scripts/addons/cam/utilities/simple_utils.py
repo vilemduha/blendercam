@@ -1,4 +1,4 @@
-"""Fabex 'simple.py' © 2012 Vilem Novak
+"""Fabex 'simple_utils.py' © 2012 Vilem Novak
 
 Various helper functions, less complex than those found in the 'utils' files.
 """
@@ -17,7 +17,7 @@ from shapely.geometry import Polygon
 import bpy
 from mathutils import Vector
 
-from .constants import BULLET_SCALE
+from ..constants import BULLET_SCALE
 
 
 def tuple_add(t, t1):  # add two tuples as Vectors

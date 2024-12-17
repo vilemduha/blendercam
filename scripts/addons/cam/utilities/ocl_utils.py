@@ -3,6 +3,7 @@
 Functions used by OpenCAMLib sampling.
 """
 
+from math import radians, tan
 import os
 from subprocess import call
 import tempfile
@@ -19,12 +20,21 @@ except ImportError:
 
 import bpy
 
-from ..constants import BULLET_SCALE, OCL_SCALE, PYTHON_BIN
-from ..simple import activate
-from .. import utils
-from ..cam_chunk import CamPathChunk
-from ..operators.async_op import progress_async
-from .oclSample import get_oclSTL, ocl_sample
+try:
+    from bl_ext.blender_org.stl_format_legacy import blender_utils
+except ImportError:
+    pass
+import mathutils
+
+from ..constants import (
+    BULLET_SCALE,
+    OCL_SCALE,
+    PYTHON_BIN,
+    _PREVIOUS_OCL_MESH,
+)
+from ..exception import CamException
+from ..utilities.async_utils import progress_async
+from ..utilities.simple_utils import activate
 
 
 def pointSamplesFromOCL(points, samples):
@@ -67,16 +77,6 @@ def chunkPointSamplesFromOCL(chunks, samples):
         z_vals /= OCL_SCALE
         ch.set_z(z_vals)
         s_index += ch_points
-        # p_index = 0
-        # for point in ch.points:
-        #     if len(point) == 2 or point[2] != 2:
-        #         z_sample = samples[s_index].z / OCL_SCALE
-        #         ch.points[p_index] = (point[0], point[1], z_sample)
-        #     # print(str(point[2]))
-        #     else:
-        #         ch.points[p_index] = (point[0], point[1], 1)
-        #     p_index += 1
-        #     s_index += 1
 
 
 def chunkPointsResampleFromOCL(chunks, samples):
@@ -100,19 +100,6 @@ def chunkPointsResampleFromOCL(chunks, samples):
         z_vals /= OCL_SCALE
         ch.set_z(z_vals)
         s_index += ch_points
-
-    # s_index = 0
-    # for ch in chunks:
-    #     p_index = 0
-    #     for point in ch.points:
-    #         if len(point) == 2 or point[2] != 2:
-    #             z_sample = samples[s_index].z / OCL_SCALE
-    #             ch.points[p_index] = (point[0], point[1], z_sample)
-    #         # print(str(point[2]))
-    #         else:
-    #             ch.points[p_index] = (point[0], point[1], 1)
-    #         p_index += 1
-    #         s_index += 1
 
 
 def exportModelsToSTL(operation):
@@ -209,52 +196,6 @@ async def oclSample(operation, chunks):
     chunkPointSamplesFromOCL(chunks, samples)
 
 
-async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
-    """Resample chunks of data using OpenCL operations.
-
-    This function takes a list of chunks to resample and performs an OpenCL
-    sampling operation on them. It first prepares a temporary chunk that
-    collects points from the specified chunks. Then, it calls the
-    `ocl_sample` function to perform the sampling operation. After obtaining
-    the samples, it updates the z-coordinates of the points in each chunk
-    based on the sampled values.
-
-    Args:
-        operation (OperationType): The OpenCL operation to be performed.
-        chunks_to_resample (list): A list of tuples, where each tuple contains
-            a chunk object and its corresponding start index and length for
-            resampling.
-        use_cached_mesh (bool): A flag indicating whether to use cached mesh
-            data during the sampling process.
-
-    Returns:
-        None: This function does not return a value but modifies the input
-            chunks in place.
-    """
-
-    tmp_chunks = list()
-    tmp_chunks.append(CamPathChunk(inpoints=[]))
-    for chunk, i_start, i_length in chunks_to_resample:
-        tmp_chunks[0].extend(chunk.get_points_np()[i_start : i_start + i_length])
-        print(i_start, i_length, len(tmp_chunks[0].points))
-
-    samples = await ocl_sample(operation, tmp_chunks, use_cached_mesh=use_cached_mesh)
-
-    sample_index = 0
-    for chunk, i_start, i_length in chunks_to_resample:
-        z = np.array([p.z for p in samples[sample_index : sample_index + i_length]]) / OCL_SCALE
-        pts = chunk.get_points_np()
-        pt_z = pts[i_start : i_start + i_length, 2]
-        pt_z = np.where(z > pt_z, z, pt_z)
-
-        sample_index += i_length
-        # for p_index in range(i_start, i_start + i_length):
-        #     z = samples[sample_index].z / OCL_SCALE
-        #     sample_index += 1
-        #     if z > chunk.points[p_index][2]:
-        #         chunk.points[p_index][2] = z
-
-
 def oclWaterlineLayerHeights(operation):
     """Generate a list of waterline layer heights for a given operation.
 
@@ -285,44 +226,102 @@ def oclWaterlineLayerHeights(operation):
     return layers
 
 
-# def oclGetMedialAxis(operation, chunks):
-#     oclWaterlineHeightsToOCL(operation)
-#     operationSettingsToOCL(operation)
-#     curvesToOCL(operation)
-#     call([PYTHON_BIN, os.path.join(bpy.utils.script_path_pref(), "addons", "cam", "opencamlib", "ocl.py")])
-#     waterlineChunksFromOCL(operation, chunks)
+def get_oclSTL(operation):
+    """Get the oclSTL representation from the provided operation.
 
-
-async def oclGetWaterline(operation, chunks):
-    """Generate waterline paths for a given machining operation.
-
-    This function calculates the waterline paths based on the provided
-    machining operation and its parameters. It determines the appropriate
-    cutter type and dimensions, sets up the waterline object with the
-    corresponding STL file, and processes each layer to generate the
-    machining paths. The resulting paths are stored in the provided chunks
-    list. The function also handles different cutter types, including end
-    mills, ball nose cutters, and V-carve cutters.
+    This function iterates through the objects in the given operation and
+    constructs an oclSTL object by extracting triangle data from mesh,
+    curve, font, or surface objects. It activates each object and checks its
+    type to determine if it can be processed. If no valid objects are found,
+    it raises an exception.
 
     Args:
-        operation (Operation): An object representing the machining operation,
-            containing details such as cutter type, diameter, and minimum Z height.
-        chunks (list): A list that will be populated with the generated
-            machining path chunks.
+        operation (Operation): An object containing a collection of objects
+
+    Returns:
+        ocl.STLSurf: An oclSTL object containing the triangles derived from
+        the valid objects.
+
+    Raises:
+        CamException: If no mesh, curve, or equivalent object is found in
+    """
+    me = None
+    oclSTL = ocl.STLSurf()
+    found_mesh = False
+    for collision_object in operation.objects:
+        activate(collision_object)
+        if (
+            collision_object.type == "MESH"
+            or collision_object.type == "CURVE"
+            or collision_object.type == "FONT"
+            or collision_object.type == "SURFACE"
+        ):
+            found_mesh = True
+            global_matrix = mathutils.Matrix.Identity(4)
+            faces = blender_utils.faces_from_mesh(
+                collision_object, global_matrix, operation.use_modifiers
+            )
+            for face in faces:
+                t = ocl.Triangle(
+                    ocl.Point(
+                        face[0][0] * OCL_SCALE,
+                        face[0][1] * OCL_SCALE,
+                        (face[0][2] + operation.skin) * OCL_SCALE,
+                    ),
+                    ocl.Point(
+                        face[1][0] * OCL_SCALE,
+                        face[1][1] * OCL_SCALE,
+                        (face[1][2] + operation.skin) * OCL_SCALE,
+                    ),
+                    ocl.Point(
+                        face[2][0] * OCL_SCALE,
+                        face[2][1] * OCL_SCALE,
+                        (face[2][2] + operation.skin) * OCL_SCALE,
+                    ),
+                )
+                oclSTL.addTriangle(t)
+        # FIXME needs to work with collections
+    if not found_mesh:
+        raise CamException(
+            "This Operation Requires a Mesh or Curve Object or Equivalent (e.g. Text, Volume)."
+        )
+    return oclSTL
+
+
+async def ocl_sample(operation, chunks, use_cached_mesh=False):
+    """Sample points using a specified cutter and operation.
+
+    This function takes an operation and a list of chunks, and samples
+    points based on the specified cutter type and its parameters. It
+    supports various cutter types such as 'END', 'BALLNOSE', 'VCARVE',
+    'CYLCONE', 'BALLCONE', and 'BULLNOSE'. The function can also utilize a
+    cached mesh for efficiency. The sampled points are returned after
+    processing all chunks.
+
+    Args:
+        operation (Operation): An object containing the cutter type, diameter,
+            minimum Z value, tip angle, and other relevant parameters.
+        chunks (list): A list of chunk objects that contain point data to be
+            processed.
+        use_cached_mesh (bool): A flag indicating whether to use a cached mesh
+            if available. Defaults to False.
+
+    Returns:
+        list: A list of sampled CL points generated by the cutter.
     """
 
-    layers = oclWaterlineLayerHeights(operation)
-    oclSTL = get_oclSTL(operation)
+    global _PREVIOUS_OCL_MESH
 
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
     op_minz = operation.min_z
+    op_cutter_tip_angle = radians(operation.cutter_tip_angle) / 2
     if op_cutter_type == "VCARVE":
-        op_cutter_tip_angle = operation["cutter_tip_angle"]
+        cutter_length = (op_cutter_diameter / tan(op_cutter_tip_angle)) / 2
+    else:
+        cutter_length = 10
 
     cutter = None
-    # TODO: automatically determine necessary cutter length depending on object size
-    cutter_length = 150
 
     if op_cutter_type == "END":
         cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
@@ -332,34 +331,43 @@ async def oclGetWaterline(operation, chunks):
         cutter = ocl.ConeCutter(
             (op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length
         )
+    elif op_cutter_type == "CYLCONE":
+        cutter = ocl.CylConeCutter(
+            (operation.cylcone_diameter / 2 + operation.skin) * 2000,
+            (op_cutter_diameter + operation.skin * 2) * 1000,
+            op_cutter_tip_angle,
+        )
+    elif op_cutter_type == "BALLCONE":
+        cutter = ocl.BallConeCutter(
+            (operation.ball_radius + operation.skin) * 2000,
+            (op_cutter_diameter + operation.skin * 2) * 1000,
+            op_cutter_tip_angle,
+        )
+    elif op_cutter_type == "BULLNOSE":
+        cutter = ocl.BullCutter(
+            (op_cutter_diameter + operation.skin * 2) * 1000,
+            operation.bull_corner_radius * 1000,
+            cutter_length,
+        )
     else:
-        print("Cutter unsupported: {0}\n".format(op_cutter_type))
+        print("Cutter Unsupported: {0}\n".format(op_cutter_type))
         quit()
 
-    waterline = ocl.Waterline()
-    waterline.setSTL(oclSTL)
-    waterline.setCutter(cutter)
-    waterline.setSampling(0.1)  # TODO: add sampling setting to UI
-    last_pos = [0, 0, 0]
-    for count, height in enumerate(layers):
-        layer_chunks = []
-        await progress_async("Waterline", int((100 * count) / len(layers)))
-        waterline.reset()
-        waterline.setZ(height * OCL_SCALE)
-        waterline.run2()
-        wl_loops = waterline.getLoops()
-        for l in wl_loops:
-            inpoints = []
-            for p in l:
-                inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
-            inpoints.append(inpoints[0])
-            chunk = CamPathChunk(inpoints=inpoints)
-            chunk.closed = True
-            layer_chunks.append(chunk)
-        # sort chunks so that ordering is stable
-        chunks.extend(await utils.sort_chunks(layer_chunks, operation, last_pos=last_pos))
-        if len(chunks) > 0:
-            last_pos = chunks[-1].get_point(-1)
+    bdc = ocl.BatchDropCutter()
+    if use_cached_mesh and _PREVIOUS_OCL_MESH is not None:
+        oclSTL = _PREVIOUS_OCL_MESH
+    else:
+        oclSTL = get_oclSTL(operation)
+        _PREVIOUS_OCL_MESH = oclSTL
+    bdc.setSTL(oclSTL)
+    bdc.setCutter(cutter)
 
+    for chunk in chunks:
+        for coord in chunk.get_points_np():
+            bdc.appendPoint(ocl.CLPoint(coord[0] * 1000, coord[1] * 1000, op_minz * 1000))
+    await progress_async("OpenCAMLib Sampling")
+    bdc.run()
 
-# def oclFillMedialAxis(operation):
+    cl_points = bdc.getCLPoints()
+
+    return cl_points

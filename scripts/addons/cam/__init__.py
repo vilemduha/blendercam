@@ -107,12 +107,12 @@ from .preset_managers import (
 
 from .ui import register as ui_register, unregister as ui_unregister
 from .ui.panels.interface import CAM_INTERFACE_Properties
-from .utils import (
-    check_operations_on_load,
-    update_operation,
-)
+from .utilities.addon_utils import check_operations_on_load
+from .utilities.operation_utils import update_operation
 
 classes = (
+    DoBasRelief,
+    ProblemAreas,
     CAM_OP_REFERENCE_Properties,
     CAM_CHAIN_Properties,
     CAM_INFO_Properties,

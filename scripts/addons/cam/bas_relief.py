@@ -23,7 +23,7 @@ from bpy.props import (
 )
 
 from .constants import PRECISION, EPS, NUMPYALG
-from .image_utils import image_to_numpy, numpy_save, numpy_to_image
+from .utilities.image_utils import image_to_numpy, numpy_save, numpy_to_image
 
 
 class ReliefError(Exception):

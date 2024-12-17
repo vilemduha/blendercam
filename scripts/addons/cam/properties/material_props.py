@@ -13,9 +13,7 @@ from bpy.props import (
 from bpy.types import (
     PropertyGroup,
 )
-from ..utils import (
-    update_material,
-)
+from ..utilities.material_utils import update_material
 from ..constants import PRECISION
 
 

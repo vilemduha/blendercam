@@ -17,10 +17,20 @@ from bpy.props import (
 from bpy.types import Operator
 from mathutils import Vector
 
-from .. import (
-    polygon_utils_cam,
-    simple,
-    utils,
+from ..cam_chunk import (
+    curve_to_shapely,
+    polygon_boolean,
+    polygon_convex_hull,
+    silhouette_offset,
+    get_object_silhouette,
+)
+from ..utilities.geom_utils import circle
+from ..utilities.shapely_utils import (
+    shapely_to_curve,
+)
+from ..utilities.simple_utils import (
+    remove_multiple,
+    join_multiple,
 )
 
 
@@ -49,7 +59,7 @@ class CamCurveBoolean(Operator):
 
     def execute(self, context):
         if len(context.selected_objects) > 1:
-            utils.polygon_boolean(context, self.boolean_type)
+            polygon_boolean(context, self.boolean_type)
             return {"FINISHED"}
         else:
             self.report({"ERROR"}, "at least 2 curves must be selected")
@@ -71,7 +81,7 @@ class CamCurveConvexHull(Operator):
         return context.active_object is not None and context.active_object.type in ["CURVE", "FONT"]
 
     def execute(self, context):
-        utils.polygon_convex_hull(context)
+        polygon_convex_hull(context)
         return {"FINISHED"}
 
 
@@ -149,7 +159,7 @@ class CamCurveIntarsion(Operator):
     def execute(self, context):
         selected = context.selected_objects  # save original selected items
 
-        simple.remove_multiple("intarsion_")
+        remove_multiple("intarsion_")
 
         for ob in selected:
             ob.select_set(True)  # select original curves
@@ -158,12 +168,12 @@ class CamCurveIntarsion(Operator):
 
         # make the diameter 5% larger and compensate for backlight
         diam = self.diameter * 1.05 + self.backlight * 2
-        utils.silhouette_offset(context, -diam / 2)
+        silhouette_offset(context, -diam / 2)
 
         o1 = bpy.context.active_object
-        utils.silhouette_offset(context, diam)
+        silhouette_offset(context, diam)
         o2 = bpy.context.active_object
-        utils.silhouette_offset(context, -diam / 2)
+        silhouette_offset(context, -diam / 2)
         o3 = bpy.context.active_object
         o1.select_set(True)
         o2.select_set(True)
@@ -174,7 +184,7 @@ class CamCurveIntarsion(Operator):
         bpy.context.object.location[2] = -self.intarsion_thickness
 
         if self.perimeter_cut > 0.0:
-            utils.silhouette_offset(context, self.perimeter_cut)
+            silhouette_offset(context, self.perimeter_cut)
             bpy.context.active_object.name = "intarsion_perimeter"
             bpy.context.object.location[2] = -self.base_thickness
             bpy.ops.object.select_all(action="DESELECT")  # deselect new curve
@@ -183,14 +193,14 @@ class CamCurveIntarsion(Operator):
         context.view_layer.objects.active = o3
         #   intarsion profile is the inside piece of the intarsion
         # make smaller curve for material profile
-        utils.silhouette_offset(context, -self.tolerance / 2)
+        silhouette_offset(context, -self.tolerance / 2)
         bpy.context.object.location[2] = self.intarsion_thickness
         o4 = bpy.context.active_object
         bpy.context.active_object.name = "intarsion_profil"
         o4.select_set(False)
 
         if self.backlight > 0.0:  # Make a smaller curve for backlighting purposes
-            utils.silhouette_offset(context, (-self.tolerance / 2) - self.backlight)
+            silhouette_offset(context, (-self.tolerance / 2) - self.backlight)
             bpy.context.active_object.name = "intarsion_backlight"
             bpy.context.object.location[2] = (
                 -self.backlight_depth_from_top - self.intarsion_thickness
@@ -246,7 +256,7 @@ class CamCurveOvercuts(Operator):
     def execute(self, context):
         bpy.ops.object.curve_remove_doubles()
         o1 = bpy.context.active_object
-        shapes = utils.curve_to_shapely(o1)
+        shapes = curve_to_shapely(o1)
         negative_overcuts = []
         positive_overcuts = []
         diameter = self.diameter * 1.001
@@ -289,7 +299,7 @@ class CamCurveOvercuts(Operator):
                                 v.normalize()
                                 p = p - v * diameter / 2
                                 if abs(a) < pi / 2:
-                                    shape = polygon_utils_cam.circle(diameter / 2, 64)
+                                    shape = circle(diameter / 2, 64)
                                     shape = shapely.affinity.translate(shape, p.x, p.y)
                                 else:
                                     l = tan(a / 2) * diameter / 2
@@ -308,7 +318,7 @@ class CamCurveOvercuts(Operator):
         fs = shapely.ops.unary_union(shapes)
         fs = fs.union(positive_overcuts)
         fs = fs.difference(negative_overcuts)
-        utils.shapely_to_curve(o1.name + "_overcuts", fs, o1.location.z)
+        shapely_to_curve(o1.name + "_overcuts", fs, o1.location.z)
 
         return {"FINISHED"}
 
@@ -376,7 +386,7 @@ class CamCurveOvercutsB(Operator):
     def execute(self, context):
         bpy.ops.object.curve_remove_doubles()
         o1 = bpy.context.active_object
-        shapes = utils.curve_to_shapely(o1)
+        shapes = curve_to_shapely(o1)
         negative_overcuts = []
         positive_overcuts = []
         # count all the corners including inside and out
@@ -402,7 +412,7 @@ class CamCurveOvercutsB(Operator):
             print("abs(a)", abs(a))
             if abs(a) <= pi / 2 + 0.0001:
                 print("<=pi/2")
-                shape = polygon_utils_cam.circle(radius, 64)
+                shape = circle(radius, 64)
                 shape = shapely.affinity.translate(shape, pos.x, pos.y)
             else:  # elongate overcut circle to make sure tool bit can fit into slot
                 print(">pi/2")
@@ -575,7 +585,7 @@ class CamCurveOvercutsB(Operator):
         fs = fs.union(positive_overcuts)
         fs = fs.difference(negative_overcuts)
 
-        utils.shapely_to_curve(o1.name + "_overcuts", fs, o1.location.z)
+        shapely_to_curve(o1.name + "_overcuts", fs, o1.location.z)
         return {"FINISHED"}
 
     def invoke(self, context, event):
@@ -865,18 +875,18 @@ class CamOffsetSilhouete(Operator):
         coords = []
         for v in obj.data.vertices:
             coords.append((v.co.x, v.co.y))
-        simple.remove_multiple("temp_mesh")  # delete temporary mesh
-        simple.remove_multiple("dilation")  # delete old dilation objects
+        remove_multiple("temp_mesh")  # delete temporary mesh
+        remove_multiple("dilation")  # delete old dilation objects
 
         # convert coordinates to shapely LineString datastructure
         line = LineString(coords)
 
         # if curve is a straight segment, change offset type to dilate
-        if self.is_straight(line) and self.opentype != "leaveopen":
-            self.opentype = "dilate"
+        if self.is_straight(line) and self.open_type != "leaveopen":
+            self.open_type = "dilate"
 
         # make the dilate or open curve offset
-        if (self.opentype != "closecurve") and ob.type == "CURVE":
+        if (self.open_type != "closecurve") and ob.type == "CURVE":
             print("line length=", round(line.length * 1000), "mm")
 
             if self.style == "3":
@@ -886,7 +896,7 @@ class CamOffsetSilhouete(Operator):
             else:
                 style = "round"
 
-            if self.opentype == "leaveopen":
+            if self.open_type == "leaveopen":
                 new_shape = shapely.offset_curve(
                     line, self.offset, join_style=style
                 )  # use shapely to expand without closing the curve
@@ -902,7 +912,7 @@ class CamOffsetSilhouete(Operator):
                 name = "Dilation: " + "%.2f" % round(self.offset * 1000) + "mm - " + ob.name
 
             # create the actual offset object based on the Shapely offset
-            polygon_utils_cam.shapely_to_curve(name, new_shape, 0, self.opentype != "leaveopen")
+            shapely_to_curve(name, new_shape, 0, self.open_type != "leaveopen")
 
             # position the object according to the calculated point
             bpy.context.object.location.z = point
@@ -910,19 +920,19 @@ class CamOffsetSilhouete(Operator):
         # if curve is not a straight line and neither dilate or leave open are selected, create a normal offset
         else:
             bpy.context.view_layer.objects.active = ob
-            utils.silhouette_offset(context, self.offset, int(self.style), self.mitre_limit)
+            silhouette_offset(context, self.offset, int(self.style), self.mitre_limit)
         return {"FINISHED"}
 
     def draw(self, context):
         layout = self.layout
         layout.prop(self, "offset", text="Offset")
-        layout.prop(self, "opentype", text="Type")
+        layout.prop(self, "open_type", text="Type")
         layout.prop(self, "style", text="Corner")
         if self.style == "2":
             layout.prop(self, "mitrelimit", text="Mitre Limit")
-        if self.opentype == "dilate":
+        if self.open_type == "dilate":
             layout.prop(self, "caps", text="Cap")
-        if self.opentype != "closecurve":
+        if self.open_type != "closecurve":
             layout.prop(self, "align", text="Align")
 
     def invoke(self, context, event):
@@ -947,13 +957,13 @@ class CamObjectSilhouette(Operator):
     # this is almost same as getobjectoutline, just without the need of operation data
     def execute(self, context):
         ob = bpy.context.active_object
-        self.silh = utils.get_object_silhouette("OBJECTS", objects=bpy.context.selected_objects)
+        self.silh = get_object_silhouette("OBJECTS", objects=bpy.context.selected_objects)
         bpy.context.scene.cursor.location = (0, 0, 0)
 
         for smp in self.silh.geoms:
-            polygon_utils_cam.shapely_to_curve(ob.name + "_silhouette", smp, 0)
+            shapely_to_curve(ob.name + "_silhouette", smp, 0)
 
-        simple.join_multiple(ob.name + "_silhouette")
+        join_multiple(ob.name + "_silhouette")
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type="ORIGIN_CURSOR")
         bpy.ops.object.curve_remove_doubles()

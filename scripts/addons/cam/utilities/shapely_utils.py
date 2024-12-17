@@ -1,4 +1,4 @@
-"""Fabex 'polygon_utils_cam.py' © 2012 Vilem Novak
+"""Fabex 'shapely_utils.py' © 2012 Vilem Novak
 
 Functions to handle shapely operations and conversions - curve, coords, polygon
 """
@@ -17,35 +17,7 @@ except ImportError:
     pass
 
 
-from .constants import SHAPELY
-
-
-def circle(r, np):
-    """Generate a circle defined by a given radius and number of points.
-
-    This function creates a polygon representing a circle by generating a
-    list of points based on the specified radius and the number of points
-    (np). It uses vector rotation to calculate the coordinates of each point
-    around the circle. The resulting points are then used to create a
-    polygon object.
-
-    Args:
-        r (float): The radius of the circle.
-        np (int): The number of points to generate around the circle.
-
-    Returns:
-        spolygon.Polygon: A polygon object representing the circle.
-    """
-
-    c = []
-    v = Vector((r, 0, 0))
-    e = Euler((0, 0, 2.0 * pi / np))
-    for a in range(0, np):
-        c.append((v.x, v.y))
-        v.rotate(e)
-
-    p = spolygon.Polygon(c)
-    return p
+from ..constants import SHAPELY
 
 
 def shapely_remove_doubles(p, optimize_threshold):
@@ -140,17 +112,12 @@ def shapely_to_coordinates(anydata):
 
     p = anydata
     seq = []
-    # print(p.type)
-    # print(p.geom_type)
+
     if p.is_empty:
         return seq
     elif p.geom_type == "Polygon":
-
-        # print('polygon')
         clen = len(p.exterior.coords)
-        # seq = sgeometry.asMultiLineString(p)
         seq = [p.exterior.coords]
-        # print(len(p.interiors))
         for interior in p.interiors:
             seq.append(interior.coords)
     elif p.geom_type == "MultiPolygon":
@@ -173,11 +140,8 @@ def shapely_to_coordinates(anydata):
     elif p.geom_type == "MultiPoint":
         return
     elif p.geom_type == "GeometryCollection":
-        # print(dir(p))
-        # print(p.geometryType, p.geom_type)
         clen = 0
         seq = []
-        # print(p.boundary.coordsd)
         for sp in p.geoms:  # TODO
             clen += len(sp.exterior.coords)
             seq.append(sp.exterior.coords)
@@ -214,9 +178,7 @@ def shapely_to_curve(name, p, z, cyclic=True):
     edges = []
     vi = 0
     ci = 0
-    # for c in p.exterior.coords:
 
-    # print(p.type)
     seq = shapely_to_coordinates(p)
     w = 1  # weight
 

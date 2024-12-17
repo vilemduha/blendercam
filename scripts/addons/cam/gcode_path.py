@@ -14,39 +14,45 @@ import bpy
 from mathutils import Euler, Vector
 
 from . import strategy
-from .operators.async_op import progress_async
+from .utilities.async_utils import progress_async
 from .bridges import use_bridges
 from .cam_chunk import (
     curve_to_chunks,
-    chunks_refine,
     limit_chunks,
     chunks_coherency,
     shapely_to_chunks,
-    parent_child_distance,
-)
-from .image_utils import (
-    crazy_stroke_image_binary,
-    get_offset_image_cavities,
-    image_to_shapely,
-    prepare_area,
-)
-from .nc import iso
-from .opencamlib.opencamlib import oclGetWaterline
-from .pattern import get_path_pattern, get_path_pattern_4_axis
-from .simple import progress, safe_filename, unit_value_to_string
-from .utils import (
-    cleanup_indexed,
-    connect_chunks_low,
-    get_ambient,
-    get_bounds,
-    get_operation_silhouette,
-    get_operation_sources,
-    prepare_indexed,
     sample_chunks,
     sample_chunks_n_axis,
+    get_operation_silhouette,
+    get_ambient,
+    connect_chunks_low,
     sort_chunks,
-    USE_PROFILER,
+    oclGetWaterline,
+    image_to_shapely,
+    crazy_stroke_image_binary,
+    get_offset_image_cavities,
 )
+from .constants import USE_PROFILER
+from .nc import iso
+from .pattern import get_path_pattern, get_path_pattern_4_axis
+from .utilities.chunk_utils import (
+    chunks_refine,
+    parent_child_distance,
+)
+from .utilities.image_utils import (
+    prepare_area,
+)
+from .utilities.simple_utils import (
+    progress,
+    safe_filename,
+    unit_value_to_string,
+)
+from .utilities.index_utils import (
+    cleanup_indexed,
+    prepare_indexed,
+)
+from .utilities.bounds_utils import get_bounds
+from .utilities.operation_utils import get_operation_sources
 
 
 def point_on_line(a, b, c, tolerance):

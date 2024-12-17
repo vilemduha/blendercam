@@ -7,7 +7,7 @@ import bpy
 from bpy.types import Panel
 
 from .buttons_panel import CAMButtonsPanel
-from ...simple import unit_value_to_string
+from ...utilities.simple_utils import unit_value_to_string
 
 
 class CAM_AREA_Panel(CAMButtonsPanel, Panel):

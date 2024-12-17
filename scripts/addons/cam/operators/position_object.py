@@ -6,7 +6,7 @@
 import bpy
 
 from bpy.types import Operator
-from ..utils import position_object
+from ..utilities.bounds_utils import position_object
 
 
 # Position object for CAM operation. Tests object bounds and places them so the object
