@@ -44,7 +44,7 @@ jobs:
         export BLENDER_MINOR=${BLENDER_SPLIT[2]}
         export BLENDER_ARCHIVE="blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}"
         echo Major version: $BLENDER_MAJOR
-        echo Minor version: $BLENDER_MINOR        
+        echo Minor version: $BLENDER_MINOR
         echo Archive name: $BLENDER_ARCHIVE
         curl -O -L https://download.blender.org/release/Blender${BLENDER_MAJOR}/${BLENDER_ARCHIVE}
         echo "BLENDER_ARCHIVE=${BLENDER_ARCHIVE}" >> "$GITHUB_OUTPUT"
@@ -68,7 +68,7 @@ jobs:
       with:
         type: 'zip'
         filename: 'blendercam.zip'
-        directory: './scripts/addons'    
+        directory: './scripts/addons'
     - name: Run tests
       shell: bash
       run: |
@@ -85,4 +85,3 @@ jobs:
       with:
         name: blendercam-${{matrix.os}}-${{matrix.blender_version}}
         path: ./scripts/addons/cam
-       
