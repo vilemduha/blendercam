@@ -1165,7 +1165,7 @@ def curveToShapely(cob, use_modifiers=False):
 # FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
 
 
-def silhoueteOffset(context, offset, style, mitrelimit):
+def silhoueteOffset(context, offset, style = 1, mitrelimit = 1.0):
     """Offset the silhouette of a curve or font object in Blender.
 
     This function takes an active curve or font object in Blender and
