@@ -33,7 +33,7 @@ from .cam_chunk import (
     get_offset_image_cavities,
 )
 from .constants import USE_PROFILER
-from .nc import iso
+from .post_processors import iso
 from .pattern import get_path_pattern, get_path_pattern_4_axis
 from .utilities.chunk_utils import (
     chunks_refine,
@@ -139,46 +139,46 @@ def export_gcode_path(filename, vertslist, operations):
 
     extension = ".tap"
     if m.post_processor == "ISO":
-        from .nc import iso as postprocessor
+        from .post_processors import iso as postprocessor
     if m.post_processor == "MACH3":
-        from .nc import mach3 as postprocessor
+        from .post_processors import mach3 as postprocessor
     elif m.post_processor == "EMC":
         extension = ".ngc"
-        from .nc import emc2b as postprocessor
+        from .post_processors import emc2b as postprocessor
     elif m.post_processor == "FADAL":
         extension = ".tap"
-        from .nc import fadal as postprocessor
+        from .post_processors import fadal as postprocessor
     elif m.post_processor == "GRBL":
         extension = ".gcode"
-        from .nc import grbl as postprocessor
+        from .post_processors import grbl as postprocessor
     elif m.post_processor == "HM50":
-        from .nc import hm50 as postprocessor
+        from .post_processors import hm50 as postprocessor
     elif m.post_processor == "HEIDENHAIN":
         extension = ".H"
-        from .nc import heiden as postprocessor
+        from .post_processors import heiden as postprocessor
     elif m.post_processor == "HEIDENHAIN530":
         extension = ".H"
-        from .nc import heiden530 as postprocessor
+        from .post_processors import heiden530 as postprocessor
     elif m.post_processor == "TNC151":
-        from .nc import tnc151 as postprocessor
+        from .post_processors import tnc151 as postprocessor
     elif m.post_processor == "SIEGKX1":
-        from .nc import siegkx1 as postprocessor
+        from .post_processors import siegkx1 as postprocessor
     elif m.post_processor == "CENTROID":
-        from .nc import centroid1 as postprocessor
+        from .post_processors import centroid1 as postprocessor
     elif m.post_processor == "ANILAM":
-        from .nc import anilam_crusader_m as postprocessor
+        from .post_processors import anilam_crusader_m as postprocessor
     elif m.post_processor == "GRAVOS":
         extension = ".nc"
-        from .nc import gravos as postprocessor
+        from .post_processors import gravos as postprocessor
     elif m.post_processor == "WIN-PC":
         extension = ".din"
-        from .nc import winpc as postprocessor
+        from .post_processors import winpc as postprocessor
     elif m.post_processor == "SHOPBOT MTC":
         extension = ".sbp"
-        from .nc import shopbot_mtc as postprocessor
+        from .post_processors import shopbot_mtc as postprocessor
     elif m.post_processor == "LYNX_OTTER_O":
         extension = ".nc"
-        from .nc import lynx_otter_o as postprocessor
+        from .post_processors import lynx_otter_o as postprocessor
 
     if s.unit_settings.system == "METRIC":
         unitcorr = 1000.0
