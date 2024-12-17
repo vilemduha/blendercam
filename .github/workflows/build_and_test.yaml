@@ -67,7 +67,7 @@ jobs:
       if: always()
       with:
         type: 'zip'
-        filename: 'fabexcnc.zip'
+        filename: 'blendercam.zip'
         directory: './scripts/addons'    
     - name: Run tests
       shell: bash
@@ -76,13 +76,13 @@ jobs:
           export BLENDER_BIN_PATH=${PWD}/blender/$(ls -AU blender | head -1)
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi
-        export ADDON_PATH=${PWD}/scripts/addons/fabexcnc.zip
+        export ADDON_PATH=${PWD}/scripts/addons/blendercam.zip
         cd scripts/addons/cam/tests
         python install_addon.py ${ADDON_PATH}
         python test_suite.py -vvv
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: fabex-${{matrix.os}}-${{matrix.blender_version}}
+        name: blendercam-${{matrix.os}}-${{matrix.blender_version}}
         path: ./scripts/addons/cam
        
