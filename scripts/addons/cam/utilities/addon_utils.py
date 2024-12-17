@@ -30,7 +30,7 @@ def check_operations_on_load(context):
 
     addons = bpy.context.preferences.addons
 
-    addon_prefs = bpy.context.preferences.addons[__package__].preferences
+    addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
 
     modules = [
         # Objects & Tools
