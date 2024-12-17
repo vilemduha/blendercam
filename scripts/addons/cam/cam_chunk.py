@@ -1323,7 +1323,7 @@ def polygon_convex_hull(context):
 
 # separate function in blender, so you can offset any curve.
 # FIXME: same algorithms as the cutout strategy, because that is hierarchy-respecting.
-def silhouette_offset(context, offset, style, mitrelimit):
+def silhouette_offset(context, offset, style=1, mitrelimit=1.0):
     """Offset the silhouette of a curve or font object in Blender.
 
     This function takes an active curve or font object in Blender and
