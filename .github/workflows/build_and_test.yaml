@@ -78,8 +78,8 @@ jobs:
         fi
         export ADDON_PATH=${PWD}/scripts/addons/blendercam.zip
         cd scripts/addons/cam/tests
-        python install_addon.py ${ADDON_PATH}
-        python test_suite.py -vvv
+        /home/runner/work/blendercam/blendercam/blender/blender-4.2.1-linux-x64/4.2/python/bin/python3.11 install_addon.py ${ADDON_PATH}
+        /home/runner/work/blendercam/blendercam/blender/blender-4.2.1-linux-x64/4.2/python/bin/python3.11 test_suite.py -vvv
     - uses: actions/upload-artifact@v4
       if: always()
       with:
