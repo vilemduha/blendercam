@@ -1,4 +1,4 @@
-"""Fabex 'utils.py' © 2012 Vilem Novak
+"""Fabex 'strategy_utils.py' © 2012 Vilem Novak
 
 Main functionality of Fabex.
 The functions here are called with operators defined in 'ops.py'

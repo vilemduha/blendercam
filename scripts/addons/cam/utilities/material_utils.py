@@ -109,5 +109,5 @@ def update_material(self, context):
     add_material_area_object()
 
 
-def update_material(self, context):
-    add_material_area_object()
+# def update_material(self, context):
+#     add_material_area_object()

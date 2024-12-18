@@ -1,4 +1,4 @@
-"""Fabex 'oclSample.py'
+"""Fabex 'ocl_utils.py'
 
 Functions used by OpenCAMLib sampling.
 """
