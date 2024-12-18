@@ -26,7 +26,7 @@ with tempfile.TemporaryDirectory() as td:
     for x in range(NUM_RETRIES):
         try:
             subprocess.run(
-                [shutil.which("blender"), "-b", "-P", str(file)],
+                ["blender", "-b", "-P", str(file)],
                 shell=False,
                 check=True,
                 stdout=subprocess.PIPE,
