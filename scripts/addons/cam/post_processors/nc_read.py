@@ -6,6 +6,7 @@
 ################################################################################
 import area
 import math
+
 count = 0
 
 
@@ -28,37 +29,37 @@ class Parser:
 
     def readline(self):
         self.line = self.file_in.readline().rstrip()
-        if (len(self.line)):
+        if len(self.line):
             return True
         else:
             return False
 
     def set_current_pos(self, x, y, z):
-        if (x != None):
+        if x != None:
             if self.absolute_flag or self.currentx == None:
                 self.currentx = x
             else:
                 self.currentx = self.currentx + x
-        if (y != None):
+        if y != None:
             if self.absolute_flag or self.currenty == None:
                 self.currenty = y
             else:
                 self.currenty = self.currenty + y
-        if (z != None):
+        if z != None:
             if self.absolute_flag or self.currentz == None:
                 self.currentz = z
             else:
                 self.currentz = self.currentz + z
 
-#    def add_line(self, x, y, z, a, b, c):
-#        if (x == None and y == None and z == None and a == None and b == None and c == None) : return
-#        self.set_current_pos(x, y, z)
-#        self.writer.add_line(self.currentx, self.currenty, self.currentz, a, b, c)
+    #    def add_line(self, x, y, z, a, b, c):
+    #        if (x == None and y == None and z == None and a == None and b == None and c == None) : return
+    #        self.set_current_pos(x, y, z)
+    #        self.writer.add_line(self.currentx, self.currenty, self.currentz, a, b, c)
 
-#    def add_arc(self, x, y, z, i, j, k, r, d):
-#        if (x == None and y == None and z == None and i == None and j == None and k == None and r == None and d == None) : return
-#        self.set_current_pos(x, y, z)
-#        self.writer.add_arc(self.currentx, self.currenty, self.currentz, i, j, k, r, d)
+    #    def add_arc(self, x, y, z, i, j, k, r, d):
+    #        if (x == None and y == None and z == None and i == None and j == None and k == None and r == None and d == None) : return
+    #        self.set_current_pos(x, y, z)
+    #        self.writer.add_arc(self.currentx, self.currenty, self.currentz, i, j, k, r, d)
 
     def incremental(self):
         self.absolute_flag = False
@@ -67,7 +68,7 @@ class Parser:
         self.absolute_flag = True
 
     def Parse(self, name):
-        self.file_in = open(name, 'r')
+        self.file_in = open(name, "r")
 
         self.path_col = None
         self.f = None
@@ -75,7 +76,7 @@ class Parser:
         self.q = None
         self.r = None
 
-        while (self.readline()):
+        while self.readline():
             self.a = None
             self.b = None
             self.c = None
@@ -109,19 +110,19 @@ class Parser:
                 if (self.m6 == True) or (self.need_m6_for_t_change == False):
                     self.writer.tool_change(self.t)
 
-            if (self.drill):
+            if self.drill:
                 if self.z != None:
                     self.drillz = self.z
                 self.writer.rapid(self.x, self.y, self.r)
                 self.writer.feed(self.x, self.y, self.drillz)
                 self.writer.feed(self.x, self.y, self.r)
 
-            elif(self.height_offset):
+            elif self.height_offset:
                 self.writer.rapid(self.x, self.y, self.z)
 
             else:
-                if (self.move and not self.no_move):
-                    if (self.arc == 0):
+                if self.move and not self.no_move:
+                    if self.arc == 0:
                         if self.path_col == "feed":
                             self.writer.feed(self.x, self.y, self.z)
                         else:
@@ -133,7 +134,11 @@ class Parser:
                         if self.arc_centre_absolute == True:
                             pass
                         else:
-                            if (self.arc_centre_positive == True) and (self.oldx != None) and (self.oldy != None):
+                            if (
+                                (self.arc_centre_positive == True)
+                                and (self.oldx != None)
+                                and (self.oldy != None)
+                            ):
                                 x = self.oldx
                                 if self.x != None:
                                     x = self.x
@@ -146,13 +151,13 @@ class Parser:
                                     i = -i
 
                                 # fix centre point
-                                r = math.sqrt(i*i + j*j)
+                                r = math.sqrt(i * i + j * j)
                                 p0 = area.Point(self.oldx, self.oldy)
                                 p1 = area.Point(x, y)
                                 v = p1 - p0
                                 l = v.length()
-                                h = l/2
-                                d = math.sqrt(r*r - h*h)
+                                h = l / 2
+                                d = math.sqrt(r * r - h * h)
                                 n = area.Point(-v.y, v.x)
                                 n.normalize()
                                 if self.arc == -1:
@@ -163,11 +168,11 @@ class Parser:
                                 global count
 
                                 if count == 0 and x > 47:
-                                    print 'x = ', x
-                                    print 'p0 = ', p0.x, ', ', p0.y, '   p1 = ', p1.x, ', ', p1.y
-                                    print 'c = ', c.x, ', ', c.y
-                                    print 'v = ', v.x, ', ', v.y
-                                    print 'n = ', n.x, ', ', n.y
+                                    print("x = ", x)
+                                    print("p0 = ", p0.x, ", ", p0.y, "   p1 = ", p1.x, ", ", p1.y)
+                                    print("c = ", c.x, ", ", c.y)
+                                    print("v = ", v.x, ", ", v.y)
+                                    print("n = ", n.x, ", ", n.y)
                                     count += 1
 
                             else:

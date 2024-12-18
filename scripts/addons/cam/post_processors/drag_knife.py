@@ -9,6 +9,7 @@ import area
 import nc
 from kurve_funcs import cut_curve as cut_curve
 from . import recreator
+
 dragging = False
 
 ################################################################################
@@ -26,7 +27,7 @@ class Creator(recreator.Redirector):
         if self.path == None:
             return
 
-        print self.drag_distance
+        print(self.drag_distance)
         self.path.OffsetForward(self.drag_distance, False)
 
         nc.creator = nc.creator.original
@@ -61,8 +62,9 @@ class Creator(recreator.Redirector):
         # add an arc to the path
         if self.path == None:
             self.path = area.Curve()
-        self.path.append(area.Vertex(1 if ccw else -1,
-                                     area.Point(self.x, self.y), area.Point(i, j)))
+        self.path.append(
+            area.Vertex(1 if ccw else -1, area.Point(self.x, self.y), area.Point(i, j))
+        )
 
 
 def drag_begin(drag_distance):

@@ -20,12 +20,13 @@ class Parser(nc.Parser):
 
         # rada
         self.pattern_main = re.compile(
-            r'(\s+|,|-?\w\+?\d*(?:\.\d*)?|\w#\d+|\(.*?\)|#\d+=\+?\d*(?:\.\d*)?)')
-        #self.pattern_main = re.compile('\s+\w')
+            r"(\s+|,|-?\w\+?\d*(?:\.\d*)?|\w#\d+|\(.*?\)|#\d+=\+?\d*(?:\.\d*)?)"
+        )
+        # self.pattern_main = re.compile('\s+\w')
         # self.pattern_main = re.compile('(\s+|\w(?:[+])?[+-\w]\d*(?:\.\d*)?|\w\#[+-\w]\d+|\(.*?\)|[\#[+-\w]\d+\=(?:[+])?[+-\w]\d*(?:\.\d*)?)')
-        #self.pattern_main = re.compile('\s\w[\S]\w,\w[+-\w]\d*\w,\w[+-\w]\d*\w,\w[+-\w]\d*')
+        # self.pattern_main = re.compile('\s\w[\S]\w,\w[+-\w]\d*\w,\w[+-\w]\d*\w,\w[+-\w]\d*')
         # self.pattern_main = re.compile('(\s|\w(?:)?\d*(?:\.\d*)?|\w\#\d+|\(.*?\)|\#\d+\=(?:)?\d*(?:\.\d*)?)')
-        #self.pattern_main = re.compile(' ')
+        # self.pattern_main = re.compile(' ')
 
         self.a = 0
         self.b = 0
@@ -51,18 +52,19 @@ class Parser(nc.Parser):
         self.dy = 0
         self.dx = 0
         self.angle = 0
-        self.SPACE = ' '
+        self.SPACE = " "
 
     def add_text(self, s, col=None):
-        s.replace('&', '&amp;')
-        s.replace('"', '&quot;')
-        s.replace('<', '&lt;')
-        s.replace('>', '&gt;')
-        s += self.SPACE+'\n'
-        if (col != None):
-            self.file_out.write('\t\t<text col="'+col+'">'+s+' </text>\n')
+        s.replace("&", "&amp;")
+        s.replace('"', "&quot;")
+        s.replace("<", "&lt;")
+        s.replace(">", "&gt;")
+        s += self.SPACE + "\n"
+        if col != None:
+            self.file_out.write('\t\t<text col="' + col + '">' + s + " </text>\n")
         else:
-            self.file_out.write('\t\t<text>'+s+' </text>\n')
+            self.file_out.write("\t\t<text>" + s + " </text>\n")
+
     # def add_text(self, s, col=None):
     #    if (col != None) : self.file_out.write('\t\t<text col="'+col+'">'+s+'</text>\n')
     #    else : self.file_out.write('\t\t<text>'+s+'</text>\n')
@@ -70,29 +72,29 @@ class Parser(nc.Parser):
     def Parse(self, name, oname=None):
         self.files_open(name, oname)
 
-        while (self.readline()):
+        while self.readline():
             self.begin_ncblock()
 
             move = False
             arc = 0
             path_col = None
             col = None
-            if(self.line[0] == 'C'):
+            if self.line[0] == "C":
                 col = "axis"
-            if(self.line[0] == 'M' and self.line[1] == 'A'):
+            if self.line[0] == "M" and self.line[1] == "A":
                 col = "feed"
-            if (self.line[0] == "/" and self.line[1] == "/"):
+            if self.line[0] == "/" and self.line[1] == "/":
                 col = "comment"
 
-            if (self.FS == 1 and not (self.line[0] == 'S' and self.line[1] == 'S') and col == "feed"):
+            if self.FS == 1 and not (self.line[0] == "S" and self.line[1] == "S") and col == "feed":
                 col = "rapid"
             self.add_text(self.line, col)
-            #words = self.pattern_main.findall(self.line)
+            # words = self.pattern_main.findall(self.line)
             words = self.line.split()
             # print self.line
             # print ' AAAA '
-            words[0] = words[0]+self.SPACE
-            print words
+            words[0] = words[0] + self.SPACE
+            print(words)
             for word in words:
                 col = None
                 # if (word[0] == 'A' or word[0] == 'a'):
@@ -104,90 +106,90 @@ class Parser(nc.Parser):
                 #   self.b = eval(word[1:])
 
                 #   move = True
-                if (word == ('C'+self.SPACE)):
+                if word == ("C" + self.SPACE):
                     # print words
                     col = "axis"
                     self.startx = self.x
                     self.starty = self.y
-                    words[0] = words[0]+self.SPACE
-                    words[2] = self.SPACE+words[2]+self.SPACE
-                    words[4] = self.SPACE+words[4]+self.SPACE
+                    words[0] = words[0] + self.SPACE
+                    words[2] = self.SPACE + words[2] + self.SPACE
+                    words[4] = self.SPACE + words[4] + self.SPACE
 
                     # print 'x,y'
                     # print self.x
                     # print self.y
                     # self.x1=self.x-eval(words[1])
-                    self.x1 = self.x-eval(words[1])
+                    self.x1 = self.x - eval(words[1])
                     # j=self.y-eval(words[5])
                     # self.y1=self.y-eval(words[3])
-                    self.y1 = self.y-eval(words[3])
-                    #self.c = eval(word[1:])
+                    self.y1 = self.y - eval(words[3])
+                    # self.c = eval(word[1:])
                     # print 'self x,y'
                     # print self.x1
                     # print self.y1
-                    self.dx = (self.x1)*1
-                    self.dy = (self.y1)*0
+                    self.dx = (self.x1) * 1
+                    self.dy = (self.y1) * 0
                     # print 'x1'
                     # print self.x1
                     # print 'y1'
                     # print self.y1
-                    ssucin = self.dx+self.dy
-                    r = math.sqrt(((self.x1)*(self.x1))+((self.y1)*(self.y1)))
+                    ssucin = self.dx + self.dy
+                    r = math.sqrt(((self.x1) * (self.x1)) + ((self.y1) * (self.y1)))
                     # print 'skalarny sucin'
                     # print ssucin
                     # print 'r'
                     # print r
-                    if (ssucin != 0):
-                        ratio = ssucin/(r*1)
+                    if ssucin != 0:
+                        ratio = ssucin / (r * 1)
                         # print 'ratio'
                         # print ratio
-                        angle = (math.acos(ratio) * 180 / math.pi)
-                        if(self.y1 < 0):
-                            angle = 360-angle
-                    elif (self.y1 > 0):
+                        angle = math.acos(ratio) * 180 / math.pi
+                        if self.y1 < 0:
+                            angle = 360 - angle
+                    elif self.y1 > 0:
                         angle = +90
-                    elif (self.y1 < 0):
+                    elif self.y1 < 0:
                         angle = -90
                     else:
                         angle = 0
                     # print words[8]
                     # print 'angles'
                     # print angle
-                    #if (i<0 and j<0): angle=180+angle
-                    #if (i<0 and j>0): angle=180-angle
-                    #if (j>0): angle=-angle
-                    #print ('reverzacia')
-                    #angle= angle+ eval(words[8])
+                    # if (i<0 and j<0): angle=180+angle
+                    # if (i<0 and j>0): angle=180-angle
+                    # if (j>0): angle=-angle
+                    # print ('reverzacia')
+                    # angle= angle+ eval(words[8])
                     # print angle
-                    self.angle = + angle + eval(words[5])
+                    self.angle = +angle + eval(words[5])
                     # print self.angle
-                    #if(angle>180): angle=360-angle
-                    angle = self.angle*math.pi/180
+                    # if(angle>180): angle=360-angle
+                    angle = self.angle * math.pi / 180
                     # print eval(words[8])
-                    self.endx = eval(words[1])+(r*math.cos(angle))
+                    self.endx = eval(words[1]) + (r * math.cos(angle))
                     # j=eval(words[5])+(r*math.sin(angle))
-                    self.endy = eval(words[3])+(r*math.sin(angle))
+                    self.endy = eval(words[3]) + (r * math.sin(angle))
                     self.x = self.endx
                     self.y = self.endy
                     path_col = "feed"
                     # arc=-eval(words[8])/math.fabs(eval(words[8]))
-                    arc = eval(words[5])/math.fabs(eval(words[5]))
-                    #if(arc==-1): arc=0
+                    arc = eval(words[5]) / math.fabs(eval(words[5]))
+                    # if(arc==-1): arc=0
                     # arc=-1
-                    #col = "feed"
+                    # col = "feed"
                     move = True
 
-                elif (word == 'P' and words[1] == 'L' and words[4] == 'F'):
+                elif word == "P" and words[1] == "L" and words[4] == "F":
                     self.FS = 1
-                elif (word == 'P' and words[1] == 'L' and words[4] == 'N'):
+                elif word == "P" and words[1] == "L" and words[4] == "N":
                     self.FS = 0
-                elif (word == ('FS'+self.SPACE)):
+                elif word == ("FS" + self.SPACE):
                     self.FS = 1
-                elif (word == ('SS'+self.SPACE)):
+                elif word == ("SS" + self.SPACE):
                     self.FS = 0
-                elif (word == ('MA'+self.SPACE)):
-                    words[2] = self.SPACE+words[2]+self.SPACE
-                    if (self.FS == 1):
+                elif word == ("MA" + self.SPACE):
+                    words[2] = self.SPACE + words[2] + self.SPACE
+                    if self.FS == 1:
                         path_col = "rapid"
                         col = "rapid"
                     else:
@@ -206,8 +208,8 @@ class Parser(nc.Parser):
                 #    arc = -1
                 # elif (word == 'G3' or word == 'G03' or word == 'g3' or word == 'g03' or word == 'G13' or word == 'g13'):
                 #    path_col = "feed"
-                 #   col = "feed"
-                 #   arc = +1
+                #   col = "feed"
+                #   arc = +1
                 # elif (word == 'G10' or word == 'g10'):
                 #    move = False
                 # elif (word == 'L1' or word == 'l1'):
@@ -272,30 +274,38 @@ class Parser(nc.Parser):
                 #    col = "axis"
                 #    self.z = eval(word[1:])
                 #    move = True
-                elif (word[0] == '('):
+                elif word[0] == "(":
                     col = "comment"
-                elif (word[0] == '#'):
+                elif word[0] == "#":
                     col = "variable"
-                elif (words[0] == ("//"+self.SPACE)):
+                elif words[0] == ("//" + self.SPACE):
                     col = "comment"
-                elif (words[0] == ("/*"+self.SPACE)):
+                elif words[0] == ("/*" + self.SPACE):
                     col = "comment"
-                #self.add_text(word, col)
+                # self.add_text(word, col)
 
-            if (move):
+            if move:
                 self.begin_path(path_col)
-                if (arc):
-                    #self.add_arc(self.x, self.y, 0.0000, self.i, self.j, 0.0000, arc)
-                    #self.add_arc(self.i, self.j, 0.0000, eval(words[2])-self.x, eval(words[5])-self.y, 0.0000, arc)
+                if arc:
+                    # self.add_arc(self.x, self.y, 0.0000, self.i, self.j, 0.0000, arc)
+                    # self.add_arc(self.i, self.j, 0.0000, eval(words[2])-self.x, eval(words[5])-self.y, 0.0000, arc)
                     # print ''
                     # print eval(words[2])-self.startx
                     # print eval(words[6])-self.starty
-                    #self.add_arc(self.endx, self.endy, 0.0000, eval(words[1])-self.startx, eval(words[3])-self.starty, 0.0000, arc)
-                    print arc
-                    self.add_arc(self.endx, self.endy, 0.0000, eval(
-                        words[1])-self.startx, eval(words[3])-self.starty, 0.0000, 0.0000, arc)
+                    # self.add_arc(self.endx, self.endy, 0.0000, eval(words[1])-self.startx, eval(words[3])-self.starty, 0.0000, arc)
+                    print(arc)
+                    self.add_arc(
+                        self.endx,
+                        self.endy,
+                        0.0000,
+                        eval(words[1]) - self.startx,
+                        eval(words[3]) - self.starty,
+                        0.0000,
+                        0.0000,
+                        arc,
+                    )
 
-                    #self.add_arc(self.x, self.y, 0.0000, self.i, self.j, 0.0000, arc)
+                    # self.add_arc(self.x, self.y, 0.0000, self.i, self.j, 0.0000, arc)
                     # self.x=self.i
                     # self.y=self.j
                 else:
