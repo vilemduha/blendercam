@@ -4,6 +4,8 @@
 import bpy
 from mathutils import Vector
 
+from .simple_utils import delete_object
+
 
 def add_orientation_object(o):
     """Set up orientation for a milling object.

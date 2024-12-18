@@ -78,7 +78,7 @@ def check_operations_on_load(context):
             )
         _IS_LOADING_DEFAULTS = False
     # copy presets if not there yet
-    preset_source_path = Path(__file__).parent / "presets"
+    preset_source_path = Path(__file__).parent.parent / "presets"
     preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
 
     def copy_if_not_exists(src, dst):
@@ -107,7 +107,7 @@ def check_operations_on_load(context):
 
     if not addon_prefs.op_preset_update:
         # Update the Operation presets
-        op_presets_source = Path(__file__).parent / "presets" / "cam_operations"
+        op_presets_source = Path(__file__).parent.parent / "presets" / "cam_operations"
         op_presets_target = Path(bpy.utils.script_path_user()) / "presets" / "cam_operations"
         shutil.copytree(op_presets_source, op_presets_target, dirs_exist_ok=True)
         addon_prefs.op_preset_update = True
