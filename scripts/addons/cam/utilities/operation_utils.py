@@ -246,7 +246,7 @@ def operation_valid(self, context):
         o.info.warnings = ""
     else:
         o.info.warnings = invalidmsg
-        addon_prefs = bpy.context.preferences.addons[__package__].preferences
+        addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
         if addon_prefs.show_popups:
             bpy.ops.cam.popup("INVOKE_DEFAULT")
 

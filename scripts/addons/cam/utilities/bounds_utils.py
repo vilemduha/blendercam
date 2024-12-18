@@ -251,7 +251,7 @@ def get_bounds(o):
     ):
         o.info.warnings += "Operation Exceeds Your Machine Limits\n"
     if not o.info.warnings == "":
-        addon_prefs = bpy.context.preferences.addons[__package__].preferences
+        addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
         if addon_prefs.show_popups:
             bpy.ops.cam.popup("INVOKE_DEFAULT")
 
