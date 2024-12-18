@@ -70,7 +70,7 @@ def update_exact(o, context):
         o.optimisation.use_opencamlib = False
 
 
-def update_opencamlib(o, context):
+def update_opencamlib_1(o, context):
     """Update the OpenCAMLib settings for a given operation.
 
     This function modifies the properties of the provided operation object
@@ -246,4 +246,4 @@ def update_opencamlib(self, context):
 
     # from . import updateOpencamlib
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
-    update_opencamlib(active_op, bpy.context)
+    update_opencamlib_1(active_op, bpy.context)

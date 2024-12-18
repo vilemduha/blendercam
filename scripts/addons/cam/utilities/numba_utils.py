@@ -1,4 +1,4 @@
-"""Fabex 'numba_wrapper.py'
+"""Fabex 'numba_utils.py'
 
 Patch to ensure functions will run if numba is unavailable.
 """

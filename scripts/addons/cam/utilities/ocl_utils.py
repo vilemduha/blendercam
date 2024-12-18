@@ -33,8 +33,8 @@ from ..constants import (
     _PREVIOUS_OCL_MESH,
 )
 from ..exception import CamException
-from ..utilities.async_utils import progress_async
-from ..utilities.simple_utils import activate
+from .async_utils import progress_async
+from .simple_utils import activate
 
 
 def pointSamplesFromOCL(points, samples):

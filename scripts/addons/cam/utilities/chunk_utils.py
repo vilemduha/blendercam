@@ -21,6 +21,7 @@ import bpy
 from mathutils import Vector
 
 from .async_utils import progress_async
+from .numba_utils import jit
 from .simple_utils import (
     activate,
     progress,
@@ -30,13 +31,7 @@ from .simple_utils import (
     union,
 )
 
-from ..collision import (
-    get_sample_bullet,
-    get_sample_bullet_n_axis,
-    prepare_bullet_collision,
-)
 from ..exception import CamException
-from ..numba_wrapper import jit
 
 
 def chunks_refine(chunks, o):

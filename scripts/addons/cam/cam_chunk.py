@@ -27,7 +27,7 @@ from mathutils import Vector
 
 from .collision import get_sample_bullet, get_sample_bullet_n_axis, prepare_bullet_collision
 from .exception import CamException
-from .numba_wrapper import jit
+from .utilities.numba_utils import jit
 
 from .utilities.async_utils import progress_async
 from .utilities.chunk_utils import (

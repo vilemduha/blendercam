@@ -37,7 +37,7 @@ from .simple_utils import (
     progress,
     get_cache_path,
 )
-from ..numba_wrapper import (
+from .numba_utils import (
     jit,
     prange,
 )
