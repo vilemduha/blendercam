@@ -5,9 +5,6 @@ import bpy
 
 warnings.simplefilter("once")
 
-print(bpy.context.scene.render.engine)
-print(bpy.context.preferences.addons["bl_ext.user_default.fabex"])
-
 # Get the scene
 s = bpy.context.scene
 s.render.engine = "FABEX_RENDER"
