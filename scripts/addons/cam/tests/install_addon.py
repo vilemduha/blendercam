@@ -6,14 +6,14 @@ import tempfile
 
 
 INSTALL_CODE = f"""
-import bpy
-bpy.context.preferences.system.use_online_access = True
-bpy.ops.extensions.repo_sync_all(use_active_only=False)
-bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}', repo='user_default')
-bpy.ops.extensions.package_install(repo_index=0, pkg_id="stl_format_legacy")
-bpy.ops.extensions.package_install(repo_index=0, pkg_id="simplify_curves_plus")
-bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")
-bpy.ops.wm.save_userpref()
+import bpy\n
+bpy.context.preferences.system.use_online_access = True\n
+bpy.ops.extensions.repo_sync_all(use_active_only=False)\n
+bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}', repo='user_default')\n
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="stl_format_legacy")\n
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="simplify_curves_plus")\n
+bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")\n
+bpy.ops.wm.save_userpref()\n
 """
 
 NUM_RETRIES = 10
@@ -26,7 +26,7 @@ with tempfile.TemporaryDirectory() as td:
     for x in range(NUM_RETRIES):
         try:
             subprocess.run(
-                [shutil.which("blender"), "-b", "-P", str(file)],
+                [shutil.which("blender"), "-b", "--python-text", INSTALL_CODE],
                 shell=False,
                 check=True,
                 stdout=subprocess.PIPE,
