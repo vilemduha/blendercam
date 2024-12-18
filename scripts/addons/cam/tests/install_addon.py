@@ -18,33 +18,33 @@ bpy.ops.wm.save_userpref()\n
 
 NUM_RETRIES = 10
 
-with tempfile.TemporaryDirectory() as td:
-    file = pathlib.Path(td, "install.py")
-    file.write_text(INSTALL_CODE)
+# with tempfile.TemporaryDirectory() as td:
+#     file = pathlib.Path(td, "install.py")
+#     file.write_text(INSTALL_CODE)
 
-    # blender 4.0 installing addon crashes sometimes on mac github actions...
-    for x in range(NUM_RETRIES):
-        try:
-            subprocess.run(
-                [shutil.which("blender"), "-b", "--python-text", INSTALL_CODE],
-                shell=False,
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-            )
-            print("installed addon okay")
-            sys.exit(0)
-        except subprocess.CalledProcessError as e:
-            print("Install addon failed, retrying:", e)
-            print("Command output:")
-            print("------------------------------")
-            print(e.output)
-            print("------------------------------")
-            for line in str(e.output):
-                if line.startswith("Writing: "):
-                    crash_file = pathlib.Path(line[len("Writing: ") :])
-                    if crash_file.exists():
-                        print("Crash log:\n================")
-                        print(crash_file.read_text())
-                        print("============================")
+# blender 4.0 installing addon crashes sometimes on mac github actions...
+for x in range(NUM_RETRIES):
+    try:
+        subprocess.run(
+            [shutil.which("blender"), "-b", "--python-text", INSTALL_CODE],
+            shell=False,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+        print("installed addon okay")
+        sys.exit(0)
+    except subprocess.CalledProcessError as e:
+        print("Install addon failed, retrying:", e)
+        print("Command output:")
+        print("------------------------------")
+        print(e.output)
+        print("------------------------------")
+        for line in str(e.output):
+            if line.startswith("Writing: "):
+                crash_file = pathlib.Path(line[len("Writing: ") :])
+                if crash_file.exists():
+                    print("Crash log:\n================")
+                    print(crash_file.read_text())
+                    print("============================")
