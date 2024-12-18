@@ -13,7 +13,7 @@ warnings.simplefilter("once")
 #     bpy.ops.extensions.repo_sync_all(use_active_only=False)
 #     bpy.ops.extensions.package_install_files(filepath=f"{sys.argv[1]}", repo="user_default")
 
-sys.path.append("/home/runner/work/blendercam/blendercam/scripts/addons/cam")
+# sys.path.append("/home/runner/work/blendercam/blendercam/scripts/addons/cam")
 
 # Get the scene
 s = bpy.context.scene
