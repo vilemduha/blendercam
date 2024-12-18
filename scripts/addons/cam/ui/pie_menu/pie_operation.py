@@ -24,15 +24,15 @@ class VIEW3D_MT_PIE_Operation(Menu):
 
         # Left
         pie.operator("wm.call_panel", text="Area", icon="SHADING_BBOX").name = (
-            "WORLD_PT_CAM_OPERATION_AREA"
+            "FABEX_PT_CAM_OPERATION_AREA"
         )
         # Right
         pie.operator("wm.call_panel", text="Optimisation", icon="MODIFIER").name = (
-            "WORLD_PT_CAM_OPTIMISATION"
+            "FABEX_PT_CAM_OPTIMISATION"
         )
         # Bottom
         pie.operator("wm.call_panel", text="Setup", icon="PREFERENCES").name = (
-            "WORLD_PT_CAM_OPERATION"
+            "FABEX_PT_CAM_OPERATION"
         )
 
         # Top
@@ -43,18 +43,18 @@ class VIEW3D_MT_PIE_Operation(Menu):
 
         # Top Left
         pie.operator("wm.call_panel", text="Movement", icon="ANIM_DATA").name = (
-            "WORLD_PT_CAM_MOVEMENT"
+            "FABEX_PT_CAM_MOVEMENT"
         )
 
         # Top Right
-        pie.operator("wm.call_panel", text="Feedrate", icon="AUTO").name = "WORLD_PT_CAM_FEEDRATE"
+        pie.operator("wm.call_panel", text="Feedrate", icon="AUTO").name = "FABEX_PT_CAM_FEEDRATE"
 
         # Bottom Left
         pie.operator("wm.call_panel", text="Cutter", icon="OUTLINER_DATA_GP_LAYER").name = (
-            "WORLD_PT_CAM_CUTTER"
+            "FABEX_PT_CAM_CUTTER"
         )
 
         # Bottom Right
         pie.operator("wm.call_panel", text="G-Code Options", icon="EVENT_G").name = (
-            "WORLD_PT_CAM_GCODE"
+            "FABEX_PT_CAM_GCODE"
         )

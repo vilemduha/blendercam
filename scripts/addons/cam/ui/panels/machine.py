@@ -17,7 +17,7 @@ class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
     bl_context = "render"
 
     bl_label = "[ Machine ]"
-    bl_idname = "WORLD_PT_CAM_MACHINE"
+    bl_idname = "FABEX_PT_CAM_MACHINE"
     panel_interface_level = 0
     always_show_panel = True
 

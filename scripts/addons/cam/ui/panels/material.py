@@ -14,7 +14,7 @@ class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
     bl_context = "render"
 
     bl_label = "[ Material ]"
-    bl_idname = "WORLD_PT_CAM_MATERIAL"
+    bl_idname = "FABEX_PT_CAM_MATERIAL"
     panel_interface_level = 0
 
     def draw(self, context):

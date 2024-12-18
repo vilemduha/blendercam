@@ -21,7 +21,7 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
     bl_options = {"HIDE_HEADER"}
 
     bl_label = "Info & Warnings"
-    bl_idname = "WORLD_PT_CAM_INFO"
+    bl_idname = "FABEX_PT_CAM_INFO"
     panel_interface_level = 0
     always_show_panel = True
 

@@ -17,7 +17,7 @@ class CAM_FEEDRATE_Panel(CAMButtonsPanel, Panel):
     bl_category = "CNC"
 
     bl_label = "[ Feedrate ]"
-    bl_idname = "WORLD_PT_CAM_FEEDRATE"
+    bl_idname = "FABEX_PT_CAM_FEEDRATE"
     panel_interface_level = 0
 
     def draw(self, context):

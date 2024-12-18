@@ -46,7 +46,7 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
     bl_context = "render"
 
     bl_label = "[ Chains ]"
-    bl_idname = "WORLD_PT_CAM_CHAINS"
+    bl_idname = "FABEX_PT_CAM_CHAINS"
     bl_options = {"DEFAULT_CLOSED"}
     panel_interface_level = 1
     always_show_panel = True

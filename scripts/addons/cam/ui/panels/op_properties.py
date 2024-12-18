@@ -17,7 +17,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
     bl_category = "CNC"
 
     bl_label = "[ Operation Setup ]"
-    bl_idname = "WORLD_PT_CAM_OPERATION"
+    bl_idname = "FABEX_PT_CAM_OPERATION"
     panel_interface_level = 0
 
     def draw_overshoot(self, col):

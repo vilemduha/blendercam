@@ -14,7 +14,6 @@ bpy.ops.extensions.package_install(repo_index=0, pkg_id="stl_format_legacy")
 bpy.ops.extensions.package_install(repo_index=0, pkg_id="simplify_curves_plus")
 bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")
 bpy.ops.wm.save_userpref()
-print('waaaaaaaaaaaaaaaaah')
 """
 
 NUM_RETRIES = 10

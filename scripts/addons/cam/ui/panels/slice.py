@@ -17,7 +17,7 @@ class CAM_SLICE_Panel(CAMButtonsPanel, Panel):
     bl_context = "render"
 
     bl_label = "[ Slice ]"
-    bl_idname = "WORLD_PT_CAM_SLICE"
+    bl_idname = "FABEX_PT_CAM_SLICE"
     bl_options = {"DEFAULT_CLOSED"}
     panel_interface_level = 2
     use_property_split = True

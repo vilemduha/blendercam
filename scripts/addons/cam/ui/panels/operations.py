@@ -17,7 +17,7 @@ class CAM_OPERATIONS_Panel(CAMButtonsPanel, Panel):
     bl_context = "render"
 
     bl_label = "[ Operations ]"
-    bl_idname = "WORLD_PT_CAM_OPERATIONS"
+    bl_idname = "FABEX_PT_CAM_OPERATIONS"
     panel_interface_level = 0
     always_show_panel = True
 

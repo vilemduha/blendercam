@@ -17,7 +17,7 @@ class CAM_PACK_Panel(CAMButtonsPanel, Panel):
     bl_context = "render"
 
     bl_label = "[ Pack ]"
-    bl_idname = "WORLD_PT_CAM_PACK"
+    bl_idname = "FABEX_PT_CAM_PACK"
     bl_options = {"DEFAULT_CLOSED"}
     panel_interface_level = 2
     use_property_split = True

@@ -17,7 +17,7 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
     bl_category = "CNC"
 
     bl_label = "[ Cutter ]"
-    bl_idname = "WORLD_PT_CAM_CUTTER"
+    bl_idname = "FABEX_PT_CAM_CUTTER"
     panel_interface_level = 0
 
     def draw(self, context):

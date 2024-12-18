@@ -18,7 +18,7 @@ class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
     bl_category = "CNC"
 
     bl_label = "[ Optimisation ]"
-    bl_idname = "WORLD_PT_CAM_OPTIMISATION"
+    bl_idname = "FABEX_PT_CAM_OPTIMISATION"
     panel_interface_level = 2
 
     def draw(self, context):
