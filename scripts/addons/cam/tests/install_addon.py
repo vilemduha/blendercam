@@ -33,7 +33,7 @@ with tempfile.TemporaryDirectory() as td:
                 stderr=subprocess.STDOUT,
                 text=True,
             )
-            print(subprocess.PIPE)
+            print(subprocess.STDOUT)
             print("installed addon okay")
             sys.exit(0)
         except subprocess.CalledProcessError as e:
