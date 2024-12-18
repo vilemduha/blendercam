@@ -5,13 +5,8 @@ import bpy
 
 warnings.simplefilter("once")
 
-bpy.context.preferences.system.use_online_access = True
-bpy.ops.extensions.repo_sync_all(use_active_only=False)
-bpy.ops.extensions.package_install_files(filepath=f"{sys.argv[1]}", repo="user_default")
-bpy.ops.extensions.package_install(repo_index=0, pkg_id="stl_format_legacy")
-bpy.ops.extensions.package_install(repo_index=0, pkg_id="simplify_curves_plus")
-bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")
-bpy.ops.wm.save_userpref()
+print(bpy.context.scene.render.engine)
+print(bpy.context.preferences.addons["bl_ext.user_default.fabex"])
 
 # Get the scene
 s = bpy.context.scene
