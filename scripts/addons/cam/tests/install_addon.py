@@ -36,7 +36,7 @@ with tempfile.TemporaryDirectory() as td:
             )
             print("installed addon okay")
             sys.exit(0)
-        except Exception as e:
+        except subprocess.CalledProcessError as e:
             print("Install addon failed, retrying:", e)
             print("Command output:")
             print("------------------------------")
