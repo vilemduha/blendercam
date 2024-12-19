@@ -108,7 +108,6 @@ class CAM_MACHINE_Properties(PropertyGroup):
         description="Post Processor",
         default="MACH3",
     )
-    # units = EnumProperty(name='Units', items = (('IMPERIAL', ''))
     # position definitions:
     use_position_definitions: BoolProperty(
         name="Use Position Definitions",
@@ -139,7 +138,6 @@ class CAM_MACHINE_Properties(PropertyGroup):
         subtype="XYZ",
         update=update_machine,
     )
-
     working_area: FloatVectorProperty(
         name="Work Area",
         default=(0.500, 0.500, 0.100),
@@ -180,7 +178,6 @@ class CAM_MACHINE_Properties(PropertyGroup):
     )
 
     # UNSUPPORTED:
-
     spindle_min: FloatProperty(
         name="Spindle Speed Minimum RPM",
         default=5000,
@@ -211,19 +208,16 @@ class CAM_MACHINE_Properties(PropertyGroup):
         max=320000,
         precision=1,
     )
-
     axis_4: BoolProperty(
         name="4th Axis",
         description="Machine has 4th axis",
         default=0,
     )
-
     axis_5: BoolProperty(
         name="5th Axis",
         description="Machine has 5th axis",
         default=0,
     )
-
     eval_splitting: BoolProperty(
         name="Split Files",
         description="Split gcode file with large number of operations",
@@ -236,7 +230,6 @@ class CAM_MACHINE_Properties(PropertyGroup):
         max=20000000,
         default=800000,
     )
-
     collet_size: FloatProperty(
         name="Collet Size",
         description="Collet size for collision detection",
@@ -246,7 +239,6 @@ class CAM_MACHINE_Properties(PropertyGroup):
         precision=PRECISION,
         unit="LENGTH",
     )
-    # exporter_start = StringProperty(name="exporter start", default="%")
 
     # post processor options
 

@@ -4,7 +4,12 @@ Generate and Export G-Code based on scene, machine, chain, operation and path se
 """
 
 # G-code Generaton
-from math import ceil, floor, pi, sqrt
+from math import (
+    ceil,
+    floor,
+    pi,
+    sqrt,
+)
 import time
 
 import numpy
@@ -14,7 +19,6 @@ import bpy
 from mathutils import Euler, Vector
 
 from . import strategy
-from .utilities.async_utils import progress_async
 from .bridges import use_bridges
 from .cam_chunk import (
     curve_to_chunks,
@@ -33,8 +37,11 @@ from .cam_chunk import (
     get_offset_image_cavities,
 )
 from .constants import USE_PROFILER
-from .post_processors import iso
 from .pattern import get_path_pattern, get_path_pattern_4_axis
+from .post_processors import iso
+
+from .utilities.async_utils import progress_async
+from .utilities.bounds_utils import get_bounds
 from .utilities.chunk_utils import (
     chunks_refine,
     parent_child_distance,
@@ -42,17 +49,16 @@ from .utilities.chunk_utils import (
 from .utilities.image_utils import (
     prepare_area,
 )
+from .utilities.index_utils import (
+    cleanup_indexed,
+    prepare_indexed,
+)
+from .utilities.operation_utils import get_operation_sources
 from .utilities.simple_utils import (
     progress,
     safe_filename,
     unit_value_to_string,
 )
-from .utilities.index_utils import (
-    cleanup_indexed,
-    prepare_indexed,
-)
-from .utilities.bounds_utils import get_bounds
-from .utilities.operation_utils import get_operation_sources
 
 
 def point_on_line(a, b, c, tolerance):

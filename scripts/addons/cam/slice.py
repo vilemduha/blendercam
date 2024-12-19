@@ -5,11 +5,6 @@ Completely rewritten April 2021.
 """
 
 import bpy
-from bpy.props import (
-    BoolProperty,
-    FloatProperty,
-)
-from bpy.types import PropertyGroup
 
 
 def slicing_2d(ob, height):

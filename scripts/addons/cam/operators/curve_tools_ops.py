@@ -24,6 +24,7 @@ from ..cam_chunk import (
     silhouette_offset,
     get_object_silhouette,
 )
+
 from ..utilities.geom_utils import circle
 from ..utilities.shapely_utils import (
     shapely_to_curve,

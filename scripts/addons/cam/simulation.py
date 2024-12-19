@@ -11,13 +11,13 @@ import bpy
 from mathutils import Vector
 
 from .utilities.async_utils import progress_async
+from .utilities.bounds_utils import get_bounds_multiple
 from .utilities.image_utils import (
     get_cutter_array,
     numpy_save,
 )
-from .utilities.simple_utils import get_simulation_path
-from .utilities.bounds_utils import get_bounds_multiple
 from .utilities.operation_utils import get_operation_sources
+from .utilities.simple_utils import get_simulation_path
 
 
 def create_simulation_object(name, operations, i):

@@ -11,8 +11,9 @@ import pickle
 import bpy
 from bpy_extras import object_utils
 
-from ..constants import was_hidden_dict
 from .simple_utils import get_cache_path
+
+from ..constants import was_hidden_dict
 
 
 def get_operation_sources(o):
@@ -471,3 +472,26 @@ def update_zbuffer_image(self, context):
     # from . import updateZbufferImage
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     update_Z_buffer_image(active_op, bpy.context)
+
+
+def get_chain_operations(chain):
+    """Return chain operations associated with a given chain object.
+
+    This function iterates through the operations of the provided chain
+    object and retrieves the corresponding operations from the current
+    scene's camera operations in Blender. Due to limitations in Blender,
+    chain objects cannot store operations directly, so this function serves
+    to extract and return the relevant operations for further processing.
+
+    Args:
+        chain (object): The chain object from which to retrieve operations.
+
+    Returns:
+        list: A list of operations associated with the given chain object.
+    """
+    chop = []
+    for cho in chain.operations:
+        for so in bpy.context.scene.cam_operations:
+            if so.name == cho.name:
+                chop.append(so)
+    return chop

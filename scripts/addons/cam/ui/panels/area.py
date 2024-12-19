@@ -7,7 +7,8 @@ import bpy
 from bpy.types import Panel
 
 from .buttons_panel import CAMButtonsPanel
-from ...utilities.simple_utils import unit_value_to_string
+
+# from ...utilities.simple_utils import unit_value_to_string
 
 
 class CAM_AREA_Panel(CAMButtonsPanel, Panel):
@@ -75,13 +76,13 @@ class CAM_AREA_Panel(CAMButtonsPanel, Panel):
             else:
                 col.prop(self.op, "source_image_scale_z")
                 col.prop(self.op, "source_image_size_x")
-                if self.op.source_image_name != "":
-                    i = bpy.data.images[self.op.source_image_name]
-                    if i is not None:
-                        size_x = self.op.source_image_size_x / i.size[0]
-                        size_y = int(x_size * i.size[1] * 1000000) / 1000
-                        col.label(text="Image Size on Y Axis: " + unit_value_to_string(size_y, 8))
-                        col.separator()
+                # if self.op.source_image_name != "":
+                #     i = bpy.data.images[self.op.source_image_name]
+                #     if i is not None:
+                #         size_x = self.op.source_image_size_x / i.size[0]
+                #         size_y = int(x_size * i.size[1] * 1000000) / 1000
+                #         col.label(text="Image Size on Y Axis: " + unit_value_to_string(size_y, 8))
+                #         col.separator()
                 col.prop(self.op, "source_image_offset")
                 col.prop(self.op, "source_image_crop", text="Crop Source Image")
                 if self.op.source_image_crop:

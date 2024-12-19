@@ -26,9 +26,10 @@ from mathutils import Euler, Vector
 
 from . import constants
 from .cam_chunk import curve_to_chunks
+
+from .utilities.chunk_utils import chunks_to_shapely
 from .utilities.shapely_utils import shapely_to_curve
 from .utilities.simple_utils import activate
-from .utilities.chunk_utils import chunks_to_shapely
 
 
 def s_rotate(s, r, x, y):

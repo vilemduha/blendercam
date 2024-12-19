@@ -17,13 +17,14 @@ import bpy
 from bpy_extras.object_utils import object_data_add
 from mathutils import Vector
 
-from .utilities.simple_utils import join_multiple, remove_doubles
-from .utilities.operation_utils import get_operation_sources
 from .cam_chunk import (
     curve_to_shapely,
     get_object_silhouette,
     get_operation_silhouette,
 )
+
+from .utilities.operation_utils import get_operation_sources
+from .utilities.simple_utils import join_multiple, remove_doubles
 
 
 def add_bridge(x, y, rot, size_x, size_y):

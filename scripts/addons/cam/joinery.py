@@ -19,6 +19,8 @@ from shapely.geometry import (
 import bpy
 
 from . import puzzle_joinery
+
+from .utilities.shapely_utils import shapely_to_curve
 from .utilities.simple_utils import (
     active_name,
     union,
@@ -33,7 +35,6 @@ from .utilities.simple_utils import (
     make_active,
     remove_multiple,
 )
-from .utilities.shapely_utils import shapely_to_curve
 
 
 # boolean operations for curve objects

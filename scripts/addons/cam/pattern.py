@@ -3,7 +3,12 @@
 Functions to read CAM path patterns and return CAM path chunks.
 """
 
-from math import ceil, floor, pi, sqrt
+from math import (
+    ceil,
+    floor,
+    pi,
+    sqrt,
+)
 import time
 
 import numpy
@@ -16,6 +21,7 @@ from .cam_chunk import (
     CamPathChunkBuilder,
     shapely_to_chunks,
 )
+
 from .utilities.chunk_utils import (
     chunks_refine,
     parent_child_distance,

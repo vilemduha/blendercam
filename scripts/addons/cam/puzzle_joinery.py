@@ -14,7 +14,10 @@ from math import (
 
 import bpy
 
+from .constants import DT
 from . import joinery
+
+from .utilities.shapely_utils import shapely_to_curve
 from .utilities.simple_utils import (
     duplicate,
     mirror_x,
@@ -29,9 +32,6 @@ from .utilities.simple_utils import (
     make_active,
     remove_multiple,
 )
-from .utilities.shapely_utils import shapely_to_curve
-
-from .constants import DT
 
 
 def finger(diameter, stem=2):

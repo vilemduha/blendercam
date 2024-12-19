@@ -6,6 +6,7 @@ Functions for automated testing.
 import bpy
 
 from .gcodepath import getPath
+
 from .utilities.simple_utils import activate
 
 

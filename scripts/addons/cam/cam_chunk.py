@@ -25,9 +25,17 @@ from shapely.geometry import MultiPolygon
 import bpy
 from mathutils import Vector
 
-from .collision import get_sample_bullet, get_sample_bullet_n_axis, prepare_bullet_collision
+try:
+    import bl_ext.blender_org.simplify_curves_plus as curve_simplify
+except ImportError:
+    pass
+
+from .collision import (
+    get_sample_bullet,
+    get_sample_bullet_n_axis,
+    prepare_bullet_collision,
+)
 from .exception import CamException
-from .utilities.numba_utils import jit
 
 from .utilities.async_utils import progress_async
 from .utilities.chunk_utils import (
@@ -39,7 +47,10 @@ from .utilities.chunk_utils import (
     parent_child_distance,
     get_closest_chunk,
 )
-from .utilities.image_utils import get_sample_image, curve_simplify
+from .utilities.image_utils import (
+    get_sample_image,
+)
+from .utilities.numba_utils import jit
 from .utilities.ocl_utils import (
     oclSample,
     get_oclSTL,

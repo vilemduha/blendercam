@@ -7,7 +7,8 @@ import bpy
 from bpy.types import UIList, Panel
 
 from .buttons_panel import CAMButtonsPanel
-from ...utilities.operation_utils import chain_valid
+
+# from ...utilities.operation_utils import chain_valid
 
 
 class CAM_UL_operations(UIList):
@@ -105,11 +106,11 @@ class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
                             icon="RESTRICT_INSTANCED_OFF",
                         )
 
-                        valid, reason = chain_valid(chain, context)
-                        if not valid:
-                            col.alert = True
-                            col.label(icon="ERROR", text=f"Can't Compute Chain!")
-                            col.label(text=reason)
+                        # valid, reason = chain_valid(chain, context)
+                        # if not valid:
+                        #     col.alert = True
+                        #     col.label(icon="ERROR", text=f"Can't Compute Chain!")
+                        #     col.label(text=reason)
                     else:
                         col.label(text="Chain Is Currently Computing")
 

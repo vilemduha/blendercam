@@ -41,6 +41,9 @@ from .cam_chunk import (
 from .collision import cleanup_bullet_collision
 from .constants import SHAPELY
 from .exception import CamException
+
+from .operators.curve_create_ops import generate_crosshatch
+
 from .utilities.chunk_utils import (
     chunks_refine,
     optimize_chunk,
@@ -50,7 +53,9 @@ from .utilities.chunk_utils import (
     set_chunks_z,
     extend_chunks_5_axis,
 )
+from .utilities.compare_utils import check_equal, unique
 from .utilities.geom_utils import circle, helix
+from .utilities.operation_utils import get_operation_sources
 from .utilities.shapely_utils import shapely_to_curve
 from .utilities.simple_utils import (
     activate,
@@ -60,9 +65,6 @@ from .utilities.simple_utils import (
     remove_multiple,
     subdivide_short_lines,
 )
-from .utilities.compare_utils import check_equal, unique
-from .utilities.operation_utils import get_operation_sources
-from .operators.curve_cam_create import generate_crosshatch
 
 
 # add pocket op for medial axis and profile cut inside to clean unremoved material

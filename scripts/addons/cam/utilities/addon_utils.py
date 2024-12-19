@@ -111,3 +111,17 @@ def check_operations_on_load(context):
         op_presets_target = Path(bpy.utils.script_path_user()) / "presets" / "cam_operations"
         shutil.copytree(op_presets_source, op_presets_target, dirs_exist_ok=True)
         addon_prefs.op_preset_update = True
+
+
+def fix_units():
+    """Set up units for Fabex.
+
+    This function configures the unit settings for the current Blender
+    scene. It sets the rotation system to degrees and the scale length to
+    1.0, ensuring that the units are appropriately configured for use within
+    Fabex.
+    """
+    s = bpy.context.scene
+    s.unit_settings.system_rotation = "DEGREES"
+    s.unit_settings.scale_length = 1.0
+    # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.

@@ -61,12 +61,20 @@ Meshing gears must match in mm_per_tooth, pressure_angle, and twist,
 and be separated by the sum of their pitch radii, which can be found with pitch_radius().
 """
 
-from math import acos, cos, degrees, pi, sin, sqrt
+from math import (
+    acos,
+    cos,
+    degrees,
+    pi,
+    sin,
+    sqrt,
+)
 
 from shapely.geometry import Polygon
 
 import bpy
 
+from .utilities.shapely_utils import shapely_to_curve
 from .utilities.simple_utils import (
     deselect,
     duplicate,
@@ -79,7 +87,6 @@ from .utilities.simple_utils import (
     add_rectangle,
     move,
 )
-from .utilities.shapely_utils import shapely_to_curve
 
 
 # convert gear_polar to cartesian coordinates

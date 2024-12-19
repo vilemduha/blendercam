@@ -8,8 +8,9 @@ from datetime import timedelta
 import bpy
 from bpy.types import Panel
 from .buttons_panel import CAMButtonsPanel
-from ...utilities.simple_utils import unit_value_to_string
-from ...version import __version__ as cam_version
+
+# from ...utilities.simple_utils import unit_value_to_string
+# from ...version import __version__ as cam_version
 
 
 # Info panel
@@ -32,8 +33,8 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
         layout.use_property_decorate = False
 
         main = layout.box()
-        # main.label(text="╠ INFO ╣", icon="INFO")
-        main.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}', icon="INFO")
+        main.label(text="╠ INFO ╣", icon="INFO")
+        # main.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}', icon="INFO")
         if context.window_manager.progress > 0:
             col = main.column(align=True)
             col.scale_y = 2
@@ -93,12 +94,12 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
             col.label(text="Estimates")
             col.label(text=f"Time: {time_estimate}", icon="TIME")
 
-            # Operation Chipload
-            if not self.op.info.chipload > 0:
-                pass
-            else:
-                chipload = f"Chipload: {unit_value_to_string(self.op.info.chipload, 4)}/tooth"
-                col.label(text=chipload, icon="DRIVER_ROTATIONAL_DIFFERENCE")
+            # # Operation Chipload
+            # if not self.op.info.chipload > 0:
+            #     pass
+            # else:
+            #     chipload = f"Chipload: {unit_value_to_string(self.op.info.chipload, 4)}/tooth"
+            #     col.label(text=chipload, icon="DRIVER_ROTATIONAL_DIFFERENCE")
 
             # Operation Money Cost
             if self.level >= 1:

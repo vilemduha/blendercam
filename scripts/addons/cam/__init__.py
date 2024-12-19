@@ -19,166 +19,34 @@ from bpy.props import (
     PointerProperty,
     StringProperty,
 )
-from bpy_extras.object_utils import object_data_add
 
 # Relative Imports - from 'cam' module
-from .bas_relief import DoBasRelief, ProblemAreas
 from .engine import (
     FABEX_ENGINE,
     get_panels,
 )
-from .operators.curve_cam_create import (
-    CamCurveDrawer,
-    CamCurveFlatCone,
-    CamCurveGear,
-    CamCurveHatch,
-    CamCurveInterlock,
-    CamCurveMortise,
-    CamCurvePlate,
-    CamCurvePuzzle,
-)
-from .operators.curve_cam_equation import (
-    CamCustomCurve,
-    CamHypotrochoidCurve,
-    CamLissajousCurve,
-    CamSineCurve,
-)
-from .operators.curve_cam_tools import (
-    CamCurveBoolean,
-    CamCurveConvexHull,
-    CamCurveIntarsion,
-    CamCurveOvercuts,
-    CamCurveOvercutsB,
-    CamCurveRemoveDoubles,
-    CamMeshGetPockets,
-    CamOffsetSilhouete,
-    CamObjectSilhouette,
-)
-from .operators.gcode_import_op import WM_OT_gcode_import
-from .operators.position_object import CAM_MATERIAL_PositionObject
-from .operators.ops import (
-    CalculatePath,
-    # bridges related
-    CamBridgesAdd,
-    CamChainAdd,
-    CamChainRemove,
-    CamChainOperationAdd,
-    CamChainOperationRemove,
-    CamChainOperationUp,
-    CamChainOperationDown,
-    CamOperationAdd,
-    CamOperationCopy,
-    CamOperationRemove,
-    CamOperationMove,
-    # 5 axis ops
-    CamOrientationAdd,
-    # shape packing
-    CamPackObjects,
-    CamSliceObjects,
-    CAMSimulate,
-    CAMSimulateChain,
-    KillPathsBackground,
-    PathsAll,
-    PathsBackground,
-    PathsChain,
-    PathExport,
-    PathExportChain,
-    timer_update,
-)
 
-from .properties.operation_props import CAM_OPERATION_Properties
-from .properties.chain_props import (
-    CAM_CHAIN_Properties,
-    CAM_OP_REFERENCE_Properties,
-)
-from .properties.info_props import CAM_INFO_Properties
+from .operators import register as ops_register, unregister as ops_unregister
+
+from .properties import register as props_register, unregister as props_unregister
+from .properties.chain_props import CAM_CHAIN_Properties
 from .properties.machine_props import CAM_MACHINE_Properties
-from .properties.material_props import CAM_MATERIAL_Properties
-from .properties.movement_props import CAM_MOVEMENT_Properties
-from .properties.optimisation_props import CAM_OPTIMISATION_Properties
+from .properties.operation_props import CAM_OPERATION_Properties
+
 from .preferences import CamAddonPreferences
-from .operators.preset_ops import (
-    AddPresetCamCutter,
-    AddPresetCamOperation,
-    AddPresetCamMachine,
-)
 
 from .ui import register as ui_register, unregister as ui_unregister
 from .ui.panels.interface import CAM_INTERFACE_Properties
+
 from .utilities.addon_utils import check_operations_on_load
 from .utilities.operation_utils import update_operation
+from .utilities.thread_utils import timer_update
 
 classes = (
-    DoBasRelief,
-    ProblemAreas,
-    CAM_OP_REFERENCE_Properties,
-    CAM_CHAIN_Properties,
-    CAM_INFO_Properties,
-    CAM_MATERIAL_Properties,
-    CAM_MOVEMENT_Properties,
-    CAM_OPTIMISATION_Properties,
-    # .curve_cam_create
-    CamCurveDrawer,
-    CamCurveFlatCone,
-    CamCurveGear,
-    CamCurveHatch,
-    CamCurveInterlock,
-    CamCurveMortise,
-    CamCurvePlate,
-    CamCurvePuzzle,
-    # .curve_cam_equation
-    CamCustomCurve,
-    CamHypotrochoidCurve,
-    CamLissajousCurve,
-    CamSineCurve,
-    # .curve_cam_tools
-    CamCurveBoolean,
-    CamCurveConvexHull,
-    CamCurveIntarsion,
-    CamCurveOvercuts,
-    CamCurveOvercutsB,
-    CamCurveRemoveDoubles,
-    CamMeshGetPockets,
-    CamOffsetSilhouete,
-    CamObjectSilhouette,
     # .engine
     FABEX_ENGINE,
-    # .machine_settings
-    CAM_MACHINE_Properties,
-    # .ops
-    CalculatePath,
-    CAM_MATERIAL_PositionObject,
-    # bridges related
-    CamBridgesAdd,
-    CamChainAdd,
-    CamChainRemove,
-    CamChainOperationAdd,
-    CamChainOperationRemove,
-    CamChainOperationUp,
-    CamChainOperationDown,
-    CamOperationAdd,
-    CamOperationCopy,
-    CamOperationRemove,
-    CamOperationMove,
-    # 5 axis ops
-    CamOrientationAdd,
-    # shape packing
-    CamPackObjects,
-    CamSliceObjects,
-    CAMSimulate,
-    CAMSimulateChain,
-    KillPathsBackground,
-    PathsAll,
-    PathsBackground,
-    PathsChain,
-    PathExport,
-    PathExportChain,
     # .preferences
     CamAddonPreferences,
-    # .preset_ops
-    AddPresetCamCutter,
-    AddPresetCamOperation,
-    AddPresetCamMachine,
 )
 
 
@@ -186,6 +54,8 @@ def register() -> None:
     for cls in classes:
         bpy.utils.register_class(cls)
 
+    props_register()
+    ops_register()
     ui_register()
 
     # .cam_operation - last to allow dependencies to register before it
@@ -246,6 +116,8 @@ def unregister() -> None:
         bpy.utils.unregister_class(cls)
 
     ui_unregister()
+    ops_unregister()
+    props_unregister()
 
     bpy.utils.unregister_class(CAM_OPERATION_Properties)
 

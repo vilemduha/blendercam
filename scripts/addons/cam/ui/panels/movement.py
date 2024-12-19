@@ -9,7 +9,8 @@ import bpy
 from bpy.types import Panel
 
 from .buttons_panel import CAMButtonsPanel
-from ...constants import G64_INCOMPATIBLE_MACHINES
+
+# from ...constants import G64_INCOMPATIBLE_MACHINES
 
 
 class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
@@ -74,17 +75,17 @@ class CAM_MOVEMENT_Panel(CAMButtonsPanel, Panel):
                     row.use_property_split = False
                     row.prop(self.op.movement, "parallel_step_back")
 
-        if self.level >= 2:
-            # Use G64
-            if context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
-                layout.use_property_split = False
-                header, panel = layout.panel("g64", default_closed=True)
-                header.prop(self.op.movement, "useG64", text="G64 Trajectory")
-                if panel:
-                    panel.enabled = self.op.movement.useG64
-                    col = panel.column(align=True)
-                    col.use_property_split = True
-                    col.prop(self.op.movement, "G64", text="Tolerance")
+            # if self.level >= 2:
+            #     # Use G64
+            #     if context.scene.cam_machine.post_processor not in G64_INCOMPATIBLE_MACHINES:
+            #         layout.use_property_split = False
+            #         header, panel = layout.panel("g64", default_closed=True)
+            #         header.prop(self.op.movement, "useG64", text="G64 Trajectory")
+            #         if panel:
+            #             panel.enabled = self.op.movement.useG64
+            #             col = panel.column(align=True)
+            #             col.use_property_split = True
+            #             col.prop(self.op.movement, "G64", text="Tolerance")
 
             # Retract Tangential
             if self.op.strategy in ["POCKET"]:
