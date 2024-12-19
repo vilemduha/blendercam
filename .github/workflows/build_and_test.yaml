@@ -78,6 +78,7 @@ jobs:
         fi
         export ADDON_PATH=${PWD}/scripts/addons/blendercam.zip
         cd scripts/addons/cam/tests
+        python import sys;sys.path.append(${PWD}/scripts/addons/cam)
         python install_addon.py ${ADDON_PATH}
         python test_suite.py -vvv
     - uses: actions/upload-artifact@v4
