@@ -43,6 +43,7 @@ from .collision import (
     get_sample_bullet_n_axis,
     prepare_bullet_collision,
 )
+from .constants import OCL_SCALE
 from .exception import CamException
 
 from .utilities.async_utils import progress_async
@@ -82,6 +83,7 @@ from .utilities.simple_utils import (
     tuple_add,
     tuple_multiply,
     tuple_subtract,
+    is_vertical_limit,
 )
 
 
