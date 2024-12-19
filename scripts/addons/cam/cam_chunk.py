@@ -49,12 +49,14 @@ from .utilities.chunk_utils import (
 )
 from .utilities.image_utils import (
     get_sample_image,
+    prepare_area,
 )
 from .utilities.numba_utils import jit
 from .utilities.ocl_utils import (
     oclSample,
     get_oclSTL,
     ocl_sample,
+    oclWaterlineLayerHeights,
 )
 from .utilities.shapely_utils import (
     shapely_to_coordinates,
@@ -69,6 +71,9 @@ from .utilities.simple_utils import (
     timing_add,
     timing_init,
     timing_start,
+    tuple_add,
+    tuple_multiply,
+    tuple_subtract,
 )
 
 
