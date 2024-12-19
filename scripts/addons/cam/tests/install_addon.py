@@ -34,19 +34,18 @@ with tempfile.TemporaryDirectory() as td:
                 stderr=subprocess.STDOUT,
                 text=True,
             )
-            print(command)
             print("installed addon okay")
             sys.exit(0)
-        except:  # subprocess.CalledProcessError as e:
-            print("Install addon failed, retrying:")  # , e)
-            # print("Command output:")
-            # print("------------------------------")
-            # print(e.output)
-            # print("------------------------------")
-            # for line in str(e.output):
-            #     if line.startswith("Writing: "):
-            #         crash_file = pathlib.Path(line[len("Writing: ") :])
-            #         if crash_file.exists():
-            #             print("Crash log:\n================")
-            #             print(crash_file.read_text())
-            #             print("============================")
+        except Exception as e:
+            print("Install addon failed, retrying:", e)
+            print("Command output:")
+            print("------------------------------")
+            print(e.output)
+            print("------------------------------")
+            for line in str(e.output):
+                if line.startswith("Writing: "):
+                    crash_file = pathlib.Path(line[len("Writing: ") :])
+                    if crash_file.exists():
+                        print("Crash log:\n================")
+                        print(crash_file.read_text())
+                        print("============================")
