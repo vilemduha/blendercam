@@ -125,3 +125,27 @@ def fix_units():
     s.unit_settings.system_rotation = "DEGREES"
     s.unit_settings.scale_length = 1.0
     # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.
+
+
+def register_keymap():
+    wm = bpy.context.window_manager
+    addon_kc = wm.keyconfigs.addon
+
+    km = addon_kc.keymaps.new(name="Object Mode")
+    kmi = km.keymap_items.new(
+        "wm.call_menu_pie",
+        "C",
+        "PRESS",
+        alt=True,
+    )
+    kmi.properties.name = "VIEW3D_MT_PIE_CAM"
+    kmi.active = True
+
+
+def unregister_keymap():
+    wm = bpy.context.window_manager
+    active_kc = wm.keyconfigs.active
+
+    for key in active_kc.keymaps["Object Mode"].keymap_items:
+        if key.idname == "wm.call_menu" and key.properties.name == "VIEW3D_MT_PIE_CAM":
+            active_kc.keymaps["Object Mode"].keymap_items.remove(key)
