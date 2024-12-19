@@ -3,8 +3,6 @@
 Package to store all constants of Fabex.
 """
 
-import sys
-
 # PRECISION is used in most operations
 PRECISION = 5
 
@@ -39,10 +37,7 @@ _IS_LOADING_DEFAULTS = False
 TOLERANCE = 1e-9
 BIG_FLOAT = 1e38
 
-if sys.version > "3":
-    PY3 = True
-else:
-    PY3 = False
+PY3 = True
 
 OCL_SCALE = 1000.0
 

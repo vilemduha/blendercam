@@ -38,7 +38,6 @@ from ..utilities.simple_utils import (
     deselect,
     active_name,
     remove_doubles,
-    active_name,
     rename,
     duplicate,
     add_overcut,
