@@ -36,15 +36,13 @@ from .ui import (
 )
 from .utilities.addon_utils import (
     check_operations_on_load,
-    register_keymap,
-    unregister_keymap,
+    keymap_register,
+    keymap_unregister,
 )
 from .utilities.thread_utils import timer_update
 
 classes = (
-    # .engine
     FABEX_ENGINE,
-    # .preferences
     CamAddonPreferences,
 )
 
@@ -56,19 +54,18 @@ def register() -> None:
     props_register()
     ops_register()
     ui_register()
+    keymap_register()
 
     # CAM_OPERATION_Properties - last to allow dependencies to register before it
     bpy.utils.register_class(CAM_OPERATION_Properties)
 
     bpy.types.Scene.cam_operations = CollectionProperty(type=CAM_OPERATION_Properties)
 
-    bpy.app.handlers.frame_change_pre.append(timer_update)
-    bpy.app.handlers.load_post.append(check_operations_on_load)
-
     for panel in get_panels():
         panel.COMPAT_ENGINES.add("FABEX_RENDER")
 
-    register_keymap()
+    bpy.app.handlers.frame_change_pre.append(timer_update)
+    bpy.app.handlers.load_post.append(check_operations_on_load)
 
 
 def unregister() -> None:
@@ -78,6 +75,7 @@ def unregister() -> None:
     ui_unregister()
     ops_unregister()
     props_unregister()
+    keymap_unregister()
 
     bpy.utils.unregister_class(CAM_OPERATION_Properties)
 
@@ -86,5 +84,3 @@ def unregister() -> None:
     for panel in get_panels():
         if "FABEX_RENDER" in panel.COMPAT_ENGINES:
             panel.COMPAT_ENGINES.remove("FABEX_RENDER")
-
-    unregister_keymap()

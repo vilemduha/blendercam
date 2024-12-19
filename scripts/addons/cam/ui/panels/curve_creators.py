@@ -11,13 +11,9 @@ class VIEW3D_PT_tools_create(Panel):
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
     bl_label = "[ Curve Creators ]"
-    # bl_option = "DEFAULT_CLOSED"
-    # bl_options = {"HIDE_HEADER"}
 
     def draw(self, context):
-        # if not context.scene.render.engine == "FABEX_RENDER":
-        #     return
-        # else:
+
         layout = self.layout
         layout.scale_y = 1.2
         col = layout.column(align=True)

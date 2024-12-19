@@ -12,12 +12,9 @@ class VIEW3D_PT_tools_curvetools(Panel):
     bl_region_type = "TOOLS"
     bl_context = "objectmode"
     bl_label = "[ Curve Tools ]"
-    # bl_options = {"HIDE_HEADER"}
 
     def draw(self, context):
-        # if not context.scene.render.engine == "FABEX_RENDER":
-        #     return
-        # else:
+
         layout = self.layout
         layout.scale_y = 1.2
         col = layout.column()
@@ -28,14 +25,26 @@ class VIEW3D_PT_tools_curvetools(Panel):
         column.operator("object.curve_overcuts", icon="CON_SIZELIKE")
         column.operator("object.curve_overcuts_b", icon="CON_SIZELIKE")
         column = col.column(align=True)
-        column.operator("object.silhouette", icon="USER", text="Object Silhouette")
-        column.operator("object.silhouette_offset", icon="COMMUNITY", text="Silhouette Offset")
+        column.operator(
+            "object.silhouette",
+            icon="USER",
+            text="Object Silhouette",
+        )
+        column.operator(
+            "object.silhouette_offset",
+            icon="COMMUNITY",
+            text="Silhouette Offset",
+        )
         col.operator(
             "object.curve_remove_doubles",
             icon="FORCE_CHARGE",
             text="Remove Curve Doubles",
         )
-        col.operator("object.mesh_get_pockets", icon="HOLDOUT_ON", text="Get Pocket Surfaces")
+        col.operator(
+            "object.mesh_get_pockets",
+            icon="HOLDOUT_ON",
+            text="Get Pocket Surfaces",
+        )
 
         column = col.column(align=True)
         column.operator(
@@ -43,6 +52,14 @@ class VIEW3D_PT_tools_curvetools(Panel):
             icon="STICKY_UVS_LOC",
             text="Pack Curves on Sheet",
         )
-        column.operator("object.cam_slice_objects", icon="ALIGN_FLUSH", text="Slice Model to Sheet")
+        column.operator(
+            "object.cam_slice_objects",
+            icon="ALIGN_FLUSH",
+            text="Slice Model to Sheet",
+        )
 
-        col.operator("scene.calculate_bas_relief", icon="RNDCURVE", text="Bas Relief")
+        col.operator(
+            "scene.calculate_bas_relief",
+            icon="RNDCURVE",
+            text="Bas Relief",
+        )

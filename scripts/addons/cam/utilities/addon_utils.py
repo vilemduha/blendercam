@@ -127,7 +127,7 @@ def fix_units():
     # Blender CAM doesn't respect this property and there were users reporting problems, not seeing this was changed.
 
 
-def register_keymap():
+def keymap_register():
     wm = bpy.context.window_manager
     addon_kc = wm.keyconfigs.addon
 
@@ -142,7 +142,7 @@ def register_keymap():
     kmi.active = True
 
 
-def unregister_keymap():
+def keymap_unregister():
     wm = bpy.context.window_manager
     active_kc = wm.keyconfigs.active
 

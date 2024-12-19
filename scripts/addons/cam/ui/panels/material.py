@@ -5,6 +5,7 @@
 
 import bpy
 from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
 
 

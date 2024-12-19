@@ -29,10 +29,16 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
         if self.level >= 1:
             row = layout.row(align=True)
             row.menu("CAM_CUTTER_MT_presets", text=bpy.types.CAM_CUTTER_MT_presets.bl_label)
-            row.operator("render.cam_preset_cutter_add", text="", icon="ADD")
-            row.operator("render.cam_preset_cutter_add", text="", icon="REMOVE").remove_active = (
-                True
+            row.operator(
+                "render.cam_preset_cutter_add",
+                text="",
+                icon="ADD",
             )
+            row.operator(
+                "render.cam_preset_cutter_add",
+                text="",
+                icon="REMOVE",
+            ).remove_active = True
 
         box = layout.box()
         col = box.column(align=True)
@@ -57,17 +63,17 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
 
         # Laser
         if self.op.cutter_type in ["LASER"]:
-            col.prop(self.op, "Laser_on")
-            col.prop(self.op, "Laser_off")
-            col.prop(self.op, "Laser_cmd")
-            col.prop(self.op, "Laser_delay")
+            col.prop(self.op, "laser_on")
+            col.prop(self.op, "laser_off")
+            col.prop(self.op, "laser_cmd")
+            col.prop(self.op, "laser_delay")
 
         # Plasma
         if self.op.cutter_type in ["PLASMA"]:
-            col.prop(self.op, "Plasma_on")
-            col.prop(self.op, "Plasma_off")
-            col.prop(self.op, "Plasma_delay")
-            col.prop(self.op, "Plasma_dwell")
+            col.prop(self.op, "plasma_on")
+            col.prop(self.op, "plasma_off")
+            col.prop(self.op, "plasma_delay")
+            col.prop(self.op, "plasma_dwell")
             col.prop(self.op, "lead_in")
             col.prop(self.op, "lead_out")
 
@@ -107,10 +113,14 @@ class CAM_CUTTER_Panel(CAMButtonsPanel, Panel):
             col = box.column(align=True)
             # Warns if cutter engagement is greater than 50%
             if self.op.cutter_type in ["BALLCONE"]:
-                engagement = round(100 * self.op.distance_between_paths / self.op.ball_radius, 1)
+                engagement = round(
+                    100 * self.op.distance_between_paths / self.op.ball_radius,
+                    1,
+                )
             else:
                 engagement = round(
-                    100 * self.op.distance_between_paths / self.op.cutter_diameter, 1
+                    100 * self.op.distance_between_paths / self.op.cutter_diameter,
+                    1,
                 )
 
             if engagement > 50:

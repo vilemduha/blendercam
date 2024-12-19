@@ -7,6 +7,7 @@ from datetime import timedelta
 
 import bpy
 from bpy.types import Panel
+
 from .buttons_panel import CAMButtonsPanel
 
 # from ...utilities.simple_utils import unit_value_to_string
@@ -17,7 +18,6 @@ from .buttons_panel import CAMButtonsPanel
 class CAM_INFO_Panel(CAMButtonsPanel, Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
-    # bl_category = "CNC"
     bl_options = {"HIDE_HEADER"}
 
     bl_label = "Info & Warnings"
@@ -32,7 +32,6 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
         layout.use_property_decorate = False
 
         main = layout.box()
-        # main.label(text="╠ INFO ╣", icon="INFO")
         main.label(text=f"Fabex CNC", icon="INFO")
         if context.window_manager.progress > 0:
             col = main.column(align=True)
