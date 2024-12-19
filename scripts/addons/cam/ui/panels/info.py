@@ -10,7 +10,6 @@ from bpy.types import Panel
 from .buttons_panel import CAMButtonsPanel
 
 # from ...utilities.simple_utils import unit_value_to_string
-# from ...version import __version__ as cam_version
 
 
 # Info panel
@@ -33,8 +32,8 @@ class CAM_INFO_Panel(CAMButtonsPanel, Panel):
         layout.use_property_decorate = False
 
         main = layout.box()
-        main.label(text="╠ INFO ╣", icon="INFO")
-        # main.label(text=f'Fabex v{".".join([str(x) for x in cam_version])}', icon="INFO")
+        # main.label(text="╠ INFO ╣", icon="INFO")
+        main.label(text=f"Fabex CNC", icon="INFO")
         if context.window_manager.progress > 0:
             col = main.column(align=True)
             col.scale_y = 2

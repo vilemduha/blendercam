@@ -29,7 +29,6 @@ from .panels.cutter import CAM_CUTTER_Panel
 from .panels.feedrate import CAM_FEEDRATE_Panel
 from .panels.gcode import CAM_GCODE_Panel
 from .panels.info import CAM_INFO_Panel
-from .panels.interface import CAM_INTERFACE_Properties, draw_interface
 from .panels.machine import CAM_MACHINE_Panel
 from .panels.material import CAM_MATERIAL_Panel
 from .panels.movement import CAM_MOVEMENT_Panel
@@ -59,7 +58,6 @@ classes = [
     CAM_BLANK_Panel,
     CAM_UL_operations,
     CAM_UL_chains,
-    CAM_INTERFACE_Properties,
     CAM_CHAINS_Panel,
     CAM_OPERATIONS_Panel,
     CAM_INFO_Panel,
@@ -104,14 +102,8 @@ def register():
     bpy.types.TOPBAR_MT_file_import.append(TOPBAR_MT_import_gcode.draw)
     bpy.types.VIEW3D_MT_curve_add.append(VIEW3D_MT_tools_add.draw)
     bpy.types.VIEW3D_MT_editor_menus.append(Fabex_Menu.draw)
-    bpy.types.RENDER_PT_context.append(draw_interface)
 
     bpy.types.WindowManager.progress = bpy.props.FloatProperty(default=0)
-
-    # scene = bpy.types.Scene
-    # scene.basreliefsettings = PointerProperty(
-    #     type=BasReliefsettings,
-    # )
 
 
 def unregister():
@@ -122,7 +114,3 @@ def unregister():
     bpy.types.TOPBAR_MT_file_import.remove(TOPBAR_MT_import_gcode.draw)
     bpy.types.VIEW3D_MT_curve_add.remove(VIEW3D_MT_tools_add.draw)
     bpy.types.VIEW3D_MT_editor_menus.remove(Fabex_Menu.draw)
-    bpy.types.RENDER_PT_context.remove(draw_interface)
-
-    # scene = bpy.types.Scene
-    # del scene.basreliefsettings

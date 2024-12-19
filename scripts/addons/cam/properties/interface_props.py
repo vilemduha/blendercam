@@ -7,23 +7,23 @@ import bpy
 from bpy.props import EnumProperty
 from bpy.types import PropertyGroup
 
-from .area import CAM_AREA_Panel
-from .basrelief import BASRELIEF_Panel
-from .chains import CAM_CHAINS_Panel
-from .cutter import CAM_CUTTER_Panel
-from .feedrate import CAM_FEEDRATE_Panel
-from .gcode import CAM_GCODE_Panel
-from .info import CAM_INFO_Panel
-from .machine import CAM_MACHINE_Panel
-from .material import CAM_MATERIAL_Panel
-from .movement import CAM_MOVEMENT_Panel
-from .op_properties import CAM_OPERATION_PROPERTIES_Panel
-from .operations import CAM_OPERATIONS_Panel
-from .optimisation import CAM_OPTIMISATION_Panel
-from .pack import CAM_PACK_Panel
-from .slice import CAM_SLICE_Panel
-from .curve_tools import VIEW3D_PT_tools_curvetools
-from .curve_creators import VIEW3D_PT_tools_create
+from ..ui.panels.area import CAM_AREA_Panel
+from ..ui.panels.basrelief import BASRELIEF_Panel
+from ..ui.panels.chains import CAM_CHAINS_Panel
+from ..ui.panels.cutter import CAM_CUTTER_Panel
+from ..ui.panels.feedrate import CAM_FEEDRATE_Panel
+from ..ui.panels.gcode import CAM_GCODE_Panel
+from ..ui.panels.info import CAM_INFO_Panel
+from ..ui.panels.machine import CAM_MACHINE_Panel
+from ..ui.panels.material import CAM_MATERIAL_Panel
+from ..ui.panels.movement import CAM_MOVEMENT_Panel
+from ..ui.panels.op_properties import CAM_OPERATION_PROPERTIES_Panel
+from ..ui.panels.operations import CAM_OPERATIONS_Panel
+from ..ui.panels.optimisation import CAM_OPTIMISATION_Panel
+from ..ui.panels.pack import CAM_PACK_Panel
+from ..ui.panels.slice import CAM_SLICE_Panel
+from ..ui.panels.curve_tools import VIEW3D_PT_tools_curvetools
+from ..ui.panels.curve_creators import VIEW3D_PT_tools_create
 
 
 def update_interface(self, context):
