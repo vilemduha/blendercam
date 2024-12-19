@@ -8,7 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest','windows-latest']
-        blender_version: ['4.2.1']
+        blender_version: ['4.3.0']
         # include:
         #   - os: 'macos-latest'
         #     blender_version: '4.2.1'
@@ -77,9 +77,7 @@ jobs:
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi
         export ADDON_PATH=${PWD}/scripts/addons/blendercam.zip
-        export PYTHON_APPEND=${PWD}/scripts/addons/cam
         cd scripts/addons/cam/tests
-        python import sys;sys.path.append(${PYTHON_APPEND})
         python install_addon.py ${ADDON_PATH}
         python test_suite.py -vvv
     - uses: actions/upload-artifact@v4
