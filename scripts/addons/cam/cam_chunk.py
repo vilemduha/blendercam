@@ -22,6 +22,14 @@ from shapely import geometry as sgeometry
 from shapely.geometry import polygon as spolygon
 from shapely.geometry import MultiPolygon
 
+try:
+    import ocl
+except ImportError:
+    try:
+        import opencamlib as ocl
+    except ImportError:
+        pass
+
 import bpy
 from mathutils import Vector
 
