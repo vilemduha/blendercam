@@ -54,6 +54,7 @@ from .operators.curve_cam_tools import (
     CamOffsetSilhouete,
     CamObjectSilhouette,
 )
+from .operators.gcode_import_op import WM_OT_gcode_import
 from .operators.position_object import CAM_MATERIAL_PositionObject
 from .operators.ops import (
     CalculatePath,
@@ -96,10 +97,7 @@ from .properties.material_props import CAM_MATERIAL_Properties
 from .properties.movement_props import CAM_MOVEMENT_Properties
 from .properties.optimisation_props import CAM_OPTIMISATION_Properties
 from .preferences import CamAddonPreferences
-from .preset_managers import (
-    CAM_CUTTER_MT_presets,
-    CAM_OPERATION_MT_presets,
-    CAM_MACHINE_MT_presets,
+from .operators.preset_ops import (
     AddPresetCamCutter,
     AddPresetCamOperation,
     AddPresetCamMachine,
@@ -177,10 +175,7 @@ classes = (
     PathExportChain,
     # .preferences
     CamAddonPreferences,
-    # .preset_managers
-    CAM_CUTTER_MT_presets,
-    CAM_OPERATION_MT_presets,
-    CAM_MACHINE_MT_presets,
+    # .preset_ops
     AddPresetCamCutter,
     AddPresetCamOperation,
     AddPresetCamMachine,

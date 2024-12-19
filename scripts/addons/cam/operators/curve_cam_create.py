@@ -44,6 +44,7 @@ from ..utilities.simple_utils import (
     move,
     difference,
     union,
+    rotate,
 )
 from ..utilities.shapely_utils import (
     shapely_to_curve,
@@ -900,7 +901,7 @@ class CamCurveMortise(Operator):
         shapes = curve_to_shapely(o1)
 
         for s in shapes.geoms:
-            if s.boundary.type == "LineString":
+            if s.boundary.geom_type == "LineString":
                 loops = [s.boundary]
             else:
                 loops = s.boundary

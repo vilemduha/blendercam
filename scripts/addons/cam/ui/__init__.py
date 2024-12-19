@@ -9,15 +9,22 @@ from bpy.props import PointerProperty
 from .menus.import_gcode import TOPBAR_MT_import_gcode
 from .menus.curve_creators import VIEW3D_MT_tools_add, VIEW3D_MT_tools_create
 from .menus.curve_tools import VIEW3D_MT_tools_curvetools
+from .menus.preset_menus import (
+    CAM_CUTTER_MT_presets,
+    CAM_MACHINE_MT_presets,
+    CAM_OPERATION_MT_presets,
+)
 from .menus.viewport import Fabex_SubMenu, Fabex_Menu
+
 from .panels.area import CAM_AREA_Panel
+from .panels.blank import CAM_BLANK_Panel
 from .panels.chains import (
     CAM_CHAINS_Panel,
     CAM_UL_chains,
     CAM_UL_operations,
 )
-
-from .panels.blank import CAM_BLANK_Panel
+from .panels.curve_creators import VIEW3D_PT_tools_create
+from .panels.curve_tools import VIEW3D_PT_tools_curvetools
 from .panels.cutter import CAM_CUTTER_Panel
 from .panels.feedrate import CAM_FEEDRATE_Panel
 from .panels.gcode import CAM_GCODE_Panel
@@ -29,18 +36,13 @@ from .panels.movement import CAM_MOVEMENT_Panel
 from .panels.op_properties import CAM_OPERATION_PROPERTIES_Panel
 from .panels.operations import CAM_OPERATIONS_Panel
 from .panels.optimisation import CAM_OPTIMISATION_Panel
-
 from .panels.popup import CAM_Popup_Panel
 
 from .pie_menu.pie_cam import VIEW3D_MT_PIE_CAM
 from .pie_menu.pie_chains import VIEW3D_MT_PIE_Chains
 from .pie_menu.pie_pack_slice_relief import VIEW3D_MT_PIE_PackSliceRelief
 from .pie_menu.pie_operation import VIEW3D_MT_PIE_Operation
-from .legacy_ui import (
-    VIEW3D_PT_tools_curvetools,
-    VIEW3D_PT_tools_create,
-    WM_OT_gcode_import,
-)
+
 
 classes = [
     # .menus
@@ -50,6 +52,9 @@ classes = [
     VIEW3D_MT_tools_curvetools,
     Fabex_SubMenu,
     Fabex_Menu,
+    CAM_CUTTER_MT_presets,
+    CAM_OPERATION_MT_presets,
+    CAM_MACHINE_MT_presets,
     # .viewport_ui and .panels - the order will affect the layout
     CAM_BLANK_Panel,
     CAM_UL_operations,
@@ -70,7 +75,6 @@ classes = [
     CAM_Popup_Panel,
     VIEW3D_PT_tools_curvetools,
     VIEW3D_PT_tools_create,
-    WM_OT_gcode_import,
     # .pie_menu
     VIEW3D_MT_PIE_CAM,
     VIEW3D_MT_PIE_Operation,

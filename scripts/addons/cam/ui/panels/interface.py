@@ -22,7 +22,8 @@ from .operations import CAM_OPERATIONS_Panel
 from .optimisation import CAM_OPTIMISATION_Panel
 from .pack import CAM_PACK_Panel
 from .slice import CAM_SLICE_Panel
-from ..legacy_ui import VIEW3D_PT_tools_curvetools, VIEW3D_PT_tools_create
+from .curve_tools import VIEW3D_PT_tools_curvetools
+from .curve_creators import VIEW3D_PT_tools_create
 
 
 def update_interface(self, context):
