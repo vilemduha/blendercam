@@ -64,9 +64,6 @@ def register():
     scene.cam_machine = PointerProperty(
         type=CAM_MACHINE_Properties,
     )
-    scene.cam_operations = CollectionProperty(
-        type=CAM_OPERATION_Properties,
-    )
     scene.cam_text = StringProperty()
     scene.interface = PointerProperty(
         type=CAM_INTERFACE_Properties,
@@ -83,7 +80,6 @@ def unregister():
 
     del scene.cam_chains
     del scene.cam_active_chain
-    del scene.cam_operations
     del scene.cam_active_operation
     del scene.cam_machine
     del scene.gcode_output_type
