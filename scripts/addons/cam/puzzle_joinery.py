@@ -20,6 +20,7 @@ from .utilities.simple_utils import (
     mirror_x,
     mirror_y,
     union,
+    intersect,
     rename,
     difference,
     active_name,

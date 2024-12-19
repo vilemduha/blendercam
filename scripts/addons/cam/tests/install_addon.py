@@ -14,7 +14,6 @@ bpy.ops.extensions.package_install(repo_index=0, pkg_id="stl_format_legacy")
 bpy.ops.extensions.package_install(repo_index=0, pkg_id="simplify_curves_plus")
 bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")
 bpy.ops.wm.save_userpref()
-bpy.fart.poop()
 """
 
 NUM_RETRIES = 10
@@ -22,21 +21,23 @@ NUM_RETRIES = 10
 with tempfile.TemporaryDirectory() as td:
     file = pathlib.Path(td, "install.py")
     file.write_text(INSTALL_CODE)
+    command = [shutil.which("blender"), "-b", "-P", str(file)]
 
     # blender 4.0 installing addon crashes sometimes on mac github actions...
     for x in range(NUM_RETRIES):
         try:
             subprocess.run(
-                [shutil.which("blender"), "-b", "-P", str(file)],
+                command,
                 shell=False,
                 check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
             )
+            print(command)
             print("installed addon okay")
             sys.exit(0)
-        except subprocess.CalledProcessError as e:
+        except:  # subprocess.CalledProcessError as e:
             print("Install addon failed, retrying:", e)
             print("Command output:")
             print("------------------------------")
