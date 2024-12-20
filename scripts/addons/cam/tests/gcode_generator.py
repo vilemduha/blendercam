@@ -6,11 +6,12 @@ import bpy
 warnings.simplefilter("once")
 
 # Set the Render Engine to Fabex
-bpy.context.scene.render.engine = "FABEX_RENDER"
+scene = bpy.context.scene
+scene.render.engine = "FABEX_RENDER"
 
-for i, operation in enumerate(s.cam_operations):
+for i, operation in enumerate(scene.cam_operations):
     # Set the active operation using the index
-    s.cam_active_operation = i
+    scene.cam_active_operation = i
 
     print("")
     print("")
