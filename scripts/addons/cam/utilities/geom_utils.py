@@ -6,17 +6,10 @@ The functions here are called with operators defined in 'ops.py'
 
 from math import pi
 
-from shapely import affinity
-from shapely.geometry import (
-    polygon as spolygon,
-    MultiLineString,
-    box,
-)
+from shapely.geometry import polygon as spolygon
 
 import bpy
 from mathutils import Euler, Vector
-
-from .shapely_utils import curve_to_shapely
 
 
 def circle(r, np):
@@ -113,81 +106,6 @@ def get_container():
 class Point:
     def __init__(self, x, y, z):
         self.x, self.y, self.z = x, y, z
-
-
-def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob=None):
-    """Execute the crosshatch generation process based on the provided context.
-
-    Args:
-        context (bpy.context): The Blender context containing the active object.
-        angle (float): The angle for rotating the crosshatch pattern.
-        distance (float): The distance between crosshatch lines.
-        offset (float): The offset for the bounds or hull.
-        pocket_shape (str): Determines whether to use bounds, hull, or pocket.
-
-    Returns:
-        shapely.geometry.MultiLineString: The resulting intersection geometry of the crosshatch.
-    """
-    if ob is None:
-        ob = context.active_object
-    else:
-        bpy.context.view_layer.objects.active = ob
-    ob.select_set(True)
-    if ob.data.splines and ob.data.splines[0].type == "BEZIER":
-        bpy.ops.object.curve_remove_doubles(merge_distance=0.0001, keep_bezier=True)
-    else:
-        bpy.ops.object.curve_remove_doubles()
-
-    bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="MEDIAN")
-    depth = ob.location[2]
-
-    shapes = curve_to_shapely(ob)
-
-    if pocket_shape == "HULL":
-        shapes = shapes.convex_hull
-
-    coords = []
-    minx, miny, maxx, maxy = shapes.bounds
-    minx -= offset
-    miny -= offset
-    maxx += offset
-    maxy += offset
-    centery = (miny + maxy) / 2
-    length = maxy - miny
-    width = maxx - minx
-    centerx = (minx + maxx) / 2
-    diagonal = hypot(width, length)
-
-    bound_rectangle = box(minx, miny, maxx, maxy)
-    amount = int(2 * diagonal / distance) + 1
-
-    for x in range(amount):
-        distance_val = x * distance - diagonal
-        coords.append(((distance_val, diagonal + 0.5), (distance_val, -diagonal - 0.5)))
-
-    # Create a multilinestring shapely object
-    lines = MultiLineString(coords)
-    rotated = affinity.rotate(lines, angle, use_radians=True)  # Rotate using shapely
-    rotated_minx, rotated_miny, rotated_maxx, rotated_maxy = rotated.bounds
-    rotated_centerx = (rotated_minx + rotated_maxx) / 2
-    rotated_centery = (rotated_miny + rotated_maxy) / 2
-    x_offset = centerx - rotated_centerx
-    y_offset = centery - rotated_centery
-    translated = affinity.translate(
-        rotated, xoff=x_offset, yoff=y_offset, zoff=depth
-    )  # Move using shapely
-
-    bounds = bound_rectangle
-
-    if pocket_shape == "BOUNDS":
-        xing = translated.intersection(bounds)  # Intersection with bounding box
-    else:
-        xing = translated.intersection(
-            shapes.buffer(offset, join_style=join)
-        )  # Intersection with shapes or hull
-
-    # Return the intersection result
-    return xing
 
 
 def triangle(i, T, A):
