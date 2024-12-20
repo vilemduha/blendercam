@@ -378,8 +378,8 @@ def get_cache_path(o):
     fn = bpy.data.filepath
     l = len(bpy.path.basename(fn))
     bn = bpy.path.basename(fn)[:-6]
-    print("fn-l:", fn[:-l])
-    print("bn:", bn)
+    print("Filepath:", fn[:-l])
+    print("Basename:", bn)
 
     iname = fn[:-l] + "temp_cam" + os.sep + bn + "_" + o.name
     return iname

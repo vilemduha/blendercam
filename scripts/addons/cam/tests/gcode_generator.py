@@ -13,9 +13,9 @@ for i, operation in enumerate(scene.cam_operations):
     # Set the active operation using the index
     scene.cam_active_operation = i
 
-    print("\n")
-    print("\n")
-    print(f"############ Generating {operation.name} Operation ############")
+    print("~")
+    print("~")
+    print(f"############ Generating Operation: {operation.name} ############")
 
     # Run the calculate_cam_path() operator
     bpy.ops.object.calculate_cam_path()

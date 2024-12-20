@@ -285,7 +285,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         """
 
         (retval, success) = await _calc_path(self, context)
-        print(f"CALCULATED PATH (success={success},retval={retval}")
+        print(f"CALCULATED PATH (success={success},retval={retval})")
         return retval
 
 
