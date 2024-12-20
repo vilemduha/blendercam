@@ -6,12 +6,12 @@
 import bpy
 from bpy.types import Panel
 
-from .parent_panel import CAM_Parent_Panel
+from .parent_panel import CAMParentPanel
 
 # from ...utilities.simple_utils import unit_value_to_string
 
 
-class CAM_AREA_Panel(CAM_Parent_Panel, Panel):
+class CAM_AREA_Panel(CAMParentPanel, Panel):
     """CAM Operation Area Panel"""
 
     bl_space_type = "VIEW_3D"

@@ -10,7 +10,7 @@ import bpy
 
 
 # Panel definitions
-class CAM_Parent_Panel:
+class CAMParentPanel:
     always_show_panel = False
     COMPAT_ENGINES = {"FABEX_RENDER"}
 

@@ -8,12 +8,12 @@ from math import pi
 import bpy
 from bpy.types import Panel
 
-from .parent_panel import CAM_Parent_Panel
+from .parent_panel import CAMParentPanel
 
 # from ...constants import G64_INCOMPATIBLE_MACHINES
 
 
-class CAM_MOVEMENT_Panel(CAM_Parent_Panel, Panel):
+class CAM_MOVEMENT_Panel(CAMParentPanel, Panel):
     """CAM Movement Panel"""
 
     bl_space_type = "VIEW_3D"
