@@ -178,8 +178,8 @@ def progress(text, n=None):
     if n is None:
         n = ""
     else:
-        n = " " + str(int(n * 1000) / 1000) + "%"
-    sys.stdout.write("progress{%s%s}\n" % (text, n))
+        n = str(int(n * 1000) / 1000) + "%"
+    sys.stdout.write(f"Progress: {text}{n}\n")
     sys.stdout.flush()
 
 
