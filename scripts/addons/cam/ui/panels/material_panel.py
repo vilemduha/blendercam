@@ -6,10 +6,10 @@
 import bpy
 from bpy.types import Panel
 
-from .buttons_panel import CAMButtonsPanel
+from .parent_panel import CAM_Parent_Panel
 
 
-class CAM_MATERIAL_Panel(CAMButtonsPanel, Panel):
+class CAM_MATERIAL_Panel(CAM_Parent_Panel, Panel):
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "render"

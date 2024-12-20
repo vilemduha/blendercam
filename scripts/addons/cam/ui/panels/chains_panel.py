@@ -6,7 +6,7 @@
 import bpy
 from bpy.types import UIList, Panel
 
-from .buttons_panel import CAMButtonsPanel
+from .parent_panel import CAM_Parent_Panel
 
 # from ...utilities.operation_utils import chain_valid
 
@@ -39,7 +39,7 @@ class CAM_UL_chains(UIList):
             layout.label(text="", icon_value=icon)
 
 
-class CAM_CHAINS_Panel(CAMButtonsPanel, Panel):
+class CAM_CHAINS_Panel(CAM_Parent_Panel, Panel):
     """CAM Chains Panel"""
 
     bl_space_type = "PROPERTIES"

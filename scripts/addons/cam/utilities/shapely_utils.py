@@ -76,8 +76,8 @@ def shapely_to_multipolygon(anydata):
         shapely.geometry.MultiPolygon: A MultiPolygon representation of the input
         geometry.
     """
-    print("geometry type: ", anydata.geom_type)
-    print("anydata empty? ", anydata.is_empty)
+    print("Geometry Type: ", anydata.geom_type)
+    print("Anydata Empty? ", anydata.is_empty)
     ## bug: empty mesh circle makes anydata empty: geometry type 'GeometryCollection'
     if anydata.geom_type == "MultiPolygon":
         return anydata

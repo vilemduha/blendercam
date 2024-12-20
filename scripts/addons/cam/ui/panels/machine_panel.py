@@ -6,10 +6,10 @@
 import bpy
 from bpy.types import Panel
 
-from .buttons_panel import CAMButtonsPanel
+from .parent_panel import CAM_Parent_Panel
 
 
-class CAM_MACHINE_Panel(CAMButtonsPanel, Panel):
+class CAM_MACHINE_Panel(CAM_Parent_Panel, Panel):
     """CAM Machine Panel"""
 
     bl_space_type = "PROPERTIES"

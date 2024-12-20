@@ -6,10 +6,10 @@
 import bpy
 from bpy.types import Panel
 
-from .buttons_panel import CAMButtonsPanel
+from .parent_panel import CAM_Parent_Panel
 
 
-class CAM_GCODE_Panel(CAMButtonsPanel, Panel):
+class CAM_GCODE_Panel(CAM_Parent_Panel, Panel):
     """CAM Operation G-code Options Panel"""
 
     bl_space_type = "VIEW_3D"

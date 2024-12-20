@@ -84,7 +84,9 @@ class FabexTest(unittest.TestCase):
                     )
                 else:
                     self.assertMultiLineEqual(
-                        generated, expected, msg="\n" + self.get_diff(gcode_file[1:], gcode_file)
+                        generated,
+                        expected,
+                        msg="\n" + self.get_diff(gcode_file[1:], gcode_file),
                     )
                 os.remove(gcode_file[1:])  # cleanup generated file unless test fails
 

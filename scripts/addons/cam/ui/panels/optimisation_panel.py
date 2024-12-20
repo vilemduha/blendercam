@@ -7,10 +7,10 @@ import bpy
 
 from bpy.types import Panel
 
-from .buttons_panel import CAMButtonsPanel
+from .parent_panel import CAM_Parent_Panel
 
 
-class CAM_OPTIMISATION_Panel(CAMButtonsPanel, Panel):
+class CAM_OPTIMISATION_Panel(CAM_Parent_Panel, Panel):
     """CAM Optimisation Panel"""
 
     bl_space_type = "VIEW_3D"

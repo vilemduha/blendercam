@@ -8,14 +8,14 @@ from datetime import timedelta
 import bpy
 from bpy.types import Panel
 
-from .buttons_panel import CAMButtonsPanel
+from .parent_panel import CAM_Parent_Panel
 
 # from ...utilities.simple_utils import unit_value_to_string
 
 
 # Info panel
 # This panel gives general information about the current operation
-class CAM_INFO_Panel(CAMButtonsPanel, Panel):
+class CAM_INFO_Panel(CAM_Parent_Panel, Panel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "TOOLS"
     bl_options = {"HIDE_HEADER"}
