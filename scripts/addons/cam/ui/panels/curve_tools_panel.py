@@ -23,7 +23,7 @@ class VIEW3D_PT_tools_curvetools(Panel):
         col.operator("object.curve_intarsion", icon="OUTLINER_DATA_META")
         column = col.column(align=True)
         column.operator("object.curve_overcuts", icon="CON_SIZELIKE")
-        column.operator("object.curve_overcuts_b", icon="CON_SIZELIKE")
+        column.operator("object.curve_overcuts_b", icon="GROUP_BONE")
         column = col.column(align=True)
         column.operator(
             "object.silhouette",

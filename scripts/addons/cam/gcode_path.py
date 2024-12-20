@@ -1010,7 +1010,7 @@ async def get_path_3_axis(context, operation):
                         i += 1
 
                 percent = int(h / nslices * 100)
-                await progress_async("waterline layers ", percent)
+                await progress_async("Waterline Layers", percent)
                 lastslice = poly
 
             if (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW") or (

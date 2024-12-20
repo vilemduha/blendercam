@@ -215,11 +215,11 @@ class CamCurveIntarsion(Operator):
 
 
 # intarsion or joints
-class CamCurveOvercuts(Operator):
+class CamCurveSimpleOvercuts(Operator):
     """Adds Overcuts for Slots"""
 
     bl_idname = "object.curve_overcuts"
-    bl_label = "Add Overcuts - A"
+    bl_label = "Simple Fillet Overcuts"
     bl_options = {"REGISTER", "UNDO"}
 
     diameter: FloatProperty(
@@ -328,11 +328,11 @@ class CamCurveOvercuts(Operator):
 
 
 # Overcut type B
-class CamCurveOvercutsB(Operator):
+class CamCurveBoneFilletOvercuts(Operator):
     """Adds Overcuts for Slots"""
 
     bl_idname = "object.curve_overcuts_b"
-    bl_label = "Add Overcuts - B"
+    bl_label = "Bone Fillet Overcuts"
     bl_options = {"REGISTER", "UNDO"}
 
     diameter: FloatProperty(

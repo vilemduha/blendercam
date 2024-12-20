@@ -815,7 +815,7 @@ def mesh_from_curve_to_chunk(object):
     lastvi = 0
     vtotal = len(mesh.vertices)
     perc = 0
-    progress("Processing Curve - START - Vertices: " + str(vtotal))
+    progress(f"Processing Curve - START - Vertices: {vtotal}")
     for vi in range(0, len(mesh.vertices) - 1):
         co = (mesh.vertices[vi].co + object.location).to_tuple()
         if not dk.isdisjoint([(vi, vi + 1)]) and d[(vi, vi + 1)] == 1:
@@ -999,7 +999,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
             percent = int(100 * n / totlen)
             if percent != last_percent:
-                await progress_async("sampling paths", percent)
+                await progress_async("Sampling Paths", percent)
                 last_percent = percent
             n += 1
             sampled = False
@@ -1752,7 +1752,7 @@ async def sample_chunks(o, pathSamples, layers):
         for s, in_ambient in zip(our_points, ambient_contains):
             if o.strategy != "WATERLINE" and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
-                await progress_async("sampling paths ", last_percent)
+                await progress_async("Sampling Paths", last_percent)
             n += 1
             x = s[0]
             y = s[1]
@@ -2037,7 +2037,7 @@ async def sort_chunks(chunks, o, last_pos=None):
     """
 
     if o.strategy != "WATERLINE":
-        await progress_async("sorting paths")
+        await progress_async("Sorting Paths")
     # the getNext() function of CamPathChunk was running out of recursion limits.
     sys.setrecursionlimit(100000)
     sortedchunks = []
@@ -2050,7 +2050,7 @@ async def sort_chunks(chunks, o, last_pos=None):
     pos = (0, 0, 0) if last_pos is None else last_pos
     while len(chunks) > 0:
         if o.strategy != "WATERLINE" and time.time() - last_progress_time > 0.1:
-            await progress_async("Sorting paths", 100.0 * (total - len(chunks)) / total)
+            await progress_async("Sorting Paths", 100.0 * (total - len(chunks)) / total)
             last_progress_time = time.time()
         ch = None
         if (

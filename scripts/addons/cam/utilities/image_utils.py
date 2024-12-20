@@ -308,7 +308,7 @@ async def offset_area(o, samples):
             _offset_inner_loop(
                 y1, y2, cutterArrayNan, cwidth, sourceArray, width, height, comparearea
             )
-            await progress_async("offset depth image", int((y2 * 100) / comparearea.shape[1]))
+            await progress_async("Offset Depth Image", int((y2 * 100) / comparearea.shape[1]))
         o.offset_image[m : width - cwidth + m, m : height - cwidth + m] = comparearea
 
         print("\nOffset Image Time " + str(time.time() - t))
