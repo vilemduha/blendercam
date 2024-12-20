@@ -554,7 +554,7 @@ async def pocket(o):
         )
         approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.distance_between_paths) / 2
         print("Approximative:" + str(approxn))
-        print(o)
+        print(o.name)
 
         i = 0
         chunks = []

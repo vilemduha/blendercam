@@ -228,7 +228,7 @@ class CamPathChunk:
         if other.poly is None:
             other.update_poly()
         if not self.poly.is_empty and not other.poly.is_empty:
-            print(other.poly, cutoff)
+            # print(other.poly, cutoff)
             return self.poly.dwithin(other.poly, cutoff)
         else:
             return _internal_x_y_distance_to(self.points, other.points, cutoff) < cutoff
