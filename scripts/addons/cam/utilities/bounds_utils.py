@@ -194,12 +194,12 @@ def get_bounds(o):
         if o.min_z_from == "OBJECT":
             if minz == 10000000:
                 minz = 0
-            print("Minz from Object:" + str(minz))
+            print("Min Z from Object:" + str(minz))
             o.min.z = minz
             o.min_z = o.min.z
         else:
             o.min.z = o.min_z  # max(bb[0][2]+l.z,o.min_z)#
-            print("Not Minz from Object")
+            print("Not Min Z from Object")
 
         if o.material.estimate_from_model:
             print("Estimate Material from Model")

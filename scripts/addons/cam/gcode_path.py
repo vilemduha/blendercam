@@ -669,7 +669,7 @@ async def get_path(context, operation):
 
     operation.changed = False
     t1 = time.process_time() - t
-    progress("total time", t1)
+    progress("Total Time", t1)
 
 
 def get_change_data(o):

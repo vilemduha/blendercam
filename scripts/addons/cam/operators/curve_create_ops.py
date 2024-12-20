@@ -912,12 +912,12 @@ class CamCurveMortise(Operator):
                     length = line.length
                 else:
                     length = c.length
-                print("loop Length:", length)
+                print("Loop Length:", length)
                 if self.opencurve:
                     loop_length = line.length
                 else:
                     loop_length = c.length
-                print("line Length:", loop_length)
+                print("Line Length:", loop_length)
 
                 if self.adaptive > 0.0:
                     joinery.variable_finger(
@@ -1093,12 +1093,12 @@ class CamCurveInterlock(Operator):
                         length = line.length
                     else:
                         length = c.length
-                    print("loop Length:", length)
+                    print("Loop Length:", length)
                     if self.opencurve:
                         loop_length = line.length
                     else:
                         loop_length = c.length
-                    print("line Length:", loop_length)
+                    print("Line Length:", loop_length)
 
                     joinery.distributed_interlock(
                         c,

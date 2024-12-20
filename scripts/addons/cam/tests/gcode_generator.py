@@ -13,8 +13,8 @@ for i, operation in enumerate(scene.cam_operations):
     # Set the active operation using the index
     scene.cam_active_operation = i
 
-    print("")
-    print("")
+    print("\n")
+    print("\n")
     print(f"############ Generating {operation.name} Operation ############")
 
     # Run the calculate_cam_path() operator

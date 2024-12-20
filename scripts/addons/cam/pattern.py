@@ -402,7 +402,7 @@ def get_path_pattern(operation):
                     pathchunks.extend(nchunks)
                     lastchunks = nchunks
                 percent = int(i / approxn * 100)
-                progress("outlining polygons ", percent)
+                progress("Outlining Polygons ", percent)
                 i += 1
         pathchunks.reverse()
         if not o.inverse:  # dont do ambient for inverse milling

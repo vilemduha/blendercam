@@ -126,7 +126,7 @@ class AsyncOperatorMixin:
                 raise StopIteration
             else:
                 (msg, args) = self.coroutine.send(None)
-            if msg == "progress":
+            if msg == "Progress:":
                 self.show_progress(context, **args)
             else:
                 sys.stdout.write(f"{msg},{args}")

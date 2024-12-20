@@ -25,6 +25,6 @@ def progress_async(text, n=None, value_type="%"):
     """
     # (f"Progress:{text} {n}{value_type}\n")
 
-    throw_exception = yield ("progress", {"text": text, "n": n, "value_type": value_type})
+    throw_exception = yield ("Progress:", f"{text} {n}{value_type}")
     if throw_exception is not None:
         raise throw_exception
