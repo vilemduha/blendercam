@@ -1032,15 +1032,7 @@ async def medial_axis(o):
             if ipts % 500 == 0:
                 sys.stdout.write("\r")
                 # the exact output you're looking for:
-                prog_message = (
-                    "Points: "
-                    + str(ipts)
-                    + " / "
-                    + str(len(pts))
-                    + " "
-                    + str(round(100 * ipts / len(pts)))
-                    + "%"
-                )
+                prog_message = f"Points: {ipts} / {len(pts)} {round(100 * ipts / len(pts))}%\n"
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
 

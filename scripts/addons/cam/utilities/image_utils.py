@@ -224,7 +224,7 @@ def image_to_numpy(i):
     na = na.reshape(height, width)
     na = na.swapaxes(0, 1)
 
-    print("\ntime of Image to Numpy " + str(time.time() - t))
+    print("\nTime of Image to Numpy " + str(time.time() - t))
     return na
 
 

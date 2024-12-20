@@ -1400,7 +1400,7 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
         shapely.geometry.MultiPolygon: The computed silhouette as a Shapely MultiPolygon.
     """
 
-    print("stype", stype)
+    print("Silhouette Type:", stype)
     if stype == "CURVES":  # curve conversion to polygon format
         allchunks = []
         for ob in objects:
@@ -1420,7 +1420,7 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
             print("Shapely Getting Silhouette")
             polys = []
             for ob in objects:
-                print("object", ob)
+                print("Object:", ob.name)
                 if use_modifiers:
                     ob = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
                     m = ob.to_mesh()

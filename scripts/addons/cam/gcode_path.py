@@ -115,7 +115,7 @@ def export_gcode_path(filename, vertslist, operations):
     Returns:
         None: This function does not return a value; it writes the G-code to a file.
     """
-    print("EXPORT")
+    print("\nEXPORT")
     progress("Exporting G-code File")
     t = time.time()
     s = bpy.context.scene
@@ -669,7 +669,7 @@ async def get_path(context, operation):
 
     operation.changed = False
     t1 = time.process_time() - t
-    progress("Total Time", t1)
+    progress("Total Time: ", t1)
 
 
 def get_change_data(o):
