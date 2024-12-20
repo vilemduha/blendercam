@@ -23,6 +23,8 @@ def progress_async(text, n=None, value_type="%"):
     Raises:
         Exception: If an exception is thrown during the operation.
     """
-    throw_exception = yield (f"Progress:{text} {n}{value_type}\n")
+    # (f"Progress:{text} {n}{value_type}\n")
+
+    throw_exception = yield ("progress", {"text": text, "n": n, "value_type": value_type})
     if throw_exception is not None:
         raise throw_exception

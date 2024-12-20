@@ -999,7 +999,7 @@ async def medial_axis(o):
         # verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
         nDupli, nZcolinear = unique(verts)
         nVerts = len(verts)
-        print(str(nDupli) + " Duplicates Points Ignored")
+        print(str(nDupli) + " Duplicate Points Ignored")
         print(str(nZcolinear) + " Z Colinear Points Excluded")
         if nVerts < 3:
             print("Not Enough Points")
