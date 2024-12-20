@@ -506,7 +506,7 @@ class CamPathChunk:
                 ramplength = estlength
                 zigzaglength = ramplength / 2.000
                 turns = 1
-                print("turns %i" % turns)
+                print("Turns %i" % turns)
                 if zigzaglength > self.length:
                     turns = ceil(zigzaglength / self.length)
                     ramplength = turns * self.length * 2.0
@@ -578,7 +578,7 @@ class CamPathChunk:
                         ramplength = estlength
                         zigzaglength = ramplength / 2.000
                         turns = 1
-                        print("turns %i" % turns)
+                        print("Turns %i" % turns)
                         if zigzaglength > self.length:
                             turns = ceil(zigzaglength / self.length)
                             ramplength = turns * self.length * 2.0
@@ -685,9 +685,9 @@ class CamPathChunk:
             print("Has Parent")
 
         if perimeterDirection == 1:
-            print("Path Direction Is Clockwise")
+            print("Path Direction is Clockwise")
         else:
-            print("Path Direction Is Counter Clockwise")
+            print("Path Direction is Counter Clockwise")
         iradius = o.lead_in
         oradius = o.lead_out
         start = self.points[0]
@@ -791,7 +791,7 @@ def limit_chunks(chunks, o, force=False):  # TODO: this should at least add poin
                 # here adds beginning of closed chunk to the end, if the chunks were split during limiting
                 nch.points.extend(nch1.points.tolist())
                 nchunks.remove(nch1)
-                print("joining stuff")
+                print("Joining")
             if len(nch.points) > 0:
                 nchunks.append(nch.to_chunk())
         return nchunks
@@ -1471,7 +1471,7 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
                 print("Joining")
                 p = sops.unary_union(bigshapes)
 
-            print("time:", time.time() - t)
+            print("Time:", time.time() - t)
 
             t = time.time()
             silhouette = shapely_to_multipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
@@ -1530,7 +1530,7 @@ def get_operation_silhouette(operation):
         # print(operation.silhouette)
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
-            print("object method for retrieving silhouette")  #
+            print("Object Method for Retrieving Silhouette")
             operation.silhouette = get_object_silhouette(
                 stype, objects=operation.objects, use_modifiers=operation.use_modifiers
             )
@@ -2182,7 +2182,7 @@ async def oclGetWaterline(operation, chunks):
             (op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length
         )
     else:
-        print("Cutter unsupported: {0}\n".format(op_cutter_type))
+        print("Cutter Unsupported: {0}\n".format(op_cutter_type))
         quit()
 
     waterline = ocl.Waterline()
@@ -2396,7 +2396,7 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
         # numpysave(ar,iname)#save for comparison before
         chunks = image_edge_search_on_line(o, ar, i)
         iname = get_cache_path(o) + "_pencilthres_comp.exr"
-        print("new pencil strategy")
+        print("New Pencil Strategy")
 
     # ##crop pixels that are on outer borders
     for chi in range(len(chunks) - 1, -1, -1):
@@ -2510,7 +2510,7 @@ def crazy_stroke_image(o):
             if xs > r + 1 and xs < ar.shape[0] - r - 1 and ys > r + 1 and ys < ar.shape[1] - r - 1:
                 testar = ar[xs - r : xs - r + d, ys - r : ys - r + d] * cutterArray
                 if 0:
-                    print("test")
+                    print("Test")
                     print(testar.sum(), satisfypix)
                     print(xs, ys, testlength, testangle)
                     print(lastvect)
@@ -2536,7 +2536,7 @@ def crazy_stroke_image(o):
                 totpix -= eatpix
                 itests = 0
                 if 0:
-                    print("success")
+                    print("Success")
                     print(xs, ys, testlength, testangle)
                     print(lastvect)
                     print(testvect)
@@ -2605,7 +2605,7 @@ def crazy_stroke_image(o):
                 itests = 0
         i += 1
         if i % 100 == 0:
-            print("100 succesfull tests done")
+            print("100 Succesfull Tests Done")
             totpix = ar.sum()
             print(totpix)
             print(totaltests)
@@ -2912,7 +2912,7 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                     itests = 0
         i += 1
         if i % 100 == 0:
-            print("100 succesfull tests done")
+            print("100 Succesfull Tests Done")
             totpix = ar.sum()
             print(totpix)
             print(totaltests)

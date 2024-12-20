@@ -100,7 +100,7 @@ def rotation_to_2_axes(e, axescombination):
         v2d = Vector((v2d.length, v.z))
         a2base = Vector((0, 1))
         aangle = a2base.angle_signed(v2d)
-        print("angles", cangle, aangle)
+        print("Angles", cangle, aangle)
         return (cangle, aangle)
 
     elif axescombination == "CB":
@@ -116,6 +116,6 @@ def rotation_to_2_axes(e, axescombination):
 
         bangle = a2base.angle_signed(v2d)
 
-        print("angles", cangle, bangle)
+        print("Angles", cangle, bangle)
 
         return (cangle, bangle)

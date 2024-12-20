@@ -34,11 +34,12 @@ with tempfile.TemporaryDirectory() as td:
                 stderr=subprocess.STDOUT,
                 text=True,
             )
-            print("installed addon okay")
+            print("Addon Install: Success!")
             sys.exit(0)
         except subprocess.CalledProcessError as e:
-            print("Install addon failed, retrying:", e)
-            print("Command output:")
+            print("Addon Install: Failed!")
+            print(f"Retrying: {e}")
+            print("Command Output:")
             print("------------------------------")
             print(e.output)
             print("------------------------------")

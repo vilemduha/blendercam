@@ -172,7 +172,7 @@ def twist_line(length, thickness, finger_play, percentage, amount, distance, cen
     while amount > 0:
         position = spacing * amount
         interlock_twist(length, thickness, finger_play, percentage=percentage, cx=position)
-        print("twistline", amount, distance, position)
+        print("Twistline", amount, distance, position)
         amount -= 1
 
     join_multiple("_groove")
@@ -671,7 +671,7 @@ def variable_finger(
     oldfinger_sz = min_finger
     hpos = []  # hpos is the horizontal positions of the middle of the mortise
     # slope_array(loop)
-    print("joinery loop length", round(loop_length * 1000), "mm")
+    print("Joinery Loop Length", round(loop_length * 1000), "mm")
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
@@ -748,7 +748,7 @@ def variable_finger(
         join_multiple("_base")
         active_name("base")
     else:
-        print("placeholder")
+        print("Placeholder")
         join_multiple("_mort")
         active_name("variable_mortise")
     return hpos

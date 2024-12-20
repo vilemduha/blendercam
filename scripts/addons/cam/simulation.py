@@ -64,7 +64,7 @@ def create_simulation_object(name, operations, i):
     ob.scale.y = (o.max.y - o.min.y) / 2
     print(o.max.x, o.min.x)
     print(o.max.y, o.min.y)
-    print("bounds")
+    print("Bounds")
     disp = ob.modifiers[-1]
     disp.direction = "Z"
     disp.texture_coords = "LOCAL"

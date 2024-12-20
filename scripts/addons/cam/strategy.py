@@ -140,7 +140,7 @@ async def cutout(o):
     max_depth = check_min_z(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2  # cutter offset
-    print("cuttertype:", o.cutter_type, "max_depth:", max_depth)
+    print("Cutter Type:", o.cutter_type, "Max Depth:", max_depth)
     if o.cutter_type == "VCARVE":
         c_offset = -max_depth * tan(cutter_angle)
     elif o.cutter_type == "CYLCONE":
@@ -149,10 +149,10 @@ async def cutout(o):
         c_offset = -max_depth * tan(cutter_angle) + o.ball_radius
     elif o.cutter_type == "BALLNOSE":
         r = o.cutter_diameter / 2
-        print("cutter radius:", r, " skin", o.skin)
+        print("Cutter Radius:", r, " Skin: ", o.skin)
         if -max_depth < r:
             c_offset = sqrt(r**2 - (r + max_depth) ** 2)
-            print("offset:", c_offset)
+            print("Offset:", c_offset)
     if c_offset > o.cutter_diameter / 2:
         c_offset = o.cutter_diameter / 2
     c_offset += o.skin  # add skin for profile
@@ -174,7 +174,7 @@ async def cutout(o):
             subdivide_short_lines(ob)
 
     if o.cut_type == "ONLINE" and o.onlycurves:  # is separate to allow open curves :)
-        print("separate")
+        print("Separate")
         chunksFromCurve = []
         for ob in o.objects:
 
@@ -375,7 +375,7 @@ async def curve(o):
         for chl in extendorder:  # Set offset Z for all chunks according to the layer information,
             chunk = chl[0]
             layer = chl[1]
-            print("layer: " + str(layer[1]))
+            print("Layer: " + str(layer[1]))
             chunk.offset_z(o.max_z * 2 - o.min_z + layer[1])
             chunk.clamp_z(o.min_z)  # safety to not cut lower than minz
             # safety, not higher than free movement height

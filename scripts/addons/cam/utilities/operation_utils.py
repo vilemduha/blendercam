@@ -255,7 +255,7 @@ def operation_valid(self, context):
         o.optimisation.use_exact = False
     o.update_offset_image_tag = True
     o.update_z_buffer_image_tag = True
-    print("validity ")
+    print("Validity ")
 
 
 def chain_valid(chain, context):

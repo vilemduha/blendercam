@@ -157,7 +157,6 @@ def get_path_pattern_parallel(o, angle):
             chunks.append(nax.swapaxes(0, 1))
         # chunks
         pathchunks = []
-        print("WOO")
         for ch in chunks:
             ch = ch.tolist()
             pathchunks.append(CamPathChunk(ch))
@@ -587,7 +586,7 @@ def get_path_pattern_4_axis(operation):
             reverse = not reverse
 
     if o.strategy_4_axis == "HELIX":
-        print("helix")
+        print("Helix")
 
         a1step = o.distance_between_paths / circlesteps
 

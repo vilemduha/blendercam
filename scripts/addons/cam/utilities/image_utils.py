@@ -151,7 +151,7 @@ def numpy_to_image(a, iname):
         bpy.types.Image: The Blender image object that was created or found.
     """
 
-    print("numpy to image", iname)
+    print("Numpy to Image", iname)
     t = time.time()
     print(a.shape[0], a.shape[1])
     foundimage = False
@@ -224,7 +224,7 @@ def image_to_numpy(i):
     na = na.reshape(height, width)
     na = na.swapaxes(0, 1)
 
-    print("\ntime of image to numpy " + str(time.time() - t))
+    print("\ntime of Image to Numpy " + str(time.time() - t))
     return na
 
 
@@ -604,7 +604,7 @@ def render_sample_image(o):
             try:
                 i = bpy.data.images.load(iname)
                 if i.size[0] != resx or i.size[1] != resy:
-                    print("Z buffer size changed:", i.size, resx, resy)
+                    print("Z Buffer Size Changed:", i.size, resx, resy)
                     o.update_z_buffer_image_tag = True
 
             except:

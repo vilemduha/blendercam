@@ -5,6 +5,7 @@ No license terms found in YAGV repo, will assume GNU release
 """
 
 import math
+import time
 
 import numpy as np
 
@@ -36,7 +37,6 @@ def import_gcode(self, context, filepath):
 
     scene = context.scene
     mytool = self
-    import time
 
     then = time.time()
 
@@ -89,15 +89,31 @@ def segments_to_meshdata(segments):
         if i >= len(segs) - 1:
 
             if segs[i].style == "extrude":
-                verts.append([segs[i].coords["X"], segs[i].coords["Y"], segs[i].coords["Z"]])
+                verts.append(
+                    [
+                        segs[i].coords["X"],
+                        segs[i].coords["Y"],
+                        segs[i].coords["Z"],
+                    ]
+                )
 
             break
 
         # start of extrusion for first time
         if segs[i].style == "travel" and segs[i + 1].style == "extrude":
-            verts.append([segs[i].coords["X"], segs[i].coords["Y"], segs[i].coords["Z"]])
             verts.append(
-                [segs[i + 1].coords["X"], segs[i + 1].coords["Y"], segs[i + 1].coords["Z"]]
+                [
+                    segs[i].coords["X"],
+                    segs[i].coords["Y"],
+                    segs[i].coords["Z"],
+                ]
+            )
+            verts.append(
+                [
+                    segs[i + 1].coords["X"],
+                    segs[i + 1].coords["Y"],
+                    segs[i + 1].coords["Z"],
+                ]
             )
             edges.append([i - del_offset, (i - del_offset) + 1])
 
@@ -105,7 +121,11 @@ def segments_to_meshdata(segments):
 
         if segs[i].style == "extrude" and segs[i + 1].style == "extrude":
             verts.append(
-                [segs[i + 1].coords["X"], segs[i + 1].coords["Y"], segs[i + 1].coords["Z"]]
+                [
+                    segs[i + 1].coords["X"],
+                    segs[i + 1].coords["Y"],
+                    segs[i + 1].coords["Z"],
+                ]
             )
             edges.append([i - del_offset, (i - del_offset) + 1])
 
@@ -534,12 +554,13 @@ class GcodeModel:
             style = "travel"
 
             # no horizontal movement, but extruder movement: retraction/refill
-            #                        if (
-            #                                (seg.coords["X"] == coords["X"]) and
-            #                                (seg.coords["Y"] == coords["Y"]) and
-            #                                (seg.coords["Z"] == coords["Z"]) and
-            #                                (seg.coords["E"] != coords["E"]) ):
-            #                                        style = "retract" if (seg.coords["E"] < coords["E"]) else "restore"
+            # if (
+            #     (seg.coords["X"] == coords["X"]) and
+            #     (seg.coords["Y"] == coords["Y"]) and
+            #     (seg.coords["Z"] == coords["Z"]) and
+            #     (seg.coords["E"] != coords["E"])
+            # ):
+            #     style = "retract" if (seg.coords["E"] < coords["E"]) else "restore"
 
             # some horizontal movement, and positive extruder movement: extrusion
             if (

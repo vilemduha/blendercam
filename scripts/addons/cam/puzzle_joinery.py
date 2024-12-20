@@ -435,7 +435,7 @@ def arc(
         "receptacle", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep
     )
     twist_female("testing", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
-    print("generating arc")
+    print("Generating Arc")
     # generate arc
     bpy.ops.curve.simple(
         align="WORLD",
@@ -1307,8 +1307,8 @@ def open_curve(
     p_start = coords[0]
     p_end = coords[-1]
 
-    print("start angle", start_angle)
-    print("end angle", end_angle)
+    print("Start Angle", start_angle)
+    print("End Angle", end_angle)
 
     bpy.ops.curve.simple(
         align="WORLD",
@@ -1422,7 +1422,7 @@ def tile(diameter, tolerance, tile_x_amount, tile_y_amount, stem=1):
     width = ((tile_x_amount) * (4 + 2 * (stem - 1)) + 1) * diameter
     height = ((tile_y_amount) * (4 + 2 * (stem - 1)) + 1) * diameter
 
-    print("size:", width, height)
+    print("Size:", width, height)
     fingers(diameter, tolerance, amount=tile_x_amount, stem=stem)
     add_rectangle(width, height)
     active_name("_base")

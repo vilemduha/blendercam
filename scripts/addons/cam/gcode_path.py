@@ -213,7 +213,7 @@ def export_gcode_path(filename, vertslist, operations):
         if split:
             fileindex = "_" + str(findex)
         filename = basefilename + fileindex + extension
-        print("writing: ", filename)
+        print("Writing: ", filename)
         c = postprocessor.Creator()
 
         # process user overrides for post processor settings
@@ -321,7 +321,7 @@ def export_gcode_path(filename, vertslist, operations):
             c.write("\n")
 
             if o.enable_dust:
-                c.write("(Dust collector)\n")
+                c.write("(Dust Collector)\n")
                 lines = o.gcode_start_dust_cmd.split(";")
                 for aline in lines:
                     c.write(aline + "\n")
@@ -570,7 +570,7 @@ def export_gcode_path(filename, vertslist, operations):
                 c.write(aline + "\n")
 
     o.info.duration = duration * unitcorr
-    print("total time:", round(o.info.duration * 60), "seconds")
+    print("Total Time:", round(o.info.duration * 60), "seconds")
     if bpy.context.scene.unit_settings.system == "METRIC":
         unit_distance = "m"
         cut_distance /= 1000
@@ -578,7 +578,7 @@ def export_gcode_path(filename, vertslist, operations):
         unit_distance = "feet"
         cut_distance /= 12
 
-    print("cut distance:", round(cut_distance, 3), unit_distance)
+    print("Cut Distance:", round(cut_distance, 3), unit_distance)
     if enable_dust:
         c.write(stop_dust + "\n")
     if enable_hold:
@@ -843,11 +843,11 @@ async def get_path_3_axis(context, operation):
         print("SAMPLE OK")
         if o.strategy == "PENCIL":  # and bpy.app.debug_value==-3:
             chunks = chunks_coherency(chunks)
-            print("coherency check")
+            print("Coherency Check")
 
         # and not o.movement.parallel_step_back:
         if o.strategy in ["PARALLEL", "CROSS", "PENCIL", "OUTLINEFILL"]:
-            print("sorting")
+            print("Sorting")
             chunks = await sort_chunks(chunks, o)
             if o.strategy == "OUTLINEFILL":
                 chunks = await connect_chunks_low(chunks, o)
@@ -883,7 +883,7 @@ async def get_path_3_axis(context, operation):
     elif o.strategy == "WATERLINE" and not o.optimisation.use_opencamlib:
         topdown = True
         chunks = []
-        await progress_async("retrieving object slices")
+        await progress_async("Retrieving Object Slices")
         await prepare_area(o)
         layerstep = 1000000000
         if o.use_layers:
