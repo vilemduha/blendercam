@@ -106,12 +106,10 @@ class CamOperationCopy(Operator):
                 {'FINISHED'} if the operation was successfully executed.
         """
 
-        # main(context)
-        scene = bpy.context.scene
+        scene = context.scene
 
         fix_units()
 
-        scene = bpy.context.scene
         if len(scene.cam_operations) == 0:
             return {"CANCELLED"}
         copyop = scene.cam_operations[scene.cam_active_operation]

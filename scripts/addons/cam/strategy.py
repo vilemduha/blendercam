@@ -140,7 +140,8 @@ async def cutout(o):
     max_depth = check_min_z(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2  # cutter offset
-    print("Cutter Type:", o.cutter_type, "Max Depth:", max_depth)
+    print("Cutter Type:", o.cutter_type)
+    print("Max Depth:", max_depth)
     if o.cutter_type == "VCARVE":
         c_offset = -max_depth * tan(cutter_angle)
     elif o.cutter_type == "CYLCONE":
@@ -149,7 +150,8 @@ async def cutout(o):
         c_offset = -max_depth * tan(cutter_angle) + o.ball_radius
     elif o.cutter_type == "BALLNOSE":
         r = o.cutter_diameter / 2
-        print("Cutter Radius:", r, " Skin: ", o.skin)
+        print("Cutter Radius:", r)
+        print("Skin: ", o.skin)
         if -max_depth < r:
             c_offset = sqrt(r**2 - (r + max_depth) ** 2)
             print("Offset:", c_offset)
@@ -180,14 +182,6 @@ async def cutout(o):
 
             chunksFromCurve.extend(curve_to_chunks(ob, o.use_modifiers))
 
-        # chunks always have polys now
-        # for ch in chunksFromCurve:
-        #     # print(ch.points)
-
-        #     if len(ch.points) > 2:
-        #         ch.poly = chunk_to_shapely(ch)
-
-    # p.addContour(ch.poly)
     else:
         chunksFromCurve = []
         if o.cut_type == "ONLINE":
@@ -218,8 +212,6 @@ async def cutout(o):
 
         if o.outlines_count > 1 and o.movement.insideout == "OUTSIDEIN":
             chunksFromCurve.reverse()
-
-    # parentChildPoly(chunksFromCurve,chunksFromCurve,o)
 
     chunksFromCurve = limit_chunks(chunksFromCurve, o)
 

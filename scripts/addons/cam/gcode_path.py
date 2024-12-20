@@ -90,6 +90,7 @@ def point_on_line(a, b, c, tolerance):
     norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
     # find angle between the two vectors
     angle = numpy.rad2deg(numpy.arccos(dot_pr / norms))
+    print(f"dot_pr: {dot_pr}, norms: {norms}, angle: {angle}")
     if angle > tolerance:
         return False
     else:

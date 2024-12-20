@@ -18,6 +18,8 @@ from bpy.types import Operator
 
 from .. import parametric
 
+from ..utilities.geom_utils import triangle, s_sine
+
 
 class CamSineCurve(Operator):
     """Object Sine"""  # by Alain Pelletier april 2021
@@ -497,25 +499,3 @@ class CamCustomCurve(Operator):
         )
 
         return {"FINISHED"}
-
-
-def triangle(i, T, A):
-    s = f"{A * 8 / (pi**2)} * ("
-    for n in range(i):
-        if n % 2 != 0:
-            e = (n - 1) / 2
-            a = round(((-1) ** e) / (n**2), 8)
-            b = round(n * pi / (T / 2), 8)
-            if n > 1:
-                s += "+"
-            s += f"{a} * sin({b} * t)"
-    s += ")"
-    return s
-
-
-def s_sine(A, T, dc_offset=0, phase_shift=0):
-    args = [dc_offset, phase_shift, A, T]
-    for arg in args:
-        arg = round(arg, 6)
-
-    return f"{dc_offset} + {A} * sin((2 * pi / {T}) * (t + {phase_shift}))"
