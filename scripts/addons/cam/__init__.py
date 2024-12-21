@@ -35,9 +35,10 @@ from .ui import (
     unregister as ui_unregister,
 )
 from .utilities.addon_utils import (
-    check_operations_on_load,
+    on_blender_startup,
     keymap_register,
     keymap_unregister,
+    on_engine_change,
 )
 from .utilities.thread_utils import timer_update
 
@@ -61,11 +62,22 @@ def register() -> None:
 
     bpy.types.Scene.cam_operations = CollectionProperty(type=CAM_OPERATION_Properties)
 
+    bpy.types.Scene.engine_check = object()
+
+    subscribe_to = bpy.types.RenderSettings, "engine"
+
+    bpy.msgbus.subscribe_rna(
+        key=subscribe_to,
+        owner=bpy.types.Scene.engine_check,
+        args=(),
+        notify=on_engine_change,
+    )
+
     for panel in get_panels():
         panel.COMPAT_ENGINES.add("FABEX_RENDER")
 
     bpy.app.handlers.frame_change_pre.append(timer_update)
-    bpy.app.handlers.load_post.append(check_operations_on_load)
+    bpy.app.handlers.load_post.append(on_blender_startup)
 
 
 def unregister() -> None:

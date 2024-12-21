@@ -90,7 +90,7 @@ def progress_bar(self, context):
         row.scale_x = 2
         row.progress(
             factor=progress,
-            text=f"Processing...{percent}%",
+            text=f"Processing... {percent}%",
         )
 
 

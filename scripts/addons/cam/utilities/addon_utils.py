@@ -99,7 +99,7 @@ def copy_presets(addon_prefs):
 
 
 @bpy.app.handlers.persistent
-def check_operations_on_load(context):
+def on_blender_startup(context):
     """Checks for any broken computations on load and resets them.
 
     This function verifies the presence of necessary Blender add-ons and
@@ -116,16 +116,24 @@ def check_operations_on_load(context):
             the current Blender environment.
     """
 
-    addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
-
     scene = bpy.context.scene
     for o in scene.cam_operations:
         if o.computing:
             o.computing = False
 
+    addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
+
     addon_dependencies()
-    load_defaults()
-    copy_presets()
+    load_defaults(addon_prefs)
+    copy_presets(addon_prefs)
+
+
+def on_engine_change(*args):
+    if bpy.context.scene.render.engine == "FABEX_RENDER":
+        bpy.context.scene.interface.layout = bpy.context.preferences.addons[
+            "bl_ext.user_default.fabex"
+        ].preferences.default_layout
+        print("Fabex!")
 
 
 def fix_units():
