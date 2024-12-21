@@ -17,10 +17,8 @@ from bpy.props import (
     PointerProperty,
     StringProperty,
 )
-from bpy.types import (
-    PropertyGroup,
-)
-from .. import constants
+from bpy.types import PropertyGroup
+from ..constants import PRECISION
 from ..utilities.strategy_utils import (
     get_strategy_list,
     update_strategy,
@@ -36,6 +34,7 @@ from ..utilities.operation_utils import (
     update_rest,
     update_rotation,
     update_Z_buffer_image,
+    update_image_size_y,
 )
 from .info_props import CAM_INFO_Properties
 from .material_props import CAM_MATERIAL_Properties
@@ -228,7 +227,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.0,
         max=1.0,
         default=0.0,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_offset_image,
     )
@@ -266,7 +265,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.00001,
         max=1.0,
         default=0.01,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -276,7 +275,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.00001,
         max=1.0,
         default=0.01,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -308,7 +307,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=-180,
         max=180.0,
         default=45.0,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_rest,
     )
     parallel_pocket_crosshatch: BoolProperty(
@@ -374,7 +373,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.000001,
         max=10,
         default=0.003,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_offset_image,
     )
@@ -384,7 +383,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.000001,
         max=10,
         default=0.003,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_offset_image,
     )
@@ -394,7 +393,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.0,
         max=100.0,
         default=25.0,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_offset_image,
     )
@@ -412,7 +411,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.0,
         max=180.0,
         default=60.0,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_offset_image,
     )
     ball_radius: FloatProperty(
@@ -422,7 +421,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         max=0.035,
         default=0.001,
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_offset_image,
     )
     bull_corner_radius: FloatProperty(
@@ -432,7 +431,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         max=0.035,
         default=0.005,
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_offset_image,
     )
     cutter_description: StringProperty(
@@ -490,7 +489,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.001,
         min=0.00001,
         max=32,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -499,7 +498,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.0002,
         min=0.00001,
         max=32,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -585,7 +584,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.001,
         min=-0.100,
         max=32,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -615,7 +614,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.001,
         min=0.00001,
         max=32,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -648,7 +647,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.01,
         min=0.00001,
         max=32,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -658,7 +657,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.00,
         max=1,
         default=0.0,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
     )
     lead_out: FloatProperty(
@@ -667,7 +666,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.00,
         max=1,
         default=0.0,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
     )
     profile_start: IntProperty(
@@ -682,7 +681,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=-0.01,
         min=-3,
         max=3,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -717,7 +716,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0,
         min=-3,
         max=10,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )  # EXPERIMENTAL
@@ -737,7 +736,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.01,
         min=-1,
         max=1,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_Z_buffer_image,
     )
@@ -746,15 +745,24 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.1,
         min=-10,
         max=10,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_Z_buffer_image,
+    )
+    source_image_size_y: FloatProperty(
+        name="Image Source Y Size",
+        default=0.1,
+        min=-10,
+        max=10,
+        precision=PRECISION,
+        unit="LENGTH",
+        update=update_image_size_y,
     )
     source_image_offset: FloatVectorProperty(
         name="Image Offset",
         default=(0, 0, 0),
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="XYZ",
         update=update_Z_buffer_image,
     )
@@ -772,7 +780,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0,
         min=0,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="PERCENTAGE",
         update=update_Z_buffer_image,
     )
@@ -781,7 +789,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0,
         min=0,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="PERCENTAGE",
         update=update_Z_buffer_image,
     )
@@ -790,7 +798,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=100,
         min=0,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="PERCENTAGE",
         update=update_Z_buffer_image,
     )
@@ -799,7 +807,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=100,
         min=0,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="PERCENTAGE",
         update=update_Z_buffer_image,
     )
@@ -821,7 +829,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.0,
         max=100.0,
         default=0.01,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -854,7 +862,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0.00005,
         max=50.0,
         default=1.0,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_chipload,
     )
@@ -909,7 +917,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.00002,
         min=0.00000001,
         max=1,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -918,7 +926,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.02,
         min=0.00000001,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_rest,
     )
     crazy_threshold_2: FloatProperty(
@@ -926,7 +934,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.5,
         min=0.00000001,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_rest,
     )
     crazy_threshold_3: FloatProperty(
@@ -934,7 +942,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=2,
         min=0.00000001,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_rest,
     )
     crazy_threshold_4: FloatProperty(
@@ -942,7 +950,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.05,
         min=0.00000001,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_rest,
     )
     crazy_threshold_5: FloatProperty(
@@ -950,7 +958,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.3,
         min=0.00000001,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_rest,
     )
 
@@ -975,7 +983,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.001,
         min=0.00000001,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -984,7 +992,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default=0.0002,
         min=0.00000001,
         max=100,
-        precision=constants.PRECISION,
+        precision=PRECISION,
         unit="LENGTH",
         update=update_rest,
     )
@@ -1003,7 +1011,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         name="Bridge / Tab Width",
         default=0.002,
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_bridges,
     )
     bridges_height: FloatProperty(
@@ -1011,7 +1019,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         description="Height from the bottom of the cutting operation",
         default=0.0005,
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         update=update_bridges,
     )
     bridges_collection_name: StringProperty(
@@ -1042,14 +1050,14 @@ class CAM_OPERATION_Properties(PropertyGroup):
         name="Operation Minimum",
         default=(0, 0, 0),
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="XYZ",
     )
     max: FloatVectorProperty(
         name="Operation Maximum",
         default=(0, 0, 0),
         unit="LENGTH",
-        precision=constants.PRECISION,
+        precision=PRECISION,
         subtype="XYZ",
     )
 

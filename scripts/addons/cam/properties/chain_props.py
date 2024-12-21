@@ -11,6 +11,8 @@ from bpy.props import (
 )
 from bpy.types import PropertyGroup
 
+from ..utilities.operation_utils import chain_valid
+
 
 # this type is defined just to hold reference to operations for chains
 class CAM_OP_REFERENCE_Properties(PropertyGroup):
@@ -43,8 +45,12 @@ class CAM_CHAIN_Properties(PropertyGroup):
     )  # filename of
     valid: BoolProperty(
         name="Valid",
-        description="True if whole chain is ok for calculation",
+        description="True if whole Chain is OK for calculation",
         default=True,
+    )
+    invalid_reason: StringProperty(
+        name="Chain Error",
+        default=chain_valid[1],
     )
     computing: BoolProperty(
         name="Computing Right Now",

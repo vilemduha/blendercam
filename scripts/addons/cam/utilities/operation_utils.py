@@ -325,6 +325,7 @@ def update_chipload(self, context):
     o = self
     # Old chipload
     o.info.chipload = o.feedrate / (o.spindle_rpm * o.cutter_flutes)
+    o.info.chipload_per_tooth = unit_value_to_string(o.info.chipload, 4)
     # New chipload with chip thining compensation.
     # I have tried to combine these 2 formulas to compinsate for the phenomenon of chip thinning when cutting at less
     # than 50% cutter engagement with cylindrical end mills. formula 1 Nominal Chipload is
@@ -338,7 +339,8 @@ def update_chipload(self, context):
     # we will be one tiny step on the way to a slightly better chipload calculating function.
 
     # self.chipload = ((0.5*(o.cutter_diameter/o.distance_between_paths))/(sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.distance_between_paths)-1)))
-    print(o.info.chipload)
+    print(f"Chipload: {o.info.chipload}")
+    print(f"Chipload per Tooth: {o.info.chipload_per_tooth}")
 
 
 def update_offset_image(self, context):
@@ -373,6 +375,17 @@ def update_Z_buffer_image(self, context):
     self.update_z_buffer_image_tag = True
     self.update_offset_image_tag = True
     get_operation_sources(self)
+
+
+def update_image_size_y(self, context):
+    """Updates the Image Y size based on the following function."""
+    if self.source_image_name != "":
+        i = bpy.data.images[self.source_image_name]
+        if i is not None:
+            size_x = self.source_image_size_x / i.size[0]
+            size_y = int(x_size * i.size[1] * 1000000) / 1000
+            col.label(text="Image Size on Y Axis: " + unit_value_to_string(size_y, 8))
+            col.separator()
 
 
 def update_bridges(o, context):

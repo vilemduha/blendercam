@@ -10,17 +10,14 @@ from bpy.props import (
     StringProperty,
     FloatProperty,
 )
-from bpy.types import (
-    PropertyGroup,
-)
-from ..utilities.operation_utils import (
-    update_operation,
-)
+from bpy.types import PropertyGroup
+
 from ..constants import (
     PRECISION,
     CHIPLOAD_PRECISION,
     MAX_OPERATION_TIME,
 )
+from ..utilities.operation_utils import update_operation, update_chipload
 
 
 class CAM_INFO_Properties(PropertyGroup):
@@ -38,6 +35,13 @@ class CAM_INFO_Properties(PropertyGroup):
         default=0.0,
         unit="LENGTH",
         precision=CHIPLOAD_PRECISION,
+    )
+
+    chipload_per_tooth: StringProperty(
+        name="Chipload per Tooth",
+        description="The chipload divided by the number of teeth",
+        default="",
+        update=update_chipload,
     )
 
     duration: FloatProperty(

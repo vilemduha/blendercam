@@ -10,8 +10,6 @@ from bpy.types import Panel
 
 from .parent_panel import CAMParentPanel
 
-# from ...utilities.simple_utils import unit_value_to_string
-
 
 # Info panel
 # This panel gives general information about the current operation
@@ -92,12 +90,11 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
             col.label(text="Estimates")
             col.label(text=f"Time: {time_estimate}", icon="TIME")
 
-            # # Operation Chipload
-            # if not self.op.info.chipload > 0:
-            #     pass
-            # else:
-            #     chipload = f"Chipload: {unit_value_to_string(self.op.info.chipload, 4)}/tooth"
-            #     col.label(text=chipload, icon="DRIVER_ROTATIONAL_DIFFERENCE")
+            # Operation Chipload
+            if not self.op.info.chipload > 0:
+                pass
+            else:
+                col.prop(self.op.info, "chipload_per_tooth", icon="DRIVER_ROTATIONAL_DIFFERENCE")
 
             # Operation Money Cost
             if self.level >= 1:

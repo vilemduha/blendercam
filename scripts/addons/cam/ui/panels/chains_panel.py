@@ -8,8 +8,6 @@ from bpy.types import UIList, Panel
 
 from .parent_panel import CAMParentPanel
 
-# from ...utilities.operation_utils import chain_valid
-
 
 class CAM_UL_operations(UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
@@ -61,12 +59,27 @@ class CAM_CHAINS_Panel(CAMParentPanel, Panel):
             row = layout.row()
             scene = bpy.context.scene
 
-            row.template_list("CAM_UL_chains", "", scene, "cam_chains", scene, "cam_active_chain")
+            row.template_list(
+                "CAM_UL_chains",
+                "",
+                scene,
+                "cam_chains",
+                scene,
+                "cam_active_chain",
+            )
             box = row.box()
             col = box.column(align=True)
             col.scale_x = col.scale_y = 1.05
-            col.operator("scene.cam_chain_add", icon="ADD", text="")
-            col.operator("scene.cam_chain_remove", icon="REMOVE", text="")
+            col.operator(
+                "scene.cam_chain_add",
+                icon="ADD",
+                text="",
+            )
+            col.operator(
+                "scene.cam_chain_remove",
+                icon="REMOVE",
+                text="",
+            )
 
             if len(scene.cam_chains) > 0:
                 chain = scene.cam_chains[scene.cam_active_chain]
@@ -74,17 +87,38 @@ class CAM_CHAINS_Panel(CAMParentPanel, Panel):
 
                 if chain:
                     row.template_list(
-                        "CAM_UL_operations", "", chain, "operations", chain, "active_operation"
+                        "CAM_UL_operations",
+                        "",
+                        chain,
+                        "operations",
+                        chain,
+                        "active_operation",
                     )
                     box = row.box()
                     col = box.column(align=True)
                     col.scale_x = col.scale_y = 1.05
-                    col.operator("scene.cam_chain_operation_add", icon="ADD", text="")
-                    col.operator("scene.cam_chain_operation_remove", icon="REMOVE", text="")
+                    col.operator(
+                        "scene.cam_chain_operation_add",
+                        icon="ADD",
+                        text="",
+                    )
+                    col.operator(
+                        "scene.cam_chain_operation_remove",
+                        icon="REMOVE",
+                        text="",
+                    )
                     if len(chain.operations) > 0:
                         col.separator()
-                        col.operator("scene.cam_chain_operation_up", icon="TRIA_UP", text="")
-                        col.operator("scene.cam_chain_operation_down", icon="TRIA_DOWN", text="")
+                        col.operator(
+                            "scene.cam_chain_operation_up",
+                            icon="TRIA_UP",
+                            text="",
+                        )
+                        col.operator(
+                            "scene.cam_chain_operation_down",
+                            icon="TRIA_DOWN",
+                            text="",
+                        )
 
                     box = layout.box()
                     col = box.column(align=True)
@@ -106,11 +140,10 @@ class CAM_CHAINS_Panel(CAMParentPanel, Panel):
                             icon="RESTRICT_INSTANCED_OFF",
                         )
 
-                        # valid, reason = chain_valid(chain, context)
-                        # if not valid:
-                        #     col.alert = True
-                        #     col.label(icon="ERROR", text=f"Can't Compute Chain!")
-                        #     col.label(text=reason)
+                        if not chain.valid:
+                            col.alert = True
+                            col.label(icon="ERROR", text="Can't Compute Chain!")
+                            col.label(text=chain.invalid_reason)
                     else:
                         col.label(text="Chain Is Currently Computing")
 
