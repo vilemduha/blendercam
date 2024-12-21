@@ -88,10 +88,11 @@ def point_on_line(a, b, c, tolerance):
     c = c - a
     dot_pr = b.dot(c)  # b dot c
     norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
+    # Ensure that values aren't == 0, which would cause
+    # a Divide by Zero error on the next line
     if not dot_pr == 0 and not norms == 0:
         # find angle between the two vectors
         angle = numpy.rad2deg(numpy.arccos(dot_pr / norms))
-        # print(f"dot_pr: {dot_pr}, norms: {norms}, angle: {angle}")
         if angle > tolerance:
             return False
         else:
@@ -136,12 +137,13 @@ def export_gcode_path(filename, vertslist, operations):
     if m.eval_splitting:  # detect whether splitting will happen
         for mesh in vertslist:
             totops += len(mesh.vertices)
-        print(totops)
+        print(f"Total Operations: {totops}")
         if totops > m.split_limit:
             split = True
             filesnum = ceil(totops / m.split_limit)
-            print("File Will Be Separated Into %i Files" % filesnum)
-    print("1")
+            print(f"Output Files: {filesnum}")
+    else:
+        print("Output Files: 1")
 
     basefilename = bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))] + safe_filename(
         filename
@@ -559,7 +561,7 @@ def export_gcode_path(filename, vertslist, operations):
         if o.remove_redundant_points and o.strategy != "DRILL":
             print(f"Online: {online}")
             print(f"Offline: {offline}")
-            print(f"{round(online / (offline + online) * 100, 1)}% Removal")
+            print(f"Removal: {round(online / (offline + online) * 100, 1)}%")
         c.feedrate(unitcorr * o.feedrate)
 
         if o.output_trailer:

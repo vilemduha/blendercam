@@ -1161,7 +1161,9 @@ def get_layers(operation, startdepth, enddepth):
     if operation.use_layers:
         layers = []
         n = ceil((startdepth - enddepth) / operation.stepdown)
-        print("Start " + str(startdepth) + " End " + str(enddepth) + " n " + str(n))
+        print(f"Start Depth: {startdepth}")
+        print(f"End Depth: {enddepth}")
+        print(f"Layers: {n}")
 
         layerstart = operation.max_z
 
