@@ -10,27 +10,8 @@ from bpy.app.handlers import persistent
 from ..constants import _IS_LOADING_DEFAULTS
 
 
-@bpy.app.handlers.persistent
-def check_operations_on_load(context):
-    """Checks for any broken computations on load and resets them.
-
-    This function verifies the presence of necessary Blender add-ons and
-    installs any that are missing. It also resets any ongoing computations
-    in camera operations and sets the interface level to the previously used
-    level when loading a new file. If the add-on has been updated, it copies
-    the necessary presets from the source to the target directory.
-    Additionally, it checks for updates to the camera plugin and updates
-    operation presets if required.
-
-    Args:
-        context: The context in which the function is executed, typically containing
-            information about
-            the current Blender environment.
-    """
-
+def addon_dependencies():
     addons = bpy.context.preferences.addons
-
-    addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
 
     modules = [
         # Objects & Tools
@@ -52,10 +33,9 @@ def check_operations_on_load(context):
             except KeyError:
                 bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
 
+
+def load_defaults(addon_prefs):
     scene = bpy.context.scene
-    for o in scene.cam_operations:
-        if o.computing:
-            o.computing = False
     # set interface level to previously used level for a new file
     if not bpy.data.filepath:
         _IS_LOADING_DEFAULTS = True
@@ -74,27 +54,32 @@ def check_operations_on_load(context):
             print("Loading Preset:", machine_preset)
             # load last used machine preset
             bpy.ops.script.execute_preset(
-                filepath=machine_preset, menu_idname="CAM_MACHINE_MT_presets"
+                filepath=machine_preset,
+                menu_idname="CAM_MACHINE_MT_presets",
             )
         _IS_LOADING_DEFAULTS = False
+
+
+def copy_if_not_exists(src, dst):
+    """Copy a file from source to destination if it does not already exist.
+
+    This function checks if the destination file exists. If it does not, the
+    function copies the source file to the destination using a high-level
+    file operation that preserves metadata.
+
+    Args:
+        src (str): The path to the source file to be copied.
+        dst (str): The path to the destination where the file should be copied.
+    """
+
+    if Path(dst).exists() == False:
+        shutil.copy2(src, dst)
+
+
+def copy_presets(addon_prefs):
     # copy presets if not there yet
     preset_source_path = Path(__file__).parent.parent / "presets"
     preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
-
-    def copy_if_not_exists(src, dst):
-        """Copy a file from source to destination if it does not already exist.
-
-        This function checks if the destination file exists. If it does not, the
-        function copies the source file to the destination using a high-level
-        file operation that preserves metadata.
-
-        Args:
-            src (str): The path to the source file to be copied.
-            dst (str): The path to the destination where the file should be copied.
-        """
-
-        if Path(dst).exists() == False:
-            shutil.copy2(src, dst)
 
     shutil.copytree(
         preset_source_path,
@@ -111,6 +96,36 @@ def check_operations_on_load(context):
         op_presets_target = Path(bpy.utils.script_path_user()) / "presets" / "cam_operations"
         shutil.copytree(op_presets_source, op_presets_target, dirs_exist_ok=True)
         addon_prefs.op_preset_update = True
+
+
+@bpy.app.handlers.persistent
+def check_operations_on_load(context):
+    """Checks for any broken computations on load and resets them.
+
+    This function verifies the presence of necessary Blender add-ons and
+    installs any that are missing. It also resets any ongoing computations
+    in camera operations and sets the interface level to the previously used
+    level when loading a new file. If the add-on has been updated, it copies
+    the necessary presets from the source to the target directory.
+    Additionally, it checks for updates to the camera plugin and updates
+    operation presets if required.
+
+    Args:
+        context: The context in which the function is executed, typically containing
+            information about
+            the current Blender environment.
+    """
+
+    addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
+
+    scene = bpy.context.scene
+    for o in scene.cam_operations:
+        if o.computing:
+            o.computing = False
+
+    addon_dependencies()
+    load_defaults()
+    copy_presets()
 
 
 def fix_units():

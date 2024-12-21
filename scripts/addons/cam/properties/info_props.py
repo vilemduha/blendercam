@@ -17,7 +17,7 @@ from ..constants import (
     CHIPLOAD_PRECISION,
     MAX_OPERATION_TIME,
 )
-from ..utilities.operation_utils import update_operation, update_chipload
+from ..utilities.operation_utils import update_operation
 
 
 class CAM_INFO_Properties(PropertyGroup):
@@ -41,7 +41,6 @@ class CAM_INFO_Properties(PropertyGroup):
         name="Chipload per Tooth",
         description="The chipload divided by the number of teeth",
         default="",
-        update=update_chipload,
     )
 
     duration: FloatProperty(

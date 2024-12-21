@@ -10,8 +10,6 @@ from bpy.types import Panel
 
 from .parent_panel import CAMParentPanel
 
-# from ...constants import G64_INCOMPATIBLE_MACHINES
-
 
 class CAM_MOVEMENT_Panel(CAMParentPanel, Panel):
     """CAM Movement Panel"""
@@ -77,6 +75,8 @@ class CAM_MOVEMENT_Panel(CAMParentPanel, Panel):
 
             if self.level >= 2:
                 # Use G64
+                # Currently checking against a hard-coded value here,
+                # Consider moving this to a scene property
                 if context.scene.cam_machine.post_processor not in ["GRBL"]:
                     layout.use_property_split = False
                     header, panel = layout.panel("g64", default_closed=True)

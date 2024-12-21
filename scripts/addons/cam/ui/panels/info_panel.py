@@ -91,10 +91,11 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
             col.label(text=f"Time: {time_estimate}", icon="TIME")
 
             # Operation Chipload
-            if not self.op.info.chipload > 0:
-                pass
+            if self.op.info.chipload > 0:
+                col.prop(self.op.info, "chipload")
+                col.label(text=self.op.info.chipload_per_tooth, icon="DRIVER_ROTATIONAL_DIFFERENCE")
             else:
-                col.prop(self.op.info, "chipload_per_tooth", icon="DRIVER_ROTATIONAL_DIFFERENCE")
+                pass
 
             # Operation Money Cost
             if self.level >= 1:

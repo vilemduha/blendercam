@@ -61,12 +61,9 @@ class WM_OT_gcode_import(Operator, ImportHelper):
 
     def execute(self, context):
         print(self.filepath)
-        context.gcode_output_type = self.output
+        context.scene.gcode_output_type = self.output
         return import_gcode(
+            self,
             context,
-            self.filepath,
-            self.output,
-            self.split_layers,
-            self.subdivide,
-            self.max_segment_size,
+            filepath=self.filepath,
         )

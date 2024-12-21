@@ -50,7 +50,8 @@ class CAM_CHAIN_Properties(PropertyGroup):
     )
     invalid_reason: StringProperty(
         name="Chain Error",
-        default=chain_valid[1],
+        default="",
+        update=chain_valid,
     )
     computing: BoolProperty(
         name="Computing Right Now",
