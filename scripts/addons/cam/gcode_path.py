@@ -88,11 +88,14 @@ def point_on_line(a, b, c, tolerance):
     c = c - a
     dot_pr = b.dot(c)  # b dot c
     norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
-    # find angle between the two vectors
-    angle = numpy.rad2deg(numpy.arccos(dot_pr / norms))
-    print(f"dot_pr: {dot_pr}, norms: {norms}, angle: {angle}")
-    if angle > tolerance:
-        return False
+    if not dot_pr == 0 and not norms == 0:
+        # find angle between the two vectors
+        angle = numpy.rad2deg(numpy.arccos(dot_pr / norms))
+        # print(f"dot_pr: {dot_pr}, norms: {norms}, angle: {angle}")
+        if angle > tolerance:
+            return False
+        else:
+            return True
     else:
         return True
 
@@ -554,15 +557,9 @@ def export_gcode_path(filename, vertslist, operations):
                 processedops = 0
 
         if o.remove_redundant_points and o.strategy != "DRILL":
-            print(
-                "online "
-                + str(online)
-                + " offline "
-                + str(offline)
-                + " "
-                + str(round(online / (offline + online) * 100, 1))
-                + "% removal"
-            )
+            print(f"Online: {online}")
+            print(f"Offline: {offline}")
+            print(f"{round(online / (offline + online) * 100, 1)}% Removal")
         c.feedrate(unitcorr * o.feedrate)
 
         if o.output_trailer:
