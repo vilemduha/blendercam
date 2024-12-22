@@ -2,7 +2,7 @@ Test Suite
 ===========
 The Test Suite is an automated testing tool that helps ensure that the addon functionality is not impacted by future code contributions.
 
-The `tests` folder contains a `TESTING_PROCEDURE` file that describes how to run the Test Suite locally, or add your own tests to it.
+The ``tests`` folder contains a ``TESTING_PROCEDURE`` file that describes how to run the Test Suite locally, or add your own tests to it.
 
 It runs a series of pre-defined operations, outputs gcode files that can be compared against reference gcode files to ensure that the results are the same.
 

@@ -8,9 +8,9 @@ As a Blender extension, Fabex follows the guidelines laid out by the Blender Fou
 
 In short, Blender uses a modified version of the `pep8 <https://peps.python.org/pep-0008/>`_ standard, meaning:
 
-* Classes are `NamedLikeThis` - no spaces, all words capitalized
-* Functions, modules, variables, etc are `named_like_this` - spaces replaced with underscores, no capital letters
-* No `*` imports - e.g. `from module import *` should be rewritten to specify exactly what is being imported - `from module import Class, function, variable as other_name` etc.
+- Classes are ``NamedLikeThis`` - no spaces, all words capitalized
+- Functions, modules, variables, etc are ``named_like_this`` - spaces replaced with underscores, no capital letters
+- No ``*`` imports - e.g. ``from module import *`` should be rewritten to specify exactly what is being imported - ``from module import Class, function, variable as other_name`` etc.
 
 Fabex extends the default line-length to 100 to allow some of the longer equations to remain on a single line.
 
@@ -25,12 +25,12 @@ Fabex is a huge addon, with many different functions, added by many different co
 
 In order to avoid conflicts, bugs and import errors a hierarchy has been established:
 
-* First, `utilities` are at the lowest level - they depend on external libraries (e.g.: `bpy`, `shapely`, `numpy` etc) and are used to power the other classes and functions
-* Second, are all the files in the main addon folder (e.g.: `cam_chunk`, `gcode_path`, `strategy`) and they use external libraries, as well as `utilities` to power Blender's functions
-* Third, `properties`, `operators` and `ui` are Blender classes that use `utilites` and the main files to integrate Fabex functions into Blender
+- First, ``utilities`` are at the lowest level - they depend on external libraries (e.g.: ``bpy``, ``shapely``, ``numpy`` etc) and are used to power the other classes and functions
+- Second, are all the files in the main addon folder (e.g.: ``cam_chunk``, ``gcode_path``, ``strategy``) and they use external libraries, as well as ``utilities`` to power Blender's functions
+- Third, ``properties``, ``operators`` and ``ui`` are Blender classes that use ``utilites`` and the main files to integrate Fabex functions into Blender
 
 The rest of the files can be considered references:
 
-* `post_processors` and `presets` will be loaded based on user selections in Blender
-* `tests` contains automated testing functions related to Github Workflows (see the Testing page for more details)
-* `wheels` conatins the pre-built Python binaries that power the external dependencies `shapely` and `opencamlib` - they are loaded automatically by Blender
+- ``post_processors`` and ``presets`` will be loaded based on user selections in Blender
+- ``tests`` contains automated testing functions related to Github Workflows (see the Testing page for more details)
+- ``wheels`` conatins the pre-built Python binaries that power the external dependencies ``shapely`` and ``opencamlib`` - they are loaded automatically by Blender
