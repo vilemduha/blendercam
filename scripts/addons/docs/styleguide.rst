@@ -2,11 +2,11 @@ Style Guide
 ===========
 As a Blender extension, Fabex follows the guidelines laid out by the Blender Foundation:
 
-`Blender Code Best Practices <https://docs.blender.org/api/current/info_best_practice.html>``
+`Blender Code Best Practices <https://docs.blender.org/api/current/info_best_practice.html>`_
 
-`Extension Guidelines <https://docs.blender.org/manual/en/latest/advanced/extensions/getting_started.html#how-to-create-extensions>`
+`Extension Guidelines <https://docs.blender.org/manual/en/latest/advanced/extensions/getting_started.html#how-to-create-extensions>`_
 
-In short, Blender uses a modified version of the `pep8 <https://peps.python.org/pep-0008/>` standard, meaning:
+In short, Blender uses a modified version of the `pep8 <https://peps.python.org/pep-0008/>`_ standard, meaning:
 - Classes are `NamedLikeThis` - no spaces, all words capitalized
 - Functions, modules, variables, etc are `named_like_this` - spaces replaced with underscores, no capital letters
 - No `*` imports - e.g. `from module import *` should be rewritten to specify exactly what is being imported - `from module import Class, function, variable as other_name` etc.

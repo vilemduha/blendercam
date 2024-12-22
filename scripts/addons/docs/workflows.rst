@@ -41,7 +41,7 @@ Docs Pages
 Using the sphinx/Google docstring format allow this action to pull comments out of the code, and format them the same way as the Blender or Shapely docs.
 This helps ensure that any changes made to the code are also made to the documentation, which helps avoid situations where a programmer has renamed a function or Class in the code, but forgotten to update the docs.
 
-In order for this system to work, docstrings have to follow a specific format: `Google Style Python Docstrings <https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html>`
+In order for this system to work, docstrings have to follow a specific format: `Google Style Python Docstrings <https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html>`_
 
 NOTE:
 
