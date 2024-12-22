@@ -15,24 +15,19 @@ Build and Test
 `build_and_test.yaml` allows you to specify which version of Blender to build and test against, along with various other options.
 
 It will be triggered by a push or pull request and it will then:
-- checkout the repository and create the addon file
-- either download a new version of Blender, or restore the version downloaded from the previous workflow run
-- install the addon and run the Test Suite
-- upload the addon file that it created along with a log of the test results
+* checkout the repository and create the addon file
+* either download a new version of Blender, or restore the version downloaded from the previous workflow run
+* install the addon and run the Test Suite
+* upload the addon file that it created along with a log of the test results
 
 Create New Release
 ==================
 `create_release.yaml` allows you to specify the addon version that you want to create.
 
-The maintainer can decide whether the changes constitute a MAJOR, MINOR or PATCH release:
-- MAJOR - usually means many breaking changes
-- MINOR - a new feature, or changes that won't break compatibility with previous version
-- PATCH - a typo, or bugfix
-
-With MAJOR, MINOR and PATCH corresponding with the version numbers 1.5.12:
-- MAJOR - 1
-- MINOR - .5
-- PATCH - .12
+The maintainer can decide whether the changes constitute a MAJOR, MINOR or PATCH release (e.g.: v1.5.12):
+* MAJOR - usually means many breaking changes - the 1 in v1.5.12
+* MINOR - a new feature, or changes that won't break compatibility with previous version - the .5 in 1.5.12
+* PATCH - a typo, or bugfix - the .12 in 1.5.12
 
 Docs Pages
 ==========
