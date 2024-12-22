@@ -1,6 +1,6 @@
 """Fabex '__init__.py' © 2012 Vilem Novak
 
-Import Modules, Register and Unregister Classes
+Import Modules, Register and Unregister  Classes
 """
 
 # Python Standard Library
