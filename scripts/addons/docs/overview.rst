@@ -1,7 +1,7 @@
 ===========
 Overview
 ===========
-BlenderCAM's code can be broken down into categories:
+Fabex (formerly BlenderCAM) code can be broken down into categories:
 
 1. Core Functions
 2. Extra Functions
@@ -11,12 +11,13 @@ BlenderCAM's code can be broken down into categories:
 
 Core Functions
 ==============
-The core function of the BlenderCAM addon is to take whatever object is in the viewport and generate toolpaths along that object according to a milling strategy set by the user.
+The core function of the Fabex addon is to take whatever object is in the viewport and generate toolpaths along that object according to a milling strategy set by the user.
+
 These operations can be exported alone, or combined into chains to be exported and run together.
 
 Extra Functions
 ===============
-Beyond simply creating toolpaths for existing objects, BlenderCAM can also create the objects (curves) and edit them through a number of operations.
+Beyond simply creating toolpaths for existing objects, Fabex can also create the objects (curves) and edit them through a number of operations.
 
 There are modules dedicated to creating reliefs, joinery, puzzle joinery and gears.
 
@@ -24,11 +25,11 @@ There is also a simulation module to allow a preview of what the final product w
 
 Reference Files
 ===============
-Presets for machines, tools, operations and preprocessors comprise the majority of the files in the addon.
+Presets for machines, tools, operations and post-processors.
 
 User Interface
 ==============
-Files related to Blender's UI - all the panels, buttons etc that you can click on in the addon, as well as menus, pie menus, popup dialogs etc.
+Files related to Blender's UI - panels, menus, pie menus, popup dialogs etc.
 
 Dependencies
 ============
