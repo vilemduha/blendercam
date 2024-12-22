@@ -20,7 +20,6 @@ units = 1.0
 
 
 class Creator(recreator.Redirector):
-
     def __init__(self, original):
         recreator.Redirector.__init__(self, original)
 

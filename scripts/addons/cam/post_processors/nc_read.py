@@ -11,7 +11,6 @@ count = 0
 
 
 class Parser:
-
     def __init__(self, writer):
         self.writer = writer
         self.currentx = None

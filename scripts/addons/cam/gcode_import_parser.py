@@ -87,7 +87,6 @@ def segments_to_meshdata(segments):
     )
     for i in range(len(segs)):
         if i >= len(segs) - 1:
-
             if segs[i].style == "extrude":
                 verts.append(
                     [
@@ -173,7 +172,6 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
 
     # Move into collection if specified
     if collection_name is not None:  # make argument optional
-
         # collection exists
         collection = bpy.data.collections.get(collection_name)
         if collection:
@@ -278,7 +276,6 @@ class GcodeParser:
                 self.last_command = code
             else:
                 if code[0] == "T":
-
                     self.model.toolnumber = int(code[1:])
                     print(self.model.toolnumber)
                     # if code doesn't start with a G but starts with a coordinate add the last command to the line
@@ -361,7 +358,6 @@ class GcodeParser:
 
 
 class GcodeModel:
-
     def __init__(self, parser):
         # save parser for messages
         self.parser = parser
@@ -502,9 +498,9 @@ class GcodeModel:
         extr_idx = int(args["S"])  # e.g. M163 S0 P1
         weight = args["P"]
         # change CMYKW
-        col[extr_idx + 3] = (
-            weight  # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
-        )
+        col[
+            extr_idx + 3
+        ] = weight  # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
         self.color = col
 
         # take RGB values for seg from last comment (above first M163 statement)
@@ -639,7 +635,6 @@ class GcodeModel:
             seg.distance = math.sqrt(d)
 
             if seg.distance > subd_threshold:
-
                 subdivs = math.ceil(
                     seg.distance / subd_threshold
                 )  # ceil makes sure that linspace interval is at least 2
@@ -654,7 +649,6 @@ class GcodeModel:
                 for i in range(
                     len(interp_coords)
                 ):  # inteprolated points array back to segment object
-
                     new_coords = {
                         "X": interp_coords[i][0],
                         "Y": interp_coords[i][1],

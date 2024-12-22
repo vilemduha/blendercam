@@ -157,7 +157,6 @@ def numpy_to_image(a, iname):
     foundimage = False
 
     for image in bpy.data.images:
-
         if (
             image.name[: len(iname)] == iname
             and image.size[0] == a.shape[0]
@@ -404,11 +403,11 @@ def build_stroke(start, end, cutterArray):
     samplesz = numpy.round(numpy.linspace(start[2], end[2], strokelength))
 
     for i in range(0, len(strokelength)):
-        strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r] = (
-            numpy.maximum(
-                strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r],
-                cutterArray + samplesz[i],
-            )
+        strokeArray[
+            samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r
+        ] = numpy.maximum(
+            strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r],
+            cutterArray + samplesz[i],
         )
     return strokeArray
 
@@ -608,7 +607,6 @@ def render_sample_image(o):
                     o.update_z_buffer_image_tag = True
 
             except:
-
                 o.update_z_buffer_image_tag = True
         if o.update_z_buffer_image_tag:
             s = bpy.context.scene

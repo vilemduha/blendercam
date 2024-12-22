@@ -1,7 +1,8 @@
 import bpy
+
 d = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
 
-d.cutter_type = 'BALLCONE'
+d.cutter_type = "BALLCONE"
 d.ball_radius = 0.001
 d.ball_cone_flute = 0.03
 d.cutter_diameter = 0.006

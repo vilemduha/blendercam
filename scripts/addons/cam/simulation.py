@@ -215,7 +215,6 @@ async def generate_simulation_image(operations, limits):
                         pass
 
                     elif v.length > simulation_detail:  # and not :
-
                         v.length = simulation_detail
                         lastxs = xs
                         lastys = ys

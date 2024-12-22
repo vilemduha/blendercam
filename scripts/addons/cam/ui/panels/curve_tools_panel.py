@@ -14,7 +14,6 @@ class VIEW3D_PT_tools_curvetools(Panel):
     bl_label = "[ Curve Tools ]"
 
     def draw(self, context):
-
         layout = self.layout
         layout.scale_y = 1.2
         col = layout.column()

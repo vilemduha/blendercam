@@ -13,7 +13,6 @@ import math
 
 
 class Parser(nc.Parser):
-
     def __init__(self, writer):
         nc.Parser.__init__(self, writer)
 
@@ -107,7 +106,6 @@ class Parser(nc.Parser):
         self.rapid = True
 
         while self.readline():
-
             self.a = None
             self.b = None
             self.c = None

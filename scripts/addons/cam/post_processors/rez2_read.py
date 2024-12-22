@@ -12,7 +12,6 @@ import math
 
 
 class Parser(nc.Parser):
-
     def __init__(self, writer):
         nc.Parser.__init__(self, writer)
 

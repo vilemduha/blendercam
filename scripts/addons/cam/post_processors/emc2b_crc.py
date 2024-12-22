@@ -13,10 +13,10 @@ import math
 
 
 class Creator(emc2b.Creator):
-
     def __init__(self):
         emc2b.Creator.__init__(self)
         self.useCrc = True
+
 
 ################################################################################
 

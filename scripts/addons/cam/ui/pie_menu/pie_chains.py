@@ -24,9 +24,9 @@ class VIEW3D_MT_PIE_Chains(Menu):
         pie.scale_y = 2
 
         # Left
-        pie.operator("wm.call_panel", text="Operations", icon="MOD_ENVELOPE").name = (
-            "FABEX_PT_CAM_OPERATIONS"
-        )
+        pie.operator(
+            "wm.call_panel", text="Operations", icon="MOD_ENVELOPE"
+        ).name = "FABEX_PT_CAM_OPERATIONS"
 
         # Right
         pie.operator("wm.call_panel", text="Chains", icon="LINKED").name = "FABEX_PT_CAM_CHAINS"

@@ -43,7 +43,6 @@ from .optimisation_props import CAM_OPTIMISATION_Properties
 
 
 class CAM_OPERATION_Properties(PropertyGroup):
-
     #######################
     # Imported Properties #
     #######################

@@ -71,7 +71,6 @@ def get_cutter_bullet(o):
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = "CYLINDER"
     elif type == "BALLNOSE":
-
         # ballnose ending used mainly when projecting from sides.
         # the actual collision shape is capsule in this case.
         bpy.ops.mesh.primitive_ico_sphere_add(
@@ -93,7 +92,6 @@ def get_cutter_bullet(o):
         # bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
     elif type == "VCARVE":
-
         angle = o.cutter_tip_angle
         s = tan(pi * (90 - angle / 2) / 180) / 2  # angles in degrees
         cone_d = o.cutter_diameter * s
@@ -116,7 +114,6 @@ def get_cutter_bullet(o):
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = "CONE"
     elif type == "CYLCONE":
-
         angle = o.cutter_tip_angle
         s = tan(pi * (90 - angle / 2) / 180) / 2  # angles in degrees
         cylcone_d = (o.cutter_diameter - o.cylcone_diameter) * s

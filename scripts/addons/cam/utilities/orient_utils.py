@@ -31,7 +31,6 @@ def add_orientation_object(o):
         ob.name = name
     ob = s.objects[name]
     if o.machine_axes == "4":
-
         if o.rotary_axis_1 == "X":
             ob.lock_rotation = [False, True, True]
             ob.rotation_euler[1] = 0

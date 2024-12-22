@@ -391,7 +391,6 @@ class CamPathChunk:
         self.points = self.points[included_values]
 
     def ramp_contour(self, zstart, zend, o):
-
         stepdown = zstart - zend
         chunk_points = []
         estlength = (zstart - zend) / tan(o.movement.ramp_in_angle)
@@ -420,7 +419,6 @@ class CamPathChunk:
                 ratio = 0
             znew = zstart - stepdown * ratio
             if znew <= zend:
-
                 ratio = (z - zend) / (z - znew)
                 v1 = Vector(chunk_points[-1])
                 v2 = Vector((s[0], s[1], znew))
@@ -1014,7 +1012,6 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
             sweepvect.normalize()
             # sampling
             if rotation != lastrotation:
-
                 cutter.rotation_euler = rotation
                 # cutter.rotation_euler.x=-cutter.rotation_euler.x
                 # print(rotation)
@@ -1113,7 +1110,6 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                                     layeractivechunks[ls + 1].startpoints.append(betweenstartpoint)
                                     layeractivechunks[ls + 1].endpoints.append(betweenendpoint)
                                 else:
-
                                     layeractivechunks[ls].points.insert(-1, betweensample)
                                     layeractivechunks[ls].rotations.insert(-1, betweenrotation)
                                     layeractivechunks[ls].startpoints.insert(-1, betweenstartpoint)
@@ -1767,7 +1763,6 @@ async def sample_chunks(o, pathSamples, layers):
                     newsample = (x, y, z)
                 # ampling
                 elif o.optimisation.use_exact and not o.optimisation.use_opencamlib:
-
                     if lastsample is not None:  # this is an optimalization,
                         # search only for near depths to the last sample. Saves about 30% of sampling time.
                         z = get_sample_bullet(
@@ -2263,7 +2258,6 @@ def image_edge_search_on_line(o, ar, zimage):
     ar[xs, ys] = False
 
     while totpix > 0 and totaltests < maxtotaltests:  # a ratio when the algorithm is allowed to end
-
         if perc != int(100 - 100 * totpix / startpix):
             perc = int(100 - 100 * totpix / startpix)
             progress("Pencil Path Searching", perc)
@@ -2498,7 +2492,6 @@ def crazy_stroke_image(o):
         testangleinit = -1
         angleincrement = angleincrement
     while totpix > 0 and totaltests < maxtotaltests:  # a ratio when the algorithm is allowed to end
-
         success = False
         # define a vector which gets varied throughout the testing, growing and growing angle to sides.
         testangle = testangleinit
@@ -2731,7 +2724,6 @@ def crazy_stroke_image_binary(o, ar, avoidar):
         angleincrement = angleincrement
 
     while totpix > 0 and totaltests < maxtotaltests:  # a ratio when the algorithm is allowed to end
-
         success = False
         # define a vector which gets varied throughout the testing, growing and growing angle to sides.
         testangle = testangleinit
@@ -2881,7 +2873,6 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                             if ys < r:
                                 ys = r
                             if avoidar[xs, ys] == 0:
-
                                 # print(toomuchpix,ar[xs-r:xs-r+d,ys-r:ys-r+d].sum()*pi/4,satisfypix)
                                 testarsum = (
                                     ar[xs - r : xs - r + d, ys - r : ys - r + d].sum() * pi / 4
@@ -3006,7 +2997,6 @@ def image_to_chunks(o, image, with_border=False):
         verts2.append(e[0])
 
     if len(edges) > 0:
-
         ch = [edges[0][0], edges[0][1]]  # first and his reference
 
         d[edges[0][0]].remove(edges[0][1])
@@ -3071,7 +3061,6 @@ def image_to_chunks(o, image, with_border=False):
                             pass
                             verts.remove(v)
                         else:
-
                             ch.append(v)
                             done = True
                             verts.remove(v)
@@ -3127,7 +3116,6 @@ def image_to_chunks(o, image, with_border=False):
         ]
         nchunks = []
         for i, ch in enumerate(vecchunks):
-
             s = curve_simplify.simplify_RDP(ch, soptions)
             # print(s)
             nch = CamPathChunkBuilder([])

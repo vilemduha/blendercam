@@ -104,7 +104,6 @@ def restrict_buffer(inbuf, outbuf):
 
     else:  # old method
         for y in range(0, outy):
-
             sx = dx / 2 - 0.5
             for x in range(0, outx):
                 pixVal = 0
@@ -450,7 +449,6 @@ def solve_pde_multigrid(
 
                 # 14. post-smoothing of current sollution using target function
                 for i in range(0, smoothiterations):
-
                     smooth(IU[k2], VF[k2], linbcgiterations, PLANAR[k2])
 
                 if useplanar and k2 == 0:

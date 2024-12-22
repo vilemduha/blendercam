@@ -12,7 +12,6 @@ from ..utilities.bounds_utils import position_object
 # Position object for CAM operation. Tests object bounds and places them so the object
 # is aligned to be positive from x and y and negative from z."""
 class CAM_MATERIAL_PositionObject(Operator):
-
     bl_idname = "object.material_cam_position"
     bl_label = "Position Object for CAM Operation"
     bl_options = {"REGISTER", "UNDO"}

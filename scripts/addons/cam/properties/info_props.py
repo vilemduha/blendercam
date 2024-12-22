@@ -21,7 +21,6 @@ from ..utilities.operation_utils import update_operation
 
 
 class CAM_INFO_Properties(PropertyGroup):
-
     warnings: StringProperty(
         name="Warnings",
         description="Warnings",

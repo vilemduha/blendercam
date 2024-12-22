@@ -18,7 +18,6 @@ from ..constants import PRECISION
 
 
 class CAM_MATERIAL_Properties(PropertyGroup):
-
     estimate_from_model: BoolProperty(
         name="Estimate Cut Area from Model",
         description="Estimate cut area based on model geometry",

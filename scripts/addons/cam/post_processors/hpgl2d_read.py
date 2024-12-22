@@ -4,7 +4,6 @@ import math
 
 
 class Parser(num_reader.NumReader):
-
     def __init__(self, writer):
         num_reader.NumReader.__init__(self, writer)
         self.i = 0
@@ -59,9 +58,9 @@ class Parser(num_reader.NumReader):
 
                     start_angle = math.atan2(sdy, sdx)
 
-                    end_angle = start_angle + int(a) * math.pi/180
+                    end_angle = start_angle + int(a) * math.pi / 180
 
-                    radius = math.sqrt(sdx*sdx + sdy*sdy)
+                    radius = math.sqrt(sdx * sdx + sdy * sdy)
 
                     ex = int(cx) + radius * math.cos(end_angle)
                     ey = int(cy) + radius * math.sin(end_angle)
@@ -71,27 +70,32 @@ class Parser(num_reader.NumReader):
                     else:
                         d = -1
 
-                    self.add_arc(ex * self.units_to_mm, ey * self.units_to_mm, i=int(-sdx)
-                                 * self.units_to_mm, j=int(-sdy) * self.units_to_mm, d=d)
+                    self.add_arc(
+                        ex * self.units_to_mm,
+                        ey * self.units_to_mm,
+                        i=int(-sdx) * self.units_to_mm,
+                        j=int(-sdy) * self.units_to_mm,
+                        d=d,
+                    )
                     self.end_path()
                     self.up = False
                     self.x = int(ex)
                     self.y = int(ey)
 
     def ParseFromFirstLetter(self, c):
-        if c == 'P':
+        if c == "P":
             self.line_index = self.line_index + 1
             if self.line_index < self.line_length:
                 c1 = self.line[self.line_index]
                 self.parse_word += c1
-                if c1 == 'U':  # PU
+                if c1 == "U":  # PU
                     self.ParsePuOrPd(True)
-                elif c1 == 'D':  # PD
+                elif c1 == "D":  # PD
                     self.ParsePuOrPd(False)
-        elif c == 'A':
+        elif c == "A":
             self.line_index = self.line_index + 1
             if self.line_index < self.line_length:
                 c1 = self.line[self.line_index]
                 self.parse_word += c1
-                if c1 == 'A':  # AA, arc absolute
+                if c1 == "A":  # AA, arc absolute
                     self.ParseAA()

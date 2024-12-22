@@ -16,15 +16,15 @@ class Creator(hpgl2d.Creator):
         self.metric()  # set self.units_to_mc_units
         self.doing_rapid = True
 
-    def program_begin(self, id, name=''):
-        self.write(';;^IN;!MC0;\n')
-        self.write('V50.0;^PR;Z0,0,10500;^PA;\n')
-        self.write('!RC15;\n')
-        self.write('!MC1;\n')
+    def program_begin(self, id, name=""):
+        self.write(";;^IN;!MC0;\n")
+        self.write("V50.0;^PR;Z0,0,10500;^PA;\n")
+        self.write("!RC15;\n")
+        self.write("!MC1;\n")
 
     def program_end(self):
-        self.write('!VZ50.0;!ZM0;\n')
-        self.write('!MC0;^IN;\n')
+        self.write("!VZ50.0;!ZM0;\n")
+        self.write("!MC0;^IN;\n")
 
     def get_machine_xyz(self, x=None, y=None, z=None):
         machine_x = self.x
@@ -44,8 +44,8 @@ class Creator(hpgl2d.Creator):
         mx, my, mz = self.get_machine_xyz(x, y, z)
         if mx != self.x or my != self.y or mz != self.z:
             if self.doing_rapid == False:
-                self.write('V50.0;')
-            self.write(('Z%i' % mx) + (',%i' % my) + (',%i;\n' % mz))
+                self.write("V50.0;")
+            self.write(("Z%i" % mx) + (",%i" % my) + (",%i;\n" % mz))
             self.x = mx
             self.y = my
             self.z = mz
@@ -57,8 +57,8 @@ class Creator(hpgl2d.Creator):
         mx, my, mz = self.get_machine_xyz(x, y, z)
         if mx != self.x or my != self.y or mz != self.z:
             if self.doing_rapid == True:
-                self.write('V10.0;')
-            self.write(('Z%i' % mx) + (',%i' % my) + (',%i;\n' % mz))
+                self.write("V10.0;")
+            self.write(("Z%i" % mx) + (",%i" % my) + (",%i;\n" % mz))
             self.x = mx
             self.y = my
             self.z = mz

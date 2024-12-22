@@ -10,9 +10,9 @@ class Parser(iso.Parser):
 
     def ParseWord(self, word):
         iso.Parser.ParseWord(self, word)
-        if (word == 'M103'):
+        if word == "M103":
             self.path_col = "rapid"
             self.col = "rapid"
-        elif (word == 'M101'):
+        elif word == "M101":
             self.path_col = "feed"
             self.col = "feed"

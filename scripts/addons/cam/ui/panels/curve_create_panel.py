@@ -13,7 +13,6 @@ class VIEW3D_PT_tools_create(Panel):
     bl_label = "[ Curve Creators ]"
 
     def draw(self, context):
-
         layout = self.layout
         layout.scale_y = 1.2
         col = layout.column(align=True)
