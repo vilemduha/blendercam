@@ -38,31 +38,56 @@ class Creator(iso.Creator):
     ############################################################################
     # Codes
 
-    def SPACE(self): return(' ')
-    def NEW_LINE(self): return('\n')
+    def SPACE(self):
+        return " "
 
-    def BLOCK(self): return('%i')
-    def COMMENT(self, comment): return((';%s' % comment))
+    def NEW_LINE(self):
+        return "\n"
 
-    def BEGIN_PGM(self): return('BEGIN PGM %i')
-    def END_PGM(self): return('END PGM %i')
+    def BLOCK(self):
+        return "%i"
 
-    def TOOL(self): return('TOOL CALL %i Z')
+    def COMMENT(self, comment):
+        return ";%s" % comment
 
-    def METRIC(self): return('MM')
+    def BEGIN_PGM(self):
+        return "BEGIN PGM %i"
 
-    def RAPID(self): return('L')
-    def FEED(self): return('L')
+    def END_PGM(self):
+        return "END PGM %i"
 
-    def ARC_CC(self): return('CC')
-    def ARC_C(self): return('C')
+    def TOOL(self):
+        return "TOOL CALL %i Z"
 
-    def ARC_CW(self): return('DR-')
-    def ARC_CCW(self): return('DR+')
+    def METRIC(self):
+        return "MM"
 
-    def X(self): return('X')
-    def Y(self): return('Y')
-    def Z(self): return('Z')
+    def RAPID(self):
+        return "L"
+
+    def FEED(self):
+        return "L"
+
+    def ARC_CC(self):
+        return "CC"
+
+    def ARC_C(self):
+        return "C"
+
+    def ARC_CW(self):
+        return "DR-"
+
+    def ARC_CCW(self):
+        return "DR+"
+
+    def X(self):
+        return "X"
+
+    def Y(self):
+        return "Y"
+
+    def Z(self):
+        return "Z"
 
     ############################################################################
     # Internals
@@ -78,7 +103,7 @@ class Creator(iso.Creator):
     ############################################################################
     # Programs
 
-    def program_begin(self, id, name=''):
+    def program_begin(self, id, name=""):
         self.program_id = id
 
         self.write_blocknum()
@@ -133,24 +158,25 @@ class Creator(iso.Creator):
 
         self.write_preps()
 
-        if (x != None):
+        if x != None:
             dx = x - self.x
-            if (self.absolute_flag):
+            if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
-        if (y != None):
+
+        if y != None:
             dy = y - self.y
-            if (self.absolute_flag):
+            if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
-
             self.y = y
-        if (z != None):
+
+        if z != None:
             dz = z - self.z
-            if (self.absolute_flag):
+            if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(dz)))
@@ -162,8 +188,9 @@ class Creator(iso.Creator):
 
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
 
-		(x, y, z, a, b, c, axis_count) = self.filter_xyz(x, y, z)
-		if axis_count == 0: return
+        (x, y, z, a, b, c, axis_count) = self.filter_xyz(x, y, z)
+        if axis_count == 0:
+            return
 
         self.write_blocknum()
 
@@ -172,24 +199,24 @@ class Creator(iso.Creator):
 
         dx = dy = dz = 0
 
-        if (x != None):
+        if x != None:
             dx = x - self.x
-            if (self.absolute_flag ):
+            if self.absolute_flag:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(x + self.shift_x)))
             else:
                 self.write(self.SPACE() + self.X() + (self.fmt.string(dx)))
             self.x = x
-        if (y != None):
+        if y != None:
             dy = y - self.y
-            if (self.absolute_flag ):
+            if self.absolute_flag:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(y + self.shift_y)))
             else:
                 self.write(self.SPACE() + self.Y() + (self.fmt.string(dy)))
 
             self.y = y
-        if (z != None):
+        if z != None:
             dz = z - self.z
-            if (self.absolute_flag ):
+            if self.absolute_flag:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(z + self.shift_z)))
             else:
                 self.write(self.SPACE() + self.Z() + (self.fmt.string(dz)))
@@ -204,5 +231,7 @@ class Creator(iso.Creator):
     # Misc
 
     def comment(self, text):
-        self.write((self.COMMENT(text) + '\n'))
+        self.write((self.COMMENT(text) + "\n"))
+
+
 nc.creator = Creator()
