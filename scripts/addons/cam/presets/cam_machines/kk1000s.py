@@ -1,9 +1,11 @@
 import bpy
+
 d = bpy.context.scene.cam_machine
 s = bpy.context.scene.unit_settings
 
-d.exporter = 'MACH3'
-s.system = 'METRIC'
+d.exporter = "MACH3"
+s.system = "METRIC"
+s.length_unit = "MILLIMETERS"
 d.working_area = (0.800000011920929, 0.5600000023841858, 0.09000000357627869)
 d.feedrate_min = 9.999999747378752e-06
 d.feedrate_max = 2.0

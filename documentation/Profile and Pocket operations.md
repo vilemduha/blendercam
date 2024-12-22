@@ -30,15 +30,15 @@
 
 ![Convert to curve](images/partConvert.png)
 
-or you can use "Object silhouete" from blendercam tool :
+or you can use "Object silhouette" from blendercam tool :
 
 ![Cam Panel](images/curvecampanel.png)
 
-![Object silhouete](images/partObjectSil.png)
+![Object silhouette](images/partObjectSil.png)
 
 9. Edit curves to separate holes from external contour.
 
-![Object silhouete](images/partSeparateHoles.png)
+![Object silhouette](images/partSeparateHoles.png)
 
 10. Add Pocket and Profile operations : 
 

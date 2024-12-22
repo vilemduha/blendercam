@@ -14,7 +14,7 @@ from bpy.types import (
     AddonPreferences,
 )
 
-from .utils import opencamlib_version, shapely_version
+from .utilities.version_utils import opencamlib_version, shapely_version
 
 
 class CamAddonPreferences(AddonPreferences):
@@ -31,10 +31,26 @@ class CamAddonPreferences(AddonPreferences):
         name="Interface Level in New File",
         description="Choose visible options",
         items=[
-            ("0", "Basic", "Only show Essential Options"),
-            ("1", "Advanced", "Show Advanced Options"),
-            ("2", "Complete", "Show All Options"),
-            ("3", "Experimental", "Show Experimental Options"),
+            (
+                "0",
+                "Basic",
+                "Only show Essential Options",
+            ),
+            (
+                "1",
+                "Advanced",
+                "Show Advanced Options",
+            ),
+            (
+                "2",
+                "Complete",
+                "Show All Options",
+            ),
+            (
+                "3",
+                "Experimental",
+                "Show Experimental Options",
+            ),
         ],
         default="3",
     )
@@ -43,11 +59,31 @@ class CamAddonPreferences(AddonPreferences):
         name="Viewport Shading in New File",
         description="Choose viewport shading preset",
         items=[
-            ("DEFAULT", "Default", "Standard viewport shading"),
-            ("DELUXE", "Deluxe", "Cavity, Curvature, Depth of Field, Shadows & Object Colors"),
-            ("CLEAN_DEFAULT", "Clean Default", "Standard viewport shading with no overlays"),
-            ("CLEAN_DELUXE", "Clean Deluxe", "Deluxe shading with no overlays"),
-            ("PREVIEW", "Preview", "HDRI Lighting Preview"),
+            (
+                "DEFAULT",
+                "Default",
+                "Standard viewport shading",
+            ),
+            (
+                "DELUXE",
+                "Deluxe",
+                "Cavity, Curvature, Depth of Field, Shadows & Object Colors",
+            ),
+            (
+                "CLEAN_DEFAULT",
+                "Clean Default",
+                "Standard viewport shading with no overlays",
+            ),
+            (
+                "CLEAN_DELUXE",
+                "Clean Deluxe",
+                "Deluxe shading with no overlays",
+            ),
+            (
+                "PREVIEW",
+                "Preview",
+                "HDRI Lighting Preview",
+            ),
         ],
         default="DEFAULT",
     )
@@ -216,16 +252,6 @@ class CamAddonPreferences(AddonPreferences):
         default="",
     )
 
-    # o_version: StringProperty(
-    #     name="OpenCAMLib",
-    #     default=opencamlib_version() if not None else "OpenCAMLib is not installed",
-    # )
-
-    # s_version: StringProperty(
-    #     name="Shapely",
-    #     default=shapely_version() if not None else "Shapely is not installed",
-    # )
-
     show_popups: BoolProperty(
         name="Show Warning Popups",
         description="Shows a Popup window when there is a warning",
@@ -251,8 +277,6 @@ class CamAddonPreferences(AddonPreferences):
         box = layout.box()
         col = box.column(align=True)
         col.label(text="Library", icon="ASSET_MANAGER")
-        # col.prop(self, "o_version")
-        # col.prop(self, "s_version")
         # OpenCAMLib Version
         ocl_version = opencamlib_version()
         if ocl_version is None:

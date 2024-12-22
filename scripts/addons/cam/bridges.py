@@ -17,11 +17,17 @@ import bpy
 from bpy_extras.object_utils import object_data_add
 from mathutils import Vector
 
-from . import utils
-from . import simple
+from .cam_chunk import (
+    curve_to_shapely,
+    get_object_silhouette,
+    get_operation_silhouette,
+)
+
+from .utilities.operation_utils import get_operation_sources
+from .utilities.simple_utils import join_multiple, remove_doubles
 
 
-def addBridge(x, y, rot, sizex, sizey):
+def add_bridge(x, y, rot, size_x, size_y):
     """Add a bridge mesh object to the scene.
 
     This function creates a bridge by adding a primitive plane to the
@@ -42,7 +48,7 @@ def addBridge(x, y, rot, sizex, sizey):
     """
 
     bpy.ops.mesh.primitive_plane_add(
-        size=sizey * 2,
+        size=size_y * 2,
         calc_uvs=True,
         enter_editmode=False,
         align="WORLD",
@@ -52,12 +58,12 @@ def addBridge(x, y, rot, sizex, sizey):
     b = bpy.context.active_object
     b.name = "bridge"
     # b.show_name=True
-    b.dimensions.x = sizex
+    b.dimensions.x = size_x
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
     bpy.ops.object.editmode_toggle()
     bpy.ops.transform.translate(
-        value=(0, sizey / 2, 0),
+        value=(0, size_y / 2, 0),
         constraint_axis=(False, True, False),
         orient_type="GLOBAL",
         mirror=False,
@@ -73,7 +79,7 @@ def addBridge(x, y, rot, sizex, sizey):
     return b
 
 
-def addAutoBridges(o):
+def add_auto_bridges(o):
     """Attempt to add auto bridges as a set of curves.
 
     This function creates a collection of bridges based on the provided
@@ -93,7 +99,7 @@ def addAutoBridges(o):
             Blender context by adding bridge objects to the specified
             collection.
     """
-    utils.getOperationSources(o)
+    get_operation_sources(o)
     bridgecollectionname = o.bridges_collection_name
     if bridgecollectionname == "" or bpy.data.collections.get(bridgecollectionname) is None:
         bridgecollectionname = "bridges_" + o.name
@@ -102,37 +108,40 @@ def addAutoBridges(o):
     g = bpy.data.collections[bridgecollectionname]
     o.bridges_collection_name = bridgecollectionname
     for ob in o.objects:
-
         if ob.type == "CURVE" or ob.type == "TEXT":
-            curve = utils.curveToShapely(ob)
+            curve = curve_to_shapely(ob)
         if ob.type == "MESH":
-            curve = utils.getObjectSilhouete("OBJECTS", [ob])
+            curve = get_object_silhouette("OBJECTS", [ob])
         for c in curve.geoms:
             c = c.exterior
             minx, miny, maxx, maxy = c.bounds
+
             d1 = c.project(sgeometry.Point(maxx + 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, -pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            bo = add_bridge(p.x, p.y, -pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
+
             d1 = c.project(sgeometry.Point(minx - 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, pi / 2, o.bridges_width, o.cutter_diameter * 1)
+            bo = add_bridge(p.x, p.y, pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
+
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, maxy + 1000))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, 0, o.bridges_width, o.cutter_diameter * 1)
+            bo = add_bridge(p.x, p.y, 0, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
+
             d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, miny - 1000))
             p = c.interpolate(d1)
-            bo = addBridge(p.x, p.y, pi, o.bridges_width, o.cutter_diameter * 1)
+            bo = add_bridge(p.x, p.y, pi, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
 
 
-def getBridgesPoly(o):
+def get_bridges_poly(o):
     """Generate and prepare bridge polygons from a Blender object.
 
     This function checks if the provided object has an attribute for bridge
@@ -159,7 +168,7 @@ def getBridgesPoly(o):
         bpy.ops.object.duplicate()
         bpy.ops.object.join()
         ob = bpy.context.active_object
-        shapes = utils.curveToShapely(ob, o.use_bridge_modifiers)
+        shapes = curve_to_shapely(ob, o.use_bridge_modifiers)
         ob.select_set(state=True)
         bpy.ops.object.delete(use_global=False)
         bridgespoly = sops.unary_union(shapes)
@@ -171,7 +180,7 @@ def getBridgesPoly(o):
         o.bridgespoly = prepared.prep(o.bridgespolyorig)
 
 
-def useBridges(ch, o):
+def use_bridges(ch, o):
     """Add bridges to chunks using a collection of bridge objects.
 
     This function takes a collection of bridge objects and uses the curves
@@ -197,9 +206,8 @@ def useBridges(ch, o):
     else:
         bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
-
         # get bridgepoly
-        getBridgesPoly(o)
+        get_bridges_poly(o)
 
         ####
 
@@ -318,7 +326,7 @@ def useBridges(ch, o):
                 edgelength = hypot(x - x2, y - y2)
                 if edgelength > o.bridges_width:
                     # make new vertex
-                    verts.append(((x + x2) / 2, (y + y2) / 2, o.minz))
+                    verts.append(((x + x2) / 2, (y + y2) / 2, o.min_z))
 
                     isedge += 1
                     edge = [count - 2, count - 1]
@@ -327,7 +335,7 @@ def useBridges(ch, o):
             else:
                 x2 = x
                 y2 = y
-            verts.append((x, y, o.minz))  # make new vertex
+            verts.append((x, y, o.min_z))  # make new vertex
             isedge += 1
             if isedge > 1:  # Two points make an edge
                 edge = [count - 2, count - 1]
@@ -344,8 +352,8 @@ def useBridges(ch, o):
         object_data_add(bpy.context, mesh)  # create object
         bpy.ops.object.convert(target="CURVE")  # convert mesh to curve
         # join all the new cut bridges curves
-        simple.join_multiple(o.name + "_cut_bridges")
-        simple.remove_doubles()  # remove overlapping vertices
+        join_multiple(o.name + "_cut_bridges")
+        remove_doubles()  # remove overlapping vertices
 
 
 def auto_cut_bridge(o):

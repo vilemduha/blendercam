@@ -75,7 +75,7 @@ class FabexTest(unittest.TestCase):
                     # bullet physics gives slightly different results on mac sometimes...
                     # this is something we can't fix, so compare against mac generated test
                     # file
-                    print("Using mac test file", len(expected), len(generated))
+                    print("Using Mac Test File", len(expected), len(generated))
                     expected = self.get_gcode_from_file(gcode_file + ".mac")
                     self.assertMultiLineEqual(
                         generated,
@@ -84,7 +84,9 @@ class FabexTest(unittest.TestCase):
                     )
                 else:
                     self.assertMultiLineEqual(
-                        generated, expected, msg="\n" + self.get_diff(gcode_file[1:], gcode_file)
+                        generated,
+                        expected,
+                        msg="\n" + self.get_diff(gcode_file[1:], gcode_file),
                     )
                 os.remove(gcode_file[1:])  # cleanup generated file unless test fails
 

@@ -22,14 +22,14 @@ from .constants import (
     BULLET_SCALE,
     CUTTER_OFFSET,
 )
-from .simple import (
+from .utilities.simple_utils import (
     activate,
-    delob,
+    delete_object,
     progress,
 )
 
 
-def getCutterBullet(o):
+def get_cutter_bullet(o):
     """Create a cutter for Rigidbody simulation collisions.
 
     This function generates a 3D cutter object based on the specified cutter
@@ -71,7 +71,6 @@ def getCutterBullet(o):
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = "CYLINDER"
     elif type == "BALLNOSE":
-
         # ballnose ending used mainly when projecting from sides.
         # the actual collision shape is capsule in this case.
         bpy.ops.mesh.primitive_ico_sphere_add(
@@ -93,7 +92,6 @@ def getCutterBullet(o):
         # bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
     elif type == "VCARVE":
-
         angle = o.cutter_tip_angle
         s = tan(pi * (90 - angle / 2) / 180) / 2  # angles in degrees
         cone_d = o.cutter_diameter * s
@@ -116,7 +114,6 @@ def getCutterBullet(o):
         cutter = bpy.context.active_object
         cutter.rigid_body.collision_shape = "CONE"
     elif type == "CYLCONE":
-
         angle = o.cutter_tip_angle
         s = tan(pi * (90 - angle / 2) / 180) / 2  # angles in degrees
         cylcone_d = (o.cutter_diameter - o.cylcone_diameter) * s
@@ -202,7 +199,7 @@ def getCutterBullet(o):
     return cutter
 
 
-def subdivideLongEdges(ob, threshold):
+def subdivide_long_edges(ob, threshold):
     """Subdivide edges of a mesh object that exceed a specified length.
 
     This function iteratively checks the edges of a given mesh object and
@@ -259,11 +256,7 @@ def subdivideLongEdges(ob, threshold):
         iter += 1
 
 
-# n=0
-#
-
-
-def prepareBulletCollision(o):
+def prepare_bullet_collision(o):
     """Prepares all objects needed for sampling with Bullet collision.
 
     This function sets up the Bullet physics simulation by preparing the
@@ -324,7 +317,7 @@ def prepareBulletCollision(o):
 
         # subdivide long edges here:
         if o.optimisation.exact_subdivide_edges:
-            subdivideLongEdges(collisionob, o.cutter_diameter * 2)
+            subdivide_long_edges(collisionob, o.cutter_diameter * 2)
 
         bpy.ops.rigidbody.object_add(type="ACTIVE")
         # using active instead of passive because of performance.TODO: check if this works also with 4axis...
@@ -349,7 +342,7 @@ def prepareBulletCollision(o):
         if active_collection in collisionob.users_collection:
             active_collection.objects.unlink(collisionob)
 
-    getCutterBullet(o)
+    get_cutter_bullet(o)
 
     # machine objects scaling up to simulation scale
     if bpy.data.objects.find("machine") > -1:
@@ -374,7 +367,7 @@ def prepareBulletCollision(o):
     progress(time.time() - t)
 
 
-def cleanupBulletCollision(o):
+def cleanup_bullet_collision(o):
     """Clean up bullet collision objects in the scene.
 
     This function checks for the presence of a 'machine' object in the
@@ -399,7 +392,7 @@ def cleanupBulletCollision(o):
         if ob.rigid_body is not None and not (
             machinepresent and ob.name in bpy.data.objects["machine"].objects
         ):
-            delob(ob)
+            delete_object(ob)
     # machine objects scaling up to simulation scale
     if machinepresent:
         for ob in bpy.data.objects["machine"].objects:
@@ -418,7 +411,7 @@ def cleanupBulletCollision(o):
             ob.location = ob.location / BULLET_SCALE
 
 
-def getSampleBullet(cutter, x, y, radius, startz, endz):
+def get_sample_bullet(cutter, x, y, radius, startz, endz):
     """Perform a collision test for a 3-axis milling cutter.
 
     This function simplifies the collision detection process compared to a
@@ -455,7 +448,7 @@ def getSampleBullet(cutter, x, y, radius, startz, endz):
         return endz - 10
 
 
-def getSampleBulletNAxis(cutter, startpoint, endpoint, rotation, cutter_compensation):
+def get_sample_bullet_n_axis(cutter, startpoint, endpoint, rotation, cutter_compensation):
     """Perform a fully 3D collision test for N-Axis milling.
 
     This function computes the collision detection between a cutter and a

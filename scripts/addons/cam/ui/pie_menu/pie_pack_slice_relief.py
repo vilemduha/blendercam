@@ -21,10 +21,10 @@ class VIEW3D_MT_PIE_PackSliceRelief(Menu):
 
         # Left
         pie.operator("object.cam_pack_objects", text="Pack", icon="PACKAGE")
-        
+
         # Right
         pie.operator("object.cam_slice_objects", text="Slice", icon="ALIGN_JUSTIFY")
-        
+
         # Bottom
         pie.operator("scene.calculate_bas_relief", text="Bas Relief", icon="RNDCURVE")
 
