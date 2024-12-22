@@ -24,12 +24,12 @@ class VIEW3D_MT_PIE_Chains(Menu):
         pie.scale_y = 2
 
         # Left
-        pie.operator("wm.call_panel", text="Operations", icon="MOD_ENVELOPE").name = (
-            "WORLD_PT_CAM_OPERATIONS"
-        )
+        pie.operator(
+            "wm.call_panel", text="Operations", icon="MOD_ENVELOPE"
+        ).name = "FABEX_PT_CAM_OPERATIONS"
 
         # Right
-        pie.operator("wm.call_panel", text="Chains", icon="LINKED").name = "WORLD_PT_CAM_CHAINS"
+        pie.operator("wm.call_panel", text="Chains", icon="LINKED").name = "FABEX_PT_CAM_CHAINS"
 
         # Bottom
         row = pie.row()
@@ -38,7 +38,7 @@ class VIEW3D_MT_PIE_Chains(Menu):
         # Top
         box = pie.box()
         column = box.column(align=True)
-        if operation.maxz > operation.movement.free_height:
+        if operation.max_z > operation.movement.free_height:
             column.label(text="!ERROR! COLLISION!")
             column.label(text="Depth Start > Free Movement Height")
             column.label(text="!ERROR! COLLISION!")

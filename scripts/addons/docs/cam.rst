@@ -7,33 +7,19 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   cam.nc
-   cam.opencamlib
-   cam.ui_panels
+   cam.operators
+   cam.post_processors
+   cam.properties
+   cam.ui
+   cam.utilities
 
 Submodules
 ----------
 
-cam.async\_op module
+cam.bas\_relief module
 --------------------
 
-.. automodule:: cam.async_op
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.autoupdate module
----------------------
-
-.. automodule:: cam.autoupdate
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.basrelief module
---------------------
-
-.. automodule:: cam.basrelief
+.. automodule:: cam.bas_relief
    :members:
    :undoc-members:
    :show-inheritance:
@@ -54,22 +40,6 @@ cam.cam\_chunk module
    :undoc-members:
    :show-inheritance:
 
-cam.cam\_operation module
--------------------------
-
-.. automodule:: cam.cam_operation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.chain module
-----------------
-
-.. automodule:: cam.chain
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 cam.collision module
 --------------------
 
@@ -82,30 +52,6 @@ cam.constants module
 --------------------
 
 .. automodule:: cam.constants
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.curvecamcreate module
--------------------------
-
-.. automodule:: cam.curvecamcreate
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.curvecamequation module
----------------------------
-
-.. automodule:: cam.curvecamequation
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.curvecamtools module
-------------------------
-
-.. automodule:: cam.curvecamtools
    :members:
    :undoc-members:
    :show-inheritance:
@@ -126,26 +72,18 @@ cam.exception module
    :undoc-members:
    :show-inheritance:
 
-cam.gcodeimportparser module
+cam.gcode\_import\_parser module
 ----------------------------
 
-.. automodule:: cam.gcodeimportparser
+.. automodule:: cam.gcode_import_parser
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.gcodepath module
+cam.gcode\_path module
 --------------------
 
-.. automodule:: cam.gcodepath
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.image\_utils module
------------------------
-
-.. automodule:: cam.image_utils
+.. automodule:: cam.gcode_path
    :members:
    :undoc-members:
    :show-inheritance:
@@ -166,26 +104,10 @@ cam.joinery module
    :undoc-members:
    :show-inheritance:
 
-cam.machine\_settings module
-----------------------------
-
-.. automodule:: cam.machine_settings
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 cam.numba\_wrapper module
 -------------------------
 
 .. automodule:: cam.numba_wrapper
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.ops module
---------------
-
-.. automodule:: cam.ops
    :members:
    :undoc-members:
    :show-inheritance:
@@ -214,14 +136,6 @@ cam.pattern module
    :undoc-members:
    :show-inheritance:
 
-cam.polygon\_utils\_cam module
-------------------------------
-
-.. automodule:: cam.polygon_utils_cam
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 cam.preferences module
 ----------------------
 
@@ -242,14 +156,6 @@ cam.puzzle\_joinery module
 --------------------------
 
 .. automodule:: cam.puzzle_joinery
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.simple module
------------------
-
-.. automodule:: cam.simple
    :members:
    :undoc-members:
    :show-inheritance:
@@ -282,22 +188,6 @@ cam.testing module
 ------------------
 
 .. automodule:: cam.testing
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.ui module
--------------
-
-.. automodule:: cam.ui
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.utils module
-----------------
-
-.. automodule:: cam.utils
    :members:
    :undoc-members:
    :show-inheritance:

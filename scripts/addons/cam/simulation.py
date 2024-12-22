@@ -1,5 +1,4 @@
 """Fabex 'simulation.py' © 2012 Vilem Novak
-
 Functions to generate a mesh simulation from CAM Chain / Operation data.
 """
 
@@ -11,33 +10,30 @@ import numpy as np
 import bpy
 from mathutils import Vector
 
-from .async_op import progress_async
-from .image_utils import (
-    getCutterArray,
-    numpysave,
+from .utilities.async_utils import progress_async
+from .utilities.bounds_utils import get_bounds_multiple
+from .utilities.image_utils import (
+    get_cutter_array,
+    numpy_save,
 )
-from .simple import getSimulationPath
-from .utils import (
-    getBoundsMultiple,
-    getOperationSources,
-)
+from .utilities.operation_utils import get_operation_sources
+from .utilities.simple_utils import get_simulation_path
 
 
-def createSimulationObject(name, operations, i):
+def create_simulation_object(name, operations, i):
     """Create a simulation object in Blender.
-
     This function creates a simulation object in Blender with the specified
     name and operations. If an object with the given name already exists, it
     retrieves that object; otherwise, it creates a new plane object and
     applies several modifiers to it. The function also sets the object's
     location and scale based on the provided operations and assigns a
     texture to the object.
-
     Args:
         name (str): The name of the simulation object to be created.
         operations (list): A list of operation objects that contain bounding box information.
         i: The image to be used as a texture for the simulation object.
     """
+
     oname = "csim_" + name
 
     o = operations[0]
@@ -68,7 +64,7 @@ def createSimulationObject(name, operations, i):
     ob.scale.y = (o.max.y - o.min.y) / 2
     print(o.max.x, o.min.x)
     print(o.max.y, o.min.y)
-    print("bounds")
+    print("Bounds")
     disp = ob.modifiers[-1]
     disp.direction = "Z"
     disp.texture_coords = "LOCAL"
@@ -95,38 +91,38 @@ def createSimulationObject(name, operations, i):
     bpy.ops.object.shade_smooth()
 
 
-async def doSimulation(name, operations):
+async def do_simulation(name, operations):
     """Perform simulation of operations for a 3-axis system.
-
     This function iterates through a list of operations, retrieves the
     necessary sources for each operation, and computes the bounds for the
     operations. It then generates a simulation image based on the operations
     and their limits, saves the image to a specified path, and finally
     creates a simulation object in Blender using the generated image.
-
     Args:
         name (str): The name to be used for the simulation object.
         operations (list): A list of operations to be simulated.
     """
     for o in operations:
-        getOperationSources(o)
-    limits = getBoundsMultiple(
+        get_operation_sources(o)
+    limits = get_bounds_multiple(
         operations
     )  # this is here because some background computed operations still didn't have bounds data
-    i = await generateSimulationImage(operations, limits)
+    i = await generate_simulation_image(operations, limits)
     #    cp = getCachePath(operations[0])[:-len(operations[0].name)] + name
-    cp = getSimulationPath() + name
+    cp = get_simulation_path() + name
+
     print("cp=", cp)
     iname = cp + "_sim.exr"
 
-    numpysave(i, iname)
+    numpy_save(i, iname)
+
     i = bpy.data.images.load(iname)
-    createSimulationObject(name, operations, i)
+
+    create_simulation_object(name, operations, i)
 
 
-async def generateSimulationImage(operations, limits):
+async def generate_simulation_image(operations, limits):
     """Generate a simulation image based on provided operations and limits.
-
     This function creates a 2D simulation image by processing a series of
     operations that define how the simulation should be conducted. It uses
     the limits provided to determine the boundaries of the simulation area.
@@ -187,7 +183,8 @@ async def generateSimulationImage(operations, limits):
 
         totalvolume = 0.0
 
-        cutterArray = getCutterArray(o, simulation_detail)
+        cutterArray = get_cutter_array(o, simulation_detail)
+
         cutterArray = -cutterArray
         lasts = verts[1].co
         perc = -1
@@ -218,7 +215,6 @@ async def generateSimulationImage(operations, limits):
                         pass
 
                     elif v.length > simulation_detail:  # and not :
-
                         v.length = simulation_detail
                         lastxs = xs
                         lastys = ys
@@ -238,7 +234,7 @@ async def generateSimulationImage(operations, limits):
                             z = lasts.z + v.z
                             # print(z)
                             if lastxs != xs or lastys != ys:
-                                volume_partial = simCutterSpot(
+                                volume_partial = sim_cutter_spot(
                                     xs, ys, z, cutterArray, si, o.do_simulation_feedrate
                                 )
                                 if o.do_simulation_feedrate:
@@ -256,7 +252,7 @@ async def generateSimulationImage(operations, limits):
                     ys = int(
                         (s.y - miny) / simulation_detail + borderwidth + simulation_detail / 2
                     )  # -middle
-                    volume_partial = simCutterSpot(
+                    volume_partial = sim_cutter_spot(
                         xs, ys, s.z, cutterArray, si, o.do_simulation_feedrate
                     )
                 if o.do_simulation_feedrate:  # compute volumes and write data into shapekey.
@@ -338,7 +334,7 @@ async def generateSimulationImage(operations, limits):
     return si
 
 
-def simCutterSpot(xs, ys, z, cutterArray, si, getvolume=False):
+def sim_cutter_spot(xs, ys, z, cutterArray, si, getvolume=False):
     """Simulates a cutter cutting into stock and optionally returns the volume
     removed.
 
