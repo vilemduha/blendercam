@@ -4,7 +4,6 @@ units = 1.0
 
 
 class Redirector(nc.Creator):
-
     def __init__(self, original):
         nc.Creator.__init__(self)
 
@@ -40,7 +39,7 @@ class Redirector(nc.Creator):
     def set_fixture(self, fixture):
         self.original.set_fixture(fixture)
 
-    def program_begin(self, id, name=''):
+    def program_begin(self, id, name=""):
         self.cut_path()
         self.original.program_begin(id, name)
 
@@ -120,7 +119,7 @@ class Redirector(nc.Creator):
         self.cut_path()
         self.original.tool_change(id)
 
-    def tool_defn(self, id, name='', params=None):
+    def tool_defn(self, id, name="", params=None):
         self.cut_path()
         self.original.tool_defn(id, name, params)
 
@@ -206,7 +205,7 @@ class Redirector(nc.Creator):
         if px == self.x and py == self.y:
             # z move only
             self.cut_path()
-            self.original.feed(self.x/units, self.y/units, self.z2(self.z)/units)
+            self.original.feed(self.x / units, self.y / units, self.z2(self.z) / units)
             return
 
     def arc(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None, ccw=True):
@@ -272,27 +271,122 @@ class Redirector(nc.Creator):
         self.cut_path()
         self.original.profile()
 
-    def circular_pocket(self, x=None, y=None, ToolDiameter=None, HoleDiameter=None, ClearanceHeight=None, StartHeight=None, MaterialTop=None, FeedRate=None, SpindleRPM=None, HoleDepth=None, DepthOfCut=None, StepOver=None):
+    def circular_pocket(
+        self,
+        x=None,
+        y=None,
+        ToolDiameter=None,
+        HoleDiameter=None,
+        ClearanceHeight=None,
+        StartHeight=None,
+        MaterialTop=None,
+        FeedRate=None,
+        SpindleRPM=None,
+        HoleDepth=None,
+        DepthOfCut=None,
+        StepOver=None,
+    ):
         self.cut_path()
-        self.circular_pocket(x, y, ToolDiameter, HoleDiameter, ClearanceHeight, StartHeight,
-                             MaterialTop, FeedRate, SpindleRPM, HoleDepth, DepthOfCut, StepOver)
+        self.circular_pocket(
+            x,
+            y,
+            ToolDiameter,
+            HoleDiameter,
+            ClearanceHeight,
+            StartHeight,
+            MaterialTop,
+            FeedRate,
+            SpindleRPM,
+            HoleDepth,
+            DepthOfCut,
+            StepOver,
+        )
 
-    def drill(self, x=None, y=None, dwell=None, depthparams=None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
+    def drill(
+        self,
+        x=None,
+        y=None,
+        dwell=None,
+        depthparams=None,
+        retract_mode=None,
+        spindle_mode=None,
+        internal_coolant_on=None,
+        rapid_to_clearance=None,
+    ):
         self.cut_path()
-        self.original.drill(x, y, dwell, depthparams, spindle_mode,
-                            internal_coolant_on, rapid_to_clearance)
+        self.original.drill(
+            x, y, dwell, depthparams, spindle_mode, internal_coolant_on, rapid_to_clearance
+        )
 
     # argument list adapted for compatibility with Tapping module
     # wild guess - I'm unsure about the purpose of this file and wether this works -haberlerm
-    def tap(self, x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, pitch=None, stoppos=None, spin_in=None, spin_out=None, tap_mode=None, direction=None):
+    def tap(
+        self,
+        x=None,
+        y=None,
+        z=None,
+        zretract=None,
+        depth=None,
+        standoff=None,
+        dwell_bottom=None,
+        pitch=None,
+        stoppos=None,
+        spin_in=None,
+        spin_out=None,
+        tap_mode=None,
+        direction=None,
+    ):
         self.cut_path()
-        self.original.tap(x, y, self.z2(z), self.z2(zretract), depth, standoff,
-                          dwell_bottom, pitch, stoppos, spin_in, spin_out, tap_mode, direction)
+        self.original.tap(
+            x,
+            y,
+            self.z2(z),
+            self.z2(zretract),
+            depth,
+            standoff,
+            dwell_bottom,
+            pitch,
+            stoppos,
+            spin_in,
+            spin_out,
+            tap_mode,
+            direction,
+        )
 
-    def bore(self, x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, feed_in=None, feed_out=None, stoppos=None, shift_back=None, shift_right=None, backbore=False, stop=False):
+    def bore(
+        self,
+        x=None,
+        y=None,
+        z=None,
+        zretract=None,
+        depth=None,
+        standoff=None,
+        dwell_bottom=None,
+        feed_in=None,
+        feed_out=None,
+        stoppos=None,
+        shift_back=None,
+        shift_right=None,
+        backbore=False,
+        stop=False,
+    ):
         self.cut_path()
-        self.original.bore(x, y, self.z2(z), self.z2(zretract), depth, standoff, dwell_Bottom,
-                           feed_in, feed_out, stoppos, shift_back, shift_right, backbore, stop)
+        self.original.bore(
+            x,
+            y,
+            self.z2(z),
+            self.z2(zretract),
+            depth,
+            standoff,
+            dwell_Bottom,
+            feed_in,
+            feed_out,
+            stoppos,
+            shift_back,
+            shift_right,
+            backbore,
+            stop,
+        )
 
     def end_canned_cycle(self):
         self.original.end_canned_cycle()

@@ -4,7 +4,6 @@ import math
 
 
 class Parser(num_reader.NumReader):
-
     def __init__(self, writer):
         num_reader.NumReader.__init__(self, writer)
         self.x = 0
@@ -34,15 +33,18 @@ class Parser(num_reader.NumReader):
                         color = "feed"
                     self.add_word(color)
                     self.begin_path(color)
-                    self.add_line(int(x) * self.units_to_mm, int(y) *
-                                  self.units_to_mm, int(z) * self.units_to_mm)
+                    self.add_line(
+                        int(x) * self.units_to_mm,
+                        int(y) * self.units_to_mm,
+                        int(z) * self.units_to_mm,
+                    )
                     self.end_path()
                     self.x = int(x)
                     self.y = int(y)
                     self.z = int(z)
 
     def ParseFromFirstLetter(self, c):
-        if c == 'Z':
+        if c == "Z":
             self.ParseZ()
-        elif c == 'V':
+        elif c == "V":
             self.ParseV()

@@ -28,7 +28,6 @@ from ..constants import PRECISION
 
 
 class CAM_OPTIMISATION_Properties(PropertyGroup):
-
     optimize: BoolProperty(
         name="Reduce Path Points",
         description="Reduce path points",

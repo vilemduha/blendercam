@@ -42,7 +42,6 @@ def chunks_refine(chunks, o):
         v2 = Vector(ch.points[0])
         # print(ch.points)
         for s in ch.points:
-
             v1 = Vector(s)
             v = v1 - v2
 
@@ -74,7 +73,6 @@ def chunks_refine_threshold(chunks, distance, limitdistance):
         v2 = Vector(ch.points[0])
 
         for s in ch.points:
-
             v1 = Vector(s)
             v = v1 - v2
 
@@ -84,7 +82,6 @@ def chunks_refine_threshold(chunks, distance, limitdistance):
                 i = 1
                 vref = Vector((0, 0, 0))
                 while vref.length < d / 2:
-
                     vref = v * distance * i
                     if vref.length < d:
                         p = v2 + vref
@@ -202,7 +199,6 @@ def chunks_to_shapely(chunks):
     for ch in chunks:  # now make only simple polygons with holes, not more polys inside others
         found = False
         if len(ch.parents) % 2 == 1:
-
             for parent in ch.parents:
                 if len(parent.parents) + 1 == len(ch.parents):
                     # nparents serves as temporary storage for parents,
@@ -218,13 +214,11 @@ def chunks_to_shapely(chunks):
         ch.parents = ch.nparents
         ch.nparents = None
         if len(ch.parents) > 0:
-
             try:
                 ch.parents[0].poly = ch.parents[0].poly.difference(
                     ch.poly
                 )  # sgeometry.Polygon( ch.parents[0].poly, ch.poly)
             except:
-
                 print("chunksToShapely oops!")
 
                 lastPt = None
@@ -263,7 +257,6 @@ def chunks_to_shapely(chunks):
                 try:
                     ch.parents[0].poly = ch.parents[0].poly.difference(ch.poly)
                 except:
-
                     # print('chunksToShapely double oops!')
 
                     lastPt = None

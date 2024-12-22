@@ -3,44 +3,44 @@ import tempfile
 
 class HxmlWriter:
     def __init__(self):
-        self.file_out = open(tempfile.gettempdir()+'/backplot.xml', 'w')
+        self.file_out = open(tempfile.gettempdir() + "/backplot.xml", "w")
         self.file_out.write('<?xml version="1.0" ?>\n')
-        self.file_out.write('<nccode>\n')
+        self.file_out.write("<nccode>\n")
 
     def __del__(self):
-        self.file_out.write('</nccode>\n')
+        self.file_out.write("</nccode>\n")
         self.file_out.close()
 
     def write(self, s):
         self.file_out.write(s)
 
-############################################
+    ############################################
 
     def begin_ncblock(self):
-        self.file_out.write('\t<ncblock>\n')
+        self.file_out.write("\t<ncblock>\n")
 
     def end_ncblock(self):
-        self.file_out.write('\t</ncblock>\n')
+        self.file_out.write("\t</ncblock>\n")
 
     def add_text(self, s, col, cdata):
-        s.replace('&', '&amp;')
-        s.replace('"', '&quot;')
-        s.replace('<', '&lt;')
-        s.replace('>', '&gt;')
-        if (cdata):
-            (cd1, cd2) = ('<![CDATA[', ']]>')
+        s.replace("&", "&amp;")
+        s.replace('"', "&quot;")
+        s.replace("<", "&lt;")
+        s.replace(">", "&gt;")
+        if cdata:
+            (cd1, cd2) = ("<![CDATA[", "]]>")
         else:
-            (cd1, cd2) = ('', '')
-        if (col != None):
-            self.file_out.write('\t\t<text col="'+col+'">'+cd1+s+cd2+'</text>\n')
+            (cd1, cd2) = ("", "")
+        if col != None:
+            self.file_out.write('\t\t<text col="' + col + '">' + cd1 + s + cd2 + "</text>\n")
         else:
-            self.file_out.write('\t\t<text>'+cd1+s+cd2+'</text>\n')
+            self.file_out.write("\t\t<text>" + cd1 + s + cd2 + "</text>\n")
 
     def set_mode(self, units):
-        self.file_out.write('\t\t<mode')
-        if (units != None):
-            self.file_out.write(' units="'+str(units)+'"')
-        self.file_out.write(' />\n')
+        self.file_out.write("\t\t<mode")
+        if units != None:
+            self.file_out.write(' units="' + str(units) + '"')
+        self.file_out.write(" />\n")
 
     def metric(self):
         self.set_mode(units=1.0)
@@ -49,13 +49,13 @@ class HxmlWriter:
         self.set_mode(units=25.4)
 
     def begin_path(self, col):
-        if (col != None):
-            self.file_out.write('\t\t<path col="'+col+'">\n')
+        if col != None:
+            self.file_out.write('\t\t<path col="' + col + '">\n')
         else:
-            self.file_out.write('\t\t<path>\n')
+            self.file_out.write("\t\t<path>\n")
 
     def end_path(self):
-        self.file_out.write('\t\t</path>\n')
+        self.file_out.write("\t\t</path>\n")
 
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None, machine_coordinates=None):
         self.begin_path("rapid")
@@ -78,10 +78,10 @@ class HxmlWriter:
         self.end_path()
 
     def tool_change(self, id):
-        self.file_out.write('\t\t<tool')
-        if (id != None):
-            self.file_out.write(' number="'+str(id)+'"')
-            self.file_out.write(' />\n')
+        self.file_out.write("\t\t<tool")
+        if id != None:
+            self.file_out.write(' number="' + str(id) + '"')
+            self.file_out.write(" />\n")
 
     def spindle(self, s, clockwise):
         pass
@@ -90,20 +90,20 @@ class HxmlWriter:
         pass
 
     def add_line(self, x, y, z, a=None, b=None, c=None):
-        self.file_out.write('\t\t\t<line')
-        if (x != None):
+        self.file_out.write("\t\t\t<line")
+        if x != None:
             self.file_out.write(' x="%.6f"' % x)
-        if (y != None):
+        if y != None:
             self.file_out.write(' y="%.6f"' % y)
-        if (z != None):
+        if z != None:
             self.file_out.write(' z="%.6f"' % z)
-        if (a != None):
+        if a != None:
             self.file_out.write(' a="%.6f"' % a)
-        if (b != None):
+        if b != None:
             self.file_out.write(' b="%.6f"' % b)
-        if (c != None):
+        if c != None:
             self.file_out.write(' c="%.6f"' % c)
-        self.file_out.write(' />\n')
+        self.file_out.write(" />\n")
         if x != None:
             self.oldx = x
         if y != None:
@@ -112,24 +112,24 @@ class HxmlWriter:
             self.oldz = z
 
     def add_arc(self, x, y, z, i, j, k, r=None, d=None):
-        self.file_out.write('\t\t\t<arc')
-        if (x != None):
+        self.file_out.write("\t\t\t<arc")
+        if x != None:
             self.file_out.write(' x="%.6f"' % x)
-        if (y != None):
+        if y != None:
             self.file_out.write(' y="%.6f"' % y)
-        if (z != None):
+        if z != None:
             self.file_out.write(' z="%.6f"' % z)
-        if (i != None):
+        if i != None:
             self.file_out.write(' i="%.6f"' % (i - self.oldx))
-        if (j != None):
+        if j != None:
             self.file_out.write(' j="%.6f"' % (j - self.oldy))
-        if (k != None):
+        if k != None:
             self.file_out.write(' k="%.6f"' % (k - self.oldz))
-        if (r != None):
+        if r != None:
             self.file_out.write(' r="%.6f"' % r)
-        if (d != None):
+        if d != None:
             self.file_out.write(' d="%i"' % d)
-        self.file_out.write(' />\n')
+        self.file_out.write(" />\n")
         if x != None:
             self.oldx = x
         if y != None:

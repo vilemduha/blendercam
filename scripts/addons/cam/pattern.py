@@ -110,7 +110,6 @@ def get_path_pattern_parallel(o, angle):
             reverse = not reverse
         # print (chunk.points)
     else:  # alternative algorithm with numpy, didn't work as should so blocked now...
-
         v = Vector((0, 1, 0))
         v.rotate(e)
         e1 = Euler((0, 0, -pi / 2))
@@ -195,12 +194,10 @@ def get_path_pattern(operation):
     if o.strategy == "PARALLEL":
         pathchunks = get_path_pattern_parallel(o, o.parallel_angle)
     elif o.strategy == "CROSS":
-
         pathchunks.extend(get_path_pattern_parallel(o, o.parallel_angle))
         pathchunks.extend(get_path_pattern_parallel(o, o.parallel_angle - pi / 2.0))
 
     elif o.strategy == "BLOCK":
-
         pathd = o.distance_between_paths
         pathstep = o.distance_along_paths
         maxxp = maxx
@@ -214,7 +211,6 @@ def get_path_pattern(operation):
         chunk = CamPathChunkBuilder([])
         i = 0
         while maxxp - minxp > 0 and maxyp - minyp > 0:
-
             y = minyp
             for a in range(ceil(minxp / pathstep), ceil(maxxp / pathstep), 1):
                 x = a * pathstep
@@ -306,7 +302,6 @@ def get_path_pattern(operation):
                 #     chunk.points[si] = (o.max.x + o.min.x - s[0], s[1], s[2])
 
     elif o.strategy == "CIRCLES":
-
         pathd = o.distance_between_paths
         pathstep = o.distance_along_paths
         midx = (o.max.x + o.min.x) / 2
@@ -370,7 +365,6 @@ def get_path_pattern(operation):
                 chunk.reverse()
     # pathchunks=sort_chunks(pathchunks,o)not until they get hierarchy parents!
     elif o.strategy == "OUTLINEFILL":
-
         polys = o.silhouette.geoms
         pathchunks = []
         chunks = []
@@ -392,7 +386,6 @@ def get_path_pattern(operation):
             while not p.is_empty:
                 p = p.buffer(-o.distance_between_paths, o.optimisation.circle_detail)
                 if not p.is_empty:
-
                     nchunks = shapely_to_chunks(p, zlevel)
 
                     if o.movement.insideout == "INSIDEOUT":
@@ -507,7 +500,6 @@ def get_path_pattern_4_axis(operation):
     cutterend = Vector((0, 0, 0))  # end point for casting
 
     if o.strategy_4_axis == "PARALLELR":
-
         for a in range(0, floor(steps) + 1):
             chunk = CamPathChunkBuilder([])
 
@@ -593,7 +585,6 @@ def get_path_pattern_4_axis(operation):
         chunk = CamPathChunkBuilder([])  # only one chunk, init here
 
         for a in range(0, floor(steps) + 1):
-
             cutterstart[a1] = o.min[a1] + a * o.distance_between_paths
             cutterend[a1] = cutterstart[a1]
             cutterstart[a2] = 0

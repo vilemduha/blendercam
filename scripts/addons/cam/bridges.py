@@ -108,7 +108,6 @@ def add_auto_bridges(o):
     g = bpy.data.collections[bridgecollectionname]
     o.bridges_collection_name = bridgecollectionname
     for ob in o.objects:
-
         if ob.type == "CURVE" or ob.type == "TEXT":
             curve = curve_to_shapely(ob)
         if ob.type == "MESH":
@@ -207,7 +206,6 @@ def use_bridges(ch, o):
     else:
         bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
-
         # get bridgepoly
         get_bridges_poly(o)
 

@@ -179,7 +179,6 @@ async def cutout(o):
         print("Separate")
         chunksFromCurve = []
         for ob in o.objects:
-
             chunksFromCurve.extend(curve_to_chunks(ob, o.use_modifiers))
 
     else:
@@ -195,7 +194,6 @@ async def cutout(o):
             p = get_object_outline(c_offset, o, offset)
             if o.outlines_count > 1:
                 for i in range(1, o.outlines_count):
-
                     chunksFromCurve.extend(shapely_to_chunks(p, -1))
 
                     path_distance = o.distance_between_paths
@@ -216,7 +214,6 @@ async def cutout(o):
     chunksFromCurve = limit_chunks(chunksFromCurve, o)
 
     if not o.dont_merge:
-
         parent_child_poly(chunksFromCurve, chunksFromCurve, o)
 
     if o.outlines_count == 1:
@@ -273,7 +270,6 @@ async def cutout(o):
             chunk = chl[0]
             layer = chl[1]
             if layer[1] < bridgeheight:
-
                 use_bridges(chunk, o)
 
     if o.profile_start > 0:
@@ -579,7 +575,6 @@ async def pocket(o):
                 mitre_limit=2,
             )
             if pnew.is_empty:
-
                 # test if the last curve will leave material
                 pt = p.buffer(
                     -c_offset, o.optimisation.circle_detail, join_style=join, mitre_limit=2
@@ -615,7 +610,6 @@ async def pocket(o):
     layers = get_layers(o, o.max_z, check_min_z(o))
 
     for l in layers:
-
         lchunks = set_chunks_z(chunksFromCurve, l[1])
 
         if o.movement.ramp:
@@ -674,7 +668,6 @@ async def pocket(o):
                 # print(chunksFromCurve[chi])
                 # print(chunksFromCurve[chi].parents)
                 if chunksFromCurve[chi].parents == [] or len(chunksFromCurve[chi].parents) == 1:
-
                     revolutions = 0.25
                     v1 = Vector(ch.get_point(-1))
                     i = -2
@@ -815,12 +808,10 @@ async def drill(o):
         l = ob.location
 
         if ob.type == "CURVE":
-
             for c in ob.data.splines:
                 maxx, minx, maxy, miny, maxz, minz = -10000, 10000, -10000, 10000, -10000, 10000
                 for p in c.points:
                     if o.drill_type == "ALL_POINTS":
-
                         chunks.append(CamPathChunk([(p.co.x + l.x, p.co.y + l.y, p.co.z + l.z)]))
 
                     minx = min(p.co.x, minx)
@@ -831,7 +822,6 @@ async def drill(o):
                     maxz = max(p.co.z, maxz)
                 for p in c.bezier_points:
                     if o.drill_type == "ALL_POINTS":
-
                         chunks.append(CamPathChunk([(p.co.x + l.x, p.co.y + l.y, p.co.z + l.z)]))
 
                     minx = min(p.co.x, minx)
@@ -849,12 +839,10 @@ async def drill(o):
                 if (
                     1.3 > aspect > 0.7 and o.drill_type == "MIDDLE_SYMETRIC"
                 ) or o.drill_type == "MIDDLE_ALL":
-
                     chunks.append(CamPathChunk([(center[0] + l.x, center[1] + l.y, cz + l.z)]))
 
         elif ob.type == "MESH":
             for v in ob.data.vertices:
-
                 chunks.append(CamPathChunk([(v.co.x + l.x, v.co.y + l.y, v.co.z + l.z)]))
 
         delete_object(ob)  # delete temporary object with applied transforms
@@ -1085,7 +1073,6 @@ async def medial_axis(o):
 
         # generate a mesh from the medial calculations
         if o.add_mesh_for_medial:
-
             shapely_to_curve("medialMesh", lines, 0.0)
 
             bpy.ops.object.convert(target="MESH")
@@ -1105,9 +1092,7 @@ async def medial_axis(o):
 
     for layer in layers:
         for chunk in chunks:
-
             if chunk.is_below_z(layer[0]):
-
                 newchunk = chunk.copy()
                 newchunk.clamp_z(layer[1])
                 chunklayers.append(newchunk)
@@ -1236,7 +1221,6 @@ def chunks_to_mesh(chunks, o):
     lifted = True
 
     for chi in range(0, len(chunks)):
-
         ch = chunks[chi]
         # print(chunks)
         # print (ch)
@@ -1245,7 +1229,6 @@ def chunks_to_mesh(chunks, o):
             # print(len(ch.points))
             nverts = []
             if o.optimisation.optimize:
-
                 ch = optimize_chunk(ch, o)
 
             # lift and drop
@@ -1304,7 +1287,6 @@ def chunks_to_mesh(chunks, o):
             lifted = lift
     # print(verts_rotations)
     if o.optimisation.use_exact and not o.optimisation.use_opencamlib:
-
         cleanup_bullet_collision(o)
 
     print(time.time() - t)

@@ -6,17 +6,27 @@ class Creator(iso.Creator):
     def __init__(self):
         iso.Creator.__init__(self)
 
-    def SPACE_STR(self): return(' ')
+    def SPACE_STR(self):
+        return " "
 
-    def COMMENT(self, comment): return('')
+    def COMMENT(self, comment):
+        return ""
 
-    def PROGRAM(self): return(None)
+    def PROGRAM(self):
+        return None
 
-    def FORMAT_DWELL(self): return(self.SPACE() + self.DWELL() + ' X%f')
-    def SPINDLE_OFF(self): return('M05\n')
+    def FORMAT_DWELL(self):
+        return self.SPACE() + self.DWELL() + " X%f"
+
+    def SPINDLE_OFF(self):
+        return "M05\n"
+
     # optimize
-    def RAPID(self): return('G00')
-    def FEED(self): return('G01')
+    def RAPID(self):
+        return "G00"
+
+    def FEED(self):
+        return "G01"
 
     # def IMPERIAL(self): return('G20\n')
     # def METRIC(self): return('G21\n')
@@ -46,7 +56,8 @@ class Creator(iso.Creator):
         # self.flush_nc()
         # self.t = id
 
-    def PROGRAM_END(self): return(self.SPACE() + self.SPINDLE_OFF() + self.SPACE() + 'M30')
+    def PROGRAM_END(self):
+        return self.SPACE() + self.SPINDLE_OFF() + self.SPACE() + "M30"
 
 
 nc.creator = Creator()

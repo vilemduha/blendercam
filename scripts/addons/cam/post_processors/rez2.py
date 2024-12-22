@@ -14,7 +14,6 @@ import circular_pocket as circular
 
 
 class Creator(nc.Creator):
-
     def __init__(self):
         nc.Creator.__init__(self)
 

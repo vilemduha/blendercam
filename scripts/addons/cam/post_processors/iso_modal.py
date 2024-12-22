@@ -13,12 +13,13 @@ import math
 
 
 class Creator(iso.Creator):
-
     def __init__(self):
         iso.Creator.__init__(self)
         self.f_modal = True
         self.g0123_modal = True
         self.drill_modal = True
+
+
 ################################################################################
 
 

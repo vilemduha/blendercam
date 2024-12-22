@@ -42,7 +42,6 @@ def shapely_remove_doubles(p, optimize_threshold):
 
     soptions = ["distance", "distance", 0.0, 5, optimize_threshold, 5, optimize_threshold]
     for ci, c in enumerate(p.boundary):  # in range(0,len(p)):
-
         veclist = []
         for v in c:
             veclist.append(Vector((v[0], v[1])))

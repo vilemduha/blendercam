@@ -6,25 +6,37 @@ import math
 
 
 class NumReader(nc.Parser):
-
     def __init__(self):
         nc.Parser.__init__(self)
 
     def get_number(self):
-        number = ''
+        number = ""
 
         # skip spaces and commas at start of number
-        while(self.line_index < self.line_length):
+        while self.line_index < self.line_length:
             c = self.line[self.line_index]
-            if c == ' ' or c == ',':
+            if c == " " or c == ",":
                 self.parse_word += c
             else:
                 break
             self.line_index = self.line_index + 1
 
-        while(self.line_index < self.line_length):
+        while self.line_index < self.line_length:
             c = self.line[self.line_index]
-            if c == '.' or c == '0' or c == '1' or c == '2' or c == '3' or c == '4' or c == '5' or c == '6' or c == '7' or c == '8' or c == '9' or c == '-':
+            if (
+                c == "."
+                or c == "0"
+                or c == "1"
+                or c == "2"
+                or c == "3"
+                or c == "4"
+                or c == "5"
+                or c == "6"
+                or c == "7"
+                or c == "8"
+                or c == "9"
+                or c == "-"
+            ):
                 number += c
             else:
                 break

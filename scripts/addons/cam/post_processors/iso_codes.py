@@ -1,4 +1,4 @@
-class Codes():
+class Codes:
     pass
 
 

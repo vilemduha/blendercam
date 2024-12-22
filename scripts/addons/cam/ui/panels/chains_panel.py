@@ -13,7 +13,6 @@ class CAM_UL_operations(UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
         operation = item
         if self.layout_type in {"DEFAULT", "COMPACT"}:
-
             layout.label(text=item.name, translate=False, icon_value=icon)
             icon = "LOCKED" if operation.computing else "UNLOCKED"
             if operation.computing:
@@ -27,7 +26,6 @@ class CAM_UL_chains(UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
         chain = item
         if self.layout_type in {"DEFAULT", "COMPACT"}:
-
             layout.label(text=item.name, translate=False, icon_value=icon)
             icon = "LOCKED" if chain.computing else "UNLOCKED"
             if chain.computing:

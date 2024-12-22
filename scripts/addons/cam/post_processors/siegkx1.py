@@ -14,7 +14,6 @@ import math
 
 
 class Creator(iso_modal.Creator):
-
     def __init__(self):
         iso_modal.Creator.__init__(self)
         self.output_tool_definitions = False

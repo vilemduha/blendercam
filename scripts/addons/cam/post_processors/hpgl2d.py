@@ -21,29 +21,29 @@ class Creator(nc.Creator):
     def metric(self):
         self.units_to_mc_units = 100  # multiplier from mm to machine units
 
-    def program_begin(self, id, name=''):
-        self.write('IN;\n')
-        self.write('VS32,1;\n')
-        self.write('VS32,2;\n')
-        self.write('VS32,3;\n')
-        self.write('VS32,4;\n')
-        self.write('VS32,5;\n')
-        self.write('VS32,6;\n')
-        self.write('VS32,7;\n')
-        self.write('VS32,8;\n')
-        self.write('WU0;\n')
-        self.write('PW0.349,1;\n')
-        self.write('PW0.349,2;\n')
-        self.write('PW0.349,3;\n')
-        self.write('PW0.349,4;\n')
-        self.write('PW0.349,5;\n')
-        self.write('PW0.349,6;\n')
-        self.write('PW0.349,7;\n')
-        self.write('PW0.349,8;\n')
-        self.write('SP1;\n')
+    def program_begin(self, id, name=""):
+        self.write("IN;\n")
+        self.write("VS32,1;\n")
+        self.write("VS32,2;\n")
+        self.write("VS32,3;\n")
+        self.write("VS32,4;\n")
+        self.write("VS32,5;\n")
+        self.write("VS32,6;\n")
+        self.write("VS32,7;\n")
+        self.write("VS32,8;\n")
+        self.write("WU0;\n")
+        self.write("PW0.349,1;\n")
+        self.write("PW0.349,2;\n")
+        self.write("PW0.349,3;\n")
+        self.write("PW0.349,4;\n")
+        self.write("PW0.349,5;\n")
+        self.write("PW0.349,6;\n")
+        self.write("PW0.349,7;\n")
+        self.write("PW0.349,8;\n")
+        self.write("SP1;\n")
 
     def program_end(self):
-        self.write('SP0;\n')
+        self.write("SP0;\n")
 
     def closest_int(self, f):
         if math.fabs(f) < 0.3:
@@ -66,7 +66,7 @@ class Creator(nc.Creator):
         # ignore the z, any rapid will be assumed to be done with the pen up
         mx, my = self.get_machine_x_y(x, y)
         if mx != self.x or my != self.y:
-            self.write(('PU%i' % mx) + (' %i;\n' % my))
+            self.write(("PU%i" % mx) + (" %i;\n" % my))
             self.x = mx
             self.y = my
 
@@ -74,7 +74,7 @@ class Creator(nc.Creator):
         # ignore the z, any feed will be assumed to be done with the pen down
         mx, my = self.get_machine_x_y(x, y)
         if mx != self.x or my != self.y:
-            self.write(('PD%i' % mx) + (' %i;\n' % my))
+            self.write(("PD%i" % mx) + (" %i;\n" % my))
             self.x = mx
             self.y = my
 
@@ -102,7 +102,7 @@ class Creator(nc.Creator):
 
             mcx, mcy = self.get_machine_x_y(cx, cy)
 
-            self.write(('AA%i' % mcx) + (',%i' % mcy) + (',%d;\n' % (a * 180 / math.pi)))
+            self.write(("AA%i" % mcx) + (",%i" % mcy) + (",%d;\n" % (a * 180 / math.pi)))
 
     def arc_cw(self, x=None, y=None, z=None, i=None, j=None, k=None, r=None):
         self.arc(True, x, y, z, i, j, k, r)

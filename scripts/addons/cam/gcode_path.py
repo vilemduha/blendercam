@@ -263,7 +263,6 @@ def export_gcode_path(filename, vertslist, operations):
     last = Vector((0, 0, 0))
     cut_distance = 0
     for i, o in enumerate(operations):
-
         if o.output_header:
             lines = o.gcode_header.split(";")
             for aline in lines:
@@ -431,7 +430,6 @@ def export_gcode_path(filename, vertslist, operations):
                 if r.x == lastrot.x:
                     ra = None
                 else:
-
                     ra = r.x * rotcorr
 
                 if r.y == lastrot.y:
@@ -483,7 +481,6 @@ def export_gcode_path(filename, vertslist, operations):
                     else:
                         c.feed(x=vx, y=vy, z=vz)
                 else:
-
                     c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
 
             elif v.z >= free_height or vi == 0:  # v.z==last.z==free_height or vi==0
@@ -515,7 +512,6 @@ def export_gcode_path(filename, vertslist, operations):
                     c.rapid(x=vx, y=vy, z=vz, a=ra, b=rb)
 
             else:
-
                 if f != millfeedrate or (fadjust and fadjustval != 1):
                     f = millfeedrate * fadjustval
                     c.feedrate(f)
@@ -793,7 +789,6 @@ async def get_path_3_axis(context, operation):
         "PENCIL",
         "CRAZY",
     ]:
-
         if o.strategy == "CARVE":
             pathSamples = []
             ob = bpy.data.objects[o.curve_source]

@@ -24,7 +24,6 @@ ncFLOOD = 2
 
 
 class Creator:
-
     def __init__(self):
         pass
 
@@ -33,7 +32,7 @@ class Creator:
 
     def file_open(self, name):
         # self.buffer=[]
-        self.file = open(name, 'w')
+        self.file = open(name, "w")
         self.filename = name
 
     def file_close(self):
@@ -45,16 +44,17 @@ class Creator:
         self.file.write(s)
         # self.buffer.append(s)
         # if len(self.buffer)>100000:
-        #	self.file.write(''.join(self.buffer))
-        #	self.buffer=[]
+        # 	self.file.write(''.join(self.buffer))
+        # 	self.buffer=[]
 
     def writem(self, a):
-        self.file.write(''.join(a))
+        self.file.write("".join(a))
         # self.buffer.extend(a)
+
     ############################################################################
     # Programs
 
-    def program_begin(self, id, name=''):
+    def program_begin(self, id, name=""):
         """Begin a program"""
         pass
 
@@ -76,7 +76,7 @@ class Creator:
     ############################################################################
     # Subprograms
 
-    def sub_begin(self, id, name=''):
+    def sub_begin(self, id, name=""):
         """Begin a subprogram"""
         pass
 
@@ -130,7 +130,7 @@ class Creator:
         """Change the tool"""
         pass
 
-    def tool_defn(self, id, name='', params=None):
+    def tool_defn(self, id, name="", params=None):
         """Define a tool"""
         pass
 
@@ -169,7 +169,9 @@ class Creator:
     # These definitions were created while looking at Irvin Kraal's book on APT
     # - Numerical Control Progamming in APT - page 211
 
-    def matrix(self, a1=None, b1=None, c1=None, a2=None, b2=None, c2=None, a3=None, b3=None, c3=None):
+    def matrix(
+        self, a1=None, b1=None, c1=None, a2=None, b2=None, c2=None, a3=None, b3=None, c3=None
+    ):
         """Create a matrix for transformations"""
         pass
 
@@ -277,7 +279,17 @@ class Creator:
         """Profile routine"""
         pass
 
-    def drill(self, x=None, y=None, dwell=None, depthparams=None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
+    def drill(
+        self,
+        x=None,
+        y=None,
+        dwell=None,
+        depthparams=None,
+        retract_mode=None,
+        spindle_mode=None,
+        internal_coolant_on=None,
+        rapid_to_clearance=None,
+    ):
         """Drilling routines"""
         pass
 
@@ -288,11 +300,42 @@ class Creator:
     # tap(x=10, y=10, z=0, tap_mode=0, depth=12.7, standoff=6.35, direction=0, pitch=1.25)
     # just add tap_mode & direction parameters
 
-    def tap(self, x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, pitch=None, stoppos=None, spin_in=None, spin_out=None, tap_mode=None, direction=None):
+    def tap(
+        self,
+        x=None,
+        y=None,
+        z=None,
+        zretract=None,
+        depth=None,
+        standoff=None,
+        dwell_bottom=None,
+        pitch=None,
+        stoppos=None,
+        spin_in=None,
+        spin_out=None,
+        tap_mode=None,
+        direction=None,
+    ):
         """Tapping routines"""
         pass
 
-    def bore(self, x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, feed_in=None, feed_out=None, stoppos=None, shift_back=None, shift_right=None, backbore=False, stop=False):
+    def bore(
+        self,
+        x=None,
+        y=None,
+        z=None,
+        zretract=None,
+        depth=None,
+        standoff=None,
+        dwell_bottom=None,
+        feed_in=None,
+        feed_out=None,
+        stoppos=None,
+        shift_back=None,
+        shift_right=None,
+        backbore=False,
+        stop=False,
+    ):
         """Boring routines"""
         pass
 
@@ -325,13 +368,47 @@ class Creator:
     def probe_linear_centre_outside(self, x1=None, y1=None, depth=None, x2=None, y2=None):
         pass
 
-    def probe_single_point(self, point_along_edge_x=None, point_along_edge_y=None, depth=None, retracted_point_x=None, retracted_point_y=None, destination_point_x=None, destination_point_y=None, intersection_variable_x=None, intersection_variable_y=None, probe_offset_x_component=None, probe_offset_y_component=None):
+    def probe_single_point(
+        self,
+        point_along_edge_x=None,
+        point_along_edge_y=None,
+        depth=None,
+        retracted_point_x=None,
+        retracted_point_y=None,
+        destination_point_x=None,
+        destination_point_y=None,
+        intersection_variable_x=None,
+        intersection_variable_y=None,
+        probe_offset_x_component=None,
+        probe_offset_y_component=None,
+    ):
         pass
 
     def probe_downward_point(self, x=None, y=None, depth=None, intersection_variable_z=None):
         pass
 
-    def report_probe_results(self, x1=None, y1=None, z1=None, x2=None, y2=None, z2=None, x3=None, y3=None, z3=None, x4=None, y4=None, z4=None, x5=None, y5=None, z5=None, x6=None, y6=None, z6=None, xml_file_name=None):
+    def report_probe_results(
+        self,
+        x1=None,
+        y1=None,
+        z1=None,
+        x2=None,
+        y2=None,
+        z2=None,
+        x3=None,
+        y3=None,
+        z3=None,
+        x4=None,
+        y4=None,
+        z4=None,
+        x5=None,
+        y5=None,
+        z5=None,
+        x6=None,
+        y6=None,
+        z6=None,
+        xml_file_name=None,
+    ):
         pass
 
     def open_log_file(self, xml_file_name=None):
@@ -349,10 +426,29 @@ class Creator:
     def rapid_to_midpoint(self, x1=None, y1=None, z1=None, x2=None, y2=None, z2=None):
         pass
 
-    def rapid_to_intersection(self, x1, y1, x2, y2, x3, y3, x4, y4, intersection_x, intersection_y, ua_numerator, ua_denominator, ua, ub_numerator, ub):
+    def rapid_to_intersection(
+        self,
+        x1,
+        y1,
+        x2,
+        y2,
+        x3,
+        y3,
+        x4,
+        y4,
+        intersection_x,
+        intersection_y,
+        ua_numerator,
+        ua_denominator,
+        ua,
+        ub_numerator,
+        ub,
+    ):
         pass
 
-    def rapid_to_rotated_coordinate(self, x1, y1, x2, y2, ref_x, ref_y, x_current, y_current, x_final, y_final):
+    def rapid_to_rotated_coordinate(
+        self, x1, y1, x2, y2, ref_x, ref_y, x_current, y_current, x_final, y_final
+    ):
         pass
 
     def set_path_control_mode(self, mode, motion_blending_tolerance, naive_cam_tolerance):
@@ -407,6 +503,7 @@ class Creator:
     def add_text(self, s, col, cdata):
         pass
 
+
 ################################################################################
 
 
@@ -423,11 +520,12 @@ def write(s):
 def output(filename):
     creator.file_open(filename)
 
+
 ############################################################################
 # Programs
 
 
-def program_begin(id, name=''):
+def program_begin(id, name=""):
     creator.program_begin(id, name)
 
 
@@ -446,11 +544,12 @@ def program_end():
 def flush_nc():
     creator.flush_nc()
 
+
 ############################################################################
 # Subprograms
 
 
-def sub_begin(id, name=''):
+def sub_begin(id, name=""):
     creator.sub_begin(id, name)
 
 
@@ -460,6 +559,7 @@ def sub_call(id):
 
 def sub_end():
     creator.sub_end()
+
 
 ############################################################################
 # Settings
@@ -496,6 +596,7 @@ def set_temporary_origin(x=None, y=None, z=None, a=None, b=None, c=None):
 def remove_temporary_origin():
     creator.remove_temporary_origin()
 
+
 ############################################################################
 # Tools
 
@@ -504,7 +605,7 @@ def tool_change(id):
     creator.tool_change(id)
 
 
-def tool_defn(id, name='', params=None):
+def tool_defn(id, name="", params=None):
     creator.tool_defn(id, name, params)
 
 
@@ -518,6 +619,7 @@ def offset_length(id, length=None):
 
 def current_tool(self):
     return creator.current_tool()
+
 
 ############################################################################
 # Datums
@@ -537,6 +639,7 @@ def workplane(id):
 
 def clearanceplane(z=None):
     creator.clearanceplane(z)
+
 
 ############################################################################
 # APT360 like Transformation Definitions
@@ -575,6 +678,7 @@ def mirror_line(line=None):
 ############################################################################
 ##	Rates + Modes
 
+
 def feedrate(f):
     creator.feedrate(f)
 
@@ -593,6 +697,7 @@ def coolant(mode=0):
 
 def gearrange(gear=0):
     creator.gearrange(gear)
+
 
 ############################################################################
 # Moves
@@ -629,6 +734,7 @@ def rapid_unhome():
 def set_machine_coordinates():
     creator.set_machine_coordinates()
 
+
 ############################################################################
 # Cutter radius compensation
 
@@ -648,6 +754,7 @@ def start_CRC(left=True, radius=0.0):
 def end_CRC():
     creator.end_CRC()
 
+
 ############################################################################
 # Cycles
 
@@ -664,19 +771,92 @@ def profile():
     creator.profile()
 
 
-def drill(x=None, y=None, dwell=None, depthparams=None, retract_mode=None, spindle_mode=None, internal_coolant_on=None, rapid_to_clearance=None):
-    creator.drill(x, y, dwell, depthparams, retract_mode, spindle_mode,
-                  internal_coolant_on, rapid_to_clearance)
+def drill(
+    x=None,
+    y=None,
+    dwell=None,
+    depthparams=None,
+    retract_mode=None,
+    spindle_mode=None,
+    internal_coolant_on=None,
+    rapid_to_clearance=None,
+):
+    creator.drill(
+        x,
+        y,
+        dwell,
+        depthparams,
+        retract_mode,
+        spindle_mode,
+        internal_coolant_on,
+        rapid_to_clearance,
+    )
 
 
-def tap(x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, pitch=None, stoppos=None, spin_in=None, spin_out=None, tap_mode=None, direction=None):
-    creator.tap(x, y, z, zretract, depth, standoff, dwell_bottom,
-                pitch, stoppos, spin_in, spin_out, tap_mode, direction)
+def tap(
+    x=None,
+    y=None,
+    z=None,
+    zretract=None,
+    depth=None,
+    standoff=None,
+    dwell_bottom=None,
+    pitch=None,
+    stoppos=None,
+    spin_in=None,
+    spin_out=None,
+    tap_mode=None,
+    direction=None,
+):
+    creator.tap(
+        x,
+        y,
+        z,
+        zretract,
+        depth,
+        standoff,
+        dwell_bottom,
+        pitch,
+        stoppos,
+        spin_in,
+        spin_out,
+        tap_mode,
+        direction,
+    )
 
 
-def bore(x=None, y=None, z=None, zretract=None, depth=None, standoff=None, dwell_bottom=None, feed_in=None, feed_out=None, stoppos=None, shift_back=None, shift_right=None, backbore=False, stop=False):
-    creator.bore(x, y, z, zretract, depth, standoff, dwell_Bottom, feed_in,
-                 feed_out, stoppos, shift_back, shift_right, backbore, stop)
+def bore(
+    x=None,
+    y=None,
+    z=None,
+    zretract=None,
+    depth=None,
+    standoff=None,
+    dwell_bottom=None,
+    feed_in=None,
+    feed_out=None,
+    stoppos=None,
+    shift_back=None,
+    shift_right=None,
+    backbore=False,
+    stop=False,
+):
+    creator.bore(
+        x,
+        y,
+        z,
+        zretract,
+        depth,
+        standoff,
+        dwell_Bottom,
+        feed_in,
+        feed_out,
+        stoppos,
+        shift_back,
+        shift_right,
+        backbore,
+        stop,
+    )
 
 
 def end_canned_cycle():
@@ -686,13 +866,14 @@ def end_canned_cycle():
 def peck(count, first, last=None, step=0.0):
     pecks = []
     peck = first
-    if (last == None):
+    if last == None:
         last = first
     for i in range(0, count):
         pecks.append(peck)
-        if (peck - step > last):
+        if peck - step > last:
             peck -= step
     return pecks
+
 
 ############################################################################
 # Misc
@@ -718,18 +899,62 @@ def variable_set(id, value):
     creator.variable_set(id, value)
 
 
-def probe_single_point(point_along_edge_x=None, point_along_edge_y=None, depth=None, retracted_point_x=None, retracted_point_y=None, destination_point_x=None, destination_point_y=None, intersection_variable_x=None, intersection_variable_y=None, probe_offset_x_component=None, probe_offset_y_component=None):
-    creator.probe_single_point(point_along_edge_x, point_along_edge_y, depth, retracted_point_x, retracted_point_y, destination_point_x,
-                               destination_point_y, intersection_variable_x, intersection_variable_y, probe_offset_x_component, probe_offset_y_component)
+def probe_single_point(
+    point_along_edge_x=None,
+    point_along_edge_y=None,
+    depth=None,
+    retracted_point_x=None,
+    retracted_point_y=None,
+    destination_point_x=None,
+    destination_point_y=None,
+    intersection_variable_x=None,
+    intersection_variable_y=None,
+    probe_offset_x_component=None,
+    probe_offset_y_component=None,
+):
+    creator.probe_single_point(
+        point_along_edge_x,
+        point_along_edge_y,
+        depth,
+        retracted_point_x,
+        retracted_point_y,
+        destination_point_x,
+        destination_point_y,
+        intersection_variable_x,
+        intersection_variable_y,
+        probe_offset_x_component,
+        probe_offset_y_component,
+    )
 
 
 def probe_downward_point(x=None, y=None, depth=None, intersection_variable_z=None):
     creator.probe_downward_point(x, y, depth, intersection_variable_z)
 
 
-def report_probe_results(x1=None, y1=None, z1=None, x2=None, y2=None, z2=None, x3=None, y3=None, z3=None, x4=None, y4=None, z4=None, x5=None, y5=None, z5=None, x6=None, y6=None, z6=None, xml_file_name=None):
-    creator.report_probe_results(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4,
-                                 y4, z4, x5, y5, z5, x6, y6, z6, xml_file_name)
+def report_probe_results(
+    x1=None,
+    y1=None,
+    z1=None,
+    x2=None,
+    y2=None,
+    z2=None,
+    x3=None,
+    y3=None,
+    z3=None,
+    x4=None,
+    y4=None,
+    z4=None,
+    x5=None,
+    y5=None,
+    z5=None,
+    x6=None,
+    y6=None,
+    z6=None,
+    xml_file_name=None,
+):
+    creator.report_probe_results(
+        x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4, x5, y5, z5, x6, y6, z6, xml_file_name
+    )
 
 
 def open_log_file(xml_file_name=None):
@@ -752,18 +977,53 @@ def rapid_to_midpoint(x1=None, y1=None, z1=None, x2=None, y2=None, z2=None):
     creator.rapid_to_midpoint(x1, y1, z1, x2, y2, z2)
 
 
-def rapid_to_intersection(x1, y1, x2, y2, x3, y3, x4, y4, intersection_x, intersection_y, ua_numerator, ua_denominator, ua, ub_numerator, ub):
-    creator.rapid_to_intersection(x1, y1, x2, y2, x3, y3, x4, y4, intersection_x,
-                                  intersection_y, ua_numerator, ua_denominator, ua, ub_numerator, ub)
+def rapid_to_intersection(
+    x1,
+    y1,
+    x2,
+    y2,
+    x3,
+    y3,
+    x4,
+    y4,
+    intersection_x,
+    intersection_y,
+    ua_numerator,
+    ua_denominator,
+    ua,
+    ub_numerator,
+    ub,
+):
+    creator.rapid_to_intersection(
+        x1,
+        y1,
+        x2,
+        y2,
+        x3,
+        y3,
+        x4,
+        y4,
+        intersection_x,
+        intersection_y,
+        ua_numerator,
+        ua_denominator,
+        ua,
+        ub_numerator,
+        ub,
+    )
 
 
-def rapid_to_rotated_coordinate(x1, y1, x2, y2, ref_x, ref_y, x_current, y_current, x_final, y_final):
+def rapid_to_rotated_coordinate(
+    x1, y1, x2, y2, ref_x, ref_y, x_current, y_current, x_final, y_final
+):
     creator.rapid_to_rotated_coordinate(
-        x1, y1, x2, y2, ref_x, ref_y, x_current, y_current, x_final, y_final)
+        x1, y1, x2, y2, ref_x, ref_y, x_current, y_current, x_final, y_final
+    )
 
 
 def set_path_control_mode(mode, motion_blending_tolerance, naive_cam_tolerance):
     creator.set_path_control_mode(mode, motion_blending_tolerance, naive_cam_tolerance)
+
 
 ############################################################################
 # NC code creator for additive machines like RepRap

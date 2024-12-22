@@ -16,7 +16,6 @@ dragging = False
 
 
 class Creator(recreator.Redirector):
-
     def __init__(self, original, drag_distance):
         recreator.Redirector.__init__(self, original)
 

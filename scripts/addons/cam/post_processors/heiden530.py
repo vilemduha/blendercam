@@ -150,7 +150,6 @@ class Creator(iso.Creator):
     # Moves
 
     def rapid(self, x=None, y=None, z=None, a=None, b=None, c=None):
-
         self.write_blocknum()
 
         self.write(self.SPACE())
@@ -187,7 +186,6 @@ class Creator(iso.Creator):
         self.write_misc()
 
     def feed(self, x=None, y=None, z=None, a=None, b=None, c=None):
-
         (x, y, z, a, b, c, axis_count) = self.filter_xyz(x, y, z)
         if axis_count == 0:
             return

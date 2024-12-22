@@ -13,10 +13,10 @@ import math
 
 
 class Creator(iso.Creator):
-
     def __init__(self):
         iso.Creator.__init__(self)
         self.useCrc = True
+
 
 ################################################################################
 
