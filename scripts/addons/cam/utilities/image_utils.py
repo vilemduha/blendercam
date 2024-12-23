@@ -403,11 +403,11 @@ def build_stroke(start, end, cutterArray):
     samplesz = numpy.round(numpy.linspace(start[2], end[2], strokelength))
 
     for i in range(0, len(strokelength)):
-        strokeArray[
-            samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r
-        ] = numpy.maximum(
-            strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r],
-            cutterArray + samplesz[i],
+        strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r] = (
+            numpy.maximum(
+                strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r],
+                cutterArray + samplesz[i],
+            )
         )
     return strokeArray
 
