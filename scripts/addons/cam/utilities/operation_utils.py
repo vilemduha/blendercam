@@ -12,6 +12,7 @@ import bpy
 from bpy_extras import object_utils
 
 from .simple_utils import get_cache_path
+from .simple_utils import unit_value_to_string
 
 from ..constants import was_hidden_dict
 
