@@ -10,6 +10,7 @@ from .shapely_utils import shapely_to_curve, shapely_to_multipolygon
 from .simple_utils import (
     activate,
     progress,
+    unit_value_to_string,
 )
 
 
@@ -242,14 +243,38 @@ def get_bounds(o):
         o.max.z = o.source_image_offset.z
     s = bpy.context.scene
     m = s.cam_machine
-    # make sure this message only shows once and goes away once fixed
-    o.info.warnings.replace("Operation Exceeds Your Machine Limits\n", "")
-    if (
-        o.max.x - o.min.x > m.working_area.x
-        or o.max.y - o.min.y > m.working_area.y
-        or o.max.z - o.min.z > m.working_area.z
-    ):
-        o.info.warnings += "Operation Exceeds Your Machine Limits\n"
+
+    x_delta_range = o.max.x - o.min.x
+    y_delta_range = o.max.y - o.min.y
+    z_delta_range = o.max.z - o.min.z
+
+    x_is_exceeded = x_delta_range > m.working_area.x
+    y_is_exceeded = y_delta_range > m.working_area.y
+    z_is_exceeded = z_delta_range > m.working_area.z
+
+    if x_is_exceeded or y_is_exceeded or z_is_exceeded:
+        exceed_msg = "Operation Exceeds Your Machine Limits (range > working area)\n"
+
+        # Do not append more than one such a warning
+        if exceed_msg not in o.info.warnings:
+            o.info.warnings += exceed_msg
+
+            if x_is_exceeded:
+                o.info.warnings += (
+                    f"Axis X[ range:{unit_value_to_string(x_delta_range)}"
+                    + f", working area:{unit_value_to_string(m.working_area.x)}]\n"
+                )
+            if y_is_exceeded:
+                o.info.warnings += (
+                    f"Axis Y[ range:{unit_value_to_string(y_delta_range)}"
+                    + f", working area:{unit_value_to_string(m.working_area.y)}]\n"
+                )
+            if z_is_exceeded:
+                o.info.warnings += (
+                    f"Axis Z[ range:{unit_value_to_string(z_delta_range)}"
+                    + f", working area:{unit_value_to_string(m.working_area.z)}]\n"
+                )
+
     if not o.info.warnings == "":
         addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
         if addon_prefs.show_popups:
