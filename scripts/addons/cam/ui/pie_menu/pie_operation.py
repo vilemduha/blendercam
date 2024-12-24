@@ -23,17 +23,17 @@ class VIEW3D_MT_PIE_Operation(Menu):
         pie.scale_y = 2
 
         # Left
-        pie.operator("wm.call_panel", text="Area", icon="SHADING_BBOX").name = (
-            "FABEX_PT_CAM_OPERATION_AREA"
-        )
+        pie.operator(
+            "wm.call_panel", text="Area", icon="SHADING_BBOX"
+        ).name = "FABEX_PT_CAM_OPERATION_AREA"
         # Right
-        pie.operator("wm.call_panel", text="Optimisation", icon="MODIFIER").name = (
-            "FABEX_PT_CAM_OPTIMISATION"
-        )
+        pie.operator(
+            "wm.call_panel", text="Optimisation", icon="MODIFIER"
+        ).name = "FABEX_PT_CAM_OPTIMISATION"
         # Bottom
-        pie.operator("wm.call_panel", text="Setup", icon="PREFERENCES").name = (
-            "FABEX_PT_CAM_OPERATION"
-        )
+        pie.operator(
+            "wm.call_panel", text="Setup", icon="PREFERENCES"
+        ).name = "FABEX_PT_CAM_OPERATION"
 
         # Top
         box = pie.box()
@@ -42,19 +42,19 @@ class VIEW3D_MT_PIE_Operation(Menu):
         box.operator("wm.call_menu_pie", text="", icon="HOME").name = "VIEW3D_MT_PIE_CAM"
 
         # Top Left
-        pie.operator("wm.call_panel", text="Movement", icon="ANIM_DATA").name = (
-            "FABEX_PT_CAM_MOVEMENT"
-        )
+        pie.operator(
+            "wm.call_panel", text="Movement", icon="ANIM_DATA"
+        ).name = "FABEX_PT_CAM_MOVEMENT"
 
         # Top Right
         pie.operator("wm.call_panel", text="Feedrate", icon="AUTO").name = "FABEX_PT_CAM_FEEDRATE"
 
         # Bottom Left
-        pie.operator("wm.call_panel", text="Cutter", icon="OUTLINER_DATA_GP_LAYER").name = (
-            "FABEX_PT_CAM_CUTTER"
-        )
+        pie.operator(
+            "wm.call_panel", text="Cutter", icon="OUTLINER_DATA_GP_LAYER"
+        ).name = "FABEX_PT_CAM_CUTTER"
 
         # Bottom Right
-        pie.operator("wm.call_panel", text="G-Code Options", icon="EVENT_G").name = (
-            "FABEX_PT_CAM_GCODE"
-        )
+        pie.operator(
+            "wm.call_panel", text="G-Code Options", icon="EVENT_G"
+        ).name = "FABEX_PT_CAM_GCODE"
