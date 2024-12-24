@@ -498,9 +498,9 @@ class GcodeModel:
         extr_idx = int(args["S"])  # e.g. M163 S0 P1
         weight = args["P"]
         # change CMYKW
-        col[extr_idx + 3] = (
-            weight  # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
-        )
+        col[
+            extr_idx + 3
+        ] = weight  # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
         self.color = col
 
         # take RGB values for seg from last comment (above first M163 statement)
