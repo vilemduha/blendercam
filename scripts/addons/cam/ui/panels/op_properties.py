@@ -166,6 +166,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMButtonsPanel, Panel):
                 warnbox.alert = True
                 warnbox.label(text="! Warning ! Experimental !", icon="ERROR")
             col.prop(self.op, "pocketType", text="Type")
+            # Skin
+            col.prop(self.op, "skin")
             if self.op.pocketType == "PARALLEL":
                 col.prop(self.op, "parallelPocketAngle", text="Angle")
                 subcol = col.column(align=True)
