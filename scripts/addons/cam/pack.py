@@ -1,4 +1,4 @@
-"""BlenderCAM 'pack.py' © 2012 Vilem Novak
+"""Fabex 'pack.py' © 2012 Vilem Novak
 
 Takes all selected curves, converts them to polygons, offsets them by the pre-set margin
 then chooses a starting location possibly inside the already occupied area and moves and rotates the
@@ -13,11 +13,7 @@ import time
 
 import shapely
 from shapely import geometry as sgeometry
-from shapely import (
-    affinity,
-    prepared,
-    speedups
-)
+from shapely import affinity, prepared, speedups
 
 import bpy
 from bpy.types import PropertyGroup
@@ -26,20 +22,17 @@ from bpy.props import (
     EnumProperty,
     FloatProperty,
 )
-from mathutils import (
-    Euler,
-    Vector
-)
+from mathutils import Euler, Vector
 
-from . import (
-    constants,
-    polygon_utils_cam,
-    simple,
-    utils,
-)
+from . import constants
+from .cam_chunk import curve_to_chunks
+
+from .utilities.chunk_utils import chunks_to_shapely
+from .utilities.shapely_utils import shapely_to_curve
+from .utilities.simple_utils import activate
 
 
-def srotate(s, r, x, y):
+def s_rotate(s, r, x, y):
     """Rotate a polygon's coordinates around a specified point.
 
     This function takes a polygon and rotates its exterior coordinates
@@ -70,7 +63,7 @@ def srotate(s, r, x, y):
     return sgeometry.Polygon(ncoords)
 
 
-def packCurves():
+def pack_curves():
     """Pack selected curves into a defined area based on specified settings.
 
     This function organizes selected curve objects in Blender by packing
@@ -104,15 +97,15 @@ def packCurves():
     # in this, position, rotation, and actual poly will be stored.
     polyfield = []
     for ob in bpy.context.selected_objects:
-        simple.activate(ob)
-        bpy.ops.object.make_single_user(type='SELECTED_OBJECTS')
-        bpy.ops.object.origin_set(type='ORIGIN_GEOMETRY')
+        activate(ob)
+        bpy.ops.object.make_single_user(type="SELECTED_OBJECTS")
+        bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY")
         z = ob.location.z
         bpy.ops.object.location_clear()
         bpy.ops.object.rotation_clear()
 
-        chunks = utils.curveToChunks(ob)
-        npolys = utils.chunksToShapely(chunks)
+        chunks = curve_to_chunks(ob)
+        npolys = chunks_to_shapely(chunks)
         # add all polys in silh to one poly
         poly = shapely.ops.unary_union(npolys)
 
@@ -127,7 +120,7 @@ def packCurves():
     rotchange = rotate_angle  # in radians
 
     xmin, ymin, xmax, ymax = polyfield[0][2].bounds
-    if direction == 'X':
+    if direction == "X":
         mindist = -xmin
     else:
         mindist = -ymin
@@ -141,10 +134,10 @@ def packCurves():
         porig = pf[2]
         placed = False
         xmin, ymin, xmax, ymax = p.bounds
-        if direction == 'X':
+        if direction == "X":
             x = mindist
             y = -ymin
-        if direction == 'Y':
+        if direction == "Y":
             x = -xmin
             y = mindist
 
@@ -165,15 +158,21 @@ def packCurves():
             xmin, ymin, xmax, ymax = ptrans.bounds
             # print(iter,p.bounds)
 
-            if xmin > 0 and ymin > 0 and (
-                    (direction == 'Y' and xmax < sheetsizex) or (direction == 'X' and ymax < sheetsizey)):
+            if (
+                xmin > 0
+                and ymin > 0
+                and (
+                    (direction == "Y" and xmax < sheetsizex)
+                    or (direction == "X" and ymax < sheetsizey)
+                )
+            ):
                 if not allpoly.intersects(ptrans):
                     # we do more good solutions, choose best out of them:
                     hits += 1
                     if best is None:
                         best = [x, y, rot, xmax, ymax]
                         besthit = hits
-                    if direction == 'X':
+                    if direction == "X":
                         if xmax < best[3]:
                             best = [x, y, rot, xmax, ymax]
                             besthit = hits
@@ -182,7 +181,8 @@ def packCurves():
                         besthit = hits
 
             if hits >= 15 or (
-                    itera > 20000 and hits > 0):  # here was originally more, but 90% of best solutions are still 1
+                itera > 20000 and hits > 0
+            ):  # here was originally more, but 90% of best solutions are still 1
                 placed = True
                 pf[3].location.x = best[0]
                 pf[3].location.y = best[1]
@@ -207,13 +207,13 @@ def packCurves():
                 # cleanup allpoly
                 print(itera, hits, besthit)
             if not placed:
-                if direction == 'Y':
+                if direction == "Y":
                     x += shift
                     mindist = y
                     if xmax + shift > sheetsizex:
                         x = x - xmin
                         y += shift
-                if direction == 'X':
+                if direction == "X":
                     y += shift
                     mindist = x
                     if ymax + shift > sheetsizey:
@@ -225,71 +225,5 @@ def packCurves():
         i += 1
     t = time.time() - t
 
-    polygon_utils_cam.shapelyToCurve('test', sgeometry.MultiPolygon(placedpolys), 0)
+    polygon_utils_cam.shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
     print(t)
-
-
-class PackObjectsSettings(PropertyGroup):
-    """stores all data for machines"""
-
-    sheet_fill_direction: EnumProperty(
-        name="Fill Direction",
-        items=(
-            ("X", "X", "Fills sheet in X axis direction"),
-            ("Y", "Y", "Fills sheet in Y axis direction"),
-        ),
-        description="Fill direction of the packer algorithm",
-        default="Y",
-    )
-    sheet_x: FloatProperty(
-        name="X Size",
-        description="Sheet size",
-        min=0.001,
-        max=10,
-        default=0.5,
-        precision=constants.PRECISION,
-        unit="LENGTH",
-    )
-    sheet_y: FloatProperty(
-        name="Y Size",
-        description="Sheet size",
-        min=0.001,
-        max=10,
-        default=0.5,
-        precision=constants.PRECISION,
-        unit="LENGTH",
-    )
-    distance: FloatProperty(
-        name="Minimum Distance",
-        description="Minimum distance between objects(should be "
-        "at least cutter diameter!)",
-        min=0.001,
-        max=10,
-        default=0.01,
-        precision=constants.PRECISION,
-        unit="LENGTH",
-    )
-    tolerance: FloatProperty(
-        name="Placement Tolerance",
-        description="Tolerance for placement: smaller value slower placemant",
-        min=0.001,
-        max=0.02,
-        default=0.005,
-        precision=constants.PRECISION,
-        unit="LENGTH",
-    )
-    rotate: BoolProperty(
-        name="Enable Rotation",
-        description="Enable rotation of elements",
-        default=True,
-    )
-    rotate_angle: FloatProperty(
-        name="Placement Angle Rotation Step",
-        description="Bigger rotation angle, faster placemant",
-        default=0.19635 * 4,
-        min=pi / 180,
-        max=pi,
-        precision=5,
-        subtype="ANGLE",
-        unit="ROTATION",
-    )

@@ -1,4 +1,4 @@
-"""BlenderCAM 'parametric.py' © 2019 Devon (Gorialis) R
+"""Fabex 'parametric.py' © 2019 Devon (Gorialis) R
 
 MIT License
 
@@ -80,14 +80,15 @@ def derive_bezier_handles(a, b, c, d, tb, tc):
 
 
 def create_parametric_curve(
-        function,
-        *args,
-        min: float = 0.0,
-        max: float = 1.0,
-        use_cubic: bool = True,
-        iterations: int = 8,
-        resolution_u: int = 10,
-        **kwargs):
+    function,
+    *args,
+    min: float = 0.0,
+    max: float = 1.0,
+    use_cubic: bool = True,
+    iterations: int = 8,
+    resolution_u: int = 10,
+    **kwargs,
+):
     """
     Creates a Blender bezier curve object from a parametric function.
     This "plots" the function in 3D space from `min <= t <= max`.
@@ -124,12 +125,12 @@ def create_parametric_curve(
     """
 
     # Create the Curve to populate with points.
-    curve = bpy.data.curves.new('Parametric', type='CURVE')
-    curve.dimensions = '3D'
+    curve = bpy.data.curves.new("Parametric", type="CURVE")
+    curve.dimensions = "3D"
     curve.resolution_u = 30
 
     # Add a new spline and give it the appropriate amount of points
-    spline = curve.splines.new('BEZIER')
+    spline = curve.splines.new("BEZIER")
     spline.bezier_points.add(iterations)
 
     if use_cubic:
@@ -156,10 +157,10 @@ def create_parametric_curve(
         for i in range(iterations + 1):
             spline.bezier_points[i].co = points[3 * (i + 1)]
 
-            spline.bezier_points[i].handle_left_type = 'FREE'
+            spline.bezier_points[i].handle_left_type = "FREE"
             spline.bezier_points[i].handle_left = Vector(points[(3 * (i + 1)) - 1])
 
-            spline.bezier_points[i].handle_right_type = 'FREE'
+            spline.bezier_points[i].handle_right_type = "FREE"
             spline.bezier_points[i].handle_right = Vector(points[(3 * (i + 1)) + 1])
 
     else:
@@ -168,11 +169,11 @@ def create_parametric_curve(
         # Set point coordinates, disable handles
         for i in range(iterations + 1):
             spline.bezier_points[i].co = points[i]
-            spline.bezier_points[i].handle_left_type = 'VECTOR'
-            spline.bezier_points[i].handle_right_type = 'VECTOR'
+            spline.bezier_points[i].handle_left_type = "VECTOR"
+            spline.bezier_points[i].handle_right_type = "VECTOR"
 
     # Create the Blender object and link it to the scene
-    curve_object = bpy.data.objects.new('Parametric', curve)
+    curve_object = bpy.data.objects.new("Parametric", curve)
     context = bpy.context
     scene = context.scene
     link_object = scene.collection.objects.link
@@ -205,7 +206,7 @@ def make_edge_loops(*objects):
         if bpy.app.version >= (2, 80):
             new_mesh = obj.to_mesh().copy()
         else:
-            new_mesh = obj.to_mesh(scene, False, 'PREVIEW')
+            new_mesh = obj.to_mesh(scene, False, "PREVIEW")
 
         # Store name and matrix, then fully delete the old object
         name = obj.name
@@ -218,7 +219,7 @@ def make_edge_loops(*objects):
 
         # Make a new vertex group from all vertices on this mesh
         vertex_group = new_object.vertex_groups.new(name=name)
-        vertex_group.add(range(len(new_mesh.vertices)), 1.0, 'ADD')
+        vertex_group.add(range(len(new_mesh.vertices)), 1.0, "ADD")
 
         vertex_groups.append(vertex_group)
 
@@ -232,12 +233,12 @@ def make_edge_loops(*objects):
     ctx = context.copy()
 
     # Select our objects in the context
-    ctx['active_object'] = mesh_objects[0]
-    ctx['selected_objects'] = mesh_objects
+    ctx["active_object"] = mesh_objects[0]
+    ctx["selected_objects"] = mesh_objects
     if bpy.app.version >= (2, 80):
-        ctx['selected_editable_objects'] = mesh_objects
+        ctx["selected_editable_objects"] = mesh_objects
     else:
-        ctx['selected_editable_bases'] = [scene.object_bases[o.name] for o in mesh_objects]
+        ctx["selected_editable_bases"] = [scene.object_bases[o.name] for o in mesh_objects]
 
     # Join them together
     bpy.ops.object.join(ctx)

@@ -1,4 +1,4 @@
-"""CNCCAM 'engine.py'
+"""Fabex 'engine.py'
 
 Engine definition, options and panels.
 """
@@ -11,26 +11,24 @@ from bl_ui.properties_material import (
 import bpy
 from bpy.types import RenderEngine
 
-from .ui_panels.area import CAM_AREA_Panel
-from .ui_panels.chains import CAM_CHAINS_Panel
-from .ui_panels.cutter import CAM_CUTTER_Panel
-from .ui_panels.feedrate import CAM_FEEDRATE_Panel
-from .ui_panels.gcode import CAM_GCODE_Panel
-from .ui_panels.info import CAM_INFO_Panel
-from .ui_panels.interface import CAM_INTERFACE_Panel
-from .ui_panels.machine import CAM_MACHINE_Panel
-from .ui_panels.material import CAM_MATERIAL_Panel
-from .ui_panels.movement import CAM_MOVEMENT_Panel
-from .ui_panels.op_properties import CAM_OPERATION_PROPERTIES_Panel
-from .ui_panels.operations import CAM_OPERATIONS_Panel
-from .ui_panels.optimisation import CAM_OPTIMISATION_Panel
-from .ui_panels.pack import CAM_PACK_Panel
-from .ui_panels.slice import CAM_SLICE_Panel
+from .ui.panels.area_panel import CAM_AREA_Panel
+from .ui.panels.chains_panel import CAM_CHAINS_Panel
+from .ui.panels.cutter_panel import CAM_CUTTER_Panel
+from .ui.panels.feedrate_panel import CAM_FEEDRATE_Panel
+from .ui.panels.gcode_panel import CAM_GCODE_Panel
+from .ui.panels.machine_panel import CAM_MACHINE_Panel
+from .ui.panels.material_panel import CAM_MATERIAL_Panel
+from .ui.panels.movement_panel import CAM_MOVEMENT_Panel
+from .ui.panels.op_properties_panel import CAM_OPERATION_PROPERTIES_Panel
+from .ui.panels.operations_panel import CAM_OPERATIONS_Panel
+from .ui.panels.optimisation_panel import CAM_OPTIMISATION_Panel
+from .ui.panels.pack_panel import CAM_PACK_Panel
+from .ui.panels.slice_panel import CAM_SLICE_Panel
 
 
-class CNCCAM_ENGINE(RenderEngine):
-    bl_idname = "CNCCAM_RENDER"
-    bl_label = "CNC CAM"
+class FABEX_ENGINE(RenderEngine):
+    bl_idname = "FABEX_RENDER"
+    bl_label = "Fabex CNC/CAM"
     bl_use_eevee_viewport = True
 
 
@@ -50,28 +48,25 @@ def get_panels():
     """
 
     exclude_panels = {
-        'RENDER_PT_eevee_performance',
-        'RENDER_PT_opengl_sampling',
-        'RENDER_PT_opengl_lighting',
-        'RENDER_PT_opengl_color',
-        'RENDER_PT_opengl_options',
-        'RENDER_PT_simplify',
-        'RENDER_PT_gpencil',
-        'RENDER_PT_freestyle',
-        'RENDER_PT_color_management',
-        'MATERIAL_PT_viewport',
-        'MATERIAL_PT_lineart',
+        "RENDER_PT_eevee_performance",
+        "RENDER_PT_opengl_sampling",
+        "RENDER_PT_opengl_lighting",
+        "RENDER_PT_opengl_color",
+        "RENDER_PT_opengl_options",
+        "RENDER_PT_simplify",
+        "RENDER_PT_gpencil",
+        "RENDER_PT_freestyle",
+        "RENDER_PT_color_management",
+        "MATERIAL_PT_viewport",
+        "MATERIAL_PT_lineart",
     }
 
     panels = [
         EEVEE_MATERIAL_PT_context_material,
         EEVEE_MATERIAL_PT_surface,
         EEVEE_MATERIAL_PT_settings,
-
-        CAM_INTERFACE_Panel,
         CAM_CHAINS_Panel,
         CAM_OPERATIONS_Panel,
-        CAM_INFO_Panel,
         CAM_MATERIAL_Panel,
         CAM_OPERATION_PROPERTIES_Panel,
         CAM_OPTIMISATION_Panel,
@@ -86,7 +81,7 @@ def get_panels():
     ]
 
     for panel in bpy.types.Panel.__subclasses__():
-        if hasattr(panel, 'COMPAT_ENGINES') and 'BLENDER_RENDER' in panel.COMPAT_ENGINES:
+        if hasattr(panel, "COMPAT_ENGINES") and "BLENDER_RENDER" in panel.COMPAT_ENGINES:
             if panel.__name__ not in exclude_panels:
                 panels.append(panel)
 

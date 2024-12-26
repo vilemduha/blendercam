@@ -1,8 +1,9 @@
-"""BlenderCAM 'preferences.py'
+"""Fabex 'preferences.py'
 
 Class to store all Addon preferences.
 """
 
+import bpy
 from bpy.props import (
     BoolProperty,
     EnumProperty,
@@ -12,6 +13,8 @@ from bpy.props import (
 from bpy.types import (
     AddonPreferences,
 )
+
+from .utilities.version_utils import opencamlib_version, shapely_version
 
 
 class CamAddonPreferences(AddonPreferences):
@@ -24,51 +27,223 @@ class CamAddonPreferences(AddonPreferences):
         default=False,
     )
 
-    experimental: BoolProperty(
-        name="Show Experimental Features",
-        default=False,
-    )
-
-    update_source: StringProperty(
-        name="Source of Updates for the Addon",
-        description="This can be either a github repo link in which case "
-        "it will download the latest release on there, "
-        "or an api link like "
-        "https://api.github.com/repos/<author>/blendercam/commits"
-        " to get from a github repository",
-        default="https://github.com/pppalain/blendercam",
-    )
-
-    last_update_check: IntProperty(
-        name="Last Update Time",
-        default=0,
-    )
-
-    last_commit_hash: StringProperty(
-        name="Hash of Last Commit from Updater",
-        default="",
-    )
-
-    just_updated: BoolProperty(
-        name="Set to True on Update or Initial Install",
-        default=True,
-    )
-
-    new_version_available: StringProperty(
-        name="Set to New Version Name if One Is Found",
-        default="",
-    )
-
     default_interface_level: EnumProperty(
         name="Interface Level in New File",
         description="Choose visible options",
         items=[
-            ("0", "Basic", "Only show Essential Options"),
-            ("1", "Advanced", "Show Advanced Options"),
-            ("2", "Complete", "Show All Options"),
-            ("3", "Experimental", "Show Experimental Options"),
+            (
+                "0",
+                "Basic",
+                "Only show Essential Options",
+            ),
+            (
+                "1",
+                "Advanced",
+                "Show Advanced Options",
+            ),
+            (
+                "2",
+                "Complete",
+                "Show All Options",
+            ),
+            (
+                "3",
+                "Experimental",
+                "Show Experimental Options",
+            ),
         ],
         default="3",
+    )
+
+    default_shading: EnumProperty(
+        name="Viewport Shading in New File",
+        description="Choose viewport shading preset",
+        items=[
+            (
+                "DEFAULT",
+                "Default",
+                "Standard viewport shading",
+            ),
+            (
+                "DELUXE",
+                "Deluxe",
+                "Cavity, Curvature, Depth of Field, Shadows & Object Colors",
+            ),
+            (
+                "CLEAN_DEFAULT",
+                "Clean Default",
+                "Standard viewport shading with no overlays",
+            ),
+            (
+                "CLEAN_DELUXE",
+                "Clean Deluxe",
+                "Deluxe shading with no overlays",
+            ),
+            (
+                "PREVIEW",
+                "Preview",
+                "HDRI Lighting Preview",
+            ),
+        ],
+        default="DEFAULT",
+    )
+
+    default_layout: EnumProperty(
+        name="Panel Layout",
+        description="Presets for all panel locations",
+        items=[
+            (
+                "CLASSIC",
+                "Classic",
+                "Properties Area holds most panels, Tools holds the rest",
+            ),
+            (
+                "MODERN",
+                "Modern",
+                "Properties holds Main panels, Sidebar holds Operation panels, Tools holds Tools",
+            ),
+            (
+                "USER",
+                "User",
+                "Define your own locations for panels",
+            ),
+        ],
+        default="MODERN",
+    )
+
+    default_main_location: EnumProperty(
+        name="Main Panels",
+        description="Location for Chains, Operations, Material, Machine, Pack, Slice Panels",
+        items=[
+            (
+                "PROPERTIES",
+                "Properties",
+                "Default panel location is the Render tab of the Properties Area",
+            ),
+            (
+                "SIDEBAR",
+                "Sidebar (N-Panel)",
+                "Common location for addon UI, press N to show/hide",
+            ),
+            (
+                "TOOLS",
+                "Tools (T-Panel)",
+                "Blender's Tool area, press T to show/hide",
+            ),
+        ],
+        default="PROPERTIES",
+    )
+
+    default_operation_location: EnumProperty(
+        name="Operation Panels",
+        description="Location for Setup, Area, Cutter, Feedrate, Optimisation, Movement, G-code",
+        items=[
+            (
+                "PROPERTIES",
+                "Properties",
+                "Default panel location is the Render tab of the Properties Area",
+            ),
+            (
+                "SIDEBAR",
+                "Sidebar (N-Panel)",
+                "Common location for addon UI, press N to show/hide",
+            ),
+            (
+                "TOOLS",
+                "Tools (T-Panel)",
+                "Blender's Tool area, press T to show/hide",
+            ),
+        ],
+        default="SIDEBAR",
+    )
+
+    default_tools_location: EnumProperty(
+        name="Tools Panels",
+        description="Location for Curve Tools, Curve Creators, Info",
+        items=[
+            (
+                "PROPERTIES",
+                "Properties",
+                "Default panel location is the Render tab of the Properties Area",
+            ),
+            (
+                "SIDEBAR",
+                "Sidebar (N-Panel)",
+                "Common location for addon UI, press N to show/hide",
+            ),
+            (
+                "TOOLS",
+                "Tools (T-Panel)",
+                "Blender's Tool area, press T to show/hide",
+            ),
+        ],
+        default="TOOLS",
+    )
+
+    user_main_location: EnumProperty(
+        name="Main Panels",
+        items=[
+            (
+                "PROPERTIES",
+                "Properties",
+                "Default panel location is the Render tab of the Properties Area",
+            ),
+            (
+                "SIDEBAR",
+                "Sidebar (N-Panel)",
+                "Common location for addon UI, press N to show/hide",
+            ),
+            (
+                "TOOLS",
+                "Tools (T-Panel)",
+                "Blender's Tool area, press T to show/hide",
+            ),
+        ],
+        default="PROPERTIES",
+    )
+
+    user_operation_location: EnumProperty(
+        name="Operation Panels",
+        items=[
+            (
+                "PROPERTIES",
+                "Properties",
+                "Default panel location is the Render tab of the Properties Area",
+            ),
+            (
+                "SIDEBAR",
+                "Sidebar (N-Panel)",
+                "Common location for addon UI, press N to show/hide",
+            ),
+            (
+                "TOOLS",
+                "Tools (T-Panel)",
+                "Blender's Tool area, press T to show/hide",
+            ),
+        ],
+        default="SIDEBAR",
+    )
+
+    user_tools_location: EnumProperty(
+        name="Tools Panels",
+        items=[
+            (
+                "PROPERTIES",
+                "Properties",
+                "Default panel location is the Render tab of the Properties Area",
+            ),
+            (
+                "SIDEBAR",
+                "Sidebar (N-Panel)",
+                "Common location for addon UI, press N to show/hide",
+            ),
+            (
+                "TOOLS",
+                "Tools (T-Panel)",
+                "Blender's Tool area, press T to show/hide",
+            ),
+        ],
+        default="TOOLS",
     )
 
     default_machine_preset: StringProperty(
@@ -77,38 +252,40 @@ class CamAddonPreferences(AddonPreferences):
         default="",
     )
 
+    show_popups: BoolProperty(
+        name="Show Warning Popups",
+        description="Shows a Popup window when there is a warning",
+        default=True,
+    )
+
     def draw(self, context):
         layout = self.layout
-        layout.label(
-            text="Use Experimental Features when you want to help development of BlenderCAM:"
-        )
-        layout.prop(self, "experimental")
-        layout.prop(self, "update_source")
-        layout.label(text="Choose a Preset Update Source")
+        layout.use_property_split = True
+        layout.use_property_decorate = False
 
-        UPDATE_SOURCES = [
-            (
-                "https://github.com/vilemduha/blendercam",
-                "Stable",
-                "Stable releases (github.com/vilemduja/blendercam)",
-            ),
-            (
-                "https://github.com/pppalain/blendercam",
-                "Unstable",
-                "Unstable releases (github.com/pppalain/blendercam)",
-            ),
-            # comments for searching in github actions release script to
-            # automatically set this repo if required
-            # REPO ON NEXT LINE
-            (
-                "https://api.github.com/repos/pppalain/blendercam/commits",
-                "Direct from git (may not work)",
-                "Get from git commits directly",
-            ),
-            # REPO ON PREV LINE
-            ("", "None", "Don't do auto update"),
-        ]
-        grid = layout.grid_flow(align=True)
-        for url, short, long in UPDATE_SOURCES:
-            op = grid.operator("render.cam_set_update_source", text=short)
-            op.new_source = url
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text="User Interface", icon="DESKTOP")
+        col.label(text="User Panel Layout")
+        col.prop(context.scene.interface, "main_location", text="Main")
+        col.prop(context.scene.interface, "operation_location", text="Operation")
+        col.prop(context.scene.interface, "tools_location", text="Tools")
+        col = box.column(align=True)
+        col.label(text="Warning Popups", icon="WINDOW")
+        col.prop(self, "show_popups")
+
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text="Library", icon="ASSET_MANAGER")
+        # OpenCAMLib Version
+        ocl_version = opencamlib_version()
+        if ocl_version is None:
+            col.label(text="OpenCAMLib is not Installed")
+        else:
+            col.label(text=f"OpenCAMLib v{ocl_version}")
+        # Shapely Version
+        shape_version = shapely_version()
+        if shape_version is None:
+            col.label(text="Shapely is not Installed")
+        else:
+            col.label(text=f"Shapely v{shape_version}")

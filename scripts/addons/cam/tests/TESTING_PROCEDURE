@@ -13,7 +13,7 @@ The script will go through each blend file, generate GCode for all operations an
 > cd name_of_your_test
 > blender name_of_your_blend_file (can be the same name as the subdirectory)
 
-- Create as many operations as necessary using BlenderCAM. Do not add operations that need a
+- Create as many operations as necessary using Fabex. Do not add operations that need a
 long calculation time unless absolutely necessary, as they will be executed everytime the
 tests are run.
 
