@@ -158,7 +158,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
             col.prop(self.op, "pocket_type", text="Type")
             if self.op.pocket_type == "PARALLEL":
                 col.prop(self.op, "parallel_pocket_angle", text="Angle")
-                # Skin
                 col.prop(self.op, "skin")
                 subcol = col.column(align=True)
                 subcol.use_property_split = False
@@ -167,7 +166,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
 
             else:
                 col.prop(self.op, "pocket_option")
-                # Skin
                 col.prop(self.op, "skin")
                 self.draw_overshoot(col=col)
                 row = col.row()
