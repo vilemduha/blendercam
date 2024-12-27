@@ -69,7 +69,7 @@ class CAM_AREA_Panel(CAMParentPanel, Panel):
                     icon = "USER"
                 col.prop(self.op, "min_z_from", text="Max", icon=icon)
                 if self.op.min_z_from == "CUSTOM":
-                    col.prop(self.op, "minz")
+                    col.prop(self.op, "min_z")
 
             else:
                 col.prop(self.op, "source_image_scale_z")

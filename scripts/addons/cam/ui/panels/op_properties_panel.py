@@ -21,7 +21,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
     panel_interface_level = 0
 
     def draw_overshoot(self, col):
-        # layout = self.layout
         # Overshoot
         row = col.row()
         row.use_property_split = False
@@ -60,7 +59,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
 
         # Cutout Options
         if self.op.strategy in ["CUTOUT"]:
-            # box = layout.box()
             col = box.column(align=True)
             # Cutout Type
             col.prop(self.op, "cut_type")
@@ -79,9 +77,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
 
         if self.op.strategy in ["CUTOUT", "CURVE"]:
             if self.op.strategy == "CURVE":
-                # box = layout.box()
                 col = box.column(align=True)
-            # self.draw_enable_A_B_axis(col=col)
             # Outlines Box
             box = col.box()
             subcol = box.column(align=True)
@@ -98,11 +94,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
                 sub = box.column(align=True)
                 sub.label(text="Toolpath Distance")
                 sub.prop(self.op, "distance_between_paths", text="Between")
-                # self.draw_cutter_engagement(col=col)
 
         # Waterline Options
         if self.op.strategy in ["WATERLINE"]:
-            # box = layout.box()
             col = box.column(align=True)
             if self.op.optimisation.use_opencamlib:
                 box = col.box()
@@ -129,7 +123,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
 
         # Carve Options
         if self.op.strategy in ["CARVE"]:
-            # box = layout.box()
             col = box.column(align=True)
             col.prop(self.op, "carve_depth", text="Depth")
             box = col.box()
@@ -139,7 +132,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
 
         # Medial Axis Options
         if self.op.strategy in ["MEDIAL_AXIS"]:
-            # box = layout.box()
             col = box.column(align=True)
             col.prop(self.op, "medial_axis_threshold", text="Threshold")
             col.prop(self.op, "medial_axis_subdivision", text="Detail Size")
@@ -152,14 +144,12 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
 
         # Drill Options
         if self.op.strategy in ["DRILL"]:
-            # box = layout.box()
             col = box.column(align=True)
             col.prop(self.op, "drill_type")
             # self.draw_enable_A_B_axis(col=col)
 
         # Pocket Options
         if self.op.strategy in ["POCKET"]:
-            # box = layout.box()
             col = box.column(align=True)
             if self.op.pocket_type == "PARALLEL":
                 warnbox = col.box()
@@ -205,7 +195,6 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
             row.prop(self.op, "inverse")
             if self.op.strategy in ["PARALLEL", "CROSS"]:
                 col.prop(self.op, "parallel_angle")
-                # self.draw_enable_A_B_axis(col=col)
             box = col.box()
             col = box.column(align=True)
             col.label(text="Toolpath Distance")
