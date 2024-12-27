@@ -27,14 +27,14 @@ class VIEW3D_MT_PIE_CAM(Menu):
             "wm.call_panel",
             text="Machine",
             icon="DESKTOP",
-        ).name = "WORLD_PT_CAM_MACHINE"
+        ).name = "FABEX_PT_CAM_MACHINE"
 
         # Right
         pie.operator(
             "wm.call_panel",
             text="Material",
             icon="META_CUBE",
-        ).name = "WORLD_PT_CAM_MATERIAL"
+        ).name = "FABEX_PT_CAM_MATERIAL"
 
         # Bottom
         if len(scene.cam_operations) < 1:
@@ -73,7 +73,7 @@ class VIEW3D_MT_PIE_CAM(Menu):
             "wm.call_panel",
             text="Info & Warnings",
             icon="INFO",
-        ).name = "WORLD_PT_CAM_INFO"
+        ).name = "FABEX_PT_CAM_INFO"
 
         # Top Right
         box = pie.box()

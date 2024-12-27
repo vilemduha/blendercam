@@ -87,7 +87,7 @@ def create_parametric_curve(
     use_cubic: bool = True,
     iterations: int = 8,
     resolution_u: int = 10,
-    **kwargs
+    **kwargs,
 ):
     """
     Creates a Blender bezier curve object from a parametric function.

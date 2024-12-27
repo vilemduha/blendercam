@@ -6,7 +6,8 @@ Functions for automated testing.
 import bpy
 
 from .gcodepath import getPath
-from .simple import activate
+
+from .utilities.simple_utils import activate
 
 
 def addTestCurve(loc):
