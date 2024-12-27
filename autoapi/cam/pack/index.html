@@ -1,0 +1,607 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>cam.pack &#8212; Fabex 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=e842dffb"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/cam/pack/index';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="cam.parametric" href="../parametric/index.html" />
+    <link rel="prev" title="cam.operators.slice_op" href="../operators/slice_op/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo_blendercam.png" class="logo__image only-light" alt="Fabex 1.0.38 documentation - Home"/>
+    <img src="../../../_static/logo_blendercam.png" class="logo__image only-dark pst-js-only" alt="Fabex 1.0.38 documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../styleguide.html">Style Guide</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+
+
+
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">cam</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../bas_relief/index.html">cam.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cam_chunk/index.html">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gcode_import_parser/index.html">cam.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gcode_path/index.html">cam.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../operators/index.html">cam.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../operators/async_op/index.html">cam.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/bas_relief_ops/index.html">cam.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/bridges_op/index.html">cam.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/chain_ops/index.html">cam.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/curve_create_ops/index.html">cam.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/curve_equation_ops/index.html">cam.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/curve_tools_ops/index.html">cam.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/gcode_import_op/index.html">cam.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/operation_ops/index.html">cam.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/orient_op/index.html">cam.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/pack_op/index.html">cam.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/path_ops/index.html">cam.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/position_op/index.html">cam.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/preset_ops/index.html">cam.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/simulation_ops/index.html">cam.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/slice_op/index.html">cam.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preferences/index.html">cam.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../properties/index.html">cam.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../properties/chain_props/index.html">cam.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/info_props/index.html">cam.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/interface_props/index.html">cam.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/machine_props/index.html">cam.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/material_props/index.html">cam.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/movement_props/index.html">cam.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/operation_props/index.html">cam.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/optimisation_props/index.html">cam.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../testing/index.html">cam.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../utilities/index.html">cam.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/addon_utils/index.html">cam.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/async_utils/index.html">cam.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/bounds_utils/index.html">cam.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/chunk_utils/index.html">cam.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/compare_utils/index.html">cam.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/dict_utils/index.html">cam.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/geom_utils/index.html">cam.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/image_utils/index.html">cam.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/index_utils/index.html">cam.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/loop_utils/index.html">cam.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/machine_utils/index.html">cam.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/material_utils/index.html">cam.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/numba_utils/index.html">cam.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/ocl_utils/index.html">cam.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/operation_utils/index.html">cam.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/orient_utils/index.html">cam.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/shapely_utils/index.html">cam.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/simple_utils/index.html">cam.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/strategy_utils/index.html">cam.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/thread_utils/index.html">cam.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/version_utils/index.html">cam.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/autoapi/cam/pack/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>cam.pack</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.pack.s_rotate"><code class="docutils literal notranslate"><span class="pre">s_rotate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.pack.pack_curves"><code class="docutils literal notranslate"><span class="pre">pack_curves()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-cam.pack">
+<span id="cam-pack"></span><h1>cam.pack<a class="headerlink" href="#module-cam.pack" title="Link to this heading">#</a></h1>
+<p>Fabex ‘pack.py’ © 2012 Vilem Novak</p>
+<p>Takes all selected curves, converts them to polygons, offsets them by the pre-set margin
+then chooses a starting location possibly inside the already occupied area and moves and rotates the
+polygon out of the occupied area if one or more positions are found where the poly doesn’t overlap,
+it is placed and added to the occupied area - allpoly
+Very slow and STUPID, a collision algorithm would be much much faster…</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cam.pack.s_rotate" title="cam.pack.s_rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">s_rotate</span></code></a>(s, r, x, y)</p></td>
+<td><p>Rotate a polygon's coordinates around a specified point.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cam.pack.pack_curves" title="cam.pack.pack_curves"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pack_curves</span></code></a>()</p></td>
+<td><p>Pack selected curves into a defined area based on specified settings.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.pack.s_rotate">
+<span class="sig-name descname"><span class="pre">s_rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/pack.html#s_rotate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.pack.s_rotate" title="Link to this definition">#</a></dt>
+<dd><p>Rotate a polygon’s coordinates around a specified point.</p>
+<p>This function takes a polygon and rotates its exterior coordinates
+around a given point (x, y) by a specified angle (r) in radians. It uses
+the Euler rotation to compute the new coordinates for each point in the
+polygon’s exterior. The resulting coordinates are then used to create a
+new polygon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<em>shapely.geometry.Polygon</em>) – The polygon to be rotated.</p></li>
+<li><p><strong>r</strong> (<em>float</em>) – The angle of rotation in radians.</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – The x-coordinate of the point around which to rotate.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The y-coordinate of the point around which to rotate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new polygon with the rotated coordinates.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>shapely.geometry.Polygon</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cam.pack.pack_curves">
+<span class="sig-name descname"><span class="pre">pack_curves</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cam/pack.html#pack_curves"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cam.pack.pack_curves" title="Link to this definition">#</a></dt>
+<dd><p>Pack selected curves into a defined area based on specified settings.</p>
+<p>This function organizes selected curve objects in Blender by packing
+them into a specified area defined by the camera pack settings. It
+calculates the optimal positions for each curve while considering
+parameters such as sheet size, fill direction, distance, tolerance, and
+rotation. The function utilizes geometric operations to ensure that the
+curves do not overlap and fit within the defined boundaries. The packed
+curves are then transformed and their properties are updated
+accordingly.  The function performs the following steps: 1. Activates
+speedup features if available. 2. Retrieves packing settings from the
+current scene. 3. Processes each selected object to create polygons from
+curves. 4. Attempts to place each polygon within the defined area while
+avoiding    overlaps and respecting the specified fill direction. 5.
+Outputs the final arrangement of polygons.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../operators/slice_op/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">cam.operators.slice_op</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../parametric/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">cam.parametric</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.pack.s_rotate"><code class="docutils literal notranslate"><span class="pre">s_rotate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cam.pack.pack_curves"><code class="docutils literal notranslate"><span class="pre">pack_curves()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

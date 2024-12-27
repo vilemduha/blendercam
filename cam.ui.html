@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>cam.ui package &#8212; Fabex 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=e842dffb"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'cam.ui';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo_blendercam.png" class="logo__image only-light" alt="Fabex 1.0.38 documentation - Home"/>
+    <img src="_static/logo_blendercam.png" class="logo__image only-dark pst-js-only" alt="Fabex 1.0.38 documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="styleguide.html">Style Guide</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflows.html">Workflows &amp; Actions</a></li>
+
+
+
+<li class="toctree-l1 has-children"><a class="reference internal" href="autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/cam/index.html">cam</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/bas_relief/index.html">cam.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/cam_chunk/index.html">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/gcode_import_parser/index.html">cam.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/gcode_path/index.html">cam.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/cam/operators/index.html">cam.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/async_op/index.html">cam.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/bas_relief_ops/index.html">cam.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/bridges_op/index.html">cam.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/chain_ops/index.html">cam.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/curve_create_ops/index.html">cam.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/curve_equation_ops/index.html">cam.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/curve_tools_ops/index.html">cam.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/gcode_import_op/index.html">cam.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/operation_ops/index.html">cam.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/orient_op/index.html">cam.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/pack_op/index.html">cam.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/path_ops/index.html">cam.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/position_op/index.html">cam.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/preset_ops/index.html">cam.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/simulation_ops/index.html">cam.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/operators/slice_op/index.html">cam.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/pack/index.html">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/preferences/index.html">cam.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/cam/properties/index.html">cam.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/properties/chain_props/index.html">cam.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/properties/info_props/index.html">cam.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/properties/interface_props/index.html">cam.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/properties/machine_props/index.html">cam.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/properties/material_props/index.html">cam.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/properties/movement_props/index.html">cam.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/properties/operation_props/index.html">cam.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/properties/optimisation_props/index.html">cam.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/testing/index.html">cam.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/cam/utilities/index.html">cam.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/addon_utils/index.html">cam.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/async_utils/index.html">cam.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/bounds_utils/index.html">cam.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/chunk_utils/index.html">cam.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/compare_utils/index.html">cam.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/dict_utils/index.html">cam.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/geom_utils/index.html">cam.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/image_utils/index.html">cam.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/index_utils/index.html">cam.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/loop_utils/index.html">cam.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/machine_utils/index.html">cam.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/material_utils/index.html">cam.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/numba_utils/index.html">cam.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/ocl_utils/index.html">cam.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/operation_utils/index.html">cam.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/orient_utils/index.html">cam.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/shapely_utils/index.html">cam.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/simple_utils/index.html">cam.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/strategy_utils/index.html">cam.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/thread_utils/index.html">cam.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/cam/utilities/version_utils/index.html">cam.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/cam/voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/cam.ui.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>cam.ui package</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module contents</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="cam-ui-package">
+<h1>cam.ui package<a class="headerlink" href="#cam-ui-package" title="Link to this heading">#</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cam.ui.panels.html">cam.ui.panels package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-area-panel-module">cam.ui.panels.area_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-basrelief-module">cam.ui.panels.basrelief module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-blank-panel-module">cam.ui.panels.blank_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-chains-panel-module">cam.ui.panels.chains_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-curve-create-panel-module">cam.ui.panels.curve_create_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-curve-tools-panel-module">cam.ui.panels.curve_tools_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-cutter-panel-module">cam.ui.panels.cutter_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-feedrate-panel-module">cam.ui.panels.feedrate_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-gcode-panel-module">cam.ui.panels.gcode_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-info-panel-module">cam.ui.panels.info_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-machine-panel-module">cam.ui.panels.machine_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-material-panel-module">cam.ui.panels.material_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-movement-panel-module">cam.ui.panels.movement_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-op-properties-panel-module">cam.ui.panels.op_properties_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-operations-panel-module">cam.ui.panels.operations_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-optimisation-panel-module">cam.ui.panels.optimisation_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-pack-panel-module">cam.ui.panels.pack_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-parent-panel-module">cam.ui.panels.parent_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-popup-panel-module">cam.ui.panels.popup_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#cam-ui-panels-slice-panel-module">cam.ui.panels.slice_panel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cam.ui.panels.html#module-contents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module contents</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

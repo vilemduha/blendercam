@@ -1,0 +1,975 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>cam.operators.bas_relief_ops &#8212; Fabex 1.0.38 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=e842dffb"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/cam/operators/bas_relief_ops';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo_blendercam.png" class="logo__image only-light" alt="Fabex 1.0.38 documentation - Home"/>
+    <img src="../../../_static/logo_blendercam.png" class="logo__image only-dark pst-js-only" alt="Fabex 1.0.38 documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../styleguide.html">Style Guide</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+
+
+
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/cam/index.html">cam</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/bas_relief/index.html">cam.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/bridges/index.html">cam.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/cam_chunk/index.html">cam.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/collision/index.html">cam.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/constants/index.html">cam.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/engine/index.html">cam.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/exception/index.html">cam.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/gcode_import_parser/index.html">cam.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/gcode_path/index.html">cam.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/involute_gear/index.html">cam.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/joinery/index.html">cam.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/cam/operators/index.html">cam.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/async_op/index.html">cam.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/bas_relief_ops/index.html">cam.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/bridges_op/index.html">cam.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/chain_ops/index.html">cam.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/curve_create_ops/index.html">cam.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/curve_equation_ops/index.html">cam.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/curve_tools_ops/index.html">cam.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/gcode_import_op/index.html">cam.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/operation_ops/index.html">cam.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/orient_op/index.html">cam.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/pack_op/index.html">cam.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/path_ops/index.html">cam.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/position_op/index.html">cam.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/preset_ops/index.html">cam.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/simulation_ops/index.html">cam.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/operators/slice_op/index.html">cam.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/pack/index.html">cam.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/parametric/index.html">cam.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/pattern/index.html">cam.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/preferences/index.html">cam.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/cam/properties/index.html">cam.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/properties/chain_props/index.html">cam.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/properties/info_props/index.html">cam.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/properties/interface_props/index.html">cam.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/properties/machine_props/index.html">cam.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/properties/material_props/index.html">cam.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/properties/movement_props/index.html">cam.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/properties/operation_props/index.html">cam.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/properties/optimisation_props/index.html">cam.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/puzzle_joinery/index.html">cam.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/simulation/index.html">cam.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/slice/index.html">cam.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/strategy/index.html">cam.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/testing/index.html">cam.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/cam/utilities/index.html">cam.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/addon_utils/index.html">cam.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/async_utils/index.html">cam.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/bounds_utils/index.html">cam.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/chunk_utils/index.html">cam.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/compare_utils/index.html">cam.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/dict_utils/index.html">cam.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/geom_utils/index.html">cam.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/image_utils/index.html">cam.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/index_utils/index.html">cam.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/loop_utils/index.html">cam.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/machine_utils/index.html">cam.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/material_utils/index.html">cam.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/numba_utils/index.html">cam.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/ocl_utils/index.html">cam.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/operation_utils/index.html">cam.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/orient_utils/index.html">cam.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/shapely_utils/index.html">cam.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/simple_utils/index.html">cam.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/strategy_utils/index.html">cam.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/thread_utils/index.html">cam.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/cam/utilities/version_utils/index.html">cam.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/version/index.html">cam.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/cam/voronoi/index.html">cam.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for cam.operators.bas_relief_ops</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;basrelief.py&#39;</span>
+
+<span class="sd">Module to allow the creation of reliefs from Images or View Layers.</span>
+<span class="sd">(https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">import</span> <span class="nn">bpy</span>
+
+<span class="kn">from</span> <span class="nn">bpy.types</span> <span class="kn">import</span> <span class="n">Operator</span>
+<span class="kn">from</span> <span class="nn">bpy.props</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BoolProperty</span><span class="p">,</span>
+    <span class="n">EnumProperty</span><span class="p">,</span>
+    <span class="n">FloatProperty</span><span class="p">,</span>
+    <span class="n">IntProperty</span><span class="p">,</span>
+    <span class="n">PointerProperty</span><span class="p">,</span>
+    <span class="n">StringProperty</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">PRECISION</span>
+
+<span class="kn">from</span> <span class="nn">..bas_relief</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">problem_areas</span><span class="p">,</span>
+    <span class="n">render_scene</span><span class="p">,</span>
+    <span class="n">relief</span><span class="p">,</span>
+    <span class="n">ReliefError</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="DoBasRelief">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/index.html#cam.operators.bas_relief_ops.DoBasRelief">[docs]</a>
+<span class="k">class</span> <span class="nc">DoBasRelief</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Bas Relief&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DoBasRelief.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;scene.calculate_bas_relief&quot;</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.bl_label">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Calculate Bas Relief&quot;</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.bl_options">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;REGISTER&quot;</span><span class="p">,</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="DoBasRelief.processes">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.processes">[docs]</a>
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+    <span class="c1"># Bas Relief Properties</span>
+<div class="viewcode-block" id="DoBasRelief.use_image_source">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.use_image_source">[docs]</a>
+    <span class="n">use_image_source</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Use Image Source&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.source_image_name">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.source_image_name">[docs]</a>
+    <span class="n">source_image_name</span><span class="p">:</span> <span class="n">StringProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Image Source&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;image source&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.view_layer_name">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.view_layer_name">[docs]</a>
+    <span class="n">view_layer_name</span><span class="p">:</span> <span class="n">StringProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;View Layer Source&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Make a bas-relief from whatever is on this view layer&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.bit_diameter">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.bit_diameter">[docs]</a>
+    <span class="n">bit_diameter</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Diameter of Ball End in mm&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Diameter of bit which will be used for carving&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">50.0</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">3.175</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.pass_per_radius">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.pass_per_radius">[docs]</a>
+    <span class="n">pass_per_radius</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Passes per Radius&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Amount of passes per radius</span><span class="se">\n</span><span class="s2">(more passes, &quot;</span> <span class="s2">&quot;more mesh precision)&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.width_mm">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.width_mm">[docs]</a>
+    <span class="n">width_mm</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Desired Width in mm&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.height_mm">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.height_mm">[docs]</a>
+    <span class="n">height_mm</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Desired Height in mm&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.thickness_mm">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.thickness_mm">[docs]</a>
+    <span class="n">thickness_mm</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Thickness in mm&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DoBasRelief.justify_x">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.justify_x">[docs]</a>
+    <span class="n">justify_x</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;X&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;Left&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;-0.5&quot;</span><span class="p">,</span> <span class="s2">&quot;Centered&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;-1&quot;</span><span class="p">,</span> <span class="s2">&quot;Right&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;-1&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.justify_y">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.justify_y">[docs]</a>
+    <span class="n">justify_y</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;Bottom&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;-0.5&quot;</span><span class="p">,</span> <span class="s2">&quot;Centered&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;-1&quot;</span><span class="p">,</span> <span class="s2">&quot;Top&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;-1&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.justify_z">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.justify_z">[docs]</a>
+    <span class="n">justify_z</span><span class="p">:</span> <span class="n">EnumProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;-1&quot;</span><span class="p">,</span> <span class="s2">&quot;Below 0&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;-0.5&quot;</span><span class="p">,</span> <span class="s2">&quot;Centered&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;Above 0&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;-1&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DoBasRelief.depth_exponent">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.depth_exponent">[docs]</a>
+    <span class="n">depth_exponent</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Depth Exponent&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Initial depth map is taken to this power. Higher = sharper relief&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DoBasRelief.silhouette_threshold">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.silhouette_threshold">[docs]</a>
+    <span class="n">silhouette_threshold</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Silhouette Threshold&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Silhouette threshold&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.000001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.003</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.recover_silhouettes">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.recover_silhouettes">[docs]</a>
+    <span class="n">recover_silhouettes</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Recover Silhouettes&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.silhouette_scale">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.silhouette_scale">[docs]</a>
+    <span class="n">silhouette_scale</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Silhouette Scale&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Silhouette scale&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.000001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.silhouette_exponent">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.silhouette_exponent">[docs]</a>
+    <span class="n">silhouette_exponent</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Silhouette Square Exponent&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;If lower, true depth distances between objects will be &quot;</span>
+        <span class="s2">&quot;more visibe in the relief&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.attenuation">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.attenuation">[docs]</a>
+    <span class="n">attenuation</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Gradient Attenuation&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Gradient attenuation&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.000001</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.min_gridsize">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.min_gridsize">[docs]</a>
+    <span class="n">min_gridsize</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Minimum Grid Size&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.smooth_iterations">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.smooth_iterations">[docs]</a>
+    <span class="n">smooth_iterations</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Smooth Iterations&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.vcycle_iterations">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.vcycle_iterations">[docs]</a>
+    <span class="n">vcycle_iterations</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;V-Cycle Iterations&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Set higher for planar constraint&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.linbcg_iterations">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.linbcg_iterations">[docs]</a>
+    <span class="n">linbcg_iterations</span><span class="p">:</span> <span class="n">IntProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;LINBCG Iterations&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Set lower for flatter relief, and when using planar constraint&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.use_planar">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.use_planar">[docs]</a>
+    <span class="n">use_planar</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Use Planar Constraint&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.gradient_scaling_mask_use">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.gradient_scaling_mask_use">[docs]</a>
+    <span class="n">gradient_scaling_mask_use</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Scale Gradients with Mask&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.decimate_ratio">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.decimate_ratio">[docs]</a>
+    <span class="n">decimate_ratio</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Decimate Ratio&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Simplify the mesh using the Decimate modifier. &quot;</span>
+        <span class="s2">&quot;The lower the value the more simplyfied&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DoBasRelief.gradient_scaling_mask_name">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.gradient_scaling_mask_name">[docs]</a>
+    <span class="n">gradient_scaling_mask_name</span><span class="p">:</span> <span class="n">StringProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Scaling Mask Name&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Mask name&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.scale_down_before_use">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.scale_down_before_use">[docs]</a>
+    <span class="n">scale_down_before_use</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Scale Down Image Before Processing&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.scale_down_before">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.scale_down_before">[docs]</a>
+    <span class="n">scale_down_before</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Image Scale&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Image scale&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.025</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.detail_enhancement_use">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.detail_enhancement_use">[docs]</a>
+    <span class="n">detail_enhancement_use</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Enhance Details&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Enhance details by frequency analysis&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+    <span class="c1"># detail_enhancement_freq=FloatProperty(name=&quot;frequency limit&quot;, description=&quot;Image scale&quot;, min=0.025, max=1.0, default=.5, precision=PRECISION)</span>
+<div class="viewcode-block" id="DoBasRelief.detail_enhancement_amount">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.detail_enhancement_amount">[docs]</a>
+    <span class="n">detail_enhancement_amount</span><span class="p">:</span> <span class="n">FloatProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Amount&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Image scale&quot;</span><span class="p">,</span>
+        <span class="nb">min</span><span class="o">=</span><span class="mf">0.025</span><span class="p">,</span>
+        <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">precision</span><span class="o">=</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DoBasRelief.advanced">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.DoBasRelief.advanced">[docs]</a>
+    <span class="n">advanced</span><span class="p">:</span> <span class="n">BoolProperty</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Advanced Options&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Show advanced options&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DoBasRelief.invoke">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/index.html#cam.operators.bas_relief_ops.DoBasRelief.invoke">[docs]</a>
+    <span class="k">def</span> <span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="n">wm</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">window_manager</span>
+        <span class="k">return</span> <span class="n">wm</span><span class="o">.</span><span class="n">invoke_props_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DoBasRelief.execute">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/index.html#cam.operators.bas_relief_ops.DoBasRelief.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the relief rendering process based on the provided context.</span>
+
+<span class="sd">        This function retrieves the scene and its associated bas relief</span>
+<span class="sd">        settings. It checks if an image source is being used and sets the view</span>
+<span class="sd">        layer name accordingly. The function then attempts to render the scene</span>
+<span class="sd">        and generate the relief. If any errors occur during these processes,</span>
+<span class="sd">        they are reported, and the operation is canceled.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context: The context in which the function is executed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary indicating the result of the operation, either</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_image_source</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_layer_name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">view_layer_name</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">render_scene</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">width_mm</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">height_mm</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bit_diameter</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pass_per_radius</span><span class="p">,</span>
+                <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_image_source</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">view_layer_name</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">ReliefError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">({</span><span class="s2">&quot;ERROR&quot;</span><span class="p">},</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;CANCELLED&quot;</span><span class="p">}</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">({</span><span class="s2">&quot;ERROR&quot;</span><span class="p">},</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;CANCELLED&quot;</span><span class="p">}</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">relief</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ReliefError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">({</span><span class="s2">&quot;ERROR&quot;</span><span class="p">},</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;CANCELLED&quot;</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="DoBasRelief.draw">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/index.html#cam.operators.bas_relief_ops.DoBasRelief.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draw the user interface for the bas relief settings.</span>
+
+<span class="sd">        This method constructs the layout for the bas relief settings in the</span>
+<span class="sd">        Blender user interface. It includes various properties and options that</span>
+<span class="sd">        allow users to configure the bas relief calculations, such as selecting</span>
+<span class="sd">        images, adjusting parameters, and setting justification options. The</span>
+<span class="sd">        layout is dynamically updated based on user selections, providing a</span>
+<span class="sd">        comprehensive interface for manipulating bas relief settings.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (bpy.context): The context in which the UI is being drawn.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None: This method does not return any value; it modifies the layout</span>
+<span class="sd">            directly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">use_property_split</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">use_property_decorate</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">scene</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+
+        <span class="n">box</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">box</span><span class="p">()</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Source&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_image_source</span><span class="p">:</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;source_image_name&quot;</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;view_layer_name&quot;</span><span class="p">,</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span> <span class="s2">&quot;view_layers&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;use_image_source&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;depth_exponent&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;advanced&quot;</span><span class="p">)</span>
+
+        <span class="n">box</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">box</span><span class="p">()</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Parameters&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;bit_diameter&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Ball End Diameter (mm)&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;pass_per_radius&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;widthmm&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Desired Width (mm)&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;heightmm&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Desired Height (mm)&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;thicknessmm&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Thickness (mm)&quot;</span><span class="p">)</span>
+
+        <span class="n">box</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">box</span><span class="p">()</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Justification&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;justifyx&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;justifyy&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;justifyz&quot;</span><span class="p">)</span>
+
+        <span class="n">box</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">box</span><span class="p">()</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Silhouette&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;silhouette_threshold&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Threshold&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;recover_silhouettes&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recover_silhouettes</span><span class="p">:</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;silhouette_scale&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Scale&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
+                <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;silhouette_exponent&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Square Exponent&quot;</span><span class="p">)</span>
+
+        <span class="n">box</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">box</span><span class="p">()</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">align</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Iterations&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
+            <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;smooth_iterations&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Smooth&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;vcycle_iterations&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;V-Cycle&quot;</span><span class="p">)</span>
+        <span class="n">col</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;linbcg_iterations&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;LINBCG&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;min_gridsize&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;decimate_ratio&quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;use_planar&quot;</span><span class="p">)</span>
+
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;gradient_scaling_mask_use&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">advanced</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient_scaling_mask_use</span><span class="p">:</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">prop_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;gradient_scaling_mask_name&quot;</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;images&quot;</span><span class="p">)</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;detail_enhancement_use&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detail_enhancement_use</span><span class="p">:</span>
+                <span class="n">layout</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;detail_enhancement_amount&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ProblemAreas">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/index.html#cam.operators.bas_relief_ops.ProblemAreas">[docs]</a>
+<span class="k">class</span> <span class="nc">ProblemAreas</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find Bas Relief Problem Areas&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ProblemAreas.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.ProblemAreas.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;scene.problemareas_bas_relief&quot;</span></div>
+
+<div class="viewcode-block" id="ProblemAreas.bl_label">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.ProblemAreas.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Problem Areas Bas Relief&quot;</span></div>
+
+<div class="viewcode-block" id="ProblemAreas.bl_options">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.ProblemAreas.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;REGISTER&quot;</span><span class="p">,</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="ProblemAreas.processes">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/bas_relief_ops/index.html#cam.operators.bas_relief_ops.ProblemAreas.processes">[docs]</a>
+    <span class="n">processes</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+    <span class="c1"># @classmethod</span>
+    <span class="c1"># def poll(cls, context):</span>
+    <span class="c1"># 	return context.active_object is not None</span>
+
+<div class="viewcode-block" id="ProblemAreas.execute">
+<a class="viewcode-back" href="../../../autoapi/cam/operators/index.html#cam.operators.bas_relief_ops.ProblemAreas.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the operation related to the bas relief settings in the current</span>
+<span class="sd">        scene.</span>
+
+<span class="sd">        This method retrieves the current scene from the Blender context and</span>
+<span class="sd">        accesses the bas relief settings. It then calls the `problemAreas`</span>
+<span class="sd">        function to perform operations related to those settings. The method</span>
+<span class="sd">        concludes by returning a status indicating that the operation has</span>
+<span class="sd">        finished successfully.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (bpy.context): The current Blender context, which provides access</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary with a status key indicating the operation result,</span>
+<span class="sd">            specifically {&#39;FINISHED&#39;}.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+        <span class="n">br</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">basreliefsettings</span>
+        <span class="n">problem_areas</span><span class="p">(</span><span class="n">br</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
