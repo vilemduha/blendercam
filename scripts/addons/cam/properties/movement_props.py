@@ -196,7 +196,7 @@ class CAM_MOVEMENT_Properties(PropertyGroup):
         update=update_operation,
     )
 
-    merge_dist: FloatProperty(
+    merge_distance: FloatProperty(
         name="Merge Distance - EXPERIMENTAL",
         default=0.0,
         min=0.0000,
