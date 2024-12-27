@@ -1962,8 +1962,8 @@ async def connect_chunks_low(chunks, o):
     if o.movement.parallel_step_back:
         mergedist *= 2
 
-    if o.movement.merge_dist > 0:
-        mergedist = o.movement.merge_dist
+    if o.movement.merge_distance > 0:
+        mergedist = o.movement.merge_distance
     # mergedist=10
     lastch = None
     i = len(chunks)

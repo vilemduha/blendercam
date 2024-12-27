@@ -64,6 +64,7 @@ class CAM_MOVEMENT_Panel(CAMParentPanel, Panel):
         row = layout.row()
         row.use_property_split = False
         row.prop(self.op.movement, "stay_low", text="Stay Low (if possible)")
+        row.prop(self.op.movement, "merge_distance")
 
         # Parallel Stepback
         if self.level >= 1:
@@ -121,7 +122,7 @@ class CAM_MOVEMENT_Panel(CAMParentPanel, Panel):
                 if self.op.movement.stay_low:
                     row = col.row()
                     row.use_property_split = True
-                    row.prop(self.op.movement, "merge_dist", text="Merge Distance")
+                    row.prop(self.op.movement, "merge_distance", text="Merge Distance")
 
                 # Helix Enter
                 if self.op.strategy in ["POCKET"]:
