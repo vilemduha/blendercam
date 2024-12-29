@@ -407,9 +407,11 @@ class CAM_OPERATION_Properties(PropertyGroup):
     cutter_tip_angle: FloatProperty(
         name="Cutter V-carve Angle",
         description="Cutter V-carve angle",
+        default=pi / 3,
         min=0.0,
-        max=180.0,
-        default=60.0,
+        max=pi,
+        subtype="ANGLE",
+        unit="ROTATION",
         precision=PRECISION,
         update=update_offset_image,
     )

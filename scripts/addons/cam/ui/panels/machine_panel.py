@@ -108,7 +108,7 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
                     subheader.prop(self.machine, "output_tool_change")
                     if subpanel:
                         subpanel.enabled = self.machine.output_tool_change
-                        subpanel.prop(self.machine, "output_g43_on_tool_change")
+                        subpanel.prop(self.machine, "output_G43_on_tool_change")
 
                 # Block Numbers
                 if self.level >= 2:

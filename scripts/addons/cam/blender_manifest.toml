@@ -22,6 +22,20 @@ copyright = [
 ]
 
 wheels = [
+  #   # llvmlite
+  # "./wheels/llvmlite-0.43.0-cp311-cp311-macosx_10_9_x86_64.whl",
+  # "./wheels/llvmlite-0.43.0-cp311-cp311-macosx_11_0_arm64.whl",
+  # "./wheels/llvmlite-0.43.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+  # "./wheels/llvmlite-0.43.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+  # "./wheels/llvmlite-0.43.0-cp311-cp311-win_amd64.whl",
+
+  #   # numba
+  # "./wheels/numba-0.60.0-cp311-cp311-macosx_10_9_x86_64.whl",
+  # "./wheels/numba-0.60.0-cp311-cp311-macosx_11_0_arm64.whl",
+  # "./wheels/numba-0.60.0-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.whl",
+  # "./wheels/numba-0.60.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+  # "./wheels/numba-0.60.0-cp311-cp311-win_amd64.whl",
+
     # opencamlib
   "./wheels/opencamlib-2023.1.11-cp311-cp311-macosx_10_9_x86_64.whl",
   "./wheels/opencamlib-2023.1.11-cp311-cp311-macosx_11_0_arm64.whl",
