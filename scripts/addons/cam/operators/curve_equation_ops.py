@@ -79,6 +79,7 @@ class CamSineCurve(Operator):
         min=-360,
         max=360,
         precision=4,
+        step=100,
         unit="ROTATION",
     )
     offset: FloatProperty(
@@ -125,6 +126,7 @@ class CamSineCurve(Operator):
         min=-200 * pi,
         max=200 * pi,
         precision=4,
+        step=100,
         unit="ROTATION",
     )
     wave_amount: IntProperty(
@@ -266,6 +268,7 @@ class CamLissajousCurve(Operator):
         min=-360,
         max=360,
         precision=4,
+        step=100,
         unit="ROTATION",
     )
 

@@ -413,6 +413,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         subtype="ANGLE",
         unit="ROTATION",
         precision=PRECISION,
+        step=500,
         update=update_offset_image,
     )
     ball_radius: FloatProperty(
