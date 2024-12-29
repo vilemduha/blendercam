@@ -507,10 +507,12 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=-360,
         max=360,
         precision=0,
+        step=500,
         subtype="ANGLE",
         unit="ROTATION",
         update=update_rest,
     )
+    # OBSOLETE?, REMOVE ?
     old_rotation_a: FloatProperty(
         name="A Axis Angle",
         description="old value of Rotate A axis\nto specified angle",
@@ -522,6 +524,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         unit="ROTATION",
         update=update_rest,
     )
+    # OBSOLETE?, REMOVE ?
     old_rotation_b: FloatProperty(
         name="A Axis Angle",
         description="old value of Rotate A axis\nto specified angle",
@@ -540,6 +543,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=-360,
         max=360,
         precision=0,
+        step=500,
         subtype="ANGLE",
         unit="ROTATION",
         update=update_rotation,
@@ -563,6 +567,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=-360,
         max=360,
         precision=0,
+        step=500,
         subtype="ANGLE",
         unit="ROTATION",
         update=update_rotation,
@@ -882,6 +887,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
         min=0,
         max=pi * 0.5,
         precision=0,
+        step=500,
         subtype="ANGLE",
         unit="ROTATION",
         update=update_rest,
