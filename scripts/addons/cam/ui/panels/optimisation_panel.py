@@ -11,6 +11,7 @@ from .parent_panel import CAMParentPanel
 
 from ...utilities.version_utils import opencamlib_version
 
+
 class CAM_OPTIMISATION_Panel(CAMParentPanel, Panel):
     """CAM Optimisation Panel"""
 
