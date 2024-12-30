@@ -13,6 +13,7 @@ from math import (
     sin,
     tan,
 )
+from typing import Optional
 import os
 import random
 import time
@@ -134,7 +135,7 @@ def get_circle_binary(r):
 # get cutters for the z-buffer image method
 
 
-def numpy_to_image(a, iname):
+def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     """Convert a NumPy array to a Blender image.
 
     This function takes a NumPy array and converts it into a Blender image.
@@ -151,46 +152,55 @@ def numpy_to_image(a, iname):
         bpy.types.Image: The Blender image object that was created or found.
     """
 
-    print("Numpy to Image", iname)
     t = time.time()
-    print(a.shape[0], a.shape[1])
-    foundimage = False
 
-    for image in bpy.data.images:
-        if (
-            image.name[: len(iname)] == iname
-            and image.size[0] == a.shape[0]
-            and image.size[1] == a.shape[1]
-        ):
-            i = image
-            foundimage = True
-    if not foundimage:
-        bpy.ops.image.new(
-            name=iname,
-            width=a.shape[0],
-            height=a.shape[1],
+    width = a.shape[0]
+    height = a.shape[1]
+    # Based on the Blender source code: source/blender/makesdna/DNA_ID.h. MAX_ID_NAME=64
+    # is defining the maximum length of the id and we need to subtract four letters for
+    # suffix as Blender seems to use the ".%03d" pattern to avoid creating duplicate ids.
+    iname_59 = iname[:59]
+
+    print(f"numpy_to_image: iname:{iname}, width:{width}, height:{height}")
+
+    def find_image(name: str, width: int, heigh: int) -> Optional[bpy.types.Image]:
+        if name in bpy.data.images:
+            image = bpy.data.images[name]
+
+            if image.size[0] == width and image.size[1] == height:
+                return image
+
+        return None
+
+    image = find_image(iname, width, height) or find_image(iname_59, width, height)
+
+    if image is None:
+        print(f"numpy_to_image: Creating a new image:{iname_59}")
+        result = bpy.ops.image.new(
+            name=iname_59,
+            width=width,
+            height=height,
             color=(0, 0, 0, 1),
             alpha=True,
             generated_type="BLANK",
             float=True,
         )
-        for image in bpy.data.images:
-            # print(image.name[:len(iname)],iname, image.size[0],a.shape[0],image.size[1],a.shape[1])
-            if (
-                image.name[: len(iname)] == iname
-                and image.size[0] == a.shape[0]
-                and image.size[1] == a.shape[1]
-            ):
-                i = image
+        print(f"numpy_to_image: Image creation result:{result}")
 
-    d = a.shape[0] * a.shape[1]
+        # If 'iname_59' id didn't exist previously, then
+        # it should have been created without changing its id.
+        image = bpy.data.images[iname_59]
+
     a = a.swapaxes(0, 1)
-    a = a.reshape(d)
+    a = a.reshape(width * height)
     a = a.repeat(4)
     a[3::4] = 1
-    i.pixels[:] = a[:]  # this gives big speedup!
-    print("\ntime " + str(time.time() - t))
-    return i
+
+    image.pixels[:] = a[:]  # this gives big speedup!
+
+    print(f"numpy_to_image: Time:{str(time.time() - t)}")
+
+    return image
 
 
 def image_to_numpy(i):
