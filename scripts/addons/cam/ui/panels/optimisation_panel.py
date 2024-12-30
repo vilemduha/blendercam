@@ -9,6 +9,8 @@ from bpy.types import Panel
 
 from .parent_panel import CAMParentPanel
 
+from ...utilities.version_utils import opencamlib_version
+
 
 class CAM_OPTIMISATION_Panel(CAMParentPanel, Panel):
     """CAM Optimisation Panel"""
@@ -86,7 +88,7 @@ class CAM_OPTIMISATION_Panel(CAMParentPanel, Panel):
                     if self.op.remove_redundant_points:
                         row = col.row()
                         row.use_property_split = True
-                        row.prop(self.op, "simplify_tol")
+                        row.prop(self.op, "simplify_tolerance")
 
                     # Use Modifiers
                     if self.op.geometry_source in ["OBJECT", "COLLECTION"]:
