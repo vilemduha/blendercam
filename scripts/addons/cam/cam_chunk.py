@@ -14,6 +14,7 @@ from math import (
 )
 import sys
 import time
+import random
 
 import numpy as np
 import shapely
@@ -31,7 +32,7 @@ except ImportError:
         pass
 
 import bpy
-from mathutils import Vector
+from mathutils import Vector, Euler
 
 try:
     import bl_ext.blender_org.simplify_curves_plus as curve_simplify
@@ -59,6 +60,8 @@ from .utilities.chunk_utils import (
 from .utilities.image_utils import (
     get_sample_image,
     prepare_area,
+    render_sample_image,
+    get_circle_binary,
 )
 from .utilities.numba_utils import jit
 from .utilities.ocl_utils import (
@@ -84,6 +87,7 @@ from .utilities.simple_utils import (
     tuple_multiply,
     tuple_subtract,
     is_vertical_limit,
+    get_cache_path,
 )
 
 
