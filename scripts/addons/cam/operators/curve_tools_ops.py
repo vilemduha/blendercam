@@ -236,6 +236,7 @@ class CamCurveSimpleOvercuts(Operator):
         min=-3.14,
         max=3.14,
         precision=4,
+        step=500,
         subtype="ANGLE",
         unit="ROTATION",
     )
@@ -361,6 +362,7 @@ class CamCurveBoneFilletOvercuts(Operator):
         max=3.14,
         description="The maximum angle to be considered as an inside corner",
         precision=4,
+        step=500,
         subtype="ANGLE",
         unit="ROTATION",
     )
