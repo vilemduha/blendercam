@@ -225,5 +225,5 @@ def pack_curves():
         i += 1
     t = time.time() - t
 
-    polygon_utils_cam.shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
+    shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
     print(t)
