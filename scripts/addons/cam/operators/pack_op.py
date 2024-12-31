@@ -96,6 +96,7 @@ class CamPackObjects(Operator):
         min=pi / 180,
         max=pi,
         precision=5,
+        step=500,
         subtype="ANGLE",
         unit="ROTATION",
     )

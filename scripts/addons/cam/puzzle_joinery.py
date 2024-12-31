@@ -31,6 +31,10 @@ from .utilities.simple_utils import (
     rotate,
     make_active,
     remove_multiple,
+    select_multiple,
+    join_multiple,
+    remove_doubles,
+    add_rectangle,
 )
 
 

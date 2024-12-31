@@ -8,6 +8,7 @@ import shapely
 import bpy
 
 from .simple_utils import activate
+from .orient_utils import rotation_to_2_axes
 
 
 def prepare_indexed(o):

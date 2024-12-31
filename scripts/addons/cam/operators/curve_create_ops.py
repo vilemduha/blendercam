@@ -851,6 +851,7 @@ class CamCurveMortise(Operator):
         default=0.0,
         min=0.000,
         max=2,
+        step=100,
         subtype="ANGLE",
         unit="ROTATION",
     )
@@ -1029,6 +1030,7 @@ class CamCurveInterlock(Operator):
         default=0.0,
         min=0.000,
         max=2,
+        step=100,
         subtype="ANGLE",
         unit="ROTATION",
     )
@@ -1037,6 +1039,7 @@ class CamCurveInterlock(Operator):
         default=0.0,
         min=0.000,
         max=2,
+        step=100,
         subtype="ANGLE",
         unit="ROTATION",
     )
@@ -1444,6 +1447,7 @@ class CamCurvePuzzle(Operator):
         default=pi / 4,
         min=-10,
         max=10,
+        step=500,
         subtype="ANGLE",
         unit="ROTATION",
     )
@@ -1452,6 +1456,7 @@ class CamCurvePuzzle(Operator):
         default=pi / 4,
         min=-10,
         max=10,
+        step=500,
         subtype="ANGLE",
         unit="ROTATION",
     )
@@ -1986,6 +1991,7 @@ class CamCurveGear(Operator):
         min=0.001,
         max=pi / 2,
         precision=4,
+        step=100,
         subtype="ANGLE",
         unit="ROTATION",
     )

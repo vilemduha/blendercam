@@ -2,6 +2,7 @@
 
 They mostly call the functions from 'utils.py'
 """
+import threading
 
 import bpy
 

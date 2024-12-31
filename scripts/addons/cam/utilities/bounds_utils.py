@@ -12,6 +12,7 @@ from .simple_utils import (
     progress,
     unit_value_to_string,
 )
+from ..exception import CamException
 
 
 def get_bounds_worldspace(obs, use_modifiers=False):
