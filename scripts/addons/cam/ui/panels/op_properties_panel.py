@@ -125,6 +125,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
         if self.op.strategy in ["CARVE"]:
             col = box.column(align=True)
             col.prop(self.op, "carve_depth", text="Depth")
+            col.prop(self.op, "skin")
             box = col.box()
             sub = box.column(align=True)
             sub.label(text="Toolpath Distance")
@@ -192,6 +193,7 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
             row.use_property_split = False
             row.prop(self.op, "inverse")
             if self.op.strategy in ["PARALLEL", "CROSS"]:
+                col.prop(self.op, "skin")
                 col.prop(self.op, "parallel_angle")
             box = col.box()
             col = box.column(align=True)

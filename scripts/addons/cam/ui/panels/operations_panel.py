@@ -120,6 +120,6 @@ class CAM_OPERATIONS_Panel(CAMParentPanel, Panel):
                 col.prop_search(self.op, "source_image_name", bpy.data, "images")
 
         if self.op.strategy in ["CARVE", "PROJECTED_CURVE"]:
-            col.prop_search(self.op, "curve_object", bpy.data, "objects")
+            col.prop_search(self.op, "curve_source", bpy.data, "objects")
             if self.op.strategy == "PROJECTED_CURVE":
-                col.prop_search(self.op, "curve_object1", bpy.data, "objects")
+                col.prop_search(self.op, "curve_target", bpy.data, "objects")
