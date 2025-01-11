@@ -901,7 +901,8 @@ async def get_path_3_axis(context, operation):
         for h in range(0, nslices):
             layerstepinc += 1
             slicechunks = []
-            z = o.min_z + h * o.slice_detail
+            # lower the layer by the skin value so the slice gets done at the tip of the tool
+            z = o.min_z + h * o.slice_detail - o.skin
             if h == 0:
                 z += 0.0000001
                 # if people do mill flat areas, this helps to reach those...
@@ -915,7 +916,7 @@ async def get_path_3_axis(context, operation):
 
             for p in slicepolys.geoms:
                 poly = poly.union(p)  # polygversion TODO: why is this added?
-                nchunks = shapely_to_chunks(p, z)
+                nchunks = shapely_to_chunks(p, z + o.skin)
                 nchunks = limit_chunks(nchunks, o, force=True)
                 lastchunks.extend(nchunks)
                 slicechunks.extend(nchunks)
@@ -951,7 +952,7 @@ async def get_path_3_axis(context, operation):
                     fillz = z
                     i = 0
                     while not restpoly.is_empty:
-                        nchunks = shapely_to_chunks(restpoly, fillz)
+                        nchunks = shapely_to_chunks(restpoly, fillz + o.skin)
                         # project paths TODO: path projection during waterline is not working
                         if o.waterline_project:
                             nchunks = chunks_refine(nchunks, o)
@@ -993,7 +994,7 @@ async def get_path_3_axis(context, operation):
                     # 'GeometryCollection':#len(restpoly.boundary.coords)>0:
                     while not restpoly.is_empty:
                         # print(i)
-                        nchunks = shapely_to_chunks(restpoly, fillz)
+                        nchunks = shapely_to_chunks(restpoly, fillz + o.skin)
                         #########################
                         nchunks = limit_chunks(nchunks, o, force=True)
                         slicechunks.extend(nchunks)
