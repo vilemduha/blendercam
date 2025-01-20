@@ -244,6 +244,10 @@ class DoBasRelief(Operator):
         default=True,
     )
 
+    @classmethod
+    def poll(cls, context):
+        return context.scene.camera is not None
+
     def invoke(self, context, event):
         wm = context.window_manager
         return wm.invoke_props_dialog(self)

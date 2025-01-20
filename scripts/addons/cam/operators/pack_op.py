@@ -101,6 +101,10 @@ class CamPackObjects(Operator):
         unit="ROTATION",
     )
 
+    @classmethod
+    def poll(cls, context):
+        return context.active_object is not None and context.active_object.type == "CURVE"
+
     def invoke(self, context, event):
         wm = context.window_manager
         return wm.invoke_props_dialog(self)

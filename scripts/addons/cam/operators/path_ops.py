@@ -386,7 +386,15 @@ class PathsChain(Operator, AsyncOperatorMixin):
         """
 
         s = context.scene
-        bpy.ops.object.mode_set(mode="OBJECT")  # force object mode
+
+        # Ensure there is an active object, and force Object Mode
+        if not context.mode == "OBJECT":
+            operations = context.scene.cam_operations
+            active_operation = operations[context.scene.cam_active_operation]
+            context_object = context.scene.objects[active_operation.object_name]
+            context.view_layer.objects.active = context_object
+            bpy.ops.object.mode_set(mode="OBJECT")
+
         chain = s.cam_chains[s.cam_active_chain]
         chainops = get_chain_operations(chain)
         meshes = []
