@@ -521,7 +521,10 @@ async def pocket(o):
         if o.parallel_pocket_contour:
             offset = -(c_offset + distance / 2)
             p = pr.buffer(
-                -c_offset, resolution=o.optimisation.circle_detail, join_style=join, mitre_limit=2
+                -c_offset,
+                resolution=o.optimisation.circle_detail,
+                join_style=join,
+                mitre_limit=2,
             )
 
             nchunks = shapely_to_chunks(p, o.min.z)
@@ -546,7 +549,10 @@ async def pocket(o):
 
     else:
         p = pr.buffer(
-            -c_offset, resolution=o.optimisation.circle_detail, join_style=join, mitre_limit=2
+            -c_offset,
+            resolution=o.optimisation.circle_detail,
+            join_style=join,
+            mitre_limit=2,
         )
         approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.distance_between_paths) / 2
         print("Approximative:" + str(approxn))
@@ -577,7 +583,10 @@ async def pocket(o):
             if pnew.is_empty:
                 # test if the last curve will leave material
                 pt = p.buffer(
-                    -c_offset, o.optimisation.circle_detail, join_style=join, mitre_limit=2
+                    -c_offset,
+                    o.optimisation.circle_detail,
+                    join_style=join,
+                    mitre_limit=2,
                 )
                 if not pt.is_empty:
                     pnew = pt
