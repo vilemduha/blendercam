@@ -42,10 +42,10 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
     )
 
     async def execute_async(self, context):
-        """Execute an asynchronous simulation operation based on the active camera
+        """Execute an asynchronous simulation operation based on the active CAM
         operation.
 
-        This method retrieves the current scene and the active camera operation.
+        This method retrieves the current scene and the active CAM operation.
         It constructs the operation name and checks if the corresponding object
         exists in the Blender data. If it does, it attempts to run the
         simulation asynchronously. If the simulation is cancelled, it returns a
@@ -76,10 +76,10 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
         return {"FINISHED"}
 
     def draw(self, context):
-        """Draws the user interface for selecting camera operations.
+        """Draws the user interface for selecting CAM operations.
 
         This method creates a layout element in the user interface that allows
-        users to search and select a specific camera operation from a list of
+        users to search and select a specific CAM operation from a list of
         available operations defined in the current scene. It utilizes the
         Blender Python API to integrate with the UI.
 
@@ -102,18 +102,18 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
 
     @classmethod
     def poll(cls, context):
-        """Check the validity of the active camera chain in the scene.
+        """Check the validity of the active CAM chain in the scene.
 
-        This method retrieves the currently active camera chain from the scene's
-        camera chains and checks its validity using the `isChainValid` function.
-        It returns a boolean indicating whether the active camera chain is
+        This method retrieves the currently active CAM chain from the scene's
+        CAM chains and checks its validity using the `isChainValid` function.
+        It returns a boolean indicating whether the active CAM chain is
         valid.
 
         Args:
             context (object): The context containing the scene and its properties.
 
         Returns:
-            bool: True if the active camera chain is valid, False otherwise.
+            bool: True if the active CAM chain is valid, False otherwise.
         """
 
         s = context.scene
@@ -130,9 +130,9 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
     )
 
     async def execute_async(self, context):
-        """Execute an asynchronous simulation for a specified camera chain.
+        """Execute an asynchronous simulation for a specified CAM chain.
 
-        This method retrieves the active camera chain from the current Blender
+        This method retrieves the active CAM chain from the current Blender
         scene and determines the operations associated with that chain. It
         checks if all operations are valid and can be simulated. If valid, it
         proceeds to execute the simulation asynchronously. If any operation is
@@ -167,10 +167,10 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
         return {"FINISHED"}
 
     def draw(self, context):
-        """Draw the user interface for selecting camera operations.
+        """Draw the user interface for selecting CAM operations.
 
         This function creates a user interface element that allows the user to
-        search and select a specific camera operation from a list of available
+        search and select a specific CAM operation from a list of available
         operations in the current scene. It utilizes the Blender Python API to
         create a property search layout.
 

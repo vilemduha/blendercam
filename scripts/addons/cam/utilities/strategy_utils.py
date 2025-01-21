@@ -213,9 +213,9 @@ def get_strategy_list(scene, context):
 
 
 def update_exact_mode(self, context):
-    """Update the exact mode of the active camera operation.
+    """Update the exact mode of the active CAM operation.
 
-    This function retrieves the currently active camera operation from the
+    This function retrieves the currently active CAM operation from the
     Blender context and updates its exact mode using the `updateExact`
     function. It accesses the active operation through the `cam_operations`
     list in the current scene and passes the active operation along with the
@@ -233,9 +233,9 @@ def update_exact_mode(self, context):
 def update_opencamlib(self, context):
     """Update the OpenCamLib with the current active operation.
 
-    This function retrieves the currently active camera operation from the
+    This function retrieves the currently active CAM operation from the
     Blender context and updates the OpenCamLib accordingly. It accesses the
-    active operation from the scene's camera operations and passes it along
+    active operation from the scene's CAM operations and passes it along
     with the current context to the update function.
 
     Args:

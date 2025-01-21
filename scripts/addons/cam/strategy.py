@@ -16,7 +16,7 @@ import time
 
 import shapely
 from shapely.geometry import polygon as spolygon
-from shapely.geometry import Point  # Double check this import!
+from shapely.geometry import Point
 from shapely import geometry as sgeometry
 from shapely import affinity
 
@@ -73,7 +73,7 @@ def add_pocket(maxdepth, sname, new_cutter_diameter):
 
     This function first deselects all objects in the scene and then checks
     for any existing medial pocket objects, deleting them if found. It
-    verifies whether a medial pocket operation already exists in the camera
+    verifies whether a medial pocket operation already exists in the CAM
     operations. If it does not exist, it creates a new pocket operation with
     the specified parameters. The function also modifies the selected
     object's silhouette offset based on the new cutter diameter.
@@ -521,7 +521,10 @@ async def pocket(o):
         if o.parallel_pocket_contour:
             offset = -(c_offset + distance / 2)
             p = pr.buffer(
-                -c_offset, resolution=o.optimisation.circle_detail, join_style=join, mitre_limit=2
+                -c_offset,
+                resolution=o.optimisation.circle_detail,
+                join_style=join,
+                mitre_limit=2,
             )
 
             nchunks = shapely_to_chunks(p, o.min.z)
@@ -546,7 +549,10 @@ async def pocket(o):
 
     else:
         p = pr.buffer(
-            -c_offset, resolution=o.optimisation.circle_detail, join_style=join, mitre_limit=2
+            -c_offset,
+            resolution=o.optimisation.circle_detail,
+            join_style=join,
+            mitre_limit=2,
         )
         approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.distance_between_paths) / 2
         print("Approximative:" + str(approxn))
@@ -577,7 +583,10 @@ async def pocket(o):
             if pnew.is_empty:
                 # test if the last curve will leave material
                 pt = p.buffer(
-                    -c_offset, o.optimisation.circle_detail, join_style=join, mitre_limit=2
+                    -c_offset,
+                    o.optimisation.circle_detail,
+                    join_style=join,
+                    mitre_limit=2,
                 )
                 if not pt.is_empty:
                     pnew = pt

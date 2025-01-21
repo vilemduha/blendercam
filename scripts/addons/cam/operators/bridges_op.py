@@ -22,12 +22,12 @@ class CamBridgesAdd(Operator):
         return context.scene is not None
 
     def execute(self, context):
-        """Execute the camera operation in the given context.
+        """Execute the CAM operation in the given context.
 
-        This function retrieves the active camera operation from the current
+        This function retrieves the active CAM operation from the current
         scene and adds automatic bridges to it. It is typically called within
         the context of a Blender operator to perform specific actions related to
-        camera operations.
+        CAM operations.
 
         Args:
             context: The context in which the operation is executed.

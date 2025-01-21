@@ -36,7 +36,7 @@ def prepare_indexed(o):
 
     # then rotate them
     for ob in o.objects:
-        ob.select = True
+        ob.select_set(True)
     s.objects.active = ob
     bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
 
@@ -45,16 +45,16 @@ def prepare_indexed(o):
     ori = s.objects[oriname]
     o.orientation_matrix = ori.matrix_world.copy()
     o.rotationaxes = rotation_to_2_axes(ori.rotation_euler, "CA")
-    ori.select = True
+    ori.select_set(True)
     s.objects.active = ori
     # we parent all objects to the orientation object
     bpy.ops.object.parent_set(type="OBJECT", keep_transform=True)
     for ob in o.objects:
-        ob.select = False
+        ob.select_set(False)
     # then we move the orientation object to 0,0
     bpy.ops.object.location_clear()
     bpy.ops.object.rotation_clear()
-    ori.select = False
+    ori.select_set(False)
     for ob in o.objects:
         activate(ob)
 
@@ -66,7 +66,7 @@ def cleanup_indexed(operation):
 
     This function takes an operation object and updates the orientation of a
     specified object in the scene based on the provided orientation matrix.
-    It also sets the location and rotation of a camera path object to match
+    It also sets the location and rotation of a CAM path object to match
     the updated orientation. Additionally, it reassigns parent-child
     relationships for the objects involved in the operation and updates
     their world matrices.
