@@ -112,6 +112,7 @@ class CamOperationCopy(Operator):
 
         if len(scene.cam_operations) == 0:
             return {"CANCELLED"}
+
         copyop = scene.cam_operations[scene.cam_active_operation]
         scene.cam_operations.add()
         scene.cam_active_operation += 1
@@ -120,11 +121,13 @@ class CamOperationCopy(Operator):
         o = scene.cam_operations[scene.cam_active_operation]
 
         for k in copyop.keys():
+            print("Key ", copyop[k])
             value = copyop[k]
             if isinstance(value, bpy.types.PropertyGroup):
                 for subkey in value.keys():
+                    print("Subkey ", value[subkey])
                     o[k][subkey] = value[subkey]
-            elif isinstance(value, (int, float, str, bool, list)):
+            else:
                 o[k] = value
 
         o.computing = False

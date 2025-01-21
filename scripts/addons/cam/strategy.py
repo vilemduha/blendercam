@@ -16,7 +16,7 @@ import time
 
 import shapely
 from shapely.geometry import polygon as spolygon
-from shapely.geometry import Point  # Double check this import!
+from shapely.geometry import Point
 from shapely import geometry as sgeometry
 from shapely import affinity
 
