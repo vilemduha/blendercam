@@ -22,7 +22,7 @@ from ..utilities.geom_utils import triangle, s_sine
 
 
 class CamSineCurve(Operator):
-    """Object Sine"""  # by Alain Pelletier april 2021
+    """Create a Sine Wave Curve"""  # by Alain Pelletier april 2021
 
     bl_idname = "object.sine"
     bl_label = "Periodic Wave"
@@ -197,7 +197,7 @@ class CamSineCurve(Operator):
 
 
 class CamLissajousCurve(Operator):
-    """Lissajous"""  # by Alain Pelletier april 2021
+    """Create a Lissajous Curve (Knot / Weave Pattern)"""  # by Alain Pelletier april 2021
 
     bl_idname = "object.lissajous"
     bl_label = "Lissajous Figure"
@@ -336,7 +336,7 @@ class CamLissajousCurve(Operator):
 
 
 class CamHypotrochoidCurve(Operator):
-    """Hypotrochoid"""  # by Alain Pelletier april 2021
+    """Create a Hypotrochoid Curve (Spirograph-type Pattern)"""  # by Alain Pelletier april 2021
 
     bl_idname = "object.hypotrochoid"
     bl_label = "Spirograph Type Figure"
@@ -432,7 +432,7 @@ class CamHypotrochoidCurve(Operator):
 
 
 class CamCustomCurve(Operator):
-    """Object Custom Curve"""  # by Alain Pelletier april 2021
+    """Create a Curve based on User Defined Variables"""  # by Alain Pelletier april 2021
 
     bl_idname = "object.customcurve"
     bl_label = "Custom Curve"

@@ -216,7 +216,7 @@ class CamCurveIntarsion(Operator):
 
 # intarsion or joints
 class CamCurveSimpleOvercuts(Operator):
-    """Adds Overcuts for Slots"""
+    """Adds Simple Fillets / Overcuts for Slots"""
 
     bl_idname = "object.curve_overcuts"
     bl_label = "Simple Fillet Overcuts"
@@ -330,7 +330,7 @@ class CamCurveSimpleOvercuts(Operator):
 
 # Overcut type B
 class CamCurveBoneFilletOvercuts(Operator):
-    """Adds Overcuts for Slots"""
+    """Adds Dogbone, T-bone Fillets / Overcuts for Slots"""
 
     bl_idname = "object.curve_overcuts_b"
     bl_label = "Bone Fillet Overcuts"
@@ -596,7 +596,7 @@ class CamCurveBoneFilletOvercuts(Operator):
 
 
 class CamCurveRemoveDoubles(Operator):
-    """Curve Remove Doubles"""
+    """Remove Duplicate Points from the Selected Curve"""
 
     bl_idname = "object.curve_remove_doubles"
     bl_label = "Remove Curve Doubles"
@@ -766,7 +766,7 @@ class CamMeshGetPockets(Operator):
 
 # this operator finds the silhouette of objects(meshes, curves just get converted) and offsets it.
 class CamOffsetSilhouete(Operator):
-    """Curve Offset Operation"""
+    """Offset Object Silhouette"""
 
     bl_idname = "object.silhouette_offset"
     bl_label = "Silhouette & Offset"
@@ -945,7 +945,7 @@ class CamOffsetSilhouete(Operator):
 
 
 class CamObjectSilhouette(Operator):
-    """Object Silhouette"""
+    """Create Object Silhouette"""
 
     bl_idname = "object.silhouette"
     bl_label = "Object Silhouette"
