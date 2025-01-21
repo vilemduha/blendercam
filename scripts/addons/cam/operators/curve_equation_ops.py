@@ -153,7 +153,7 @@ class CamSineCurve(Operator):
 
         # build triangle wave from fourier series
         elif self.wave == "triangle":
-            zstring = f"{round(offset, 6) + triangle(80, period, amp)}"
+            zstring = f"{round(offset, 6)} + {triangle(80, period, amp)}"
             if self.beat_period != 0:
                 zstring += f"+ {triangle(80, period+beatperiod, amp)}"
 

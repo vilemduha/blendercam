@@ -135,9 +135,27 @@ class CamCurveHatch(Operator):
     bl_label = "CrossHatch Curve"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
-    angle: FloatProperty(default=0, min=-pi / 2, max=pi / 2, precision=4, subtype="ANGLE")
-    distance: FloatProperty(default=0.003, min=0.0001, max=3.0, precision=4, unit="LENGTH")
-    offset: FloatProperty(default=0, min=-1.0, max=3.0, precision=4, unit="LENGTH")
+    angle: FloatProperty(
+        default=0,
+        min=-pi / 2,
+        max=pi / 2,
+        precision=4,
+        subtype="ANGLE",
+    )
+    distance: FloatProperty(
+        default=0.003,
+        min=0.0001,
+        max=3.0,
+        precision=4,
+        unit="LENGTH",
+    )
+    offset: FloatProperty(
+        default=0,
+        min=-1.0,
+        max=3.0,
+        precision=4,
+        unit="LENGTH",
+    )
     pocket_shape: EnumProperty(
         name="Pocket Shape",
         items=(
