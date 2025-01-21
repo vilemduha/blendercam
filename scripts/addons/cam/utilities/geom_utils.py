@@ -75,7 +75,7 @@ def helix(r, np, zstart, pend, rev):
 
 
 def get_container():
-    """Get or create a container object for camera objects.
+    """Get or create a container object for CAM objects.
 
     This function checks if a container object named 'CAM_OBJECTS' exists in
     the current Blender scene. If it does not exist, the function creates a
@@ -85,7 +85,7 @@ def get_container():
     returns that object.
 
     Returns:
-        bpy.types.Object: The container object for camera objects, either newly created or
+        bpy.types.Object: The container object for CAM objects, either newly created or
             existing.
     """
 
