@@ -133,7 +133,7 @@ def create_parametric_curve(
     spline = curve.splines.new("BEZIER")
     spline.bezier_points.add(iterations)
 
-    if use_cubic:
+    if use_cubic and iterations > 0:
         points = [
             function(((i - 3) / (3 * iterations)) * (max - min) + min, *args, **kwargs)
             for i in range((3 * (iterations + 2)) + 1)
