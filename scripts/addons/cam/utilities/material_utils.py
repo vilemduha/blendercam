@@ -45,12 +45,12 @@ def add_material_area_object():
     already exists in the current scene. If it does, it retrieves that
     object; if not, it creates a new cube mesh object to serve as the
     material area. The dimensions and location of the object are set based
-    on the current camera operation's bounds. The function also applies
+    on the current CAM operation's bounds. The function also applies
     transformations to ensure the object's location and dimensions are
     correctly set.  The created or retrieved object is configured to be non-
     renderable and non-selectable in the viewport, while still being
     selectable for operations. This is useful for visualizing the working
-    area of the camera without affecting the render output.  Raises:
+    area of the CAM without affecting the render output.  Raises:
     None
     """
 

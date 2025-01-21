@@ -22,10 +22,10 @@ class CamOrientationAdd(Operator):
         return context.scene is not None
 
     def execute(self, context):
-        """Execute the camera orientation operation in Blender.
+        """Execute the CAM orientation operation in Blender.
 
-        This function retrieves the active camera operation from the current
-        scene, creates an empty object to represent the camera orientation, and
+        This function retrieves the active CAM operation from the current
+        scene, creates an empty object to represent the CAM orientation, and
         adds it to a specified group. The empty object is named based on the
         operation's name and the current count of objects in the group. The size
         of the empty object is set to a predefined value for visibility.

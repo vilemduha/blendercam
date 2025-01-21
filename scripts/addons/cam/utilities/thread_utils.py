@@ -2,6 +2,7 @@
 
 They mostly call the functions from 'utils.py'
 """
+
 import threading
 
 import bpy
@@ -46,12 +47,12 @@ def thread_read(tcom):
 
 @bpy.app.handlers.persistent
 def timer_update(context):
-    """Monitor background processes related to camera path calculations.
+    """Monitor background processes related to CAM path calculations.
 
     This function checks the status of background processes that are
-    responsible for calculating camera paths. It retrieves the current
+    responsible for calculating CAM paths. It retrieves the current
     processes and monitors their state. If a process has finished, it
-    updates the corresponding camera operation and reloads the necessary
+    updates the corresponding CAM operation and reloads the necessary
     paths. If the process is still running, it restarts the associated
     thread to continue monitoring.
 

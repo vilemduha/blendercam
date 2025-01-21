@@ -20,10 +20,10 @@ class CamChainAdd(Operator):
         return context.scene is not None
 
     def execute(self, context):
-        """Execute the camera chain creation in the given context.
+        """Execute the CAM chain creation in the given context.
 
-        This function adds a new camera chain to the current scene in Blender.
-        It updates the active camera chain index and assigns a name and filename
+        This function adds a new CAM chain to the current scene in Blender.
+        It updates the active CAM chain index and assigns a name and filename
         to the newly created chain. The function is intended to be called within
         a Blender operator context.
 
@@ -59,10 +59,10 @@ class CamChainRemove(Operator):
         return context.scene is not None
 
     def execute(self, context):
-        """Execute the camera chain removal process.
+        """Execute the CAM chain removal process.
 
-        This function removes the currently active camera chain from the scene
-        and decrements the active camera chain index if it is greater than zero.
+        This function removes the currently active CAM chain from the scene
+        and decrements the active CAM chain index if it is greater than zero.
         It modifies the Blender context to reflect these changes.
 
         Args:
@@ -92,13 +92,13 @@ class CamChainOperationAdd(Operator):
         return context.scene is not None
 
     def execute(self, context):
-        """Execute an operation in the active camera chain.
+        """Execute an operation in the active CAM chain.
 
-        This function retrieves the active camera chain from the current scene
+        This function retrieves the active CAM chain from the current scene
         and adds a new operation to it. It increments the active operation index
-        and assigns the name of the currently selected camera operation to the
+        and assigns the name of the currently selected CAM operation to the
         newly added operation. This is typically used in the context of managing
-        camera operations in a 3D environment.
+        CAM operations in a 3D environment.
 
         Args:
             context: The context in which the operation is executed.
@@ -128,9 +128,9 @@ class CamChainOperationUp(Operator):
         return context.scene is not None
 
     def execute(self, context):
-        """Execute the operation to move the active camera operation in the chain.
+        """Execute the operation to move the active CAM operation in the chain.
 
-        This function retrieves the current scene and the active camera chain.
+        This function retrieves the current scene and the active CAM chain.
         If there is an active operation (i.e., its index is greater than 0), it
         moves the operation one step up in the chain by adjusting the indices
         accordingly. After moving the operation, it updates the active operation
@@ -165,9 +165,9 @@ class CamChainOperationDown(Operator):
         return context.scene is not None
 
     def execute(self, context):
-        """Execute the operation to move the active camera operation in the chain.
+        """Execute the operation to move the active CAM operation in the chain.
 
-        This function retrieves the current scene and the active camera chain.
+        This function retrieves the current scene and the active CAM chain.
         It checks if the active operation can be moved down in the list of
         operations. If so, it moves the active operation one position down and
         updates the active operation index accordingly.
@@ -201,10 +201,10 @@ class CamChainOperationRemove(Operator):
         return context.scene is not None
 
     def execute(self, context):
-        """Execute the operation to remove the active operation from the camera
+        """Execute the operation to remove the active operation from the CAM
         chain.
 
-        This method accesses the current scene and retrieves the active camera
+        This method accesses the current scene and retrieves the active CAM
         chain. It then removes the currently active operation from that chain
         and adjusts the index of the active operation accordingly. If the active
         operation index becomes negative, it resets it to zero to ensure it
