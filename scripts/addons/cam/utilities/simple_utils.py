@@ -386,15 +386,15 @@ def get_cache_path(o):
 
 
 def get_simulation_path():
-    """Get the simulation path for temporary camera files.
+    """Get the simulation path for temporary CAM files.
 
     This function retrieves the file path of the current Blender project and
-    constructs a new path for temporary camera files by appending 'temp_cam'
+    constructs a new path for temporary CAM files by appending 'temp_cam'
     to the directory of the current file. The constructed path is returned
     as a string.
 
     Returns:
-        str: The path to the temporary camera directory.
+        str: The path to the temporary CAM directory.
     """
     fn = bpy.data.filepath
     l = len(bpy.path.basename(fn))

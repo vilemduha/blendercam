@@ -16,7 +16,7 @@ import time
 
 import shapely
 from shapely.geometry import polygon as spolygon
-from shapely.geometry import Point  # Double check this import!
+from shapely.geometry import Point
 from shapely import geometry as sgeometry
 from shapely import affinity
 
@@ -73,7 +73,7 @@ def add_pocket(maxdepth, sname, new_cutter_diameter):
 
     This function first deselects all objects in the scene and then checks
     for any existing medial pocket objects, deleting them if found. It
-    verifies whether a medial pocket operation already exists in the camera
+    verifies whether a medial pocket operation already exists in the CAM
     operations. If it does not exist, it creates a new pocket operation with
     the specified parameters. The function also modifies the selected
     object's silhouette offset based on the new cutter diameter.

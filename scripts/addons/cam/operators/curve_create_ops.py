@@ -135,9 +135,27 @@ class CamCurveHatch(Operator):
     bl_label = "CrossHatch Curve"
     bl_options = {"REGISTER", "UNDO", "PRESET"}
 
-    angle: FloatProperty(default=0, min=-pi / 2, max=pi / 2, precision=4, subtype="ANGLE")
-    distance: FloatProperty(default=0.003, min=0, max=3.0, precision=4, unit="LENGTH")
-    offset: FloatProperty(default=0, min=-1.0, max=3.0, precision=4, unit="LENGTH")
+    angle: FloatProperty(
+        default=0,
+        min=-pi / 2,
+        max=pi / 2,
+        precision=4,
+        subtype="ANGLE",
+    )
+    distance: FloatProperty(
+        default=0.003,
+        min=0.0001,
+        max=3.0,
+        precision=4,
+        unit="LENGTH",
+    )
+    offset: FloatProperty(
+        default=0,
+        min=-1.0,
+        max=3.0,
+        precision=4,
+        unit="LENGTH",
+    )
     pocket_shape: EnumProperty(
         name="Pocket Shape",
         items=(
@@ -244,7 +262,7 @@ class CamCurveHatch(Operator):
 
 
 class CamCurvePlate(Operator):
-    """Perform Generates Rounded Plate with Mounting Holes"""  # by Alain Pelletier Sept 2021
+    """Generates Rounded Plate with Mounting Holes"""  # by Alain Pelletier Sept 2021
 
     bl_idname = "object.curve_plate"
     bl_label = "Sign Plate"
@@ -645,7 +663,7 @@ class CamCurvePlate(Operator):
 
 
 class CamCurveFlatCone(Operator):
-    """Generates cone from flat stock"""  # by Alain Pelletier Sept 2021
+    """Generates Cone from Flat Stock"""  # by Alain Pelletier Sept 2021
 
     bl_idname = "object.curve_flat_cone"
     bl_label = "Cone Flat Calculator"
@@ -654,7 +672,7 @@ class CamCurveFlatCone(Operator):
     small_d: FloatProperty(
         name="Small Diameter",
         default=0.025,
-        min=0,
+        min=0.0001,
         max=0.1,
         precision=4,
         unit="LENGTH",
@@ -662,7 +680,7 @@ class CamCurveFlatCone(Operator):
     large_d: FloatProperty(
         name="Large Diameter",
         default=0.3048,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -670,7 +688,7 @@ class CamCurveFlatCone(Operator):
     height: FloatProperty(
         name="Height of Cone",
         default=0.457,
-        min=0,
+        min=0.0001,
         max=3.0,
         precision=4,
         unit="LENGTH",
@@ -1934,8 +1952,11 @@ class CamCurvePuzzle(Operator):
 
 
 class CamCurveGear(Operator):
-    """Generates Involute Gears // version 1.1 by Leemon Baird, 2011, Leemon@Leemon.com
-    http://www.thingiverse.com/thing:5505"""  # ported by Alain Pelletier January 2022
+    """Generates Involute Gears"""
+
+    # // version 1.1 by Leemon Baird, 2011, Leemon@Leemon.com
+    # http://www.thingiverse.com/thing:5505
+    # # ported by Alain Pelletier January 2022
 
     bl_idname = "object.curve_gear"
     bl_label = "Gears"
@@ -1944,15 +1965,17 @@ class CamCurveGear(Operator):
     tooth_spacing: FloatProperty(
         name="Distance per Tooth",
         default=0.010,
-        min=0.001,
+        min=0.01,
         max=1.0,
         precision=4,
         unit="LENGTH",
     )
+
     tooth_amount: IntProperty(
         name="Amount of Teeth",
         default=7,
-        min=4,
+        min=6,  # min=4,
+        max=32,
     )
 
     spoke_amount: IntProperty(
@@ -1964,7 +1987,7 @@ class CamCurveGear(Operator):
     hole_diameter: FloatProperty(
         name="Hole Diameter",
         default=0.003175,
-        min=0,
+        min=0.00001,
         max=3.0,
         precision=4,
         unit="LENGTH",

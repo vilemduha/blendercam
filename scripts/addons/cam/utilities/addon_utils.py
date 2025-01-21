@@ -104,10 +104,10 @@ def on_blender_startup(context):
 
     This function verifies the presence of necessary Blender add-ons and
     installs any that are missing. It also resets any ongoing computations
-    in camera operations and sets the interface level to the previously used
+    in CAM operations and sets the interface level to the previously used
     level when loading a new file. If the add-on has been updated, it copies
     the necessary presets from the source to the target directory.
-    Additionally, it checks for updates to the camera plugin and updates
+    Additionally, it checks for updates to the CAM plugin and updates
     operation presets if required.
 
     Args:

@@ -66,7 +66,7 @@ def cleanup_indexed(operation):
 
     This function takes an operation object and updates the orientation of a
     specified object in the scene based on the provided orientation matrix.
-    It also sets the location and rotation of a camera path object to match
+    It also sets the location and rotation of a CAM path object to match
     the updated orientation. Additionally, it reassigns parent-child
     relationships for the objects involved in the operation and updates
     their world matrices.

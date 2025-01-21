@@ -111,15 +111,15 @@ def deleteFirstVert(ob):
 
 
 def testCalc(o):
-    """Test the calculation of the camera path for a given object.
+    """Test the calculation of the CAM path for a given object.
 
-    This function invokes the Blender operator to calculate the camera path
+    This function invokes the Blender operator to calculate the CAM path
     for the specified object and then deletes the first vertex of that
     object. It is intended to be used within a Blender environment where the
     bpy module is available.
 
     Args:
-        o (Object): The Blender object for which the camera path is to be calculated.
+        o (Object): The Blender object for which the CAM path is to be calculated.
     """
     bpy.ops.object.calculate_cam_path()
     deleteFirstVert(bpy.data.objects[o.name])
@@ -129,8 +129,8 @@ def testCutout(pos):
     """Test the cutout functionality in the scene.
 
     This function adds a test curve based on the provided position, performs
-    a camera operation, and sets the strategy to 'CUTOUT'. It then calls the
-    `testCalc` function to perform further calculations on the camera
+    a CAM operation, and sets the strategy to 'CUTOUT'. It then calls the
+    `testCalc` function to perform further calculations on the CAM
     operation.
 
     Args:
@@ -148,7 +148,7 @@ def testPocket(pos):
     """Test the pocket operation in a 3D scene.
 
     This function sets up a pocket operation by adding a test curve based on
-    the provided position. It configures the camera operation settings for
+    the provided position. It configures the CAM operation settings for
     the pocket strategy, enabling helix entry and tangential retraction.
     Finally, it performs a calculation based on the configured operation.
 
@@ -166,12 +166,12 @@ def testPocket(pos):
 
 
 def testParallel(pos):
-    """Test the parallel functionality of the camera operations.
+    """Test the parallel functionality of the CAM operations.
 
     This function adds a test mesh at a specified position and then performs
-    camera operations in the Blender environment. It sets the ambient
-    behavior of the camera operation to 'AROUND' and configures the material
-    radius around the model. Finally, it calculates the camera path based on
+    CAM operations in the Blender environment. It sets the ambient
+    behavior of the CAM operation to 'AROUND' and configures the material
+    radius around the model. Finally, it calculates the CAM path based on
     the current scene settings.
 
     Args:
@@ -190,7 +190,7 @@ def testWaterline(pos):
     """Test the waterline functionality in the scene.
 
     This function adds a test mesh at a specified position and then performs
-    a camera operation with the strategy set to 'WATERLINE'. It also
+    a CAM operation with the strategy set to 'WATERLINE'. It also
     configures the optimization pixel size for the operation. The function
     is intended for use in a 3D environment where waterline calculations are
     necessary for rendering or simulation.
@@ -219,11 +219,11 @@ def testSimulation():
 
 
 def cleanUp():
-    """Clean up the Blender scene by removing all objects and camera
+    """Clean up the Blender scene by removing all objects and CAM
     operations.
 
     This function selects all objects in the current Blender scene and
-    deletes them. It also removes any camera operations that are present in
+    deletes them. It also removes any CAM operations that are present in
     the scene. This is useful for resetting the scene to a clean state
     before performing further operations.
     """
@@ -234,18 +234,18 @@ def cleanUp():
 
 
 def testOperation(i):
-    """Test the operation of a camera path in Blender.
+    """Test the operation of a CAM path in Blender.
 
-    This function tests a specific camera operation by comparing the
-    generated camera path with an existing reference path. It retrieves the
-    camera operation from the scene and checks if the generated path matches
+    This function tests a specific CAM operation by comparing the
+    generated CAM path with an existing reference path. It retrieves the
+    CAM operation from the scene and checks if the generated path matches
     the expected path in terms of vertex count and positions. If there is no
     existing reference path, it marks the new result as comparable. The
     function generates a report detailing the results of the comparison,
     including any discrepancies found.
 
     Args:
-        i (int): The index of the camera operation to test.
+        i (int): The index of the CAM operation to test.
 
     Returns:
         str: A report summarizing the results of the operation test.
@@ -289,13 +289,13 @@ def testOperation(i):
 
 
 def testAll():
-    """Run tests on all camera operations in the current scene.
+    """Run tests on all CAM operations in the current scene.
 
-    This function iterates through all camera operations defined in the
+    This function iterates through all CAM operations defined in the
     current Blender scene and executes a test for each operation. The
     results of these tests are collected into a report string, which is then
     printed to the console. This is useful for verifying the functionality
-    of camera operations within the Blender environment.
+    of CAM operations within the Blender environment.
     """
     s = bpy.context.scene
     report = ""

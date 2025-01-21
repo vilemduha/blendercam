@@ -80,9 +80,9 @@ def get_operation_sources(o):
 
 
 def reload_paths(o):
-    """Reload the camera path data from a pickle file.
+    """Reload the CAM path data from a pickle file.
 
-    This function retrieves the camera path data associated with the given
+    This function retrieves the CAM path data associated with the given
     object `o`. It constructs a new mesh from the path vertices and updates
     the object's properties with the loaded data. If a previous path mesh
     exists, it is removed to avoid memory leaks. The function also handles
@@ -90,7 +90,7 @@ def reload_paths(o):
     current scene.
 
     Args:
-        o (Object): The object for which the camera path is being
+        o (Object): The object for which the CAM path is being
     """
 
     oname = "cam_path_" + o.name
@@ -136,10 +136,10 @@ def reload_paths(o):
 
 
 def update_operation(self, context):
-    """Update the visibility and selection state of camera operations in the
+    """Update the visibility and selection state of CAM operations in the
     scene.
 
-    This method manages the visibility of objects associated with camera
+    This method manages the visibility of objects associated with CAM
     operations based on the current active operation. If the
     'hide_all_others' flag is set to true, it hides all other objects except
     for the currently active one. If the flag is false, it restores the
@@ -228,15 +228,15 @@ def source_valid(o, context):
 
 
 def operation_valid(self, context):
-    """Validate the current camera operation in the given context.
+    """Validate the current CAM operation in the given context.
 
-    This method checks if the active camera operation is valid based on the
+    This method checks if the active CAM operation is valid based on the
     current scene context. It updates the operation's validity status and
     provides warnings if the source object is invalid. Additionally, it
     configures specific settings related to image geometry sources.
 
     Args:
-        context (Context): The context containing the scene and camera operations.
+        context (Context): The context containing the scene and CAM operations.
     """
 
     scene = context.scene
@@ -265,14 +265,14 @@ def chain_valid(chain, context):
     This function verifies if all operations in the provided chain are valid
     according to the current scene context. It first checks if the chain
     contains any operations. If it does, it iterates through each operation
-    in the chain and checks if it exists in the scene's camera operations.
+    in the chain and checks if it exists in the scene's CAM operations.
     If an operation is not found or is deemed invalid, the function returns
     a tuple indicating the failure and provides an appropriate error
     message. If all operations are valid, it returns a success indication.
 
     Args:
         chain (Chain): The chain of operations to validate.
-        context (Context): The context containing the scene and camera operations.
+        context (Context): The context containing the scene and CAM operations.
 
     Returns:
         tuple: A tuple containing a boolean indicating validity and an error message
@@ -455,11 +455,11 @@ def update_rest(o, context):
 
 
 def update_operation(self, context):
-    """Update the camera operation based on the current context.
+    """Update the CAM operation based on the current context.
 
-    This function retrieves the active camera operation from the Blender
+    This function retrieves the active CAM operation from the Blender
     context and updates it using the `updateRest` function. It accesses the
-    active operation from the scene's camera operations and passes the
+    active operation from the scene's CAM operations and passes the
     current context to the updating function.
 
     Args:
@@ -472,11 +472,11 @@ def update_operation(self, context):
 
 
 def update_zbuffer_image(self, context):
-    """Update the Z-buffer image based on the active camera operation.
+    """Update the Z-buffer image based on the active CAM operation.
 
-    This function retrieves the currently active camera operation from the
+    This function retrieves the currently active CAM operation from the
     Blender context and updates the Z-buffer image accordingly. It accesses
-    the scene's camera operations and invokes the `updateZbufferImage`
+    the scene's CAM operations and invokes the `updateZbufferImage`
     function with the active operation and context.
 
     Args:
@@ -493,7 +493,7 @@ def get_chain_operations(chain):
 
     This function iterates through the operations of the provided chain
     object and retrieves the corresponding operations from the current
-    scene's camera operations in Blender. Due to limitations in Blender,
+    scene's CAM operations in Blender. Due to limitations in Blender,
     chain objects cannot store operations directly, so this function serves
     to extract and return the relevant operations for further processing.
 

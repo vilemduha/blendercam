@@ -67,7 +67,7 @@ def pack_curves():
     """Pack selected curves into a defined area based on specified settings.
 
     This function organizes selected curve objects in Blender by packing
-    them into a specified area defined by the camera pack settings. It
+    them into a specified area defined by the CAM pack settings. It
     calculates the optimal positions for each curve while considering
     parameters such as sheet size, fill direction, distance, tolerance, and
     rotation. The function utilizes geometric operations to ensure that the
