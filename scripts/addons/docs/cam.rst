@@ -7,7 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   operators
+   cam.operators
    cam.post_processors
    cam.properties
    cam.ui

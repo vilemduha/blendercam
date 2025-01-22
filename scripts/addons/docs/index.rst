@@ -6,6 +6,8 @@
 Welcome to Fabex's API Documentation!
 ==========================================
 
+   user_guide
+
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
