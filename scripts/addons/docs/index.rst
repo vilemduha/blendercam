@@ -17,10 +17,22 @@ User Guide
    :maxdepth: 1
 
    install
+   panels
+   tools
+   starting
+   profilepocket
 
 This section is for new users, containing basic info on how to install and use the extension.
 
-:doc:`install` contains Installation instructions.
+:doc:`install` contains instructions for downloading and installing Fabex and Blender.
+
+:doc:`panels` gives descriptions of what each of the panels in the UI is for.
+
+:doc:`tools` offers an introduction to the various tools packaged with Fabex.
+
+:doc:`starting` is a good place for newcomers to begin.
+
+:doc:`profilepocket` contains a step-by-step guide for completing these common operations.
 
 Developer Guide
 ******************

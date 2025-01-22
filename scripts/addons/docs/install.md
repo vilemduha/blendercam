@@ -1,11 +1,12 @@
-# How to install CNC CAM extension for Blender ?
+# Installation
 
 ## Use CNC CAM extension for Blender from github 
 
 Using CNC CAM Blender extention from github is a great way to try out the newest features and fixes.  The latest build (dailybuild) of Blender can be used with the latest Master branch of CNC CAM extension and then you can live on the bleeding edge.
 
-* [1. Obtaining Blender](#obtaining-blender)
-* [2. Install (or update) Blendercam addon](#install-or-update-blendercam-addon)
+- [Installation](#installation)
+  - [Use CNC CAM extension for Blender from github](#use-cnc-cam-extension-for-blender-from-github)
+  - [Obtaining Blender](#obtaining-blender)
 
 ## Obtaining Blender
 CNC CAM is an extension for Blender. It works now with Blender version 4.21 .
