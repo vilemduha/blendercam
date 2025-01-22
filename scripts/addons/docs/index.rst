@@ -22,6 +22,8 @@ User Guide
 
 This section is for new users, containing basic info on how to install and use the extension.
 
+:doc:`fun` is fun
+
 Developer Guide
 ******************
 
@@ -42,5 +44,3 @@ This section is for people who want to contribute code to BlenderCAM, people who
 :doc:`testing` has information on how to run and contribute to the Test Suite.
 
 :doc:`workflows` contains an explanation of how the addon, testing and documentation are automated via Github Actions.
-
-:doc: `fun` is fun
