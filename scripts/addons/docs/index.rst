@@ -23,7 +23,7 @@ User Guide
 .. toctree::
    :maxdepth: 1
 
-   workflows
+   fun
 
 This site serves as an introduction to the code behind Fabex.
 
@@ -36,3 +36,5 @@ This resource is for people who want to contribute code to BlenderCAM, people wh
 :doc:`testing` has information on how to run and contribute to the Test Suite.
 
 :doc:`workflows` contains an explanation of how the addon, testing and documentation are automated via Github Actions.
+
+:doc: `fun` is fun
