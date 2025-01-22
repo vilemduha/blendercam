@@ -28,8 +28,9 @@
 </div>
 
 ## 👁️ About
-[**Fabex CNC CAM extension for Blender**](https://blendercam.com/) is an open source solution for artistic, personal, commercial or industrial CAM - Computer aided machining - a g-code generation tool.  It was called Blendercam but the name Blender can no longer be used in the name due to Trademark.
+[**Fabex CNC CAM extension for Blender**](https://blendercam.com/) is an open source solution for artistic, personal, commercial or industrial CAM - Computer aided machining - a G-code generation tool.
 
+Formerly known as BlenderCAM, the Blender Foundation has requested that external projects no longer use the name Blender due to Trademark, so it was renamed **Fabex**!.
 
 It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed. 
 
