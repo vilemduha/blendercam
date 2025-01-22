@@ -24,6 +24,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.graphviz",
     "sphinx.ext.inheritance_diagram",
+    "myst_parser",
 ]
 
 autoapi_type = "python"
@@ -43,7 +44,8 @@ exclude_patterns = [
     ".DS_Store",
     "*post_processors*",
     "*presets*",
-    "*ui*" "*tests*",
+    "*ui*",
+    "*tests*",
     "*wheels*",
 ]
 

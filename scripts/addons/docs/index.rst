@@ -14,6 +14,7 @@ Welcome to BlenderCAM's API Documentation!
    styleguide
    testing
    workflows
+   fun
 
 This site serves as an introduction to the code behind BlenderCAM.
 
