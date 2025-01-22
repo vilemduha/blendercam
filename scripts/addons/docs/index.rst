@@ -6,22 +6,24 @@
 Welcome to Fabex's API Documentation!
 ==========================================
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Contents yo
-
-   user_guide
+Developer Guide
+******************
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents
-   :titlesonly:
 
    overview
    styleguide
    testing
    workflows
 
+User Guide
+*****************
+
+.. toctree::
+   :maxdepth: 1
+
+   user_guide
 
 This site serves as an introduction to the code behind Fabex.
 
