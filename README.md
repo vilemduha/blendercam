@@ -95,22 +95,29 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 
 ```graphql
 .
-├── config - # 'startup' and 'userpref' blend files
-├── documentation - # How to Use (Wiki) - files
-├── Examples - # Bas Relief & Intarsion operation demo files and images
-├── scripts
-│   └── addons
-│       └── cam - # Main Addon Folder
-│           ├── nc - # Post-Processors
-│           ├── opencamlib - # OpenCAMLib functions
-│           ├── presets - # Quick access to pre-defined cutting tools, machines and operations
-│           │   ├── cam_cutters
-│           │   ├── cam_machines
-│           │   └── cam_operations
-│           ├── tests - # Developer Tests
-│           │   └── test_data - # Test output
-│           └── ui_panels - # User Interface
-└── static - # Logo
+├── config/ - # 'startup' and 'userpref' blend files
+├── documentation/ - # How to Use (Wiki) - files
+├── Examples/ - # Bas Relief & Intarsion operation demo files and images
+├── scripts/
+│   └── addons/
+│       └── cam/ - # Main Addon Folder
+│           ├── operators/ - # Blender Operators
+│           ├── post_processors/ - # CAM Post-Processors
+│           ├── presets/ - # Quick access to pre-defined cutting tools, machines and operations
+│           │   ├── cam_cutters/
+│           │   ├── cam_machines/
+│           │   └── cam_operations/
+│           ├── properties/ - # Blender PropertyGroups to store Machine, Operation, Cutter data
+│           ├── tests/ - # Developer Tests
+│           │   └── test_data/ - # Test output
+│           ├── ui/ - # Blender User Interface
+│           │   ├── icons/ - # .png files for custom icons
+│           │   ├── menus/
+│           │   ├── panels/
+│           │   └── pie_menu/
+│           ├── utilities/ - # Low level helper functions
+│           └── wheels/ - # Python Dependencies (as binary wheels)
+└── static/ - # Logo
 
 ```
 
