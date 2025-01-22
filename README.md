@@ -78,19 +78,19 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 > _All features listed above are for Blender 4.2.1 and up. For previous versions of Blender, check the Releases page._
 
 ## 💻 Post-processors
-* GRBL
+* [GRBL](https://github.com/gnea/grbl/wiki)
 * Iso
-* LinuxCNC - EMC2
-* Fadal
-* Heidenhain
-* Sieg KX1
+* [LinuxCNC - EMC2](https://linuxcnc.org/)
+* [Fadal](https://fadal.com/)
+* [Heidenhain](https://www.heidenhain.com/)
+* [Sieg KX1](https://www.sieg.co.za/)
 * Hafco HM-50
-* Centroïd M40
+* [Centroïd M40](https://www.centroidcnc.com/)
 * Anilam Crusader M
-* Gravos
-* WinPC-NC
-* ShopBot MTC
-* Lynx Otter o
+* [Gravos](https://www.gravos.cz/)
+* [WinPC-NC](https://www.lewetz.de/de/)
+* [ShopBot MTC](https://shopbottools.com/)
+* [Lynx Otter o](https://lynx-poland.com/)
 * ...
 
 
