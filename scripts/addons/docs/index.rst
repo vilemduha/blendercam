@@ -10,18 +10,6 @@ Welcome to Fabex's API Documentation!
    :maxdepth: 1
    :caption: Contents:
 
-User Guide
-------------
-
-   user_guide
-
-Developer Guide
------------------
-
-   overview
-   styleguide
-   testing
-   workflows
 
 
 This site serves as an introduction to the code behind Fabex.
