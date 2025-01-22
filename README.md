@@ -51,8 +51,8 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 (The full [documentation](https://blendercam.com/documentation/) can also be found on the website)
 ## 👌 Features
 
-| Feature | _Description_ | Status |
-| :---: | :--- | :---: | 
+| _Feature_ | _Description_ | _Status_ |
+| ---: | :--- | :---: | 
 | **2D & 3D Milling Strategies** | _Profile, Pocket, Drill, Parallel, Cross, Block, Spiral, Medial Axis and more_ | ✅ |
 | **Cutter Types** | _Ballnose, Ballcone, Bullnose, Flat Endmill, V-Carve, User Defined and more_ | ✅ |
 | **3D Data or 2D Images** | _Model in Blender, or import 3D objects or b/w images, and generate toolpaths_ | ✅ |
