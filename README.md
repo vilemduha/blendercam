@@ -17,7 +17,7 @@
 
 - - -
 
-### [About](#About) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer)
+### [About](#-about) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer)
 
 - - - 
 
@@ -51,28 +51,31 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 (The full [documentation](https://blendercam.com/documentation/) can also be found on the website)
 ## 👌 Features
 
-|                            | Blender from 4.2.1
-| -------------------------- | :----------------: |
-| Several Milling Strategies for 2D and 3D          |         ✔️        |
-| Cutter Types: Ball, Ballcone, Endmill Flat, V-Carve _(various angles)_, User Defined             |         ✔️         |  
-| Work with 3D Data or Depth Images       |         ✔️         |  
-| Layers and Skin for Roughing |         ✔️         |  
-| Inverse Milling   |         ✔️         |  
-| Various Options for Ambient around Model  |         ✔️         |  
-| Protection of Vertical Surfaces       |         ✔️         |  
-| Stay Low - Option for Movement       |         ✔️         |  
-| Material Size Setup  |         ✔️         |  
-| Simulation of 3D Operations        |         ✔️         |  
-| Arc Retract   |         ✔️         |  
-| Pack Curves and Slice Model   |         ✔️         |  
-| Automatic Bridges for Cutout Operation   |         ✔️         |  
-| Chain Export and Simulation  |         ✔️         |   
-| Adaptive milling speed  |         ✔️         |   
+| Feature | Description | Status |
+| :---: | :--- | :---: | 
+| 2D & 3D Milling Strategies | _Profile, Pocket, Drill, Parallel, Cross, Block, Spiral, Medial Axis and more!_ | ✅ |
+| Cutter Types | _Ballnose, Ballcone, Bullnose, Flat Endmill, V-Carve, User Defined and more!_ | ✅ |
+| Use 3D Data or 2D Images | _Model an object in Blender, or import any 3D object or Black & White image, and generate toolpaths!_ | ✅ |
+| Layers & Skin for Roughing | _Leave material during roughing passes to ensure that your finishing passes have enough to work with_ | ✅ |
+| Inverse Milling | _description_ | ✅ |
+| Ambient Around Model | _description_ | ✅ |
+| Protection of Vertical Surfaces | _description_ | ✅ |
+| Stay Low | _Option for Movement_ | ✅ |
+| Stock Material Setup | _Set up the dimensions and location of your stock material, or auto-generate them from your 3D model!_ | ✅ |
+| Simulation of 3D Operations | _Use your toolpaths to generate a 3D mesh simulation of your finished product!_ | ✅ |
+| Arc Retract | _Retracts cutter in an arc, rather than straight lines to reduce travel time_ | ✅ |
+| Pack Curves | _Auto-arrange all selected curves to fit on a plywood sheet_ | ✅ |
+| Slice Model | _Vertically slices model into a series of curves to be cut and stacked to recreate the 3D shape_ | ✅ |
+| Automatic Bridges / Tabs | _One click to add Bridges/Tabs to keep your work in place during Cutout Operations_ | ✅ |
+| Chain Export & Simulation | _Combine multiple CAM operations into a Chain, then export them as gcode, or simulate the result of all combined operations!_ | ✅ |
+| Adaptive Milling Speed | _Adjusts the operation feedrate relative to the chipload calculation_ | ✅ |
+| :warning: Helix Entry :warning: | _EXPERIMENTAL - Available in the Extension, but not yet fully supported_ | ⏳ |
+| :warning: Ramp Down :warning: | _EXPERIMENTAL - Available in the Extension, but not yet fully supported_ | ⏳ |
+| :warning: 4 Axis Milling :warning: | _Currently only possible via manual indexing_ | ⏳ |
+| :warning: 5 axis Milling :warning: | _Currently only possible via manual indexing_ | ⏳ |
 
-### Pending Features
-* Helix entry and ramp down are experimental.
-* 4 and 5 axis milling are only manual
-
+> [!NOTE]
+> _All features listed above are for Blender 4.2.1 and up. For previous versions of Blender, check the Releases page._
 
 ## 💻 Post-processors
 * GRBL
