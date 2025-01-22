@@ -55,7 +55,7 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 | :---: | :--- | :---: | 
 | 2D & 3D Milling Strategies | _Profile, Pocket, Drill, Parallel, Cross, Block, Spiral, Medial Axis and more_ | ✅ |
 | Cutter Types | _Ballnose, Ballcone, Bullnose, Flat Endmill, V-Carve, User Defined and more_ | ✅ |
-| 3D Data or 2D Images | _Model in Blender, or import any 3D object or Black & White image, and generate toolpaths_ | ✅ |
+| 3D Data or 2D Images | _Model in Blender, or import 3D objects or b/w images, and generate toolpaths_ | ✅ |
 | Layers & Skin | _Leave material during Roughing to ensure that your Finishing passes have enough to work with_ | ✅ |
 | Inverse Milling | _Cut an inverted piece for joinery, e.g. Male to Female connector_ | ✅ |
 | Ambient Around Model | _Restrict Cutter to specified radius around the model_ | ✅ |
