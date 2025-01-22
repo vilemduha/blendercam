@@ -55,20 +55,20 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 | :---: | :--- | :---: | 
 | 2D & 3D Milling Strategies | _Profile, Pocket, Drill, Parallel, Cross, Block, Spiral, Medial Axis and more!_ | ✅ |
 | Cutter Types | _Ballnose, Ballcone, Bullnose, Flat Endmill, V-Carve, User Defined and more!_ | ✅ |
-| Use 3D Data or 2D Images | _Model an object in Blender, or import any 3D object or Black & White image, and generate toolpaths!_ | ✅ |
-| Layers & Skin for Roughing | _Leave material during roughing passes to ensure that your finishing passes have enough to work with_ | ✅ |
+| 3D Data or 2D Images | _Model in Blender, or import any 3D object or Black & White image, and generate toolpaths!_ | ✅ |
+| Layers & Skin | _Leave material during Roughing to ensure that your Finishing passes have enough to work with_ | ✅ |
 | Inverse Milling | _description_ | ✅ |
 | Ambient Around Model | _description_ | ✅ |
-| Protection of Vertical Surfaces | _description_ | ✅ |
-| Stay Low | _Option for Movement_ | ✅ |
-| Stock Material Setup | _Set up the dimensions and location of your stock material, or auto-generate them from your 3D model!_ | ✅ |
-| Simulation of 3D Operations | _Use your toolpaths to generate a 3D mesh simulation of your finished product!_ | ✅ |
+| Protect Vertical Surfaces | _Cutter will move vertically when next to surfaces greater than a threshold angle_ | ✅ |
+| Stay Low | _Keeps the Cutter low, if possible, to reduce travel time_ | ✅ |
+| Stock Material Setup | _Enter dimensions & location of your stock material, or auto-generate them from your 3D model!_ | ✅ |
+| Operation Simulations | _Use your toolpaths to generate a 3D mesh simulation of your finished product!_ | ✅ |
 | Arc Retract | _Retracts cutter in an arc, rather than straight lines to reduce travel time_ | ✅ |
-| Pack Curves | _Auto-arrange all selected curves to fit on a plywood sheet_ | ✅ |
+| Pack Curves | _Auto-arrange all selected curves to fit on a plywood sheet for easy bulk cutting_ | ✅ |
 | Slice Model | _Vertically slices model into a series of curves to be cut and stacked to recreate the 3D shape_ | ✅ |
 | Automatic Bridges / Tabs | _One click to add Bridges/Tabs to keep your work in place during Cutout Operations_ | ✅ |
-| Chain Export & Simulation | _Combine multiple CAM operations into a Chain, then export them as gcode, or simulate the result of all combined operations!_ | ✅ |
-| Adaptive Milling Speed | _Adjusts the operation feedrate relative to the chipload calculation_ | ✅ |
+| Chain Operations | _Combine multiple CAM operations into a Chain, Export as Gcode, or create a Chain Simulation!_ | ✅ |
+| Adaptive Milling Speed | _Adjusts the operation feedrate relative to the chipload calculation!_ | ✅ |
 | :warning: Helix Entry :warning: | _EXPERIMENTAL - Available in the Extension, but not yet fully supported_ | ⏳ |
 | :warning: Ramp Down :warning: | _EXPERIMENTAL - Available in the Extension, but not yet fully supported_ | ⏳ |
 | :warning: 4 Axis Milling :warning: | _Currently only possible via manual indexing_ | ⏳ |
