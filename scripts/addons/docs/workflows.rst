@@ -12,7 +12,7 @@ In the root folder of the repository, there is a folder called ``.github``, and 
 This folder contains a series of ``.yaml`` or ``.yml`` (either will work) files that describe what will trigger the workflow to start (e.g.: push, pull request etc), and which workflow file to run (e.g.: ``build_and_test.yaml``)
 
 Build and Test
-==============
+****************
 ``build_and_test.yaml`` allows you to specify which version of Blender to build and test against, along with various other options.
 
 It will be triggered by a push or pull request and it will then:
@@ -23,7 +23,7 @@ It will be triggered by a push or pull request and it will then:
 - upload the addon file that it created along with a log of the test results
 
 Create New Release
-==================
+********************
 ``create_release.yaml`` allows you to specify the addon version that you want to create.
 
 The maintainer can decide whether the changes constitute a MAJOR, MINOR or PATCH release (e.g.: ``v1.5.12``):
@@ -33,7 +33,7 @@ The maintainer can decide whether the changes constitute a MAJOR, MINOR or PATCH
 - PATCH - a typo, or bugfix - the ``.12`` in ``1.5.12``
 
 Docs Pages
-==========
+***********
 ``docs_pages.yml`` will build a complete documentation website based on the files in the ``docs`` folder.
 
 Using the sphinx/Google docstring format allow this action to pull comments out of the code, and format them the same way as the Blender or Shapely docs.

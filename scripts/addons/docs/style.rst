@@ -20,7 +20,7 @@ It will ensure that your spacing, indentation etc are in line with the project g
 Most Code Editors/IDEs are able to integrate the Black formatter, so you can format your code while you work.
 
 Project Structure
-=================
+******************
 Fabex is a huge addon, with many different functions, added by many different contributors over the course of 12 years of development!
 
 In order to avoid conflicts, bugs and import errors a hierarchy has been established:
