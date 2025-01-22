@@ -43,11 +43,11 @@ It has been used for many milling projects _(artistic, personal, commercial and 
 
 Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Linux and MacOS.
 
-* [Fabex CNC CAM extension Installation](documentation/Blendercam%20Installation.md)
-* [Getting Started](documentation/Getting%20started.md)
-* [Panel Descriptions](documentation/Blendercam-Panel-Descriptions.md)
-* [Tools](documentation/Blendercam-Tools.md)
-* [Example of using Profile and Pocket operations](documentation/Profile%20and%20Pocket%20operations.md)
+* [Installation](scripts/addons/docs/install.md)
+* [Getting Started](scripts/addons/docs/starting.md)
+* [Panel Descriptions](scripts/addons/docs/panels.md)
+* [Tools](scripts/addons/docs/tools.md)
+* [Example of using Profile and Pocket operations](scripts/addons/docs/profilepocket.md)
 
 (The full [documentation](https://blendercam.com/documentation/) can also be found on the website)
 ## 👌 Features
