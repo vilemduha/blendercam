@@ -7,6 +7,7 @@ import bpy
 from bpy.types import Panel
 
 from .parent_panel import CAMParentPanel
+from ..icons import preview_collections
 
 
 class CAM_CUTTER_Panel(CAMParentPanel, Panel):
@@ -25,6 +26,19 @@ class CAM_CUTTER_Panel(CAMParentPanel, Panel):
         layout.use_property_split = True
         layout.use_property_decorate = False
 
+        fabex_icons = preview_collections["FABEX"]
+        cutter_icons = {
+            "END": "EndMillIcon",
+            "BALLNOSE": "BallnoseIcon",
+            "BULLNOSE": "BullnoseIcon",
+            "VCARVE": "VCarveIcon",
+            "BALLCONE": "BallconeIcon",
+            "CYLCONE": "CylinderConeIcon",
+            "LASER": "LaserPlasmaIcon",
+            "PLASMA": "LaserPlasmaIcon",
+            "CUSTOM": "FabexCNC_Logo",
+        }
+
         # Cutter Preset Menu
         if self.level >= 1:
             row = layout.row(align=True)
@@ -42,8 +56,14 @@ class CAM_CUTTER_Panel(CAMParentPanel, Panel):
 
         box = layout.box()
         col = box.column(align=True)
+
         # Cutter Type
-        col.prop(self.op, "cutter_type", text="Type")
+        col.prop(
+            self.op,
+            "cutter_type",
+            text="Type",
+            icon_value=fabex_icons[cutter_icons[self.op.cutter_type]].icon_id,
+        )
 
         # Ball Radius
         if self.op.cutter_type in ["BALLCONE"]:

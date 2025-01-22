@@ -34,6 +34,10 @@ from .ui import (
     register as ui_register,
     unregister as ui_unregister,
 )
+from .ui.icons import (
+    register as icons_register,
+    unregister as icons_unregister,
+)
 from .utilities.addon_utils import (
     on_blender_startup,
     keymap_register,
@@ -49,9 +53,12 @@ classes = (
 
 
 def register() -> None:
+    # Register classes from the list above
     for cls in classes:
         bpy.utils.register_class(cls)
 
+    # Import and run the Register functions of the submodules
+    icons_register()
     props_register()
     ops_register()
     ui_register()
@@ -60,12 +67,13 @@ def register() -> None:
     # CAM_OPERATION_Properties - last to allow dependencies to register before it
     bpy.utils.register_class(CAM_OPERATION_Properties)
 
+    # Store a reference to the CAM Operation Properties in the Scene so it can be easily accessed
     bpy.types.Scene.cam_operations = CollectionProperty(type=CAM_OPERATION_Properties)
 
+    # Use the Message Bus to notify when the Render Engine is changed
+    # And run the 'on_engine_change' function
     bpy.types.Scene.engine_check = object()
-
     subscribe_to = bpy.types.RenderSettings, "engine"
-
     bpy.msgbus.subscribe_rna(
         key=subscribe_to,
         owner=bpy.types.Scene.engine_check,
@@ -73,9 +81,11 @@ def register() -> None:
         notify=on_engine_change,
     )
 
+    # Get all the compatible UI panels, as defined in 'engine.py'
     for panel in get_panels():
         panel.COMPAT_ENGINES.add("FABEX_RENDER")
 
+    # Adding Application Handlers to run functions after certain events
     bpy.app.handlers.frame_change_pre.append(timer_update)
     bpy.app.handlers.load_post.append(on_blender_startup)
 
@@ -84,6 +94,7 @@ def unregister() -> None:
     for cls in classes:
         bpy.utils.unregister_class(cls)
 
+    icons_unregister()
     ui_unregister()
     ops_unregister()
     props_unregister()
@@ -96,3 +107,6 @@ def unregister() -> None:
     for panel in get_panels():
         if "FABEX_RENDER" in panel.COMPAT_ENGINES:
             panel.COMPAT_ENGINES.remove("FABEX_RENDER")
+
+    bpy.app.handlers.frame_change_pre.remove(timer_update)
+    bpy.app.handlers.load_post.remove(on_blender_startup)
