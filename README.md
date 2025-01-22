@@ -61,7 +61,7 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 | Ambient Around Model | _Restrict Cutter to specified radius around the model_ | ✅ |
 | Protect Vertical Surfaces | _Cutter moves vertically next to surfaces greater than a threshold angle_ | ✅ |
 | Stay Low | _Keeps the Cutter low, if possible, to reduce travel time_ | ✅ |
-| Stock Material Setup | _Enter dimensions & location of your stock material, or auto-generate them from your 3D model_ | ✅ |
+| Stock Material Setup | _Enter material dimensions & location, or get them from your 3D model_ | ✅ |
 | Operation Simulations | _Use your toolpaths to generate a 3D mesh simulation of your finished product_ | ✅ |
 | Arc Retract | _Retracts cutter in an arc, rather than straight lines to reduce travel time_ | ✅ |
 | Pack Curves | _Auto-arrange all selected curves to fit on a plywood sheet for easy bulk cutting_ | ✅ |
