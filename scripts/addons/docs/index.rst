@@ -7,9 +7,7 @@ Welcome to Fabex's Documentation!
 ==========================================
 
 This site serves as an introduction to Fabex, a free and open source extension for Blender, the free and open-source 3D app.
-
 Fabex allows you to generate toolpaths and gcode files based on 3D objects or 2D Images within Blender.
-
 These files can then be sent to a CNC machine to cut your designs!
 
 User Guide
@@ -18,11 +16,11 @@ User Guide
 .. toctree::
    :maxdepth: 1
 
-   fun
+   install
 
 This section is for new users, containing basic info on how to install and use the extension.
 
-:doc:`fun` is fun
+:doc:`install` contains Installation instructions.
 
 Developer Guide
 ******************
