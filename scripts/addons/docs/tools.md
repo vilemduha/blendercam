@@ -2,27 +2,6 @@
 
 Blendercam has a number of curve operators that will modify selected curves to make them better suited to CAM operations. They can be found in the Tool Shelf Panel located on the left of the 3D view editor. The operators create new curves, in most cases, which can then be used in CAM operations.
 
-- [Tools](#tools)
-  - [View Tool Shelf](#view-tool-shelf)
-  - [View Blendercam Tools](#view-blendercam-tools)
-  - [Curve Boolean](#curve-boolean)
-  - [Intarsion](#intarsion)
-  - [Add Overcuts](#add-overcuts)
-      - [Operator Options:](#operator-options)
-  - [Add OvercutsB](#add-overcutsb)
-      - [Operator Options:](#operator-options-1)
-      - [Examples:](#examples)
-        - [T-Bone](#t-bone)
-        - [T-Bone other edge](#t-bone-other-edge)
-        - [T-Bone other edge invert](#t-bone-other-edge-invert)
-        - [T-Bone other edge](#t-bone-other-edge-1)
-  - [Silhouette](#silhouette)
-  - [Silhouette Offset](#silhouette-offset)
-  - [C-Remove Doubles](#c-remove-doubles)
-  - [Get pocket surfaces](#get-pocket-surfaces)
-      - [Operator Options:](#operator-options-2)
-  - [Create Curves Shapes](#create-curves-shapes)
-
 ## View Tool Shelf
 If the Tool Shelf is not visible on the left of the 3D view then use the short cut **T** or use the mouse to left button select the small **+** near the top left border of the 3D view.
 

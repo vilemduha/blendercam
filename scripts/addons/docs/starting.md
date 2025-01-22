@@ -1,6 +1,6 @@
 # Getting Started
 
-This is a step-by-step tutorial on generating a toolpath with Blender CAM. For detailed description of panel options go [here](Blendercam-Panel-Descriptions.md).
+This is a step-by-step tutorial on generating a toolpath with Blender CAM. For detailed description of panel options go [here](panels.md).
 
 ## Change render engine
 First of all, change render engine to CAM to use the blender cam tool.

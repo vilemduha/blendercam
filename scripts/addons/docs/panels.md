@@ -1,19 +1,5 @@
 # Panels
 
-- [Panels](#panels)
-  - [Enter CAM mode](#enter-cam-mode)
-  - [CAM operations Panel](#cam-operations-panel)
-  - [CAM info and Warnings Panel](#cam-info-and-warnings-panel)
-  - [CAM operation setup Panel](#cam-operation-setup-panel)
-  - [CAM optimization Panel](#cam-optimization-panel)
-  - [CAM operation area panel](#cam-operation-area-panel)
-  - [CAM material size and position panel](#cam-material-size-and-position-panel)
-  - [CAM movement panel](#cam-movement-panel)
-  - [CAM feedrate panel](#cam-feedrate-panel)
-  - [CAM cutter panel](#cam-cutter-panel)
-  - [CAM machine panel](#cam-machine-panel)
-  - [CAM chains panel](#cam-chains-panel)
-
 
 ## Enter CAM mode
 All of the CAM panels are found in the Render Data settings.
