@@ -25,9 +25,13 @@ User Guide
 This section is for new users, containing basic info on how to install and use the extension.
 
 :doc:`install` contains instructions for downloading and installing Fabex and Blender.
+
 :doc:`panels` gives descriptions of what each of the panels in the UI is for.
+
 :doc:`tools` offers an introduction to the various tools packaged with Fabex.
+
 :doc:`starting` is a good place for newcomers to begin.
+
 :doc:`profilepocket` contains a step-by-step guide for completing these common operations.
 
 Developer Guide
@@ -44,6 +48,9 @@ Developer Guide
 This section is for people who want to contribute code to BlenderCAM, people who want to modify the addon for their needs, or anyone who simply want to better understand what is happening 'under the hood'.
 
 :doc:`overview` offers a guide to the addon files and how they relate to one another.
+
 :doc:`styleguide` gives tips on editors, linting, formatting etc.
+
 :doc:`testing` has information on how to run and contribute to the Test Suite.
+
 :doc:`workflows` contains an explanation of how the addon, testing and documentation are automated via Github Actions.
