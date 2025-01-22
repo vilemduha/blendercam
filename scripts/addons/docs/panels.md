@@ -22,14 +22,14 @@ To put blender into CAM mode do the following. The Blendercam add-on must be ena
 
 First of all, change render engine to CAM to use the blender cam tool.
 
-![Renderer selection](images/cam_render.png)
+![Renderer selection](_static/cam_render.png)
  1. select **Blender CAM** as the render engine  
  2. select the **Properties** editor
  3. select the **Render** data in order to see the CAM panels
 
 
 ## CAM operations Panel
-![CAM operations](images/opPanel2.png)
+![CAM operations](_static/opPanel2.png)
 * **Calculate path** - This calculates the operation which is currently selected in the cam operations list. The Button will stay selected until the calculation is completed.
 
 * **Simulate operation** - Works for 3 axis operations, but not for all. It creates a new object which shows the simulation - the subdivision of the object can be increased, and the resolution of the simulation also depends on simulation sampling raster detail, which is in the optimization panel
@@ -51,13 +51,13 @@ First of all, change render engine to CAM to use the blender cam tool.
 
 
 ## CAM info and Warnings Panel
-![Cam Info & warnings](images/camInfo.png)
+![Cam Info & warnings](_static/camInfo.png)
 
 This panel will show any trouble found during the computation, estimated operation time, and chipload data
 
 
 ## CAM operation setup Panel
-* ![Strategy](images/opList.png)
+* ![Strategy](_static/opList.png)
 
 
 **Strategy** sets one of the strategies.
@@ -66,49 +66,49 @@ This panel will show any trouble found during the computation, estimated operati
 
   * **Parallel** 
 
-      ![Parallel](images/opParallel.png)  
+      ![Parallel](_static/opParallel.png)  
 
       Parallel paths at any angle
 
   * **Pocket**
 
-    ![pocket](images/opPocket.png)  
+    ![pocket](_static/opPocket.png)  
 
   * **Cutout**
 
-    ![profile cutout](images/opProfile.png)  
+    ![profile cutout](_static/opProfile.png)  
 
     Cutout a silhouette using optional offset.
 
   * **Drill**
 
-    ![drill](images/opDrill.png)  
+    ![drill](_static/opDrill.png)  
 
     This detects circles or squares in any 2d curve and converts these into a drill operation.  Supports peck drilling if layers are enabled.
 
   * **Cross**
 
-    ![cross](images/opCross.png)  
+    ![cross](_static/opCross.png)  
 
   * **Block**
 
-    ![block](images/opBlock.png)  
+    ![block](_static/opBlock.png)  
 
   * **Spiral**
 
-    ![spiral](images/opSpiral.png)  
+    ![spiral](_static/opSpiral.png)  
 
     Best suited for coins or other circular objects
 
   * **Circles**
 
-    ![circles](images/opCircle.png)  
+    ![circles](_static/opCircle.png)  
 
     Best suited for coins or other circular objects
 
   * **Outline Fill**
 
-    ![outline fill](images/opOutline.png)  
+    ![outline fill](_static/opOutline.png)  
 
   * **Carve**
 
@@ -118,7 +118,7 @@ This panel will show any trouble found during the computation, estimated operati
 
   * **Overview of principles strategies**
 
-  ![Strategy Overview](images/opOverview.png)
+  ![Strategy Overview](_static/opOverview.png)
   
   ![waterline](https://cloud.githubusercontent.com/assets/648108/12060351/1316d53a-af44-11e5-8158-31c349a7a265.jpg)
 
@@ -136,7 +136,7 @@ Various strategies will combine these parameters:
 
 
 ## CAM optimization Panel
-![Cam Optimization](images/camOptim.png)
+![Cam Optimization](_static/camOptim.png)
 
 This panel is crucial for performance of blenderCAM.
 
@@ -152,7 +152,7 @@ This panel is crucial for performance of blenderCAM.
 
 
 ## CAM operation area panel
-![CAM Operation Area](images/camOpArea.png)
+![CAM Operation Area](_static/camOpArea.png)
 * **Use layers** - sets up layers for roughing.
 * **Step down** - specifies thickness of the layers for roughing
 * **Ambient** - how much space surrounding the object will be used for the milling
@@ -162,7 +162,7 @@ This panel is crucial for performance of blenderCAM.
 
 
 ## CAM material size and position panel
-![CAM material size and position](images/materialSize.png)
+![CAM material size and position](_static/materialSize.png)
 
 * **Estimate from model** - will assume the workpiece/material has the same size as the model, with radius around the model.
 If not enabled then the Material origin and Material size are used in case when the material/workpiece is not the same as the model.  The 3D view will show the machine work area with a hashed outline and the material size and position will be a lighter grey.  The material object is not selectable in the 3D view but can be selected in the Outliner and has the name CAM_material.
@@ -170,7 +170,7 @@ If not enabled then the Material origin and Material size are used in case when 
 
 
 ## CAM movement panel
-![CAM Movement](images/camMovement.png)
+![CAM Movement](_static/camMovement.png)
 
 * **G64 trajectory** This enables the "naive cam detector" and enables blending with a tolerance. If you program G64 P0.05, you tell the planner that you want continuous feed, but at programmed corners you want it to slow down enough so that the tool path can stay within 0.05 user units of the programmed path. The exact amount of slowdown depends on the geometry of the programmed corner and the machine constraints, but the only thing the programmer needs to worry about is the tolerance. This gives the programmer complete control over the path following compromise. 
 * **Movement type** - is supported only for some of the strategies, sets up how the cutter moves into the material
@@ -187,7 +187,7 @@ If not enabled then the Material origin and Material size are used in case when 
 
 
 ## CAM feedrate panel
-![CAM feedrate](images/camFeedrate.png)
+![CAM feedrate](_static/camFeedrate.png)
 
 * **feedrate/minute** - How much will the machine travel in 1 minute
 * **Plunge speed** - the feed speed gets reduced when the slope of the path is above the Plunge angle
@@ -196,26 +196,26 @@ If not enabled then the Material origin and Material size are used in case when 
 
 
 ## CAM cutter panel
-![CAM cutter](images/camCut.png)
+![CAM cutter](_static/camCut.png)
 
 * **Tool number** - this parameter is exported with toolchange command
 * **Cutters** - supported types are now following:
 
-![CAM cutters](images/camCut2.png)
+![CAM cutters](_static/camCut2.png)
 
 
 
 | Cutters  |   |   |
 |----------|---|---|
-| End      | ![End](images/cut-end.jpg)  |   |
-| Ballnose | ![Ballnose](images/cut-ballnose.jpg)  |   |
-| Bullnose | ![Bullnose](images/cut-bullnose.jpg)  |   |
-| V-Carve  |  ![v-carve](images/cut-v-carve.jpg) |   |
-| Ballcone |  ![Ballcone](images/cut-ballcone.jpg) |   |
-| Laser    |  ![Laser](images/cut-laser.jpg) |   |
-| Custom   |  ![Custom](images/cut-custom.jpg) |   |
+| End      | ![End](_static/cut-end.jpg)  |   |
+| Ballnose | ![Ballnose](_static/cut-ballnose.jpg)  |   |
+| Bullnose | ![Bullnose](_static/cut-bullnose.jpg)  |   |
+| V-Carve  |  ![v-carve](_static/cut-v-carve.jpg) |   |
+| Ballcone |  ![Ballcone](_static/cut-ballcone.jpg) |   |
+| Laser    |  ![Laser](_static/cut-laser.jpg) |   |
+| Custom   |  ![Custom](_static/cut-custom.jpg) |   |
 
-  ![custom cutter](images/cutCustom.png)
+  ![custom cutter](_static/cutCustom.png)
 
   * Cutter object - a 3D object of your choice available in the drop down list.
 
@@ -225,14 +225,14 @@ If not enabled then the Material origin and Material size are used in case when 
 
 
 ## CAM machine panel
-![Cam machine](images/machine.png)
+![Cam machine](_static/machine.png)
 
 This panel sets up your machine and the settings are common in the whole file.
 You can also set up your machine and then save your default file with Ctrl+U command. This way you will always start with the settings you need.
 
 * **Post processor** - this defines the formatting of the output file. If your machine is not in the list, you can try the Iso code, which is standardized g-code
 
-![post processor](images/processor.png)
+![post processor](_static/processor.png)
 
 * **Unit system** - Metric or Imperial
 * **Work area** - if the operation has a larger area than this, you will get a warning in the info panel

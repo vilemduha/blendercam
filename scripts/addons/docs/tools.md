@@ -26,18 +26,18 @@ Blendercam has a number of curve operators that will modify selected curves to m
 ## View Tool Shelf
 If the Tool Shelf is not visible on the left of the 3D view then use the short cut **T** or use the mouse to left button select the small **+** near the top left border of the 3D view.
 
-![Tool Shelf view](images/toolshelfview.png) 
+![Tool Shelf view](_static/toolshelfview.png) 
 
 ## View Blendercam Tools
-![tools](images/curvecampanel.png)
+![tools](_static/curvecampanel.png)
 
 1. The 3D view editor must be in object mode. In older version of blender, select the **Blender CAM** tab to view the **Curve CAM Tools** panel.
 2. Select the expansion arrow to see the tool buttons available.
 
 ## Curve Boolean
-![Boolean](images/bool_union.png)
-![Boolean difference](images/bool_dif.png)
-![Boolean Intersect](images/bool_inter.png)
+![Boolean](_static/bool_union.png)
+![Boolean difference](_static/bool_dif.png)
+![Boolean Intersect](_static/bool_inter.png)
 
 
 Perform a Boolean operation on two or more curves. A new curve is created.  The Boolean operations that can be performed are:
@@ -46,7 +46,7 @@ Perform a Boolean operation on two or more curves. A new curve is created.  The 
   * Intersect - resulting curve is the curve portion common to all selected curves
 
 ## Intarsion
-![intarsion](images/intarsion.png)
+![intarsion](_static/intarsion.png)
 
 Makes a new curve that is cuttable from both the inside and outside.  This is useful for [intarsia](https://en.wikipedia.org/wiki/Intarsia), inlays, and joints.  All sharp edges are rounded over using the cutter diameter. Works on mesh, text, and curve objects.
 
@@ -62,7 +62,7 @@ Adds overcuts for slots/inserts and creates a new curve.  Works on text and curv
   * **Invert** - 
 
 ## Add OvercutsB
-![Add Overcuts](images/overcut_db.png)
+![Add Overcuts](_static/overcut_db.png)
 
 An enhanced version of [Add Overcuts](#add-overcuts)
 
@@ -82,27 +82,27 @@ Add overcuts for slots/inserts/tabs and creates a new curve. Works on text and c
 #### Examples:
 
 ##### T-Bone
-![T-bone](images/overcut_tbone.png)
+![T-bone](_static/overcut_tbone.png)
 
 ##### T-Bone other edge
-![T-bone](images/overcut_tbone_oe.png)
+![T-bone](_static/overcut_tbone_oe.png)
 
 ##### T-Bone other edge invert
-![T-bone](images/overcut_tbone_oe_inv.png)
+![T-bone](_static/overcut_tbone_oe_inv.png)
 
 ##### T-Bone other edge
-![T-bone](images/overcut_tbone_oe_2.png)
+![T-bone](_static/overcut_tbone_oe_2.png)
 
 
 ## Silhouette 
 This operator finds and create the silhouette of objects(meshes, text, curves just get converted) 
 
-![Silhouette](images/silhouette.png)
+![Silhouette](_static/silhouette.png)
 
 ## Silhouette Offset
-![Silhouette Offset](images/silhouette_offset.png)
+![Silhouette Offset](_static/silhouette_offset.png)
 
-![Silhouette Offset2](images/silhouette_offset2.png)
+![Silhouette Offset2](_static/silhouette_offset2.png)
 
 This operator create offsets on a silhouette in a new curve.
 
@@ -115,8 +115,8 @@ Curve remove doubles - warning, removes beziers! Does not create a new curve but
 This operator will convert the curve to a mesh, perform remove doubles on the mesh, and then convert it back to a curve.  This can be used to fix curves that are imported into Blender from other applications i.e. stl, dxf, that may have overlapping control points in the curve which can be a problem when calculating an operation.
 
 ## Get pocket surfaces
-![Get Pocket Surface](images/get_pocket2.png)
-![Get Pocket Surface2](images/get_pocket.png)
+![Get Pocket Surface](_static/get_pocket2.png)
+![Get Pocket Surface2](_static/get_pocket.png)
 
 This operator will detect pockets in a mesh and extract them as curves.  The curves can then be used for pocket operations.  Curves that are at the same z level will be in the same object.  All generated curve objects will be placed into the same group.
 
@@ -131,17 +131,17 @@ Operator option **z limit** controls which horizontal surfaces are considered a 
 ## Create Curves Shapes 
 This operators will create shapes directly from the panel. 
 
-![Create Panel](images/createcurve.png)
+![Create Panel](_static/createcurve.png)
 
 *create sine
 
-![Create Sine](images/createsine.png)
+![Create Sine](_static/createsine.png)
 
 *create lissajous figure
-![Create Lissajous](images/createlissajous.png)
+![Create Lissajous](_static/createlissajous.png)
 
 *create spirograph type figure
-![Create Spirograph](images/createspiro.png)
+![Create Spirograph](_static/createspiro.png)
 
 *create custom curve
-![Create Custom](images/createcustum.png)
+![Create Custom](_static/createcustum.png)

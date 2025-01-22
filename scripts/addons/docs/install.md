@@ -24,4 +24,4 @@ experimental: https://github.com/pppalain/blendercam/releases
 
 <!-- ![image](https://github.com/user-attachments/assets/7776b3dd-2411-4348-b4d7-b0262f683f90)
 ![image](https://github.com/user-attachments/assets/1bec6168-5b57-48c4-afe7-310664fa979d) -->
-![img](/scripts/addons/docs/_static/beforePosition.png)
+![img](_static/beforePosition.png)
