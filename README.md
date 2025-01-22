@@ -59,7 +59,7 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 | Layers & Skin | _Leave material during Roughing to ensure that your Finishing passes have enough to work with_ | ✅ |
 | Inverse Milling | _Cut an inverted piece for joinery, e.g. Male to Female connector_ | ✅ |
 | Ambient Around Model | _Restrict Cutter to specified radius around the model_ | ✅ |
-| Protect Vertical Surfaces | _Cutter will move vertically when next to surfaces greater than a threshold angle_ | ✅ |
+| Protect Vertical Surfaces | _Cutter moves vertically next to surfaces greater than a threshold angle_ | ✅ |
 | Stay Low | _Keeps the Cutter low, if possible, to reduce travel time_ | ✅ |
 | Stock Material Setup | _Enter dimensions & location of your stock material, or auto-generate them from your 3D model_ | ✅ |
 | Operation Simulations | _Use your toolpaths to generate a 3D mesh simulation of your finished product_ | ✅ |
