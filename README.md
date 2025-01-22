@@ -64,7 +64,7 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 | Stock Material Setup | _Enter material dimensions & location, or get them from your 3D model_ | ✅ |
 | Operation Simulations | _Use your toolpaths to generate a 3D mesh simulation of your finished product_ | ✅ |
 | Arc Retract | _Retracts cutter in an arc, rather than straight lines to reduce travel time_ | ✅ |
-| Pack Curves | _Auto-arrange all selected curves to fit on a plywood sheet for easy bulk cutting_ | ✅ |
+| Pack Curves | _Arrange selected curves to fit on a plywood sheet for bulk cutting_ | ✅ |
 | Slice Model | _Vertically slices model into a series of curves to be cut and stacked to recreate the 3D shape_ | ✅ |
 | Automatic Bridges / Tabs | _One click to add Bridges/Tabs to keep your work in place during Cutout Operations_ | ✅ |
 | Chain Operations | _Combine multiple CAM operations into a Chain, Export as Gcode, or create a Chain Simulation_ | ✅ |
