@@ -2,14 +2,12 @@
 
 **FabexCNC** is an Extension for **Blender** version 4.21 and later.
 
-> [!NOTE]
 > To use Fabex with Blender 4.1 and earlier use one of the blendercam.zip releases from the Github Releases page.
 
 ## Get Blender
 
 [Download Blender from the official site.](https://www.blender.org/download/)
 
-> [!NOTE]
 > If you are a Linux user, it is recommended that you download Blender from their website, and **NOT install via a Package Manager.**
 > Blender has elected to support only Python 3.11 for Extensions, so Fabex is packaged with dependencies that are only compatible with Python 3.11.
 > Since many distros will allow you to install Blender and Python separately this can lead to version mismatch and a broken Extension.
@@ -33,6 +31,7 @@ _If you're not sure which version you want, then you probably want the Stable ve
 The Experimental version will have all the latest features, but is more likely to encounter bugs and errors and is recommended for more experienced users, developers and testers.
 
 > [!NOTE]
+> 
 > [The latest (Daily) build of Blender](https://builder.blender.org/download/daily/) can be used with the Experimental branch of FabexCNC to live on the bleeding edge!
 
 From the Releases page, download **fabexcnc.zip**.

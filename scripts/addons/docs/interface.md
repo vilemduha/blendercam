@@ -72,22 +72,22 @@ This panel will show any trouble found during the computation, estimated operati
 ![Strategy](_static/OperationSetupPanel.png)
 
 - **Axis Count** - how many axes will be used _(Default is 3, additional axes should be enabled in the Machine panel first)_
-- **Strategy** sets one of the strategies.
+- **Strategy** sets one of the milling strategies.
 
 Depending on which **Strategy** is selected, the options will differ. Below is a sampling of some common settings *(see the Strategy page for a full list of options for each Strategy)*:
-* **Inverse Milling** - used if you want to mill a form directly from positive of the object. Does not work in exact mode. Only works for 3 axis strategies.
-* **Skin** - useful for roughing, leaves a layer on the surface for finishing
-* **Angle of Paths** - this rotates the parallel and cross strategies by the specified amount. Note that e.g. rotating by 90 changes the basic axis from X to Y
+- **Inverse Milling** - used if you want to mill a form directly from positive of the object. Does not work in exact mode. Only works for 3 axis strategies.
+- **Skin** - useful for roughing, leaves a layer on the surface for finishing
+- **Angle of Paths** - this rotates the parallel and cross strategies by the specified amount. Note that e.g. rotating by 90 changes the basic axis from X to Y
 - **Toolpath Distance**
   * **Between** - also called Stepover
   * **Along** - how dense will be the operation path. This can influence accuracy of the machining. 
 <!-- * **parallel step back** - this function is only for finishing pass, where you still have to cut some substantial amount of material, and want also to save the cutter. If you set up to climb movement, it goes with climb into material, then goes in the other direction one step back - this uses the back movement of the machine for finishing the surface. Note that this also means the cutting into material will happen with a rate which is 2x of distance between toolpaths If you don't know what this all means, don't use this function. !!!!!!!!!!!!MOVED TO MOVEMENT PANEL!!!!!!!!!-->
-* **Direction** - for block and spiral strategy, decides if the path progresses from inside or from outside
-* **Carve** 
+- **Direction** - for block and spiral strategy, decides if the path progresses from inside or from outside
+- **Carve** 
   * **Depth** - decides how deep below the surface will go the carve operation
-* **Outlines**
+- **Outlines**
   * **Don't Merge** - for cutout strategy. Does not merge outlines - this results into cutting in the object area! It is usefully when milling PCBs, where you don't need exact shape but need to separate areas with engraving.
-* **Bridges (Tabs)** - for cutout operation, places automatically bridges by the rules set by options that will appear after this is enabled: width, height, minimum per curve, distance.
+- **Bridges (Tabs)** - for cutout operation, places automatically bridges by the rules set by options that will appear after this is enabled: width, height, minimum per curve, distance.
 
 ### [ Operation G-code ]
 ![](_static/OperationGcodePanel.png)
@@ -168,15 +168,15 @@ If not enabled then the Material origin and Material size are used in case when 
 * **Description** - A description of the tool.  Currently this is not used for anything.
 * **Cutter object** - a 3D object of your choice available in the drop down list.
 
-| Cutter Types  |   |   |
-|----------|---|---|
-| End      | ![End](_static/cut-end.jpg)  |   |
-| Ballnose | ![Ballnose](_static/cut-ballnose.jpg)  |   |
-| Bullnose | ![Bullnose](_static/cut-bullnose.jpg)  |   |
-| V-Carve  |  ![v-carve](_static/cut-v-carve.jpg) |   |
-| Ballcone |  ![Ballcone](_static/cut-ballcone.jpg) |   |
-| Laser    |  ![Laser](_static/cut-laser.jpg) |   |
-| Custom   |  ![Custom](_static/cut-custom.jpg) |   |
+| Cutter Types  |   |
+|----------:|---|
+| End      | ![End](_static/cut-end.jpg)  |
+| Ballnose | ![Ballnose](_static/cut-ballnose.jpg)  |
+| Bullnose | ![Bullnose](_static/cut-bullnose.jpg)  |
+| V-Carve  |  ![v-carve](_static/cut-v-carve.jpg) |
+| Ballcone |  ![Ballcone](_static/cut-ballcone.jpg) |
+| Laser    |  ![Laser](_static/cut-laser.jpg) |
+| Custom   |  ![Custom](_static/cut-custom.jpg) |
 
 
 ### [ Chains ]

@@ -16,7 +16,7 @@ This section is for new users, containing basic info on how to install and use t
 
 :doc:`starting` is a good place for newcomers to begin.
 
-:doc:`panels` gives descriptions of what each of the panels in the UI is for.
+:doc:`interface` gives descriptions of what each of the panels in the UI is for.
 
 :doc:`tools` offers an introduction to the various tools packaged with Fabex.
 
