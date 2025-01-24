@@ -2,7 +2,9 @@
 
 **FabexCNC** is an Extension for **Blender** version 4.21 and later.
 
-> To use Fabex with Blender 4.1 and earlier use one of the blendercam.zip releases from the Github Releases page.
+```{note}
+To use Fabex with Blender 4.1 and earlier use one of the blendercam.zip releases from the Github Releases page.
+```
 
 ## Get Blender
 
