@@ -25,8 +25,6 @@ Fabex can do a lot of things so we try to balance not overwhelming new users wit
 ## Enter CNC/CAM Mode
 The main interface is arranged into a series of panels described below. 
 
-*(Most functionality can also be accessed through menus, pie menus or the Search operator, if you prefer.)*
-
 Fabex hides its many panels when it is not active. 
 
 To display them you need to enter CNC/CAM mode.
@@ -35,40 +33,72 @@ In the **Properties** area, in the **Render** tab, set the **Render Engine** to 
 
 ![Renderer selection](_static/RenderEngine.png)
 
+```{note}
+*(Most functionality can also be accessed through menus, pie menus or the Search operator.)*
+```
+
 ## Panels
 
 ### [ Operations ]
+The **[ Operations ]** panel allows you to add, remove, copy, rename, re-arrange, calculate, export and simulate Operations. 
+
+Click the **+** button to add a new Operation, or choose an Operation Preset.
+
 ![CAM operations](_static/OperationsPanelSuzanne.png)
-- **Calculate Path & Export Gcode** - This calculates the operation which is currently selected in the cam operations list. The Button will stay selected until the calculation is completed.
-- **Simulate This Operation** - Works for 3 axis operations, but not for all. It creates a new object which shows the simulation - the subdivision of the object can be increased, and the resolution of the simulation also depends on simulation sampling raster detail, which is in the optimization panel
+- **Calculate Path & Export Gcode** - This calculates the currently selected operation from the CAM operations list. The Button will stay selected until the calculation is completed.
+- **Simulate This Operation** - Works for most 3 axis operations. It creates a new object which shows the simulation - the subdivision of the object can be increased, and the resolution of the simulation also depends on simulation sampling raster detail, which is in the optimization panel
 - **Operation Name** - Select this field to change the name of the currently selected operation.
-- **File Name** - Name of the gcode file. The file extension used will be determined by the g-code post processor selected. See [Machine panel](Blendercam-Panel-Descriptions.md) for setting post processor.
+- **File Name** - Name of the Gcode file. _Post Processor sets the file extension. See [Machine](#-machine-)._
 - **Data Source** - This can be either 1 object, a group of objects, or an image.
   * **Object** - a Blender object.  This could be a mesh, or a curve.
   * **Collection** - Objects can be combined into a Collection in the Outliner.
   * **Image** - Open an image that will be used as a height/depth map.
 - **Object** - the blender object that will be used in the CAM operation. Select the object from a drop down list. Write it's name in the field, it should auto-complete and give a list of objects to select from.
-> [!NOTE] 
-> *If you change the object's name later on then you must also change it here. The field will turn red if the object can not be found.*
+```{note}
+*If you change the object's name later on then you must also change it here. The field will turn red if the object can not be found.*
+```
 
 ### [ Machine ]
+The **[ Machine ]** panel lets you setup your CNC machine parameters within Blender. 
+
+You can set up your machine, then save your default file with Ctrl+U command. This way you will always start with the settings you need.
+
 ![Cam machine](_static/MachineParameters.png)
 
-This panel sets up your machine and the settings are common in the whole file.
-You can also set up your machine and then save your default file with Ctrl+U command. This way you will always start with the settings you need.
-
-* **Post Processor** - this defines the formatting of the output file. If your machine is not in the list, you can try the ISO code, which is standardized Gcode
+* **Post Processor** - this defines the formatting of the output file.
 * **Unit System** - Metric or Imperial
 * **Work Area** - if the Operation has a larger area than this, you will get a warning in the info panel
-* **Feedrate minimum/maximum** - this will limit your feed speeds set up in the feedrate panel.
+* **Feedrate (/min)** - this will limit your feed speeds set up in the feedrate panel.
+
+```{note}
+If your machine is not in the list, you can try the ISO code, which is standardized Gcode, or see the FAQ for details on writing your own Post Processor (EXPERIMENTAL!)
+```
 
 ### [ Info ]
+The **[ Info ]** panel shows important information about your Operation.
+
 ![Cam Info & warnings](_static/InfoPanel.png)
 
-This panel will show any trouble found during the computation, estimated operation time, and chipload data
+- **Estimates** give rough calculations based on current Operation settings for:
+  - **Time** - in hours, minutes and seconds
+  - **Chipload** - if applicable, _does not currently include Stepover_
+  - **Cost** - based on the **Price** set in the **[ Machine ]** panel and the **Time** estimate above
+- **Warnings** will be displayed in RED when calculations indicate a problem like:
+  - an Operation that exceeds your Machine's Work Area
+  - a potential Collision
+  - high Cutter engagement
 
+```{note}
+**Warnings** should always be heeded, and can usually be fixed by adjusting your Operation parameters. 
+
+Failure to resolve issues with your Operation could result in damage, injury or death. We do our best to ensure that Fabex is safe to use, but we accept no liability for any harm or loss resulting from its use.
+
+**Warnings** are there to keep you, your machine and your material safe, and we urge you to take all necessary precautions when working with CNC Machines.
+```
 
 ### [ Operation Setup ]
+The **[ Operation Setup ]** panel gives you access to milling strategies and settings specific to those strategies.
+
 ![Strategy](_static/OperationSetupPanel.png)
 
 - **Axis Count** - how many axes will be used _(Default is 3, additional axes should be enabled in the Machine panel first)_
@@ -81,8 +111,7 @@ Depending on which **Strategy** is selected, the options will differ. Below is a
 - **Toolpath Distance**
   * **Between** - also called Stepover
   * **Along** - how dense will be the operation path. This can influence accuracy of the machining. 
-<!-- * **parallel step back** - this function is only for finishing pass, where you still have to cut some substantial amount of material, and want also to save the cutter. If you set up to climb movement, it goes with climb into material, then goes in the other direction one step back - this uses the back movement of the machine for finishing the surface. Note that this also means the cutting into material will happen with a rate which is 2x of distance between toolpaths If you don't know what this all means, don't use this function. !!!!!!!!!!!!MOVED TO MOVEMENT PANEL!!!!!!!!!-->
-- **Direction** - for block and spiral strategy, decides if the path progresses from inside or from outside
+- **Direction** - for Block and Spiral strategy, decides if the path progresses from inside or from outside
 - **Carve** 
   * **Depth** - decides how deep below the surface will go the carve operation
 - **Outlines**
@@ -90,6 +119,10 @@ Depending on which **Strategy** is selected, the options will differ. Below is a
 - **Bridges (Tabs)** - for cutout operation, places automatically bridges by the rules set by options that will appear after this is enabled: width, height, minimum per curve, distance.
 
 ### [ Operation G-code ]
+The **[ Operation G-code]** panel lets you specify commands or macros to be executed at the beginning and end of Operations.
+
+The Gcode options in the **[ Machine ]** panel are global across all Operations, while the **[ Operation G-code ]** panel options apply only to the current Operation.
+
 ![](_static/OperationGcodePanel.png)
 
 - **Output Header**
@@ -99,9 +132,13 @@ Depending on which **Strategy** is selected, the options will differ. Below is a
 - **Mist**
 
 ### [ Optimization ]
-![Cam Optimization](_static/OptimisationPanel.png)
+The **[ Optimisation ]** panel is crucial for performance. 
 
-This panel is crucial for performance.
+Toolpaths and Simulations can quickly end up with many points to calculate, and if you accidentally try to calculate a giant toolpath with a tiny resolution then you could run out of memory and crash.
+
+These settings allow you to balance performance and accuracy by limiting how many points will be generated in the toolpaths and simulations.
+
+![Cam Optimization](_static/OptimisationPanel.png)
 
 * **Reduce Path Points** - reduces number of commands in the operation, so the resulting gcode is shorter and can run smoother on the machine
   * **Threshold (um)** - points with smaller distance (in micrometers) to the path direction will be reduced
@@ -117,52 +154,68 @@ This panel is crucial for performance.
 ### [ Operation Area ]
 ![CAM Operation Area](_static/OperationArea.png)
 
-* **Layers** - sets up layers for roughing.
-  * **Layer Height** - specifies thickness of the layers for roughing
-* **Ambient** - how much space surrounding the object will be used for the milling
-  * **All** - a rectangular area will be used
-  * **Around** - object silhouette will be used, with a radius specified by Ambient radius
-* **Depth from object** - takes object depth and sets up the total depth of the operation from it. Otherwise, you can use Operation depth to do the same manually.
+- **Z Clearance**
+  - **Safe Height** - how high will the cutter travel when moving between toolpaths.  Keep it as low as possible to reduce total cutting time.  The Z axis usually has the slowest rapid rates compared to the other two axis X and Y.
+- **Operation Depth**
+  - **Start**
+  - **Max**
+    - **Object** - takes object depth and sets up the total depth of the operation from it. Otherwise, you can use Operation depth to do the same manually.
+- **Layers** - sets up layers for roughing.
+  - **Layer Height** - specifies thickness of the layers for roughing
+- **Ambient** - how much space surrounding the object will be used for the milling
+  - **Surfaces All** - a rectangular area will be used
+  - **Surfaces Around** - object silhouette will be used, with a radius specified by Ambient radius
 
 
 ### [ Material ]
+The **[ Material ]** panel
+
 ![CAM material size and position](_static/MaterialPanel.png)
 
-* **Size from Model** - will assume the workpiece/material has the same size as the model, with radius around the model.
-If not enabled then the Material origin and Material size are used in case when the material/workpiece is not the same as the model.  The 3D view will show the machine work area with a hashed outline and the material size and position will be a lighter grey.  The material object is not selectable in the 3D view but can be selected in the Outliner and has the name CAM_material.
-* **Position Object** - this will move the object to positive X and Y and negative Z so that it is fully in the work area and closest to the origin.
+- **Size**
+  - **Size from Model** - will assume the workpiece/material has the same size as the model, with radius around the model.
+  If not enabled then the Material origin and Material size are used in case when the material/workpiece is not the same as the model.  The 3D view will show the machine work area with a hashed outline and the material size and position will be a lighter grey.  The material object is not selectable in the 3D view but can be selected in the Outliner and has the name CAM_material.
+  - **Additional Radius**
+- **Position**
+  -  **Center on X Axis**
+  -  **Center on Y Axis**
+  -  **Z Placement**
+  - **Position Object** - this will move the object to positive X and Y and negative Z so that it is fully in the work area and closest to the origin.
 
 
 ### [ Movement ]
 ![CAM Movement](_static/MovementPanel.png)
 
-* **G64 Trajectory** This enables the "naive cam detector" and enables blending with a tolerance. If you program G64 P0.05, you tell the planner that you want continuous feed, but at programmed corners you want it to slow down enough so that the tool path can stay within 0.05 user units of the programmed path. The exact amount of slowdown depends on the geometry of the programmed corner and the machine constraints, but the only thing the programmer needs to worry about is the tolerance. This gives the programmer complete control over the path following compromise. 
-* **Milling Type** - is supported only for some of the strategies, sets up how the cutter moves into the material
-  * **Meander/ZigZag** - sometimes also called ZigZag , this means you don't care which direction the cutter goes into the material.
-  * **Climb/Down Milling** - the default movement, and mostly used when doing CNC machining if the machine has no or very little backlash. The cutter rotates with the direction of the feed. It can produce a better finish, less stress on the bit, and less power required. If the machine has backlash then Conventional milling is a better choice.
-  * **Conventional/Up Milling** - The cutter rotates against the direction of the feed.  If the machine has backlash that can not be compensated for then this is the better choice.  Some woods cut better with this method but grain direction also has to be considered.
-* **Cutter Spin** - this parameter is not exported, but it is used when setting up the movement type, because with the spindle rotating CCW, all operations go in opposite direction.
-* **Free movement height** - how high will the cutter travel when moving between toolpaths.  Keep it as low as possible to reduce total cutting time.  The Z axis usually has the slowest rapid rates compared to the other two axis X and Y.
-* **First down** - for cutout strategy. If on, the paths are cut one by one to the full depth(all layers), otherwise first all the silhouettes are cut on layer 1, then 2....
-* **Ramp contour** - for cutout strategy, instead of going layer by layer, it goes down all the way on a ramp.
-* **Ramp out** - also going out is performed on a ramp, to prevent burning of the finished piece by staying on one place in XY axes.
-* **Stay Low if possible** - tries to not lift the cutter when going from 1 path to other, when the paths are closer to each other than the cutter radius, which means no extra material will be cut during this travel move.
-* **Protect vertical** - when the angle of the path is above verticality limit, the move will be made vertical. this way vertical surfaces won't get a slope because of the distance between the path points.
+- **Milling Type** - is supported only for some of the strategies, sets up how the cutter moves into the material
+  - **Meander/ZigZag** - sometimes also called ZigZag , this means you don't care which direction the cutter goes into the material.
+  - **Climb/Down Milling** - the default movement, and mostly used when doing CNC machining if the machine has no or very little backlash. The cutter rotates with the direction of the feed. It can produce a better finish, less stress on the bit, and less power required. If the machine has backlash then Conventional milling is a better choice.
+  - **Conventional/Up Milling** - The cutter rotates against the direction of the feed.  If the machine has backlash that can not be compensated for then this is the better choice.  Some woods cut better with this method but grain direction also has to be considered.
+- **Cutter Spin** - this parameter is not exported, but it is used when setting up the movement type, because with the spindle rotating CCW, all operations go in opposite direction.
+- **Z Clearance**
+  - **Safe Height** - how high will the cutter travel when moving between toolpaths.  Keep it as low as possible to reduce total cutting time.  The Z axis usually has the slowest rapid rates compared to the other two axis X and Y.
+- **Stay Low if possible** - tries to not lift the cutter when going from 1 path to other, when the paths are closer to each other than the cutter radius, which means no extra material will be cut during this travel move.
+- **Parallel Step Back** - this function is only for finishing pass, where you still have to cut some substantial amount of material, and want also to save the cutter. If you set up to climb movement, it goes with climb into material, then goes in the other direction one step back - this uses the back movement of the machine for finishing the surface. Note that this also means the cutting into material will happen with a rate which is 2x of distance between toolpaths If you don't know what this all means, don't use this function.
+- **G64 Trajectory** This enables the "naive cam detector" and enables blending with a tolerance. If you program G64 P0.05, you tell the planner that you want continuous feed, but at programmed corners you want it to slow down enough so that the tool path can stay within 0.05 user units of the programmed path. The exact amount of slowdown depends on the geometry of the programmed corner and the machine constraints, but the only thing the programmer needs to worry about is the tolerance. This gives the programmer complete control over the path following compromise. 
+- **Protect vertical** - when the angle of the path is above verticality limit, the move will be made vertical. this way vertical surfaces won't get a slope because of the distance between the path points.
+- **First down** - for cutout strategy. If on, the paths are cut one by one to the full depth(all layers), otherwise first all the silhouettes are cut on layer 1, then 2....
+- **Ramp Contour** - for cutout strategy, instead of going layer by layer, it goes down all the way on a ramp.
+- **Ramp Out** - also going out is performed on a ramp, to prevent burning of the finished piece by staying on one place in XY axes.
 
 
 ### [ Feedrate ]
 ![CAM feedrate](_static/FeedratePanel.png)
 
-* **Feedrate (/min)** - How much will the machine travel in 1 minute
-* **Spindle (RPM)** - spindle revolutions per minute
-* **Plunge speed** - the feed speed gets reduced when the slope of the path is above the Plunge angle
-* **Plunge angle** - any angle greater than the plunge angle will activate plunge speed
+- **Feedrate (/min)** - How much will the machine travel in 1 minute
+- **Spindle (RPM)** - spindle revolutions per minute
+- **Plunge**
+  - **Speed** - the feed speed gets reduced when the slope of the path is above the Plunge angle
+  - **Angle** - any angle greater than the plunge angle will activate plunge speed
 
 ### [ Cutter ]
 ![CAM cutter](_static/CutterPanel.png)
 
 * **Type** - supported types are listed in the table below
-* **Diameter** - The exact diameter of the cutting tool.  This is used for calculating tool paths.  For a v-bit its the maximum diameter of the bit.
+* **Diameter** - The exact diameter of the cutting tool.  _Used in toolpath calculation.  For V-bits its the maximum diameter of the bit._
 * **Flutes** - this parameter is used only for chipload computation.
 * **Tool Number** - this parameter is exported with toolchange command
 * **Description** - A description of the tool.  Currently this is not used for anything.

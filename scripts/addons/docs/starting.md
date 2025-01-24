@@ -16,8 +16,9 @@ Now we are going to scale and rotate the monkey head so that it gives us the bes
 - press **R**, then **X**, then **-90** to rotate it on the X axis by -90 degrees
 - press **S**, then **Z**, then **.5** to scale it down on the Z axis
 
-> [!NOTE]
-> _If you don't feel the need to reproduce the guide results exactly, you can skip all of the above and perform the operations on the default cube, but you will get a warning about the object being too big for your machine if you don't scale it down to fit inside the **CAM_machine** area._
+```{note}
+_If you don't feel the need to reproduce the guide results exactly, you can skip all of the above and perform the operations on the default cube, but you will get a warning about the object being too big for your machine if you don't scale it down to fit inside the **CAM_machine** area._
+```
 
 ## Change the Render Engine
 In the **Properties** area, in the **Render** tab, set the **Render Engine** to **Fabex CNC/CAM**
@@ -55,8 +56,9 @@ In the  **[ Operation Setup ]** panel, choose **Parallel** from the **Strategy**
 
 **Waterline** and other operations require curve data source. See how to generate curves from mesh model [here](Profile%20and%20Pocket%20operations.md).
 
-> [!NOTE]
-> _If you are not sure what each milling strategy does, check the Strategy page for pictures and explanations of how each works._
+```{note}
+_If you are not sure what each milling strategy does, check the Strategy page for pictures and explanations of how each works._
+```
 
 ## Setup Stock Material and Position your Object
 
@@ -68,8 +70,9 @@ You can manually position object inside the Machine's Work Area, or use **Positi
 
 ![Material Panel](_static/MaterialPanel.png)
 
-> [!NOTE]
-> _If the box representing material doesn't update, uncheck **Size from Model** and then check it again._
+```{note}
+_If the box representing material doesn't update, uncheck **Size from Model** and then check it again._
+```
 
 ## Configure the Operation Settings
 ### [ Operation Setup ]
