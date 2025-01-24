@@ -88,12 +88,24 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
             box = main.box()
             col = box.column(align=True)
             col.label(text="Estimates")
-            col.label(text=f"Time: {time_estimate}", icon="TIME")
+            row = col.split(factor=0.32)
+            title_col = row.column(align=True)
+            # title_col.alignment = "RIGHT"
+            value_col = row.column(align=True)
+            # value_col.alignment = "LEFT"
+
+            title_col.label(text="Time:", icon="TIME")
+            value_col.label(text=time_estimate)
 
             # Operation Chipload
             if self.op.info.chipload > 0:
-                col.prop(self.op.info, "chipload")
-                col.label(text=self.op.info.chipload_per_tooth, icon="DRIVER_ROTATIONAL_DIFFERENCE")
+                chipload = self.op.feedrate / (self.op.spindle_rpm * self.op.cutter_flutes)
+                chipload = f"{chipload:.5f}"
+                title_col.label(
+                    text=f"Chipload:",
+                    icon="DRIVER_ROTATIONAL_DIFFERENCE",
+                )
+                value_col.label(text=chipload)
             else:
                 pass
 
@@ -107,5 +119,6 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
 
                 cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
                 total_cost = self.op.info.duration * 60 * cost_per_second
-                op_cost = f"Cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
-                col.label(text=op_cost, icon="TAG")
+                op_cost = f"${total_cost:.2f} (${cost_per_second:.2f}/s)"
+                title_col.label(text="Cost:", icon="TAG")
+                value_col.label(text=op_cost)

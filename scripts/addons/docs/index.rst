@@ -10,47 +10,11 @@ This site serves as an introduction to Fabex, a free and open source extension f
 Fabex allows you to generate toolpaths and gcode files based on 3D objects or 2D Images within Blender.
 These files can then be sent to a CNC machine to cut your designs!
 
-User Guide
+Guides
 *****************
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   install
-   starting
-   panels
-   tools
-   profilepocket
-
-This section is for new users, containing basic info on how to install and use the extension.
-
-:doc:`install` contains instructions for downloading and installing Fabex and Blender.
-
-:doc:`starting` is a good place for newcomers to begin.
-
-:doc:`panels` gives descriptions of what each of the panels in the UI is for.
-
-:doc:`tools` offers an introduction to the various tools packaged with Fabex.
-
-:doc:`profilepocket` contains a step-by-step guide for completing these common operations.
-
-Developer Guide
-******************
-
-.. toctree::
-   :maxdepth: 1
-
-   overview
-   style
-   testing
-   workflows
-
-This section is for people who want to contribute code to BlenderCAM, people who want to modify the addon for their needs, or anyone who simply want to better understand what is happening 'under the hood'.
-
-:doc:`overview` offers a guide to the addon files and how they relate to one another.
-
-:doc:`style` gives tips on editors, linting, formatting etc.
-
-:doc:`testing` has information on how to run and contribute to the Test Suite.
-
-:doc:`workflows` contains an explanation of how the addon, testing and documentation are automated via Github Actions.
+   users
+   developers
