@@ -1,46 +1,58 @@
 # Tools
 
-Blendercam has a number of curve operators that will modify selected curves to make them better suited to CAM operations. They can be found in the Tool Shelf Panel located on the left of the 3D view editor. The operators create new curves, in most cases, which can then be used in CAM operations.
+**Fabex** has a number of tools that will modify selected curves to make them better suited to CAM operations. 
 
-## View Tool Shelf
-If the Tool Shelf is not visible on the left of the 3D view then use the short cut **T** or use the mouse to left button select the small **+** near the top left border of the 3D view.
+They can be found in the Tool Shelf Panel located on the left of the 3D view editor. 
 
-![Tool Shelf view](_static/toolshelfview.png) 
+The operators create new curves which can then be used in CAM operations.
 
-## View Blendercam Tools
-![tools](_static/curvecampanel.png)
+## Open the Tool Shelf
+If the Tool Shelf is not visible on the left of the 3D view then use the short cut **T** or use the mouse to left button select the small **+** near the top left border of the 3D view. The 3D view editor must be in object mode.
 
-1. The 3D view editor must be in object mode. In older version of blender, select the **Blender CAM** tab to view the **Curve CAM Tools** panel.
-2. Select the expansion arrow to see the tool buttons available.
+![Tool Shelf view](_static/OpenToolShelf.png) 
+
+## [ Curve Tools ]
+Select the expansion arrow to see the tool buttons available.
+
+![tools](_static/CurveToolsPanel.png)
+
+```{note}
+*In older version of blender, select the **BlenderCAM** tab to view the **Curve CAM Tools** panel.*
+```
 
 ## Curve Boolean
+Perform a Boolean operation on two or more curves. A new curve will be created.
+
+The Boolean operations that can be performed are:
+  * **Union** - The result is a curve that forms a perimeter around the union (merger) of all curves selected:
+
 ![Boolean](_static/bool_union.png)
+
+  * **Difference** - subtract the first selected curve(s) from the last (active) selected curve:
+
 ![Boolean difference](_static/bool_dif.png)
+
+  * **Intersect** - resulting curve is the curve portion common to all selected curves:
+
 ![Boolean Intersect](_static/bool_inter.png)
-
-
-Perform a Boolean operation on two or more curves. A new curve is created.  The Boolean operations that can be performed are:
-  * Union - The result is a curve that forms a perimeter around the union(merger) of all curves selected
-  * Difference - subtract the first selected curve(s) from the last(active) selected curve.
-  * Intersect - resulting curve is the curve portion common to all selected curves
 
 ## Intarsion
 ![intarsion](_static/intarsion.png)
 
 Makes a new curve that is cuttable from both the inside and outside.  This is useful for [intarsia](https://en.wikipedia.org/wiki/Intarsia), inlays, and joints.  All sharp edges are rounded over using the cutter diameter. Works on mesh, text, and curve objects.
 
-## Add Overcuts
+## Simple Fillet Overcuts
 ![Add Overcuts](https://cloud.githubusercontent.com/assets/648108/12375365/318df7d8-bc95-11e5-953f-58e23f85c419.png)
 
 Adds overcuts for slots/inserts and creates a new curve.  Works on text and curve objects.
 
 #### Operator Options:
-  * **diameter** - tool diameter to use for the overcut
-  * **threshold** - the minimum angle that an overcut is applied. 
-  * **Outer polygons** -
+  * **Diameter** - tool diameter to use for the overcut
+  * **Threshold** - the minimum angle that an overcut is applied. 
+  * **Outer Polygons** -
   * **Invert** - 
 
-## Add OvercutsB
+## Bone Fillet Overcuts
 ![Add Overcuts](_static/overcut_db.png)
 
 An enhanced version of [Add Overcuts](#add-overcuts)
@@ -86,18 +98,18 @@ This operator finds and create the silhouette of objects(meshes, text, curves ju
 This operator create offsets on a silhouette in a new curve.
 
 Operator Options:
-  * **offset** - tool diameter to use for the offset
+  * **Offset** - tool diameter to use for the offset
 
-## C-Remove Doubles
-Curve remove doubles - warning, removes beziers! Does not create a new curve but modifies the original.
+## Remove Curve Doubles
+Warning, removes bezier points! Does not create a new curve but modifies the original.
 
 This operator will convert the curve to a mesh, perform remove doubles on the mesh, and then convert it back to a curve.  This can be used to fix curves that are imported into Blender from other applications i.e. stl, dxf, that may have overlapping control points in the curve which can be a problem when calculating an operation.
 
 ## Get pocket surfaces
+This operator will detect pockets in a mesh and extract them as curves.  The curves can then be used for pocket operations.  Curves that are at the same z level will be in the same object.  All generated curve objects will be placed into the same group.
+
 ![Get Pocket Surface](_static/get_pocket2.png)
 ![Get Pocket Surface2](_static/get_pocket.png)
-
-This operator will detect pockets in a mesh and extract them as curves.  The curves can then be used for pocket operations.  Curves that are at the same z level will be in the same object.  All generated curve objects will be placed into the same group.
 
 #### Operator Options:
   * **horizontal threshold** - if 1.0 then perfectly flat surface, if < 1.0 then allow surfaces not perfectly flat.
@@ -107,20 +119,20 @@ The way the detection works is each face in the mesh is checked to see if it is 
 
 Operator option **z limit** controls which horizontal surfaces are considered a pocket.  If the horizontal surface z location is below the z limit then the surface is considered a pocket. Setting z limit to 0.0 (default setting) should work for most situations if mesh top is at z=0.0.
 
-## Create Curves Shapes 
+## [ Curve Creators ]
 This operators will create shapes directly from the panel. 
 
-![Create Panel](_static/createcurve.png)
+![Create Panel](_static/CurveCreatorsPanel.png)
 
-*create sine
+**Periodic Wave**
 
 ![Create Sine](_static/createsine.png)
 
-*create lissajous figure
+**Lissajous figure**
 ![Create Lissajous](_static/createlissajous.png)
 
-*create spirograph type figure
+**Hypotrochoid figure**
 ![Create Spirograph](_static/createspiro.png)
 
-*create custom curve
+**Custom Curve**
 ![Create Custom](_static/createcustum.png)

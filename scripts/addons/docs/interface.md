@@ -152,6 +152,8 @@ These settings allow you to balance performance and accuracy by limiting how man
 
 
 ### [ Operation Area ]
+The **[ Operation Area ]** panel controls the area where the Cutter is allowed to move and sets limits on depth and travel height.
+
 ![CAM Operation Area](_static/OperationArea.png)
 
 - **Z Clearance**
@@ -168,7 +170,7 @@ These settings allow you to balance performance and accuracy by limiting how man
 
 
 ### [ Material ]
-The **[ Material ]** panel
+The **[ Material ]** panel handles the size and position of your stock material - the raw material that you are planning to mill. You can enter values manually, or allow Fabex to calculate them for you based on the object you have selected.
 
 ![CAM material size and position](_static/MaterialPanel.png)
 
@@ -184,6 +186,8 @@ The **[ Material ]** panel
 
 
 ### [ Movement ]
+The **[ Movement ]** panel handles how the Cutter moves during the Operation, the direction the Cutter spins, and has a little overlap with the **[ Operation Area ]** panel for the most important settings.
+
 ![CAM Movement](_static/MovementPanel.png)
 
 - **Milling Type** - is supported only for some of the strategies, sets up how the cutter moves into the material
@@ -203,6 +207,8 @@ The **[ Material ]** panel
 
 
 ### [ Feedrate ]
+The **[ Feedrate ]** panel sets the Operation feedrate, Cutter speed and more.
+
 ![CAM feedrate](_static/FeedratePanel.png)
 
 - **Feedrate (/min)** - How much will the machine travel in 1 minute
@@ -212,6 +218,8 @@ The **[ Material ]** panel
   - **Angle** - any angle greater than the plunge angle will activate plunge speed
 
 ### [ Cutter ]
+The **[ Cutter ]** panel allows you to select a pre-defined cutting tool, or define your own with custom Tool Number and Description.
+
 ![CAM cutter](_static/CutterPanel.png)
 
 * **Type** - supported types are listed in the table below
@@ -233,6 +241,6 @@ The **[ Material ]** panel
 
 
 ### [ Chains ]
-![New chain](_static/ChainsPanel.png)
+The **[ Chains ]** panel allows you to combine multiple operations. It is useful for simulating more operations or exporting a chain of operations if you have automatic toolchanger or use the same tool for several operations.
 
-This enables you to chain operations. It is useful for simulating more operations or exporting a chain of operations if you have automatic toolchanger or use the same tool for several operations.
+![New chain](_static/ChainsPanel.png)
