@@ -21,7 +21,7 @@
 
 - - - 
 
-![Fabex CNC CAM extension for Blender](documentation/images/suzanne.gif)
+![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/suzanne.gif)
 
 - - -
 
