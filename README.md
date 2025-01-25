@@ -1,6 +1,6 @@
 <div align="center">
 
-![Fabex CNC CAM extension for Blender](documentation/images/logo.png)
+![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/logo.png)
 
 - - -
 

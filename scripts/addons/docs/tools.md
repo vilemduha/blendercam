@@ -7,12 +7,16 @@ They can be found in the Tool Shelf Panel located on the left of the 3D view edi
 The operators create new curves which can then be used in CAM operations.
 
 ## Open the Tool Shelf
-If the Tool Shelf is not visible on the left of the 3D view then use the short cut **T** or use the mouse to left button select the small **+** near the top left border of the 3D view. The 3D view editor must be in object mode.
+If the Tool Shelf is not visible on the left of the 3D view then use the short cut **T** or use the mouse to left button select the small **+** near the top left border of the 3D view. 
 
 ![Tool Shelf view](_static/OpenToolShelf.png) 
 
+```{note}
+*The 3D view editor must be in Object Mode.*
+```
+
 ## [ Curve Tools ]
-Select the expansion arrow to see the tool buttons available.
+Click the dropdown arrow to see the available Tools.
 
 ![tools](_static/CurveToolsPanel.png)
 
@@ -37,14 +41,20 @@ The Boolean operations that can be performed are:
 ![Boolean Intersect](_static/bool_inter.png)
 
 ## Intarsion
+Makes a new curve that is cuttable from both the inside and outside.  This is useful for [intarsia](https://en.wikipedia.org/wiki/Intarsia), inlays, and joints.  All sharp edges are rounded over using the cutter diameter.
+
 ![intarsion](_static/intarsion.png)
 
-Makes a new curve that is cuttable from both the inside and outside.  This is useful for [intarsia](https://en.wikipedia.org/wiki/Intarsia), inlays, and joints.  All sharp edges are rounded over using the cutter diameter. Works on mesh, text, and curve objects.
+```{note}
+*Works on mesh, text, and curve objects.*
+```
 
 ## Simple Fillet Overcuts
+Adds overcuts for slots/inserts and creates a new curve.
+
 ![Add Overcuts](https://cloud.githubusercontent.com/assets/648108/12375365/318df7d8-bc95-11e5-953f-58e23f85c419.png)
 
-Adds overcuts for slots/inserts and creates a new curve.  Works on text and curve objects.
+Works on text and curve objects.
 
 #### Operator Options:
   * **Diameter** - tool diameter to use for the overcut
