@@ -76,7 +76,9 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 | :warning: **5 axis Milling** :warning: | _Currently only possible via manual indexing_ | ⏳ |
 
 > [!NOTE]
-> _All features listed above are for Blender 4.2.1 and up. For previous versions of Blender, check the Releases page._
+> _All features listed above are for Blender 4.2.1 and up._
+> 
+> _For previous versions of Blender, check the Github Releases page._
 
 ## 💻 Post-processors
 * [GRBL](https://github.com/gnea/grbl/wiki)
@@ -92,7 +94,7 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 * [WinPC-NC](https://www.lewetz.de/de/)
 * [ShopBot MTC](https://shopbottools.com/)
 * [Lynx Otter o](https://lynx-poland.com/)
-* ...
+* and more...
 
 
 ## 📒 Files Organisation

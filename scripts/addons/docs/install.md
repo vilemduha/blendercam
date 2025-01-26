@@ -1,9 +1,9 @@
 # Installation
 
-**FabexCNC** is an Extension for **Blender** version 4.21 and later.
+**FabexCNC** is an Extension for **Blender** v4.21 and later.
 
 ```{note}
-To use Fabex with Blender 4.1 and earlier use one of the blendercam.zip releases from the Github Releases page.
+To use **Fabex** with **Blender** 4.1 and earlier use one of the **blendercam.zip** releases from the Github Releases page.
 ```
 
 ## Get Blender
@@ -56,16 +56,18 @@ From the Releases page, download **fabexcnc.zip**.
 - Blender may need to be restarted to ensure the dependencies are correctly installed.
 
 ```{note}
-If you experience difficulty installing the Extension, check out the FAQ for common installation issues and fixes, or try the Matrix chat for help from developers and other users.
+*If you experience difficulty installing the Extension, check out the FAQ for common installation issues and fixes, or try the Matrix chat for help from developers and other users.*
 ```
 
-You're now ready to start using Fabex!
+You're now ready to start using **Fabex**!
 
-If you're not sure what to do next, check out the Getting Started page.
+```{note}
+*If you're not sure what to do next, check out the [Getting Started](starting.md) page.*
+```
 
 ### For Developers
-If you intend to contribute to the Fabex codebase, or if you want to modify the Extension to suit your own needs, you may find that the installation method outlined above is not the best for rapid iteration and updates.
+If you intend to contribute to the **Fabex** codebase, or if you want to modify the Extension to suit your own needs, you may find that the installation method outlined above is not the best for rapid iteration and updates.
 
-For these users we recommend cloning the repository from Github, then creating a symlink (alias, shortcut) for the 'cam' folder and moving that into [Blender's Extension directory.](https://docs.blender.org/manual/en/latest/advanced/blender_directory_layout.html)
+For these users we recommend cloning the repository from Github, then creating a symlink (alias, shortcut) for the **'cam'** folder and moving that into [Blender's Extension directory.](https://docs.blender.org/manual/en/latest/advanced/blender_directory_layout.html)
 
 For more details, see the FAQ.

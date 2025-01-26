@@ -7,7 +7,7 @@ They can be found in the Tool Shelf Panel located on the left of the 3D view edi
 The operators create new curves which can then be used in CAM operations.
 
 ## Open the Tool Shelf
-If the Tool Shelf is not visible on the left of the 3D view then use the short cut **T** or use the mouse to left button select the small **+** near the top left border of the 3D view. 
+If the Tool Shelf is not visible on the left of the 3D view then use the short cut **T** or use the mouse to left button select the small **>** near the top left border of the 3D view. 
 
 ![Tool Shelf view](_static/OpenToolShelf.png) 
 
@@ -27,21 +27,24 @@ Click the dropdown arrow to see the available Tools.
 ## Curve Boolean
 Perform a Boolean operation on two or more curves. A new curve will be created.
 
-The Boolean operations that can be performed are:
-  * **Union** - The result is a curve that forms a perimeter around the union (merger) of all curves selected:
+### Options:
+- **Type** - choose from one of three Boolean operations:
+  - **Union** - The result is a curve that forms a perimeter around the union (merger) of all curves selected:
 
 ![Boolean](_static/bool_union.png)
 
-  * **Difference** - subtract the first selected curve(s) from the last (active) selected curve:
+  - **Difference** - subtract the first selected curve(s) from the last (active) selected curve:
 
 ![Boolean difference](_static/bool_dif.png)
 
-  * **Intersect** - resulting curve is the curve portion common to all selected curves:
+  - **Intersect** - resulting curve is the curve portion common to all selected curves:
 
 ![Boolean Intersect](_static/bool_inter.png)
 
 ## Intarsion
-Makes a new curve that is cuttable from both the inside and outside.  This is useful for [intarsia](https://en.wikipedia.org/wiki/Intarsia), inlays, and joints.  All sharp edges are rounded over using the cutter diameter.
+Makes a new curve that is cuttable from both the inside and outside. 
+
+This is useful for [intarsia](https://en.wikipedia.org/wiki/Intarsia), inlays, and joints.  
 
 ![intarsion](_static/intarsion.png)
 
@@ -49,54 +52,59 @@ Makes a new curve that is cuttable from both the inside and outside.  This is us
 *Works on mesh, text, and curve objects.*
 ```
 
+### Options
+- **Cutter Diameter** - Sharp edges will be rounded over using the Cutter diameter.
+
 ## Simple Fillet Overcuts
-Adds overcuts for slots/inserts and creates a new curve.
+Adds overcuts for slots/inserts and creates a new curve. Works on text and curve objects.
 
-![Add Overcuts](https://cloud.githubusercontent.com/assets/648108/12375365/318df7d8-bc95-11e5-953f-58e23f85c419.png)
+![Add Overcuts](_static/SimpleFilletOvercuts.png)
 
-Works on text and curve objects.
+The original curve is black, and the new curve with overcuts is in orange.
 
-#### Operator Options:
+### Options:
   * **Diameter** - tool diameter to use for the overcut
   * **Threshold** - the minimum angle that an overcut is applied. 
   * **Outer Polygons** -
   * **Invert** - 
 
 ## Bone Fillet Overcuts
-![Add Overcuts](_static/overcut_db.png)
-
-An enhanced version of [Add Overcuts](#add-overcuts)
-
 Add overcuts for slots/inserts/tabs and creates a new curve. Works on text and curve objects.  Three types of overcuts can be used: T-bone, Dog-bone, and opposite edge.
 
-#### Operator Options:
-* **Tool Diameter** - Diameter of the tool bit
-* **Style**:
-  * *T-Bone* - place overcuts so that a T shape is formed in a slot
-  * *Dog-Bone/Corner Point* - place overcuts so that a dog bone shape is formed in a slot
-  * *Opposite Edge* - when placing an overcut switch to the opposite edge from the last inside corner
-* **Max inside angle** - if the angle of the corner is less than max inside angle then the corner is considered an inside corner and an overcut will be placed. 
-* **Include outer curve** - If there are curves within curves then include the most outer curve
-* **Invert** - make inside cut an outside cut or vice versa 
-* **other edge** - move the overcut to the other edge
+![Add Overcuts](_static/overcut_db.png)
 
-#### Examples:
+### Options:
+- **Tool Diameter** - Diameter of the tool bit
+- **Style**:
+  - **T-Bone** - place overcuts so that a T shape is formed in a slot
+  - **Dog-Bone/Corner Point** - place overcuts so that a dog bone shape is formed in a slot
+  - **Opposite Edge** - when placing an overcut switch to the opposite edge from the last inside corner
+- **Max Inside Angle** - if the angle of the corner is less than max inside angle then the corner is considered an inside corner and an overcut will be placed. 
+- **Include Outer Curve** - If there are curves within curves then include the most outer curve
+- **Invert** - make inside cut an outside cut or vice versa 
+- **Other Edge** - move the overcut to the other edge
 
-##### T-Bone
+### Examples:
+
+- **T-Bone**
+
 ![T-bone](_static/overcut_tbone.png)
 
-##### T-Bone other edge
+- **T-Bone Other Edge**
+
 ![T-bone](_static/overcut_tbone_oe.png)
 
-##### T-Bone other edge invert
+- **T-Bone Other Edge Invert**
+
 ![T-bone](_static/overcut_tbone_oe_inv.png)
 
-##### T-Bone other edge
+- **T-Bone Other Edge**
+
 ![T-bone](_static/overcut_tbone_oe_2.png)
 
 
 ## Silhouette 
-This operator finds and create the silhouette of objects(meshes, text, curves just get converted) 
+This finds and creates the silhouette of objects(meshes, text, curves just get converted).
 
 ![Silhouette](_static/silhouette.png)
 
@@ -111,17 +119,21 @@ Operator Options:
   * **Offset** - tool diameter to use for the offset
 
 ## Remove Curve Doubles
-Warning, removes bezier points! Does not create a new curve but modifies the original.
+```{note}
+Warning, removes bezier points! 
+
+Does not create a new curve but modifies the original!
+```
 
 This operator will convert the curve to a mesh, perform remove doubles on the mesh, and then convert it back to a curve.  This can be used to fix curves that are imported into Blender from other applications i.e. stl, dxf, that may have overlapping control points in the curve which can be a problem when calculating an operation.
 
-## Get pocket surfaces
+## Get Pocket Surfaces
 This operator will detect pockets in a mesh and extract them as curves.  The curves can then be used for pocket operations.  Curves that are at the same z level will be in the same object.  All generated curve objects will be placed into the same group.
 
 ![Get Pocket Surface](_static/get_pocket2.png)
 ![Get Pocket Surface2](_static/get_pocket.png)
 
-#### Operator Options:
+#### Options:
   * **horizontal threshold** - if 1.0 then perfectly flat surface, if < 1.0 then allow surfaces not perfectly flat.
   * **z limit** - flat surfaces that are below the z limit are considered a pocket.
 
