@@ -9,6 +9,8 @@ User Guide
    interface
    tools
    profilepocket
+   faq
+   glossary
 
 This section is for new users, containing basic info on how to install and use the extension.
 
@@ -21,3 +23,7 @@ This section is for new users, containing basic info on how to install and use t
 :doc:`tools` offers an introduction to the various tools packaged with Fabex.
 
 :doc:`profilepocket` contains a step-by-step guide for completing these common operations.
+
+:doc:`faq` aka Frequently Asked Questions
+
+:doc:`glossary` has a list of terms used in **Fabex**, their definitions, and alternate names they might go by in other applications
