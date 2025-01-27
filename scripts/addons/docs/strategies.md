@@ -1,7 +1,7 @@
 # Strategies
 
 ## Profile (Cutout)
-Cutout a silhouette using optional offset.
+Cutout a silhouette using an optional offset.
 
 ![profile cutout](_static/opProfile.png)
 

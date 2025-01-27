@@ -1,8 +1,8 @@
 # User Interface
 
-Fabex's user interface was designed to facilitate multiple different workflows, layouts and experience levels.
+**Fabex**'s user interface was designed to facilitate multiple different workflows, layouts and experience levels.
 
-Fabex can do a lot of things so we try to balance not overwhelming new users with giving access to the many parameters necessary for advanced users.
+**Fabex** has a lot of functionality, and tries to balance not overwhelming new users with settings they may not need, with giving access to the many parameters necessary for advanced users to complete complex jobs.
 
 **Interface** allows users to hide options below a certain level, simplifying the layout for beginners.
 - **Basic** - displays only necessary panels and options
@@ -15,19 +15,17 @@ Fabex can do a lot of things so we try to balance not overwhelming new users wit
 - **Classic** - preserves the original BlenderCAM layout
 - **User** - can be edited in Preferences
 
-**Shading** offers quick preset viewport settings for users unfamiliar with Blender's interface.
-- **Default** - standard Blender viewport shading
+**Shading** offers quick preset viewport settings for users unfamiliar with **Blender**'s interface.
+- **Default** - standard **Blender** viewport shading
 - **Deluxe** - enables extra shading options to help view mesh details or organize comples scenes
 - **Clean Default** - same as Default with the Viewport Grid turned off
 - **Clean Deluxe** - same as Deluxe with the Viewport Grid turned off
 - **Preview** - enables HDRI and material shaders
 
 ## Enter CNC/CAM Mode
-The main interface is arranged into a series of panels described below. 
+**Fabex** hides most of its interface when it is not active. 
 
-Fabex hides its many panels when it is not active. 
-
-To display them you need to enter CNC/CAM mode.
+To display it you need to enter CNC/CAM mode.
 
 In the **Properties** area, in the **Render** tab, set the **Render Engine** to **Fabex CNC/CAM**
 
@@ -50,28 +48,36 @@ Click the **+** button to add a new Operation, or choose an Operation Preset.
 - **Operation Name** - Select this field to change the name of the currently selected operation.
 - **File Name** - Name of the Gcode file. _Post Processor sets the file extension. See [Machine](#-machine-)._
 - **Data Source** - This can be either 1 object, a group of objects, or an image.
-  * **Object** - a Blender object.  This could be a mesh, or a curve.
-  * **Collection** - Objects can be combined into a Collection in the Outliner.
-  * **Image** - Open an image that will be used as a height/depth map.
-- **Object** - the blender object that will be used in the CAM operation. Select the object from a drop down list. Write it's name in the field, it should auto-complete and give a list of objects to select from.
+  - **Object** - a **Blender** object.  This could be a mesh, or a curve.
+  - **Collection** - Objects can be combined into a Collection in the Outliner.
+  - **Image** - Open an image that will be used as a height/depth map.
+- **Object** - the **Blender** object that will be used in the CAM operation. Select the object from a drop down list. Write it's name in the field, it should auto-complete and give a list of objects to select from.
 ```{note}
 *If you change the object's name later on then you must also change it here. The field will turn red if the object can not be found.*
 ```
 ---
 ### [ Machine ]
-The **[ Machine ]** panel lets you setup your CNC machine parameters within Blender. 
+The **[ Machine ]** panel lets you setup your CNC machine parameters within **Blender**. 
 
-You can set up your machine, then save your default file with Ctrl+U command. This way you will always start with the settings you need.
+You can set up your machine, then save your default file with `Ctrl+U` command. This way you will always start with the settings you need.
 
 ![Cam machine](_static/MachineParameters.png)
 
-* **Post Processor** - this defines the formatting of the output file.
-* **Unit System** - Metric or Imperial
-* **Work Area** - if the Operation has a larger area than this, you will get a warning in the info panel
-* **Feedrate (/min)** - this will limit your feed speeds set up in the feedrate panel.
+- **Post Processor** - this defines the formatting of the output file.
+- **Unit System** - Metric or Imperial
+- **Length Unit** - Feet, Inches, Millimeters, Meters
+- **Collet Size**
+- **Work Area** - if the Operation has a larger area than this, you will get a warning in the info panel
+- **4th Axis** - enable if your machine has a 4th Axis
+- **5th Axis** - enable if your machine has a 5th Axis
+- **Position Definitions** - set custom positions for job start, end and tool change
+- **Feedrate (/min)** - minimum, maximum and default feedrate for the machine
+- **Spindle Speed (RPM)** - minimum, maximum and default spindle speed for the machine
+- **Machine G-code** - Gcode options to be included in every file produced for this machine
+- **Price ($/hour)** - used in the Estimates in the Info Panel
 
 ```{note}
-If your machine is not in the list, you can try the ISO code, which is standardized Gcode, or see the FAQ for details on writing your own Post Processor (EXPERIMENTAL!)
+If your machine is not in the list, you can try the ISO code, which is standardized Gcode, or see the [FAQ](faq.md) for details on writing your own Post Processor (EXPERIMENTAL!)
 ```
 ---
 ### [ Info ]
@@ -83,7 +89,7 @@ The **[ Info ]** panel shows important information about your Operation.
   - **Time** - in hours, minutes and seconds
   - **Chipload** - if applicable, _does not currently include Stepover_
   - **Cost** - based on the **Price** set in the **[ Machine ]** panel and the **Time** estimate above
-- **Warnings** will be displayed in RED when calculations indicate a problem like:
+- **Warnings** will be displayed in **RED** when calculations indicate a problem like:
   - an Operation that exceeds your Machine's Work Area
   - a potential Collision
   - high Cutter engagement
@@ -104,7 +110,7 @@ The **[ Operation Setup ]** panel gives you access to milling strategies and set
 - **Axis Count** - how many axes will be used _(Default is 3, additional axes should be enabled in the Machine panel first)_
 - **Strategy** sets one of the milling strategies.
 
-Depending on which **Strategy** is selected, the options will differ. Below is a sampling of some common settings *(see the Strategy page for a full list of options for each Strategy)*:
+Depending on which **Strategy** is selected, the options will differ. Below is a sampling of some common settings: 
 - **Inverse Milling** - used if you want to mill a form directly from positive of the object. Does not work in exact mode. Only works for 3 axis strategies.
 - **Skin** - useful for roughing, leaves a layer on the surface for finishing
 - **Angle of Paths** - this rotates the parallel and cross strategies by the specified amount. Note that e.g. rotating by 90 changes the basic axis from X to Y
@@ -117,6 +123,9 @@ Depending on which **Strategy** is selected, the options will differ. Below is a
 - **Outlines**
   * **Don't Merge** - for cutout strategy. Does not merge outlines - this results into cutting in the object area! It is usefully when milling PCBs, where you don't need exact shape but need to separate areas with engraving.
 - **Bridges (Tabs)** - for cutout operation, places automatically bridges by the rules set by options that will appear after this is enabled: width, height, minimum per curve, distance.
+```{note}
+*(see the [Strategies](strategies.md) page for a full list of options for each Strategy)*
+```
 ---
 ### [ Operation G-code ]
 The **[ Operation G-code]** panel lets you specify commands or macros to be executed at the beginning and end of Operations.

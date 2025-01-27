@@ -21,7 +21,7 @@ Click the dropdown arrow to see the available Tools.
 ![tools](_static/CurveToolsPanel.png)
 
 ```{note}
-*In older version of blender, select the **BlenderCAM** tab to view the **Curve CAM Tools** panel.*
+*In older versions of **Blender**, select the **BlenderCAM** tab to view the **Curve CAM Tools** panel.*
 ```
 
 ## Curve Boolean
@@ -84,7 +84,7 @@ Add overcuts for slots/inserts/tabs and creates a new curve. Works on text and c
 - **Invert** - make inside cut an outside cut or vice versa 
 - **Other Edge** - move the overcut to the other edge
 
-### Examples:
+<!-- ### Examples:
 
 - **T-Bone**
 
@@ -100,7 +100,7 @@ Add overcuts for slots/inserts/tabs and creates a new curve. Works on text and c
 
 - **T-Bone Other Edge**
 
-![T-bone](_static/overcut_tbone_oe_2.png)
+![T-bone](_static/overcut_tbone_oe_2.png) -->
 
 
 ## Silhouette 
@@ -119,13 +119,14 @@ Operator Options:
   * **Offset** - tool diameter to use for the offset
 
 ## Remove Curve Doubles
+This operator will convert the curve to a mesh, perform remove doubles on the mesh, and then convert it back to a curve.  
+
+This can be used to fix curves that are imported into **Blender** from other applications i.e. .stl, .dxf, that may have overlapping control points in the curve which can be a problem when calculating an operation.
+
 ```{note}
 Warning, removes bezier points! 
-
 Does not create a new curve but modifies the original!
 ```
-
-This operator will convert the curve to a mesh, perform remove doubles on the mesh, and then convert it back to a curve.  This can be used to fix curves that are imported into Blender from other applications i.e. stl, dxf, that may have overlapping control points in the curve which can be a problem when calculating an operation.
 
 ## Get Pocket Surfaces
 This operator will detect pockets in a mesh and extract them as curves.  The curves can then be used for pocket operations.  Curves that are at the same z level will be in the same object.  All generated curve objects will be placed into the same group.

@@ -34,22 +34,22 @@ The maintainer can decide whether the changes constitute a MAJOR, MINOR or PATCH
 
 ## Black Formatter
 
-`black.yml` will format code submissions on pull request according to the configuration laid out in thhe `pyproject.toml` file.
+`black.yml` will format code submissions on pull request using the [Black Formatter](https://black.readthedocs.io/en/stable/index.html) with the configuration found in the `pyproject.toml` file.
 
 Other than extending the line length to 100 characters, the default Black config is unchanged.
 
 ## Docs Pages
 
-`docs_pages.yml` will build a complete documentation website based on the files in the `docs` folder.
+`docs_pages.yml` will build a complete documentation website based on the files in the `docs` folder by first building documentation from docstring comments in the code, then building a Github Pages site using the generated docs and any other files you wish to include.
 
-Using the sphinx/Google docstring format allow this action to pull comments out of the code, and format them the same way as the **Blender** or `shapely` docs.
+Using the Sphinx/Google docstring format allows this action to create a searchable reference, just like the [**Blender**](https://docs.blender.org/api/current/index.html) or [**Shapely**](https://shapely.readthedocs.io/en/stable/index.html) API docs.
 
-This helps ensure that any changes made to the code are also made to the documentation, to avoid situations where a programmer has renamed a function or Class in the code, but forgotten to update the docs.
+This also helps ensure that any changes made to the code are also made to the documentation, to avoid situations where a programmer has renamed a function or Class in the code, but forgotten to update the docs.
 
 In order for this system to work, docstrings have to follow a specific format: [Google Style Python Docstrings](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html)
 
+Docs can be written in [**Markdown**](https://www.markdownguide.org/) thanks to [MyST Parser](https://myst-parser.readthedocs.io/en/latest/), or the original [reStructured Text](https://docutils.sourceforge.io/rst.html).
 
-
-``{note}
+```{note}
 Although the addon uses Sphinx to build the docs, it was decided that Google-style strings would be used in the code for readability, that would then be converted automatically to Sphinx format using the Napoleon extension.
-``
+```

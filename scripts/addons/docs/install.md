@@ -10,9 +10,9 @@ To use **Fabex** with **Blender** 4.1 and earlier use one of the **blendercam.zi
 [Download Blender from the official site.](https://www.blender.org/download/)
 
 ```{note}
-If you are a Linux user, it is recommended that you download Blender from their website, and **NOT install via a Package Manager.**
-Blender has elected to support only Python 3.11 for Extensions, so Fabex is packaged with dependencies that are only compatible with Python 3.11.
-Since many distros will allow you to install Blender and Python separately this can lead to version mismatch and a broken Extension.
+If you are a Linux user, it is recommended that you download **Blender** from their website, and **NOT install via a Package Manager.**
+**Blender** has elected to support only Python 3.11 for Extensions, so Fabex is packaged with dependencies that are only compatible with Python 3.11.
+Since many distros will allow you to install **Blender** and Python separately this can lead to version mismatch and a broken Extension.
 
 *For details on how to work around this issue, see the FAQ.*
 ```
@@ -45,7 +45,7 @@ From the Releases page, download **fabexcnc.zip**.
 - Click **Edit** > **Preferences** > **Get Extension**
 
 ![image](https://github.com/user-attachments/assets/7776b3dd-2411-4348-b4d7-b0262f683f90)
-- Click the small arrow in the top right of the window, then click 'Install from Disk'
+- Click the small arrow in the top right of the window, then click **Install from Disk**
 
 ![image](https://github.com/user-attachments/assets/1bec6168-5b57-48c4-afe7-310664fa979d)
 - Select the **fabexcnc.zip** file you downloaded, then click **Install from Disk**

@@ -10,9 +10,9 @@
 6. **Dependencies**
 
 ## Core Functions
-The core function of the Fabex addon is to take whatever object is in the viewport, generate toolpaths along that object according to a milling strategy set by the user, and export that path as Gcode so that it can be run on a CNC machine.
+The core function of **Fabex** is to take the active object in the viewport, generate toolpaths along that object according to a milling strategy set by the user, and export that path as Gcode so that it can be run on a CNC machine.
 
-These operations can be exported alone, or combined into chains to be exported and run together.
+These Operations can be exported alone, or combined into Chains to be exported and run together.
 
 **Core Functions** can be found in:
 - `cam_chunk` - breaks paths into chunks and layers for calculation
@@ -29,14 +29,14 @@ Although there is a file called `engine`, it is not actually part of the Core fu
 ```
 
 ## Extra Functions
-Beyond simply creating toolpaths for existing objects, Fabex can also create the objects (curves) and edit them through a number of operations.
+Beyond simply creating toolpaths for existing objects, **Fabex** can also create objects and edit them a number of ways.
 
-There are modules dedicated to creating reliefs, joinery, puzzle joinery and gears.
+There are modules dedicated to creating Reliefs, Joinery, Puzzle Joinery and Gears.
 
-There is also a simulation module to allow a preview of what the final product will look like.
+There is also a Simulation module to allow a preview of what the finished Operation will look like.
 
 **Extra Functions** can be found in:
-- `bas_relief` - generate a Relief mesh using Blender's Camera
+- `bas_relief` - generate a Relief mesh using **Blender**'s Camera
 - `bridges` - generate and place Bridges / Tabs for Cutout Operations
 - `involute_gear` - generate a customizable Rack or Pinion Gear curve
 - `joinery` - create mortise, twist, finger, etc. joints
@@ -87,9 +87,9 @@ And the files:
 - `version` - Extension version
 
 ## Blender Files
-All the functionality and data listed above needs to be connecetd to Blender.
+All the functionality and data listed above needs to be connecetd to **Blender**.
 
-This is done by registering PropertyGroups that contain all the data for our CNC machine, and Operations, passing that to Operators that can calculate that data, and exposing those Operators as buttons and controls in the User Interface.
+This is done by registering `PropertyGroups` that contain all the data for our CNC machine and Operations, passing that to Operators that can calculate that data, and exposing those Operators as buttons and controls in the User Interface.
 
 **Blender Files** can be found in the folders:
 - `properties/`
@@ -99,7 +99,7 @@ This is done by registering PropertyGroups that contain all the data for our CNC
 And also include the `blender_manifest.toml` file, which defines the Extension name, author(s), website, license, tags, wheels etc, and is read by **Blender** when you install **Fabex**.
 
 ### Properties
-Properties allow you to store data in your Blender Scene or Object.
+Properties allow you to store data in your **Blender** Scene or Object.
 - `chain_props` - CAM Chain-related data
 - `info_props` - Info Panel data, like Estimates
 - `interface_props` - UI Layout data and callback functions
@@ -110,9 +110,9 @@ Properties allow you to store data in your Blender Scene or Object.
 - `optimisation_props` - Optimisation Panel data, like Path Point reduction
 
 ### Operators
-Python functions need to be wrapped in a Blender Operator to be stored and called in Blender.
+Python functions need to be wrapped in a **Blender** Operator to be stored and called in **Blender**.
 - `async_op` - asynchronous Operator Mixin class for non-blocking updates
-- `bas_relief_ops` - create a Bas Relief mesh from a Blender Camera
+- `bas_relief_ops` - create a Bas Relief mesh from a **Blender** Camera
 - `bridges_op` - generate and place Bridges / Tabs for Cutout Operations
 - `chain_ops` - add, remove, sort CAM Chains
 - `curve_create_ops` - add Sign Plate, Drawer, Mortise, Interlock, Puzzle Joint, Gear objects
@@ -128,9 +128,9 @@ Python functions need to be wrapped in a Blender Operator to be stored and calle
 - `slice_op` - slice the selected object into a series of curves
 
 ### User Interface
-Files related to Blender's User Interface (aka UI) are found in the `ui` folder, which has been broken down into sub-folders for easier management:
+Files related to **Blender**'s User Interface (aka UI) are found in the `ui` folder, which has been broken down into sub-folders for easier management:
 - `icons/` - custom .png icon images
-- `menus/` - the **Fabex CNC** menu in the 3D viewport, and its children
+- `menus/` - the **Fabex CNC** menu in the 3D viewport, and sub-menus
 - `panels/` - the main **Fabex** interface
 - `pie_menu/` - the Pie Menu system, called with `Alt+C`
 

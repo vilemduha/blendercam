@@ -1,6 +1,6 @@
 # Getting Started
 
-This is a step-by-step tutorial on generating your first toolpath with Fabex.
+This is a step-by-step tutorial on generating your first toolpath with **Fabex**.
 
 For detailed descriptions of User Interface options go [here](interface.md).
 
@@ -17,7 +17,7 @@ Now we are going to scale and rotate the monkey head so that it gives us the bes
 - press **S**, then **Z**, then **.5** to scale it down on the Z axis
 
 ```{note}
-_If you don't feel the need to reproduce the guide results exactly, you can skip all of the above and perform the operations on the default cube, but you will get a warning about the object being too big for your machine if you don't scale it down to fit inside the **CAM_machine** area._
+_If you don't want to reproduce the guide results exactly, you can skip all of the above and perform the operations on the default cube, but you will get a warning about the object being too big for your machine if you don't scale it down to fit inside the **CAM_machine** area._
 ```
 
 ## Change the Render Engine
@@ -57,12 +57,12 @@ In the  **[ Operation Setup ]** panel, choose **Parallel** from the **Strategy**
 **Waterline** and other operations require curve data source. See how to generate curves from mesh model [here](Profile%20and%20Pocket%20operations.md).
 
 ```{note}
-_If you are not sure what each milling strategy does, check the Strategy page for pictures and explanations of how each works._
+_If you are not sure what each milling strategy does, check the [Strategies](strategies.md) page for pictures and explanations of how each works._
 ```
 
 ## Setup Stock Material and Position your Object
 
-In the **[ Material ]** panel, click **Size from Model** to allow Fabex to auto-calculate the size of the required Stock Material, you can then set **Additional Radius** to mill additional stock around object. 
+In the **[ Material ]** panel, click **Size from Model** to allow **Fabex** to auto-calculate the size of the required Stock Material, you can then set **Additional Radius** to mill additional stock around object. 
 
 If you know the dimensions of your stock, e.g. a plywood sheet, you can uncheck **Size from Model** and enter the dimensions manually.
 
@@ -103,7 +103,9 @@ Under **Operation Depth** you can set the **Start** and **Max** depth.
 
 ![](_static/OperationArea.png)
 
-_**Max** depth is set to auto-calculate from the selected **Object** by default._
+```{note}
+_**Operation Depth Max** is set to auto-calculate from the selected **Object** by default._
+```
 
 ### [ Feedrate ]
 
@@ -111,7 +113,7 @@ Set the **Feedrate** _(in units per minute)_ and **Spindle** speed _(in revoluti
 
 ![](_static/FeedratePanel.png)
 
-***Plunge** **Speed** and **Angle** allows slows down the operation feedrate when the cutter is moving down on steep areas.*
+***Plunge** **Speed** and **Angle** slow the operation feedrate when the cutter is moving down on steep areas.*
 
 ### [ Cutter ]
 
@@ -127,7 +129,7 @@ Back in the **[ Operations ]** panel, click **Calculate Path & Export Gcode**.
 
 ![Calculate path](_static/OperationsPanelSuzanne.png)
 
-This will calculate the toolpath, add it to the Blender scene and export a Gcode file to the same directory as your .blend file.
+This will calculate the toolpath, add it to the **Blender** scene and export a Gcode file to the same directory as your .blend file.
 
 ![Calculate path view](_static/SuzannePath.png)
 
@@ -145,7 +147,7 @@ Or, combine it with Blender shaders and HDRIs to get a better idea of what your 
 
 ## Combine Multiple Operations in a Chain
 
-You may need to combine multiple strategies and Opertations to achieve your desired result, and chains make that possible.
+You may need to combine multiple strategies and Opertations to achieve your desired result, and Chains make that possible.
 
 Chains allow you to combine multiple Operations for Gcode export or Simulation.
 
