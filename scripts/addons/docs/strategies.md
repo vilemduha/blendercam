@@ -158,6 +158,6 @@ Projects any 2d curve on 3d surface
 - Add Pocket
 - Add Medial Mesh
 
-# **Overview of Principle Strategies**
+## **Overview of Principle Strategies**
 
 ![Strategy Overview](_static/opOverview.png)

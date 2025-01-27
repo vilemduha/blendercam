@@ -2,7 +2,7 @@
 
 This is a step-by-step tutorial on generating your first toolpath with Fabex.
 
-For detailed descriptions of Panel options go [here](interface.md).
+For detailed descriptions of User Interface options go [here](interface.md).
 
 ## Setup your Scene
 You can use any object to generate toolpaths, but for the purpose of this guide we will use Suzanne, the monkey.

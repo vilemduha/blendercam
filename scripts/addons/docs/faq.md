@@ -13,6 +13,21 @@ CNC replaced CAM in the name as it seemed more widely recognizable, and avoids a
 **Fabex** was **BlenderCAM** (now it is **Fabex** _not_ **BlenderCAM**), it hasn't been a long time now, since **BlenderCAM** and still a machinist's delight, on a moonlit night. 
 ```
 
+## What do I do with the Gcode file that **Fabex** outputs?
+That will need to be sent to your machine so that it can be run.
+
+The specifics of how to do it will vary between manufacturers, but, generally the Gcode file will be loaded into a Gcode sender which then connects or transmits the file to your CNC.
+
+Some free, open-source Gcode senders include:
+- [UGS - Universal Gcode Sender](https://github.com/winder/Universal-G-Code-Sender)
+- [CNCJS](https://cnc.js.org/)
+- [Gsender](https://github.com/Sienci-Labs/gsender)
+- [bCNC](https://github.com/vlachoudis/bCNC)
+
+```{note}
+There is also a prototype Gcode sender Extension for Blender called [gControl](https://github.com/SpectralVectors/gControl) for grbl-based machines - it allows for connection, jog control and sending simple jobs and commands, but should be considered Experimental until further notice.
+```
+
 ## When will you have full support for 4 and 5 axis Operations?
 None of the developers currently have access to a 4+ Axis machine, so until one of the developers acquires a 4th axis, or someone with a 4+ axis machine joins the development team, 4 and 5 axis Operations will remain officially unsupported (outside of manual indexing).
 
@@ -107,18 +122,3 @@ If you have installed **Blender** from a package manager and you want to make **
 
 ## What do I do if I have a question that isn't covered in the FAQ or elsewhere in the docs?
 Your best bet is to ask in the chat. 
-
-## What do I do with the Gcode file that **Fabex** outputs?
-That will need to be sent to your machine so that it can be run.
-
-The specifics of how to do it will vary between manufacturers, but, generally the Gcode file will be loaded into a Gcode sender which then connects or transmits the file to your CNC.
-
-Some free, open-source Gcode senders include:
-- [UGS - Universal Gcode Sender](https://github.com/winder/Universal-G-Code-Sender)
-- [CNCJS](https://cnc.js.org/)
-- [Gsender](https://github.com/Sienci-Labs/gsender)
-- [bCNC](https://github.com/vlachoudis/bCNC)
-
-```{note}
-There is also a prototype Gcode sender Extension for Blender called [gControl](https://github.com/SpectralVectors/gControl) for grbl-based machines - it allows for connection, jog control and sending simple jobs and commands, but should be considered Experimental until further notice.
-```

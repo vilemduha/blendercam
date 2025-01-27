@@ -142,7 +142,7 @@ The way the detection works is each face in the mesh is checked to see if it is 
 Operator option **z limit** controls which horizontal surfaces are considered a pocket.  If the horizontal surface z location is below the z limit then the surface is considered a pocket. Setting z limit to 0.0 (default setting) should work for most situations if mesh top is at z=0.0.
 
 ## [ Curve Creators ]
-This operators will create shapes directly from the panel. 
+These operators will create shapes directly from the panel. 
 
 ![Create Panel](_static/CurveCreatorsPanel.png)
 

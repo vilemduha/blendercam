@@ -86,7 +86,7 @@ Python wheels - executable binaries packed in for all supported systems.
 The wheels are for Python version 3.11, and will not work with other Python versions
 ```
 
-# Complete Addon Layout
+## Complete Addon Layout
 ```
 scripts/addons/
 └── cam/

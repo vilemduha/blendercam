@@ -244,3 +244,22 @@ The **[ Cutter ]** panel allows you to select a pre-defined cutting tool, or def
 The **[ Chains ]** panel allows you to combine multiple operations. It is useful for simulating more operations or exporting a chain of operations if you have automatic toolchanger or use the same tool for several operations.
 
 ![New chain](_static/ChainsPanel.png)
+
+## Menus
+Many of **Fabex**'s Tools can be accessed through the **Fabex CNC** menus located in the 3D viewport.
+
+![](_static/FabexMenus.png)
+
+## Pie Menu
+**Fabex**'s entire panel, tool and menu layout can also be accessed through a multi-level Pie Menu system.
+
+![](_static/FabexPieMenu.png)
+
+```{note}
+The Pie Menu is bound to the shortcut - `Alt + C` by default, but can be changed in Preferences.
+```
+
+## Search Operator (F3)
+Any of **Fabex**'s Operators can be searched and executed using Blender's built-in Search Operator, activated with F3.
+
+![](_static/F3Search.png)
