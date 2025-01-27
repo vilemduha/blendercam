@@ -28,8 +28,9 @@ Some free, open-source Gcode senders include:
 There is also a prototype Gcode sender Extension for Blender called [gControl](https://github.com/SpectralVectors/gControl) for grbl-based machines - it allows for connection, jog control and sending simple jobs and commands, but should be considered Experimental until further notice.
 ```
 ---
-## When will you have full support for 4 and 5 axis Operations?
+## When will you have full support for 4 and 5 Axis Operations?
 None of the developers currently have access to a 4+ Axis machine, so until one of the developers acquires a 4th axis, or someone with a 4+ axis machine joins the development team, 4 and 5 axis Operations will remain officially unsupported (outside of manual indexing).
+
 ---
 ## When will the Experimental features become Stable?
 The short answer is: it depends.
@@ -49,6 +50,7 @@ Everyone puts in effort to make sure that all of **Fabex**'s features are suppor
 It is not always possible to resolve these problems quickly, and there may be other users who are not experiencing any issues with the same feature who do not want it to be removed because someone else filed a Bug Report.
 
 In these cases, a feature may be marked Experimental and, like 4+ axis operation, it may have to wait until a developer with the right combination of experience and equipment is available to develop, test and stabilize it.
+
 ---
 ## What should I do if something in **Fabex** isn't working?
 The first step is to check the docs or the chat to make sure that it is supposed to work the way you think.
@@ -58,6 +60,7 @@ The first step is to check the docs or the chat to make sure that it is supposed
 The next step is to check the Known Issues - long-standing bugs and workarounds will be posted there.
 
 After that, you can file a Bug Report!
+
 ---
 ## How Do I File a Bug Report?
 On Github, on the Fabex page, click Issues.
@@ -93,6 +96,7 @@ Bug Reports are one form of contribution, but there are a lot of other ways to c
 Either way, you're going to start by forking the repository and submitting pull requests.
 
 And you can always check in with the chat!
+
 ---
 ## Can I use Fabex with **Blender** 3 and earlier? Why support 4.2.1 and later?
 If you want to use **Fabex** with earlier versions of **Blender** then you need to use on of the **blendercam.zip** releases, and you will also have to manually manage the Python dependencies (opencamlib, shapely), which might involve admin privilege.
@@ -109,7 +113,7 @@ Unfortunately, the Extension system is not without issues, leading to the next m
 
 ---
 ## I can't install or enable **Fabex**, what's going on?
-*Or, 'I get an error that says `No module name 'shapely.lib'`, but I can still `import shapely`'*
+*Or - 'I get an error that says `No module name 'shapely.lib'`, but I can still `import shapely`'*
 
 **Blender** officially supports Python 3.11. At the time of this writing, Python 3.13 is the latest release.
 
