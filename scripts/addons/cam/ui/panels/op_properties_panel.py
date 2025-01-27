@@ -92,8 +92,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
                 subcol.prop(self.op.movement, "insideout")
                 box = subcol.box()
                 sub = box.column(align=True)
-                sub.label(text="Toolpath Distance")
-                sub.prop(self.op, "distance_between_paths", text="Between")
+                sub.label(text="Toolpath")
+                sub.prop(self.op, "distance_between_paths", text="Stepover")
 
         # Waterline Options
         if self.op.strategy in ["WATERLINE"]:
@@ -118,8 +118,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
                 if self.op.waterline_fill:
                     box = col.box()
                     sub = box.column(align=True)
-                    sub.label(text="Toolpath Distance")
-                    sub.prop(self.op, "distance_between_paths", text="Between")
+                    sub.label(text="Toolpath")
+                    sub.prop(self.op, "distance_between_paths", text="Stepover")
 
         # Carve Options
         if self.op.strategy in ["CARVE"]:
@@ -128,8 +128,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
             col.prop(self.op, "skin")
             box = col.box()
             sub = box.column(align=True)
-            sub.label(text="Toolpath Distance")
-            sub.prop(self.op, "distance_along_paths", text="Along")
+            sub.label(text="Toolpath")
+            sub.prop(self.op, "distance_along_paths", text="Detail")
 
         # Medial Axis Options
         if self.op.strategy in ["MEDIAL_AXIS"]:
@@ -174,8 +174,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
                 row.prop(self.op, "pocket_to_curve")
             box = col.box()
             sub = box.column(align=True)
-            sub.label(text="Toolpath Distance")
-            sub.prop(self.op, "distance_between_paths", text="Between")
+            sub.label(text="Toolpath")
+            sub.prop(self.op, "distance_between_paths", text="Stepover")
 
         # Default Options
         if self.op.strategy not in [
@@ -197,9 +197,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
                 col.prop(self.op, "parallel_angle")
             box = col.box()
             col = box.column(align=True)
-            col.label(text="Toolpath Distance")
-            col.prop(self.op, "distance_between_paths", text="Between")
-            col.prop(self.op, "distance_along_paths", text="Along")
+            col.label(text="Toolpath")
+            col.prop(self.op, "distance_between_paths", text="Stepover")
+            col.prop(self.op, "distance_along_paths", text="Detail")
 
         # A & B, Array, Bridges Options
         if self.level >= 1:

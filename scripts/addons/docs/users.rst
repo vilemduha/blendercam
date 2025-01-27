@@ -9,7 +9,7 @@ User Guide
    interface
    tools
    strategies
-   profilepocket
+   examplechain
    faq
    glossary
 
@@ -25,7 +25,7 @@ This section is for new users, containing basic info on how to install and use t
 
 :doc:`strategies` gives detailed descriptions of each Milling Strategy and its options.
 
-:doc:`profilepocket` contains a step-by-step guide for completing these common operations.
+:doc:`examplechain` contains a step-by-step guide for completing these common operations.
 
 :doc:`faq` aka Frequently Asked Questions
 

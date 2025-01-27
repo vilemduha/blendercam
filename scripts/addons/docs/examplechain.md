@@ -1,4 +1,4 @@
-# Profile & Pocket (Step-by-Step)
+# Example Chain Workflow
 
 1. Convert model from CSG to mesh (in this example FreeCAD is used for conversion). Precision setting is very important for correct result.
 

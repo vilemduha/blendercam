@@ -1,59 +1,163 @@
 # Strategies
 
-  * **Parallel** 
+## Profile (Cutout)
+Cutout a silhouette using optional offset.
 
-      ![Parallel](_static/opParallel.png)  
+![profile cutout](_static/opProfile.png)
 
-      Parallel paths at any angle
+### Options
+![](_static/CutoutOptions.png)
+- Cut
+- Start Point
+- Skin
+- Overshoot
+- Radius
+  - Lead-in
+  - Lead-out
+- Outlines
+  - Count
+- Don't Merge
 
-  * **Pocket**
+## Pocket
+Mills a pocket in the shape of the selected object.
 
-    ![pocket](_static/opPocket.png)  
+![pocket](_static/opPocket.png)  
 
-  * **Cutout**
+### Options
+![](_static/PocketOptions.png)
+- Type
+- Start Position
+- Skin
+- Overshoot
+- Pocket to Curve
+- Toolpath
+  - Stepover
 
-    ![profile cutout](_static/opProfile.png)  
+## Drill
+Detects circles or squares in any 2D curve and converts these into a drill operation.  Supports peck drilling if layers are enabled.
 
-    Cutout a silhouette using optional offset.
+![drill](_static/opDrill.png)  
 
-  * **Drill**
+### Options
+![](_static/DrillOptions.png)
+- Holes On
 
-    ![drill](_static/opDrill.png)  
+## **Parallel**
+Parallel paths at any angle.
 
-    This detects circles or squares in any 2d curve and converts these into a drill operation.  Supports peck drilling if layers are enabled.
+![Parallel](_static/opParallel.png)
 
-  * **Cross**
+### Options
+![](_static/ParallelOptions.png)
+- Inverse Milling
+- Skin
+- Angle of Paths
+- Toolpath
+  - Stepover
+  - Detail
 
-    ![cross](_static/opCross.png)  
+## Cross
+Perpendicular paths at any angle.
 
-  * **Block**
+![cross](_static/opCross.png)  
 
-    ![block](_static/opBlock.png)  
+### Options
+![](_static/CrossOptions.png)
+- Inverse Milling
+- Skin
+- Angle of Paths
+- Toolpath
+  - Stepover
+  - Detail
 
-  * **Spiral**
+## Block
 
-    ![spiral](_static/opSpiral.png)  
+![block](_static/opBlock.png)  
 
-    Best suited for coins or other circular objects
+### Options
+![](_static/BlockOptions.png)
+- Inverse Milling
+- Toolpath
+  - Stepover
+  - Detail
 
-  * **Circles**
+## Spiral
+Best suited for coins or other circular objects
 
-    ![circles](_static/opCircle.png)  
+![spiral](_static/opSpiral.png)  
 
-    Best suited for coins or other circular objects
+### Options
+![](_static/SpiralOptions.png)
+- Inverse Milling
+- Toolpath
+  - Stepover
+  - Detail
 
-  * **Outline Fill**
+## Circles
+Best suited for coins or other circular objects
 
-    ![outline fill](_static/opOutline.png)  
+![circles](_static/opCircle.png)  
 
-  * **Carve**
+### Options
+![](_static/CirclesOptions.png)
+- Inverse Milling
+- Toolpath
+  - Stepover
+  - Detail
 
-    ![carve](https://cloud.githubusercontent.com/assets/648108/12060353/19527cf6-af44-11e5-9de1-27cf1c98a90a.jpg) 
+## Outline Fill
 
-    Projects any 2d curve on 3d surface
+![outline fill](_static/opOutline.png)  
 
-  * **Overview of principles strategies**
+### Options
+![](_static/OutlineFillOptions.png)
+- Inverse Milling
+- Toolpath
+  - Stepover
+  - Detail
 
-  ![Strategy Overview](_static/opOverview.png)
-  
-  ![waterline](https://cloud.githubusercontent.com/assets/648108/12060351/1316d53a-af44-11e5-8158-31c349a7a265.jpg)
+## Carve
+Projects any 2d curve on 3d surface
+
+![carve](https://cloud.githubusercontent.com/assets/648108/12060353/19527cf6-af44-11e5-9de1-27cf1c98a90a.jpg) 
+
+### Options
+![](_static/CarveOptions.png)
+- Depth
+- Skin
+- Toolpath
+  - Detail
+
+## Waterline
+
+![waterline](https://cloud.githubusercontent.com/assets/648108/12060351/1316d53a-af44-11e5-8158-31c349a7a265.jpg)
+
+### Options
+![](_static/WaterlineOptions.png)
+- Slice Detail
+- Skin
+- Project Paths
+- Fill Between Slices
+- Toolpath
+  - Stepover
+
+## Curve to Path
+
+### Options
+![](_static/CurveOptions.png)
+- Outlines
+  - Count
+- Don't Merge
+
+## Medial Axis
+
+### Options
+![](_static/MedialAxisOptions.png)
+- Threshold
+- Detail Size
+- Add Pocket
+- Add Medial Mesh
+
+# **Overview of Principle Strategies**
+
+![Strategy Overview](_static/opOverview.png)
