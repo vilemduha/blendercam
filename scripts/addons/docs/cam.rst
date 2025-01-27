@@ -1,196 +1,196 @@
 cam package
 ===========
 
-Subpackages
------------
+.. Subpackages
+.. -----------
 
-.. toctree::
-   :maxdepth: 4
 
-   cam.operators
-   cam.post_processors
-   cam.properties
-   cam.ui
-   cam.utilities
+..    :maxdepth: 4
 
-Submodules
-----------
+..    cam.operators
+..    cam.post_processors
+..    cam.properties
+..    cam.ui
+..    cam.utilities
 
-cam.bas\_relief module
---------------------
+.. Submodules
+.. ----------
 
-.. automodule:: cam.bas_relief
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.bas\_relief module
+.. --------------------
 
-cam.bridges module
-------------------
+.. .. automodule:: cam.bas_relief
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.bridges
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.bridges module
+.. ------------------
 
-cam.cam\_chunk module
----------------------
+.. .. automodule:: cam.bridges
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.cam_chunk
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.cam\_chunk module
+.. ---------------------
 
-cam.collision module
---------------------
+.. .. automodule:: cam.cam_chunk
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.collision
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.collision module
+.. --------------------
 
-cam.constants module
---------------------
+.. .. automodule:: cam.collision
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.constants
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.constants module
+.. --------------------
 
-cam.engine module
------------------
+.. .. automodule:: cam.constants
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.engine
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.engine module
+.. -----------------
 
-cam.exception module
---------------------
+.. .. automodule:: cam.engine
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.exception
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.exception module
+.. --------------------
 
-cam.gcode\_import\_parser module
-----------------------------
+.. .. automodule:: cam.exception
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.gcode_import_parser
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.gcode\_import\_parser module
+.. ----------------------------
 
-cam.gcode\_path module
---------------------
+.. .. automodule:: cam.gcode_import_parser
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.gcode_path
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.gcode\_path module
+.. --------------------
 
-cam.involute\_gear module
--------------------------
+.. .. automodule:: cam.gcode_path
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.involute_gear
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.involute\_gear module
+.. -------------------------
 
-cam.joinery module
-------------------
+.. .. automodule:: cam.involute_gear
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.joinery
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.joinery module
+.. ------------------
 
-cam.pack module
----------------
+.. .. automodule:: cam.joinery
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.pack
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.pack module
+.. ---------------
 
-cam.parametric module
----------------------
+.. .. automodule:: cam.pack
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.parametric
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.parametric module
+.. ---------------------
 
-cam.pattern module
-------------------
+.. .. automodule:: cam.parametric
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.pattern
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.pattern module
+.. ------------------
 
-cam.preferences module
-----------------------
+.. .. automodule:: cam.pattern
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.preferences
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.preferences module
+.. ----------------------
 
-cam.puzzle\_joinery module
---------------------------
+.. .. automodule:: cam.preferences
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.puzzle_joinery
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.puzzle\_joinery module
+.. --------------------------
 
-cam.simulation module
----------------------
+.. .. automodule:: cam.puzzle_joinery
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.simulation
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.simulation module
+.. ---------------------
 
-cam.slice module
-----------------
+.. .. automodule:: cam.simulation
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.slice
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.slice module
+.. ----------------
 
-cam.strategy module
--------------------
+.. .. automodule:: cam.slice
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.strategy
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.strategy module
+.. -------------------
 
-cam.testing module
-------------------
+.. .. automodule:: cam.strategy
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.testing
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.testing module
+.. ------------------
 
-cam.version module
-------------------
+.. .. automodule:: cam.testing
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.version
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.version module
+.. ------------------
 
-cam.voronoi module
-------------------
+.. .. automodule:: cam.version
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
-.. automodule:: cam.voronoi
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. cam.voronoi module
+.. ------------------
+
+.. .. automodule:: cam.voronoi
+..    :members:
+..    :undoc-members:
+..    :show-inheritance:
 
 Module contents
 ---------------
