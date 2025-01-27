@@ -19,18 +19,18 @@ Submodules
 Bas Relief
 --------------------
 
-.. automodule:: cam.bas_relief
+.. automodule:: bas_relief
    :members:
    :undoc-members:
    :show-inheritance:
 
-Bridges
+cam.bridges module
 ------------------
 
 .. automodule:: cam.bridges
    :members:
    :undoc-members:
-   :no-show-inheritance:
+   :show-inheritance:
 
 cam.cam\_chunk module
 ---------------------
@@ -192,3 +192,10 @@ cam.voronoi module
    :undoc-members:
    :show-inheritance:
 
+Module contents
+---------------
+
+.. automodule:: cam
+   :members:
+   :undoc-members:
+   :show-inheritance:
