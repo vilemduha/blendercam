@@ -41,15 +41,17 @@ It has been used for many milling projects _(artistic, personal, commercial and 
 
 ![Linux](https://img.shields.io/badge/Platform-Linux%20|%20MacOS%20|%20Windows-brightgreen.svg)
 
-Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Linux and MacOS.
+**FabexCNC** extension for **Blender** _(formerly BlenderCAM)_ works on **Windows**, **Linux** and **MacOS**.
 
+Check out the guides below:
 * [Installation](scripts/addons/docs/install.md)
 * [Getting Started](scripts/addons/docs/starting.md)
-* [Panel Descriptions](scripts/addons/docs/panels.md)
+* [User Interface](scripts/addons/docs/interface.md)
 * [Tools](scripts/addons/docs/tools.md)
-* [Example of using Profile and Pocket operations](scripts/addons/docs/profilepocket.md)
+* [Example Chain Workflow](scripts/addons/docs/examplechain.md)
 
-(The full [documentation](https://blendercam.com/documentation/) can also be found on the website)
+Or, view the full [User, Developer and API Documentation](https://spectralvectors.github.io/blendercam/index.html)
+
 ## 👌 Features
 
 | _Feature_ | _Description_ | _Status_ |
@@ -134,12 +136,12 @@ Fabex CNC CAM extension for Blender (formerly Blendercam) works on Windows or Li
 
 Originally created by [Vilem Novak](https://github.com/vilemduha), the addon is currently maintained by [Alain Pelletier](https://github.com/pppalain) and a team of contributors. 
 
-If you are a developer who would like to contribute to the project, please fork and open pull requests.
+If you are a developer who would like to contribute to the project, check out the [Developer Guide](https://spectralvectors.github.io/blendercam/developers.html), fork the repository and open pull requests.
 
-If you wish to contribute to the addon, your code must be GPL or a more permissive license (e.g.: MIT, Public Domain).
+If you wish to contribute to the addon, your code must be GPL or a more permissive license. *(e.g.: MIT, Public Domain)*
 
 > [!TIP]
-> _If you need help or want to discuss about BlenderCAM you can join the [Chat Room #BlenderCAM:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org)._
+> _If you need help or want to discuss about **Fabex** you can join the [Chat Room #BlenderCAM:matrix.org on Matrix](https://riot.im/app/#/room/#blendercam:matrix.org)._
 
 ### Contributors
 <a href="https://github.com/pppalain/blendercam/graphs/contributors">
