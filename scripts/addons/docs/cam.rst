@@ -16,10 +16,10 @@ Subpackages
 Submodules
 ----------
 
-Bas Relief
+cam.bas\_relief module
 --------------------
 
-.. automodule:: bas_relief
+.. automodule:: cam.bas_relief
    :members:
    :undoc-members:
    :show-inheritance:
