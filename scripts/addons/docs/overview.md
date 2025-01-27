@@ -1,6 +1,6 @@
 # Code Overview
 
-Fabex (formerly BlenderCAM) code can be broken down into categories:
+**Fabex** *(formerly BlenderCAM)* code can be broken down into categories:
 
 1. **Core Functions**
 2. **Extra Functions**
@@ -15,13 +15,14 @@ The core function of the Fabex addon is to take whatever object is in the viewpo
 These operations can be exported alone, or combined into chains to be exported and run together.
 
 **Core Functions** can be found in:
-- `cam_chunk`
-- `collision`
-- `constants`
-- `exception`
-- `gcode_path`
-- `pattern`
-- `strategy`
+- `cam_chunk` - breaks paths into chunks and layers for calculation
+- `collision` - sweep collision functions for cutter tip positioning 
+- `constants` - static values for precision, offsets, etc
+- `exception` - handles CAM-related exceptions
+- `gcode_import_parser` - builds toolpaths from imported Gcode files
+- `gcode_path` - builds and exports toolpaths using functions from `pattern` and `strategy`
+- `pattern` - build path patterns for various milling strategies
+- `strategy` - milling strategy function definitions - how each strategy is calculated
 
 ```{note}
 Although there is a file called `engine`, it is not actually part of the Core functionality, and mostly functions as a way to collect and register the UI panels that will be shown when **Fabex** is activated.
@@ -32,55 +33,111 @@ Beyond simply creating toolpaths for existing objects, Fabex can also create the
 
 There are modules dedicated to creating reliefs, joinery, puzzle joinery and gears.
 
-There is also a simulation module to allow a preview of what the final product will look like, as well as an asynchronous module that allows progress reports on calculations.
+There is also a simulation module to allow a preview of what the final product will look like.
 
 **Extra Functions** can be found in:
-- `bas_relief`
-- `bridges`
-- `gcode_import_parser`
-- `involute_gear`
-- `joinery`
-- `pack`
-- `parametric`
-- `puzzle_joinery`
-- `simulation`
-- `slice`
-- `testing`
-- `voronoi`
+- `bas_relief` - generate a Relief mesh using Blender's Camera
+- `bridges` - generate and place Bridges / Tabs for Cutout Operations
+- `involute_gear` - generate a customizable Rack or Pinion Gear curve
+- `joinery` - create mortise, twist, finger, etc. joints
+- `pack` - arrange curves on a sheet for bulk cutting
+- `parametric` - creates curves with input functions
+- `puzzle_joinery` - create jigsaw puzzle joints
+- `simulation` - generate a mesh preview of the result of the selected toolpath
+- `slice` - cut objects into vertical slices
+- `testing` - test function definitions for the Test Suite
+- `voronoi` - generate [Voronoi](https://en.wikipedia.org/wiki/Voronoi_diagram) tesselations
 
 ## Utility Functions
-Utilities are generally low-level, depend only on external code (no local imports), and power both Core and Extra functions.
+Utilities are generally low-level, depend only on external code (no local imports), and power Core and Extra functions as well as some Blender-specific functionality.
 
-**Utility Functions** can be found in the `utilities` folder, and have been broken down into files containing related functions.
+**Utility Functions** can be found in the `utilities/` folder, and have been broken down into files containing related functions:
+- `addon_utils` - check and load dependencies, presets, keymaps and UI
+- `async_utils` - asynchronous function for non-blocking updates
+- `bounds_utils` - get and update bounding boxes in worldspace
+- `chunk_utils` - low-level CAM chunk-related functions
+- `compare_utils` - basic comparisons - equal, overlapping etc.
+- `dict_utils` - simple Python dict functions
+- `geom_utils` - define or create simple geometry
+- `image_utils` - image creation, conversion and manipulation
+- `index_utils` - related to Indexing Operations - multi-sided jobs
+- `loop_utils` - add or remove nested loops
+- `machine_utils` - add or update the **CAM_Machine** area object
+- `material_utils` - add or update the **CAM_Material** object
+- `numba_utils` - add or bypass `numba` acceleration, if available
+- `ocl_utils` - `opencamlib` library helpers
+- `operation_utils` - add, update, sort Operations and Chains
+- `orient_utils` - add or convert Orientation objects
+- `shapely_utils` - `shapely` library helpers
+- `simple_utils` - select, delete, duplicate, rename etc.
+- `strategy_utils` - update available strategies
+- `thread_utils` - monitor threads for CAM updates
+- `version_utils` - get and set the Extension version
 
 ## Reference Files
+Reference files contain pre-defined data that can be quickly loaded into Blender, including Gcode Post-Processors that will translate a generic CAM toolpath into instructions specific to your CNC machine, presets for Machines, compatible cutting tools and Operations.
+
 **Reference Files** can be found in the folders:
-- `post_processors`
-- `presets`
-- `tests`
+- `post_processors/` - all currently available Gcode Post-Processors
+- `presets/` - Machine, Cutter, Operation preset files
+- `tests/` - an automated suite to ensure consistent calculations and output
 
 And the files:
-- `testing`
-- `version`
+- `testing` - test function definitions
+- `version` - Extension version
 
 ## Blender Files
 All the functionality and data listed above needs to be connecetd to Blender.
 
 This is done by registering PropertyGroups that contain all the data for our CNC machine, and Operations, passing that to Operators that can calculate that data, and exposing those Operators as buttons and controls in the User Interface.
 
+**Blender Files** can be found in the folders:
+- `properties/`
+- `operators/`
+- `ui/`
+
+And also include the `blender_manifest.toml` file, which defines the Extension name, author(s), website, license, tags, wheels etc, and is read by **Blender** when you install **Fabex**.
+
 ### Properties
 Properties allow you to store data in your Blender Scene or Object.
+- `chain_props` - CAM Chain-related data
+- `info_props` - Info Panel data, like Estimates
+- `interface_props` - UI Layout data and callback functions
+- `machine_props` - Machine Panel data - your CNC Machine settings
+- `material_props` - Stock material-related settings
+- `movement_props` - Movement Panel data, like Climb vs Conventional cut
+- `operation_props` - all Operation data not covered elsewhere
+- `optimisation_props` - Optimisation Panel data, like Path Point reduction
 
 ### Operators
 Python functions need to be wrapped in a Blender Operator to be stored and called in Blender.
+- `async_op` - asynchronous Operator Mixin class for non-blocking updates
+- `bas_relief_ops` - create a Bas Relief mesh from a Blender Camera
+- `bridges_op` - generate and place Bridges / Tabs for Cutout Operations
+- `chain_ops` - add, remove, sort CAM Chains
+- `curve_create_ops` - add Sign Plate, Drawer, Mortise, Interlock, Puzzle Joint, Gear objects
+- `curve_equation_ops`- add Periodic, Lissajous, Hypotrochoid and Custom Curve objects
+- `curve_tools_ops` - Boolean, Convex Hull, Intarsion, Overcuts, Remove Doubles, and Pocket Surfaces
+- `gcode_import_op` - creates a toolpath object from an imported Gcode file
+- `orient_op` - add Orientation object
+- `pack_op` - pack curves on sheet
+- `path_ops` - create, chain, calculate, export toolpaths
+- `position_op` - position Stock material within Machine Work Area
+- `preset_ops` - execute Preset files
+- `simulation_ops` - simulate the selected toolpath
+- `slice_op` - slice the selected object into a series of curves
 
 ### User Interface
-Files related to Blender's UI - panels, menus, pie menus, popup dialogs etc.
-
-**Blender Files** can be found in the `operators`, `properties` and `ui` folders, as well as the `blender_manifest.toml` file.
+Files related to Blender's User Interface (aka UI) are found in the `ui` folder, which has been broken down into sub-folders for easier management:
+- `icons/` - custom .png icon images
+- `menus/` - the **Fabex CNC** menu in the 3D viewport, and its children
+- `panels/` - the main **Fabex** interface
+- `pie_menu/` - the Pie Menu system, called with `Alt+C`
 
 ## Dependencies
 Python wheels - executable binaries packed in for all supported systems.
+- `opencamlib`
+- `shapely`
 
 ```{note}
 The wheels are for Python version 3.11, and will not work with other Python versions

@@ -7,7 +7,6 @@ To use **Fabex** with **Blender** 4.1 and earlier use one of the **blendercam.zi
 ```
 
 ## Get Blender
-
 [Download Blender from the official site.](https://www.blender.org/download/)
 
 ```{note}
@@ -18,9 +17,7 @@ Since many distros will allow you to install Blender and Python separately this 
 *For details on how to work around this issue, see the FAQ.*
 ```
 ## Get Fabex
-
 ### For Users
-
 #### Stable Version
 [Download the Stable version here.](https://github.com/vilemduha/blendercam/releases)
 
@@ -44,7 +41,6 @@ From the Releases page, download **fabexcnc.zip**.
 *(Don't extract it, Blender is expecting a .zip file!)*
 
 #### Install Fabex
-
 - Open **Blender**
 - Click **Edit** > **Preferences** > **Get Extension**
 
@@ -70,4 +66,4 @@ If you intend to contribute to the **Fabex** codebase, or if you want to modify 
 
 For these users we recommend cloning the repository from Github, then creating a symlink (alias, shortcut) for the **'cam'** folder and moving that into [Blender's Extension directory.](https://docs.blender.org/manual/en/latest/advanced/blender_directory_layout.html)
 
-For more details, see the FAQ.
+For more details, see the [FAQ](faq.md).

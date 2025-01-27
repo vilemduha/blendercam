@@ -48,7 +48,7 @@ Everyone puts in effort to make sure that all of **Fabex**'s features are suppor
 
 It is not always possible to resolve these problems quickly, and there may be other users who are not experiencing any issues with the same feature who do not want it to be removed because someone else filed a Bug Report.
 
-In these cases, a feature may be marked Experimental and, like 4+ axis operation, 
+In these cases, a feature may be marked Experimental and, like 4+ axis operation, it may have to wait until a developer with the right combination of experience and equipment is available to develop, test and stabilize it.
 
 ## What should I do if something in **Fabex** isn't working?
 The first step is to check the docs or the chat to make sure that it is supposed to work the way you think.

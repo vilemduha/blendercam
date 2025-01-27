@@ -1,4 +1,4 @@
-# Interface
+# User Interface
 
 Fabex's user interface was designed to facilitate multiple different workflows, layouts and experience levels.
 
@@ -11,7 +11,7 @@ Fabex can do a lot of things so we try to balance not overwhelming new users wit
 - **Experimental** - all previous options, plus those marked EXPERIMENTAL
 
 **Layout** will rearrange where the panels are placed onscreen. 
-- **Modern** - splits the panels between the Properties and Sidebar areas 
+- **Modern** - splits the panels between the Properties and Sidebar areas
 - **Classic** - preserves the original BlenderCAM layout
 - **User** - can be edited in Preferences
 
@@ -57,7 +57,7 @@ Click the **+** button to add a new Operation, or choose an Operation Preset.
 ```{note}
 *If you change the object's name later on then you must also change it here. The field will turn red if the object can not be found.*
 ```
-
+---
 ### [ Machine ]
 The **[ Machine ]** panel lets you setup your CNC machine parameters within Blender. 
 
@@ -73,7 +73,7 @@ You can set up your machine, then save your default file with Ctrl+U command. Th
 ```{note}
 If your machine is not in the list, you can try the ISO code, which is standardized Gcode, or see the FAQ for details on writing your own Post Processor (EXPERIMENTAL!)
 ```
-
+---
 ### [ Info ]
 The **[ Info ]** panel shows important information about your Operation.
 
@@ -95,7 +95,7 @@ Failure to resolve issues with your Operation could result in damage, injury or 
 
 **Warnings** are there to keep you, your machine and your material safe, and we urge you to take all necessary precautions when working with CNC Machines.
 ```
-
+---
 ### [ Operation Setup ]
 The **[ Operation Setup ]** panel gives you access to milling strategies and settings specific to those strategies.
 
@@ -117,7 +117,7 @@ Depending on which **Strategy** is selected, the options will differ. Below is a
 - **Outlines**
   * **Don't Merge** - for cutout strategy. Does not merge outlines - this results into cutting in the object area! It is usefully when milling PCBs, where you don't need exact shape but need to separate areas with engraving.
 - **Bridges (Tabs)** - for cutout operation, places automatically bridges by the rules set by options that will appear after this is enabled: width, height, minimum per curve, distance.
-
+---
 ### [ Operation G-code ]
 The **[ Operation G-code]** panel lets you specify commands or macros to be executed at the beginning and end of Operations.
 
@@ -130,7 +130,7 @@ The Gcode options in the **[ Machine ]** panel are global across all Operations,
 - **Dust Collector**
 - **Hold Down**
 - **Mist**
-
+---
 ### [ Optimization ]
 The **[ Optimisation ]** panel is crucial for performance. 
 
@@ -149,8 +149,7 @@ These settings allow you to balance performance and accuracy by limiting how man
 * **Simulation sampling raster detail** - same as sampling raster detail, but only for simulation
 * **Detail of circles used for curve offsets** - exactly what it says
 * **Use OpenCAMLib** - use external library for calculating toolpaths, improving toolpath quality (especially with waterlines) and calculation time. Has to be used with exact mode. [[Using-BlenderCAM-with-OpenCAMLib]]
-
-
+---
 ### [ Operation Area ]
 The **[ Operation Area ]** panel controls the area where the Cutter is allowed to move and sets limits on depth and travel height.
 
@@ -167,8 +166,7 @@ The **[ Operation Area ]** panel controls the area where the Cutter is allowed t
 - **Ambient** - how much space surrounding the object will be used for the milling
   - **Surfaces All** - a rectangular area will be used
   - **Surfaces Around** - object silhouette will be used, with a radius specified by Ambient radius
-
-
+---
 ### [ Material ]
 The **[ Material ]** panel handles the size and position of your stock material - the raw material that you are planning to mill. You can enter values manually, or allow Fabex to calculate them for you based on the object you have selected.
 
@@ -183,8 +181,7 @@ The **[ Material ]** panel handles the size and position of your stock material 
   -  **Center on Y Axis**
   -  **Z Placement**
   - **Position Object** - this will move the object to positive X and Y and negative Z so that it is fully in the work area and closest to the origin.
-
-
+---
 ### [ Movement ]
 The **[ Movement ]** panel handles how the Cutter moves during the Operation, the direction the Cutter spins, and has a little overlap with the **[ Operation Area ]** panel for the most important settings.
 
@@ -204,8 +201,7 @@ The **[ Movement ]** panel handles how the Cutter moves during the Operation, th
 - **First down** - for cutout strategy. If on, the paths are cut one by one to the full depth(all layers), otherwise first all the silhouettes are cut on layer 1, then 2....
 - **Ramp Contour** - for cutout strategy, instead of going layer by layer, it goes down all the way on a ramp.
 - **Ramp Out** - also going out is performed on a ramp, to prevent burning of the finished piece by staying on one place in XY axes.
-
-
+---
 ### [ Feedrate ]
 The **[ Feedrate ]** panel sets the Operation feedrate, Cutter speed and more.
 
@@ -216,7 +212,7 @@ The **[ Feedrate ]** panel sets the Operation feedrate, Cutter speed and more.
 - **Plunge**
   - **Speed** - the feed speed gets reduced when the slope of the path is above the Plunge angle
   - **Angle** - any angle greater than the plunge angle will activate plunge speed
-
+---
 ### [ Cutter ]
 The **[ Cutter ]** panel allows you to select a pre-defined cutting tool, or define your own with custom Tool Number and Description.
 
@@ -239,7 +235,7 @@ The **[ Cutter ]** panel allows you to select a pre-defined cutting tool, or def
 | Laser    |  ![Laser](_static/cut-laser.jpg) |
 | Custom   |  ![Custom](_static/cut-custom.jpg) |
 
-
+---
 ### [ Chains ]
 The **[ Chains ]** panel allows you to combine multiple operations. It is useful for simulating more operations or exporting a chain of operations if you have automatic toolchanger or use the same tool for several operations.
 
