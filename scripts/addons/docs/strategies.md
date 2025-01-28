@@ -7,16 +7,17 @@ Cutout a silhouette using an optional offset.
 
 ### Options
 ![](_static/CutoutOptions.png)
-- Cut
-- Start Point
-- Skin
-- Overshoot
-- Radius
-  - Lead-in
-  - Lead-out
-- Outlines
-  - Count
-- Don't Merge
+- **Cut** - which side of the path to place the Cutter - *Inside, Outside, On Line*
+- **Start Point** - which path point to start with
+- **Skin** - excess material to leave during Roughing
+- **Overshoot**
+- **Radius**
+  - **Lead-in**
+  - **Lead-out**
+- **Outlines**
+  - **Count**
+- **Don't Merge**
+---
 
 ## Pocket
 Mills a pocket in the shape of the selected object.
@@ -25,13 +26,14 @@ Mills a pocket in the shape of the selected object.
 
 ### Options
 ![](_static/PocketOptions.png)
-- Type
-- Start Position
-- Skin
-- Overshoot
-- Pocket to Curve
-- Toolpath
-  - Stepover
+- **Type**
+- **Start Position**
+- **Skin**
+- **Overshoot**
+- **Pocket to Curve**
+- **Toolpath**
+  - **Stepover**
+---
 
 ## Drill
 Detects circles or squares in any 2D curve and converts these into a drill operation.  Supports peck drilling if layers are enabled.
@@ -40,7 +42,8 @@ Detects circles or squares in any 2D curve and converts these into a drill opera
 
 ### Options
 ![](_static/DrillOptions.png)
-- Holes On
+- **Holes On**
+---
 
 ## **Parallel**
 Parallel paths at any angle.
@@ -49,12 +52,13 @@ Parallel paths at any angle.
 
 ### Options
 ![](_static/ParallelOptions.png)
-- Inverse Milling
-- Skin
-- Angle of Paths
-- Toolpath
-  - Stepover
-  - Detail
+- **Inverse Milling**
+- **Skin**
+- **Angle of Paths**
+- **Toolpath**
+  - **Stepover**
+  - **Detail**
+---
 
 ## Cross
 Perpendicular paths at any angle.
@@ -63,12 +67,13 @@ Perpendicular paths at any angle.
 
 ### Options
 ![](_static/CrossOptions.png)
-- Inverse Milling
-- Skin
-- Angle of Paths
-- Toolpath
-  - Stepover
-  - Detail
+- **Inverse Milling**
+- **Skin**
+- **Angle of Paths**
+- **Toolpath**
+  - **Stepover**
+  - **Detail**
+---
 
 ## Block
 
@@ -76,10 +81,11 @@ Perpendicular paths at any angle.
 
 ### Options
 ![](_static/BlockOptions.png)
-- Inverse Milling
-- Toolpath
-  - Stepover
-  - Detail
+- **Inverse Milling**
+- **Toolpath**
+  - **Stepover**
+  - **Detail**
+---
 
 ## Spiral
 Best suited for coins or other circular objects
@@ -88,10 +94,11 @@ Best suited for coins or other circular objects
 
 ### Options
 ![](_static/SpiralOptions.png)
-- Inverse Milling
-- Toolpath
-  - Stepover
-  - Detail
+- **Inverse Milling**
+- **Toolpath**
+  - **Stepover**
+  - **Detail**
+---
 
 ## Circles
 Best suited for coins or other circular objects
@@ -100,10 +107,11 @@ Best suited for coins or other circular objects
 
 ### Options
 ![](_static/CirclesOptions.png)
-- Inverse Milling
-- Toolpath
-  - Stepover
-  - Detail
+- **Inverse Milling**
+- **Toolpath**
+  - **Stepover**
+  - **Detail**
+---
 
 ## Outline Fill
 
@@ -111,10 +119,11 @@ Best suited for coins or other circular objects
 
 ### Options
 ![](_static/OutlineFillOptions.png)
-- Inverse Milling
-- Toolpath
-  - Stepover
-  - Detail
+- **Inverse Milling**
+- **Toolpath**
+  - **Stepover**
+  - **Detail**
+---
 
 ## Carve
 Projects any 2d curve on 3d surface
@@ -123,10 +132,11 @@ Projects any 2d curve on 3d surface
 
 ### Options
 ![](_static/CarveOptions.png)
-- Depth
-- Skin
-- Toolpath
-  - Detail
+- **Depth**
+- **Skin**
+- **Toolpath**
+  - **Detail**
+---
 
 ## Waterline
 
@@ -134,29 +144,32 @@ Projects any 2d curve on 3d surface
 
 ### Options
 ![](_static/WaterlineOptions.png)
-- Slice Detail
-- Skin
-- Project Paths
-- Fill Between Slices
-- Toolpath
-  - Stepover
+- **Slice Detail**
+- **Skin**
+- **Project Paths**
+- **Fill Between Slices**
+- **Toolpath**
+  - **Stepover**
+---
 
 ## Curve to Path
 
 ### Options
 ![](_static/CurveOptions.png)
-- Outlines
-  - Count
-- Don't Merge
+- **Outlines**
+  - **Count**
+- **Don't Merge**
+---
 
 ## Medial Axis
 
 ### Options
 ![](_static/MedialAxisOptions.png)
-- Threshold
-- Detail Size
-- Add Pocket
-- Add Medial Mesh
+- **Threshold**
+- **Detail Size**
+- **Add Pocket**
+- **Add Medial Mesh**
+---
 
 ## **Overview of Principle Strategies**
 

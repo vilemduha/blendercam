@@ -5,13 +5,14 @@
 
 For a time, seeing the word **Blender** in a product name would mean that it was made _for_ **Blender**, but from now on it will mean that it is made _by_ **Blender**.
 
-**FabexCNC** was chosen because it combines _fabrication_ with _extension (the new format and location in Blender)_. 
+**FabexCNC** was chosen because it combines _fabrication_ with _extension (the new format and location in **Blender**)_. 
 
-CNC replaced CAM in the name as it seemed more widely recognizable, and avoids any confusion with 'camera' that may come from Blender's many 'camera' functions.
+CNC replaced CAM in the name as it seemed more widely recognizable, and avoids any confusion between **CAM** *(Computer-Aided-Machining)* *and* **Camera** *(abbreviated to Cam)* that may come from **Blender**'s many Camera-related functions and settings.
 
 ```{note}
 **Fabex** was **BlenderCAM** (now it is **Fabex** _not_ **BlenderCAM**), it hasn't been a long time now, since **BlenderCAM** and still a machinist's delight, on a moonlit night. 
 ```
+
 ---
 ## What do I do with the Gcode file that **Fabex** outputs?
 That will need to be sent to your machine so that it can be run.
@@ -37,15 +38,15 @@ The short answer is: it depends.
 
 The long answer is: there are generally 2 reasons why a feature is marked Experimental:
 
-1 - It was developed for a specific machine or operation that cannot currently be tested or verified.
+- It was developed for a specific machine or operation that cannot currently be tested or verified.
 
-*or*
+  *or*
 
-2 - It worked with some previous combination of Python and Blender versions and needs to be rewritten.
+- It worked with some previous combination of Python and **Blender** versions and needs to be rewritten.
 
-**Fabex** has been in continuous development since 2012, between Python 2 - 3.11, Blender 2.7 - 4.2, and 30+ volunteer developers with different machines, needs and approaches to coding.
+**Fabex** has been in continuous development since 2012, between Python 2 - 3.11, **Blender** 2.7 - 4.2, and 30+ volunteer developers with different machines, needs and approaches to coding.
 
-Everyone puts in effort to make sure that all of **Fabex**'s features are supported and stable, but sometimes a feature will be introduced by someone who stops development, the feature will rely on a deprecated Python or Blender function, or there might be an intermittent issue that is difficult to diagnose.
+Everyone puts in effort to make sure that all of **Fabex**'s features are supported and stable, but sometimes a feature will be introduced by someone who stops development, the feature will rely on a deprecated Python or **Blender** function, or there might be an intermittent issue that is difficult to diagnose.
 
 It is not always possible to resolve these problems quickly, and there may be other users who are not experiencing any issues with the same feature who do not want it to be removed because someone else filed a Bug Report.
 
@@ -53,35 +54,40 @@ In these cases, a feature may be marked Experimental and, like 4+ axis operation
 
 ---
 ## What should I do if something in **Fabex** isn't working?
-The first step is to check the docs or the chat to make sure that it is supposed to work the way you think.
-
-*e.g. some tools will only work with a mesh or a curve, while others will accept any type of object, and certain CAM options will only appear alongside certain Strategies.*
+The first step is to check the docs or the [chat](https://riot.im/app/#/room/#blendercam:matrix.org) to make sure that it is supposed to work the way you think.
 
 The next step is to check the Known Issues - long-standing bugs and workarounds will be posted there.
 
 After that, you can file a Bug Report!
 
+```{note}
+*Some tools will only work with a mesh, others will only work with a curve, while others will accept any type of object. 
+
+Some CAM options will ONLY appear with certain Milling Strategies - e.g. the **Parallel** strategy has a **Stepover** option, but the **Drill** strategy does not.*
+```
+
 ---
 ## How Do I File a Bug Report?
-On Github, on the Fabex page, click Issues.
+On **Github**, in the **Fabex** repository, click Issues.
 
-Check to see if any of the Open Issues deal with the same problem you faced - someone else may have found a fix!
+Check to see if any of the **Open Issues** deal with the same problem you faced - someone else may have found a fix!
 
-If not, click the New Issue button.
+If not, click the **New Issue** button.
 
-On the next screen, click Bug Report.
+On the next screen, click **Bug Report**.
 
 A template is provided for you, and though you don't need to follow it exactly, it helps to at least include:
 - your OS
-- your Blender version number
-- your Fabex version number
+- your **Blender** version number
+- your **Fabex** version number
 - a description of what the bug is
 - steps to take for a developer to reproduce the bug
 
 Bonus points for including:
 - a .blend file where the bug can be recreated
 - the Error message from the console
-- your Python version (just kidding, it's 3.11)
+- your Python version _(just kidding, it's 3.11!)_
+
 ---
 ## How can I contribute?
 Bug Reports are one form of contribution, but there are a lot of other ways to contribute:
@@ -95,13 +101,13 @@ Bug Reports are one form of contribution, but there are a lot of other ways to c
 
 Either way, you're going to start by forking the repository and submitting pull requests.
 
-And you can always check in with the chat!
+And you can always check in with the [chat!](https://riot.im/app/#/room/#blendercam:matrix.org)
 
 ---
 ## Can I use Fabex with **Blender** 3 and earlier? Why support 4.2.1 and later?
 If you want to use **Fabex** with earlier versions of **Blender** then you need to use on of the **blendercam.zip** releases, and you will also have to manually manage the Python dependencies (opencamlib, shapely), which might involve admin privilege.
 
-Blender 4.2 came with the Extensions system, which offered two benefits:
+**Blender** 4.2 came with the Extensions system, which offered two benefits:
 - one-click install for official Extensions
 - a Python dependency management solution
 
@@ -126,6 +132,31 @@ If you are not comfortable with Python version or dependency management, then th
 If you have installed **Blender** from a package manager and you want to make **Fabex** work, you have a couple of options:
 - manually manage the dependencies by `pip install`-ing `shapely`, and `opencamlib`
 - manually manage Python versions by installing 3.11, or using a version management tool like `pyenv`
+
+---
+## Where is **Fabex** installed?
+### Linux
+`$HOME/.config/blender/4.3/extensions/user_default/fabex/`
+### macOS
+`/Users/$USER/Library/Application Support/Blender/4.3/extensions/user_default/fabex/`
+### Windows
+`%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\4.3\extensions\user_default\fabex`
+```{note}
+The location of this addon changed with the introduction of the Extension system, the old file path was `blender/4.3/scripts/addons/cam`.
+
+If you choose the Developer Install option you will create a symlink for the `cam` folder and place it in the `user_default` folder described above.
+```
+
+---
+## My CNC uses a Router, how do I set Spindle Speed (RPM)?
+Thanks to the efforts of people with access to tachometers and high-speed cameras, we know that an off-the-shelf trim router *(e.g. Makita RT0701C, DeWalt DWP611)* will have a range of roughly 10,000 - 30,000 RPM.
+
+Routers generally cannot spin as slow as Spindles, they have less power, and typically aren't made to the same kinds of tolerances as a Spindle, so the range may vary.
+
+Some tests showed Routers spinning as low as 7,000 - 9,000, or reaching a maximum of 24,000, but as a general rule of thumb you can consider the power dial on your router *(e.g. 1 - 6)* to correspond to a range of ~10,000 - 30,000 RPM.
+
 ---
 ## What do I do if I have a question that isn't covered in the FAQ or elsewhere in the docs?
-Your best bet is to ask in the chat. 
+Your best bet is to ask in the [chat.](https://riot.im/app/#/room/#blendercam:matrix.org)
+
+---

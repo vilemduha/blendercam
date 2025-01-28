@@ -66,4 +66,4 @@ If you intend to contribute to the **Fabex** codebase, or if you want to modify 
 
 For these users we recommend cloning the repository from Github, then creating a symlink (alias, shortcut) for the **'cam'** folder and moving that into [Blender's Extension directory.](https://docs.blender.org/manual/en/latest/advanced/blender_directory_layout.html)
 
-For more details, see the [FAQ](faq.md).
+For more details, see the [Developers Guide](developers.rst) and the [FAQ](faq.md).

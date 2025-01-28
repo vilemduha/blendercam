@@ -28,9 +28,9 @@
 </div>
 
 ## 👁️ About
-[**Fabex CNC CAM extension for Blender**](https://blendercam.com/) is an open source solution for artistic, personal, commercial or industrial CAM - Computer aided machining - a G-code generation tool.
+[**FabexCNC**](https://blendercam.com/) CAM extension for **Blender** is an open source solution for artistic, personal, commercial or industrial CAM (*Computer Aided Machining*) - a G-code generation tool.
 
-Formerly known as BlenderCAM, the Blender Foundation has requested that external projects no longer use the name Blender due to Trademark, so it was renamed **Fabex**!
+Formerly known as **BlenderCAM**, the **Blender Foundation** has requested that external projects no longer use the name **Blender** due to Trademark, so it was renamed **Fabex**!
 
 It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed. 
 
@@ -78,12 +78,12 @@ Or, view the full [User, Developer and API Documentation](https://spectralvector
 | :warning: **5 axis Milling** :warning: | _Currently only possible via manual indexing_ | ⏳ |
 
 > [!NOTE]
-> _All features listed above are for Blender 4.2.1 and up._
+> _All features listed above are for **Blender** 4.2.1 and up._
 > 
-> _For previous versions of Blender, check the Github Releases page._
+> _For previous versions of **Blender**, check the **Github Releases** page._
 
 ## 💻 Post-processors
-* [GRBL](https://github.com/gnea/grbl/wiki)
+* [Grbl](https://github.com/gnea/grbl/wiki)
 * [ISO](https://www.iso.org/obp/ui/#iso:std:iso:4343:ed-2:v1:en)
 * [LinuxCNC - EMC2](https://linuxcnc.org/)
 * [Fadal](https://fadal.com/)
@@ -102,34 +102,30 @@ Or, view the full [User, Developer and API Documentation](https://spectralvector
 ## 📒 Files Organisation
 
 ```graphql
-.
-├── config/ - # 'startup' and 'userpref' blend files
-├── documentation/ - # How to Use (Wiki) - files
-├── Examples/ - # Bas Relief & Intarsion operation demo files and images
-├── scripts/
-│   └── addons/
-│       └── cam/ - # Main Addon Folder
-│           ├── operators/ - # Blender Operators
-│           ├── post_processors/ - # CAM Post-Processors
-│           ├── presets/ - # Quick access to pre-defined cutting tools, machines and operations
-│           │   ├── cam_cutters/
-│           │   ├── cam_machines/
-│           │   └── cam_operations/
-│           ├── properties/ - # Blender PropertyGroups to store Machine, Operation, Cutter data
-│           ├── tests/ - # Developer Tests
-│           │   └── test_data/ - # Test output
-│           ├── ui/ - # Blender User Interface
-│           │   ├── icons/ - # .png files for custom icons
-│           │   ├── menus/
-│           │   ├── panels/
-│           │   └── pie_menu/
-│           ├── utilities/ - # Low level helper functions
-│           └── wheels/ - # Python Dependencies (as binary wheels)
-└── static/ - # Logo
-
+config/ - # 'startup' and 'userpref' blend files
+Examples/ - # Bas Relief & Intarsion operation demo files and images
+scripts/
+└── addons/
+    ├── cam/ - # Main Addon Folder
+    │   ├── operators/ - # Blender Operators
+    │   ├── post_processors/ - # CAM Post-Processors
+    │   ├── presets/ - # Quick access to pre-defined cutting tools, machines and operations
+    │   │   ├── cam_cutters/
+    │   │   ├── cam_machines/
+    │   │   └── cam_operations/
+    │   ├── properties/ - # Blender PropertyGroups to store Machine, Operation, Cutter data
+    │   ├── tests/ - # Developer Tests
+    │   │   └── test_data/ - # Test output
+    │   ├── ui/ - # Blender User Interface
+    │   │   ├── icons/ - # .png files for custom icons
+    │   │   ├── menus/ - # viewport menu and sub-menus
+    │   │   ├── panels/ - # primary UI
+    │   │   └── pie_menu/ - # complete Pie Menu system
+    │   ├── utilities/ - # Low level helper functions
+    │   └── wheels/ - # Python Dependencies (as binary wheels)
+    └── docs/ - # User, Developer and API docs
+        └── _static/ - # Images for docs and README
 ```
-
-
 
 ## 🤝 Contribute
 #### Fabex CNC CAM extension for Blender is in active development.
