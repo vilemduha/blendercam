@@ -4,17 +4,16 @@
 
 # CAM Toolpaths for CNC in Blender
 
-### [About](#-about) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer)
+### • [About](#-about) • [Guide](#-user-guide) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer) • 
 
 ![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/suzanne.gif)
 
 [![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org)
 ![Contributors](https://img.shields.io/github/contributors/vilemduha/blendercam)
-[![Issues](https://img.shields.io/github/issues/vilemduha/blendercam)](https://github.com/vilemduha/blendercam)
+![Linux](https://img.shields.io/badge/Platform-Linux%20|%20Mac%20|%20Windows-brightgreen.svg)
 ![Size](https://img.shields.io/github/repo-size/vilemduha/blendercam)
 ![License](https://img.shields.io/github/license/vilemduha/blendercam)
 
----
 </div>
 
 ## 👁️ About
@@ -27,9 +26,7 @@ It has been used for many milling projects _(artistic, personal, commercial and 
 > [!NOTE]
 > _If you are a developer who would like to help, check out the section on [Contributing](#-contribute)._
 
-## 👨‍🎓 How to Use (Wiki)
-
-![Linux](https://img.shields.io/badge/Platform-Linux%20|%20MacOS%20|%20Windows-brightgreen.svg)
+## 👨‍🎓 User Guide
 
 **FabexCNC** extension for **Blender** _(formerly BlenderCAM)_ works on **Windows**, **Linux** and **MacOS**.
 
