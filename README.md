@@ -6,10 +6,7 @@
 
 [![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org)
 ![Contributors](https://img.shields.io/github/contributors/vilemduha/blendercam)
-
 [![Issues](https://img.shields.io/github/issues/vilemduha/blendercam)](https://github.com/vilemduha/blendercam)
-![Last commit](https://img.shields.io/github/last-commit/vilemduha/blendercam)
-
 ![Size](https://img.shields.io/github/repo-size/vilemduha/blendercam)
 ![License](https://img.shields.io/github/license/vilemduha/blendercam)
 
