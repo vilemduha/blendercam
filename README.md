@@ -4,22 +4,17 @@
 
 # CAM Toolpaths for CNC in Blender
 
+### [About](#-about) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer)
+
+![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/suzanne.gif)
+
 [![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org)
 ![Contributors](https://img.shields.io/github/contributors/vilemduha/blendercam)
 [![Issues](https://img.shields.io/github/issues/vilemduha/blendercam)](https://github.com/vilemduha/blendercam)
 ![Size](https://img.shields.io/github/repo-size/vilemduha/blendercam)
 ![License](https://img.shields.io/github/license/vilemduha/blendercam)
 
-- - -
-
-### [About](#-about) • [How to Use](#-how-to-use-wiki) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer)
-
-- - - 
-
-![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/suzanne.gif)
-
-- - -
-
+---
 </div>
 
 ## 👁️ About
