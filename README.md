@@ -4,7 +4,7 @@
 
 # CAM Toolpaths for CNC in Blender
 
-### • [About](#-about) • [Guide](#-user-guide) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer) • 
+### [About](#-about) • [Guide](#-user-guide) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer)
 
 ![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/suzanne.gif)
 
@@ -17,7 +17,9 @@
 </div>
 
 ## 👁️ About
-[**FabexCNC**](https://blendercam.com/) CAM extension for **Blender** is an open source solution for artistic, personal, commercial or industrial CAM (*Computer Aided Machining*) - a G-code generation tool.
+[**FabexCNC**](https://blendercam.com/) Extension for [**Blender**](https://www.blender.org) is an open source solution for artistic, personal, commercial or industrial CAM (*Computer Aided Machining*) - a G-code generation tool.
+
+It is available for **Windows**, **Linux** and **MacOS**.
 
 Formerly known as **BlenderCAM**, the **Blender Foundation** has requested that external projects no longer use the name **Blender** due to Trademark, so it was renamed **Fabex**!
 
@@ -27,17 +29,14 @@ It has been used for many milling projects _(artistic, personal, commercial and 
 > _If you are a developer who would like to help, check out the section on [Contributing](#-contribute)._
 
 ## 👨‍🎓 User Guide
-
-**FabexCNC** extension for **Blender** _(formerly BlenderCAM)_ works on **Windows**, **Linux** and **MacOS**.
-
-Check out the guides below:
 * [Installation](scripts/addons/docs/install.md)
 * [Getting Started](scripts/addons/docs/starting.md)
 * [User Interface](scripts/addons/docs/interface.md)
 * [Tools](scripts/addons/docs/tools.md)
 * [Example Chain Workflow](scripts/addons/docs/examplechain.md)
 
-Or, view the full [User, Developer and API Documentation](https://spectralvectors.github.io/blendercam/index.html)
+> [!NOTE]
+> *You can also view the full [User, Developer and API Documentation](https://spectralvectors.github.io/blendercam/index.html)*
 
 ## 👌 Features
 
@@ -46,9 +45,9 @@ Or, view the full [User, Developer and API Documentation](https://spectralvector
 | **2D & 3D Milling Strategies** | _Profile, Pocket, Drill, Parallel, Cross, Block, Spiral, Medial Axis and more_ | ✅ |
 | **Cutter Types** | _Ballnose, Ballcone, Bullnose, Flat Endmill, V-Carve, User Defined and more_ | ✅ |
 | **3D Data or 2D Images** | _Model in Blender, or import 3D objects or b/w images, and generate toolpaths_ | ✅ |
-| **Layers & Skin** | _Leave material during Roughing to ensure that your Finishing passes have enough to work with_ | ✅ |
+| **Layers & Skin** | _Leave excess material during Roughing passes_ | ✅ |
 | **Inverse Milling** | _Cut an inverted piece for joinery, e.g. Male to Female connector_ | ✅ |
-| **Ambient Around Model** | _Restrict Cutter to specified radius around the model_ | ✅ |
+| **Ambient Around Model** | _Clear excess material around the model_ | ✅ |
 | **Protect Vertical Surfaces** | _Cutter moves vertically next to surfaces greater than a threshold angle_ | ✅ |
 | **Stay Low** | _Keeps the Cutter low, if possible, to reduce travel time_ | ✅ |
 | **Stock Material Setup** | _Enter material dimensions & location, or get them from your 3D model_ | ✅ |
