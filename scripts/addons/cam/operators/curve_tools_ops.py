@@ -6,7 +6,10 @@ Operators that perform various functions on existing curves.
 from math import pi, tan
 
 import shapely
-from shapely.geometry import LineString
+from shapely.geometry import (
+    LineString,
+    MultiLineString,
+)
 
 import bpy
 from bpy.props import (
@@ -265,8 +268,6 @@ class CamCurveSimpleOvercuts(Operator):
         for s in shapes.geoms:
             s = shapely.geometry.polygon.orient(s, 1)
             if s.boundary.geom_type == "LineString":
-                from shapely.geometry import MultiLineString
-
                 loops = MultiLineString([s.boundary])
             else:
                 loops = s.boundary
