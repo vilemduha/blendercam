@@ -2,7 +2,7 @@
 
 ![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/fabex_logo_rectangle.png)
 
-## CAM Toolpaths for CNC Milling in Blender
+# CAM Toolpaths for CNC in Blender
 
 [![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org)
 ![Contributors](https://img.shields.io/github/contributors/vilemduha/blendercam)
