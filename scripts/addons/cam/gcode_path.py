@@ -192,10 +192,11 @@ def export_gcode_path(filename, vertslist, operations):
         extension = ".nc"
         from .post_processors import lynx_otter_o as postprocessor
 
+    scale = bpy.context.scene.unit_settings.scale_length
     if s.unit_settings.system == "METRIC":
-        unitcorr = 1000.0
+        unitcorr = 1000.0 * scale
     elif s.unit_settings.system == "IMPERIAL":
-        unitcorr = 1 / 0.0254
+        unitcorr = 1 / 0.0254 * scale
     else:
         unitcorr = 1
     rotcorr = 180.0 / pi
