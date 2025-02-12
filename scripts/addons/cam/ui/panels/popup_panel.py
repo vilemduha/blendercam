@@ -19,7 +19,7 @@ class CAM_Popup_Panel(Operator):
 
         width = window.width
         height = window.height
-        popup_width = 400
+        popup_width = 300
         v_offset = 100
 
         x = int(width / 2 + popup_width / 2)
@@ -45,8 +45,10 @@ class CAM_Popup_Panel(Operator):
             if not self.op.info.warnings == "":
                 # Operation Warnings
                 box = layout.box()
-                box.alert = True
-                col = box.column(align=True)
+                # box.alert = True
+                row = box.row(align=True)
+                row.alignment = "CENTER"
+                col = row.column(align=True)
                 col.alert = True
                 col.label(text="!!! WARNING !!!", icon="ERROR")
                 for line in self.op.info.warnings.rstrip("\n").split("\n"):

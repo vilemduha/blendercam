@@ -142,10 +142,32 @@ If you have installed **Blender** from a package manager and you want to make **
 ### Windows
 `%USERPROFILE%\AppData\Roaming\Blender Foundation\Blender\4.3\extensions\user_default\fabex`
 ```{note}
-The location of this addon changed with the introduction of the Extension system, the old file path was `blender/4.3/scripts/addons/cam`.
-
 If you choose the Developer Install option you will create a symlink for the `cam` folder and place it in the `user_default` folder described above.
+
+The location of this addon changed with the introduction of the Extension system, the old file path was `blender/4.3/scripts/addons/cam`.
 ```
+
+---
+## How Do I Add a Post-Processor?
+If you find that your post-processor is not included with the addon, and the ISO post-processor does not work for you, or you simply wish you write your own, it is possible to add a custom post-processor to **Fabex**.
+
+This is considered **Experimental**, and a more advanced use case, all the prior **warnings** about **safety** apply here, and more!
+
+**Fabex**'s post-processors are a modified version of the [`nc` *(Numerical Control)*](https://github.com/danheeks/PyCAM/tree/master/nc) module of [Dan Heeks](https://github.com/danheeks)' [PyCAM](https://github.com/danheeks/PyCAM).
+
+As such, you can use his [documentation as a guide to edit post-processor files.](https://sites.google.com/site/heekscad/help/editing-post-processor-script-files)
+
+We have had a user report successfully implementing their own custom post-processor using the following steps:
+
+- go to the `post-processors` folder
+- `grbl` is a good choice to customize as it is a single file, some of the others are 2 or more separate files
+- after creating and customizing your post-processor file, you will need to add the code that allows the addon to load it inside **Blender**
+- ~line 135 in the gcodepath file is where all the post-processors are listed for the actual calculation part
+- ~line 23 in the machine_settings file is where the post-processors are listed in the UI
+
+So, write your post-processor, place it in the nc folder, then add references to it in the gcodepath and machine_settings files and you should be able to select and use your custom post-processor.
+
+Again, please double-check all your code to ensure that it is outputting what you expect, we do not currently have any way to test custom Post Processors, so we are depending on users to solve their own issues.
 
 ---
 ## My CNC uses a Router, how do I set Spindle Speed (RPM)?
