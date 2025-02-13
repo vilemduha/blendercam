@@ -225,7 +225,7 @@ async def cutout(o):
         for ch in chunksFromCurve:
             ch.reverse()
 
-    if o.cut_type == "INSIDE":  # there would bee too many conditions above,
+    if o.cut_type == "INSIDE":  # there would be too many conditions above,
         # so for now it gets reversed once again when inside cutting.
         for ch in chunksFromCurve:
             ch.reverse()

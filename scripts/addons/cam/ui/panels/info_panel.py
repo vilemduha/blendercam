@@ -47,10 +47,17 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                 box = main.box()
                 col = box.column(align=True)
                 col.alert = True
-                col.label(text="!!! Warning !!!", icon="ERROR")
+                col.label(text="!!! WARNING !!!", icon="ERROR")
                 for line in self.op.info.warnings.rstrip("\n").split("\n"):
                     if len(line) > 0:
-                        col.label(text=line, icon="ERROR")
+                        icon = "BLANK1"
+                        if line.startswith(("Path", "Operation", "X", "Y", "Z")):
+                            icon = "MOD_WIREFRAME"
+                        if line.startswith(("Memory", "Detail")):
+                            icon = "MEMORY"
+                        if line.startswith(("!!!")):
+                            icon = "ERROR"
+                        col.label(text=line, icon=icon)
 
             # Cutter Engagement
             if not self.op.strategy == "CUTOUT" and not self.op.cutter_type in ["LASER", "PLASMA"]:
@@ -125,7 +132,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                     return
 
                 cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
-                total_cost = self.op.info.duration * 60 * cost_per_second
-                op_cost = f"${total_cost:.2f} (${cost_per_second:.2f}/s)"
+                total_cost = self.op.info.duration * 6000 * cost_per_second
+                op_cost = f"${total_cost:.2f}"  # (${cost_per_second:.2f}/s)"
                 title_col.label(text="Cost:")
                 value_col.label(text=op_cost, icon="TAG")

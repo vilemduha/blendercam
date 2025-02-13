@@ -1152,7 +1152,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
     ambient = sgeometry.Polygon()
     operation_limit = sgeometry.Polygon()
     borderwidth = 50
-    object = None
+    objects = None
     path_object_name: StringProperty(name="Path Object", description="Actual CNC path")
 
     #################
