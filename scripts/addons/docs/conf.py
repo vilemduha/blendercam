@@ -24,6 +24,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.graphviz",
     "sphinx.ext.inheritance_diagram",
+    "myst_parser",
 ]
 
 autoapi_type = "python"
@@ -43,7 +44,8 @@ exclude_patterns = [
     ".DS_Store",
     "*post_processors*",
     "*presets*",
-    "*ui*" "*tests*",
+    "*ui*",
+    "*tests*",
     "*wheels*",
 ]
 
@@ -54,7 +56,7 @@ add_module_names = False
 
 html_theme = "sphinx_book_theme"
 html_static_path = ["_static"]
-html_logo = "_static/logo_blendercam.png"
+html_logo = "_static/Fabex_logo_square.png"
 html_theme_options = {
     "icon_links": [
         {

@@ -1,30 +1,19 @@
-.. BlenderCAM documentation master file, created by
-   sphinx-quickstart on Sun Sep  8 08:23:06 2024.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to BlenderCAM's API Documentation!
+Welcome to FabexCNC!
 ==========================================
 
+.. image:: _static/Fabex_Screenshot.png
+   :width: 800
+
+Fabex is an extension for Blender that creates toolpaths and gcode files for CNC machines. It can generate paths from 3D objects or 2D depth images (height maps) and simulate the results of the calculated paths.
+
+Fabex also has a range of tools to create and edit inlays, joints, reliefs, and more.
+
+To learn the basics, like how to install Blender and Fabex, and how to use the extension, see the User Guide. Beginners can check the Glossary page for a list of terms and explanations.
+
+To learn how Fabex works, to modify or contribute to the code, see the Developer Guide and API Reference.
+
 .. toctree::
-   :maxdepth: 1
-   :caption: Contents:
+   :maxdepth: 2
 
-   overview
-   styleguide
-   testing
-   workflows
-
-This site serves as an introduction to the code behind BlenderCAM.
-
-If you just want to know how to use the addon to mill projects, check out the `wiki <https://blendercam.com/documentation/>`_
-
-This resource is for people who want to contribute code to BlenderCAM, people who want to modify the addon for their needs, or anyone who simply want to better understand what is happening 'under the hood'.
-
-:doc:`overview` offers a guide to the addon files and how they relate to one another.
-
-:doc:`styleguide` gives tips on editors, linting, formatting etc.
-
-:doc:`testing` has information on how to run and contribute to the Test Suite.
-
-:doc:`workflows` contains an explanation of how the addon, testing and documentation are automated via Github Actions.
+   users
+   developers

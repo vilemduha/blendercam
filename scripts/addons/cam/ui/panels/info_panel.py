@@ -30,7 +30,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
         layout.use_property_decorate = False
 
         main = layout.box()
-        main.label(text=f"Fabex CNC", icon="INFO")
+        main.label(text=f"[ Info ]", icon="INFO")
         if context.window_manager.progress > 0:
             col = main.column(align=True)
             col.scale_y = 2
@@ -47,10 +47,17 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                 box = main.box()
                 col = box.column(align=True)
                 col.alert = True
-                col.label(text="!!! Warning !!!", icon="ERROR")
+                col.label(text="!!! WARNING !!!", icon="ERROR")
                 for line in self.op.info.warnings.rstrip("\n").split("\n"):
                     if len(line) > 0:
-                        col.label(text=line, icon="ERROR")
+                        icon = "BLANK1"
+                        if line.startswith(("Path", "Operation", "X", "Y", "Z")):
+                            icon = "MOD_WIREFRAME"
+                        if line.startswith(("Memory", "Detail")):
+                            icon = "MEMORY"
+                        if line.startswith(("!!!")):
+                            icon = "ERROR"
+                        col.label(text=line, icon=icon)
 
             # Cutter Engagement
             if not self.op.strategy == "CUTOUT" and not self.op.cutter_type in ["LASER", "PLASMA"]:
@@ -70,7 +77,14 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                     col.alert = True
                     col.label(text="Warning: High Cutter Engagement", icon="ERROR")
 
-                col.label(text=f"Cutter Engagement: {engagement}%", icon="MOD_SHRINKWRAP")
+                col.label(text="Cutter Engagement")
+                row = col.split(factor=0.32)
+                col_1 = row.column(align=True)
+                col_1.alignment = "RIGHT"
+                col_1.label(text="CWE:")
+                col_2 = row.column(align=True)
+                col_2.alignment = "LEFT"
+                col_2.label(text=f"{engagement}%", icon="STYLUS_PRESSURE")
 
             # Operation Time Estimate
             duration = self.op.info.duration
@@ -88,12 +102,24 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
             box = main.box()
             col = box.column(align=True)
             col.label(text="Estimates")
-            col.label(text=f"Time: {time_estimate}", icon="TIME")
+            row = col.split(factor=0.32)
+            title_col = row.column(align=True)
+            title_col.alignment = "RIGHT"
+            value_col = row.column(align=True)
+            value_col.alignment = "LEFT"
+
+            title_col.label(text="Time:")
+            value_col.label(text=time_estimate, icon="TIME")
 
             # Operation Chipload
             if self.op.info.chipload > 0:
-                col.prop(self.op.info, "chipload")
-                col.label(text=self.op.info.chipload_per_tooth, icon="DRIVER_ROTATIONAL_DIFFERENCE")
+                chipload = self.op.feedrate / (self.op.spindle_rpm * self.op.cutter_flutes)
+                chipload = f"{chipload:.5f}"
+                title_col.label(text=f"Chipload:")
+                value_col.label(
+                    text=chipload,
+                    icon="DRIVER_ROTATIONAL_DIFFERENCE",
+                )
             else:
                 pass
 
@@ -106,6 +132,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
                     return
 
                 cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
-                total_cost = self.op.info.duration * 60 * cost_per_second
-                op_cost = f"Cost: ${total_cost:.2f} (${cost_per_second:.2f}/s)"
-                col.label(text=op_cost, icon="TAG")
+                total_cost = self.op.info.duration * 6000 * cost_per_second
+                op_cost = f"${total_cost:.2f}"  # (${cost_per_second:.2f}/s)"
+                title_col.label(text="Cost:")
+                value_col.label(text=op_cost, icon="TAG")

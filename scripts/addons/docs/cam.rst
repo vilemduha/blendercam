@@ -104,14 +104,6 @@ cam.joinery module
    :undoc-members:
    :show-inheritance:
 
-cam.numba\_wrapper module
--------------------------
-
-.. automodule:: cam.numba_wrapper
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 cam.pack module
 ---------------
 
@@ -140,14 +132,6 @@ cam.preferences module
 ----------------------
 
 .. automodule:: cam.preferences
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cam.preset\_managers module
----------------------------
-
-.. automodule:: cam.preset_managers
    :members:
    :undoc-members:
    :show-inheritance:

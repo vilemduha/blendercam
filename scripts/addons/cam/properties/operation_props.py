@@ -489,6 +489,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
 
     distance_between_paths: FloatProperty(
         name="Distance Between Toolpaths",
+        description="Distance Between / Overlap of Toolpaths - Linked to Cutter Diameter",
         default=0.001,
         min=0.00001,
         max=32,
@@ -498,6 +499,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
     )
     distance_along_paths: FloatProperty(
         name="Distance Along Toolpaths",
+        description="Toolpath Resolution - Details Smaller than this Size Will not be Captured",
         default=0.0002,
         min=0.00001,
         max=32,
@@ -1150,7 +1152,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
     ambient = sgeometry.Polygon()
     operation_limit = sgeometry.Polygon()
     borderwidth = 50
-    object = None
+    objects = None
     path_object_name: StringProperty(name="Path Object", description="Actual CNC path")
 
     #################

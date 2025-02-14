@@ -729,9 +729,9 @@ def check_memory_limit(o):
     if res > limit:
         ratio = res / limit
         o.optimisation.pixsize = o.optimisation.pixsize * sqrt(ratio)
-        o.info.warnings += (
-            f"Memory limit: Sampling Resolution Reduced to {round(o.optimisation.pixsize, 5)}\n"
-        )
+        o.info.warnings += " \n!!! Memory Error !!!\n"
+        o.info.warnings += "Memory Limit Exceeded!\n"
+        o.info.warnings += f"Detail Size Increased to {round(o.optimisation.pixsize, 5)}\n"
         print("Changing Sampling Resolution to %f" % o.optimisation.pixsize)
 
 

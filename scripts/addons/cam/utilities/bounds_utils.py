@@ -254,27 +254,22 @@ def get_bounds(o):
     z_is_exceeded = z_delta_range > m.working_area.z
 
     if x_is_exceeded or y_is_exceeded or z_is_exceeded:
-        exceed_msg = "Operation Exceeds Your Machine Limits (range > working area)\n"
+        exceed_msg = " \n!!! Bounds Error !!!\n"
 
         # Do not append more than one such a warning
         if exceed_msg not in o.info.warnings:
             o.info.warnings += exceed_msg
+            o.info.warnings += "Path Exceeds Machine Limits!\n"
+            o.info.warnings += "Operation Area > Work Area\n"
 
             if x_is_exceeded:
-                o.info.warnings += (
-                    f"Axis X[ range:{unit_value_to_string(x_delta_range)}"
-                    + f", working area:{unit_value_to_string(m.working_area.x)}]\n"
-                )
+                o.info.warnings += f"X: {unit_value_to_string(x_delta_range)} > {unit_value_to_string(m.working_area.x)}\n"
+
             if y_is_exceeded:
-                o.info.warnings += (
-                    f"Axis Y[ range:{unit_value_to_string(y_delta_range)}"
-                    + f", working area:{unit_value_to_string(m.working_area.y)}]\n"
-                )
+                o.info.warnings += f"Y: {unit_value_to_string(y_delta_range)} > {unit_value_to_string(m.working_area.y)}\n"
+
             if z_is_exceeded:
-                o.info.warnings += (
-                    f"Axis Z[ range:{unit_value_to_string(z_delta_range)}"
-                    + f", working area:{unit_value_to_string(m.working_area.z)}]\n"
-                )
+                o.info.warnings += f"Z: {unit_value_to_string(z_delta_range)} > {unit_value_to_string(m.working_area.z)}\n"
 
     if not o.info.warnings == "":
         addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences

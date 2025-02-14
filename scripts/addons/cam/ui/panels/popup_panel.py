@@ -19,14 +19,14 @@ class CAM_Popup_Panel(Operator):
 
         width = window.width
         height = window.height
-        popup_width = 400
+        popup_width = 300
         v_offset = 100
 
         x = int(width / 2 + popup_width / 2)
         y = int(height / 2 + v_offset)
         context.window.cursor_warp(x, y)
 
-        return wm.invoke_props_dialog(self, width=popup_width, title="Fabex CNC/CAM")
+        return wm.invoke_props_dialog(self, width=popup_width, title="Fabex CNC")
 
     def draw(self, context):
         layout = self.layout
@@ -45,10 +45,16 @@ class CAM_Popup_Panel(Operator):
             if not self.op.info.warnings == "":
                 # Operation Warnings
                 box = layout.box()
-                box.alert = True
                 col = box.column(align=True)
                 col.alert = True
                 col.label(text="!!! WARNING !!!", icon="ERROR")
                 for line in self.op.info.warnings.rstrip("\n").split("\n"):
                     if len(line) > 0:
-                        col.label(text=line, icon="ERROR")
+                        icon = "BLANK1"
+                        if line.startswith(("Bounds", "Path", "Operation", "X", "Y", "Z")):
+                            icon = "MOD_WIREFRAME"
+                        if line.startswith(("Memory", "Detail")):
+                            icon = "MEMORY"
+                        if line.startswith(("!!!")):
+                            icon = "ERROR"
+                        col.label(text=line, icon=icon)
