@@ -59,7 +59,7 @@ class CAM_CHAINS_Panel(CAMParentPanel, Panel):
 
             row.template_list(
                 "CAM_UL_chains",
-                "",
+                "id_list_chains",
                 scene,
                 "cam_chains",
                 scene,
@@ -86,7 +86,7 @@ class CAM_CHAINS_Panel(CAMParentPanel, Panel):
                 if chain:
                     row.template_list(
                         "CAM_UL_operations",
-                        "",
+                        "id_list_chain_operations",
                         chain,
                         "operations",
                         chain,

@@ -40,7 +40,7 @@ class CAM_OPERATIONS_Panel(CAMParentPanel, Panel):
         row = layout.row()
         row.template_list(
             "CAM_UL_operations",
-            "",
+            "id_list_operations",
             bpy.context.scene,
             "cam_operations",
             bpy.context.scene,
