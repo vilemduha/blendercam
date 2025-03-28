@@ -1,4 +1,4 @@
-cam package
+fabex package
 ===========
 
 Subpackages
@@ -7,187 +7,187 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   cam.operators
-   cam.post_processors
-   cam.properties
-   cam.ui
-   cam.utilities
+   fabex.operators
+   fabex.post_processors
+   fabex.properties
+   fabex.ui
+   fabex.utilities
 
 Submodules
 ----------
 
-cam.bas\_relief module
+fabex.bas\_relief module
 --------------------
 
-.. automodule:: cam.bas_relief
+.. automodule:: fabex.bas_relief
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.bridges module
+fabex.bridges module
 ------------------
 
-.. automodule:: cam.bridges
+.. automodule:: fabex.bridges
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.cam\_chunk module
+fabex.fabex\_chunk module
 ---------------------
 
-.. automodule:: cam.cam_chunk
+.. automodule:: fabex.fabex_chunk
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.collision module
+fabex.collision module
 --------------------
 
-.. automodule:: cam.collision
+.. automodule:: fabex.collision
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.constants module
+fabex.constants module
 --------------------
 
-.. automodule:: cam.constants
+.. automodule:: fabex.constants
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.engine module
+fabex.engine module
 -----------------
 
-.. automodule:: cam.engine
+.. automodule:: fabex.engine
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.exception module
+fabex.exception module
 --------------------
 
-.. automodule:: cam.exception
+.. automodule:: fabex.exception
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.gcode\_import\_parser module
+fabex.gcode\_import\_parser module
 ----------------------------
 
-.. automodule:: cam.gcode_import_parser
+.. automodule:: fabex.gcode_import_parser
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.gcode\_path module
+fabex.gcode\_path module
 --------------------
 
-.. automodule:: cam.gcode_path
+.. automodule:: fabex.gcode_path
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.involute\_gear module
+fabex.involute\_gear module
 -------------------------
 
-.. automodule:: cam.involute_gear
+.. automodule:: fabex.involute_gear
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.joinery module
+fabex.joinery module
 ------------------
 
-.. automodule:: cam.joinery
+.. automodule:: fabex.joinery
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.pack module
+fabex.pack module
 ---------------
 
-.. automodule:: cam.pack
+.. automodule:: fabex.pack
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.parametric module
+fabex.parametric module
 ---------------------
 
-.. automodule:: cam.parametric
+.. automodule:: fabex.parametric
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.pattern module
+fabex.pattern module
 ------------------
 
-.. automodule:: cam.pattern
+.. automodule:: fabex.pattern
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.preferences module
+fabex.preferences module
 ----------------------
 
-.. automodule:: cam.preferences
+.. automodule:: fabex.preferences
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.puzzle\_joinery module
+fabex.puzzle\_joinery module
 --------------------------
 
-.. automodule:: cam.puzzle_joinery
+.. automodule:: fabex.puzzle_joinery
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.simulation module
+fabex.simulation module
 ---------------------
 
-.. automodule:: cam.simulation
+.. automodule:: fabex.simulation
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.slice module
+fabex.slice module
 ----------------
 
-.. automodule:: cam.slice
+.. automodule:: fabex.slice
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.strategy module
+fabex.strategy module
 -------------------
 
-.. automodule:: cam.strategy
+.. automodule:: fabex.strategy
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.testing module
+fabex.testing module
 ------------------
 
-.. automodule:: cam.testing
+.. automodule:: fabex.testing
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.version module
+fabex.version module
 ------------------
 
-.. automodule:: cam.version
+.. automodule:: fabex.version
    :members:
    :undoc-members:
    :show-inheritance:
 
-cam.voronoi module
+fabex.voronoi module
 ------------------
 
-.. automodule:: cam.voronoi
+.. automodule:: fabex.voronoi
    :members:
    :undoc-members:
    :show-inheritance:
@@ -195,7 +195,7 @@ cam.voronoi module
 Module contents
 ---------------
 
-.. automodule:: cam
+.. automodule:: fabex
    :members:
    :undoc-members:
    :show-inheritance:
