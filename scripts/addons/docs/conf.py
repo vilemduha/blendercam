@@ -3,16 +3,16 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../cam/"))
+sys.path.insert(0, os.path.abspath("../fabex/"))
 
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "Fabex"
-copyright = "2024"
+copyright = "2025"
 author = "Vilem Novak, Alain Pelletier & Contributors"
-release = "1.0.38"
+release = "1.0.65"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -28,7 +28,7 @@ extensions = [
 ]
 
 autoapi_type = "python"
-autoapi_dirs = ["../cam"]
+autoapi_dirs = ["../fabex"]
 autoapi_ignore = [
     "*post_processors*",
     "*presets*",

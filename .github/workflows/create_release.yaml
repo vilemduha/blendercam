@@ -28,7 +28,7 @@ jobs:
         from pathlib import Path
         import re
         import os
-        v_file=Path("scripts","addons","cam","version.py")
+        v_file=Path("scripts","addons","fabex","version.py")
         version_txt=v_file.read_text()
         major,minor,patch = re.match(r".*\(\s*(\d+),(\s*\d+),(\s*\d+)\)",version_txt).groups()
         major=int(major)
@@ -48,7 +48,7 @@ jobs:
           patch=0
         v_file.write_text(f"__version__=({major},{minor},{patch})")
         # update in bl_info structure (which can't be dynamic because blender...)
-        toml_file=Path("scripts","addons","cam","blender_manifest.toml")
+        toml_file=Path("scripts","addons","fabex","blender_manifest.toml")
         toml_text=toml_file.read_text()
         version_regex= r'version\s=\s"[0-9]+\.[0-9]+\.[0-9]+"'
         toml_text = re.sub(version_regex,f'version = "{major}.{minor}.{patch}"',toml_text)
@@ -80,4 +80,4 @@ jobs:
         artifacts: "scripts/addons/fabexcnc.zip"
         tag: ${{ env.VERSION_TAG }}
         allowUpdates: true
-        body: "To install Fabexcnc extension for Blender, download fabexcnc.zip and *don't* extract it. In blender, go to preferences, Get Extensions, and select 'install from disk' and select the CNCCAM.zip file you downloaded"
+        body: "To install FabexCNC extension for Blender, download fabexcnc.zip and *don't* extract it. In Blender, go to Preferences, Get Extensions, and select 'Install from Disk' and select the CNCCAM.zip file you downloaded"
