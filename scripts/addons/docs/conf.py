@@ -28,7 +28,7 @@ extensions = [
 ]
 
 autoapi_type = "python"
-autoapi_dirs = ["../cam"]
+autoapi_dirs = ["../fabex"]
 autoapi_ignore = [
     "*post_processors*",
     "*presets*",
