@@ -16,7 +16,7 @@ class AsyncCancelledException(Exception):
 
 
 class AsyncOperatorMixin:
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.timer = None
         self.coroutine = None
         self._is_cancelled = False

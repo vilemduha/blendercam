@@ -246,6 +246,11 @@ class CalculatePath(Operator, AsyncOperatorMixin):
     bl_label = "Calculate CAM Paths"
     bl_options = {"REGISTER", "UNDO", "BLOCKING"}
 
+    def __init__(self, *args, **kwargs):
+        Operator.__init__(self, *args, **kwargs)
+        AsyncOperatorMixin.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
+
     @classmethod
     def poll(cls, context):
         """Check if the current CAM operation is valid.
@@ -345,6 +350,11 @@ class PathsChain(Operator, AsyncOperatorMixin):
     bl_idname = "object.calculate_cam_paths_chain"
     bl_label = "Calculate CAM Paths in Current Chain and Export Chain G-code"
     bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+
+    def __init__(self, *args, **kwargs):
+        Operator.__init__(self, *args, **kwargs)
+        AsyncOperatorMixin.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @classmethod
     def poll(cls, context):

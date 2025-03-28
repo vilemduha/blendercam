@@ -41,6 +41,11 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
         default="Operation",
     )
 
+    def __init__(self, *args, **kwargs):
+        Operator.__init__(self, *args, **kwargs)
+        AsyncOperatorMixin.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
+
     async def execute_async(self, context):
         """Execute an asynchronous simulation operation based on the active CAM
         operation.
@@ -99,6 +104,11 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
     bl_idname = "object.cam_simulate_chain"
     bl_label = "CAM Simulation"
     bl_options = {"REGISTER", "UNDO", "BLOCKING"}
+
+    def __init__(self, *args, **kwargs):
+        Operator.__init__(self, *args, **kwargs)
+        AsyncOperatorMixin.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @classmethod
     def poll(cls, context):
