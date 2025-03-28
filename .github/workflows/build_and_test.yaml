@@ -84,4 +84,4 @@ jobs:
       if: always()
       with:
         name: blendercam-${{matrix.os}}-${{matrix.blender_version}}
-        path: ./scripts/addons/cam
+        path: ./scripts/addons/fabex
