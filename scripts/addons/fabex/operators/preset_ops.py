@@ -161,13 +161,13 @@ class AddPresetCamMachine(AddPresetBase, Operator):
         "d.spindle_min",
         "d.spindle_max",
         "d.spindle_default",
-        "d.axis4",
-        "d.axis5",
+        "d.axis_4",
+        "d.axis_5",
         "d.collet_size",
         "d.output_tool_change",
         "d.output_block_numbers",
         "d.output_tool_definitions",
-        "d.output_g43_on_tool_change",
+        "d.output_G43_on_tool_change",
     ]
 
     preset_subdir = "cam_machines"
