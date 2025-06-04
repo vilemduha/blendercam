@@ -93,6 +93,20 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
             col.prop(self.machine, "spindle_min", text="Minimum")
             col.prop(self.machine, "spindle_max", text="Maximum")
             panel.prop(self.machine, "spindle_start_time", text="Start Delay (seconds)")
+            # Spindle Slow Start
+            if self.level >= 2:
+                subheader, subpanel = panel.panel(idname="slow_start", default_closed=True)
+                subheader.label(text="Slow Start (Ramp-Up) (*EXPERIMENTAL, grbl only*)")
+                col = subpanel.column(align=True)
+                if subpanel:
+                    subpanel.use_property_split = True
+                    col.prop(self.machine, "spindle_slow_start_enable", text="Slow Start")
+                    subcol = col.column(align=True)
+                    subcol.enabled = self.machine.spindle_slow_start_enable
+                    subcol.prop(self.machine, "spindle_slow_start_steps", text="Steps")
+                    subcol.prop(self.machine, "spindle_slow_start_skip_threshold", text="Skip Small Increase (RPM)")
+                    subcol.prop(self.machine, "spindle_slow_start_total_time", text="Total Time (sec)")
+
 
         # Gcode Options
         if self.level >= 1:
