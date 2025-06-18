@@ -77,11 +77,11 @@ jobs:
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi
         export ADDON_PATH=${PWD}/scripts/addons/blendercam.zip
-        cd scripts/addons/cam/tests
+        cd scripts/addons/fabex/tests
         python install_addon.py ${ADDON_PATH}
         python test_suite.py -vvv
     - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: blendercam-${{matrix.os}}-${{matrix.blender_version}}
-        path: ./scripts/addons/cam
+        path: ./scripts/addons/fabex
