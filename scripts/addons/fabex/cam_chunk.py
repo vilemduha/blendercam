@@ -1841,7 +1841,13 @@ async def sample_chunks(o, pathSamples, layers):
                             v1 = Vector(v1)
                             v2 = Vector(v2)
                             # print(v1,v2)
-                            ratio = (splitz - v1.z) / (v2.z - v1.z)
+
+                            # Prevent divide by zero:
+                            dz = v2.z - v1.z
+                            if abs(dz) < 1e-8:
+                                # no vertical change – nothing to split
+                                continue
+                            ratio = (splitz - v1.z) / dz
                             # print(ratio)
                             betweensample = v1 + (v2 - v1) * ratio
 
