@@ -738,9 +738,9 @@ class Creator(nc.Creator):
         else:
             # Normal spindle start (existing code)
             if clockwise:
-            self.s.set(s, self.SPINDLE_CW(), self.SPINDLE_CCW())
-        else:
-            self.s.set(s, self.SPINDLE_CCW(), self.SPINDLE_CW())
+                self.s.set(s, self.SPINDLE_CW(), self.SPINDLE_CCW())
+            else:
+                self.s.set(s, self.SPINDLE_CCW(), self.SPINDLE_CW())
 
     def coolant(self, mode=0):
         if mode <= 0:
