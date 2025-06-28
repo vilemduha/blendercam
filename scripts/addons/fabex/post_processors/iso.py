@@ -9,6 +9,7 @@ from . import nc
 import math
 from .format import Format
 from .format import *
+import bpy
 
 ################################################################################
 
@@ -688,11 +689,58 @@ class Creator(nc.Creator):
             # not much, if any horizontal component, so use the vertical feed rate
             self.f.set(self.fh)
 
-    def spindle(self, s, clockwise):
-        if clockwise == True:
-            self.s.set(s, self.SPINDLE_CW(), self.SPINDLE_CCW())
+    # def spindle(self, s, clockwise):
+    #     if clockwise == True:
+    #         self.s.set(s, self.SPINDLE_CW(), self.SPINDLE_CCW())
+    #     else:
+    #         self.s.set(s, self.SPINDLE_CCW(), self.SPINDLE_CW())
+    def spindle(self, s, clockwise): # EXPERIMENTAL -- grbl only
+        # Get machine settings
+        machine = bpy.context.scene.cam_machine
+
+        if (machine.spindle_slow_start_enable and
+                s > machine.spindle_min + machine.spindle_slow_start_skip_threshold):
+
+            # Generate slow start sequence
+            steps = machine.spindle_slow_start_steps
+            total_time = machine.spindle_slow_start_total_time
+            step_time = total_time / steps
+
+            # Calculate speed increments
+            speed_range = s - machine.spindle_min
+            step_increment = speed_range / steps
+
+            # Start at minimum speed
+            current_speed = machine.spindle_min
+            if clockwise:
+                self.s.set(current_speed, self.SPINDLE_CW(), self.SPINDLE_CCW())
+            else:
+                self.s.set(current_speed, self.SPINDLE_CCW(), self.SPINDLE_CW())
+            self.write_spindle()
+
+            # Ramp up through intermediate steps
+            for step in range(1, steps + 1):
+                if step < steps:
+                    current_speed = machine.spindle_min + (step_increment * step)
+                else:
+                    current_speed = s  # Final target speed
+
+                # Dwell for step time
+                self.dwell(step_time)
+
+                # Set next speed
+                current_speed = int(current_speed)
+                if clockwise:
+                    self.s.set(current_speed, self.SPINDLE_CW(), self.SPINDLE_CCW())
+                else:
+                    self.s.set(current_speed, self.SPINDLE_CCW(), self.SPINDLE_CW())
+                self.write_spindle()
         else:
-            self.s.set(s, self.SPINDLE_CCW(), self.SPINDLE_CW())
+            # Normal spindle start (existing code)
+            if clockwise:
+                self.s.set(s, self.SPINDLE_CW(), self.SPINDLE_CCW())
+            else:
+                self.s.set(s, self.SPINDLE_CCW(), self.SPINDLE_CW())
 
     def coolant(self, mode=0):
         if mode <= 0:

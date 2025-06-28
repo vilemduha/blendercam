@@ -208,6 +208,38 @@ class CAM_MACHINE_Properties(PropertyGroup):
         max=320000,
         precision=1,
     )
+
+    # Spindle Slow Start Settings
+    spindle_slow_start_enable: BoolProperty(
+        name="Spindle Slow Start Enable",
+        description="Enable gradual spindle speed ramping from minimum to target speed",
+        default=False,
+    )
+    spindle_slow_start_steps: IntProperty(
+        name="Slow Start Steps",
+        description="Number of intermediate speed steps when ramping from minimum to target spindle speed. More steps = smoother acceleration",
+        default=8,
+        min=2,
+        max=20,
+    )
+    spindle_slow_start_skip_threshold: FloatProperty(
+        name="Skip Threshold (RPM)",
+        description="If target speed is within this RPM of the minimum speed, skip slow start and go directly to target",
+        default=500,
+        min=0,
+        max=5000,
+        precision=0,
+    )
+
+    spindle_slow_start_total_time: FloatProperty(
+        name="Total Ramp Time (seconds)",
+        description="Total time in seconds to ramp from minimum to target speed, distributed equally across all steps",
+        default=2.0,
+        min=0.1,
+        max=10.0,
+        precision=1,
+    )
+
     axis_4: BoolProperty(
         name="4th Axis",
         description="Machine has 4th axis",
