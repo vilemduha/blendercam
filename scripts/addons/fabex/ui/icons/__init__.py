@@ -27,7 +27,6 @@ def register():
 
 
 def unregister():
-
     for fabex_icons in preview_collections.values():
         bpy.utils.previews.remove(fabex_icons)
     preview_collections.clear()
