@@ -109,9 +109,14 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
                     subcol = col.column(align=True)
                     subcol.enabled = self.machine.spindle_slow_start_enable
                     subcol.prop(self.machine, "spindle_slow_start_steps", text="Steps")
-                    subcol.prop(self.machine, "spindle_slow_start_skip_threshold", text="Skip Small Increase (RPM)")
-                    subcol.prop(self.machine, "spindle_slow_start_total_time", text="Total Time (sec)")
-
+                    subcol.prop(
+                        self.machine,
+                        "spindle_slow_start_skip_threshold",
+                        text="Skip Small Increase (RPM)",
+                    )
+                    subcol.prop(
+                        self.machine, "spindle_slow_start_total_time", text="Total Time (sec)"
+                    )
 
         # Gcode Options
         if self.level >= 1:
