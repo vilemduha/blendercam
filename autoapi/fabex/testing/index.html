@@ -1,0 +1,841 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.testing &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/testing/index';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="fabex.utilities" href="../utilities/index.html" />
+    <link rel="prev" title="fabex.strategy" href="../strategy/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../bas_relief/index.html">fabex.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cam_chunk/index.html">fabex.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../collision/index.html">fabex.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gcode_import_parser/index.html">fabex.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gcode_path/index.html">fabex.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../involute_gear/index.html">fabex.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../joinery/index.html">fabex.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../pack/index.html">fabex.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parametric/index.html">fabex.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pattern/index.html">fabex.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../puzzle_joinery/index.html">fabex.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../slice/index.html">fabex.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../strategy/index.html">fabex.strategy</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">fabex.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../version/index.html">fabex.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../voronoi/index.html">fabex.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/autoapi/fabex/testing/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.testing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.addTestCurve"><code class="docutils literal notranslate"><span class="pre">addTestCurve()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.addTestMesh"><code class="docutils literal notranslate"><span class="pre">addTestMesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.deleteFirstVert"><code class="docutils literal notranslate"><span class="pre">deleteFirstVert()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testCalc"><code class="docutils literal notranslate"><span class="pre">testCalc()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testCutout"><code class="docutils literal notranslate"><span class="pre">testCutout()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testPocket"><code class="docutils literal notranslate"><span class="pre">testPocket()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testParallel"><code class="docutils literal notranslate"><span class="pre">testParallel()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testWaterline"><code class="docutils literal notranslate"><span class="pre">testWaterline()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testSimulation"><code class="docutils literal notranslate"><span class="pre">testSimulation()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.cleanUp"><code class="docutils literal notranslate"><span class="pre">cleanUp()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testOperation"><code class="docutils literal notranslate"><span class="pre">testOperation()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testAll"><code class="docutils literal notranslate"><span class="pre">testAll()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.tests"><code class="docutils literal notranslate"><span class="pre">tests</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.p"><code class="docutils literal notranslate"><span class="pre">p</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.testing">
+<span id="fabex-testing"></span><h1>fabex.testing<a class="headerlink" href="#module-fabex.testing" title="Link to this heading">#</a></h1>
+<p>Fabex ‘testing.py’ © 2012 Vilem Novak</p>
+<p>Functions for automated testing.</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.testing.tests" title="fabex.testing.tests"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tests</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.testing.p" title="fabex.testing.p"><code class="xref py py-obj docutils literal notranslate"><span class="pre">p</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.testing.addTestCurve" title="fabex.testing.addTestCurve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addTestCurve</span></code></a>(loc)</p></td>
+<td><p>Add a test curve to the Blender scene.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.testing.addTestMesh" title="fabex.testing.addTestMesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addTestMesh</span></code></a>(loc)</p></td>
+<td><p>Add a test mesh to the Blender scene.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.testing.deleteFirstVert" title="fabex.testing.deleteFirstVert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deleteFirstVert</span></code></a>(ob)</p></td>
+<td><p>Delete the first vertex of a given object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.testing.testCalc" title="fabex.testing.testCalc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testCalc</span></code></a>(o)</p></td>
+<td><p>Test the calculation of the CAM path for a given object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.testing.testCutout" title="fabex.testing.testCutout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testCutout</span></code></a>(pos)</p></td>
+<td><p>Test the cutout functionality in the scene.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.testing.testPocket" title="fabex.testing.testPocket"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testPocket</span></code></a>(pos)</p></td>
+<td><p>Test the pocket operation in a 3D scene.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.testing.testParallel" title="fabex.testing.testParallel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testParallel</span></code></a>(pos)</p></td>
+<td><p>Test the parallel functionality of the CAM operations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.testing.testWaterline" title="fabex.testing.testWaterline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testWaterline</span></code></a>(pos)</p></td>
+<td><p>Test the waterline functionality in the scene.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.testing.testSimulation" title="fabex.testing.testSimulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testSimulation</span></code></a>()</p></td>
+<td><p>Testsimulation function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.testing.cleanUp" title="fabex.testing.cleanUp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cleanUp</span></code></a>()</p></td>
+<td><p>Clean up the Blender scene by removing all objects and CAM</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.testing.testOperation" title="fabex.testing.testOperation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testOperation</span></code></a>(i)</p></td>
+<td><p>Test the operation of a CAM path in Blender.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.testing.testAll" title="fabex.testing.testAll"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testAll</span></code></a>()</p></td>
+<td><p>Run tests on all CAM operations in the current scene.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.addTestCurve">
+<span class="sig-name descname"><span class="pre">addTestCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#addTestCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.addTestCurve" title="Link to this definition">#</a></dt>
+<dd><p>Add a test curve to the Blender scene.</p>
+<p>This function creates a Bezier circle at the specified location in the
+Blender scene. It first adds a primitive Bezier circle, then enters edit
+mode to duplicate the circle twice, resizing each duplicate to half its
+original size. The function ensures that the transformations are applied
+in the global orientation and does not use proportional editing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>loc</strong> (<em>tuple</em>) – A tuple representing the (x, y, z) coordinates where
+the Bezier circle will be added in the 3D space.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.addTestMesh">
+<span class="sig-name descname"><span class="pre">addTestMesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#addTestMesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.addTestMesh" title="Link to this definition">#</a></dt>
+<dd><p>Add a test mesh to the Blender scene.</p>
+<p>This function creates a monkey mesh and a plane mesh at the specified
+location in the Blender scene. It first adds a monkey mesh with a small
+radius, rotates it, and applies the transformation. Then, it toggles
+into edit mode, adds a plane mesh, resizes it, and translates it
+slightly before toggling back out of edit mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>loc</strong> (<em>tuple</em>) – A tuple representing the (x, y, z) coordinates where
+the meshes will be added in the Blender scene.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.deleteFirstVert">
+<span class="sig-name descname"><span class="pre">deleteFirstVert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ob</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#deleteFirstVert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.deleteFirstVert" title="Link to this definition">#</a></dt>
+<dd><p>Delete the first vertex of a given object.</p>
+<p>This function activates the specified object, enters edit mode,
+deselects all vertices, selects the first vertex, and then deletes it.
+The function ensures that the object is properly updated after the
+deletion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ob</strong> (<em>bpy.types.Object</em>) – The Blender object from which the first</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.testCalc">
+<span class="sig-name descname"><span class="pre">testCalc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#testCalc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.testCalc" title="Link to this definition">#</a></dt>
+<dd><p>Test the calculation of the CAM path for a given object.</p>
+<p>This function invokes the Blender operator to calculate the CAM path
+for the specified object and then deletes the first vertex of that
+object. It is intended to be used within a Blender environment where the
+bpy module is available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>o</strong> (<em>Object</em>) – The Blender object for which the CAM path is to be calculated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.testCutout">
+<span class="sig-name descname"><span class="pre">testCutout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#testCutout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.testCutout" title="Link to this definition">#</a></dt>
+<dd><p>Test the cutout functionality in the scene.</p>
+<p>This function adds a test curve based on the provided position, performs
+a CAM operation, and sets the strategy to ‘CUTOUT’. It then calls the
+<cite>testCalc</cite> function to perform further calculations on the CAM
+operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pos</strong> (<em>tuple</em>) – A tuple containing the x and y coordinates for the
+position of the test curve.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.testPocket">
+<span class="sig-name descname"><span class="pre">testPocket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#testPocket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.testPocket" title="Link to this definition">#</a></dt>
+<dd><p>Test the pocket operation in a 3D scene.</p>
+<p>This function sets up a pocket operation by adding a test curve based on
+the provided position. It configures the CAM operation settings for
+the pocket strategy, enabling helix entry and tangential retraction.
+Finally, it performs a calculation based on the configured operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pos</strong> (<em>tuple</em>) – A tuple containing the x and y coordinates for
+the position of the test curve.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.testParallel">
+<span class="sig-name descname"><span class="pre">testParallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#testParallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.testParallel" title="Link to this definition">#</a></dt>
+<dd><p>Test the parallel functionality of the CAM operations.</p>
+<p>This function adds a test mesh at a specified position and then performs
+CAM operations in the Blender environment. It sets the ambient
+behavior of the CAM operation to ‘AROUND’ and configures the material
+radius around the model. Finally, it calculates the CAM path based on
+the current scene settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pos</strong> (<em>tuple</em>) – A tuple containing the x and y coordinates for
+positioning the test mesh.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.testWaterline">
+<span class="sig-name descname"><span class="pre">testWaterline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#testWaterline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.testWaterline" title="Link to this definition">#</a></dt>
+<dd><p>Test the waterline functionality in the scene.</p>
+<p>This function adds a test mesh at a specified position and then performs
+a CAM operation with the strategy set to ‘WATERLINE’. It also
+configures the optimization pixel size for the operation. The function
+is intended for use in a 3D environment where waterline calculations are
+necessary for rendering or simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pos</strong> (<em>tuple</em>) – A tuple containing the x and y coordinates for
+the position of the test mesh.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.testSimulation">
+<span class="sig-name descname"><span class="pre">testSimulation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#testSimulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.testSimulation" title="Link to this definition">#</a></dt>
+<dd><p>Testsimulation function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.cleanUp">
+<span class="sig-name descname"><span class="pre">cleanUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#cleanUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.cleanUp" title="Link to this definition">#</a></dt>
+<dd><p>Clean up the Blender scene by removing all objects and CAM
+operations.</p>
+<p>This function selects all objects in the current Blender scene and
+deletes them. It also removes any CAM operations that are present in
+the scene. This is useful for resetting the scene to a clean state
+before performing further operations.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.testOperation">
+<span class="sig-name descname"><span class="pre">testOperation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#testOperation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.testOperation" title="Link to this definition">#</a></dt>
+<dd><p>Test the operation of a CAM path in Blender.</p>
+<p>This function tests a specific CAM operation by comparing the
+generated CAM path with an existing reference path. It retrieves the
+CAM operation from the scene and checks if the generated path matches
+the expected path in terms of vertex count and positions. If there is no
+existing reference path, it marks the new result as comparable. The
+function generates a report detailing the results of the comparison,
+including any discrepancies found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i</strong> (<em>int</em>) – The index of the CAM operation to test.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A report summarizing the results of the operation test.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.testing.testAll">
+<span class="sig-name descname"><span class="pre">testAll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/testing.html#testAll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.testAll" title="Link to this definition">#</a></dt>
+<dd><p>Run tests on all CAM operations in the current scene.</p>
+<p>This function iterates through all CAM operations defined in the
+current Blender scene and executes a test for each operation. The
+results of these tests are collected into a report string, which is then
+printed to the console. This is useful for verifying the functionality
+of CAM operations within the Blender environment.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="fabex.testing.tests">
+<span class="sig-name descname"><span class="pre">tests</span></span><a class="reference internal" href="../../../_modules/fabex/testing.html#tests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.tests" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="fabex.testing.p">
+<span class="sig-name descname"><span class="pre">p</span></span><a class="reference internal" href="../../../_modules/fabex/testing.html#p"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.testing.p" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../strategy/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.strategy</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../utilities/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.utilities</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attributes">Attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.addTestCurve"><code class="docutils literal notranslate"><span class="pre">addTestCurve()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.addTestMesh"><code class="docutils literal notranslate"><span class="pre">addTestMesh()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.deleteFirstVert"><code class="docutils literal notranslate"><span class="pre">deleteFirstVert()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testCalc"><code class="docutils literal notranslate"><span class="pre">testCalc()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testCutout"><code class="docutils literal notranslate"><span class="pre">testCutout()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testPocket"><code class="docutils literal notranslate"><span class="pre">testPocket()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testParallel"><code class="docutils literal notranslate"><span class="pre">testParallel()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testWaterline"><code class="docutils literal notranslate"><span class="pre">testWaterline()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testSimulation"><code class="docutils literal notranslate"><span class="pre">testSimulation()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.cleanUp"><code class="docutils literal notranslate"><span class="pre">cleanUp()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testOperation"><code class="docutils literal notranslate"><span class="pre">testOperation()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.testAll"><code class="docutils literal notranslate"><span class="pre">testAll()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.tests"><code class="docutils literal notranslate"><span class="pre">tests</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.testing.p"><code class="docutils literal notranslate"><span class="pre">p</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

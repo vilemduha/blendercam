@@ -1,0 +1,827 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.bounds_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/bounds_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bas_relief/index.html">fabex.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/cam_chunk/index.html">fabex.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/collision/index.html">fabex.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/gcode_import_parser/index.html">fabex.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/gcode_path/index.html">fabex.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/involute_gear/index.html">fabex.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/pack/index.html">fabex.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/parametric/index.html">fabex.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/pattern/index.html">fabex.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/puzzle_joinery/index.html">fabex.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/slice/index.html">fabex.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/strategy/index.html">fabex.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/testing/index.html">fabex.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/voronoi/index.html">fabex.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.bounds_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;bounds_utils.py&#39; © 2012 Vilem Novak</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mathutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.shapely_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shapely_to_curve</span><span class="p">,</span> <span class="n">shapely_to_multipolygon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.simple_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">activate</span><span class="p">,</span>
+    <span class="n">progress</span><span class="p">,</span>
+    <span class="n">unit_value_to_string</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..exception</span><span class="w"> </span><span class="kn">import</span> <span class="n">CamException</span>
+
+
+<div class="viewcode-block" id="get_bounds_worldspace">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/bounds_utils/index.html#fabex.utilities.bounds_utils.get_bounds_worldspace">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_bounds_worldspace</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">use_modifiers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the bounding box of a list of objects in world space.</span>
+
+<span class="sd">    This function calculates the minimum and maximum coordinates that</span>
+<span class="sd">    encompass all the specified objects in the 3D world space. It iterates</span>
+<span class="sd">    through each object, taking into account their transformations and</span>
+<span class="sd">    modifiers if specified. The function supports different object types,</span>
+<span class="sd">    including meshes and fonts, and handles the conversion of font objects</span>
+<span class="sd">    to mesh format for accurate bounding box calculations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obs (list): A list of Blender objects to calculate bounds for.</span>
+<span class="sd">        use_modifiers (bool): If True, apply modifiers to the objects</span>
+<span class="sd">            before calculating bounds. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple containing the minimum and maximum coordinates</span>
+<span class="sd">            in the format (minx, miny, minz, maxx, maxy, maxz).</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CamException: If an object type does not support CAM operations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># progress(&#39;getting bounds of object(s)&#39;)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="n">maxx</span> <span class="o">=</span> <span class="n">maxy</span> <span class="o">=</span> <span class="n">maxz</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10000000</span>
+    <span class="n">minx</span> <span class="o">=</span> <span class="n">miny</span> <span class="o">=</span> <span class="n">minz</span> <span class="o">=</span> <span class="mi">10000000</span>
+    <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">obs</span><span class="p">:</span>
+        <span class="c1"># bb=ob.bound_box</span>
+        <span class="n">mw</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">matrix_world</span>
+        <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;MESH&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">use_modifiers</span><span class="p">:</span>
+                <span class="n">depsgraph</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">evaluated_depsgraph_get</span><span class="p">()</span>
+                <span class="n">mesh_owner</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">evaluated_get</span><span class="p">(</span><span class="n">depsgraph</span><span class="p">)</span>
+                <span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh_owner</span><span class="o">.</span><span class="n">to_mesh</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mesh</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">data</span>
+
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">:</span>
+                <span class="n">coord</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">co</span>
+                <span class="n">worldCoord</span> <span class="o">=</span> <span class="n">mw</span> <span class="o">@</span> <span class="n">Vector</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                <span class="n">minx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="n">minz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+                <span class="n">maxx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxy</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="n">maxz</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">use_modifiers</span><span class="p">:</span>
+                <span class="n">mesh_owner</span><span class="o">.</span><span class="n">to_mesh_clear</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;FONT&quot;</span><span class="p">:</span>
+            <span class="n">activate</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+            <span class="n">co</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">parent_clear</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;CLEAR_KEEP_TRANSFORM&quot;</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;MESH&quot;</span><span class="p">,</span> <span class="n">keep_original</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">mesh</span> <span class="o">=</span> <span class="n">co</span><span class="o">.</span><span class="n">data</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span><span class="p">:</span>
+                <span class="n">coord</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">co</span>
+                <span class="n">worldCoord</span> <span class="o">=</span> <span class="n">mw</span> <span class="o">@</span> <span class="n">Vector</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                <span class="n">minx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="n">minz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+                <span class="n">maxx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxy</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                <span class="n">maxz</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">outliner</span><span class="o">.</span><span class="n">orphans_purge</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;splines&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">CamException</span><span class="p">(</span><span class="s2">&quot;Can&#39;t do CAM operation on the selected object type&quot;</span><span class="p">)</span>
+            <span class="c1"># for coord in bb:</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ob</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">splines</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">bezier_points</span><span class="p">:</span>
+                    <span class="n">coord</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">co</span>
+                    <span class="c1"># this can work badly with some imported curves, don&#39;t know why...</span>
+                    <span class="c1"># worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))</span>
+                    <span class="n">worldCoord</span> <span class="o">=</span> <span class="n">mw</span> <span class="o">@</span> <span class="n">Vector</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                    <span class="n">minx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                    <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                    <span class="n">minz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+                    <span class="n">maxx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                    <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxy</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                    <span class="n">maxz</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                    <span class="n">coord</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">co</span>
+                    <span class="c1"># this can work badly with some imported curves, don&#39;t know why...</span>
+                    <span class="c1"># worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))</span>
+                    <span class="n">worldCoord</span> <span class="o">=</span> <span class="n">mw</span> <span class="o">@</span> <span class="n">Vector</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+                    <span class="n">minx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                    <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                    <span class="n">minz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+                    <span class="n">maxx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                    <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxy</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+                    <span class="n">maxz</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+    <span class="c1"># progress(time.time()-t)</span>
+    <span class="k">return</span> <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span></div>
+
+
+
+<div class="viewcode-block" id="get_spline_bounds">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/bounds_utils/index.html#fabex.utilities.bounds_utils.get_spline_bounds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_spline_bounds</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span> <span class="n">curve</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the bounding box of a spline object.</span>
+
+<span class="sd">    This function calculates the minimum and maximum coordinates (x, y, z)</span>
+<span class="sd">    of the given spline object by iterating through its bezier points and</span>
+<span class="sd">    regular points. It transforms the local coordinates to world coordinates</span>
+<span class="sd">    using the object&#39;s transformation matrix. The resulting bounds can be</span>
+<span class="sd">    used for various purposes, such as collision detection or rendering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ob (Object): The object containing the spline whose bounds are to be calculated.</span>
+<span class="sd">        curve (Curve): The curve object that contains the bezier points and regular points.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple containing the minimum and maximum coordinates in the</span>
+<span class="sd">        format (minx, miny, minz, maxx, maxy, maxz).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># progress(&#39;getting bounds of object(s)&#39;)</span>
+    <span class="n">maxx</span> <span class="o">=</span> <span class="n">maxy</span> <span class="o">=</span> <span class="n">maxz</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10000000</span>
+    <span class="n">minx</span> <span class="o">=</span> <span class="n">miny</span> <span class="o">=</span> <span class="n">minz</span> <span class="o">=</span> <span class="mi">10000000</span>
+    <span class="n">mw</span> <span class="o">=</span> <span class="n">ob</span><span class="o">.</span><span class="n">matrix_world</span>
+
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">curve</span><span class="o">.</span><span class="n">bezier_points</span><span class="p">:</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">co</span>
+        <span class="c1"># this can work badly with some imported curves, don&#39;t know why...</span>
+        <span class="c1"># worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))</span>
+        <span class="n">worldCoord</span> <span class="o">=</span> <span class="n">mw</span> <span class="o">@</span> <span class="n">Vector</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">minx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">minz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">maxx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxy</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">maxz</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">curve</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">co</span>
+        <span class="c1"># this can work badly with some imported curves, don&#39;t know why...</span>
+        <span class="c1"># worldCoord = mw * Vector((coord[0]/ob.scale.x, coord[1]/ob.scale.y, coord[2]/ob.scale.z))</span>
+        <span class="n">worldCoord</span> <span class="o">=</span> <span class="n">mw</span> <span class="o">@</span> <span class="n">Vector</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">minx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">minz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">maxx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxy</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">maxz</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxz</span><span class="p">,</span> <span class="n">worldCoord</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+    <span class="c1"># progress(time.time()-t)</span>
+    <span class="k">return</span> <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span></div>
+
+
+
+<div class="viewcode-block" id="get_bounds">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/bounds_utils/index.html#fabex.utilities.bounds_utils.get_bounds">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_bounds</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the bounding box for a given object.</span>
+
+<span class="sd">    This function determines the minimum and maximum coordinates of an</span>
+<span class="sd">    object&#39;s bounding box based on its geometry source. It handles different</span>
+<span class="sd">    geometry types such as OBJECT, COLLECTION, and CURVE. The function also</span>
+<span class="sd">    considers material properties and image cropping if applicable. The</span>
+<span class="sd">    bounding box is adjusted according to the object&#39;s material settings and</span>
+<span class="sd">    the optimization parameters defined in the object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing geometry and material properties, as well as</span>
+<span class="sd">            optimization settings.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function modifies the input object in place and does not return a</span>
+<span class="sd">            value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># print(&#39;kolikrat sem rpijde&#39;)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">geometry_source</span> <span class="o">==</span> <span class="s2">&quot;OBJECT&quot;</span>
+        <span class="ow">or</span> <span class="n">o</span><span class="o">.</span><span class="n">geometry_source</span> <span class="o">==</span> <span class="s2">&quot;COLLECTION&quot;</span>
+        <span class="ow">or</span> <span class="n">o</span><span class="o">.</span><span class="n">geometry_source</span> <span class="o">==</span> <span class="s2">&quot;CURVE&quot;</span>
+    <span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Valid Geometry&quot;</span><span class="p">)</span>
+        <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span> <span class="o">=</span> <span class="n">get_bounds_worldspace</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">objects</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">use_modifiers</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">min_z_from</span> <span class="o">==</span> <span class="s2">&quot;OBJECT&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">minz</span> <span class="o">==</span> <span class="mi">10000000</span><span class="p">:</span>
+                <span class="n">minz</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Min Z from Object:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">minz</span><span class="p">))</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">minz</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">min_z</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min_z</span>  <span class="c1"># max(bb[0][2]+l.z,o.min_z)#</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not Min Z from Object&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">estimate_from_model</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimate Material from Model&quot;</span><span class="p">)</span>
+
+            <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">minx</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">radius_around_model</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">miny</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">radius_around_model</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max_z</span><span class="p">,</span> <span class="n">maxz</span><span class="p">)</span>
+
+            <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">maxx</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">radius_around_model</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">maxy</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">radius_around_model</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not Material from Model&quot;</span><span class="p">)</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">z</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">z</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">source_image_name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop</span><span class="p">:</span>
+            <span class="n">sx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop_start_x</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="n">ex</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop_end_x</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="n">sy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop_start_y</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="n">ey</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop_end_y</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">ex</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">sy</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">ey</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_size_x</span> <span class="o">/</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_offset</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">sx</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_offset</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">ex</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_offset</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">sy</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_offset</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">ey</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_offset</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min_z</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_offset</span><span class="o">.</span><span class="n">z</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_machine</span>
+
+    <span class="n">x_delta_range</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">y_delta_range</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">z_delta_range</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span>
+
+    <span class="n">x_is_exceeded</span> <span class="o">=</span> <span class="n">x_delta_range</span> <span class="o">&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">working_area</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">y_is_exceeded</span> <span class="o">=</span> <span class="n">y_delta_range</span> <span class="o">&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">working_area</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">z_is_exceeded</span> <span class="o">=</span> <span class="n">z_delta_range</span> <span class="o">&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">working_area</span><span class="o">.</span><span class="n">z</span>
+
+    <span class="k">if</span> <span class="n">x_is_exceeded</span> <span class="ow">or</span> <span class="n">y_is_exceeded</span> <span class="ow">or</span> <span class="n">z_is_exceeded</span><span class="p">:</span>
+        <span class="n">exceed_msg</span> <span class="o">=</span> <span class="s2">&quot; </span><span class="se">\n</span><span class="s2">!!! Bounds Error !!!</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Do not append more than one such a warning</span>
+        <span class="k">if</span> <span class="n">exceed_msg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span> <span class="o">+=</span> <span class="n">exceed_msg</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span> <span class="o">+=</span> <span class="s2">&quot;Path Exceeds Machine Limits!</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span> <span class="o">+=</span> <span class="s2">&quot;Operation Area &gt; Work Area</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+            <span class="k">if</span> <span class="n">x_is_exceeded</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;X: </span><span class="si">{</span><span class="n">unit_value_to_string</span><span class="p">(</span><span class="n">x_delta_range</span><span class="p">)</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="n">unit_value_to_string</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">working_area</span><span class="o">.</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+            <span class="k">if</span> <span class="n">y_is_exceeded</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Y: </span><span class="si">{</span><span class="n">unit_value_to_string</span><span class="p">(</span><span class="n">y_delta_range</span><span class="p">)</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="n">unit_value_to_string</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">working_area</span><span class="o">.</span><span class="n">y</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+            <span class="k">if</span> <span class="n">z_is_exceeded</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Z: </span><span class="si">{</span><span class="n">unit_value_to_string</span><span class="p">(</span><span class="n">z_delta_range</span><span class="p">)</span><span class="si">}</span><span class="s2"> &gt; </span><span class="si">{</span><span class="n">unit_value_to_string</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">working_area</span><span class="o">.</span><span class="n">z</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">warnings</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="n">addon_prefs</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">addons</span><span class="p">[</span><span class="s2">&quot;bl_ext.user_default.fabex&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">preferences</span>
+        <span class="k">if</span> <span class="n">addon_prefs</span><span class="o">.</span><span class="n">show_popups</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">cam</span><span class="o">.</span><span class="n">popup</span><span class="p">(</span><span class="s2">&quot;INVOKE_DEFAULT&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_bounds_multiple">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/bounds_utils/index.html#fabex.utilities.bounds_utils.get_bounds_multiple">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_bounds_multiple</span><span class="p">(</span><span class="n">operations</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets bounds of multiple operations for simulations or rest milling.</span>
+
+<span class="sd">    This function iterates through a list of operations to determine the</span>
+<span class="sd">    minimum and maximum bounds in three-dimensional space (x, y, z). It</span>
+<span class="sd">    initializes the bounds to extreme values and updates them based on the</span>
+<span class="sd">    bounds of each operation. The function is primarily intended for use in</span>
+<span class="sd">    simulations or rest milling processes, although it is noted that the</span>
+<span class="sd">    implementation may not be optimal.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        operations (list): A list of operation objects, each containing</span>
+<span class="sd">            &#39;min&#39; and &#39;max&#39; attributes with &#39;x&#39;, &#39;y&#39;,</span>
+<span class="sd">            and &#39;z&#39; coordinates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple containing the minimum and maximum bounds in the</span>
+<span class="sd">            order (minx, miny, minz, maxx, maxy, maxz).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">maxx</span> <span class="o">=</span> <span class="n">maxy</span> <span class="o">=</span> <span class="n">maxz</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10000000</span>
+    <span class="n">minx</span> <span class="o">=</span> <span class="n">miny</span> <span class="o">=</span> <span class="n">minz</span> <span class="o">=</span> <span class="mi">10000000</span>
+    <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">operations</span><span class="p">:</span>
+        <span class="n">get_bounds</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+        <span class="n">maxx</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxx</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">maxy</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxy</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">maxz</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxz</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">minx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minx</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">miny</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">miny</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">minz</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">minz</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span></div>
+
+
+
+<div class="viewcode-block" id="position_object">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/bounds_utils/index.html#fabex.utilities.bounds_utils.position_object">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">position_object</span><span class="p">(</span><span class="n">operation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Position an object based on specified operation parameters.</span>
+
+<span class="sd">    This function adjusts the location of a Blender object according to the</span>
+<span class="sd">    provided operation settings. It calculates the bounding box of the</span>
+<span class="sd">    object in world space and modifies its position based on the material&#39;s</span>
+<span class="sd">    center settings and specified z-positioning (BELOW, ABOVE, or CENTERED).</span>
+<span class="sd">    The function also applies transformations to the object if it is not of</span>
+<span class="sd">    type &#39;CURVE&#39;.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        operation (OperationType): An object containing parameters for positioning,</span>
+<span class="sd">            including object_name, use_modifiers, and material</span>
+<span class="sd">            settings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">operation</span><span class="o">.</span><span class="n">object_name</span><span class="p">]</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">origin_set</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;ORIGIN_GEOMETRY&quot;</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="s2">&quot;BOUNDS&quot;</span><span class="p">)</span>
+    <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">ob</span>
+
+    <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span> <span class="o">=</span> <span class="n">get_bounds_worldspace</span><span class="p">([</span><span class="n">ob</span><span class="p">],</span> <span class="n">operation</span><span class="o">.</span><span class="n">use_modifiers</span><span class="p">)</span>
+    <span class="n">totx</span> <span class="o">=</span> <span class="n">maxx</span> <span class="o">-</span> <span class="n">minx</span>
+    <span class="n">toty</span> <span class="o">=</span> <span class="n">maxy</span> <span class="o">-</span> <span class="n">miny</span>
+    <span class="n">totz</span> <span class="o">=</span> <span class="n">maxz</span> <span class="o">-</span> <span class="n">minz</span>
+    <span class="k">if</span> <span class="n">operation</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">center_x</span><span class="p">:</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">x</span> <span class="o">-=</span> <span class="n">minx</span> <span class="o">+</span> <span class="n">totx</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">x</span> <span class="o">-=</span> <span class="n">minx</span>
+
+    <span class="k">if</span> <span class="n">operation</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">center_y</span><span class="p">:</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">y</span> <span class="o">-=</span> <span class="n">miny</span> <span class="o">+</span> <span class="n">toty</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">y</span> <span class="o">-=</span> <span class="n">miny</span>
+
+    <span class="k">if</span> <span class="n">operation</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">z_position</span> <span class="o">==</span> <span class="s2">&quot;BELOW&quot;</span><span class="p">:</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">z</span> <span class="o">-=</span> <span class="n">maxz</span>
+    <span class="k">elif</span> <span class="n">operation</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">z_position</span> <span class="o">==</span> <span class="s2">&quot;ABOVE&quot;</span><span class="p">:</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">z</span> <span class="o">-=</span> <span class="n">minz</span>
+    <span class="k">elif</span> <span class="n">operation</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">z_position</span> <span class="o">==</span> <span class="s2">&quot;CENTERED&quot;</span><span class="p">:</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">z</span> <span class="o">-=</span> <span class="n">minz</span> <span class="o">+</span> <span class="n">totz</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="n">ob</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;CURVE&quot;</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

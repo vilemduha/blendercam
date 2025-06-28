@@ -1,0 +1,1087 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.chunk_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/chunk_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bas_relief/index.html">fabex.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/cam_chunk/index.html">fabex.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/collision/index.html">fabex.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/gcode_import_parser/index.html">fabex.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/gcode_path/index.html">fabex.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/involute_gear/index.html">fabex.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/pack/index.html">fabex.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/parametric/index.html">fabex.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/pattern/index.html">fabex.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/puzzle_joinery/index.html">fabex.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/slice/index.html">fabex.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/strategy/index.html">fabex.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/testing/index.html">fabex.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/voronoi/index.html">fabex.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.chunk_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;chunk_utils.py&#39; © 2012 Vilem Novak</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ceil</span><span class="p">,</span>
+    <span class="n">cos</span><span class="p">,</span>
+    <span class="n">hypot</span><span class="p">,</span>
+    <span class="n">pi</span><span class="p">,</span>
+    <span class="n">sin</span><span class="p">,</span>
+    <span class="n">sqrt</span><span class="p">,</span>
+    <span class="n">tan</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">polygon</span> <span class="k">as</span> <span class="n">spolygon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely</span><span class="w"> </span><span class="kn">import</span> <span class="n">geometry</span> <span class="k">as</span> <span class="n">sgeometry</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mathutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vector</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.async_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">progress_async</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.numba_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.simple_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">activate</span><span class="p">,</span>
+    <span class="n">progress</span><span class="p">,</span>
+    <span class="n">tuple_add</span><span class="p">,</span>
+    <span class="n">tuple_multiply</span><span class="p">,</span>
+    <span class="n">tuple_subtract</span><span class="p">,</span>
+    <span class="n">union</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..exception</span><span class="w"> </span><span class="kn">import</span> <span class="n">CamException</span>
+
+
+<div class="viewcode-block" id="chunks_refine">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.chunks_refine">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">chunks_refine</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add Extra Points in Between for Chunks&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+        <span class="c1"># print(&#39;before&#39;,len(ch))</span>
+        <span class="n">newchunk</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># print(ch.points)</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">-</span> <span class="n">v2</span>
+
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">vref</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+                <span class="k">while</span> <span class="n">vref</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">d</span><span class="p">:</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">vref</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span> <span class="o">*</span> <span class="n">i</span>
+                    <span class="k">if</span> <span class="n">vref</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">d</span><span class="p">:</span>
+                        <span class="n">p</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">+</span> <span class="n">vref</span>
+
+                        <span class="n">newchunk</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+
+            <span class="n">newchunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="n">v1</span>
+        <span class="n">ch</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newchunk</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">chunks</span></div>
+
+
+
+<div class="viewcode-block" id="chunks_refine_threshold">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.chunks_refine_threshold">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">chunks_refine_threshold</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">limitdistance</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add Extra Points in Between for Chunks. for Medial Axis Strategy only!&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+        <span class="n">newchunk</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+            <span class="n">v1</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">-</span> <span class="n">v2</span>
+
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="n">limitdistance</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">vref</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="k">while</span> <span class="n">vref</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">d</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">vref</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">distance</span> <span class="o">*</span> <span class="n">i</span>
+                    <span class="k">if</span> <span class="n">vref</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">d</span><span class="p">:</span>
+                        <span class="n">p</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">+</span> <span class="n">vref</span>
+
+                        <span class="n">newchunk</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="c1"># because of the condition, so it doesn&#39;t run again.</span>
+                    <span class="n">vref</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">distance</span> <span class="o">*</span> <span class="n">i</span>
+                <span class="k">while</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">vref</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">distance</span> <span class="o">*</span> <span class="n">i</span>
+                    <span class="k">if</span> <span class="n">vref</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;</span> <span class="n">d</span><span class="p">:</span>
+                        <span class="n">p</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">-</span> <span class="n">vref</span>
+
+                        <span class="n">newchunk</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+                    <span class="n">i</span> <span class="o">-=</span> <span class="mi">1</span>
+
+            <span class="n">newchunk</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="n">v1</span>
+        <span class="n">ch</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newchunk</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">chunks</span></div>
+
+
+
+<div class="viewcode-block" id="chunk_to_shapely">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.chunk_to_shapely">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">chunk_to_shapely</span><span class="p">(</span><span class="n">chunk</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">spolygon</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span></div>
+
+
+
+<div class="viewcode-block" id="mesh_from_curve">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.mesh_from_curve">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mesh_from_curve</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">use_modifiers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">activate</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">duplicate</span><span class="p">()</span>
+
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">parent_clear</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;CLEAR_KEEP_TRANSFORM&quot;</span><span class="p">)</span>
+
+    <span class="n">co</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+
+    <span class="c1"># support for text objects is only and only here, just convert them to curves.</span>
+    <span class="k">if</span> <span class="n">co</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;FONT&quot;</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;CURVE&quot;</span><span class="p">,</span> <span class="n">keep_original</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">co</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">&quot;CURVE&quot;</span><span class="p">:</span>  <span class="c1"># curve must be a curve...</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>  <span class="c1"># delete temporary object</span>
+        <span class="k">raise</span> <span class="n">CamException</span><span class="p">(</span><span class="s2">&quot;Source Curve Object Must Be of Type Curve&quot;</span><span class="p">)</span>
+    <span class="n">co</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dimensions</span> <span class="o">=</span> <span class="s2">&quot;3D&quot;</span>
+    <span class="n">co</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">bevel_depth</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">co</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">extrude</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">co</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">resolution_u</span> <span class="o">=</span> <span class="mi">100</span>
+
+    <span class="c1"># first, convert to mesh to avoid parenting issues with hooks, then apply locrotscale.</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;MESH&quot;</span><span class="p">,</span> <span class="n">keep_original</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_modifiers</span><span class="p">:</span>
+        <span class="n">eval_object</span> <span class="o">=</span> <span class="n">co</span><span class="o">.</span><span class="n">evaluated_get</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">evaluated_depsgraph_get</span><span class="p">())</span>
+        <span class="n">newmesh</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">meshes</span><span class="o">.</span><span class="n">new_from_object</span><span class="p">(</span><span class="n">eval_object</span><span class="p">)</span>
+        <span class="n">oldmesh</span> <span class="o">=</span> <span class="n">co</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">co</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">co</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">newmesh</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">meshes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">oldmesh</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span></div>
+
+
+
+<div class="viewcode-block" id="make_visible">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.make_visible">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_visible</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+    <span class="n">storage</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="p">[]]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">visible_get</span><span class="p">():</span>
+        <span class="n">storage</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">cam_collection</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;cam&quot;</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">cam_collection</span><span class="p">)</span>
+    <span class="n">cam_collection</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+        <span class="n">storage</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="n">o</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">storage</span></div>
+
+
+
+<div class="viewcode-block" id="restore_visibility">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.restore_visibility">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">restore_visibility</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">hide_viewport</span> <span class="o">=</span> <span class="n">storage</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># print(storage)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">):</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">storage</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span></div>
+
+
+
+<span class="c1"># this does more cleve chunks to Poly with hierarchies... ;)</span>
+<div class="viewcode-block" id="chunks_to_shapely">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.chunks_to_shapely">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">chunks_to_shapely</span><span class="p">(</span><span class="n">chunks</span><span class="p">):</span>
+    <span class="c1"># print (&#39;analyzing paths&#39;)</span>
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>  <span class="c1"># first convert chunk to poly</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># pchunk=[]</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">sgeometry</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">sgeometry</span><span class="o">.</span><span class="n">Polygon</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">sgeometry</span><span class="o">.</span><span class="n">Polygon</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">ppart</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>  <span class="c1"># then add hierarchy relations</span>
+        <span class="k">for</span> <span class="n">ptest</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ppart</span> <span class="o">!=</span> <span class="n">ptest</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">ppart</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ptest</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ptest</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">ppart</span><span class="o">.</span><span class="n">poly</span><span class="p">):</span>
+                        <span class="c1"># hierarchy works like this: - children get milled first.</span>
+                        <span class="n">ppart</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ptest</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>  <span class="c1"># now make only simple polygons with holes, not more polys inside others</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">):</span>
+                    <span class="c1"># nparents serves as temporary storage for parents,</span>
+                    <span class="n">ch</span><span class="o">.</span><span class="n">nparents</span> <span class="o">=</span> <span class="p">[</span><span class="n">parent</span><span class="p">]</span>
+                    <span class="c1"># not to get mixed with the first parenting during the check</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">nparents</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>  <span class="c1"># then subtract the 1st level holes</span>
+        <span class="n">ch</span><span class="o">.</span><span class="n">parents</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">nparents</span>
+        <span class="n">ch</span><span class="o">.</span><span class="n">nparents</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span>
+                    <span class="n">ch</span><span class="o">.</span><span class="n">poly</span>
+                <span class="p">)</span>  <span class="c1"># sgeometry.Polygon( ch.parents[0].poly, ch.poly)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;chunksToShapely oops!&quot;</span><span class="p">)</span>
+
+                <span class="n">lastPt</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">tolerance</span> <span class="o">=</span> <span class="mf">0.0000003</span>
+                <span class="n">newPoints</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                    <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="n">lastPt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                            <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                            <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">False</span>
+
+                        <span class="k">if</span> <span class="n">toleranceXok</span> <span class="ow">or</span> <span class="n">toleranceYok</span><span class="p">:</span>
+                            <span class="n">newPoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                            <span class="n">lastPt</span> <span class="o">=</span> <span class="n">pt</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">newPoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                        <span class="n">lastPt</span> <span class="o">=</span> <span class="n">pt</span>
+
+                <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">newPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                    <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">newPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                    <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">toleranceXok</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">toleranceYok</span><span class="p">:</span>
+                    <span class="n">newPoints</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+                <span class="n">ch</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newPoints</span><span class="p">)</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">sgeometry</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">poly</span><span class="p">)</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="c1"># print(&#39;chunksToShapely double oops!&#39;)</span>
+
+                    <span class="n">lastPt</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">tolerance</span> <span class="o">=</span> <span class="mf">0.0000003</span>
+                    <span class="n">newPoints</span> <span class="o">=</span> <span class="p">[]</span>
+
+                    <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+                        <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="c1"># print( &#39;{0:.9f}, {0:.9f}, {0:.9f}&#39;.format(pt[0], pt[1], pt[2]) )</span>
+                        <span class="c1"># print(pt)</span>
+                        <span class="k">if</span> <span class="n">lastPt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                                <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                                <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">False</span>
+
+                            <span class="k">if</span> <span class="n">toleranceXok</span> <span class="ow">or</span> <span class="n">toleranceYok</span><span class="p">:</span>
+                                <span class="n">newPoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                                <span class="n">lastPt</span> <span class="o">=</span> <span class="n">pt</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">newPoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pt</span><span class="p">)</span>
+                            <span class="n">lastPt</span> <span class="o">=</span> <span class="n">pt</span>
+
+                    <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">newPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                        <span class="n">toleranceXok</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">newPoints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lastPt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
+                        <span class="n">toleranceYok</span> <span class="o">=</span> <span class="kc">False</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">toleranceXok</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">toleranceYok</span><span class="p">:</span>
+                        <span class="n">newPoints</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                    <span class="c1"># print(&#39;starting and ending points too close, removing ending point&#39;)</span>
+
+                    <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newPoints</span><span class="p">)</span>
+                    <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">sgeometry</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
+
+                    <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span>
+                        <span class="n">ch</span><span class="o">.</span><span class="n">poly</span>
+                    <span class="p">)</span>  <span class="c1"># sgeometry.Polygon( ch.parents[0].poly, ch.poly)</span>
+
+    <span class="n">returnpolys</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">polyi</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunks</span><span class="p">)):</span>  <span class="c1"># export only the booleaned polygons</span>
+        <span class="n">ch</span> <span class="o">=</span> <span class="n">chunks</span><span class="p">[</span><span class="n">polyi</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ch</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">returnpolys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ch</span><span class="o">.</span><span class="n">poly</span><span class="p">)</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiPolygon</span>
+
+    <span class="n">polys</span> <span class="o">=</span> <span class="n">MultiPolygon</span><span class="p">(</span><span class="n">returnpolys</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">polys</span></div>
+
+
+
+<div class="viewcode-block" id="set_chunks_z">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.set_chunks_z">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_chunks_z</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+    <span class="n">newchunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">chunk</span><span class="o">.</span><span class="n">set_z</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">newchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">newchunks</span></div>
+
+
+
+<div class="viewcode-block" id="rotate_point_by_point">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.rotate_point_by_point">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rotate_point_by_point</span><span class="p">(</span><span class="n">originp</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">ang</span><span class="p">):</span>  <span class="c1"># rotate point around another point with angle</span>
+    <span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">oz</span> <span class="o">=</span> <span class="n">originp</span>
+    <span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">oz</span> <span class="o">=</span> <span class="n">p</span>
+
+    <span class="k">if</span> <span class="n">ang</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">ang</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span>
+        <span class="n">qx</span> <span class="o">=</span> <span class="n">ox</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="p">(</span><span class="n">oy</span> <span class="o">-</span> <span class="n">py</span><span class="p">)</span>
+        <span class="n">qy</span> <span class="o">=</span> <span class="n">oy</span> <span class="o">+</span> <span class="n">d</span> <span class="o">*</span> <span class="p">(</span><span class="n">px</span> <span class="o">-</span> <span class="n">ox</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">qx</span> <span class="o">=</span> <span class="n">ox</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">px</span> <span class="o">-</span> <span class="n">ox</span><span class="p">)</span> <span class="o">-</span> <span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">py</span> <span class="o">-</span> <span class="n">oy</span><span class="p">)</span>
+        <span class="n">qy</span> <span class="o">=</span> <span class="n">oy</span> <span class="o">+</span> <span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">px</span> <span class="o">-</span> <span class="n">ox</span><span class="p">)</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">py</span> <span class="o">-</span> <span class="n">oy</span><span class="p">)</span>
+    <span class="n">rot_p</span> <span class="o">=</span> <span class="p">[</span><span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">oz</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">rot_p</span></div>
+
+
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fastmath</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="_internal_x_y_distance_to">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils._internal_x_y_distance_to">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_internal_x_y_distance_to</span><span class="p">(</span><span class="n">ourpoints</span><span class="p">,</span> <span class="n">theirpoints</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">):</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">ourpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="n">theirpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">minDistSq</span> <span class="o">=</span> <span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="n">cutoffSq</span> <span class="o">=</span> <span class="n">cutoff</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">for</span> <span class="n">v1</span> <span class="ow">in</span> <span class="n">ourpoints</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">theirpoints</span><span class="p">:</span>
+            <span class="n">distSq</span> <span class="o">=</span> <span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="k">if</span> <span class="n">distSq</span> <span class="o">&lt;</span> <span class="n">cutoffSq</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">distSq</span><span class="p">)</span>
+            <span class="n">minDistSq</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">distSq</span><span class="p">,</span> <span class="n">minDistSq</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">minDistSq</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># don&#39;t make this @jit parallel, because it sometimes gets called with small N</span>
+<span class="c1"># and the overhead of threading is too much.</span>
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fastmath</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="_optimize_internal">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils._optimize_internal">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_optimize_internal</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">keep_points</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">protect_vertical</span><span class="p">,</span> <span class="n">protect_vertical_limit</span><span class="p">):</span>
+    <span class="c1"># inlined so that numba can optimize it nicely</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mag_sq</span><span class="p">(</span><span class="n">v1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dot_pr</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_applyVerticalLimit</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">cos_limit</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test Path Segment on Verticality Threshold, for Protect_vertical Option&quot;&quot;&quot;</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">v2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">z</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># don&#39;t use this vector because dot product of 0,0,1 is trivially just v2[2]</span>
+            <span class="c1">#            vec_up = np.array([0, 0, 1])</span>
+            <span class="n">vec_diff</span> <span class="o">=</span> <span class="n">v1</span> <span class="o">-</span> <span class="n">v2</span>
+            <span class="n">vec_diff2</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">-</span> <span class="n">v1</span>
+            <span class="n">vec_diff_mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">_mag_sq</span><span class="p">(</span><span class="n">vec_diff</span><span class="p">))</span>
+            <span class="c1"># dot product = cos(angle) * mag1 * mag2</span>
+            <span class="n">cos1_times_mag</span> <span class="o">=</span> <span class="n">vec_diff</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">cos2_times_mag</span> <span class="o">=</span> <span class="n">vec_diff2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">cos1_times_mag</span> <span class="o">&gt;</span> <span class="n">cos_limit</span> <span class="o">*</span> <span class="n">vec_diff_mag</span><span class="p">:</span>
+                <span class="c1"># vertical, moving down</span>
+                <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">cos2_times_mag</span> <span class="o">&gt;</span> <span class="n">cos_limit</span> <span class="o">*</span> <span class="n">vec_diff_mag</span><span class="p">:</span>
+                <span class="c1"># vertical, moving up</span>
+                <span class="n">v2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">v2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">cos_limit</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">protect_vertical_limit</span><span class="p">)</span>
+    <span class="n">prev_i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">prev_i</span><span class="p">]</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">vmiddle</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="n">line_direction</span> <span class="o">=</span> <span class="n">v2</span> <span class="o">-</span> <span class="n">v1</span>
+        <span class="n">line_length</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">_mag_sq</span><span class="p">(</span><span class="n">line_direction</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">line_length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># don&#39;t keep duplicate points</span>
+            <span class="n">keep_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">continue</span>
+        <span class="c1"># normalize line direction</span>
+        <span class="n">line_direction</span> <span class="o">*=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">line_length</span>  <span class="c1"># N in formula below</span>
+        <span class="c1"># X = A + tN (line formula) Distance to point P</span>
+        <span class="c1"># A = v1, N = line_direction, P = vmiddle</span>
+        <span class="c1"># distance = || (P - A) - ((P-A).N)N ||</span>
+        <span class="n">point_offset</span> <span class="o">=</span> <span class="n">vmiddle</span> <span class="o">-</span> <span class="n">v1</span>
+        <span class="n">distance_sq</span> <span class="o">=</span> <span class="n">_mag_sq</span><span class="p">(</span>
+            <span class="n">point_offset</span> <span class="o">-</span> <span class="p">(</span><span class="n">line_direction</span> <span class="o">*</span> <span class="n">_dot_pr</span><span class="p">(</span><span class="n">point_offset</span><span class="p">,</span> <span class="n">line_direction</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="c1"># compare on squared distance to save a sqrt</span>
+        <span class="k">if</span> <span class="n">distance_sq</span> <span class="o">&lt;</span> <span class="n">e</span> <span class="o">*</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">keep_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">keep_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">protect_vertical</span><span class="p">:</span>
+                <span class="n">_applyVerticalLimit</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">prev_i</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cos_limit</span><span class="p">)</span>
+            <span class="n">prev_i</span> <span class="o">=</span> <span class="n">i</span></div>
+
+
+
+<div class="viewcode-block" id="optimize_chunk">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.optimize_chunk">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">optimize_chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">points</span>
+        <span class="n">naxispoints</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">startpoints</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span>
+            <span class="n">endpoints</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">endpoints</span>
+            <span class="n">naxispoints</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">protect_vertical</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">protect_vertical</span> <span class="ow">and</span> <span class="n">operation</span><span class="o">.</span><span class="n">machine_axes</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span>
+        <span class="n">keep_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># shape points need to be on line,</span>
+        <span class="c1"># but we need to protect vertical - which</span>
+        <span class="c1"># means changing point values</span>
+        <span class="c1"># bits of this are moved from simple.py so that</span>
+        <span class="c1"># numba can optimize as a whole</span>
+        <span class="n">_optimize_internal</span><span class="p">(</span>
+            <span class="n">points</span><span class="p">,</span>
+            <span class="n">keep_points</span><span class="p">,</span>
+            <span class="n">operation</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">optimize_threshold</span> <span class="o">*</span> <span class="mf">0.000001</span><span class="p">,</span>
+            <span class="n">protect_vertical</span><span class="p">,</span>
+            <span class="n">operation</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">protect_vertical_limit</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># now do numpy select by boolean array</span>
+        <span class="n">chunk</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">keep_points</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">naxispoints</span><span class="p">:</span>
+            <span class="c1"># list comprehension so we don&#39;t have to do tons of appends</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">keep_points</span><span class="p">)</span> <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="kc">True</span>
+            <span class="p">]</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">endpoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">chunk</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">keep_points</span><span class="p">)</span> <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">rotations</span> <span class="o">=</span> <span class="p">[</span><span class="n">chunk</span><span class="o">.</span><span class="n">rotations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">keep_points</span><span class="p">)</span> <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">chunk</span></div>
+
+
+
+<div class="viewcode-block" id="parent_child_distance">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.parent_child_distance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parent_child_distance</span><span class="p">(</span><span class="n">parents</span><span class="p">,</span> <span class="n">children</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># parenting based on x,y distance between chunks</span>
+    <span class="c1"># hierarchy works like this: - children get milled first.</span>
+
+    <span class="k">if</span> <span class="n">distance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dlim</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;PARALLEL&quot;</span> <span class="ow">or</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;CROSS&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">parallel_step_back</span><span class="p">:</span>
+            <span class="n">dlim</span> <span class="o">=</span> <span class="n">dlim</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dlim</span> <span class="o">=</span> <span class="n">distance</span>
+
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
+            <span class="n">isrelation</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">parent</span> <span class="o">!=</span> <span class="n">child</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">parent</span><span class="o">.</span><span class="n">x_y_distance_within</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="n">dlim</span><span class="p">):</span>
+                    <span class="n">parent</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+                    <span class="n">child</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="parent_child">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.parent_child">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parent_child</span><span class="p">(</span><span class="n">parents</span><span class="p">,</span> <span class="n">children</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="c1"># connect all children to all parents. Useful for any type of defining hierarchy.</span>
+    <span class="c1"># hierarchy works like this: - children get milled first.</span>
+
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">parent</span> <span class="o">!=</span> <span class="n">child</span><span class="p">:</span>
+                <span class="n">parent</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+                <span class="n">child</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="parent_child_poly">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.parent_child_poly">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parent_child_poly</span><span class="p">(</span><span class="n">parents</span><span class="p">,</span> <span class="n">children</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+    <span class="c1"># hierarchy based on polygons - a polygon inside another is his child.</span>
+    <span class="c1"># hierarchy works like this: - children get milled first.</span>
+
+    <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">parent</span><span class="o">.</span><span class="n">poly</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">parent</span><span class="o">.</span><span class="n">update_poly</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">poly</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">child</span><span class="o">.</span><span class="n">update_poly</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">child</span> <span class="o">!=</span> <span class="n">parent</span><span class="p">:</span>  <span class="c1"># and len(child.poly)&gt;0</span>
+                <span class="k">if</span> <span class="n">parent</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">sgeometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+                    <span class="n">parent</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+                    <span class="n">child</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="extend_chunks_5_axis">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.extend_chunks_5_axis">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">extend_chunks_5_axis</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extend chunks with 5-axis cutter start and end points.</span>
+
+<span class="sd">    This function modifies the provided chunks by appending calculated start</span>
+<span class="sd">    and end points for a cutter based on the specified orientation and</span>
+<span class="sd">    movement parameters. It determines the starting position of the cutter</span>
+<span class="sd">    based on the machine&#39;s settings and the object&#39;s movement constraints.</span>
+<span class="sd">    The function iterates through each point in the chunks and updates their</span>
+<span class="sd">    start and end points accordingly.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chunks (list): A list of chunk objects that will be modified.</span>
+<span class="sd">        o (object): An object containing movement and orientation data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_machine</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">free_height</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">free_height</span>  <span class="c1"># o.max.z +</span>
+    <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">use_position_definitions</span><span class="p">:</span>  <span class="c1"># dhull</span>
+        <span class="n">cutterstart</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">starting_position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">starting_position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">starting_position</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+        <span class="p">)</span>  <span class="c1"># start point for casting</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># start point for casting</span>
+        <span class="n">cutterstart</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">free_height</span><span class="p">)))</span>
+    <span class="n">cutterend</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+    <span class="n">oriname</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; orientation&quot;</span>
+    <span class="n">ori</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">oriname</span><span class="p">]</span>
+    <span class="c1"># rotationaxes = rotTo2axes(ori.rotation_euler,&#39;CA&#39;)#warning-here it allready is reset to 0!!</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rot&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">rotationaxes</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">rotationaxes</span>  <span class="c1"># this is all nonsense by now.</span>
+    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+            <span class="n">cutterstart</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">cutterstart</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">cutterend</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">cutterend</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutterstart</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutterend</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">rotations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="p">)</span>  <span class="c1"># TODO: this is a placeholder. It does 99.9% probably write total nonsense.</span></div>
+
+
+
+<div class="viewcode-block" id="get_closest_chunk">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/chunk_utils/index.html#fabex.utilities.chunk_utils.get_closest_chunk">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_closest_chunk</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">chunks</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the closest chunk to a given position.</span>
+
+<span class="sd">    This function iterates through a list of chunks and determines which</span>
+<span class="sd">    chunk is closest to the specified position. It checks if each chunk&#39;s</span>
+<span class="sd">    children are sorted before calculating the distance. The chunk with the</span>
+<span class="sd">    minimum distance to the given position is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o: An object representing the origin point.</span>
+<span class="sd">        pos: A position to which the closest chunk is calculated.</span>
+<span class="sd">        chunks (list): A list of chunk objects to evaluate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Chunk: The closest chunk object to the specified position, or None if no valid</span>
+<span class="sd">            chunk is found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># ch=-1</span>
+    <span class="n">mind</span> <span class="o">=</span> <span class="mi">2000</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="mi">100000000000</span>
+    <span class="n">ch</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">chtest</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+        <span class="n">cango</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># here was chtest.getNext==chtest, was doing recursion error and slowing down.</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">chtest</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">child</span><span class="o">.</span><span class="n">sorted</span><span class="p">:</span>
+                <span class="n">cango</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">cango</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">chtest</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">mind</span><span class="p">:</span>
+                <span class="n">ch</span> <span class="o">=</span> <span class="n">chtest</span>
+                <span class="n">mind</span> <span class="o">=</span> <span class="n">d</span>
+    <span class="k">return</span> <span class="n">ch</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

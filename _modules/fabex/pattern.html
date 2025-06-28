@@ -1,0 +1,1078 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.pattern &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/pattern';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/bas_relief/index.html">fabex.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/cam_chunk/index.html">fabex.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/collision/index.html">fabex.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/gcode_import_parser/index.html">fabex.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/gcode_path/index.html">fabex.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/involute_gear/index.html">fabex.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/joinery/index.html">fabex.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/pack/index.html">fabex.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/parametric/index.html">fabex.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/pattern/index.html">fabex.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/puzzle_joinery/index.html">fabex.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/slice/index.html">fabex.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/strategy/index.html">fabex.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/testing/index.html">fabex.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/version/index.html">fabex.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/fabex/voronoi/index.html">fabex.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.pattern</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;pattern.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Functions to read CAM path patterns and return CAM path chunks.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ceil</span><span class="p">,</span>
+    <span class="n">floor</span><span class="p">,</span>
+    <span class="n">pi</span><span class="p">,</span>
+    <span class="n">sqrt</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mathutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">Euler</span><span class="p">,</span> <span class="n">Vector</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.cam_chunk</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CamPathChunk</span><span class="p">,</span>
+    <span class="n">CamPathChunkBuilder</span><span class="p">,</span>
+    <span class="n">shapely_to_chunks</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utilities.chunk_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">chunks_refine</span><span class="p">,</span>
+    <span class="n">parent_child_distance</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utilities.simple_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">progress</span>
+
+
+<div class="viewcode-block" id="get_path_pattern_parallel">
+<a class="viewcode-back" href="../../autoapi/fabex/pattern/index.html#fabex.pattern.get_path_pattern_parallel">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_path_pattern_parallel</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate path chunks for parallel movement based on object dimensions</span>
+<span class="sd">    and angle.</span>
+
+<span class="sd">    This function calculates a series of path chunks for a given object,</span>
+<span class="sd">    taking into account its dimensions and the specified angle. It utilizes</span>
+<span class="sd">    both a traditional method and an alternative algorithm (currently</span>
+<span class="sd">    disabled) to generate these paths. The paths are constructed by</span>
+<span class="sd">    iterating over calculated vectors and applying transformations based on</span>
+<span class="sd">    the object&#39;s properties. The resulting path chunks can be used for</span>
+<span class="sd">    various movement types, including conventional and climb movements.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing properties such as dimensions and movement type.</span>
+<span class="sd">        angle (float): The angle to rotate the path generation.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of path chunks generated based on the object&#39;s dimensions and</span>
+<span class="sd">            angle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">zlevel</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">pathd</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+    <span class="n">pathstep</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span>
+    <span class="n">pathchunks</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">xm</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">ym</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">vm</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">xdim</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">ydim</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="p">(</span><span class="n">xdim</span> <span class="o">+</span> <span class="n">ydim</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">angle</span><span class="p">))</span>
+    <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">bpy</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">debug_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># by default off</span>
+        <span class="c1"># this is the original pattern method, slower, but well tested:</span>
+        <span class="n">dirvect</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">dirvect</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">dirvect</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+        <span class="n">dirvect</span> <span class="o">*=</span> <span class="n">pathstep</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">)</span>
+        <span class="p">):</span>  <span class="c1"># this is highly ineffective, computes path2x the area needed...</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">a</span> <span class="o">*</span> <span class="n">pathd</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">)</span> <span class="o">*</span> <span class="n">pathstep</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="c1"># shifting for the rotation, so pattern rotates around middle...</span>
+            <span class="n">v</span> <span class="o">+=</span> <span class="n">vm</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">)):</span>
+                <span class="n">v</span> <span class="o">+=</span> <span class="n">dirvect</span>
+
+                <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>
+                    <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">reverse</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;MEANDER&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CONVENTIONAL&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CW&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CLIMB&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CCW&quot;</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">())</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">pathchunks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+                <span class="ow">and</span> <span class="n">reverse</span>
+                <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">parallel_step_back</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">use_layers</span>
+            <span class="p">):</span>
+                <span class="c1"># parallel step back - for finishing, best with climb movement, saves cutter life by going into</span>
+                <span class="c1"># material with climb, while using move back on the surface to improve finish</span>
+                <span class="c1"># (which would otherwise be a conventional move in the material)</span>
+
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CONVENTIONAL&quot;</span> <span class="ow">or</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CLIMB&quot;</span><span class="p">:</span>
+                    <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+                <span class="n">changechunk</span> <span class="o">=</span> <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">pathchunks</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">changechunk</span>
+
+            <span class="n">reverse</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">reverse</span>
+        <span class="c1"># print (chunk.points)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># alternative algorithm with numpy, didn&#39;t work as should so blocked now...</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">e1</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">v1</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span>
+
+        <span class="n">axis_across_paths</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">))</span> <span class="o">*</span> <span class="n">pathd</span> <span class="o">*</span> <span class="n">v1</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">xm</span><span class="p">,</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">))</span> <span class="o">*</span> <span class="n">pathd</span> <span class="o">*</span> <span class="n">v1</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">ym</span><span class="p">,</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathd</span><span class="p">))</span> <span class="o">*</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">axis_along_paths</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">))</span> <span class="o">*</span> <span class="n">pathstep</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">))</span> <span class="o">*</span> <span class="n">pathstep</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="o">-</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">))</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">+</span> <span class="n">zlevel</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># rotate this first</span>
+        <span class="n">progress</span><span class="p">(</span><span class="n">axis_along_paths</span><span class="p">)</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">axis_across_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="c1"># progress(chunks[a,...,...].shape)</span>
+            <span class="c1"># progress(axis_along_paths.shape)</span>
+            <span class="n">nax</span> <span class="o">=</span> <span class="n">axis_along_paths</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1"># progress(nax.shape)</span>
+            <span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">axis_across_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
+            <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">axis_across_paths</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">a</span><span class="p">]</span>
+            <span class="c1"># progress(a)</span>
+            <span class="c1"># progress(nax.shape)</span>
+            <span class="c1"># progress(chunks.shape)</span>
+            <span class="c1"># progress(chunks[...,a,...].shape)</span>
+            <span class="n">xfitmin</span> <span class="o">=</span> <span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">xfitmax</span> <span class="o">=</span> <span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">xfit</span> <span class="o">=</span> <span class="n">xfitmin</span> <span class="o">&amp;</span> <span class="n">xfitmax</span>
+            <span class="c1"># print(xfit,nax)</span>
+            <span class="n">nax</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">xfit</span><span class="p">],</span> <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">xfit</span><span class="p">],</span> <span class="n">nax</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">xfit</span><span class="p">]])</span>
+            <span class="n">yfitmin</span> <span class="o">=</span> <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">yfitmax</span> <span class="o">=</span> <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">yfit</span> <span class="o">=</span> <span class="n">yfitmin</span> <span class="o">&amp;</span> <span class="n">yfitmax</span>
+            <span class="n">nax</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">nax</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">yfit</span><span class="p">],</span> <span class="n">nax</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">yfit</span><span class="p">],</span> <span class="n">nax</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">yfit</span><span class="p">]])</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nax</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># chunks</span>
+        <span class="n">pathchunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+            <span class="n">ch</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CamPathChunk</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span>
+        <span class="c1"># print (ch)</span>
+    <span class="k">return</span> <span class="n">pathchunks</span></div>
+
+
+
+<div class="viewcode-block" id="get_path_pattern">
+<a class="viewcode-back" href="../../autoapi/fabex/pattern/index.html#fabex.pattern.get_path_pattern">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_path_pattern</span><span class="p">(</span><span class="n">operation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a path pattern based on the specified operation strategy.</span>
+
+<span class="sd">    This function constructs a path pattern for a given operation by</span>
+<span class="sd">    analyzing its parameters and applying different strategies such as</span>
+<span class="sd">    &#39;PARALLEL&#39;, &#39;CROSS&#39;, &#39;BLOCK&#39;, &#39;SPIRAL&#39;, &#39;CIRCLES&#39;, and &#39;OUTLINEFILL&#39;.</span>
+<span class="sd">    Each strategy dictates how the path is built, utilizing various</span>
+<span class="sd">    geometric calculations and conditions to ensure the path adheres to the</span>
+<span class="sd">    specified operational constraints. The function also handles the</span>
+<span class="sd">    orientation and direction of the path based on the movement settings</span>
+<span class="sd">    provided in the operation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        operation (object): An object containing parameters for path generation,</span>
+<span class="sd">            including strategy, movement type, and geometric bounds.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of path chunks representing the generated path pattern.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">o</span> <span class="o">=</span> <span class="n">operation</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">progress</span><span class="p">(</span><span class="s2">&quot;Building Path Pattern&quot;</span><span class="p">)</span>
+    <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span>
+
+    <span class="n">pathchunks</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">zlevel</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># minz#this should do layers...</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;PARALLEL&quot;</span><span class="p">:</span>
+        <span class="n">pathchunks</span> <span class="o">=</span> <span class="n">get_path_pattern_parallel</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">parallel_angle</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;CROSS&quot;</span><span class="p">:</span>
+        <span class="n">pathchunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_path_pattern_parallel</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">parallel_angle</span><span class="p">))</span>
+        <span class="n">pathchunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_path_pattern_parallel</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">parallel_angle</span> <span class="o">-</span> <span class="n">pi</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;BLOCK&quot;</span><span class="p">:</span>
+        <span class="n">pathd</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+        <span class="n">pathstep</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span>
+        <span class="n">maxxp</span> <span class="o">=</span> <span class="n">maxx</span>
+        <span class="n">maxyp</span> <span class="o">=</span> <span class="n">maxy</span>
+        <span class="n">minxp</span> <span class="o">=</span> <span class="n">minx</span>
+        <span class="n">minyp</span> <span class="o">=</span> <span class="n">miny</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">incx</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">incy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="n">maxxp</span> <span class="o">-</span> <span class="n">minxp</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">maxyp</span> <span class="o">-</span> <span class="n">minyp</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">minyp</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">minxp</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="n">ceil</span><span class="p">(</span><span class="n">maxxp</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">pathstep</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">minxp</span> <span class="o">+=</span> <span class="n">pathd</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">maxxp</span><span class="p">,</span> <span class="n">minyp</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+
+            <span class="n">x</span> <span class="o">=</span> <span class="n">maxxp</span>
+
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">minyp</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="n">ceil</span><span class="p">(</span><span class="n">maxyp</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">pathstep</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+
+            <span class="n">minyp</span> <span class="o">+=</span> <span class="n">pathd</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">maxxp</span><span class="p">,</span> <span class="n">maxyp</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+
+            <span class="n">y</span> <span class="o">=</span> <span class="n">maxyp</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">maxxp</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="n">ceil</span><span class="p">(</span><span class="n">minxp</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">pathstep</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+
+            <span class="n">maxxp</span> <span class="o">-=</span> <span class="n">pathd</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">minxp</span><span class="p">,</span> <span class="n">maxyp</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+
+            <span class="n">x</span> <span class="o">=</span> <span class="n">minxp</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">floor</span><span class="p">(</span><span class="n">maxyp</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="n">ceil</span><span class="p">(</span><span class="n">minyp</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">pathstep</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">minxp</span><span class="p">,</span> <span class="n">minyp</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+
+            <span class="n">maxyp</span> <span class="o">-=</span> <span class="n">pathd</span>
+
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">insideout</span> <span class="o">==</span> <span class="s2">&quot;INSIDEOUT&quot;</span><span class="p">:</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CLIMB&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CW&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CONVENTIONAL&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CCW&quot;</span>
+        <span class="p">):</span>
+            <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">)):</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">si</span><span class="p">]</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">pathchunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">()]</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;SPIRAL&quot;</span><span class="p">:</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+        <span class="n">pathd</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+        <span class="n">pathstep</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span>
+        <span class="n">midx</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">midy</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">pathd</span> <span class="o">/</span> <span class="mi">4</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">pathd</span> <span class="o">/</span> <span class="mi">4</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="n">pathd</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="c1"># progress(x,y,midx,midy)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="c1"># pi = pi</span>
+        <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">midx</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">midy</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+        <span class="k">while</span> <span class="n">midx</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="ow">or</span> <span class="n">midy</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>
+            <span class="c1"># v.x=x-midx</span>
+            <span class="c1"># v.y=y-midy</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">*</span> <span class="n">pi</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">pathstep</span> <span class="o">/</span> <span class="n">offset</span><span class="p">)</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="n">pathd</span> <span class="o">/</span> <span class="p">(</span><span class="n">offset</span> <span class="o">/</span> <span class="n">pathstep</span><span class="p">)</span>
+            <span class="c1"># progress(v.x,v.y)</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">midx</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">midy</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">midx</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">midy</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">())</span>
+                <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">insideout</span> <span class="o">==</span> <span class="s2">&quot;OUTSIDEIN&quot;</span><span class="p">:</span>
+            <span class="n">pathchunks</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pathchunks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">insideout</span> <span class="o">==</span> <span class="s2">&quot;OUTSIDEIN&quot;</span><span class="p">:</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CONVENTIONAL&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CW&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CLIMB&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CCW&quot;</span>
+            <span class="p">):</span>
+                <span class="c1"># TODO</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">flip_x</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+                <span class="c1"># for si in range(0, len(chunk.points)):</span>
+                <span class="c1">#     s = chunk.points[si]</span>
+                <span class="c1">#     chunk.points[si] = (o.max.x + o.min.x - s[0], s[1], s[2])</span>
+
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;CIRCLES&quot;</span><span class="p">:</span>
+        <span class="n">pathd</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+        <span class="n">pathstep</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span>
+        <span class="n">midx</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">midy</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">rx</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">ry</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">maxr</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">rx</span> <span class="o">*</span> <span class="n">rx</span> <span class="o">+</span> <span class="n">ry</span> <span class="o">*</span> <span class="n">ry</span><span class="p">)</span>
+
+        <span class="c1"># progress(x,y,midx,midy)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="c1"># pi = pi</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+        <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">midx</span><span class="p">,</span> <span class="n">midy</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+        <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">())</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">while</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">maxr</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">+=</span> <span class="n">pathd</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+            <span class="n">firstchunk</span> <span class="o">=</span> <span class="n">chunk</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="o">-</span><span class="n">r</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="n">steps</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">r</span> <span class="o">/</span> <span class="n">pathstep</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="n">steps</span>
+            <span class="n">laststepchunks</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">currentstepchunks</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">)):</span>
+                <span class="n">laststepchunks</span> <span class="o">=</span> <span class="n">currentstepchunks</span>
+                <span class="n">currentstepchunks</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">midx</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">midy</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">:</span>
+                    <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">midx</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">midy</span> <span class="o">+</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">chunk</span><span class="o">.</span><span class="n">closed</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">chunk</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">()</span>
+                        <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                        <span class="n">currentstepchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                        <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">firstchunk</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">chunk</span> <span class="o">==</span> <span class="n">firstchunk</span><span class="p">:</span>
+                    <span class="n">chunk</span><span class="o">.</span><span class="n">closed</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">chunk</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">()</span>
+                <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                <span class="n">currentstepchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">laststepchunks</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">currentstepchunks</span><span class="p">:</span>
+                    <span class="n">parent_child_distance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">ch</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">insideout</span> <span class="o">==</span> <span class="s2">&quot;OUTSIDEIN&quot;</span><span class="p">:</span>
+            <span class="n">pathchunks</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pathchunks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">insideout</span> <span class="o">==</span> <span class="s2">&quot;OUTSIDEIN&quot;</span><span class="p">:</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CONVENTIONAL&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CW&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CLIMB&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CCW&quot;</span>
+            <span class="p">):</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="c1"># pathchunks=sort_chunks(pathchunks,o)not until they get hierarchy parents!</span>
+    <span class="k">elif</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;OUTLINEFILL&quot;</span><span class="p">:</span>
+        <span class="n">polys</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">silhouette</span><span class="o">.</span><span class="n">geoms</span>
+        <span class="n">pathchunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">polys</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">circle_detail</span><span class="p">)</span>
+            <span class="c1"># first, move a bit inside, because otherwise the border samples go crazy very often changin between</span>
+            <span class="c1"># hit/non hit and making too many jumps in the path.</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">shapely_to_chunks</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">pathchunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+        <span class="n">lastchunks</span> <span class="o">=</span> <span class="n">chunks</span>
+        <span class="n">firstchunks</span> <span class="o">=</span> <span class="n">chunks</span>
+
+        <span class="n">approxn</span> <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">maxx</span> <span class="o">-</span> <span class="n">minx</span><span class="p">,</span> <span class="n">maxy</span> <span class="o">-</span> <span class="n">miny</span><span class="p">)</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">porig</span> <span class="ow">in</span> <span class="n">polys</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">porig</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">circle_detail</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+                    <span class="n">nchunks</span> <span class="o">=</span> <span class="n">shapely_to_chunks</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">insideout</span> <span class="o">==</span> <span class="s2">&quot;INSIDEOUT&quot;</span><span class="p">:</span>
+                        <span class="n">parent_child_distance</span><span class="p">(</span><span class="n">lastchunks</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">parent_child_distance</span><span class="p">(</span><span class="n">nchunks</span><span class="p">,</span> <span class="n">lastchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+                    <span class="n">pathchunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
+                    <span class="n">lastchunks</span> <span class="o">=</span> <span class="n">nchunks</span>
+                <span class="n">percent</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="n">approxn</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+                <span class="n">progress</span><span class="p">(</span><span class="s2">&quot;Outlining Polygons &quot;</span><span class="p">,</span> <span class="n">percent</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">pathchunks</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">inverse</span><span class="p">:</span>  <span class="c1"># dont do ambient for inverse milling</span>
+            <span class="n">lastchunks</span> <span class="o">=</span> <span class="n">firstchunks</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">polys</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+                <span class="n">steps</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">ambient_radius</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+                <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">)):</span>
+                    <span class="n">dist</span> <span class="o">=</span> <span class="n">d</span>
+                    <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">cutter_diameter</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">use_exact</span><span class="p">:</span>
+                            <span class="n">dist</span> <span class="o">+=</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">*</span> <span class="mf">0.85</span>
+                            <span class="c1"># this is here only because silhouette is still done with zbuffer method,</span>
+                            <span class="c1"># even if we use bullet collisions.</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">dist</span> <span class="o">+=</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">*</span> <span class="mf">2.5</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">circle_detail</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">is_empty</span><span class="p">:</span>
+                        <span class="n">nchunks</span> <span class="o">=</span> <span class="n">shapely_to_chunks</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">zlevel</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">insideout</span> <span class="o">==</span> <span class="s2">&quot;INSIDEOUT&quot;</span><span class="p">:</span>
+                            <span class="n">parent_child_distance</span><span class="p">(</span><span class="n">nchunks</span><span class="p">,</span> <span class="n">lastchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">parent_child_distance</span><span class="p">(</span><span class="n">lastchunks</span><span class="p">,</span> <span class="n">nchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+                        <span class="n">pathchunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">nchunks</span><span class="p">)</span>
+                        <span class="n">lastchunks</span> <span class="o">=</span> <span class="n">nchunks</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">insideout</span> <span class="o">==</span> <span class="s2">&quot;OUTSIDEIN&quot;</span><span class="p">:</span>
+            <span class="n">pathchunks</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">pathchunks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">insideout</span> <span class="o">==</span> <span class="s2">&quot;OUTSIDEIN&quot;</span><span class="p">:</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CLIMB&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CW&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CONVENTIONAL&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CCW&quot;</span>
+            <span class="p">):</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+        <span class="n">chunks_refine</span><span class="p">(</span><span class="n">pathchunks</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+    <span class="n">progress</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pathchunks</span></div>
+
+
+
+<div class="viewcode-block" id="get_path_pattern_4_axis">
+<a class="viewcode-back" href="../../autoapi/fabex/pattern/index.html#fabex.pattern.get_path_pattern_4_axis">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_path_pattern_4_axis</span><span class="p">(</span><span class="n">operation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate path patterns for a specified operation along a rotary axis.</span>
+
+<span class="sd">    This function constructs a series of path chunks based on the provided</span>
+<span class="sd">    operation&#39;s parameters, including the rotary axis, strategy, and</span>
+<span class="sd">    dimensions. It calculates the necessary angles and positions for the</span>
+<span class="sd">    cutter based on the specified strategy (PARALLELR, PARALLEL, or HELIX)</span>
+<span class="sd">    and generates the corresponding path chunks for machining operations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        operation (object): An object containing parameters for the machining operation,</span>
+<span class="sd">            including min and max coordinates, rotary axis configuration,</span>
+<span class="sd">            distance settings, and movement strategy.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of path chunks generated for the specified operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">o</span> <span class="o">=</span> <span class="n">operation</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">progress</span><span class="p">(</span><span class="s2">&quot;Building Path Pattern&quot;</span><span class="p">)</span>
+    <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span>
+    <span class="n">pathchunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">zlevel</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># minz#this should do layers...</span>
+
+    <span class="c1"># set axes for various options, Z option is obvious nonsense now.</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">rotary_axis_1</span> <span class="o">==</span> <span class="s2">&quot;X&quot;</span><span class="p">:</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">a3</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">rotary_axis_1</span> <span class="o">==</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">a3</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">rotary_axis_1</span> <span class="o">==</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">a3</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max_z</span>
+    <span class="c1"># set radius for all types of operation</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">)</span>
+    <span class="n">radiusend</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span>
+
+    <span class="n">mradius</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">radiusend</span><span class="p">)</span>
+    <span class="n">circlesteps</span> <span class="o">=</span> <span class="p">(</span><span class="n">mradius</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span>
+    <span class="n">circlesteps</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">circlesteps</span><span class="p">)</span>
+    <span class="n">anglestep</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="n">circlesteps</span>
+    <span class="c1"># generalized rotation</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">e</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anglestep</span>
+
+    <span class="c1"># generalized length of the operation</span>
+    <span class="n">maxl</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span>
+    <span class="n">minl</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span>
+    <span class="n">steps</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxl</span> <span class="o">-</span> <span class="n">minl</span><span class="p">)</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+
+    <span class="c1"># set starting positions for cutter e.t.c.</span>
+    <span class="n">cutterstart</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">cutterend</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>  <span class="c1"># end point for casting</span>
+
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy_4_axis</span> <span class="o">==</span> <span class="s2">&quot;PARALLELR&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+
+            <span class="n">cutterstart</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+            <span class="n">cutterend</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cutterstart</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span>
+
+            <span class="n">cutterstart</span><span class="p">[</span><span class="n">a2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># radius</span>
+            <span class="n">cutterend</span><span class="p">[</span><span class="n">a2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># radiusend</span>
+
+            <span class="n">cutterstart</span><span class="p">[</span><span class="n">a3</span><span class="p">]</span> <span class="o">=</span> <span class="n">radius</span>
+            <span class="n">cutterend</span><span class="p">[</span><span class="n">a3</span><span class="p">]</span> <span class="o">=</span> <span class="n">radiusend</span>
+
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">circlesteps</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="c1"># print(cutterstart,cutterend)</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutterstart</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutterend</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span>
+                <span class="n">rot</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="n">rot</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">anglestep</span>
+
+                <span class="n">chunk</span><span class="o">.</span><span class="n">rotations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
+                <span class="n">cutterstart</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">cutterend</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="n">chunk</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">radiusend</span> <span class="o">-</span> <span class="n">radius</span>
+            <span class="c1"># last point = first</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">endpoints</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">rotations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">rotations</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy_4_axis</span> <span class="o">==</span> <span class="s2">&quot;PARALLEL&quot;</span><span class="p">:</span>
+        <span class="n">circlesteps</span> <span class="o">=</span> <span class="p">(</span><span class="n">mradius</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxl</span> <span class="o">-</span> <span class="n">minl</span><span class="p">)</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span>
+
+        <span class="n">anglestep</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="n">circlesteps</span>
+        <span class="c1"># generalized rotation</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">Euler</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">e</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anglestep</span>
+
+        <span class="n">reverse</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">circlesteps</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>
+            <span class="n">cutterstart</span><span class="p">[</span><span class="n">a2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">cutterstart</span><span class="p">[</span><span class="n">a3</span><span class="p">]</span> <span class="o">=</span> <span class="n">radius</span>
+
+            <span class="n">cutterend</span><span class="p">[</span><span class="n">a2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">cutterend</span><span class="p">[</span><span class="n">a3</span><span class="p">]</span> <span class="o">=</span> <span class="n">radiusend</span>
+
+            <span class="n">e</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anglestep</span> <span class="o">*</span> <span class="n">b</span>
+
+            <span class="n">cutterstart</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">cutterend</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">cutterstart</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_along_paths</span>
+                <span class="n">cutterend</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cutterstart</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutterstart</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutterend</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span>
+                <span class="n">rot</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="n">rot</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span> <span class="o">*</span> <span class="n">anglestep</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">rotations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
+
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">()</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">radiusend</span> <span class="o">-</span> <span class="n">radius</span>
+            <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="p">(</span><span class="n">reverse</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;MEANDER&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CONVENTIONAL&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CW&quot;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;CLIMB&quot;</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">spindle_rotation</span> <span class="o">==</span> <span class="s2">&quot;CCW&quot;</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+            <span class="n">reverse</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">reverse</span>
+
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy_4_axis</span> <span class="o">==</span> <span class="s2">&quot;HELIX&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Helix&quot;</span><span class="p">)</span>
+
+        <span class="n">a1step</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span> <span class="o">/</span> <span class="n">circlesteps</span>
+
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">CamPathChunkBuilder</span><span class="p">([])</span>  <span class="c1"># only one chunk, init here</span>
+
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">cutterstart</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">distance_between_paths</span>
+            <span class="n">cutterend</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cutterstart</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span>
+            <span class="n">cutterstart</span><span class="p">[</span><span class="n">a2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">cutterstart</span><span class="p">[</span><span class="n">a3</span><span class="p">]</span> <span class="o">=</span> <span class="n">radius</span>
+            <span class="n">cutterend</span><span class="p">[</span><span class="n">a3</span><span class="p">]</span> <span class="o">=</span> <span class="n">radiusend</span>
+
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">circlesteps</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="c1"># print(cutterstart,cutterend)</span>
+                <span class="n">cutterstart</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">a1step</span>
+                <span class="n">cutterend</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">a1step</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">startpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutterstart</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">endpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cutterend</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span>
+
+                <span class="n">rot</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+                <span class="n">rot</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">anglestep</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">rotations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
+
+                <span class="n">cutterstart</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">cutterend</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">to_chunk</span><span class="p">()</span>
+            <span class="n">chunk</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">radiusend</span> <span class="o">-</span> <span class="n">radius</span>
+
+        <span class="n">pathchunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pathchunks</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

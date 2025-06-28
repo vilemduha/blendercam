@@ -1,0 +1,1104 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.operators.path_ops &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/operators/path_ops';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bas_relief/index.html">fabex.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/cam_chunk/index.html">fabex.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/collision/index.html">fabex.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/gcode_import_parser/index.html">fabex.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/gcode_path/index.html">fabex.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/involute_gear/index.html">fabex.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/pack/index.html">fabex.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/parametric/index.html">fabex.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/pattern/index.html">fabex.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/puzzle_joinery/index.html">fabex.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/slice/index.html">fabex.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/strategy/index.html">fabex.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/testing/index.html">fabex.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/voronoi/index.html">fabex.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.operators.path_ops</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;ops.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Blender Operator definitions are in this file.</span>
+<span class="sd">They mostly call the functions from &#39;utils.py&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy.props</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BoolProperty</span><span class="p">,</span>
+    <span class="n">EnumProperty</span><span class="p">,</span>
+    <span class="n">StringProperty</span><span class="p">,</span>
+    <span class="n">FloatProperty</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.async_op</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AsyncCancelledException</span><span class="p">,</span>
+    <span class="n">AsyncOperatorMixin</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">was_hidden_dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..exception</span><span class="w"> </span><span class="kn">import</span> <span class="n">CamException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..gcode_path</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_path</span><span class="p">,</span>
+    <span class="n">export_gcode_path</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.async_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">progress_async</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.chunk_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">chunks_to_shapely</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.shapely_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">shapely_to_curve</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.simple_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">activate</span><span class="p">,</span> <span class="n">add_to_group</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.thread_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">threadCom</span><span class="p">,</span> <span class="n">thread_read</span><span class="p">,</span> <span class="n">timer_update</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.machine_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_machine_area_object</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.bounds_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_bounds_worldspace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utilities.operation_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">chain_valid</span><span class="p">,</span>
+    <span class="n">source_valid</span><span class="p">,</span>
+    <span class="n">reload_paths</span><span class="p">,</span>
+    <span class="n">get_chain_operations</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="PathsBackground">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsBackground">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PathsBackground</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate CAM Paths in Background. File Has to Be Saved Before.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PathsBackground.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsBackground.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.calculate_cam_paths_background&quot;</span></div>
+
+<div class="viewcode-block" id="PathsBackground.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsBackground.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Calculate CAM Paths in Background&quot;</span></div>
+
+<div class="viewcode-block" id="PathsBackground.bl_options">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsBackground.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;REGISTER&quot;</span><span class="p">,</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="PathsBackground.execute">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsBackground.execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the CAM operation in the background.</span>
+
+<span class="sd">        This method initiates a background process to perform CAM operations</span>
+<span class="sd">        based on the current scene and active CAM operation. It sets up the</span>
+<span class="sd">        necessary paths for the script and starts a subprocess to handle the</span>
+<span class="sd">        CAM computations. Additionally, it manages threading to ensure that</span>
+<span class="sd">        the main thread remains responsive while the background operation is</span>
+<span class="sd">        executed.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context: The context in which the operation is executed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary indicating the completion status of the operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_operation</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="n">o</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">computing</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">bpath</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">binary_path</span>
+        <span class="n">fpath</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span>
+
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">bpy</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">script_paths</span><span class="p">():</span>
+            <span class="n">scriptpath</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;addons&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;cam&quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;backgroundop.py&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">scriptpath</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">scriptpath</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">bpath</span><span class="p">,</span> <span class="s2">&quot;-b&quot;</span><span class="p">,</span> <span class="n">fpath</span><span class="p">,</span> <span class="s2">&quot;-P&quot;</span><span class="p">,</span> <span class="n">scriptpath</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="s2">&quot;-o=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_operation</span><span class="p">)],</span>
+            <span class="n">bufsize</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+            <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">tcom</span> <span class="o">=</span> <span class="n">threadCom</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">proc</span><span class="p">)</span>
+        <span class="n">readthread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">thread_read</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">([</span><span class="n">tcom</span><span class="p">]),</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">readthread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="c1"># self.__class__.cam_processes=[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">calculate_cam_paths_background</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="s2">&quot;cam_processes&quot;</span><span class="p">):</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">calculate_cam_paths_background</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">cam_processes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">calculate_cam_paths_background</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">cam_processes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">readthread</span><span class="p">,</span> <span class="n">tcom</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="KillPathsBackground">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.KillPathsBackground">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KillPathsBackground</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove CAM Path Processes in Background.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="KillPathsBackground.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.KillPathsBackground.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.kill_calculate_cam_paths_background&quot;</span></div>
+
+<div class="viewcode-block" id="KillPathsBackground.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.KillPathsBackground.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Kill Background Computation of an Operation&quot;</span></div>
+
+<div class="viewcode-block" id="KillPathsBackground.bl_options">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.KillPathsBackground.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;REGISTER&quot;</span><span class="p">,</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="KillPathsBackground.execute">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.KillPathsBackground.execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the CAM operation in the given context.</span>
+
+<span class="sd">        This method retrieves the active CAM operation from the scene and</span>
+<span class="sd">        checks if there are any ongoing processes related to CAM path</span>
+<span class="sd">        calculations. If such processes exist and match the current operation,</span>
+<span class="sd">        they are terminated. The method then marks the operation as not</span>
+<span class="sd">        computing and returns a status indicating that the execution has</span>
+<span class="sd">        finished.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context: The context in which the operation is executed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary with a status key indicating the result of the execution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_operation</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="n">o</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">calculate_cam_paths_background</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="s2">&quot;cam_processes&quot;</span><span class="p">):</span>
+            <span class="n">processes</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">calculate_cam_paths_background</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">cam_processes</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">processes</span><span class="p">:</span>
+                <span class="n">tcom</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">tcom</span><span class="o">.</span><span class="n">opname</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">processes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="n">tcom</span><span class="o">.</span><span class="n">proc</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">computing</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="_calc_path">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators._calc_path">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_calc_path</span><span class="p">(</span><span class="n">operator</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the path for a given operator and context.</span>
+
+<span class="sd">    This function processes the current scene&#39;s CAM operations based on</span>
+<span class="sd">    the specified operator and context. It handles different geometry</span>
+<span class="sd">    sources, checks for valid operation parameters, and manages the</span>
+<span class="sd">    visibility of objects and collections. The function also retrieves the</span>
+<span class="sd">    path using an asynchronous operation and handles any exceptions that may</span>
+<span class="sd">    arise during this process. If the operation is invalid or if certain</span>
+<span class="sd">    conditions are not met, appropriate error messages are reported to the</span>
+<span class="sd">    operator.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        operator (bpy.types.Operator): The operator that initiated the path calculation.</span>
+<span class="sd">        context (bpy.types.Context): The context in which the operation is executed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: A tuple indicating the status of the operation.</span>
+<span class="sd">            Returns {&#39;FINISHED&#39;, True} if successful,</span>
+<span class="sd">            {&#39;FINISHED&#39;, False} if there was an error,</span>
+<span class="sd">            or {&#39;CANCELLED&#39;, False} if the operation was cancelled.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_operation</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">geometry_source</span> <span class="o">==</span> <span class="s2">&quot;OBJECT&quot;</span><span class="p">:</span>
+        <span class="n">ob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">object_name</span><span class="p">]</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">hide_set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">geometry_source</span> <span class="o">==</span> <span class="s2">&quot;COLLECTION&quot;</span><span class="p">:</span>
+        <span class="n">obc</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">collection_name</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">obc</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+            <span class="n">ob</span><span class="o">.</span><span class="n">hide_set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;CARVE&quot;</span><span class="p">:</span>
+        <span class="n">curvob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">curve_source</span><span class="p">]</span>
+        <span class="n">curvob</span><span class="o">.</span><span class="n">hide_set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;if o.strategy == &#39;WATERLINE&#39;:</span>
+<span class="sd">        ob = bpy.data.objects[o.object_name]</span>
+<span class="sd">        ob.select_set(True)</span>
+<span class="sd">        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)&quot;&quot;&quot;</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">meshes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cam_path_</span><span class="si">{</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mesh</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">meshes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Operation can&#39;t be performed, see Warnings for info&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+        <span class="n">operator</span><span class="o">.</span><span class="n">report</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;ERROR_INVALID_INPUT&quot;</span><span class="p">},</span>
+            <span class="n">text</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">progress_async</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="c1"># bpy.ops.cam.popup(text=text)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">}</span>
+
+    <span class="c1"># check for free movement height &lt; maxz and return with error</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">free_height</span> <span class="o">&lt;</span> <span class="n">o</span><span class="o">.</span><span class="n">max_z</span><span class="p">:</span>
+        <span class="n">operator</span><span class="o">.</span><span class="n">report</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;ERROR_INVALID_INPUT&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;Free Movement Height Is Less than Operation Depth Start </span><span class="se">\n</span><span class="s2"> Correct and Try Again.&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">progress_async</span><span class="p">(</span><span class="s2">&quot;Operation Can&#39;t Be Performed, See Warnings for Info&quot;</span><span class="p">)</span>
+        <span class="c1"># bpy.ops.cam.popup(text=text)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">computing</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">}</span>
+
+    <span class="n">o</span><span class="o">.</span><span class="n">operator</span> <span class="o">=</span> <span class="n">operator</span>
+
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">use_layers</span><span class="p">:</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">movement</span><span class="o">.</span><span class="n">parallel_step_back</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">get_path</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Got Path Okay&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">CamException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="mi">80</span><span class="p">))</span>
+        <span class="n">operator</span><span class="o">.</span><span class="n">report</span><span class="p">({</span><span class="s2">&quot;ERROR&quot;</span><span class="p">},</span> <span class="n">error_str</span><span class="p">)</span>
+        <span class="c1"># bpy.ops.cam.popup(text=error_str)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="k">except</span> <span class="n">AsyncCancelledException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># bpy.ops.cam.popup(text=str(e))</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;CANCELLED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FAIL&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
+        <span class="n">operator</span><span class="o">.</span><span class="n">report</span><span class="p">({</span><span class="s2">&quot;ERROR&quot;</span><span class="p">},</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="c1"># bpy.ops.cam.popup(text=str(e))</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">}</span>
+    <span class="n">coll</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;RigidBodyWorld&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">coll</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">coll</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="CalculatePath">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.CalculatePath">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CalculatePath</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">AsyncOperatorMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate CAM Paths&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CalculatePath.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.CalculatePath.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.calculate_cam_path&quot;</span></div>
+
+<div class="viewcode-block" id="CalculatePath.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.CalculatePath.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Calculate CAM Paths&quot;</span></div>
+
+<div class="viewcode-block" id="CalculatePath.bl_options">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.CalculatePath.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;REGISTER&quot;</span><span class="p">,</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">,</span> <span class="s2">&quot;BLOCKING&quot;</span><span class="p">}</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Operator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">AsyncOperatorMixin</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="CalculatePath.poll">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.CalculatePath.poll">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the current CAM operation is valid.</span>
+
+<span class="sd">        This method checks the active CAM operation in the given context and</span>
+<span class="sd">        determines if it is valid. It retrieves the active operation from the</span>
+<span class="sd">        scene&#39;s CAM operations and validates it using the `isValid` function.</span>
+<span class="sd">        If the operation is valid, it returns True; otherwise, it returns False.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (Context): The context containing the scene and CAM operations.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the active CAM operation is valid, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_operation</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">o</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">source_valid</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="CalculatePath.execute_async">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.CalculatePath.execute_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute an asynchronous calculation of a path.</span>
+
+<span class="sd">        This method performs an asynchronous operation to calculate a path based</span>
+<span class="sd">        on the provided context. It awaits the result of the calculation and</span>
+<span class="sd">        prints the success status along with the return value. The return value</span>
+<span class="sd">        can be used for further processing or analysis.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (Any): The context in which the path calculation is to be executed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: The result of the path calculation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="p">(</span><span class="n">retval</span><span class="p">,</span> <span class="n">success</span><span class="p">)</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_calc_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CALCULATED PATH (success=</span><span class="si">{</span><span class="n">success</span><span class="si">}</span><span class="s2">,retval=</span><span class="si">{</span><span class="n">retval</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">retval</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PathsAll">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsAll">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PathsAll</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate All CAM Paths&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PathsAll.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsAll.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.calculate_cam_paths_all&quot;</span></div>
+
+<div class="viewcode-block" id="PathsAll.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsAll.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Calculate All CAM Paths&quot;</span></div>
+
+<div class="viewcode-block" id="PathsAll.bl_options">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsAll.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;REGISTER&quot;</span><span class="p">,</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="PathsAll.execute">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsAll.execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute CAM operations in the current Blender context.</span>
+
+<span class="sd">        This function iterates through the CAM operations defined in the</span>
+<span class="sd">        current scene and executes the background calculation for each</span>
+<span class="sd">        operation. It sets the active CAM operation index and prints the name</span>
+<span class="sd">        of each operation being processed. This is typically used in a Blender</span>
+<span class="sd">        add-on or script to automate CAM path calculations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (bpy.context): The current Blender context.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary indicating the completion status of the operation,</span>
+<span class="sd">                typically {&#39;FINISHED&#39;}.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">:</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_active_operation</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Calculating Path :&quot;</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">calculate_cam_paths_background</span><span class="p">()</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="PathsAll.draw">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsAll.draw">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Draws the user interface elements for the operation selection.</span>
+
+<span class="sd">        This method utilizes the Blender layout system to create a property</span>
+<span class="sd">        search interface for selecting operations related to CAM</span>
+<span class="sd">        functionalities. It links the current instance&#39;s operation property to</span>
+<span class="sd">        the available CAM operations defined in the Blender scene.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (bpy.context): The context in which the drawing occurs,</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">layout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">prop_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;operation&quot;</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="p">,</span> <span class="s2">&quot;cam_operations&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PathsChain">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsChain">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PathsChain</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">AsyncOperatorMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate a Chain and Export the G-code Alltogether.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PathsChain.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsChain.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.calculate_cam_paths_chain&quot;</span></div>
+
+<div class="viewcode-block" id="PathsChain.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsChain.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Calculate CAM Paths in Current Chain and Export Chain G-code&quot;</span></div>
+
+<div class="viewcode-block" id="PathsChain.bl_options">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsChain.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;REGISTER&quot;</span><span class="p">,</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">,</span> <span class="s2">&quot;BLOCKING&quot;</span><span class="p">}</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Operator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">AsyncOperatorMixin</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="PathsChain.poll">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsChain.poll">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the validity of the active CAM chain in the given context.</span>
+
+<span class="sd">        This method retrieves the active CAM chain from the scene and checks</span>
+<span class="sd">        its validity using the `isChainValid` function. It returns a boolean</span>
+<span class="sd">        value indicating whether the CAM chain is valid or not.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (Context): The context containing the scene and CAM chain information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the active CAM chain is valid, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">cam_chains</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">chain</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_chains</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_chain</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">chain_valid</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">context</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="PathsChain.execute_async">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathsChain.execute_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute asynchronous operations for CAM path calculations.</span>
+
+<span class="sd">        This method sets the object mode for the Blender scene and processes a</span>
+<span class="sd">        series of CAM operations defined in the active CAM chain. It</span>
+<span class="sd">        reports the progress of each operation and handles any exceptions that</span>
+<span class="sd">        may occur during the path calculation. After successful calculations, it</span>
+<span class="sd">        exports the resulting mesh data to a specified G-code file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (bpy.context): The Blender context containing scene and</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary indicating the result of the operation,</span>
+<span class="sd">            typically {&#39;FINISHED&#39;}.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+
+        <span class="c1"># Ensure there is an active object, and force Object Mode</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">context</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;OBJECT&quot;</span><span class="p">:</span>
+            <span class="n">operations</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_operations</span>
+            <span class="n">active_operation</span> <span class="o">=</span> <span class="n">operations</span><span class="p">[</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">cam_active_operation</span><span class="p">]</span>
+            <span class="n">context_object</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">active_operation</span><span class="o">.</span><span class="n">object_name</span><span class="p">]</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">context_object</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;OBJECT&quot;</span><span class="p">)</span>
+
+        <span class="n">chain</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_chains</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_chain</span><span class="p">]</span>
+        <span class="n">chainops</span> <span class="o">=</span> <span class="n">get_chain_operations</span><span class="p">(</span><span class="n">chain</span><span class="p">)</span>
+        <span class="n">meshes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chainops</span><span class="p">)):</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">cam_active_operation</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_operations</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">chainops</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">({</span><span class="s2">&quot;INFO&quot;</span><span class="p">},</span> <span class="sa">f</span><span class="s2">&quot;Calculating Path: </span><span class="si">{</span><span class="n">chainops</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">result</span><span class="p">,</span> <span class="n">success</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_calc_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span> <span class="ow">and</span> <span class="s2">&quot;FINISHED&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">({</span><span class="s2">&quot;ERROR&quot;</span><span class="p">},</span> <span class="sa">f</span><span class="s2">&quot;Couldn&#39;t Calculate Path: </span><span class="si">{</span><span class="n">chainops</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FAIL&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">({</span><span class="s2">&quot;ERROR&quot;</span><span class="p">},</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">chainops</span><span class="p">:</span>
+            <span class="n">meshes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="s2">&quot;cam_path_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">export_gcode_path</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">meshes</span><span class="p">,</span> <span class="n">chainops</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PathExportChain">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExportChain">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PathExportChain</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate a Chain and Export the G-code Together.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PathExportChain.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExportChain.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.cam_export_paths_chain&quot;</span></div>
+
+<div class="viewcode-block" id="PathExportChain.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExportChain.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Export CAM Paths in Current Chain as G-code&quot;</span></div>
+
+<div class="viewcode-block" id="PathExportChain.bl_options">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExportChain.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;REGISTER&quot;</span><span class="p">,</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">}</span></div>
+
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="PathExportChain.poll">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExportChain.poll">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">poll</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the validity of the active CAM chain in the given context.</span>
+
+<span class="sd">        This method retrieves the currently active CAM chain from the scene</span>
+<span class="sd">        context and checks its validity using the `isChainValid` function. It</span>
+<span class="sd">        returns a boolean indicating whether the active CAM chain is valid or</span>
+<span class="sd">        not.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (object): The context containing the scene and CAM chain information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the active CAM chain is valid, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+        <span class="n">chain</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_chains</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_chain</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">chain_valid</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">context</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PathExportChain.execute">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExportChain.execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the CAM path export process.</span>
+
+<span class="sd">        This function retrieves the active CAM chain from the current scene</span>
+<span class="sd">        and gathers the mesh data associated with the operations of that chain.</span>
+<span class="sd">        It then exports the G-code path using the specified filename and the</span>
+<span class="sd">        collected mesh data. The function is designed to be called within the</span>
+<span class="sd">        context of a Blender operator.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context (bpy.context): The context in which the operator is executed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary indicating the completion status of the operation,</span>
+<span class="sd">                typically {&#39;FINISHED&#39;}.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+
+        <span class="n">chain</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_chains</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_chain</span><span class="p">]</span>
+        <span class="n">chainops</span> <span class="o">=</span> <span class="n">get_chain_operations</span><span class="p">(</span><span class="n">chain</span><span class="p">)</span>
+        <span class="n">meshes</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># if len(chainops)&lt;4:</span>
+
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">chainops</span><span class="p">:</span>
+            <span class="c1"># bpy.ops.object.calculate_cam_paths_background()</span>
+            <span class="n">meshes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="s2">&quot;cam_path_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">export_gcode_path</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">meshes</span><span class="p">,</span> <span class="n">chainops</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PathExport">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExport">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PathExport</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Export G-code. Can Be Used only when the Path Object Is Present&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PathExport.bl_idname">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExport.bl_idname">[docs]</a>
+    <span class="n">bl_idname</span> <span class="o">=</span> <span class="s2">&quot;object.cam_export&quot;</span></div>
+
+<div class="viewcode-block" id="PathExport.bl_label">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExport.bl_label">[docs]</a>
+    <span class="n">bl_label</span> <span class="o">=</span> <span class="s2">&quot;Export Operation G-code&quot;</span></div>
+
+<div class="viewcode-block" id="PathExport.bl_options">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExport.bl_options">[docs]</a>
+    <span class="n">bl_options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;REGISTER&quot;</span><span class="p">,</span> <span class="s2">&quot;UNDO&quot;</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="PathExport.execute">
+<a class="viewcode-back" href="../../../autoapi/fabex/operators/path_ops/index.html#fabex.operators.PathExport.execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the CAM operation and export the G-code path.</span>
+
+<span class="sd">        This method retrieves the active CAM operation from the current scene</span>
+<span class="sd">        and exports the corresponding G-code path to a specified filename. It</span>
+<span class="sd">        prints the filename and relevant operation details to the console for</span>
+<span class="sd">        debugging purposes. The G-code path is generated based on the CAM</span>
+<span class="sd">        path data associated with the active operation.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            context: The context in which the operation is executed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary indicating the completion status of the operation,</span>
+<span class="sd">                typically {&#39;FINISHED&#39;}.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+        <span class="n">operation</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">cam_operations</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">cam_active_operation</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;EXPORTING&quot;</span><span class="p">,</span>
+            <span class="n">operation</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="s2">&quot;cam_path_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">operation</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">export_gcode_path</span><span class="p">(</span>
+            <span class="n">operation</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="s2">&quot;cam_path_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span><span class="o">.</span><span class="n">data</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">operation</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">}</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

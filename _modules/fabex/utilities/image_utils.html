@@ -1,0 +1,1460 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fabex.utilities.image_utils &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/fabex/utilities/image_utils';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../autoapi/index.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../autoapi/fabex/index.html">fabex</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bas_relief/index.html">fabex.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/cam_chunk/index.html">fabex.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/collision/index.html">fabex.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/gcode_import_parser/index.html">fabex.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/gcode_path/index.html">fabex.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/involute_gear/index.html">fabex.involute_gear</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/joinery/index.html">fabex.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/pack/index.html">fabex.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/parametric/index.html">fabex.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/pattern/index.html">fabex.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/puzzle_joinery/index.html">fabex.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/slice/index.html">fabex.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/strategy/index.html">fabex.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/testing/index.html">fabex.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../autoapi/fabex/utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/fabex/utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/version/index.html">fabex.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/fabex/voronoi/index.html">fabex.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for fabex.utilities.image_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Fabex &#39;image_utils.py&#39; © 2012 Vilem Novak</span>
+
+<span class="sd">Functions to render, save, convert and analyze image data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">acos</span><span class="p">,</span>
+    <span class="n">ceil</span><span class="p">,</span>
+    <span class="n">cos</span><span class="p">,</span>
+    <span class="n">floor</span><span class="p">,</span>
+    <span class="n">pi</span><span class="p">,</span>
+    <span class="n">radians</span><span class="p">,</span>
+    <span class="n">sin</span><span class="p">,</span>
+    <span class="n">tan</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">bl_ext.blender_org.simplify_curves_plus</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">curve_simplify</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mathutils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Euler</span><span class="p">,</span>
+    <span class="n">Vector</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.async_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">progress_async</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.chunk_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">parent_child_distance</span><span class="p">,</span> <span class="n">chunks_to_shapely</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.simple_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">progress</span><span class="p">,</span>
+    <span class="n">get_cache_path</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.numba_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">jit</span><span class="p">,</span>
+    <span class="n">prange</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="numpy_save">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.numpy_save">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">numpy_save</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">iname</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save a NumPy array as an image file in OpenEXR format.</span>
+
+<span class="sd">    This function converts a NumPy array into an image and saves it using</span>
+<span class="sd">    Blender&#39;s rendering capabilities. It sets the image format to OpenEXR</span>
+<span class="sd">    with black and white color mode and a color depth of 32 bits. The image</span>
+<span class="sd">    is saved to the specified filename.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a (numpy.ndarray): The NumPy array to be converted and saved as an image.</span>
+<span class="sd">        iname (str): The file path where the image will be saved.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">inamebase</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">iname</span><span class="p">)</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="n">numpy_to_image</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">inamebase</span><span class="p">)</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">render</span>
+
+    <span class="n">r</span><span class="o">.</span><span class="n">image_settings</span><span class="o">.</span><span class="n">file_format</span> <span class="o">=</span> <span class="s2">&quot;OPEN_EXR&quot;</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">image_settings</span><span class="o">.</span><span class="n">color_mode</span> <span class="o">=</span> <span class="s2">&quot;BW&quot;</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">image_settings</span><span class="o">.</span><span class="n">color_depth</span> <span class="o">=</span> <span class="s2">&quot;32&quot;</span>
+
+    <span class="n">i</span><span class="o">.</span><span class="n">save_render</span><span class="p">(</span><span class="n">iname</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_circle">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.get_circle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_circle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a 2D array representing a circle.</span>
+
+<span class="sd">    This function creates a 2D NumPy array filled with a specified value for</span>
+<span class="sd">    points that fall within a circle of a given radius. The circle is</span>
+<span class="sd">    centered in the array, and the function uses the Euclidean distance to</span>
+<span class="sd">    determine which points are inside the circle. The resulting array has</span>
+<span class="sd">    dimensions that are twice the radius, ensuring that the entire circle</span>
+<span class="sd">    fits within the array.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        r (int): The radius of the circle.</span>
+<span class="sd">        z (float): The value to fill the points inside the circle.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray: A 2D array where points inside the circle are filled</span>
+<span class="sd">        with the value `z`, and points outside are filled with -10.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">car</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+        <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">:</span>
+                <span class="n">car</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span>
+    <span class="k">return</span> <span class="n">car</span></div>
+
+
+
+<div class="viewcode-block" id="get_circle_binary">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.get_circle_binary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_circle_binary</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a binary representation of a circle in a 2D grid.</span>
+
+<span class="sd">    This function creates a 2D boolean array where the elements inside a</span>
+<span class="sd">    circle of radius `r` are set to `True`, and the elements outside the</span>
+<span class="sd">    circle are set to `False`. The circle is centered in the middle of the</span>
+<span class="sd">    array, which has dimensions of (2*r, 2*r). The function iterates over</span>
+<span class="sd">    each point in the grid and checks if it lies within the specified</span>
+<span class="sd">    radius.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        r (int): The radius of the circle.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray: A 2D boolean array representing the circle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">car</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">2</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">r</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+        <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">:</span>
+                <span class="n">car</span><span class="o">.</span><span class="n">itemset</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">car</span></div>
+
+
+
+<span class="c1"># get cutters for the z-buffer image method</span>
+
+
+<div class="viewcode-block" id="numpy_to_image">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.numpy_to_image">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">numpy_to_image</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">iname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Image</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a NumPy array to a Blender image.</span>
+
+<span class="sd">    This function takes a NumPy array and converts it into a Blender image.</span>
+<span class="sd">    It first checks if an image with the specified name and dimensions</span>
+<span class="sd">    already exists in Blender. If it does not exist, a new image is created</span>
+<span class="sd">    with the specified name and dimensions. The pixel data from the NumPy</span>
+<span class="sd">    array is then reshaped and assigned to the image&#39;s pixel buffer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        a (numpy.ndarray): A 2D NumPy array representing the image data.</span>
+<span class="sd">        iname (str): The name to assign to the created or found image.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bpy.types.Image: The Blender image object that was created or found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="n">width</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Based on the Blender source code: source/blender/makesdna/DNA_ID.h. MAX_ID_NAME=64</span>
+    <span class="c1"># is defining the maximum length of the id and we need to subtract four letters for</span>
+    <span class="c1"># suffix as Blender seems to use the &quot;.%03d&quot; pattern to avoid creating duplicate ids.</span>
+    <span class="n">iname_59</span> <span class="o">=</span> <span class="n">iname</span><span class="p">[:</span><span class="mi">59</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;numpy_to_image: iname:</span><span class="si">{</span><span class="n">iname</span><span class="si">}</span><span class="s2">, width:</span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s2">, height:</span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_image</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">heigh</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Image</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="p">:</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">width</span> <span class="ow">and</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">height</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">image</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">find_image</span><span class="p">(</span><span class="n">iname</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span> <span class="ow">or</span> <span class="n">find_image</span><span class="p">(</span><span class="n">iname_59</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">image</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;numpy_to_image: Creating a new image:</span><span class="si">{</span><span class="n">iname_59</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">iname_59</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">generated_type</span><span class="o">=</span><span class="s2">&quot;BLANK&quot;</span><span class="p">,</span>
+            <span class="nb">float</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;numpy_to_image: Image creation result:</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If &#39;iname_59&#39; id didn&#39;t exist previously, then</span>
+        <span class="c1"># it should have been created without changing its id.</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">iname_59</span><span class="p">]</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">::</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">image</span><span class="o">.</span><span class="n">pixels</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:]</span>  <span class="c1"># this gives big speedup!</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;numpy_to_image: Time:</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">image</span></div>
+
+
+
+<div class="viewcode-block" id="image_to_numpy">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.image_to_numpy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">image_to_numpy</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Blender image to a NumPy array.</span>
+
+<span class="sd">    This function takes a Blender image object and converts its pixel data</span>
+<span class="sd">    into a NumPy array. It retrieves the pixel data, reshapes it, and swaps</span>
+<span class="sd">    the axes to match the expected format for further processing. The</span>
+<span class="sd">    function also measures the time taken for the conversion and prints it</span>
+<span class="sd">    to the console.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        i (Image): A Blender image object containing pixel data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray: A 2D NumPy array representing the image pixels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="n">width</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">na</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">height</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,),</span> <span class="n">fill_value</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">pixels</span><span class="p">[:]</span>
+    <span class="c1"># these 2 lines are about 15% faster than na[:]=i.pixels[:].... whyyyyyyyy!!?!?!?!?!</span>
+    <span class="c1"># Blender image data access is evil.</span>
+    <span class="n">na</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">p</span>
+    <span class="n">na</span> <span class="o">=</span> <span class="n">na</span><span class="p">[::</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">na</span> <span class="o">=</span> <span class="n">na</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+    <span class="n">na</span> <span class="o">=</span> <span class="n">na</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Time of Image to Numpy &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">na</span></div>
+
+
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fastmath</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="_offset_inner_loop">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils._offset_inner_loop">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_offset_inner_loop</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">cutterArrayNan</span><span class="p">,</span> <span class="n">cwidth</span><span class="p">,</span> <span class="n">sourceArray</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">comparearea</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Offset the inner loop for processing a specified area in a 2D array.</span>
+
+<span class="sd">    This function iterates over a specified range of rows and columns in a</span>
+<span class="sd">    2D array, calculating the maximum value from a source array combined</span>
+<span class="sd">    with a cutter array for each position in the defined area. The results</span>
+<span class="sd">    are stored in the comparearea array, which is updated with the maximum</span>
+<span class="sd">    values found.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        y1 (int): The starting index for the row iteration.</span>
+<span class="sd">        y2 (int): The ending index for the row iteration.</span>
+<span class="sd">        cutterArrayNan (numpy.ndarray): A 2D array used for modifying the source array.</span>
+<span class="sd">        cwidth (int): The width of the area to consider for the maximum calculation.</span>
+<span class="sd">        sourceArray (numpy.ndarray): The source 2D array from which maximum values are derived.</span>
+<span class="sd">        width (int): The width of the source array.</span>
+<span class="sd">        height (int): The height of the source array.</span>
+<span class="sd">        comparearea (numpy.ndarray): A 2D array where the calculated maximum values are stored.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function modifies the comparearea in place and does not return a</span>
+<span class="sd">            value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">prange</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span> <span class="o">-</span> <span class="n">cwidth</span><span class="p">):</span>
+            <span class="n">comparearea</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span>
+                <span class="n">sourceArray</span><span class="p">[</span><span class="n">x</span> <span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">cwidth</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="n">y</span> <span class="o">+</span> <span class="n">cwidth</span><span class="p">]</span> <span class="o">+</span> <span class="n">cutterArrayNan</span>
+            <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="offset_area">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.offset_area">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">offset_area</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Offsets the whole image with the cutter and skin offsets.</span>
+
+<span class="sd">    This function modifies the offset image based on the provided cutter and</span>
+<span class="sd">    skin offsets. It calculates the dimensions of the source and cutter</span>
+<span class="sd">    arrays, initializes an offset image, and processes the image in</span>
+<span class="sd">    segments. The function handles the inversion of the source array if</span>
+<span class="sd">    specified and updates the offset image accordingly. Progress is reported</span>
+<span class="sd">    asynchronously during processing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o: An object containing properties such as `update_offset_image_tag`,</span>
+<span class="sd">            `min`, `max`, `inverse`, and `offset_image`.</span>
+<span class="sd">        samples (numpy.ndarray): A 2D array representing the source image data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray: The updated offset image after applying the cutter and skin offsets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">update_offset_image_tag</span><span class="p">:</span>
+        <span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">,</span> <span class="n">minz</span><span class="p">,</span> <span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">,</span> <span class="n">maxz</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span>
+
+        <span class="n">sourceArray</span> <span class="o">=</span> <span class="n">samples</span>
+        <span class="n">cutterArray</span> <span class="o">=</span> <span class="n">get_cutter_array</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span>
+
+        <span class="c1"># progress(&#39;image size&#39;, sourceArray.shape)</span>
+
+        <span class="n">width</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sourceArray</span><span class="p">)</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sourceArray</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">cwidth</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cutterArray</span><span class="p">)</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cwidth</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">inverse</span><span class="p">:</span>
+            <span class="n">sourceArray</span> <span class="o">=</span> <span class="o">-</span><span class="n">sourceArray</span> <span class="o">+</span> <span class="n">minz</span>
+        <span class="n">comparearea</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span><span class="p">[</span><span class="n">m</span> <span class="p">:</span> <span class="n">width</span> <span class="o">-</span> <span class="n">cwidth</span> <span class="o">+</span> <span class="n">m</span><span class="p">,</span> <span class="n">m</span> <span class="p">:</span> <span class="n">height</span> <span class="o">-</span> <span class="n">cwidth</span> <span class="o">+</span> <span class="n">m</span><span class="p">]</span>
+        <span class="c1"># i=0</span>
+        <span class="n">cutterArrayNan</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">cutterArray</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">cutterArray</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">cutterArray</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+            <span class="n">y1</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">comparearea</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">//</span> <span class="mi">10</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="p">((</span><span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">comparearea</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">//</span> <span class="mi">10</span>
+            <span class="n">_offset_inner_loop</span><span class="p">(</span>
+                <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">cutterArrayNan</span><span class="p">,</span> <span class="n">cwidth</span><span class="p">,</span> <span class="n">sourceArray</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">comparearea</span>
+            <span class="p">)</span>
+            <span class="k">await</span> <span class="n">progress_async</span><span class="p">(</span><span class="s2">&quot;Offset Depth Image&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">y2</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="n">comparearea</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span><span class="p">[</span><span class="n">m</span> <span class="p">:</span> <span class="n">width</span> <span class="o">-</span> <span class="n">cwidth</span> <span class="o">+</span> <span class="n">m</span><span class="p">,</span> <span class="n">m</span> <span class="p">:</span> <span class="n">height</span> <span class="o">-</span> <span class="n">cwidth</span> <span class="o">+</span> <span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">comparearea</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Offset Image Time &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span>
+
+        <span class="n">o</span><span class="o">.</span><span class="n">update_offset_image_tag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span></div>
+
+
+
+<div class="viewcode-block" id="dilate_array">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.dilate_array">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dilate_array</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">cycles</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dilate a binary array using a specified number of cycles.</span>
+
+<span class="sd">    This function performs a dilation operation on a 2D binary array. For</span>
+<span class="sd">    each cycle, it updates the array by applying a logical OR operation</span>
+<span class="sd">    between the current array and its neighboring elements. The dilation</span>
+<span class="sd">    effect expands the boundaries of the foreground (True) pixels in the</span>
+<span class="sd">    binary array.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ar (numpy.ndarray): A 2D binary array (numpy array) where</span>
+<span class="sd">            dilation will be applied.</span>
+<span class="sd">        cycles (int): The number of dilation cycles to perform.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: The function modifies the input array in place and does not</span>
+<span class="sd">            return a value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cycles</span><span class="p">):</span>
+        <span class="n">ar</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">ar</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">ar</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">ar</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">ar</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">ar</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="crazy_path">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.crazy_path">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">crazy_path</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute a greedy adaptive algorithm for path planning.</span>
+
+<span class="sd">    This function prepares an area based on the provided object `o`,</span>
+<span class="sd">    calculates the dimensions of the area, and initializes a mill image and</span>
+<span class="sd">    cutter array. The dimensions are determined by the maximum and minimum</span>
+<span class="sd">    coordinates of the object, adjusted by the simulation detail and border</span>
+<span class="sd">    width. The function is currently a stub and requires further</span>
+<span class="sd">    implementation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing properties such as max, min, optimisation, and</span>
+<span class="sd">            borderwidth.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO: try to do something with this  stuff, it&#39;s just a stub. It should be a greedy adaptive algorithm.</span>
+    <span class="c1">#  started another thing below.</span>
+    <span class="k">await</span> <span class="n">prepare_area</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">sx</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">sy</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="n">resx</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">sx</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">simulation_detail</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span>
+    <span class="n">resy</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">sy</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">simulation_detail</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span>
+
+    <span class="n">o</span><span class="o">.</span><span class="n">millimage</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">resx</span><span class="p">,</span> <span class="n">resy</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="c1"># getting inverted cutter</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">cutterArray</span> <span class="o">=</span> <span class="o">-</span><span class="n">get_cutter_array</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">simulation_detail</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="build_stroke">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.build_stroke">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_stroke</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">cutterArray</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a stroke array based on start and end points.</span>
+
+<span class="sd">    This function generates a 2D stroke array that represents a stroke from</span>
+<span class="sd">    a starting point to an ending point. It calculates the length of the</span>
+<span class="sd">    stroke and creates a grid that is filled based on the positions defined</span>
+<span class="sd">    by the start and end coordinates. The function uses a cutter array to</span>
+<span class="sd">    determine how the stroke interacts with the grid.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        start (tuple): A tuple representing the starting coordinates (x, y, z).</span>
+<span class="sd">        end (tuple): A tuple representing the ending coordinates (x, y, z).</span>
+<span class="sd">        cutterArray: An object that contains size information used to modify</span>
+<span class="sd">            the stroke array.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray: A 2D array representing the stroke, filled with</span>
+<span class="sd">            calculated values based on the input parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">strokelength</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">size_x</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">cutterArray</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">size_y</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">cutterArray</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">cutterArray</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="n">strokeArray</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">size_x</span><span class="p">,</span> <span class="n">size_y</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="n">samplesx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">strokelength</span><span class="p">))</span>
+    <span class="n">samplesy</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">strokelength</span><span class="p">))</span>
+    <span class="n">samplesz</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">strokelength</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">strokelength</span><span class="p">)):</span>
+        <span class="n">strokeArray</span><span class="p">[</span>
+            <span class="n">samplesx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">samplesx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">samplesy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">samplesy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+            <span class="n">strokeArray</span><span class="p">[</span><span class="n">samplesx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">samplesx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">,</span> <span class="n">samplesy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r</span> <span class="p">:</span> <span class="n">samplesy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span><span class="p">],</span>
+            <span class="n">cutterArray</span> <span class="o">+</span> <span class="n">samplesz</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">strokeArray</span></div>
+
+
+
+<div class="viewcode-block" id="test_stroke">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.test_stroke">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_stroke</span><span class="p">():</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="apply_stroke">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.apply_stroke">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_stroke</span><span class="p">():</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="test_stroke_binary">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.test_stroke_binary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_stroke_binary</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">stroke</span><span class="p">):</span>
+    <span class="k">pass</span>  <span class="c1"># buildstroke()</span></div>
+
+
+
+<div class="viewcode-block" id="get_sample_image">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.get_sample_image">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_sample_image</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">sarray</span><span class="p">,</span> <span class="n">minz</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a sample image value from a 2D array based on given coordinates.</span>
+
+<span class="sd">    This function retrieves a value from a 2D array by performing bilinear</span>
+<span class="sd">    interpolation based on the provided coordinates. It checks if the</span>
+<span class="sd">    coordinates are within the bounds of the array and calculates the</span>
+<span class="sd">    interpolated value accordingly. If the coordinates are out of bounds, it</span>
+<span class="sd">    returns -10.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s (tuple): A tuple containing the x and y coordinates (float).</span>
+<span class="sd">        sarray (numpy.ndarray): A 2D array from which to sample the image values.</span>
+<span class="sd">        minz (float): A minimum threshold value (not used in the current implementation).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: The interpolated value from the 2D array, or -10 if the coordinates are</span>
+<span class="sd">            out of bounds.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sarray</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sarray</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">10</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">minx</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">maxx</span> <span class="o">=</span> <span class="n">minx</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">miny</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">maxy</span> <span class="o">=</span> <span class="n">miny</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">s1a</span> <span class="o">=</span> <span class="n">sarray</span><span class="p">[</span><span class="n">minx</span><span class="p">,</span> <span class="n">miny</span><span class="p">]</span>
+        <span class="n">s2a</span> <span class="o">=</span> <span class="n">sarray</span><span class="p">[</span><span class="n">maxx</span><span class="p">,</span> <span class="n">miny</span><span class="p">]</span>
+        <span class="n">s1b</span> <span class="o">=</span> <span class="n">sarray</span><span class="p">[</span><span class="n">minx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">]</span>
+        <span class="n">s2b</span> <span class="o">=</span> <span class="n">sarray</span><span class="p">[</span><span class="n">maxx</span><span class="p">,</span> <span class="n">maxy</span><span class="p">]</span>
+        <span class="c1"># s1a = sarray.item(minx, miny)  # most optimal access to array so far</span>
+        <span class="c1"># s2a = sarray.item(maxx, miny)</span>
+        <span class="c1"># s1b = sarray.item(minx, maxy)</span>
+        <span class="c1"># s2b = sarray.item(maxx, maxy)</span>
+
+        <span class="n">sa</span> <span class="o">=</span> <span class="n">s1a</span> <span class="o">*</span> <span class="p">(</span><span class="n">maxx</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">s2a</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">minx</span><span class="p">)</span>
+        <span class="n">sb</span> <span class="o">=</span> <span class="n">s1b</span> <span class="o">*</span> <span class="p">(</span><span class="n">maxx</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">s2b</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">minx</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">sa</span> <span class="o">*</span> <span class="p">(</span><span class="n">maxy</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">sb</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">miny</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+
+
+
+<div class="viewcode-block" id="get_resolution">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.get_resolution">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_resolution</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the resolution based on the dimensions of an object.</span>
+
+<span class="sd">    This function computes the resolution in both x and y directions by</span>
+<span class="sd">    determining the width and height of the object, adjusting for pixel size</span>
+<span class="sd">    and border width. The resolution is calculated by dividing the</span>
+<span class="sd">    dimensions by the pixel size and adding twice the border width to each</span>
+<span class="sd">    dimension.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object with attributes `max`, `min`, `optimisation`,</span>
+<span class="sd">            and `borderwidth`. The `max` and `min` attributes should</span>
+<span class="sd">            have `x` and `y` properties representing the coordinates,</span>
+<span class="sd">            while `optimisation` should have a `pixsize` attribute.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None: This function does not return a value; it performs calculations</span>
+<span class="sd">            to determine resolution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sx</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">sy</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="n">resx</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">sx</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span>
+    <span class="n">resy</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">sy</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span></div>
+
+
+
+<span class="c1"># this basically renders blender zbuffer and makes it accessible by saving &amp; loading it again.</span>
+<span class="c1"># that&#39;s because blender doesn&#39;t allow accessing pixels in render :(</span>
+
+
+<div class="viewcode-block" id="_backup_render_settings">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils._backup_render_settings">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_backup_render_settings</span><span class="p">(</span><span class="n">pairs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Backup the render settings of Blender objects.</span>
+
+<span class="sd">    This function iterates over a list of pairs consisting of owners and</span>
+<span class="sd">    their corresponding structure names. It retrieves the properties of each</span>
+<span class="sd">    structure and stores them in a backup list. If the structure is a</span>
+<span class="sd">    Blender object, it saves all its properties that do not start with an</span>
+<span class="sd">    underscore. For simple values, it directly appends them to the</span>
+<span class="sd">    properties list. This is useful for preserving render settings that</span>
+<span class="sd">    Blender does not allow direct access to during rendering.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pairs (list): A list of tuples where each tuple contains an owner and a structure</span>
+<span class="sd">            name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list containing the backed-up properties of the specified Blender</span>
+<span class="sd">            objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">properties</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">owner</span><span class="p">,</span> <span class="n">struct_name</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">struct_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">bpy_struct</span><span class="p">):</span>
+            <span class="c1"># structure, backup all properties</span>
+            <span class="n">obj_value</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">):</span>
+                    <span class="n">obj_value</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">properties</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj_value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># simple value</span>
+            <span class="n">properties</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_restore_render_settings">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils._restore_render_settings">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_restore_render_settings</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Restore render settings for a given owner and structure.</span>
+
+<span class="sd">    This function takes pairs of owners and structure names along with their</span>
+<span class="sd">    corresponding properties. It iterates through these pairs, retrieves the</span>
+<span class="sd">    appropriate object from the owner using the structure name, and sets the</span>
+<span class="sd">    properties on the object. If the object is an instance of</span>
+<span class="sd">    `bpy.types.bpy_struct`, it updates its attributes; otherwise, it</span>
+<span class="sd">    directly sets the value on the owner.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pairs (list): A list of tuples where each tuple contains an owner and a structure</span>
+<span class="sd">            name.</span>
+<span class="sd">        properties (list): A list of dictionaries containing property names and their corresponding</span>
+<span class="sd">            values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">struct_name</span><span class="p">),</span> <span class="n">obj_value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">struct_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">bpy</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">bpy_struct</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obj_value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="n">struct_name</span><span class="p">,</span> <span class="n">obj_value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="render_sample_image">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.render_sample_image">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_sample_image</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a sample image based on the provided object settings.</span>
+
+<span class="sd">    This function generates a Z-buffer image for a given object by either</span>
+<span class="sd">    rendering it from scratch or loading an existing image from the cache.</span>
+<span class="sd">    It handles different geometry sources and applies various settings to</span>
+<span class="sd">    ensure the image is rendered correctly. The function also manages backup</span>
+<span class="sd">    and restoration of render settings to maintain the scene&#39;s integrity</span>
+<span class="sd">    during the rendering process.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing various properties and settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray: The generated or loaded Z-buffer image as a NumPy array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">progress</span><span class="p">(</span><span class="s2">&quot;Getting Z-Buffer&quot;</span><span class="p">)</span>
+    <span class="c1"># print(o.zbuffer_image)</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">update_offset_image_tag</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">geometry_source</span> <span class="o">==</span> <span class="s2">&quot;OBJECT&quot;</span> <span class="ow">or</span> <span class="n">o</span><span class="o">.</span><span class="n">geometry_source</span> <span class="o">==</span> <span class="s2">&quot;COLLECTION&quot;</span><span class="p">:</span>
+        <span class="n">pixsize</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span>
+
+        <span class="n">sx</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">sy</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span>
+
+        <span class="n">resx</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">sx</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span>
+        <span class="n">resy</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">sy</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span>
+
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">update_z_buffer_image_tag</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">zbuffer_image</span><span class="p">)</span> <span class="o">==</span> <span class="n">resx</span>
+            <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">zbuffer_image</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">resy</span>
+        <span class="p">):</span>
+            <span class="c1"># if we call this accidentally in more functions, which currently happens...</span>
+            <span class="c1"># print(&#39;has zbuffer&#39;)</span>
+            <span class="k">return</span> <span class="n">o</span><span class="o">.</span><span class="n">zbuffer_image</span>
+        <span class="c1"># ###setup image name</span>
+        <span class="n">iname</span> <span class="o">=</span> <span class="n">get_cache_path</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_z.exr&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">update_z_buffer_image_tag</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">iname</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">resx</span> <span class="ow">or</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">resy</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Z Buffer Size Changed:&quot;</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">resx</span><span class="p">,</span> <span class="n">resy</span><span class="p">)</span>
+                    <span class="n">o</span><span class="o">.</span><span class="n">update_z_buffer_image_tag</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">update_z_buffer_image_tag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">update_z_buffer_image_tag</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">use_nodes</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">vl</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">node_tree</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">render</span>
+
+            <span class="n">SETTINGS_TO_BACKUP</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">,</span> <span class="s2">&quot;resolution_x&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">render</span><span class="p">,</span> <span class="s2">&quot;resolution_x&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">cycles</span><span class="p">,</span> <span class="s2">&quot;samples&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s2">&quot;camera&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">vl</span><span class="p">,</span> <span class="s2">&quot;samples&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">vl</span><span class="o">.</span><span class="n">cycles</span><span class="p">,</span> <span class="s2">&quot;use_denoising&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="s2">&quot;mist_settings&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&quot;resolution_x&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&quot;resolution_y&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&quot;resolution_percentage&quot;</span><span class="p">),</span>
+            <span class="p">]</span>
+            <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+                <span class="n">SETTINGS_TO_BACKUP</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ob</span><span class="p">,</span> <span class="s2">&quot;hide_render&quot;</span><span class="p">))</span>
+            <span class="n">backup_settings</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">backup_settings</span> <span class="o">=</span> <span class="n">_backup_render_settings</span><span class="p">(</span><span class="n">SETTINGS_TO_BACKUP</span><span class="p">)</span>
+                <span class="c1"># prepare nodes first</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">resolution_x</span> <span class="o">=</span> <span class="n">resx</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">resolution_y</span> <span class="o">=</span> <span class="n">resy</span>
+                <span class="c1"># use cycles for everything because</span>
+                <span class="c1"># it renders okay on github actions</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="s2">&quot;CYCLES&quot;</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">vl</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">vl</span><span class="o">.</span><span class="n">cycles</span><span class="o">.</span><span class="n">use_denoising</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="n">n</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="n">n</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="n">node_in</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;CompositorNodeRLayers&quot;</span><span class="p">)</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">view_layers</span><span class="p">[</span><span class="n">node_in</span><span class="o">.</span><span class="n">layer</span><span class="p">]</span><span class="o">.</span><span class="n">use_pass_mist</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">mist_settings</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">mist_settings</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">mist_settings</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="mf">10.0</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">mist_settings</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">mist_settings</span><span class="o">.</span><span class="n">falloff</span> <span class="o">=</span> <span class="s2">&quot;LINEAR&quot;</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">mist_settings</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">mist_settings</span><span class="o">.</span><span class="n">intensity</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">node_out</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;CompositorNodeOutputFile&quot;</span><span class="p">)</span>
+                <span class="n">node_out</span><span class="o">.</span><span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">iname</span><span class="p">)</span>
+                <span class="n">node_out</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">file_format</span> <span class="o">=</span> <span class="s2">&quot;OPEN_EXR&quot;</span>
+                <span class="n">node_out</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">color_mode</span> <span class="o">=</span> <span class="s2">&quot;RGB&quot;</span>
+                <span class="n">node_out</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">color_depth</span> <span class="o">=</span> <span class="s2">&quot;32&quot;</span>
+                <span class="n">node_out</span><span class="o">.</span><span class="n">file_slots</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">iname</span><span class="p">))</span>
+                <span class="n">n</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">node_in</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">node_in</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;Mist&quot;</span><span class="p">)],</span> <span class="n">node_out</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="c1">###################</span>
+
+                <span class="c1"># resize operation image</span>
+                <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">resx</span><span class="p">,</span> <span class="n">resy</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">double</span><span class="p">)</span>
+
+                <span class="c1"># various settings for  faster render</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">resolution_percentage</span> <span class="o">=</span> <span class="mi">100</span>
+
+                <span class="c1"># add a new camera settings</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">camera_add</span><span class="p">(</span>
+                    <span class="n">align</span><span class="o">=</span><span class="s2">&quot;WORLD&quot;</span><span class="p">,</span> <span class="n">enter_editmode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">rotation</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">camera</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">camera</span> <span class="o">=</span> <span class="n">camera</span>
+
+                <span class="n">camera</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;ORTHO&quot;</span>
+                <span class="n">camera</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">ortho_scale</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                    <span class="n">resx</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">,</span> <span class="n">resy</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span>
+                <span class="p">)</span>
+                <span class="n">camera</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">sx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">sy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">camera</span><span class="o">.</span><span class="n">rotation_euler</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">camera</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">clip_end</span> <span class="o">=</span> <span class="mf">10.0</span>
+                <span class="c1"># if not o.render_all:#removed in 0.3</span>
+
+                <span class="n">h</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="c1"># ob=bpy.data.objects[o.object_name]</span>
+                <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+                    <span class="n">ob</span><span class="o">.</span><span class="n">hide_render</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">o</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+                    <span class="n">ob</span><span class="o">.</span><span class="n">hide_render</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">render</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+                <span class="n">n</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node_out</span><span class="p">)</span>
+                <span class="n">n</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node_in</span><span class="p">)</span>
+                <span class="n">camera</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+
+                <span class="n">os</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">iname</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">%04d</span><span class="s2">.exr&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">frame_current</span><span class="p">),</span> <span class="n">iname</span><span class="p">)</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">backup_settings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">_restore_render_settings</span><span class="p">(</span><span class="n">SETTINGS_TO_BACKUP</span><span class="p">,</span> <span class="n">backup_settings</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to Backup Scene Settings&quot;</span><span class="p">)</span>
+
+            <span class="n">i</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">iname</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">render</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="s2">&quot;FABEX_RENDER&quot;</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="n">image_to_numpy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">*</span> <span class="n">a</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">a</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">zbuffer_image</span> <span class="o">=</span> <span class="n">a</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">update_z_buffer_image_tag</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">source_image_name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop</span><span class="p">:</span>
+            <span class="n">sx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop_start_x</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
+            <span class="n">ex</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop_end_x</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
+            <span class="n">sy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop_start_y</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
+            <span class="n">ey</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_crop_end_y</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sx</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">ex</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">sy</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">ey</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)</span>
+
+        <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_size_x</span> <span class="o">/</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">progress</span><span class="p">(</span><span class="s2">&quot;Pixel Size in the Image Source&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">optimisation</span><span class="o">.</span><span class="n">pixsize</span><span class="p">)</span>
+
+        <span class="n">rawimage</span> <span class="o">=</span> <span class="n">image_to_numpy</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">maxa</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">rawimage</span><span class="p">)</span>
+        <span class="n">mina</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">rawimage</span><span class="p">)</span>
+        <span class="n">neg</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_scale_z</span> <span class="o">&lt;</span> <span class="mi">0</span>
+        <span class="c1"># waterline strategy needs image border to have ok ambient.</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;WATERLINE&quot;</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">fill_value</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="n">neg</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># other operations like parallel need to reach the border</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">fill_value</span><span class="o">=</span><span class="n">neg</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="c1"># 2*o.borderwidth</span>
+        <span class="n">a</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="p">:</span> <span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="p">:</span> <span class="o">-</span><span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span><span class="p">]</span> <span class="o">=</span> <span class="n">rawimage</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">sx</span> <span class="p">:</span> <span class="n">ex</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sy</span> <span class="p">:</span> <span class="n">ey</span> <span class="o">+</span> <span class="n">o</span><span class="o">.</span><span class="n">borderwidth</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_scale_z</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># negative images place themselves under the 0 plane by inverting through scale multiplication</span>
+            <span class="c1"># first, put the image down, se we know the image minimum is on 0</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">mina</span>
+            <span class="n">a</span> <span class="o">*=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_scale_z</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># place positive images under 0 plane, this is logical</span>
+            <span class="c1"># first, put the image down, se we know the image minimum is on 0</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">mina</span>
+            <span class="n">a</span> <span class="o">*=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_scale_z</span>
+            <span class="n">a</span> <span class="o">-=</span> <span class="p">(</span><span class="n">maxa</span> <span class="o">-</span> <span class="n">mina</span><span class="p">)</span> <span class="o">*</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_scale_z</span>
+
+        <span class="n">a</span> <span class="o">+=</span> <span class="n">o</span><span class="o">.</span><span class="n">source_image_offset</span><span class="o">.</span><span class="n">z</span>  <span class="c1"># after that, image gets offset.</span>
+
+        <span class="n">o</span><span class="o">.</span><span class="n">min_z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>  <span class="c1"># TODO: I really don&#39;t know why this is here...</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;min z &quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max z &quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max image &quot;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;min image &quot;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="n">o</span><span class="o">.</span><span class="n">zbuffer_image</span> <span class="o">=</span> <span class="n">a</span>
+    <span class="c1"># progress(&#39;got z buffer also with conversion in:&#39;)</span>
+    <span class="n">progress</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="c1"># progress(a)</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">update_z_buffer_image_tag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="n">o</span><span class="o">.</span><span class="n">zbuffer_image</span></div>
+
+
+
+<span class="c1"># return numpy.array([])</span>
+
+
+<div class="viewcode-block" id="prepare_area">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.prepare_area">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">prepare_area</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare the area for rendering by processing the offset image.</span>
+
+<span class="sd">    This function handles the preparation of the area by rendering a sample</span>
+<span class="sd">    image and managing the offset image based on the provided options. It</span>
+<span class="sd">    checks if the offset image needs to be updated and loads it if</span>
+<span class="sd">    necessary. If the inverse option is set, it adjusts the samples</span>
+<span class="sd">    accordingly before calling the offsetArea function. Finally, it saves</span>
+<span class="sd">    the processed offset image.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): An object containing various properties and methods</span>
+<span class="sd">            required for preparing the area, including flags for</span>
+<span class="sd">            updating the offset image and rendering options.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># if not o.use_exact:</span>
+    <span class="n">render_sample_image</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">zbuffer_image</span>
+
+    <span class="n">iname</span> <span class="o">=</span> <span class="n">get_cache_path</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_off.exr&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">o</span><span class="o">.</span><span class="n">update_offset_image_tag</span><span class="p">:</span>
+        <span class="n">progress</span><span class="p">(</span><span class="s2">&quot;Loading Offset Image&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">offset_image</span> <span class="o">=</span> <span class="n">image_to_numpy</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">iname</span><span class="p">))</span>
+
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">o</span><span class="o">.</span><span class="n">update_offset_image_tag</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">update_offset_image_tag</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">inverse</span><span class="p">:</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="mf">0.00001</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">offset_area</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+        <span class="n">numpy_save</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">offset_image</span><span class="p">,</span> <span class="n">iname</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_cutter_array">
+<a class="viewcode-back" href="../../../autoapi/fabex/utilities/image_utils/index.html#fabex.utilities.image_utils.get_cutter_array">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cutter_array</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">pixsize</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a cutter array based on the specified operation and pixel size.</span>
+
+<span class="sd">    This function calculates a 2D array representing the cutter shape based</span>
+<span class="sd">    on the cutter type defined in the operation object. The cutter can be of</span>
+<span class="sd">    various types such as &#39;END&#39;, &#39;BALL&#39;, &#39;VCARVE&#39;, &#39;CYLCONE&#39;, &#39;BALLCONE&#39;, or</span>
+<span class="sd">    &#39;CUSTOM&#39;. The function uses geometric calculations to fill the array</span>
+<span class="sd">    with appropriate values based on the cutter&#39;s dimensions and properties.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        operation (object): An object containing properties of the cutter, including</span>
+<span class="sd">            cutter type, diameter, tip angle, and other relevant parameters.</span>
+<span class="sd">        pixsize (float): The size of each pixel in the generated cutter array.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        numpy.ndarray: A 2D array filled with values representing the cutter shape.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">cutter_type</span>
+    <span class="c1"># print(&#39;generating cutter&#39;)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">cutter_diameter</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">operation</span><span class="o">.</span><span class="n">skin</span>  <span class="c1"># /operation.pixsize</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">((</span><span class="n">r</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">pixsize</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">res</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">car</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">res</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=-</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="n">pixsize</span>
+    <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;END&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+                <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">car</span><span class="o">.</span><span class="n">itemset</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;BALL&quot;</span> <span class="ow">or</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;BALLNOSE&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+                <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">z</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">acos</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">r</span><span class="p">))</span> <span class="o">*</span> <span class="n">r</span> <span class="o">-</span> <span class="n">r</span>
+                    <span class="n">car</span><span class="o">.</span><span class="n">itemset</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">z</span><span class="p">)</span>  <span class="c1"># [a,b]=z</span>
+
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;VCARVE&quot;</span><span class="p">:</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">cutter_tip_angle</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">tan</span><span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">90</span> <span class="o">-</span> <span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">180</span><span class="p">)</span>  <span class="c1"># angle in degrees</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+                <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">*</span> <span class="n">s</span>
+                    <span class="n">car</span><span class="o">.</span><span class="n">itemset</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">z</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;CYLCONE&quot;</span><span class="p">:</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">cutter_tip_angle</span>
+        <span class="n">cyl_r</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">cylcone_diameter</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">tan</span><span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="mi">90</span> <span class="o">-</span> <span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">180</span><span class="p">)</span>  <span class="c1"># angle in degrees</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+                <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">:</span>
+                    <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">cyl_r</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span>
+                    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="n">cyl_r</span><span class="p">:</span>
+                        <span class="n">z</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">car</span><span class="o">.</span><span class="n">itemset</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">z</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;BALLCONE&quot;</span><span class="p">:</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">radians</span><span class="p">(</span><span class="n">operation</span><span class="o">.</span><span class="n">cutter_tip_angle</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">ball_r</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">ball_radius</span>
+        <span class="n">cutter_r</span> <span class="o">=</span> <span class="n">operation</span><span class="o">.</span><span class="n">cutter_diameter</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">conedepth</span> <span class="o">=</span> <span class="p">(</span><span class="n">cutter_r</span> <span class="o">-</span> <span class="n">ball_r</span><span class="p">)</span> <span class="o">/</span> <span class="n">tan</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">Ball_R</span> <span class="o">=</span> <span class="n">ball_r</span> <span class="o">/</span> <span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">D_ofset</span> <span class="o">=</span> <span class="n">ball_r</span> <span class="o">*</span> <span class="n">tan</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">tan</span><span class="p">(</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">angle</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+            <span class="n">v</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+                <span class="n">v</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span>
+                <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="n">cutter_r</span><span class="p">:</span>
+                    <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">ball_r</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span> <span class="o">-</span> <span class="n">Ball_R</span> <span class="o">+</span> <span class="n">D_ofset</span>
+                    <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">&lt;=</span> <span class="n">ball_r</span><span class="p">:</span>
+                        <span class="n">z</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">acos</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="n">Ball_R</span><span class="p">))</span> <span class="o">*</span> <span class="n">Ball_R</span> <span class="o">-</span> <span class="n">Ball_R</span>
+                    <span class="n">car</span><span class="o">.</span><span class="n">itemset</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">z</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;CUSTOM&quot;</span><span class="p">:</span>
+        <span class="n">cutob</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">operation</span><span class="o">.</span><span class="n">cutter_object_name</span><span class="p">]</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="p">((</span><span class="n">cutob</span><span class="o">.</span><span class="n">dimensions</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="n">cutob</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">r</span>  <span class="c1">#</span>
+        <span class="c1"># print(cutob.scale)</span>
+        <span class="n">vstart</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">vend</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sampling Custom Cutter&quot;</span><span class="p">)</span>
+        <span class="n">maxz</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+            <span class="n">vstart</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span> <span class="o">*</span> <span class="n">scale</span>
+            <span class="n">vend</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">vstart</span><span class="o">.</span><span class="n">x</span>
+
+            <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+                <span class="n">vstart</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="n">ps</span> <span class="o">*</span> <span class="n">scale</span>
+                <span class="n">vend</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">vstart</span><span class="o">.</span><span class="n">y</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">vend</span> <span class="o">-</span> <span class="n">vstart</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">cutob</span><span class="o">.</span><span class="n">ray_cast</span><span class="p">(</span><span class="n">vstart</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mf">1.70141e38</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">c</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">scale</span>
+                    <span class="c1"># print(c)</span>
+                    <span class="k">if</span> <span class="n">z</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">9</span><span class="p">:</span>
+                        <span class="c1"># print(z)</span>
+                        <span class="k">if</span> <span class="n">z</span> <span class="o">&gt;</span> <span class="n">maxz</span><span class="p">:</span>
+                            <span class="n">maxz</span> <span class="o">=</span> <span class="n">z</span>
+                        <span class="n">car</span><span class="o">.</span><span class="n">itemset</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">z</span><span class="p">)</span>
+        <span class="n">car</span> <span class="o">-=</span> <span class="n">maxz</span>
+    <span class="k">return</span> <span class="n">car</span></div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

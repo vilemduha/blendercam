@@ -1,0 +1,1081 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fabex.joinery &#8212; Fabex 1.0.65 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../../_static/documentation_options.js?v=38568b08"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/fabex/joinery/index';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="fabex.operators" href="../operators/index.html" />
+    <link rel="prev" title="fabex.involute_gear" href="../involute_gear/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/Fabex_logo_square.png" class="logo__image only-light" alt="Fabex 1.0.65 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/Fabex_logo_square.png" class="logo__image only-dark" alt="Fabex 1.0.65 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/pppalain/blendercam" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://riot.im/app/#/room/#blendercam:matrix.org" title="Matrix" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-comments fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Matrix</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../users.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starting.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../interface.html">User Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tools.html">Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../strategies.html">Strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examplechain.html">Example Chain Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../faq.html">FAQ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../glossary.html">Glossary</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../developers.html">Developer Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../overview.html">Code Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../style.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../testing.html">Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../workflows.html">Workflows &amp; Actions</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API Reference</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">fabex</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../bas_relief/index.html">fabex.bas_relief</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bridges/index.html">fabex.bridges</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cam_chunk/index.html">fabex.cam_chunk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../collision/index.html">fabex.collision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../constants/index.html">fabex.constants</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../engine/index.html">fabex.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../exception/index.html">fabex.exception</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gcode_import_parser/index.html">fabex.gcode_import_parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gcode_path/index.html">fabex.gcode_path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../involute_gear/index.html">fabex.involute_gear</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">fabex.joinery</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../operators/index.html">fabex.operators</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../operators/async_op/index.html">fabex.operators.async_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/bas_relief_ops/index.html">fabex.operators.bas_relief_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/bridges_op/index.html">fabex.operators.bridges_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/chain_ops/index.html">fabex.operators.chain_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/curve_create_ops/index.html">fabex.operators.curve_create_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/curve_equation_ops/index.html">fabex.operators.curve_equation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/curve_tools_ops/index.html">fabex.operators.curve_tools_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/gcode_import_op/index.html">fabex.operators.gcode_import_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/operation_ops/index.html">fabex.operators.operation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/orient_op/index.html">fabex.operators.orient_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/pack_op/index.html">fabex.operators.pack_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/path_ops/index.html">fabex.operators.path_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/position_op/index.html">fabex.operators.position_op</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/preset_ops/index.html">fabex.operators.preset_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/simulation_ops/index.html">fabex.operators.simulation_ops</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../operators/slice_op/index.html">fabex.operators.slice_op</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../pack/index.html">fabex.pack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../parametric/index.html">fabex.parametric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pattern/index.html">fabex.pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preferences/index.html">fabex.preferences</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../properties/index.html">fabex.properties</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../properties/chain_props/index.html">fabex.properties.chain_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/info_props/index.html">fabex.properties.info_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/interface_props/index.html">fabex.properties.interface_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/machine_props/index.html">fabex.properties.machine_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/material_props/index.html">fabex.properties.material_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/movement_props/index.html">fabex.properties.movement_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/operation_props/index.html">fabex.properties.operation_props</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../properties/optimisation_props/index.html">fabex.properties.optimisation_props</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../puzzle_joinery/index.html">fabex.puzzle_joinery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../simulation/index.html">fabex.simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../slice/index.html">fabex.slice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../strategy/index.html">fabex.strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../testing/index.html">fabex.testing</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../utilities/index.html">fabex.utilities</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/addon_utils/index.html">fabex.utilities.addon_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/async_utils/index.html">fabex.utilities.async_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/bounds_utils/index.html">fabex.utilities.bounds_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/chunk_utils/index.html">fabex.utilities.chunk_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/compare_utils/index.html">fabex.utilities.compare_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/dict_utils/index.html">fabex.utilities.dict_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/geom_utils/index.html">fabex.utilities.geom_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/image_utils/index.html">fabex.utilities.image_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/index_utils/index.html">fabex.utilities.index_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/loop_utils/index.html">fabex.utilities.loop_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/machine_utils/index.html">fabex.utilities.machine_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/material_utils/index.html">fabex.utilities.material_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/numba_utils/index.html">fabex.utilities.numba_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/ocl_utils/index.html">fabex.utilities.ocl_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/operation_utils/index.html">fabex.utilities.operation_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/orient_utils/index.html">fabex.utilities.orient_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/shapely_utils/index.html">fabex.utilities.shapely_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/simple_utils/index.html">fabex.utilities.simple_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/strategy_utils/index.html">fabex.utilities.strategy_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/thread_utils/index.html">fabex.utilities.thread_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utilities/version_utils/index.html">fabex.utilities.version_utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../version/index.html">fabex.version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../voronoi/index.html">fabex.voronoi</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../_sources/autoapi/fabex/joinery/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>fabex.joinery</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.finger_amount"><code class="docutils literal notranslate"><span class="pre">finger_amount()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.mortise"><code class="docutils literal notranslate"><span class="pre">mortise()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.interlock_groove"><code class="docutils literal notranslate"><span class="pre">interlock_groove()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.interlock_twist"><code class="docutils literal notranslate"><span class="pre">interlock_twist()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.twist_line"><code class="docutils literal notranslate"><span class="pre">twist_line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.twist_separator_slot"><code class="docutils literal notranslate"><span class="pre">twist_separator_slot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.interlock_twist_separator"><code class="docutils literal notranslate"><span class="pre">interlock_twist_separator()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.horizontal_finger"><code class="docutils literal notranslate"><span class="pre">horizontal_finger()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.vertical_finger"><code class="docutils literal notranslate"><span class="pre">vertical_finger()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.finger_pair"><code class="docutils literal notranslate"><span class="pre">finger_pair()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.create_base_plate"><code class="docutils literal notranslate"><span class="pre">create_base_plate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.make_flex_pocket"><code class="docutils literal notranslate"><span class="pre">make_flex_pocket()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.make_variable_flex_pocket"><code class="docutils literal notranslate"><span class="pre">make_variable_flex_pocket()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.create_flex_side"><code class="docutils literal notranslate"><span class="pre">create_flex_side()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.angle"><code class="docutils literal notranslate"><span class="pre">angle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.angle_difference"><code class="docutils literal notranslate"><span class="pre">angle_difference()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.fixed_finger"><code class="docutils literal notranslate"><span class="pre">fixed_finger()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.find_slope"><code class="docutils literal notranslate"><span class="pre">find_slope()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.slope_array"><code class="docutils literal notranslate"><span class="pre">slope_array()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.d_slope_array"><code class="docutils literal notranslate"><span class="pre">d_slope_array()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.variable_finger"><code class="docutils literal notranslate"><span class="pre">variable_finger()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.single_interlock"><code class="docutils literal notranslate"><span class="pre">single_interlock()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.distributed_interlock"><code class="docutils literal notranslate"><span class="pre">distributed_interlock()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-fabex.joinery">
+<span id="fabex-joinery"></span><h1>fabex.joinery<a class="headerlink" href="#module-fabex.joinery" title="Link to this heading">#</a></h1>
+<p>Fabex ‘joinery.py’ © 2021 Alain Pelletier</p>
+<p>Functions to create various woodworking joints - mortise, finger etc.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.finger_amount" title="fabex.joinery.finger_amount"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finger_amount</span></code></a>(space, size)</p></td>
+<td><p>Calculates the amount of fingers needed from the available space vs the size of the finger</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.mortise" title="fabex.joinery.mortise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mortise</span></code></a>(length, thickness, finger_play[, cx, cy, rotation])</p></td>
+<td><p>Generates a mortise of length, thickness and finger_play tolerance</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.interlock_groove" title="fabex.joinery.interlock_groove"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interlock_groove</span></code></a>(length, thickness, finger_play[, cx, ...])</p></td>
+<td><p>Generates an interlocking groove.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.interlock_twist" title="fabex.joinery.interlock_twist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interlock_twist</span></code></a>(length, thickness, finger_play[, cx, ...])</p></td>
+<td><p>Generates an interlocking twist.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.twist_line" title="fabex.joinery.twist_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">twist_line</span></code></a>(length, thickness, finger_play, percentage, ...)</p></td>
+<td><p>Generates a multiple interlocking twist.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.twist_separator_slot" title="fabex.joinery.twist_separator_slot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">twist_separator_slot</span></code></a>(length, thickness[, finger_play, ...])</p></td>
+<td><p>Generates a slot for interlocking twist separator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.interlock_twist_separator" title="fabex.joinery.interlock_twist_separator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interlock_twist_separator</span></code></a>(length, thickness, amount, ...)</p></td>
+<td><p>Generates a interlocking twist separator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.horizontal_finger" title="fabex.joinery.horizontal_finger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">horizontal_finger</span></code></a>(length, thickness, finger_play, amount)</p></td>
+<td><p>Generates an interlocking horizontal finger pair _wfa and _wfb.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.vertical_finger" title="fabex.joinery.vertical_finger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertical_finger</span></code></a>(length, thickness, finger_play, amount)</p></td>
+<td><p>Generates an interlocking horizontal finger pair _vfa and _vfb.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.finger_pair" title="fabex.joinery.finger_pair"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finger_pair</span></code></a>(name[, dx, dy])</p></td>
+<td><p>Creates a duplicate set of fingers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.create_base_plate" title="fabex.joinery.create_base_plate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_base_plate</span></code></a>(height, width, depth)</p></td>
+<td><p>Creates blank plates for a box.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.make_flex_pocket" title="fabex.joinery.make_flex_pocket"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_flex_pocket</span></code></a>(length, height, finger_thick, ...)</p></td>
+<td><p>creates pockets using mortise function for kerf bending</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.make_variable_flex_pocket" title="fabex.joinery.make_variable_flex_pocket"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_variable_flex_pocket</span></code></a>(height, finger_thick, ...)</p></td>
+<td><p>creates pockets pocket using mortise function for kerf bending</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.create_flex_side" title="fabex.joinery.create_flex_side"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_flex_side</span></code></a>(length, height, finger_thick[, ...])</p></td>
+<td><p>crates a flex side for mortise on curve. Assumes the base fingers were created and exist</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.angle" title="fabex.joinery.angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">angle</span></code></a>(a, b)</p></td>
+<td><p>returns angle of a vector</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.angle_difference" title="fabex.joinery.angle_difference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">angle_difference</span></code></a>(a, b, c)</p></td>
+<td><p>returns the difference between two lines with three points</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.fixed_finger" title="fabex.joinery.fixed_finger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fixed_finger</span></code></a>(loop, loop_length, finger_size, ...[, base])</p></td>
+<td><p>distributes mortises of a fixed distance.  Dynamically changes the finger tolerance with the angle differences</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.find_slope" title="fabex.joinery.find_slope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_slope</span></code></a>(p1, p2)</p></td>
+<td><p>returns slope of a vector</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.slope_array" title="fabex.joinery.slope_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slope_array</span></code></a>(loop)</p></td>
+<td><p>Returns an array of slopes from loop coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.d_slope_array" title="fabex.joinery.d_slope_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">d_slope_array</span></code></a>(loop[, resolution])</p></td>
+<td><p>Returns a double derivative array or slope of the slope</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.variable_finger" title="fabex.joinery.variable_finger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variable_finger</span></code></a>(loop, loop_length, min_finger, ...[, ...])</p></td>
+<td><p>Distributes mortises of a fixed distance. Dynamically changes the finger tolerance with the angle differences</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#fabex.joinery.single_interlock" title="fabex.joinery.single_interlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">single_interlock</span></code></a>(finger_depth, finger_thick, ...[, ...])</p></td>
+<td><p>Generates a single interlock at coodinate x,y.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fabex.joinery.distributed_interlock" title="fabex.joinery.distributed_interlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distributed_interlock</span></code></a>(loop, loop_length, finger_depth, ...)</p></td>
+<td><p>Distributes interlocking joints of a fixed amount.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.finger_amount">
+<span class="sig-name descname"><span class="pre">finger_amount</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#finger_amount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.finger_amount" title="Link to this definition">#</a></dt>
+<dd><p>Calculates the amount of fingers needed from the available space vs the size of the finger</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>space</strong> (<em>float</em>) – available distance to cover</p></li>
+<li><p><strong>size</strong> (<em>float</em>) – size of the finger</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.mortise">
+<span class="sig-name descname"><span class="pre">mortise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_play</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#mortise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.mortise" title="Link to this definition">#</a></dt>
+<dd><p>Generates a mortise of length, thickness and finger_play tolerance
+cx and cy are the center position and rotation is the angle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – length of the mortise</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – thickness of material</p></li>
+<li><p><strong>finger_play</strong> (<em>float</em>) – tolerance for good fit</p></li>
+<li><p><strong>cx</strong> (<em>float</em>) – coordinate for x center of the finger</p></li>
+<li><p><strong>cy</strong> (<em>float</em>) – coordinate for y center of the finger</p></li>
+<li><p><strong>rotation</strong> (<em>float</em>) – angle of rotation</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.interlock_groove">
+<span class="sig-name descname"><span class="pre">interlock_groove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_play</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#interlock_groove"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.interlock_groove" title="Link to this definition">#</a></dt>
+<dd><p>Generates an interlocking groove.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – Length of groove</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – thickness of groove</p></li>
+<li><p><strong>finger_play</strong> (<em>float</em>) – tolerance for proper fit</p></li>
+<li><p><strong>cx</strong> (<em>float</em>) – center offset x</p></li>
+<li><p><strong>cy</strong> (<em>float</em>) – center offset y</p></li>
+<li><p><strong>rotation</strong> (<em>float</em>) – angle of rotation</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.interlock_twist">
+<span class="sig-name descname"><span class="pre">interlock_twist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_play</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#interlock_twist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.interlock_twist" title="Link to this definition">#</a></dt>
+<dd><p>Generates an interlocking twist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – Length of groove</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – thickness of groove</p></li>
+<li><p><strong>finger_play</strong> (<em>float</em>) – tolerance for proper fit</p></li>
+<li><p><strong>cx</strong> (<em>float</em>) – center offset x</p></li>
+<li><p><strong>cy</strong> (<em>float</em>) – center offset y</p></li>
+<li><p><strong>rotation</strong> (<em>float</em>) – angle of rotation</p></li>
+<li><p><strong>percentage</strong> (<em>float</em>) – percentage amount the twist will take (between 0 and 1)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.twist_line">
+<span class="sig-name descname"><span class="pre">twist_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_play</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#twist_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.twist_line" title="Link to this definition">#</a></dt>
+<dd><p>Generates a multiple interlocking twist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – Length of groove</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – thickness of groove</p></li>
+<li><p><strong>finger_play</strong> (<em>float</em>) – tolerance for proper fit</p></li>
+<li><p><strong>percentage</strong> (<em>float</em>) – percentage amount the twist will take (between 0 and 1)</p></li>
+<li><p><strong>amount</strong> (<em>int</em>) – amount of twists generated</p></li>
+<li><p><strong>distance</strong> (<em>float</em>) – distance between twists</p></li>
+<li><p><strong>center</strong> (<em>bool</em>) – center or not from origin</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.twist_separator_slot">
+<span class="sig-name descname"><span class="pre">twist_separator_slot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_play</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#twist_separator_slot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.twist_separator_slot" title="Link to this definition">#</a></dt>
+<dd><p>Generates a slot for interlocking twist separator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – Length of slot</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – thickness of slot</p></li>
+<li><p><strong>finger_play</strong> (<em>float</em>) – tolerance for proper fit</p></li>
+<li><p><strong>percentage</strong> (<em>float</em>) – percentage amount the twist will take (between 0 and 1)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.interlock_twist_separator">
+<span class="sig-name descname"><span class="pre">interlock_twist_separator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_play</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rounded'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rounded'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#interlock_twist_separator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.interlock_twist_separator" title="Link to this definition">#</a></dt>
+<dd><p>Generates a interlocking twist separator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – Length of separator</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – thickness of separator</p></li>
+<li><p><strong>amount</strong> (<em>int</em>) – quantity of separation grooves</p></li>
+<li><p><strong>spacing</strong> (<em>float</em>) – distance between slots</p></li>
+<li><p><strong>edge_distance</strong> (<em>float</em>) – distance of the first slots close to the edge</p></li>
+<li><p><strong>finger_play</strong> (<em>float</em>) – tolerance for proper fit</p></li>
+<li><p><strong>percentage</strong> (<em>float</em>) – percentage amount the twist will take (between 0 and 1)</p></li>
+<li><p><strong>start</strong> (<em>string</em>) – type of start wanted (rounded, flat or other) not implemented</p></li>
+<li><p><strong>start</strong> – type of end wanted (rounded, flat or other) not implemented</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.horizontal_finger">
+<span class="sig-name descname"><span class="pre">horizontal_finger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_play</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#horizontal_finger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.horizontal_finger" title="Link to this definition">#</a></dt>
+<dd><p>Generates an interlocking horizontal finger pair _wfa and _wfb.</p>
+<p>_wfa is centered at 0,0
+_wfb is _wfa offset by one length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – Length of mortise</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – thickness of material</p></li>
+<li><p><strong>amount</strong> (<em>int</em>) – quantity of fingers</p></li>
+<li><p><strong>finger_play</strong> (<em>float</em>) – tolerance for proper fit</p></li>
+<li><p><strong>center</strong> (<em>bool</em>) – centered of not</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.vertical_finger">
+<span class="sig-name descname"><span class="pre">vertical_finger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_play</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#vertical_finger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.vertical_finger" title="Link to this definition">#</a></dt>
+<dd><p>Generates an interlocking horizontal finger pair _vfa and _vfb.</p>
+<p>_vfa is starts at 0,0
+_vfb is _vfa offset by one length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – Length of mortise</p></li>
+<li><p><strong>thickness</strong> (<em>float</em>) – thickness of material</p></li>
+<li><p><strong>amount</strong> (<em>int</em>) – quantity of fingers</p></li>
+<li><p><strong>finger_play</strong> (<em>float</em>) – tolerance for proper fit</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.finger_pair">
+<span class="sig-name descname"><span class="pre">finger_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#finger_pair"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.finger_pair" title="Link to this definition">#</a></dt>
+<dd><p>Creates a duplicate set of fingers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – name of original finger</p></li>
+<li><p><strong>dx</strong> (<em>float</em>) – x offset</p></li>
+<li><p><strong>dy</strong> (<em>float</em>) – y offset</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.create_base_plate">
+<span class="sig-name descname"><span class="pre">create_base_plate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#create_base_plate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.create_base_plate" title="Link to this definition">#</a></dt>
+<dd><p>Creates blank plates for a box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> (<em>float</em>) – height size for box</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – width size for box</p></li>
+<li><p><strong>depth</strong> (<em>float</em>) – depth size for box</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.make_flex_pocket">
+<span class="sig-name descname"><span class="pre">make_flex_pocket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_thick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pocket_width</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#make_flex_pocket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.make_flex_pocket" title="Link to this definition">#</a></dt>
+<dd><p>creates pockets using mortise function for kerf bending</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – Length of pocket</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – height of pocket</p></li>
+<li><p><strong>finger_thick</strong> (<em>float</em>) – thickness of finger</p></li>
+<li><p><strong>finger_width</strong> (<em>float</em>) – width of finger</p></li>
+<li><p><strong>pocket_width</strong> (<em>float</em>) – width of pocket</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.make_variable_flex_pocket">
+<span class="sig-name descname"><span class="pre">make_variable_flex_pocket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_thick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pocket_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#make_variable_flex_pocket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.make_variable_flex_pocket" title="Link to this definition">#</a></dt>
+<dd><p>creates pockets pocket using mortise function for kerf bending</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>height</strong> (<em>float</em>) – height of the side</p></li>
+<li><p><strong>finger_thick</strong> (<em>float</em>) – thickness of the finger</p></li>
+<li><p><strong>pocket_width</strong> (<em>float</em>) – width of pocket</p></li>
+<li><p><strong>locations</strong> (<em>tuple</em>) – coordinates for pocket</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.create_flex_side">
+<span class="sig-name descname"><span class="pre">create_flex_side</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_thick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_bottom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#create_flex_side"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.create_flex_side" title="Link to this definition">#</a></dt>
+<dd><p>crates a flex side for mortise on curve. Assumes the base fingers were created and exist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – length of curve</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – height of side</p></li>
+<li><p><strong>finger_thick</strong> (<em>float</em>) – finger thickness or thickness of material</p></li>
+<li><p><strong>top_bottom</strong> (<em>bool</em>) – fingers on top and bottom if true, just on bottom if false</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.angle">
+<span class="sig-name descname"><span class="pre">angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.angle" title="Link to this definition">#</a></dt>
+<dd><p>returns angle of a vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>tuple</em>) – point a x,y coordinates</p></li>
+<li><p><strong>b</strong> (<em>tuple</em>) – point b x,y coordinates</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.angle_difference">
+<span class="sig-name descname"><span class="pre">angle_difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#angle_difference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.angle_difference" title="Link to this definition">#</a></dt>
+<dd><p>returns the difference between two lines with three points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>tuple</em>) – point a x,y coordinates</p></li>
+<li><p><strong>b</strong> (<em>tuple</em>) – point b x,y coordinates</p></li>
+<li><p><strong>c</strong> (<em>tuple</em>) – point c x,y coordinates</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.fixed_finger">
+<span class="sig-name descname"><span class="pre">fixed_finger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_thick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_tolerance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#fixed_finger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.fixed_finger" title="Link to this definition">#</a></dt>
+<dd><p>distributes mortises of a fixed distance.  Dynamically changes the finger tolerance with the angle differences</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loop</strong> (<em>list</em><em> of </em><em>tuples</em>) – takes in a shapely shape</p></li>
+<li><p><strong>loop_length</strong> (<em>float</em>) – length of loop</p></li>
+<li><p><strong>finger_size</strong> (<em>float</em>) – size of the mortise</p></li>
+<li><p><strong>finger_thick</strong> (<em>float</em>) – thickness of the material</p></li>
+<li><p><strong>finger_tolerance</strong> (<em>float</em>) – minimum finger tolerance</p></li>
+<li><p><strong>base</strong> (<em>bool</em>) – if base exists, it will join with it</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.find_slope">
+<span class="sig-name descname"><span class="pre">find_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#find_slope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.find_slope" title="Link to this definition">#</a></dt>
+<dd><p>returns slope of a vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>tuple</em>) – point 1 x,y coordinates</p></li>
+<li><p><strong>p2</strong> (<em>tuple</em>) – point 2 x,y coordinates</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.slope_array">
+<span class="sig-name descname"><span class="pre">slope_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#slope_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.slope_array" title="Link to this definition">#</a></dt>
+<dd><p>Returns an array of slopes from loop coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>loop</strong> (<em>list</em><em> of </em><em>tuples</em>) – list of coordinates for a curve</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.d_slope_array">
+<span class="sig-name descname"><span class="pre">d_slope_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#d_slope_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.d_slope_array" title="Link to this definition">#</a></dt>
+<dd><p>Returns a double derivative array or slope of the slope</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loop</strong> (<em>list</em><em> of </em><em>tuples</em>) – list of coordinates for a curve</p></li>
+<li><p><strong>resolution</strong> (<em>float</em>) – granular resolution of the array</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.variable_finger">
+<span class="sig-name descname"><span class="pre">variable_finger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_finger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_thick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_tolerance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">double_adaptive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#variable_finger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.variable_finger" title="Link to this definition">#</a></dt>
+<dd><p>Distributes mortises of a fixed distance. Dynamically changes the finger tolerance with the angle differences</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loop</strong> (<em>list</em><em> of </em><em>tuples</em>) – takes in a shapely shape</p></li>
+<li><p><strong>loop_length</strong> (<em>float</em>) – length of loop</p></li>
+<li><p><strong>finger_size</strong> (<em>float</em>) – size of the mortise</p></li>
+<li><p><strong>finger_thick</strong> (<em>float</em>) – thickness of the material</p></li>
+<li><p><strong>min_finger</strong> (<em>float</em>) – minimum finger size</p></li>
+<li><p><strong>finger_tolerance</strong> (<em>float</em>) – minimum finger tolerance</p></li>
+<li><p><strong>adaptive</strong> (<em>float</em>) – angle threshold to reduce finger size</p></li>
+<li><p><strong>base</strong> (<em>bool</em>) – join with base if true</p></li>
+<li><p><strong>double_adaptive</strong> (<em>bool</em>) – uses double adaptive algorithm if true</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.single_interlock">
+<span class="sig-name descname"><span class="pre">single_interlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">finger_depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_thick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_tolerance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groove_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twist_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#single_interlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.single_interlock" title="Link to this definition">#</a></dt>
+<dd><p>Generates a single interlock at coodinate x,y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>finger_depth</strong> (<em>float</em>) – depth of finger</p></li>
+<li><p><strong>finger_thick</strong> (<em>float</em>) – thickness of finger</p></li>
+<li><p><strong>finger_tolerance</strong> (<em>float</em>) – tolerance for proper fit</p></li>
+<li><p><strong>x</strong> (<em>float</em>) – offset x</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – offset y</p></li>
+<li><p><strong>groove_angle</strong> (<em>float</em>) – angle of rotation</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – GROOVE, TWIST, PUZZLE are the valid choices</p></li>
+<li><p><strong>twist_percentage</strong> – percentage of thickness for twist (not used in puzzle or groove)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fabex.joinery.distributed_interlock">
+<span class="sig-name descname"><span class="pre">distributed_interlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_thick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_tolerance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_amount</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tangent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">closed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GROOVE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twist_percentage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/fabex/joinery.html#distributed_interlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fabex.joinery.distributed_interlock" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Distributes interlocking joints of a fixed amount.</dt><dd><p>Dynamically changes the finger tolerance with the angle differences</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loop</strong> (<em>list</em><em> of </em><em>tuples</em>) – coordinates curve</p></li>
+<li><p><strong>loop_length</strong> (<em>float</em>) – length of the curve</p></li>
+<li><p><strong>finger_depth</strong> (<em>float</em>) – depth of the mortise</p></li>
+<li><p><strong>finger_thick</strong> (<em>float</em>)</p></li>
+<li><p><strong>finger_tolerance</strong> (<em>float</em>) – minimum finger tolerance</p></li>
+<li><p><strong>finger_amount</strong> (<em>int</em>) – quantity of fingers</p></li>
+<li><p><strong>tangent</strong> (<em>int</em>)</p></li>
+<li><p><strong>fixed_angle</strong> (<em>float</em>) – 0 will be variable, desired angle for the finger</p></li>
+<li><p><strong>closed</strong> (<em>bool</em>) – False:open curve  -  True:closed curved</p></li>
+<li><p><strong>stem</strong> (<em>twist_percentage = portion</em><em> of </em><em>twist finger which is the</em>)</p></li>
+<li><p><strong>type</strong> (<em>str</em>) – GROOVE, TWIST, PUZZLE are the valid choices</p></li>
+<li><p><strong>start</strong> (<em>float</em>) – start distance from first point</p></li>
+<li><p><strong>end</strong> (<em>float</em>) – end distance from last point</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../involute_gear/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fabex.involute_gear</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../operators/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fabex.operators</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.finger_amount"><code class="docutils literal notranslate"><span class="pre">finger_amount()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.mortise"><code class="docutils literal notranslate"><span class="pre">mortise()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.interlock_groove"><code class="docutils literal notranslate"><span class="pre">interlock_groove()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.interlock_twist"><code class="docutils literal notranslate"><span class="pre">interlock_twist()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.twist_line"><code class="docutils literal notranslate"><span class="pre">twist_line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.twist_separator_slot"><code class="docutils literal notranslate"><span class="pre">twist_separator_slot()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.interlock_twist_separator"><code class="docutils literal notranslate"><span class="pre">interlock_twist_separator()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.horizontal_finger"><code class="docutils literal notranslate"><span class="pre">horizontal_finger()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.vertical_finger"><code class="docutils literal notranslate"><span class="pre">vertical_finger()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.finger_pair"><code class="docutils literal notranslate"><span class="pre">finger_pair()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.create_base_plate"><code class="docutils literal notranslate"><span class="pre">create_base_plate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.make_flex_pocket"><code class="docutils literal notranslate"><span class="pre">make_flex_pocket()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.make_variable_flex_pocket"><code class="docutils literal notranslate"><span class="pre">make_variable_flex_pocket()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.create_flex_side"><code class="docutils literal notranslate"><span class="pre">create_flex_side()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.angle"><code class="docutils literal notranslate"><span class="pre">angle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.angle_difference"><code class="docutils literal notranslate"><span class="pre">angle_difference()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.fixed_finger"><code class="docutils literal notranslate"><span class="pre">fixed_finger()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.find_slope"><code class="docutils literal notranslate"><span class="pre">find_slope()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.slope_array"><code class="docutils literal notranslate"><span class="pre">slope_array()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.d_slope_array"><code class="docutils literal notranslate"><span class="pre">d_slope_array()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.variable_finger"><code class="docutils literal notranslate"><span class="pre">variable_finger()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.single_interlock"><code class="docutils literal notranslate"><span class="pre">single_interlock()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fabex.joinery.distributed_interlock"><code class="docutils literal notranslate"><span class="pre">distributed_interlock()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Vilem Novak, Alain Pelletier & Contributors
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
