@@ -93,7 +93,7 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
 
             # Operation Time Estimate
             duration = self.op.info.duration
-            seconds = int(duration * 60)
+            seconds = int(duration * 60 + bpy.context.scene.cam_machine.spindle_start_time)
             if not seconds > 0:
                 return
 
@@ -135,9 +135,8 @@ class CAM_INFO_Panel(CAMParentPanel, Panel):
 
                 if float(bpy.context.scene.cam_machine.hourly_rate) < 0.01:
                     return
-
                 cost_per_second = bpy.context.scene.cam_machine.hourly_rate / 3600
-                total_cost = self.op.info.duration * 6000 * cost_per_second
+                total_cost = seconds * cost_per_second
                 op_cost = f"${total_cost:.2f}"  # (${cost_per_second:.2f}/s)"
                 title_col.label(text="Cost:")
                 value_col.label(text=op_cost, icon="TAG")
