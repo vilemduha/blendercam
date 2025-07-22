@@ -586,6 +586,9 @@ def export_gcode_path(filename, vertslist, operations):
     c.file_close()
     print(time.time() - t)
 
+    # print(basefilename)
+    # bpy.ops.text.open(filepath=basefilename)
+
 
 async def get_path(context, operation):
     """Calculate the path for a given operation in a specified context.

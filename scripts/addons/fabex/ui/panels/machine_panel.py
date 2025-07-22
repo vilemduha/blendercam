@@ -51,14 +51,14 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
         col.scale_y = 1.2
         # Post Processor
         col.prop(self.machine, "post_processor")
-        # System
+        # Units
         row = col.row(align=True)
-        row.prop(context.scene.unit_settings, "system")
-        row.prop(context.scene.unit_settings, "length_unit", text="")
+        row.prop(context.scene.cam_machine, "unit_system")
+        # row.prop(context.scene.unit_settings, "length_unit", text="")
 
-        # Collet Size
-        if self.level >= 2:
-            box.prop(self.machine, "collet_size")
+        # # Collet Size
+        # if self.level >= 2:
+        #     box.prop(self.machine, "collet_size")
 
         # Working Area
         box.prop(self.machine, "working_area")
@@ -109,9 +109,14 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
                     subcol = col.column(align=True)
                     subcol.enabled = self.machine.spindle_slow_start_enable
                     subcol.prop(self.machine, "spindle_slow_start_steps", text="Steps")
-                    subcol.prop(self.machine, "spindle_slow_start_skip_threshold", text="Skip Small Increase (RPM)")
-                    subcol.prop(self.machine, "spindle_slow_start_total_time", text="Total Time (sec)")
-
+                    subcol.prop(
+                        self.machine,
+                        "spindle_slow_start_skip_threshold",
+                        text="Skip Small Increase (RPM)",
+                    )
+                    subcol.prop(
+                        self.machine, "spindle_slow_start_total_time", text="Total Time (sec)"
+                    )
 
         # Gcode Options
         if self.level >= 1:

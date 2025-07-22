@@ -14,7 +14,12 @@ from bpy.types import (
     AddonPreferences,
 )
 
-from .utilities.version_utils import opencamlib_version, shapely_version
+from .utilities.version_utils import (
+    opencamlib_version,
+    shapely_version,
+    get_numba_version,
+    get_llvmlite_version,
+)
 
 
 class CamAddonPreferences(AddonPreferences):
@@ -252,6 +257,33 @@ class CamAddonPreferences(AddonPreferences):
         default="",
     )
 
+    default_simulation_material: EnumProperty(
+        name="Simulation Shader",
+        items=[
+            (
+                "GLASS",
+                "Glass",
+                "Glass or Clear Acrylic-type Material",
+            ),
+            (
+                "METAL",
+                "Metal",
+                "Metallic Material",
+            ),
+            (
+                "PLASTIC",
+                "Plastic",
+                "Plastic-type Material",
+            ),
+            (
+                "WOOD",
+                "Wood",
+                "Wood Grain-type Material",
+            ),
+        ],
+        default="WOOD",
+    )
+
     show_popups: BoolProperty(
         name="Show Warning Popups",
         description="Shows a Popup window when there is a warning",
@@ -262,6 +294,11 @@ class CamAddonPreferences(AddonPreferences):
         layout = self.layout
         layout.use_property_split = True
         layout.use_property_decorate = False
+
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text="Appearance", icon="SHADING_TEXTURE")
+        col.prop(self, "default_simulation_material")
 
         box = layout.box()
         col = box.column(align=True)
@@ -289,3 +326,15 @@ class CamAddonPreferences(AddonPreferences):
             col.label(text="Shapely is not Installed")
         else:
             col.label(text=f"Shapely v{shape_version}")
+        # numba Version
+        numba_version = get_numba_version()
+        if numba_version is None:
+            col.label(text="Numba is not Installed")
+        else:
+            col.label(text=f"Numba v{ocl_version}")
+        # llvmlite Version
+        llvmlite_version = get_llvmlite_version()
+        if llvmlite_version is None:
+            col.label(text="LLVMLite is not Installed")
+        else:
+            col.label(text=f"LLVMLite v{ocl_version}")

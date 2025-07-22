@@ -291,6 +291,71 @@ class CalculatePath(Operator, AsyncOperatorMixin):
 
         (retval, success) = await _calc_path(self, context)
         print(f"CALCULATED PATH (success={success},retval={retval})")
+
+        # Import the Gcode file to Blender's Text Editor for inspection
+        active_op = context.scene.cam_active_operation
+        operation = context.scene.cam_operations[active_op]
+
+        m = context.scene.cam_machine
+
+        extension = ".tap"
+        if m.post_processor == "ISO":
+            from ..post_processors import iso as postprocessor
+        if m.post_processor == "MACH3":
+            from ..post_processors import mach3 as postprocessor
+        elif m.post_processor == "EMC":
+            extension = ".ngc"
+            from ..post_processors import emc2b as postprocessor
+        elif m.post_processor == "FADAL":
+            extension = ".tap"
+            from ..post_processors import fadal as postprocessor
+        elif m.post_processor == "GRBL":
+            extension = ".gcode"
+            from ..post_processors import grbl as postprocessor
+        elif m.post_processor == "HM50":
+            from ..post_processors import hm50 as postprocessor
+        elif m.post_processor == "HEIDENHAIN":
+            extension = ".H"
+            from ..post_processors import heiden as postprocessor
+        elif m.post_processor == "HEIDENHAIN530":
+            extension = ".H"
+            from ..post_processors import heiden530 as postprocessor
+        elif m.post_processor == "TNC151":
+            from ..post_processors import tnc151 as postprocessor
+        elif m.post_processor == "SIEGKX1":
+            from ..post_processors import siegkx1 as postprocessor
+        elif m.post_processor == "CENTROID":
+            from ..post_processors import centroid1 as postprocessor
+        elif m.post_processor == "ANILAM":
+            from ..post_processors import anilam_crusader_m as postprocessor
+        elif m.post_processor == "GRAVOS":
+            extension = ".nc"
+            from ..post_processors import gravos as postprocessor
+        elif m.post_processor == "WIN-PC":
+            extension = ".din"
+            from ..post_processors import winpc as postprocessor
+        elif m.post_processor == "SHOPBOT MTC":
+            extension = ".sbp"
+            from ..post_processors import shopbot_mtc as postprocessor
+        elif m.post_processor == "LYNX_OTTER_O":
+            extension = ".nc"
+            from ..post_processors import lynx_otter_o as postprocessor
+
+        basefilename = (
+            bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))]
+            + operation.filename
+            + extension
+        )
+
+        print(basefilename)
+        bpy.ops.text.open(filepath=basefilename)
+
+        areas = context.screen.areas
+        text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
+
+        with context.temp_override(space=text_editor):
+            text_editor.text = bpy.data.texts["Op_Cube_1.tap"]
+
         return retval
 
 
@@ -525,4 +590,15 @@ class PathExport(Operator):
             [bpy.data.objects["cam_path_{}".format(operation.name)].data],
             [operation],
         )
+
+        # extension = ".tap"
+        # basefilename = (
+        #     bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))]
+        #     + operation.filename
+        #     + extension
+        # )
+
+        # print(basefilename)
+        # bpy.ops.text.open(filepath=basefilename)
+
         return {"FINISHED"}

@@ -87,3 +87,17 @@ def update_machine(self, context):
     print("Update Machine")
     if not _IS_LOADING_DEFAULTS:
         add_machine_area_object()
+
+
+def update_unit_system(self, context):
+    # unit_system = context.scene.unit_settings.system
+    # unit_type = context.scene.unit_settings.length_unit
+
+    machine_unit = context.scene.cam_machine.unit_system
+
+    if machine_unit == "INCHES":
+        context.scene.unit_settings.system = "IMPERIAL"
+        context.scene.unit_settings.length_unit = "INCHES"
+    if machine_unit == "MILLIMETERS":
+        context.scene.unit_settings.system = "METRIC"
+        context.scene.unit_settings.length_unit = "MILLIMETERS"

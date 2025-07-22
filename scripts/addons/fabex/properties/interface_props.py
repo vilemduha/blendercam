@@ -279,10 +279,34 @@ class CAM_INTERFACE_Properties(PropertyGroup):
         name="Interface",
         description="Choose visible options",
         items=[
-            ("0", "Basic", "Only show essential options", "", 0),
-            ("1", "Advanced", "Show advanced options", "", 1),
-            ("2", "Complete", "Show all options", "", 2),
-            ("3", "Experimental", "Show experimental options", "EXPERIMENTAL", 3),
+            (
+                "0",
+                "Basic",
+                "Only show essential options",
+                "",
+                0,
+            ),
+            (
+                "1",
+                "Advanced",
+                "Show advanced options",
+                "",
+                1,
+            ),
+            (
+                "2",
+                "Complete",
+                "Show all options",
+                "",
+                2,
+            ),
+            (
+                "3",
+                "Experimental",
+                "Show experimental options",
+                "EXPERIMENTAL",
+                3,
+            ),
         ],
         default="0",
         update=update_interface,
@@ -292,11 +316,31 @@ class CAM_INTERFACE_Properties(PropertyGroup):
         name="Shading",
         description="Choose viewport shading preset",
         items=[
-            ("DEFAULT", "Default", "Standard viewport shading"),
-            ("DELUXE", "Deluxe", "Cavity, Curvature, Depth of Field, Shadows & Object Colors"),
-            ("CLEAN_DEFAULT", "Clean Default", "Standard viewport shading with no overlays"),
-            ("CLEAN_DELUXE", "Clean Deluxe", "Deluxe shading with no overlays"),
-            ("PREVIEW", "Preview", "HDRI Lighting Preview"),
+            (
+                "DEFAULT",
+                "Default",
+                "Standard viewport shading",
+            ),
+            (
+                "DELUXE",
+                "Deluxe",
+                "Cavity, Curvature, Depth of Field, Shadows & Object Colors",
+            ),
+            (
+                "CLEAN_DEFAULT",
+                "Clean Default",
+                "Standard viewport shading with no overlays",
+            ),
+            (
+                "CLEAN_DELUXE",
+                "Clean Deluxe",
+                "Deluxe shading with no overlays",
+            ),
+            (
+                "PREVIEW",
+                "Preview",
+                "HDRI Lighting Preview",
+            ),
         ],
         default="DEFAULT",
         update=update_shading,
@@ -405,7 +449,7 @@ def draw_interface(self, context):
     layout.use_property_decorate = False
 
     if context.engine == "FABEX_RENDER":
-        col = layout.column()
+        col = layout.column(align=True)
         col.prop(context.scene.interface, "level")
         col.prop(context.scene.interface, "layout")
         col.prop(context.scene.interface, "shading")

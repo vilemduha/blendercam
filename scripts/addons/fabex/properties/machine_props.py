@@ -14,12 +14,28 @@ from bpy.props import (
 from bpy.types import PropertyGroup
 
 from ..constants import PRECISION
-from ..utilities.machine_utils import update_machine
+from ..utilities.machine_utils import update_machine, update_unit_system
 
 
 class CAM_MACHINE_Properties(PropertyGroup):
     """stores all data for machines"""
 
+    unit_system: EnumProperty(
+        name="Units",
+        items=(
+            (
+                "INCHES",
+                "Inches (in)",
+                "Dimensions use Inches (Imperial)",
+            ),
+            (
+                "MILLIMETERS",
+                "Millimeters (mm)",
+                "Dimensions use Millimeters (Metric)",
+            ),
+        ),
+        update=update_unit_system,
+    )
     # name = StringProperty(name="Machine Name", default="Machine")
     post_processor: EnumProperty(
         name="Post Processor",

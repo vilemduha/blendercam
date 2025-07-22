@@ -42,11 +42,13 @@ class CAM_MATERIAL_Panel(CAMParentPanel, Panel):
                 col = box.column(align=True)
                 col.label(text="Size")
                 row = col.row()
-                row.use_property_split = False
-                row.prop(self.op.material, "estimate_from_model", text="Size from Model")
-                if self.op.material.estimate_from_model:
+                row.prop(self.op.material, "material_source", text="Source")
+                if self.op.material.material_source == "MODEL":
                     col.prop(self.op.material, "radius_around_model", text="Additional Radius")
-                else:
+                if self.op.material.material_source == "OBJECT":
+                    col.prop(self.op.material, "alt_object")
+                    col.prop(self.op.material, "radius_around_model", text="Additional Radius")
+                if self.op.material.material_source == "DIMENSIONS":
                     col.prop(self.op.material, "origin")
                     col.prop(self.op.material, "size")
 

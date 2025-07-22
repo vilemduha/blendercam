@@ -9,15 +9,40 @@ from bpy.props import (
     EnumProperty,
     FloatProperty,
     FloatVectorProperty,
+    PointerProperty,
 )
 from bpy.types import (
     PropertyGroup,
 )
-from ..utilities.material_utils import update_material
+from ..utilities.material_utils import update_material, update_material_source
 from ..constants import PRECISION
 
 
 class CAM_MATERIAL_Properties(PropertyGroup):
+    material_source: EnumProperty(
+        name="Material Source",
+        description="Data source for Stock Material Object - Estimated from the Model, Generated from Dimensions or Picked from an Object in the Scene",
+        default="MODEL",
+        items=(
+            (
+                "MODEL",
+                "Operation Model",
+                "Estimate the dimensions of the stock material using the Model",
+            ),
+            (
+                "OBJECT",
+                "Alternate Object",
+                "Use Object found in Scene",
+            ),
+            (
+                "DIMENSIONS",
+                "Enter Dimensions",
+                "Manually enter the dimensions and origin point of the stock material",
+            ),
+        ),
+        update=update_material_source,
+    )
+
     estimate_from_model: BoolProperty(
         name="Estimate Cut Area from Model",
         description="Estimate cut area based on model geometry",
@@ -25,9 +50,14 @@ class CAM_MATERIAL_Properties(PropertyGroup):
         update=update_material,
     )
 
+    alt_object: PointerProperty(
+        name="Alternate Object",
+        type=bpy.types.Object,
+    )
+
     radius_around_model: FloatProperty(
         name="Radius Around Model",
-        description="Increase cut area around the model on X and " "Y by this amount",
+        description="Increase cut area around the model on X and Y by this amount",
         default=0.0,
         unit="LENGTH",
         precision=PRECISION,

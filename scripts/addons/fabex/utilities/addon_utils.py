@@ -124,6 +124,7 @@ def on_blender_startup(context):
     addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
 
     addon_dependencies()
+    add_asset_library()
     load_defaults(addon_prefs)
     copy_presets(addon_prefs)
 
@@ -134,6 +135,7 @@ def on_engine_change(*args):
             "bl_ext.user_default.fabex"
         ].preferences.default_layout
         print("Fabex!")
+        bpy.context.scene.cam_machine.unit_system = "INCHES"
 
 
 def fix_units():
@@ -172,3 +174,13 @@ def keymap_unregister():
     for key in active_kc.keymaps["Object Mode"].keymap_items:
         if key.idname == "wm.call_menu" and key.properties.name == "VIEW3D_MT_PIE_CAM":
             active_kc.keymaps["Object Mode"].keymap_items.remove(key)
+
+
+def add_asset_library():
+    libraries = bpy.context.preferences.filepaths.asset_libraries
+    if "Fabex Assets" not in libraries:
+        library_path = str(Path(__file__).parent.parent / "assets")
+        bpy.ops.preferences.asset_library_add(directory=library_path)
+        bpy.context.preferences.filepaths.asset_libraries["assets"].name = "Fabex Assets"
+    else:
+        pass

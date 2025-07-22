@@ -3,6 +3,7 @@ Functions to generate a mesh simulation from CAM Chain / Operation data.
 """
 
 import math
+import os
 import time
 
 import numpy as np
@@ -42,7 +43,10 @@ def create_simulation_object(name, operations, i):
         ob = bpy.data.objects[oname]
     else:
         bpy.ops.mesh.primitive_plane_add(
-            align="WORLD", enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0)
+            align="WORLD",
+            enter_editmode=False,
+            location=(0, 0, 0),
+            rotation=(0, 0, 0),
         )
         ob = bpy.context.active_object
         ob.name = oname
@@ -89,6 +93,33 @@ def create_simulation_object(name, operations, i):
                 disp.texture = t
     ob.hide_render = True
     bpy.ops.object.shade_smooth()
+
+    # Assign Simulation Material
+    library_name = "Fabex Assets"
+    filename = "Fabex_Assets.blend"
+    addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
+
+    material_name = str(addon_prefs.default_simulation_material).title()
+
+    filepaths = bpy.context.preferences.filepaths
+    folder = filepaths.asset_libraries[library_name].path
+
+    library_path = os.path.join(folder, filename)
+
+    with bpy.data.libraries.load(
+        library_path,
+        assets_only=True,
+        link=False,
+    ) as (
+        asset_library,
+        current_file,
+    ):
+        for material in asset_library.materials:
+            if material == material_name:
+                current_file.materials.append(material)
+
+    ob.data.materials.append(bpy.data.materials[material_name])
+    ob.active_material_index = len(ob.material_slots) - 1
 
 
 async def do_simulation(name, operations):

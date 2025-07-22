@@ -185,13 +185,12 @@ def get_bounds(o):
     """
 
     # print('kolikrat sem rpijde')
-    if (
-        o.geometry_source == "OBJECT"
-        or o.geometry_source == "COLLECTION"
-        or o.geometry_source == "CURVE"
-    ):
+    if o.geometry_source in ["OBJECT", "COLLECTION", "CURVE"]:
         print("Valid Geometry")
-        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(o.objects, o.use_modifiers)
+        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
+            o.objects,
+            o.use_modifiers,
+        )
 
         if o.min_z_from == "OBJECT":
             if minz == 10000000:
@@ -203,20 +202,34 @@ def get_bounds(o):
             o.min.z = o.min_z  # max(bb[0][2]+l.z,o.min_z)#
             print("Not Min Z from Object")
 
-        if o.material.estimate_from_model:
+        if o.material.material_source == "MODEL":
             print("Estimate Material from Model")
-
             o.min.x = minx - o.material.radius_around_model
             o.min.y = miny - o.material.radius_around_model
             o.max.z = max(o.max_z, maxz)
 
             o.max.x = maxx + o.material.radius_around_model
             o.max.y = maxy + o.material.radius_around_model
-        else:
+
+        if o.material.material_source == "OBJECT":
+            print("Estimate Material from Alternate Object")
+            minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
+                [o.material.alt_object],
+                o.use_modifiers,
+            )
+            o.min.x = minx - o.material.radius_around_model
+            o.min.y = miny - o.material.radius_around_model
+            o.max.z = max(o.max_z, maxz)
+
+            o.max.x = maxx + o.material.radius_around_model
+            o.max.y = maxy + o.material.radius_around_model
+
+        if o.material.material_source == "DIMENSIONS":
             print("Not Material from Model")
             o.min.x = o.material.origin.x
             o.min.y = o.material.origin.y
             o.min.z = o.material.origin.z - o.material.size.z
+
             o.max.x = o.min.x + o.material.size.x
             o.max.y = o.min.y + o.material.size.y
             o.max.z = o.material.origin.z
