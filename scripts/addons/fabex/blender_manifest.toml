@@ -21,6 +21,8 @@ copyright = [
   "2012-2024 Vilem Novak, Alain Pelletier & contributors",
 ]
 
+platforms = ["windows-x64", "macos-arm64", "linux-x64"]
+
 wheels = [
     # llvmlite
   "./wheels/llvmlite-0.43.0-cp311-cp311-macosx_10_9_x86_64.whl",

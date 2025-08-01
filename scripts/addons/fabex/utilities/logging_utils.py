@@ -42,6 +42,6 @@ error_handler.setFormatter(error_formatter)
 console_handler.setFormatter(console_formatter)
 
 # Adding handlers to the logger
-# log.addHandler(file_handler)
-# log.addHandler(error_handler)
+log.addHandler(file_handler)
+log.addHandler(error_handler)
 log.addHandler(console_handler)
