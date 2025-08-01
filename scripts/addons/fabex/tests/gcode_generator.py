@@ -6,6 +6,11 @@ import bpy
 # from ..utilities.logging_utils import log
 
 warnings.simplefilter("once")
+try:
+    bpy.ops.preferences.addon_disable(module="bl_ext.user_default.fabex")
+except:
+    pass
+bpy.ops.preferences.addon_enable(module="bl_ext.user_default.fabex")
 
 # Set the Render Engine to Fabex
 scene = bpy.context.scene
