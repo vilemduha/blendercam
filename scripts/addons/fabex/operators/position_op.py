@@ -6,7 +6,9 @@
 import bpy
 
 from bpy.types import Operator
+
 from ..utilities.bounds_utils import position_object
+from ..utilities.logging_utils import log
 
 
 # Position object for CAM operation. Tests object bounds and places them so the object
@@ -22,7 +24,7 @@ class CAM_MATERIAL_PositionObject(Operator):
         if operation.object_name in bpy.data.objects:
             position_object(operation)
         else:
-            print("No Object Assigned")
+            log.info("No Object Assigned")
         return {"FINISHED"}
 
     def draw(self, context):

@@ -17,7 +17,7 @@ Now we are going to scale and rotate the monkey head so that it gives us the bes
 - press **S**, then **Z**, then **.5** to scale it down on the Z axis
 
 ```{note}
-_If you don't want to reproduce the guide results exactly, you can skip all of the above and perform the operations on the default cube, but you will get a warning about the object being too big for your machine if you don't scale it down to fit inside the **CAM_machine** area._
+_If you don't want to reproduce the guide results exactly, you can skip all of the above and perform the operations on the default cube, but you will get a warning about the object being too big for your machine if you don't scale it down to fit inside the **CAM_Machine** area._
 ```
 
 ## Change the Render Engine

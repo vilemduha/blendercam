@@ -29,6 +29,7 @@ from ..cam_chunk import (
 )
 
 from ..utilities.geom_utils import circle
+from ..utilities.logging_utils import log
 from ..utilities.shapely_utils import (
     shapely_to_curve,
 )
@@ -413,13 +414,13 @@ class CamCurveBoneFilletOvercuts(Operator):
             nonlocal pos, centerv, radius, extendedv, sign, negative_overcuts, positive_overcuts
             # move the overcut shape center position 1 radius in direction v
             pos -= centerv * radius
-            print("abs(a)", abs(a))
+            log.info(f"abs(a) {abs(a)}")
             if abs(a) <= pi / 2 + 0.0001:
-                print("<=pi/2")
+                log.info("<=pi/2")
                 shape = circle(radius, 64)
                 shape = shapely.affinity.translate(shape, pos.x, pos.y)
             else:  # elongate overcut circle to make sure tool bit can fit into slot
-                print(">pi/2")
+                log.info(">pi/2")
                 p1 = pos + (extendedv * radius)
                 l = shapely.geometry.LineString((pos, p1))
                 shape = l.buffer(radius, resolution=64)
@@ -534,7 +535,9 @@ class CamCurveBoneFilletOvercuts(Operator):
                     # check if t-bone processing required
                     # if no inside corners then nothing to do
                     if isTBone and len(insideCorners) > 0:
-                        print("corner count", cornerCnt, "inside corner count", len(insideCorners))
+                        log.info(
+                            f"Corner Count {cornerCnt} Inside Corner Count {len(insideCorners)}"
+                        )
                         # process all of the inside corners
                         for i, corner in enumerate(insideCorners):
                             pos, v1, v2, a, idx = corner
@@ -542,44 +545,44 @@ class CamCurveBoneFilletOvercuts(Operator):
                             # if prev corner is outside corner
                             # calc index distance between current corner and prev
                             prevCorner = get_corner(i, -1)
-                            print("first:", i, idx, prevCorner[IDX])
+                            log.info(f"First: {i} {idx} {prevCorner[IDX]}")
                             if get_corner_delta(prevCorner[IDX], idx) == 1:
                                 # make sure there is an outside corner
-                                print(get_corner_delta(get_corner(i, -2)[IDX], idx))
+                                log.info(get_corner_delta(get_corner(i, -2)[IDX], idx))
                                 if get_corner_delta(get_corner(i, -2)[IDX], idx) > 2:
                                     set_other_edge(v1, v2, a)
-                                    print("first won")
+                                    log.info("First Won")
                                     continue
 
                             nextCorner = get_corner(i, 1)
-                            print("second:", i, idx, nextCorner[IDX])
+                            log.info(f"Second: {i} {idx} {nextCorner[IDX]}")
                             if get_corner_delta(idx, nextCorner[IDX]) == 1:
                                 # make sure there is an outside corner
-                                print(get_corner_delta(idx, get_corner(i, 2)[IDX]))
+                                log.info(get_corner_delta(idx, get_corner(i, 2)[IDX]))
                                 if get_corner_delta(idx, get_corner(i, 2)[IDX]) > 2:
-                                    print("second won")
+                                    log.info("Second Won")
                                     set_other_edge(-v2, -v1, a)
                                     continue
 
-                            print("third")
+                            log.info("Third")
                             if get_corner_delta(prevCorner[IDX], idx) == 3:
                                 # check if they share the same edge
                                 a1 = v1.angle_signed(prevCorner[V2]) * 180.0 / pi
-                                print("third won", a1)
+                                log.info(f"Third Won {a1}")
                                 if a1 < -135 or a1 > 135:
                                     set_other_edge(-v2, -v1, a)
                                     continue
 
-                            print("fourth")
+                            log.info("Fourth")
                             if get_corner_delta(idx, nextCorner[IDX]) == 3:
                                 # check if they share the same edge
                                 a1 = v2.angle_signed(nextCorner[V1]) * 180.0 / pi
-                                print("fourth won", a1)
+                                log.info(f"Fourth Won {a1}")
                                 if a1 < -135 or a1 > 135:
                                     set_other_edge(v1, v2, a)
                                     continue
 
-                            print("***No Win***")
+                            log.info("***No Win***")
                             # the default if no other rules pass
                             set_center_offset(a)
 
@@ -716,13 +719,13 @@ class CamMeshGetPockets(Operator):
                             else:
                                 pockets[z].append(i)
                     i += 1
-                print(len(pockets))
+                log.info(len(pockets))
                 for p in pockets:
-                    print(p)
+                    log.info(p)
                 ao = bpy.context.active_object
                 i = 0
                 for p in pockets:
-                    print(i)
+                    log.info(i)
                     i += 1
 
                     sf = pockets[p]
@@ -891,7 +894,7 @@ class CamOffsetSilhouete(Operator):
 
         # make the dilate or open curve offset
         if (self.open_type != "closecurve") and ob.type == "CURVE":
-            print("line length=", round(line.length * 1000), "mm")
+            log.info(f"line length= {round(line.length * 1000)}mm")
 
             if self.style == "3":
                 style = "bevel"

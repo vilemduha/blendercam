@@ -81,28 +81,53 @@ class CAM_OPERATIONS_Panel(CAMParentPanel, Panel):
         col = box.column(align=True)
         col.scale_y = 1.2
         col.operator(
-            "object.calculate_cam_path", text="Calculate Path & Export Gcode", icon="FILE_CACHE"
+            "object.calculate_cam_path",
+            text="Calculate Path & Export Gcode",
+            icon="FILE_CACHE",
         )
 
         # Export Gcode
         if self.level >= 1:
             if self.op.valid:
                 if self.op.name is not None:
-                    name = f"cam_path_{self.op.name}"
+                    path_name = context.scene.cam_names.path_name_full
+                    name = path_name  # f"cam_path_{self.op.name}"
                     if bpy.context.scene.objects.get(name) is not None:
                         col.operator("object.cam_export", text="Export Gcode", icon="EXPORT")
 
                 # Simulate Op
                 col.operator(
-                    "object.cam_simulate", text="Simulate This Operation", icon="MESH_GRID"
+                    "object.cam_simulate",
+                    text="Simulate This Operation",
+                    icon="MESH_GRID",
                 )
 
         box = layout.box()
         col = box.column(align=True)
-        # Op Name
-        col.prop(self.op, "name")
-        # Op Filename
-        col.prop(self.op, "filename")
+        cam_names = context.scene.cam_names
+        link_names = self.op.link_operation_file_names
+
+        row = col.row(align=True)
+        col = row.column(align=True)
+        col.use_property_split = True
+        col.use_property_decorate = False
+
+        if link_names:
+            text = "Operation & File Name"
+            icon = "LINKED"
+            col.scale_y = 2
+        else:
+            text = "Operation Name"
+            icon = "UNLINKED"
+            col.scale_y = 1
+        col.prop(self.op, "name", text=text)
+        if not link_names:
+            col.prop(self.op, "filename", text="File Name")
+        col = row.column(align=True)
+        col.scale_y = 2
+        col.prop(self.op, "link_operation_file_names", text="", icon=icon)
+
+        col = box.column(align=True)
         # Op Source
         col.prop(self.op, "geometry_source")
 

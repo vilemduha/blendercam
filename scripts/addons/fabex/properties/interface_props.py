@@ -38,8 +38,11 @@ def update_shading(self, context):
     shading = view3d.shading
     overlay = view3d.overlay
 
+    shading.wireframe_color_type = "OBJECT"
+
     if context.scene.interface.shading == "DEFAULT":
         shading.type = "SOLID"
+        shading.light = "STUDIO"
         shading.color_type = "MATERIAL"
         shading.show_shadows = False
         shading.show_cavity = False
@@ -51,6 +54,8 @@ def update_shading(self, context):
 
     elif context.scene.interface.shading == "DELUXE":
         shading.type = "SOLID"
+        shading.light = "MATCAP"
+        shading.studio_light = "metal_shiny.exr"
         shading.color_type = "OBJECT"
         shading.show_shadows = True
         shading.show_cavity = True
@@ -63,6 +68,7 @@ def update_shading(self, context):
 
     elif context.scene.interface.shading == "CLEAN_DEFAULT":
         shading.type = "SOLID"
+        shading.light = "STUDIO"
         shading.color_type = "MATERIAL"
         shading.show_shadows = False
         shading.show_cavity = False
@@ -74,6 +80,8 @@ def update_shading(self, context):
 
     elif context.scene.interface.shading == "CLEAN_DELUXE":
         shading.type = "SOLID"
+        shading.light = "MATCAP"
+        shading.studio_light = "metal_shiny.exr"
         shading.color_type = "OBJECT"
         shading.show_shadows = True
         shading.show_cavity = True
@@ -453,3 +461,4 @@ def draw_interface(self, context):
         col.prop(context.scene.interface, "level")
         col.prop(context.scene.interface, "layout")
         col.prop(context.scene.interface, "shading")
+        col.prop(context.scene.cam_names, "default_export_location")

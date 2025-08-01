@@ -23,6 +23,7 @@ from .cam_chunk import (
     get_operation_silhouette,
 )
 
+from .utilities.logging_utils import log
 from .utilities.operation_utils import get_operation_sources
 from .utilities.simple_utils import join_multiple, remove_doubles
 
@@ -104,7 +105,9 @@ def add_auto_bridges(o):
     if bridgecollectionname == "" or bpy.data.collections.get(bridgecollectionname) is None:
         bridgecollectionname = "bridges_" + o.name
         bpy.data.collections.new(bridgecollectionname)
-        bpy.context.collection.children.link(bpy.data.collections[bridgecollectionname])
+        bpy.data.collections["Bridges (Tabs)"].children.link(
+            bpy.data.collections[bridgecollectionname]
+        )
     g = bpy.data.collections[bridgecollectionname]
     o.bridges_collection_name = bridgecollectionname
     for ob in o.objects:
@@ -375,4 +378,4 @@ def auto_cut_bridge(o):
     bridgecollectionname = o.bridges_collection_name
     bridgecollection = bpy.data.collections[bridgecollectionname]
     if len(bridgecollection.objects) > 0:
-        print("bridges")
+        log.info("Bridges")

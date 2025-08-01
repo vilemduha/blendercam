@@ -4,6 +4,7 @@
 import bpy
 from mathutils import Vector
 
+from .logging_utils import log
 from .simple_utils import delete_object
 
 
@@ -99,7 +100,7 @@ def rotation_to_2_axes(e, axescombination):
         v2d = Vector((v2d.length, v.z))
         a2base = Vector((0, 1))
         aangle = a2base.angle_signed(v2d)
-        print("Angles", cangle, aangle)
+        log.info(f"Angles {cangle}, {aangle}")
         return (cangle, aangle)
 
     elif axescombination == "CB":
@@ -115,6 +116,6 @@ def rotation_to_2_axes(e, axescombination):
 
         bangle = a2base.angle_signed(v2d)
 
-        print("Angles", cangle, bangle)
+        log.info(f"Angles {cangle}, {bangle}")
 
         return (cangle, bangle)

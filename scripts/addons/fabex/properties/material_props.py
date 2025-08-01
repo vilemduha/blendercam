@@ -14,11 +14,20 @@ from bpy.props import (
 from bpy.types import (
     PropertyGroup,
 )
-from ..utilities.material_utils import update_material, update_material_source
+from ..utilities.material_utils import update_material
 from ..constants import PRECISION
 
 
 class CAM_MATERIAL_Properties(PropertyGroup):
+
+    wire_color: FloatVectorProperty(
+        name="Wire Color",
+        description="Color of the CAM_Material box in the viewport",
+        size=4,
+        default=(1.0, 1.0, 1.0, 1.0),
+        subtype="COLOR",
+    )
+
     material_source: EnumProperty(
         name="Material Source",
         description="Data source for Stock Material Object - Estimated from the Model, Generated from Dimensions or Picked from an Object in the Scene",
@@ -40,7 +49,6 @@ class CAM_MATERIAL_Properties(PropertyGroup):
                 "Manually enter the dimensions and origin point of the stock material",
             ),
         ),
-        update=update_material_source,
     )
 
     estimate_from_model: BoolProperty(

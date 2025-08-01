@@ -1,6 +1,8 @@
 """Fabex 'dict_utils.py' © 2012 Vilem Novak
 """
 
+from .logging_utils import log
+
 
 def dict_cleanup(ndict):
     """Remove lonely points from a dictionary.
@@ -20,7 +22,7 @@ def dict_cleanup(ndict):
     """
 
     # now it should delete all junk first, iterate over lonely verts.
-    print("Removing Lonely Points")
+    log.info("Removing Lonely Points")
     # found_solitaires=True
     # while found_solitaires:
     found_solitaires = False
@@ -28,8 +30,8 @@ def dict_cleanup(ndict):
     keys.extend(ndict.keys())
     removed = 0
     for k in keys:
-        print(k)
-        print(ndict[k])
+        log.info(k)
+        log.info(ndict[k])
         if len(ndict[k]) <= 1:
             newcheck = [k]
             while len(newcheck) > 0:
@@ -40,7 +42,7 @@ def dict_cleanup(ndict):
                     dict_remove(ndict, v)
             removed += 1
             found_solitaires = True
-    print(removed)
+    log.info(removed)
 
 
 def dict_remove(dict, val):

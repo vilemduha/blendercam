@@ -36,7 +36,12 @@ from .cam_chunk import (
     crazy_stroke_image_binary,
     get_offset_image_cavities,
 )
-from .constants import USE_PROFILER
+from .constants import (
+    IMPERIAL_CORRECTION,
+    METRIC_CORRECTION,
+    ROTATION_CORRECTION,
+    USE_PROFILER,
+)
 from .pattern import get_path_pattern, get_path_pattern_4_axis
 from .post_processors import iso
 
@@ -53,6 +58,7 @@ from .utilities.index_utils import (
     cleanup_indexed,
     prepare_indexed,
 )
+from .utilities.logging_utils import log
 from .utilities.operation_utils import get_operation_sources
 from .utilities.simple_utils import (
     progress,
@@ -120,7 +126,8 @@ def export_gcode_path(filename, vertslist, operations):
     Returns:
         None: This function does not return a value; it writes the G-code to a file.
     """
-    print("\nEXPORT")
+    log.debug("EXPORT")
+    # print("\nEXPORT")
     progress("Exporting G-code File")
     t = time.time()
     s = bpy.context.scene
@@ -137,17 +144,21 @@ def export_gcode_path(filename, vertslist, operations):
     if m.eval_splitting:  # detect whether splitting will happen
         for mesh in vertslist:
             totops += len(mesh.vertices)
-        print(f"Total Operations: {totops}")
+        log.info(f"Total Operations: {totops}")
         if totops > m.split_limit:
             split = True
             filesnum = ceil(totops / m.split_limit)
-            print(f"Output Files: {filesnum}")
+            log.info(f"Output Files: {filesnum}")
     else:
-        print("Output Files: 1")
+        log.info("Output Files: 1")
 
-    basefilename = bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))] + safe_filename(
-        filename
-    )
+    if s.cam_names.default_export_location == "":
+        filepath = bpy.data.filepath
+        basename = bpy.path.basename
+
+        basefilename = filepath[: -len(basename(filepath))] + safe_filename(filename)
+    else:
+        basefilename = s.cam_names.default_export_location + safe_filename(filename)
 
     extension = ".tap"
     if m.post_processor == "ISO":
@@ -193,12 +204,12 @@ def export_gcode_path(filename, vertslist, operations):
         from .post_processors import lynx_otter_o as postprocessor
 
     if s.unit_settings.system == "METRIC":
-        unitcorr = 1000.0
+        unitcorr = METRIC_CORRECTION
     elif s.unit_settings.system == "IMPERIAL":
-        unitcorr = 1 / 0.0254
+        unitcorr = IMPERIAL_CORRECTION
     else:
         unitcorr = 1
-    rotcorr = 180.0 / pi
+    rotcorr = ROTATION_CORRECTION
 
     def start_new_file():
         """Start a new file for G-code generation.
@@ -219,7 +230,7 @@ def export_gcode_path(filename, vertslist, operations):
         if split:
             fileindex = "_" + str(findex)
         filename = basefilename + fileindex + extension
-        print("Writing: ", filename)
+        log.info(f"Writing: {filename}")
         c = postprocessor.Creator()
 
         # process user overrides for post processor settings
@@ -298,7 +309,11 @@ def export_gcode_path(filename, vertslist, operations):
         if m.output_tool_definitions:
             c.comment(
                 "Tool: D = %s type %s flutes %s"
-                % (unit_value_to_string(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes)
+                % (
+                    unit_value_to_string(o.cutter_diameter, 4),
+                    o.cutter_type,
+                    o.cutter_flutes,
+                )
             )
 
         c.flush_nc()
@@ -555,9 +570,9 @@ def export_gcode_path(filename, vertslist, operations):
                 processedops = 0
 
         if o.remove_redundant_points and o.strategy != "DRILL":
-            print(f"Online: {online}")
-            print(f"Offline: {offline}")
-            print(f"Removal: {round(online / (offline + online) * 100, 1)}%")
+            log.info(f"Online: {online}")
+            log.info(f"Offline: {offline}")
+            log.info(f"Removal: {round(online / (offline + online) * 100, 1)}%")
         c.feedrate(unitcorr * o.feedrate)
 
         if o.output_trailer:
@@ -566,7 +581,7 @@ def export_gcode_path(filename, vertslist, operations):
                 c.write(aline + "\n")
 
     o.info.duration = duration * unitcorr
-    print("Total Time:", round(o.info.duration * 60), "seconds")
+    log.info(f"Total Time: {round(o.info.duration * 60)} seconds")
     if bpy.context.scene.unit_settings.system == "METRIC":
         unit_distance = "m"
         cut_distance /= 1000
@@ -574,7 +589,7 @@ def export_gcode_path(filename, vertslist, operations):
         unit_distance = "feet"
         cut_distance /= 12
 
-    print("Cut Distance:", round(cut_distance, 3), unit_distance)
+    log.info(f"Cut Distance: {round(cut_distance, 3)} {unit_distance}")
     if enable_dust:
         c.write(stop_dust + "\n")
     if enable_hold:
@@ -584,10 +599,7 @@ def export_gcode_path(filename, vertslist, operations):
 
     c.program_end()
     c.file_close()
-    print(time.time() - t)
-
-    # print(basefilename)
-    # bpy.ops.text.open(filepath=basefilename)
+    log.info(f"{time.time() - t}")
 
 
 async def get_path(context, operation):
@@ -630,7 +642,7 @@ async def get_path(context, operation):
     operation.info.warnings = ""
     check_memory_limit(operation)
 
-    print(operation.machine_axes)
+    log.info(f"{operation.machine_axes} Axis Path")
 
     if operation.machine_axes == "3":
         if USE_PROFILER == True:  # profiler
@@ -661,9 +673,10 @@ async def get_path(context, operation):
 
     # export gcode if automatic.
     if operation.auto_export:
-        if bpy.data.objects.get("cam_path_{}".format(operation.name)) is None:
+        path_name = context.scene.cam_names.path_name_full
+        if bpy.data.objects.get(path_name) is None:
             return
-        p = bpy.data.objects["cam_path_{}".format(operation.name)]
+        p = bpy.data.objects[path_name]
         export_gcode_path(operation.filename, [p.data], [operation])
 
     operation.changed = False
@@ -732,10 +745,13 @@ def check_memory_limit(o):
     if res > limit:
         ratio = res / limit
         o.optimisation.pixsize = o.optimisation.pixsize * sqrt(ratio)
+        log.warning("!!! Memory Error !!!")
+        log.warning("Memory Limit Exceeded!")
+        log.warning(f"Detail Size Increased to {round(o.optimisation.pixsize, 5)}")
         o.info.warnings += " \n!!! Memory Error !!!\n"
         o.info.warnings += "Memory Limit Exceeded!\n"
         o.info.warnings += f"Detail Size Increased to {round(o.optimisation.pixsize, 5)}\n"
-        print("Changing Sampling Resolution to %f" % o.optimisation.pixsize)
+        log.info("Changing Sampling Resolution to %f" % o.optimisation.pixsize)
 
 
 # this is the main function.
@@ -836,16 +852,16 @@ async def get_path_3_axis(context, operation):
         chunks = []
         layers = strategy.get_layers(o, o.max_z, o.min.z)
 
-        print("SAMPLE", o.name)
+        log.info(f"SAMPLE {o.name}")
         chunks.extend(await sample_chunks(o, pathSamples, layers))
-        print("SAMPLE OK")
+        log.info("SAMPLE OK")
         if o.strategy == "PENCIL":  # and bpy.app.debug_value==-3:
             chunks = chunks_coherency(chunks)
-            print("Coherency Check")
+            log.info("Coherency Check")
 
         # and not o.movement.parallel_step_back:
         if o.strategy in ["PARALLEL", "CROSS", "PENCIL", "OUTLINEFILL"]:
-            print("Sorting")
+            log.info("Sorting")
             chunks = await sort_chunks(chunks, o)
             if o.strategy == "OUTLINEFILL":
                 chunks = await connect_chunks_low(chunks, o)
@@ -859,7 +875,7 @@ async def get_path_3_axis(context, operation):
         #                for vi in range(0, len(ch.points)):
         #                    ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
         if o.use_bridges:
-            print(chunks)
+            log.info(chunks)
             for bridge_chunk in chunks:
                 use_bridges(bridge_chunk, o)
 

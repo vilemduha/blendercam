@@ -3,6 +3,9 @@ from bpy.types import Operator
 from bpy.props import StringProperty
 
 
+from ...utilities.logging_utils import log
+
+
 class CAM_Popup_Panel(Operator):
     bl_idname = "cam.popup"
     bl_label = ""
@@ -10,7 +13,7 @@ class CAM_Popup_Panel(Operator):
     text: StringProperty(name="text", default="")
 
     def execute(self, context):
-        print(self.text)
+        log.info(self.text)
         return {"FINISHED"}
 
     def invoke(self, context, event):

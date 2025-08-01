@@ -3,6 +3,8 @@
 Package to store all constants of Fabex.
 """
 
+from math import pi
+
 # PRECISION is used in most operations
 PRECISION = 5
 
@@ -44,3 +46,9 @@ OCL_SCALE = 1000.0
 PYTHON_BIN = None
 
 _PREVIOUS_OCL_MESH = None
+
+METRIC_CORRECTION = 1000.0
+
+IMPERIAL_CORRECTION = 1 / 0.0254
+
+ROTATION_CORRECTION = 180.0 / pi

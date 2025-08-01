@@ -17,6 +17,7 @@ from .utilities.image_utils import (
     get_cutter_array,
     numpy_save,
 )
+from .utilities.logging_utils import log
 from .utilities.operation_utils import get_operation_sources
 from .utilities.simple_utils import get_simulation_path
 
@@ -35,7 +36,9 @@ def create_simulation_object(name, operations, i):
         i: The image to be used as a texture for the simulation object.
     """
 
-    oname = "csim_" + name
+    oname = bpy.context.scene.cam_names.simulation_name_full
+
+    # oname = "csim_" + name
 
     o = operations[0]
 
@@ -66,9 +69,9 @@ def create_simulation_object(name, operations, i):
     ob.location = ((o.max.x + o.min.x) / 2, (o.max.y + o.min.y) / 2, o.min.z)
     ob.scale.x = (o.max.x - o.min.x) / 2
     ob.scale.y = (o.max.y - o.min.y) / 2
-    print(o.max.x, o.min.x)
-    print(o.max.y, o.min.y)
-    print("Bounds")
+    log.info(f"{o.max.x}, {o.min.x}")
+    log.info(f"{o.max.y}, {o.min.y}")
+    log.info("Bounds")
     disp = ob.modifiers[-1]
     disp.direction = "Z"
     disp.texture_coords = "LOCAL"
@@ -121,6 +124,9 @@ def create_simulation_object(name, operations, i):
     ob.data.materials.append(bpy.data.materials[material_name])
     ob.active_material_index = len(ob.material_slots) - 1
 
+    bpy.context.collection.objects.unlink(ob)
+    bpy.data.collections["Simulations"].objects.link(ob)
+
 
 async def do_simulation(name, operations):
     """Perform simulation of operations for a 3-axis system.
@@ -142,7 +148,7 @@ async def do_simulation(name, operations):
     #    cp = getCachePath(operations[0])[:-len(operations[0].name)] + name
     cp = get_simulation_path() + name
 
-    print("cp=", cp)
+    log.info(f"Cache Path = {cp}")
     iname = cp + "_sim.exr"
 
     numpy_save(i, iname)
@@ -194,7 +200,8 @@ async def generate_simulation_image(operations, limits):
     start_time = time.time()
 
     for op_count, o in enumerate(operations):
-        ob = bpy.data.objects["cam_path_{}".format(o.name)]
+        path_name = bpy.context.scene.cam_names.path_name_full
+        ob = bpy.data.objects[path_name]
         m = ob.data
         verts = m.vertices
 

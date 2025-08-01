@@ -4,6 +4,7 @@
 import bpy
 
 from .bounds_utils import get_bounds
+from .logging_utils import log
 from .operation_utils import get_operation_sources
 
 
@@ -41,7 +42,7 @@ def add_transparent_material(ob, mname, color, alpha):
 def add_material_area_object():
     """Add a material area object to the current Blender scene.
 
-    This function checks if a material area object named 'CAM_material'
+    This function checks if a material area object named 'CAM_Material'
     already exists in the current scene. If it does, it retrieves that
     object; if not, it creates a new cube mesh object to serve as the
     material area. The dimensions and location of the object are set based
@@ -60,19 +61,20 @@ def add_material_area_object():
     get_bounds(operation)
 
     ao = bpy.context.active_object
-    if s.objects.get("CAM_material") is not None:
-        o = s.objects["CAM_material"]
+    if s.objects.get("CAM_Material") is not None:
+        o = s.objects["CAM_Material"]
     else:
         bpy.ops.mesh.primitive_cube_add(
             align="WORLD", enter_editmode=False, location=(1, 1, -1), rotation=(0, 0, 0)
         )
         o = bpy.context.active_object
-        o.name = "CAM_material"
-        o.data.name = "CAM_material"
+        o.name = "CAM_Material"
+        o.data.name = "CAM_Material"
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 
         # addTranspMat(o, 'blue_transparent', (0.458695, 0.794658, 0.8), 0.1)
-        o.display_type = "BOUNDS"
+        o.display_type = "WIRE"
+        o.color = s.cam_material.wire_color  # (1, 1, 1, 1)
         o.hide_render = True
         o.hide_select = True
         o.select_set(state=True, view_layer=None)
@@ -105,9 +107,5 @@ def update_material(self, context):
         context: The context in which the material update is performed.
     """
 
-    print("Update Material")
+    log.info("Update Material")
     add_material_area_object()
-
-
-def update_material_source(self, context):
-    print("yo")

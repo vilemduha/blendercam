@@ -4,6 +4,7 @@ import subprocess
 import sys
 import tempfile
 
+from ..utilities.logging_utils import log
 
 INSTALL_CODE = f"""
 import bpy
@@ -34,19 +35,19 @@ with tempfile.TemporaryDirectory() as td:
                 stderr=subprocess.STDOUT,
                 text=True,
             )
-            print("Addon Install: Success!")
+            log.info("Addon Install: Success!")
             sys.exit(0)
         except subprocess.CalledProcessError as e:
-            print("Addon Install: Failed!")
-            print(f"Retrying: {e}")
-            print("Command Output:")
-            print("------------------------------")
-            print(e.output)
-            print("------------------------------")
+            log.error("Addon Install: Failed!")
+            log.error(f"Retrying: {e}")
+            log.error("Command Output:")
+            log.error("------------------------------")
+            log.error(e.output)
+            log.error("------------------------------")
             for line in str(e.output):
                 if line.startswith("Writing: "):
                     crash_file = pathlib.Path(line[len("Writing: ") :])
                     if crash_file.exists():
-                        print("Crash log:\n================")
-                        print(crash_file.read_text())
-                        print("============================")
+                        log.error("Crash log:\n================")
+                        log.error(crash_file.read_text())
+                        log.error("============================")

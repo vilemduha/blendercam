@@ -6,12 +6,14 @@ import time
 import bpy
 from mathutils import Vector
 
+from .logging_utils import log
 from .shapely_utils import shapely_to_curve, shapely_to_multipolygon
 from .simple_utils import (
     activate,
     progress,
     unit_value_to_string,
 )
+
 from ..exception import CamException
 
 
@@ -186,7 +188,7 @@ def get_bounds(o):
 
     # print('kolikrat sem rpijde')
     if o.geometry_source in ["OBJECT", "COLLECTION", "CURVE"]:
-        print("Valid Geometry")
+        log.info("Valid Geometry")
         minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
             o.objects,
             o.use_modifiers,
@@ -195,15 +197,15 @@ def get_bounds(o):
         if o.min_z_from == "OBJECT":
             if minz == 10000000:
                 minz = 0
-            print("Min Z from Object:" + str(minz))
+            log.info(f"Min Z from Object: {minz}")
             o.min.z = minz
             o.min_z = o.min.z
         else:
             o.min.z = o.min_z  # max(bb[0][2]+l.z,o.min_z)#
-            print("Not Min Z from Object")
+            log.info("Not Min Z from Object")
 
         if o.material.material_source == "MODEL":
-            print("Estimate Material from Model")
+            log.info("Estimate Material from Model")
             o.min.x = minx - o.material.radius_around_model
             o.min.y = miny - o.material.radius_around_model
             o.max.z = max(o.max_z, maxz)
@@ -212,7 +214,7 @@ def get_bounds(o):
             o.max.y = maxy + o.material.radius_around_model
 
         if o.material.material_source == "OBJECT":
-            print("Estimate Material from Alternate Object")
+            log.info("Estimate Material from Alternate Object")
             minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
                 [o.material.alt_object],
                 o.use_modifiers,
@@ -225,7 +227,7 @@ def get_bounds(o):
             o.max.y = maxy + o.material.radius_around_model
 
         if o.material.material_source == "DIMENSIONS":
-            print("Not Material from Model")
+            log.info("Not Material from Model")
             o.min.x = o.material.origin.x
             o.min.y = o.material.origin.y
             o.min.z = o.material.origin.z - o.material.size.z

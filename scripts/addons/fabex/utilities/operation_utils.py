@@ -11,6 +11,7 @@ import pickle
 import bpy
 from bpy_extras import object_utils
 
+from .logging_utils import log
 from .simple_utils import get_cache_path
 from .simple_utils import unit_value_to_string
 
@@ -93,8 +94,9 @@ def reload_paths(o):
         o (Object): The object for which the CAM path is being
     """
 
-    oname = "cam_path_" + o.name
+    # oname = "cam_path_" + o.name
     s = bpy.context.scene
+    oname = s.cam_names.path_name_full
     # for o in s.objects:
     ob = None
     old_pathmesh = None
@@ -115,7 +117,7 @@ def reload_paths(o):
     for a in range(0, len(verts) - 1):
         edges.append((a, a + 1))
 
-    oname = "cam_path_" + o.name
+    # oname = "cam_path_" + o.name
     mesh = bpy.data.meshes.new(oname)
     mesh.name = oname
     mesh.from_pydata(verts, edges, [])
@@ -165,7 +167,7 @@ def update_operation(self, context):
                     other_obj.select = False
     else:
         for path_obj_name in was_hidden_dict:
-            print(was_hidden_dict)
+            log.info(was_hidden_dict)
             if was_hidden_dict[path_obj_name]:
                 # Find object and make it hidde, then reset 'hidden' flag
                 obj = bpy.data.objects[path_obj_name]
@@ -185,7 +187,7 @@ def update_operation(self, context):
             was_hidden_dict[ao.path_object_name] = True
         bpy.context.scene.objects.active = ob
     except Exception as e:
-        print(e)
+        log.error(e)
 
 
 def source_valid(o, context):
@@ -256,7 +258,7 @@ def operation_valid(self, context):
         o.optimisation.use_exact = False
     o.update_offset_image_tag = True
     o.update_z_buffer_image_tag = True
-    print("Validity ")
+    log.info("Validity ")
 
 
 def chain_valid(chain, context):
@@ -322,7 +324,7 @@ def update_chipload(self, context):
     Returns:
         None: This function does not return a value; it updates the chipload in place.
     """
-    print("Update Chipload ")
+    log.info("Update Chipload ")
     o = self
     # Old chipload
     o.info.chipload = o.feedrate / (o.spindle_rpm * o.cutter_flutes)
@@ -340,8 +342,8 @@ def update_chipload(self, context):
     # we will be one tiny step on the way to a slightly better chipload calculating function.
 
     # self.chipload = ((0.5*(o.cutter_diameter/o.distance_between_paths))/(sqrt((o.feedrate*1000)/(o.spindle_rpm*o.cutter_diameter*o.cutter_flutes)*(o.cutter_diameter/o.distance_between_paths)-1)))
-    print(f"Chipload: {o.info.chipload}")
-    print(f"Chipload per Tooth: {o.info.chipload_per_tooth}")
+    log.info(f"Chipload: {o.info.chipload}")
+    log.info(f"Chipload per Tooth: {o.info.chipload_per_tooth}")
 
 
 def update_offset_image(self, context):
@@ -355,7 +357,7 @@ def update_offset_image(self, context):
         context: The context in which the update is performed.
     """
     update_chipload(self, context)
-    print("Update Offset")
+    log.info("Update Offset")
     self.changed = True
     self.update_offset_image_tag = True
 
@@ -402,7 +404,7 @@ def update_bridges(o, context):
         context (object): Additional context for the update, not used in this function.
     """
 
-    print("Update Bridges ")
+    log.info("Update Bridges ")
     o.changed = True
 
 
@@ -420,9 +422,9 @@ def update_rotation(o, context):
         context (object): The context in which the operation is performed.
     """
 
-    print("Update Rotation")
+    log.info("Update Rotation")
     if o.enable_b_axis or o.enable_a_axis:
-        print(o, o.rotation_a)
+        log.info(f"{o}, {o.rotation_a}")
         ob = bpy.data.objects[o.object_name]
         ob.select_set(True)
         bpy.context.view_layer.objects.active = ob
@@ -450,7 +452,7 @@ def update_rest(o, context):
         context (object): The context in which the update is being performed.
     """
 
-    print("Update Rest ")
+    log.info("Update Rest ")
     o.changed = True
 
 

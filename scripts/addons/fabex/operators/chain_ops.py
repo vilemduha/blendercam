@@ -40,7 +40,8 @@ class CamChainAdd(Operator):
         s.cam_chains.add()
         chain = s.cam_chains[-1]
         s.cam_active_chain = len(s.cam_chains) - 1
-        chain.name = "Chain_" + str(s.cam_active_chain + 1)
+        chain.name = s.cam_names.chain_name_full
+        # chain.name = "Chain_" + str(s.cam_active_chain + 1)
         chain.filename = chain.name
         chain.index = s.cam_active_chain
 

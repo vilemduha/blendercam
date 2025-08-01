@@ -35,6 +35,7 @@ from ..gcode_path import (
 
 from ..utilities.async_utils import progress_async
 from ..utilities.chunk_utils import chunks_to_shapely
+from ..utilities.logging_utils import log
 from ..utilities.shapely_utils import shapely_to_curve
 from ..utilities.simple_utils import activate, add_to_group
 from ..utilities.thread_utils import threadCom, thread_read, timer_update
@@ -82,7 +83,7 @@ class PathsBackground(Operator):
 
         for p in bpy.utils.script_paths():
             scriptpath = p + os.sep + "addons" + os.sep + "cam" + os.sep + "backgroundop.py"
-            print(scriptpath)
+            log.info(scriptpath)
             if os.path.isfile(scriptpath):
                 break
         proc = subprocess.Popen(
@@ -183,7 +184,8 @@ async def _calc_path(operator, context):
         ob = bpy.data.objects[o.object_name]
         ob.select_set(True)
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)"""
-    mesh = bpy.data.meshes.get(f"cam_path_{o.name}")
+    path_name = s.cam_names.path_name_full
+    mesh = bpy.data.meshes.get(path_name)
     if mesh:
         bpy.data.meshes.remove(mesh)
 
@@ -194,7 +196,6 @@ async def _calc_path(operator, context):
             text,
         )
         progress_async(text)
-        # bpy.ops.cam.popup(text=text)
         return {"FINISHED", False}
 
     # check for free movement height < maxz and return with error
@@ -204,7 +205,6 @@ async def _calc_path(operator, context):
             "Free Movement Height Is Less than Operation Depth Start \n Correct and Try Again.",
         )
         progress_async("Operation Can't Be Performed, See Warnings for Info")
-        # bpy.ops.cam.popup(text=text)
         return {"FINISHED", False}
 
     if o.computing:
@@ -216,21 +216,20 @@ async def _calc_path(operator, context):
         o.movement.parallel_step_back = False
     try:
         await get_path(context, o)
-        print("Got Path Okay")
+        log.info("Got Path Okay")
     except CamException as e:
+        log.error(e)
         traceback.print_tb(e.__traceback__)
         error_str = "\n".join(textwrap.wrap(str(e), width=80))
         operator.report({"ERROR"}, error_str)
-        # bpy.ops.cam.popup(text=error_str)
         return {"FINISHED", False}
     except AsyncCancelledException as e:
-        # bpy.ops.cam.popup(text=str(e))
+        log.warning(e)
         return {"CANCELLED", False}
     except Exception as e:
-        print("FAIL", e)
+        log.error(f"FAIL {e}")
         traceback.print_tb(e.__traceback__)
         operator.report({"ERROR"}, str(e))
-        # bpy.ops.cam.popup(text=str(e))
         return {"FINISHED", False}
     coll = bpy.data.collections.get("RigidBodyWorld")
     if coll:
@@ -268,7 +267,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         """
 
         s = context.scene
-        o = s.cam_operations[s.cam_active_operation]
+        o = s.cam_operations[s.cam_active_operation] if len(s.cam_operations) > 0 else None
         if o is not None:
             if source_valid(o, context):
                 return True
@@ -290,7 +289,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         """
 
         (retval, success) = await _calc_path(self, context)
-        print(f"CALCULATED PATH (success={success},retval={retval})")
+        log.info(f"CALCULATED PATH (success={success},retval={retval})")
 
         # Import the Gcode file to Blender's Text Editor for inspection
         active_op = context.scene.cam_active_operation
@@ -347,14 +346,17 @@ class CalculatePath(Operator, AsyncOperatorMixin):
             + extension
         )
 
-        print(basefilename)
+        log.info(basefilename)
         bpy.ops.text.open(filepath=basefilename)
 
-        areas = context.screen.areas
-        text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
+        try:
+            areas = context.screen.areas
+            text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
 
-        with context.temp_override(space=text_editor):
-            text_editor.text = bpy.data.texts["Op_Cube_1.tap"]
+            with context.temp_override(space=text_editor):
+                text_editor.text = bpy.data.texts[f"{operation.filename}{extension}"]
+        except IndexError:
+            pass
 
         return retval
 
@@ -386,8 +388,8 @@ class PathsAll(Operator):
         i = 0
         for o in bpy.context.scene.cam_operations:
             bpy.context.scene.cam_active_operation = i
-            print("\nCalculating Path :" + o.name)
-            print("\n")
+            log.info(f"\nCalculating Path : {o.name}")
+            log.info("\n")
             bpy.ops.object.calculate_cam_paths_background()
             i += 1
 
@@ -481,13 +483,14 @@ class PathsChain(Operator, AsyncOperatorMixin):
                 if not success and "FINISHED" in result:
                     self.report({"ERROR"}, f"Couldn't Calculate Path: {chainops[i].name}")
         except Exception as e:
-            print("FAIL", e)
+            log.error(f"FAIL {e}")
             traceback.print_tb(e.__traceback__)
             self.report({"ERROR"}, str(e))
             return {"FINISHED"}
 
         for o in chainops:
-            meshes.append(bpy.data.objects["cam_path_{}".format(o.name)].data)
+            path_name = s.cam_names.path_name_full
+            meshes.append(bpy.data.objects[path_name].data)
         export_gcode_path(chain.filename, meshes, chainops)
         return {"FINISHED"}
 
@@ -516,7 +519,7 @@ class PathExportChain(Operator):
         """
 
         s = context.scene
-        chain = s.cam_chains[s.cam_active_chain]
+        chain = s.cam_chains[s.cam_active_chain] if len(s.cam_chains) > 0 else None
         return chain_valid(chain, context)[0]
 
     def execute(self, context):
@@ -546,7 +549,8 @@ class PathExportChain(Operator):
 
         for o in chainops:
             # bpy.ops.object.calculate_cam_paths_background()
-            meshes.append(bpy.data.objects["cam_path_{}".format(o.name)].data)
+            path_name = s.cam_names.path_name_full
+            meshes.append(bpy.data.objects[path_name].data)
         export_gcode_path(chain.filename, meshes, chainops)
         return {"FINISHED"}
 
@@ -577,28 +581,14 @@ class PathExport(Operator):
 
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
+        path_name = s.cam_names.path_name_full
 
-        print(
-            "EXPORTING",
-            operation.filename,
-            bpy.data.objects["cam_path_{}".format(operation.name)].data,
-            operation,
-        )
+        log.info(f"EXPORTING {operation.filename} {bpy.data.objects[path_name].data} {operation}")
 
         export_gcode_path(
             operation.filename,
-            [bpy.data.objects["cam_path_{}".format(operation.name)].data],
+            [bpy.data.objects[path_name].data],
             [operation],
         )
-
-        # extension = ".tap"
-        # basefilename = (
-        #     bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))]
-        #     + operation.filename
-        #     + extension
-        # )
-
-        # print(basefilename)
-        # bpy.ops.text.open(filepath=basefilename)
 
         return {"FINISHED"}

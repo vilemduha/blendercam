@@ -71,13 +71,18 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
 
         # Position Definitions
         if self.level >= 2:
-            header, panel = layout.panel_prop(self.machine, "use_position_definitions")
-            header.label(text="Position Definitions")
+            layout.use_property_split = False
+            header, panel = layout.panel("position_definitions", default_closed=True)
+            header.prop(self.machine, "use_position_definitions", text="Position Definitions")
             if panel:
-                panel.prop(self.machine, "starting_position")
-                panel.prop(self.machine, "mtc_position")
-                panel.prop(self.machine, "ending_position")
+                panel.enabled = self.machine.use_position_definitions
+                col = panel.column()
+                col.use_property_split = True
+                col.prop(self.machine, "starting_position")
+                col.prop(self.machine, "mtc_position")
+                col.prop(self.machine, "ending_position")
 
+        layout.use_property_split = True
         # Feedrates
         if self.level >= 1:
             header, panel = layout.panel(idname="feedrate", default_closed=True)
@@ -102,8 +107,8 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
             if self.level >= 2:
                 subheader, subpanel = panel.panel(idname="slow_start", default_closed=True)
                 subheader.label(text="Slow Start (Ramp-Up) (*EXPERIMENTAL, grbl only*)")
-                col = subpanel.column(align=True)
                 if subpanel:
+                    col = subpanel.column(align=True)
                     subpanel.use_property_split = True
                     col.prop(self.machine, "spindle_slow_start_enable", text="Slow Start")
                     subcol = col.column(align=True)

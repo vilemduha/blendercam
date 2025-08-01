@@ -4,6 +4,8 @@ import subprocess
 import sys
 import unittest
 
+from ..utilities.logging_utils import log
+
 
 class FabexTest(unittest.TestCase):
     @classmethod
@@ -55,7 +57,7 @@ class FabexTest(unittest.TestCase):
 
     def execute_blender(self, blend_file):
         command = f'blender -noaudio -b "{blend_file}" -P "{self.generator_path}"'
-        print(f"Executing: {command}")
+        log.info(f"Executing: {command}")
         subprocess.run(command, shell=True, check=True)
 
     def run_test_case(self, test_case):
@@ -75,7 +77,7 @@ class FabexTest(unittest.TestCase):
                     # bullet physics gives slightly different results on mac sometimes...
                     # this is something we can't fix, so compare against mac generated test
                     # file
-                    print("Using Mac Test File", len(expected), len(generated))
+                    log.info(f"Using Mac Test File {len(expected)} {len(generated)}")
                     expected = self.get_gcode_from_file(gcode_file + ".mac")
                     self.assertMultiLineEqual(
                         generated,

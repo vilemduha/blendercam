@@ -20,6 +20,22 @@ from ..utilities.machine_utils import update_machine, update_unit_system
 class CAM_MACHINE_Properties(PropertyGroup):
     """stores all data for machines"""
 
+    path_color: FloatVectorProperty(
+        name="Path Color",
+        description="Color of the CAM_path object in the viewport",
+        size=4,
+        default=(0.0, 1.0, 0.0, 1.0),
+        subtype="COLOR",
+    )
+
+    wire_color: FloatVectorProperty(
+        name="Wire Color",
+        description="Color of the CAM_Machine box in the viewport",
+        size=4,
+        default=(1.0, 1.0, 0.0, 1.0),
+        subtype="COLOR",
+    )
+
     unit_system: EnumProperty(
         name="Units",
         items=(

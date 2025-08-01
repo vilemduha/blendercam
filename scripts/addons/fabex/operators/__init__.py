@@ -43,6 +43,7 @@ from .curve_tools_ops import (
     CamOffsetSilhouete,
 )
 from .gcode_import_op import WM_OT_gcode_import
+from .log_ops import CamOpenLogFolder, CamPurgeLogs
 from .operation_ops import (
     CamOperationAdd,
     CamOperationCopy,
@@ -102,6 +103,8 @@ classes = [
     CamObjectSilhouette,
     CamOffsetSilhouete,
     WM_OT_gcode_import,
+    CamOpenLogFolder,
+    CamPurgeLogs,
     CamOperationAdd,
     CamOperationCopy,
     CamOperationMove,

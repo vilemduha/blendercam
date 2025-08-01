@@ -63,6 +63,7 @@ from .utilities.image_utils import (
     render_sample_image,
     get_circle_binary,
 )
+from .utilities.logging_utils import log
 from .utilities.numba_utils import jit
 from .utilities.ocl_utils import (
     oclSample,
@@ -319,7 +320,7 @@ class CamPathChunk:
         self.rotations.reverse()
 
     def pop(self, index):
-        print("WARNING: Popping from Chunk Is Slow", self, index)
+        log.warning("Popping from Chunk Is Slow", self, index)
         self.points = np.concatenate((self.points[0:index], self.points[index + 1 :]), axis=0)
         if len(self.startpoints) > 0:
             self.startpoints.pop(index)
@@ -509,7 +510,7 @@ class CamPathChunk:
                 ramplength = estlength
                 zigzaglength = ramplength / 2.000
                 turns = 1
-                print("Turns %i" % turns)
+                log.info(f"Turns: {turns}")
                 if zigzaglength > self.length:
                     turns = ceil(zigzaglength / self.length)
                     ramplength = turns * self.length * 2.0
@@ -581,7 +582,7 @@ class CamPathChunk:
                         ramplength = estlength
                         zigzaglength = ramplength / 2.000
                         turns = 1
-                        print("Turns %i" % turns)
+                        print(f"Turns: {turns}")
                         if zigzaglength > self.length:
                             turns = ceil(zigzaglength / self.length)
                             ramplength = turns * self.length * 2.0
@@ -685,12 +686,12 @@ class CamPathChunk:
 
         if self.parents:  # if it is inside another parent
             perimeterDirection ^= 1  # toggle with a bitwise XOR
-            print("Has Parent")
+            log.info("Has Parent")
 
         if perimeterDirection == 1:
-            print("Path Direction is Clockwise")
+            log.info("Path Direction is Clockwise")
         else:
-            print("Path Direction is Counter Clockwise")
+            log.info("Path Direction is Counter Clockwise")
         iradius = o.lead_in
         oradius = o.lead_out
         start = self.points[0]
@@ -794,7 +795,7 @@ def limit_chunks(chunks, o, force=False):  # TODO: this should at least add poin
                 # here adds beginning of closed chunk to the end, if the chunks were split during limiting
                 nch.points.extend(nch1.points.tolist())
                 nchunks.remove(nch1)
-                print("Joining")
+                log.info("Joining")
             if len(nch.points) > 0:
                 nchunks.append(nch.to_chunk())
         return nchunks
@@ -964,7 +965,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
     cutterdepth = cutter.dimensions.z / 2
 
     t = time.time()
-    print("Sampling Paths")
+    log.info("Sampling Paths")
 
     totlen = 0  # total length of all chunks, to estimate sampling time.
     for chs in pathSamples:
@@ -1401,7 +1402,7 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
         shapely.geometry.MultiPolygon: The computed silhouette as a Shapely MultiPolygon.
     """
 
-    print("Silhouette Type:", stype)
+    log.info(f"Silhouette Type: {stype}")
     if stype == "CURVES":  # curve conversion to polygon format
         allchunks = []
         for ob in objects:
@@ -1418,10 +1419,10 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
             totfaces < 20000000
         ):  # boolean polygons method originaly was 20 000 poly limit, now limitless,
             t = time.time()
-            print("Shapely Getting Silhouette")
+            log.info("Shapely Getting Silhouette")
             polys = []
             for ob in objects:
-                print("Object:", ob.name)
+                log.info(f"Object: {ob.name}")
                 if use_modifiers:
                     ob = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
                     m = ob.to_mesh()
@@ -1457,22 +1458,22 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
             if totfaces < 20000:
                 p = sops.unary_union(polys)
             else:
-                print("Computing in Parts")
+                log.info("Computing in Parts")
                 bigshapes = []
                 i = 1
                 part = 20000
                 while i * part < totfaces:
-                    print(i)
+                    log.info(i)
                     ar = polys[(i - 1) * part : i * part]
                     bigshapes.append(sops.unary_union(ar))
                     i += 1
                 if (i - 1) * part < totfaces:
                     last_ar = polys[(i - 1) * part :]
                     bigshapes.append(sops.unary_union(last_ar))
-                print("Joining")
+                log.info("Joining")
                 p = sops.unary_union(bigshapes)
 
-            print("Time:", time.time() - t)
+            log.info(f"Time: {time.time() - t}")
 
             t = time.time()
             silhouette = shapely_to_multipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
@@ -1515,7 +1516,7 @@ def get_operation_silhouette(operation):
                     totfaces += len(ob.data.polygons)
 
         if (stype == "OBJECTS" and totfaces > 200000) or stype == "IMAGE":
-            print("Image Method")
+            log.info("Image Method")
             samples = render_sample_image(operation)
             if stype == "OBJECTS":
                 i = samples > operation.min_z - 0.0000001
@@ -1531,9 +1532,11 @@ def get_operation_silhouette(operation):
         # print(operation.silhouette)
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
-            print("Object Method for Retrieving Silhouette")
+            log.info("Object Method for Retrieving Silhouette")
             operation.silhouette = get_object_silhouette(
-                stype, objects=operation.objects, use_modifiers=operation.use_modifiers
+                stype,
+                objects=operation.objects,
+                use_modifiers=operation.use_modifiers,
             )
 
         operation.update_silhouette_tag = False
@@ -1728,7 +1731,7 @@ async def sample_chunks(o, pathSamples, layers):
         ob = bpy.data.objects[o.object_name]
         zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
 
-    print(f"Total Sample Points {totlen}")
+    log.info(f"Total Sample Points: {totlen}")
 
     n = 0
     last_percent = -1
@@ -1901,6 +1904,7 @@ async def sample_chunks(o, pathSamples, layers):
         lastrunchunks = thisrunchunks
 
     # print(len(layerchunks[i]))
+    # log.info("Checking Relations Between Paths")
     progress("Checking Relations Between Paths")
     timing_start(sortingtime)
 
@@ -1929,9 +1933,12 @@ async def sample_chunks(o, pathSamples, layers):
                 ch.zend = layers[i][1]
         chunks.extend(layerchunks[i])
     timing_add(totaltime)
-    print(samplingtime)
-    print(sortingtime)
-    print(totaltime)
+    log.info(f"Sampling Time: {samplingtime}")
+    log.info(f"Sorting Time: {sortingtime}")
+    log.info(f"Total Time: {totaltime}")
+    # print(samplingtime)
+    # print(sortingtime)
+    # print(totaltime)
     return chunks
 
 
@@ -2134,7 +2141,7 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
     tmp_chunks.append(CamPathChunk(inpoints=[]))
     for chunk, i_start, i_length in chunks_to_resample:
         tmp_chunks[0].extend(chunk.get_points_np()[i_start : i_start + i_length])
-        print(i_start, i_length, len(tmp_chunks[0].points))
+        log.info(f"{i_start}, {i_length}, {len(tmp_chunks[0].points)}")
 
     samples = await ocl_sample(operation, tmp_chunks, use_cached_mesh=use_cached_mesh)
 
@@ -2188,7 +2195,7 @@ async def oclGetWaterline(operation, chunks):
             (op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length
         )
     else:
-        print("Cutter Unsupported: {0}\n".format(op_cutter_type))
+        log.info(f"Cutter Unsupported: {op_cutter_type}\n")
         quit()
 
     waterline = ocl.Waterline()
@@ -2289,11 +2296,11 @@ def image_edge_search_on_line(o, ar, zimage):
                 last_direction = test_direction
                 ar[xs, ys] = False
                 if 0:
-                    print("Success")
-                    print(xs, ys, testlength, testangle)
-                    print(lastvect)
-                    print(testvect)
-                    print(itests)
+                    log.info("Success")
+                    log.info(f"{xs}, {ys}, {testlength}, {testangle}")
+                    log.info(lastvect)
+                    log.info(testvect)
+                    log.info(itests)
             else:
                 # nappend([xs,ys])#for debugging purpose
                 # ar.shape[0]
@@ -2343,8 +2350,10 @@ def image_edge_search_on_line(o, ar, zimage):
 
                 test_direction = directions[dindexmod]
                 if 0:
-                    print(xs, ys, test_direction, last_direction, testangulardistance)
-                    print(totpix)
+                    log.info(
+                        f"{xs}, {ys}, {test_direction}, {last_direction}, {testangulardistance}"
+                    )
+                    log.info(totpix)
             itests += 1
             totaltests += 1
 
@@ -2401,7 +2410,7 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
         # numpysave(ar,iname)#save for comparison before
         chunks = image_edge_search_on_line(o, ar, i)
         iname = get_cache_path(o) + "_pencilthres_comp.exr"
-        print("New Pencil Strategy")
+        log.info("New Pencil Strategy")
 
     # ##crop pixels that are on outer borders
     for chi in range(len(chunks) - 1, -1, -1):
@@ -2467,8 +2476,8 @@ def crazy_stroke_image(o):
     if ys < r:
         ys = r
     nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
-    print(indices)
-    print(indices[0][0], indices[1][0])
+    log.info(indices)
+    log.info(f"{indices[0][0]}, {indices[1][0]}")
     # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
     lastvect = Vector((r, 0, 0))
     # multiply *2 not to get values <1 pixel
@@ -2481,7 +2490,7 @@ def crazy_stroke_image(o):
     maxtests = 500
     maxtotaltests = 1000000
 
-    print(xs, ys, indices[0][0], indices[1][0], r)
+    log.info(f"{xs}, {ys}, {indices[0][0]}, {indices[1][0]}, {r}")
     ar[xs - r : xs - r + d, ys - r : ys - r + d] = (
         ar[xs - r : xs - r + d, ys - r : ys - r + d] * cutterArrayNegative
     )
@@ -2514,12 +2523,12 @@ def crazy_stroke_image(o):
             if xs > r + 1 and xs < ar.shape[0] - r - 1 and ys > r + 1 and ys < ar.shape[1] - r - 1:
                 testar = ar[xs - r : xs - r + d, ys - r : ys - r + d] * cutterArray
                 if 0:
-                    print("Test")
-                    print(testar.sum(), satisfypix)
-                    print(xs, ys, testlength, testangle)
-                    print(lastvect)
-                    print(testvect)
-                    print(totpix)
+                    log.info("Test")
+                    log.info(f"{testar.sum()}, {satisfypix}")
+                    log.info(f"{xs}, {ys}, {testlength}, {testangle}")
+                    log.info(lastvect)
+                    log.info(testvect)
+                    log.info(totpix)
 
                 eatpix = testar.sum()
                 cindices = testar.nonzero()
@@ -2540,11 +2549,11 @@ def crazy_stroke_image(o):
                 totpix -= eatpix
                 itests = 0
                 if 0:
-                    print("Success")
-                    print(xs, ys, testlength, testangle)
-                    print(lastvect)
-                    print(testvect)
-                    print(itests)
+                    log.info("Success")
+                    log.info(f"{xs}, {ys}, {testlength}, {testangle}")
+                    log.info(lastvect)
+                    log.info(testvect)
+                    log.info(itests)
             else:
                 # TODO: after all angles were tested into material higher than toomuchpix, it should cancel,
                 #  otherwise there is no problem with long travel in free space.....
@@ -2609,10 +2618,10 @@ def crazy_stroke_image(o):
                 itests = 0
         i += 1
         if i % 100 == 0:
-            print("100 Succesfull Tests Done")
+            log.info("100 Succesfull Tests Done")
             totpix = ar.sum()
-            print(totpix)
-            print(totaltests)
+            log.info(totpix)
+            log.info(totaltests)
             i = 0
     chunk_builders.append(nchunk)
     for ch in chunk_builders:
@@ -2695,8 +2704,8 @@ def crazy_stroke_image_binary(o, ar, avoidar):
         ys = r
 
     nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
-    print(indices)
-    print(indices[0][0], indices[1][0])
+    log.info(indices)
+    log.info(f"{indices[0][0]}, {indices[1][0]}")
     # vector is 3d, blender somehow doesn't rotate 2d vectors with angles.
     lastvect = Vector((r, 0, 0))
     # multiply *2 not to get values <1 pixel
@@ -2914,10 +2923,10 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                     itests = 0
         i += 1
         if i % 100 == 0:
-            print("100 Succesfull Tests Done")
+            log.info("100 Succesfull Tests Done")
             totpix = ar.sum()
-            print(totpix)
-            print(totaltests)
+            log.info(totpix)
+            log.info(totaltests)
             i = 0
     if len(nchunk.points) > 1:
         parent_child_distance([nchunk], chunks, o, distance=r)
@@ -3097,9 +3106,9 @@ def image_to_chunks(o, image, with_border=False):
             # print(' la problema grandiosa')
             i += 1
             if i % 10000 == 0:
-                print(len(ch))
+                log.info(len(ch))
                 # print(polychunks)
-                print(i)
+                log.info(i)
 
         vecchunks = []
 

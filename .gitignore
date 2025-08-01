@@ -18,6 +18,8 @@ acp
 syncWithUpstream
 forceSyncWithUpstream
 
+scripts/addons/fabex/logs
+
 \.idea/
 
 .project

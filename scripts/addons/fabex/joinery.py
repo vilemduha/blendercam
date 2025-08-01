@@ -20,6 +20,7 @@ import bpy
 
 from . import puzzle_joinery
 
+from .utilities.logging_utils import log
 from .utilities.shapely_utils import shapely_to_curve
 from .utilities.simple_utils import (
     active_name,
@@ -172,7 +173,7 @@ def twist_line(length, thickness, finger_play, percentage, amount, distance, cen
     while amount > 0:
         position = spacing * amount
         interlock_twist(length, thickness, finger_play, percentage=percentage, cx=position)
-        print("Twistline", amount, distance, position)
+        log.info(f"Twistline {amount}, {distance}, {position}")
         amount -= 1
 
     join_multiple("_groove")
@@ -519,7 +520,7 @@ def fixed_finger(loop, loop_length, finger_size, finger_thick, finger_tolerance,
     old_mortise_angle = 0
     distance = finger_size / 2
     j = 0
-    print("Joinery Loop Length", round(loop_length * 1000), "mm")
+    log.info(f"Joinery Loop Length {round(loop_length * 1000)}mm")
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
@@ -598,7 +599,7 @@ def slope_array(loop):
         if i != 0:
             slope = find_slope(p, oldp)
             if abs(slope) > 10:
-                print(distance)
+                log.info(distance)
             dsarray.append((distance, slope * -0.00001))
         oldp = p
     derivative = LineString(sarray)
@@ -632,7 +633,7 @@ def d_slope_array(loop, resolution=0.001):
         if i != 0:
             slope = find_slope(p, oldp)
             if abs(slope) > 10:
-                print(distance)
+                log.info(distance)
             dsarray.append((distance, slope * -0.1))
         oldp = p
     dderivative = LineString(dsarray)
@@ -671,7 +672,7 @@ def variable_finger(
     oldfinger_sz = min_finger
     hpos = []  # hpos is the horizontal positions of the middle of the mortise
     # slope_array(loop)
-    print("Joinery Loop Length", round(loop_length * 1000), "mm")
+    log.info(f"Joinery Loop Length {round(loop_length * 1000)}mm")
     for i, p in enumerate(coords):
         if i == 0:
             p_start = p
@@ -748,7 +749,7 @@ def variable_finger(
         join_multiple("_base")
         active_name("base")
     else:
-        print("Placeholder")
+        log.info("Placeholder")
         join_multiple("_mort")
         active_name("variable_mortise")
     return hpos
@@ -827,7 +828,7 @@ def distributed_interlock(
         end (float): end distance from last point
     """
     coords = list(loop.coords)
-    print(closed)
+    log.info(closed)
     if not closed:
         spacing = (loop_length - start - end) / (finger_amount - 1)
         distance = start
@@ -838,8 +839,8 @@ def distributed_interlock(
         end_distance = loop_length
 
     j = 0
-    print("Joinery Loop Length", round(loop_length * 1000), "mm")
-    print("Distance Between Joints", round(spacing * 1000), "mm")
+    log.info(f"Joinery Loop Length {round(loop_length * 1000)}mm")
+    log.info(f"Distance Between Joints {round(spacing * 1000)}mm")
 
     for i, p in enumerate(coords):
         if i == 0:
@@ -860,13 +861,8 @@ def distributed_interlock(
 
                 groove_point = loop.interpolate(distance)
 
-                print(
-                    j,
-                    "groove_angle",
-                    round(180 * groove_angle / pi),
-                    "distance",
-                    round(distance * 1000),
-                    "mm",
+                log.info(
+                    f"{j} groove_angle {round(180 * groove_angle / pi)} distance {round(distance * 1000)}mm"
                 )
                 single_interlock(
                     finger_depth,

@@ -7,6 +7,8 @@ import shutil
 import bpy
 from bpy.app.handlers import persistent
 
+from .logging_utils import log
+
 from ..constants import _IS_LOADING_DEFAULTS
 
 
@@ -51,7 +53,7 @@ def load_defaults(addon_prefs):
 
         machine_preset = addon_prefs.machine_preset = addon_prefs.default_machine_preset
         if len(machine_preset) > 0:
-            print("Loading Preset:", machine_preset)
+            log.info(f"Loading Preset: {machine_preset}")
             # load last used machine preset
             bpy.ops.script.execute_preset(
                 filepath=machine_preset,
@@ -116,6 +118,8 @@ def on_blender_startup(context):
             the current Blender environment.
     """
 
+    log.debug("Blender Startup")
+
     scene = bpy.context.scene
     for o in scene.cam_operations:
         if o.computing:
@@ -125,6 +129,7 @@ def on_blender_startup(context):
 
     addon_dependencies()
     add_asset_library()
+    add_workspace()
     load_defaults(addon_prefs)
     copy_presets(addon_prefs)
 
@@ -134,8 +139,9 @@ def on_engine_change(*args):
         bpy.context.scene.interface.layout = bpy.context.preferences.addons[
             "bl_ext.user_default.fabex"
         ].preferences.default_layout
-        print("Fabex!")
-        bpy.context.scene.cam_machine.unit_system = "INCHES"
+        add_collections()
+        log.debug("Fabex Activated")
+        # print("Fabex!")
 
 
 def fix_units():
@@ -184,3 +190,59 @@ def add_asset_library():
         bpy.context.preferences.filepaths.asset_libraries["assets"].name = "Fabex Assets"
     else:
         pass
+
+
+def add_workspace():
+    workspaces = bpy.data.workspaces
+    if "FabexCNC" not in workspaces:
+        workspace_file = str(
+            Path(__file__).parent.parent / "assets" / "Fabex_Assets.blend/WorkSpace/"
+        )
+        bpy.ops.wm.append(directory=workspace_file, filename="FabexCNC")
+
+    else:
+        pass
+
+
+def add_collections():
+    context = bpy.context
+    data = bpy.data
+    collections = data.collections
+    cam_names = context.scene.cam_names
+    path_prefix = cam_names.path_prefix
+    simulation_prefix = cam_names.simulation_prefix
+
+    scene_collection = context.scene.collection
+    default_collection = collections["Collection"]
+    fabex_collections = [
+        ("Bridges (Tabs)", "COLOR_06"),
+        ("Paths", "COLOR_04"),
+        ("Simulations", "COLOR_05"),
+    ]
+
+    for collection, color in fabex_collections:
+        if collection not in collections:
+            collections.new(collection)
+            scene_collection.children.link(collections[collection])
+            collections[collection].color_tag = color
+
+    bridges_collection = collections["Bridges (Tabs)"]
+    paths_collection = collections["Paths"]
+    simulations_collection = collections["Simulations"]
+
+    children = default_collection.children
+    for child in children:
+        prefix = child.name.startswith
+        if prefix("bridge"):
+            bridges_collection.children.link(child)
+            default_collection.children.unlink(child)
+
+    objects = default_collection.objects
+    for obj in objects:
+        prefix = obj.name.startswith
+        if prefix(path_prefix):
+            paths_collection.objects.link(obj)
+        if prefix(simulation_prefix):
+            simulations_collection.objects.link(obj)
+        if prefix in ["bridge", path_prefix, simulation_prefix]:
+            default_collection.objects.unlink(obj)

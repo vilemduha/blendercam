@@ -11,6 +11,8 @@ import numpy as np
 
 import bpy
 
+from .utilities.logging_utils import log
+
 np.set_printoptions(suppress=True)  # suppress scientific notation in subdivide functions linspace
 
 
@@ -33,7 +35,7 @@ def import_gcode(self, context, filepath):
             {'FINISHED'}.
     """
 
-    print("Running read_some_data...")
+    log.info("Running read_some_data...")
 
     scene = context.scene
     mytool = self
@@ -52,7 +54,7 @@ def import_gcode(self, context, filepath):
         model.draw(split_layers=False)
 
     now = time.time()
-    print("Importing Gcode Took ", round(now - then, 1), "Seconds")
+    log.info(f"Importing Gcode Took {round(now - then, 1)} Seconds")
 
     return {"FINISHED"}
 
@@ -256,7 +258,7 @@ class GcodeParser:
                 s += " "
             s += a
             a_old = a
-        print(s)
+        log.info(s)
         command = s
 
         # code is fist word, then args
@@ -277,14 +279,14 @@ class GcodeParser:
             else:
                 if code[0] == "T":
                     self.model.toolnumber = int(code[1:])
-                    print(self.model.toolnumber)
+                    log.info(self.model.toolnumber)
                     # if code doesn't start with a G but starts with a coordinate add the last command to the line
                 elif code[0] == "X" or code[0] == "Y" or code[0] == "Z":
                     self.line = self.last_command + " " + self.line
                     self.parse_line()  # parse this line again with the corrections
                 else:
                     pass
-                    print("Unsupported gcode " + str(code))
+                    log.info(f"Unsupported gcode {code}")
 
     def parse_args(self, args):
         """Parse command-line arguments into a dictionary.
@@ -336,7 +338,7 @@ class GcodeParser:
         self.model.do_G92(self.parse_args(args))
 
     def warn(self, msg):
-        print("[WARN] Line %d: %s (Text:'%s')" % (self.lineNb, msg, self.line))
+        log.warning(f"[WARN] Line {self.lineNb}: {msg} (Text:'{self.line}')")
 
     def error(self, msg):
         """Log an error message and raise an exception.
@@ -353,8 +355,8 @@ class GcodeParser:
             Exception: Always raises an Exception with the formatted error message.
         """
 
-        print("[ERROR] Line %d: %s (Text:'%s')" % (self.lineNb, msg, self.line))
-        raise Exception("[ERROR] Line %d: %s (Text:'%s')" % (self.lineNb, msg, self.line))
+        log.error(f"[ERROR] Line {self.lineNb}: {msg} (Text:'{self.line}')")
+        raise Exception(f"[ERROR] Line {self.lineNb}: {msg} (Text:'{self.line}')")
 
 
 class GcodeModel:
@@ -498,9 +500,9 @@ class GcodeModel:
         extr_idx = int(args["S"])  # e.g. M163 S0 P1
         weight = args["P"]
         # change CMYKW
-        col[
-            extr_idx + 3
-        ] = weight  # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
+        col[extr_idx + 3] = (
+            weight  # +3 weil ersten 3 stellen RGB sind, need only CMYKW values for extrude
+        )
         self.color = col
 
         # take RGB values for seg from last comment (above first M163 statement)

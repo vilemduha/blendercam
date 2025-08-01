@@ -28,6 +28,7 @@ from . import constants
 from .cam_chunk import curve_to_chunks
 
 from .utilities.chunk_utils import chunks_to_shapely
+from .utilities.logging_utils import log
 from .utilities.shapely_utils import shapely_to_curve
 from .utilities.simple_utils import activate
 
@@ -129,7 +130,7 @@ def pack_curves():
     placedpolys = []
     rotcenter = sgeometry.Point(0, 0)
     for pf in polyfield:
-        print(i)
+        log.info(i)
         rot = 0
         porig = pf[2]
         placed = False
@@ -200,12 +201,12 @@ def pack_curves():
                 ptrans = affinity.rotate(porig, best[2], rotcenter, use_radians=True)
                 ptrans = affinity.translate(ptrans, best[0], best[1])
 
-                print(best[0], best[1], itera)
+                log.info(f"{best[0]}, {best[1]}, {itera}")
                 placedpolys.append(ptrans)
                 allpoly = prepared.prep(sgeometry.MultiPolygon(placedpolys))
 
                 # cleanup allpoly
-                print(itera, hits, besthit)
+                log.info(f"{itera}, {hits}, {besthit}")
             if not placed:
                 if direction == "Y":
                     x += shift
@@ -226,4 +227,4 @@ def pack_curves():
     t = time.time() - t
 
     shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
-    print(t)
+    log.info(t)

@@ -43,6 +43,11 @@ class CAM_CHAIN_Properties(PropertyGroup):
         name="File Name",
         default="Chain",
     )  # filename of
+    link_chain_file_names: BoolProperty(
+        name="Link Chain & File Name",
+        description="Auto-assign the Chain Name to the Chain Gcode File",
+        default=False,
+    )
     valid: BoolProperty(
         name="Valid",
         description="True if whole Chain is OK for calculation",
