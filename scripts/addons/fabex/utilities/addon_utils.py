@@ -10,6 +10,7 @@ from bpy.app.handlers import persistent
 from .logging_utils import log
 
 from ..constants import _IS_LOADING_DEFAULTS
+from .. import __package__ as base_package
 
 
 def addon_dependencies():
@@ -125,7 +126,7 @@ def on_blender_startup(context):
         if o.computing:
             o.computing = False
 
-    addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = bpy.context.preferences.addons[base_package].preferences
 
     addon_dependencies()
     add_asset_library()
@@ -137,7 +138,7 @@ def on_blender_startup(context):
 def on_engine_change(*args):
     if bpy.context.scene.render.engine == "FABEX_RENDER":
         bpy.context.scene.interface.layout = bpy.context.preferences.addons[
-            "bl_ext.user_default.fabex"
+            base_package
         ].preferences.default_layout
         add_collections()
         log.debug("Fabex Activated")

@@ -15,6 +15,7 @@ from .logging_utils import log
 from .simple_utils import get_cache_path
 from .simple_utils import unit_value_to_string
 
+from .. import __package__ as base_package
 from ..constants import was_hidden_dict
 
 
@@ -250,7 +251,7 @@ def operation_valid(self, context):
         o.info.warnings = ""
     else:
         o.info.warnings = invalidmsg
-        addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
+        addon_prefs = bpy.context.preferences.addons[base_package].preferences
         if addon_prefs.show_popups:
             bpy.ops.cam.popup("INVOKE_DEFAULT")
 

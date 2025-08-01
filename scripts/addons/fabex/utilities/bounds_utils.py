@@ -14,6 +14,7 @@ from .simple_utils import (
     unit_value_to_string,
 )
 
+from .. import __package__ as base_package
 from ..exception import CamException
 
 
@@ -287,7 +288,7 @@ def get_bounds(o):
                 o.info.warnings += f"Z: {unit_value_to_string(z_delta_range)} > {unit_value_to_string(m.working_area.z)}\n"
 
     if not o.info.warnings == "":
-        addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
+        addon_prefs = bpy.context.preferences.addons[base_package].preferences
         if addon_prefs.show_popups:
             bpy.ops.cam.popup("INVOKE_DEFAULT")
 

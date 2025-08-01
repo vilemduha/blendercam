@@ -14,6 +14,7 @@ from bpy.types import (
     AddonPreferences,
 )
 
+from . import __package__ as base_package
 from .utilities.version_utils import (
     opencamlib_version,
     shapely_version,
@@ -25,7 +26,7 @@ from .utilities.version_utils import (
 class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
     # when defining this in a submodule of a python package.
-    bl_idname = __package__
+    bl_idname = base_package
 
     op_preset_update: BoolProperty(
         name="Have the Operation Presets Been Updated",

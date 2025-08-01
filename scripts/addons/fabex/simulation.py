@@ -11,6 +11,7 @@ import numpy as np
 import bpy
 from mathutils import Vector
 
+from . import __package__ as base_package
 from .utilities.async_utils import progress_async
 from .utilities.bounds_utils import get_bounds_multiple
 from .utilities.image_utils import (
@@ -100,7 +101,7 @@ def create_simulation_object(name, operations, i):
     # Assign Simulation Material
     library_name = "Fabex Assets"
     filename = "Fabex_Assets.blend"
-    addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = bpy.context.preferences.addons[base_package].preferences
 
     material_name = str(addon_prefs.default_simulation_material).title()
 

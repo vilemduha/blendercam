@@ -6,6 +6,8 @@ Operators and Menus for CAM Machine, Cutter and Operation Presets.
 import bpy
 from bpy.types import Menu
 
+from ... import __package__ as base_package
+
 
 class CAM_CUTTER_MT_presets(Menu):
     bl_label = "Cutter Presets"
@@ -67,7 +69,7 @@ class CAM_MACHINE_MT_presets(Menu):
 
     @classmethod
     def post_cb(cls, context, filepath):
-        addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
+        addon_prefs = context.preferences.addons[base_package].preferences
         addon_prefs.default_machine_preset = filepath
         bpy.ops.wm.save_userpref()
 

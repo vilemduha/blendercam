@@ -7,6 +7,8 @@ import bpy
 from bpy.props import EnumProperty
 from bpy.types import PropertyGroup
 
+from .. import __package__ as base_package
+
 from ..ui.panels.area_panel import CAM_AREA_Panel
 from ..ui.panels.basrelief import BASRELIEF_Panel
 from ..ui.panels.chains_panel import CAM_CHAINS_Panel
@@ -28,7 +30,7 @@ from ..ui.panels.slice_panel import CAM_SLICE_Panel
 
 def update_interface(self, context):
     # set default for new files
-    addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = context.preferences.addons[base_package].preferences
     addon_prefs.default_interface_level = context.scene.interface.level
     bpy.ops.wm.save_userpref()
 
@@ -97,7 +99,7 @@ def update_shading(self, context):
         shading.studio_light = "interior.exr"
         overlay.show_overlays = False
 
-    addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = context.preferences.addons[base_package].preferences
     addon_prefs.default_shading = context.scene.interface.shading
     bpy.ops.wm.save_userpref()
 
@@ -176,7 +178,7 @@ def update_layout(self, context):
     sidebar_area_classes = []
     tools_area_classes = []
 
-    addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = context.preferences.addons[base_package].preferences
 
     panel_layout = context.scene.interface.layout
 
@@ -274,7 +276,7 @@ def update_user_layout(self, context):
     operation_location = context.scene.interface.operation_location
     tools_location = context.scene.interface.tools_location
 
-    addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = context.preferences.addons[base_package].preferences
     addon_prefs.user_main_location = main_location
     addon_prefs.user_operation_location = operation_location
     addon_prefs.user_tools_location = tools_location
