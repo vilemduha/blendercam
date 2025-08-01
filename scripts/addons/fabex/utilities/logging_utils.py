@@ -8,7 +8,7 @@ from pathlib import Path
 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 log = logging.getLogger("fabex_logger")
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.CRITICAL + 1)
 
 # Create file handler for logging
 log_path = Path(__file__).parent.parent / "logs" / f"{current_time}.log"
