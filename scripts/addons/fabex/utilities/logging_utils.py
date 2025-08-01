@@ -7,7 +7,7 @@ from pathlib import Path
 
 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-log = print
+log = log.info = log.error = log.warning = print
 
 # log = logging.getLogger("fabex_logger")
 # log.setLevel(logging.CRITICAL + 1)
