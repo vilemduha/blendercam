@@ -134,6 +134,17 @@ def on_blender_startup(context):
     load_defaults(addon_prefs)
     copy_presets(addon_prefs)
 
+    # Use the Message Bus to notify when the Render Engine is changed
+    # And run the 'on_engine_change' function
+    bpy.types.Scene.engine_check = object()
+    subscribe_to = bpy.types.RenderSettings, "engine"
+    bpy.msgbus.subscribe_rna(
+        key=subscribe_to,
+        owner=bpy.types.Scene.engine_check,
+        args=(),
+        notify=on_engine_change,
+    )
+
 
 def on_engine_change(*args):
     if bpy.context.scene.render.engine == "FABEX_RENDER":

@@ -70,17 +70,6 @@ def register() -> None:
     # Store a reference to the CAM Operation Properties in the Scene so it can be easily accessed
     bpy.types.Scene.cam_operations = CollectionProperty(type=CAM_OPERATION_Properties)
 
-    # Use the Message Bus to notify when the Render Engine is changed
-    # And run the 'on_engine_change' function
-    bpy.types.Scene.engine_check = object()
-    subscribe_to = bpy.types.RenderSettings, "engine"
-    bpy.msgbus.subscribe_rna(
-        key=subscribe_to,
-        owner=bpy.types.Scene.engine_check,
-        args=(),
-        notify=on_engine_change,
-    )
-
     # Get all the compatible UI panels, as defined in 'engine.py'
     for panel in get_panels():
         panel.COMPAT_ENGINES.add("FABEX_RENDER")
