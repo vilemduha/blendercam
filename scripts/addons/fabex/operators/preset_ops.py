@@ -119,7 +119,7 @@ class AddPresetCamOperation(AddPresetBase, Operator):
         "o.stepdown",
         # "o.path_object_name",
         "o.pencil_threshold",
-        "o.geometry_source",
+        # "o.geometry_source",
         # "o.object_name",
         "o.parallel_angle",
         "o.output_header",
