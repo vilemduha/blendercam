@@ -107,6 +107,8 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
                 box = col.box()
                 box.alert = True
                 box.label(text="Ocl Doesn't Support Fill Areas", icon="ERROR")
+                # ocl waterline also takes skin into account
+                col.prop(self.op, "skin")
             else:
                 col.prop(self.op, "slice_detail", text="Slice Detail")
                 col.prop(self.op, "skin")
