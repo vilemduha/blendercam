@@ -131,7 +131,6 @@ def on_blender_startup(context):
     addon_dependencies()
     add_asset_library()
     add_workspace()
-    load_defaults(addon_prefs)
     copy_presets(addon_prefs)
 
     # Use the Message Bus to notify when the Render Engine is changed
@@ -147,13 +146,15 @@ def on_blender_startup(context):
 
 
 def on_engine_change(*args):
+    addon_prefs = bpy.context.preferences.addons[base_package].preferences
+
     if bpy.context.scene.render.engine == "FABEX_RENDER":
-        bpy.context.scene.interface.layout = bpy.context.preferences.addons[
-            base_package
-        ].preferences.default_layout
+        bpy.context.scene.interface.layout = addon_prefs.default_layout
+
         add_collections()
+        load_defaults(addon_prefs)
+
         log.debug("Fabex Activated")
-        # print("Fabex!")
 
 
 def fix_units():
