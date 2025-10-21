@@ -17,6 +17,7 @@ from shapely.geometry import Polygon
 import bpy
 from mathutils import Vector
 
+from .logging_utils import log
 from ..constants import BULLET_SCALE
 
 
@@ -152,7 +153,7 @@ def timing_print(tinf):
         None: This function does not return any value; it only prints output to the
             console.
     """
-    print("time " + str(tinf[0]) + "seconds")
+    log.info(f"time {tinf[0]} seconds")
 
 
 def progress(text, n=None):
@@ -179,7 +180,9 @@ def progress(text, n=None):
         n = ""
     else:
         n = str(int(n * 1000) / 1000) + "%"
-    sys.stdout.write(f"Progress: {text}{n}\n")
+    progress_string = f"{text}{n}"
+    log.info(progress_string)
+    sys.stdout.write(f"Progress: {progress_string}\n")
     sys.stdout.flush()
 
 
@@ -378,8 +381,8 @@ def get_cache_path(o):
     fn = bpy.data.filepath
     l = len(bpy.path.basename(fn))
     bn = bpy.path.basename(fn)[:-6]
-    print("Folder:", fn[:-l])
-    print("File:", bn)
+    log.info(f"Folder: {fn[:-l]}")
+    log.info(f"File: {bn}")
 
     iname = fn[:-l] + "temp_cam" + os.sep + bn + "_" + o.name
     return iname

@@ -34,6 +34,7 @@ from mathutils import (
 
 from .async_utils import progress_async
 from .chunk_utils import parent_child_distance, chunks_to_shapely
+from .logging_utils import log
 from .simple_utils import (
     progress,
     get_cache_path,
@@ -161,7 +162,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     # suffix as Blender seems to use the ".%03d" pattern to avoid creating duplicate ids.
     iname_59 = iname[:59]
 
-    print(f"numpy_to_image: iname:{iname}, width:{width}, height:{height}")
+    log.info(f"numpy_to_image: iname:{iname}, width:{width}, height:{height}")
 
     def find_image(name: str, width: int, heigh: int) -> Optional[bpy.types.Image]:
         if name in bpy.data.images:
@@ -175,7 +176,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     image = find_image(iname, width, height) or find_image(iname_59, width, height)
 
     if image is None:
-        print(f"numpy_to_image: Creating a new image:{iname_59}")
+        log.info(f"numpy_to_image: Creating a new image:{iname_59}")
         result = bpy.ops.image.new(
             name=iname_59,
             width=width,
@@ -185,7 +186,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
             generated_type="BLANK",
             float=True,
         )
-        print(f"numpy_to_image: Image creation result:{result}")
+        log.info(f"numpy_to_image: Image creation result:{result}")
 
         # If 'iname_59' id didn't exist previously, then
         # it should have been created without changing its id.
@@ -198,7 +199,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
 
     image.pixels[:] = a[:]  # this gives big speedup!
 
-    print(f"numpy_to_image: Time:{str(time.time() - t)}")
+    log.info(f"numpy_to_image: Time:{str(time.time() - t)}")
 
     return image
 
@@ -233,7 +234,7 @@ def image_to_numpy(i):
     na = na.reshape(height, width)
     na = na.swapaxes(0, 1)
 
-    print("\nTime of Image to Numpy " + str(time.time() - t))
+    log.info(f"\nTime of Image to Numpy {time.time() - t}")
     return na
 
 
@@ -320,7 +321,7 @@ async def offset_area(o, samples):
             await progress_async("Offset Depth Image", int((y2 * 100) / comparearea.shape[1]))
         o.offset_image[m : width - cwidth + m, m : height - cwidth + m] = comparearea
 
-        print("\nOffset Image Time " + str(time.time() - t))
+        log.info(f"\nOffset Image Time {time.time() - t}")
 
         o.update_offset_image_tag = False
     return o.offset_image
@@ -413,11 +414,11 @@ def build_stroke(start, end, cutterArray):
     samplesz = numpy.round(numpy.linspace(start[2], end[2], strokelength))
 
     for i in range(0, len(strokelength)):
-        strokeArray[
-            samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r
-        ] = numpy.maximum(
-            strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r],
-            cutterArray + samplesz[i],
+        strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r] = (
+            numpy.maximum(
+                strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r],
+                cutterArray + samplesz[i],
+            )
         )
     return strokeArray
 
@@ -613,7 +614,7 @@ def render_sample_image(o):
             try:
                 i = bpy.data.images.load(iname)
                 if i.size[0] != resx or i.size[1] != resy:
-                    print("Z Buffer Size Changed:", i.size, resx, resy)
+                    log.info(f"Z Buffer Size Changed: {i.size} {resx} {resy}")
                     o.update_z_buffer_image_tag = True
 
             except:
@@ -713,7 +714,7 @@ def render_sample_image(o):
                 if backup_settings is not None:
                     _restore_render_settings(SETTINGS_TO_BACKUP, backup_settings)
                 else:
-                    print("Failed to Backup Scene Settings")
+                    log.info("Failed to Backup Scene Settings")
 
             i = bpy.data.images.load(iname)
             bpy.context.scene.render.engine = "FABEX_RENDER"
@@ -779,10 +780,10 @@ def render_sample_image(o):
 
         o.min_z = numpy.min(a)  # TODO: I really don't know why this is here...
         o.min.z = numpy.min(a)
-        print("min z ", o.min.z)
-        print("max z ", o.max.z)
-        print("max image ", numpy.max(a))
-        print("min image ", numpy.min(a))
+        log.info(f"min z {o.min.z}")
+        log.info(f"max z {o.max.z}")
+        log.info(f"max image {numpy.max(a)}")
+        log.info(f"min image {numpy.min(a)}")
         o.zbuffer_image = a
     # progress('got z buffer also with conversion in:')
     progress(time.time() - t)
@@ -921,7 +922,7 @@ def get_cutter_array(operation, pixsize):
         # print(cutob.scale)
         vstart = Vector((0, 0, -10))
         vend = Vector((0, 0, 10))
-        print("Sampling Custom Cutter")
+        log.info("Sampling Custom Cutter")
         maxz = -1
         for a in range(0, res):
             vstart.x = (a + 0.5 - m) * ps * scale

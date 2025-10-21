@@ -51,14 +51,14 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
         col.scale_y = 1.2
         # Post Processor
         col.prop(self.machine, "post_processor")
-        # System
+        # Units
         row = col.row(align=True)
-        row.prop(context.scene.unit_settings, "system")
-        row.prop(context.scene.unit_settings, "length_unit", text="")
+        row.prop(context.scene.cam_machine, "unit_system")
+        # row.prop(context.scene.unit_settings, "length_unit", text="")
 
-        # Collet Size
-        if self.level >= 2:
-            box.prop(self.machine, "collet_size")
+        # # Collet Size
+        # if self.level >= 2:
+        #     box.prop(self.machine, "collet_size")
 
         # Working Area
         box.prop(self.machine, "working_area")
@@ -71,13 +71,18 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
 
         # Position Definitions
         if self.level >= 2:
-            header, panel = layout.panel_prop(self.machine, "use_position_definitions")
-            header.label(text="Position Definitions")
+            layout.use_property_split = False
+            header, panel = layout.panel("position_definitions", default_closed=True)
+            header.prop(self.machine, "use_position_definitions", text="Position Definitions")
             if panel:
-                panel.prop(self.machine, "starting_position")
-                panel.prop(self.machine, "mtc_position")
-                panel.prop(self.machine, "ending_position")
+                panel.enabled = self.machine.use_position_definitions
+                col = panel.column()
+                col.use_property_split = True
+                col.prop(self.machine, "starting_position")
+                col.prop(self.machine, "mtc_position")
+                col.prop(self.machine, "ending_position")
 
+        layout.use_property_split = True
         # Feedrates
         if self.level >= 1:
             header, panel = layout.panel(idname="feedrate", default_closed=True)
@@ -102,16 +107,21 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
             if self.level >= 2:
                 subheader, subpanel = panel.panel(idname="slow_start", default_closed=True)
                 subheader.label(text="Slow Start (Ramp-Up) (*EXPERIMENTAL, grbl only*)")
-                col = subpanel.column(align=True)
                 if subpanel:
+                    col = subpanel.column(align=True)
                     subpanel.use_property_split = True
                     col.prop(self.machine, "spindle_slow_start_enable", text="Slow Start")
                     subcol = col.column(align=True)
                     subcol.enabled = self.machine.spindle_slow_start_enable
                     subcol.prop(self.machine, "spindle_slow_start_steps", text="Steps")
-                    subcol.prop(self.machine, "spindle_slow_start_skip_threshold", text="Skip Small Increase (RPM)")
-                    subcol.prop(self.machine, "spindle_slow_start_total_time", text="Total Time (sec)")
-
+                    subcol.prop(
+                        self.machine,
+                        "spindle_slow_start_skip_threshold",
+                        text="Skip Small Increase (RPM)",
+                    )
+                    subcol.prop(
+                        self.machine, "spindle_slow_start_total_time", text="Total Time (sec)"
+                    )
 
         # Gcode Options
         if self.level >= 1:

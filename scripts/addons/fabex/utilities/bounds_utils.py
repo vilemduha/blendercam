@@ -6,12 +6,15 @@ import time
 import bpy
 from mathutils import Vector
 
+from .logging_utils import log
 from .shapely_utils import shapely_to_curve, shapely_to_multipolygon
 from .simple_utils import (
     activate,
     progress,
     unit_value_to_string,
 )
+
+from .. import __package__ as base_package
 from ..exception import CamException
 
 
@@ -185,38 +188,51 @@ def get_bounds(o):
     """
 
     # print('kolikrat sem rpijde')
-    if (
-        o.geometry_source == "OBJECT"
-        or o.geometry_source == "COLLECTION"
-        or o.geometry_source == "CURVE"
-    ):
-        print("Valid Geometry")
-        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(o.objects, o.use_modifiers)
+    if o.geometry_source in ["OBJECT", "COLLECTION", "CURVE"]:
+        log.info("Valid Geometry")
+        minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
+            o.objects,
+            o.use_modifiers,
+        )
 
         if o.min_z_from == "OBJECT":
             if minz == 10000000:
                 minz = 0
-            print("Min Z from Object:" + str(minz))
+            log.info(f"Min Z from Object: {minz}")
             o.min.z = minz
             o.min_z = o.min.z
         else:
             o.min.z = o.min_z  # max(bb[0][2]+l.z,o.min_z)#
-            print("Not Min Z from Object")
+            log.info("Not Min Z from Object")
 
-        if o.material.estimate_from_model:
-            print("Estimate Material from Model")
-
+        if o.material.material_source == "MODEL":
+            log.info("Estimate Material from Model")
             o.min.x = minx - o.material.radius_around_model
             o.min.y = miny - o.material.radius_around_model
             o.max.z = max(o.max_z, maxz)
 
             o.max.x = maxx + o.material.radius_around_model
             o.max.y = maxy + o.material.radius_around_model
-        else:
-            print("Not Material from Model")
+
+        if o.material.material_source == "OBJECT":
+            log.info("Estimate Material from Alternate Object")
+            minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
+                [o.material.alt_object],
+                o.use_modifiers,
+            )
+            o.min.x = minx - o.material.radius_around_model
+            o.min.y = miny - o.material.radius_around_model
+            o.max.z = max(o.max_z, maxz)
+
+            o.max.x = maxx + o.material.radius_around_model
+            o.max.y = maxy + o.material.radius_around_model
+
+        if o.material.material_source == "DIMENSIONS":
+            log.info("Not Material from Model")
             o.min.x = o.material.origin.x
             o.min.y = o.material.origin.y
             o.min.z = o.material.origin.z - o.material.size.z
+
             o.max.x = o.min.x + o.material.size.x
             o.max.y = o.min.y + o.material.size.y
             o.max.z = o.material.origin.z
@@ -272,7 +288,7 @@ def get_bounds(o):
                 o.info.warnings += f"Z: {unit_value_to_string(z_delta_range)} > {unit_value_to_string(m.working_area.z)}\n"
 
     if not o.info.warnings == "":
-        addon_prefs = bpy.context.preferences.addons["bl_ext.user_default.fabex"].preferences
+        addon_prefs = bpy.context.preferences.addons[base_package].preferences
         if addon_prefs.show_popups:
             bpy.ops.cam.popup("INVOKE_DEFAULT")
 

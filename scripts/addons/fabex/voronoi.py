@@ -66,6 +66,8 @@ from .constants import (
     PY3,
 )
 
+from .utilities.logging_utils import log
+
 
 class Context(object):
     def __init__(self):
@@ -386,11 +388,11 @@ class Context(object):
             None: This function does not return a value.
         """
         if self.debug:
-            print("site (%d) at %f %f" % (s.sitenum, s.x, s.y))
+            log.info(f"Site ({s.sitenum}) at {s.x} {s.y}")
         elif self.triangulate:
             pass
         elif self.doPrint:
-            print("s %f %f" % (s.x, s.y))
+            log.info(f"s {s.x} {s.y}")
 
     def out_vertex(self, s):
         """Add a vertex to the list of vertices.
@@ -410,11 +412,11 @@ class Context(object):
         """
         self.vertices.append((s.x, s.y))
         if self.debug:
-            print("vertex(%d) at %f %f" % (s.sitenum, s.x, s.y))
+            log.info(f"Vertex ({s.sitenum}) at {s.x} {s.y}")
         elif self.triangulate:
             pass
         elif self.doPrint:
-            print("v %f %f" % (s.x, s.y))
+            log.info(f"v {s.x} {s.y}")
 
     def out_triple(self, s1, s2, s3):
         """Add a triangle defined by three site numbers to the list of triangles.
@@ -435,11 +437,9 @@ class Context(object):
         """
         self.triangles.append((s1.sitenum, s2.sitenum, s3.sitenum))
         if self.debug:
-            print(
-                "circle through left=%d right=%d bottom=%d" % (s1.sitenum, s2.sitenum, s3.sitenum)
-            )
+            log.info(f"Circle through Left={s1.sitenum} Right={s2.sitenum} Bottom={s3.sitenum}")
         elif self.triangulate and self.doPrint:
-            print("%d %d %d" % (s1.sitenum, s2.sitenum, s3.sitenum))
+            log.info(f"{s1.sitenum} {s2.sitenum} {s3.sitenum}")
 
     def out_bisector(self, edge):
         """Process and log the outbisector of a given edge.
@@ -459,12 +459,11 @@ class Context(object):
         """
         self.lines.append((edge.a, edge.b, edge.c))
         if self.debug:
-            print(
-                "line(%d) %gx+%gy=%g, bisecting %d %d"
-                % (edge.edgenum, edge.a, edge.b, edge.c, edge.reg[0].sitenum, edge.reg[1].sitenum)
+            log.info(
+                f"Line ({edge.edgenum}) {edge.a}+{edge.b}={edge.c}, bisecting {edge.reg[0].sitenum} {edge.reg[1].sitenum}"
             )
         elif self.doPrint:
-            print("l %f %f %f" % (edge.a, edge.b, edge.c))
+            log.info(f"l {edge.a} {edge.b} {edge.c}")
 
     def out_edge(self, edge):
         """Process an edge and update the associated polygons and edges.
@@ -502,9 +501,9 @@ class Context(object):
 
         if not self.triangulate:
             if self.doPrint:
-                print("e %d" % edge.edgenum)
-                print(" %d " % sitenumL)
-                print("%d" % sitenumR)
+                log.info(f"e {edge.edgenum}")
+                log.info(f" {sitenumL} ")
+                log.info(f"{sitenumR}")
 
 
 def voronoi(siteList, context):
@@ -700,7 +699,7 @@ class Site(object):
         Returns:
             None: This function does not return any value.
         """
-        print("Site #%d (%g, %g)" % (self.sitenum, self.x, self.y))
+        log.info(f"Site #{self.sitenum} ({self.x}, {self.y})")
 
     def __lt__(self, other):
         """Compare two objects based on their coordinates.
@@ -797,9 +796,9 @@ class Edge(object):
             ep: The value of the ep attribute.
             reg: The value of the reg attribute.
         """
-        print("(#%d a=%g, b=%g, c=%g)" % (self.edgenum, self.a, self.b, self.c))
-        print("ep", self.ep)
-        print("reg", self.reg)
+        log.info(f"(#{self.edgenum} a={self.a}, b={self.b}, c={self.c})")
+        log.info(f"ep {self.ep}")
+        log.info(f"reg {self.reg}")
 
     def set_endpoint(self, lrFlag, site):
         """Set the endpoint for a given flag.
@@ -898,17 +897,17 @@ class Halfedge(object):
                 own dump method.
             ystar: The ystar value associated with this object.
         """
-        print("Halfedge--------------------------")
-        print("Left: ", self.left)
-        print("Right: ", self.right)
-        print("Edge: ", self.edge)
-        print("PM: ", self.pm)
-        print("Vertex: "),
+        log.info("Halfedge--------------------------")
+        log.info(f"Left: {self.left}")
+        log.info(f"Right: {self.right}")
+        log.info(f"Edge: {self.edge}")
+        log.info(f"PM: {self.pm}")
+        log.info("Vertex: "),
         if self.vertex:
             self.vertex.dump()
         else:
-            print("None")
-        print("Ystar: ", self.ystar)
+            log.info("None")
+        log.info(f"Ystar: {self.ystar}")
 
     def __lt__(self, other):
         """Compare two objects based on their ystar and vertex attributes.

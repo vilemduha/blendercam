@@ -1,6 +1,41 @@
 """Fabex 'version_utils.py' © 2012 Vilem Novak
 """
 
+from .. import __package__ as base_package
+
+
+def get_fabex_version():
+    import addon_utils
+
+    for module in addon_utils.modules():
+        if module.__name__ == base_package:
+            version = str(module.bl_info.get("version", (-1, -1, -1)))
+            version = version.replace(", ", ".")
+            version = version[1 : len(version) - 1]
+            return version
+
+
+def get_numba_version():
+    try:
+        import numba
+    except ImportError:
+        return
+    version = str(numba.version_info.full)
+    version = version.replace(", ", ".")
+    version = version[1 : len(version) - 1]
+    return version
+
+
+def get_llvmlite_version():
+    try:
+        import llvmlite
+    except ImportError:
+        return
+    version = str(llvmlite.binding.llvm_version_info)
+    version = version.replace(", ", ".")
+    version = version[1 : len(version) - 1]
+    return version
+
 
 # Import OpencamLib
 # Return available OpenCamLib version on success, None otherwise

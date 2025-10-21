@@ -22,6 +22,7 @@ from .constants import (
     BULLET_SCALE,
     CUTTER_OFFSET,
 )
+from .utilities.logging_utils import log
 from .utilities.simple_utils import (
     activate,
     delete_object,
@@ -215,7 +216,7 @@ def subdivide_long_edges(ob, threshold):
             subdivided.
     """
 
-    print("Subdividing Long Edges")
+    log.info("Subdividing Long Edges")
     m = ob.data
     scale = (ob.scale.x + ob.scale.y + ob.scale.z) / 3
     subdivides = []
@@ -232,7 +233,7 @@ def subdivide_long_edges(ob, threshold):
                 n += 1
                 subdivides.append(i)
         if n > 0:
-            print(len(subdivides))
+            log.info(len(subdivides))
             bpy.ops.object.editmode_toggle()
 
             # bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY')
@@ -274,7 +275,7 @@ def prepare_bullet_collision(o):
     """
     progress("Preparing Collisions")
 
-    print(o.name)
+    log.info(o.name)
     active_collection = bpy.context.view_layer.active_layer_collection.collection
     t = time.time()
     s = bpy.context.scene

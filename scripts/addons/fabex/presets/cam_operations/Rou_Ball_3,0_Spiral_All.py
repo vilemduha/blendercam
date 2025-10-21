@@ -23,7 +23,7 @@ o.distance_between_paths = 0.0024
 o.dont_merge = False
 o.duration = 96.3156509399414
 o.feedrate = 1.0
-o.filename = o.name = f"OP_{o.object_name}_{scene.cam_active_operation + 1}_{Path(__file__).stem}"
+o.filename = o.name = f"{scene.cam_names.operation_name_full}_{Path(__file__).stem}"
 o.free_movement_height = 0.01
 o.geometry_source = "OBJECT"
 o.inverse = False

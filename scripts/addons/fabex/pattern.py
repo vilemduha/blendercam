@@ -26,6 +26,7 @@ from .utilities.chunk_utils import (
     chunks_refine,
     parent_child_distance,
 )
+from .utilities.logging_utils import log
 from .utilities.simple_utils import progress
 
 
@@ -578,7 +579,7 @@ def get_path_pattern_4_axis(operation):
             reverse = not reverse
 
     if o.strategy_4_axis == "HELIX":
-        print("Helix")
+        log.info("Helix")
 
         a1step = o.distance_between_paths / circlesteps
 

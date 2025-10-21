@@ -17,6 +17,7 @@ from .utilities.image_utils import (
     image_to_numpy,
     numpy_to_image,
 )
+from .utilities.logging_utils import log
 
 
 class ReliefError(Exception):
@@ -194,10 +195,12 @@ def prolongate(inbuf, outbuf):
                 weight = 0
 
                 for ix in range(
-                    max(0, ceil(sx - filterSize)), min(floor(sx + filterSize), inx - 1) + 1
+                    max(0, ceil(sx - filterSize)),
+                    min(floor(sx + filterSize), inx - 1) + 1,
                 ):
                     for iy in range(
-                        max(0, ceil(sy - filterSize)), min(floor(sy + filterSize), iny - 1) + 1
+                        max(0, ceil(sy - filterSize)),
+                        min(floor(sy + filterSize), iny - 1) + 1,
                     ):
                         fx = abs(sx - ix)
                         fy = abs(sy - iy)
@@ -384,7 +387,7 @@ def solve_pde_multigrid(
     # 3. nested iterations
 
     for k in range(levels - 1, -1, -1):
-        print("K:", str(k))
+        log.info(f"K: {k}")
 
         # 4. interpolate sollution from last coarse-grid to finer-grid
         # interpolate from level k+1 to level k (finer-grid)
@@ -399,7 +402,7 @@ def solve_pde_multigrid(
         # 5. V-cycle (twice repeated)
 
         for cycle in range(0, vcycleiterations):
-            print("v-cycle iteration:", str(cycle))
+            log.info(f"V-Cycle Iteration: {cycle}")
 
             # 6. downward stroke of V
             for k2 in range(k, levels):
@@ -438,7 +441,7 @@ def solve_pde_multigrid(
 
             # 11. upward stroke of V
             for k2 in range(levels - 1, k - 1, -1):
-                print("k2: ", str(k2))
+                log.info(f"K2: {k2}")
                 # 12. interpolate correction from last coarser-grid to finer-grid
                 #   iu[k2+1] -> cor
                 C = numpy.zeros_like(IU[k2])
@@ -586,7 +589,7 @@ def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
         asolve(r, z)
         znrm = snrm(n, z, itol)
     else:
-        print("illegal itol in linbcg")
+        log.info("Illegal itol in LinBCG")
 
     asolve(r, z)
 
@@ -721,12 +724,12 @@ def build_mesh(mesh_z, br):
     for object in bpy.data.objects:
         if re.search("BasReliefMesh", str(object)):
             bpy.data.objects.remove(object)
-            print("old basrelief removed")
+            log.info("Old BasRelief Removed")
 
-    print("Building Mesh")
+    log.info("Building Mesh")
     numY = mesh_z.shape[1]
     numX = mesh_z.shape[0]
-    print(numX, numY)
+    log.info(f"{numX}, {numY}")
 
     verts = list()
     faces = list()
@@ -775,18 +778,18 @@ def build_mesh(mesh_z, br):
         float(br.justify_z) * br.thickness_mm / 1000,
     )
 
-    print("Faces:" + str(len(ob.data.polygons)))
-    print("Vertices:" + str(len(ob.data.vertices)))
+    log.info(f"Faces: {len(ob.data.polygons)}")
+    log.info(f"Vertices: {len(ob.data.vertices)}")
     if decimateRatio > 0.95:
-        print("Skipping Decimate Ratio > 0.95")
+        log.info("Skipping Decimate Ratio > 0.95")
     else:
         m = ob.modifiers.new(name="Foo", type="DECIMATE")
         m.ratio = decimateRatio
-        print("Decimating with Ratio:" + str(decimateRatio))
+        log.info(f"Decimating with Ratio: {decimateRatio}")
         bpy.ops.object.modifier_apply(modifier=m.name)
-        print("Decimated")
-        print("Faces:" + str(len(ob.data.polygons)))
-        print("Vertices:" + str(len(ob.data.vertices)))
+        log.info("Decimated")
+        log.info(f"Faces: {len(ob.data.polygons)}")
+        log.info(f"Vertices: {len(ob.data.vertices)}")
 
 
 # Switches to cycles render to CYCLES to render the sceen then switches it back to FABEX_RENDER for basRelief
@@ -811,7 +814,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
         None: This function does not return any value.
     """
 
-    print("Rendering Scene")
+    log.info("Rendering Scene")
     scene = bpy.context.scene
     # make sure we're in object mode or else bad things happen
     if bpy.context.active_object:
@@ -843,7 +846,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
     passes = bit_diameter / (2 * passes_per_radius)
     x = round(width / passes)
     y = round(height / passes)
-    print(x, y, passes)
+    log.info(f"{x}, {y}, {passes}")
     scene.render.resolution_x = x
     scene.render.resolution_y = y
     scene.render.resolution_percentage = 100
@@ -853,7 +856,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
     if our_viewer is not None:
         nodes.remove(our_viewer)
     bpy.context.scene.render.engine = "FABEX_RENDER"
-    print("Done Rendering")
+    log.info("Done Rendering")
 
 
 def problem_areas(br):
@@ -920,7 +923,7 @@ def problem_areas(br):
     # put image to scale
     tonemap(nar, br.depth_exponent)
     nar = 1 - nar  # reverse z buffer+ add something
-    print(nar.min(), nar.max())
+    log.info(f"{nar.min()}, {nar.max()}")
     gx = nar.copy()
     gx.fill(0)
     gx[:-1, :] = nar[1:, :] - nar[:-1, :]
@@ -1039,7 +1042,7 @@ def relief(br):
     # put image to scale
     tonemap(nar, br.depth_exponent)
     nar = 1 - nar  # reverse z buffer+ add something
-    print("Range:", nar.min(), nar.max())
+    log.info(f"Range: {nar.min()}, {nar.max()}")
     if nar.min() - nar.max() == 0:
         raise ReliefError(
             "Input Image Is Blank - Check You Have the Correct View Layer or Input Image Set."
@@ -1066,7 +1069,7 @@ def relief(br):
 
     # detect and also recover silhouettes:
     silhxpos = gx > silh_thres
-    print("*** silhxpos is %s" % silhxpos)
+    log.info(f"Silhouette X Position: {silhxpos}")
     gx = gx * (~silhxpos) + recover_silh * (silhxpos * silh_thres * silh_scale) * sqrarx
     silhxneg = gx < -silh_thres
     gx = gx * (~silhxneg) - recover_silh * (silhxneg * silh_thres * silh_scale) * sqrarx
@@ -1090,7 +1093,7 @@ def relief(br):
     divg[:, 1:] = divg[:, 1:] - gy[:, :-1]  # subtract y
 
     if br.detail_enhancement_use:  # fourier stuff here!disabled by now
-        print("detail enhancement")
+        log.info("Detail Enhancement")
         rows, cols = gx.shape
         crow, ccol = int(rows / 2), int(cols / 2)
 
@@ -1120,7 +1123,7 @@ def relief(br):
         divg = numpy.abs(numpy.fft.ifft2(divgfshift))
         divg -= divgmin
         divg = -divg
-        print("detail enhancement finished")
+        log.info("Detail Enhancement Finished")
 
     levels = 0
     mins = min(nar.shape[0], nar.shape[1])
@@ -1147,4 +1150,4 @@ def relief(br):
     build_mesh(target, br)
 
     t = time.time() - t
-    print("total time:" + str(t) + "\n")
+    log.info(f"Total Time: {t}\n")

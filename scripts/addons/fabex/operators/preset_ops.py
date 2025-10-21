@@ -148,8 +148,7 @@ class AddPresetCamMachine(AddPresetBase, Operator):
     preset_defines = ["d = bpy.context.scene.cam_machine", "s = bpy.context.scene.unit_settings"]
     preset_values = [
         "d.post_processor",
-        "s.system",
-        "s.length_unit",
+        "d.unit_system",
         "d.use_position_definitions",
         "d.starting_position",
         "d.mtc_position",

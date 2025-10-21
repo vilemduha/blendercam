@@ -3,6 +3,8 @@
 'CAM Cutter' panel in Properties > Render
 """
 
+import textwrap
+
 import bpy
 from bpy.types import Panel
 
@@ -123,8 +125,35 @@ class CAM_CUTTER_Panel(CAMParentPanel, Panel):
             col = box.column(align=True)
             col.prop(self.op, "cutter_id")
 
-            # Cutter Description
-            col.prop(self.op, "cutter_description", text="Description")
+            header, panel = layout.panel(idname="cutter_description", default_closed=True)
+            header.label(text="Description")
+            if panel:
+                panel.use_property_split = False
+                col = panel.column()
+
+                if self.op.cutter_description == "":
+                    # Cutter Description
+                    col.prop(self.op, "cutter_description", text="")
+                else:
+                    text = self.op.cutter_description
+
+                    # Get the width and create a text wrapper
+                    width = context.region.width
+                    characters = int(width / 8)
+                    wrapper = textwrap.TextWrapper(width=characters)
+                    lines = text.split("\\n")
+                    text_lines = []
+
+                    # Wrap each line separately
+                    for line in lines:
+                        text_lines += wrapper.wrap(text=line)
+
+                    box = col.box()
+                    col = box.column(align=True)
+                    col.active = False
+
+                    for text_line in text_lines:
+                        col.label(text=text_line)
 
         # Cutter Engagement
         if self.op.cutter_type in ["LASER", "PLASMA"]:

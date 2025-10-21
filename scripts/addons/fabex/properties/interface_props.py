@@ -7,6 +7,8 @@ import bpy
 from bpy.props import EnumProperty
 from bpy.types import PropertyGroup
 
+from .. import __package__ as base_package
+
 from ..ui.panels.area_panel import CAM_AREA_Panel
 from ..ui.panels.basrelief import BASRELIEF_Panel
 from ..ui.panels.chains_panel import CAM_CHAINS_Panel
@@ -28,7 +30,7 @@ from ..ui.panels.slice_panel import CAM_SLICE_Panel
 
 def update_interface(self, context):
     # set default for new files
-    addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = context.preferences.addons[base_package].preferences
     addon_prefs.default_interface_level = context.scene.interface.level
     bpy.ops.wm.save_userpref()
 
@@ -38,8 +40,11 @@ def update_shading(self, context):
     shading = view3d.shading
     overlay = view3d.overlay
 
+    shading.wireframe_color_type = "OBJECT"
+
     if context.scene.interface.shading == "DEFAULT":
         shading.type = "SOLID"
+        shading.light = "STUDIO"
         shading.color_type = "MATERIAL"
         shading.show_shadows = False
         shading.show_cavity = False
@@ -51,6 +56,8 @@ def update_shading(self, context):
 
     elif context.scene.interface.shading == "DELUXE":
         shading.type = "SOLID"
+        shading.light = "MATCAP"
+        shading.studio_light = "metal_shiny.exr"
         shading.color_type = "OBJECT"
         shading.show_shadows = True
         shading.show_cavity = True
@@ -63,6 +70,7 @@ def update_shading(self, context):
 
     elif context.scene.interface.shading == "CLEAN_DEFAULT":
         shading.type = "SOLID"
+        shading.light = "STUDIO"
         shading.color_type = "MATERIAL"
         shading.show_shadows = False
         shading.show_cavity = False
@@ -74,6 +82,8 @@ def update_shading(self, context):
 
     elif context.scene.interface.shading == "CLEAN_DELUXE":
         shading.type = "SOLID"
+        shading.light = "MATCAP"
+        shading.studio_light = "metal_shiny.exr"
         shading.color_type = "OBJECT"
         shading.show_shadows = True
         shading.show_cavity = True
@@ -89,7 +99,7 @@ def update_shading(self, context):
         shading.studio_light = "interior.exr"
         overlay.show_overlays = False
 
-    addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = context.preferences.addons[base_package].preferences
     addon_prefs.default_shading = context.scene.interface.shading
     bpy.ops.wm.save_userpref()
 
@@ -168,7 +178,7 @@ def update_layout(self, context):
     sidebar_area_classes = []
     tools_area_classes = []
 
-    addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = context.preferences.addons[base_package].preferences
 
     panel_layout = context.scene.interface.layout
 
@@ -266,7 +276,7 @@ def update_user_layout(self, context):
     operation_location = context.scene.interface.operation_location
     tools_location = context.scene.interface.tools_location
 
-    addon_prefs = context.preferences.addons["bl_ext.user_default.fabex"].preferences
+    addon_prefs = context.preferences.addons[base_package].preferences
     addon_prefs.user_main_location = main_location
     addon_prefs.user_operation_location = operation_location
     addon_prefs.user_tools_location = tools_location
@@ -279,10 +289,34 @@ class CAM_INTERFACE_Properties(PropertyGroup):
         name="Interface",
         description="Choose visible options",
         items=[
-            ("0", "Basic", "Only show essential options", "", 0),
-            ("1", "Advanced", "Show advanced options", "", 1),
-            ("2", "Complete", "Show all options", "", 2),
-            ("3", "Experimental", "Show experimental options", "EXPERIMENTAL", 3),
+            (
+                "0",
+                "Basic",
+                "Only show essential options",
+                "",
+                0,
+            ),
+            (
+                "1",
+                "Advanced",
+                "Show advanced options",
+                "",
+                1,
+            ),
+            (
+                "2",
+                "Complete",
+                "Show all options",
+                "",
+                2,
+            ),
+            (
+                "3",
+                "Experimental",
+                "Show experimental options",
+                "EXPERIMENTAL",
+                3,
+            ),
         ],
         default="0",
         update=update_interface,
@@ -292,11 +326,31 @@ class CAM_INTERFACE_Properties(PropertyGroup):
         name="Shading",
         description="Choose viewport shading preset",
         items=[
-            ("DEFAULT", "Default", "Standard viewport shading"),
-            ("DELUXE", "Deluxe", "Cavity, Curvature, Depth of Field, Shadows & Object Colors"),
-            ("CLEAN_DEFAULT", "Clean Default", "Standard viewport shading with no overlays"),
-            ("CLEAN_DELUXE", "Clean Deluxe", "Deluxe shading with no overlays"),
-            ("PREVIEW", "Preview", "HDRI Lighting Preview"),
+            (
+                "DEFAULT",
+                "Default",
+                "Standard viewport shading",
+            ),
+            (
+                "DELUXE",
+                "Deluxe",
+                "Cavity, Curvature, Depth of Field, Shadows & Object Colors",
+            ),
+            (
+                "CLEAN_DEFAULT",
+                "Clean Default",
+                "Standard viewport shading with no overlays",
+            ),
+            (
+                "CLEAN_DELUXE",
+                "Clean Deluxe",
+                "Deluxe shading with no overlays",
+            ),
+            (
+                "PREVIEW",
+                "Preview",
+                "HDRI Lighting Preview",
+            ),
         ],
         default="DEFAULT",
         update=update_shading,
@@ -405,7 +459,8 @@ def draw_interface(self, context):
     layout.use_property_decorate = False
 
     if context.engine == "FABEX_RENDER":
-        col = layout.column()
+        col = layout.column(align=True)
         col.prop(context.scene.interface, "level")
         col.prop(context.scene.interface, "layout")
         col.prop(context.scene.interface, "shading")
+        col.prop(context.scene.cam_names, "default_export_location")

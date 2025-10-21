@@ -152,5 +152,25 @@ class CAM_CHAINS_Panel(CAMParentPanel, Panel):
 
                     box = layout.box()
                     col = box.column(align=True)
-                    col.prop(chain, "name")
-                    col.prop(chain, "filename")
+                    cam_names = context.scene.cam_names
+                    link_names = chain.link_chain_file_names
+
+                    row = col.row(align=True)
+                    col = row.column(align=True)
+                    col.use_property_split = True
+                    col.use_property_decorate = False
+
+                    if link_names:
+                        text = "Chain & File Name"
+                        icon = "LINKED"
+                        col.scale_y = 2
+                    else:
+                        text = "Chain Name"
+                        icon = "UNLINKED"
+                        col.scale_y = 1
+                    col.prop(chain, "name", text=text)
+                    if not link_names:
+                        col.prop(chain, "filename", text="File Name")
+                    col = row.column(align=True)
+                    col.scale_y = 2
+                    col.prop(chain, "link_chain_file_names", text="", icon=icon)

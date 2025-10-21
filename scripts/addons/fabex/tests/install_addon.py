@@ -4,16 +4,18 @@ import subprocess
 import sys
 import tempfile
 
+# from ..utilities.logging_utils import log
 
 INSTALL_CODE = f"""
 import bpy
 bpy.context.preferences.system.use_online_access = True
 bpy.ops.extensions.repo_sync_all(use_active_only=False)
-bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}', repo='user_default')
 bpy.ops.extensions.package_install(repo_index=0, pkg_id="stl_format_legacy")
 bpy.ops.extensions.package_install(repo_index=0, pkg_id="simplify_curves_plus")
 bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")
+bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}', repo='user_default')
 bpy.ops.wm.save_userpref()
+bpy.ops.wm.read_homefile(app_template="")
 """
 
 NUM_RETRIES = 10

@@ -34,6 +34,7 @@ from ..constants import (
 )
 from ..exception import CamException
 from .async_utils import progress_async
+from .logging_utils import log
 from .simple_utils import activate
 
 
@@ -350,7 +351,7 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
             cutter_length,
         )
     else:
-        print("Cutter Unsupported: {0}\n".format(op_cutter_type))
+        log.info(f"Cutter Unsupported: {op_cutter_type}\n")
         quit()
 
     bdc = ocl.BatchDropCutter()

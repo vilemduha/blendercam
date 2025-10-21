@@ -15,7 +15,9 @@ from bpy.types import Operator
 
 from ..constants import PRECISION
 from ..slice import slicing_2d, slicing_3d
+
 from ..utilities.bounds_utils import get_bounds_worldspace
+from ..utilities.logging_utils import log
 
 
 class CamSliceObjects(Operator):
@@ -28,7 +30,7 @@ class CamSliceObjects(Operator):
 
     slice_distance: FloatProperty(
         name="Slicing Distance",
-        description="Slices distance in z, should be most often " "thickness of plywood sheet.",
+        description="Slices distance in z, should be most often thickness of plywood sheet.",
         min=0.001,
         max=10,
         default=0.005,
@@ -100,7 +102,7 @@ class CamSliceObjects(Operator):
             slicename = "slice_" + t  # name for the current slice
             tslicename = "t_" + t  # name for the current slice text
             height += start_height
-            print(slicename)
+            log.info(slicename)
 
             ob.select_set(True)  # select object to be sliced
             bpy.context.view_layer.objects.active = ob  # make object to be sliced active

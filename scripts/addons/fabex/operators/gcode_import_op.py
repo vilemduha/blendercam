@@ -16,6 +16,8 @@ from bpy.types import (
 
 from ..gcode_import_parser import import_gcode
 
+from ..utilities.logging_utils import log
+
 
 class WM_OT_gcode_import(Operator, ImportHelper):
     """Import G-code, Travel Lines Don't Get Drawn"""
@@ -60,7 +62,7 @@ class WM_OT_gcode_import(Operator, ImportHelper):
     )
 
     def execute(self, context):
-        print(self.filepath)
+        log.info(self.filepath)
         context.scene.gcode_output_type = self.output
         return import_gcode(
             self,

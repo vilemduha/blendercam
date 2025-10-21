@@ -7,7 +7,8 @@ import threading
 
 import bpy
 
-from ..utilities.operation_utils import reload_paths
+from .logging_utils import log
+from .operation_utils import reload_paths
 
 
 class threadCom:  # object passed to threads to read background process stdout info
@@ -73,7 +74,7 @@ def timer_update(context):
                 # readthread.
                 tcom.lasttext = tcom.out_text
                 if tcom.out_text != "":
-                    print(tcom.opname, tcom.out_text)
+                    log.info(f"{tcom.opname}, {tcom.out_text}")
                     tcom.out_text = ""
 
                 if "finished" in tcom.lasttext:

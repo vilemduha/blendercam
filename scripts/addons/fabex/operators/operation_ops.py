@@ -17,6 +17,7 @@ from ..constants import was_hidden_dict
 
 from ..utilities.simple_utils import add_to_group
 from ..utilities.machine_utils import add_machine_area_object
+from ..utilities.logging_utils import log
 from ..utilities.bounds_utils import get_bounds_worldspace
 from ..utilities.addon_utils import fix_units
 
@@ -66,10 +67,13 @@ class CamOperationAdd(Operator):
 
         s.cam_active_operation = len(s.cam_operations) - 1
 
-        o.name = f"Op_{ob.name}_{s.cam_active_operation + 1}"
-        o.filename = o.name
+        # o.name = f"Op_{ob.name}_{s.cam_active_operation + 1}"
+        # o.filename = o.name
 
-        if s.objects.get("CAM_machine") is None:
+        o.name = s.cam_names.operation_name_full
+        o.filename = s.cam_names.file_name_full
+
+        if s.objects.get("CAM_Machine") is None:
             add_machine_area_object()
 
         return {"FINISHED"}
@@ -196,7 +200,7 @@ class CamOperationRemove(Operator):
             pass
 
         ao = scene.cam_operations[scene.cam_active_operation]
-        print(was_hidden_dict)
+        log.info(was_hidden_dict)
         if ao.name in was_hidden_dict:
             del was_hidden_dict[ao.name]
 

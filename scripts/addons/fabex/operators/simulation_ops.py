@@ -20,6 +20,8 @@ from .async_op import (
 )
 
 from ..simulation import do_simulation
+
+from ..utilities.logging_utils import log
 from ..utilities.operation_utils import (
     chain_valid,
     get_chain_operations,
@@ -67,8 +69,9 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
 
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
+        path_name = s.cam_names.path_name_full
 
-        operation_name = "cam_path_{}".format(operation.name)
+        operation_name = path_name  # "cam_path_{}".format(operation.name)
 
         if operation_name in bpy.data.objects:
             try:
@@ -165,14 +168,14 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
         for operation in chainops:
             if operation.name not in bpy.data.objects:
                 canSimulate = True  # force true
-            print("Operation Name " + str(operation.name))
+            log.info(f"Operation Name {operation.name}")
         if canSimulate:
             try:
                 await do_simulation(chain.name, chainops)
             except AsyncCancelledException as e:
                 return {"CANCELLED"}
         else:
-            print("No Computed Path to Simulate")
+            log.info("No Computed Path to Simulate")
             return {"FINISHED"}
         return {"FINISHED"}
 

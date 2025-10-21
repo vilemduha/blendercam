@@ -3,12 +3,14 @@
 Patch to ensure functions will run if numba is unavailable.
 """
 
+from .logging_utils import log
+
 try:
     from numba import jit, prange
 
-    print("Numba library is available.")
+    log.info("Numba library is available.")
 except:
-    print("Numba library is not installed.")
+    log.info("Numba library is not installed.")
 
     def jit(f=None, *args, **kwargs):
         def decorator(func):

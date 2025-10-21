@@ -1,5 +1,6 @@
 [tool.black]
 line-length = 100
+exclude = "/scripts/addons/fabex/presets/"
 target-version = ['py311']
 include = '\.py'
 

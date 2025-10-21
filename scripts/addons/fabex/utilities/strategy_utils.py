@@ -6,6 +6,7 @@ The functions here are called with operators defined in 'ops.py'
 
 import bpy
 
+from .logging_utils import log
 from .orient_utils import add_orientation_object, remove_orientation_object
 
 
@@ -26,7 +27,7 @@ def update_strategy(o, context):
 
     """"""
     o.changed = True
-    print("Update Strategy")
+    log.info("Update Strategy")
     if o.machine_axes == "5" or (
         o.machine_axes == "4" and o.strategy_4_axis == "INDEXED"
     ):  # INDEXED 4 AXIS DOESN'T EXIST NOW...
@@ -58,14 +59,14 @@ def update_exact(o, context):
         None: This function does not return a value.
     """
 
-    print("Update Exact ")
+    log.info("Update Exact ")
     o.changed = True
     o.update_z_buffer_image_tag = True
     o.update_offset_image_tag = True
     if o.optimisation.use_exact:
         if o.strategy == "POCKET" or o.strategy == "MEDIAL_AXIS" or o.inverse:
             o.optimisation.use_opencamlib = False
-            print("Current Operation Cannot Use Exact Mode")
+            log.info("Current Operation Cannot Use Exact Mode")
     else:
         o.optimisation.use_opencamlib = False
 
@@ -88,12 +89,12 @@ def update_opencamlib_1(o, context):
         None: This function does not return any value.
     """
 
-    print("Update OpenCAMLib ")
+    log.info("Update OpenCAMLib ")
     o.changed = True
     if o.optimisation.use_opencamlib and (o.strategy == "POCKET" or o.strategy == "MEDIAL_AXIS"):
         o.optimisation.use_exact = False
         o.optimisation.use_opencamlib = False
-        print("Current Operation Cannot Use OpenCAMLib")
+        log.info("Current Operation Cannot Use OpenCAMLib")
 
 
 def get_strategy_list(scene, context):

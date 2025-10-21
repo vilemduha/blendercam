@@ -16,6 +16,7 @@ try:
 except ImportError:
     pass
 
+from .logging_utils import log
 
 from ..constants import SHAPELY
 
@@ -75,8 +76,8 @@ def shapely_to_multipolygon(anydata):
         shapely.geometry.MultiPolygon: A MultiPolygon representation of the input
         geometry.
     """
-    print("Geometry Type: ", anydata.geom_type)
-    print("Anydata Empty: ", anydata.is_empty)
+    log.info(f"Geometry Type: {anydata.geom_type}")
+    log.info(f"Anydata Empty: {anydata.is_empty}")
     ## bug: empty mesh circle makes anydata empty: geometry type 'GeometryCollection'
     if anydata.geom_type == "MultiPolygon":
         return anydata
@@ -86,7 +87,7 @@ def shapely_to_multipolygon(anydata):
         else:
             return sgeometry.MultiPolygon()
     else:
-        print("Shapely Conversion Aborted")
+        log.info("Shapely Conversion Aborted")
         return sgeometry.MultiPolygon()
 
 

@@ -66,6 +66,11 @@ class CAM_OPERATION_Properties(PropertyGroup):
         default="Operation",
         update=update_rest,
     )
+    link_operation_file_names: BoolProperty(
+        name="Link Operation & File Name",
+        description="Auto-assign the Operation Name to the Operation Gcode File",
+        default=False,
+    )
     auto_export: BoolProperty(
         name="Auto Export",
         description="Export files immediately after path calculation",
@@ -130,28 +135,6 @@ class CAM_OPERATION_Properties(PropertyGroup):
         description="Geometry source",
         default="OBJECT",
         update=update_operation_valid,
-    )
-    cutter_type: EnumProperty(
-        name="Cutter",
-        items=(
-            ("END", "End", "End - Flat cutter"),
-            ("BALLNOSE", "Ballnose", "Ballnose cutter"),
-            ("BULLNOSE", "Bullnose", "Bullnose cutter ***placeholder **"),
-            ("VCARVE", "V-carve", "V-carve cutter"),
-            ("BALLCONE", "Ballcone", "Ball with a Cone for Parallel - X"),
-            ("CYLCONE", "Cylinder cone", "Cylinder End with a Cone for Parallel - X"),
-            ("LASER", "Laser", "Laser cutter"),
-            ("PLASMA", "Plasma", "Plasma cutter"),
-            ("CUSTOM", "Custom-EXPERIMENTAL", "Modelled cutter - not well tested yet."),
-        ),
-        description="Type of cutter used",
-        default="END",
-        update=update_Z_buffer_image,
-    )
-    cutter_object_name: StringProperty(
-        name="Cutter Object",
-        description="Object used as custom cutter for this operation",
-        update=update_Z_buffer_image,
     )
     machine_axes: EnumProperty(
         name="Number of Axes",
@@ -358,6 +341,28 @@ class CAM_OPERATION_Properties(PropertyGroup):
     # Cutter #
     ##########
 
+    cutter_type: EnumProperty(
+        name="Cutter",
+        items=(
+            ("END", "End", "End - Flat cutter"),
+            ("BALLNOSE", "Ballnose", "Ballnose cutter"),
+            ("BULLNOSE", "Bullnose", "Bullnose cutter ***placeholder **"),
+            ("VCARVE", "V-carve", "V-carve cutter"),
+            ("BALLCONE", "Ballcone", "Ball with a Cone for Parallel - X"),
+            ("CYLCONE", "Cylinder cone", "Cylinder End with a Cone for Parallel - X"),
+            ("LASER", "Laser", "Laser cutter"),
+            ("PLASMA", "Plasma", "Plasma cutter"),
+            ("CUSTOM", "Custom-EXPERIMENTAL", "Modelled cutter - not well tested yet."),
+        ),
+        description="Type of cutter used",
+        default="END",
+        update=update_Z_buffer_image,
+    )
+    cutter_object_name: StringProperty(
+        name="Cutter Object",
+        description="Object used as custom cutter for this operation",
+        update=update_Z_buffer_image,
+    )
     cutter_id: IntProperty(
         name="Tool Number",
         description="For machines which support tool change based on tool id",

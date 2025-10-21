@@ -32,6 +32,7 @@ from ..cam_chunk import (
     polygon_convex_hull,
 )
 
+from ..utilities.logging_utils import log
 from ..utilities.simple_utils import (
     remove_multiple,
     select_multiple,
@@ -930,12 +931,12 @@ class CamCurveMortise(Operator):
                     length = line.length
                 else:
                     length = c.length
-                print("Loop Length:", length)
+                log.info(f"Loop Length: {length}")
                 if self.opencurve:
                     loop_length = line.length
                 else:
                     loop_length = c.length
-                print("Line Length:", loop_length)
+                log.info(f"Line Length: {loop_length}")
 
                 if self.adaptive > 0.0:
                     joinery.variable_finger(
@@ -1082,7 +1083,7 @@ class CamCurveInterlock(Operator):
             dict: A dictionary indicating the operation's completion status.
         """
 
-        print(len(context.selected_objects), "selected object", context.selected_objects)
+        log.info(f"{len(context.selected_objects)} Selected Object {context.selected_objects}")
         if len(context.selected_objects) > 0 and (context.active_object.type in ["CURVE", "FONT"]):
             o1 = bpy.context.active_object
 
@@ -1113,12 +1114,12 @@ class CamCurveInterlock(Operator):
                         length = line.length
                     else:
                         length = c.length
-                    print("Loop Length:", length)
+                    log.info(f"Loop Length: {length}")
                     if self.opencurve:
                         loop_length = line.length
                     else:
                         loop_length = c.length
-                    print("Line Length:", loop_length)
+                    log.info(f"Line Length: {loop_length}")
 
                     joinery.distributed_interlock(
                         c,
@@ -1730,7 +1731,7 @@ class CamCurvePuzzle(Operator):
         """
 
         curve_detected = False
-        print(len(context.selected_objects), "selected object", context.selected_objects)
+        log.info(f"{len(context.selected_objects)} Selected Object {context.selected_objects}")
         if len(context.selected_objects) > 0 and context.active_object.type == "CURVE":
             curve_detected = True
             # bpy.context.object.data.resolution_u = 60

@@ -9,6 +9,7 @@ import bpy
 
 from .simple_utils import activate
 from .orient_utils import rotation_to_2_axes
+from .logging_utils import log
 
 
 def prepare_indexed(o):
@@ -78,15 +79,18 @@ def cleanup_indexed(operation):
     s = bpy.context.scene
     oriname = operation.name + "orientation"
 
+    path_name = s.cam_names.path_name_full
+
     ori = s.objects[oriname]
-    path = s.objects["cam_path_{}{}".format(operation.name)]
+    # path = s.objects["cam_path_{}{}".format(operation.name)]
+    path = s.objects[path_name]
 
     ori.matrix_world = operation.orientation_matrix
     # set correct path location
     path.location = ori.location
     path.rotation_euler = ori.rotation_euler
 
-    print(ori.matrix_world, operation.orientation_matrix)
+    log.info(f"{ori.matrix_world}, {operation.orientation_matrix}")
     # TODO: fix this here wrong order can cause objects out of place
     for i, ob in enumerate(operation.objects):
         ob.parent = operation.parents[i]

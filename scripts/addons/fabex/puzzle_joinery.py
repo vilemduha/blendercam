@@ -17,6 +17,7 @@ import bpy
 from .constants import DT
 from . import joinery
 
+from .utilities.logging_utils import log
 from .utilities.shapely_utils import shapely_to_curve
 from .utilities.simple_utils import (
     duplicate,
@@ -439,7 +440,7 @@ def arc(
         "receptacle", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep
     )
     twist_female("testing", thick, diameter, tolerance, twist, tneck, tthick, twist_keep=twist_keep)
-    print("Generating Arc")
+    log.info("Generating Arc")
     # generate arc
     bpy.ops.curve.simple(
         align="WORLD",
@@ -1311,8 +1312,8 @@ def open_curve(
     p_start = coords[0]
     p_end = coords[-1]
 
-    print("Start Angle", start_angle)
-    print("End Angle", end_angle)
+    log.info(f"Start Angle {start_angle}")
+    log.info(f"End Angle {end_angle}")
 
     bpy.ops.curve.simple(
         align="WORLD",
@@ -1426,7 +1427,7 @@ def tile(diameter, tolerance, tile_x_amount, tile_y_amount, stem=1):
     width = ((tile_x_amount) * (4 + 2 * (stem - 1)) + 1) * diameter
     height = ((tile_y_amount) * (4 + 2 * (stem - 1)) + 1) * diameter
 
-    print("Size:", width, height)
+    log.info(f"Size: {width}, {height}")
     fingers(diameter, tolerance, amount=tile_x_amount, stem=stem)
     add_rectangle(width, height)
     active_name("_base")

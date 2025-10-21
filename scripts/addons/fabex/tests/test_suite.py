@@ -4,6 +4,8 @@ import subprocess
 import sys
 import unittest
 
+# from ..utilities.logging_utils import log
+
 
 class FabexTest(unittest.TestCase):
     @classmethod
@@ -75,7 +77,7 @@ class FabexTest(unittest.TestCase):
                     # bullet physics gives slightly different results on mac sometimes...
                     # this is something we can't fix, so compare against mac generated test
                     # file
-                    print("Using Mac Test File", len(expected), len(generated))
+                    print(f"Using Mac Test File {len(expected)} {len(generated)}")
                     expected = self.get_gcode_from_file(gcode_file + ".mac")
                     self.assertMultiLineEqual(
                         generated,

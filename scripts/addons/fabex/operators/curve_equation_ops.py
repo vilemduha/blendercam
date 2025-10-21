@@ -19,6 +19,7 @@ from bpy.types import Operator
 from .. import parametric
 
 from ..utilities.geom_utils import triangle, s_sine
+from ..utilities.logging_utils import log
 
 
 class CamSineCurve(Operator):
@@ -32,20 +33,52 @@ class CamSineCurve(Operator):
     axis: EnumProperty(
         name="Displacement Axis",
         items=(
-            ("XY", "Y to displace X axis", "Y constant; X sine displacement"),
-            ("YX", "X to displace Y axis", "X constant; Y sine displacement"),
-            ("ZX", "X to displace Z axis", "X constant; Y sine displacement"),
-            ("ZY", "Y to displace Z axis", "X constant; Y sine displacement"),
+            (
+                "XY",
+                "Y to displace X axis",
+                "Y constant; X sine displacement",
+            ),
+            (
+                "YX",
+                "X to displace Y axis",
+                "X constant; Y sine displacement",
+            ),
+            (
+                "ZX",
+                "X to displace Z axis",
+                "X constant; Y sine displacement",
+            ),
+            (
+                "ZY",
+                "Y to displace Z axis",
+                "X constant; Y sine displacement",
+            ),
         ),
         default="ZX",
     )
     wave: EnumProperty(
         name="Wave",
         items=(
-            ("sine", "Sine Wave", "Sine Wave"),
-            ("triangle", "Triangle Wave", "triangle wave"),
-            ("cycloid", "Cycloid", "Sine wave rectification"),
-            ("invcycloid", "Inverse Cycloid", "Sine wave rectification"),
+            (
+                "sine",
+                "Sine Wave",
+                "Sine Wave",
+            ),
+            (
+                "triangle",
+                "Triangle Wave",
+                "triangle wave",
+            ),
+            (
+                "cycloid",
+                "Cycloid",
+                "Sine wave rectification",
+            ),
+            (
+                "invcycloid",
+                "Inverse Cycloid",
+                "Sine wave rectification",
+            ),
         ),
         default="sine",
     )
@@ -163,7 +196,7 @@ class CamSineCurve(Operator):
         elif self.wave == "invcycloid":
             zstring = f"-1 * abs({s_sine(amp, period, dc_offset=offset, phase_shift=shift)})"
 
-        print(zstring)
+        log.info(zstring)
         # make equation from string
 
         def e(t):
@@ -320,8 +353,8 @@ class CamLissajousCurve(Operator):
         def z(t):
             return eval(zstring)
 
-        print(f"x= {xstring}")
-        print(f"y= {ystring}")
+        log.info(f"X= {xstring}")
+        log.info(f"Y= {ystring}")
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
@@ -410,10 +443,10 @@ class CamHypotrochoidCurve(Operator):
         def z(t):
             return eval(zstring)
 
-        print(f"x= {xstring}")
-        print(f"y= {ystring}")
-        print(f"z= {zstring}")
-        print(f"maxangle {maxangle}")
+        log.info(f"X= {xstring}")
+        log.info(f"Y= {ystring}")
+        log.info(f"Z= {zstring}")
+        log.info(f"MaxAngle {maxangle}")
 
         # build function to be passed to create parametric curve ()
         def f(t, offset: float = 0.0):
@@ -422,10 +455,15 @@ class CamHypotrochoidCurve(Operator):
 
         iter = int(maxangle * 10)
         if iter > 10000:  # do not calculate more than 10000 points
-            print("limiting calculations to 10000 points")
+            log.info("limiting calculations to 10000 points")
             iter = 10000
         parametric.create_parametric_curve(
-            f, offset=0.0, min=0, max=maxangle, use_cubic=True, iterations=iter
+            f,
+            offset=0.0,
+            min=0,
+            max=maxangle,
+            use_cubic=True,
+            iterations=iter,
         )
 
         return {"FINISHED"}
@@ -478,9 +516,9 @@ class CamCustomCurve(Operator):
     )
 
     def execute(self, context):
-        print("x= " + self.x_string)
-        print("y= " + self.y_string)
-        print("z= " + self.z_string)
+        log.info(f"X= {self.x_string}")
+        log.info(f"Y= {self.y_string}")
+        log.info(f"Z= {self.z_string}")
 
         # make equation from string
         def ex(t):
@@ -498,7 +536,12 @@ class CamCustomCurve(Operator):
             return c
 
         parametric.create_parametric_curve(
-            f, offset=0.0, min=self.min_t, max=self.max_t, use_cubic=True, iterations=self.iteration
+            f,
+            offset=0.0,
+            min=self.min_t,
+            max=self.max_t,
+            use_cubic=True,
+            iterations=self.iteration,
         )
 
         return {"FINISHED"}

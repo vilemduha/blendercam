@@ -55,6 +55,7 @@ from .utilities.chunk_utils import (
 )
 from .utilities.compare_utils import check_equal, unique
 from .utilities.geom_utils import circle, helix
+from .utilities.logging_utils import log
 from .utilities.operation_utils import get_operation_sources
 from .utilities.shapely_utils import shapely_to_curve
 from .utilities.simple_utils import (
@@ -142,8 +143,10 @@ async def cutout(o):
     max_depth = check_min_z(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
     c_offset = o.cutter_diameter / 2  # cutter offset
-    print("Cutter Type:", o.cutter_type)
-    print("Max Depth:", max_depth)
+    log.info(f"Cutter Type: {o.cutter_type}")
+    log.info(f"Max Depth: {max_depth}")
+    # print("Cutter Type:", o.cutter_type)
+    # print("Max Depth:", max_depth)
     if o.cutter_type == "VCARVE":
         c_offset = -max_depth * tan(cutter_angle)
     elif o.cutter_type == "CYLCONE":
@@ -152,11 +155,11 @@ async def cutout(o):
         c_offset = -max_depth * tan(cutter_angle) + o.ball_radius
     elif o.cutter_type == "BALLNOSE":
         r = o.cutter_diameter / 2
-        print("Cutter Radius:", r)
-        print("Skin: ", o.skin)
+        log.info(f"Cutter Radius: {r}")
+        log.info(f"Skin: {o.skin}")
         if -max_depth < r:
             c_offset = sqrt(r**2 - (r + max_depth) ** 2)
-            print("Offset:", c_offset)
+            log.info(f"Offset: {c_offset}")
     if c_offset > o.cutter_diameter / 2:
         c_offset = o.cutter_diameter / 2
     c_offset += o.skin  # add skin for profile
@@ -164,7 +167,7 @@ async def cutout(o):
         join = 2
     else:
         join = 1
-    print("Operation: Cutout")
+    log.info("Operation: Cutout")
     offset = True
 
     for ob in o.objects:
@@ -178,7 +181,7 @@ async def cutout(o):
             subdivide_short_lines(ob)
 
     if o.cut_type == "ONLINE" and o.onlycurves:  # is separate to allow open curves :)
-        print("Separate")
+        log.info("Separate")
         chunksFromCurve = []
         for ob in o.objects:
             chunksFromCurve.extend(curve_to_chunks(ob, o.use_modifiers))
@@ -256,15 +259,15 @@ async def cutout(o):
     for chl in extendorder:  # Set Z for all chunks
         chunk = chl[0]
         layer = chl[1]
-        print(layer[1])
+        log.info(layer[1])
         chunk.set_z(layer[1])
 
     chunks = []
 
     if o.use_bridges:  # add bridges to chunks
-        print("Using Bridges")
+        log.info("Using Bridges")
         remove_multiple(o.name + "_cut_bridges")
-        print("Old Briddge Cut Removed")
+        log.info("Old Briddge Cut Removed")
 
         bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
 
@@ -275,7 +278,7 @@ async def cutout(o):
                 use_bridges(chunk, o)
 
     if o.profile_start > 0:
-        print("Cutout Change Profile Start")
+        log.info("Cutout Change Profile Start")
         for chl in extendorder:
             chunk = chl[0]
             if chunk.closed:
@@ -283,7 +286,7 @@ async def cutout(o):
 
     # Lead in
     if o.lead_in > 0.0 or o.lead_out > 0:
-        print("Cutout Lead-in")
+        log.info("Cutout Lead-in")
         for chl in extendorder:
             chunk = chl[0]
             if chunk.closed:
@@ -333,7 +336,7 @@ async def curve(o):
         CamException: If not all objects in the operation are curves.
     """
 
-    print("Operation: Curve")
+    log.info("Operation: Curve")
     pathSamples = []
     get_operation_sources(o)
     if not o.onlycurves:
@@ -365,7 +368,7 @@ async def curve(o):
         for chl in extendorder:  # Set offset Z for all chunks according to the layer information,
             chunk = chl[0]
             layer = chl[1]
-            print("Layer: " + str(layer[1]))
+            log.info(f"Layer: {layer[1]}")
             chunk.offset_z(o.max_z * 2 - o.min_z + layer[1])
             chunk.clamp_z(o.min_z)  # safety to not cut lower than minz
             # safety, not higher than free movement height
@@ -408,7 +411,7 @@ async def project_curve(s, o):
         CamException: If the target curve is not of type 'CURVE'.
     """
 
-    print("Operation: Projected Curve")
+    log.info("Operation: Projected Curve")
     pathSamples = []
     chunks = []
     ob = bpy.data.objects[o.curve_source]
@@ -484,7 +487,7 @@ async def pocket(o):
         join = 2
     else:
         join = 1
-    print("Operation: Pocket")
+    log.info("Operation: Pocket")
     scene = bpy.context.scene
 
     remove_multiple("3D_poc")
@@ -502,7 +505,7 @@ async def pocket(o):
         c_offset = o.cutter_diameter / 2
 
     c_offset += o.skin  # add skin
-    print("Cutter Offset", c_offset)
+    log.info(f"Cutter Offset: {c_offset}")
     obname = o.object_name
     c_ob = bpy.data.objects[obname]
     for ob in o.objects:
@@ -557,8 +560,8 @@ async def pocket(o):
             mitre_limit=2,
         )
         approxn = (min(o.max.x - o.min.x, o.max.y - o.min.y) / o.distance_between_paths) / 2
-        print("Approximative:" + str(approxn))
-        print(o.name)
+        log.info(f"Approximative: {approxn}")
+        log.info(o.name)
 
         i = 0
         chunks = []
@@ -779,7 +782,7 @@ async def drill(o):
             that modify the state of the Blender context.
     """
 
-    print("Operation: Drill")
+    log.info("Operation: Drill")
     chunks = []
     for ob in o.objects:
         activate(ob)
@@ -910,7 +913,7 @@ async def medial_axis(o):
             is not closed.
     """
 
-    print("Operation: Medial Axis")
+    log.info("Operation: Medial Axis")
 
     remove_multiple("medialMesh")
 
@@ -990,19 +993,19 @@ async def medial_axis(o):
         # verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
         nDupli, nZcolinear = unique(verts)
         nVerts = len(verts)
-        print(str(nDupli) + " Duplicate Points Ignored")
-        print(str(nZcolinear) + " Z Colinear Points Excluded")
+        log.info(f"{nDupli} Duplicate Points Ignored")
+        log.info(f"{nZcolinear} Z Colinear Points Excluded")
         if nVerts < 3:
-            print("Not Enough Points")
+            log.info("Not Enough Points")
             return {"FINISHED"}
         # Check colinear
         xValues = [pt[0] for pt in verts]
         yValues = [pt[1] for pt in verts]
         if check_equal(xValues) or check_equal(yValues):
-            print("Points Are Colinear")
+            log.info("Points Are Colinear")
             return {"FINISHED"}
         # Create diagram
-        print("Tesselation... (" + str(nVerts) + " Points)")
+        log.info(f"Tesselation... ({nVerts})Points)")
         xbuff, ybuff = 5, 5  # %
         zPosition = 0
         vertsPts = [Point(vert[0], vert[1], vert[2]) for vert in verts]
@@ -1016,7 +1019,7 @@ async def medial_axis(o):
         newIdx = 0
         vertr = []
         filteredPts = []
-        print("Filter Points")
+        log.info("Filter Points")
         ipts = 0
         for p in pts:
             ipts = ipts + 1
@@ -1051,7 +1054,7 @@ async def medial_axis(o):
                 filteredPts.append((p[0], p[1], z))
                 newIdx += 1
 
-        print("Filter Edges")
+        log.info("Filter Edges")
         filteredEdgs = []
         ledges = []
         for e in edgesIdx:
@@ -1148,18 +1151,20 @@ def get_layers(operation, startdepth, enddepth):
     """
 
     if startdepth < enddepth:
-        raise CamException(
-            "Start Depth Is Lower than End Depth. "
-            "if You Have Set a Custom Depth End, It Must Be Lower than Depth Start, "
-            "and Should Usually Be Negative. Set This in the CAM Operation Area Panel."
+        string = (
+            "Start Depth Is Lower than End Depth.\n"
+            "if You Have Set a Custom Depth End, It Must Be Lower than Depth Start,\n"
+            "and Should Usually Be Negative.\nSet This in the CAM Operation Area Panel."
         )
+        log.error("Start Depth Is Lower than End Depth.")
+        raise CamException(string)
 
     if operation.use_layers:
         layers = []
         n = ceil((startdepth - enddepth) / operation.stepdown)
-        print(f"Start Depth: {startdepth}")
-        print(f"End Depth: {enddepth}")
-        print(f"Layers: {n}")
+        log.info(f"Start Depth: {startdepth}")
+        log.info(f"End Depth: {enddepth}")
+        log.info(f"Layers: {n}")
 
         layerstart = operation.max_z
 
@@ -1220,7 +1225,7 @@ def chunks_to_mesh(chunks, o):
         nchunks = []
         for x in range(0, o.array_x_count):
             for y in range(0, o.array_y_count):
-                print(x, y)
+                log.info(f"{x}, {y}")
                 for ch in chunks:
                     ch = ch.copy()
                     ch.shift(x * o.array_x_distance, y * o.array_y_distance, 0)
@@ -1300,7 +1305,7 @@ def chunks_to_mesh(chunks, o):
     if o.optimisation.use_exact and not o.optimisation.use_opencamlib:
         cleanup_bullet_collision(o)
 
-    print(time.time() - t)
+    log.info(f"{time.time() - t}")
     t = time.time()
 
     # actual blender object generation starts here:
@@ -1308,7 +1313,8 @@ def chunks_to_mesh(chunks, o):
     for a in range(0, len(verts) - 1):
         edges.append((a, a + 1))
 
-    oname = "cam_path_{}".format(o.name)
+    # oname = "cam_path_{}".format(o.name)
+    oname = s.cam_names.path_name_full
 
     mesh = bpy.data.meshes.new(oname)
     mesh.name = oname
@@ -1328,17 +1334,21 @@ def chunks_to_mesh(chunks, o):
         ob.shape_key_add()
         shapek = mesh.shape_keys.key_blocks[1]
         shapek.name = "rotations"
-        print(len(shapek.data))
-        print(len(verts_rotations))
+        log.info(len(shapek.data))
+        log.info(len(verts_rotations))
 
         # TODO: optimize this. this is just rewritten too many times...
         for i, co in enumerate(verts_rotations):
             shapek.data[i].co = co
 
-    print(time.time() - t)
+    log.info(f"{time.time() - t}")
 
     ob.location = (0, 0, 0)
+    ob.color = s.cam_machine.path_color  # (0, 1, 0, 1)
     o.path_object_name = oname
+
+    bpy.context.collection.objects.unlink(ob)
+    bpy.data.collections["Paths"].objects.link(ob)
 
     # parent the path object to source object if object mode
     if (o.geometry_source == "OBJECT") and o.parent_path_to_object:

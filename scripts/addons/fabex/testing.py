@@ -7,6 +7,7 @@ import bpy
 
 from .gcode_path import getPath
 
+from .utilities.logging_utils import log
 from .utilities.simple_utils import activate
 
 
@@ -284,7 +285,7 @@ def testOperation(i):
             report += "Test Ok\n\n"
         else:
             report += "Test Result Is Different\n \n "
-    print(report)
+    log.info(report)
     return report
 
 
@@ -301,7 +302,7 @@ def testAll():
     report = ""
     for i in range(0, len(s.cam_operations)):
         report += testOperation(i)
-    print(report)
+    log.info(report)
 
 
 tests = [

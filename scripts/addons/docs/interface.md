@@ -183,7 +183,7 @@ The **[ Material ]** panel handles the size and position of your stock material 
 
 - **Size**
   - **Size from Model** - will assume the workpiece/material has the same size as the model, with radius around the model.
-  If not enabled then the Material origin and Material size are used in case when the material/workpiece is not the same as the model.  The 3D view will show the machine work area with a hashed outline and the material size and position will be a lighter grey.  The material object is not selectable in the 3D view but can be selected in the Outliner and has the name CAM_material.
+  If not enabled then the Material origin and Material size are used in case when the material/workpiece is not the same as the model.  The 3D view will show the machine work area with a hashed outline and the material size and position will be a lighter grey.  The material object is not selectable in the 3D view but can be selected in the Outliner and has the name CAM_Material.
   - **Additional Radius**
 - **Position**
   -  **Center on X Axis**

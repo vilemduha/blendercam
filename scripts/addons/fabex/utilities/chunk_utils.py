@@ -21,6 +21,7 @@ import bpy
 from mathutils import Vector
 
 from .async_utils import progress_async
+from .logging_utils import log
 from .numba_utils import jit
 from .simple_utils import (
     activate,
@@ -219,7 +220,7 @@ def chunks_to_shapely(chunks):
                     ch.poly
                 )  # sgeometry.Polygon( ch.parents[0].poly, ch.poly)
             except:
-                print("chunksToShapely oops!")
+                log.info("chunksToShapely oops!")
 
                 lastPt = None
                 tolerance = 0.0000003
@@ -528,7 +529,7 @@ def extend_chunks_5_axis(chunks, o):
     oriname = o.name + " orientation"
     ori = s.objects[oriname]
     # rotationaxes = rotTo2axes(ori.rotation_euler,'CA')#warning-here it allready is reset to 0!!
-    print("rot", o.rotationaxes)
+    log.info(f"rot {o.rotationaxes}")
     a, b = o.rotationaxes  # this is all nonsense by now.
     for chunk in chunks:
         for v in chunk.points:

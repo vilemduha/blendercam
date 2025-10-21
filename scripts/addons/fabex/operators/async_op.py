@@ -9,6 +9,7 @@ import sys
 import bpy
 
 from ..utilities.async_utils import progress_async
+from ..utilities.logging_utils import log
 
 
 class AsyncCancelledException(Exception):
@@ -133,7 +134,7 @@ class AsyncOperatorMixin:
         except StopIteration:
             return False
         except Exception as e:
-            print("Exception Thrown in Tick:", e)
+            log.error(f"Exception Thrown in Tick: {e}")
 
     def execute(self, context):
         """Execute the modal operation based on the context.
