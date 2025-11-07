@@ -16,6 +16,7 @@ import bpy
 from bpy.props import CollectionProperty
 
 # Relative Imports - from 'cam' module
+from .compatibility import Fabex_Compatibility_Panel
 from .engine import (
     FABEX_ENGINE,
     get_panels,
@@ -53,30 +54,38 @@ classes = (
 
 
 def register() -> None:
-    # Register classes from the list above
-    for cls in classes:
-        bpy.utils.register_class(cls)
+    # Register Compatibility Panel first
+    bpy.utils.register_class(Fabex_Compatibility_Panel)
 
-    # Import and run the Register functions of the submodules
-    icons_register()
-    props_register()
-    ops_register()
-    ui_register()
-    keymap_register()
+    # Try to register classes, show Compatibility Panel on failure
+    try:
+        # Register classes from the list above
+        for cls in classes:
+            bpy.utils.register_class(cls)
 
-    # CAM_OPERATION_Properties - last to allow dependencies to register before it
-    bpy.utils.register_class(CAM_OPERATION_Properties)
+        # Import and run the Register functions of the submodules
+        icons_register()
+        props_register()
+        ops_register()
+        ui_register()
+        keymap_register()
 
-    # Store a reference to the CAM Operation Properties in the Scene so it can be easily accessed
-    bpy.types.Scene.cam_operations = CollectionProperty(type=CAM_OPERATION_Properties)
+        # CAM_OPERATION_Properties - last to allow dependencies to register before it
+        bpy.utils.register_class(CAM_OPERATION_Properties)
 
-    # Get all the compatible UI panels, as defined in 'engine.py'
-    for panel in get_panels():
-        panel.COMPAT_ENGINES.add("FABEX_RENDER")
+        # Store a reference to the CAM Operation Properties in the Scene so it can be easily accessed
+        bpy.types.Scene.cam_operations = CollectionProperty(type=CAM_OPERATION_Properties)
 
-    # Adding Application Handlers to run functions after certain events
-    bpy.app.handlers.frame_change_pre.append(timer_update)
-    bpy.app.handlers.load_post.append(on_blender_startup)
+        # Get all the compatible UI panels, as defined in 'engine.py'
+        for panel in get_panels():
+            panel.COMPAT_ENGINES.add("FABEX_RENDER")
+
+        # Adding Application Handlers to run functions after certain events
+        bpy.app.handlers.frame_change_pre.append(timer_update)
+        bpy.app.handlers.load_post.append(on_blender_startup)
+
+    except:
+        bpy.ops.fabex.compatibility("INVOKE_DEFAULT")
 
 
 def unregister() -> None:
