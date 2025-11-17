@@ -54,38 +54,31 @@ classes = (
 
 
 def register() -> None:
-    # Register Compatibility Panel first
-    bpy.utils.register_class(Fabex_Compatibility_Panel)
 
-    # Try to register classes, show Compatibility Panel on failure
-    try:
-        # Register classes from the list above
-        for cls in classes:
-            bpy.utils.register_class(cls)
+    # Register classes from the list above
+    for cls in classes:
+        bpy.utils.register_class(cls)
 
-        # Import and run the Register functions of the submodules
-        icons_register()
-        props_register()
-        ops_register()
-        ui_register()
-        keymap_register()
+    # Import and run the Register functions of the submodules
+    icons_register()
+    props_register()
+    ops_register()
+    ui_register()
+    keymap_register()
 
-        # CAM_OPERATION_Properties - last to allow dependencies to register before it
-        bpy.utils.register_class(CAM_OPERATION_Properties)
+    # CAM_OPERATION_Properties - last to allow dependencies to register before it
+    bpy.utils.register_class(CAM_OPERATION_Properties)
 
-        # Store a reference to the CAM Operation Properties in the Scene so it can be easily accessed
-        bpy.types.Scene.cam_operations = CollectionProperty(type=CAM_OPERATION_Properties)
+    # Store a reference to the CAM Operation Properties in the Scene so it can be easily accessed
+    bpy.types.Scene.cam_operations = CollectionProperty(type=CAM_OPERATION_Properties)
 
-        # Get all the compatible UI panels, as defined in 'engine.py'
-        for panel in get_panels():
-            panel.COMPAT_ENGINES.add("FABEX_RENDER")
+    # Get all the compatible UI panels, as defined in 'engine.py'
+    for panel in get_panels():
+        panel.COMPAT_ENGINES.add("FABEX_RENDER")
 
-        # Adding Application Handlers to run functions after certain events
-        bpy.app.handlers.frame_change_pre.append(timer_update)
-        bpy.app.handlers.load_post.append(on_blender_startup)
-
-    except:
-        bpy.ops.fabex.compatibility("INVOKE_DEFAULT")
+    # Adding Application Handlers to run functions after certain events
+    bpy.app.handlers.frame_change_pre.append(timer_update)
+    bpy.app.handlers.load_post.append(on_blender_startup)
 
 
 def unregister() -> None:
@@ -108,3 +101,13 @@ def unregister() -> None:
 
     bpy.app.handlers.frame_change_pre.remove(timer_update)
     bpy.app.handlers.load_post.remove(on_blender_startup)
+
+
+if __name__ == "__package__":
+    bpy.utils.register_class(Fabex_Compatibility_Panel)
+    bpy.ops.fabex.compatibility("INVOKE_DEFAULT")
+
+    try:
+        register()
+    except:
+        bpy.ops.fabex.compatibility("INVOKE_DEFAULT")
