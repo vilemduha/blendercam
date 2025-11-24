@@ -1,5 +1,4 @@
-"""Fabex 'addon_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'addon_utils.py' © 2012 Vilem Novak"""
 
 from pathlib import Path
 import shutil
