@@ -1,5 +1,4 @@
-"""Fabex 'logging_utils.py' © 2025
-"""
+"""Fabex 'logging_utils.py' © 2025"""
 
 from datetime import datetime
 import logging
@@ -11,12 +10,16 @@ log = logging.getLogger("fabex_logger")
 log.setLevel(logging.DEBUG)
 
 # Create file handler for logging
-log_path = Path(__file__).parent.parent / "logs" / f"{current_time}.log"
+log_folder = Path(__file__).parent.parent / "logs"
+log_folder.mkdir(parents=True, exist_ok=True)
+log_path = Path(log_folder, f"{current_time}.log")
 file_handler = logging.FileHandler(log_path)
 file_handler.setLevel(logging.DEBUG)
 
 # Create another file handler for error logging
-error_log_path = Path(__file__).parent.parent / "logs" / f"Error_{current_time}.log"
+error_log_folder = Path(__file__).parent.parent / "logs"
+error_log_folder.mkdir(parents=True, exist_ok=True)
+error_log_path = Path(error_log_folder, f"Error_{current_time}.log")
 error_handler = logging.FileHandler(error_log_path)
 error_handler.setLevel(logging.ERROR)
 

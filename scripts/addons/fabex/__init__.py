@@ -16,6 +16,7 @@ import bpy
 from bpy.props import CollectionProperty
 
 # Relative Imports - from 'cam' module
+from .compatibility import Fabex_Compatibility_Panel
 from .engine import (
     FABEX_ENGINE,
     get_panels,
@@ -53,6 +54,7 @@ classes = (
 
 
 def register() -> None:
+
     # Register classes from the list above
     for cls in classes:
         bpy.utils.register_class(cls)
@@ -99,3 +101,7 @@ def unregister() -> None:
 
     bpy.app.handlers.frame_change_pre.remove(timer_update)
     bpy.app.handlers.load_post.remove(on_blender_startup)
+
+
+if __name__ == "__package__":
+    register()
