@@ -104,10 +104,4 @@ def unregister() -> None:
 
 
 if __name__ == "__package__":
-    bpy.utils.register_class(Fabex_Compatibility_Panel)
-    bpy.ops.fabex.compatibility("INVOKE_DEFAULT")
-
-    try:
-        register()
-    except:
-        bpy.ops.fabex.compatibility("INVOKE_DEFAULT")
+    register()
