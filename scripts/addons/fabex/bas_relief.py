@@ -815,32 +815,54 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
     """
 
     log.info("Rendering Scene")
+
+    blender_version = int(bpy.app.version_string[0])
     scene = bpy.context.scene
+
     # make sure we're in object mode or else bad things happen
     if bpy.context.active_object:
         bpy.ops.object.mode_set(mode="OBJECT")
 
     scene.render.engine = "CYCLES"
+    scene.view_layers[view_layer].use_pass_z = True
+
     our_viewer = None
     our_renderer = None
+
     if make_nodes:
-        # make depth render node and viewer node
-        if scene.use_nodes == False:
-            scene.use_nodes = True
-        node_tree = scene.node_tree
-        nodes = node_tree.nodes
-        our_viewer = node_tree.nodes.new(type="CompositorNodeViewer")
-        our_viewer.label = "CAM_basrelief_viewer"
-        our_renderer = node_tree.nodes.new(type="CompositorNodeRLayers")
-        our_renderer.label = "CAM_basrelief_renderlayers"
-        our_renderer.layer = view_layer
-        node_tree.links.new(
-            our_renderer.outputs[our_renderer.outputs.find("Depth")],
-            our_viewer.inputs[our_viewer.inputs.find("Image")],
-        )
-        scene.view_layers[view_layer].use_pass_z = True
-        # set our viewer as active so that it is what gets rendered to viewer node image
-        nodes.active = our_viewer
+        if blender_version >= 5:
+            if scene.compositing_node_group == None:
+                bpy.ops.node.new_compositing_node_group()
+
+            scene.compositing_node_group = bpy.data.node_groups["NodeTree"]
+            node_tree = scene.compositing_node_group
+            nodes = node_tree.nodes
+            render_layers = nodes["Render Layers"]
+            reroute = nodes["Reroute"]
+
+            node_tree.links.new(
+                render_layers.outputs[render_layers.outputs.find("Depth")],
+                reroute.inputs[0],
+            )
+        else:
+            # make depth render node and viewer node
+            if scene.use_nodes == False:
+                scene.use_nodes = True
+            node_tree = scene.node_tree
+            nodes = node_tree.nodes
+            our_viewer = node_tree.nodes.new(type="CompositorNodeViewer")
+            our_viewer.label = "CAM_basrelief_viewer"
+            our_renderer = node_tree.nodes.new(type="CompositorNodeRLayers")
+            our_renderer.label = "CAM_basrelief_renderlayers"
+            our_renderer.layer = view_layer
+
+            node_tree.links.new(
+                our_renderer.outputs[our_renderer.outputs.find("Depth")],
+                our_viewer.inputs[our_viewer.inputs.find("Image")],
+            )
+            scene.view_layers[view_layer].use_pass_z = True
+            # set our viewer as active so that it is what gets rendered to viewer node image
+            nodes.active = our_viewer
 
     # Set render resolution
     passes = bit_diameter / (2 * passes_per_radius)
