@@ -12,8 +12,11 @@ from ..utilities.logging_utils import log
 ##################
 # Operation Presets #
 ##################
-operation_preset_path = bpy.utils.preset_paths("cam_operations")[0]
-operation_presets = sorted(listdir(operation_preset_path))
+operation_presets = []
+if len(bpy.utils.preset_paths("cam_operations")) > 0:
+    operation_preset_path = bpy.utils.preset_paths("cam_operations")[0]
+    operation_presets = sorted(listdir(operation_preset_path))
+
 operation_presets = [
     operation.replace("_", " ").replace(".py", "") for operation in operation_presets
 ]
@@ -82,8 +85,11 @@ def update_user_operation(self, context):
 ##################
 # Cutter Presets #
 ##################
-cutter_preset_path = bpy.utils.preset_paths("cam_cutters")[0]
-cutter_presets = sorted(listdir(cutter_preset_path))
+cutter_presets = []
+if len(bpy.utils.preset_paths("cam_cutters")) > 0:
+    cutter_preset_path = bpy.utils.preset_paths("cam_cutters")[0]
+    cutter_presets = sorted(listdir(cutter_preset_path))
+
 cutter_presets = [cutter.replace("_", " ").replace(".py", "") for cutter in cutter_presets]
 
 
@@ -152,8 +158,11 @@ def update_user_cutter(self, context):
 ###################
 # Machine Presets #
 ###################
-machine_preset_path = bpy.utils.preset_paths("cam_machines")[0]
-machine_presets = sorted(listdir(machine_preset_path))
+machine_presets = []
+if len(bpy.utils.preset_paths("cam_machines")) > 0:
+    machine_preset_path = bpy.utils.preset_paths("cam_machines")[0]
+    machine_presets = sorted(listdir(machine_preset_path))
+
 machine_presets = [machine.replace("_", " ").replace(".py", "") for machine in machine_presets]
 
 
