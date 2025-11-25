@@ -13,6 +13,13 @@ from .. import __package__ as base_package
 
 
 def addon_dependencies():
+    """Checks for and installs Blender addon dependencies.
+
+    This function installs a number of addons that previously came
+    with Blender, but now have to be downloaded from an online repository.
+    It checks for the addon in the users Blender install, and if it
+    can't find them, attempts to download them from Blender.
+    """
     addons = bpy.context.preferences.addons
 
     modules = [
@@ -37,19 +44,27 @@ def addon_dependencies():
 
 
 def load_defaults(addon_prefs):
+    """Assigns scene settings based on user preferences.
+
+    When Fabex is activated it will restore the user's scene settings.
+    This includes the interface level (Beginner - Experimental), viewport
+    shading, panel layout and machine preset.
+    """
     scene = bpy.context.scene
+    interface = scene.interface
+
     # set interface level to previously used level for a new file
     if not bpy.data.filepath:
         _IS_LOADING_DEFAULTS = True
 
-        scene.interface.level = addon_prefs.default_interface_level
-        scene.interface.shading = addon_prefs.default_shading
+        interface.level = addon_prefs.default_interface_level
+        interface.shading = addon_prefs.default_shading
 
-        scene.interface.layout = addon_prefs.default_layout
+        interface.layout = addon_prefs.default_layout
 
-        scene.interface.main_location = addon_prefs.default_main_location
-        scene.interface.operation_location = addon_prefs.default_operation_location
-        scene.interface.tools_location = addon_prefs.default_tools_location
+        interface.main_location = addon_prefs.default_main_location
+        interface.operation_location = addon_prefs.default_operation_location
+        interface.tools_location = addon_prefs.default_tools_location
 
         machine_preset = addon_prefs.machine_preset = addon_prefs.default_machine_preset
         if len(machine_preset) > 0:
@@ -79,6 +94,12 @@ def copy_if_not_exists(src, dst):
 
 
 def copy_presets(addon_prefs):
+    """Copies Presets from the addon to Blender's Script Directory
+
+    This function copies new presets without overwriting the existing presets,
+    unless it detects that the presets have not been updated to the current spec,
+    in which case it will overwrite them with the addon presets.
+    """
     # copy presets if not there yet
     preset_source_path = Path(__file__).parent.parent / "presets"
     preset_target_path = Path(bpy.utils.script_path_user()) / "presets"
@@ -121,6 +142,9 @@ def on_blender_startup(context):
     log.debug("Blender Startup")
 
     scene = bpy.context.scene
+    render_engine = scene.render.engine
+    interface_layout = scene.interface.layout
+
     for o in scene.cam_operations:
         if o.computing:
             o.computing = False
@@ -143,12 +167,35 @@ def on_blender_startup(context):
         notify=on_engine_change,
     )
 
+    if render_engine in ["CNCCAM_RENDER", "BLENDERCAM_RENDER"]:
+        render_engine = "FABEX_RENDER"
+
+    if render_engine == "FABEX_RENDER":
+        interface_layout = addon_prefs.default_layout
+
+        add_collections()
+        load_defaults(addon_prefs)
+
+        log.debug("Fabex Activated")
+
 
 def on_engine_change(*args):
-    addon_prefs = bpy.context.preferences.addons[base_package].preferences
+    """Callback function to setup Fabex when activated.
 
-    if bpy.context.scene.render.engine == "FABEX_RENDER":
-        bpy.context.scene.interface.layout = addon_prefs.default_layout
+    In combination with a message bus (msgbus) listener, this function will
+    run when the Render Engine is changed. If it detects that Fabex is active
+    it will call the required setup functions, and log the Fabex activation.
+    """
+    context = bpy.context
+    scene = context.scene
+
+    render_engine = scene.render.engine
+    interface_layout = scene.interface.layout
+
+    addon_prefs = context.preferences.addons[base_package].preferences
+
+    if render_engine == "FABEX_RENDER":
+        interface_layout = addon_prefs.default_layout
 
         add_collections()
         load_defaults(addon_prefs)
@@ -195,16 +242,29 @@ def keymap_unregister():
 
 
 def add_asset_library():
-    libraries = bpy.context.preferences.filepaths.asset_libraries
+    """Installs the Fabex Asset Library.
+
+    This function adds the /assets/ folder from Fabex to the users'
+    Asset Library, which adds a number of Material and Geometry Node
+    assets.
+    """
+    filepaths = bpy.context.preferences.filepaths
+    libraries = filepaths.asset_libraries
+
     if "Fabex Assets" not in libraries:
         library_path = str(Path(__file__).parent.parent / "assets")
         bpy.ops.preferences.asset_library_add(directory=library_path)
-        bpy.context.preferences.filepaths.asset_libraries["assets"].name = "Fabex Assets"
+        filepaths.asset_libraries["assets"].name = "Fabex Assets"
     else:
         pass
 
 
 def add_workspace():
+    """Installs the Fabex Workspace
+
+    This function adds the Fabex Workspace to the users' default Blender
+    startup scene.
+    """
     workspaces = bpy.data.workspaces
     if "FabexCNC" not in workspaces:
         workspace_file = str(
@@ -217,6 +277,13 @@ def add_workspace():
 
 
 def add_collections():
+    """Adds color-coded Collection folders to the scene.
+
+    This function adds three collections to aid in scene management.
+    Bridges, Paths and Simulations are now auto-sorted into their
+    own collections upon creation, which can be shown or hidden as
+    groups.
+    """
     context = bpy.context
     data = bpy.data
     collections = data.collections
