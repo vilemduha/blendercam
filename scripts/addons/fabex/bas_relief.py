@@ -830,11 +830,15 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
     our_renderer = None
 
     if make_nodes:
+        # If Blender is v5 or greater, use the new Compositor settings
         if blender_version >= 5:
             if scene.compositing_node_group == None:
                 bpy.ops.node.new_compositing_node_group()
 
-            scene.compositing_node_group = bpy.data.node_groups["NodeTree"]
+            for group in bpy.data.node_groups:
+                if group.type == "COMPOSITING":
+                    scene.compositing_node_group = group
+
             node_tree = scene.compositing_node_group
             nodes = node_tree.nodes
             render_layers = nodes["Render Layers"]
@@ -844,6 +848,7 @@ def render_scene(width, height, bit_diameter, passes_per_radius, make_nodes, vie
                 render_layers.outputs[render_layers.outputs.find("Depth")],
                 reroute.inputs[0],
             )
+        # If Blender is v4 or lower, use the legacy Compositor settings
         else:
             # make depth render node and viewer node
             if scene.use_nodes == False:

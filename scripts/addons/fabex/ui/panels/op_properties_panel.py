@@ -80,9 +80,9 @@ class CAM_OPERATION_PROPERTIES_Panel(CAMParentPanel, Panel):
             sub.prop(self.op, "lead_in", text="Lead-in")
             sub.prop(self.op, "lead_out", text="Lead-out")
 
-        if self.op.strategy in ["CUTOUT", "CURVE"]:
-            if self.op.strategy == "CURVE":
-                col = box.column(align=True)
+        if self.op.strategy in ["CUTOUT"] and not self.op.cut_type == "ONLINE":
+            # if self.op.strategy == "CURVE":
+            #     col = box.column(align=True)
             # Outlines Box
             box = col.box()
             subcol = box.column(align=True)

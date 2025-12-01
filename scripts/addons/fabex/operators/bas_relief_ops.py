@@ -229,7 +229,6 @@ class DoBasRelief(Operator):
         description="Enhance details by frequency analysis",
         default=False,
     )
-    # detail_enhancement_freq=FloatProperty(name="frequency limit", description="Image scale", min=0.025, max=1.0, default=.5, precision=PRECISION)
     detail_enhancement_amount: FloatProperty(
         name="Amount",
         description="Image scale",
@@ -268,7 +267,7 @@ class DoBasRelief(Operator):
             dict: A dictionary indicating the result of the operation, either
         """
 
-        if not self.use_image_source and self.view_layer_name == "":
+        if self.view_layer_name == "":  # not self.use_image_source and
             self.view_layer_name = bpy.context.view_layer.name
 
         try:
