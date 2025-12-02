@@ -677,7 +677,8 @@ async def get_path(context, operation):
         if bpy.data.objects.get(path_name) is None:
             return
         p = bpy.data.objects[path_name]
-        export_gcode_path(operation.filename, [p.data], [operation])
+        name = operation.name if operation.link_operation_file_names else operation.filename
+        export_gcode_path(name, [p.data], [operation])
 
     operation.changed = False
     t1 = time.process_time() - t
