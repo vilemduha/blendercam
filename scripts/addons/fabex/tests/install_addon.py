@@ -16,6 +16,7 @@ bpy.ops.extensions.package_install(repo_index=0, pkg_id="curve_tools")
 bpy.ops.extensions.package_install_files(filepath='{sys.argv[1]}', repo='user_default')
 bpy.ops.wm.save_userpref()
 bpy.ops.wm.read_homefile(app_template="")
+bpy.ops.wm.quit_blender()
 """
 
 NUM_RETRIES = 10

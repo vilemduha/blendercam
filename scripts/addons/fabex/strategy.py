@@ -24,7 +24,6 @@ import bpy
 from bpy_extras import object_utils
 from mathutils import Euler, Vector
 
-
 from .bridges import use_bridges
 from .cam_chunk import (
     CamPathChunk,
@@ -66,6 +65,7 @@ from .utilities.simple_utils import (
     remove_multiple,
     subdivide_short_lines,
 )
+from .voronoi import compute_voronoi_diagram
 
 
 # add pocket op for medial axis and profile cut inside to clean unremoved material
@@ -88,25 +88,41 @@ def add_pocket(maxdepth, sname, new_cutter_diameter):
     bpy.ops.object.select_all(action="DESELECT")
     s = bpy.context.scene
     mpocket_exists = False
+
+    # OBJECT name
     mp_ob_name = f"{sname}_medial_pocket"
-    for ob in s.objects:  # delete old medial pocket
+
+    # Delete old Medial Pocket object, if one exists
+    for ob in s.objects:
         if ob.name.startswith(mp_ob_name):
             ob.select_set(True)
             bpy.ops.object.delete()
 
+    # OPERATION name
     mp_op_name = f"{sname}_MedialPocket"
-    for op in s.cam_operations:  # verify medial pocket operation exists
+
+    # Verify Medial Pocket Operation exists
+    for op in s.cam_operations:
         if op.name == mp_op_name:
             mpocket_exists = True
+
+    # Modify Silhouette with Cutter Radius
     ob = bpy.data.objects[sname]
     ob.select_set(True)
     bpy.context.view_layer.objects.active = ob
-    silhouette_offset(ob, -new_cutter_diameter / 2, 1, 2)
+    silhouette_offset(
+        ob,
+        -new_cutter_diameter / 2,
+        1,
+        2,
+    )
     bpy.context.active_object.name = mp_ob_name
     m_ob = bpy.context.view_layer.objects.active
     bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
     m_ob.location.z = maxdepth
-    if not mpocket_exists:  # create a pocket operation if it does not exist already
+
+    # Create a Pocket Operation if it does not exist already
+    if not mpocket_exists:
         s.cam_operations.add()
         o = s.cam_operations[-1]
         o.object_name = mp_ob_name
@@ -140,34 +156,38 @@ async def cutout(o):
             on the provided object.
     """
 
+    log.info("Operation: Cutout")
+
     max_depth = check_min_z(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
-    c_offset = o.cutter_diameter / 2  # cutter offset
+
+    # Cutter Offset
+    r = o.cutter_diameter / 2
+    cutter_offset = r
+
     log.info(f"Cutter Type: {o.cutter_type}")
     log.info(f"Max Depth: {max_depth}")
-    # print("Cutter Type:", o.cutter_type)
-    # print("Max Depth:", max_depth)
-    if o.cutter_type == "VCARVE":
-        c_offset = -max_depth * tan(cutter_angle)
-    elif o.cutter_type == "CYLCONE":
-        c_offset = -max_depth * tan(cutter_angle) + o.cylcone_diameter / 2
-    elif o.cutter_type == "BALLCONE":
-        c_offset = -max_depth * tan(cutter_angle) + o.ball_radius
-    elif o.cutter_type == "BALLNOSE":
-        r = o.cutter_diameter / 2
-        log.info(f"Cutter Radius: {r}")
-        log.info(f"Skin: {o.skin}")
-        if -max_depth < r:
-            c_offset = sqrt(r**2 - (r + max_depth) ** 2)
-            log.info(f"Offset: {c_offset}")
-    if c_offset > o.cutter_diameter / 2:
-        c_offset = o.cutter_diameter / 2
-    c_offset += o.skin  # add skin for profile
-    if o.straight:
-        join = 2
-    else:
-        join = 1
-    log.info("Operation: Cutout")
+    log.info(f"Cutter Radius: {r}")
+    log.info(f"Skin: {o.skin}")
+
+    offset_by_type = {
+        "VCARVE": -max_depth * tan(cutter_angle),
+        "CYLCONE": -max_depth * tan(cutter_angle) + o.cylcone_diameter / 2,
+        "BALLCONE": -max_depth * tan(cutter_angle) + o.ball_radius,
+        "BALLNOSE": sqrt(r**2 - (r + max_depth) ** 2) if -max_depth < r else r,
+    }
+
+    try:
+        cutter_offset = offset_by_type[o.cutter_type]
+    except:
+        pass
+    cutter_offset = r if cutter_offset > r else cutter_offset
+    # Add Skin for Profile
+    cutter_offset += o.skin
+
+    log.info(f"Offset: {cutter_offset}")
+
+    join = 2 if o.straight else 1
     offset = True
 
     for ob in o.objects:
@@ -177,31 +197,34 @@ async def cutout(o):
                 bpy.ops.object.curve_remove_doubles(merge_distance=0.0001, keep_bezier=True)
             else:
                 bpy.ops.object.curve_remove_doubles()
-            # make sure all polylines are at least three points long
+            # Ensure polylines are at least three points long
             subdivide_short_lines(ob)
 
-    if o.cut_type == "ONLINE" and o.onlycurves:  # is separate to allow open curves :)
+    # Separate to allow open Curves :)
+    if o.cut_type == "ONLINE" and o.onlycurves:
         log.info("Separate")
         chunksFromCurve = []
+
         for ob in o.objects:
             chunksFromCurve.extend(curve_to_chunks(ob, o.use_modifiers))
-
     else:
         chunksFromCurve = []
+
         if o.cut_type == "ONLINE":
             p = get_object_outline(0, o, True)
-
         else:
             offset = True
+
             if o.cut_type == "INSIDE":
                 offset = False
 
-            p = get_object_outline(c_offset, o, offset)
+            p = get_object_outline(cutter_offset, o, offset)
+
             if o.outlines_count > 1:
                 for i in range(1, o.outlines_count):
                     chunksFromCurve.extend(shapely_to_chunks(p, -1))
-
                     path_distance = o.distance_between_paths
+
                     if o.cut_type == "INSIDE":
                         path_distance *= -1
                     p = p.buffer(
@@ -224,31 +247,43 @@ async def cutout(o):
     if o.outlines_count == 1:
         chunksFromCurve = await sort_chunks(chunksFromCurve, o)
 
-    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW") or (
-        o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW"
-    ):
+    move_type = o.movement.type
+    spin = o.movement.spindle_rotation
+    climb_ccw = move_type == "CLIMB" and spin == "CCW"
+    conventional_cw = move_type == "CONVENTIONAL" and spin == "CW"
+
+    if climb_ccw or conventional_cw:
         for ch in chunksFromCurve:
             ch.reverse()
 
-    if o.cut_type == "INSIDE":  # there would be too many conditions above,
-        # so for now it gets reversed once again when inside cutting.
+    # For simplicity, reverse once again when Inside cutting
+    if o.cut_type == "INSIDE":
         for ch in chunksFromCurve:
             ch.reverse()
 
-    layers = get_layers(o, o.max_z, check_min_z(o))
+    layers = get_layers(
+        o,
+        o.max_z,
+        check_min_z(o),
+    )
     extendorder = []
 
-    if o.first_down:  # each shape gets either cut all the way to bottom,
-        # or every shape gets cut 1 layer, then all again. has to create copies,
-        # because same chunks are worked with on more layers usually
+    # If First Down is true, cut each shape from top to bottom,
+    # if not, split shapes into layers by height, creating copies as
+    # the same chunks will be on multiple layers
+    if o.first_down:
         for chunk in chunksFromCurve:
-            dir_switch = False  # needed to avoid unnecessary lifting of cutter with open chunks
-            # and movement set to "MEANDER"
+            # A direction switch boolean check is needed to avoid cutter
+            # lifting with open Chunks and "MEANDER" movement
+            dir_switch = False
+
             for layer in layers:
                 chunk_copy = chunk.copy()
+
                 if dir_switch:
                     chunk_copy.reverse()
                 extendorder.append([chunk_copy, layer])
+
                 if (not chunk.closed) and o.movement.type == "MEANDER":
                     dir_switch = not dir_switch
     else:
@@ -256,7 +291,8 @@ async def cutout(o):
             for chunk in chunksFromCurve:
                 extendorder.append([chunk.copy(), layer])
 
-    for chl in extendorder:  # Set Z for all chunks
+    # Set Z for all Chunks
+    for chl in extendorder:
         chunk = chl[0]
         layer = chl[1]
         log.info(layer[1])
@@ -264,16 +300,17 @@ async def cutout(o):
 
     chunks = []
 
-    if o.use_bridges:  # add bridges to chunks
+    # Add Bridges to Chunks
+    if o.use_bridges:
         log.info("Using Bridges")
         remove_multiple(o.name + "_cut_bridges")
         log.info("Old Briddge Cut Removed")
-
         bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
 
         for chl in extendorder:
             chunk = chl[0]
             layer = chl[1]
+
             if layer[1] < bridgeheight:
                 use_bridges(chunk, o)
 
@@ -281,6 +318,7 @@ async def cutout(o):
         log.info("Cutout Change Profile Start")
         for chl in extendorder:
             chunk = chl[0]
+
             if chunk.closed:
                 chunk.change_path_start(o)
 
@@ -289,23 +327,38 @@ async def cutout(o):
         log.info("Cutout Lead-in")
         for chl in extendorder:
             chunk = chl[0]
+
             if chunk.closed:
                 chunk.break_path_for_leadin_leadout(o)
                 chunk.lead_contour(o)
 
-    if o.movement.ramp:  # add ramps or simply add chunks
+    # Add Ramps or just Chunks
+    if o.movement.ramp:
         for chl in extendorder:
             chunk = chl[0]
             layer = chl[1]
+
             if o.movement.zig_zag_ramp:
-                chunk.ramp_zig_zag(layer[0], layer[1], o)
+                chunk.ramp_zig_zag(
+                    layer[0],
+                    layer[1],
+                    o,
+                )
                 chunks.append(chunk)
             else:
                 if chunk.closed:
-                    chunk.ramp_contour(layer[0], layer[1], o)
+                    chunk.ramp_contour(
+                        layer[0],
+                        layer[1],
+                        o,
+                    )
                     chunks.append(chunk)
                 else:
-                    chunk.ramp_zig_zag(layer[0], layer[1], o)
+                    chunk.ramp_zig_zag(
+                        layer[0],
+                        layer[1],
+                        o,
+                    )
                     chunks.append(chunk)
     else:
         for chl in extendorder:
@@ -336,55 +389,65 @@ async def curve(o):
         CamException: If not all objects in the operation are curves.
     """
 
-    log.info("Operation: Curve")
+    log.info("Operation: Curve to Path")
+
     pathSamples = []
     get_operation_sources(o)
+
     if not o.onlycurves:
         raise CamException("All Objects Must Be Curves for This Operation.")
 
     for ob in o.objects:
-        # make sure all polylines are at least three points long
+        # Ensure Polylines are at least three points long
         subdivide_short_lines(ob)
-        # make the chunks from curve here
-
+        # Make the Chunks from the Curve
         pathSamples.extend(curve_to_chunks(ob))
 
-    # sort before sampling
+    # Sort Chunks before sampling Path
     pathSamples = await sort_chunks(pathSamples, o)
+    # Simplify Path Chunks
+    pathSamples = chunks_refine(pathSamples, o)
 
-    pathSamples = chunks_refine(pathSamples, o)  # simplify
-
-    # layers here
+    # Layers
     if o.use_layers:
-        layers = get_layers(o, o.max_z, round(check_min_z(o), 6))
-        # layers is a list of lists [[0.00,l1],[l1,l2],[l2,l3]] containg the start and end of each layer
+        # layers is a list of lists [[0.00,l1],[l1,l2],[l2,l3]]
+        # containing the start and end of each layer
+        layers = get_layers(
+            o,
+            o.max_z,
+            round(check_min_z(o), 6),
+        )
         extendorder = []
         chunks = []
+
+        # Include Layer information in Chunk list
         for layer in layers:
             for ch in pathSamples:
-                # include layer information to chunk list
                 extendorder.append([ch.copy(), layer])
 
-        for chl in extendorder:  # Set offset Z for all chunks according to the layer information,
+        # Set offset Z for all chunks according to the layer information,
+        for chl in extendorder:
             chunk = chl[0]
             layer = chl[1]
             log.info(f"Layer: {layer[1]}")
             chunk.offset_z(o.max_z * 2 - o.min_z + layer[1])
-            chunk.clamp_z(o.min_z)  # safety to not cut lower than minz
-            # safety, not higher than free movement height
+            # Limit Cut Depth to Operation Z Minimum
+            chunk.clamp_z(o.min_z)
+            # Limit Cut Height to Operation Safe Height
             chunk.clamp_max_z(o.movement.free_height)
 
-        for (
-            chl
-        ) in extendorder:  # strip layer information from extendorder and transfer them to chunks
+        # Strip Layer information from extendorder and transfer them to Chunks
+        for chl in extendorder:
             chunks.append(chl[0])
 
         chunks_to_mesh(chunks, o)  # finish by converting to mesh
 
-    else:  # no layers, old curve
+    # No Layers, old Curve
+    else:
         for ch in pathSamples:
-            ch.clamp_z(o.min_z)  # safety to not cut lower than minz
-            # safety, not higher than free movement height
+            # Limit Cut Depth to Operation Z Minimum
+            ch.clamp_z(o.min_z)
+            # Limit Cut Height to Operation Safe Height
             ch.clamp_max_z(o.movement.free_height)
         chunks_to_mesh(pathSamples, o)
 
@@ -412,15 +475,12 @@ async def project_curve(s, o):
     """
 
     log.info("Operation: Projected Curve")
+
     pathSamples = []
     chunks = []
     ob = bpy.data.objects[o.curve_source]
-
     pathSamples.extend(curve_to_chunks(ob))
-
     targetCurve = s.objects[o.curve_target]
-
-    from cam import cam_chunk
 
     if targetCurve.type != "CURVE":
         raise CamException("Projection Target and Source Have to Be Curve Objects!")
@@ -428,13 +488,13 @@ async def project_curve(s, o):
     if 1:
         extend_up = 0.1
         extend_down = 0.04
-
         tsamples = curve_to_chunks(targetCurve)
 
         for chi, ch in enumerate(pathSamples):
             cht = tsamples[chi].get_points()
             ch.depth = 0
             ch_points = ch.get_points()
+
             for i, s in enumerate(ch_points):
                 # move the points a bit
                 ep = Vector(cht[i])
@@ -445,22 +505,19 @@ async def project_curve(s, o):
                 vecs *= extend_up
                 sp += vecs
                 ch.startpoints.append(sp)
-
                 # extend endpoint
                 vece = sp - ep
                 vece.normalize()
                 vece *= extend_down
                 ep -= vece
                 ch.endpoints.append(ep)
-
                 ch.rotations.append((0, 0, 0))
-
                 vec = sp - ep
                 ch.depth = min(ch.depth, -vec.length)
                 ch_points[i] = sp.copy()
+
     ch.set_points(ch_points)
     layers = get_layers(o, 0, ch.depth)
-
     chunks.extend(sample_chunks_n_axis(o, pathSamples, layers))
     chunks_to_mesh(chunks, o)
 
@@ -483,31 +540,31 @@ async def pocket(o):
         based on the pocketing operation.
     """
 
-    if o.straight:
-        join = 2
-    else:
-        join = 1
     log.info("Operation: Pocket")
+
+    join = 2 if o.straight else 1
+
     scene = bpy.context.scene
-
     remove_multiple("3D_poc")
-
     max_depth = check_min_z(o) + o.skin
     cutter_angle = radians(o.cutter_tip_angle / 2)
-    c_offset = o.cutter_diameter / 2
-    if o.cutter_type == "VCARVE":
-        c_offset = -max_depth * tan(cutter_angle)
-    elif o.cutter_type == "CYLCONE":
-        c_offset = -max_depth * tan(cutter_angle) + o.cylcone_diameter / 2
-    elif o.cutter_type == "BALLCONE":
-        c_offset = -max_depth * tan(cutter_angle) + o.ball_radius
-    if c_offset > o.cutter_diameter / 2:
-        c_offset = o.cutter_diameter / 2
 
-    c_offset += o.skin  # add skin
-    log.info(f"Cutter Offset: {c_offset}")
+    cutter_offset = o.cutter_diameter / 2
+    if o.cutter_type == "VCARVE":
+        cutter_offset = -max_depth * tan(cutter_angle)
+    elif o.cutter_type == "CYLCONE":
+        cutter_offset = -max_depth * tan(cutter_angle) + o.cylcone_diameter / 2
+    elif o.cutter_type == "BALLCONE":
+        cutter_offset = -max_depth * tan(cutter_angle) + o.ball_radius
+
+    if cutter_offset > o.cutter_diameter / 2:
+        cutter_offset = o.cutter_diameter / 2
+
+    cutter_offset += o.skin  # add skin
+    log.info(f"Cutter Offset: {cutter_offset}")
     obname = o.object_name
     c_ob = bpy.data.objects[obname]
+
     for ob in o.objects:
         if ob.type == "CURVE":
             if ob.data.splines and ob.data.splines[0].type == "BEZIER":
@@ -515,46 +572,54 @@ async def pocket(o):
                 bpy.ops.object.curve_remove_doubles(merge_distance=0.0001, keep_bezier=True)
             else:
                 bpy.ops.object.curve_remove_doubles()
+
     chunksFromCurve = []
     angle = radians(o.parallel_pocket_angle)
     distance = o.distance_between_paths
-    offset = -c_offset
+    offset = -cutter_offset
     pocket_shape = ""
     n_angle = angle - pi / 2
     pr = get_object_outline(0, o, False)
     if o.pocket_type == "PARALLEL":
         if o.parallel_pocket_contour:
-            offset = -(c_offset + distance / 2)
+            offset = -(cutter_offset + distance / 2)
             p = pr.buffer(
-                -c_offset,
+                -cutter_offset,
                 resolution=o.optimisation.circle_detail,
                 join_style=join,
                 mitre_limit=2,
             )
-
             nchunks = shapely_to_chunks(p, o.min.z)
-
             chunksFromCurve.extend(nchunks)
+
         crosshatch_result = generate_crosshatch(
-            bpy.context, angle, distance, offset, pocket_shape, join, c_ob
+            bpy.context,
+            angle,
+            distance,
+            offset,
+            pocket_shape,
+            join,
+            c_ob,
         )
-
         nchunks = shapely_to_chunks(crosshatch_result, o.min.z)
-
         chunksFromCurve.extend(nchunks)
 
         if o.parallel_pocket_crosshatch:
             crosshatch_result = generate_crosshatch(
-                bpy.context, n_angle, distance, offset, pocket_shape, join, c_ob
+                bpy.context,
+                n_angle,
+                distance,
+                offset,
+                pocket_shape,
+                join,
+                c_ob,
             )
-
             nchunks = shapely_to_chunks(crosshatch_result, o.min.z)
-
             chunksFromCurve.extend(nchunks)
 
     else:
         p = pr.buffer(
-            -c_offset,
+            -cutter_offset,
             resolution=o.optimisation.circle_detail,
             join_style=join,
             mitre_limit=2,
@@ -568,60 +633,62 @@ async def pocket(o):
         lastchunks = []
         centers = None
         firstoutline = p  # for testing in the end.
-        prest = p.buffer(-c_offset, o.optimisation.circle_detail)
+        prest = p.buffer(-cutter_offset, o.optimisation.circle_detail)
 
         while not p.is_empty:
             if o.pocket_to_curve:
                 # make a curve starting with _3dpocket
-
                 shapely_to_curve("3dpocket", p, 0.0)
 
             nchunks = shapely_to_chunks(p, o.min.z)
-
-            # print("nchunks")
             pnew = p.buffer(
                 -o.distance_between_paths,
                 o.optimisation.circle_detail,
                 join_style=join,
                 mitre_limit=2,
             )
+
             if pnew.is_empty:
                 # test if the last curve will leave material
                 pt = p.buffer(
-                    -c_offset,
+                    -cutter_offset,
                     o.optimisation.circle_detail,
                     join_style=join,
                     mitre_limit=2,
                 )
+
                 if not pt.is_empty:
                     pnew = pt
-            # print("pnew")
 
             nchunks = limit_chunks(nchunks, o)
-
             chunksFromCurve.extend(nchunks)
-
             parent_child_distance(lastchunks, nchunks, o)
-
             lastchunks = nchunks
-
             percent = int(i / approxn * 100)
             progress("Outlining Polygons ", percent)
             p = pnew
-
             i += 1
 
-    # if (o.poc)#TODO inside outside!
-    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (
-        o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"
-    ):
+    # TODO inside outside!
+
+    move_type = o.movement.type
+    spin = o.movement.spindle_rotation
+    climb_cw = move_type == "CLIMB" and spin == "CW"
+    climb_ccw = move_type == "CLIMB" and spin == "CCW"
+    conventional_cw = move_type == "CONVENTIONAL" and spin == "CW"
+    conventional_ccw = move_type == "CONVENTIONAL" and spin == "CCW"
+
+    if climb_cw or conventional_ccw:
         for ch in chunksFromCurve:
             ch.reverse()
 
     chunksFromCurve = await sort_chunks(chunksFromCurve, o)
-
     chunks = []
-    layers = get_layers(o, o.max_z, check_min_z(o))
+    layers = get_layers(
+        o,
+        o.max_z,
+        check_min_z(o),
+    )
 
     for l in layers:
         lchunks = set_chunks_z(chunksFromCurve, l[1])
@@ -633,22 +700,20 @@ async def pocket(o):
 
         # helix_enter first try here TODO: check if helix radius is not out of operation area.
         if o.movement.helix_enter:
-            helix_radius = (
-                c_offset * o.movement.helix_diameter * 0.01
-            )  # 90 percent of cutter radius
+            helix_radius = cutter_offset * o.movement.helix_diameter * 0.01
+            # 90 percent of cutter radius
             helix_circumference = helix_radius * pi * 2
-
             revheight = helix_circumference * tan(o.movement.ramp_in_angle)
+
             for chi, ch in enumerate(lchunks):
                 if not chunksFromCurve[chi].children:
                     # TODO:intercept closest next point when it should stay low
                     p = ch.get_point(0)
                     # first thing to do is to check if helix enter can really enter.
-
-                    checkc = circle(helix_radius + c_offset, o.optimisation.circle_detail)
-
+                    checkc = circle(helix_radius + cutter_offset, o.optimisation.circle_detail)
                     checkc = affinity.translate(checkc, p[0], p[1])
                     covers = False
+
                     for poly in o.silhouette.geoms:
                         if poly.contains(checkc):
                             covers = True
@@ -656,37 +721,39 @@ async def pocket(o):
 
                     if covers:
                         revolutions = (l[0] - p[2]) / revheight
-                        # print(revolutions)
+                        # log.debug(revolutions)
                         h = helix(helix_radius, o.optimisation.circle_detail, l[0], p, revolutions)
                         # invert helix if not the typical direction
-                        if (
-                            o.movement.type == "CONVENTIONAL"
-                            and o.movement.spindle_rotation == "CW"
-                        ) or (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW"):
+                        if conventional_cw or climb_ccw:
                             nhelix = []
                             for v in h:
-                                nhelix.append((2 * p[0] - v[0], v[1], v[2]))
+                                nhelix.append(
+                                    (
+                                        2 * p[0] - v[0],
+                                        v[1],
+                                        v[2],
+                                    )
+                                )
                             h = nhelix
                         ch.extend(h, at_index=0)
-                    #                        ch.points = h + ch.points
 
                     else:
                         o.info.warnings += "Helix entry did not fit! \n "
                         ch.closed = True
                         ch.ramp_zig_zag(l[0], l[1], o)
+
         # Arc retract here first try:
         # TODO: check for entry and exit point before actual computing... will be much better.
         if o.movement.retract_tangential:
             # TODO: fix this for CW and CCW!
             for chi, ch in enumerate(lchunks):
-                # print(chunksFromCurve[chi])
-                # print(chunksFromCurve[chi].parents)
                 if chunksFromCurve[chi].parents == [] or len(chunksFromCurve[chi].parents) == 1:
                     revolutions = 0.25
                     v1 = Vector(ch.get_point(-1))
                     i = -2
                     v2 = Vector(ch.get_point(i))
                     v = v1 - v2
+
                     while v.length == 0:
                         i = i - 1
                         v2 = Vector(ch.get_point(i))
@@ -699,7 +766,6 @@ async def pocket(o):
                     p = v1 + v * o.movement.retract_radius
                     center = p
                     p = (p.x, p.y, p.z)
-
                     # progress(str((v1,v,p)))
                     h = helix(
                         o.movement.retract_radius,
@@ -708,14 +774,13 @@ async def pocket(o):
                         p,
                         revolutions,
                     )
-
                     # angle to rotate whole retract move
                     e = Euler((0, 0, rotangle + pi))
                     rothelix = []
                     c = []  # polygon for outlining and checking collisions.
+
                     for p in h:  # rotate helix to go from tangent of vector
                         v1 = Vector(p)
-
                         v = v1 - center
                         v.x = -v.x  # flip it here first...
                         v.rotate(e)
@@ -724,16 +789,14 @@ async def pocket(o):
                         c.append((p[0], p[1]))
 
                     c = sgeometry.Polygon(c)
-                    # print('çoutline')
-                    # print(c)
-                    coutline = c.buffer(c_offset, o.optimisation.circle_detail)
-                    # print(h)
-                    # print('çoutline')
-                    # print(coutline)
+                    coutline = c.buffer(cutter_offset, o.optimisation.circle_detail)
+                    # log.debug(h)
+                    # log.debug(c)
+                    # log.debug(coutline)
                     # polyToMesh(coutline,0)
                     rothelix.reverse()
-
                     covers = False
+
                     for poly in o.silhouette.geoms:
                         if poly.contains(coutline):
                             covers = True
@@ -746,7 +809,11 @@ async def pocket(o):
 
     if o.movement.ramp:
         for ch in chunks:
-            ch.ramp_zig_zag(ch.zstart, ch.get_point(0)[2], o)
+            ch.ramp_zig_zag(
+                ch.zstart,
+                ch.get_point(0)[2],
+                o,
+            )
 
     if o.first_down:
         if o.pocket_option == "OUTSIDE":
@@ -755,7 +822,6 @@ async def pocket(o):
 
     if o.pocket_to_curve:  # make curve instead of a path
         join_multiple("3dpocket")
-
     else:
         chunks_to_mesh(chunks, o)  # make normal pocket path
 
@@ -783,10 +849,11 @@ async def drill(o):
     """
 
     log.info("Operation: Drill")
+
     chunks = []
+
     for ob in o.objects:
         activate(ob)
-
         bpy.ops.object.duplicate_move(
             OBJECT_OT_duplicate={"linked": False, "mode": "TRANSLATION"},
             TRANSFORM_OT_translate={
@@ -806,67 +873,105 @@ async def drill(o):
                 "release_confirm": False,
             },
         )
-        # bpy.ops.collection.objects_remove_all()
         bpy.ops.object.parent_clear(type="CLEAR_KEEP_TRANSFORM")
-
         ob = bpy.context.active_object
+
         if ob.type == "CURVE":
             ob.data.dimensions = "3D"
-        try:
-            bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-            bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
-            bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
+        try:
+            bpy.ops.object.transform_apply(
+                location=True,
+                rotation=False,
+                scale=False,
+            )
+            bpy.ops.object.transform_apply(
+                location=False,
+                rotation=True,
+                scale=False,
+            )
+            bpy.ops.object.transform_apply(
+                location=False,
+                rotation=False,
+                scale=True,
+            )
         except:
             pass
+
         l = ob.location
 
         if ob.type == "CURVE":
             for c in ob.data.splines:
                 maxx, minx, maxy, miny, maxz, minz = -10000, 10000, -10000, 10000, -10000, 10000
-                for p in c.points:
-                    if o.drill_type == "ALL_POINTS":
-                        chunks.append(CamPathChunk([(p.co.x + l.x, p.co.y + l.y, p.co.z + l.z)]))
+                points = c.points if len(c.points) > 0 else c.bezier_points
 
+                for p in points:
+                    if o.drill_type == "ALL_POINTS":
+                        chunks.append(
+                            CamPathChunk(
+                                [
+                                    (
+                                        p.co.x + l.x,
+                                        p.co.y + l.y,
+                                        p.co.z + l.z,
+                                    )
+                                ]
+                            )
+                        )
                     minx = min(p.co.x, minx)
                     maxx = max(p.co.x, maxx)
                     miny = min(p.co.y, miny)
                     maxy = max(p.co.y, maxy)
                     minz = min(p.co.z, minz)
                     maxz = max(p.co.z, maxz)
-                for p in c.bezier_points:
-                    if o.drill_type == "ALL_POINTS":
-                        chunks.append(CamPathChunk([(p.co.x + l.x, p.co.y + l.y, p.co.z + l.z)]))
 
-                    minx = min(p.co.x, minx)
-                    maxx = max(p.co.x, maxx)
-                    miny = min(p.co.y, miny)
-                    maxy = max(p.co.y, maxy)
-                    minz = min(p.co.z, minz)
-                    maxz = max(p.co.z, maxz)
                 cx = (maxx + minx) / 2
                 cy = (maxy + miny) / 2
                 cz = (maxz + minz) / 2
-
                 center = (cx, cy)
                 aspect = (maxx - minx) / (maxy - miny)
+
                 if (
                     1.3 > aspect > 0.7 and o.drill_type == "MIDDLE_SYMETRIC"
                 ) or o.drill_type == "MIDDLE_ALL":
-                    chunks.append(CamPathChunk([(center[0] + l.x, center[1] + l.y, cz + l.z)]))
+                    chunks.append(
+                        CamPathChunk(
+                            [
+                                (
+                                    center[0] + l.x,
+                                    center[1] + l.y,
+                                    cz + l.z,
+                                )
+                            ]
+                        )
+                    )
 
         elif ob.type == "MESH":
             for v in ob.data.vertices:
-                chunks.append(CamPathChunk([(v.co.x + l.x, v.co.y + l.y, v.co.z + l.z)]))
+                chunks.append(
+                    CamPathChunk(
+                        [
+                            (
+                                v.co.x + l.x,
+                                v.co.y + l.y,
+                                v.co.z + l.z,
+                            )
+                        ]
+                    )
+                )
+        # Delete temporary Object with applied transforms
+        delete_object(ob)
 
-        delete_object(ob)  # delete temporary object with applied transforms
-
-    layers = get_layers(o, o.max_z, check_min_z(o))
+    layers = get_layers(
+        o,
+        o.max_z,
+        check_min_z(o),
+    )
 
     chunklayers = []
     for layer in layers:
         for chunk in chunks:
-            # If using object for minz then use z from points in object
+            # If using Object for minz then use Z from Points in Object
             if o.min_z_from == "OBJECT":
                 z = chunk.get_point(0)[2]
             else:  # using operation minz
@@ -917,16 +1022,15 @@ async def medial_axis(o):
 
     remove_multiple("medialMesh")
 
-    from .voronoi import Site, compute_voronoi_diagram
-
     chunks = []
 
     gpoly = spolygon.Polygon()
     angle = o.cutter_tip_angle
-    slope = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
-    # slope = tan((pi-angle)/2) #angle in radian
+    # Angle in Degrees
+    slope = tan(pi * (90 - angle / 2) / 180)
     new_cutter_diameter = o.cutter_diameter
     m_o_ob = o.object_name
+
     if o.cutter_type == "VCARVE":
         angle = o.cutter_tip_angle
         # start the max depth calc from the "start depth" of the operation.
@@ -943,6 +1047,7 @@ async def medial_axis(o):
         maxdepth = -new_cutter_diameter / 2 - o.skin
     else:
         raise CamException("Only Ballnose and V-carve Cutters Are Supported for Medial Axis.")
+
     # remember resolutions of curves, to refine them,
     # otherwise medial axis computation yields too many branches in curved parts
     resolutions_before = []
@@ -981,16 +1086,16 @@ async def medial_axis(o):
         schunks = shapely_to_chunks(poly, -1)
 
         schunks = chunks_refine_threshold(
-            schunks, o.medial_axis_subdivision, o.medial_axis_threshold
-        )  # chunks_refine(schunks,o)
+            schunks,
+            o.medial_axis_subdivision,
+            o.medial_axis_threshold,
+        )
+        # chunks_refine(schunks,o)
 
         verts = []
         for ch in schunks:
             verts.extend(ch.get_points())
-            # for pt in ch.get_points():
-            #     # pvoro = Site(pt[0], pt[1])
-            #     verts.append(pt)  # (pt[0], pt[1]), pt[2])
-        # verts= points#[[vert.x, vert.y, vert.z] for vert in vertsPts]
+
         nDupli, nZcolinear = unique(verts)
         nVerts = len(verts)
         log.info(f"{nDupli} Duplicate Points Ignored")
@@ -998,31 +1103,37 @@ async def medial_axis(o):
         if nVerts < 3:
             log.info("Not Enough Points")
             return {"FINISHED"}
+
         # Check colinear
         xValues = [pt[0] for pt in verts]
         yValues = [pt[1] for pt in verts]
         if check_equal(xValues) or check_equal(yValues):
             log.info("Points Are Colinear")
             return {"FINISHED"}
+
         # Create diagram
         log.info(f"Tesselation... ({nVerts})Points)")
         xbuff, ybuff = 5, 5  # %
         zPosition = 0
         vertsPts = [Point(vert[0], vert[1], vert[2]) for vert in verts]
-        # vertsPts= [Point(vert[0], vert[1]) for vert in verts]
 
         pts, edgesIdx = compute_voronoi_diagram(
-            vertsPts, xbuff, ybuff, polygonsOutput=False, formatOutput=True
+            vertsPts,
+            xbuff,
+            ybuff,
+            polygonsOutput=False,
+            formatOutput=True,
         )
 
-        # pts=[[pt[0], pt[1], zPosition] for pt in pts]
         newIdx = 0
         vertr = []
         filteredPts = []
         log.info("Filter Points")
         ipts = 0
+
         for p in pts:
             ipts = ipts + 1
+
             if ipts % 500 == 0:
                 sys.stdout.write("\r")
                 # the exact output you're looking for:
@@ -1034,61 +1145,68 @@ async def medial_axis(o):
                 vertr.append((True, -1))
             else:
                 vertr.append((False, newIdx))
+
                 if o.cutter_type == "VCARVE":
                     # start the z depth calc from the "start depth" of the operation.
                     z = o.max_z - mpoly.boundary.distance(sgeometry.Point(p)) * slope
+
                     if z < maxdepth:
                         z = maxdepth
+
                 elif o.cutter_type == "BALL" or o.cutter_type == "BALLNOSE":
                     d = mpoly_boundary.distance(sgeometry.Point(p))
                     r = new_cutter_diameter / 2.0
+
                     if d >= r:
                         z = -r
                     else:
-                        # print(r, d)
                         z = -r + sqrt(r * r - d * d)
                 else:
                     z = 0  #
-                # print(mpoly.distance(sgeometry.Point(0,0)))
-                # if(z!=0):print(z)
+
                 filteredPts.append((p[0], p[1], z))
                 newIdx += 1
 
         log.info("Filter Edges")
         filteredEdgs = []
         ledges = []
+
         for e in edgesIdx:
             do = True
-            # p1 = pts[e[0]]
-            # p2 = pts[e[1]]
-            # print(p1,p2,len(vertr))
-            if vertr[e[0]][0]:  # exclude edges with allready excluded points
+
+            # Exclude Edges with already excluded Points
+            if vertr[e[0]][0]:
                 do = False
             elif vertr[e[1]][0]:
                 do = False
             if do:
-                filteredEdgs.append((vertr[e[0]][1], vertr[e[1]][1]))
-                ledges.append(
-                    sgeometry.LineString((filteredPts[vertr[e[0]][1]], filteredPts[vertr[e[1]][1]]))
+                filteredEdgs.append(
+                    (
+                        vertr[e[0]][1],
+                        vertr[e[1]][1],
+                    )
                 )
-        # print(ledges[-1].has_z)
+                ledges.append(
+                    sgeometry.LineString(
+                        (
+                            filteredPts[vertr[e[0]][1]],
+                            filteredPts[vertr[e[1]][1]],
+                        )
+                    )
+                )
 
         bufpoly = poly.buffer(-new_cutter_diameter / 2, resolution=64)
-
         lines = shapely.ops.linemerge(ledges)
-        # print(lines.type)
 
         if bufpoly.geom_type == "Polygon" or bufpoly.geom_type == "MultiPolygon":
             lines = lines.difference(bufpoly)
-
             chunks.extend(shapely_to_chunks(bufpoly, maxdepth))
 
         chunks.extend(shapely_to_chunks(lines, 0))
 
-        # generate a mesh from the medial calculations
+        # Generate a Mesh from the Medial calculations
         if o.add_mesh_for_medial:
             shapely_to_curve("medialMesh", lines, 0.0)
-
             bpy.ops.object.convert(target="MESH")
 
     oi = 0
@@ -1099,9 +1217,11 @@ async def medial_axis(o):
 
     # bpy.ops.object.join()
     chunks = await sort_chunks(chunks, o)
-
-    layers = get_layers(o, o.max_z, o.min.z)
-
+    layers = get_layers(
+        o,
+        o.max_z,
+        o.min.z,
+    )
     chunklayers = []
 
     for layer in layers:
@@ -1120,7 +1240,6 @@ async def medial_axis(o):
     chunks_to_mesh(chunklayers, o)
     # add pocket operation for medial if add pocket checked
     if o.add_pocket_for_medial:
-        #        o.add_pocket_for_medial = False
         # export medial axis parameter to pocket op
         add_pocket(maxdepth, m_o_ob, new_cutter_diameter)
 
@@ -1162,6 +1281,7 @@ def get_layers(operation, startdepth, enddepth):
     if operation.use_layers:
         layers = []
         n = ceil((startdepth - enddepth) / operation.stepdown)
+
         log.info(f"Start Depth: {startdepth}")
         log.info(f"End Depth: {enddepth}")
         log.info(f"Layers: {n}")
@@ -1169,7 +1289,10 @@ def get_layers(operation, startdepth, enddepth):
         layerstart = operation.max_z
 
         for x in range(0, n):
-            layerend = round(max(startdepth - ((x + 1) * operation.stepdown), enddepth), 6)
+            layerend = round(
+                max(startdepth - ((x + 1) * operation.stepdown), enddepth),
+                6,
+            )
             if int(layerstart * 10**8) != int(layerend * 10**8):
                 # it was possible that with precise same end of operation,
                 # last layer was done 2x on exactly same level...
@@ -1205,20 +1328,34 @@ def chunks_to_mesh(chunks, o):
     m = s.cam_machine
     verts = []
 
-    free_height = o.movement.free_height  # o.max.z +
+    free_height = o.movement.free_height
 
-    if o.machine_axes == "3":
+    three_axis = o.machine_axes == "3"
+    four_axis = o.machine_axes == "4"
+    five_axis = o.machine_axes == "5"
+
+    indexed_four_axis = four_axis and o.strategy_4_axis == "INDEXED"
+    indexed_five_axis = five_axis and o.strategy_5_axis == "INDEXED"
+
+    if three_axis:
         if m.use_position_definitions:
-            origin = (m.starting_position.x, m.starting_position.y, m.starting_position.z)  # dhull
+            origin = (
+                m.starting_position.x,
+                m.starting_position.y,
+                m.starting_position.z,
+            )
         else:
-            origin = (0, 0, free_height)
-
+            origin = (
+                0,
+                0,
+                free_height,
+            )
         verts = [origin]
-    if o.machine_axes != "3":
-        verts_rotations = []  # (0,0,0)
-    if (o.machine_axes == "5" and o.strategy_5_axis == "INDEXED") or (
-        o.machine_axes == "4" and o.strategy_4_axis == "INDEXED"
-    ):
+
+    if not three_axis:
+        verts_rotations = []
+
+    if indexed_five_axis or indexed_four_axis:
         extend_chunks_5_axis(chunks, o)
 
     if o.array:
@@ -1228,7 +1365,11 @@ def chunks_to_mesh(chunks, o):
                 log.info(f"{x}, {y}")
                 for ch in chunks:
                     ch = ch.copy()
-                    ch.shift(x * o.array_x_distance, y * o.array_y_distance, 0)
+                    ch.shift(
+                        x * o.array_x_distance,
+                        y * o.array_y_distance,
+                        0,
+                    )
                     nchunks.append(ch)
         chunks = nchunks
 
@@ -1238,25 +1379,17 @@ def chunks_to_mesh(chunks, o):
 
     for chi in range(0, len(chunks)):
         ch = chunks[chi]
-        # print(chunks)
-        # print (ch)
         # TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
         if ch.count() > 0:
-            # print(len(ch.points))
+            # log.debug(len(ch.points))
             nverts = []
             if o.optimisation.optimize:
                 ch = optimize_chunk(ch, o)
 
             # lift and drop
-
-            if (
-                lifted
-            ):  # did the cutter lift before? if yes, put a new position above of the first point of next chunk.
-                if (
-                    o.machine_axes == "3"
-                    or (o.machine_axes == "5" and o.strategy_5_axis == "INDEXED")
-                    or (o.machine_axes == "4" and o.strategy_4_axis == "INDEXED")
-                ):
+            if lifted:
+                # did the cutter lift before? if yes, put a new position above of the first point of next chunk.
+                if three_axis or indexed_five_axis or indexed_four_axis:
                     v = (ch.get_point(0)[0], ch.get_point(0)[1], free_height)
                 else:  # otherwise, continue with the next chunk without lifting/dropping
                     v = ch.startpoints[0]  # startpoints=retract points
@@ -1267,7 +1400,7 @@ def chunks_to_mesh(chunks, o):
             verts.extend(ch.get_points())
 
             # add rotations for n-axis
-            if o.machine_axes != "3":
+            if not three_axis:
                 verts_rotations.extend(ch.rotations)
 
             lift = True
@@ -1277,12 +1410,13 @@ def chunks_to_mesh(chunks, o):
                 last = Vector(ch.get_point(-1))
                 first = Vector(chunks[chi + 1].get_point(0))
                 vect = first - last
-                if (
-                    o.machine_axes == "3"
-                    and (o.strategy == "PARALLEL" or o.strategy == "CROSS")
-                    and vect.z == 0
-                    and vect.length < o.distance_between_paths * 2.5
-                ) or (o.machine_axes == "4" and vect.length < o.distance_between_paths * 2.5):
+                vector_length = vect.length < o.distance_between_paths * 2.5
+                vector_check = vect.z == 0 and vector_length
+                parallel_cross = o.strategy in ["PARALLEL", "CROSS"]
+
+                if (three_axis and parallel_cross and vector_check) or (
+                    four_axis and vector_length
+                ):
                     # case of neighbouring paths
                     lift = False
                 # case of stepdown by cutting.
@@ -1290,32 +1424,26 @@ def chunks_to_mesh(chunks, o):
                     lift = False
 
             if lift:
-                if (
-                    o.machine_axes == "3"
-                    or (o.machine_axes == "5" and o.strategy_5_axis == "INDEXED")
-                    or (o.machine_axes == "4" and o.strategy_4_axis == "INDEXED")
-                ):
+                if three_axis or indexed_five_axis or indexed_four_axis:
                     v = (ch.get_point(-1)[0], ch.get_point(-1)[1], free_height)
                 else:
                     v = ch.startpoints[-1]
                     verts_rotations.append(ch.rotations[-1])
                 verts.append(v)
             lifted = lift
-    # print(verts_rotations)
+
     if o.optimisation.use_exact and not o.optimisation.use_opencamlib:
         cleanup_bullet_collision(o)
 
     log.info(f"{time.time() - t}")
     t = time.time()
 
-    # actual blender object generation starts here:
+    # Blender Object generation starts here:
     edges = []
     for a in range(0, len(verts) - 1):
         edges.append((a, a + 1))
 
-    # oname = "cam_path_{}".format(o.name)
     oname = s.cam_names.path_name_full
-
     mesh = bpy.data.meshes.new(oname)
     mesh.name = oname
     mesh.from_pydata(verts, edges, [])
@@ -1326,10 +1454,9 @@ def chunks_to_mesh(chunks, o):
     else:
         ob = object_utils.object_data_add(bpy.context, mesh, operator=None)
 
-    if o.machine_axes != "3":
+    if not three_axis:
         # store rotations into shape keys, only way to store large arrays with correct floating point precision
         # - object/mesh attributes can only store array up to 32000 intems.
-
         ob.shape_key_add()
         ob.shape_key_add()
         shapek = mesh.shape_keys.key_blocks[1]
@@ -1344,7 +1471,7 @@ def chunks_to_mesh(chunks, o):
     log.info(f"{time.time() - t}")
 
     ob.location = (0, 0, 0)
-    ob.color = s.cam_machine.path_color  # (0, 1, 0, 1)
+    ob.color = s.cam_machine.path_color
     o.path_object_name = oname
 
     bpy.context.collection.objects.unlink(ob)

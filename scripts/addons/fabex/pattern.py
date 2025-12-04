@@ -220,7 +220,6 @@ def get_path_pattern(operation):
             if i > 0:
                 minxp += pathd
             chunk.points.append((maxxp, minyp, zlevel))
-
             x = maxxp
 
             for a in range(ceil(minyp / pathstep), ceil(maxyp / pathstep), 1):
@@ -229,24 +228,23 @@ def get_path_pattern(operation):
 
             minyp += pathd
             chunk.points.append((maxxp, maxyp, zlevel))
-
             y = maxyp
+
             for a in range(floor(maxxp / pathstep), ceil(minxp / pathstep), -1):
                 x = a * pathstep
                 chunk.points.append((x, y, zlevel))
 
             maxxp -= pathd
             chunk.points.append((minxp, maxyp, zlevel))
-
             x = minxp
+
             for a in range(floor(maxyp / pathstep), ceil(minyp / pathstep), -1):
                 y = a * pathstep
                 chunk.points.append((x, y, zlevel))
             chunk.points.append((minxp, minyp, zlevel))
-
             maxyp -= pathd
-
             i += 1
+
         if o.movement.insideout == "INSIDEOUT":
             chunk.points.reverse()
         if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (
