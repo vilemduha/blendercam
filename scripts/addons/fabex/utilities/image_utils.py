@@ -688,11 +688,6 @@ def render_sample_image(o):
 
                 # If Blender is v5 or greater, use the new Compositor settings
                 if blender_version >= 5:
-                    image_settings = render.image_settings
-                    image_settings.file_format = "OPEN_EXR"
-                    image_settings.color_mode = "RGB"
-                    image_settings.color_depth = "32"
-
                     if scene.compositing_node_group == None:
                         bpy.ops.node.new_compositing_node_group()
 
@@ -710,9 +705,13 @@ def render_sample_image(o):
                     except KeyError:
                         file_output = node_tree.nodes.new("CompositorNodeOutputFile")
 
-                    file_output.file_output_items.new(socket_type="FLOAT", name="Output")
+                    file_output.file_output_items.new(socket_type="RGBA", name="")
                     file_output.directory = os.path.dirname(image_name)
                     file_output.file_name = os.path.basename(image_name)
+                    file_output.format.media_type = "IMAGE"
+                    file_output.format.file_format = "OPEN_EXR"
+                    file_output.format.color_mode = "RGB"
+                    file_output.format.color_depth = "32"
 
                     node_tree.links.new(
                         render_layers.outputs[render_layers.outputs.find("Mist")],
@@ -804,6 +803,7 @@ def render_sample_image(o):
                     log.info("Failed to Backup Scene Settings")
 
             i = bpy.data.images.load(image_name)
+            print(f"Image load: {image_name}")
             bpy.context.scene.render.engine = "FABEX_RENDER"
 
         ####################################################################
