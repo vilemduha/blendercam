@@ -545,6 +545,10 @@ def _backup_render_settings(pairs):
             objects.
     """
 
+    scene = bpy.context.scene
+    view_layer = bpy.context.view_layer
+    render = scene.render
+
     properties = []
     for owner, struct_name in pairs:
         obj = getattr(owner, struct_name)
@@ -576,6 +580,10 @@ def _restore_render_settings(pairs, properties):
         properties (list): A list of dictionaries containing property names and their corresponding
             values.
     """
+
+    scene = bpy.context.scene
+    view_layer = bpy.context.view_layer
+    render = scene.render
 
     for (owner, struct_name), obj_value in zip(pairs, properties):
         obj = getattr(owner, struct_name)
@@ -649,12 +657,12 @@ def render_sample_image(o):
             SETTINGS_TO_BACKUP = [
                 (render, "resolution_x"),
                 (render, "resolution_x"),
+                (render, "resolution_percentage"),
                 (scene.cycles, "samples"),
                 (scene, "camera"),
                 (view_layer, "samples"),
                 (view_layer.cycles, "use_denoising"),
                 (scene.world, "mist_settings"),
-                (render, "resolution_percentage"),
             ]
 
             for ob in scene.objects:
@@ -767,6 +775,7 @@ def render_sample_image(o):
                 bpy.ops.object.delete()
 
                 # os.replace(image_name + "%04d.exr" % (scene.frame_current), image_name)
+
             finally:
                 if backup_settings is not None:
                     _restore_render_settings(SETTINGS_TO_BACKUP, backup_settings)

@@ -312,16 +312,16 @@ def add_collections():
     children = default_collection.children
     for child in children:
         prefix = child.name.startswith
-        if prefix("bridge") and not bridges_collection[child.name]:
+        if prefix("bridge"):
             bridges_collection.children.link(child)
             default_collection.children.unlink(child)
 
     objects = default_collection.objects
     for obj in objects:
         prefix = obj.name.startswith
-        if prefix(path_prefix) and not paths_collection[obj.name]:
+        if prefix(path_prefix):
             paths_collection.objects.link(obj)
-        if prefix(simulation_prefix) and not simulations_collection[obj.name]:
+        if prefix(simulation_prefix):
             simulations_collection.objects.link(obj)
         if prefix in ["bridge", path_prefix, simulation_prefix]:
             default_collection.objects.unlink(obj)

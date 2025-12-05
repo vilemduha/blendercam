@@ -21,10 +21,16 @@ for i, operation in enumerate(scene.cam_operations):
     scene.cam_active_operation = i
 
     print("~")
-    print("~")
+    print("~~")
+    print("~~~")
     print(f"############ Generating Operation: {operation.name} ############")
 
     # Run the calculate_cam_path() operator
     bpy.ops.object.calculate_cam_path()
+
+    print(f"############ Operation: {operation.name} Complete! ############")
+    print("~~~")
+    print("~~")
+    print("~")
 
 sys.exit(0)
