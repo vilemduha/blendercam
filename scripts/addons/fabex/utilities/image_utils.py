@@ -682,7 +682,7 @@ def render_sample_image(o):
                         bpy.ops.node.new_compositing_node_group()
 
                     for group in bpy.data.node_groups:
-                        if group.type == "COMPOSITING":
+                        if group.type == "COMPOSITING" and "Render Layers" in group.nodes:
                             scene.compositing_node_group = group
 
                     node_tree = scene.compositing_node_group
