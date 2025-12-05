@@ -759,9 +759,8 @@ def render_sample_image(o):
 
                 bpy.ops.render.render()
 
-                if node_out is not None:
+                if blender_version < 5:
                     node_tree.nodes.remove(node_out)
-                if node_in is not None:
                     node_tree.nodes.remove(node_in)
 
                 camera.select_set(True)
