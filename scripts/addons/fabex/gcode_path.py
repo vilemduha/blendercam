@@ -42,6 +42,7 @@ from .constants import (
     ROTATION_CORRECTION,
     USE_PROFILER,
 )
+from .exception import CamException
 from .pattern import get_path_pattern, get_path_pattern_4_axis
 from .post_processors import iso
 
@@ -127,24 +128,25 @@ def export_gcode_path(filename, vertslist, operations):
         None: This function does not return a value; it writes the G-code to a file.
     """
     log.debug("EXPORT")
-    # print("\nEXPORT")
     progress("Exporting G-code File")
+
     t = time.time()
     s = bpy.context.scene
     m = s.cam_machine
+
     enable_dust = False
     enable_hold = False
     enable_mist = False
     # find out how many files will be done:
-
     split = False
-
     totops = 0
     findex = 0
+
     if m.eval_splitting:  # detect whether splitting will happen
         for mesh in vertslist:
             totops += len(mesh.vertices)
         log.info(f"Total Operations: {totops}")
+
         if totops > m.split_limit:
             split = True
             filesnum = ceil(totops / m.split_limit)
@@ -155,7 +157,6 @@ def export_gcode_path(filename, vertslist, operations):
     if s.cam_names.default_export_location == "":
         filepath = bpy.data.filepath
         basename = bpy.path.basename
-
         basefilename = filepath[: -len(basename(filepath))] + safe_filename(filename)
     else:
         basefilename = s.cam_names.default_export_location + safe_filename(filename)
@@ -247,7 +248,6 @@ def export_gcode_path(filename, vertslist, operations):
         c.file_open(filename)
 
         # unit system correction
-        ###############
         if s.unit_settings.system == "METRIC":
             c.metric()
         elif s.unit_settings.system == "IMPERIAL":
@@ -259,7 +259,6 @@ def export_gcode_path(filename, vertslist, operations):
         c.comment("G-code Generated with Fabex and NC library")
         # absolute coordinates
         c.absolute()
-
         # work-plane, by now always xy,
         c.set_plane(0)
         c.flush_nc()
@@ -267,29 +266,30 @@ def export_gcode_path(filename, vertslist, operations):
         return c
 
     c = start_new_file()
-    # [o.cutter_id,o.cutter_dameter,o.cutter_type,o.cutter_flutes]
     last_cutter = None
-
     processedops = 0
     last = Vector((0, 0, 0))
     cut_distance = 0
+
     for i, o in enumerate(operations):
         if o.output_header:
             lines = o.gcode_header.split(";")
+
             for aline in lines:
                 c.write(aline + "\n")
 
-        free_height = o.movement.free_height  # o.max.z+
+        free_height = o.movement.free_height
+
         if o.movement.useG64:
             c.set_path_control_mode(2, round(o.movement.G64 * 1000, 5), 0)
 
         mesh = vertslist[i]
         verts = mesh.vertices[:]
+
         if o.machine_axes != "3":
             rots = mesh.shape_keys.key_blocks["rotations"].data
 
         # spindle rpm and direction
-        ###############
         if o.movement.spindle_rotation == "CW":
             spdir_clockwise = True
         else:
@@ -317,8 +317,8 @@ def export_gcode_path(filename, vertslist, operations):
             )
 
         c.flush_nc()
-
         last_cutter = [o.cutter_id, o.cutter_diameter, o.cutter_type, o.cutter_flutes]
+
         if o.cutter_type not in ["LASER", "PLASMA"]:
             if o.enable_hold:
                 c.write("(Hold Down)\n")
@@ -351,10 +351,12 @@ def export_gcode_path(filename, vertslist, operations):
         if m.spindle_start_time > 0:
             c.dwell(m.spindle_start_time)
 
-        #        c.rapid(z=free_height*1000)  #raise the spindle to safe height
+        # raise the spindle to safe height
         fmh = round(free_height * unitcorr, 2)
+
         if o.cutter_type not in ["LASER", "PLASMA"]:
             c.write("G00 Z" + str(fmh) + "\n")
+
         if o.enable_a_axis:
             if o.rotation_a == 0:
                 o.rotation_a = 0.0001
@@ -368,9 +370,6 @@ def export_gcode_path(filename, vertslist, operations):
         c.write("\n")
         c.flush_nc()
 
-        # dhull c.feedrate(unitcorr*o.feedrate)
-
-        # commands=[]
         m = bpy.context.scene.cam_machine
 
         millfeedrate = min(o.feedrate, m.feedrate_max)
@@ -394,22 +393,21 @@ def export_gcode_path(filename, vertslist, operations):
         duration = 0.0
         f = 0.1123456  # nonsense value, so first feedrate always gets written
         fadjustval = 1  # if simulation load data is Not present
-
         downvector = Vector((0, 0, -1))
         plungelimit = pi / 2 - o.plunge_angle
-
         scale_graph = 0.05  # warning this has to be same as in export in utils!!!!
-
         ii = 0
         offline = 0
         online = 0
         cut = True  # active cut variable for laser or plasma
         shapes = 0
+
         for vi, vert in enumerate(verts):
             # skip the first vertex if this is a chained operation
             # ie: outputting more than one operation
             # otherwise the machine gets sent back to 0,0 for each operation which is unecessary
             shapes += 1  # Count amount of shapes
+
             if i > 0 and vi == 0:
                 continue
             v = vert.co
@@ -498,7 +496,7 @@ def export_gcode_path(filename, vertslist, operations):
                 else:
                     c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
 
-            elif v.z >= free_height or vi == 0:  # v.z==last.z==free_height or vi==0
+            elif v.z >= free_height or vi == 0:
                 if f != freefeedrate:
                     f = freefeedrate
                     c.feedrate(f)
@@ -535,17 +533,19 @@ def export_gcode_path(filename, vertslist, operations):
                     c.feed(x=vx, y=vy, z=vz)
                 else:
                     c.feed(x=vx, y=vy, z=vz, a=ra, b=rb)
+
             cut_distance += vect.length * unitcorr
             vector_duration = vect.length / f
             duration += vector_duration
             last = v
+
             if o.machine_axes != "3":
                 lastrot = r
 
             processedops += 1
+
             if split and processedops > m.split_limit:
                 c.rapid(x=last.x * unitcorr, y=last.y * unitcorr, z=free_height * unitcorr)
-                # @v=(ch.points[-1][0],ch.points[-1][1],free_height)
                 c.program_end()
                 findex += 1
                 c.file_close()
@@ -621,6 +621,8 @@ async def get_path(context, operation):
     # should do all path calculations.
     t = time.process_time()
     # print('ahoj0')
+    if operation.feedrate > context.scene.cam_machine.feedrate_max:
+        raise CamException("Operation Feedrate is greater than Machine Maximum!")
 
     # these tags are for caching of some of the results. Not working well still
     # - although it can save a lot of time during calculation...

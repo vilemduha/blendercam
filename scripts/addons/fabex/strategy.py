@@ -181,9 +181,9 @@ async def cutout(o):
         cutter_offset = offset_by_type[o.cutter_type]
     except:
         pass
-    cutter_offset = r if cutter_offset > r else cutter_offset
+
     # Add Skin for Profile
-    cutter_offset += o.skin
+    cutter_offset = (r if cutter_offset > r else cutter_offset) + o.skin
 
     log.info(f"Offset: {cutter_offset}")
 
@@ -266,7 +266,7 @@ async def cutout(o):
         o.max_z,
         check_min_z(o),
     )
-    extendorder = []
+    chunk_copies = []
 
     # If First Down is true, cut each shape from top to bottom,
     # if not, split shapes into layers by height, creating copies as
@@ -282,19 +282,19 @@ async def cutout(o):
 
                 if dir_switch:
                     chunk_copy.reverse()
-                extendorder.append([chunk_copy, layer])
+                chunk_copies.append([chunk_copy, layer])
 
                 if (not chunk.closed) and o.movement.type == "MEANDER":
                     dir_switch = not dir_switch
     else:
         for layer in layers:
             for chunk in chunksFromCurve:
-                extendorder.append([chunk.copy(), layer])
+                chunk_copies.append([chunk.copy(), layer])
 
     # Set Z for all Chunks
-    for chl in extendorder:
-        chunk = chl[0]
-        layer = chl[1]
+    for chunk_layer in chunk_copies:
+        chunk = chunk_layer[0]
+        layer = chunk_layer[1]
         log.info(layer[1])
         chunk.set_z(layer[1])
 
@@ -307,17 +307,17 @@ async def cutout(o):
         log.info("Old Briddge Cut Removed")
         bridgeheight = min(o.max.z, o.min.z + abs(o.bridges_height))
 
-        for chl in extendorder:
-            chunk = chl[0]
-            layer = chl[1]
+        for chunk_layer in chunk_copies:
+            chunk = chunk_layer[0]
+            layer = chunk_layer[1]
 
             if layer[1] < bridgeheight:
                 use_bridges(chunk, o)
 
     if o.profile_start > 0:
         log.info("Cutout Change Profile Start")
-        for chl in extendorder:
-            chunk = chl[0]
+        for chunk_layer in chunk_copies:
+            chunk = chunk_layer[0]
 
             if chunk.closed:
                 chunk.change_path_start(o)
@@ -325,8 +325,8 @@ async def cutout(o):
     # Lead in
     if o.lead_in > 0.0 or o.lead_out > 0:
         log.info("Cutout Lead-in")
-        for chl in extendorder:
-            chunk = chl[0]
+        for chunk_layer in chunk_copies:
+            chunk = chunk_layer[0]
 
             if chunk.closed:
                 chunk.break_path_for_leadin_leadout(o)
@@ -334,9 +334,9 @@ async def cutout(o):
 
     # Add Ramps or just Chunks
     if o.movement.ramp:
-        for chl in extendorder:
-            chunk = chl[0]
-            layer = chl[1]
+        for chunk_layer in chunk_copies:
+            chunk = chunk_layer[0]
+            layer = chunk_layer[1]
 
             if o.movement.zig_zag_ramp:
                 chunk.ramp_zig_zag(
@@ -361,8 +361,8 @@ async def cutout(o):
                     )
                     chunks.append(chunk)
     else:
-        for chl in extendorder:
-            chunks.append(chl[0])
+        for chunk_layer in chunk_copies:
+            chunks.append(chunk_layer[0])
 
     chunks_to_mesh(chunks, o)
 
@@ -391,7 +391,7 @@ async def curve(o):
 
     log.info("Operation: Curve to Path")
 
-    pathSamples = []
+    path_samples = []
     get_operation_sources(o)
 
     if not o.onlycurves:
@@ -401,12 +401,12 @@ async def curve(o):
         # Ensure Polylines are at least three points long
         subdivide_short_lines(ob)
         # Make the Chunks from the Curve
-        pathSamples.extend(curve_to_chunks(ob))
+        path_samples.extend(curve_to_chunks(ob))
 
     # Sort Chunks before sampling Path
-    pathSamples = await sort_chunks(pathSamples, o)
+    path_samples = await sort_chunks(path_samples, o)
     # Simplify Path Chunks
-    pathSamples = chunks_refine(pathSamples, o)
+    path_samples = chunks_refine(path_samples, o)
 
     # Layers
     if o.use_layers:
@@ -417,18 +417,18 @@ async def curve(o):
             o.max_z,
             round(check_min_z(o), 6),
         )
-        extendorder = []
+        chunk_copies = []
         chunks = []
 
         # Include Layer information in Chunk list
         for layer in layers:
-            for ch in pathSamples:
-                extendorder.append([ch.copy(), layer])
+            for ch in path_samples:
+                chunk_copies.append([ch.copy(), layer])
 
         # Set offset Z for all chunks according to the layer information,
-        for chl in extendorder:
-            chunk = chl[0]
-            layer = chl[1]
+        for chunk_layer in chunk_copies:
+            chunk = chunk_layer[0]
+            layer = chunk_layer[1]
             log.info(f"Layer: {layer[1]}")
             chunk.offset_z(o.max_z * 2 - o.min_z + layer[1])
             # Limit Cut Depth to Operation Z Minimum
@@ -437,19 +437,19 @@ async def curve(o):
             chunk.clamp_max_z(o.movement.free_height)
 
         # Strip Layer information from extendorder and transfer them to Chunks
-        for chl in extendorder:
-            chunks.append(chl[0])
+        for chunk_layer in chunk_copies:
+            chunks.append(chunk_layer[0])
 
         chunks_to_mesh(chunks, o)  # finish by converting to mesh
 
     # No Layers, old Curve
     else:
-        for ch in pathSamples:
+        for ch in path_samples:
             # Limit Cut Depth to Operation Z Minimum
             ch.clamp_z(o.min_z)
             # Limit Cut Height to Operation Safe Height
             ch.clamp_max_z(o.movement.free_height)
-        chunks_to_mesh(pathSamples, o)
+        chunks_to_mesh(path_samples, o)
 
 
 async def project_curve(s, o):
@@ -580,6 +580,7 @@ async def pocket(o):
     pocket_shape = ""
     n_angle = angle - pi / 2
     pr = get_object_outline(0, o, False)
+
     if o.pocket_type == "PARALLEL":
         if o.parallel_pocket_contour:
             offset = -(cutter_offset + distance / 2)
@@ -790,10 +791,6 @@ async def pocket(o):
 
                     c = sgeometry.Polygon(c)
                     coutline = c.buffer(cutter_offset, o.optimisation.circle_detail)
-                    # log.debug(h)
-                    # log.debug(c)
-                    # log.debug(coutline)
-                    # polyToMesh(coutline,0)
                     rothelix.reverse()
                     covers = False
 
@@ -903,6 +900,7 @@ async def drill(o):
         if ob.type == "CURVE":
             for c in ob.data.splines:
                 maxx, minx, maxy, miny, maxz, minz = -10000, 10000, -10000, 10000, -10000, 10000
+                # If Curve Points has points use them, otherwise use Bezier Points
                 points = c.points if len(c.points) > 0 else c.bezier_points
 
                 for p in points:
@@ -931,9 +929,11 @@ async def drill(o):
                 center = (cx, cy)
                 aspect = (maxx - minx) / (maxy - miny)
 
-                if (
-                    1.3 > aspect > 0.7 and o.drill_type == "MIDDLE_SYMETRIC"
-                ) or o.drill_type == "MIDDLE_ALL":
+                aspect_check = 1.3 > aspect > 0.7
+                mid_sym = o.drill_type == "MIDDLE_SYMETRIC"
+                mid_all = o.drill_type == "MIDDLE_ALL"
+
+                if (aspect_check and mid_sym) or mid_all:
                     chunks.append(
                         CamPathChunk(
                             [
@@ -1067,6 +1067,7 @@ async def medial_axis(o):
                 ob.data.resolution_u = 64
 
     polys = get_operation_silhouette(o)
+
     if isinstance(polys, list):
         if len(polys) == 1 and isinstance(polys[0], shapely.MultiPolygon):
             mpoly = polys[0]
@@ -1080,17 +1081,15 @@ async def medial_axis(o):
 
     mpoly_boundary = mpoly.boundary
     ipol = 0
+
     for poly in mpoly.geoms:
         ipol = ipol + 1
-
         schunks = shapely_to_chunks(poly, -1)
-
         schunks = chunks_refine_threshold(
             schunks,
             o.medial_axis_subdivision,
             o.medial_axis_threshold,
         )
-        # chunks_refine(schunks,o)
 
         verts = []
         for ch in schunks:
@@ -1149,9 +1148,7 @@ async def medial_axis(o):
                 if o.cutter_type == "VCARVE":
                     # start the z depth calc from the "start depth" of the operation.
                     z = o.max_z - mpoly.boundary.distance(sgeometry.Point(p)) * slope
-
-                    if z < maxdepth:
-                        z = maxdepth
+                    z = maxdepth if z < maxdepth else z
 
                 elif o.cutter_type == "BALL" or o.cutter_type == "BALLNOSE":
                     d = mpoly_boundary.distance(sgeometry.Point(p))
@@ -1198,7 +1195,7 @@ async def medial_axis(o):
         bufpoly = poly.buffer(-new_cutter_diameter / 2, resolution=64)
         lines = shapely.ops.linemerge(ledges)
 
-        if bufpoly.geom_type == "Polygon" or bufpoly.geom_type == "MultiPolygon":
+        if bufpoly.geom_type in ["Polygon", "MultiPolygon"]:
             lines = lines.difference(bufpoly)
             chunks.extend(shapely_to_chunks(bufpoly, maxdepth))
 
@@ -1381,8 +1378,8 @@ def chunks_to_mesh(chunks, o):
         ch = chunks[chi]
         # TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
         if ch.count() > 0:
-            # log.debug(len(ch.points))
             nverts = []
+
             if o.optimisation.optimize:
                 ch = optimize_chunk(ch, o)
 
@@ -1410,6 +1407,7 @@ def chunks_to_mesh(chunks, o):
                 last = Vector(ch.get_point(-1))
                 first = Vector(chunks[chi + 1].get_point(0))
                 vect = first - last
+
                 vector_length = vect.length < o.distance_between_paths * 2.5
                 vector_check = vect.z == 0 and vector_length
                 parallel_cross = o.strategy in ["PARALLEL", "CROSS"]
