@@ -358,6 +358,7 @@ async def curve(o):
     if o.use_layers:
         layers = get_layers(o, o.max_z, round(check_min_z(o), 6))
         # layers is a list of lists [[0.00,l1],[l1,l2],[l2,l3]] containg the start and end of each layer
+        #print(layers)
         extendorder = []
         chunks = []
         for layer in layers:
@@ -369,7 +370,7 @@ async def curve(o):
             chunk = chl[0]
             layer = chl[1]
             log.info(f"Layer: {layer[1]}")
-            chunk.offset_z(o.max_z * 2 - o.min_z + layer[1])
+            chunk.clamp_z(layer[1])
             chunk.clamp_z(o.min_z)  # safety to not cut lower than minz
             # safety, not higher than free movement height
             chunk.clamp_max_z(o.movement.free_height)
@@ -387,7 +388,6 @@ async def curve(o):
             # safety, not higher than free movement height
             ch.clamp_max_z(o.movement.free_height)
         chunks_to_mesh(pathSamples, o)
-
 
 async def project_curve(s, o):
     """Project a curve onto another curve object.
