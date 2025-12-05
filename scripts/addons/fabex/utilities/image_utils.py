@@ -766,7 +766,7 @@ def render_sample_image(o):
                 camera.select_set(True)
                 bpy.ops.object.delete()
 
-                os.replace(image_name + "%04d.exr" % (scene.frame_current), image_name)
+                # os.replace(image_name + "%04d.exr" % (scene.frame_current), image_name)
             finally:
                 if backup_settings is not None:
                     _restore_render_settings(SETTINGS_TO_BACKUP, backup_settings)
