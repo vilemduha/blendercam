@@ -674,6 +674,8 @@ def render_sample_image(o):
             try:
                 backup_settings = _backup_render_settings(SETTINGS_TO_BACKUP)
                 # prepare nodes first
+                # various settings for faster render
+                render.resolution_percentage = 100
                 render.resolution_x = resolution_x
                 render.resolution_y = resolution_y
                 # use cycles for everything because
@@ -686,6 +688,11 @@ def render_sample_image(o):
 
                 # If Blender is v5 or greater, use the new Compositor settings
                 if blender_version >= 5:
+                    image_settings = render.image_settings
+                    image_settings.file_format = "OPEN_EXR"
+                    image_settings.color_mode = "RGB"
+                    image_settings.color_depth = "32"
+
                     if scene.compositing_node_group == None:
                         bpy.ops.node.new_compositing_node_group()
 
@@ -698,10 +705,25 @@ def render_sample_image(o):
                     render_layers = nodes["Render Layers"]
                     reroute = nodes["Reroute"]
 
+                    try:
+                        file_output = nodes["File Output"]
+                    except KeyError:
+                        file_output = node_tree.nodes.new("CompositorNodeOutputFile")
+
+                    file_output.file_output_items.new(socket_type="FLOAT", name="Output")
+                    file_output.directory = os.path.dirname(image_name)
+                    file_output.filename = os.path.basename(image_name)
+
                     node_tree.links.new(
                         render_layers.outputs[render_layers.outputs.find("Mist")],
                         reroute.inputs[0],
                     )
+
+                    node_tree.links.new(
+                        reroute.outputs[0],
+                        file_output.inputs[0],
+                    )
+
                 # If Blender is v4 or lower, use the legacy Compositor settings
                 else:
                     scene.use_nodes = True
@@ -711,12 +733,6 @@ def render_sample_image(o):
 
                     node_in = node_tree.nodes.new("CompositorNodeRLayers")
                     scene.view_layers[node_in.layer].use_pass_mist = True
-                    mist_settings = scene.world.mist_settings
-                    mist_settings.depth = 10.0
-                    mist_settings.start = 0
-                    mist_settings.falloff = "LINEAR"
-                    mist_settings.height = 0
-                    mist_settings.intensity = 0
 
                     node_out = node_tree.nodes.new("CompositorNodeOutputFile")
                     node_out.base_path = os.path.dirname(image_name)
@@ -729,16 +745,21 @@ def render_sample_image(o):
                         node_out.inputs[-1],
                     )
 
+                mist_settings = scene.world.mist_settings
+                mist_settings.depth = 10.0
+                mist_settings.start = 0
+                mist_settings.falloff = "LINEAR"
+                mist_settings.height = 0
+                mist_settings.intensity = 0
+
                 # resize operation image
                 o.offset_image = numpy.full(
                     shape=(resolution_x, resolution_y),
                     fill_value=-10,
                     dtype=numpy.double,
                 )
-                # various settings for  faster render
-                render.resolution_percentage = 100
 
-                # add a new camera settings
+                # Add a Camera and settings
                 bpy.ops.object.camera_add(
                     align="WORLD",
                     enter_editmode=False,

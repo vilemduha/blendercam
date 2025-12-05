@@ -12,7 +12,6 @@ class FabexTest(unittest.TestCase):
     def setUpClass(cls):
         cls.original_dir = os.getcwd()
         cls.generator_path = os.path.join(cls.original_dir, "gcode_generator.py")
-
         cls.blend_test_cases = cls.get_test_cases()
 
     @staticmethod
