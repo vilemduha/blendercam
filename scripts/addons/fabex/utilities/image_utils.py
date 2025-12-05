@@ -674,6 +674,7 @@ def render_sample_image(o):
                 scene.cycles.samples = 1
                 view_layer.samples = 1
                 view_layer.cycles.use_denoising = False
+                view_layer.use_pass_mist = True
 
                 # If Blender is v5 or greater, use the new Compositor settings
                 if blender_version >= 5:
