@@ -1,5 +1,4 @@
-"""Fabex 'async_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'async_utils.py' © 2012 Vilem Novak"""
 
 import types
 
@@ -24,7 +23,8 @@ def progress_async(text, n=None, value_type="%"):
         Exception: If an exception is thrown during the operation.
     """
     # (f"Progress:{text} {n}{value_type}\n")
+    # ("Progress:", {"text": text, "n": n, "value_type": value_type})
 
-    throw_exception = yield ("Progress:", {"text": text, "n": n, "value_type": value_type})
+    throw_exception = yield ({"text": text, "n": n, "value_type": value_type})
     if throw_exception is not None:
         raise throw_exception
