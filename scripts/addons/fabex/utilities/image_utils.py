@@ -712,7 +712,7 @@ def render_sample_image(o):
 
                     file_output.file_output_items.new(socket_type="FLOAT", name="Output")
                     file_output.directory = os.path.dirname(image_name)
-                    file_output.filename = os.path.basename(image_name)
+                    file_output.file_name = os.path.basename(image_name)
 
                     node_tree.links.new(
                         render_layers.outputs[render_layers.outputs.find("Mist")],
