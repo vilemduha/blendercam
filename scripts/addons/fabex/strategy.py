@@ -14,11 +14,14 @@ from math import (
 import sys
 import time
 
-import shapely
-from shapely.geometry import polygon as spolygon
-from shapely.geometry import Point
-from shapely import geometry as sgeometry
 from shapely import affinity
+from shapely.geometry import (
+    LineString,
+    MultiPolygon,
+    Point,
+    Polygon,
+)
+from shapely.ops import linemerge
 
 import bpy
 from bpy_extras import object_utils
@@ -69,7 +72,7 @@ from .voronoi import compute_voronoi_diagram
 
 
 # add pocket op for medial axis and profile cut inside to clean unremoved material
-def add_pocket(maxdepth, sname, new_cutter_diameter):
+def add_pocket(max_depth, sname, new_cutter_diameter):
     """Add a pocket operation for the medial axis and profile cut.
 
     This function first deselects all objects in the scene and then checks
@@ -80,7 +83,7 @@ def add_pocket(maxdepth, sname, new_cutter_diameter):
     object's silhouette offset based on the new cutter diameter.
 
     Args:
-        maxdepth (float): The maximum depth of the pocket to be created.
+        max_depth (float): The maximum depth of the pocket to be created.
         sname (str): The name of the object to which the pocket will be added.
         new_cutter_diameter (float): The diameter of the new cutter to be used.
     """
@@ -120,7 +123,7 @@ def add_pocket(maxdepth, sname, new_cutter_diameter):
     bpy.context.active_object.name = mp_ob_name
     m_ob = bpy.context.view_layer.objects.active
     bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
-    m_ob.location.z = maxdepth
+    m_ob.location.z = max_depth
 
     # Create a Pocket Operation if it does not exist already
     if not mpocket_exists:
@@ -133,7 +136,7 @@ def add_pocket(maxdepth, sname, new_cutter_diameter):
         o.strategy = "POCKET"
         o.use_layers = False
         o.material.estimate_from_model = False
-        o.material.size[2] = -maxdepth
+        o.material.size[2] = -max_depth
 
 
 # cutout strategy is completely here:
@@ -814,7 +817,7 @@ async def pocket(o):
                         rotate_helix.append(point)
                         c.append((point[0], point[1]))
 
-                    c = sgeometry.Polygon(c)
+                    c = Polygon(c)
                     coutline = c.buffer(cutter_offset, o.optimisation.circle_detail)
                     rotate_helix.reverse()
                     covers = False
@@ -1059,7 +1062,6 @@ async def medial_axis(o):
 
     chunks = []
 
-    gpoly = spolygon.Polygon()
     angle = o.cutter_tip_angle
     # Angle in Degrees
     slope = tan(pi * (90 - angle / 2) / 180)
@@ -1074,8 +1076,8 @@ async def medial_axis(o):
         if max_depth < o.min_z:
             max_depth = o.min_z
             # the effective cutter diameter can be reduced from it's max
-            # since we will be cutting shallower than the original maxdepth
-            # without this, the curve is calculated as if the diameter was at the original maxdepth and we get the bit
+            # since we will be cutting shallower than the original max_depth
+            # without this, the curve is calculated as if the diameter was at the original max_depth and we get the bit
             # pulling away from the desired cut surface
             new_cutter_diameter = (max_depth - o.max_z) / (-slope) * 2
     elif o.cutter_type == "BALLNOSE":
@@ -1104,11 +1106,11 @@ async def medial_axis(o):
     silhouette_polygon = get_operation_silhouette(o)
 
     if isinstance(silhouette_polygon, list):
-        if len(silhouette_polygon) == 1 and isinstance(silhouette_polygon[0], shapely.MultiPolygon):
+        if len(silhouette_polygon) == 1 and isinstance(silhouette_polygon[0], MultiPolygon):
             multipolygon = silhouette_polygon[0]
         else:
-            multipolygon = sgeometry.MultiPolygon(silhouette_polygon)
-    elif isinstance(silhouette_polygon, shapely.MultiPolygon):
+            multipolygon = MultiPolygon(silhouette_polygon)
+    elif isinstance(silhouette_polygon, MultiPolygon):
         # just a multipolygon
         multipolygon = silhouette_polygon
     else:
@@ -1127,7 +1129,11 @@ async def medial_axis(o):
             o.medial_axis_threshold,
         )
 
-        vertices = [chunk.get_points() for chunk in silhouette_chunks]
+        vertices = []
+
+        for chunk in silhouette_chunks:
+            vertices.extend(chunk.get_points())
+
         duplicate_point_count, z_colinear_point_count = unique(vertices)
         vertex_count = len(vertices)
 
@@ -1177,18 +1183,18 @@ async def medial_axis(o):
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
 
-            if not polygon.contains(sgeometry.Point(point)):
+            if not polygon.contains(Point(point)):
                 vertr.append((True, -1))
             else:
                 vertr.append((False, newIdx))
 
                 if o.cutter_type == "VCARVE":
                     # start the z depth calc from the "start depth" of the operation.
-                    z = o.max_z - multipolygon.boundary.distance(sgeometry.Point(point)) * slope
+                    z = o.max_z - multipolygon.boundary.distance(Point(point)) * slope
                     z = max_depth if z < max_depth else z
 
                 elif o.cutter_type == "BALL" or o.cutter_type == "BALLNOSE":
-                    d = multipolygon_boundary.distance(sgeometry.Point(point))
+                    d = multipolygon_boundary.distance(Point(point))
                     r = new_cutter_diameter / 2.0
 
                     if d >= r:
@@ -1218,7 +1224,7 @@ async def medial_axis(o):
                     )
                 )
                 line_edges.append(
-                    sgeometry.LineString(
+                    LineString(
                         (
                             filtered_points[vertr[edge[0]][1]],
                             filtered_points[vertr[edge[1]][1]],
@@ -1227,7 +1233,7 @@ async def medial_axis(o):
                 )
 
         polygon_buffer = polygon.buffer(-new_cutter_diameter / 2, resolution=64)
-        lines = shapely.ops.linemerge(line_edges)
+        lines = linemerge(line_edges)
 
         if polygon_buffer.geom_type in ["Polygon", "MultiPolygon"]:
             lines = lines.difference(polygon_buffer)
