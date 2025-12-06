@@ -1104,13 +1104,10 @@ async def medial_axis(o):
 
     silhouette_polygon = get_operation_silhouette(o)
     silhouette_is_list = isinstance(silhouette_polygon, list)
-    silhouette_list_polygon_is_multipolygon = len(silhouette_polygon) == 1 and isinstance(
-        silhouette_polygon[0], MultiPolygon
-    )
     silhouette_is_multipolygon = isinstance(silhouette_polygon, MultiPolygon)
 
     if silhouette_is_list:
-        if silhouette_list_polygon_is_multipolygon:
+        if len(silhouette_polygon) == 1 and isinstance(silhouette_polygon[0], MultiPolygon):
             multipolygon = silhouette_polygon[0]
         else:
             multipolygon = MultiPolygon(silhouette_polygon)
