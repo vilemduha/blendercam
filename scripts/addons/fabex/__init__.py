@@ -8,8 +8,8 @@ import subprocess
 import sys
 
 # pip Wheels
-import shapely
 import opencamlib
+import shapely
 
 # Blender Library
 import bpy
