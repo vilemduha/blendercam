@@ -1142,8 +1142,9 @@ async def medial_axis(o):
         duplicate_point_count, z_colinear_point_count = unique(vertices)
         vertex_count = len(vertices)
 
-        log.info(f"Duplicate Points Ignored: {duplicate_point_count}")
-        log.info(f"Z Colinear Points Excluded: {z_colinear_point_count}")
+        log.info("Points Ignored / Excluded:")
+        log.info(f"Duplicate: {duplicate_point_count}")
+        log.info(f"Z Colinear: {z_colinear_point_count}")
 
         if vertex_count < 3:
             log.info("Not Enough Points")
@@ -1174,7 +1175,7 @@ async def medial_axis(o):
         vertr = []
         filtered_points = []
 
-        log.info("Filter Points")
+        log.info("Filtering Points...")
 
         newIdx = 0
         point_count = len(points)
@@ -1188,6 +1189,7 @@ async def medial_axis(o):
                 prog_message = f"Points: {point_index}/{point_count} - {round(100 * point_index / point_count)}%"
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
+                log.info("-")
 
             if not polygon.contains(Point(point)):
                 vertr.append((True, -1))
@@ -1213,7 +1215,7 @@ async def medial_axis(o):
                 filtered_points.append((point[0], point[1], z))
                 newIdx += 1
 
-        log.info("Filter Edges")
+        log.info("Filtering Edges...")
         log.info("-")
 
         filtered_edges = []

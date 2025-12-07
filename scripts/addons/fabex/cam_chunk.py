@@ -1557,7 +1557,7 @@ def get_operation_silhouette(operation):
             operation.silhouette = chunks_to_shapely(chunks)
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
-            log.info("Object Method for Retrieving Silhouette")
+            log.info("~ Object Method for Retrieving Silhouette ~")
             operation.silhouette = get_object_silhouette(
                 stype,
                 objects=operation.objects,
