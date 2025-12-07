@@ -162,7 +162,9 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     # suffix as Blender seems to use the ".%03d" pattern to avoid creating duplicate ids.
     iname_59 = iname[:59]
 
-    log.info(f"numpy_to_image: iname:{iname}, width:{width}, height:{height}")
+    log.info("Converting Numpy Array to Blender Image:")
+    log.info(f"Image Name:{iname}")
+    log.info(f"Dimensions: {width}x{height}")
 
     def find_image(name: str, width: int, heigh: int) -> Optional[bpy.types.Image]:
         if name in bpy.data.images:
@@ -176,7 +178,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     image = find_image(iname, width, height) or find_image(iname_59, width, height)
 
     if image is None:
-        log.info(f"numpy_to_image: Creating a new image:{iname_59}")
+        log.info(f"Creating New Image:{iname_59}")
         result = bpy.ops.image.new(
             name=iname_59,
             width=width,
@@ -186,7 +188,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
             generated_type="BLANK",
             float=True,
         )
-        log.info(f"numpy_to_image: Image creation result:{result}")
+        log.info(f"Image Creation: {result}")
 
         # If 'iname_59' id didn't exist previously, then
         # it should have been created without changing its id.
@@ -199,7 +201,8 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
 
     image.pixels[:] = a[:]  # this gives big speedup!
 
-    log.info(f"numpy_to_image: Time:{str(time.time() - t)}")
+    log.info(f"Time:{str(time.time() - t)}")
+    log.info("\n")
 
     return image
 
@@ -332,7 +335,7 @@ async def offset_area(o, samples):
             m : height - cwidth + m,
         ] = comparearea
 
-        log.info(f"\nOffset Image Time {time.time() - t}")
+        log.info(f"\nOffset Image Time: {time.time() - t}")
 
         o.update_offset_image_tag = False
     return o.offset_image

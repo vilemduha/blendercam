@@ -160,7 +160,7 @@ async def cutout(o):
             on the provided object.
     """
 
-    log.info("Operation: Cutout")
+    log.info("Strategy: Cutout")
 
     max_depth = check_min_z(o)
     cutter_angle = radians(o.cutter_tip_angle / 2)
@@ -393,7 +393,7 @@ async def curve(o):
         CamException: If not all objects in the operation are curves.
     """
 
-    log.info("Operation: Curve to Path")
+    log.info("Strategy: Curve to Path")
 
     path_samples = []
     get_operation_sources(o)
@@ -478,7 +478,7 @@ async def project_curve(s, o):
         CamException: If the target curve is not of type 'CURVE'.
     """
 
-    log.info("Operation: Projected Curve")
+    log.info("Strategy: Projected Curve")
 
     path_samples = []
     chunks = []
@@ -548,7 +548,7 @@ async def pocket(o):
         based on the pocketing operation.
     """
 
-    log.info("Operation: Pocket")
+    log.info("Strategy: Pocket")
 
     join = 2 if o.straight else 1
 
@@ -874,7 +874,7 @@ async def drill(o):
             that modify the state of the Blender context.
     """
 
-    log.info("Operation: Drill")
+    log.info("Strategy: Drill")
 
     chunks = []
 
@@ -1057,7 +1057,7 @@ async def medial_axis(o):
             is not closed.
     """
 
-    log.info("Operation: Medial Axis")
+    log.info("Strategy: Medial Axis")
 
     remove_multiple("medialMesh")
 
@@ -1209,7 +1209,8 @@ async def medial_axis(o):
                 filtered_points.append((point[0], point[1], z))
                 newIdx += 1
 
-        log.info("Filter Edges\n")
+        log.info("Filter Edges")
+        log.info("\n")
 
         filtered_edges = []
         line_edges = []
@@ -1413,6 +1414,7 @@ def chunks_to_mesh(chunks, o):
                     array_chunks.append(chunk)
         chunks = array_chunks
 
+    log.info("\n")
     progress("Building Paths from Chunks")
     e = 0.0001
     lifted = True
@@ -1477,7 +1479,7 @@ def chunks_to_mesh(chunks, o):
     if o.optimisation.use_exact and not o.optimisation.use_opencamlib:
         cleanup_bullet_collision(o)
 
-    log.info(f"{time.time() - t}")
+    log.info(f"Path Calculation Time: {time.time() - t}")
     t = time.time()
 
     # Blender Object generation starts here:
@@ -1511,7 +1513,7 @@ def chunks_to_mesh(chunks, o):
         for i, co in enumerate(vertices_rotations):
             shapek.data[i].co = co
 
-    log.info(f"{time.time() - t}")
+    log.info(f"Path Object Generation Time: {time.time() - t}")
 
     ob.location = (0, 0, 0)
     ob.color = scene.cam_machine.path_color
