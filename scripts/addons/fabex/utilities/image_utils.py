@@ -202,7 +202,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     image.pixels[:] = a[:]  # this gives big speedup!
 
     log.info(f"Time:{str(time.time() - t)}")
-    log.info("\n")
+    log.info("")
 
     return image
 
