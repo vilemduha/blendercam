@@ -1142,7 +1142,7 @@ async def medial_axis(o):
         duplicate_point_count, z_colinear_point_count = unique(vertices)
         vertex_count = len(vertices)
 
-        log.info("Points Ignored / Excluded:")
+        log.info("~ Exclude Points ~")
         log.info(f"Duplicate: {duplicate_point_count}")
         log.info(f"Z Colinear: {z_colinear_point_count}")
 
@@ -1189,7 +1189,7 @@ async def medial_axis(o):
                 prog_message = f"Points: {point_index}/{point_count} - {round(100 * point_index / point_count)}%"
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
-                log.info("-")
+            log.info("-")
 
             if not polygon.contains(Point(point)):
                 vertr.append((True, -1))
