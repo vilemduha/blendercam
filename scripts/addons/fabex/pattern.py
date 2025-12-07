@@ -186,7 +186,7 @@ def get_path_pattern(operation):
 
     o = operation
     t = time.time()
-    progress("Building Path Pattern")
+    progress("~ Building Path Pattern ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
     pathchunks = []
@@ -457,7 +457,7 @@ def get_path_pattern_4_axis(operation):
 
     o = operation
     t = time.time()
-    progress("Building Path Pattern")
+    progress("~ Building Path Pattern ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
     zlevel = 1  # minz#this should do layers...

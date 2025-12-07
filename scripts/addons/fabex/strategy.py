@@ -1422,7 +1422,7 @@ def chunks_to_mesh(chunks, o):
         chunks = array_chunks
 
     log.info("-")
-    progress("Building Paths from Chunks")
+    progress("~ Building Paths from Chunks ~")
     e = 0.0001
     lifted = True
 
