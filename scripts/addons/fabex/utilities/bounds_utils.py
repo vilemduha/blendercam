@@ -1,5 +1,4 @@
-"""Fabex 'bounds_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'bounds_utils.py' © 2012 Vilem Novak"""
 
 import time
 
@@ -189,7 +188,7 @@ def get_bounds(o):
 
     # print('kolikrat sem rpijde')
     if o.geometry_source in ["OBJECT", "COLLECTION", "CURVE"]:
-        log.info("Valid Geometry")
+        log.info("Geometry Source: Valid")
         minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
             o.objects,
             o.use_modifiers,
@@ -203,10 +202,10 @@ def get_bounds(o):
             o.min_z = o.min.z
         else:
             o.min.z = o.min_z  # max(bb[0][2]+l.z,o.min_z)#
-            log.info("Not Min Z from Object")
+            log.info("~ Not Min Z from Object ~")
 
         if o.material.material_source == "MODEL":
-            log.info("Estimate Material from Model")
+            log.info("~ Estimate Material from Model ~")
             o.min.x = minx - o.material.radius_around_model
             o.min.y = miny - o.material.radius_around_model
             o.max.z = max(o.max_z, maxz)
@@ -215,7 +214,7 @@ def get_bounds(o):
             o.max.y = maxy + o.material.radius_around_model
 
         if o.material.material_source == "OBJECT":
-            log.info("Estimate Material from Alternate Object")
+            log.info("~ Estimate Material from Alternate Object ~")
             minx, miny, minz, maxx, maxy, maxz = get_bounds_worldspace(
                 [o.material.alt_object],
                 o.use_modifiers,
@@ -228,7 +227,7 @@ def get_bounds(o):
             o.max.y = maxy + o.material.radius_around_model
 
         if o.material.material_source == "DIMENSIONS":
-            log.info("Not Material from Model")
+            log.info("~ Not Material from Model ~")
             o.min.x = o.material.origin.x
             o.min.y = o.material.origin.y
             o.min.z = o.material.origin.z - o.material.size.z

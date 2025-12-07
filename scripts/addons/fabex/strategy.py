@@ -1176,6 +1176,7 @@ async def medial_axis(o):
         filtered_points = []
 
         log.info("Filtering Points...")
+        log.info("-")
 
         newIdx = 0
         point_count = len(points)
@@ -1189,7 +1190,6 @@ async def medial_axis(o):
                 prog_message = f"Points: {point_index}/{point_count} - {round(100 * point_index / point_count)}%"
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
-            log.info("-")
 
             if not polygon.contains(Point(point)):
                 vertr.append((True, -1))

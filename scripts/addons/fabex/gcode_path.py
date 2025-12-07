@@ -646,7 +646,7 @@ async def get_path(context, operation):
     operation.info.warnings = ""
     check_memory_limit(operation)
 
-    log.info(f"{operation.machine_axes} Axis Path")
+    log.info(f"Operation Axes: {operation.machine_axes}")
 
     if operation.machine_axes == "3":
         if USE_PROFILER == True:  # profiler
