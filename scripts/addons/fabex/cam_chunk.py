@@ -984,7 +984,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
     t = time.time()
     totlen = 0  # total length of all chunks, to estimate sampling time.
 
-    log.info("Sampling Paths")
+    log.info("~ Sampling Paths ~")
 
     for chs in pathSamples:
         totlen += len(chs.startpoints)
@@ -1180,7 +1180,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
         lastrunchunks = thisrunchunks
 
-    progress("Checking Relations Between Paths")
+    progress("~ Checking Relations Between Paths ~")
     """#this algorithm should also work for n-axis, but now is "sleeping"
     if (o.strategy=='PARALLEL' or o.strategy=='CROSS'):
         if len(layers)>1:# sorting help so that upper layers go first always
@@ -1754,6 +1754,7 @@ async def sample_chunks(o, pathSamples, layers):
         zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
 
     log.info(f"Total Sample Points: {totlen}")
+    log.info("-")
 
     n = 0
     last_percent = -1
@@ -1924,7 +1925,7 @@ async def sample_chunks(o, pathSamples, layers):
 
         lastrunchunks = thisrunchunks
 
-    progress("Checking Relations Between Paths")
+    progress("~ Checking Relations Between Paths ~")
     timing_start(sortingtime)
 
     if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "OUTLINEFILL":
@@ -1956,6 +1957,7 @@ async def sample_chunks(o, pathSamples, layers):
     log.info(f"Sampling Time: {samplingtime}")
     log.info(f"Sorting Time: {sortingtime}")
     log.info(f"Total Time: {totaltime}")
+    log.info("-")
 
     return chunks
 
@@ -2061,8 +2063,9 @@ async def sort_chunks(chunks, o, last_pos=None):
         list: A sorted list of chunk objects.
     """
 
+    log.info("-")
+
     if o.strategy != "WATERLINE":
-        log.info("-")
         await progress_async("Sorting Paths")
     # the getNext() function of CamPathChunk was running out of recursion limits.
     sys.setrecursionlimit(100000)

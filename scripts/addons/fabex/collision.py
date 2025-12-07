@@ -273,7 +273,7 @@ def prepare_bullet_collision(o):
     Args:
         o (Object): An object containing properties and settings for
     """
-    progress("Preparing Collisions")
+    progress("~ Preparing Collisions ~")
 
     log.info(o.name)
     active_collection = bpy.context.view_layer.active_layer_collection.collection
