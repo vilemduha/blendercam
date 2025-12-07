@@ -221,7 +221,13 @@ class CamPathChunk:
         if other.poly is None:
             other.update_poly()
         if not self.poly.is_empty and not other.poly.is_empty:
-            return self.poly.dwithin(other.poly, cutoff)
+            # Divide by Zero Exception
+            with np.errstate(invalid="raise"):
+                try:
+                    return self.poly.dwithin(other.poly, cutoff)
+                except FloatingPointError:
+                    print("Error: Division by Zero")
+                    pass
         else:
             return _internal_x_y_distance_to(self.points, other.points, cutoff) < cutoff
 
