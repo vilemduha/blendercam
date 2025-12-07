@@ -325,7 +325,7 @@ def update_chipload(self, context):
     Returns:
         None: This function does not return a value; it updates the chipload in place.
     """
-    log.info("Update Chipload ")
+    log.info("~ Update Chipload ~")
     o = self
     # Old chipload
     o.info.chipload = o.feedrate / (o.spindle_rpm * o.cutter_flutes)
@@ -358,7 +358,7 @@ def update_offset_image(self, context):
         context: The context in which the update is performed.
     """
     update_chipload(self, context)
-    log.info("Update Offset")
+    log.info("~ Update Offset ~")
     self.changed = True
     self.update_offset_image_tag = True
 
@@ -405,7 +405,7 @@ def update_bridges(o, context):
         context (object): Additional context for the update, not used in this function.
     """
 
-    log.info("Update Bridges ")
+    log.info("~ Update Bridges ~")
     o.changed = True
 
 
@@ -423,7 +423,7 @@ def update_rotation(o, context):
         context (object): The context in which the operation is performed.
     """
 
-    log.info("Update Rotation")
+    log.info("~ Update Rotation ~")
     if o.enable_b_axis or o.enable_a_axis:
         log.info(f"{o}, {o.rotation_a}")
         ob = bpy.data.objects[o.object_name]
@@ -453,7 +453,7 @@ def update_rest(o, context):
         context (object): The context in which the update is being performed.
     """
 
-    log.info("Update Rest ")
+    log.info("~ Update Rest ~")
     o.changed = True
 
 
