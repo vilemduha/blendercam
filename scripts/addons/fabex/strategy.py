@@ -295,11 +295,12 @@ async def cutout(o):
                 chunk_copies.append([chunk.copy(), layer])
 
     # Set Z for all Chunks
-    for chunk_layer in chunk_copies:
+    for i, chunk_layer in enumerate(chunk_copies):
         chunk = chunk_layer[0]
         layer = chunk_layer[1]
-        log.info(layer[1])
         chunk.set_z(layer[1])
+
+        log.info(f"Layer {i} Depth: {layer[1]}")
 
     chunks = []
 
@@ -1180,7 +1181,7 @@ async def medial_axis(o):
             if point_index % 500 == 0:
                 sys.stdout.write("\r")
                 # the exact output you're looking for:
-                prog_message = f"Points: {point_index} / {point_count} {round(100 * point_index / point_count)}%\n"
+                prog_message = f"Points: {point_index}/{point_count} - {round(100 * point_index / point_count)}%"
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
 
@@ -1208,7 +1209,7 @@ async def medial_axis(o):
                 filtered_points.append((point[0], point[1], z))
                 newIdx += 1
 
-        log.info("Filter Edges")
+        log.info("Filter Edges\n")
 
         filtered_edges = []
         line_edges = []
