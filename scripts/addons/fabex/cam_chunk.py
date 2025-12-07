@@ -225,8 +225,9 @@ class CamPathChunk:
             with np.errstate(invalid="raise"):
                 try:
                     return self.poly.dwithin(other.poly, cutoff)
+                # Suppress RuntimeWarning 'Divide by Zero'
+                # Doesn't affect path calculation, but keeps logs cleaner
                 except FloatingPointError:
-                    print("Error: Division by Zero")
                     pass
         else:
             return _internal_x_y_distance_to(self.points, other.points, cutoff) < cutoff

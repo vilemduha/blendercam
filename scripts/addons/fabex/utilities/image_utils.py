@@ -162,6 +162,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     # suffix as Blender seems to use the ".%03d" pattern to avoid creating duplicate ids.
     iname_59 = iname[:59]
 
+    log.info("-")
     log.info("Converting Numpy Array to Blender Image:")
     log.info(f"Image Name:{iname}")
     log.info(f"Dimensions: {width}x{height}")
@@ -202,7 +203,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     image.pixels[:] = a[:]  # this gives big speedup!
 
     log.info(f"Time:{str(time.time() - t)}")
-    log.info("~")
+    log.info("-")
 
     return image
 

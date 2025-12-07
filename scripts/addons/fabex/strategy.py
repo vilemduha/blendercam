@@ -306,10 +306,12 @@ async def cutout(o):
 
     # Add Bridges to Chunks
     if o.use_bridges:
-        log.info("Using Bridges")
         remove_multiple(o.name + "_cut_bridges")
-        log.info("Old Briddge Cut Removed")
         bridge_height = min(o.max.z, o.min.z + abs(o.bridges_height))
+
+        log.info("-")
+        log.info("Using Bridges")
+        log.info("Old Briddge Cut Removed")
 
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
@@ -433,12 +435,13 @@ async def curve(o):
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
             layer = chunk_layer[1]
-            log.info(f"Layer: {layer[1]}")
             chunk.offset_z(o.max_z * 2 - o.min_z + layer[1])
             # Limit Cut Depth to Operation Z Minimum
             chunk.clamp_z(o.min_z)
             # Limit Cut Height to Operation Safe Height
             chunk.clamp_max_z(o.movement.free_height)
+
+            log.info(f"Layer: {layer[1]}")
 
         # Strip Layer information from extendorder and transfer them to Chunks
         for chunk_layer in chunk_copies:
@@ -1210,7 +1213,7 @@ async def medial_axis(o):
                 newIdx += 1
 
         log.info("Filter Edges")
-        log.info("\n")
+        log.info("-")
 
         filtered_edges = []
         line_edges = []
@@ -1321,9 +1324,12 @@ def get_layers(operation, start_depth, end_depth):
         layers = []
         layer_count = ceil((start_depth - end_depth) / operation.stepdown)
 
+        log.info("-")
+        log.info("Getting Layer Data:")
         log.info(f"Start Depth: {start_depth}")
         log.info(f"End Depth: {end_depth}")
         log.info(f"Layers: {layer_count}")
+        log.info("-")
 
         layer_start = operation.max_z
 
@@ -1414,7 +1420,7 @@ def chunks_to_mesh(chunks, o):
                     array_chunks.append(chunk)
         chunks = array_chunks
 
-    log.info("\n")
+    log.info("-")
     progress("Building Paths from Chunks")
     e = 0.0001
     lifted = True
