@@ -232,6 +232,8 @@ def export_gcode_path(filename, vertslist, operations):
             fileindex = "_" + str(findex)
         filename = basefilename + fileindex + extension
         log.info(f"Writing: {filename}")
+        log.info("-")
+
         c = postprocessor.Creator()
 
         # process user overrides for post processor settings
@@ -855,9 +857,10 @@ async def get_path_3_axis(context, operation):
         chunks = []
         layers = strategy.get_layers(o, o.max_z, o.min.z)
 
-        log.info(f"SAMPLE {o.name}")
+        log.info(f"Sampling Object: {o.name}")
         chunks.extend(await sample_chunks(o, pathSamples, layers))
-        log.info("SAMPLE OK")
+        log.info("Sampling Finished Successfully")
+
         if o.strategy == "PENCIL":  # and bpy.app.debug_value==-3:
             chunks = chunks_coherency(chunks)
             log.info("Coherency Check")

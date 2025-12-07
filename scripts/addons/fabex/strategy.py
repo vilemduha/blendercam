@@ -1142,8 +1142,8 @@ async def medial_axis(o):
         duplicate_point_count, z_colinear_point_count = unique(vertices)
         vertex_count = len(vertices)
 
-        log.info(f"{duplicate_point_count} Duplicate Points Ignored")
-        log.info(f"{z_colinear_point_count} Z Colinear Points Excluded")
+        log.info(f"Duplicate Points Ignored: {duplicate_point_count}")
+        log.info(f"Z Colinear Points Excluded: {z_colinear_point_count}")
 
         if vertex_count < 3:
             log.info("Not Enough Points")
@@ -1152,12 +1152,13 @@ async def medial_axis(o):
         # Check colinear
         x_values = [vertex[0] for vertex in vertices]
         y_values = [vertex[1] for vertex in vertices]
+
         if check_equal(x_values) or check_equal(y_values):
             log.info("Points Are Colinear")
             return {"FINISHED"}
 
         # Create diagram
-        log.info(f"Tesselation... ({vertex_count})Points)")
+        log.info(f"Tesselation... ({vertex_count} Points)")
 
         x_buffer, y_buffer = 5, 5
         z_position = 0
@@ -1325,7 +1326,7 @@ def get_layers(operation, start_depth, end_depth):
         layer_count = ceil((start_depth - end_depth) / operation.stepdown)
 
         log.info("-")
-        log.info("Getting Layer Data:")
+        log.info("~ Getting Layer Data ~")
         log.info(f"Start Depth: {start_depth}")
         log.info(f"End Depth: {end_depth}")
         log.info(f"Layers: {layer_count}")
@@ -1520,6 +1521,7 @@ def chunks_to_mesh(chunks, o):
             shapek.data[i].co = co
 
     log.info(f"Path Object Generation Time: {time.time() - t}")
+    log.info("-")
 
     ob.location = (0, 0, 0)
     ob.color = scene.cam_machine.path_color

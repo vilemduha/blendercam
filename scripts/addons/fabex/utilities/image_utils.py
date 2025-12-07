@@ -163,8 +163,8 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     iname_59 = iname[:59]
 
     log.info("-")
-    log.info("Converting Numpy Array to Blender Image:")
-    log.info(f"Image Name:{iname}")
+    log.info("~ Converting Numpy Array to Blender Image ~")
+    log.info(f"Name: {iname}")
     log.info(f"Dimensions: {width}x{height}")
 
     def find_image(name: str, width: int, heigh: int) -> Optional[bpy.types.Image]:
@@ -179,7 +179,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     image = find_image(iname, width, height) or find_image(iname_59, width, height)
 
     if image is None:
-        log.info(f"Creating New Image:{iname_59}")
+        log.info(f"Creating New Image: {iname_59}")
         result = bpy.ops.image.new(
             name=iname_59,
             width=width,
@@ -202,7 +202,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
 
     image.pixels[:] = a[:]  # this gives big speedup!
 
-    log.info(f"Time:{str(time.time() - t)}")
+    log.info(f"Time: {str(time.time() - t)}")
     log.info("-")
 
     return image
@@ -616,7 +616,7 @@ def render_sample_image(o):
     """
 
     t = time.time()
-    progress("Getting Z-Buffer")
+    progress("~ Getting Z-Buffer ~")
     o.update_offset_image_tag = True
 
     if o.geometry_source in ["OBJECT", "COLLECTION"]:

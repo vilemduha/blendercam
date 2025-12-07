@@ -832,7 +832,10 @@ def mesh_from_curve_to_chunk(object):
     lastvi = 0
     vtotal = len(mesh.vertices)
     perc = 0
-    progress(f"Processing Curve - START - Vertices: {vtotal}")
+
+    log.info("-")
+    progress(f"Processing Curve - START")
+    log.info(f"Vertices: {vtotal}")
 
     for vi in range(0, len(mesh.vertices) - 1):
         co = (mesh.vertices[vi].co + object.location).to_tuple()
@@ -2059,6 +2062,7 @@ async def sort_chunks(chunks, o, last_pos=None):
     """
 
     if o.strategy != "WATERLINE":
+        log.info("-")
         await progress_async("Sorting Paths")
     # the getNext() function of CamPathChunk was running out of recursion limits.
     sys.setrecursionlimit(100000)
