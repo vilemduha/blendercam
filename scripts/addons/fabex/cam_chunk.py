@@ -17,11 +17,14 @@ import time
 import random
 
 import numpy as np
-import shapely
-from shapely import ops as sops
-from shapely import geometry as sgeometry
-from shapely.geometry import polygon as spolygon
-from shapely.geometry import MultiPolygon
+from shapely import contains, points
+from shapely.ops import unary_union
+from shapely.geometry import (
+    MultiPoint,
+    MultiPolygon,
+    Point,
+    Polygon,
+)
 
 try:
     import ocl
@@ -118,25 +121,15 @@ class CamPathChunk:
     def __init__(self, inpoints, startpoints=None, endpoints=None, rotations=None):
         # name this as _points so nothing external accesses it directly
         # for 3 axes, this is only storage of points. For N axes, here go the sampled points
-        if len(inpoints) == 0:
-            self.points = np.empty(shape=(0, 3))
-        else:
-            self.points = np.array(inpoints)
+        self.points = np.empty(shape=(0, 3)) if len(inpoints) == 0 else np.array(inpoints)
         self.poly = None  # get polygon just in time
         self.simppoly = None
-        if startpoints:
-            # from where the sweep test begins, but also retract point for given path
-            self.startpoints = startpoints
-        else:
-            self.startpoints = []
-        if endpoints:
-            self.endpoints = endpoints
-        else:
-            self.endpoints = []  # where sweep test ends
-        if rotations:
-            self.rotations = rotations
-        else:
-            self.rotations = []  # rotation of the machine axes
+        # from where the sweep test begins, but also retract point for given path
+        self.startpoints = startpoints if startpoints else []
+        self.endpoints = endpoints if endpoints else []
+        # where sweep test ends
+        self.rotations = rotations if rotations else []
+        # rotation of the machine axes
         self.closed = False
         self.children = []
         self.parents = []
@@ -148,10 +141,7 @@ class CamPathChunk:
         self.zend = 0  #
 
     def update_poly(self):
-        if len(self.points) > 2:
-            self.poly = sgeometry.Polygon(self.points[:, 0:2])
-        else:
-            self.poly = sgeometry.Polygon()
+        self.poly = Polygon(self.points[:, 0:2]) if len(self.points) > 2 else Polygon()
 
     def get_point(self, n):
         return self.points[n].tolist()
@@ -218,8 +208,6 @@ class CamPathChunk:
             if o.movement.type == "MEANDER":
                 d1 = distance_2d(pos, self.points[0])
                 d2 = distance_2d(pos, self.points[-1])
-                # if d2<d1:
-                #   ch.points.reverse()
                 return min(d1, d2)
             else:
                 return distance_2d(pos, self.points[0])
@@ -233,7 +221,6 @@ class CamPathChunk:
         if other.poly is None:
             other.update_poly()
         if not self.poly.is_empty and not other.poly.is_empty:
-            # print(other.poly, cutoff)
             return self.poly.dwithin(other.poly, cutoff)
         else:
             return _internal_x_y_distance_to(self.points, other.points, cutoff) < cutoff
@@ -274,7 +261,6 @@ class CamPathChunk:
     def get_next_closest(self, o, pos):
         # finds closest chunk that can be milled, when inside sorting hierarchy.
         mind = 100000000000
-
         self.cango = False
         closest = None
         testlist = []
@@ -282,8 +268,10 @@ class CamPathChunk:
         tested = []
         tested.extend(self.children)
         ch = None
+
         while len(testlist) > 0:
             chtest = testlist.pop()
+
             if not chtest.sorted:
                 self.cango = False
                 cango = True
@@ -297,14 +285,12 @@ class CamPathChunk:
 
                 if cango:
                     d = chtest.distance(pos, o)
+
                     if d < mind:
                         ch = chtest
                         mind = d
-        if ch is not None:
-            # print('found some')
-            return ch
-        # print('returning none')
-        return None
+
+        return ch if ch is not None else None
 
     def get_length(self):
         # computes length of the chunk - in 3d
@@ -400,16 +386,14 @@ class CamPathChunk:
         chunk_points = []
         estlength = (zstart - zend) / tan(o.movement.ramp_in_angle)
         self.get_length()
-        ramplength = estlength  # min(ch.length,estlength)
+        ramplength = estlength
         ltraveled = 0
         endpoint = None
         i = 0
-        # z=zstart
         znew = 10
         rounds = 0  # for counting if ramping makes more layers
-        while endpoint is None and not (znew == zend and i == 0):  #
-            # for i,s in enumerate(ch.points):
-            # print(i, znew, zend, len(ch.points))
+
+        while endpoint is None and not (znew == zend and i == 0):
             s = self.points[i]
 
             if i > 0:
@@ -422,7 +406,9 @@ class CamPathChunk:
                 ratio = ltraveled / ramplength
             else:
                 ratio = 0
+
             znew = zstart - stepdown * ratio
+
             if znew <= zend:
                 ratio = (z - zend) / (z - znew)
                 v1 = Vector(chunk_points[-1])
@@ -432,33 +418,35 @@ class CamPathChunk:
 
                 if zend == o.min.z and endpoint is None and self.closed:
                     endpoint = i + 1
+
                     if endpoint == len(self.points):
                         endpoint = 0
-            # print(endpoint,len(ch.points))
-            # else:
+
             znew = max(znew, zend, s[2])
             chunk_points.append((s[0], s[1], znew))
             z = znew
+
             if endpoint is not None:
                 break
             i += 1
+
             if i >= len(self.points):
                 i = 0
                 rounds += 1
-        # if not o.use_layers:
-        # endpoint=0
+
         if endpoint is not None:  # append final contour on the bottom z level
             i = endpoint
             started = False
-            # print('finaliz')
+
             if i == len(self.points):
                 i = 0
+
             while i != endpoint or not started:
                 started = True
                 s = self.points[i]
                 chunk_points.append((s[0], s[1], s[2]))
-                # print(i,endpoint)
                 i += 1
+
                 if i == len(self.points):
                     i = 0
         # ramp out
@@ -466,18 +454,19 @@ class CamPathChunk:
             not o.use_layers or not o.first_down or (o.first_down and endpoint is not None)
         ):
             z = zend
-            # i=endpoint
 
             while z < o.max_z:
                 if i == len(self.points):
                     i = 0
                 s1 = self.points[i]
                 i2 = i - 1
+
                 if i2 < 0:
                     i2 = len(self.points) - 1
                 s2 = self.points[i2]
                 l = distance_2d(s1, s2)
                 znew = z + tan(o.movement.ramp_out_angle) * l
+
                 if znew > o.max_z:
                     ratio = (z - o.max_z) / (z - znew)
                     v1 = Vector(chunk_points[-1])
@@ -497,20 +486,23 @@ class CamPathChunk:
         # TODO: convert to numpy properly
         if zend == None:
             zend = self.points[0][2]
+
         chunk_points = []
-        # print(zstart,zend)
-        if zend < zstart:  # this check here is only for stupid setup,
-            # when the chunks lie actually above operation start z.
 
+        # this check here is only for stupid setup,
+        # when the chunks lie actually above operation start z.
+        if zend < zstart:
             stepdown = zstart - zend
-
             estlength = (zstart - zend) / tan(o.movement.ramp_in_angle)
             self.get_length()
+
             if self.length > 0:  # for single point chunks..
                 ramplength = estlength
                 zigzaglength = ramplength / 2.000
                 turns = 1
+
                 log.info(f"Turns: {turns}")
+
                 if zigzaglength > self.length:
                     turns = ceil(zigzaglength / self.length)
                     ramplength = turns * self.length * 2.0
@@ -522,17 +514,18 @@ class CamPathChunk:
                     haspoints = False
                     ramppoints = [(self.points[0][0], self.points[0][1], self.points[0][2])]
                     i = 1
+
                     while not haspoints:
-                        # print(i,zigzaglength,zigzagtraveled)
                         p1 = ramppoints[-1]
                         p2 = self.points[i]
                         d = distance_2d(p1, p2)
                         zigzagtraveled += d
+
                         if zigzagtraveled >= zigzaglength or i + 1 == len(self.points):
                             ratio = 1 - (zigzagtraveled - zigzaglength) / d
-                            if i + 1 == len(
-                                self.points
-                            ):  # this condition is for a rare case of combined layers+bridges+ramps..
+
+                            # this condition is for a rare case of combined layers+bridges+ramps..
+                            if i + 1 == len(self.points):
                                 ratio = 1
                             v = p1 + ratio * (p2 - p1)
                             ramppoints.append(v.tolist())
@@ -540,10 +533,10 @@ class CamPathChunk:
                         else:
                             ramppoints.append(p2)
                         i += 1
+
                 negramppoints = ramppoints.copy()
                 negramppoints.reverse()
                 ramppoints.extend(negramppoints[1:])
-
                 traveled = 0.0
                 chunk_points.append(
                     (
@@ -552,6 +545,7 @@ class CamPathChunk:
                         max(self.points[0][2], zstart),
                     )
                 )
+
                 for r in range(turns):
                     for p in range(0, len(ramppoints)):
                         p1 = chunk_points[-1]
@@ -564,7 +558,6 @@ class CamPathChunk:
                         chunk_points.append((p2[0], p2[1], max(p2[2], znew)))
                         # below surface in the case of 3d paths
 
-                # chunks = setChunksZ([ch],zend)
                 chunk_points.extend(self.points.tolist())
 
             ######################################
@@ -572,17 +565,20 @@ class CamPathChunk:
             if o.movement.ramp_out:
                 zstart = o.max_z
                 zend = self.points[-1][2]
+
                 # again, sometimes a chunk could theoretically end above the starting level.
                 if zend < zstart:
                     stepdown = zstart - zend
-
                     estlength = (zstart - zend) / tan(o.movement.ramp_out_angle)
                     self.get_length()
+
                     if self.length > 0:
                         ramplength = estlength
                         zigzaglength = ramplength / 2.000
                         turns = 1
-                        print(f"Turns: {turns}")
+
+                        log.info(f"Turns: {turns}")
+
                         if zigzaglength > self.length:
                             turns = ceil(zigzaglength / self.length)
                             ramplength = turns * self.length * 2.0
@@ -602,33 +598,34 @@ class CamPathChunk:
                                 )
                             ]
                             i = len(self.points) - 2
+
                             while not haspoints:
-                                # print(i,zigzaglength,zigzagtraveled)
                                 p1 = ramppoints[-1]
                                 p2 = self.points[i]
                                 d = distance_2d(p1, p2)
                                 zigzagtraveled += d
+
                                 if zigzagtraveled >= zigzaglength or i + 1 == len(self.points):
                                     ratio = 1 - (zigzagtraveled - zigzaglength) / d
-                                    if i + 1 == len(
-                                        self.points
-                                    ):  # this condition is for a rare case of
-                                        # combined layers+bridges+ramps...
+
+                                    # this condition is for a rare case of
+                                    # combined layers+bridges+ramps...
+                                    if i + 1 == len(self.points):
                                         ratio = 1
-                                    # print((ratio,zigzaglength))
+
                                     v = p1 + ratio * (p2 - p1)
                                     ramppoints.append(v.tolist())
                                     haspoints = True
-                                # elif :
 
                                 else:
                                     ramppoints.append(p2)
                                 i -= 1
+
                         negramppoints = ramppoints.copy()
                         negramppoints.reverse()
                         ramppoints.extend(negramppoints[1:])
-
                         traveled = 0.0
+
                         for r in range(turns):
                             for p in range(0, len(ramppoints)):
                                 p1 = chunk_points[-1]
@@ -652,6 +649,7 @@ class CamPathChunk:
     def break_path_for_leadin_leadout(self, o):
         iradius = o.lead_in
         oradius = o.lead_out
+
         if iradius + oradius > 0:
             chunkamt = len(self.points)
 
@@ -662,9 +660,8 @@ class CamPathChunk:
                 bmay = bpoint[1] - apoint[1]
                 segmentLength = hypot(bmax, bmay)  # find segment length
 
-                if segmentLength > 2 * max(
-                    iradius, oradius
-                ):  # Be certain there is enough room for the leadin and leadiout
+                if segmentLength > 2 * max(iradius, oradius):
+                    # Be certain there is enough room for the leadin and leadiout
                     # add point on the line here
                     # average of the two x points to find center
                     newpointx = (bpoint[0] + apoint[0]) / 2
@@ -692,6 +689,7 @@ class CamPathChunk:
             log.info("Path Direction is Clockwise")
         else:
             log.info("Path Direction is Counter Clockwise")
+
         iradius = o.lead_in
         oradius = o.lead_out
         start = self.points[0]
@@ -716,8 +714,6 @@ class CamPathChunk:
 
         # glue rest of the path to the arc
         chunk_points.extend(self.points.tolist())
-        # for i in range(len(self.points)):
-        #     chunk_points.append(self.points[i])
 
         # add lead out arc to the end
         if round(o.lead_in, 6) > 0.0:
@@ -736,25 +732,28 @@ def chunks_coherency(chunks):
     # too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often,
     # but also means that some parts detected by cavity algorithm won't be milled
     nchunks = []
+
     for chunk in chunks:
         if len(chunk.points) > 2:
             nchunk = CamPathChunkBuilder()
-
             # doesn't check for 1 point chunks here, they shouldn't get here at all.
             lastvec = Vector(chunk.points[1]) - Vector(chunk.points[0])
+
             for i in range(0, len(chunk.points) - 1):
                 nchunk.points.append(chunk.points[i])
                 vec = Vector(chunk.points[i + 1]) - Vector(chunk.points[i])
                 angle = vec.angle(lastvec, vec)
-                # print(angle,i)
+
                 if angle > 1.07:  # 60 degrees is maximum toleration for pencil paths.
                     if len(nchunk.points) > 4:  # this is a testing threshold
                         nchunks.append(nchunk.to_chunk())
                     nchunk = CamPathChunkBuilder()
                 lastvec = vec
+
             if len(nchunk.points) > 4:  # this is a testing threshold
                 nchunk.points = np.array(nchunk.points)
                 nchunks.append(nchunk)
+
     return nchunks
 
 
@@ -762,23 +761,28 @@ def limit_chunks(chunks, o, force=False):  # TODO: this should at least add poin
     # but shouldn't be needed at all at the first place...
     if o.use_limit_curve or force:
         nchunks = []
+
         for ch in chunks:
             prevsampled = True
             nch = CamPathChunkBuilder()
             nch1 = None
             closed = True
+
             for s in ch.points:
-                sampled = o.ambient.contains(sgeometry.Point(s[0], s[1]))
+                sampled = o.ambient.contains(Point(s[0], s[1]))
+
                 if not sampled and len(nch.points) > 0:
                     nch.closed = False
                     closed = False
                     nchunks.append(nch.to_chunk())
+
                     if nch1 is None:
                         nch1 = nchunks[-1]
                     nch = CamPathChunkBuilder()
                 elif sampled:
                     nch.points.append(s)
                 prevsampled = sampled
+
             if (
                 len(nch.points) > 2
                 and closed
@@ -796,6 +800,7 @@ def limit_chunks(chunks, o, force=False):  # TODO: this should at least add poin
                 nch.points.extend(nch1.points.tolist())
                 nchunks.remove(nch1)
                 log.info("Joining")
+
             if len(nch.points) > 0:
                 nchunks.append(nch.to_chunk())
         return nchunks
@@ -805,13 +810,14 @@ def limit_chunks(chunks, o, force=False):  # TODO: this should at least add poin
 
 def mesh_from_curve_to_chunk(object):
     mesh = object.data
-    # print('detecting contours from curve')
+
     chunks = []
     chunk = CamPathChunkBuilder()
     ek = mesh.edge_keys
     d = {}
+
     for e in ek:
-        d[e] = 1  #
+        d[e] = 1
     dk = d.keys()
     x = object.location.x
     y = object.location.y
@@ -820,16 +826,19 @@ def mesh_from_curve_to_chunk(object):
     vtotal = len(mesh.vertices)
     perc = 0
     progress(f"Processing Curve - START - Vertices: {vtotal}")
+
     for vi in range(0, len(mesh.vertices) - 1):
         co = (mesh.vertices[vi].co + object.location).to_tuple()
+
         if not dk.isdisjoint([(vi, vi + 1)]) and d[(vi, vi + 1)] == 1:
             chunk.points.append(co)
         else:
             chunk.points.append(co)
+
+            # this was looping chunks of length of only 2 points...
             if len(chunk.points) > 2 and (
                 not (dk.isdisjoint([(vi, lastvi)])) or not (dk.isdisjoint([(lastvi, vi)]))
-            ):  # this was looping chunks of length of only 2 points...
-                # print('itis')
+            ):
 
                 chunk.closed = True
                 chunk.points.append((mesh.vertices[lastvi].co + object.location).to_tuple())
@@ -882,15 +891,15 @@ def curve_to_chunks(o, use_modifiers=False):
     return chunks
 
 
-def shapely_to_chunks(p, zlevel):  #
+def shapely_to_chunks(p, zlevel):
     chunk_builders = []
-    # p=sortContours(p)
     seq = shapely_to_coordinates(p)
     i = 0
+
     for s in seq:
-        # progress(p[i])
         if len(s) > 1:
             chunk = CamPathChunkBuilder([])
+
             for v in s:
                 if p.has_z:
                     chunk.points.append((v[0], v[1], v[2]))
@@ -957,19 +966,19 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
     # prepare collision world
     if o.update_bullet_collision_tag:
         prepare_bullet_collision(o)
-        # print('getting ambient')
         get_ambient(o)
         o.update_bullet_collision_tag = False
-    # print (o.ambient)
+
     cutter = o.cutter_shape
     cutterdepth = cutter.dimensions.z / 2
-
     t = time.time()
+    totlen = 0  # total length of all chunks, to estimate sampling time.
+
     log.info("Sampling Paths")
 
-    totlen = 0  # total length of all chunks, to estimate sampling time.
     for chs in pathSamples:
         totlen += len(chs.startpoints)
+
     layerchunks = []
     minz = o.min_z
     layeractivechunks = []
@@ -979,35 +988,33 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
         layerchunks.append([])
         layeractivechunks.append(CamPathChunkBuilder([]))
         lastrunchunks.append([])
-    n = 0
 
+    n = 0
     last_percent = -1
     lastz = minz
+
     for patternchunk in pathSamples:
-        # print (patternchunk.endpoints)
         thisrunchunks = []
+
         for l in layers:
             thisrunchunks.append([])
         lastlayer = None
         currentlayer = None
         lastsample = None
-        # threads_count=4
         lastrotation = (0, 0, 0)
-        # for t in range(0,threads):
-        # print(len(patternchunk.startpoints),len( patternchunk.endpoints))
         spl = len(patternchunk.startpoints)
-        # ,startp in enumerate(patternchunk.startpoints):
+
         for si in range(0, spl):
             # #TODO: seems we are writing into the source chunk ,
             #  and that is why we need to write endpoints everywhere too?
-
             percent = int(100 * n / totlen)
+
             if percent != last_percent:
                 await progress_async("Sampling Paths", percent)
                 last_percent = percent
+
             n += 1
             sampled = False
-            # print(si)
 
             # get the vector to sample
             startp = Vector(patternchunk.startpoints[si])
@@ -1015,14 +1022,14 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
             rotation = patternchunk.rotations[si]
             sweepvect = endp - startp
             sweepvect.normalize()
+
             # sampling
             if rotation != lastrotation:
                 cutter.rotation_euler = rotation
-                # cutter.rotation_euler.x=-cutter.rotation_euler.x
-                # print(rotation)
 
                 if o.cutter_type == "VCARVE":  # Bullet cone is always pointing Up Z in the object
                     cutter.rotation_euler.x += pi
+
                 cutter.update_tag()
                 # this has to be :( it resets the rigidbody world.
                 bpy.context.scene.frame_set(1)
@@ -1033,7 +1040,6 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
 
             newsample = get_sample_bullet_n_axis(cutter, startp, endp, rotation, cutterdepth)
 
-            # print('totok',startp,endp,rotation,newsample)
             ################################
             # handling samples
             ############################################
@@ -1043,17 +1049,11 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
             else:  # TODO: why was this here?
                 newsample = startp
                 sampled = True
-            # print(newsample)
 
-            # elif o.ambient_behaviour=='ALL' and not o.inverse:#handle ambient here
-            # newsample=(x,y,minz)
             if sampled:
                 for i, l in enumerate(layers):
                     terminatechunk = False
                     ch = layeractivechunks[i]
-
-                    # print(i,l)
-                    # print(l[1],l[0])
                     v = startp - newsample
                     distance = -v.length
 
@@ -1077,14 +1077,13 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                                 r = range(lastlayer, currentlayer)
                                 growing = False
                                 spliti = 0
-                            # print(r)
+
                             li = 0
 
                             for ls in r:
                                 splitdistance = layers[ls][1]
 
                                 ratio = (splitdistance - lastdistance) / (distance - lastdistance)
-                                # print(ratio)
                                 betweensample = lastsample + (newsample - lastsample) * ratio
                                 # this probably doesn't work at all!!!! check this algoritm>
                                 betweenrotation = tuple_add(
@@ -1125,11 +1124,8 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                                     layeractivechunks[ls + 1].startpoints.append(betweenstartpoint)
                                     layeractivechunks[ls + 1].endpoints.append(betweenendpoint)
 
-                                # layeractivechunks[ls+1].points.insert(0,betweensample)
                                 li += 1
                         # this chunk is terminated, and allready in layerchunks /
-
-                        # ch.points.append(betweensample)#
                         ch.points.append(newsample)
                         ch.rotations.append(rotation)
                         ch.startpoints.append(startp)
@@ -1143,6 +1139,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                         ch.rotations.append(rotation)
                         ch.startpoints.append(startp)
                         ch.endpoints.append(endp)
+
                     elif l[0] < distance:  # retract to original track
                         ch.points.append(startp)
                         ch.rotations.append(rotation)
@@ -1168,12 +1165,10 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                 thisrunchunks[i].append(ch)
                 layeractivechunks[i] = CamPathChunkBuilder([])
 
-            if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "OUTLINEFILL":
+            if o.strategy in ["PARALLEL", "CROSS", "OUTLINEFILL"]:
                 parent_child_distance(thisrunchunks[i], lastrunchunks[i], o)
 
         lastrunchunks = thisrunchunks
-
-    # print(len(layerchunks[i]))
 
     progress("Checking Relations Between Paths")
     """#this algorithm should also work for n-axis, but now is "sleeping"
@@ -1216,23 +1211,23 @@ def sample_path_low(o, ch1, ch2, dosample):
 
     v1 = Vector(ch1.get_point(-1))
     v2 = Vector(ch2.get_point(0))
-
     v = v2 - v1
     d = v.length
     v.normalize()
-
     vref = Vector((0, 0, 0))
     bpath_points = []
     i = 0
+
     while vref.length < d:
         i += 1
         vref = v * o.distance_along_paths * i
+
         if vref.length < d:
             p = v1 + vref
             bpath_points.append([p.x, p.y, p.z])
-    # print('between path')
-    # print(len(bpath))
+
     pixsize = o.optimisation.pixsize
+
     if dosample:
         if not (o.optimisation.use_opencamlib and o.optimisation.use_exact):
             if o.optimisation.use_exact:
@@ -1241,17 +1236,21 @@ def sample_path_low(o, ch1, ch2, dosample):
                     o.update_bullet_collision_tag = False
 
                 cutterdepth = o.cutter_shape.dimensions.z / 2
+
                 for p in bpath_points:
                     z = get_sample_bullet(o.cutter_shape, p[0], p[1], cutterdepth, 1, o.min_z)
+
                     if z > p[2]:
                         p[2] = z
             else:
                 for p in bpath_points:
-                    xs = (p[0] - o.min.x) / pixsize + o.borderwidth + pixsize / 2  # -m
-                    ys = (p[1] - o.min.y) / pixsize + o.borderwidth + pixsize / 2  # -m
+                    xs = (p[0] - o.min.x) / pixsize + o.borderwidth + pixsize / 2
+                    ys = (p[1] - o.min.y) / pixsize + o.borderwidth + pixsize / 2
                     z = get_sample_image((xs, ys), o.offset_image, o.min_z) + o.skin
+
                     if z > p[2]:
                         p[2] = z
+
     return CamPathChunk(bpath_points)
 
 
@@ -1278,17 +1277,20 @@ def polygon_boolean(context, boolean_type):
     bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
     obs = []
+
     for ob1 in bpy.context.selected_objects:
         if ob1 != ob:
             obs.append(ob1)
+
     plist = curve_to_shapely(ob)
     p1 = MultiPolygon(plist)
     polys = []
+
     for o in obs:
         plist = curve_to_shapely(o)
         p2 = MultiPolygon(plist)
         polys.append(p2)
-    # print(polys)
+
     if boolean_type == "UNION":
         for p2 in polys:
             p1 = p1.union(p2)
@@ -1329,7 +1331,6 @@ def polygon_convex_hull(context):
     bpy.context.object.data.dimensions = "3D"  # force curve to be a 3D curve
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     bpy.context.active_object.name = "_tmp"
-
     bpy.ops.object.convert(target="MESH")
     obj = bpy.context.view_layer.objects.active
 
@@ -1339,10 +1340,8 @@ def polygon_convex_hull(context):
 
     select_multiple("_tmp")  # delete temporary mesh
     select_multiple("ConvexHull")  # delete old hull
-
     # convert coordinates to shapely MultiPoint datastructure
-    points = sgeometry.MultiPoint(coords)
-
+    points = MultiPoint(coords)
     hull = points.convex_hull
     shapely_to_curve("ConvexHull", hull, 0.0)
 
@@ -1372,13 +1371,16 @@ def silhouette_offset(context, offset, style=1, mitrelimit=1.0):
 
     bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
-    if ob.type == "CURVE" or ob.type == "FONT":
+
+    if ob.type in ["CURVE", "FONT"]:
         silhs = curve_to_shapely(ob)
     else:
         silhs = get_object_silhouette("OBJECTS", [ob])
+
     mp = silhs.buffer(offset, cap_style=1, join_style=style, resolution=16, mitre_limit=mitrelimit)
     shapely_to_curve(ob.name + "_offset_" + str(round(offset, 5)), mp, ob.location.z)
     bpy.ops.object.curve_remove_doubles()
+
     return {"FINISHED"}
 
 
@@ -1403,8 +1405,10 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
     """
 
     log.info(f"Silhouette Type: {stype}")
+
     if stype == "CURVES":  # curve conversion to polygon format
         allchunks = []
+
         for ob in objects:
             chunks = curve_to_chunks(ob)
             allchunks.extend(chunks)
@@ -1412,22 +1416,25 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
 
     elif stype == "OBJECTS":
         totfaces = 0
+
         for ob in objects:
             totfaces += len(ob.data.polygons)
 
-        if (
-            totfaces < 20000000
-        ):  # boolean polygons method originaly was 20 000 poly limit, now limitless,
+        if totfaces < 20000000:
+            # boolean polygons method originaly was 20 000 poly limit, now limitless,
             t = time.time()
             log.info("Shapely Getting Silhouette")
             polys = []
+
             for ob in objects:
                 log.info(f"Object: {ob.name}")
+
                 if use_modifiers:
                     ob = ob.evaluated_get(bpy.context.evaluated_depsgraph_get())
                     m = ob.to_mesh()
                 else:
                     m = ob.data
+
                 mw = ob.matrix_world
                 mwi = mw.inverted()
                 r = ob.rotation_euler
@@ -1435,48 +1442,55 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
                 id = 0
                 e = 0.000001
                 scaleup = 100
+
                 for tri in m.loop_triangles:
                     n = tri.normal.copy()
                     n.rotate(r)
 
-                    if tri.area > 0 and n.z != 0:  # n.z>0.0 and f.area>0.0 :
+                    if tri.area > 0 and n.z != 0:
                         s = []
                         c = mw @ tri.center
                         c = c.xy
+
                         for vert_index in tri.vertices:
                             v = mw @ m.vertices[vert_index].co
                             s.append((v.x, v.y))
+
                         if len(s) > 2:
-                            # print(s)
-                            p = spolygon.Polygon(s)
-                            # print(dir(p))
+                            p = Polygon(s)
+
                             if p.is_valid:
-                                # polys.append(p)
                                 polys.append(p.buffer(e, resolution=0))
+
                         id += 1
             ob.select_set(False)
+
             if totfaces < 20000:
-                p = sops.unary_union(polys)
+                p = unary_union(polys)
             else:
                 log.info("Computing in Parts")
                 bigshapes = []
                 i = 1
                 part = 20000
+
                 while i * part < totfaces:
                     log.info(i)
                     ar = polys[(i - 1) * part : i * part]
-                    bigshapes.append(sops.unary_union(ar))
+                    bigshapes.append(unary_union(ar))
                     i += 1
+
                 if (i - 1) * part < totfaces:
                     last_ar = polys[(i - 1) * part :]
-                    bigshapes.append(sops.unary_union(last_ar))
+                    bigshapes.append(unary_union(last_ar))
+
                 log.info("Joining")
-                p = sops.unary_union(bigshapes)
+
+                p = unary_union(bigshapes)
 
             log.info(f"Time: {time.time() - t}")
 
             t = time.time()
-            silhouette = shapely_to_multipolygon(p)  # [polygon_utils_cam.Shapely2Polygon(p)]
+            silhouette = shapely_to_multipolygon(p)
 
     return silhouette
 
@@ -1501,6 +1515,7 @@ def get_operation_silhouette(operation):
     if operation.update_silhouette_tag:
         image = None
         objects = None
+
         if operation.geometry_source == "OBJECT" or operation.geometry_source == "COLLECTION":
             if not operation.onlycurves:
                 stype = "OBJECTS"
@@ -1510,6 +1525,7 @@ def get_operation_silhouette(operation):
             stype = "IMAGE"
 
         totfaces = 0
+
         if stype == "OBJECTS":
             for ob in operation.objects:
                 if ob.type == "MESH":
@@ -1518,9 +1534,9 @@ def get_operation_silhouette(operation):
         if (stype == "OBJECTS" and totfaces > 200000) or stype == "IMAGE":
             log.info("Image Method")
             samples = render_sample_image(operation)
+
             if stype == "OBJECTS":
                 i = samples > operation.min_z - 0.0000001
-                # np.min(operation.zbuffer_image)-0.0000001#
                 # #the small number solves issue with totally flat meshes, which people tend to mill instead of
                 # proper pockets. then the minimum was also maximum, and it didn't detect contour.
             else:
@@ -1529,7 +1545,6 @@ def get_operation_silhouette(operation):
 
             chunks = image_to_chunks(operation, i)
             operation.silhouette = chunks_to_shapely(chunks)
-        # print(operation.silhouette)
         # this conversion happens because we need the silh to be oriented, for milling directions.
         else:
             log.info("Object Method for Retrieving Silhouette")
@@ -1565,9 +1580,7 @@ def get_object_outline(radius, o, Offset):
     # circle detail, optimize, optimize thresold.
 
     polygons = get_operation_silhouette(o)
-
     i = 0
-    # print('offseting polygons')
 
     if Offset:
         offset = 1
@@ -1576,6 +1589,7 @@ def get_object_outline(radius, o, Offset):
 
     outlines = []
     i = 0
+
     if o.straight:
         join = 2
     else:
@@ -1587,7 +1601,6 @@ def get_object_outline(radius, o, Offset):
         polygon_list = polygons.geoms
 
     for p1 in polygon_list:  # sort by size before this???
-        # print(p1.type, len(polygons))
         i += 1
         if radius > 0:
             p1 = p1.buffer(
@@ -1598,11 +1611,11 @@ def get_object_outline(radius, o, Offset):
             )
         outlines.append(p1)
 
-    # print(outlines)
     if o.dont_merge:
-        outline = sgeometry.MultiPolygon(outlines)
+        outline = MultiPolygon(outlines)
     else:
-        outline = shapely.ops.unary_union(outlines)
+        outline = unary_union(outlines)
+
     return outline
 
 
@@ -1635,7 +1648,7 @@ def get_ambient(o):
             # in this method we need ambient from silhouette
             o.ambient = get_object_outline(r, o, True)
         else:
-            o.ambient = spolygon.Polygon(
+            o.ambient = Polygon(
                 (
                     (o.min.x + m, o.min.y + m),
                     (o.min.x + m, o.max.y - m),
@@ -1648,7 +1661,7 @@ def get_ambient(o):
             if o.limit_curve != "":
                 limit_curve = bpy.data.objects[o.limit_curve]
                 polys = curve_to_shapely(limit_curve)
-                o.limit_poly = shapely.ops.unary_union(polys)
+                o.limit_poly = unary_union(polys)
 
                 if o.ambient_cutter_restrict:
                     o.limit_poly = o.limit_poly.buffer(
@@ -1693,9 +1706,8 @@ async def sample_chunks(o, pathSamples, layers):
         else:
             if o.update_bullet_collision_tag:
                 prepare_bullet_collision(o)
-
                 o.update_bullet_collision_tag = False
-            # print (o.ambient)
+
             cutter = o.cutter_shape
             cutterdepth = cutter.dimensions.z / 2
     else:
@@ -1704,18 +1716,17 @@ async def sample_chunks(o, pathSamples, layers):
             await prepare_area(o)
 
         pixsize = o.optimisation.pixsize
-
         coordoffset = o.borderwidth + pixsize / 2  # -m
-
         res = ceil(o.cutter_diameter / o.optimisation.pixsize)
         m = res / 2
 
     t = time.time()
-    # print('sampling paths')
 
     totlen = 0  # total length of all chunks, to estimate sampling time.
+
     for ch in pathSamples:
         totlen += ch.count()
+
     layerchunks = []
     minz = o.min_z - 0.000001  # correction for image method problems
     layeractivechunks = []
@@ -1727,6 +1738,7 @@ async def sample_chunks(o, pathSamples, layers):
         lastrunchunks.append([])
 
     zinvert = 0
+
     if o.inverse:
         ob = bpy.data.objects[o.object_name]
         zinvert = ob.location.z + maxz  # ob.bound_box[6][2]
@@ -1741,33 +1753,38 @@ async def sample_chunks(o, pathSamples, layers):
     totaltime = timing_init()
     timing_start(totaltime)
     lastz = minz
+
     for patternchunk in pathSamples:
         thisrunchunks = []
+
         for l in layers:
             thisrunchunks.append([])
+
         lastlayer = None
         currentlayer = None
         lastsample = None
-        # threads_count=4
-
-        # for t in range(0,threads):
         our_points = patternchunk.get_points_np()
-        ambient_contains = shapely.contains(o.ambient, shapely.points(our_points[:, 0:2]))
+        ambient_contains = contains(o.ambient, points(our_points[:, 0:2]))
+
         for s, in_ambient in zip(our_points, ambient_contains):
             if o.strategy != "WATERLINE" and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
                 await progress_async("Sampling Paths", last_percent)
+
             n += 1
             x = s[0]
             y = s[1]
+
             if not in_ambient:
                 newsample = (x, y, 1)
             else:
                 if o.optimisation.use_opencamlib and o.optimisation.use_exact:
                     z = s[2]
+
                     if minz > z:
                         z = minz
                     newsample = (x, y, z)
+
                 # ampling
                 elif o.optimisation.use_exact and not o.optimisation.use_opencamlib:
                     if lastsample is not None:  # this is an optimalization,
@@ -1775,6 +1792,7 @@ async def sample_chunks(o, pathSamples, layers):
                         z = get_sample_bullet(
                             cutter, x, y, cutterdepth, 1, lastsample[2] - o.distance_along_paths
                         )  # first try to the last sample
+
                         if z < minz - 1:
                             z = get_sample_bullet(
                                 cutter,
@@ -1787,7 +1805,6 @@ async def sample_chunks(o, pathSamples, layers):
                     else:
                         z = get_sample_bullet(cutter, x, y, cutterdepth, 1, minz)
 
-                # print(z)
                 else:
                     timing_start(samplingtime)
                     xs = (x - minx) / pixsize + coordoffset
@@ -1805,7 +1822,6 @@ async def sample_chunks(o, pathSamples, layers):
 
             for i, l in enumerate(layers):
                 terminatechunk = False
-
                 ch = layeractivechunks[i]
 
                 if l[1] <= newsample[2] <= l[0]:
@@ -1817,7 +1833,7 @@ async def sample_chunks(o, pathSamples, layers):
                                 lastlayer = i2
 
                     currentlayer = i
-                    # and lastsample[2]!=newsample[2]:
+
                     if lastlayer is not None and lastlayer != currentlayer:
                         # #sampling for sorted paths in layers- to go to the border of the sampled layer at least...
                         # there was a bug here, but should be fixed.
@@ -1829,21 +1845,20 @@ async def sample_chunks(o, pathSamples, layers):
                             r = range(lastlayer, currentlayer)
                             growing = False
                             spliti = 0
-                        # print(r)
+
                         li = 0
+
                         for ls in r:
                             splitz = layers[ls][1]
-                            # print(ls)
-
                             v1 = lastsample
                             v2 = newsample
+
                             if o.movement.protect_vertical:
                                 v1, v2 = is_vertical_limit(
                                     v1, v2, o.movement.protect_vertical_limit
                                 )
                             v1 = Vector(v1)
                             v2 = Vector(v2)
-                            # print(v1,v2)
 
                             # Prevent divide by zero:
                             dz = v2.z - v1.z
@@ -1851,10 +1866,7 @@ async def sample_chunks(o, pathSamples, layers):
                                 # no vertical change – nothing to split
                                 continue
                             ratio = (splitz - v1.z) / dz
-                            # print(ratio)
                             betweensample = v1 + (v2 - v1) * ratio
-
-                            # ch.points.append(betweensample.to_tuple())
 
                             if growing:
                                 if li > 0:
@@ -1865,7 +1877,6 @@ async def sample_chunks(o, pathSamples, layers):
                                     layeractivechunks[ls].points.append(betweensample.to_tuple())
                                 layeractivechunks[ls + 1].points.append(betweensample.to_tuple())
                             else:
-                                # print(v1,v2,betweensample,lastlayer,currentlayer)
                                 layeractivechunks[ls].points.insert(-1, betweensample.to_tuple())
                                 layeractivechunks[ls + 1].points.insert(0, betweensample.to_tuple())
 
@@ -1903,8 +1914,6 @@ async def sample_chunks(o, pathSamples, layers):
 
         lastrunchunks = thisrunchunks
 
-    # print(len(layerchunks[i]))
-    # log.info("Checking Relations Between Paths")
     progress("Checking Relations Between Paths")
     timing_start(sortingtime)
 
@@ -1933,12 +1942,11 @@ async def sample_chunks(o, pathSamples, layers):
                 ch.zend = layers[i][1]
         chunks.extend(layerchunks[i])
     timing_add(totaltime)
+
     log.info(f"Sampling Time: {samplingtime}")
     log.info(f"Sorting Time: {sortingtime}")
     log.info(f"Total Time: {totaltime}")
-    # print(samplingtime)
-    # print(sortingtime)
-    # print(totaltime)
+
     return chunks
 
 
@@ -1967,9 +1975,8 @@ async def connect_chunks_low(chunks, o):
     connectedchunks = []
     chunks_to_resample = []  # for OpenCAMLib sampling
     mergedist = 3 * o.distance_between_paths
-    if (
-        o.strategy == "PENCIL"
-    ):  # this is bigger for pencil path since it goes on the surface to clean up the rests,
+    if o.strategy == "PENCIL":
+        # this is bigger for pencil path since it goes on the surface to clean up the rests,
         # and can go to close points on the surface without fear of going deep into material.
         mergedist = 10 * o.distance_between_paths
 
@@ -1990,21 +1997,16 @@ async def connect_chunks_low(chunks, o):
         if ch.count() > 0:
             if lastch is not None and (ch.distance_start(pos, o) < mergedist):
                 # CARVE should lift allways, when it goes below surface...
-                # print(mergedist,ch.distance(pos,o))
-                if o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "PENCIL":
+                if o.strategy in ["PARALLEL", "CROSS", "PENCIL"]:
                     # for these paths sorting happens after sampling, thats why they need resample the connection
                     between = sample_path_low(o, lastch, ch, True)
                 else:
-                    # print('addbetwee')
-                    between = sample_path_low(
-                        o, lastch, ch, False
-                    )  # other paths either dont use sampling or are sorted before it.
+                    between = sample_path_low(o, lastch, ch, False)
+                # other paths either dont use sampling or are sorted before it.
                 if (
                     o.optimisation.use_opencamlib
                     and o.optimisation.use_exact
-                    and (
-                        o.strategy == "PARALLEL" or o.strategy == "CROSS" or o.strategy == "PENCIL"
-                    )
+                    and (o.strategy in ["PARALLEL", "CROSS", "PENCIL"])
                 ):
                     chunks_to_resample.append(
                         (connectedchunks[-1], connectedchunks[-1].count(), between.count())
@@ -2061,14 +2063,14 @@ async def sort_chunks(chunks, o, last_pos=None):
     total = len(chunks)
     i = len(chunks)
     pos = (0, 0, 0) if last_pos is None else last_pos
+
     while len(chunks) > 0:
         if o.strategy != "WATERLINE" and time.time() - last_progress_time > 0.1:
             await progress_async("Sorting Paths", 100.0 * (total - len(chunks)) / total)
             last_progress_time = time.time()
         ch = None
-        if (
-            len(sortedchunks) == 0 or len(lastch.parents) == 0
-        ):  # first chunk or when there are no parents -> parents come after children here...
+        if len(sortedchunks) == 0 or len(lastch.parents) == 0:
+            # first chunk or when there are no parents -> parents come after children here...
             ch = get_closest_chunk(o, pos, chunks)
         elif len(lastch.parents) > 0:  # looks in parents for next candidate, recursively
             for parent in lastch.parents:
@@ -2083,34 +2085,24 @@ async def sort_chunks(chunks, o, last_pos=None):
             if not ch.sorted:
                 ch.adapt_distance(pos, o)
                 ch.sorted = True
-            # print(len(ch.parents),'children')
+
             chunks.remove(ch)
             sortedchunks.append(ch)
             lastch = ch
             pos = lastch.get_point(-1)
-        # print(i, len(chunks))
-        # experimental fix for infinite loop problem
-        # else:
-        # THIS PROBLEM WASN'T HERE AT ALL. but keeping it here, it might fix the problems somwhere else:)
-        # can't find chunks close enough and still some chunks left
-        # to be sorted. For now just move the remaining chunks over to
-        # the sorted list.
-        # This fixes an infinite loop condition that occurs sometimes.
-        # This is a bandaid fix: need to find the root cause of this problem
-        # suspect it has to do with the sorted flag?
-        # print("no chunks found closest. Chunks not sorted: ", len(chunks))
-        # sortedchunks.extend(chunks)
-        # chunks[:] = []
 
         i -= 1
+
     if o.strategy == "POCKET" and o.pocket_option == "OUTSIDE":
         sortedchunks.reverse()
 
     sys.setrecursionlimit(1000)
+
     if o.strategy != "DRILL" and o.strategy != "OUTLINEFILL":
         # THIS SHOULD AVOID ACTUALLY MOST STRATEGIES, THIS SHOULD BE DONE MANUALLY,
         # BECAUSE SOME STRATEGIES GET SORTED TWICE.
         sortedchunks = await connect_chunks_low(sortedchunks, o)
+
     return sortedchunks
 
 
@@ -2139,6 +2131,7 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
 
     tmp_chunks = list()
     tmp_chunks.append(CamPathChunk(inpoints=[]))
+
     for chunk, i_start, i_length in chunks_to_resample:
         tmp_chunks[0].extend(chunk.get_points_np()[i_start : i_start + i_length])
         log.info(f"{i_start}, {i_length}, {len(tmp_chunks[0].points)}")
@@ -2146,12 +2139,12 @@ async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
     samples = await ocl_sample(operation, tmp_chunks, use_cached_mesh=use_cached_mesh)
 
     sample_index = 0
+
     for chunk, i_start, i_length in chunks_to_resample:
         z = np.array([p.z for p in samples[sample_index : sample_index + i_length]]) / OCL_SCALE
         pts = chunk.get_points_np()
         pt_z = pts[i_start : i_start + i_length, 2]
         pt_z = np.where(z > pt_z, z, pt_z)
-
         sample_index += i_length
 
 
@@ -2175,10 +2168,10 @@ async def oclGetWaterline(operation, chunks):
 
     layers = oclWaterlineLayerHeights(operation)
     oclSTL = get_oclSTL(operation)
-
     op_cutter_type = operation.cutter_type
     op_cutter_diameter = operation.cutter_diameter
     op_minz = operation.min_z
+
     if op_cutter_type == "VCARVE":
         op_cutter_tip_angle = operation["cutter_tip_angle"]
 
@@ -2203,6 +2196,7 @@ async def oclGetWaterline(operation, chunks):
     waterline.setCutter(cutter)
     waterline.setSampling(0.1)  # TODO: add sampling setting to UI
     last_pos = [0, 0, 0]
+
     for count, height in enumerate(layers):
         layer_chunks = []
         await progress_async("Waterline", int((100 * count) / len(layers)))
@@ -2210,16 +2204,20 @@ async def oclGetWaterline(operation, chunks):
         waterline.setZ(height * OCL_SCALE)
         waterline.run2()
         wl_loops = waterline.getLoops()
+
         for l in wl_loops:
             inpoints = []
+
             for p in l:
                 inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
+
             inpoints.append(inpoints[0])
             chunk = CamPathChunk(inpoints=inpoints)
             chunk.closed = True
             layer_chunks.append(chunk)
         # sort chunks so that ordering is stable
         chunks.extend(await sort_chunks(layer_chunks, operation, last_pos=last_pos))
+
         if len(chunks) > 0:
             last_pos = chunks[-1].get_point(-1)
 
@@ -2278,23 +2276,26 @@ def image_edge_search_on_line(o, ar, zimage):
         if perc != int(100 - 100 * totpix / startpix):
             perc = int(100 - 100 * totpix / startpix)
             progress("Pencil Path Searching", perc)
-        # progress('simulation ',int(100*i/l))
+
         success = False
         testangulardistance = 0  # distance from initial direction in the list of direction
         testleftright = False  # test both sides from last vector
+
         while not success:
             xs = nchunk.points[-1][0] + test_direction[0]
             ys = nchunk.points[-1][1] + test_direction[1]
 
             if xs > r and xs < ar.shape[0] - r and ys > r and ys < ar.shape[1] - r:
                 test = ar[xs, ys]
-                # print(test)
+
                 if test:
                     success = True
+
             if success:
                 nchunk.points.append([xs, ys, zimage[xs, ys]])
                 last_direction = test_direction
                 ar[xs, ys] = False
+
                 if 0:
                     log.info("Success")
                     log.info(f"{xs}, {ys}, {testlength}, {testangle}")
@@ -2302,9 +2303,8 @@ def image_edge_search_on_line(o, ar, zimage):
                     log.info(testvect)
                     log.info(itests)
             else:
-                # nappend([xs,ys])#for debugging purpose
-                # ar.shape[0]
                 test_direction = last_direction
+
                 if testleftright:
                     testangulardistance = -testangulardistance
                     testleftright = False
@@ -2318,11 +2318,11 @@ def image_edge_search_on_line(o, ar, zimage):
                     indices = ar.nonzero()
                     totpix = len(indices[0])
                     chunk_builders.append(nchunk)
+
                     if len(indices[0] > 0):
                         xs = indices[0][0]
                         ys = indices[1][0]
                         nchunk = CamPathChunkBuilder([(xs, ys, zimage[xs, ys])])  # startposition
-
                         ar[xs, ys] = False
                     else:
                         nchunk = CamPathChunkBuilder([])
@@ -2331,7 +2331,7 @@ def image_edge_search_on_line(o, ar, zimage):
                     last_direction = directions[3]
                     success = True
                     itests = 0
-                # print('reset')
+
                 if len(nchunk.points) > 0:
                     if nchunk.points[-1][0] + test_direction[0] < r:
                         testvect.x = r
@@ -2343,12 +2343,14 @@ def image_edge_search_on_line(o, ar, zimage):
                         testvect.y = maxary - r
 
                 dindexmod = dindex + testangulardistance
+
                 while dindexmod < 0:
                     dindexmod += len(directions)
                 while dindexmod > len(directions):
                     dindexmod -= len(directions)
 
                 test_direction = directions[dindexmod]
+
                 if 0:
                     log.info(
                         f"{xs}, {ys}, {test_direction}, {last_direction}, {testangulardistance}"
@@ -2359,20 +2361,21 @@ def image_edge_search_on_line(o, ar, zimage):
 
         i += 1
         if i % 100 == 0:
-            # print('100 succesfull tests done')
             totpix = ar.sum()
-            # print(totpix)
-            # print(totaltests)
             i = 0
+
     chunk_builders.append(nchunk)
+
     for ch in chunk_builders:
         ch = ch.points
+
         for i in range(0, len(ch)):
             ch[i] = (
                 (ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                 (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny,
                 ch[i][2],
             )
+
     return [c.to_chunk() for c in chunk_builders]
 
 
@@ -2396,12 +2399,10 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
     Returns:
         list: A list of detected chunks representing the cavities in the image.
     """
-    # i=np.logical_xor(lastislice , islice)
+
     progress("Detect Corners in the Offset Image")
     vertical = i[:-2, 1:-1] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[2:, 1:-1]
     horizontal = i[1:-1, :-2] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[1:-1, 2:]
-    # if bpy.app.debug_value==2:
-
     ar = np.logical_or(vertical, horizontal)
 
     if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge,
@@ -2410,15 +2411,14 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
         # numpysave(ar,iname)#save for comparison before
         chunks = image_edge_search_on_line(o, ar, i)
         iname = get_cache_path(o) + "_pencilthres_comp.exr"
+
         log.info("New Pencil Strategy")
 
-    # ##crop pixels that are on outer borders
+    # crop pixels that are on outer borders
     for chi in range(len(chunks) - 1, -1, -1):
         chunk = chunks[chi]
         chunk.clip_points(o.min.x, o.max.x, o.min.y, o.max.y)
-        # for si in range(len(points) - 1, -1, -1):
-        #     if not (o.min.x < points[si][0] < o.max.x and o.min.y < points[si][1] < o.max.y):
-        #         points.pop(si)
+
         if chunk.count() < 2:
             chunks.pop(chi)
 
@@ -2449,18 +2449,14 @@ def crazy_stroke_image(o):
     # this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
-    # ceil((o.cutter_diameter/12)/o.optimisation.pixsize)
     r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)
     d = 2 * r
     coef = 0.75
-
     ar = o.offset_image.copy()
     maxarx = ar.shape[0]
     maxary = ar.shape[1]
-
     cutterArray = get_circle_binary(r)
     cutterArrayNegative = -cutterArray
-
     cutterimagepix = cutterArray.sum()
     # a threshold which says if it is valuable to cut in a direction
     satisfypix = cutterimagepix * o.crazy_threshold_1
@@ -2470,11 +2466,14 @@ def crazy_stroke_image(o):
     totpix = startpix
     chunk_builders = []
     xs = indices[0][0] - r
+
     if xs < r:
         xs = r
     ys = indices[1][0] - r
+
     if ys < r:
         ys = r
+
     nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
     log.info(indices)
     log.info(f"{indices[0][0]}, {indices[1][0]}")
@@ -2498,6 +2497,7 @@ def crazy_stroke_image(o):
     anglerange = [-pi, pi]
     testangleinit = 0
     angleincrement = 0.05
+
     if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW") or (
         o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW"
     ):
@@ -2510,6 +2510,7 @@ def crazy_stroke_image(o):
         anglerange = [0, pi]
         testangleinit = -1
         angleincrement = angleincrement
+
     while totpix > 0 and totaltests < maxtotaltests:  # a ratio when the algorithm is allowed to end
         success = False
         # define a vector which gets varied throughout the testing, growing and growing angle to sides.
@@ -2520,6 +2521,7 @@ def crazy_stroke_image(o):
         while not success:
             xs = nchunk.points[-1][0] + int(testvect.x)
             ys = nchunk.points[-1][1] + int(testvect.y)
+
             if xs > r + 1 and xs < ar.shape[0] - r - 1 and ys > r + 1 and ys < ar.shape[1] - r - 1:
                 testar = ar[xs - r : xs - r + d, ys - r : ys - r + d] * cutterArray
                 if 0:
@@ -2537,9 +2539,11 @@ def crazy_stroke_image(o):
                 v = Vector((cx - r, cy - r))
                 angle = testvect.to_2d().angle_signed(v)
                 # this could be righthanded milling? lets see :)
+
                 if anglerange[0] < angle < anglerange[1]:
                     if toomuchpix > eatpix > satisfypix:
                         success = True
+
             if success:
                 nchunk.points.append([xs, ys])
                 lastvect = testvect
@@ -2548,6 +2552,7 @@ def crazy_stroke_image(o):
                 ] * (-cutterArray)
                 totpix -= eatpix
                 itests = 0
+
                 if 0:
                     log.info("Success")
                     log.info(f"{xs}, {ys}, {testlength}, {testangle}")
@@ -2561,6 +2566,7 @@ def crazy_stroke_image(o):
                 #  So values closer to toomuchpix are obtained rather than satisfypix
                 testvect = lastvect.normalized() * testlength
                 right = True
+
                 if testangleinit == 0:  # meander
                     if testleftright:
                         testangle = -testangle
@@ -2584,25 +2590,22 @@ def crazy_stroke_image(o):
                     testvect.y = maxary - r
 
                 rot.z = testangle
-
                 testvect.rotate(rot)
-                # if 0:
-                #     print(xs, ys, testlength, testangle)
-                #     print(lastvect)
-                #     print(testvect)
-                #     print(totpix)
+
             itests += 1
             totaltests += 1
 
             if itests > maxtests or testlength > r * 1.5:
-                # print('resetting location')
                 indices = ar.nonzero()
                 chunk_builders.append(nchunk)
+
                 if len(indices[0]) > 0:
                     xs = indices[0][0] - r
+
                     if xs < r:
                         xs = r
                     ys = indices[1][0] - r
+
                     if ys < r:
                         ys = r
                     nchunk = CamPathChunkBuilder([(xs, ys)])  # startposition
@@ -2617,21 +2620,26 @@ def crazy_stroke_image(o):
                 success = True
                 itests = 0
         i += 1
+
         if i % 100 == 0:
             log.info("100 Succesfull Tests Done")
             totpix = ar.sum()
             log.info(totpix)
             log.info(totaltests)
             i = 0
+
     chunk_builders.append(nchunk)
+
     for ch in chunk_builders:
         ch = ch.points
+
         for i in range(0, len(ch)):
             ch[i] = (
                 (ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
                 (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny,
                 0,
             )
+
     return [c.to_chunk() for c in chunk_builders]
 
 
@@ -2790,13 +2798,11 @@ def crazy_stroke_image_binary(o, ar, avoidar):
             if success:
                 # fist, try to inter/extrapolate the recieved results.
                 closest = 100000000
-                # print('evaluate')
+
                 for s in foundsolutions:
-                    # print(abs(s[1]-optimalpix),optimalpix,abs(s[1]))
                     if abs(s[1] - optimalpix) < closest:
                         bestsolution = s
                         closest = abs(s[1] - optimalpix)
-                # print('closest',closest)
 
                 # v1#+(v2-v1)*ratio#rewriting with interpolated vect.
                 testvect = bestsolution[0]
@@ -2810,13 +2816,6 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                 )
                 totpix -= bestsolution[1]
                 itests = 0
-                # if 0:
-                #     print('success')
-                #     print(testar.sum(), satisfypix, toomuchpix)
-                #     print(xs, ys, testlength, testangle)
-                #     print(lastvect)
-                #     print(testvect)
-                #     print(itests)
                 totaltests = 0
             else:
                 # TODO: after all angles were tested into material higher than toomuchpix,
@@ -2840,7 +2839,7 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                 ) > 2 * pi:  # /testlength
                     testangle = testangleinit
                     testlength += r / 4.0
-                # print(itests,testlength)
+
                 if nchunk.points[-1][0] + testvect.x < r:
                     testvect.x = r
                 if nchunk.points[-1][1] + testvect.y < r:
@@ -2851,22 +2850,12 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                     testvect.y = maxary - r
 
                 rot.z = testangle
-                # if abs(testvect.normalized().y<-0.99):
-                #   print(testvect,rot.z)
                 testvect.rotate(rot)
 
-                # if 0:
-                #     print(xs, ys, testlength, testangle)
-                #     print(lastvect)
-                #     print(testvect)
-                #     print(totpix)
                 if itests > maxtests or testlength > r * 1.5:
-                    # if len(foundsolutions)>0:
-
-                    # print('resetting location')
-                    # print(testlength,r)
                     andar = np.logical_and(ar, np.logical_not(avoidar))
                     indices = andar.nonzero()
+
                     if len(nchunk.points) > 1:
                         parent_child_distance([nchunk], chunks, o, distance=r)
                         chunk_builders.append(nchunk)
@@ -2874,11 +2863,10 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                     if totpix > startpix * 0.001:
                         found = False
                         ftests = 0
+
                         while not found:
                             # look for next start point:
                             index = random.randint(0, len(indices[0]) - 1)
-                            # print(index,len(indices[0]))
-                            # print(indices[index])
                             xs = indices[0][index]
                             ys = indices[1][index]
                             v = Vector((r - 1, 0, 0))
@@ -2887,21 +2875,19 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                             v.rotate(e)
                             xs += int(v.x)
                             ys += int(v.y)
+
                             if xs < r:
                                 xs = r
                             if ys < r:
                                 ys = r
                             if avoidar[xs, ys] == 0:
-                                # print(toomuchpix,ar[xs-r:xs-r+d,ys-r:ys-r+d].sum()*pi/4,satisfypix)
                                 testarsum = (
                                     ar[xs - r : xs - r + d, ys - r : ys - r + d].sum() * pi / 4
                                 )
-                                if toomuchpix > testarsum > 0 or (
-                                    totpix < startpix * 0.025
-                                ):  # 0 now instead of satisfypix
-                                    found = True
-                                    # print(xs,ys,indices[0][index],indices[1][index])
 
+                                if toomuchpix > testarsum > 0 or (totpix < startpix * 0.025):
+                                    # 0 now instead of satisfypix
+                                    found = True
                                     nchunk = CamPathChunk([(xs, ys)])  # startposition
                                     ar[xs - r : xs + r, ys - r : ys + r] = (
                                         ar[xs - r : xs + r, ys - r : ys + r] * cutterArrayNegative
@@ -2922,18 +2908,21 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                     success = True
                     itests = 0
         i += 1
+
         if i % 100 == 0:
             log.info("100 Succesfull Tests Done")
             totpix = ar.sum()
             log.info(totpix)
             log.info(totaltests)
             i = 0
+
     if len(nchunk.points) > 1:
         parent_child_distance([nchunk], chunks, o, distance=r)
         chunk_builders.append(nchunk)
 
     for ch in chunk_builders:
         ch = ch.points
+
         for i in range(0, len(ch)):
             ch[i] = (
                 (ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
@@ -2970,45 +2959,44 @@ def image_to_chunks(o, image, with_border=False):
     t = time.time()
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pixsize = o.optimisation.pixsize
-
     image = image.astype(np.uint8)
-
-    # progress('detecting outline')
     edges = []
     ar = image[:, :-1] - image[:, 1:]
-
     indices1 = ar.nonzero()
     borderspread = 2
-    # o.cutter_diameter/o.optimisation.pixsize#when the border was excluded precisely, sometimes it did remove some silhouette parts
+    # when the border was excluded precisely, sometimes it did remove some silhouette parts
     r = o.borderwidth - borderspread
     # to prevent outline of the border was 3 before and also (o.cutter_diameter/2)/pixsize+o.borderwidth
     if with_border:
-        #   print('border')
         r = 0
     w = image.shape[0]
     h = image.shape[1]
     coef = 0.75  # compensates for imprecisions
+
     for id in range(0, len(indices1[0])):
         a = indices1[0][id]
         b = indices1[1][id]
+
         if r < a < w - r and r < b < h - r:
             edges.append(((a - 1, b), (a, b)))
 
     ar = image[:-1, :] - image[1:, :]
     indices2 = ar.nonzero()
+
     for id in range(0, len(indices2[0])):
         a = indices2[0][id]
         b = indices2[1][id]
+
         if r < a < w - r and r < b < h - r:
             edges.append(((a, b - 1), (a, b)))
 
     polychunks = []
-    # progress(len(edges))
-
     d = {}
+
     for e in edges:
         d[e[0]] = []
         d[e[1]] = []
+
     for e in edges:
         verts1 = d[e[0]]
         verts2 = d[e[1]]
@@ -3017,16 +3005,13 @@ def image_to_chunks(o, image, with_border=False):
 
     if len(edges) > 0:
         ch = [edges[0][0], edges[0][1]]  # first and his reference
-
         d[edges[0][0]].remove(edges[0][1])
-
         i = 0
         specialcase = 0
-        # progress('condensing outline')
+
         while len(d) > 0 and i < 20000000:
             verts = d.get(ch[-1], [])
             closed = False
-            # print(verts)
 
             if len(verts) <= 1:  # this will be good for not closed loops...some time
                 closed = True
@@ -3043,6 +3028,7 @@ def image_to_chunks(o, image, with_border=False):
                 comesfromleft = v1[0] > v2[0]
                 comesfromright = v1[0] < v2[0]
                 take = False
+
                 for v in verts:
                     if v[0] == ch[-2][0] and v[1] == ch[-2][1]:
                         pass
@@ -3076,6 +3062,7 @@ def image_to_chunks(o, image, with_border=False):
                 for vi in range(len(verts) - 1, -1, -1):
                     if not done:
                         v = verts[vi]
+
                         if v[0] == ch[-2][0] and v[1] == ch[-2][1]:
                             pass
                             verts.remove(v)
@@ -3089,25 +3076,26 @@ def image_to_chunks(o, image, with_border=False):
 
             if closed:
                 polychunks.append(ch)
+
                 for si, s in enumerate(ch):
-                    # print(si)
                     if si > 0:  # first one was popped
                         if d.get(s, None) is not None and len(d[s]) == 0:
                             # this makes the case much less probable, but i think not impossible
                             d.pop(s)
                 if len(d) > 0:
                     newch = False
+
                     while not newch:
                         v1 = d.popitem()
+
                         if len(v1[1]) > 0:
                             ch = [v1[0], v1[1][0]]
                             newch = True
 
-            # print(' la problema grandiosa')
             i += 1
+
             if i % 10000 == 0:
                 log.info(len(ch))
-                # print(polychunks)
                 log.info(i)
 
         vecchunks = []
@@ -3115,6 +3103,7 @@ def image_to_chunks(o, image, with_border=False):
         for ch in polychunks:
             vecchunk = []
             vecchunks.append(vecchunk)
+
             for i in range(0, len(ch)):
                 ch[i] = (
                     (ch[i][0] + coef - o.borderwidth) * pixsize + minx,
@@ -3122,9 +3111,7 @@ def image_to_chunks(o, image, with_border=False):
                     0,
                 )
                 vecchunk.append(Vector(ch[i]))
-        # print('optimizing outline')
 
-        # print('directsimplify')
         reduxratio = 1.25  # was 1.25
         soptions = [
             "distance",
@@ -3134,10 +3121,11 @@ def image_to_chunks(o, image, with_border=False):
             o.optimisation.pixsize * reduxratio,
         ]
         nchunks = []
+
         for i, ch in enumerate(vecchunks):
             s = curve_simplify.simplify_RDP(ch, soptions)
-            # print(s)
             nch = CamPathChunkBuilder([])
+
             for i in range(0, len(s)):
                 nch.points.append((ch[s[i]].x, ch[s[i]].y))
 
