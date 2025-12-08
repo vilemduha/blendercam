@@ -1176,7 +1176,6 @@ async def medial_axis(o):
         filtered_points = []
 
         log.info("Filtering Points...")
-        log.info("-")
 
         newIdx = 0
         point_count = len(points)
@@ -1215,6 +1214,7 @@ async def medial_axis(o):
                 filtered_points.append((point[0], point[1], z))
                 newIdx += 1
 
+        log.info("-")
         log.info("Filtering Edges...")
         log.info("-")
 

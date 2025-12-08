@@ -4,6 +4,7 @@ Generate and Export G-Code based on scene, machine, chain, operation and path se
 """
 
 # G-code Generaton
+import importlib
 from math import (
     ceil,
     floor,
@@ -161,48 +162,70 @@ def export_gcode_path(filename, vertslist, operations):
     else:
         basefilename = s.cam_names.default_export_location + safe_filename(filename)
 
-    extension = ".tap"
-    if m.post_processor == "ISO":
-        from .post_processors import iso as postprocessor
-    if m.post_processor == "MACH3":
-        from .post_processors import mach3 as postprocessor
-    elif m.post_processor == "EMC":
-        extension = ".ngc"
-        from .post_processors import emc2b as postprocessor
-    elif m.post_processor == "FADAL":
-        extension = ".tap"
-        from .post_processors import fadal as postprocessor
-    elif m.post_processor == "GRBL":
-        extension = ".gcode"
-        from .post_processors import grbl as postprocessor
-    elif m.post_processor == "HM50":
-        from .post_processors import hm50 as postprocessor
-    elif m.post_processor == "HEIDENHAIN":
-        extension = ".H"
-        from .post_processors import heiden as postprocessor
-    elif m.post_processor == "HEIDENHAIN530":
-        extension = ".H"
-        from .post_processors import heiden530 as postprocessor
-    elif m.post_processor == "TNC151":
-        from .post_processors import tnc151 as postprocessor
-    elif m.post_processor == "SIEGKX1":
-        from .post_processors import siegkx1 as postprocessor
-    elif m.post_processor == "CENTROID":
-        from .post_processors import centroid1 as postprocessor
-    elif m.post_processor == "ANILAM":
-        from .post_processors import anilam_crusader_m as postprocessor
-    elif m.post_processor == "GRAVOS":
-        extension = ".nc"
-        from .post_processors import gravos as postprocessor
-    elif m.post_processor == "WIN-PC":
-        extension = ".din"
-        from .post_processors import winpc as postprocessor
-    elif m.post_processor == "SHOPBOT MTC":
-        extension = ".sbp"
-        from .post_processors import shopbot_mtc as postprocessor
-    elif m.post_processor == "LYNX_OTTER_O":
-        extension = ".nc"
-        from .post_processors import lynx_otter_o as postprocessor
+    processor_by_machine = {
+        "ISO": (".post_processors.iso", ".tap"),
+        "MACH3": (".post_processors.mach3", ".tap"),
+        "EMC": (".post_processors.emc2b", ".ngc"),
+        "FADAL": (".post_processors.fadal", ".tap"),
+        "GRBL": (".post_processors.grbl", ".gcode"),
+        "HM50": (".post_processors.hm50", ".tap"),
+        "HEIDENHAIN": (".post_processors.heiden", ".H"),
+        "HEIDENHAIN530": (".post_processors.heiden530", ".H"),
+        "TNC151": (".post_processors.tnc151", ".tap"),
+        "SIEGKX1": (".post_processors.siegkx1", ".tap"),
+        "CENTROID": (".post_processors.centroid1", ".tap"),
+        "ANILAM": (".post_processors.anilam_crusader_m", ".tap"),
+        "GRAVOS": (".post_processors.gravos", ".nc"),
+        "WIN-PC": (".post_processors.winpc", ".din"),
+        "SHOPBOT MTC": (".post_processors.shopbot_mtc", ".sbp"),
+        "LYNX_OTTER_O": (".post_processors.lynx_otter_o", ".nc"),
+    }
+
+    postprocessor = importlib.import_module(processor_by_machine[m.post_processor][0], __package__)
+    extension = processor_by_machine[m.post_processor][1]
+
+    # extension = ".tap"
+    # if m.post_processor == "ISO":
+    #     from .post_processors import iso as postprocessor
+    # if m.post_processor == "MACH3":
+    #     from .post_processors import mach3 as postprocessor
+    # elif m.post_processor == "EMC":
+    #     extension = ".ngc"
+    #     from .post_processors import emc2b as postprocessor
+    # elif m.post_processor == "FADAL":
+    #     extension = ".tap"
+    #     from .post_processors import fadal as postprocessor
+    # elif m.post_processor == "GRBL":
+    #     extension = ".gcode"
+    #     from .post_processors import grbl as postprocessor
+    # elif m.post_processor == "HM50":
+    #     from .post_processors import hm50 as postprocessor
+    # elif m.post_processor == "HEIDENHAIN":
+    #     extension = ".H"
+    #     from .post_processors import heiden as postprocessor
+    # elif m.post_processor == "HEIDENHAIN530":
+    #     extension = ".H"
+    #     from .post_processors import heiden530 as postprocessor
+    # elif m.post_processor == "TNC151":
+    #     from .post_processors import tnc151 as postprocessor
+    # elif m.post_processor == "SIEGKX1":
+    #     from .post_processors import siegkx1 as postprocessor
+    # elif m.post_processor == "CENTROID":
+    #     from .post_processors import centroid1 as postprocessor
+    # elif m.post_processor == "ANILAM":
+    #     from .post_processors import anilam_crusader_m as postprocessor
+    # elif m.post_processor == "GRAVOS":
+    #     extension = ".nc"
+    #     from .post_processors import gravos as postprocessor
+    # elif m.post_processor == "WIN-PC":
+    #     extension = ".din"
+    #     from .post_processors import winpc as postprocessor
+    # elif m.post_processor == "SHOPBOT MTC":
+    #     extension = ".sbp"
+    #     from .post_processors import shopbot_mtc as postprocessor
+    # elif m.post_processor == "LYNX_OTTER_O":
+    #     extension = ".nc"
+    #     from .post_processors import lynx_otter_o as postprocessor
 
     if s.unit_settings.system == "METRIC":
         unitcorr = METRIC_CORRECTION

@@ -27,9 +27,9 @@ for i, operation in enumerate(scene.cam_operations):
     complete_border = len(complete_string) * "#"
 
     print(".")
-    print("~")
-    print("~~")
-    print("~~~")
+    print("#")
+    print("##")
+    print("###")
     print(generate_border)
     print(generate_string)
     print(generate_border)
@@ -40,9 +40,9 @@ for i, operation in enumerate(scene.cam_operations):
     print(complete_border)
     print(complete_string)
     print(complete_border)
-    print("~~~")
-    print("~~")
-    print("~")
+    print("###")
+    print("##")
+    print("#")
     print(".")
 
 sys.exit(0)
