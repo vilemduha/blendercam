@@ -4,7 +4,7 @@ Generate and Export G-Code based on scene, machine, chain, operation and path se
 """
 
 # G-code Generaton
-import importlib
+from importlib import import_module
 from math import (
     ceil,
     floor,
@@ -14,7 +14,7 @@ from math import (
 import time
 
 import numpy
-from shapely.geometry import polygon as spolygon
+from shapely.geometry import Polygon
 
 import bpy
 from mathutils import Euler, Vector
@@ -129,7 +129,7 @@ def export_gcode_path(filename, vertslist, operations):
         None: This function does not return a value; it writes the G-code to a file.
     """
     log.debug("EXPORT")
-    progress("Exporting G-code File")
+    progress("~ Exporting G-code File ~")
 
     t = time.time()
     s = bpy.context.scene
@@ -162,70 +162,28 @@ def export_gcode_path(filename, vertslist, operations):
     else:
         basefilename = s.cam_names.default_export_location + safe_filename(filename)
 
-    processor_by_machine = {
-        "ISO": (".post_processors.iso", ".tap"),
-        "MACH3": (".post_processors.mach3", ".tap"),
-        "EMC": (".post_processors.emc2b", ".ngc"),
-        "FADAL": (".post_processors.fadal", ".tap"),
-        "GRBL": (".post_processors.grbl", ".gcode"),
-        "HM50": (".post_processors.hm50", ".tap"),
-        "HEIDENHAIN": (".post_processors.heiden", ".H"),
-        "HEIDENHAIN530": (".post_processors.heiden530", ".H"),
-        "TNC151": (".post_processors.tnc151", ".tap"),
-        "SIEGKX1": (".post_processors.siegkx1", ".tap"),
-        "CENTROID": (".post_processors.centroid1", ".tap"),
-        "ANILAM": (".post_processors.anilam_crusader_m", ".tap"),
-        "GRAVOS": (".post_processors.gravos", ".nc"),
-        "WIN-PC": (".post_processors.winpc", ".din"),
-        "SHOPBOT MTC": (".post_processors.shopbot_mtc", ".sbp"),
-        "LYNX_OTTER_O": (".post_processors.lynx_otter_o", ".nc"),
+    processor_extension = {
+        "ANILAM": ("anilam_crusader_m", ".tap"),
+        "CENTROID": ("centroid1", ".tap"),
+        "EMC": ("emc2b", ".ngc"),
+        "FADAL": ("fadal", ".tap"),
+        "GRAVOS": ("gravos", ".nc"),
+        "GRBL": ("grbl", ".gcode"),
+        "HM50": ("hm50", ".tap"),
+        "HEIDENHAIN": ("heiden", ".H"),
+        "HEIDENHAIN530": ("heiden530", ".H"),
+        "ISO": ("iso", ".tap"),
+        "LYNX_OTTER_O": ("lynx_otter_o", ".nc"),
+        "MACH3": ("mach3", ".tap"),
+        "SHOPBOT MTC": ("shopbot_mtc", ".sbp"),
+        "SIEGKX1": ("siegkx1", ".tap"),
+        "TNC151": ("tnc151", ".tap"),
+        "WIN-PC": ("winpc", ".din"),
     }
 
-    postprocessor = importlib.import_module(processor_by_machine[m.post_processor][0], __package__)
-    extension = processor_by_machine[m.post_processor][1]
-
-    # extension = ".tap"
-    # if m.post_processor == "ISO":
-    #     from .post_processors import iso as postprocessor
-    # if m.post_processor == "MACH3":
-    #     from .post_processors import mach3 as postprocessor
-    # elif m.post_processor == "EMC":
-    #     extension = ".ngc"
-    #     from .post_processors import emc2b as postprocessor
-    # elif m.post_processor == "FADAL":
-    #     extension = ".tap"
-    #     from .post_processors import fadal as postprocessor
-    # elif m.post_processor == "GRBL":
-    #     extension = ".gcode"
-    #     from .post_processors import grbl as postprocessor
-    # elif m.post_processor == "HM50":
-    #     from .post_processors import hm50 as postprocessor
-    # elif m.post_processor == "HEIDENHAIN":
-    #     extension = ".H"
-    #     from .post_processors import heiden as postprocessor
-    # elif m.post_processor == "HEIDENHAIN530":
-    #     extension = ".H"
-    #     from .post_processors import heiden530 as postprocessor
-    # elif m.post_processor == "TNC151":
-    #     from .post_processors import tnc151 as postprocessor
-    # elif m.post_processor == "SIEGKX1":
-    #     from .post_processors import siegkx1 as postprocessor
-    # elif m.post_processor == "CENTROID":
-    #     from .post_processors import centroid1 as postprocessor
-    # elif m.post_processor == "ANILAM":
-    #     from .post_processors import anilam_crusader_m as postprocessor
-    # elif m.post_processor == "GRAVOS":
-    #     extension = ".nc"
-    #     from .post_processors import gravos as postprocessor
-    # elif m.post_processor == "WIN-PC":
-    #     extension = ".din"
-    #     from .post_processors import winpc as postprocessor
-    # elif m.post_processor == "SHOPBOT MTC":
-    #     extension = ".sbp"
-    #     from .post_processors import shopbot_mtc as postprocessor
-    # elif m.post_processor == "LYNX_OTTER_O":
-    #     extension = ".nc"
-    #     from .post_processors import lynx_otter_o as postprocessor
+    module = f".post_processors.{processor_extension[m.post_processor][0]}"
+    postprocessor = import_module(module, __package__)
+    extension = processor_extension[m.post_processor][1]
 
     if s.unit_settings.system == "METRIC":
         unitcorr = METRIC_CORRECTION
@@ -233,6 +191,7 @@ def export_gcode_path(filename, vertslist, operations):
         unitcorr = IMPERIAL_CORRECTION
     else:
         unitcorr = 1
+
     rotcorr = ROTATION_CORRECTION
 
     def start_new_file():
@@ -250,17 +209,15 @@ def export_gcode_path(filename, vertslist, operations):
             G-code generation.
         """
 
-        fileindex = ""
-        if split:
-            fileindex = "_" + str(findex)
+        fileindex = "_" + str(findex) if split else ""
         filename = basefilename + fileindex + extension
+
         log.info(f"Writing: {filename}")
         log.info("-")
 
         c = postprocessor.Creator()
 
         # process user overrides for post processor settings
-
         if isinstance(c, iso.Creator):
             c.output_block_numbers = m.output_block_numbers
             c.start_block_number = m.start_block_number
@@ -491,7 +448,6 @@ def export_gcode_path(filename, vertslist, operations):
             if fadjust:
                 fadjustval = shapek.data[vi].co.z / scale_graph
 
-            # v=(v.x*unitcorr,v.y*unitcorr,v.z*unitcorr)
             vect = v - last
             l = vect.length
             if vi > 0 and l > 0 and downvector.angle(vect) < plungelimit:
@@ -645,7 +601,7 @@ async def get_path(context, operation):
     """
     # should do all path calculations.
     t = time.process_time()
-    # print('ahoj0')
+
     if operation.feedrate > context.scene.cam_machine.feedrate_max:
         raise CamException("Operation Feedrate is greater than Machine Maximum!")
 
@@ -653,8 +609,7 @@ async def get_path(context, operation):
     # - although it can save a lot of time during calculation...
 
     chd = get_change_data(operation)
-    # print(chd)
-    # print(o.change_data)
+
     if operation.change_data != chd:  # or 1:
         operation.update_offset_image_tag = True
         operation.update_z_buffer_image_tag = True
@@ -762,14 +717,13 @@ def check_memory_limit(o):
             return a value.
     """
 
-    # getBounds(o)
     sx = o.max.x - o.min.x
     sy = o.max.y - o.min.y
     resx = sx / o.optimisation.pixsize
     resy = sy / o.optimisation.pixsize
     res = resx * resy
     limit = o.optimisation.imgres_limit * 1000000
-    # print('co se to deje')
+
     if res > limit:
         ratio = res / limit
         o.optimisation.pixsize = o.optimisation.pixsize * sqrt(ratio)
@@ -875,8 +829,6 @@ async def get_path_3_axis(context, operation):
             if o.strategy in ["BLOCK", "SPIRAL", "CIRCLES"]:
                 pathSamples = await connect_chunks_low(pathSamples, o)
 
-        # print (minz)
-
         chunks = []
         layers = strategy.get_layers(o, o.max_z, o.min.z)
 
@@ -884,11 +836,10 @@ async def get_path_3_axis(context, operation):
         chunks.extend(await sample_chunks(o, pathSamples, layers))
         log.info("Sampling Finished Successfully")
 
-        if o.strategy == "PENCIL":  # and bpy.app.debug_value==-3:
+        if o.strategy == "PENCIL":
             chunks = chunks_coherency(chunks)
             log.info("Coherency Check")
 
-        # and not o.movement.parallel_step_back:
         if o.strategy in ["PARALLEL", "CROSS", "PENCIL", "OUTLINEFILL"]:
             log.info("Sorting")
             chunks = await sort_chunks(chunks, o)
@@ -897,12 +848,11 @@ async def get_path_3_axis(context, operation):
         if o.movement.ramp:
             for ch in chunks:
                 ch.ramp_zig_zag(ch.zstart, None, o)
-        # print(chunks)
+
         if o.strategy == "CARVE":
             for ch in chunks:
                 ch.offset_z(-o.carve_depth)
-        #                for vi in range(0, len(ch.points)):
-        #                    ch.points[vi] = (ch.points[vi][0], ch.points[vi][1], ch.points[vi][2] - o.carve_depth)
+
         if o.use_bridges:
             log.info(chunks)
             for bridge_chunk in chunks:
@@ -940,7 +890,7 @@ async def get_path_3_axis(context, operation):
         layers = [[layerstart, layerend]]
         #######################
         nslices = ceil(abs((o.min_z - o.max_z) / o.slice_detail))
-        lastslice = spolygon.Polygon()  # polyversion
+        lastslice = Polygon()  # polyversion
         layerstepinc = 0
 
         slicesfilled = 0
@@ -959,7 +909,7 @@ async def get_path_3_axis(context, operation):
             islice = o.offset_image > z
             slicepolys = image_to_shapely(o, islice, with_border=True)
 
-            poly = spolygon.Polygon()  # polygversion
+            poly = Polygon()  # polygversion
             lastchunks = []
 
             for p in slicepolys.geoms:
@@ -987,10 +937,11 @@ async def get_path_3_axis(context, operation):
                             restpoly = poly.difference(lastslice)
                         else:
                             restpoly = lastslice.difference(poly)
-                    # print('filling between')
+
                     if (not o.inverse and poly.is_empty and slicesfilled > 0) or (
                         o.inverse and not poly.is_empty and slicesfilled == 1
-                    ):  # first slice fill
+                    ):
+                        # first slice fill
                         restpoly = lastslice
 
                     restpoly = restpoly.buffer(
@@ -1011,13 +962,12 @@ async def get_path_3_axis(context, operation):
                         slicechunks.extend(nchunks)
                         parent_child_distance(lastchunks, nchunks, o)
                         lastchunks = nchunks
-                        # slicechunks.extend(polyToChunks(restpoly,z))
                         restpoly = restpoly.buffer(
                             -o.distance_between_paths, resolution=o.optimisation.circle_detail
                         )
 
                         i += 1
-                # print(i)
+
                 i = 0
                 #  fill layers and last slice, last slice with inverse is not working yet
                 #  - inverse millings end now always on 0 so filling ambient does have no sense.
@@ -1039,9 +989,8 @@ async def get_path_3_axis(context, operation):
                     )
 
                     i = 0
-                    # 'GeometryCollection':#len(restpoly.boundary.coords)>0:
+
                     while not restpoly.is_empty:
-                        # print(i)
                         nchunks = shapely_to_chunks(restpoly, fillz + o.skin)
                         #########################
                         nchunks = limit_chunks(nchunks, o, force=True)
@@ -1077,6 +1026,7 @@ async def get_path_3_axis(context, operation):
 
     elif o.strategy == "MEDIAL_AXIS":
         await strategy.medial_axis(o)
+
     await progress_async(f"Done", time.time() - tw, "s")
 
 

@@ -64,15 +64,15 @@ def get_path_pattern_parallel(o, angle):
     dim = (xdim + ydim) / 2.0
     e = Euler((0, 0, angle))
     reverse = False
+
+    # Original pattern method, slower, but well tested
     if bpy.app.debug_value == 0:  # by default off
-        # this is the original pattern method, slower, but well tested:
         dirvect = Vector((0, 1, 0))
         dirvect.rotate(e)
         dirvect.normalize()
         dirvect *= pathstep
-        for a in range(
-            int(-dim / pathd), int(dim / pathd)
-        ):  # this is highly ineffective, computes path2x the area needed...
+        for a in range(int(-dim / pathd), int(dim / pathd)):
+            # this is highly ineffective, computes path2x the area needed...
             chunk = CamPathChunkBuilder([])
             v = Vector((a * pathd, int(-dim / pathstep) * pathstep, 0))
             v.rotate(e)
@@ -109,8 +109,9 @@ def get_path_pattern_parallel(o, angle):
                 pathchunks[-2] = changechunk
 
             reverse = not reverse
-        # print (chunk.points)
-    else:  # alternative algorithm with numpy, didn't work as should so blocked now...
+
+    # Alternative pattern algorithm using numpy, didn't work as should so blocked now...
+    else:
         v = Vector((0, 1, 0))
         v.rotate(e)
         e1 = Euler((0, 0, -pi / 2))
@@ -131,24 +132,17 @@ def get_path_pattern_parallel(o, angle):
                 numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.y,
                 numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * 0 + zlevel,
             )
-        )  # rotate this first
+        )
+        # rotate this first
         progress(axis_along_paths)
         chunks = []
         for a in range(0, len(axis_across_paths[0])):
-            # progress(chunks[a,...,...].shape)
-            # progress(axis_along_paths.shape)
             nax = axis_along_paths.copy()
-            # progress(nax.shape)
             nax[0] += axis_across_paths[0][a]
             nax[1] += axis_across_paths[1][a]
-            # progress(a)
-            # progress(nax.shape)
-            # progress(chunks.shape)
-            # progress(chunks[...,a,...].shape)
             xfitmin = nax[0] > o.min.x
             xfitmax = nax[0] < o.max.x
             xfit = xfitmin & xfitmax
-            # print(xfit,nax)
             nax = numpy.array([nax[0][xfit], nax[1][xfit], nax[2][xfit]])
             yfitmin = nax[1] > o.min.y
             yfitmax = nax[1] < o.max.y
@@ -160,7 +154,7 @@ def get_path_pattern_parallel(o, angle):
         for ch in chunks:
             ch = ch.tolist()
             pathchunks.append(CamPathChunk(ch))
-        # print (ch)
+
     return pathchunks
 
 

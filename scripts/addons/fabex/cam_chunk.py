@@ -98,9 +98,7 @@ from .utilities.simple_utils import (
 # for building points - stores points as lists for easy insert /append behaviour
 class CamPathChunkBuilder:
     def __init__(self, inpoints=None, startpoints=None, endpoints=None, rotations=None):
-        if inpoints is None:
-            inpoints = []
-        self.points = inpoints
+        self.points = inpoints if inpoints is None else []
         self.startpoints = startpoints or []
         self.endpoints = endpoints or []
         self.rotations = rotations or []
@@ -301,7 +299,6 @@ class CamPathChunk:
 
     def get_length(self):
         # computes length of the chunk - in 3d
-
         point_differences = self.points[0:-1, :] - self.points[1:, :]
         distances = np.linalg.norm(point_differences, axis=1)
         self.length = np.sum(distances)
