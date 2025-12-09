@@ -98,7 +98,7 @@ from .utilities.simple_utils import (
 # for building points - stores points as lists for easy insert /append behaviour
 class CamPathChunkBuilder:
     def __init__(self, inpoints=None, startpoints=None, endpoints=None, rotations=None):
-        self.points = inpoints if inpoints is None else []
+        self.points = [] if inpoints is None else inpoints
         self.startpoints = startpoints or []
         self.endpoints = endpoints or []
         self.rotations = rotations or []
