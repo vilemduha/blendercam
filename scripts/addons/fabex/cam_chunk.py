@@ -804,6 +804,7 @@ def limit_chunks(chunks, o, force=False):  # TODO: this should at least add poin
 
 
 def mesh_from_curve_to_chunk(object):
+    object = mesh_from_curve(object) if object.type == "CURVE" else object
     mesh = object.data
     # print('detecting contours from curve')
     chunks = []
