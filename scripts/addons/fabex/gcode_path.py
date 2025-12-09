@@ -606,9 +606,6 @@ async def get_path(context, operation):
     if operation.feedrate > context.scene.cam_machine.feedrate_max:
         raise CamException("Operation Feedrate is greater than Machine Maximum!")
 
-    if operation.feedrate > context.scene.cam_machine.feedrate_max:
-        raise CamException("Operation Feedrate is greater than Machine Maximum!")
-
     # these tags are for caching of some of the results. Not working well still
     # - although it can save a lot of time during calculation...
 

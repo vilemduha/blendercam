@@ -66,7 +66,10 @@ def get_path_pattern_parallel(o, angle):
     reverse = False
 
     # Original pattern method, slower, but well tested
-    if bpy.app.debug_value == 0:  # by default off
+    # bpy.app.debug_value has a default value of 0 (False), so
+    # this check will always pass unless Blender is launched
+    # with the correct command line options: -d, --debug
+    if bpy.app.debug_value == 0:
         dirvect = Vector((0, 1, 0))
         dirvect.rotate(e)
         dirvect.normalize()
