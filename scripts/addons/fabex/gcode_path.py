@@ -37,6 +37,7 @@ from .cam_chunk import (
     crazy_stroke_image_binary,
     get_offset_image_cavities,
 )
+from .exception import CamException
 from .constants import (
     IMPERIAL_CORRECTION,
     METRIC_CORRECTION,
@@ -601,6 +602,9 @@ async def get_path(context, operation):
     """
     # should do all path calculations.
     t = time.process_time()
+
+    if operation.feedrate > context.scene.cam_machine.feedrate_max:
+        raise CamException("Operation Feedrate is greater than Machine Maximum!")
 
     if operation.feedrate > context.scene.cam_machine.feedrate_max:
         raise CamException("Operation Feedrate is greater than Machine Maximum!")
