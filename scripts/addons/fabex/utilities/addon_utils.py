@@ -322,13 +322,13 @@ def add_collections():
         if prefix(path_prefix):
             try:
                 paths_collection.objects[obj.name]
-            except RuntimeError:
+            except RuntimeError or KeyError:
                 paths_collection.objects.link(obj)
             paths_collection.objects.link(obj)
         if prefix(simulation_prefix):
             try:
                 simulations_collection.objects[obj.name]
-            except RuntimeError:
+            except RuntimeError or KeyError:
                 simulations_collection.objects.link(obj)
             simulations_collection.objects.link(obj)
         if prefix in ["bridge", path_prefix, simulation_prefix]:
