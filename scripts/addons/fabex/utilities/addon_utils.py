@@ -324,12 +324,10 @@ def add_collections():
                 paths_collection.objects[obj.name]
             except (RuntimeError, KeyError) as e:
                 paths_collection.objects.link(obj)
-            paths_collection.objects.link(obj)
         if prefix(simulation_prefix):
             try:
                 simulations_collection.objects[obj.name]
             except (RuntimeError, KeyError) as e:
                 simulations_collection.objects.link(obj)
-            simulations_collection.objects.link(obj)
         if prefix in ["bridge", path_prefix, simulation_prefix]:
             default_collection.objects.unlink(obj)
