@@ -62,11 +62,11 @@ def numpy_save(a, iname):
 
     i = numpy_to_image(a, inamebase)
 
-    r = bpy.context.scene.render
-
-    r.image_settings.file_format = "OPEN_EXR"
-    r.image_settings.color_mode = "BW"
-    r.image_settings.color_depth = "32"
+    render = bpy.context.scene.render
+    image_settings = render.image_settings
+    image_settings.file_format = "OPEN_EXR"
+    image_settings.color_mode = "BW"
+    image_settings.color_depth = "32"
 
     i.save_render(iname)
 
@@ -162,7 +162,10 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     # suffix as Blender seems to use the ".%03d" pattern to avoid creating duplicate ids.
     iname_59 = iname[:59]
 
-    log.info(f"numpy_to_image: iname:{iname}, width:{width}, height:{height}")
+    log.info("-")
+    log.info("~ Converting Numpy Array to Blender Image ~")
+    log.info(f"Name: {iname}")
+    log.info(f"Dimensions: {width}x{height}")
 
     def find_image(name: str, width: int, heigh: int) -> Optional[bpy.types.Image]:
         if name in bpy.data.images:
@@ -176,7 +179,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     image = find_image(iname, width, height) or find_image(iname_59, width, height)
 
     if image is None:
-        log.info(f"numpy_to_image: Creating a new image:{iname_59}")
+        log.info(f"Creating New Image: {iname_59}")
         result = bpy.ops.image.new(
             name=iname_59,
             width=width,
@@ -186,7 +189,7 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
             generated_type="BLANK",
             float=True,
         )
-        log.info(f"numpy_to_image: Image creation result:{result}")
+        log.info(f"Image Creation: {result}")
 
         # If 'iname_59' id didn't exist previously, then
         # it should have been created without changing its id.
@@ -199,7 +202,8 @@ def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
 
     image.pixels[:] = a[:]  # this gives big speedup!
 
-    log.info(f"numpy_to_image: Time:{str(time.time() - t)}")
+    log.info(f"Time: {str(time.time() - t)}")
+    log.info("-")
 
     return image
 
@@ -294,34 +298,45 @@ async def offset_area(o, samples):
         sourceArray = samples
         cutterArray = get_cutter_array(o, o.optimisation.pixsize)
 
-        # progress('image size', sourceArray.shape)
-
         width = len(sourceArray)
         height = len(sourceArray[0])
         cwidth = len(cutterArray)
         o.offset_image = numpy.full(shape=(width, height), fill_value=-10.0, dtype=numpy.double)
 
         t = time.time()
-
         m = int(cwidth / 2.0)
 
         if o.inverse:
             sourceArray = -sourceArray + minz
-        comparearea = o.offset_image[m : width - cwidth + m, m : height - cwidth + m]
-        # i=0
+        comparearea = o.offset_image[
+            m : width - cwidth + m,
+            m : height - cwidth + m,
+        ]
         cutterArrayNan = numpy.where(
             cutterArray > -10, cutterArray, numpy.full(cutterArray.shape, numpy.nan)
         )
+
         for y in range(0, 10):
             y1 = (y * comparearea.shape[1]) // 10
             y2 = ((y + 1) * comparearea.shape[1]) // 10
             _offset_inner_loop(
-                y1, y2, cutterArrayNan, cwidth, sourceArray, width, height, comparearea
+                y1,
+                y2,
+                cutterArrayNan,
+                cwidth,
+                sourceArray,
+                width,
+                height,
+                comparearea,
             )
             await progress_async("Offset Depth Image", int((y2 * 100) / comparearea.shape[1]))
-        o.offset_image[m : width - cwidth + m, m : height - cwidth + m] = comparearea
 
-        log.info(f"\nOffset Image Time {time.time() - t}")
+        o.offset_image[
+            m : width - cwidth + m,
+            m : height - cwidth + m,
+        ] = comparearea
+
+        log.info(f"\nOffset Image Time: {time.time() - t}")
 
         o.update_offset_image_tag = False
     return o.offset_image
@@ -347,8 +362,14 @@ def dilate_array(ar, cycles):
     """
 
     for c in range(cycles):
-        ar[1:-1, :] = numpy.logical_or(ar[1:-1, :], ar[:-2, :])
-        ar[:, 1:-1] = numpy.logical_or(ar[:, 1:-1], ar[:, :-2])
+        ar[1:-1, :] = numpy.logical_or(
+            ar[1:-1, :],
+            ar[:-2, :],
+        )
+        ar[:, 1:-1] = numpy.logical_or(
+            ar[:, 1:-1],
+            ar[:, :-2],
+        )
 
 
 async def crazy_path(o):
@@ -498,15 +519,14 @@ def get_resolution(o):
             to determine resolution.
     """
 
-    sx = o.max.x - o.min.x
-    sy = o.max.y - o.min.y
+    pixsize = o.optimisation.pixsize
+    border_width = o.borderwidth
 
-    resx = ceil(sx / o.optimisation.pixsize) + 2 * o.borderwidth
-    resy = ceil(sy / o.optimisation.pixsize) + 2 * o.borderwidth
+    size_x = o.max.x - o.min.x
+    size_y = o.max.y - o.min.y
 
-
-# this basically renders blender zbuffer and makes it accessible by saving & loading it again.
-# that's because blender doesn't allow accessing pixels in render :(
+    resolution_x = ceil(size_x / pixsize) + 2 * border_width
+    resolution_y = ceil(size_y / pixsize) + 2 * border_width
 
 
 def _backup_render_settings(pairs):
@@ -528,6 +548,10 @@ def _backup_render_settings(pairs):
         list: A list containing the backed-up properties of the specified Blender
             objects.
     """
+
+    scene = bpy.context.scene
+    view_layer = bpy.context.view_layer
+    render = scene.render
 
     properties = []
     for owner, struct_name in pairs:
@@ -561,6 +585,10 @@ def _restore_render_settings(pairs, properties):
             values.
     """
 
+    scene = bpy.context.scene
+    view_layer = bpy.context.view_layer
+    render = scene.render
+
     for (owner, struct_name), obj_value in zip(pairs, properties):
         obj = getattr(owner, struct_name)
         if isinstance(obj, bpy.types.bpy_struct):
@@ -588,212 +616,291 @@ def render_sample_image(o):
     """
 
     t = time.time()
-    progress("Getting Z-Buffer")
-    # print(o.zbuffer_image)
+    progress("~ Getting Z-Buffer ~")
     o.update_offset_image_tag = True
-    if o.geometry_source == "OBJECT" or o.geometry_source == "COLLECTION":
+
+    if o.geometry_source in ["OBJECT", "COLLECTION"]:
         pixsize = o.optimisation.pixsize
+        border_width = o.borderwidth
 
-        sx = o.max.x - o.min.x
-        sy = o.max.y - o.min.y
+        size_x = o.max.x - o.min.x
+        size_y = o.max.y - o.min.y
 
-        resx = ceil(sx / o.optimisation.pixsize) + 2 * o.borderwidth
-        resy = ceil(sy / o.optimisation.pixsize) + 2 * o.borderwidth
+        resolution_x = ceil(size_x / pixsize) + 2 * border_width
+        resolution_y = ceil(size_y / pixsize) + 2 * border_width
 
-        if (
-            not o.update_z_buffer_image_tag
-            and len(o.zbuffer_image) == resx
-            and len(o.zbuffer_image[0]) == resy
-        ):
-            # if we call this accidentally in more functions, which currently happens...
-            # print('has zbuffer')
+        static_z_buffer = not o.update_z_buffer_image_tag
+        buffer_resolution_equal = (
+            len(o.zbuffer_image) == resolution_x and len(o.zbuffer_image[0]) == resolution_y
+        )
+
+        if static_z_buffer and buffer_resolution_equal:
             return o.zbuffer_image
-        # ###setup image name
-        iname = get_cache_path(o) + "_z.exr"
-        if not o.update_z_buffer_image_tag:
-            try:
-                i = bpy.data.images.load(iname)
-                if i.size[0] != resx or i.size[1] != resy:
-                    log.info(f"Z Buffer Size Changed: {i.size} {resx} {resy}")
-                    o.update_z_buffer_image_tag = True
 
+        # Setup Image name
+        image_name = get_cache_path(o) + "_z.exr"
+
+        if static_z_buffer:
+            try:
+                i = bpy.data.images.load(image_name)
+                image_size_x = i.size[0]
+                image_size_y = i.size[1]
+
+                if image_size_x != resolution_x or image_size_y != resolution_y:
+                    log.info(f"Z Buffer Size Changed: {i.size} {resolution_x} {resolution_y}")
+                    o.update_z_buffer_image_tag = True
             except:
                 o.update_z_buffer_image_tag = True
+
         if o.update_z_buffer_image_tag:
-            s = bpy.context.scene
-            s.use_nodes = True
-            vl = bpy.context.view_layer
-            n = s.node_tree
-            r = s.render
+            blender_version = int(bpy.app.version_string[0])
+            scene = bpy.context.scene
+            view_layer = bpy.context.view_layer
+            render = scene.render
 
             SETTINGS_TO_BACKUP = [
-                (s.render, "resolution_x"),
-                (s.render, "resolution_x"),
-                (s.cycles, "samples"),
-                (s, "camera"),
-                (vl, "samples"),
-                (vl.cycles, "use_denoising"),
-                (s.world, "mist_settings"),
-                (r, "resolution_x"),
-                (r, "resolution_y"),
-                (r, "resolution_percentage"),
+                (render, "resolution_x"),
+                (render, "resolution_x"),
+                (render, "resolution_percentage"),
+                (scene.cycles, "samples"),
+                (scene, "camera"),
+                (view_layer, "samples"),
+                (view_layer.cycles, "use_denoising"),
+                (scene.world, "mist_settings"),
             ]
-            for ob in s.objects:
+
+            for ob in scene.objects:
                 SETTINGS_TO_BACKUP.append((ob, "hide_render"))
             backup_settings = None
+
+            ############################################################3
+
             try:
                 backup_settings = _backup_render_settings(SETTINGS_TO_BACKUP)
                 # prepare nodes first
-                r.resolution_x = resx
-                r.resolution_y = resy
+                # various settings for faster render
+                render.resolution_percentage = 100
+                render.resolution_x = resolution_x
+                render.resolution_y = resolution_y
                 # use cycles for everything because
                 # it renders okay on github actions
-                r.engine = "CYCLES"
-                s.cycles.samples = 1
-                vl.samples = 1
-                vl.cycles.use_denoising = False
+                render.engine = "CYCLES"
+                scene.cycles.samples = 1
+                view_layer.samples = 1
+                view_layer.cycles.use_denoising = False
+                view_layer.use_pass_mist = True
 
-                n.links.clear()
-                n.nodes.clear()
-                node_in = n.nodes.new("CompositorNodeRLayers")
-                s.view_layers[node_in.layer].use_pass_mist = True
-                mist_settings = s.world.mist_settings
-                s.world.mist_settings.depth = 10.0
-                s.world.mist_settings.start = 0
-                s.world.mist_settings.falloff = "LINEAR"
-                s.world.mist_settings.height = 0
-                s.world.mist_settings.intensity = 0
-                node_out = n.nodes.new("CompositorNodeOutputFile")
-                node_out.base_path = os.path.dirname(iname)
-                node_out.format.file_format = "OPEN_EXR"
-                node_out.format.color_mode = "RGB"
-                node_out.format.color_depth = "32"
-                node_out.file_slots.new(os.path.basename(iname))
-                n.links.new(node_in.outputs[node_in.outputs.find("Mist")], node_out.inputs[-1])
-                ###################
+                # If Blender is v5 or greater, use the new Compositor settings
+                if blender_version >= 5:
+                    if scene.compositing_node_group == None:
+                        bpy.ops.node.new_compositing_node_group()
+
+                    for group in bpy.data.node_groups:
+                        if group.type == "COMPOSITING" and "Render Layers" in group.nodes:
+                            scene.compositing_node_group = group
+
+                    node_tree = scene.compositing_node_group
+                    nodes = node_tree.nodes
+                    render_layers = nodes["Render Layers"]
+                    reroute = nodes["Reroute"]
+
+                    try:
+                        file_output = nodes["File Output"]
+                    except KeyError:
+                        file_output = node_tree.nodes.new("CompositorNodeOutputFile")
+
+                    file_output.file_output_items.new(socket_type="RGBA", name="")
+                    file_output.directory = os.path.dirname(image_name)
+                    file_output.file_name = os.path.basename(image_name)
+                    file_output.format.media_type = "IMAGE"
+                    file_output.format.file_format = "OPEN_EXR"
+                    file_output.format.color_mode = "RGB"
+                    file_output.format.color_depth = "32"
+
+                    node_tree.links.new(
+                        render_layers.outputs[render_layers.outputs.find("Mist")],
+                        reroute.inputs[0],
+                    )
+
+                    node_tree.links.new(
+                        reroute.outputs[0],
+                        file_output.inputs[0],
+                    )
+
+                # If Blender is v4 or lower, use the legacy Compositor settings
+                else:
+                    scene.use_nodes = True
+                    node_tree = scene.node_tree
+                    node_tree.links.clear()
+                    node_tree.nodes.clear()
+
+                    node_in = node_tree.nodes.new("CompositorNodeRLayers")
+                    scene.view_layers[node_in.layer].use_pass_mist = True
+
+                    node_out = node_tree.nodes.new("CompositorNodeOutputFile")
+                    node_out.base_path = os.path.dirname(image_name)
+                    node_out.format.file_format = "OPEN_EXR"
+                    node_out.format.color_mode = "RGB"
+                    node_out.format.color_depth = "32"
+                    node_out.file_slots.new(os.path.basename(image_name))
+                    node_tree.links.new(
+                        node_in.outputs[node_in.outputs.find("Mist")],
+                        node_out.inputs[-1],
+                    )
+
+                mist_settings = scene.world.mist_settings
+                mist_settings.depth = 10.0
+                mist_settings.start = 0
+                mist_settings.falloff = "LINEAR"
+                mist_settings.height = 0
+                mist_settings.intensity = 0
 
                 # resize operation image
-                o.offset_image = numpy.full(shape=(resx, resy), fill_value=-10, dtype=numpy.double)
+                o.offset_image = numpy.full(
+                    shape=(resolution_x, resolution_y),
+                    fill_value=-10,
+                    dtype=numpy.double,
+                )
 
-                # various settings for  faster render
-                r.resolution_percentage = 100
-
-                # add a new camera settings
+                # Add a Camera and settings
                 bpy.ops.object.camera_add(
-                    align="WORLD", enter_editmode=False, location=(0, 0, 0), rotation=(0, 0, 0)
+                    align="WORLD",
+                    enter_editmode=False,
+                    location=(0, 0, 0),
+                    rotation=(0, 0, 0),
                 )
                 camera = bpy.context.active_object
                 bpy.context.scene.camera = camera
-
                 camera.data.type = "ORTHO"
                 camera.data.ortho_scale = max(
-                    resx * o.optimisation.pixsize, resy * o.optimisation.pixsize
+                    resolution_x * pixsize,
+                    resolution_y * pixsize,
                 )
-                camera.location = (o.min.x + sx / 2, o.min.y + sy / 2, 1)
+                camera.location = (
+                    o.min.x + size_x / 2,
+                    o.min.y + size_y / 2,
+                    1,
+                )
                 camera.rotation_euler = (0, 0, 0)
                 camera.data.clip_end = 10.0
-                # if not o.render_all:#removed in 0.3
 
-                h = []
-
-                # ob=bpy.data.objects[o.object_name]
-                for ob in s.objects:
+                for ob in scene.objects:
                     ob.hide_render = True
                 for ob in o.objects:
                     ob.hide_render = False
 
                 bpy.ops.render.render()
 
-                n.nodes.remove(node_out)
-                n.nodes.remove(node_in)
+                if blender_version < 5:
+                    node_tree.nodes.remove(node_out)
+                    node_tree.nodes.remove(node_in)
+
                 camera.select_set(True)
                 bpy.ops.object.delete()
 
-                os.replace(iname + "%04d.exr" % (s.frame_current), iname)
+                # os.replace(image_name + "%04d.exr" % (scene.frame_current), image_name)
+
             finally:
                 if backup_settings is not None:
                     _restore_render_settings(SETTINGS_TO_BACKUP, backup_settings)
                 else:
                     log.info("Failed to Backup Scene Settings")
 
-            i = bpy.data.images.load(iname)
+            i = bpy.data.images.load(image_name)
+            print(f"Image load: {image_name}")
             bpy.context.scene.render.engine = "FABEX_RENDER"
 
-        a = image_to_numpy(i)
-        a = 10.0 * a
-        a = 1.0 - a
-        o.zbuffer_image = a
+        ####################################################################
+
+        image_array = image_to_numpy(i)
+        image_array = 10.0 * image_array
+        image_array = 1.0 - image_array
+        o.zbuffer_image = image_array
         o.update_z_buffer_image_tag = False
 
     else:
         i = bpy.data.images[o.source_image_name]
+        image_size_x = i.size[0]
+        image_size_y = i.size[1]
+
         if o.source_image_crop:
-            sx = int(i.size[0] * o.source_image_crop_start_x / 100.0)
-            ex = int(i.size[0] * o.source_image_crop_end_x / 100.0)
-            sy = int(i.size[1] * o.source_image_crop_start_y / 100.0)
-            ey = int(i.size[1] * o.source_image_crop_end_y / 100.0)
+            crop_start_x = o.source_image_crop_start_x
+            crop_end_x = o.source_image_crop_end_x
+            crop_start_y = o.source_image_crop_start_y
+            crop_end_y = o.source_image_crop_end_y
+
+            start_x = int(image_size_x * crop_start_x / 100.0)
+            end_x = int(image_size_x * crop_end_x / 100.0)
+            start_y = int(image_size_y * crop_start_y / 100.0)
+            end_y = int(image_size_y * crop_end_y / 100.0)
         else:
-            sx = 0
-            ex = i.size[0]
-            sy = 0
-            ey = i.size[1]
+            start_x = 0
+            end_x = image_size_x
+            start_y = 0
+            end_y = image_size_y
 
-        # o.offset_image.resize(ex - sx + 2 * o.borderwidth, ey - sy + 2 * o.borderwidth)
+        pixsize = o.source_image_size_x / image_size_x
+        progress("Pixel Size in the Image Source", pixsize)
 
-        o.optimisation.pixsize = o.source_image_size_x / i.size[0]
-        progress("Pixel Size in the Image Source", o.optimisation.pixsize)
-
-        rawimage = image_to_numpy(i)
-        maxa = numpy.max(rawimage)
-        mina = numpy.min(rawimage)
-        neg = o.source_image_scale_z < 0
+        raw_image = image_to_numpy(i)
+        image_array_max = numpy.max(raw_image)
+        image_array_min = numpy.min(raw_image)
+        negative = o.source_image_scale_z < 0
         # waterline strategy needs image border to have ok ambient.
         if o.strategy == "WATERLINE":
-            a = numpy.full(
-                shape=(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]),
-                fill_value=1 - neg,
+            image_array = numpy.full(
+                shape=(
+                    2 * border_width + image_size_x,
+                    2 * border_width + image_size_y,
+                ),
+                fill_value=1 - negative,
                 dtype=numpy.float,
             )
         else:  # other operations like parallel need to reach the border
-            a = numpy.full(
-                shape=(2 * o.borderwidth + i.size[0], 2 * o.borderwidth + i.size[1]),
-                fill_value=neg,
+            image_array = numpy.full(
+                shape=(
+                    2 * border_width + image_size_x,
+                    2 * border_width + image_size_y,
+                ),
+                fill_value=negative,
                 dtype=numpy.float,
             )
-        # 2*o.borderwidth
-        a[o.borderwidth : -o.borderwidth, o.borderwidth : -o.borderwidth] = rawimage
-        a = a[sx : ex + o.borderwidth * 2, sy : ey + o.borderwidth * 2]
 
-        if o.source_image_scale_z < 0:
+        image_array[
+            border_width:-border_width,
+            border_width:-border_width,
+        ] = raw_image
+        image_array = image_array[
+            start_x : end_x + border_width * 2,
+            start_y : end_y + border_width * 2,
+        ]
+
+        if negative:
             # negative images place themselves under the 0 plane by inverting through scale multiplication
             # first, put the image down, se we know the image minimum is on 0
-            a = a - mina
-            a *= o.source_image_scale_z
-
+            image_array = image_array - image_array_min
+            image_array *= o.source_image_scale_z
         else:  # place positive images under 0 plane, this is logical
             # first, put the image down, se we know the image minimum is on 0
-            a = a - mina
-            a *= o.source_image_scale_z
-            a -= (maxa - mina) * o.source_image_scale_z
+            image_array = image_array - image_array_min
+            image_array *= o.source_image_scale_z
+            image_array -= (image_array_max - image_array_min) * o.source_image_scale_z
 
-        a += o.source_image_offset.z  # after that, image gets offset.
+        image_array += o.source_image_offset.z  # after that, image gets offset.
 
-        o.min_z = numpy.min(a)  # TODO: I really don't know why this is here...
-        o.min.z = numpy.min(a)
-        log.info(f"min z {o.min.z}")
-        log.info(f"max z {o.max.z}")
-        log.info(f"max image {numpy.max(a)}")
-        log.info(f"min image {numpy.min(a)}")
-        o.zbuffer_image = a
-    # progress('got z buffer also with conversion in:')
+        o.min_z = numpy.min(image_array)  # TODO: I really don't know why this is here...
+        o.min.z = numpy.min(image_array)
+        o.zbuffer_image = image_array
+
+        log.info(f"Min Z {o.min.z}")
+        log.info(f"Max Z {o.max.z}")
+        log.info(f"Min Image {numpy.min(image_array)}")
+        log.info(f"Max Image {numpy.max(image_array)}")
+
     progress(time.time() - t)
-
-    # progress(a)
     o.update_z_buffer_image_tag = False
+
     return o.zbuffer_image
-
-
-# return numpy.array([])
 
 
 async def prepare_area(o):
