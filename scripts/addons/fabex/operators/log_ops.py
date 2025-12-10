@@ -76,6 +76,7 @@ class CamPurgeLogs(Operator):
 
         for file in listdir(log_folder):
             file_name = Path(log_folder) / file
-            Path.unlink(file_name)
+            if not file_name == ".gitignore":
+                Path.unlink(file_name)
 
         return {"FINISHED"}
