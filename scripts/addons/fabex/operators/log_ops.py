@@ -5,7 +5,9 @@ They mostly call the functions from 'utils.py'
 """
 
 from os import listdir
+from platform import system
 from pathlib import Path
+from subprocess import call
 
 import bpy
 from bpy.types import Operator
@@ -35,7 +37,15 @@ class CamOpenLogFolder(Operator):
                 specifically returning {'FINISHED'} upon successful execution.
         """
 
-        bpy.ops.file.external_operation(filepath=log_folder, operation="OPEN")
+        # bpy.ops.file.external_operation(log_folder, operation="OPEN")
+        if system() == "Linux":
+            call(["xdg-open", log_folder])
+        elif system() == "Darwin":
+            call(["open", log_folder])
+        else:
+            from os import startfile
+
+            startfile(log_folder)
 
         return {"FINISHED"}
 
