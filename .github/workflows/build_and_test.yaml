@@ -69,6 +69,7 @@ jobs:
         type: 'zip'
         filename: 'blendercam.zip'
         directory: './scripts/addons'
+        exclusions: './scripts/addons/docs/*'
     - name: Run tests
       shell: bash
       run: |
