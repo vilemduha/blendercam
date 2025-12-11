@@ -68,7 +68,7 @@ jobs:
       with:
         type: 'zip'
         filename: 'blendercam.zip'
-        directory: './scripts/addons'
+        directory: './'
         path: 'fabex'
         exclusions: '/*docs/* /*tests/*'
     - name: Run tests
@@ -86,4 +86,4 @@ jobs:
       if: always()
       with:
         name: blendercam-${{matrix.os}}-${{matrix.blender_version}}
-        path: ./scripts/addons/fabex
+        path: ./fabex

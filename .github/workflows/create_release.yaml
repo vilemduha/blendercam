@@ -62,7 +62,9 @@ jobs:
       with:
         type: 'zip'
         filename: 'fabexcnc.zip'
-        directory: './scripts/addons'
+        directory: './'
+        path: 'fabex'
+        exclusions: '/*docs/* /*tests/*'
     - name: Write version number
       if: ${{ inputs.version_bump }} != "overwrite previous tag"
       run: |
@@ -77,7 +79,7 @@ jobs:
     - name: make release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "scripts/addons/fabexcnc.zip"
+        artifacts: "fabexcnc.zip"
         tag: ${{ env.VERSION_TAG }}
         allowUpdates: true
         body: "To install FabexCNC extension for Blender, download fabexcnc.zip and *don't* extract it. In Blender, go to Preferences, Get Extensions, and select 'Install from Disk' and select the CNCCAM.zip file you downloaded"
