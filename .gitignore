@@ -19,7 +19,7 @@ acp
 syncWithUpstream
 forceSyncWithUpstream
 
-/strategies
+strategies/
 
 \.idea/
 
