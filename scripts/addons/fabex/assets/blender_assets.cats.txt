@@ -8,5 +8,6 @@ VERSION 1
 
 39dcd477-92dd-482c-8e70-78bf51d97c68:Fabex:Fabex
 3ec432d4-33e5-495d-b10b-bcad78d0ee07:Fabex/Creators:Fabex-Creators
+c8e0608a-5801-4d4b-87d0-1accd25cc34b:Fabex/Examples:Fabex-Examples
 7b67d00d-02b2-4551-8484-a9f5a1258789:Fabex/Materials:Fabex-Materials
 0a1014d6-a65b-4209-b2ad-10c855726179:Fabex/Visualizers:Fabex-Visualizers
