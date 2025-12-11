@@ -70,7 +70,7 @@ jobs:
         filename: 'blendercam.zip'
         directory: './scripts/addons'
         path: 'fabex'
-        exclusions: '/*docs/*'
+        exclusions: '/*docs/* /*tests/*'
     - name: Run tests
       shell: bash
       run: |
@@ -79,7 +79,7 @@ jobs:
           export PATH=$PATH:${BLENDER_BIN_PATH}
         fi
         export ADDON_PATH=${PWD}/scripts/addons/blendercam.zip
-        cd scripts/addons/fabex/tests
+        cd scripts/addons/tests
         python install_addon.py ${ADDON_PATH}
         python test_suite.py -vvv
     - uses: actions/upload-artifact@v4
