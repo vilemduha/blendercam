@@ -1,12 +1,12 @@
 <div align="center">
 
-![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/fabex_logo_rectangle.png)
+![Fabex CNC CAM extension for Blender](docs/_static/fabex_logo_rectangle.png)
 
 # CAM Toolpaths for CNC in Blender
 
 ### [About](#-about) • [Guide](#-user-guide) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer)
 
-![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/suzanne.gif)
+![Fabex CNC CAM extension for Blender](docs/_static/suzanne.gif)
 
 [![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org)
 ![Contributors](https://img.shields.io/github/contributors/vilemduha/blendercam)
@@ -17,7 +17,7 @@
 </div>
 
 ## 👁️ About
-[**FabexCNC**](https://blendercam.com/) Extension for [**Blender**](https://www.blender.org) is an open source solution for artistic, personal, commercial or industrial CAM (*Computer Aided Machining*) - a G-code generation tool.
+[**FabexCNC**](https://blendercam.com/) Extension for [**Blender**](https://www.blender.org) is an open source solution for CAM (*Computer Aided Machining*) toolpath generation and Gcode export.
 
 It is available for **Windows**, **Linux** and **MacOS**.
 
@@ -29,11 +29,11 @@ It has been used for many milling projects _(artistic, personal, commercial and 
 > _If you are a developer who would like to help, check out the section on [Contributing](#-contribute)._
 
 ## 👨‍🎓 User Guide
-* [Installation](scripts/addons/docs/install.md)
-* [Getting Started](scripts/addons/docs/starting.md)
-* [User Interface](scripts/addons/docs/interface.md)
-* [Tools](scripts/addons/docs/tools.md)
-* [Example Chain Workflow](scripts/addons/docs/examplechain.md)
+* [Installation](https://spectralvectors.github.io/blendercam/install.html)
+* [Getting Started](https://spectralvectors.github.io/blendercam/starting.html)
+* [User Interface](https://spectralvectors.github.io/blendercam/interface.html)
+* [Tools](https://spectralvectors.github.io/blendercam/tools.html)
+* [Example Chain Workflow](https://spectralvectors.github.io/blendercam/examplechain.html)
 
 > [!NOTE]
 > *You can also view the full [User, Developer and API Documentation](https://spectralvectors.github.io/blendercam/index.html)*
