@@ -68,7 +68,7 @@ jobs:
       with:
         type: 'zip'
         filename: 'blendercam.zip'
-        directory: './scripts/addons'
+        directory: './scripts/addons/fabex'
     - name: Run tests
       shell: bash
       run: |
