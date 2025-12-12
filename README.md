@@ -21,11 +21,11 @@
 
 It is available for **Windows**, **Linux** and **MacOS**.
 
-Formerly known as **BlenderCAM**, the **Blender Foundation** has requested that external projects no longer use the name **Blender** due to Trademark, so it was renamed **Fabex**!
-
 It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed. 
 
 > [!NOTE]
+> _Formerly known as **BlenderCAM**, the **Blender Foundation** has requested that external projects no longer use the name **Blender** due to Trademark, so it was renamed **Fabex**!_
+> 
 > _If you are a developer who would like to help, check out the section on [Contributing](#-contribute)._
 
 ## 👨‍🎓 User Guide
