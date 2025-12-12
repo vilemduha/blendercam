@@ -88,29 +88,25 @@ It has been used for many milling projects _(artistic, personal, commercial and 
 ## 📒 Files Organisation
 
 ```graphql
-config/ - # 'startup' and 'userpref' blend files
-Examples/ - # Bas Relief & Intarsion operation demo files and images
-scripts/
-└── addons/
-    ├── cam/ - # Main Addon Folder
-    │   ├── operators/ - # Blender Operators
-    │   ├── post_processors/ - # CAM Post-Processors
-    │   ├── presets/ - # Quick access to pre-defined cutting tools, machines and operations
-    │   │   ├── cam_cutters/
-    │   │   ├── cam_machines/
-    │   │   └── cam_operations/
-    │   ├── properties/ - # Blender PropertyGroups to store Machine, Operation, Cutter data
-    │   ├── tests/ - # Developer Tests
-    │   │   └── test_data/ - # Test output
-    │   ├── ui/ - # Blender User Interface
-    │   │   ├── icons/ - # .png files for custom icons
-    │   │   ├── menus/ - # viewport menu and sub-menus
-    │   │   ├── panels/ - # primary UI
-    │   │   └── pie_menu/ - # complete Pie Menu system
-    │   ├── utilities/ - # Low level helper functions
-    │   └── wheels/ - # Python Dependencies (as binary wheels)
-    └── docs/ - # User, Developer and API docs
-        └── _static/ - # Images for docs and README
+docs/ - # User, Developer and API docs
+└── _static/ - # Images for docs and README
+fabex/ - # Main Addon Folder
+├── operators/ - # Blender Operators
+├── post_processors/ - # CAM Post-Processors
+├── presets/ - # Quick access to pre-defined cutting tools, machines and operations
+│   ├── cam_cutters/
+│   ├── cam_machines/
+│   └── cam_operations/
+├── properties/ - # Blender PropertyGroups to store Machine, Operation, Cutter data
+├── ui/ - # Blender User Interface
+│   ├── icons/ - # .png files for custom icons
+│   ├── menus/ - # viewport menu and sub-menus
+│   ├── panels/ - # primary UI
+│   └── pie_menu/ - # complete Pie Menu system
+├── utilities/ - # Low level helper functions
+└── wheels/ - # Python Dependencies (as binary wheels)
+tests/ - # Developer Tests
+└── test_data/ - # Test output
 ```
 
 ## 🤝 Contribute
