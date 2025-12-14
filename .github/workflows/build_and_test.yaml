@@ -12,7 +12,7 @@ jobs:
         # include:
         #   - os: 'macos-latest'
         #     blender_version: '4.2.1'
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4.1.1
@@ -28,7 +28,7 @@ jobs:
       uses:  actions/cache/restore@v4
       with:
         path: blender
-        key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
+        key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
     - name: Download blender
       id: download
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
@@ -38,8 +38,8 @@ jobs:
         os_suffixes["ubuntu-latest"]="linux-x64.tar.xz"
         os_suffixes["macos-latest"]="macos-x64.dmg"
         os_suffixes["windows-latest"]="windows-x64.zip"
-        export OS_SUFFIX=${os_suffixes["${{matrix.os}}"]}
-        IFS='.' read -ra BLENDER_SPLIT <<< "${{matrix.blender_version}}"
+        export OS_SUFFIX=${os_suffixes["${{ matrix.os }}"]}
+        IFS='.' read -ra BLENDER_SPLIT <<< "${{ matrix.blender_version }}"
         export BLENDER_MAJOR=${BLENDER_SPLIT[0]}.${BLENDER_SPLIT[1]}
         export BLENDER_MINOR=${BLENDER_SPLIT[2]}
         export BLENDER_ARCHIVE="blender-${BLENDER_MAJOR}.${BLENDER_MINOR}-${OS_SUFFIX}"
@@ -61,7 +61,7 @@ jobs:
       if: steps.cache-blender.outputs.cache-hit != 'true' && runner.os != 'macOS'
       with:
         path: blender
-        key: ${{ matrix.os }}-${{ matrix.blender_version}}-blender
+        key: ${{ matrix.os }}-${{ matrix.blender_version }}-blender
     - name: Make addon zip
       uses: thedoctor0/zip-release@0.7.5
       if: always()
@@ -85,5 +85,5 @@ jobs:
     - uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: blendercam-${{matrix.os}}-${{matrix.blender_version}}
+        name: blendercam-${{ matrix.os }}-${{ matrix.blender_version }}
         path: ./fabex

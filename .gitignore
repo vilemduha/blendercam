@@ -23,6 +23,8 @@ strategies/
 
 \.idea/
 
+.vscode
+
 .project
 
 .pydevproject

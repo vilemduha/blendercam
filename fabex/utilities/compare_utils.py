@@ -1,5 +1,6 @@
-"""Fabex 'compare_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'compare_utils.py' © 2012 Vilem Novak"""
+
+from math import atan2
 
 from mathutils import Vector
 
@@ -107,3 +108,25 @@ def unique(L):
 
 def check_equal(lst):
     return lst[1:] == lst[:-1]
+
+
+def angle(a, b):
+    """returns angle of a vector
+
+    Args:
+        a (tuple): point a x,y coordinates
+        b (tuple): point b x,y coordinates
+    """
+
+    return atan2(b[1] - a[1], b[0] - a[0])
+
+
+def angle_difference(a, b, c):
+    """returns the difference between two lines with three points
+
+    Args:
+        a (tuple): point a x,y coordinates
+        b (tuple): point b x,y coordinates
+        c (tuple): point c x,y coordinates
+    """
+    return angle(a, b) - angle(b, c)

@@ -84,7 +84,7 @@ def get_path_pattern_parallel(o, angle):
             for b in range(int(-dim / pathstep), int(dim / pathstep)):
                 v += dirvect
 
-                if v.x > o.min.x and v.x < o.max.x and v.y > o.min.y and v.y < o.max.y:
+                if o.min.x < v.x < o.max.x and o.min.y < v.y < o.max.y:
                     chunk.points.append((v.x, v.y, zlevel))
             if (
                 (reverse and o.movement.type == "MEANDER")

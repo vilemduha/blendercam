@@ -21,7 +21,7 @@
 
 It is available for **Windows**, **Linux** and **MacOS**.
 
-It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed. 
+It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed.
 
 > [!NOTE]
 > _Formerly known as **BlenderCAM**, the **Blender Foundation** has requested that external projects no longer use the name **Blender** due to Trademark, so it was renamed **Fabex**!_
@@ -91,6 +91,8 @@ It has been used for many milling projects _(artistic, personal, commercial and 
 docs/ - # User, Developer and API docs
 └── _static/ - # Images for docs and README
 fabex/ - # Main Addon Folder
+├── assets/ - # Fabex Asset Library
+├── logs/ - # Log files for errors and normal usage
 ├── operators/ - # Blender Operators
 ├── post_processors/ - # CAM Post-Processors
 ├── presets/ - # Quick access to pre-defined cutting tools, machines and operations

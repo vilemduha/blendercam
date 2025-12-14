@@ -186,12 +186,12 @@ def export_gcode_path(filename, vertslist, operations):
     postprocessor = import_module(module, __package__)
     extension = processor_extension[m.post_processor][1]
 
-    if s.unit_settings.system == "METRIC":
-        unitcorr = METRIC_CORRECTION
-    elif s.unit_settings.system == "IMPERIAL":
-        unitcorr = IMPERIAL_CORRECTION
-    else:
-        unitcorr = 1
+    unit_system = s.unit_settings.system
+    unitcorr = (
+        METRIC_CORRECTION
+        if unit_system == "METRIC"
+        else IMPERIAL_CORRECTION if unit_system == "IMPERIAL" else 1
+    )
 
     rotcorr = ROTATION_CORRECTION
 
@@ -273,10 +273,7 @@ def export_gcode_path(filename, vertslist, operations):
             rots = mesh.shape_keys.key_blocks["rotations"].data
 
         # spindle rpm and direction
-        if o.movement.spindle_rotation == "CW":
-            spdir_clockwise = True
-        else:
-            spdir_clockwise = False
+        spdir_clockwise = True if o.movement.spindle_rotation == "CW" else False
 
         # write tool, not working yet probably
         # print (last_cutter)
@@ -423,28 +420,12 @@ def export_gcode_path(filename, vertslist, operations):
                 rcompensate.z = -r.z
                 v.rotate(rcompensate)
 
-                if r.x == lastrot.x:
-                    ra = None
-                else:
-                    ra = r.x * rotcorr
+                ra = None if r.x == lastrot.x else r.x * rotcorr
+                rb = None if r.y == lastrot.y else r.y * rotcorr
 
-                if r.y == lastrot.y:
-                    rb = None
-                else:
-                    rb = r.y * rotcorr
-
-            if vi > 0 and v.x == last.x:
-                vx = None
-            else:
-                vx = v.x * unitcorr
-            if vi > 0 and v.y == last.y:
-                vy = None
-            else:
-                vy = v.y * unitcorr
-            if vi > 0 and v.z == last.z:
-                vz = None
-            else:
-                vz = v.z * unitcorr
+            vx = None if vi > 0 and v.x == last.x else v.x * unitcorr
+            vy = None if vi > 0 and v.y == last.y else v.y * unitcorr
+            vz = None if vi > 0 and v.z == last.z else v.z * unitcorr
 
             if fadjust:
                 fadjustval = shapek.data[vi].co.z / scale_graph
@@ -534,8 +515,7 @@ def export_gcode_path(filename, vertslist, operations):
                 c = start_new_file()
                 c.flush_nc()
                 c.comment(
-                    "Tool change - D = %s type %s flutes %s"
-                    % (unit_value_to_string(o.cutter_diameter, 4), o.cutter_type, o.cutter_flutes)
+                    f"Tool change - D = {unit_value_to_string(o.cutter_diameter, 4)} type {o.cutter_type} flutes {o.cutter_flutes}"
                 )
                 c.tool_change(o.cutter_id)
                 c.spindle(o.spindle_rpm, spdir_clockwise)

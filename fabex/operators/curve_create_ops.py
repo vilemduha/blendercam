@@ -21,15 +21,47 @@ from bpy.props import (
 )
 from bpy.types import Operator
 
-from .. import (
-    involute_gear,
-    joinery,
-    puzzle_joinery,
-)
+from .. import involute_gear
+
 from ..cam_chunk import (
     curve_to_shapely,
     polygon_boolean,
     polygon_convex_hull,
+)
+
+from ..joinery.finger import (
+    finger,
+    finger_amount,
+    finger_pair,
+    fingers,
+    fixed_finger,
+    horizontal_finger,
+    variable_finger,
+    vertical_finger,
+)
+from ..joinery.flex import (
+    create_flex_side,
+    make_variable_flex_pocket,
+    make_flex_pocket,
+)
+from ..joinery.interlock_twist import (
+    distributed_interlock,
+    single_interlock,
+    interlock_twist_separator,
+)
+from ..joinery.arc_bar import (
+    arc,
+    bar,
+    arc_bar,
+    arc_bar_arc,
+)
+from ..joinery.multiangle import (
+    mitre,
+    multiangle,
+    t,
+    curved_t,
+    tile,
+    open_curve,
 )
 
 from ..utilities.logging_utils import log
@@ -939,7 +971,7 @@ class CamCurveMortise(Operator):
                 log.info(f"Line Length: {loop_length}")
 
                 if self.adaptive > 0.0:
-                    joinery.variable_finger(
+                    variable_finger(
                         c,
                         length,
                         self.min_finger_size,
@@ -948,7 +980,7 @@ class CamCurveMortise(Operator):
                         self.finger_tolerance,
                         self.adaptive,
                     )
-                    locations = joinery.variable_finger(
+                    locations = variable_finger(
                         c,
                         length,
                         self.min_finger_size,
@@ -959,19 +991,19 @@ class CamCurveMortise(Operator):
                         True,
                         self.double_adaptive,
                     )
-                    joinery.create_flex_side(
+                    create_flex_side(
                         loop_length, self.side_height, self.plate_thickness, self.top_bottom
                     )
                     if self.flex_pocket > 0:
-                        joinery.make_variable_flex_pocket(
+                        make_variable_flex_pocket(
                             self.side_height, self.plate_thickness, self.flex_pocket, locations
                         )
 
                 else:
-                    joinery.fixed_finger(
+                    fixed_finger(
                         c, length, self.finger_size, self.plate_thickness, self.finger_tolerance
                     )
-                    joinery.fixed_finger(
+                    fixed_finger(
                         c,
                         length,
                         self.finger_size,
@@ -979,11 +1011,11 @@ class CamCurveMortise(Operator):
                         self.finger_tolerance,
                         True,
                     )
-                    joinery.create_flex_side(
+                    create_flex_side(
                         loop_length, self.side_height, self.plate_thickness, self.top_bottom
                     )
                     if self.flex_pocket > 0:
-                        joinery.make_flex_pocket(
+                        make_flex_pocket(
                             length,
                             self.side_height,
                             self.plate_thickness,
@@ -1121,7 +1153,7 @@ class CamCurveInterlock(Operator):
                         loop_length = c.length
                     log.info(f"Line Length: {loop_length}")
 
-                    joinery.distributed_interlock(
+                    distributed_interlock(
                         c,
                         length,
                         self.finger_size,
@@ -1136,7 +1168,7 @@ class CamCurveInterlock(Operator):
 
         else:
             location = bpy.context.scene.cursor.location
-            joinery.single_interlock(
+            single_interlock(
                 self.finger_size,
                 self.plate_thickness,
                 self.finger_tolerance,
@@ -1292,21 +1324,21 @@ class CamCurveDrawer(Operator):
                 typically {'FINISHED'}.
         """
 
-        height_finger_amt = int(joinery.finger_amount(self.height, self.finger_size))
+        height_finger_amt = int(finger_amount(self.height, self.finger_size))
         height_finger = (self.height + 0.0004) / height_finger_amt
-        width_finger_amt = int(joinery.finger_amount(self.width, self.finger_size))
+        width_finger_amt = int(finger_amount(self.width, self.finger_size))
         width_finger = (self.width - self.finger_size) / width_finger_amt
 
         # create base
-        joinery.create_base_plate(self.height, self.width, self.depth)
+        create_base_plate(self.height, self.width, self.depth)
         bpy.context.object.data.resolution_u = 64
         bpy.context.scene.cursor.location = (0, 0, 0)
 
-        joinery.vertical_finger(
+        vertical_finger(
             height_finger, self.drawer_plate_thickness, self.finger_tolerance, height_finger_amt
         )
 
-        joinery.horizontal_finger(
+        horizontal_finger(
             width_finger, self.drawer_plate_thickness, self.finger_tolerance, width_finger_amt * 2
         )
         make_active("_wfb")
@@ -1314,7 +1346,7 @@ class CamCurveDrawer(Operator):
         bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="MEDIAN")
 
         #   make drawer back
-        finger_pair = joinery.finger_pair(
+        finger_pair = finger_pair(
             "_vfa", self.width - self.drawer_plate_thickness - self.finger_inset * 2, 0
         )
         make_active("_wfa")
@@ -1355,7 +1387,7 @@ class CamCurveDrawer(Operator):
         )
         #   make side
 
-        finger_pair = joinery.finger_pair("_vfb", self.depth - self.drawer_plate_thickness, 0)
+        finger_pair = finger_pair("_vfb", self.depth - self.drawer_plate_thickness, 0)
         make_active("_side")
         finger_pair.select_set(True)
         fronth.select_set(True)
@@ -1372,15 +1404,13 @@ class CamCurveDrawer(Operator):
             TRANSFORM_OT_translate={"value": (0, -self.drawer_plate_thickness / 2, 0.0)},
         )
         active_name("_wfb0")
-        joinery.finger_pair("_wfb0", 0, self.depth - self.drawer_plate_thickness)
+        finger_pair("_wfb0", 0, self.depth - self.drawer_plate_thickness)
         active_name("_bot_fingers")
 
         difference("_bot", "_bottom")
         rotate(pi / 2)
 
-        joinery.finger_pair(
-            "_wfb0", 0, self.width - self.drawer_plate_thickness - self.finger_inset * 2
-        )
+        finger_pair("_wfb0", 0, self.width - self.drawer_plate_thickness - self.finger_inset * 2)
         active_name("_bot_fingers")
         difference("_bot", "_bottom")
 
@@ -1750,21 +1780,19 @@ class CamCurvePuzzle(Operator):
             remove_multiple("_")
 
         if self.interlock_type == "FINGER":
-            puzzle_joinery.finger(self.diameter, self.finger_tolerance, stem=self.stem_size)
+            finger(self.diameter, self.finger_tolerance, stem=self.stem_size)
             rename("_puzzle", "receptacle")
-            puzzle_joinery.finger(self.diameter, 0, stem=self.stem_size)
+            finger(self.diameter, 0, stem=self.stem_size)
             rename("_puzzle", "finger")
 
         if self.interlock_type == "JOINT":
             if self.finger_amount == 0:  # cannot be 0 in joints
                 self.finger_amount = 1
-            puzzle_joinery.fingers(
-                self.diameter, self.finger_tolerance, self.finger_amount, stem=self.stem_size
-            )
+            fingers(self.diameter, self.finger_tolerance, self.finger_amount, stem=self.stem_size)
 
         if self.interlock_type == "BAR":
             if not self.mitre:
-                puzzle_joinery.bar(
+                bar(
                     self.width,
                     self.height,
                     self.diameter,
@@ -1780,7 +1808,7 @@ class CamCurvePuzzle(Operator):
                     which=self.gender,
                 )
             else:
-                puzzle_joinery.mitre(
+                mitre(
                     self.width,
                     self.height,
                     self.angle,
@@ -1795,7 +1823,7 @@ class CamCurvePuzzle(Operator):
                     which=self.gender,
                 )
         elif self.interlock_type == "ARC":
-            puzzle_joinery.arc(
+            arc(
                 self.radius,
                 self.height,
                 self.angle,
@@ -1809,7 +1837,7 @@ class CamCurvePuzzle(Operator):
                 which=self.gender,
             )
         elif self.interlock_type == "CURVEBARCURVE":
-            puzzle_joinery.arc_bar_arc(
+            arc_bar_arc(
                 self.width,
                 self.radius,
                 self.height,
@@ -1829,7 +1857,7 @@ class CamCurvePuzzle(Operator):
             )
 
         elif self.interlock_type == "CURVEBAR":
-            puzzle_joinery.arc_bar(
+            arc_bar(
                 self.width,
                 self.radius,
                 self.height,
@@ -1848,7 +1876,7 @@ class CamCurvePuzzle(Operator):
             )
 
         elif self.interlock_type == "MULTIANGLE":
-            puzzle_joinery.multiangle(
+            multiangle(
                 self.radius,
                 self.height,
                 pi / 3,
@@ -1863,7 +1891,7 @@ class CamCurvePuzzle(Operator):
             )
 
         elif self.interlock_type == "T":
-            puzzle_joinery.t(
+            t(
                 self.width,
                 self.height,
                 self.diameter,
@@ -1878,7 +1906,7 @@ class CamCurvePuzzle(Operator):
             )
 
         elif self.interlock_type == "CURVET":
-            puzzle_joinery.curved_t(
+            curved_t(
                 self.width,
                 self.height,
                 self.radius,
@@ -1894,7 +1922,7 @@ class CamCurvePuzzle(Operator):
             )
 
         elif self.interlock_type == "CORNER":
-            puzzle_joinery.t(
+            t(
                 self.width,
                 self.height,
                 self.diameter,
@@ -1910,7 +1938,7 @@ class CamCurvePuzzle(Operator):
             )
 
         elif self.interlock_type == "TILE":
-            puzzle_joinery.tile(
+            tile(
                 self.diameter,
                 self.finger_tolerance,
                 self.tile_x_amount,
@@ -1919,7 +1947,7 @@ class CamCurvePuzzle(Operator):
             )
 
         elif self.interlock_type == "OPENCURVE" and curve_detected:
-            puzzle_joinery.open_curve(
+            open_curve(
                 line,
                 self.height,
                 self.diameter,
@@ -1938,7 +1966,7 @@ class CamCurvePuzzle(Operator):
         add_overcut(self.overcut_diameter, self.overcut)
 
         if self.twist_lock and self.twist_separator:
-            joinery.interlock_twist_separator(
+            interlock_twist_separator(
                 self.height,
                 self.twist_thick,
                 self.twist_separator_amount,
