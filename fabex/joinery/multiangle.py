@@ -6,10 +6,7 @@ from math import (
     tan,
 )
 
-
 import bpy
-
-from . import joinery
 
 from .arc_bar import arc, bar
 from .finger import fingers
