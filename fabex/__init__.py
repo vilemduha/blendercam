@@ -16,7 +16,6 @@ import bpy
 from bpy.props import CollectionProperty
 
 # Relative Imports - from 'cam' module
-from .compatibility import Fabex_Compatibility_Panel
 from .engine import (
     FABEX_ENGINE,
     get_panels,
