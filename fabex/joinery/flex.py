@@ -8,7 +8,7 @@ import bpy
 from .finger import finger_pair
 from .mortise import mortise
 
-from .utilities.simple_utils import (
+from ..utilities.simple_utils import (
     active_name,
     make_active,
     remove_multiple,

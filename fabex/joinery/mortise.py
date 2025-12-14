@@ -1,6 +1,6 @@
 import bpy
 
-from .utilities.simple_utils import (
+from ..utilities.simple_utils import (
     active_name,
 )
 

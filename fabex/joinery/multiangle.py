@@ -15,9 +15,9 @@ from .arc_bar import arc, bar
 from .finger import fingers
 from .interlock_twist import distributed_interlock, twist_female, twist_male
 
-from .utilities.logging_utils import log
-from .utilities.shapely_utils import shapely_to_curve
-from .utilities.simple_utils import (
+from ..utilities.logging_utils import log
+from ..utilities.shapely_utils import shapely_to_curve
+from ..utilities.simple_utils import (
     duplicate,
     mirror_x,
     mirror_y,

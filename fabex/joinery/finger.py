@@ -10,8 +10,8 @@ import bpy
 
 from ..constants import DT  # DT = Bit diameter tolerance
 
-from .utilities.logging_utils import log
-from .utilities.simple_utils import (
+from ..utilities.logging_utils import log
+from ..utilities.simple_utils import (
     active_name,
     duplicate,
     mirror_x,
