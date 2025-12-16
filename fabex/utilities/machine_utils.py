@@ -7,6 +7,7 @@ The functions here are called with operators defined in 'ops.py'
 import bpy
 
 from .logging_utils import log
+from .simple_utils import activate
 
 from ..constants import _IS_LOADING_DEFAULTS
 
@@ -84,6 +85,7 @@ def add_machine_area_object():
     o.dimensions = bpy.context.scene.cam_machine.working_area
     if ao is not None:
         ao.select_set(True)
+        activate(ao)
 
 
 def update_machine(self, context):

@@ -631,20 +631,18 @@ class CamCurveRemoveDoubles(Operator):
                         bpy.ops.curvetools.operatorsplinesremoveshort()
                         bpy.context.view_layer.objects.active = ob
                         ob.data.resolution_u = 64
-                        if bpy.context.mode == "OBJECT":
-                            bpy.ops.object.editmode_toggle()
+                        bpy.ops.object.mode_set(mode="OBJECT")
                         bpy.ops.curve.select_all()
                         bpy.ops.curve.remove_double(distance=self.merge_distance)
-                        bpy.ops.object.editmode_toggle()
+
                 else:
                     self.merge_distance = 0
-                    if bpy.context.mode == "EDIT_CURVE":
-                        bpy.ops.object.editmode_toggle()
+                    bpy.ops.object.mode_set(mode="OBJECT")
                     bpy.ops.object.convert(target="MESH")
-                    bpy.ops.object.editmode_toggle()
+                    bpy.ops.object.mode_set(mode="EDIT")
                     bpy.ops.mesh.select_all(action="SELECT")
                     bpy.ops.mesh.remove_doubles(threshold=self.merge_distance)
-                    bpy.ops.object.editmode_toggle()
+                    bpy.ops.object.mode_set(mode="OBJECT")
                     bpy.ops.object.convert(target="CURVE")
 
         return {"FINISHED"}
@@ -957,9 +955,7 @@ class CamObjectSilhouette(Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.active_object is not None and (
-            context.active_object.type == "FONT" or context.active_object.type == "MESH"
-        )
+        return context.active_object is not None and context.active_object.type in ["FONT", "MESH"]
 
     # this is almost same as getobjectoutline, just without the need of operation data
     def execute(self, context):
@@ -973,5 +969,5 @@ class CamObjectSilhouette(Operator):
         join_multiple(ob.name + "_silhouette")
         bpy.context.scene.cursor.location = ob.location
         bpy.ops.object.origin_set(type="ORIGIN_CURSOR")
-        bpy.ops.object.curve_remove_doubles()
+        # bpy.ops.object.curve_remove_doubles()
         return {"FINISHED"}

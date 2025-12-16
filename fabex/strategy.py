@@ -46,6 +46,7 @@ from .exception import CamException
 
 from .operators.curve_create_ops import generate_crosshatch
 
+from .utilities.addon_utils import add_collections
 from .utilities.chunk_utils import (
     chunks_refine,
     optimize_chunk,
@@ -1529,8 +1530,14 @@ def chunks_to_mesh(chunks, o):
     ob.color = scene.cam_machine.path_color
     o.path_object_name = path_name
 
-    bpy.context.collection.objects.unlink(ob)
-    bpy.data.collections["Paths"].objects.link(ob)
+    collections = bpy.data.collections
+    if "Paths" in collections:
+        bpy.context.collection.objects.unlink(ob)
+        collections["Paths"].objects.link(ob)
+    else:
+        add_collections()
+        bpy.context.collection.objects.unlink(ob)
+        collections["Paths"].objects.link(ob)
 
     # parent the path object to source object if object mode
     if (o.geometry_source == "OBJECT") and o.parent_path_to_object:

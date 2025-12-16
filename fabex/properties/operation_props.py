@@ -129,7 +129,8 @@ class CAM_OPERATION_Properties(PropertyGroup):
         name="Data Source",
         items=(
             ("OBJECT", "Object", "a"),
-            ("COLLECTION", "Collection of Objects", "a"),
+            # Collections temporarily disabled until bugs can be fixed
+            # ("COLLECTION", "Collection of Objects", "a"),
             ("IMAGE", "Image", "a"),
         ),
         description="Geometry source",
@@ -1040,6 +1041,7 @@ class CAM_OPERATION_Properties(PropertyGroup):
     )
     bridges_collection_name: StringProperty(
         name="Bridges / Tabs Collection",
+        default="Bridges (Tabs)",
         description="Collection of curves used as bridges",
         update=operation_valid,
     )

@@ -323,9 +323,8 @@ def use_bridges(ch, o):
         z = pt[2]
         if z == bridgeheight:  # find all points with z = bridge height
             count += 1
-            if (
-                isedge == 1
-            ):  # This is to subdivide  edges which are longer than the width of the bridge
+            if isedge == 1:
+                # This is to subdivide  edges which are longer than the width of the bridge
                 edgelength = hypot(x - x2, y - y2)
                 if edgelength > o.bridges_width:
                     # make new vertex

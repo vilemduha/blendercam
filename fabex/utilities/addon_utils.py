@@ -20,7 +20,9 @@ def addon_dependencies():
     It checks for the addon in the users Blender install, and if it
     can't find them, attempts to download them from Blender.
     """
-    addons = bpy.context.preferences.addons
+    preferences = bpy.context.preferences
+    addons = preferences.addons
+    online_access = preferences.system.use_online_access
 
     modules = [
         # Objects & Tools
@@ -35,12 +37,15 @@ def addon_dependencies():
         "export_autocad_dxf_format_dxf",
     ]
 
-    for module in modules:
-        if module not in addons:
-            try:
-                addons[f"bl_ext.blender_org.{module}"]
-            except KeyError:
-                bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
+    if online_access:
+        for module in modules:
+            if module not in addons:
+                try:
+                    addons[f"bl_ext.blender_org.{module}"]
+                except KeyError:
+                    bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
+    else:
+        log.debug("Could not Access Online Addon Repository!")
 
 
 def load_defaults(addon_prefs):
@@ -211,6 +216,11 @@ def on_engine_change(*args):
         log.debug("Loading Fabex Settings")
 
         log.debug("Fabex Activated")
+
+        # Initialize an Operation if one hasn't already been created
+        if len(context.scene.cam_operations) == 0:
+            bpy.ops.scene.cam_operation_add()
+            log.debug("Added Default Operation")
 
 
 def fix_units():
