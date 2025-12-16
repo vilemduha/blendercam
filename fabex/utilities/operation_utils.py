@@ -512,3 +512,82 @@ def get_chain_operations(chain):
             if so.name == cho.name:
                 chop.append(so)
     return chop
+
+
+def get_change_data(o):
+    """Check if object properties have changed to determine if image updates
+    are needed.
+
+    This function inspects the properties of objects specified by the input
+    parameter to see if any changes have occurred. It concatenates the
+    location, rotation, and dimensions of the relevant objects into a single
+    string, which can be used to determine if an image update is necessary
+    based on changes in the object's state.
+
+    Args:
+        o (object): An object containing properties that specify the geometry source
+            and relevant object or collection names.
+
+    Returns:
+        str: A string representation of the location, rotation, and dimensions of
+            the specified objects.
+    """
+    changedata = ""
+    obs = []
+    if o.geometry_source == "OBJECT":
+        obs = [bpy.data.objects[o.object_name]]
+    elif o.geometry_source == "COLLECTION":
+        obs = bpy.data.collections[o.collection_name].objects
+    for ob in obs:
+        changedata += str(ob.location)
+        changedata += str(ob.rotation_euler)
+        changedata += str(ob.dimensions)
+
+    return changedata
+
+
+def check_memory_limit(o):
+    """Check and adjust the memory limit for an object.
+
+    This function calculates the resolution of an object based on its
+    dimensions and the specified pixel size. If the calculated resolution
+    exceeds the defined memory limit, it adjusts the pixel size accordingly
+    to reduce the resolution. A warning message is appended to the object's
+    info if the pixel size is modified.
+
+    Args:
+        o (object): An object containing properties such as max, min, optimisation, and
+            info.
+
+    Returns:
+        None: This function modifies the object's properties in place and does not
+            return a value.
+    """
+
+    sx = o.max.x - o.min.x
+    sy = o.max.y - o.min.y
+    resx = sx / o.optimisation.pixsize
+    resy = sy / o.optimisation.pixsize
+    res = resx * resy
+    limit = o.optimisation.imgres_limit * 1000000
+
+    if res > limit:
+        ratio = res / limit
+        o.optimisation.pixsize = o.optimisation.pixsize * sqrt(ratio)
+        log.warning("!!! Memory Error !!!")
+        log.warning("Memory Limit Exceeded!")
+        log.warning(f"Detail Size Increased to {round(o.optimisation.pixsize, 5)}")
+        o.info.warnings += " \n!!! Memory Error !!!\n"
+        o.info.warnings += "Memory Limit Exceeded!\n"
+        o.info.warnings += f"Detail Size Increased to {round(o.optimisation.pixsize, 5)}\n"
+        log.info("Changing Sampling Resolution to %f" % o.optimisation.pixsize)
+
+
+def get_move_and_spin(o):
+    move_type = o.movement.type
+    spin = o.movement.spindle_rotation
+
+    climb_CW = move_type == "CLIMB" and spin == "CW"
+    climb_CCW = move_type == "CLIMB" and spin == "CCW"
+    conventional_CW = move_type == "CONVENTIONAL" and spin == "CW"
+    conventional_CCW = move_type == "CONVENTIONAL" and spin == "CCW"

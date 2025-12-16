@@ -4,6 +4,8 @@ from math import atan2
 
 from mathutils import Vector
 
+import numpy
+
 
 def compare_z_level(x):
     return x[5]
@@ -130,3 +132,43 @@ def angle_difference(a, b, c):
         c (tuple): point c x,y coordinates
     """
     return angle(a, b) - angle(b, c)
+
+
+def point_on_line(a, b, c, tolerance):
+    """Determine if the angle between two vectors is within a specified
+    tolerance.
+
+    This function checks if the angle formed by two vectors, defined by
+    points `b` and `c` relative to point `a`, is less than or equal to a
+    given tolerance. It converts the points into vectors, calculates the dot
+    product, and then computes the angle between them using the arccosine
+    function. If the angle exceeds the specified tolerance, the function
+    returns False; otherwise, it returns True.
+
+    Args:
+        a (numpy.ndarray): The origin point as a vector.
+        b (numpy.ndarray): The first point as a vector.
+        c (numpy.ndarray): The second point as a vector.
+        tolerance (float): The maximum allowable angle (in degrees) between the vectors.
+
+    Returns:
+        bool: True if the angle between vectors b and c is within the specified
+            tolerance,
+            False otherwise.
+    """
+
+    b = b - a  # convert to vector by subtracting origin
+    c = c - a
+    dot_pr = b.dot(c)  # b dot c
+    norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
+    # Ensure that values aren't == 0, which would cause
+    # a Divide by Zero error on the next line
+    if not dot_pr == 0 and not norms == 0:
+        # find angle between the two vectors
+        angle = numpy.rad2deg(numpy.arccos(dot_pr / norms))
+        if angle > tolerance:
+            return False
+        else:
+            return True
+    else:
+        return True

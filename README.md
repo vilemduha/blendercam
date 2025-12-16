@@ -17,9 +17,9 @@
 </div>
 
 ## 👁️ About
-[**FabexCNC**](https://blendercam.com/) Extension for [**Blender**](https://www.blender.org) is an open source solution for CAM (*Computer Aided Machining*) toolpath generation and Gcode export.
+[**FabexCNC**](https://blendercam.com/) is an open source solution for CAM (*Computer Aided Machining*) toolpath generation and Gcode export.
 
-It is available for **Windows**, **Linux** and **MacOS**.
+It is available for **Windows**, **Linux** and **MacOS** as an Extension for [**Blender**](https://www.blender.org).
 
 It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed.
 
@@ -92,6 +92,7 @@ docs/ - # User, Developer and API docs
 └── _static/ - # Images for docs and README
 fabex/ - # Main Addon Folder
 ├── assets/ - # Fabex Asset Library
+├── joinery/ - # Functions for creating joints, e.g. mortise, interlock etc.
 ├── logs/ - # Log files for errors and normal usage
 ├── operators/ - # Blender Operators
 ├── post_processors/ - # CAM Post-Processors

@@ -1332,7 +1332,7 @@ def polygon_convex_hull(context):
         dict: A dictionary indicating the operation's completion status.
     """
 
-    coords = []
+    # coords = []
 
     bpy.ops.object.duplicate()
     bpy.ops.object.join()
@@ -1342,9 +1342,12 @@ def polygon_convex_hull(context):
     bpy.ops.object.convert(target="MESH")
     obj = bpy.context.view_layer.objects.active
 
-    for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-        c = (v.co.x, v.co.y)
-        coords.append(c)
+    # for v in obj.data.vertices:
+    #     c = (v.co.x, v.co.y)
+    #     coords.append(c)
+
+    # extract X,Y coordinates from the vertices data
+    coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
 
     select_multiple("_tmp")  # delete temporary mesh
     select_multiple("ConvexHull")  # delete old hull
@@ -1380,12 +1383,19 @@ def silhouette_offset(context, offset, style=1, mitrelimit=1.0):
     bpy.context.scene.cursor.location = (0, 0, 0)
     ob = bpy.context.active_object
 
-    if ob.type in ["CURVE", "FONT"]:
-        silhs = curve_to_shapely(ob)
-    else:
-        silhs = get_object_silhouette("OBJECTS", [ob])
+    silhs = (
+        curve_to_shapely(ob)
+        if ob.type in ["CURVE", "FONT"]
+        else get_object_silhouette("OBJECTS", [ob])
+    )
 
-    mp = silhs.buffer(offset, cap_style=1, join_style=style, resolution=16, mitre_limit=mitrelimit)
+    mp = silhs.buffer(
+        offset,
+        cap_style=1,
+        join_style=style,
+        resolution=16,
+        mitre_limit=mitrelimit,
+    )
     shapely_to_curve(ob.name + "_offset_" + str(round(offset, 5)), mp, ob.location.z)
     bpy.ops.object.curve_remove_doubles()
 
@@ -1415,6 +1425,8 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
     log.info(f"Silhouette Type: {stype}")
 
     if stype == "CURVES":  # curve conversion to polygon format
+        # allchunks = [curve_to_chunks(ob) for ob in objects]
+
         allchunks = []
 
         for ob in objects:
@@ -1590,23 +1602,14 @@ def get_object_outline(radius, o, Offset):
     polygons = get_operation_silhouette(o)
     i = 0
 
-    if Offset:
-        offset = 1
-    else:
-        offset = -1
+    offset = 1 if Offset else -1
 
     outlines = []
     i = 0
 
-    if o.straight:
-        join = 2
-    else:
-        join = 1
+    join = 2 if o.straight else 1
 
-    if isinstance(polygons, list):
-        polygon_list = polygons
-    else:
-        polygon_list = polygons.geoms
+    polygon_list = polygons if isinstance(polygons, list) else polygons.geoms
 
     for p1 in polygon_list:  # sort by size before this???
         i += 1
@@ -1619,10 +1622,7 @@ def get_object_outline(radius, o, Offset):
             )
         outlines.append(p1)
 
-    if o.dont_merge:
-        outline = MultiPolygon(outlines)
-    else:
-        outline = unary_union(outlines)
+    outline = MultiPolygon(outlines) if o.dont_merge else unary_union(outlines)
 
     return outline
 
@@ -1645,11 +1645,8 @@ def get_ambient(o):
         None: The function updates the ambient property of the object in place.
     """
 
-    if o.update_ambient_tag:
-        if o.ambient_cutter_restrict:  # cutter stays in ambient & limit curve
-            m = o.cutter_diameter / 2
-        else:
-            m = 0
+    if o.update_ambient_tag:  # cutter stays in ambient & limit curve
+        m = o.cutter_diameter / 2 if o.ambient_cutter_restrict else 0
 
         if o.ambient_behaviour == "AROUND":
             r = o.ambient_radius - m

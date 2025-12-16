@@ -519,14 +519,15 @@ def get_resolution(o):
             to determine resolution.
     """
 
-    pixsize = o.optimisation.pixsize
+    pixel_size = o.optimisation.pixsize
     border_width = o.borderwidth
 
     size_x = o.max.x - o.min.x
     size_y = o.max.y - o.min.y
 
-    resolution_x = ceil(size_x / pixsize) + 2 * border_width
-    resolution_y = ceil(size_y / pixsize) + 2 * border_width
+    resolution_x = ceil(size_x / pixel_size) + 2 * border_width
+    resolution_y = ceil(size_y / pixel_size) + 2 * border_width
+    resolution = resolution_x * resolution_y
 
 
 def _backup_render_settings(pairs):
@@ -929,7 +930,6 @@ async def prepare_area(o):
         progress("Loading Offset Image")
         try:
             o.offset_image = image_to_numpy(bpy.data.images.load(iname))
-
         except:
             o.update_offset_image_tag = True
 
@@ -958,23 +958,24 @@ def get_cutter_array(operation, pixsize):
         numpy.ndarray: A 2D array filled with values representing the cutter shape.
     """
 
-    type = operation.cutter_type
-    # print('generating cutter')
+    cutter_type = operation.cutter_type
     r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
     res = ceil((r * 2) / pixsize)
     m = res / 2.0
     car = numpy.full(shape=(res, res), fill_value=-10.0, dtype=float)
-
     v = Vector((0, 0, 0))
     ps = pixsize
-    if type == "END":
+
+    if cutter_type == "END":
         for a in range(0, res):
             v.x = (a + 0.5 - m) * ps
+            # v.x = [(a + 0.5 - m) * ps for a in range(0, res)]
             for b in range(0, res):
                 v.y = (b + 0.5 - m) * ps
                 if v.length <= r:
                     car.itemset((a, b), 0)
-    elif type == "BALL" or type == "BALLNOSE":
+
+    elif cutter_type in ["BALL", "BALLNOSE"]:
         for a in range(0, res):
             v.x = (a + 0.5 - m) * ps
             for b in range(0, res):
@@ -983,7 +984,7 @@ def get_cutter_array(operation, pixsize):
                     z = sin(acos(v.length / r)) * r - r
                     car.itemset((a, b), z)  # [a,b]=z
 
-    elif type == "VCARVE":
+    elif cutter_type == "VCARVE":
         angle = operation.cutter_tip_angle
         s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
         for a in range(0, res):
@@ -993,7 +994,8 @@ def get_cutter_array(operation, pixsize):
                 if v.length <= r:
                     z = -v.length * s
                     car.itemset((a, b), z)
-    elif type == "CYLCONE":
+
+    elif cutter_type == "CYLCONE":
         angle = operation.cutter_tip_angle
         cyl_r = operation.cylcone_diameter / 2
         s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
@@ -1006,7 +1008,8 @@ def get_cutter_array(operation, pixsize):
                     if v.length <= cyl_r:
                         z = 0
                     car.itemset((a, b), z)
-    elif type == "BALLCONE":
+
+    elif cutter_type == "BALLCONE":
         angle = radians(operation.cutter_tip_angle) / 2
         ball_r = operation.ball_radius
         cutter_r = operation.cutter_diameter / 2
@@ -1023,7 +1026,8 @@ def get_cutter_array(operation, pixsize):
                     if v.length <= ball_r:
                         z = sin(acos(v.length / Ball_R)) * Ball_R - Ball_R
                     car.itemset((a, b), z)
-    elif type == "CUSTOM":
+
+    elif cutter_type == "CUSTOM":
         cutob = bpy.data.objects[operation.cutter_object_name]
         scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
         # print(cutob.scale)
@@ -1034,7 +1038,6 @@ def get_cutter_array(operation, pixsize):
         for a in range(0, res):
             vstart.x = (a + 0.5 - m) * ps * scale
             vend.x = vstart.x
-
             for b in range(0, res):
                 vstart.y = (b + 0.5 - m) * ps * scale
                 vend.y = vstart.y
@@ -1049,4 +1052,5 @@ def get_cutter_array(operation, pixsize):
                             maxz = z
                         car.itemset((a, b), z)
         car -= maxz
+
     return car

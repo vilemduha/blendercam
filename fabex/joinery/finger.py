@@ -8,8 +8,11 @@ from shapely.geometry import (
 
 import bpy
 
+from .mortise import mortise
+
 from ..constants import DT  # DT = Bit diameter tolerance
 
+from ..utilities.compare_utils import angle
 from ..utilities.logging_utils import log
 from ..utilities.simple_utils import (
     active_name,

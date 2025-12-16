@@ -10,6 +10,7 @@ import bpy
 from shapely.geometry import Point
 
 from .finger import fingers
+from .mortise import mortise
 
 from ..utilities.logging_utils import log
 from ..utilities.simple_utils import (

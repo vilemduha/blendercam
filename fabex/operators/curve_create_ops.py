@@ -40,6 +40,7 @@ from ..joinery.finger import (
     vertical_finger,
 )
 from ..joinery.flex import (
+    create_base_plate,
     create_flex_side,
     make_variable_flex_pocket,
     make_flex_pocket,
@@ -1346,13 +1347,13 @@ class CamCurveDrawer(Operator):
         bpy.ops.object.origin_set(type="ORIGIN_CURSOR", center="MEDIAN")
 
         #   make drawer back
-        finger_pair = finger_pair(
+        pair = finger_pair(
             "_vfa", self.width - self.drawer_plate_thickness - self.finger_inset * 2, 0
         )
         make_active("_wfa")
         fronth = bpy.context.active_object
         make_active("_back")
-        finger_pair.select_set(True)
+        pair.select_set(True)
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type="DIFFERENCE")
         remove_multiple("_finger_pair")
@@ -1387,9 +1388,9 @@ class CamCurveDrawer(Operator):
         )
         #   make side
 
-        finger_pair = finger_pair("_vfb", self.depth - self.drawer_plate_thickness, 0)
+        pair = finger_pair("_vfb", self.depth - self.drawer_plate_thickness, 0)
         make_active("_side")
-        finger_pair.select_set(True)
+        pair.select_set(True)
         fronth.select_set(True)
         bpy.ops.object.curve_boolean(boolean_type="DIFFERENCE")
         active_name("drawer_side")

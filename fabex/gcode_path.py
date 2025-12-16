@@ -102,10 +102,7 @@ def point_on_line(a, b, c, tolerance):
     if not dot_pr == 0 and not norms == 0:
         # find angle between the two vectors
         angle = numpy.rad2deg(numpy.arccos(dot_pr / norms))
-        if angle > tolerance:
-            return False
-        else:
-            return True
+        return False if angle > tolerance else True
     else:
         return True
 
@@ -156,12 +153,15 @@ def export_gcode_path(filename, vertslist, operations):
     else:
         log.info("Output Files: 1")
 
-    if s.cam_names.default_export_location == "":
-        filepath = bpy.data.filepath
-        basename = bpy.path.basename
-        basefilename = filepath[: -len(basename(filepath))] + safe_filename(filename)
-    else:
-        basefilename = s.cam_names.default_export_location + safe_filename(filename)
+    filepath = bpy.data.filepath
+    basename = bpy.path.basename
+    safename = safe_filename(filename)
+    export_folder = s.cam_names.default_export_location
+    basefilename = (
+        filepath[: -len(basename(filepath))] + safename
+        if export_folder == ""
+        else export_folder + safename
+    )
 
     processor_extension = {
         "ANILAM": ("anilam_crusader_m", ".tap"),

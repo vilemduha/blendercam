@@ -350,15 +350,9 @@ def position_object(operation):
     totx = maxx - minx
     toty = maxy - miny
     totz = maxz - minz
-    if operation.material.center_x:
-        ob.location.x -= minx + totx / 2
-    else:
-        ob.location.x -= minx
 
-    if operation.material.center_y:
-        ob.location.y -= miny + toty / 2
-    else:
-        ob.location.y -= miny
+    ob.location.x -= minx + totx / 2 if operation.material.center_x else minx
+    ob.location.y -= miny + toty / 2 if operation.material.center_y else miny
 
     if operation.material.z_position == "BELOW":
         ob.location.z -= maxz

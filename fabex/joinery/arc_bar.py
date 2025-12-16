@@ -9,7 +9,6 @@ import bpy
 from .finger import fingers
 from .interlock_twist import (
     twist_female,
-    twist_line,
     twist_male,
 )
 

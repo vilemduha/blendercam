@@ -149,12 +149,18 @@ def on_blender_startup(context):
         if o.computing:
             o.computing = False
 
-    addon_prefs = bpy.context.preferences.addons[base_package].preferences
-
     addon_dependencies()
+    log.debug("Found / Installed Addon Dependencies")
+
     add_asset_library()
+    log.debug("Found / Installed Asset Library")
+
     add_workspace()
+    log.debug("Found / Installed Workspace")
+
+    addon_prefs = bpy.context.preferences.addons[base_package].preferences
     copy_presets(addon_prefs)
+    log.debug("Preset Files Copied")
 
     # Use the Message Bus to notify when the Render Engine is changed
     # And run the 'on_engine_change' function
@@ -174,7 +180,9 @@ def on_blender_startup(context):
         interface_layout = addon_prefs.default_layout
 
         add_collections()
+        log.debug("Collections Added to Scene")
         load_defaults(addon_prefs)
+        log.debug("Loading Fabex Settings")
 
         log.debug("Fabex Activated")
 
@@ -198,7 +206,9 @@ def on_engine_change(*args):
         interface_layout = addon_prefs.default_layout
 
         add_collections()
+        log.debug("Collections Added to Scene")
         load_defaults(addon_prefs)
+        log.debug("Loading Fabex Settings")
 
         log.debug("Fabex Activated")
 

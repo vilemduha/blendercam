@@ -20,6 +20,7 @@ syncWithUpstream
 forceSyncWithUpstream
 
 strategies/
+gcode/
 
 \.idea/
 
