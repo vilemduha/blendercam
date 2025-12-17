@@ -9,6 +9,7 @@ from bpy.app.handlers import persistent
 from .logging_utils import log
 
 from ..constants import _IS_LOADING_DEFAULTS
+from ..exception import CamException
 from .. import __package__ as base_package
 
 
@@ -46,6 +47,9 @@ def addon_dependencies():
                     bpy.ops.extensions.package_install(repo_index=0, pkg_id=module)
     else:
         log.debug("Could not Access Online Addon Repository!")
+        raise CamException(
+            "Fabex couldn't install required addons - 'Enable Online Access' in 'Preferences > System'"
+        )
 
 
 def load_defaults(addon_prefs):

@@ -204,7 +204,7 @@ def get_strategy_list(scene, context):
         ),
         (
             "MEDIAL_AXIS",
-            "Medial Axis",
+            "Medial Axis (V-Carve)",
             "Medial axis, must be used with V or ball cutter, for engraving various width shapes with a single stroke ",
             "SHARPCURVE",
             12,

@@ -97,4 +97,4 @@ jobs:
         artifacts: "fabexcnc.zip"
         tag: ${{ env.VERSION_TAG }}
         allowUpdates: true
-        body: "To install FabexCNC extension for Blender, download fabexcnc.zip and *don't* extract it. In Blender, go to Preferences, Get Extensions, and select 'Install from Disk' and select the CNCCAM.zip file you downloaded"
+        bodyFile: './docs/RELEASE.md'
