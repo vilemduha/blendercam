@@ -53,7 +53,10 @@ from .utilities.index_utils import (
     prepare_indexed,
 )
 from .utilities.logging_utils import log
-from .utilities.operation_utils import get_operation_sources
+from .utilities.operation_utils import (
+    get_operation_sources,
+    get_change_data,
+)
 from .utilities.simple_utils import (
     progress,
 )
