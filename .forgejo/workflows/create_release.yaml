@@ -1,0 +1,100 @@
+name: Make new release
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: "New version:"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - overwrite previous tag
+          - minor
+          - major
+          - patch
+jobs:
+  release:
+    runs-on: codeberg-medium
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: https://github.com/actions/checkout@v4.1.1
+      - name: Bump version
+        shell: python
+        env:
+          VERSION_BUMP: ${{ inputs.version_bump }}
+        run: |
+          from pathlib import Path
+          import re
+          import os
+
+          # Path to the file with the version number
+          v_file=Path("fabex","version.py")
+          version_txt=v_file.read_text()
+
+          # Separate each number in the version into its own variable
+          major,minor,patch = re.match(r".*\(\s*(\d+),(\s*\d+),(\s*\d+)\)",version_txt).groups()
+
+          # Convert from String to Integer to add numbers
+          major=int(major)
+          minor=int(minor)
+          patch=int(patch)
+
+          # Get the release type - patch, minor or major
+          bump = os.getenv("VERSION_BUMP")
+
+          # Increase the version and clear lower numbers
+          # When a minor version is released, patch is reset to zero
+          # For a major version, patch and minor are both reset
+          if bump=='patch':
+            patch+=1
+          elif bump=='minor':
+            minor+=1
+            patch=0
+          elif bump=='major':
+            major+=1
+            minor=0
+            patch=0
+
+          # Write the new number to the version file
+          v_file.write_text(f"__version__=({major},{minor},{patch})")
+
+          # Update in blender_manifest for Blender to read
+          toml_file=Path("fabex","blender_manifest.toml")
+          toml_text=toml_file.read_text()
+          version_regex= r'version\s=\s"[0-9]+\.[0-9]+\.[0-9]+"'
+          toml_text = re.sub(version_regex,f'version = "{major}.{minor}.{patch}"',toml_text)
+          toml_file.write_text(toml_text)
+
+          # Write the version number to an env file for the 'make release' action
+          env_file = Path(os.getenv('GITHUB_ENV'))  
+          env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")
+
+          print(f"New version: {major}.{minor}.{patch}")
+      - name: Make addon zip
+        uses: https://github.com/thedoctor0/zip-release@0.7.5
+        with:
+          type: "zip"
+          filename: "fabexcnc.zip"
+          directory: "./"
+          path: "fabex"
+          exclusions: "/*docs/* /*tests/*"
+      - name: Write version number
+        if: ${{ inputs.version_bump }} != "overwrite previous tag"
+        run: |
+          git config --global user.name 'Release robot'
+          git config --global user.email 'release-robot@users.noreply.github.com'
+          git commit -am "Version number" || true
+      - name: Push changes
+        uses: https://github.com/ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+      - name: make release
+        uses: https://github.com/ncipollo/release-action@v1
+        with:
+          artifacts: "fabexcnc.zip"
+          tag: ${{ env.VERSION_TAG }}
+          allowUpdates: true
+          bodyFile: "./docs/RELEASE.md"

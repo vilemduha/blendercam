@@ -14,7 +14,7 @@ from bpy.types import (
     Operator,
 )
 
-from ..gcode_import_parser import import_gcode
+from ..gcode.gcode_import import import_gcode
 
 from ..utilities.logging_utils import log
 

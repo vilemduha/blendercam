@@ -252,9 +252,8 @@ class GcodeParser:
         a_old = ""
         for i in range(len(command)):  # check each character in the line
             a = command[i]
-            if (
-                a.isupper() and a_old != " " and i > 0
-            ):  # add a space if upper case letter and no space is found before
+            if a.isupper() and a_old != " " and i > 0:
+                # add a space if upper case letter and no space is found before
                 s += " "
             s += a
             a_old = a

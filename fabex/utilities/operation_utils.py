@@ -589,5 +589,6 @@ def get_move_and_spin(o):
 
     climb_CW = move_type == "CLIMB" and spin == "CW"
     climb_CCW = move_type == "CLIMB" and spin == "CCW"
+
     conventional_CW = move_type == "CONVENTIONAL" and spin == "CW"
     conventional_CCW = move_type == "CONVENTIONAL" and spin == "CCW"

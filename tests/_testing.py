@@ -5,7 +5,7 @@ Functions for automated testing.
 
 import bpy
 
-from .gcode_path import getPath
+from .toolpath import get_path
 
 from .utilities.logging_utils import log
 from .utilities.simple_utils import activate
