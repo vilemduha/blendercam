@@ -11,7 +11,7 @@ import numpy as np
 
 import bpy
 
-from .utilities.logging_utils import log
+from ..utilities.logging_utils import log
 
 np.set_printoptions(suppress=True)  # suppress scientific notation in subdivide functions linspace
 
