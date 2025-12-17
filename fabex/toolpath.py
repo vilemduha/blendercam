@@ -37,6 +37,7 @@ from .constants import (
     USE_PROFILER,
 )
 from .exception import CamException
+from .gcode.gcode_export import export_gcode_path
 from .pattern import get_path_pattern, get_path_pattern_4_axis
 
 from .utilities.async_utils import progress_async

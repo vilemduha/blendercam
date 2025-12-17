@@ -15,6 +15,7 @@ import time
 import bpy
 from mathutils import Euler, Vector
 
+from .. import __package__ as base_package
 from ..constants import (
     IMPERIAL_CORRECTION,
     METRIC_CORRECTION,
@@ -104,7 +105,7 @@ def export_gcode_path(filename, vertslist, operations):
     }
 
     module = f".post_processors.{processor_extension[m.post_processor][0]}"
-    postprocessor = import_module(module, __package__)
+    postprocessor = import_module(module, base_package)
     extension = processor_extension[m.post_processor][1]
 
     unit_system = s.unit_settings.system
