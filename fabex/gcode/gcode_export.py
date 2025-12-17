@@ -15,12 +15,12 @@ import time
 import bpy
 from mathutils import Euler, Vector
 
-from .constants import (
+from ..constants import (
     IMPERIAL_CORRECTION,
     METRIC_CORRECTION,
     ROTATION_CORRECTION,
 )
-from .post_processors import iso
+from ..post_processors import iso
 
 from ..utilities.compare_utils import point_on_line
 from ..utilities.logging_utils import log
