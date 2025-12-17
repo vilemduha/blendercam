@@ -56,6 +56,7 @@ from .utilities.logging_utils import log
 from .utilities.operation_utils import (
     get_operation_sources,
     get_change_data,
+    check_memory_limit,
 )
 from .utilities.simple_utils import (
     progress,
