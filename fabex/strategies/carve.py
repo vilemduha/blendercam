@@ -3,11 +3,14 @@ import bpy
 from ..bridges import use_bridges
 
 from ..utilities.chunk_utils import (
+    chunks_to_mesh,
     chunks_refine,
+    sample_chunks,
     sort_chunks,
 )
 from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log
+from ..utilities.operation_utils import get_layers
 
 
 async def carve(o):
@@ -19,7 +22,7 @@ async def carve(o):
     pathSamples = chunks_refine(pathSamples, o)
 
     chunks = []
-    layers = strategy.get_layers(o, o.max_z, o.min.z)
+    layers = get_layers(o, o.max_z, o.min.z)
 
     log.info(f"Sampling Object: {o.name}")
     chunks.extend(await sample_chunks(o, pathSamples, layers))
@@ -37,4 +40,4 @@ async def carve(o):
         for bridge_chunk in chunks:
             use_bridges(bridge_chunk, o)
 
-    strategy.chunks_to_mesh(chunks, o)
+    chunks_to_mesh(chunks, o)

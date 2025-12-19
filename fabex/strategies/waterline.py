@@ -1,13 +1,21 @@
-from math import ceil
+from math import ceil, floor
 
+from shapely.geometry import Polygon
 
 from ..utilities.chunk_utils import (
+    chunks_to_mesh,
     chunks_refine,
     limit_chunks,
+    sample_chunks,
     sort_chunks,
 )
+from ..utilities.image_shapely_utils import image_to_shapely
+from ..utilities.image_utils import prepare_area
+from ..utilities.waterline_utils import oclGetWaterline
+from ..utilities.operation_utils import get_ambient
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.shapely_utils import shapely_to_chunks
+from ..utilities.async_utils import progress_async
 
 
 async def waterline(o):
@@ -22,7 +30,7 @@ async def waterline(o):
             for ch in chunks:
                 ch.reverse()
 
-        strategy.chunks_to_mesh(chunks, o)
+        chunks_to_mesh(chunks, o)
 
     else:
         topdown = True
@@ -30,6 +38,7 @@ async def waterline(o):
         await progress_async("Retrieving Object Slices")
         await prepare_area(o)
         layerstep = 1000000000
+
         if o.use_layers:
             layerstep = floor(o.stepdown / o.slice_detail)
             if layerstep == 0:
@@ -39,9 +48,8 @@ async def waterline(o):
         layerstart = o.max.z  #
         layerend = o.min.z  #
         layers = [[layerstart, layerend]]
-        #######################
         nslices = ceil(abs((o.min_z - o.max_z) / o.slice_detail))
-        lastslice = spolygon.Polygon()  # polyversion
+        lastslice = Polygon()  # polyversion
         layerstepinc = 0
 
         slicesfilled = 0
@@ -60,7 +68,7 @@ async def waterline(o):
             islice = o.offset_image > z
             slicepolys = image_to_shapely(o, islice, with_border=True)
 
-            poly = spolygon.Polygon()  # polygversion
+            poly = Polygon()  # polygversion
             lastchunks = []
 
             for p in slicepolys.geoms:
@@ -72,7 +80,6 @@ async def waterline(o):
             if len(slicepolys.geoms) > 0:
                 slicesfilled += 1
 
-            #
             if o.waterline_fill:
                 layerstart = min(o.max_z, z + o.slice_detail)  #
                 layerend = max(o.min.z, z - o.slice_detail)  #
@@ -88,18 +95,20 @@ async def waterline(o):
                             restpoly = poly.difference(lastslice)
                         else:
                             restpoly = lastslice.difference(poly)
-                    # print('filling between')
+
                     if (not o.inverse and poly.is_empty and slicesfilled > 0) or (
                         o.inverse and not poly.is_empty and slicesfilled == 1
                     ):  # first slice fill
                         restpoly = lastslice
 
                     restpoly = restpoly.buffer(
-                        -o.distance_between_paths, resolution=o.optimisation.circle_detail
+                        -o.distance_between_paths,
+                        resolution=o.optimisation.circle_detail,
                     )
 
                     fillz = z
                     i = 0
+
                     while not restpoly.is_empty:
                         nchunks = shapely_to_chunks(restpoly, fillz + o.skin)
                         # project paths TODO: path projection during waterline is not working
@@ -114,11 +123,11 @@ async def waterline(o):
                         lastchunks = nchunks
                         # slicechunks.extend(polyToChunks(restpoly,z))
                         restpoly = restpoly.buffer(
-                            -o.distance_between_paths, resolution=o.optimisation.circle_detail
+                            -o.distance_between_paths,
+                            resolution=o.optimisation.circle_detail,
                         )
-
                         i += 1
-                # print(i)
+
                 i = 0
                 #  fill layers and last slice, last slice with inverse is not working yet
                 #  - inverse millings end now always on 0 so filling ambient does have no sense.
@@ -129,20 +138,19 @@ async def waterline(o):
                 ):
                     fillz = z
                     layerstepinc = 0
-
                     bound_rectangle = o.ambient
                     restpoly = bound_rectangle.difference(poly)
+
                     if o.inverse and poly.is_empty and slicesfilled > 0:
                         restpoly = bound_rectangle.difference(lastslice)
 
                     restpoly = restpoly.buffer(
-                        -o.distance_between_paths, resolution=o.optimisation.circle_detail
+                        -o.distance_between_paths,
+                        resolution=o.optimisation.circle_detail,
                     )
-
                     i = 0
-                    # 'GeometryCollection':#len(restpoly.boundary.coords)>0:
+
                     while not restpoly.is_empty:
-                        # print(i)
                         nchunks = shapely_to_chunks(restpoly, fillz + o.skin)
                         #########################
                         nchunks = limit_chunks(nchunks, o, force=True)
@@ -150,7 +158,8 @@ async def waterline(o):
                         parent_child_distance(lastchunks, nchunks, o)
                         lastchunks = nchunks
                         restpoly = restpoly.buffer(
-                            -o.distance_between_paths, resolution=o.optimisation.circle_detail
+                            -o.distance_between_paths,
+                            resolution=o.optimisation.circle_detail,
                         )
                         i += 1
 
@@ -171,4 +180,4 @@ async def waterline(o):
             chunks.extend(slicechunks)
         if topdown:
             chunks.reverse()
-        strategy.chunks_to_mesh(chunks, o)
+        chunks_to_mesh(chunks, o)

@@ -1,12 +1,15 @@
 from ..bridges import use_bridges
 
 from ..utilities.chunk_utils import (
+    chunks_coherency,
     chunks_to_mesh,
     limit_chunks,
+    sample_chunks,
     sort_chunks,
 )
+from ..utilities.image_utils import prepare_area, get_offset_image_cavities
 from ..utilities.logging_utils import log
-from ..utilities.operation_utils import get_layers
+from ..utilities.operation_utils import get_layers, get_ambient
 
 
 async def pencil(o):

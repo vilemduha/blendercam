@@ -1,5 +1,4 @@
 from math import ceil, floor
-import time
 
 from ..bridges import use_bridges
 
@@ -15,8 +14,6 @@ from ..utilities.simple_utils import progress
 
 
 async def block(o):
-    # o = operation
-    t = time.time()
     progress("~ Building Path Pattern ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 

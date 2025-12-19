@@ -2,7 +2,6 @@ from math import (
     pi,
     sqrt,
 )
-import time
 
 from mathutils import Euler, Vector
 
@@ -21,7 +20,6 @@ from ..utilities.simple_utils import progress
 
 
 async def circles(o):
-    t = time.time()
     progress("~ Building Path Pattern ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 

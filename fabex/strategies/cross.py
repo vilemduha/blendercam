@@ -1,5 +1,4 @@
 from math import pi
-import time
 
 from ..bridges import use_bridges
 
@@ -15,8 +14,6 @@ from ..utilities.strategy_utils import parallel_pattern
 
 
 async def cross(o):
-    # from pattern
-    t = time.time()
     progress("~ Building Path Pattern ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
@@ -24,7 +21,6 @@ async def cross(o):
     pathSamples.extend(parallel_pattern(o, o.parallel_angle))
     pathSamples.extend(parallel_pattern(o, o.parallel_angle - pi / 2.0))
 
-    # from toolpath
     chunks = []
     layers = get_layers(o, o.max_z, o.min.z)
 

@@ -4,7 +4,6 @@ from math import (
     pi,
     sqrt,
 )
-import time
 
 import numpy
 
@@ -29,7 +28,6 @@ from ..utilities.strategy_utils import parallel_pattern
 
 
 async def spiral(o):
-    t = time.time()
     progress("~ Building Path Pattern ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 

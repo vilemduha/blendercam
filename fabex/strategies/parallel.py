@@ -1,5 +1,3 @@
-import time
-
 from ..bridges import use_bridges
 
 from ..utilities.chunk_utils import (
@@ -14,14 +12,11 @@ from ..utilities.strategy_utils import parallel_pattern
 
 
 async def parallel(o):
-    # from pattern
-    t = time.time()
     progress("~ Building Path Pattern ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
     pathSamples = parallel_pattern(o, o.parallel_angle)
 
-    # from toolpath
     chunks = []
     layers = get_layers(o, o.max_z, o.min.z)
 

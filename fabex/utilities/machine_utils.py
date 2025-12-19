@@ -106,9 +106,15 @@ def update_machine(self, context):
 
 
 def update_unit_system(self, context):
-    # unit_system = context.scene.unit_settings.system
-    # unit_type = context.scene.unit_settings.length_unit
+    """Update the scene units based on the machine units
 
+    This function is responsible for updating the Blender scene unit system
+    and length unit settings, it reads the 'machine_unit' string and sets the
+    scene to Imperial, Inches or Metric, Millimeters.
+
+    Args:
+        context: The context in which the machine update is being performed.
+    """
     machine_unit = context.scene.cam_machine.unit_system
 
     if machine_unit == "INCHES":

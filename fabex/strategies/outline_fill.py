@@ -1,5 +1,3 @@
-import time
-
 from ..bridges import use_bridges
 
 from ..utilities.chunk_utils import (
@@ -18,8 +16,6 @@ from ..utilities.simple_utils import progress
 
 
 async def outline_fill(o):
-    # from pattern
-    t = time.time()
     progress("~ Building Path Pattern ~")
 
     get_operation_silhouette(o)
