@@ -6,14 +6,10 @@ from math import (
 
 from mathutils import Euler, Vector
 
-from ..utilities.chunk_builder import (
-    CamPathChunkBuilder,
-)
+from ..utilities.chunk_builder import CamPathChunkBuilder
 from ..utilities.chunk_utils import chunks_to_mesh, sample_chunks_n_axis
-from ..utilities.logging_utils import log
 from ..utilities.operation_utils import get_layers
 from ..utilities.simple_utils import progress
-from ..utilities.strategy_utils import setup_4_axis
 
 
 async def parallel_four_axis(o):
@@ -34,7 +30,46 @@ async def parallel_four_axis(o):
         list: A list of path chunks generated for the specified operation.
     """
 
-    setup_4_axis(o)
+    progress("~ Building Path Pattern ~")
+    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    pathchunks = []
+    zlevel = 1  # minz#this should do layers...
+
+    # set axes for various options, Z option is obvious nonsense now.
+    if o.rotary_axis_1 == "X":
+        a1 = 0
+        a2 = 1
+        a3 = 2
+    if o.rotary_axis_1 == "Y":
+        a1 = 1
+        a2 = 0
+        a3 = 2
+    if o.rotary_axis_1 == "Z":
+        a1 = 2
+        a2 = 0
+        a3 = 1
+
+    o.max.z = o.max_z
+    # set radius for all types of operation
+    radius = max(o.max.z, 0.0001)
+    radiusend = o.min.z
+
+    mradius = max(radius, radiusend)
+    circlesteps = (mradius * pi * 2) / o.distance_along_paths
+    circlesteps = max(4, circlesteps)
+    anglestep = 2 * pi / circlesteps
+    # generalized rotation
+    e = Euler((0, 0, 0))
+    e[a1] = anglestep
+
+    # generalized length of the operation
+    maxl = o.max[a1]
+    minl = o.min[a1]
+    steps = (maxl - minl) / o.distance_between_paths
+
+    # set starting positions for cutter e.t.c.
+    cutterstart = Vector((0, 0, 0))
+    cutterend = Vector((0, 0, 0))  # end point for casting
 
     if o.strategy_4_axis == "PARALLELR":
         for a in range(0, floor(steps) + 1):

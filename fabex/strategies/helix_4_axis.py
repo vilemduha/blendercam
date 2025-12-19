@@ -8,11 +8,13 @@ from math import (
     pi,
 )
 
+from mathutils import Euler, Vector
 
 from ..utilities.chunk_builder import CamPathChunkBuilder
 from ..utilities.chunk_utils import chunks_to_mesh, sample_chunks_n_axis
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import get_layers
+from ..utilities.simple_utils import progress
 
 
 async def helix_four_axis(o):
@@ -33,34 +35,74 @@ async def helix_four_axis(o):
         list: A list of path chunks generated for the specified operation.
     """
 
-    if o.strategy_4_axis == "HELIX":
-        log.info("Helix")
-        a1step = o.distance_between_paths / circlesteps
-        # only one chunk, init here
-        chunk = CamPathChunkBuilder([])
+    progress("~ Building Path Pattern ~")
+    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    pathchunks = []
+    zlevel = 1  # minz#this should do layers...
 
-        for a in range(0, floor(steps) + 1):
-            cutterstart[a1] = o.min[a1] + a * o.distance_between_paths
-            cutterend[a1] = cutterstart[a1]
-            cutterstart[a2] = 0
-            cutterstart[a3] = radius
-            cutterend[a3] = radiusend
+    # set axes for various options, Z option is obvious nonsense now.
+    if o.rotary_axis_1 == "X":
+        a1 = 0
+        a2 = 1
+        a3 = 2
+    if o.rotary_axis_1 == "Y":
+        a1 = 1
+        a2 = 0
+        a3 = 2
+    if o.rotary_axis_1 == "Z":
+        a1 = 2
+        a2 = 0
+        a3 = 1
 
-            for b in range(0, floor(circlesteps) + 1):
-                cutterstart[a1] += a1step
-                cutterend[a1] += a1step
-                chunk.startpoints.append(cutterstart.to_tuple())
-                chunk.endpoints.append(cutterend.to_tuple())
-                rot = [0, 0, 0]
-                rot[a1] = a * 2 * pi + b * anglestep
-                chunk.rotations.append(rot)
-                cutterstart.rotate(e)
-                cutterend.rotate(e)
+    o.max.z = o.max_z
+    # set radius for all types of operation
+    radius = max(o.max.z, 0.0001)
+    radiusend = o.min.z
 
-            chunk = chunk.to_chunk()
-            chunk.depth = radiusend - radius
+    mradius = max(radius, radiusend)
+    circlesteps = (mradius * pi * 2) / o.distance_along_paths
+    circlesteps = max(4, circlesteps)
+    anglestep = 2 * pi / circlesteps
+    # generalized rotation
+    e = Euler((0, 0, 0))
+    e[a1] = anglestep
 
-        pathchunks.append(chunk)
+    # generalized length of the operation
+    maxl = o.max[a1]
+    minl = o.min[a1]
+    steps = (maxl - minl) / o.distance_between_paths
+
+    # set starting positions for cutter e.t.c.
+    cutterstart = Vector((0, 0, 0))
+    cutterend = Vector((0, 0, 0))  # end point for casting
+
+    log.info("Helix")
+    a1step = o.distance_between_paths / circlesteps
+    # only one chunk, init here
+    chunk = CamPathChunkBuilder([])
+
+    for a in range(0, floor(steps) + 1):
+        cutterstart[a1] = o.min[a1] + a * o.distance_between_paths
+        cutterend[a1] = cutterstart[a1]
+        cutterstart[a2] = 0
+        cutterstart[a3] = radius
+        cutterend[a3] = radiusend
+
+        for b in range(0, floor(circlesteps) + 1):
+            cutterstart[a1] += a1step
+            cutterend[a1] += a1step
+            chunk.startpoints.append(cutterstart.to_tuple())
+            chunk.endpoints.append(cutterend.to_tuple())
+            rot = [0, 0, 0]
+            rot[a1] = a * 2 * pi + b * anglestep
+            chunk.rotations.append(rot)
+            cutterstart.rotate(e)
+            cutterend.rotate(e)
+
+        chunk = chunk.to_chunk()
+        chunk.depth = radiusend - radius
+
+    pathchunks.append(chunk)
 
     path_samples = pathchunks
 
