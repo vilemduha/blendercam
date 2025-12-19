@@ -944,7 +944,7 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
     progress("Detect Corners in the Offset Image")
     vertical = i[:-2, 1:-1] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[2:, 1:-1]
     horizontal = i[1:-1, :-2] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[1:-1, 2:]
-    ar = np.logical_or(vertical, horizontal)
+    ar = numpy.logical_or(vertical, horizontal)
 
     if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge,
         # it has tons of spikes and simply is not better than the old one
@@ -992,7 +992,7 @@ def image_to_chunks(o, image, with_border=False):
     t = time.time()
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pixsize = o.optimisation.pixsize
-    image = image.astype(np.uint8)
+    image = image.astype(numpy.uint8)
     edges = []
     ar = image[:, :-1] - image[:, 1:]
     indices1 = ar.nonzero()
