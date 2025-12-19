@@ -1,14 +1,30 @@
-from math import ceil
-
+from math import ceil, floor
+import time
 
 from ..bridges import use_bridges
 
+from ..utilities.chunk_builder import CamPathChunkBuilder
+from ..utilities.chunk_utils import (
+    chunks_to_mesh,
+    connect_chunks_low,
+    sample_chunks,
+)
 from ..utilities.logging_utils import log
+from ..utilities.operation_utils import get_layers
+from ..utilities.simple_utils import progress
 
 
 async def block(o):
+    # o = operation
+    t = time.time()
+    progress("~ Building Path Pattern ~")
+    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+
+    # pathchunks = []
+
+    zlevel = 1  # minz#this should do layers...
+
     # from Pattern
-    # elif o.strategy == "BLOCK":
     pathd = o.distance_between_paths
     pathstep = o.distance_along_paths
     maxxp = maxx
@@ -55,15 +71,22 @@ async def block(o):
         maxyp -= pathd
         i += 1
 
-    # progress(time.time() - t)
-    # return pathchunks
+    if o.movement.insideout == "INSIDEOUT":
+        chunk.points.reverse()
+    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (
+        o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"
+    ):
+        for si in range(0, len(chunk.points)):
+            s = chunk.points[si]
+            chunk.points[si] = (o.max.x + o.min.x - s[0], s[1], s[2])
+    pathSamples = [chunk.to_chunk()]
 
     # from Toolpath
     # if o.strategy in ["BLOCK", "SPIRAL", "CIRCLES"]:
     pathSamples = await connect_chunks_low(pathSamples, o)
 
     chunks = []
-    layers = strategy.get_layers(o, o.max_z, o.min.z)
+    layers = get_layers(o, o.max_z, o.min.z)
 
     log.info(f"Sampling Object: {o.name}")
     chunks.extend(await sample_chunks(o, pathSamples, layers))
@@ -78,4 +101,4 @@ async def block(o):
         for bridge_chunk in chunks:
             use_bridges(bridge_chunk, o)
 
-    strategy.chunks_to_mesh(chunks, o)
+    chunks_to_mesh(chunks, o)

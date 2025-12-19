@@ -23,12 +23,18 @@ from .exception import CamException
 from .gcode.gcode_export import export_gcode_path
 from .pattern import get_path_pattern, get_path_pattern_4_axis
 
+from .strategies.block import block
+from .strategies.circles import circles
+from .strategies.cross import cross
 from .strategies.cutout import cutout
 from .strategies.curve_to_path import curve
 from .strategies.drill import drill
 from .strategies.medial_axis import medial_axis
+from .strategies.outline_fill import outline_fill
 from .strategies.project_curve import project_curve
 from .strategies.pocket import pocket
+from .strategies.parallel import parallel
+from .strategies.spiral import spiral
 
 from .utilities.async_utils import progress_async
 from .utilities.bounds_utils import get_bounds
@@ -61,9 +67,7 @@ from .utilities.operation_utils import (
     get_layers,
 )
 from .utilities.parent_utils import parent_child_distance
-from .utilities.shapely_utils import (
-    shapely_to_chunks,
-)
+from .utilities.shapely_utils import shapely_to_chunks
 from .utilities.silhouette_utils import get_operation_silhouette
 from .utilities.simple_utils import progress
 from .utilities.stroke_utils import crazy_stroke_image_binary
@@ -185,12 +189,13 @@ async def get_path_3_axis(context, operation):
     tw = time.time()
 
     # strategy_from_operation = {
+    #     "BLOCK": block(o),
     #     "CUTOUT": cutout(o),
     #     "CURVE": curve(o),
-    #     "DRILL": strategy.drill(o),
-    #     "MEDIAL_AXIS": strategy.medial_axis(o),
-    #     "PROJECTED_CURVE": strategy.project_curve(s, o),
-    #     "POCKET": strategy.pocket(o),
+    #     "DRILL": drill(o),
+    #     "MEDIAL_AXIS": medial_axis(o),
+    #     "PROJECTED_CURVE": project_curve(s, o),
+    #     "POCKET": pocket(o),
     # }
 
     # await strategy_from_operation[o.strategy]
@@ -208,18 +213,30 @@ async def get_path_3_axis(context, operation):
         await medial_axis(o)
 
     elif o.strategy == "PROJECTED_CURVE":
-        await project_curve(s, o)
+        await project_curve(o)
 
     elif o.strategy == "POCKET":
         await pocket(o)
 
+    elif o.strategy == "PARALLEL":
+        await parallel(o)
+
+    elif o.strategy == "CROSS":
+        await cross(o)
+
+    elif o.strategy == "BLOCK":
+        await block(o)
+
+    elif o.strategy == "SPIRAL":
+        await spiral(o)
+
+    elif o.strategy == "CIRCLES":
+        await circles(o)
+
+    elif o.strategy == "OUTLINEFILL":
+        await outline_fill(o)
+
     elif o.strategy in [
-        "PARALLEL",
-        "CROSS",
-        "BLOCK",
-        "SPIRAL",
-        "CIRCLES",
-        "OUTLINEFILL",
         "CARVE",
         "PENCIL",
         "CRAZY",
@@ -231,6 +248,7 @@ async def get_path_3_axis(context, operation):
             # sort before sampling
             pathSamples = await sort_chunks(pathSamples, o)
             pathSamples = chunks_refine(pathSamples, o)
+
         elif o.strategy == "PENCIL":
             await prepare_area(o)
             get_ambient(o)
@@ -238,30 +256,15 @@ async def get_path_3_axis(context, operation):
             pathSamples = limit_chunks(pathSamples, o)
             # sort before sampling
             pathSamples = await sort_chunks(pathSamples, o)
+
         elif o.strategy == "CRAZY":
             await prepare_area(o)
-            # pathSamples = crazyStrokeImage(o)
             # this kind of worked and should work:
             millarea = o.zbuffer_image < o.min_z + 0.000001
             avoidarea = o.offset_image > o.min_z + 0.000001
-
             pathSamples = crazy_stroke_image_binary(o, millarea, avoidarea)
-            #####
             pathSamples = await sort_chunks(pathSamples, o)
             pathSamples = chunks_refine(pathSamples, o)
-
-        else:
-            if o.strategy == "OUTLINEFILL":
-                get_operation_silhouette(o)
-
-            pathSamples = get_path_pattern(o)
-
-            if o.strategy == "OUTLINEFILL":
-                pathSamples = await sort_chunks(pathSamples, o)
-                # have to be sorted once before, because of the parenting inside of samplechunks
-
-            if o.strategy in ["BLOCK", "SPIRAL", "CIRCLES"]:
-                pathSamples = await connect_chunks_low(pathSamples, o)
 
         chunks = []
         layers = get_layers(o, o.max_z, o.min.z)
@@ -273,12 +276,10 @@ async def get_path_3_axis(context, operation):
         if o.strategy == "PENCIL":
             chunks = chunks_coherency(chunks)
             log.info("Coherency Check")
-
-        if o.strategy in ["PARALLEL", "CROSS", "PENCIL", "OUTLINEFILL"]:
             log.info("Sorting")
             chunks = await sort_chunks(chunks, o)
-            if o.strategy == "OUTLINEFILL":
-                chunks = await connect_chunks_low(chunks, o)
+
+        ############### Common - Carve, Pencil, Crazy
         if o.movement.ramp:
             for ch in chunks:
                 ch.ramp_zig_zag(ch.zstart, None, o)
@@ -293,6 +294,8 @@ async def get_path_3_axis(context, operation):
                 use_bridges(bridge_chunk, o)
 
         chunks_to_mesh(chunks, o)
+
+    #############################################################################
 
     elif o.strategy == "WATERLINE" and o.optimisation.use_opencamlib:
         get_ambient(o)
@@ -342,20 +345,19 @@ async def get_path_3_axis(context, operation):
 
             islice = o.offset_image > z
             slicepolys = image_to_shapely(o, islice, with_border=True)
-
-            poly = Polygon()  # polygversion
+            poly = Polygon()
             lastchunks = []
 
             for p in slicepolys.geoms:
-                poly = poly.union(p)  # polygversion TODO: why is this added?
+                poly = poly.union(p)  # TODO: why is this added?
                 nchunks = shapely_to_chunks(p, z + o.skin)
                 nchunks = limit_chunks(nchunks, o, force=True)
                 lastchunks.extend(nchunks)
                 slicechunks.extend(nchunks)
+
             if len(slicepolys.geoms) > 0:
                 slicesfilled += 1
 
-            #
             if o.waterline_fill:
                 layerstart = min(o.max_z, z + o.slice_detail)  #
                 layerend = max(o.min.z, z - o.slice_detail)  #
@@ -379,11 +381,12 @@ async def get_path_3_axis(context, operation):
                         restpoly = lastslice
 
                     restpoly = restpoly.buffer(
-                        -o.distance_between_paths, resolution=o.optimisation.circle_detail
+                        -o.distance_between_paths,
+                        resolution=o.optimisation.circle_detail,
                     )
-
                     fillz = z
                     i = 0
+
                     while not restpoly.is_empty:
                         nchunks = shapely_to_chunks(restpoly, fillz + o.skin)
                         # project paths TODO: path projection during waterline is not working
@@ -397,9 +400,9 @@ async def get_path_3_axis(context, operation):
                         parent_child_distance(lastchunks, nchunks, o)
                         lastchunks = nchunks
                         restpoly = restpoly.buffer(
-                            -o.distance_between_paths, resolution=o.optimisation.circle_detail
+                            -o.distance_between_paths,
+                            resolution=o.optimisation.circle_detail,
                         )
-
                         i += 1
 
                 i = 0
@@ -412,9 +415,9 @@ async def get_path_3_axis(context, operation):
                 ):
                     fillz = z
                     layerstepinc = 0
-
                     bound_rectangle = o.ambient
                     restpoly = bound_rectangle.difference(poly)
+
                     if o.inverse and poly.is_empty and slicesfilled > 0:
                         restpoly = bound_rectangle.difference(lastslice)
 
@@ -446,13 +449,15 @@ async def get_path_3_axis(context, operation):
                 for chunk in slicechunks:
                     chunk.reverse()
             slicechunks = await sort_chunks(slicechunks, o)
+
             if topdown:
                 slicechunks.reverse()
             # project chunks in between
-
             chunks.extend(slicechunks)
+
         if topdown:
             chunks.reverse()
+
         chunks_to_mesh(chunks, o)
 
     await progress_async(f"Done", time.time() - tw, "s")

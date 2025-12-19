@@ -4,11 +4,21 @@ Main functionality of Fabex.
 The functions here are called with operators defined in 'ops.py'
 """
 
-import bpy
+from math import pi
 
+import numpy
+
+import bpy
+from mathutils import Euler, Vector
+
+from .chunk_builder import (
+    CamPathChunk,
+    CamPathChunkBuilder,
+)
 from .logging_utils import log
 from .orient_utils import add_orientation_object, remove_orientation_object
 from .silhouette_utils import silhouette_offset
+from .simple_utils import progress
 
 
 def update_strategy(o, context):
@@ -316,3 +326,147 @@ def add_pocket(max_depth, sname, new_cutter_diameter):
         o.use_layers = False
         o.material.estimate_from_model = False
         o.material.size[2] = -max_depth
+
+
+def parallel_pattern(o, angle):
+    """Generate path chunks for parallel movement based on object dimensions
+    and angle.
+
+    This function calculates a series of path chunks for a given object,
+    taking into account its dimensions and the specified angle. It utilizes
+    both a traditional method and an alternative algorithm (currently
+    disabled) to generate these paths. The paths are constructed by
+    iterating over calculated vectors and applying transformations based on
+    the object's properties. The resulting path chunks can be used for
+    various movement types, including conventional and climb movements.
+
+    Args:
+        o (object): An object containing properties such as dimensions and movement type.
+        angle (float): The angle to rotate the path generation.
+
+    Returns:
+        list: A list of path chunks generated based on the object's dimensions and
+            angle.
+    """
+
+    zlevel = 1
+    pathd = o.distance_between_paths
+    pathstep = o.distance_along_paths
+    pathchunks = []
+
+    xm = (o.max.x + o.min.x) / 2
+    ym = (o.max.y + o.min.y) / 2
+    vm = Vector((xm, ym, 0))
+    xdim = o.max.x - o.min.x
+    ydim = o.max.y - o.min.y
+    dim = (xdim + ydim) / 2.0
+    e = Euler((0, 0, angle))
+    reverse = False
+
+    # Original pattern method, slower, but well tested
+    # bpy.app.debug_value has a default value of 0 (False), so
+    # this check will always pass unless Blender is launched
+    # with the correct command line options: -d, --debug
+    if bpy.app.debug_value == 0:
+        dirvect = Vector((0, 1, 0))
+        dirvect.rotate(e)
+        dirvect.normalize()
+        dirvect *= pathstep
+        for a in range(int(-dim / pathd), int(dim / pathd)):
+            # this is highly ineffective, computes path2x the area needed...
+            chunk = CamPathChunkBuilder([])
+            v = Vector((a * pathd, int(-dim / pathstep) * pathstep, 0))
+            v.rotate(e)
+            # shifting for the rotation, so pattern rotates around middle...
+            v += vm
+            for b in range(int(-dim / pathstep), int(dim / pathstep)):
+                v += dirvect
+
+                if o.min.x < v.x < o.max.x and o.min.y < v.y < o.max.y:
+                    chunk.points.append((v.x, v.y, zlevel))
+            if (
+                (reverse and o.movement.type == "MEANDER")
+                or (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW")
+                or (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW")
+            ):
+                chunk.points.reverse()
+
+            if len(chunk.points) > 0:
+                pathchunks.append(chunk.to_chunk())
+            if (
+                len(pathchunks) > 1
+                and reverse
+                and o.movement.parallel_step_back
+                and not o.use_layers
+            ):
+                # parallel step back - for finishing, best with climb movement, saves cutter life by going into
+                # material with climb, while using move back on the surface to improve finish
+                # (which would otherwise be a conventional move in the material)
+
+                if o.movement.type == "CONVENTIONAL" or o.movement.type == "CLIMB":
+                    pathchunks[-2].reverse()
+                changechunk = pathchunks[-1]
+                pathchunks[-1] = pathchunks[-2]
+                pathchunks[-2] = changechunk
+
+            reverse = not reverse
+
+    # Alternative pattern algorithm using numpy, didn't work as should so blocked now...
+    else:
+        v = Vector((0, 1, 0))
+        v.rotate(e)
+        e1 = Euler((0, 0, -pi / 2))
+        v1 = v.copy()
+        v1.rotate(e1)
+
+        axis_across_paths = numpy.array(
+            (
+                numpy.arange(int(-dim / pathd), int(dim / pathd)) * pathd * v1.x + xm,
+                numpy.arange(int(-dim / pathd), int(dim / pathd)) * pathd * v1.y + ym,
+                numpy.arange(int(-dim / pathd), int(dim / pathd)) * 0,
+            )
+        )
+
+        axis_along_paths = numpy.array(
+            (
+                numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.x,
+                numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.y,
+                numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * 0 + zlevel,
+            )
+        )
+        # rotate this first
+        progress(axis_along_paths)
+        chunks = []
+
+        for a in range(0, len(axis_across_paths[0])):
+            nax = axis_along_paths.copy()
+            nax[0] += axis_across_paths[0][a]
+            nax[1] += axis_across_paths[1][a]
+            xfitmin = nax[0] > o.min.x
+            xfitmax = nax[0] < o.max.x
+            xfit = xfitmin & xfitmax
+            nax = numpy.array(
+                [
+                    nax[0][xfit],
+                    nax[1][xfit],
+                    nax[2][xfit],
+                ]
+            )
+            yfitmin = nax[1] > o.min.y
+            yfitmax = nax[1] < o.max.y
+            yfit = yfitmin & yfitmax
+            nax = numpy.array(
+                [
+                    nax[0][yfit],
+                    nax[1][yfit],
+                    nax[2][yfit],
+                ]
+            )
+            chunks.append(nax.swapaxes(0, 1))
+
+        pathchunks = []
+        for ch in chunks:
+            ch = ch.tolist()
+            pathchunks.append(CamPathChunk(ch))
+
+    return pathchunks

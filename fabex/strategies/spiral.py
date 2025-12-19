@@ -1,16 +1,23 @@
 from math import (
+    ceil,
+    floor,
     pi,
     sqrt,
 )
 import time
 
+import numpy
+
+import bpy
 from mathutils import Euler, Vector
 
-from ..bridges import use_bridges
-
-from ..utilities.chunk_builder import CamPathChunkBuilder
+from ..utilities.chunk_builder import (
+    CamPathChunk,
+    CamPathChunkBuilder,
+)
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
+    chunks_refine,
     connect_chunks_low,
     sample_chunks,
 )
@@ -18,9 +25,10 @@ from ..utilities.logging_utils import log
 from ..utilities.operation_utils import get_layers
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.simple_utils import progress
+from ..utilities.strategy_utils import parallel_pattern
 
 
-async def circles(o):
+async def spiral(o):
     t = time.time()
     progress("~ Building Path Pattern ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
@@ -29,59 +37,31 @@ async def circles(o):
 
     zlevel = 1  # minz#this should do layers...
 
+    chunk = CamPathChunkBuilder([])
     pathd = o.distance_between_paths
     pathstep = o.distance_along_paths
     midx = (o.max.x + o.min.x) / 2
     midy = (o.max.y + o.min.y) / 2
-    rx = o.max.x - o.min.x
-    ry = o.max.y - o.min.y
-    maxr = sqrt(rx * rx + ry * ry)
+    x = pathd / 4
+    y = pathd / 4
+    v = Vector((pathd / 4, 0, 0))
     e = Euler((0, 0, 0))
-    chunk = CamPathChunkBuilder([])
-    chunk.points.append((midx, midy, zlevel))
-    pathSamples.append(chunk.to_chunk())
-    r = 0
+    chunk.points.append((midx + v.x, midy + v.y, zlevel))
 
-    while r < maxr:
-        r += pathd
-        chunk = CamPathChunkBuilder([])
-        firstchunk = chunk
-        v = Vector((-r, 0, 0))
-        steps = 2 * pi * r / pathstep
-        e.z = 2 * pi / steps
-        laststepchunks = []
-        currentstepchunks = []
+    while midx + v.x > o.min.x or midy + v.y > o.min.y:
+        offset = 2 * v.length * pi
+        e.z = 2 * pi * (pathstep / offset)
+        v.rotate(e)
+        v.length = v.length + pathd / (offset / pathstep)
 
-        for a in range(0, int(steps)):
-            laststepchunks = currentstepchunks
-            currentstepchunks = []
-
-            if o.max.x > midx + v.x > o.min.x and o.max.y > midy + v.y > o.min.y:
-                chunk.points.append((midx + v.x, midy + v.y, zlevel))
-            else:
-                if len(chunk.points) > 0:
-                    chunk.closed = False
-                    chunk = chunk.to_chunk()
-                    pathSamples.append(chunk)
-                    currentstepchunks.append(chunk)
-                    chunk = CamPathChunkBuilder([])
-
-            v.rotate(e)
-
-        if len(chunk.points) > 0:
-            chunk.points.append(firstchunk.points[0])
-
-            if chunk == firstchunk:
-                chunk.closed = True
-
-            chunk = chunk.to_chunk()
-            pathSamples.append(chunk)
-            currentstepchunks.append(chunk)
+        if o.max.x > midx + v.x > o.min.x and o.max.y > midy + v.y > o.min.y:
+            chunk.points.append((midx + v.x, midy + v.y, zlevel))
+        else:
+            pathSamples.append(chunk.to_chunk())
             chunk = CamPathChunkBuilder([])
 
-        for ch in laststepchunks:
-            for p in currentstepchunks:
-                parent_child_distance(p, ch, o)
+    if len(chunk.points) > 0:
+        pathSamples.append(chunk.to_chunk())
 
     if o.movement.insideout == "OUTSIDEIN":
         pathSamples.reverse()
@@ -89,12 +69,15 @@ async def circles(o):
     for chunk in pathSamples:
         if o.movement.insideout == "OUTSIDEIN":
             chunk.reverse()
+
         if (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW") or (
             o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW"
         ):
-            chunk.reverse()
+            # TODO
+            chunk.flip_x(o.max.x + o.min.x)
 
     pathSamples = await connect_chunks_low(pathSamples, o)
+
     chunks = []
     layers = get_layers(o, o.max_z, o.min.z)
 

@@ -1,18 +1,117 @@
+import time
+
 from ..bridges import use_bridges
 
 from ..utilities.chunk_utils import (
+    chunks_refine,
     chunks_to_mesh,
+    connect_chunks_low,
+    sample_chunks,
     sort_chunks,
 )
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import get_layers
+from ..utilities.parent_utils import parent_child_distance
+from ..utilities.shapely_utils import shapely_to_chunks
 from ..utilities.silhouette_utils import get_operation_silhouette
+from ..utilities.simple_utils import progress
 
 
 async def outline_fill(o):
+    # from pattern
+    t = time.time()
+    progress("~ Building Path Pattern ~")
+
     get_operation_silhouette(o)
 
-    pathSamples = get_path_pattern(o)
+    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+
+    pathchunks = []
+
+    zlevel = 1  # minz#this should do layers...
+    polys = o.silhouette.geoms
+    chunks = []
+
+    for p in polys:
+        p = p.buffer(-o.distance_between_paths / 10, o.optimisation.circle_detail)
+        # first, move a bit inside, because otherwise the border samples go crazy very often changin between
+        # hit/non hit and making too many jumps in the path.
+        chunks.extend(shapely_to_chunks(p, 0))
+
+    pathchunks.extend(chunks)
+    lastchunks = chunks
+    firstchunks = chunks
+    approxn = (min(maxx - minx, maxy - miny) / o.distance_between_paths) / 2
+    i = 0
+
+    for porig in polys:
+        p = porig
+
+        while not p.is_empty:
+            p = p.buffer(-o.distance_between_paths, o.optimisation.circle_detail)
+
+            if not p.is_empty:
+                nchunks = shapely_to_chunks(p, zlevel)
+
+                if o.movement.insideout == "INSIDEOUT":
+                    parent_child_distance(lastchunks, nchunks, o)
+                else:
+                    parent_child_distance(nchunks, lastchunks, o)
+
+                pathchunks.extend(nchunks)
+                lastchunks = nchunks
+
+            percent = int(i / approxn * 100)
+            progress("Outlining Polygons ", percent)
+            i += 1
+
+    pathchunks.reverse()
+
+    if not o.inverse:  # dont do ambient for inverse milling
+        lastchunks = firstchunks
+
+        for p in polys:
+            d = o.distance_between_paths
+            steps = o.ambient_radius / o.distance_between_paths
+
+            for a in range(0, int(steps)):
+                dist = d
+
+                if a == int(o.cutter_diameter / 2 / o.distance_between_paths):
+                    if o.optimisation.use_exact:
+                        dist += o.optimisation.pixsize * 0.85
+                        # this is here only because silhouette is still done with zbuffer method,
+                        # even if we use bullet collisions.
+                    else:
+                        dist += o.optimisation.pixsize * 2.5
+
+                p = p.buffer(dist, o.optimisation.circle_detail)
+
+                if not p.is_empty:
+                    nchunks = shapely_to_chunks(p, zlevel)
+
+                    if o.movement.insideout == "INSIDEOUT":
+                        parent_child_distance(nchunks, lastchunks, o)
+                    else:
+                        parent_child_distance(lastchunks, nchunks, o)
+
+                    pathchunks.extend(nchunks)
+                    lastchunks = nchunks
+
+    if o.movement.insideout == "OUTSIDEIN":
+        pathchunks.reverse()
+
+    for chunk in pathchunks:
+        if o.movement.insideout == "OUTSIDEIN":
+            chunk.reverse()
+        if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (
+            o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"
+        ):
+            chunk.reverse()
+
+    pathSamples = chunks_refine(pathchunks, o)
+
+    # from toolpath
     pathSamples = await sort_chunks(pathSamples, o)
 
     chunks = []
@@ -32,7 +131,7 @@ async def outline_fill(o):
 
     if o.use_bridges:
         log.info(chunks)
-    for bridge_chunk in chunks:
-        use_bridges(bridge_chunk, o)
+        for bridge_chunk in chunks:
+            use_bridges(bridge_chunk, o)
 
     chunks_to_mesh(chunks, o)

@@ -16,7 +16,7 @@ from ..utilities.operation_utils import (
 from ..utilities.simple_utils import subdivide_short_lines
 
 
-async def project_curve(s, o):
+async def project_curve(o):
     """Project a curve onto another curve object.
 
     This function takes a source object and a target object, both of which
@@ -43,6 +43,7 @@ async def project_curve(s, o):
     path_samples = []
     chunks = []
 
+    s = bpy.context.scene
     ob = bpy.data.objects[o.curve_source]
     path_samples.extend(curve_to_chunks(ob))
     target_curve = s.objects[o.curve_target]
