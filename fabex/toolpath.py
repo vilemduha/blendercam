@@ -21,7 +21,7 @@ from .constants import (
 )
 from .exception import CamException
 from .gcode.gcode_export import export_gcode_path
-from .pattern import get_path_pattern, get_path_pattern_4_axis
+from .pattern import get_path_pattern_4_axis
 
 from .strategies.block import block
 from .strategies.circles import circles
