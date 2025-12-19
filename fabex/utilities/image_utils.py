@@ -33,6 +33,7 @@ from mathutils import (
 )
 
 from .async_utils import progress_async
+from .chunk_builder import CamPathChunkBuilder
 from .logging_utils import log
 from .operation_utils import get_cutter_array
 from .parent_utils import parent_child_distance
