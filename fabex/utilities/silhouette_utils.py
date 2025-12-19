@@ -9,8 +9,10 @@ from shapely.geometry import (
 
 import bpy
 
-# image_to_chunks required
-from .chunk_utils import image_to_chunks
+from .chunk_utils import (
+    image_to_chunks,
+    curve_to_chunks,
+)
 from .image_utils import render_sample_image
 
 from .logging_utils import log

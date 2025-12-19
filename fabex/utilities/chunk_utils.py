@@ -43,7 +43,10 @@ from .image_utils import (
 )
 from .internal_utils import _optimize_internal
 from .logging_utils import log
-from .ocl_utils import oclSample
+from .ocl_utils import (
+    oclSample,
+    oclResampleChunks,
+)
 
 from .operation_utils import get_ambient
 from .parent_utils import (

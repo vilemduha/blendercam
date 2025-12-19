@@ -18,9 +18,10 @@ from math import (
 import numpy
 import pickle
 
+from shapely.geometry import Polygon
+
 import bpy
 from bpy_extras import object_utils
-
 from mathutils import (
     Vector,
 )
@@ -28,10 +29,8 @@ from mathutils import (
 from .logging_utils import log
 from .simple_utils import (
     get_cache_path,
+    unit_value_to_string,
 )
-from .logging_utils import log
-from .simple_utils import get_cache_path
-from .simple_utils import unit_value_to_string
 
 from .. import __package__ as base_package
 from ..constants import was_hidden_dict
