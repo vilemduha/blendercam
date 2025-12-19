@@ -3,25 +3,21 @@
 Functions to handle shapely operations and conversions - curve, coords, polygon
 """
 
-from math import pi
-
 import shapely
 from shapely.geometry import (
     Polygon,
     MultiPolygon,
 )
 
-from mathutils import Euler, Vector
+from mathutils import Vector
 
 try:
     import bl_ext.blender_org.simplify_curves_plus as curve_simplify
 except ImportError:
     pass
 
-# from .chunk_utils import curve_to_chunks
+from .chunk_builder import CamPathChunkBuilder
 from .logging_utils import log
-
-from ..constants import SHAPELY
 
 
 def shapely_remove_doubles(p, optimize_threshold):
@@ -174,8 +170,6 @@ def shapely_to_curve(name, p, z, cyclic=True):
     """
 
     import bpy
-    import bmesh
-    from bpy_extras import object_utils
 
     verts = []
     edges = []
@@ -391,3 +385,24 @@ def chunks_to_shapely(chunks):
 
     polys = MultiPolygon(returnpolys)
     return polys
+
+
+def shapely_to_chunks(p, zlevel):
+    chunk_builders = []
+    seq = shapely_to_coordinates(p)
+    i = 0
+
+    for s in seq:
+        if len(s) > 1:
+            chunk = CamPathChunkBuilder([])
+
+            for v in s:
+                if p.has_z:
+                    chunk.points.append((v[0], v[1], v[2]))
+                else:
+                    chunk.points.append((v[0], v[1], zlevel))
+
+            chunk_builders.append(chunk)
+        i += 1
+    chunk_builders.reverse()  # this is for smaller shapes first.
+    return [c.to_chunk() for c in chunk_builders]

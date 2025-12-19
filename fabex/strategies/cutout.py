@@ -13,12 +13,12 @@ from ..utilities.chunk_utils import (
     chunks_to_mesh,
     curve_to_chunks,
     limit_chunks,
-    shapely_to_chunks,
     sort_chunks,
 )
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import check_min_z, get_layers
 from ..utilities.parent_utils import parent_child_poly
+from ..utilities.shapely_utils import shapely_to_chunks
 from ..utilities.silhouette_utils import get_object_outline
 from ..utilities.simple_utils import (
     activate,

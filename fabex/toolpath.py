@@ -39,7 +39,6 @@ from .utilities.chunk_utils import (
     curve_to_chunks,
     limit_chunks,
     chunks_coherency,
-    shapely_to_chunks,
     sample_chunks,
     sample_chunks_n_axis,
     connect_chunks_low,
@@ -55,7 +54,6 @@ from .utilities.index_utils import (
     prepare_indexed,
 )
 from .utilities.logging_utils import log
-from .utilities.ocl_utils import oclGetWaterline
 from .utilities.operation_utils import (
     get_ambient,
     get_operation_sources,
@@ -64,10 +62,14 @@ from .utilities.operation_utils import (
     get_layers,
 )
 from .utilities.parent_utils import parent_child_distance
-from .utilities.shapely_utils import image_to_shapely
+from .utilities.shapely_utils import (
+    image_to_shapely,
+    shapely_to_chunks,
+)
 from .utilities.silhouette_utils import get_operation_silhouette
 from .utilities.simple_utils import progress
 from .utilities.stroke_utils import crazy_stroke_image_binary
+from .utilities.waterline_utils import oclGetWaterline
 
 
 async def get_path(context, operation):

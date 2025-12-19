@@ -53,7 +53,6 @@ from .parent_utils import (
     parent_child,
     parent_child_distance,
 )
-from .shapely_utils import shapely_to_coordinates
 from .simple_utils import (
     activate,
     progress,
@@ -485,27 +484,6 @@ def curve_to_chunks(o, use_modifiers=False):
     bpy.ops.object.delete()
 
     return chunks
-
-
-def shapely_to_chunks(p, zlevel):
-    chunk_builders = []
-    seq = shapely_to_coordinates(p)
-    i = 0
-
-    for s in seq:
-        if len(s) > 1:
-            chunk = CamPathChunkBuilder([])
-
-            for v in s:
-                if p.has_z:
-                    chunk.points.append((v[0], v[1], v[2]))
-                else:
-                    chunk.points.append((v[0], v[1], zlevel))
-
-            chunk_builders.append(chunk)
-        i += 1
-    chunk_builders.reverse()  # this is for smaller shapes first.
-    return [c.to_chunk() for c in chunk_builders]
 
 
 async def sample_chunks_n_axis(o, pathSamples, layers):

@@ -4,10 +4,10 @@ from math import ceil
 from ..utilities.chunk_utils import (
     chunks_refine,
     limit_chunks,
-    shapely_to_chunks,
     sort_chunks,
 )
 from ..utilities.parent_utils import parent_child_distance
+from ..utilities.shapely_utils import shapely_to_chunks
 
 
 async def waterline(o):

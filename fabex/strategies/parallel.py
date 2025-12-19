@@ -31,7 +31,6 @@ from ..utilities.chunk_utils import (
     set_chunks_z,
     curve_to_chunks,
     limit_chunks,
-    shapely_to_chunks,
     sample_chunks_n_axis,
     sort_chunks,
 )
@@ -43,7 +42,10 @@ from ..utilities.parent_utils import (
     parent_child_distance,
     parent_child_poly,
 )
-from ..utilities.shapely_utils import shapely_to_curve
+from ..utilities.shapely_utils import (
+    shapely_to_curve,
+    shapely_to_chunks,
+)
 from ..utilities.silhouette_utils import (
     get_object_outline,
     get_operation_silhouette,

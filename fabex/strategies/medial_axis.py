@@ -19,13 +19,15 @@ from ..exception import CamException
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     chunks_refine_threshold,
-    shapely_to_chunks,
     sort_chunks,
 )
 from ..utilities.compare_utils import check_equal, unique
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import get_layers
-from ..utilities.shapely_utils import shapely_to_curve
+from ..utilities.shapely_utils import (
+    shapely_to_curve,
+    shapely_to_chunks,
+)
 from ..utilities.silhouette_utils import get_operation_silhouette
 from ..utilities.simple_utils import (
     activate,

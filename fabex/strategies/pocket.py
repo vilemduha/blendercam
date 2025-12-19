@@ -17,7 +17,6 @@ from ..operators.curve_create_ops import generate_crosshatch
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     limit_chunks,
-    shapely_to_chunks,
     sort_chunks,
     set_chunks_z,
 )
@@ -28,7 +27,10 @@ from ..utilities.operation_utils import (
     get_layers,
 )
 from ..utilities.parent_utils import parent_child_distance
-from ..utilities.shapely_utils import shapely_to_curve
+from ..utilities.shapely_utils import (
+    shapely_to_curve,
+    shapely_to_chunks,
+)
 from ..utilities.silhouette_utils import get_object_outline
 from ..utilities.simple_utils import (
     activate,
