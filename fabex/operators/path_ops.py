@@ -32,9 +32,8 @@ from ..gcode.gcode_export import export_gcode_path
 from ..toolpath import get_path
 
 from ..utilities.async_utils import progress_async
-from ..utilities.chunk_utils import chunks_to_shapely
 from ..utilities.logging_utils import log
-from ..utilities.shapely_utils import shapely_to_curve
+from ..utilities.shapely_utils import shapely_to_curve, chunks_to_shapely
 from ..utilities.simple_utils import activate, add_to_group
 from ..utilities.thread_utils import threadCom, thread_read, timer_update
 from ..utilities.machine_utils import add_machine_area_object

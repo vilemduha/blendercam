@@ -8,6 +8,7 @@ import bpy
 
 from .logging_utils import log
 from .orient_utils import add_orientation_object, remove_orientation_object
+from .silhouette_utils import silhouette_offset
 
 
 def update_strategy(o, context):
@@ -28,9 +29,8 @@ def update_strategy(o, context):
     """"""
     o.changed = True
     log.info("Update Strategy")
-    if o.machine_axes == "5" or (
-        o.machine_axes == "4" and o.strategy_4_axis == "INDEXED"
-    ):  # INDEXED 4 AXIS DOESN'T EXIST NOW...
+    if o.machine_axes == "5" or (o.machine_axes == "4" and o.strategy_4_axis == "INDEXED"):
+        # INDEXED 4 AXIS DOESN'T EXIST NOW...
         add_orientation_object(o)
     else:
         remove_orientation_object(o)
@@ -248,3 +248,71 @@ def update_opencamlib(self, context):
     # from . import updateOpencamlib
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     update_opencamlib_1(active_op, bpy.context)
+
+
+# add pocket op for medial axis and profile cut inside to clean unremoved material
+def add_pocket(max_depth, sname, new_cutter_diameter):
+    """Add a pocket operation for the medial axis and profile cut.
+
+    This function first deselects all objects in the scene and then checks
+    for any existing medial pocket objects, deleting them if found. It
+    verifies whether a medial pocket operation already exists in the CAM
+    operations. If it does not exist, it creates a new pocket operation with
+    the specified parameters. The function also modifies the selected
+    object's silhouette offset based on the new cutter diameter.
+
+    Args:
+        max_depth (float): The maximum depth of the pocket to be created.
+        sname (str): The name of the object to which the pocket will be added.
+        new_cutter_diameter (float): The diameter of the new cutter to be used.
+    """
+
+    bpy.ops.object.select_all(action="DESELECT")
+    scene = bpy.context.scene
+    mpocket_exists = False
+
+    # OBJECT name
+    mp_ob_name = f"{sname}_medial_pocket"
+
+    # Delete old Medial Pocket object, if one exists
+    # [ob.select_set(True) for ob in scene.objects if ob.name.startswith(mp_ob_name)]
+    for ob in scene.objects:
+        if ob.name.startswith(mp_ob_name):
+            ob.select_set(True)
+            bpy.ops.object.delete()
+
+    # OPERATION name
+    mp_op_name = f"{sname}_MedialPocket"
+
+    # Verify Medial Pocket Operation exists
+    for op in scene.cam_operations:
+        if op.name == mp_op_name:
+            mpocket_exists = True
+
+    # Modify Silhouette with Cutter Radius
+    ob = bpy.data.objects[sname]
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    silhouette_offset(
+        ob,
+        -new_cutter_diameter / 2,
+        1,
+        2,
+    )
+    bpy.context.active_object.name = mp_ob_name
+    m_ob = bpy.context.view_layer.objects.active
+    bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
+    m_ob.location.z = max_depth
+
+    # Create a Pocket Operation if it does not exist already
+    if not mpocket_exists:
+        scene.cam_operations.add()
+        o = scene.cam_operations[-1]
+        o.object_name = mp_ob_name
+        scene.cam_active_operation = len(scene.cam_operations) - 1
+        o.name = mp_op_name
+        o.filename = o.name
+        o.strategy = "POCKET"
+        o.use_layers = False
+        o.material.estimate_from_model = False
+        o.material.size[2] = -max_depth

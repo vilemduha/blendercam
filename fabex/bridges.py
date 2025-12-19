@@ -17,14 +17,13 @@ import bpy
 from bpy_extras.object_utils import object_data_add
 from mathutils import Vector
 
-from .cam_chunk import (
-    curve_to_shapely,
+from .utilities.logging_utils import log
+from .utilities.operation_utils import get_operation_sources
+from .utilities.silhouette_utils import (
     get_object_silhouette,
     get_operation_silhouette,
 )
-
-from .utilities.logging_utils import log
-from .utilities.operation_utils import get_operation_sources
+from .utilities.shapely_utils import curve_to_shapely
 from .utilities.simple_utils import join_multiple, remove_doubles
 
 

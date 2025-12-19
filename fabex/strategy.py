@@ -5,14 +5,12 @@ The functions here are called with operators defined in 'ops.py'
 """
 
 from math import (
-    ceil,
     pi,
     radians,
     sqrt,
     tan,
 )
 import sys
-import time
 
 from shapely import affinity
 from shapely.geometry import (
@@ -24,43 +22,38 @@ from shapely.geometry import (
 from shapely.ops import linemerge
 
 import bpy
-from bpy_extras import object_utils
 from mathutils import Euler, Vector
 
 from .bridges import use_bridges
-from .cam_chunk import (
-    CamPathChunk,
-    curve_to_chunks,
-    limit_chunks,
-    shapely_to_chunks,
-    sample_chunks_n_axis,
-    silhouette_offset,
-    get_object_silhouette,
-    get_object_outline,
-    get_operation_silhouette,
-    sort_chunks,
-)
-from .collision import cleanup_bullet_collision
-from .constants import SHAPELY
 from .exception import CamException
 
 from .operators.curve_create_ops import generate_crosshatch
 
-from .utilities.addon_utils import add_collections
+from .utilities.chunk_builder import CamPathChunk
 from .utilities.chunk_utils import (
+    chunks_to_mesh,
     chunks_refine,
-    optimize_chunk,
     chunks_refine_threshold,
-    parent_child_distance,
-    parent_child_poly,
     set_chunks_z,
-    extend_chunks_5_axis,
+    curve_to_chunks,
+    limit_chunks,
+    shapely_to_chunks,
+    sample_chunks_n_axis,
+    sort_chunks,
 )
 from .utilities.compare_utils import check_equal, unique
 from .utilities.geom_utils import circle, helix
 from .utilities.logging_utils import log
-from .utilities.operation_utils import get_operation_sources
+from .utilities.operation_utils import get_operation_sources, check_min_z, get_layers
+from .utilities.parent_utils import (
+    parent_child_distance,
+    parent_child_poly,
+)
 from .utilities.shapely_utils import shapely_to_curve
+from .utilities.silhouette_utils import (
+    get_object_outline,
+    get_operation_silhouette,
+)
 from .utilities.simple_utils import (
     activate,
     delete_object,
@@ -69,75 +62,8 @@ from .utilities.simple_utils import (
     remove_multiple,
     subdivide_short_lines,
 )
+from .utilities.strategy_utils import add_pocket
 from .voronoi import compute_voronoi_diagram
-
-
-# add pocket op for medial axis and profile cut inside to clean unremoved material
-def add_pocket(max_depth, sname, new_cutter_diameter):
-    """Add a pocket operation for the medial axis and profile cut.
-
-    This function first deselects all objects in the scene and then checks
-    for any existing medial pocket objects, deleting them if found. It
-    verifies whether a medial pocket operation already exists in the CAM
-    operations. If it does not exist, it creates a new pocket operation with
-    the specified parameters. The function also modifies the selected
-    object's silhouette offset based on the new cutter diameter.
-
-    Args:
-        max_depth (float): The maximum depth of the pocket to be created.
-        sname (str): The name of the object to which the pocket will be added.
-        new_cutter_diameter (float): The diameter of the new cutter to be used.
-    """
-
-    bpy.ops.object.select_all(action="DESELECT")
-    scene = bpy.context.scene
-    mpocket_exists = False
-
-    # OBJECT name
-    mp_ob_name = f"{sname}_medial_pocket"
-
-    # Delete old Medial Pocket object, if one exists
-    # [ob.select_set(True) for ob in scene.objects if ob.name.startswith(mp_ob_name)]
-    for ob in scene.objects:
-        if ob.name.startswith(mp_ob_name):
-            ob.select_set(True)
-            bpy.ops.object.delete()
-
-    # OPERATION name
-    mp_op_name = f"{sname}_MedialPocket"
-
-    # Verify Medial Pocket Operation exists
-    for op in scene.cam_operations:
-        if op.name == mp_op_name:
-            mpocket_exists = True
-
-    # Modify Silhouette with Cutter Radius
-    ob = bpy.data.objects[sname]
-    ob.select_set(True)
-    bpy.context.view_layer.objects.active = ob
-    silhouette_offset(
-        ob,
-        -new_cutter_diameter / 2,
-        1,
-        2,
-    )
-    bpy.context.active_object.name = mp_ob_name
-    m_ob = bpy.context.view_layer.objects.active
-    bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
-    m_ob.location.z = max_depth
-
-    # Create a Pocket Operation if it does not exist already
-    if not mpocket_exists:
-        scene.cam_operations.add()
-        o = scene.cam_operations[-1]
-        o.object_name = mp_ob_name
-        scene.cam_active_operation = len(scene.cam_operations) - 1
-        o.name = mp_op_name
-        o.filename = o.name
-        o.strategy = "POCKET"
-        o.use_layers = False
-        o.material.estimate_from_model = False
-        o.material.size[2] = -max_depth
 
 
 # cutout strategy is completely here:
@@ -1288,281 +1214,3 @@ async def medial_axis(o):
     if o.add_pocket_for_medial:
         # export medial axis parameter to pocket op
         add_pocket(max_depth, m_o_ob, new_cutter_diameter)
-
-
-def get_layers(operation, start_depth, end_depth):
-    """Returns a list of layers bounded by start depth and end depth.
-
-    This function calculates the layers between the specified start and end
-    depths based on the step down value defined in the operation. If the
-    operation is set to use layers, it computes the number of layers by
-    dividing the difference between start and end depths by the step down
-    value. The function raises an exception if the start depth is lower than
-    the end depth.
-
-    Args:
-        operation (object): An object that contains the properties `use_layers`,
-            `stepdown`, and `maxz` which are used to determine
-            how layers are generated.
-        start_depth (float): The starting depth for layer calculation.
-        end_depth (float): The ending depth for layer calculation.
-
-    Returns:
-        list: A list of layers, where each layer is represented as a list
-            containing the start and end depths of that layer.
-
-    Raises:
-        CamException: If the start depth is lower than the end depth.
-    """
-
-    if start_depth < end_depth:
-        string = (
-            "Start Depth Is Lower than End Depth.\n"
-            "if You Have Set a Custom Depth End, It Must Be Lower than Depth Start,\n"
-            "and Should Usually Be Negative.\nSet This in the CAM Operation Area Panel."
-        )
-        log.error("Start Depth Is Lower than End Depth.")
-        raise CamException(string)
-
-    if operation.use_layers:
-        layers = []
-        layer_count = ceil((start_depth - end_depth) / operation.stepdown)
-
-        log.info("-")
-        log.info("~ Getting Layer Data ~")
-        log.info(f"Start Depth: {start_depth}")
-        log.info(f"End Depth: {end_depth}")
-        log.info(f"Layers: {layer_count}")
-        log.info("-")
-
-        layer_start = operation.max_z
-
-        for x in range(0, layer_count):
-            layer_end = round(
-                max(start_depth - ((x + 1) * operation.stepdown), end_depth),
-                6,
-            )
-            if int(layer_start * 10**8) != int(layer_end * 10**8):
-                # it was possible that with precise same end of operation,
-                # last layer was done 2x on exactly same level...
-                layers.append([layer_start, layer_end])
-            layer_start = layer_end
-    else:
-        layers = [[round(start_depth, 6), round(end_depth, 6)]]
-
-    return layers
-
-
-def chunks_to_mesh(chunks, o):
-    """Convert sampled chunks into a mesh path for a given optimization object.
-
-    This function takes a list of sampled chunks and converts them into a
-    mesh path based on the specified optimization parameters. It handles
-    different machine axes configurations and applies optimizations as
-    needed. The resulting mesh is created in the Blender context, and the
-    function also manages the lifting and dropping of the cutter based on
-    the chunk positions.
-
-    Args:
-        chunks (list): A list of chunk objects to be converted into a mesh.
-        o (object): An object containing optimization parameters and settings.
-
-    Returns:
-        None: The function creates a mesh in the Blender context but does not return a
-            value.
-    """
-
-    t = time.time()
-    scene = bpy.context.scene
-    machine = scene.cam_machine
-    vertices = []
-
-    free_height = o.movement.free_height
-
-    three_axis = o.machine_axes == "3"
-    four_axis = o.machine_axes == "4"
-    five_axis = o.machine_axes == "5"
-
-    indexed_four_axis = four_axis and o.strategy_4_axis == "INDEXED"
-    indexed_five_axis = five_axis and o.strategy_5_axis == "INDEXED"
-
-    user_origin = (
-        machine.starting_position.x,
-        machine.starting_position.y,
-        machine.starting_position.z,
-    )
-
-    default_origin = (
-        0,
-        0,
-        free_height,
-    )
-
-    if three_axis:
-        origin = user_origin if machine.use_position_definitions else default_origin
-        vertices = [origin]
-
-    if not three_axis:
-        vertices_rotations = []
-
-    if indexed_five_axis or indexed_four_axis:
-        extend_chunks_5_axis(chunks, o)
-
-    if o.array:
-        array_chunks = []
-        for x in range(0, o.array_x_count):
-            for y in range(0, o.array_y_count):
-                log.info(f"{x}, {y}")
-
-                for chunk in chunks:
-                    chunk = chunk.copy()
-                    chunk.shift(
-                        x * o.array_x_distance,
-                        y * o.array_y_distance,
-                        0,
-                    )
-                    array_chunks.append(chunk)
-        chunks = array_chunks
-
-    log.info("-")
-    progress("~ Building Paths from Chunks ~")
-    e = 0.0001
-    lifted = True
-
-    for chunk_index in range(0, len(chunks)):
-        chunk = chunks[chunk_index]
-        # TODO: there is a case where parallel+layers+zigzag ramps send empty chunks here...
-        if chunk.count() > 0:
-            if o.optimisation.optimize:
-                chunk = optimize_chunk(chunk, o)
-
-            # lift and drop
-            if lifted:
-                # did the cutter lift before? if yes, put a new position above of the first point of next chunk.
-                if three_axis or indexed_five_axis or indexed_four_axis:
-                    vertex = (
-                        chunk.get_point(0)[0],
-                        chunk.get_point(0)[1],
-                        free_height,
-                    )
-                # otherwise, continue with the next chunk without lifting/dropping
-                else:
-                    vertex = chunk.startpoints[0]
-                    vertices_rotations.append(chunk.rotations[0])
-                vertices.append(vertex)
-
-            # add whole chunk
-            vertices.extend(chunk.get_points())
-
-            # add rotations for n-axis
-            if not three_axis:
-                vertices_rotations.extend(chunk.rotations)
-
-            lift = True
-            # check if lifting should happen
-            if chunk_index < len(chunks) - 1 and chunks[chunk_index + 1].count() > 0:
-                # TODO: remake this for n axis, and this check should be somewhere else...
-                last = Vector(chunk.get_point(-1))
-                first = Vector(chunks[chunk_index + 1].get_point(0))
-                vector = first - last
-
-                vector_length = vector.length < o.distance_between_paths * 2.5
-                vector_check = vector.z == 0 and vector_length
-                parallel_cross = o.strategy in ["PARALLEL", "CROSS"]
-                neighbouring_paths = (three_axis and parallel_cross and vector_check) or (
-                    four_axis and vector_length
-                )
-                stepdown_by_cutting = abs(vector.x) < e and abs(vector.y) < e
-
-                if neighbouring_paths or stepdown_by_cutting:
-                    lift = False
-
-            if lift:
-                if three_axis or indexed_five_axis or indexed_four_axis:
-                    vertex = (chunk.get_point(-1)[0], chunk.get_point(-1)[1], free_height)
-                else:
-                    vertex = chunk.startpoints[-1]
-                    vertices_rotations.append(chunk.rotations[-1])
-                vertices.append(vertex)
-            lifted = lift
-
-    if o.optimisation.use_exact and not o.optimisation.use_opencamlib:
-        cleanup_bullet_collision(o)
-
-    log.info(f"Path Calculation Time: {time.time() - t}")
-    t = time.time()
-
-    # Blender Object generation starts here:
-    edges = []
-    for a in range(0, len(vertices) - 1):
-        edges.append((a, a + 1))
-
-    path_name = scene.cam_names.path_name_full
-    mesh = bpy.data.meshes.new(path_name)
-    mesh.name = path_name
-    mesh.from_pydata(vertices, edges, [])
-
-    if path_name in scene.objects:
-        scene.objects[path_name].data = mesh
-        ob = scene.objects[path_name]
-    else:
-        ob = object_utils.object_data_add(bpy.context, mesh, operator=None)
-
-    if not three_axis:
-        # store rotations into shape keys, only way to store large arrays with correct floating point precision
-        # - object/mesh attributes can only store array up to 32000 intems.
-        ob.shape_key_add()
-        ob.shape_key_add()
-        shapek = mesh.shape_keys.key_blocks[1]
-        shapek.name = "rotations"
-
-        log.info(len(shapek.data))
-        log.info(len(vertices_rotations))
-
-        # TODO: optimize this. this is just rewritten too many times...
-        for i, co in enumerate(vertices_rotations):
-            shapek.data[i].co = co
-
-    log.info(f"Path Object Generation Time: {time.time() - t}")
-    log.info("-")
-
-    ob.location = (0, 0, 0)
-    ob.color = scene.cam_machine.path_color
-    o.path_object_name = path_name
-
-    collections = bpy.data.collections
-    if "Paths" in collections:
-        bpy.context.collection.objects.unlink(ob)
-        collections["Paths"].objects.link(ob)
-    else:
-        add_collections()
-        bpy.context.collection.objects.unlink(ob)
-        collections["Paths"].objects.link(ob)
-
-    # parent the path object to source object if object mode
-    if (o.geometry_source == "OBJECT") and o.parent_path_to_object:
-        activate(o.objects[0])
-        ob.select_set(state=True, view_layer=None)
-        bpy.ops.object.parent_set(type="OBJECT", keep_transform=True)
-    else:
-        ob.select_set(state=True, view_layer=None)
-
-
-def check_min_z(o):
-    """Check the minimum value based on the specified condition.
-
-    This function evaluates the 'minz_from' attribute of the input object
-    'o'. If 'minz_from' is set to 'MATERIAL', it returns the value of
-    'min.z'. Otherwise, it returns the value of 'minz'.
-
-    Args:
-        o (object): An object that has attributes 'minz_from', 'min', and 'minz'.
-
-    Returns:
-        The minimum value, which can be either 'o.min.z' or 'o.min_z' depending
-            on the condition.
-    """
-    if o.min_z_from == "MATERIAL":
-        return o.min.z
-    else:
-        return o.min_z

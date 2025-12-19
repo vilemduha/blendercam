@@ -20,18 +20,19 @@ from bpy.props import (
 from bpy.types import Operator
 from mathutils import Vector
 
-from ..cam_chunk import (
-    curve_to_shapely,
-    polygon_boolean,
-    polygon_convex_hull,
-    silhouette_offset,
-    get_object_silhouette,
-)
-
 from ..utilities.geom_utils import circle
 from ..utilities.logging_utils import log
+from ..utilities.polygon_utils import (
+    polygon_boolean,
+    polygon_convex_hull,
+)
 from ..utilities.shapely_utils import (
+    curve_to_shapely,
     shapely_to_curve,
+)
+from ..utilities.silhouette_utils import (
+    silhouette_offset,
+    get_object_silhouette,
 )
 from ..utilities.simple_utils import (
     remove_multiple,

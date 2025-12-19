@@ -4,13 +4,31 @@ Main functionality of Fabex.
 The functions here are called with operators defined in 'ops.py'
 """
 
-from math import pi
-from pathlib import Path
+from math import (
+    acos,
+    ceil,
+    cos,
+    pi,
+    radians,
+    sin,
+    sqrt,
+    tan,
+)
+
+import numpy
 import pickle
 
 import bpy
 from bpy_extras import object_utils
 
+from mathutils import (
+    Vector,
+)
+
+from .logging_utils import log
+from .simple_utils import (
+    get_cache_path,
+)
 from .logging_utils import log
 from .simple_utils import get_cache_path
 from .simple_utils import unit_value_to_string
@@ -95,15 +113,10 @@ def reload_paths(o):
         o (Object): The object for which the CAM path is being
     """
 
-    # oname = "cam_path_" + o.name
     s = bpy.context.scene
     oname = s.cam_names.path_name_full
-    # for o in s.objects:
-    ob = None
-    old_pathmesh = None
-    if oname in s.objects:
-        old_pathmesh = s.objects[oname].data
-        ob = s.objects[oname]
+    ob = s.objects[oname] if oname in s.objects else None
+    old_pathmesh = s.objects[oname].data if oname in s.objects else None
 
     picklepath = get_cache_path(o) + ".pickle"
     f = open(picklepath, "rb")
@@ -112,13 +125,13 @@ def reload_paths(o):
 
     o.info.warnings = d["warnings"]
     o.info.duration = d["duration"]
+
     verts = d["path"]
+    edges = [(a, a + 1) for a in range(0, len(verts) - 1)]
 
-    edges = []
-    for a in range(0, len(verts) - 1):
-        edges.append((a, a + 1))
+    # for a in range(0, len(verts) - 1):
+    #     edges.append((a, a + 1))
 
-    # oname = "cam_path_" + o.name
     mesh = bpy.data.meshes.new(oname)
     mesh.name = oname
     mesh.from_pydata(verts, edges, [])
@@ -129,6 +142,7 @@ def reload_paths(o):
         object_utils.object_data_add(bpy.context, mesh, operator=None)
         ob = bpy.context.active_object
         ob.name = oname
+
     ob = s.objects[oname]
     ob.location = (0, 0, 0)
     o.path_object_name = oname
@@ -469,7 +483,6 @@ def update_operation(self, context):
         context: The context in which the operation is being updated.
     """
 
-    # from . import updateRest
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     update_rest(active_op, bpy.context)
 
@@ -486,7 +499,6 @@ def update_zbuffer_image(self, context):
         context (bpy.context): The current Blender context.
     """
 
-    # from . import updateZbufferImage
     active_op = bpy.context.scene.cam_operations[bpy.context.scene.cam_active_operation]
     update_Z_buffer_image(active_op, bpy.context)
 
@@ -534,10 +546,12 @@ def get_change_data(o):
     """
     changedata = ""
     obs = []
+
     if o.geometry_source == "OBJECT":
         obs = [bpy.data.objects[o.object_name]]
     elif o.geometry_source == "COLLECTION":
         obs = bpy.data.collections[o.collection_name].objects
+
     for ob in obs:
         changedata += str(ob.location)
         changedata += str(ob.rotation_euler)
@@ -574,12 +588,15 @@ def check_memory_limit(o):
     if res > limit:
         ratio = res / limit
         o.optimisation.pixsize = o.optimisation.pixsize * sqrt(ratio)
+
         log.warning("!!! Memory Error !!!")
         log.warning("Memory Limit Exceeded!")
         log.warning(f"Detail Size Increased to {round(o.optimisation.pixsize, 5)}")
+
         o.info.warnings += " \n!!! Memory Error !!!\n"
         o.info.warnings += "Memory Limit Exceeded!\n"
         o.info.warnings += f"Detail Size Increased to {round(o.optimisation.pixsize, 5)}\n"
+
         log.info("Changing Sampling Resolution to %f" % o.optimisation.pixsize)
 
 
@@ -592,3 +609,270 @@ def get_move_and_spin(o):
 
     conventional_CW = move_type == "CONVENTIONAL" and spin == "CW"
     conventional_CCW = move_type == "CONVENTIONAL" and spin == "CCW"
+
+
+def get_ambient(o):
+    """Calculate and update the ambient geometry based on the provided object.
+
+    This function computes the ambient shape for a given object based on its
+    properties, such as cutter restrictions and ambient behavior. It
+    determines the appropriate radius and creates the ambient geometry
+    either from the silhouette or as a polygon defined by the object's
+    minimum and maximum coordinates. If a limit curve is specified, it will
+    also intersect the ambient shape with the limit polygon.
+
+    Args:
+        o (object): An object containing properties that define the ambient behavior,
+            cutter restrictions, and limit curve.
+
+    Returns:
+        None: The function updates the ambient property of the object in place.
+    """
+
+    if o.update_ambient_tag:  # cutter stays in ambient & limit curve
+        m = o.cutter_diameter / 2 if o.ambient_cutter_restrict else 0
+
+        if o.ambient_behaviour == "AROUND":
+            r = o.ambient_radius - m
+            # in this method we need ambient from silhouette
+            o.ambient = get_object_outline(r, o, True)
+        else:
+            o.ambient = Polygon(
+                (
+                    (o.min.x + m, o.min.y + m),
+                    (o.min.x + m, o.max.y - m),
+                    (o.max.x - m, o.max.y - m),
+                    (o.max.x - m, o.min.y + m),
+                )
+            )
+
+        if o.use_limit_curve:
+            if o.limit_curve != "":
+                limit_curve = bpy.data.objects[o.limit_curve]
+                polys = curve_to_shapely(limit_curve)
+                o.limit_poly = unary_union(polys)
+
+                if o.ambient_cutter_restrict:
+                    o.limit_poly = o.limit_poly.buffer(
+                        o.cutter_diameter / 2, resolution=o.optimisation.circle_detail
+                    )
+            o.ambient = o.ambient.intersection(o.limit_poly)
+    o.update_ambient_tag = False
+
+
+def get_cutter_array(operation, pixsize):
+    """Generate a cutter array based on the specified operation and pixel size.
+
+    This function calculates a 2D array representing the cutter shape based
+    on the cutter type defined in the operation object. The cutter can be of
+    various types such as 'END', 'BALL', 'VCARVE', 'CYLCONE', 'BALLCONE', or
+    'CUSTOM'. The function uses geometric calculations to fill the array
+    with appropriate values based on the cutter's dimensions and properties.
+
+    Args:
+        operation (object): An object containing properties of the cutter, including
+            cutter type, diameter, tip angle, and other relevant parameters.
+        pixsize (float): The size of each pixel in the generated cutter array.
+
+    Returns:
+        numpy.ndarray: A 2D array filled with values representing the cutter shape.
+    """
+
+    cutter_type = operation.cutter_type
+    r = operation.cutter_diameter / 2 + operation.skin
+    res = ceil((r * 2) / pixsize)
+    m = res / 2.0
+    car = numpy.full(shape=(res, res), fill_value=-10.0, dtype=float)
+    v = Vector((0, 0, 0))
+    ps = pixsize
+
+    if cutter_type == "END":
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+
+                if v.length <= r:
+                    car.itemset((a, b), 0)
+
+    elif cutter_type in ["BALL", "BALLNOSE"]:
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+
+                if v.length <= r:
+                    z = sin(acos(v.length / r)) * r - r
+                    car.itemset((a, b), z)  # [a,b]=z
+
+    elif cutter_type == "VCARVE":
+        angle = operation.cutter_tip_angle
+        s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
+
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+
+                if v.length <= r:
+                    z = -v.length * s
+                    car.itemset((a, b), z)
+
+    elif cutter_type == "CYLCONE":
+        angle = operation.cutter_tip_angle
+        cyl_r = operation.cylcone_diameter / 2
+        s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
+
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+
+                if v.length <= r:
+                    z = -(v.length - cyl_r) * s
+
+                    if v.length <= cyl_r:
+                        z = 0
+
+                    car.itemset((a, b), z)
+
+    elif cutter_type == "BALLCONE":
+        angle = radians(operation.cutter_tip_angle) / 2
+        ball_r = operation.ball_radius
+        cutter_r = operation.cutter_diameter / 2
+        conedepth = (cutter_r - ball_r) / tan(angle)
+        Ball_R = ball_r / cos(angle)
+        D_ofset = ball_r * tan(angle)
+        s = tan(pi / 2 - angle)
+
+        for a in range(0, res):
+            v.x = (a + 0.5 - m) * ps
+
+            for b in range(0, res):
+                v.y = (b + 0.5 - m) * ps
+
+                if v.length <= cutter_r:
+                    z = -(v.length - ball_r) * s - Ball_R + D_ofset
+
+                    if v.length <= ball_r:
+                        z = sin(acos(v.length / Ball_R)) * Ball_R - Ball_R
+
+                    car.itemset((a, b), z)
+
+    elif cutter_type == "CUSTOM":
+        cutob = bpy.data.objects[operation.cutter_object_name]
+        scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
+        vstart = Vector((0, 0, -10))
+        vend = Vector((0, 0, 10))
+        log.info("Sampling Custom Cutter")
+        maxz = -1
+
+        for a in range(0, res):
+            vstart.x = (a + 0.5 - m) * ps * scale
+            vend.x = vstart.x
+
+            for b in range(0, res):
+                vstart.y = (b + 0.5 - m) * ps * scale
+                vend.y = vstart.y
+                v = vend - vstart
+                c = cutob.ray_cast(vstart, v, distance=1.70141e38)
+
+                if c[3] != -1:
+                    z = -c[1][2] / scale
+
+                    if z > -9:
+                        if z > maxz:
+                            maxz = z
+
+                        car.itemset((a, b), z)
+
+        car -= maxz
+
+    return car
+
+
+def check_min_z(o):
+    """Check the minimum value based on the specified condition.
+
+    This function evaluates the 'minz_from' attribute of the input object
+    'o'. If 'minz_from' is set to 'MATERIAL', it returns the value of
+    'min.z'. Otherwise, it returns the value of 'minz'.
+
+    Args:
+        o (object): An object that has attributes 'minz_from', 'min', and 'minz'.
+
+    Returns:
+        The minimum value, which can be either 'o.min.z' or 'o.min_z' depending
+            on the condition.
+    """
+    if o.min_z_from == "MATERIAL":
+        return o.min.z
+    else:
+        return o.min_z
+
+
+def get_layers(operation, start_depth, end_depth):
+    """Returns a list of layers bounded by start depth and end depth.
+
+    This function calculates the layers between the specified start and end
+    depths based on the step down value defined in the operation. If the
+    operation is set to use layers, it computes the number of layers by
+    dividing the difference between start and end depths by the step down
+    value. The function raises an exception if the start depth is lower than
+    the end depth.
+
+    Args:
+        operation (object): An object that contains the properties `use_layers`,
+            `stepdown`, and `maxz` which are used to determine
+            how layers are generated.
+        start_depth (float): The starting depth for layer calculation.
+        end_depth (float): The ending depth for layer calculation.
+
+    Returns:
+        list: A list of layers, where each layer is represented as a list
+            containing the start and end depths of that layer.
+
+    Raises:
+        CamException: If the start depth is lower than the end depth.
+    """
+
+    if start_depth < end_depth:
+        string = (
+            "Start Depth Is Lower than End Depth.\n"
+            "if You Have Set a Custom Depth End, It Must Be Lower than Depth Start,\n"
+            "and Should Usually Be Negative.\nSet This in the CAM Operation Area Panel."
+        )
+        log.error("Start Depth Is Lower than End Depth.")
+        raise CamException(string)
+
+    if operation.use_layers:
+        layers = []
+        layer_count = ceil((start_depth - end_depth) / operation.stepdown)
+
+        log.info("-")
+        log.info("~ Getting Layer Data ~")
+        log.info(f"Start Depth: {start_depth}")
+        log.info(f"End Depth: {end_depth}")
+        log.info(f"Layers: {layer_count}")
+        log.info("-")
+
+        layer_start = operation.max_z
+
+        for x in range(0, layer_count):
+            layer_end = round(
+                max(start_depth - ((x + 1) * operation.stepdown), end_depth),
+                6,
+            )
+            if int(layer_start * 10**8) != int(layer_end * 10**8):
+                # it was possible that with precise same end of operation,
+                # last layer was done 2x on exactly same level...
+                layers.append([layer_start, layer_end])
+            layer_start = layer_end
+    else:
+        layers = [[round(start_depth, 6), round(end_depth, 6)]]
+
+    return layers

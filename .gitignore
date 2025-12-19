@@ -19,8 +19,6 @@ acp
 syncWithUpstream
 forceSyncWithUpstream
 
-strategies/
-
 \.idea/
 
 .vscode

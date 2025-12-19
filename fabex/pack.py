@@ -7,7 +7,6 @@ it is placed and added to the occupied area - allpoly
 Very slow and STUPID, a collision algorithm would be much much faster...
 """
 
-from math import pi
 import random
 import time
 
@@ -16,20 +15,12 @@ from shapely import geometry as sgeometry
 from shapely import affinity, prepared, speedups
 
 import bpy
-from bpy.types import PropertyGroup
-from bpy.props import (
-    BoolProperty,
-    EnumProperty,
-    FloatProperty,
-)
 from mathutils import Euler, Vector
 
-from . import constants
-from .cam_chunk import curve_to_chunks
 
-from .utilities.chunk_utils import chunks_to_shapely
+from .utilities.chunk_utils import curve_to_chunks
 from .utilities.logging_utils import log
-from .utilities.shapely_utils import shapely_to_curve
+from .utilities.shapely_utils import shapely_to_curve, chunks_to_shapely
 from .utilities.simple_utils import activate
 
 
@@ -181,15 +172,13 @@ def pack_curves():
                         best = [x, y, rot, xmax, ymax]
                         besthit = hits
 
-            if hits >= 15 or (
-                itera > 20000 and hits > 0
-            ):  # here was originally more, but 90% of best solutions are still 1
+            if hits >= 15 or (itera > 20000 and hits > 0):
+                # here was originally more, but 90% of best solutions are still 1
                 placed = True
                 pf[3].location.x = best[0]
                 pf[3].location.y = best[1]
                 pf[3].location.z = pf[4]
                 pf[3].rotation_euler.z = best[2]
-
                 pf[3].select_set(state=True)
 
                 # print(mindist)

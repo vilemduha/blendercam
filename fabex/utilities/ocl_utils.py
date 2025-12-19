@@ -372,3 +372,119 @@ async def ocl_sample(operation, chunks, use_cached_mesh=False):
     cl_points = bdc.getCLPoints()
 
     return cl_points
+
+
+async def oclResampleChunks(operation, chunks_to_resample, use_cached_mesh):
+    """Resample chunks of data using OpenCL operations.
+
+    This function takes a list of chunks to resample and performs an OpenCL
+    sampling operation on them. It first prepares a temporary chunk that
+    collects points from the specified chunks. Then, it calls the
+    `ocl_sample` function to perform the sampling operation. After obtaining
+    the samples, it updates the z-coordinates of the points in each chunk
+    based on the sampled values.
+
+    Args:
+        operation (OperationType): The OpenCL operation to be performed.
+        chunks_to_resample (list): A list of tuples, where each tuple contains
+            a chunk object and its corresponding start index and length for
+            resampling.
+        use_cached_mesh (bool): A flag indicating whether to use cached mesh
+            data during the sampling process.
+
+    Returns:
+        None: This function does not return a value but modifies the input
+            chunks in place.
+    """
+
+    tmp_chunks = list()
+    tmp_chunks.append(CamPathChunk(inpoints=[]))
+
+    for chunk, i_start, i_length in chunks_to_resample:
+        tmp_chunks[0].extend(chunk.get_points_np()[i_start : i_start + i_length])
+        log.info(f"{i_start}, {i_length}, {len(tmp_chunks[0].points)}")
+
+    samples = await ocl_sample(operation, tmp_chunks, use_cached_mesh=use_cached_mesh)
+
+    sample_index = 0
+
+    for chunk, i_start, i_length in chunks_to_resample:
+        z = np.array([p.z for p in samples[sample_index : sample_index + i_length]]) / OCL_SCALE
+        pts = chunk.get_points_np()
+        pt_z = pts[i_start : i_start + i_length, 2]
+        pt_z = np.where(z > pt_z, z, pt_z)
+        sample_index += i_length
+
+
+async def oclGetWaterline(operation, chunks):
+    """Generate waterline paths for a given machining operation.
+
+    This function calculates the waterline paths based on the provided
+    machining operation and its parameters. It determines the appropriate
+    cutter type and dimensions, sets up the waterline object with the
+    corresponding STL file, and processes each layer to generate the
+    machining paths. The resulting paths are stored in the provided chunks
+    list. The function also handles different cutter types, including end
+    mills, ball nose cutters, and V-carve cutters.
+
+    Args:
+        operation (Operation): An object representing the machining operation,
+            containing details such as cutter type, diameter, and minimum Z height.
+        chunks (list): A list that will be populated with the generated
+            machining path chunks.
+    """
+
+    layers = oclWaterlineLayerHeights(operation)
+    oclSTL = get_oclSTL(operation)
+    op_cutter_type = operation.cutter_type
+    op_cutter_diameter = operation.cutter_diameter
+    op_minz = operation.min_z
+
+    if op_cutter_type == "VCARVE":
+        op_cutter_tip_angle = operation["cutter_tip_angle"]
+
+    cutter = None
+    # TODO: automatically determine necessary cutter length depending on object size
+    cutter_length = 150
+
+    if op_cutter_type == "END":
+        cutter = ocl.CylCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
+    elif op_cutter_type == "BALLNOSE":
+        cutter = ocl.BallCutter((op_cutter_diameter + operation.skin * 2) * 1000, cutter_length)
+    elif op_cutter_type == "VCARVE":
+        cutter = ocl.ConeCutter(
+            (op_cutter_diameter + operation.skin * 2) * 1000, op_cutter_tip_angle, cutter_length
+        )
+    else:
+        log.info(f"Cutter Unsupported: {op_cutter_type}\n")
+        quit()
+
+    waterline = ocl.Waterline()
+    waterline.setSTL(oclSTL)
+    waterline.setCutter(cutter)
+    waterline.setSampling(0.1)  # TODO: add sampling setting to UI
+    last_pos = [0, 0, 0]
+
+    for count, height in enumerate(layers):
+        layer_chunks = []
+        await progress_async("Waterline", int((100 * count) / len(layers)))
+        waterline.reset()
+        waterline.setZ(height * OCL_SCALE)
+        waterline.run2()
+        wl_loops = waterline.getLoops()
+
+        for l in wl_loops:
+            inpoints = []
+
+            for p in l:
+                inpoints.append((p.x / OCL_SCALE, p.y / OCL_SCALE, p.z / OCL_SCALE))
+
+            inpoints.append(inpoints[0])
+            chunk = CamPathChunk(inpoints=inpoints)
+            chunk.closed = True
+            layer_chunks.append(chunk)
+        # sort chunks so that ordering is stable
+        chunks.extend(await sort_chunks(layer_chunks, operation, last_pos=last_pos))
+
+        if len(chunks) > 0:
+            last_pos = chunks[-1].get_point(-1)

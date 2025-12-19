@@ -22,14 +22,12 @@ from bpy.props import (
 )
 from bpy.types import Operator
 
-
-from ..cam_chunk import curve_to_chunks
 from ..constants import PRECISION
 from ..pack import pack_curves
 
-from ..utilities.chunk_utils import chunks_to_shapely
+from ..utilities.chunk_utils import curve_to_chunks
 from ..utilities.logging_utils import log
-from ..utilities.shapely_utils import shapely_to_curve
+from ..utilities.shapely_utils import shapely_to_curve, chunks_to_shapely
 from ..utilities.simple_utils import activate
 
 

@@ -340,26 +340,23 @@ def is_vertical_limit(v1, v2, limit):
         tuple: The adjusted 3D points v1 and v2 after evaluating the verticality.
     """
     z = abs(v1[2] - v2[2])
-    # verticality=0.05
-    # this will be better.
-    #
-    # print(a)
+
     if z > 0:
         v2d = Vector((0, 0, -1))
         v3d = Vector((v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2]))
         a = v3d.angle(v2d)
+
         if a > pi / 2:
             a = abs(a - pi)
-        # print(a)
+
         if a < limit:
-            # print(abs(v1[0]-v2[0])/z)
-            # print(abs(v1[1]-v2[1])/z)
             if v1[2] > v2[2]:
                 v1 = (v2[0], v2[1], v1[2])
                 return v1, v2
             else:
                 v2 = (v1[0], v1[1], v2[2])
                 return v1, v2
+
     return v1, v2
 
 
@@ -384,7 +381,7 @@ def get_cache_path(o):
     log.info(f"Folder: {fn[:-l]}")
     log.info(f"File: {bn}")
 
-    iname = fn[:-l] + "temp_cam" + os.sep + bn + "_" + o.name
+    iname = f"{fn[:-l]}temp_cam{os.sep}{bn}_{o.name}"
     return iname
 
 
@@ -401,7 +398,7 @@ def get_simulation_path():
     """
     fn = bpy.data.filepath
     l = len(bpy.path.basename(fn))
-    iname = fn[:-l] + "temp_cam" + os.sep
+    iname = f"{fn[:-l]}temp_cam{os.sep}"
     return iname
 
 
@@ -879,6 +876,31 @@ def active_to_shapely_poly():
     return Polygon(active_to_coords())
 
 
+def make_visible(o):
+    storage = [True, []]
+
+    if not o.visible_get():
+        storage[0] = False
+
+    cam_collection = bpy.data.collections.new("cam")
+    bpy.context.scene.collection.children.link(cam_collection)
+    cam_collection.objects.link(bpy.context.object)
+
+    for i in range(0, 20):
+        storage[1].append(o.layers[i])
+
+        o.layers[i] = bpy.context.scene.layers[i]
+
+    return storage
+
+
+def restore_visibility(o, storage):
+    o.hide_viewport = storage[0]
+    # print(storage)
+    for i in range(0, 20):
+        o.layers[i] = storage[1][i]
+
+
 # checks for curve splines shorter than three points and subdivides if necessary
 def subdivide_short_lines(co):
     """Subdivide all polylines to have at least three points.
@@ -900,3 +922,105 @@ def subdivide_short_lines(co):
             bpy.ops.curve.subdivide()
     bpy.ops.object.editmode_toggle()
     bpy.ops.object.select_all(action="SELECT")
+
+
+def subdivide_long_edges(ob, threshold):
+    """Subdivide edges of a mesh object that exceed a specified length.
+
+    This function iteratively checks the edges of a given mesh object and
+    subdivides those that are longer than a specified threshold. The process
+    involves toggling the edit mode of the object, selecting the long edges,
+    and applying a subdivision operation. The function continues to
+    subdivide until no edges exceed the threshold.
+
+    Args:
+        ob (bpy.types.Object): The Blender object containing the mesh to be
+            subdivided.
+        threshold (float): The length threshold above which edges will be
+            subdivided.
+    """
+
+    log.info("Subdividing Long Edges")
+    m = ob.data
+    scale = (ob.scale.x + ob.scale.y + ob.scale.z) / 3
+    subdivides = []
+    n = 1
+    iter = 0
+    while n > 0:
+        n = 0
+        for i, e in enumerate(m.edges):
+            v1 = m.vertices[e.vertices[0]].co
+            v2 = m.vertices[e.vertices[1]].co
+            vec = v2 - v1
+            l = vec.length
+            if l * scale > threshold:
+                n += 1
+                subdivides.append(i)
+        if n > 0:
+            log.info(len(subdivides))
+            bpy.ops.object.editmode_toggle()
+
+            # bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY')
+            # bpy.ops.mesh.tris_convert_to_quads()
+
+            bpy.ops.mesh.select_all(action="DESELECT")
+            bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type="EDGE")
+            bpy.ops.object.editmode_toggle()
+            for i in subdivides:
+                m.edges[i].select = True
+            bpy.ops.object.editmode_toggle()
+            bpy.ops.mesh.subdivide(smoothness=0)
+            if iter == 0:
+                bpy.ops.mesh.select_all(action="SELECT")
+                bpy.ops.mesh.quads_convert_to_tris(
+                    quad_method="SHORTEST_DIAGONAL", ngon_method="BEAUTY"
+                )
+            bpy.ops.mesh.select_all(action="DESELECT")
+            bpy.ops.object.editmode_toggle()
+            ob.update_from_editmode()
+        iter += 1
+
+
+def dilate_array(ar, cycles):
+    """Dilate a binary array using a specified number of cycles.
+
+    This function performs a dilation operation on a 2D binary array. For
+    each cycle, it updates the array by applying a logical OR operation
+    between the current array and its neighboring elements. The dilation
+    effect expands the boundaries of the foreground (True) pixels in the
+    binary array.
+
+    Args:
+        ar (numpy.ndarray): A 2D binary array (numpy array) where
+            dilation will be applied.
+        cycles (int): The number of dilation cycles to perform.
+
+    Returns:
+        None: The function modifies the input array in place and does not
+            return a value.
+    """
+
+    for c in range(cycles):
+        ar[1:-1, :] = numpy.logical_or(
+            ar[1:-1, :],
+            ar[:-2, :],
+        )
+        ar[:, 1:-1] = numpy.logical_or(
+            ar[:, 1:-1],
+            ar[:, :-2],
+        )
+
+
+def rotate_point_by_point(originp, p, ang):  # rotate point around another point with angle
+    ox, oy, oz = originp
+    px, py, oz = p
+
+    if ang == abs(pi / 2):
+        d = ang / abs(ang)
+        qx = ox + d * (oy - py)
+        qy = oy + d * (px - ox)
+    else:
+        qx = ox + cos(ang) * (px - ox) - sin(ang) * (py - oy)
+        qy = oy + sin(ang) * (px - ox) + cos(ang) * (py - oy)
+    rot_p = [qx, qy, oz]
+    return rot_p

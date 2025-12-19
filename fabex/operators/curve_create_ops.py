@@ -23,12 +23,6 @@ from bpy.types import Operator
 
 from .. import involute_gear
 
-from ..cam_chunk import (
-    curve_to_shapely,
-    polygon_boolean,
-    polygon_convex_hull,
-)
-
 from ..joinery.finger import (
     finger,
     finger_amount,
@@ -66,6 +60,10 @@ from ..joinery.multiangle import (
 )
 
 from ..utilities.logging_utils import log
+from ..utilities.polygon_utils import (
+    polygon_boolean,
+    polygon_convex_hull,
+)
 from ..utilities.simple_utils import (
     remove_multiple,
     select_multiple,
@@ -83,6 +81,7 @@ from ..utilities.simple_utils import (
     rotate,
 )
 from ..utilities.shapely_utils import (
+    curve_to_shapely,
     shapely_to_curve,
 )
 

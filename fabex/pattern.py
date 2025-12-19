@@ -16,17 +16,13 @@ import numpy
 import bpy
 from mathutils import Euler, Vector
 
-from .cam_chunk import (
+from .utilities.chunk_builder import (
     CamPathChunk,
     CamPathChunkBuilder,
-    shapely_to_chunks,
 )
-
-from .utilities.chunk_utils import (
-    chunks_refine,
-    parent_child_distance,
-)
+from .utilities.chunk_utils import chunks_refine
 from .utilities.logging_utils import log
+from .utilities.parent_utils import parent_child_distance
 from .utilities.simple_utils import progress
 
 
@@ -139,6 +135,7 @@ def get_path_pattern_parallel(o, angle):
         # rotate this first
         progress(axis_along_paths)
         chunks = []
+
         for a in range(0, len(axis_across_paths[0])):
             nax = axis_along_paths.copy()
             nax[0] += axis_across_paths[0][a]
@@ -146,13 +143,25 @@ def get_path_pattern_parallel(o, angle):
             xfitmin = nax[0] > o.min.x
             xfitmax = nax[0] < o.max.x
             xfit = xfitmin & xfitmax
-            nax = numpy.array([nax[0][xfit], nax[1][xfit], nax[2][xfit]])
+            nax = numpy.array(
+                [
+                    nax[0][xfit],
+                    nax[1][xfit],
+                    nax[2][xfit],
+                ]
+            )
             yfitmin = nax[1] > o.min.y
             yfitmax = nax[1] < o.max.y
             yfit = yfitmin & yfitmax
-            nax = numpy.array([nax[0][yfit], nax[1][yfit], nax[2][yfit]])
+            nax = numpy.array(
+                [
+                    nax[0][yfit],
+                    nax[1][yfit],
+                    nax[2][yfit],
+                ]
+            )
             chunks.append(nax.swapaxes(0, 1))
-        # chunks
+
         pathchunks = []
         for ch in chunks:
             ch = ch.tolist()

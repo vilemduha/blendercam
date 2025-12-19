@@ -6,8 +6,10 @@ Functions to handle shapely operations and conversions - curve, coords, polygon
 from math import pi
 
 import shapely
-from shapely.geometry import polygon as spolygon
-from shapely import geometry as sgeometry
+from shapely.geometry import (
+    Polygon,
+    MultiPolygon,
+)
 
 from mathutils import Euler, Vector
 
@@ -85,10 +87,10 @@ def shapely_to_multipolygon(anydata):
         if not anydata.is_empty:
             return shapely.geometry.MultiPolygon([anydata])
         else:
-            return sgeometry.MultiPolygon()
+            return MultiPolygon()
     else:
         log.info("Shapely Conversion Aborted")
-        return sgeometry.MultiPolygon()
+        return MultiPolygon()
 
 
 def shapely_to_coordinates(anydata):
@@ -203,3 +205,188 @@ def shapely_to_curve(name, p, z, cyclic=True):
         c.use_cyclic_u = cyclic
 
     return objectdata  # bpy.context.active_object
+
+
+def image_to_shapely(o, i, with_border=False):
+    """Convert an image to Shapely polygons.
+
+    This function takes an image and converts it into a series of Shapely
+    polygon objects. It first processes the image into chunks and then
+    transforms those chunks into polygon geometries. The `with_border`
+    parameter allows for the inclusion of borders in the resulting polygons.
+
+    Args:
+        o: The input image to be processed.
+        i: Additional input parameters for processing the image.
+        with_border (bool): A flag indicating whether to include
+            borders in the resulting polygons. Defaults to False.
+
+    Returns:
+        list: A list of Shapely polygon objects created from the
+            image chunks.
+    """
+
+    polychunks = image_to_chunks(o, i, with_border)
+    polys = chunks_to_shapely(polychunks)
+
+    return polys
+
+
+def curve_to_shapely(cob, use_modifiers=False):
+    """Convert a curve object to Shapely polygons.
+
+    This function takes a curve object and converts it into a list of
+    Shapely polygons. It first breaks the curve into chunks and then
+    transforms those chunks into Shapely-compatible polygon representations.
+    The `use_modifiers` parameter allows for additional processing of the
+    curve before conversion, depending on the specific requirements of the
+    application.
+
+    Args:
+        cob: The curve object to be converted.
+        use_modifiers (bool): A flag indicating whether to apply modifiers
+            during the conversion process. Defaults to False.
+
+    Returns:
+        list: A list of Shapely polygons created from the curve object.
+    """
+
+    chunks = curve_to_chunks(cob, use_modifiers)
+    polys = chunks_to_shapely(chunks)
+    return polys
+
+
+# this does more cleve chunks to Poly with hierarchies... ;)
+def chunks_to_shapely(chunks):
+    # print ('analyzing paths')
+    for ch in chunks:  # first convert chunk to poly
+        if len(ch.points) > 2:
+            # pchunk=[]
+            ch.poly = Polygon(ch.points[:, 0:2])
+            if not ch.poly.is_valid:
+                ch.poly = Polygon()
+        else:
+            ch.poly = Polygon()
+
+    for ppart in chunks:  # then add hierarchy relations
+        for ptest in chunks:
+            if ppart != ptest:
+                if not ppart.poly.is_empty and not ptest.poly.is_empty:
+                    if ptest.poly.contains(ppart.poly):
+                        # hierarchy works like this: - children get milled first.
+                        ppart.parents.append(ptest)
+
+    for ch in chunks:  # now make only simple polygons with holes, not more polys inside others
+        found = False
+        if len(ch.parents) % 2 == 1:
+            for parent in ch.parents:
+                if len(parent.parents) + 1 == len(ch.parents):
+                    # nparents serves as temporary storage for parents,
+                    ch.nparents = [parent]
+                    # not to get mixed with the first parenting during the check
+                    found = True
+                    break
+
+        if not found:
+            ch.nparents = []
+
+    for ch in chunks:  # then subtract the 1st level holes
+        ch.parents = ch.nparents
+        ch.nparents = None
+        if len(ch.parents) > 0:
+            try:
+                ch.parents[0].poly = ch.parents[0].poly.difference(
+                    ch.poly
+                )  # Polygon( ch.parents[0].poly, ch.poly)
+            except:
+                log.info("chunksToShapely oops!")
+
+                lastPt = None
+                tolerance = 0.0000003
+                newPoints = []
+
+                for pt in ch.points:
+                    toleranceXok = True
+                    toleranceYok = True
+                    if lastPt is not None:
+                        if abs(pt[0] - lastPt[0]) < tolerance:
+                            toleranceXok = False
+                        if abs(pt[1] - lastPt[1]) < tolerance:
+                            toleranceYok = False
+
+                        if toleranceXok or toleranceYok:
+                            newPoints.append(pt)
+                            lastPt = pt
+                    else:
+                        newPoints.append(pt)
+                        lastPt = pt
+
+                toleranceXok = True
+                toleranceYok = True
+                if abs(newPoints[0][0] - lastPt[0]) < tolerance:
+                    toleranceXok = False
+                if abs(newPoints[0][1] - lastPt[1]) < tolerance:
+                    toleranceYok = False
+
+                if not toleranceXok and not toleranceYok:
+                    newPoints.pop()
+
+                ch.points = np.array(newPoints)
+                ch.poly = Polygon(ch.points)
+
+                try:
+                    ch.parents[0].poly = ch.parents[0].poly.difference(ch.poly)
+                except:
+                    # print('chunksToShapely double oops!')
+
+                    lastPt = None
+                    tolerance = 0.0000003
+                    newPoints = []
+
+                    for pt in ch.parents[0].points:
+                        toleranceXok = True
+                        toleranceYok = True
+                        # print( '{0:.9f}, {0:.9f}, {0:.9f}'.format(pt[0], pt[1], pt[2]) )
+                        # print(pt)
+                        if lastPt is not None:
+                            if abs(pt[0] - lastPt[0]) < tolerance:
+                                toleranceXok = False
+                            if abs(pt[1] - lastPt[1]) < tolerance:
+                                toleranceYok = False
+
+                            if toleranceXok or toleranceYok:
+                                newPoints.append(pt)
+                                lastPt = pt
+                        else:
+                            newPoints.append(pt)
+                            lastPt = pt
+
+                    toleranceXok = True
+                    toleranceYok = True
+                    if abs(newPoints[0][0] - lastPt[0]) < tolerance:
+                        toleranceXok = False
+                    if abs(newPoints[0][1] - lastPt[1]) < tolerance:
+                        toleranceYok = False
+
+                    if not toleranceXok and not toleranceYok:
+                        newPoints.pop()
+                    # print('starting and ending points too close, removing ending point')
+
+                    ch.parents[0].points = np.array(newPoints)
+                    ch.parents[0].poly = Polygon(ch.parents[0].points)
+
+                    ch.parents[0].poly = ch.parents[0].poly.difference(
+                        ch.poly
+                    )  # Polygon( ch.parents[0].poly, ch.poly)
+
+    returnpolys = []
+
+    for polyi in range(0, len(chunks)):  # export only the booleaned polygons
+        ch = chunks[polyi]
+
+        if not ch.poly.is_empty:
+            if len(ch.parents) == 0:
+                returnpolys.append(ch.poly)
+
+    polys = MultiPolygon(returnpolys)
+    return polys

@@ -33,8 +33,9 @@ from mathutils import (
 )
 
 from .async_utils import progress_async
-from .chunk_utils import parent_child_distance, chunks_to_shapely
+from .shapely_utils import chunks_to_shapely
 from .logging_utils import log
+from .parent_utils import parent_child_distance
 from .simple_utils import (
     progress,
     get_cache_path,
@@ -71,71 +72,7 @@ def numpy_save(a, iname):
     i.save_render(iname)
 
 
-def get_circle(r, z):
-    """Generate a 2D array representing a circle.
-
-    This function creates a 2D NumPy array filled with a specified value for
-    points that fall within a circle of a given radius. The circle is
-    centered in the array, and the function uses the Euclidean distance to
-    determine which points are inside the circle. The resulting array has
-    dimensions that are twice the radius, ensuring that the entire circle
-    fits within the array.
-
-    Args:
-        r (int): The radius of the circle.
-        z (float): The value to fill the points inside the circle.
-
-    Returns:
-        numpy.ndarray: A 2D array where points inside the circle are filled
-        with the value `z`, and points outside are filled with -10.
-    """
-
-    car = numpy.full(shape=(r * 2, r * 2), fill_value=-10, dtype=numpy.double)
-    res = 2 * r
-    m = r
-    v = Vector((0, 0, 0))
-    for a in range(0, res):
-        v.x = a + 0.5 - m
-        for b in range(0, res):
-            v.y = b + 0.5 - m
-            if v.length <= r:
-                car[a, b] = z
-    return car
-
-
-def get_circle_binary(r):
-    """Generate a binary representation of a circle in a 2D grid.
-
-    This function creates a 2D boolean array where the elements inside a
-    circle of radius `r` are set to `True`, and the elements outside the
-    circle are set to `False`. The circle is centered in the middle of the
-    array, which has dimensions of (2*r, 2*r). The function iterates over
-    each point in the grid and checks if it lies within the specified
-    radius.
-
-    Args:
-        r (int): The radius of the circle.
-
-    Returns:
-        numpy.ndarray: A 2D boolean array representing the circle.
-    """
-
-    car = numpy.full(shape=(r * 2, r * 2), fill_value=False, dtype=bool)
-    res = 2 * r
-    m = r
-    v = Vector((0, 0, 0))
-    for a in range(0, res):
-        v.x = a + 0.5 - m
-        for b in range(0, res):
-            v.y = b + 0.5 - m
-            if v.length <= r:
-                car.itemset((a, b), True)
-    return car
-
-
 # get cutters for the z-buffer image method
-
-
 def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
     """Convert a NumPy array to a Blender image.
 
@@ -340,120 +277,6 @@ async def offset_area(o, samples):
 
         o.update_offset_image_tag = False
     return o.offset_image
-
-
-def dilate_array(ar, cycles):
-    """Dilate a binary array using a specified number of cycles.
-
-    This function performs a dilation operation on a 2D binary array. For
-    each cycle, it updates the array by applying a logical OR operation
-    between the current array and its neighboring elements. The dilation
-    effect expands the boundaries of the foreground (True) pixels in the
-    binary array.
-
-    Args:
-        ar (numpy.ndarray): A 2D binary array (numpy array) where
-            dilation will be applied.
-        cycles (int): The number of dilation cycles to perform.
-
-    Returns:
-        None: The function modifies the input array in place and does not
-            return a value.
-    """
-
-    for c in range(cycles):
-        ar[1:-1, :] = numpy.logical_or(
-            ar[1:-1, :],
-            ar[:-2, :],
-        )
-        ar[:, 1:-1] = numpy.logical_or(
-            ar[:, 1:-1],
-            ar[:, :-2],
-        )
-
-
-async def crazy_path(o):
-    """Execute a greedy adaptive algorithm for path planning.
-
-    This function prepares an area based on the provided object `o`,
-    calculates the dimensions of the area, and initializes a mill image and
-    cutter array. The dimensions are determined by the maximum and minimum
-    coordinates of the object, adjusted by the simulation detail and border
-    width. The function is currently a stub and requires further
-    implementation.
-
-    Args:
-        o (object): An object containing properties such as max, min, optimisation, and
-            borderwidth.
-
-    Returns:
-        None: This function does not return a value.
-    """
-
-    # TODO: try to do something with this  stuff, it's just a stub. It should be a greedy adaptive algorithm.
-    #  started another thing below.
-    await prepare_area(o)
-    sx = o.max.x - o.min.x
-    sy = o.max.y - o.min.y
-
-    resx = ceil(sx / o.optimisation.simulation_detail) + 2 * o.borderwidth
-    resy = ceil(sy / o.optimisation.simulation_detail) + 2 * o.borderwidth
-
-    o.millimage = numpy.full(shape=(resx, resy), fill_value=0.0, dtype=numpy.float)
-    # getting inverted cutter
-    o.cutterArray = -get_cutter_array(o, o.optimisation.simulation_detail)
-
-
-def build_stroke(start, end, cutterArray):
-    """Build a stroke array based on start and end points.
-
-    This function generates a 2D stroke array that represents a stroke from
-    a starting point to an ending point. It calculates the length of the
-    stroke and creates a grid that is filled based on the positions defined
-    by the start and end coordinates. The function uses a cutter array to
-    determine how the stroke interacts with the grid.
-
-    Args:
-        start (tuple): A tuple representing the starting coordinates (x, y, z).
-        end (tuple): A tuple representing the ending coordinates (x, y, z).
-        cutterArray: An object that contains size information used to modify
-            the stroke array.
-
-    Returns:
-        numpy.ndarray: A 2D array representing the stroke, filled with
-            calculated values based on the input parameters.
-    """
-
-    strokelength = max(abs(end[0] - start[0]), abs(end[1] - start[1]))
-    size_x = abs(end[0] - start[0]) + cutterArray.size[0]
-    size_y = abs(end[1] - start[1]) + cutterArray.size[0]
-    r = cutterArray.size[0] / 2
-
-    strokeArray = numpy.full(shape=(size_x, size_y), fill_value=-10.0, dtype=numpy.float)
-    samplesx = numpy.round(numpy.linspace(start[0], end[0], strokelength))
-    samplesy = numpy.round(numpy.linspace(start[1], end[1], strokelength))
-    samplesz = numpy.round(numpy.linspace(start[2], end[2], strokelength))
-
-    for i in range(0, len(strokelength)):
-        strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r] = (
-            numpy.maximum(
-                strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r],
-                cutterArray + samplesz[i],
-            )
-        )
-    return strokeArray
-
-
-def test_stroke():
-    pass
-
-
-def apply_stroke():
-    pass
-
-
-def test_stroke_binary(img, stroke):
-    pass  # buildstroke()
 
 
 def get_sample_image(s, sarray, minz):
@@ -940,117 +763,204 @@ async def prepare_area(o):
         numpy_save(o.offset_image, iname)
 
 
-def get_cutter_array(operation, pixsize):
-    """Generate a cutter array based on the specified operation and pixel size.
+# search edges for pencil strategy, another try.
+def image_edge_search_on_line(o, ar, zimage):
+    """Search for edges in an image using a pencil strategy.
 
-    This function calculates a 2D array representing the cutter shape based
-    on the cutter type defined in the operation object. The cutter can be of
-    various types such as 'END', 'BALL', 'VCARVE', 'CYLCONE', 'BALLCONE', or
-    'CUSTOM'. The function uses geometric calculations to fill the array
-    with appropriate values based on the cutter's dimensions and properties.
+    This function implements an edge detection algorithm that simulates a
+    pencil-like movement across the image represented by a 2D array. It
+    identifies white pixels and builds chunks of points based on the
+    detected edges. The algorithm iteratively explores possible directions
+    to find and track the edges until a specified condition is met, such as
+    exhausting the available white pixels or reaching a maximum number of
+    tests.
 
     Args:
-        operation (object): An object containing properties of the cutter, including
-            cutter type, diameter, tip angle, and other relevant parameters.
-        pixsize (float): The size of each pixel in the generated cutter array.
+        o (object): An object containing parameters such as min, max coordinates, cutter
+            diameter,
+            border width, and optimisation settings.
+        ar (np.ndarray): A 2D array representing the image where edge detection is to be
+            performed.
+        zimage (np.ndarray): A 2D array representing the z-coordinates corresponding to the image.
 
     Returns:
-        numpy.ndarray: A 2D array filled with values representing the cutter shape.
+        list: A list of chunks representing the detected edges in the image.
     """
 
-    cutter_type = operation.cutter_type
-    r = operation.cutter_diameter / 2 + operation.skin  # /operation.pixsize
-    res = ceil((r * 2) / pixsize)
-    m = res / 2.0
-    car = numpy.full(shape=(res, res), fill_value=-10.0, dtype=float)
-    v = Vector((0, 0, 0))
-    ps = pixsize
+    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    r = ceil((o.cutter_diameter / 12) / o.optimisation.pixsize)  # was commented
+    coef = 0.75
+    maxarx = ar.shape[0]
+    maxary = ar.shape[1]
 
-    if cutter_type == "END":
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            # v.x = [(a + 0.5 - m) * ps for a in range(0, res)]
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    car.itemset((a, b), 0)
+    directions = ((-1, -1), (0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0))
 
-    elif cutter_type in ["BALL", "BALLNOSE"]:
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = sin(acos(v.length / r)) * r - r
-                    car.itemset((a, b), z)  # [a,b]=z
+    indices = ar.nonzero()  # first get white pixels
+    startpix = ar.sum()
+    totpix = startpix
+    chunk_builders = []
+    xs = indices[0][0]
+    ys = indices[1][0]
+    nchunk = CamPathChunkBuilder([(xs, ys, zimage[xs, ys])])  # startposition
+    dindex = 0  # index in the directions list
+    last_direction = directions[dindex]
+    test_direction = directions[dindex]
+    i = 0
+    perc = 0
+    itests = 0
+    totaltests = 0
+    maxtotaltests = startpix * 4
 
-    elif cutter_type == "VCARVE":
-        angle = operation.cutter_tip_angle
-        s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = -v.length * s
-                    car.itemset((a, b), z)
+    ar[xs, ys] = False
 
-    elif cutter_type == "CYLCONE":
-        angle = operation.cutter_tip_angle
-        cyl_r = operation.cylcone_diameter / 2
-        s = tan(pi * (90 - angle / 2) / 180)  # angle in degrees
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= r:
-                    z = -(v.length - cyl_r) * s
-                    if v.length <= cyl_r:
-                        z = 0
-                    car.itemset((a, b), z)
+    while totpix > 0 and totaltests < maxtotaltests:  # a ratio when the algorithm is allowed to end
+        if perc != int(100 - 100 * totpix / startpix):
+            perc = int(100 - 100 * totpix / startpix)
+            progress("Pencil Path Searching", perc)
 
-    elif cutter_type == "BALLCONE":
-        angle = radians(operation.cutter_tip_angle) / 2
-        ball_r = operation.ball_radius
-        cutter_r = operation.cutter_diameter / 2
-        conedepth = (cutter_r - ball_r) / tan(angle)
-        Ball_R = ball_r / cos(angle)
-        D_ofset = ball_r * tan(angle)
-        s = tan(pi / 2 - angle)
-        for a in range(0, res):
-            v.x = (a + 0.5 - m) * ps
-            for b in range(0, res):
-                v.y = (b + 0.5 - m) * ps
-                if v.length <= cutter_r:
-                    z = -(v.length - ball_r) * s - Ball_R + D_ofset
-                    if v.length <= ball_r:
-                        z = sin(acos(v.length / Ball_R)) * Ball_R - Ball_R
-                    car.itemset((a, b), z)
+        success = False
+        testangulardistance = 0  # distance from initial direction in the list of direction
+        testleftright = False  # test both sides from last vector
 
-    elif cutter_type == "CUSTOM":
-        cutob = bpy.data.objects[operation.cutter_object_name]
-        scale = ((cutob.dimensions.x / cutob.scale.x) / 2) / r  #
-        # print(cutob.scale)
-        vstart = Vector((0, 0, -10))
-        vend = Vector((0, 0, 10))
-        log.info("Sampling Custom Cutter")
-        maxz = -1
-        for a in range(0, res):
-            vstart.x = (a + 0.5 - m) * ps * scale
-            vend.x = vstart.x
-            for b in range(0, res):
-                vstart.y = (b + 0.5 - m) * ps * scale
-                vend.y = vstart.y
-                v = vend - vstart
-                c = cutob.ray_cast(vstart, v, distance=1.70141e38)
-                if c[3] != -1:
-                    z = -c[1][2] / scale
-                    # print(c)
-                    if z > -9:
-                        # print(z)
-                        if z > maxz:
-                            maxz = z
-                        car.itemset((a, b), z)
-        car -= maxz
+        while not success:
+            xs = nchunk.points[-1][0] + test_direction[0]
+            ys = nchunk.points[-1][1] + test_direction[1]
 
-    return car
+            if xs > r and xs < ar.shape[0] - r and ys > r and ys < ar.shape[1] - r:
+                test = ar[xs, ys]
+
+                if test:
+                    success = True
+
+            if success:
+                nchunk.points.append([xs, ys, zimage[xs, ys]])
+                last_direction = test_direction
+                ar[xs, ys] = False
+
+                if 0:
+                    log.info("Success")
+                    log.info(f"{xs}, {ys}, {testlength}, {testangle}")
+                    log.info(lastvect)
+                    log.info(testvect)
+                    log.info(itests)
+            else:
+                test_direction = last_direction
+
+                if testleftright:
+                    testangulardistance = -testangulardistance
+                    testleftright = False
+                else:
+                    testangulardistance = -testangulardistance
+                    testangulardistance += 1  # increment angle
+                    testleftright = True
+
+                if abs(testangulardistance) > 6:  # /testlength
+                    testangulardistance = 0
+                    indices = ar.nonzero()
+                    totpix = len(indices[0])
+                    chunk_builders.append(nchunk)
+
+                    if len(indices[0] > 0):
+                        xs = indices[0][0]
+                        ys = indices[1][0]
+                        nchunk = CamPathChunkBuilder([(xs, ys, zimage[xs, ys])])  # startposition
+                        ar[xs, ys] = False
+                    else:
+                        nchunk = CamPathChunkBuilder([])
+
+                    test_direction = directions[3]
+                    last_direction = directions[3]
+                    success = True
+                    itests = 0
+
+                if len(nchunk.points) > 0:
+                    if nchunk.points[-1][0] + test_direction[0] < r:
+                        testvect.x = r
+                    if nchunk.points[-1][1] + test_direction[1] < r:
+                        testvect.y = r
+                    if nchunk.points[-1][0] + test_direction[0] > maxarx - r:
+                        testvect.x = maxarx - r
+                    if nchunk.points[-1][1] + test_direction[1] > maxary - r:
+                        testvect.y = maxary - r
+
+                dindexmod = dindex + testangulardistance
+
+                while dindexmod < 0:
+                    dindexmod += len(directions)
+                while dindexmod > len(directions):
+                    dindexmod -= len(directions)
+
+                test_direction = directions[dindexmod]
+
+                if 0:
+                    log.info(
+                        f"{xs}, {ys}, {test_direction}, {last_direction}, {testangulardistance}"
+                    )
+                    log.info(totpix)
+            itests += 1
+            totaltests += 1
+
+        i += 1
+        if i % 100 == 0:
+            totpix = ar.sum()
+            i = 0
+
+    chunk_builders.append(nchunk)
+
+    for ch in chunk_builders:
+        ch = ch.points
+
+        for i in range(0, len(ch)):
+            ch[i] = (
+                (ch[i][0] + coef - o.borderwidth) * o.optimisation.pixsize + minx,
+                (ch[i][1] + coef - o.borderwidth) * o.optimisation.pixsize + miny,
+                ch[i][2],
+            )
+
+    return [c.to_chunk() for c in chunk_builders]
+
+
+def get_offset_image_cavities(o, i):  # for pencil operation mainly
+    """Detects areas in the offset image which are 'cavities' due to curvature
+    changes.
+
+    This function analyzes the input image to identify regions where the
+    curvature changes, indicating the presence of cavities. It computes
+    vertical and horizontal differences in pixel values to detect edges and
+    applies a threshold to filter out insignificant changes. The resulting
+    areas are then processed to remove any chunks that do not meet the
+    minimum criteria for cavity detection. The function returns a list of
+    valid chunks that represent the detected cavities.
+
+    Args:
+        o: An object containing parameters and thresholds for the detection
+            process.
+        i (np.ndarray): A 2D array representing the image data to be analyzed.
+
+    Returns:
+        list: A list of detected chunks representing the cavities in the image.
+    """
+
+    progress("Detect Corners in the Offset Image")
+    vertical = i[:-2, 1:-1] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[2:, 1:-1]
+    horizontal = i[1:-1, :-2] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[1:-1, 2:]
+    ar = np.logical_or(vertical, horizontal)
+
+    if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge,
+        # it has tons of spikes and simply is not better than the old one
+        iname = get_cache_path(o) + "_pencilthres.exr"
+        # numpysave(ar,iname)#save for comparison before
+        chunks = image_edge_search_on_line(o, ar, i)
+        iname = get_cache_path(o) + "_pencilthres_comp.exr"
+
+        log.info("New Pencil Strategy")
+
+    # crop pixels that are on outer borders
+    for chi in range(len(chunks) - 1, -1, -1):
+        chunk = chunks[chi]
+        chunk.clip_points(o.min.x, o.max.x, o.min.y, o.max.y)
+
+        if chunk.count() < 2:
+            chunks.pop(chi)
+
+    return chunks

@@ -16,22 +16,6 @@ import bpy
 
 from . import strategy
 from .bridges import use_bridges
-from .cam_chunk import (
-    curve_to_chunks,
-    limit_chunks,
-    chunks_coherency,
-    shapely_to_chunks,
-    sample_chunks,
-    sample_chunks_n_axis,
-    get_operation_silhouette,
-    get_ambient,
-    connect_chunks_low,
-    sort_chunks,
-    oclGetWaterline,
-    image_to_shapely,
-    crazy_stroke_image_binary,
-    get_offset_image_cavities,
-)
 from .exception import CamException
 from .constants import (
     USE_PROFILER,
@@ -40,28 +24,50 @@ from .exception import CamException
 from .gcode.gcode_export import export_gcode_path
 from .pattern import get_path_pattern, get_path_pattern_4_axis
 
+from .strategies.cutout import cutout
+from .strategies.curve_to_path import curve
+from .strategies.drill import drill
+from .strategies.medial_axis import medial_axis
+from .strategies.project_curve import project_curve
+from .strategies.pocket import pocket
+
 from .utilities.async_utils import progress_async
 from .utilities.bounds_utils import get_bounds
 from .utilities.chunk_utils import (
+    chunks_to_mesh,
     chunks_refine,
-    parent_child_distance,
+    curve_to_chunks,
+    limit_chunks,
+    chunks_coherency,
+    shapely_to_chunks,
+    sample_chunks,
+    sample_chunks_n_axis,
+    connect_chunks_low,
+    sort_chunks,
 )
+
 from .utilities.image_utils import (
     prepare_area,
+    get_offset_image_cavities,
 )
 from .utilities.index_utils import (
     cleanup_indexed,
     prepare_indexed,
 )
 from .utilities.logging_utils import log
+from .utilities.ocl_utils import oclGetWaterline
 from .utilities.operation_utils import (
+    get_ambient,
     get_operation_sources,
     get_change_data,
     check_memory_limit,
+    get_layers,
 )
-from .utilities.simple_utils import (
-    progress,
-)
+from .utilities.parent_utils import parent_child_distance
+from .utilities.shapely_utils import image_to_shapely
+from .utilities.silhouette_utils import get_operation_silhouette
+from .utilities.simple_utils import progress
+from .utilities.stroke_utils import crazy_stroke_image_binary
 
 
 async def get_path(context, operation):
@@ -100,6 +106,9 @@ async def get_path(context, operation):
     operation.update_ambient_tag = True
     operation.update_bullet_collision_tag = True
 
+    indexed_five_axis = operation.machine_axes == "5" and operation.strategy_5_axis == "INDEXED"
+    indexed_four_axis = operation.machine_axes == "4" and operation.strategy_4_axis == "INDEXED"
+
     get_operation_sources(operation)
 
     operation.info.warnings = ""
@@ -119,9 +128,7 @@ async def get_path(context, operation):
         else:
             await get_path_3_axis(context, operation)
 
-    elif (operation.machine_axes == "5" and operation.strategy_5_axis == "INDEXED") or (
-        operation.machine_axes == "4" and operation.strategy_4_axis == "INDEXED"
-    ):
+    elif indexed_five_axis or indexed_four_axis:
         # 5 axis operations are now only 3 axis operations that get rotated...
         operation.orientation = prepare_indexed(operation)  # TODO RENAME THIS
 
@@ -177,17 +184,34 @@ async def get_path_3_axis(context, operation):
     get_bounds(o)
     tw = time.time()
 
+    # strategy_from_operation = {
+    #     "CUTOUT": cutout(o),
+    #     "CURVE": curve(o),
+    #     "DRILL": strategy.drill(o),
+    #     "MEDIAL_AXIS": strategy.medial_axis(o),
+    #     "PROJECTED_CURVE": strategy.project_curve(s, o),
+    #     "POCKET": strategy.pocket(o),
+    # }
+
+    # await strategy_from_operation[o.strategy]
+
     if o.strategy == "CUTOUT":
-        await strategy.cutout(o)
+        await cutout(o)
 
     elif o.strategy == "CURVE":
-        await strategy.curve(o)
+        await curve(o)
+
+    elif o.strategy == "DRILL":
+        await drill(o)
+
+    elif o.strategy == "MEDIAL_AXIS":
+        await medial_axis(o)
 
     elif o.strategy == "PROJECTED_CURVE":
-        await strategy.project_curve(s, o)
+        await project_curve(s, o)
 
     elif o.strategy == "POCKET":
-        await strategy.pocket(o)
+        await pocket(o)
 
     elif o.strategy in [
         "PARALLEL",
@@ -240,7 +264,7 @@ async def get_path_3_axis(context, operation):
                 pathSamples = await connect_chunks_low(pathSamples, o)
 
         chunks = []
-        layers = strategy.get_layers(o, o.max_z, o.min.z)
+        layers = get_layers(o, o.max_z, o.min.z)
 
         log.info(f"Sampling Object: {o.name}")
         chunks.extend(await sample_chunks(o, pathSamples, layers))
@@ -268,7 +292,7 @@ async def get_path_3_axis(context, operation):
             for bridge_chunk in chunks:
                 use_bridges(bridge_chunk, o)
 
-        strategy.chunks_to_mesh(chunks, o)
+        chunks_to_mesh(chunks, o)
 
     elif o.strategy == "WATERLINE" and o.optimisation.use_opencamlib:
         get_ambient(o)
@@ -281,7 +305,7 @@ async def get_path_3_axis(context, operation):
             for ch in chunks:
                 ch.reverse()
 
-        strategy.chunks_to_mesh(chunks, o)
+        chunks_to_mesh(chunks, o)
 
     elif o.strategy == "WATERLINE" and not o.optimisation.use_opencamlib:
         topdown = True
@@ -429,13 +453,7 @@ async def get_path_3_axis(context, operation):
             chunks.extend(slicechunks)
         if topdown:
             chunks.reverse()
-        strategy.chunks_to_mesh(chunks, o)
-
-    elif o.strategy == "DRILL":
-        await strategy.drill(o)
-
-    elif o.strategy == "MEDIAL_AXIS":
-        await strategy.medial_axis(o)
+        chunks_to_mesh(chunks, o)
 
     await progress_async(f"Done", time.time() - tw, "s")
 
@@ -468,7 +486,7 @@ async def get_path_4_axis(context, operation):
         depth = path_samples[0].depth
         chunks = []
 
-        layers = strategy.get_layers(o, 0, depth)
+        layers = get_layers(o, 0, depth)
 
         chunks.extend(await sample_chunks_n_axis(o, path_samples, layers))
-        strategy.chunks_to_mesh(chunks, o)
+        chunks_to_mesh(chunks, o)

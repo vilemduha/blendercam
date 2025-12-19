@@ -18,15 +18,16 @@ from mathutils import (
     Vector,
 )
 
-from .constants import (
+from ..constants import (
     BULLET_SCALE,
     CUTTER_OFFSET,
 )
-from .utilities.logging_utils import log
-from .utilities.simple_utils import (
+from .logging_utils import log
+from .simple_utils import (
     activate,
     delete_object,
     progress,
+    subdivide_long_edges,
 )
 
 
@@ -198,63 +199,6 @@ def get_cutter_bullet(o):
     cutter.name = "cam_cutter"
     o.cutter_shape = cutter
     return cutter
-
-
-def subdivide_long_edges(ob, threshold):
-    """Subdivide edges of a mesh object that exceed a specified length.
-
-    This function iteratively checks the edges of a given mesh object and
-    subdivides those that are longer than a specified threshold. The process
-    involves toggling the edit mode of the object, selecting the long edges,
-    and applying a subdivision operation. The function continues to
-    subdivide until no edges exceed the threshold.
-
-    Args:
-        ob (bpy.types.Object): The Blender object containing the mesh to be
-            subdivided.
-        threshold (float): The length threshold above which edges will be
-            subdivided.
-    """
-
-    log.info("Subdividing Long Edges")
-    m = ob.data
-    scale = (ob.scale.x + ob.scale.y + ob.scale.z) / 3
-    subdivides = []
-    n = 1
-    iter = 0
-    while n > 0:
-        n = 0
-        for i, e in enumerate(m.edges):
-            v1 = m.vertices[e.vertices[0]].co
-            v2 = m.vertices[e.vertices[1]].co
-            vec = v2 - v1
-            l = vec.length
-            if l * scale > threshold:
-                n += 1
-                subdivides.append(i)
-        if n > 0:
-            log.info(len(subdivides))
-            bpy.ops.object.editmode_toggle()
-
-            # bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY')
-            # bpy.ops.mesh.tris_convert_to_quads()
-
-            bpy.ops.mesh.select_all(action="DESELECT")
-            bpy.ops.mesh.select_mode(use_extend=False, use_expand=False, type="EDGE")
-            bpy.ops.object.editmode_toggle()
-            for i in subdivides:
-                m.edges[i].select = True
-            bpy.ops.object.editmode_toggle()
-            bpy.ops.mesh.subdivide(smoothness=0)
-            if iter == 0:
-                bpy.ops.mesh.select_all(action="SELECT")
-                bpy.ops.mesh.quads_convert_to_tris(
-                    quad_method="SHORTEST_DIAGONAL", ngon_method="BEAUTY"
-                )
-            bpy.ops.mesh.select_all(action="DESELECT")
-            bpy.ops.object.editmode_toggle()
-            ob.update_from_editmode()
-        iter += 1
 
 
 def prepare_bullet_collision(o):

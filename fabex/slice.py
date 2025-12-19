@@ -44,12 +44,12 @@ def slicing_2d(ob, height):
     ob.location[2] = -1 * height
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
     bpy.ops.object.convert(target="CURVE")  # convert it to curve
-    if (
-        bpy.context.active_object.type != "CURVE"
-    ):  # conversion failed because mesh was empty so delete mesh
+    if bpy.context.active_object.type != "CURVE":
+        # conversion failed because mesh was empty so delete mesh
         bpy.ops.object.delete(use_global=False, confirm=False)
         return False
     bpy.ops.object.select_all(action="DESELECT")  # deselect everything
+
     return True
 
 
@@ -97,6 +97,6 @@ def slicing_3d(ob, start, end):
     # bring all the slices to 0 level and reset location transform
     ob.location[2] = -1 * start
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-
     bpy.ops.object.select_all(action="DESELECT")  # deselect everything
+
     return True
