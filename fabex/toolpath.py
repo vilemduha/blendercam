@@ -48,6 +48,7 @@ from .utilities.image_utils import (
     prepare_area,
     get_offset_image_cavities,
 )
+from .utilities.image_shapely_utils import image_to_shapely
 from .utilities.index_utils import (
     cleanup_indexed,
     prepare_indexed,
@@ -62,7 +63,6 @@ from .utilities.operation_utils import (
 )
 from .utilities.parent_utils import parent_child_distance
 from .utilities.shapely_utils import (
-    image_to_shapely,
     shapely_to_chunks,
 )
 from .utilities.silhouette_utils import get_operation_silhouette

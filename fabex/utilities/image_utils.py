@@ -33,7 +33,6 @@ from mathutils import (
 )
 
 from .async_utils import progress_async
-from .shapely_utils import chunks_to_shapely
 from .logging_utils import log
 from .operation_utils import get_cutter_array
 from .parent_utils import parent_child_distance
@@ -965,3 +964,203 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
             chunks.pop(chi)
 
     return chunks
+
+
+def image_to_chunks(o, image, with_border=False):
+    """Convert an image into chunks based on detected edges.
+
+    This function processes a given image to identify edges and convert them
+    into polychunks, which are essentially collections of connected edge
+    segments. It utilizes the properties of the input object `o` to
+    determine the boundaries and size of the chunks. The function can
+    optionally include borders in the edge detection process. The output is
+    a list of chunks that represent the detected polygons in the image.
+
+    Args:
+        o (object): An object containing properties such as min, max, borderwidth,
+            and optimisation settings.
+        image (np.ndarray): A 2D array representing the image to be processed,
+            expected to be in a format compatible with uint8.
+        with_border (bool?): A flag indicating whether to include borders
+            in the edge detection. Defaults to False.
+
+    Returns:
+        list: A list of chunks, where each chunk is represented as a collection of
+            points that outline the detected edges in the image.
+    """
+
+    t = time.time()
+    minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    pixsize = o.optimisation.pixsize
+    image = image.astype(np.uint8)
+    edges = []
+    ar = image[:, :-1] - image[:, 1:]
+    indices1 = ar.nonzero()
+    borderspread = 2
+    # when the border was excluded precisely, sometimes it did remove some silhouette parts
+    r = o.borderwidth - borderspread
+    # to prevent outline of the border was 3 before and also (o.cutter_diameter/2)/pixsize+o.borderwidth
+    if with_border:
+        r = 0
+    w = image.shape[0]
+    h = image.shape[1]
+    coef = 0.75  # compensates for imprecisions
+
+    for id in range(0, len(indices1[0])):
+        a = indices1[0][id]
+        b = indices1[1][id]
+
+        if r < a < w - r and r < b < h - r:
+            edges.append(((a - 1, b), (a, b)))
+
+    ar = image[:-1, :] - image[1:, :]
+    indices2 = ar.nonzero()
+
+    for id in range(0, len(indices2[0])):
+        a = indices2[0][id]
+        b = indices2[1][id]
+
+        if r < a < w - r and r < b < h - r:
+            edges.append(((a, b - 1), (a, b)))
+
+    polychunks = []
+    d = {}
+
+    for e in edges:
+        d[e[0]] = []
+        d[e[1]] = []
+
+    for e in edges:
+        verts1 = d[e[0]]
+        verts2 = d[e[1]]
+        verts1.append(e[1])
+        verts2.append(e[0])
+
+    if len(edges) > 0:
+        ch = [edges[0][0], edges[0][1]]  # first and his reference
+        d[edges[0][0]].remove(edges[0][1])
+        i = 0
+        specialcase = 0
+
+        while len(d) > 0 and i < 20000000:
+            verts = d.get(ch[-1], [])
+            closed = False
+
+            if len(verts) <= 1:  # this will be good for not closed loops...some time
+                closed = True
+                if len(verts) == 1:
+                    ch.append(verts[0])
+                    verts.remove(verts[0])
+            elif len(verts) >= 3:
+                specialcase += 1
+                v1 = ch[-1]
+                v2 = ch[-2]
+                white = image[v1[0], v1[1]]
+                comesfromtop = v1[1] < v2[1]
+                comesfrombottom = v1[1] > v2[1]
+                comesfromleft = v1[0] > v2[0]
+                comesfromright = v1[0] < v2[0]
+                take = False
+
+                for v in verts:
+                    if v[0] == ch[-2][0] and v[1] == ch[-2][1]:
+                        verts.remove(v)
+
+                    if not take:
+                        if (not white and comesfromtop) or (white and comesfrombottom):
+                            # goes right
+                            if v1[0] + 0.5 < v[0]:
+                                take = True
+                        elif (not white and comesfrombottom) or (white and comesfromtop):
+                            # goes left
+                            if v1[0] > v[0] + 0.5:
+                                take = True
+                        elif (not white and comesfromleft) or (white and comesfromright):
+                            # goes down
+                            if v1[1] > v[1] + 0.5:
+                                take = True
+                        elif (not white and comesfromright) or (white and comesfromleft):
+                            # goes up
+                            if v1[1] + 0.5 < v[1]:
+                                take = True
+                        if take:
+                            ch.append(v)
+                            verts.remove(v)
+
+            else:  # here it has to be 2 always
+                done = False
+                for vi in range(len(verts) - 1, -1, -1):
+                    if not done:
+                        v = verts[vi]
+
+                        if v[0] == ch[-2][0] and v[1] == ch[-2][1]:
+                            verts.remove(v)
+                        else:
+                            ch.append(v)
+                            done = True
+                            verts.remove(v)
+                            # or len(verts)<=1:
+                            if v[0] == ch[0][0] and v[1] == ch[0][1]:
+                                closed = True
+
+            if closed:
+                polychunks.append(ch)
+
+                for si, s in enumerate(ch):
+                    if si > 0:  # first one was popped
+                        if d.get(s, None) is not None and len(d[s]) == 0:
+                            # this makes the case much less probable, but i think not impossible
+                            d.pop(s)
+                if len(d) > 0:
+                    newch = False
+
+                    while not newch:
+                        v1 = d.popitem()
+
+                        if len(v1[1]) > 0:
+                            ch = [v1[0], v1[1][0]]
+                            newch = True
+
+            i += 1
+
+            if i % 10000 == 0:
+                log.info(len(ch))
+                log.info(i)
+
+        vecchunks = []
+
+        for ch in polychunks:
+            vecchunk = []
+            vecchunks.append(vecchunk)
+
+            for i in range(0, len(ch)):
+                ch[i] = (
+                    (ch[i][0] + coef - o.borderwidth) * pixsize + minx,
+                    (ch[i][1] + coef - o.borderwidth) * pixsize + miny,
+                    0,
+                )
+                vecchunk.append(Vector(ch[i]))
+
+        reduxratio = 1.25  # was 1.25
+        soptions = [
+            "distance",
+            "distance",
+            o.optimisation.pixsize * reduxratio,
+            5,
+            o.optimisation.pixsize * reduxratio,
+        ]
+        nchunks = []
+
+        for i, ch in enumerate(vecchunks):
+            s = curve_simplify.simplify_RDP(ch, soptions)
+            nch = CamPathChunkBuilder([])
+
+            for i in range(0, len(s)):
+                nch.points.append((ch[s[i]].x, ch[s[i]].y))
+
+            if len(nch.points) > 2:
+                nchunks.append(nch.to_chunk())
+
+        return nchunks
+    else:
+        return []

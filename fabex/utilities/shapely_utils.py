@@ -18,7 +18,6 @@ except ImportError:
 
 from .chunk_builder import CamPathChunkBuilder
 
-# from .chunk_utils import curve_to_chunks
 from .logging_utils import log
 
 
@@ -202,55 +201,6 @@ def shapely_to_curve(name, p, z, cyclic=True):
         c.use_cyclic_u = cyclic
 
     return objectdata  # bpy.context.active_object
-
-
-def image_to_shapely(o, i, with_border=False):
-    """Convert an image to Shapely polygons.
-
-    This function takes an image and converts it into a series of Shapely
-    polygon objects. It first processes the image into chunks and then
-    transforms those chunks into polygon geometries. The `with_border`
-    parameter allows for the inclusion of borders in the resulting polygons.
-
-    Args:
-        o: The input image to be processed.
-        i: Additional input parameters for processing the image.
-        with_border (bool): A flag indicating whether to include
-            borders in the resulting polygons. Defaults to False.
-
-    Returns:
-        list: A list of Shapely polygon objects created from the
-            image chunks.
-    """
-
-    polychunks = image_to_chunks(o, i, with_border)
-    polys = chunks_to_shapely(polychunks)
-
-    return polys
-
-
-# def curve_to_shapely(cob, use_modifiers=False):
-#     """Convert a curve object to Shapely polygons.
-
-#     This function takes a curve object and converts it into a list of
-#     Shapely polygons. It first breaks the curve into chunks and then
-#     transforms those chunks into Shapely-compatible polygon representations.
-#     The `use_modifiers` parameter allows for additional processing of the
-#     curve before conversion, depending on the specific requirements of the
-#     application.
-
-#     Args:
-#         cob: The curve object to be converted.
-#         use_modifiers (bool): A flag indicating whether to apply modifiers
-#             during the conversion process. Defaults to False.
-
-#     Returns:
-#         list: A list of Shapely polygons created from the curve object.
-#     """
-
-#     chunks = curve_to_chunks(cob, use_modifiers)
-#     polys = chunks_to_shapely(chunks)
-#     return polys
 
 
 # this does more cleve chunks to Poly with hierarchies... ;)
