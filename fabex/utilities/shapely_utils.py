@@ -18,6 +18,7 @@ try:
 except ImportError:
     pass
 
+# from .chunk_utils import curve_to_chunks
 from .logging_utils import log
 
 from ..constants import SHAPELY
