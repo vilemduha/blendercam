@@ -18,7 +18,7 @@ import bpy
 from mathutils import Euler, Vector
 
 
-from .utilities.chunk_utils import curve_to_chunks
+from .utilities.curve_utils import curve_to_chunks
 from .utilities.logging_utils import log
 from .utilities.shapely_utils import shapely_to_curve, chunks_to_shapely
 from .utilities.simple_utils import activate

@@ -3,10 +3,10 @@ from ..exception import CamException
 
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
-    curve_to_chunks,
     sort_chunks,
     chunks_refine,
 )
+from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import (
     get_operation_sources,

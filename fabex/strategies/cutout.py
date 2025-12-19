@@ -11,10 +11,10 @@ from ..bridges import use_bridges
 
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
-    curve_to_chunks,
     limit_chunks,
     sort_chunks,
 )
+from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import check_min_z, get_layers
 from ..utilities.parent_utils import parent_child_poly

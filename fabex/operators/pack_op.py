@@ -25,7 +25,7 @@ from bpy.types import Operator
 from ..constants import PRECISION
 from ..pack import pack_curves
 
-from ..utilities.chunk_utils import curve_to_chunks
+from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log
 from ..utilities.shapely_utils import shapely_to_curve, chunks_to_shapely
 from ..utilities.simple_utils import activate

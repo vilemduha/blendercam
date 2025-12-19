@@ -35,12 +35,12 @@ from .utilities.chunk_utils import (
     chunks_refine,
     chunks_refine_threshold,
     set_chunks_z,
-    curve_to_chunks,
     limit_chunks,
     sample_chunks_n_axis,
     sort_chunks,
 )
 from .utilities.compare_utils import check_equal, unique
+from .utilities.curve_utils import curve_to_chunks
 from .utilities.geom_utils import circle, helix
 from .utilities.logging_utils import log
 from .utilities.operation_utils import get_operation_sources, check_min_z, get_layers

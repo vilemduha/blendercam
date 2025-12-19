@@ -22,10 +22,9 @@ from shapely.geometry import Polygon
 
 import bpy
 from bpy_extras import object_utils
-from mathutils import (
-    Vector,
-)
+from mathutils import Vector
 
+from .curve_utils import curve_to_shapely
 from .logging_utils import log
 from .simple_utils import (
     get_cache_path,

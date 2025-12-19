@@ -5,7 +5,7 @@ from shapely.geometry import (
 
 import bpy
 
-
+from .curve_utils import curve_to_shapely
 from .shapely_utils import shapely_to_curve
 from .simple_utils import select_multiple
 

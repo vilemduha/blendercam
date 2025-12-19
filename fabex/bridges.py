@@ -23,7 +23,7 @@ from .utilities.silhouette_utils import (
     get_object_silhouette,
     get_operation_silhouette,
 )
-from .utilities.shapely_utils import curve_to_shapely
+from .utilities.curve_utils import curve_to_shapely
 from .utilities.simple_utils import join_multiple, remove_doubles
 
 

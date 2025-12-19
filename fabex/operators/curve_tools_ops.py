@@ -26,8 +26,8 @@ from ..utilities.polygon_utils import (
     polygon_boolean,
     polygon_convex_hull,
 )
+from ..utilities.curve_utils import curve_to_shapely
 from ..utilities.shapely_utils import (
-    curve_to_shapely,
     shapely_to_curve,
 )
 from ..utilities.silhouette_utils import (

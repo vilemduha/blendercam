@@ -80,10 +80,8 @@ from ..utilities.simple_utils import (
     union,
     rotate,
 )
-from ..utilities.shapely_utils import (
-    curve_to_shapely,
-    shapely_to_curve,
-)
+from ..utilities.curve_utils import curve_to_shapely
+from ..utilities.shapely_utils import shapely_to_curve
 
 
 def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob=None):

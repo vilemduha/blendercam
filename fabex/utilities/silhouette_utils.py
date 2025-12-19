@@ -9,8 +9,9 @@ from shapely.geometry import (
 
 import bpy
 
-from .chunk_utils import (
-    image_to_chunks,
+from .chunk_utils import image_to_chunks
+from .curve_utils import (
+    curve_to_shapely,
     curve_to_chunks,
 )
 from .image_utils import render_sample_image
@@ -18,7 +19,6 @@ from .image_utils import render_sample_image
 from .logging_utils import log
 from .shapely_utils import (
     chunks_to_shapely,
-    curve_to_shapely,
     shapely_to_curve,
     shapely_to_multipolygon,
 )

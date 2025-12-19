@@ -25,7 +25,7 @@ except ImportError:
     pass
 import mathutils
 
-from ..constants import OCL_SCALE
+from ..constants import OCL_SCALE, _PREVIOUS_OCL_MESH
 from ..exception import CamException
 from .async_utils import progress_async
 from .chunk_builder import CamPathChunk

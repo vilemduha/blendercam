@@ -4,9 +4,9 @@ from ..bridges import use_bridges
 
 from ..utilities.chunk_utils import (
     chunks_refine,
-    curve_to_chunks,
     sort_chunks,
 )
+from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log
 
 

@@ -36,7 +36,6 @@ from .utilities.bounds_utils import get_bounds
 from .utilities.chunk_utils import (
     chunks_to_mesh,
     chunks_refine,
-    curve_to_chunks,
     limit_chunks,
     chunks_coherency,
     sample_chunks,
@@ -44,7 +43,7 @@ from .utilities.chunk_utils import (
     connect_chunks_low,
     sort_chunks,
 )
-
+from .utilities.curve_utils import curve_to_chunks
 from .utilities.image_utils import (
     prepare_area,
     get_offset_image_cavities,
