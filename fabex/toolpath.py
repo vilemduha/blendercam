@@ -14,7 +14,6 @@ from shapely.geometry import Polygon
 
 import bpy
 
-from . import strategy
 from .bridges import use_bridges
 from .exception import CamException
 from .constants import (
