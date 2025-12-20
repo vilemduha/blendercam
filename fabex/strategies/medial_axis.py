@@ -35,7 +35,7 @@ from ..utilities.simple_utils import (
     remove_multiple,
 )
 from ..utilities.strategy_utils import add_pocket
-from ..voronoi import compute_voronoi_diagram
+from ..utilities.voronoi_utils import compute_voronoi_diagram
 
 
 async def medial_axis(o):

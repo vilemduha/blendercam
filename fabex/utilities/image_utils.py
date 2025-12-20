@@ -664,6 +664,7 @@ def render_sample_image(o):
             start_y = 0
             end_y = image_size_y
 
+        border_width = o.borderwidth
         pixsize = o.source_image_size_x / image_size_x
         progress("Pixel Size in the Image Source", pixsize)
 
@@ -679,7 +680,7 @@ def render_sample_image(o):
                     2 * border_width + image_size_y,
                 ),
                 fill_value=1 - negative,
-                dtype=numpy.float,
+                dtype=float,
             )
         else:  # other operations like parallel need to reach the border
             image_array = numpy.full(
@@ -688,7 +689,7 @@ def render_sample_image(o):
                     2 * border_width + image_size_y,
                 ),
                 fill_value=negative,
-                dtype=numpy.float,
+                dtype=float,
             )
 
         image_array[

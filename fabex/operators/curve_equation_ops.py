@@ -16,10 +16,9 @@ from bpy.props import (
 )
 from bpy.types import Operator
 
-from .. import parametric
-
 from ..utilities.geom_utils import triangle, s_sine
 from ..utilities.logging_utils import log
+from ..utilities.parametric_utils import create_parametric_curve
 
 
 class CamSineCurve(Operator):
@@ -216,7 +215,7 @@ class CamSineCurve(Operator):
 
         for i in range(self.wave_amount):
             angle_off = self.wave_angle_offset * period * i / (2 * pi)
-            parametric.create_parametric_curve(
+            create_parametric_curve(
                 f,
                 offset=self.wave_distance * i,
                 min=self.min_t,
@@ -361,7 +360,7 @@ class CamLissajousCurve(Operator):
             c = (x(t), y(t), z(t))
             return c
 
-        parametric.create_parametric_curve(
+        create_parametric_curve(
             f, offset=0.0, min=self.min_t, max=self.max_t, use_cubic=True, iterations=self.iteration
         )
 
@@ -457,7 +456,7 @@ class CamHypotrochoidCurve(Operator):
         if iter > 10000:  # do not calculate more than 10000 points
             log.info("limiting calculations to 10000 points")
             iter = 10000
-        parametric.create_parametric_curve(
+        create_parametric_curve(
             f,
             offset=0.0,
             min=0,
@@ -535,7 +534,7 @@ class CamCustomCurve(Operator):
             c = (ex(t), ey(t), ez(t))
             return c
 
-        parametric.create_parametric_curve(
+        create_parametric_curve(
             f,
             offset=0.0,
             min=self.min_t,

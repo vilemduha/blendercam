@@ -21,8 +21,6 @@ from bpy.props import (
 )
 from bpy.types import Operator
 
-from .. import involute_gear
-
 from ..joinery.finger import (
     finger,
     finger_amount,
@@ -59,6 +57,7 @@ from ..joinery.multiangle import (
     open_curve,
 )
 
+from ..utilities.gear_utils import gear, rack
 from ..utilities.logging_utils import log
 from ..utilities.polygon_utils import (
     polygon_boolean,
@@ -2130,7 +2129,7 @@ class CamCurveGear(Operator):
         """
 
         if self.gear_type == "PINION":
-            involute_gear.gear(
+            gear(
                 mm_per_tooth=self.tooth_spacing,
                 number_of_teeth=self.tooth_amount,
                 hole_diameter=self.hole_diameter,
@@ -2142,7 +2141,7 @@ class CamCurveGear(Operator):
                 spokes=self.spoke_amount,
             )
         elif self.gear_type == "RACK":
-            involute_gear.rack(
+            rack(
                 mm_per_tooth=self.tooth_spacing,
                 number_of_teeth=self.tooth_amount,
                 pressure_angle=self.pressure_angle,

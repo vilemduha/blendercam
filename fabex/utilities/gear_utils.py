@@ -74,8 +74,8 @@ from shapely.geometry import Polygon
 
 import bpy
 
-from .utilities.shapely_utils import shapely_to_curve
-from .utilities.simple_utils import (
+from .shapely_utils import shapely_to_curve
+from .simple_utils import (
     deselect,
     duplicate,
     rotate,

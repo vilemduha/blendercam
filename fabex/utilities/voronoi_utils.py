@@ -32,13 +32,13 @@ Steve Fortune's homepage: http://netlib.bell-labs.com/cm/cs/who/sjf/index.html
 
 import math
 
-from .constants import (
+from ..constants import (
     TOLERANCE,
     BIG_FLOAT,
     PY3,
 )
 
-from .utilities.logging_utils import log
+from .logging_utils import log
 
 
 class Context(object):

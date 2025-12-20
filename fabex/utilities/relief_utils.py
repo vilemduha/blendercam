@@ -12,12 +12,12 @@ import numpy
 
 import bpy
 
-from .constants import EPS, NUMPYALG
-from .utilities.image_utils import (
+from ..constants import EPS, NUMPYALG
+from .image_utils import (
     image_to_numpy,
     numpy_to_image,
 )
-from .utilities.logging_utils import log
+from .logging_utils import log
 
 
 class ReliefError(Exception):

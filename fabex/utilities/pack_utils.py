@@ -11,17 +11,17 @@ import random
 import time
 
 import shapely
-from shapely import geometry as sgeometry
+from shapely.geometry import Point, Polygon, MultiPolygon
 from shapely import affinity, prepared, speedups
 
 import bpy
 from mathutils import Euler, Vector
 
 
-from .utilities.curve_utils import curve_to_chunks
-from .utilities.logging_utils import log
-from .utilities.shapely_utils import shapely_to_curve, chunks_to_shapely
-from .utilities.simple_utils import activate
+from .curve_utils import curve_to_chunks
+from .logging_utils import log
+from .shapely_utils import shapely_to_curve, chunks_to_shapely
+from .simple_utils import activate
 
 
 def s_rotate(s, r, x, y):
@@ -52,7 +52,7 @@ def s_rotate(s, r, x, y):
         v.rotate(e)
         ncoords.append((v[0], v[1]))
 
-    return sgeometry.Polygon(ncoords)
+    return Polygon(ncoords)
 
 
 def pack_curves():
@@ -106,7 +106,7 @@ def pack_curves():
         polyfield.append([[0, 0], 0.0, poly, ob, z])
     random.shuffle(polyfield)
     # primitive layout here:
-    allpoly = prepared.prep(sgeometry.Polygon())  # main collision poly.
+    allpoly = prepared.prep(Polygon())  # main collision poly.
 
     shift = tolerance  # one milimeter by now.
     rotchange = rotate_angle  # in radians
@@ -119,7 +119,7 @@ def pack_curves():
     i = 0
     p = polyfield[0][2]
     placedpolys = []
-    rotcenter = sgeometry.Point(0, 0)
+    rotcenter = Point(0, 0)
     for pf in polyfield:
         log.info(i)
         rot = 0
@@ -192,7 +192,7 @@ def pack_curves():
 
                 log.info(f"{best[0]}, {best[1]}, {itera}")
                 placedpolys.append(ptrans)
-                allpoly = prepared.prep(sgeometry.MultiPolygon(placedpolys))
+                allpoly = prepared.prep(MultiPolygon(placedpolys))
 
                 # cleanup allpoly
                 log.info(f"{itera}, {hits}, {besthit}")
@@ -215,5 +215,5 @@ def pack_curves():
         i += 1
     t = time.time() - t
 
-    shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
+    shapely_to_curve("test", MultiPolygon(placedpolys), 0)
     log.info(t)

@@ -23,7 +23,7 @@ from bpy.props import (
 from bpy.types import Operator
 
 from ..constants import PRECISION
-from ..pack import pack_curves
+from ..utilities.pack_utils import pack_curves
 
 from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log

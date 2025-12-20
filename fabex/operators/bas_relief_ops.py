@@ -22,7 +22,7 @@ from bpy.props import (
 
 from ..constants import PRECISION
 
-from ..bas_relief import (
+from ..utilities.relief_utils import (
     problem_areas,
     render_scene,
     relief,
