@@ -162,65 +162,26 @@ async def get_path_3_axis(context, operation):
     get_bounds(o)
     tw = time.time()
 
-    # strategy_from_operation = {
-    #     "BLOCK": block(o),
-    #     "CUTOUT": cutout(o),
-    #     "CURVE": curve(o),
-    #     "DRILL": drill(o),
-    #     "MEDIAL_AXIS": medial_axis(o),
-    #     "PROJECTED_CURVE": project_curve(o),
-    #     "POCKET": pocket(o),
-    # }
+    strategy_from_operation = {
+        "BLOCK": block,
+        "CARVE": carve,
+        "CIRCLES": circles,
+        "CRAZY": crazy,
+        "CROSS": cross,
+        "CUTOUT": cutout,
+        "CURVE": curve,
+        "DRILL": drill,
+        "MEDIAL_AXIS": medial_axis,
+        "OUTLINEFILL": outline_fill,
+        "PENCIL": pencil,
+        "PROJECTED_CURVE": projected_curve,
+        "POCKET": pocket,
+        "PARALLEL": parallel,
+        "SPIRAL": spiral,
+        "WATERLINE": waterline,
+    }
 
-    # await strategy_from_operation[o.strategy]
-
-    if o.strategy == "CUTOUT":
-        await cutout(o)
-
-    elif o.strategy == "CURVE":
-        await curve(o)
-
-    elif o.strategy == "DRILL":
-        await drill(o)
-
-    elif o.strategy == "MEDIAL_AXIS":
-        await medial_axis(o)
-
-    elif o.strategy == "PROJECTED_CURVE":
-        await projected_curve(o)
-
-    elif o.strategy == "POCKET":
-        await pocket(o)
-
-    elif o.strategy == "PARALLEL":
-        await parallel(o)
-
-    elif o.strategy == "CROSS":
-        await cross(o)
-
-    elif o.strategy == "BLOCK":
-        await block(o)
-
-    elif o.strategy == "SPIRAL":
-        await spiral(o)
-
-    elif o.strategy == "CIRCLES":
-        await circles(o)
-
-    elif o.strategy == "OUTLINEFILL":
-        await outline_fill(o)
-
-    elif o.strategy == "CARVE":
-        await carve(o)
-
-    elif o.strategy == "PENCIL":
-        await pencil(o)
-
-    elif o.strategy == "CRAZY":
-        await crazy(o)
-
-    elif o.strategy == "WATERLINE":
-        await waterline(o)
+    await strategy_from_operation[o.strategy](o)
 
     await progress_async(f"Done", time.time() - tw, "s")
 
@@ -250,10 +211,12 @@ async def get_path_4_axis(context, operation):
     get_bounds(o)
     tw = time.time()
 
-    if o.strategy_4_axis in ["PARALLELR", "PARALLEL"]:
-        await parallel_four_axis(o)
+    strategy_from_operation = {
+        "PARALLEL": parallel_four_axis,
+        "PARALLELR": parallel_four_axis,
+        "HELIX": helix_four_axis,
+    }
 
-    elif o.strategy_4_axis == "HELIX":
-        await helix_four_axis(o)
+    await strategy_from_operation[o.strategy_4_axis](o)
 
     await progress_async(f"Done", time.time() - tw, "s")

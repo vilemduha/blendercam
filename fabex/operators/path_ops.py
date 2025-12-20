@@ -4,6 +4,7 @@ Blender Operator definitions are in this file.
 They mostly call the functions from 'utils.py'
 """
 
+from importlib import import_module
 from math import pi
 import os
 import subprocess
