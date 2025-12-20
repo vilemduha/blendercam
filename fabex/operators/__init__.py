@@ -66,6 +66,7 @@ from .preset_ops import (
     AddPresetCamCutter,
     AddPresetCamMachine,
     AddPresetCamOperation,
+    EditUserPostProcessor,
 )
 from .simulation_ops import CAMSimulate, CAMSimulateChain
 from .slice_op import CamSliceObjects
@@ -111,6 +112,7 @@ classes = [
     CamOperationRemove,
     CamOrientationAdd,
     CamPackObjects,
+    EditUserPostProcessor,
     PathExport,
     PathExportChain,
     PathsAll,

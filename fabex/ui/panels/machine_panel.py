@@ -50,11 +50,15 @@ class CAM_MACHINE_Panel(CAMParentPanel, Panel):
         col = box.column(align=True)
         col.scale_y = 1.2
         # Post Processor
-        col.prop(self.machine, "post_processor")
+        if self.machine.post_processor == "USER":
+            row = col.row(align=True)
+            row.prop(self.machine, "post_processor")
+            row.operator("fabex.edit_user_post_processor", text="Edit", icon="GREASEPENCIL")
+        else:
+            col.prop(self.machine, "post_processor")
         # Units
         row = col.row(align=True)
         row.prop(context.scene.cam_machine, "unit_system")
-        # row.prop(context.scene.unit_settings, "length_unit", text="")
 
         # # Collet Size
         # if self.level >= 2:

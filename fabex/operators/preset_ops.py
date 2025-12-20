@@ -9,6 +9,8 @@ from bpy.types import (
     Operator,
 )
 
+from ..utilities.addon_utils import edit_user_post_processor
+
 
 class AddPresetCamCutter(AddPresetBase, Operator):
     """Add a Cutter Preset"""
@@ -170,3 +172,14 @@ class AddPresetCamMachine(AddPresetBase, Operator):
     ]
 
     preset_subdir = "cam_machines"
+
+
+class EditUserPostProcessor(Operator):
+    """Edit the User Post Processor File in Blender"""
+
+    bl_idname = "fabex.edit_user_post_processor"
+    bl_label = "Edit User Post Processor"
+
+    def execute(self, context):
+        edit_user_post_processor()
+        return {"FINISHED"}

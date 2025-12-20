@@ -355,3 +355,18 @@ def add_collections():
                 simulations_collection.objects.link(obj)
         if prefix in ["bridge", path_prefix, simulation_prefix]:
             default_collection.objects.unlink(obj)
+
+
+def edit_user_post_processor():
+    user_processor_path = Path(__file__).parent.parent / "post_processors" / "user.py"
+    log.info(user_processor_path)
+    bpy.ops.text.open(filepath=str(user_processor_path))
+
+    try:
+        areas = bpy.data.workspaces["Scripting"].screens["Scripting"].areas
+        text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
+
+        with bpy.context.temp_override(space=text_editor):
+            text_editor.text = bpy.data.texts[f"user.py"]
+    except IndexError:
+        pass

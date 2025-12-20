@@ -101,6 +101,7 @@ def export_gcode_path(filename, vertslist, operations):
         "SHOPBOT MTC": ("shopbot_mtc", ".sbp"),
         "SIEGKX1": ("siegkx1", ".tap"),
         "TNC151": ("tnc151", ".tap"),
+        "USER": {"user", ".gcode"},
         "WIN-PC": ("winpc", ".din"),
     }
 

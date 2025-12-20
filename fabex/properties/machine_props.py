@@ -136,6 +136,11 @@ class CAM_MACHINE_Properties(PropertyGroup):
                 "Lynx Otter o",
                 "Lynx Otter o",
             ),
+            (
+                "USER",
+                "User Custom",
+                "Customizable User Post Processor (based on ISO)",
+            ),
         ),
         description="Post Processor",
         default="MACH3",

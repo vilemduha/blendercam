@@ -294,48 +294,29 @@ class CalculatePath(Operator, AsyncOperatorMixin):
 
         m = context.scene.cam_machine
 
-        extension = ".tap"
-        if m.post_processor == "ISO":
-            from ..post_processors import iso as postprocessor
-        if m.post_processor == "MACH3":
-            from ..post_processors import mach3 as postprocessor
-        elif m.post_processor == "EMC":
-            extension = ".ngc"
-            from ..post_processors import emc2b as postprocessor
-        elif m.post_processor == "FADAL":
-            extension = ".tap"
-            from ..post_processors import fadal as postprocessor
-        elif m.post_processor == "GRBL":
-            extension = ".gcode"
-            from ..post_processors import grbl as postprocessor
-        elif m.post_processor == "HM50":
-            from ..post_processors import hm50 as postprocessor
-        elif m.post_processor == "HEIDENHAIN":
-            extension = ".H"
-            from ..post_processors import heiden as postprocessor
-        elif m.post_processor == "HEIDENHAIN530":
-            extension = ".H"
-            from ..post_processors import heiden530 as postprocessor
-        elif m.post_processor == "TNC151":
-            from ..post_processors import tnc151 as postprocessor
-        elif m.post_processor == "SIEGKX1":
-            from ..post_processors import siegkx1 as postprocessor
-        elif m.post_processor == "CENTROID":
-            from ..post_processors import centroid1 as postprocessor
-        elif m.post_processor == "ANILAM":
-            from ..post_processors import anilam_crusader_m as postprocessor
-        elif m.post_processor == "GRAVOS":
-            extension = ".nc"
-            from ..post_processors import gravos as postprocessor
-        elif m.post_processor == "WIN-PC":
-            extension = ".din"
-            from ..post_processors import winpc as postprocessor
-        elif m.post_processor == "SHOPBOT MTC":
-            extension = ".sbp"
-            from ..post_processors import shopbot_mtc as postprocessor
-        elif m.post_processor == "LYNX_OTTER_O":
-            extension = ".nc"
-            from ..post_processors import lynx_otter_o as postprocessor
+        processor_extension = {
+            "ANILAM": ("anilam_crusader_m", ".tap"),
+            "CENTROID": ("centroid1", ".tap"),
+            "EMC": ("emc2b", ".ngc"),
+            "FADAL": ("fadal", ".tap"),
+            "GRAVOS": ("gravos", ".nc"),
+            "GRBL": ("grbl", ".gcode"),
+            "HM50": ("hm50", ".tap"),
+            "HEIDENHAIN": ("heiden", ".H"),
+            "HEIDENHAIN530": ("heiden530", ".H"),
+            "ISO": ("iso", ".tap"),
+            "LYNX_OTTER_O": ("lynx_otter_o", ".nc"),
+            "MACH3": ("mach3", ".tap"),
+            "SHOPBOT MTC": ("shopbot_mtc", ".sbp"),
+            "SIEGKX1": ("siegkx1", ".tap"),
+            "TNC151": ("tnc151", ".tap"),
+            "USER": {"user", ".gcode"},
+            "WIN-PC": ("winpc", ".din"),
+        }
+
+        module = f".post_processors.{processor_extension[m.post_processor][0]}"
+        postprocessor = import_module(module, base_package)
+        extension = processor_extension[m.post_processor][1]
 
         basefilename = (
             bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))]
