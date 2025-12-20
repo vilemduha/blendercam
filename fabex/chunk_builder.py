@@ -197,10 +197,7 @@ class CamPathChunk:
         mind = 100000000000
         self.cango = False
         closest = None
-        testlist = []
-        testlist.extend(self.children)
-        tested = []
-        tested.extend(self.children)
+        testlist = tested = [child for child in self.children]
         ch = None
 
         while len(testlist) > 0:
@@ -210,11 +207,22 @@ class CamPathChunk:
                 self.cango = False
                 cango = True
 
+                [
+                    testlist.append(child)
+                    for child in chtest.children
+                    if not child.sorted and child not in tested
+                ]
+                [
+                    tested.append(child)
+                    for child in chtest.children
+                    if not child.sorted and child not in tested
+                ]
+
                 for child in chtest.children:
                     if not child.sorted:
-                        if child not in tested:
-                            testlist.append(child)
-                            tested.append(child)
+                        # if child not in tested:
+                        #     testlist.append(child)
+                        #     tested.append(child)
                         cango = False
 
                 if cango:
