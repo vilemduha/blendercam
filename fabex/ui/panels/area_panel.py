@@ -76,17 +76,24 @@ class CAM_AREA_Panel(CAMParentPanel, Panel):
                 if self.op.min_z_from == "CUSTOM":
                     col.prop(self.op, "min_z")
 
+            # Image Source Options
             else:
-                col.prop(self.op, "source_image_scale_z")
-                col.prop(self.op, "source_image_size_x")
+                col.prop(self.op, "source_image_scale_z", text="Depth Scale")
+                col = box.column(align=True)
+                col.label(text="Image Source")
+                col = box.column(align=True)
+                col.prop(self.op, "source_image_size_x", text="X Size")
                 if self.op.source_image_name != "":
-                    col.prop(self.op, "source_image_size_y")
+                    col.prop(self.op, "source_image_size_y", text="Y Size")
                     col.separator()
+                col = box.column(align=True)
                 col.prop(self.op, "source_image_offset")
                 col.prop(self.op, "source_image_crop", text="Crop Source Image")
                 if self.op.source_image_crop:
+                    col = box.column(align=True)
                     col.prop(self.op, "source_image_crop_start_x", text="Start X")
                     col.prop(self.op, "source_image_crop_start_y", text="Start Y")
+                    col = box.column(align=True)
                     col.prop(self.op, "source_image_crop_end_x", text="End X")
                     col.prop(self.op, "source_image_crop_end_y", text="End Y")
 

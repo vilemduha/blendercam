@@ -328,7 +328,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         bpy.ops.text.open(filepath=basefilename)
 
         try:
-            areas = context.screen.areas
+            areas = bpy.data.workspaces["Scripting"].screens["Scripting"].areas
             text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
 
             with context.temp_override(space=text_editor):
