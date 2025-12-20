@@ -27,6 +27,7 @@ from .async_op import (
     AsyncOperatorMixin,
 )
 
+from .. import __package__ as base_package
 from ..constants import was_hidden_dict
 from ..exception import CamException
 from ..gcode.gcode_export import export_gcode_path
