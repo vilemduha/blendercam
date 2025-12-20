@@ -2,6 +2,8 @@
 
 from pathlib import Path
 import shutil
+import subprocess
+import sys
 
 import bpy
 from bpy.app.handlers import persistent
@@ -50,6 +52,28 @@ def addon_dependencies():
         raise CamException(
             "Fabex couldn't install required addons - 'Enable Online Access' in 'Preferences > System'"
         )
+
+
+def python_dependencies():
+    """Checks for and installs Python library dependencies.
+
+    This function checks for required Python packages. These should
+    be installed via the included 'wheels', but if there is a version
+    mismatch this function will attempt to install them via pip.
+    """
+    installed_modules = sys.modules
+
+    modules = ["llvmlite", "numba", "opencamlib", "shapely"]
+
+    for module in modules:
+        if module not in installed_modules:
+            try:
+                subprocess.check_call([sys.executable, "-m", "pip", "install", module])
+            except:
+                log.debug("Python Dependencies Not Found!")
+                raise CamException(
+                    "Fabex couldn't install required Python libraries! Check your Blender Python Version and Location!"
+                )
 
 
 def load_defaults(addon_prefs):
@@ -157,6 +181,9 @@ def on_blender_startup(context):
     for o in scene.cam_operations:
         if o.computing:
             o.computing = False
+
+    python_dependencies()
+    log.debug("Found / Installed Python Dependencies")
 
     addon_dependencies()
     log.debug("Found / Installed Addon Dependencies")
