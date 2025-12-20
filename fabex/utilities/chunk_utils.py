@@ -1251,9 +1251,9 @@ def chunks_to_mesh(chunks, o):
     t = time.time()
 
     # Blender Object generation starts here:
-    edges = []
-    for a in range(0, len(vertices) - 1):
-        edges.append((a, a + 1))
+    edges = [(a, a + 1) for a in range(0, len(vertices) - 1)]
+    # for a in range(0, len(vertices) - 1):
+    #     edges.append((a, a + 1))
 
     path_name = scene.cam_names.path_name_full
     mesh = bpy.data.meshes.new(path_name)

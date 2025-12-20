@@ -85,8 +85,14 @@ async def get_path(context, operation):
     operation.update_ambient_tag = True
     operation.update_bullet_collision_tag = True
 
-    indexed_five_axis = operation.machine_axes == "5" and operation.strategy_5_axis == "INDEXED"
-    indexed_four_axis = operation.machine_axes == "4" and operation.strategy_4_axis == "INDEXED"
+    o = operation
+
+    three_axis = o.machine_axes == "3"
+    four_axis = o.machine_axes == "4"
+    five_axis = o.machine_axes == "5"
+
+    indexed_four_axis = four_axis and o.strategy_4_axis == "INDEXED"
+    indexed_five_axis = five_axis and o.strategy_5_axis == "INDEXED"
 
     get_operation_sources(operation)
 
@@ -95,7 +101,7 @@ async def get_path(context, operation):
 
     log.info(f"Operation Axes: {operation.machine_axes}")
 
-    if operation.machine_axes == "3":
+    if three_axis:
         if USE_PROFILER == True:  # profiler
             import cProfile
 
@@ -107,15 +113,13 @@ async def get_path(context, operation):
         else:
             await get_path_3_axis(context, operation)
 
+    # 5 axis operations are now only 3 axis operations that get rotated...
     elif indexed_five_axis or indexed_four_axis:
-        # 5 axis operations are now only 3 axis operations that get rotated...
         operation.orientation = prepare_indexed(operation)  # TODO RENAME THIS
-
         await get_path_3_axis(context, operation)  # TODO RENAME THIS
-
         cleanup_indexed(operation)  # TODO RENAME THIS
-    # transform5axisIndexed
-    elif operation.machine_axes == "4":
+
+    elif four_axis:
         await get_path_4_axis(context, operation)
 
     # export gcode if automatic.
