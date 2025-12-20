@@ -27,7 +27,7 @@ except ImportError:
 
 
 from .async_utils import progress_async
-from .chunk_builder import (
+from ..chunk_builder import (
     CamPathChunk,
     CamPathChunkBuilder,
 )

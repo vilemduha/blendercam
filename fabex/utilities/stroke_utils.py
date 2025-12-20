@@ -10,7 +10,7 @@ import numpy as np
 from mathutils import Vector, Euler
 
 
-from .chunk_builder import (
+from ..chunk_builder import (
     CamPathChunk,
     CamPathChunkBuilder,
 )

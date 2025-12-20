@@ -11,7 +11,7 @@ import numpy
 import bpy
 from mathutils import Euler, Vector
 
-from .chunk_builder import (
+from ..chunk_builder import (
     CamPathChunk,
     CamPathChunkBuilder,
 )

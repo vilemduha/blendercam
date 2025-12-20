@@ -11,7 +11,7 @@ from ..constants import (
     OCL_SCALE,
 )
 from .async_utils import progress_async
-from .chunk_builder import CamPathChunk
+from ..chunk_builder import CamPathChunk
 from .chunk_utils import sort_chunks
 from .logging_utils import log
 from .ocl_utils import get_oclSTL

@@ -1,7 +1,7 @@
 import bpy
 
 
-from .chunk_builder import (
+from ..chunk_builder import (
     CamPathChunkBuilder,
 )
 from .logging_utils import log

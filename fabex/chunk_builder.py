@@ -16,9 +16,9 @@ from shapely.geometry import Polygon
 
 from mathutils import Vector
 
-from .internal_utils import _internal_x_y_distance_to
-from .logging_utils import log
-from .simple_utils import (
+from .utilities.internal_utils import _internal_x_y_distance_to
+from .utilities.logging_utils import log
+from .utilities.simple_utils import (
     distance_2d,
     rotate_point_by_point,
 )

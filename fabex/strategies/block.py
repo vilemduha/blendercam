@@ -2,7 +2,7 @@ from math import ceil, floor
 
 from ..bridges import use_bridges
 
-from ..utilities.chunk_builder import CamPathChunkBuilder
+from ..chunk_builder import CamPathChunkBuilder
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     connect_chunks_low,

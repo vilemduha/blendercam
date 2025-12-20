@@ -6,7 +6,7 @@ from math import (
 
 from mathutils import Euler, Vector
 
-from ..utilities.chunk_builder import CamPathChunkBuilder
+from ..chunk_builder import CamPathChunkBuilder
 from ..utilities.chunk_utils import chunks_to_mesh, sample_chunks_n_axis
 from ..utilities.operation_utils import get_layers
 from ..utilities.simple_utils import progress
