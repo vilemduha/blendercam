@@ -4,7 +4,7 @@ from math import (
 )
 import random
 
-import np
+import numpy as np
 import numpy as np
 
 from mathutils import Vector, Euler

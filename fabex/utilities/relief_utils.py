@@ -8,7 +8,7 @@ from math import ceil, floor, sqrt
 import re
 import time
 
-import np
+import numpy as np
 
 import bpy
 

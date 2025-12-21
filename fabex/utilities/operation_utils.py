@@ -15,7 +15,7 @@ from math import (
     tan,
 )
 
-import np
+import numpy as np
 import pickle
 
 from shapely.geometry import Polygon

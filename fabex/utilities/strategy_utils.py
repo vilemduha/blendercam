@@ -6,7 +6,7 @@ The functions here are called with operators defined in 'ops.py'
 
 from math import pi
 
-import np
+import numpy as np
 
 import bpy
 from mathutils import Euler, Vector
