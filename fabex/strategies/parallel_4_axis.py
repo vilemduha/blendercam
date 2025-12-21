@@ -43,7 +43,6 @@ async def parallel_four_axis(o):
     pathchunks = []
     zlevel = 1
     climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
-    meander_reverse = reverse and o.movement.type == "MEANDER"
 
     # set axes for various options, Z option is obvious nonsense now.
     if o.rotary_axis_1 == "X":
@@ -119,6 +118,7 @@ async def parallel_four_axis(o):
         e = Euler((0, 0, 0))
         e[a1] = anglestep
         reverse = False
+        meander_reverse = reverse and o.movement.type == "MEANDER"
 
         for b in range(0, floor(circlesteps) + 1):
             chunk = CamPathChunkBuilder([])
