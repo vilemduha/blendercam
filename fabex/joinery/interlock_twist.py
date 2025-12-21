@@ -9,6 +9,8 @@ import bpy
 
 from shapely.geometry import Point
 
+from ..constants import DT
+
 from .finger import fingers
 from .mortise import mortise
 
@@ -380,7 +382,6 @@ def twist_male(
     """
 
     # add twist lock to male connector
-    global DT
     if twist:
         interlock_twist(length, tthick, tolerance, cx=0, cy=0, rotation=0, percentage=tneck)
         rotate(pi / 2)

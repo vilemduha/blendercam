@@ -19,6 +19,9 @@ from .interlock_twist import (
     twist_male,
 )
 
+from ..constants import DT
+
+from ..utilities.compare_utils import angle as compare_angle
 from ..utilities.logging_utils import log
 from ..utilities.shapely_utils import shapely_to_curve
 from ..utilities.simple_utils import (
@@ -574,10 +577,12 @@ def open_curve(
             Blender context.
     """
 
+    log.info("Starting Open Curve Function")
+
     coords = list(line.coords)
 
-    start_angle = joinery.angle(coords[0], coords[1]) + pi / 2
-    end_angle = joinery.angle(coords[-1], coords[-2]) + pi / 2
+    start_angle = compare_angle(coords[0], coords[1]) + pi / 2
+    end_angle = compare_angle(coords[-1], coords[-2]) + pi / 2
     p_start = coords[0]
     p_end = coords[-1]
 
@@ -595,6 +600,9 @@ def open_curve(
         edit_mode=False,
         shape="3D",
     )
+
+    log.info("Created Open Curve")
+
     active_name("tmprect")
     move(y=thick)
     duplicate()
@@ -606,9 +614,11 @@ def open_curve(
     union("tmprect")
     dilated = line.buffer(thick / 2)  # expand shapely object to thickness
     shapely_to_curve("tmp_curve", dilated, 0.0)
+
+    log.info("Dilated and Processed with Shapely")
+
     # truncate curve at both ends with the rectangles
     difference("tmp", "tmp_curve")
-
     fingers(diameter, tolerance, amount, stem=stem)
     make_active("fingers")
     rotate(end_angle)
@@ -616,6 +626,9 @@ def open_curve(
     active_name("tmp_fingers")
     union("tmp_")
     active_name("tmp_curve")
+
+    log.info("Adding Twists")
+
     twist_male(
         "tmp_curve",
         thick,
@@ -629,14 +642,21 @@ def open_curve(
         y=p_end[1],
         twist_keep=twist_keep,
     )
-
     twist_female(
-        "receptacle", thick, diameter, tolerance, twist, t_neck, t_thick, twist_keep=twist_keep
+        "receptacle",
+        thick,
+        diameter,
+        tolerance,
+        twist,
+        t_neck,
+        t_thick,
+        twist_keep=twist_keep,
     )
     rename("receptacle", "tmp")
     rotate(start_angle + pi)
     move(x=p_start[0], y=p_start[1])
     difference("tmp", "tmp_curve")
+
     if twist_keep:
         make_active("twist_keep_f")
         rotate(start_angle + pi)
@@ -659,6 +679,7 @@ def open_curve(
             type="TWIST",
             twist_percentage=t_neck,
         )
+
         if twist_keep:
             duplicate()
             active_name("twist_keep")
@@ -691,7 +712,6 @@ def tile(diameter, tolerance, tile_x_amount, tile_y_amount, stem=1):
         None: This function does not return a value but modifies global state.
     """
 
-    global DT
     diameter = diameter * DT
     width = ((tile_x_amount) * (4 + 2 * (stem - 1)) + 1) * diameter
     height = ((tile_y_amount) * (4 + 2 * (stem - 1)) + 1) * diameter

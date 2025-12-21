@@ -220,9 +220,6 @@ class CamPathChunk:
 
                 for child in chtest.children:
                     if not child.sorted:
-                        # if child not in tested:
-                        #     testlist.append(child)
-                        #     tested.append(child)
                         cango = False
 
                 if cango:
@@ -295,7 +292,12 @@ class CamPathChunk:
         if len(points) == 0:
             return
         if at_index is None:
-            self.points = np.concatenate((self.points, np.array(points)))
+            self.points = np.concatenate(
+                (
+                    self.points,
+                    np.array(points),
+                )
+            )
             if startpoints is not None:
                 self.startpoints.extend(startpoints)
             if endpoints is not None:
@@ -304,7 +306,11 @@ class CamPathChunk:
                 self.rotations.extend(rotations)
         else:
             self.points = np.concatenate(
-                (self.points[0:at_index], np.array(points), self.points[at_index:])
+                (
+                    self.points[0:at_index],
+                    np.array(points),
+                    self.points[at_index:],
+                )
             )
             if startpoints is not None:
                 self.startpoints[at_index:at_index] = startpoints
@@ -315,11 +321,9 @@ class CamPathChunk:
 
     def clip_points(self, minx, maxx, miny, maxy):
         """Remove Any Points Outside This Range"""
-        included_values = (self.points[:, 0] >= minx) and (
-            (self.points[:, 0] <= maxx)
-            and (self.points[:, 1] >= maxy)
-            and (self.points[:, 1] <= maxy)
-        )
+        in_range_x = (self.points[:, 0] >= minx) and (self.points[:, 0] <= maxx)
+        in_range_y = (self.points[:, 1] >= maxy) and (self.points[:, 1] <= maxy)
+        included_values = in_range_x and in_range_y
         self.points = self.points[included_values]
 
     def ramp_contour(self, zstart, zend, o):
@@ -560,6 +564,7 @@ class CamPathChunk:
 
                                 else:
                                     ramppoints.append(p2)
+
                                 i -= 1
 
                         negramppoints = ramppoints.copy()
@@ -575,8 +580,9 @@ class CamPathChunk:
                                 traveled += d
                                 ratio = 1 - (traveled / ramplength)
                                 znew = zstart - stepdown * ratio
-                                chunk_points.append((p2[0], p2[1], max(p2[2], znew)))
                                 # max value here is so that it doesn't go below surface in the case of 3d paths
+                                chunk_points.append((p2[0], p2[1], max(p2[2], znew)))
+
         self.points = np.array(chunk_points)
 
     #  modify existing path start point
@@ -617,7 +623,8 @@ class CamPathChunk:
                     )
 
     def lead_contour(self, o):
-        perimeterDirection = 1  # 1 is clockwise, 0 is CCW
+        # 1 is Clockwise, 0 is CCW
+        perimeterDirection = 1
         if o.movement.spindle_rotation == "CW":
             if o.movement.type == "CONVENTIONAL":
                 perimeterDirection = 0

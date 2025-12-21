@@ -108,7 +108,9 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob
         ob = context.active_object
     else:
         bpy.context.view_layer.objects.active = ob
+
     ob.select_set(True)
+
     if ob.data.splines and ob.data.splines[0].type == "BEZIER":
         bpy.ops.object.curve_remove_doubles(merge_distance=0.0001, keep_bezier=True)
     else:
@@ -116,7 +118,6 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob
 
     bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="MEDIAN")
     depth = ob.location[2]
-
     shapes = curve_to_shapely(ob)
 
     if pocket_shape == "HULL":
@@ -133,7 +134,6 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob
     width = maxx - minx
     centerx = (minx + maxx) / 2
     diagonal = hypot(width, length)
-
     bound_rectangle = box(minx, miny, maxx, maxy)
     amount = int(2 * diagonal / distance) + 1
 
@@ -149,18 +149,16 @@ def generate_crosshatch(context, angle, distance, offset, pocket_shape, join, ob
     rotated_centery = (rotated_miny + rotated_maxy) / 2
     x_offset = centerx - rotated_centerx
     y_offset = centery - rotated_centery
-    translated = affinity.translate(
-        rotated, xoff=x_offset, yoff=y_offset, zoff=depth
-    )  # Move using shapely
-
+    translated = affinity.translate(rotated, xoff=x_offset, yoff=y_offset, zoff=depth)
+    # Move using shapely
     bounds = bound_rectangle
 
     if pocket_shape == "BOUNDS":
-        xing = translated.intersection(bounds)  # Intersection with bounding box
+        # Intersection with bounding box
+        xing = translated.intersection(bounds)
     else:
-        xing = translated.intersection(
-            shapes.buffer(offset, join_style=join)
-        )  # Intersection with shapes or hull
+        # Intersection with shapes or hull
+        xing = translated.intersection(shapes.buffer(offset, join_style=join))
 
     # Return the intersection result
     return xing
@@ -667,12 +665,10 @@ class CamCurvePlate(Operator):
                         bpy.context.object.location[0] = -dist
                 else:
                     for x in range(int(self.hole_hamount / 2)):
-                        dist = (
-                            self.hole_hdist * x + self.hole_hdist / 2
-                        )  # calculate the distance from the middle
-                        if (
-                            x == 0
-                        ):  # special case where the original hole only needs to move and not duplicate
+                        dist = self.hole_hdist * x + self.hole_hdist / 2
+                        # calculate the distance from the middle
+                        if x == 0:
+                            # special case where the original hole only needs to move and not duplicate
                             bpy.context.object.location[0] = dist
                             duplicate()
                             bpy.context.object.location[0] = -dist
@@ -1776,9 +1772,8 @@ class CamCurvePuzzle(Operator):
             bpy.ops.object.convert(target="MESH")
             bpy.context.active_object.name = "_tempmesh"
 
-            coords = []
-            for v in obj.data.vertices:  # extract X,Y coordinates from the vertices data
-                coords.append((v.co.x, v.co.y))
+            # extract X,Y coordinates from the vertices data
+            coords = [(v.co.x, v.co.y) for v in obj.data.vertices]
             remove_multiple("_tmp")
             # convert coordinates to shapely LineString datastructure
             line = LineString(coords)
