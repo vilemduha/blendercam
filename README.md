@@ -1,12 +1,12 @@
 <div align="center">
 
-![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/fabex_logo_rectangle.png)
+![Fabex CNC CAM extension for Blender](docs/_static/fabex_logo_rectangle.png)
 
 # CAM Toolpaths for CNC in Blender
 
 ### [About](#-about) • [Guide](#-user-guide) • [Features](#-features) • [Post-Processors](#-post-processors) • [Files](#-files-organisation) • [Contribute](#-contribute) • [License](#-license) • [Disclaimer](#-disclaimer)
 
-![Fabex CNC CAM extension for Blender](scripts/addons/docs/_static/suzanne.gif)
+![Fabex CNC CAM extension for Blender](docs/_static/suzanne.gif)
 
 [![Chat on Matrix](https://img.shields.io/matrix/blendercam:matrix.org?label=Chat%20on%20Matrix)](https://riot.im/app/#/room/#blendercam:matrix.org)
 ![Contributors](https://img.shields.io/github/contributors/vilemduha/blendercam)
@@ -17,23 +17,23 @@
 </div>
 
 ## 👁️ About
-[**FabexCNC**](https://blendercam.com/) Extension for [**Blender**](https://www.blender.org) is an open source solution for artistic, personal, commercial or industrial CAM (*Computer Aided Machining*) - a G-code generation tool.
+[**FabexCNC**](https://blendercam.com/) is an open source solution for CAM (*Computer Aided Machining*) toolpath generation and Gcode export.
 
-It is available for **Windows**, **Linux** and **MacOS**.
+It is available for **Windows**, **Linux** and **MacOS** as an Extension for [**Blender**](https://www.blender.org).
 
-Formerly known as **BlenderCAM**, the **Blender Foundation** has requested that external projects no longer use the name **Blender** due to Trademark, so it was renamed **Fabex**!
-
-It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed. 
+It has been used for many milling projects _(artistic, personal, commercial and industrial)_ since its creation in 2012, and is actively developed.
 
 > [!NOTE]
+> _Formerly known as **BlenderCAM**, the **Blender Foundation** has requested that external projects no longer use the name **Blender** due to Trademark, so it was renamed **Fabex**!_
+> 
 > _If you are a developer who would like to help, check out the section on [Contributing](#-contribute)._
 
 ## 👨‍🎓 User Guide
-* [Installation](scripts/addons/docs/install.md)
-* [Getting Started](scripts/addons/docs/starting.md)
-* [User Interface](scripts/addons/docs/interface.md)
-* [Tools](scripts/addons/docs/tools.md)
-* [Example Chain Workflow](scripts/addons/docs/examplechain.md)
+* [Installation](https://spectralvectors.github.io/blendercam/install.html)
+* [Getting Started](https://spectralvectors.github.io/blendercam/starting.html)
+* [User Interface](https://spectralvectors.github.io/blendercam/interface.html)
+* [Tools](https://spectralvectors.github.io/blendercam/tools.html)
+* [Example Chain Workflow](https://spectralvectors.github.io/blendercam/examplechain.html)
 
 > [!NOTE]
 > *You can also view the full [User, Developer and API Documentation](https://spectralvectors.github.io/blendercam/index.html)*
@@ -88,29 +88,28 @@ It has been used for many milling projects _(artistic, personal, commercial and 
 ## 📒 Files Organisation
 
 ```graphql
-config/ - # 'startup' and 'userpref' blend files
-Examples/ - # Bas Relief & Intarsion operation demo files and images
-scripts/
-└── addons/
-    ├── cam/ - # Main Addon Folder
-    │   ├── operators/ - # Blender Operators
-    │   ├── post_processors/ - # CAM Post-Processors
-    │   ├── presets/ - # Quick access to pre-defined cutting tools, machines and operations
-    │   │   ├── cam_cutters/
-    │   │   ├── cam_machines/
-    │   │   └── cam_operations/
-    │   ├── properties/ - # Blender PropertyGroups to store Machine, Operation, Cutter data
-    │   ├── tests/ - # Developer Tests
-    │   │   └── test_data/ - # Test output
-    │   ├── ui/ - # Blender User Interface
-    │   │   ├── icons/ - # .png files for custom icons
-    │   │   ├── menus/ - # viewport menu and sub-menus
-    │   │   ├── panels/ - # primary UI
-    │   │   └── pie_menu/ - # complete Pie Menu system
-    │   ├── utilities/ - # Low level helper functions
-    │   └── wheels/ - # Python Dependencies (as binary wheels)
-    └── docs/ - # User, Developer and API docs
-        └── _static/ - # Images for docs and README
+docs/ - # User, Developer and API docs
+└── _static/ - # Images for docs and README
+fabex/ - # Main Addon Folder
+├── assets/ - # Fabex Asset Library
+├── joinery/ - # Functions for creating joints, e.g. mortise, interlock etc.
+├── logs/ - # Log files for errors and normal usage
+├── operators/ - # Blender Operators
+├── post_processors/ - # CAM Post-Processors
+├── presets/ - # Quick access to pre-defined cutting tools, machines and operations
+│   ├── cam_cutters/
+│   ├── cam_machines/
+│   └── cam_operations/
+├── properties/ - # Blender PropertyGroups to store Machine, Operation, Cutter data
+├── ui/ - # Blender User Interface
+│   ├── icons/ - # .png files for custom icons
+│   ├── menus/ - # viewport menu and sub-menus
+│   ├── panels/ - # primary UI
+│   └── pie_menu/ - # complete Pie Menu system
+├── utilities/ - # Low level helper functions
+└── wheels/ - # Python Dependencies (as binary wheels)
+tests/ - # Developer Tests
+└── test_data/ - # Test output
 ```
 
 ## 🤝 Contribute
