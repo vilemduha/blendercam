@@ -15,7 +15,7 @@ from math import (
     tan,
 )
 
-import numpy
+import np
 import pickle
 
 from shapely.geometry import Polygon
@@ -680,7 +680,7 @@ def get_cutter_array(operation, pixsize):
     r = operation.cutter_diameter / 2 + operation.skin
     res = ceil((r * 2) / pixsize)
     m = res / 2.0
-    car = numpy.full(shape=(res, res), fill_value=-10.0, dtype=float)
+    car = np.full(shape=(res, res), fill_value=-10.0, dtype=float)
     v = Vector((0, 0, 0))
     ps = pixsize
 

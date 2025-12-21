@@ -10,8 +10,16 @@ import random
 import time
 
 import shapely
-from shapely import geometry as sgeometry
-from shapely import affinity, prepared, speedups
+from shapely.geometry import (
+    Point,
+    Polygon,
+    MultiPolygon,
+)
+from shapely import (
+    affinity,
+    prepared,
+    speedups,
+)
 
 import bpy
 from bpy.props import (
@@ -157,7 +165,7 @@ class CamPackObjects(Operator):
             polyfield.append([[0, 0], 0.0, poly, ob, z])
         random.shuffle(polyfield)
         # primitive layout here:
-        allpoly = prepared.prep(sgeometry.Polygon())  # main collision poly.
+        allpoly = prepared.prep(Polygon())  # main collision poly.
 
         shift = tolerance  # one milimeter by now.
         rotchange = rotate_angle  # in radians
@@ -170,7 +178,7 @@ class CamPackObjects(Operator):
         i = 0
         p = polyfield[0][2]
         placedpolys = []
-        rotcenter = sgeometry.Point(0, 0)
+        rotcenter = Point(0, 0)
         for pf in polyfield:
             log.info(i)
             rot = 0
@@ -245,7 +253,7 @@ class CamPackObjects(Operator):
 
                     log.info(f"{best[0]}, {best[1]}, {itera}")
                     placedpolys.append(ptrans)
-                    allpoly = prepared.prep(sgeometry.MultiPolygon(placedpolys))
+                    allpoly = prepared.prep(MultiPolygon(placedpolys))
 
                     # cleanup allpoly
                     log.info(f"{itera}, {hits}, {besthit}")
@@ -268,7 +276,7 @@ class CamPackObjects(Operator):
             i += 1
         t = time.time() - t
 
-        shapely_to_curve("test", sgeometry.MultiPolygon(placedpolys), 0)
+        shapely_to_curve("test", MultiPolygon(placedpolys), 0)
         log.info(t)
         # layout.
         return {"FINISHED"}

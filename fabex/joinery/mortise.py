@@ -1,8 +1,6 @@
 import bpy
 
-from ..utilities.simple_utils import (
-    active_name,
-)
+from ..utilities.simple_utils import active_name
 
 
 def mortise(length, thickness, finger_play, cx=0, cy=0, rotation=0):

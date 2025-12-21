@@ -6,7 +6,7 @@ The functions here are called with operators defined in 'ops.py'
 
 from math import pi
 
-import numpy
+import np
 
 import bpy
 from mathutils import Euler, Vector
@@ -422,19 +422,19 @@ def parallel_pattern(o, angle):
         v1 = v.copy()
         v1.rotate(e1)
 
-        axis_across_paths = numpy.array(
+        axis_across_paths = np.array(
             (
-                numpy.arange(int(-dim / pathd), int(dim / pathd)) * pathd * v1.x + xm,
-                numpy.arange(int(-dim / pathd), int(dim / pathd)) * pathd * v1.y + ym,
-                numpy.arange(int(-dim / pathd), int(dim / pathd)) * 0,
+                np.arange(int(-dim / pathd), int(dim / pathd)) * pathd * v1.x + xm,
+                np.arange(int(-dim / pathd), int(dim / pathd)) * pathd * v1.y + ym,
+                np.arange(int(-dim / pathd), int(dim / pathd)) * 0,
             )
         )
 
-        axis_along_paths = numpy.array(
+        axis_along_paths = np.array(
             (
-                numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.x,
-                numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.y,
-                numpy.arange(int(-dim / pathstep), int(dim / pathstep)) * 0 + zlevel,
+                np.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.x,
+                np.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.y,
+                np.arange(int(-dim / pathstep), int(dim / pathstep)) * 0 + zlevel,
             )
         )
         # rotate this first
@@ -448,7 +448,7 @@ def parallel_pattern(o, angle):
             xfitmin = nax[0] > o.min.x
             xfitmax = nax[0] < o.max.x
             xfit = xfitmin & xfitmax
-            nax = numpy.array(
+            nax = np.array(
                 [
                     nax[0][xfit],
                     nax[1][xfit],
@@ -458,7 +458,7 @@ def parallel_pattern(o, angle):
             yfitmin = nax[1] > o.min.y
             yfitmax = nax[1] < o.max.y
             yfit = yfitmin & yfitmax
-            nax = numpy.array(
+            nax = np.array(
                 [
                     nax[0][yfit],
                     nax[1][yfit],

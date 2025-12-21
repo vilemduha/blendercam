@@ -5,8 +5,8 @@ All properties of a single CAM Operation.
 
 from math import pi
 
-import numpy
-from shapely import geometry as sgeometry
+import numpy as np
+from shapely.geometry import Polygon
 
 from bpy.props import (
     BoolProperty,
@@ -1153,11 +1153,11 @@ class CAM_OPERATION_Properties(PropertyGroup):
     # Internal #
     ############
 
-    offset_image = numpy.array([], dtype=float)
-    zbuffer_image = numpy.array([], dtype=float)
-    silhouette = sgeometry.Polygon()
-    ambient = sgeometry.Polygon()
-    operation_limit = sgeometry.Polygon()
+    offset_image = np.array([], dtype=float)
+    zbuffer_image = np.array([], dtype=float)
+    silhouette = Polygon()
+    ambient = Polygon()
+    operation_limit = Polygon()
     borderwidth = 50
     objects = None
     path_object_name: StringProperty(name="Path Object", description="Actual CNC path")

@@ -14,7 +14,7 @@ from ..utilities.strategy_utils import parallel_pattern
 
 
 async def cross(o):
-    progress("~ Building Path Pattern ~")
+    log.info("~ Strategy: Cross ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
 
     pathSamples = []

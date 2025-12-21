@@ -1,6 +1,7 @@
 import bpy
 
 from ..chunk_builder import CamPathChunk
+
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     sort_chunks,

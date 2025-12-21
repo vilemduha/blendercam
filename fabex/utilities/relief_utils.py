@@ -8,7 +8,7 @@ from math import ceil, floor, sqrt
 import re
 import time
 
-import numpy
+import np
 
 import bpy
 
@@ -68,8 +68,8 @@ def restrict_buffer(inbuf, outbuf):
         ) / 4.0
 
     elif NUMPYALG:  # numpy method
-        yrange = numpy.arange(0, outy)
-        xrange = numpy.arange(0, outx)
+        yrange = np.arange(0, outy)
+        xrange = np.arange(0, outx)
 
         w = 0
         sx = dx / 2 - 0.5
@@ -77,18 +77,18 @@ def restrict_buffer(inbuf, outbuf):
         sxrange = xrange * dx + sx
         syrange = yrange * dy + sy
 
-        sxstartrange = numpy.array(numpy.ceil(sxrange - xfiltersize), dtype=int)
+        sxstartrange = np.array(np.ceil(sxrange - xfiltersize), dtype=int)
         sxstartrange[sxstartrange < 0] = 0
-        sxendrange = numpy.array(numpy.floor(sxrange + xfiltersize) + 1, dtype=int)
+        sxendrange = np.array(np.floor(sxrange + xfiltersize) + 1, dtype=int)
         sxendrange[sxendrange > inx] = inx
 
-        systartrange = numpy.array(numpy.ceil(syrange - xfiltersize), dtype=int)
+        systartrange = np.array(np.ceil(syrange - xfiltersize), dtype=int)
         systartrange[systartrange < 0] = 0
-        syendrange = numpy.array(numpy.floor(syrange + xfiltersize) + 1, dtype=int)
+        syendrange = np.array(np.floor(syrange + xfiltersize) + 1, dtype=int)
         syendrange[syendrange > iny] = iny
 
         # 3 is the maximum value...?pff.
-        indices = numpy.arange(outx * outy * 2 * 3).reshape((2, outx * outy, 3))
+        indices = np.arange(outx * outy * 2 * 3).reshape((2, outx * outy, 3))
 
         r = sxendrange - sxstartrange
 
@@ -163,22 +163,22 @@ def prolongate(inbuf, outbuf):
     elif NUMPYALG:  # numpy method
         sy = -dy / 2
         sx = -dx / 2
-        xrange = numpy.arange(0, outx)
-        yrange = numpy.arange(0, outy)
+        xrange = np.arange(0, outx)
+        yrange = np.arange(0, outy)
 
         sxrange = xrange * dx + sx
         syrange = yrange * dy + sy
 
-        sxstartrange = numpy.array(numpy.ceil(sxrange - xfiltersize), dtype=int)
+        sxstartrange = np.array(np.ceil(sxrange - xfiltersize), dtype=int)
         sxstartrange[sxstartrange < 0] = 0
-        sxendrange = numpy.array(numpy.floor(sxrange + xfiltersize) + 1, dtype=int)
+        sxendrange = np.array(np.floor(sxrange + xfiltersize) + 1, dtype=int)
         sxendrange[sxendrange >= inx] = inx - 1
-        systartrange = numpy.array(numpy.ceil(syrange - xfiltersize), dtype=int)
+        systartrange = np.array(np.ceil(syrange - xfiltersize), dtype=int)
         systartrange[systartrange < 0] = 0
-        syendrange = numpy.array(numpy.floor(syrange + xfiltersize) + 1, dtype=int)
+        syendrange = np.array(np.floor(syrange + xfiltersize) + 1, dtype=int)
         syendrange[syendrange >= iny] = iny - 1
 
-        indices = numpy.arange(outx * outy * 2).reshape((2, outx * outy))
+        indices = np.arange(outx * outy * 2).reshape((2, outx * outy))
         indices[0] = sxstartrange.repeat(outy)
         indices[1] = systartrange.repeat(outx).reshape(outx, outy).swapaxes(0, 1).flatten()
 
@@ -353,7 +353,7 @@ def solve_pde_multigrid(
         IU.append(None)
         VF.append(None)
         PLANAR.append(None)
-    VF[0] = numpy.zeros((xmax, ymax), dtype=numpy.float64)
+    VF[0] = np.zeros((xmax, ymax), dtype=np.float64)
     # numpy.fill(pix)!? TODO
 
     RHS[0] = F.copy()
@@ -367,10 +367,10 @@ def solve_pde_multigrid(
         # calculate size of next level
         sx = int(sx / 2)
         sy = int(sy / 2)
-        PLANAR[k + 1] = numpy.zeros((sx, sy), dtype=numpy.float64)
-        RHS[k + 1] = numpy.zeros((sx, sy), dtype=numpy.float64)
-        IU[k + 1] = numpy.zeros((sx, sy), dtype=numpy.float64)
-        VF[k + 1] = numpy.zeros((sx, sy), dtype=numpy.float64)
+        PLANAR[k + 1] = np.zeros((sx, sy), dtype=np.float64)
+        RHS[k + 1] = np.zeros((sx, sy), dtype=np.float64)
+        IU[k + 1] = np.zeros((sx, sy), dtype=np.float64)
+        VF[k + 1] = np.zeros((sx, sy), dtype=np.float64)
 
         # restrict from level k to level k+1 (coarser-grid)
         restrict_buffer(PLANAR[k], PLANAR[k + 1])
@@ -418,7 +418,7 @@ def solve_pde_multigrid(
                 # 8. calculate defect at level
                 #  d[k2] = Lh * ~u[k2] - f[k2]
 
-                D = numpy.zeros_like(IU[k2])
+                D = np.zeros_like(IU[k2])
                 # if k2==0:
                 # IU[k2][planar[k2]]=IU[k2].max()
                 # print(IU[0])
@@ -444,7 +444,7 @@ def solve_pde_multigrid(
                 log.info(f"K2: {k2}")
                 # 12. interpolate correction from last coarser-grid to finer-grid
                 #   iu[k2+1] -> cor
-                C = numpy.zeros_like(IU[k2])
+                C = np.zeros_like(IU[k2])
                 prolongate(IU[k2 + 1], C)
 
                 # 13. add interpolated correction to initial sollution at level k2
@@ -529,7 +529,7 @@ def snrm(n, sx, itol):
         ans = temp.sum()
         return sqrt(ans)
     else:
-        temp = numpy.abs(sx)
+        temp = np.abs(sx)
         return temp.max()
 
 
@@ -560,12 +560,12 @@ def linear_bcg(n, b, x, itol, tol, itmax, iter, err, rows, cols, planar):
         None: The solution is stored in the input array `x`.
     """
 
-    p = numpy.zeros((cols, rows))
-    pp = numpy.zeros((cols, rows))
-    r = numpy.zeros((cols, rows))
-    rr = numpy.zeros((cols, rows))
-    z = numpy.zeros((cols, rows))
-    zz = numpy.zeros((cols, rows))
+    p = np.zeros((cols, rows))
+    pp = np.zeros((cols, rows))
+    r = np.zeros((cols, rows))
+    rr = np.zeros((cols, rows))
+    z = np.zeros((cols, rows))
+    zz = np.zeros((cols, rows))
 
     iter = 0
     atimes(x, r)
@@ -671,7 +671,7 @@ def tonemap(i, exponent):
     # so we only have things that are actually drawn
     maxheight = i.max(where=i < 1000000000.0, initial=0)
     minheight = i.min()
-    i[:] = numpy.clip(i, minheight, maxheight)
+    i[:] = np.clip(i, minheight, maxheight)
 
     i[:] = ((i - minheight)) / (maxheight - minheight)
     i[:] **= exponent
@@ -962,27 +962,27 @@ def problem_areas(br):
     a = br.attenuation
     planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
-    sqrarx = numpy.abs(gx)
+    sqrarx = np.abs(gx)
     for iter in range(0, br.silhouette_exponent):
-        sqrarx = numpy.sqrt(sqrarx)
-    sqrary = numpy.abs(gy)
+        sqrarx = np.sqrt(sqrarx)
+    sqrary = np.abs(gy)
     for iter in range(0, br.silhouette_exponent):
-        sqrary = numpy.sqrt(sqrary)
+        sqrary = np.sqrt(sqrary)
 
     # detect and also recover silhouettes:
     silhxpos = gx > silh_thres
     gx = gx * (-silhxpos) + recover_silh * (silhxpos * silh_thres * silh_scale) * sqrarx
     silhxneg = gx < -silh_thres
     gx = gx * (-silhxneg) - recover_silh * (silhxneg * silh_thres * silh_scale) * sqrarx
-    silhx = numpy.logical_or(silhxpos, silhxneg)
-    gx = gx * silhx + (1.0 / a * numpy.log(1.0 + a * (gx))) * (-silhx)  # attenuate
+    silhx = np.logical_or(silhxpos, silhxneg)
+    gx = gx * silhx + (1.0 / a * np.log(1.0 + a * (gx))) * (-silhx)  # attenuate
 
     silhypos = gy > silh_thres
     gy = gy * (-silhypos) + recover_silh * (silhypos * silh_thres * silh_scale) * sqrary
     silhyneg = gy < -silh_thres
     gy = gy * (-silhyneg) - recover_silh * (silhyneg * silh_thres * silh_scale) * sqrary
-    silhy = numpy.logical_or(silhypos, silhyneg)  # both silh
-    gy = gy * silhy + (1.0 / a * numpy.log(1.0 + a * (gy))) * (-silhy)  # attenuate
+    silhy = np.logical_or(silhypos, silhyneg)  # both silh
+    gy = gy * silhy + (1.0 / a * np.log(1.0 + a * (gy))) * (-silhy)  # attenuate
 
     # now scale slopes...
     if br.gradient_scaling_mask_use:
@@ -990,7 +990,7 @@ def problem_areas(br):
         gy *= mask
 
     divg = gx + gy
-    divga = numpy.abs(divg)
+    divga = np.abs(divg)
     divgp = divga > silh_thres / 4.0
     divgp = 1 - divgp
     for a in range(0, 2):
@@ -1087,12 +1087,12 @@ def relief(br):
     # numpy.logical_or(silhxplanar,silhyplanar)#
     planar = nar < (nar.min() + 0.0001)
     # sqrt for silhouettes recovery:
-    sqrarx = numpy.abs(gx)
+    sqrarx = np.abs(gx)
     for iter in range(0, br.silhouette_exponent):
-        sqrarx = numpy.sqrt(sqrarx)
-    sqrary = numpy.abs(gy)
+        sqrarx = np.sqrt(sqrarx)
+    sqrary = np.abs(gy)
     for iter in range(0, br.silhouette_exponent):
-        sqrary = numpy.sqrt(sqrary)
+        sqrary = np.sqrt(sqrary)
 
     # detect and also recover silhouettes:
     silhxpos = gx > silh_thres
@@ -1100,15 +1100,15 @@ def relief(br):
     gx = gx * (~silhxpos) + recover_silh * (silhxpos * silh_thres * silh_scale) * sqrarx
     silhxneg = gx < -silh_thres
     gx = gx * (~silhxneg) - recover_silh * (silhxneg * silh_thres * silh_scale) * sqrarx
-    silhx = numpy.logical_or(silhxpos, silhxneg)
-    gx = gx * silhx + (1.0 / a * numpy.log(1.0 + a * (gx))) * (~silhx)  # attenuate
+    silhx = np.logical_or(silhxpos, silhxneg)
+    gx = gx * silhx + (1.0 / a * np.log(1.0 + a * (gx))) * (~silhx)  # attenuate
 
     silhypos = gy > silh_thres
     gy = gy * (~silhypos) + recover_silh * (silhypos * silh_thres * silh_scale) * sqrary
     silhyneg = gy < -silh_thres
     gy = gy * (~silhyneg) - recover_silh * (silhyneg * silh_thres * silh_scale) * sqrary
-    silhy = numpy.logical_or(silhypos, silhyneg)  # both silh
-    gy = gy * silhy + (1.0 / a * numpy.log(1.0 + a * (gy))) * (~silhy)  # attenuate
+    silhy = np.logical_or(silhypos, silhyneg)  # both silh
+    gy = gy * silhy + (1.0 / a * np.log(1.0 + a * (gy))) * (~silhy)  # attenuate
 
     # now scale slopes...
     if br.gradient_scaling_mask_use:
@@ -1126,16 +1126,16 @@ def relief(br):
 
         divgmin = divg.min()
         divg += divgmin
-        divgf = numpy.fft.fft2(divg)
-        divgfshift = numpy.fft.fftshift(divgf)
+        divgf = np.fft.fft2(divg)
+        divgfshift = np.fft.fftshift(divgf)
         mask = divg.copy()
-        pos = numpy.array((crow, ccol))
+        pos = np.array((crow, ccol))
 
         def filterwindow(x, y, cx=0, cy=0):
             return abs((cx - x)) + abs((cy - y))
 
-        mask = numpy.fromfunction(filterwindow, divg.shape, cx=crow, cy=ccol)
-        mask = numpy.sqrt(mask)
+        mask = np.fromfunction(filterwindow, divg.shape, cx=crow, cy=ccol)
+        mask = np.sqrt(mask)
 
         maskmin = mask.min()
         maskmax = mask.max()
@@ -1146,8 +1146,8 @@ def relief(br):
         mask[crow - 1 : crow + 1, ccol - 1 : ccol + 1] = 1  # to preserve basic freqencies.
 
         divgfshift = divgfshift * mask
-        divgfshift = numpy.fft.ifftshift(divgfshift)
-        divg = numpy.abs(numpy.fft.ifft2(divgfshift))
+        divgfshift = np.fft.ifftshift(divgfshift)
+        divg = np.abs(np.fft.ifft2(divgfshift))
         divg -= divgmin
         divg = -divg
         log.info("Detail Enhancement Finished")
@@ -1158,7 +1158,7 @@ def relief(br):
         levels += 1
         mins = mins / 2
 
-    target = numpy.zeros_like(divg)
+    target = np.zeros_like(divg)
 
     solve_pde_multigrid(
         divg,

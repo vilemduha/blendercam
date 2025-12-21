@@ -1,10 +1,6 @@
-from math import (
-    pi,
-)
+from math import pi
 
-from shapely.geometry import (
-    Point,
-)
+from shapely.geometry import Point
 
 import bpy
 

@@ -9,8 +9,12 @@ from math import (
     pi,
 )
 
-from shapely import ops as sops
-from shapely import geometry as sgeometry
+from shapely.ops import unary_union
+from shapely.geometry import (
+    GeometryCollection,
+    LineString,
+    Point,
+)
 from shapely import prepared
 
 import bpy
@@ -24,7 +28,10 @@ from .utilities.silhouette_utils import (
     get_operation_silhouette,
 )
 from .utilities.curve_utils import curve_to_shapely
-from .utilities.simple_utils import join_multiple, remove_doubles
+from .utilities.simple_utils import (
+    join_multiple,
+    remove_doubles,
+)
 
 
 def add_bridge(x, y, rot, size_x, size_y):
@@ -118,25 +125,25 @@ def add_auto_bridges(o):
             c = c.exterior
             minx, miny, maxx, maxy = c.bounds
 
-            d1 = c.project(sgeometry.Point(maxx + 1000, (maxy + miny) / 2.0))
+            d1 = c.project(Point(maxx + 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
             bo = add_bridge(p.x, p.y, -pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
 
-            d1 = c.project(sgeometry.Point(minx - 1000, (maxy + miny) / 2.0))
+            d1 = c.project(Point(minx - 1000, (maxy + miny) / 2.0))
             p = c.interpolate(d1)
             bo = add_bridge(p.x, p.y, pi / 2, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
 
-            d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, maxy + 1000))
+            d1 = c.project(Point((minx + maxx) / 2.0, maxy + 1000))
             p = c.interpolate(d1)
             bo = add_bridge(p.x, p.y, 0, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
             bpy.context.collection.objects.unlink(bo)
 
-            d1 = c.project(sgeometry.Point((minx + maxx) / 2.0, miny - 1000))
+            d1 = c.project(Point((minx + maxx) / 2.0, miny - 1000))
             p = c.interpolate(d1)
             bo = add_bridge(p.x, p.y, pi, o.bridges_width, o.cutter_diameter * 1)
             g.objects.link(bo)
@@ -173,7 +180,7 @@ def get_bridges_poly(o):
         shapes = curve_to_shapely(ob, o.use_bridge_modifiers)
         ob.select_set(state=True)
         bpy.ops.object.delete(use_global=False)
-        bridgespoly = sops.unary_union(shapes)
+        bridgespoly = unary_union(shapes)
 
         # buffer the poly, so the bridges are not actually milled...
         o.bridgespolyorig = bridgespoly.buffer(distance=o.cutter_diameter / 2.0)
@@ -218,7 +225,7 @@ def use_bridges(ch, o):
         vi = 0
         newpoints = []
         ch_points = ch.get_points_np()
-        p1 = sgeometry.Point(ch_points[0])
+        p1 = Point(ch_points[0])
         startinside = o.bridgespoly.contains(p1)
         interrupted = False
         verts = []
@@ -237,20 +244,20 @@ def use_bridges(ch, o):
             v2 = Vector(chp2)
             if v1.z < bridgeheight or v2.z < bridgeheight:
                 v = v2 - v1
-                p2 = sgeometry.Point(chp2)
+                p2 = Point(chp2)
 
                 if interrupted:
-                    p1 = sgeometry.Point(chp1)
+                    p1 = Point(chp1)
                     startinside = o.bridgespoly.contains(p1)
                     interrupted = False
 
                 endinside = o.bridgespoly.contains(p2)
-                l = sgeometry.LineString([chp1, chp2])
+                l = LineString([chp1, chp2])
                 if o.bridgespoly_boundary_prep.intersects(l):
                     intersections = o.bridgespoly_boundary.intersection(l)
 
                 else:
-                    intersections = sgeometry.GeometryCollection()
+                    intersections = GeometryCollection()
 
                 itpoint = intersections.geom_type == "Point"
                 itmpoint = intersections.geom_type == "MultiPoint"

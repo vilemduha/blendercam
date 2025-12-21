@@ -9,13 +9,9 @@ from bpy.props import (
     FloatProperty,
     IntProperty,
 )
-from bpy.types import (
-    PropertyGroup,
-)
+from bpy.types import PropertyGroup
 
-from ..utilities.version_utils import (
-    opencamlib_version,
-)
+from ..utilities.version_utils import opencamlib_version
 from ..utilities.strategy_utils import (
     update_exact_mode,
     update_opencamlib,

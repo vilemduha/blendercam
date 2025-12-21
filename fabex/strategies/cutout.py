@@ -4,7 +4,6 @@ from math import (
     tan,
 )
 
-
 import bpy
 
 from ..bridges import use_bridges
@@ -16,7 +15,10 @@ from ..utilities.chunk_utils import (
 )
 from ..utilities.curve_utils import curve_to_chunks
 from ..utilities.logging_utils import log
-from ..utilities.operation_utils import check_min_z, get_layers
+from ..utilities.operation_utils import (
+    check_min_z,
+    get_layers,
+)
 from ..utilities.parent_utils import parent_child_poly
 from ..utilities.shapely_utils import shapely_to_chunks
 from ..utilities.silhouette_utils import get_object_outline

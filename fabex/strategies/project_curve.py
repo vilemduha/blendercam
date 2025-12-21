@@ -1,6 +1,5 @@
 from ..exception import CamException
 
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     sort_chunks,

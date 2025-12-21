@@ -7,14 +7,23 @@ from ..utilities.chunk_utils import (
     sample_chunks,
     sort_chunks,
 )
-from ..utilities.image_utils import prepare_area, get_offset_image_cavities
+from ..utilities.image_utils import (
+    prepare_area,
+    get_offset_image_cavities,
+)
 from ..utilities.logging_utils import log
-from ..utilities.operation_utils import get_layers, get_ambient
+from ..utilities.operation_utils import (
+    get_layers,
+    get_ambient,
+)
 
 
 async def pencil(o):
+    log.info("~ Strategy: Pencil ~")
+
     await prepare_area(o)
     get_ambient(o)
+
     pathSamples = get_offset_image_cavities(o, o.offset_image)
     pathSamples = limit_chunks(pathSamples, o)
     # sort before sampling
@@ -27,8 +36,8 @@ async def pencil(o):
     chunks.extend(await sample_chunks(o, pathSamples, layers))
     log.info("Sampling Finished Successfully")
 
-    chunks = chunks_coherency(chunks)
     log.info("Coherency Check")
+    chunks = chunks_coherency(chunks)
 
     log.info("Sorting")
     chunks = await sort_chunks(chunks, o)

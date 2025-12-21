@@ -10,9 +10,7 @@ from bpy.props import (
     IntProperty,
     StringProperty,
 )
-from bpy.types import (
-    AddonPreferences,
-)
+from bpy.types import AddonPreferences
 
 from . import __package__ as base_package
 from .utilities.version_utils import (

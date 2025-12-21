@@ -3,7 +3,10 @@
 Operators that perform various functions on existing curves.
 """
 
-from math import pi, tan
+from math import (
+    pi,
+    tan,
+)
 
 import shapely
 from shapely.geometry import (
@@ -27,9 +30,7 @@ from ..utilities.polygon_utils import (
     polygon_convex_hull,
 )
 from ..utilities.curve_utils import curve_to_shapely
-from ..utilities.shapely_utils import (
-    shapely_to_curve,
-)
+from ..utilities.shapely_utils import shapely_to_curve
 from ..utilities.silhouette_utils import (
     silhouette_offset,
     get_object_silhouette,

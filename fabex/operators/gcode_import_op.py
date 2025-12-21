@@ -10,9 +10,7 @@ from bpy.props import (
     EnumProperty,
     FloatProperty,
 )
-from bpy.types import (
-    Operator,
-)
+from bpy.types import Operator
 
 from ..gcode.gcode_import import import_gcode
 

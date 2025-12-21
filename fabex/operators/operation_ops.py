@@ -10,7 +10,10 @@ from bpy.types import (
     Operator,
     PropertyGroup,
 )
-from mathutils import Euler, Vector
+from mathutils import (
+    Euler,
+    Vector,
+)
 
 from ..bridges import add_auto_bridges
 from ..constants import was_hidden_dict

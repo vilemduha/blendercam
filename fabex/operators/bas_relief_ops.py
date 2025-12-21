@@ -4,10 +4,6 @@ Module to allow the creation of reliefs from Images or View Layers.
 (https://en.wikipedia.org/wiki/Relief#Bas-relief_or_low_relief)
 """
 
-import time
-
-import numpy
-
 import bpy
 
 from bpy.types import Operator
@@ -16,7 +12,6 @@ from bpy.props import (
     EnumProperty,
     FloatProperty,
     IntProperty,
-    PointerProperty,
     StringProperty,
 )
 

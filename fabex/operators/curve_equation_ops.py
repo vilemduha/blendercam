@@ -3,7 +3,12 @@
 Operators to create a number of geometric shapes with curves.
 """
 
-from math import pi, sin, cos, sqrt
+from math import (
+    pi,
+    sin,
+    cos,
+    sqrt,
+)
 
 import numpy as np
 
@@ -16,7 +21,10 @@ from bpy.props import (
 )
 from bpy.types import Operator
 
-from ..utilities.geom_utils import triangle, s_sine
+from ..utilities.geom_utils import (
+    triangle,
+    s_sine,
+)
 from ..utilities.logging_utils import log
 from ..utilities.parametric_utils import create_parametric_curve
 

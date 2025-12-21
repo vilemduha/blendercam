@@ -7,8 +7,11 @@ They mostly call the functions from 'utils.py'
 import os
 
 import shapely
-from shapely import geometry as sgeometry
-from shapely import affinity, prepared, speedups
+from shapely import (
+    affinity,
+    prepared,
+    speedups,
+)
 
 import bpy
 from bpy.props import StringProperty

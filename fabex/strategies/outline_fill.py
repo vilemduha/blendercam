@@ -16,15 +16,13 @@ from ..utilities.simple_utils import progress
 
 
 async def outline_fill(o):
-    progress("~ Building Path Pattern ~")
+    log.info("~ Strategy: Outline Fill ~")
 
     get_operation_silhouette(o)
 
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-
     pathchunks = []
-
-    zlevel = 1  # minz#this should do layers...
+    zlevel = 1
     polys = o.silhouette.geoms
     chunks = []
 
@@ -106,10 +104,7 @@ async def outline_fill(o):
             chunk.reverse()
 
     pathSamples = chunks_refine(pathchunks, o)
-
-    # from toolpath
     pathSamples = await sort_chunks(pathSamples, o)
-
     chunks = []
     layers = get_layers(o, o.max_z, o.min.z)
 

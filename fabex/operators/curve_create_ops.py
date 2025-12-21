@@ -3,7 +3,12 @@
 Operators to create a number of predefined curve objects.
 """
 
-from math import degrees, hypot, pi, radians
+from math import (
+    degrees,
+    hypot,
+    pi,
+    radians,
+)
 
 from shapely import affinity
 from shapely.geometry import (
@@ -57,7 +62,10 @@ from ..joinery.multiangle import (
     open_curve,
 )
 
-from ..utilities.gear_utils import gear, rack
+from ..utilities.gear_utils import (
+    gear,
+    rack,
+)
 from ..utilities.logging_utils import log
 from ..utilities.polygon_utils import (
     polygon_boolean,

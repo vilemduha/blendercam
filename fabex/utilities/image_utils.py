@@ -18,7 +18,7 @@ import os
 import random
 import time
 
-import numpy
+import numpy as np
 
 import bpy
 
@@ -74,7 +74,7 @@ def numpy_save(a, iname):
 
 
 # get cutters for the z-buffer image method
-def numpy_to_image(a: numpy.ndarray, iname: str) -> bpy.types.Image:
+def numpy_to_image(a: np.ndarray, iname: str) -> bpy.types.Image:
     """Convert a NumPy array to a Blender image.
 
     This function takes a NumPy array and converts it into a Blender image.
@@ -166,7 +166,7 @@ def image_to_numpy(i):
 
     width = i.size[0]
     height = i.size[1]
-    na = numpy.full(shape=(width * height * 4,), fill_value=-10, dtype=numpy.double)
+    na = np.full(shape=(width * height * 4,), fill_value=-10, dtype=np.double)
 
     p = i.pixels[:]
     # these 2 lines are about 15% faster than na[:]=i.pixels[:].... whyyyyyyyy!!?!?!?!?!
@@ -207,7 +207,7 @@ def _offset_inner_loop(y1, y2, cutterArrayNan, cwidth, sourceArray, width, heigh
 
     for y in prange(y1, y2):
         for x in range(0, width - cwidth):
-            comparearea[x, y] = numpy.nanmax(
+            comparearea[x, y] = np.nanmax(
                 sourceArray[x : x + cwidth, y : y + cwidth] + cutterArrayNan
             )
 
@@ -239,7 +239,7 @@ async def offset_area(o, samples):
         width = len(sourceArray)
         height = len(sourceArray[0])
         cwidth = len(cutterArray)
-        o.offset_image = numpy.full(shape=(width, height), fill_value=-10.0, dtype=numpy.double)
+        o.offset_image = np.full(shape=(width, height), fill_value=-10.0, dtype=np.double)
 
         t = time.time()
         m = int(cwidth / 2.0)
@@ -250,8 +250,8 @@ async def offset_area(o, samples):
             m : width - cwidth + m,
             m : height - cwidth + m,
         ]
-        cutterArrayNan = numpy.where(
-            cutterArray > -10, cutterArray, numpy.full(cutterArray.shape, numpy.nan)
+        cutterArrayNan = np.where(
+            cutterArray > -10, cutterArray, np.full(cutterArray.shape, np.nan)
         )
 
         for y in range(0, 10):
@@ -581,10 +581,10 @@ def render_sample_image(o):
                 mist_settings.intensity = 0
 
                 # resize operation image
-                o.offset_image = numpy.full(
+                o.offset_image = np.full(
                     shape=(resolution_x, resolution_y),
                     fill_value=-10,
-                    dtype=numpy.double,
+                    dtype=np.double,
                 )
 
                 # Add a Camera and settings
@@ -669,12 +669,12 @@ def render_sample_image(o):
         progress("Pixel Size in the Image Source", pixsize)
 
         raw_image = image_to_numpy(i)
-        image_array_max = numpy.max(raw_image)
-        image_array_min = numpy.min(raw_image)
+        image_array_max = np.max(raw_image)
+        image_array_min = np.min(raw_image)
         negative = o.source_image_scale_z < 0
         # waterline strategy needs image border to have ok ambient.
         if o.strategy == "WATERLINE":
-            image_array = numpy.full(
+            image_array = np.full(
                 shape=(
                     2 * border_width + image_size_x,
                     2 * border_width + image_size_y,
@@ -683,7 +683,7 @@ def render_sample_image(o):
                 dtype=float,
             )
         else:  # other operations like parallel need to reach the border
-            image_array = numpy.full(
+            image_array = np.full(
                 shape=(
                     2 * border_width + image_size_x,
                     2 * border_width + image_size_y,
@@ -714,14 +714,14 @@ def render_sample_image(o):
 
         image_array += o.source_image_offset.z  # after that, image gets offset.
 
-        o.min_z = numpy.min(image_array)  # TODO: I really don't know why this is here...
-        o.min.z = numpy.min(image_array)
+        o.min_z = np.min(image_array)  # TODO: I really don't know why this is here...
+        o.min.z = np.min(image_array)
         o.zbuffer_image = image_array
 
         log.info(f"Min Z {o.min.z}")
         log.info(f"Max Z {o.max.z}")
-        log.info(f"Min Image {numpy.min(image_array)}")
-        log.info(f"Max Image {numpy.max(image_array)}")
+        log.info(f"Min Image {np.min(image_array)}")
+        log.info(f"Max Image {np.max(image_array)}")
 
     progress(time.time() - t)
     o.update_z_buffer_image_tag = False
@@ -760,7 +760,7 @@ async def prepare_area(o):
 
     if o.update_offset_image_tag:
         if o.inverse:
-            samples = numpy.maximum(samples, o.min.z - 0.00001)
+            samples = np.maximum(samples, o.min.z - 0.00001)
         await offset_area(o, samples)
         numpy_save(o.offset_image, iname)
 
@@ -946,7 +946,7 @@ def get_offset_image_cavities(o, i):  # for pencil operation mainly
     progress("Detect Corners in the Offset Image")
     vertical = i[:-2, 1:-1] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[2:, 1:-1]
     horizontal = i[1:-1, :-2] - i[1:-1, 1:-1] - o.pencil_threshold > i[1:-1, 1:-1] - i[1:-1, 2:]
-    ar = numpy.logical_or(vertical, horizontal)
+    ar = np.logical_or(vertical, horizontal)
 
     if 1:  # this is newer strategy, finds edges nicely, but pff.going exacty on edge,
         # it has tons of spikes and simply is not better than the old one
@@ -994,7 +994,7 @@ def image_to_chunks(o, image, with_border=False):
     t = time.time()
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pixsize = o.optimisation.pixsize
-    image = image.astype(numpy.uint8)
+    image = image.astype(np.uint8)
     edges = []
     ar = image[:, :-1] - image[:, 1:]
     indices1 = ar.nonzero()

@@ -4,7 +4,7 @@ from math import atan2
 
 from mathutils import Vector
 
-import numpy
+import numpy as np
 
 
 def compare_z_level(x):
@@ -151,9 +151,9 @@ def point_on_line(a, b, c, tolerance):
     returns False; otherwise, it returns True.
 
     Args:
-        a (numpy.ndarray): The origin point as a vector.
-        b (numpy.ndarray): The first point as a vector.
-        c (numpy.ndarray): The second point as a vector.
+        a (np.ndarray): The origin point as a vector.
+        b (np.ndarray): The first point as a vector.
+        c (np.ndarray): The second point as a vector.
         tolerance (float): The maximum allowable angle (in degrees) between the vectors.
 
     Returns:
@@ -165,12 +165,12 @@ def point_on_line(a, b, c, tolerance):
     b = b - a  # convert to vector by subtracting origin
     c = c - a
     dot_pr = b.dot(c)  # b dot c
-    norms = numpy.linalg.norm(b) * numpy.linalg.norm(c)  # find norms
+    norms = np.linalg.norm(b) * np.linalg.norm(c)  # find norms
     # Ensure that values aren't == 0, which would cause
     # a Divide by Zero error on the next line
     if not dot_pr == 0 and not norms == 0:
         # find angle between the two vectors
-        angle = numpy.rad2deg(numpy.arccos(dot_pr / norms))
+        angle = np.rad2deg(np.arccos(dot_pr / norms))
         if angle > tolerance:
             return False
         else:

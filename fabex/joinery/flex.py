@@ -1,7 +1,4 @@
-from math import (
-    pi,
-)
-
+from math import pi
 
 import bpy
 

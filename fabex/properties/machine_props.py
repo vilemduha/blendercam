@@ -14,7 +14,10 @@ from bpy.props import (
 from bpy.types import PropertyGroup
 
 from ..constants import PRECISION
-from ..utilities.machine_utils import update_machine, update_unit_system
+from ..utilities.machine_utils import (
+    update_machine,
+    update_unit_system,
+)
 
 
 class CAM_MACHINE_Properties(PropertyGroup):

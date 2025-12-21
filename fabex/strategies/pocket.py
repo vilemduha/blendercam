@@ -5,9 +5,7 @@ from math import (
 )
 
 from shapely import affinity
-from shapely.geometry import (
-    Polygon,
-)
+from shapely.geometry import Polygon
 
 import bpy
 from mathutils import Euler, Vector
@@ -20,7 +18,10 @@ from ..utilities.chunk_utils import (
     sort_chunks,
     set_chunks_z,
 )
-from ..utilities.geom_utils import circle, helix
+from ..utilities.geom_utils import (
+    circle,
+    helix,
+)
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import (
     check_min_z,
@@ -61,13 +62,12 @@ async def pocket(o):
     log.info("Strategy: Pocket")
 
     join = 2 if o.straight else 1
-
     scene = bpy.context.scene
     remove_multiple("3D_poc")
     max_depth = check_min_z(o) + o.skin
     cutter_angle = radians(o.cutter_tip_angle / 2)
-
     cutter_offset = o.cutter_diameter / 2
+
     if o.cutter_type == "VCARVE":
         cutter_offset = -max_depth * tan(cutter_angle)
     elif o.cutter_type == "CYLCONE":
@@ -92,7 +92,6 @@ async def pocket(o):
                 bpy.ops.object.curve_remove_doubles()
 
     circle_detail = o.optimisation.circle_detail
-
     chunks_from_curve = []
     angle = radians(o.parallel_pocket_angle)
     stepover = o.distance_between_paths
@@ -260,9 +259,11 @@ async def pocket(o):
                             point,
                             revolutions,
                         )
+
                         # invert helix if not the typical direction
                         if conventional_cw or climb_ccw:
                             inverse_helix = []
+
                             for vector in entry_helix:
                                 inverse_helix.append(
                                     (
@@ -271,7 +272,9 @@ async def pocket(o):
                                         vector[2],
                                     )
                                 )
+
                             entry_helix = inverse_helix
+
                         chunk.extend(entry_helix, at_index=0)
 
                     else:

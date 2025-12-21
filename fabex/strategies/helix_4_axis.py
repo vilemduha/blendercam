@@ -11,7 +11,10 @@ from math import (
 from mathutils import Euler, Vector
 
 from ..chunk_builder import CamPathChunkBuilder
-from ..utilities.chunk_utils import chunks_to_mesh, sample_chunks_n_axis
+from ..utilities.chunk_utils import (
+    chunks_to_mesh,
+    sample_chunks_n_axis,
+)
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import get_layers
 from ..utilities.simple_utils import progress
@@ -35,10 +38,10 @@ async def helix_four_axis(o):
         list: A list of path chunks generated for the specified operation.
     """
 
-    progress("~ Building Path Pattern ~")
+    log.info("~ Strategy: Helix 4 Axis ~")
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
-    zlevel = 1  # minz#this should do layers...
+    zlevel = 1
 
     # set axes for various options, Z option is obvious nonsense now.
     if o.rotary_axis_1 == "X":
@@ -103,13 +106,10 @@ async def helix_four_axis(o):
         chunk.depth = radiusend - radius
 
     pathchunks.append(chunk)
-
     path_samples = pathchunks
-
     depth = path_samples[0].depth
     chunks = []
-
     layers = get_layers(o, 0, depth)
-
     chunks.extend(await sample_chunks_n_axis(o, path_samples, layers))
+
     chunks_to_mesh(chunks, o)

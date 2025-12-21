@@ -4,7 +4,7 @@ from math import (
 )
 import random
 
-import numpy
+import np
 import numpy as np
 
 from mathutils import Vector, Euler
@@ -558,7 +558,7 @@ async def crazy_path(o):
     resx = ceil(sx / o.optimisation.simulation_detail) + 2 * o.borderwidth
     resy = ceil(sy / o.optimisation.simulation_detail) + 2 * o.borderwidth
 
-    o.millimage = numpy.full(shape=(resx, resy), fill_value=0.0, dtype=numpy.float)
+    o.millimage = np.full(shape=(resx, resy), fill_value=0.0, dtype=np.float)
     # getting inverted cutter
     o.cutterArray = -get_cutter_array(o, o.optimisation.simulation_detail)
 
@@ -588,14 +588,14 @@ def build_stroke(start, end, cutterArray):
     size_y = abs(end[1] - start[1]) + cutterArray.size[0]
     r = cutterArray.size[0] / 2
 
-    strokeArray = numpy.full(shape=(size_x, size_y), fill_value=-10.0, dtype=numpy.float)
-    samplesx = numpy.round(numpy.linspace(start[0], end[0], strokelength))
-    samplesy = numpy.round(numpy.linspace(start[1], end[1], strokelength))
-    samplesz = numpy.round(numpy.linspace(start[2], end[2], strokelength))
+    strokeArray = np.full(shape=(size_x, size_y), fill_value=-10.0, dtype=np.float)
+    samplesx = np.round(np.linspace(start[0], end[0], strokelength))
+    samplesy = np.round(np.linspace(start[1], end[1], strokelength))
+    samplesz = np.round(np.linspace(start[2], end[2], strokelength))
 
     for i in range(0, len(strokelength)):
         strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r] = (
-            numpy.maximum(
+            np.maximum(
                 strokeArray[samplesx[i] - r : samplesx[i] + r, samplesy[i] - r : samplesy[i] + r],
                 cutterArray + samplesz[i],
             )

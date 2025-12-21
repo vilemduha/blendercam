@@ -14,13 +14,15 @@ from ..utilities.operation_utils import get_layers
 
 
 async def carve(o):
+    log.info("~ Strategy: Carve ~")
+
     pathSamples = []
     ob = bpy.data.objects[o.curve_source]
     pathSamples.extend(curve_to_chunks(ob))
+
     # sort before sampling
     pathSamples = await sort_chunks(pathSamples, o)
     pathSamples = chunks_refine(pathSamples, o)
-
     chunks = []
     layers = get_layers(o, o.max_z, o.min.z)
 

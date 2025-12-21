@@ -12,9 +12,10 @@ from ..utilities.stroke_utils import crazy_stroke_image_binary
 
 
 async def crazy(o):
+    log.info("~ Strategy: Crazy ~")
+
     await prepare_area(o)
-    # pathSamples = crazyStrokeImage(o)
-    # this kind of worked and should work:
+
     millarea = o.zbuffer_image < o.min_z + 0.000001
     avoidarea = o.offset_image > o.min_z + 0.000001
 

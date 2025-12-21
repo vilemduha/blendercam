@@ -3,7 +3,10 @@
 Preset Properties
 """
 
-from os import listdir, sep
+from os import (
+    listdir,
+    sep,
+)
 
 import bpy
 

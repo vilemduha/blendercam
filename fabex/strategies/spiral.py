@@ -1,40 +1,30 @@
 from math import (
-    ceil,
-    floor,
     pi,
-    sqrt,
 )
 
-import numpy
 
-import bpy
-from mathutils import Euler, Vector
-
-from ..chunk_builder import (
-    CamPathChunk,
-    CamPathChunkBuilder,
+from mathutils import (
+    Euler,
+    Vector,
 )
+
+from ..chunk_builder import CamPathChunkBuilder
+
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
-    chunks_refine,
     connect_chunks_low,
     sample_chunks,
 )
 from ..utilities.logging_utils import log
 from ..utilities.operation_utils import get_layers
-from ..utilities.parent_utils import parent_child_distance
-from ..utilities.simple_utils import progress
-from ..utilities.strategy_utils import parallel_pattern
 
 
 async def spiral(o):
-    progress("~ Building Path Pattern ~")
+    log.info("~ Strategy: Spiral ~")
+
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-
     pathSamples = []
-
-    zlevel = 1  # minz#this should do layers...
-
+    zlevel = 1
     chunk = CamPathChunkBuilder([])
     pathd = o.distance_between_paths
     pathstep = o.distance_along_paths
@@ -75,7 +65,6 @@ async def spiral(o):
             chunk.flip_x(o.max.x + o.min.x)
 
     pathSamples = await connect_chunks_low(pathSamples, o)
-
     chunks = []
     layers = get_layers(o, o.max_z, o.min.z)
 

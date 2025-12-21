@@ -1,4 +1,7 @@
-from math import ceil, floor
+from math import (
+    ceil,
+    floor,
+)
 
 from shapely.geometry import Polygon
 

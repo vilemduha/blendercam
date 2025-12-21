@@ -3,11 +3,14 @@ from math import (
     sqrt,
 )
 
-from mathutils import Euler, Vector
+from mathutils import (
+    Euler,
+    Vector,
+)
 
 from ..bridges import use_bridges
-
 from ..chunk_builder import CamPathChunkBuilder
+
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     connect_chunks_low,
@@ -20,13 +23,11 @@ from ..utilities.simple_utils import progress
 
 
 async def circles(o):
-    progress("~ Building Path Pattern ~")
+    log.info("~ Strategy: Circles ~")
+
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
-
     pathSamples = []
-
-    zlevel = 1  # minz#this should do layers...
-
+    zlevel = 1
     pathd = o.distance_between_paths
     pathstep = o.distance_along_paths
     midx = (o.max.x + o.min.x) / 2

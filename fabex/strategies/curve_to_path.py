@@ -1,6 +1,5 @@
 from ..exception import CamException
 
-
 from ..utilities.chunk_utils import (
     chunks_to_mesh,
     chunks_refine,
@@ -99,4 +98,5 @@ async def curve(o):
             chunk.clamp_z(o.min_z)
             # Limit Cut Height to Operation Safe Height
             chunk.clamp_max_z(o.movement.free_height)
+
         chunks_to_mesh(path_samples, o)

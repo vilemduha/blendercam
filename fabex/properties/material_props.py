@@ -11,9 +11,7 @@ from bpy.props import (
     FloatVectorProperty,
     PointerProperty,
 )
-from bpy.types import (
-    PropertyGroup,
-)
+from bpy.types import PropertyGroup
 from ..utilities.material_utils import update_material
 from ..constants import PRECISION
 
