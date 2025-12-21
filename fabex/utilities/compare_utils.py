@@ -109,11 +109,16 @@ def unique(L):
 
 
 def check_equal(lst):
+    """Checks if First and Last List items are Equal
+
+    Args:
+        lst (list): list of points to check
+    """
     return lst[1:] == lst[:-1]
 
 
 def angle(a, b):
-    """returns angle of a vector
+    """Returns angle of a vector
 
     Args:
         a (tuple): point a x,y coordinates
@@ -124,7 +129,7 @@ def angle(a, b):
 
 
 def angle_difference(a, b, c):
-    """returns the difference between two lines with three points
+    """Returns the difference between two lines with three points
 
     Args:
         a (tuple): point a x,y coordinates

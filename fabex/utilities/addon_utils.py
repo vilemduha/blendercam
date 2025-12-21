@@ -269,6 +269,11 @@ def fix_units():
 
 
 def keymap_register():
+    """Adds a Keyboard Shortcut to the Active Key Config
+
+    This function binds the keyboard shortcut 'Alt+C' to the Fabex
+    Pie Menu, and adds that shortcut to the user's active key configuration.
+    """
     wm = bpy.context.window_manager
     addon_kc = wm.keyconfigs.addon
 
@@ -284,6 +289,11 @@ def keymap_register():
 
 
 def keymap_unregister():
+    """Removes a Keyboard Shortcut from the Active Key Config
+
+    This function removes the keyboard shortcut 'Alt+C' from
+    the user's active key configuration.
+    """
     wm = bpy.context.window_manager
     active_kc = wm.keyconfigs.active
 
@@ -385,6 +395,13 @@ def add_collections():
 
 
 def edit_user_post_processor():
+    """Open and Edit the User Post Processor file in the Text Editor
+
+    This function finds the path to the 'user.py' post processor file
+    and opens it for editing in Blender's Text Editor. In order to open
+    the file Blender's Context must be overridden to ensure the Text Editor
+    actions can run no matter what Context the user is currently in.
+    """
     user_processor_path = Path(__file__).parent.parent / "post_processors" / "user.py"
     log.info(user_processor_path)
     bpy.ops.text.open(filepath=str(user_processor_path))
@@ -395,5 +412,35 @@ def edit_user_post_processor():
 
         with bpy.context.temp_override(space=text_editor):
             text_editor.text = bpy.data.texts[f"user.py"]
+
     except IndexError:
         pass
+
+
+def append_asset_from_library(asset_type, asset_name):
+    """Append an Asset from the Fabex Asset Library
+
+    This function adds an asset from the Fabex Asset Library to the
+    current file. The path to the library is automatically filled, but
+    the user must provide the type and name of the asset they wish to
+    append. Currently the library contains materials, node groups and
+    scenes, and separate logic is provided for each.
+    """
+    library_path = Path(__file__).parent.parent / "assets"
+
+    if not library_path.exists():
+        print(f"File not found: {library_path}")
+
+    with bpy.data.libraries.load(str(library_path)) as (data_from, data_to):
+        if asset_type == "scene":
+            if asset_name in data_from.scenes:
+                data_to.scenes = [asset_name]
+            bpy.context.window.scene = bpy.data.scenes[asset_name]
+
+        elif asset_type == "node_group":
+            if asset_name in data_from.node_groups:
+                data_to.node_groups = [asset_name]
+
+        elif asset_type == "material":
+            if asset_name in data_from.materials:
+                data_to.materials = [asset_name]

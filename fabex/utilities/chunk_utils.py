@@ -140,11 +140,22 @@ def chunks_refine_threshold(chunks, distance, limitdistance):
 
 
 def chunk_to_shapely(chunk):
+    """Converts CAM path chunks into Shapely Polygon
+
+    This function takes a CAM path chunk, uses the chunk points
+    to create a Shapely Polygon, and returns the Polygon.
+    """
     p = Polygon(chunk.points)
     return p
 
 
 def set_chunks_z(chunks, z):
+    """Sets the Depth of CAM path chunks
+
+    This function takes a group of CAM path chunks, and a depth
+    setting, creates copies of the chunks, assigns the depth
+    value and then returns the copied chunks as a new list.
+    """
     newchunks = []
     for ch in chunks:
         chunk = ch.copy()
@@ -272,11 +283,13 @@ def get_closest_chunk(o, pos, chunks):
 
 
 def chunks_coherency(chunks):
-    # checks chunks for their stability, for pencil path.
-    # it checks if the vectors direction doesn't jump too much too quickly,
-    # if this happens it splits the chunk on such places,
-    # too much jumps = deletion of the chunk. this is because otherwise the router has to slow down too often,
-    # but also means that some parts detected by cavity algorithm won't be milled
+    """Checks CAM path chunks for Stability for Pencil path
+
+    This function checks if the vectors direction doesn't change too quickly,
+    if this happens it splits the chunk at that point, and if the change is too great
+    the chunk will be deleted. This prevents the router/spindle from slowing down too
+    much, but also means that some parts detected by cavity algorithm won't be milled.
+    """
     nchunks = []
 
     for chunk in chunks:
@@ -303,8 +316,15 @@ def chunks_coherency(chunks):
     return nchunks
 
 
-def limit_chunks(chunks, o, force=False):  # TODO: this should at least add point on area border...
-    # but shouldn't be needed at all at the first place...
+# TODO: this should at least add point on area border...
+# but shouldn't be needed at all at the first place...
+def limit_chunks(chunks, o, force=False):
+    """Prevent excluded CAM path chunks from being Processed
+
+    This function checks if there are limitations on the area to be
+    milled, like limit curves, and rebuilds the chunk list without the
+    excluded chunks.
+    """
     if o.use_limit_curve or force:
         nchunks = []
 
@@ -325,8 +345,10 @@ def limit_chunks(chunks, o, force=False):  # TODO: this should at least add poin
                     if nch1 is None:
                         nch1 = nchunks[-1]
                     nch = CamPathChunkBuilder()
+
                 elif sampled:
                     nch.points.append(s)
+
                 prevsampled = sampled
 
             if (
@@ -349,7 +371,9 @@ def limit_chunks(chunks, o, force=False):  # TODO: this should at least add poin
 
             if len(nch.points) > 0:
                 nchunks.append(nch.to_chunk())
+
         return nchunks
+
     else:
         return chunks
 

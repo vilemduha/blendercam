@@ -39,6 +39,12 @@ def curve_to_shapely(cob, use_modifiers=False):
 
 
 def mesh_from_curve(o, use_modifiers=False):
+    """Create a Mesh Object from a Curve Object
+
+    This function converts a curve object into a mesh object, maintaining
+    parent-child relationships, applying transforms, deleting the old
+    curve object and returning the mesh as the active object.
+    """
     activate(o)
     bpy.ops.object.duplicate()
 
@@ -81,6 +87,12 @@ def mesh_from_curve(o, use_modifiers=False):
 
 
 def mesh_from_curve_to_chunk(object):
+    """Convert a Curve Object to a Mesh and then to a CAM path chunk
+
+    This function uses 'mesh_from_curve' and 'CamPathChunkBuilder' to convert
+    a Curve object into a Mesh, then sample the points and edges of the mesh to
+    create and return a list of CAM path chunks.
+    """
     object = mesh_from_curve(object) if object.type == "CURVE" else object
     mesh = object.data
 
@@ -158,6 +170,12 @@ def mesh_from_curve_to_chunk(object):
 
 
 def curve_to_chunks(o, use_modifiers=False):
+    """Convert a Curve Object into CAM path chunks
+
+    This function uses 'mesh_from_curve' and 'mesh_from_curve_to_chunk' to
+    convert a Curve object into CAM path chunks, deletes the Curve object
+    and returns the CAM path chunks.
+    """
     co = mesh_from_curve(o, use_modifiers)
     chunks = mesh_from_curve_to_chunk(co)
 

@@ -6,7 +6,7 @@ The functions here are called with operators defined in 'ops.py'
 
 from math import pi
 
-from shapely.geometry import polygon as spolygon
+from shapely.geometry import Polygon
 
 import bpy
 from mathutils import Euler, Vector
@@ -26,7 +26,7 @@ def circle(r, np):
         np (int): The number of points to generate around the circle.
 
     Returns:
-        spolygon.Polygon: A polygon object representing the circle.
+        Polygon: A polygon object representing the circle.
     """
 
     c = []
@@ -36,7 +36,7 @@ def circle(r, np):
         c.append((v.x, v.y))
         v.rotate(e)
 
-    p = spolygon.Polygon(c)
+    p = Polygon(c)
     return p
 
 

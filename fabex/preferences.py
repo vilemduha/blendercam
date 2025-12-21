@@ -25,7 +25,8 @@ from .utilities.version_utils import (
 
 class CamAddonPreferences(AddonPreferences):
     # this must match the addon name, use '__package__'
-    # when defining this in a submodule of a python package.
+    # when defining this in a submodule of a python package,
+    # or 'base_package' in this case
     bl_idname = base_package
 
     op_preset_update: BoolProperty(

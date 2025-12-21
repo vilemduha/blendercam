@@ -15,6 +15,7 @@ from ..chunk_builder import (
     CamPathChunk,
     CamPathChunkBuilder,
 )
+from ..ui.icons import preview_collections
 from .logging_utils import log
 from .orient_utils import add_orientation_object, remove_orientation_object
 from .silhouette_utils import silhouette_offset
@@ -127,19 +128,21 @@ def get_strategy_list(scene, context):
             name, and description.
     """
 
+    fabex_icons = preview_collections["FABEX"]
+
     items = [
         (
             "CUTOUT",
             "Profile (Cutout)",
             "Cut the silhouette with offset",
-            "MOD_SKIN",
+            fabex_icons["ProfileCutoutIcon"].icon_id,  #  "MOD_SKIN",
             0,
         ),
         (
             "POCKET",
             "Pocket",
             "Pocket operation",
-            "CLIPUV_DEHLT",
+            fabex_icons["PocketIcon"].icon_id,  #  "CLIPUV_DEHLT",
             1,
         ),
         (
@@ -153,35 +156,35 @@ def get_strategy_list(scene, context):
             "PARALLEL",
             "Parallel",
             "Parallel lines on any angle",
-            "SNAP_EDGE",
+            fabex_icons["ParallelIcon"].icon_id,  #  "SNAP_EDGE",
             3,
         ),
         (
             "CROSS",
             "Cross",
             "Cross paths",
-            "ADD",
+            fabex_icons["CrossIcon"].icon_id,  #  "ADD",
             4,
         ),
         (
             "BLOCK",
             "Block",
             "Block path",
-            "META_PLANE",
+            fabex_icons["BlockIcon"].icon_id,  # "META_PLANE",
             5,
         ),
         (
             "SPIRAL",
             "Spiral",
             "Spiral path",
-            "FORCE_VORTEX",
+            fabex_icons["SpiralIcon"].icon_id,  # "FORCE_VORTEX",
             6,
         ),
         (
             "CIRCLES",
             "Circles",
             "Circles path",
-            "ONIONSKIN_ON",
+            fabex_icons["CirclesIcon"].icon_id,  # "ONIONSKIN_ON",
             7,
         ),
         (
@@ -202,7 +205,7 @@ def get_strategy_list(scene, context):
             "WATERLINE",
             "Waterline - Roughing (Below Z0)",
             "Waterline paths - constant z below zero",
-            "MOD_OCEAN",
+            fabex_icons["WaterlineIcon"].icon_id,  # "MOD_OCEAN",
             10,
         ),
         (

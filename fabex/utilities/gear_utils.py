@@ -89,23 +89,23 @@ from .simple_utils import (
 )
 
 
-# convert gear_polar to cartesian coordinates
 def gear_polar(r, theta):
+    """Convert gear_polar to Cartesian coordinates"""
     return r * sin(theta), r * cos(theta)
 
 
-# unwind a string this many degrees to go from radius r1 to radius r2
 def gear_iang(r1, r2):
+    """Unwind a string (x) Degrees to go from Radius r1 to r2"""
     return sqrt((r2 / r1) * (r2 / r1) - 1) - acos(r1 / r2)
 
 
-#  radius a fraction f up the curved side of the tooth
 def gear_q7(f, r, b, r2, t, s):
+    """Radius a fraction (f) up the curved side of the Tooth"""
     return gear_q6(b, s, t, (1 - f) * max(b, r) + f * r2)
 
 
-# point at radius d on the involute curve
 def gear_q6(b, s, t, d):
+    """Point at Radius (d) on the involute curve"""
     return gear_polar(d, s * (gear_iang(b, d) + t))
 
 

@@ -1,10 +1,17 @@
-"""Fabex 'version_utils.py' © 2012 Vilem Novak
-"""
+"""Fabex 'version_utils.py' © 2012 Vilem Novak"""
 
 from .. import __package__ as base_package
 
 
 def get_fabex_version():
+    """Return the version of the Fabex Extension.
+
+    This function checks for fabex in the module list and reads and
+    returns the number found in the 'version' file.
+
+    Returns:
+        str or None: The version of Fabex if available, None otherwise.
+    """
     import addon_utils
 
     for module in addon_utils.modules():
@@ -16,6 +23,14 @@ def get_fabex_version():
 
 
 def get_numba_version():
+    """Return the version of the numba library.
+
+    This function attempts to import the numba library and returns its
+    version. If the library is not available, it will return None.
+
+    Returns:
+        str or None: The version of numba if available, None otherwise.
+    """
     try:
         import numba
     except ImportError:
@@ -27,6 +42,14 @@ def get_numba_version():
 
 
 def get_llvmlite_version():
+    """Return the version of the llvmlite library.
+
+    This function attempts to import the llvmlite library and returns its
+    version. If the library is not available, it will return None.
+
+    Returns:
+        str or None: The version of llvmlite if available, None otherwise.
+    """
     try:
         import llvmlite
     except ImportError:
@@ -37,8 +60,6 @@ def get_llvmlite_version():
     return version
 
 
-# Import OpencamLib
-# Return available OpenCamLib version on success, None otherwise
 def opencamlib_version():
     """Return the version of the OpenCamLib library.
 

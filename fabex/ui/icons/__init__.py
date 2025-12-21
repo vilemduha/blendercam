@@ -9,6 +9,7 @@ preview_collections = {}
 
 def register():
     icon_images = [
+        # Cutter Icons
         "EndMillIcon",
         "BallnoseIcon",
         "VCarveIcon",
@@ -16,7 +17,17 @@ def register():
         "LaserPlasmaIcon",
         "BullnoseIcon",
         "BallconeIcon",
+        # Fabex Logo
         "FabexCNC_Logo",
+        # Strategy Icons
+        "WaterlineIcon",
+        "PocketIcon",
+        "ProfileCutoutIcon",
+        "CrossIcon",
+        "BlockIcon",
+        "ParallelIcon",
+        "CirclesIcon",
+        "SpiralIcon",
     ]
 
     fabex_icons = bpy.utils.previews.new()

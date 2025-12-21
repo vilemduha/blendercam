@@ -242,9 +242,8 @@ def chunks_to_shapely(chunks):
         ch.nparents = None
         if len(ch.parents) > 0:
             try:
-                ch.parents[0].poly = ch.parents[0].poly.difference(
-                    ch.poly
-                )  # Polygon( ch.parents[0].poly, ch.poly)
+                ch.parents[0].poly = ch.parents[0].poly.difference(ch.poly)
+                # Polygon( ch.parents[0].poly, ch.poly)
             except:
                 log.info("chunksToShapely oops!")
 
