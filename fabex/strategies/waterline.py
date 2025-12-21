@@ -14,6 +14,7 @@ from ..utilities.chunk_utils import (
 )
 from ..utilities.image_shapely_utils import image_to_shapely
 from ..utilities.image_utils import prepare_area
+from ..utilities.logging_utils import log
 from ..utilities.waterline_utils import oclGetWaterline
 from ..utilities.operation_utils import get_ambient
 from ..utilities.parent_utils import parent_child_distance
@@ -22,6 +23,8 @@ from ..utilities.async_utils import progress_async
 
 
 async def waterline(o):
+    log.info("~ Strategy: Waterline ~")
+
     if o.optimisation.use_opencamlib:
         get_ambient(o)
         chunks = []
