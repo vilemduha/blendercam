@@ -26,6 +26,7 @@ from ..utilities.logging_utils import log
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
+    get_move_and_spin,
 )
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.shapely_utils import (
@@ -193,15 +194,9 @@ async def pocket(o):
             i += 1
 
     # TODO inside outside!
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
 
-    move_type = o.movement.type
-    spin = o.movement.spindle_rotation
-    climb_cw = move_type == "CLIMB" and spin == "CW"
-    climb_ccw = move_type == "CLIMB" and spin == "CCW"
-    conventional_cw = move_type == "CONVENTIONAL" and spin == "CW"
-    conventional_ccw = move_type == "CONVENTIONAL" and spin == "CCW"
-
-    if climb_cw or conventional_ccw:
+    if climb_CW or conventional_CCW:
         for chunk in chunks_from_curve:
             chunk.reverse()
 
@@ -357,6 +352,7 @@ async def pocket(o):
     if o.first_down:
         if o.pocket_option == "OUTSIDE":
             chunks.reverse()
+
         chunks = await sort_chunks(chunks, o)
 
     if o.pocket_to_curve:  # make curve instead of a path

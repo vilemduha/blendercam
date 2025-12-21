@@ -48,7 +48,10 @@ from .ocl_utils import (
     oclResampleChunks,
 )
 
-from .operation_utils import get_ambient
+from .operation_utils import (
+    get_ambient,
+    get_operation_axes,
+)
 from .parent_utils import (
     parent_child,
     parent_child_distance,
@@ -1161,12 +1164,7 @@ def chunks_to_mesh(chunks, o):
 
     free_height = o.movement.free_height
 
-    three_axis = o.machine_axes == "3"
-    four_axis = o.machine_axes == "4"
-    five_axis = o.machine_axes == "5"
-
-    indexed_four_axis = four_axis and o.strategy_4_axis == "INDEXED"
-    indexed_five_axis = five_axis and o.strategy_5_axis == "INDEXED"
+    three_axis, four_axis, five_axis, indexed_four_axis, indexed_five_axis = get_operation_axes(o)
 
     user_origin = (
         machine.starting_position.x,
@@ -1276,9 +1274,6 @@ def chunks_to_mesh(chunks, o):
 
     # Blender Object generation starts here:
     edges = [(a, a + 1) for a in range(0, len(vertices) - 1)]
-    # for a in range(0, len(vertices) - 1):
-    #     edges.append((a, a + 1))
-
     path_name = scene.cam_names.path_name_full
     mesh = bpy.data.meshes.new(path_name)
     mesh.name = path_name

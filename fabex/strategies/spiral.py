@@ -16,12 +16,16 @@ from ..utilities.chunk_utils import (
     sample_chunks,
 )
 from ..utilities.logging_utils import log
-from ..utilities.operation_utils import get_layers
+from ..utilities.operation_utils import (
+    get_layers,
+    get_move_and_spin,
+)
 
 
 async def spiral(o):
     log.info("~ Strategy: Spiral ~")
 
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathSamples = []
     zlevel = 1
@@ -58,9 +62,7 @@ async def spiral(o):
         if o.movement.insideout == "OUTSIDEIN":
             chunk.reverse()
 
-        if (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW") or (
-            o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW"
-        ):
+        if conventional_CW or climb_CCW:
             # TODO
             chunk.flip_x(o.max.x + o.min.x)
 

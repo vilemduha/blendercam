@@ -608,6 +608,8 @@ def get_move_and_spin(o):
     conventional_CW = move_type == "CONVENTIONAL" and spin == "CW"
     conventional_CCW = move_type == "CONVENTIONAL" and spin == "CCW"
 
+    return climb_CW, climb_CCW, conventional_CW, conventional_CCW
+
 
 def get_ambient(o):
     """Calculate and update the ambient geometry based on the provided object.
@@ -874,3 +876,14 @@ def get_layers(operation, start_depth, end_depth):
         layers = [[round(start_depth, 6), round(end_depth, 6)]]
 
     return layers
+
+
+def get_operation_axes(o):
+    three_axis = o.machine_axes == "3"
+    four_axis = o.machine_axes == "4"
+    five_axis = o.machine_axes == "5"
+
+    indexed_four_axis = four_axis and o.strategy_4_axis == "INDEXED"
+    indexed_five_axis = five_axis and o.strategy_5_axis == "INDEXED"
+
+    return three_axis, four_axis, five_axis, indexed_four_axis, indexed_five_axis

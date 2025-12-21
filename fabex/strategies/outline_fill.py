@@ -8,7 +8,10 @@ from ..utilities.chunk_utils import (
     sort_chunks,
 )
 from ..utilities.logging_utils import log
-from ..utilities.operation_utils import get_layers
+from ..utilities.operation_utils import (
+    get_layers,
+    get_move_and_spin,
+)
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.shapely_utils import shapely_to_chunks
 from ..utilities.silhouette_utils import get_operation_silhouette
@@ -19,6 +22,8 @@ async def outline_fill(o):
     log.info("~ Strategy: Outline Fill ~")
 
     get_operation_silhouette(o)
+
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
 
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
@@ -98,9 +103,7 @@ async def outline_fill(o):
     for chunk in pathchunks:
         if o.movement.insideout == "OUTSIDEIN":
             chunk.reverse()
-        if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (
-            o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"
-        ):
+        if climb_CW or conventional_CCW:
             chunk.reverse()
 
     pathSamples = chunks_refine(pathchunks, o)

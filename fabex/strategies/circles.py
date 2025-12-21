@@ -17,7 +17,10 @@ from ..utilities.chunk_utils import (
     sample_chunks,
 )
 from ..utilities.logging_utils import log
-from ..utilities.operation_utils import get_layers
+from ..utilities.operation_utils import (
+    get_layers,
+    get_move_and_spin,
+)
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.simple_utils import progress
 
@@ -40,6 +43,7 @@ async def circles(o):
     chunk.points.append((midx, midy, zlevel))
     pathSamples.append(chunk.to_chunk())
     r = 0
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
 
     while r < maxr:
         r += pathd
@@ -88,9 +92,7 @@ async def circles(o):
     for chunk in pathSamples:
         if o.movement.insideout == "OUTSIDEIN":
             chunk.reverse()
-        if (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW") or (
-            o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW"
-        ):
+        if conventional_CW or climb_CCW:
             chunk.reverse()
 
     pathSamples = await connect_chunks_low(pathSamples, o)

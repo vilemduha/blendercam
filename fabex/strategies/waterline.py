@@ -16,7 +16,10 @@ from ..utilities.image_shapely_utils import image_to_shapely
 from ..utilities.image_utils import prepare_area
 from ..utilities.logging_utils import log
 from ..utilities.waterline_utils import oclGetWaterline
-from ..utilities.operation_utils import get_ambient
+from ..utilities.operation_utils import (
+    get_ambient,
+    get_move_and_spin,
+)
 from ..utilities.parent_utils import parent_child_distance
 from ..utilities.shapely_utils import shapely_to_chunks
 from ..utilities.async_utils import progress_async
@@ -25,14 +28,15 @@ from ..utilities.async_utils import progress_async
 async def waterline(o):
     log.info("~ Strategy: Waterline ~")
 
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+
     if o.optimisation.use_opencamlib:
         get_ambient(o)
         chunks = []
         await oclGetWaterline(o, chunks)
         chunks = limit_chunks(chunks, o)
-        if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (
-            o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"
-        ):
+
+        if climb_CW or conventional_CCW:
             for ch in chunks:
                 ch.reverse()
 
@@ -57,7 +61,6 @@ async def waterline(o):
         nslices = ceil(abs((o.min_z - o.max_z) / o.slice_detail))
         lastslice = Polygon()  # polyversion
         layerstepinc = 0
-
         slicesfilled = 0
         get_ambient(o)
 
@@ -66,6 +69,7 @@ async def waterline(o):
             slicechunks = []
             # lower the layer by the skin value so the slice gets done at the tip of the tool
             z = o.min_z + h * o.slice_detail - o.skin
+
             if h == 0:
                 z += 0.0000001
                 # if people do mill flat areas, this helps to reach those...
@@ -73,7 +77,6 @@ async def waterline(o):
 
             islice = o.offset_image > z
             slicepolys = image_to_shapely(o, islice, with_border=True)
-
             poly = Polygon()  # polygversion
             lastchunks = []
 
@@ -83,6 +86,7 @@ async def waterline(o):
                 nchunks = limit_chunks(nchunks, o, force=True)
                 lastchunks.extend(nchunks)
                 slicechunks.extend(nchunks)
+
             if len(slicepolys.geoms) > 0:
                 slicesfilled += 1
 
@@ -111,7 +115,6 @@ async def waterline(o):
                         -o.distance_between_paths,
                         resolution=o.optimisation.circle_detail,
                     )
-
                     fillz = z
                     i = 0
 
@@ -173,17 +176,19 @@ async def waterline(o):
                 await progress_async("Waterline Layers", percent)
                 lastslice = poly
 
-            if (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW") or (
-                o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW"
-            ):
+            if conventional_CCW or climb_CW:
                 for chunk in slicechunks:
                     chunk.reverse()
+
             slicechunks = await sort_chunks(slicechunks, o)
+
             if topdown:
                 slicechunks.reverse()
-            # project chunks in between
 
+            # project chunks in between
             chunks.extend(slicechunks)
+
         if topdown:
             chunks.reverse()
+
         chunks_to_mesh(chunks, o)

@@ -19,6 +19,7 @@ from .image_utils import (
     prepare_area,
 )
 from .logging_utils import log
+from .operation_utils import get_move_and_spin
 from .parent_utils import (
     parent_child_distance,
 )
@@ -47,6 +48,7 @@ def crazy_stroke_image(o):
 
     # this surprisingly works, and can be used as a basis for something similar to adaptive milling strategy.
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
 
     r = int((o.cutter_diameter / 2.0) / o.optimisation.pixsize)
     d = 2 * r
@@ -97,15 +99,11 @@ def crazy_stroke_image(o):
     testangleinit = 0
     angleincrement = 0.05
 
-    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW") or (
-        o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW"
-    ):
+    if climb_CCW or conventional_CW:
         anglerange = [-pi, 0]
         testangleinit = 1
         angleincrement = -angleincrement
-    elif (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW") or (
-        o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW"
-    ):
+    elif conventional_CCW or climb_CW:
         anglerange = [0, pi]
         testangleinit = -1
         angleincrement = angleincrement
@@ -271,6 +269,7 @@ def crazy_stroke_image_binary(o, ar, avoidar):
     # if somewhere the cutter load is appropriate - it is correct magnitude and side, continue in that directon
     # try to continue straight or around that, looking
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
     # TODO this should be somewhere else, but here it is now to get at least some ambient for start of the operation.
     ar[: o.borderwidth, :] = 0
     ar[-o.borderwidth :, :] = 0
@@ -336,15 +335,11 @@ def crazy_stroke_image_binary(o, ar, avoidar):
     testangleinit = 0
     angleincrement = o.crazy_threshold_4
 
-    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW") or (
-        o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW"
-    ):
+    if climb_CCW or conventional_CW:
         anglerange = [-pi, 0]
         testangleinit = anglelimit
         angleincrement = -angleincrement
-    elif (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW") or (
-        o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW"
-    ):
+    elif conventional_CCW or climb_CW:
         anglerange = [0, pi]
         testangleinit = -anglelimit
         angleincrement = angleincrement
@@ -355,13 +350,12 @@ def crazy_stroke_image_binary(o, ar, avoidar):
         testangle = testangleinit
         testleftright = False
         testlength = r
-
         foundsolutions = []
+
         while not success:
             xs = int(nchunk.points[-1][0] + testvect.x)
             ys = int(nchunk.points[-1][1] + testvect.y)
-            # print(xs,ys,ar.shape)
-            # print(d)
+
             if (
                 xs > r + margin
                 and xs < ar.shape[0] - r - margin
@@ -376,7 +370,6 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                     cx = cindices[0].sum() / eatpix
                     cy = cindices[1].sum() / eatpix
                     v = Vector((cx - r, cy - r))
-                    # print(testvect.length,testvect)
 
                     if v.length != 0:
                         angle = testvect.to_2d().angle_signed(v)
@@ -386,7 +379,6 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                         ) or (eatpix > 0 and totpix < startpix * 0.025):
                             # this could be righthanded milling?
                             # lets see :)
-                            # print(xs,ys,angle)
                             foundsolutions.append([testvect.copy(), eatpix])
                             # or totpix < startpix*0.025:
                             if len(foundsolutions) >= 10:
@@ -433,9 +425,9 @@ def crazy_stroke_image_binary(o, ar, avoidar):
                 else:  # climb/conv.
                     testangle += angleincrement
 
-                if (abs(testangle) > o.crazy_threshold_3 and len(nchunk.points) > 1) or abs(
-                    testangle
-                ) > 2 * pi:
+                if (abs(testangle) > o.crazy_threshold_3 and len(nchunk.points) > 1) or (
+                    abs(testangle) > 2 * pi
+                ):
                     testangle = testangleinit
                     testlength += r / 4.0
 

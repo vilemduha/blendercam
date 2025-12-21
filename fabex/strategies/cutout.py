@@ -18,6 +18,7 @@ from ..utilities.logging_utils import log
 from ..utilities.operation_utils import (
     check_min_z,
     get_layers,
+    get_move_and_spin,
 )
 from ..utilities.parent_utils import parent_child_poly
 from ..utilities.shapely_utils import shapely_to_chunks
@@ -142,12 +143,9 @@ async def cutout(o):
     if o.outlines_count == 1:
         chunks_from_curve = await sort_chunks(chunks_from_curve, o)
 
-    move_type = o.movement.type
-    spin = o.movement.spindle_rotation
-    climb_ccw = move_type == "CLIMB" and spin == "CCW"
-    conventional_cw = move_type == "CONVENTIONAL" and spin == "CW"
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
 
-    if climb_ccw or conventional_cw:
+    if climb_CCW or conventional_CW:
         [chunk.reverse() for chunk in chunks_from_curve]
 
     # For simplicity, reverse once again when Inside cutting

@@ -42,6 +42,7 @@ from .utilities.index_utils import (
 )
 from .utilities.logging_utils import log
 from .utilities.operation_utils import (
+    get_operation_axes,
     get_operation_sources,
     get_change_data,
     check_memory_limit,
@@ -65,7 +66,6 @@ async def get_path(context, operation):
             attributes such as machine_axes, strategy, and
             auto_export.
     """
-    # should do all path calculations.
     t = time.process_time()
 
     if operation.feedrate > context.scene.cam_machine.feedrate_max:
@@ -73,7 +73,6 @@ async def get_path(context, operation):
 
     # these tags are for caching of some of the results. Not working well still
     # - although it can save a lot of time during calculation...
-
     chd = get_change_data(operation)
 
     if operation.change_data != chd:  # or 1:
@@ -85,17 +84,10 @@ async def get_path(context, operation):
     operation.update_ambient_tag = True
     operation.update_bullet_collision_tag = True
 
-    o = operation
-
-    three_axis = o.machine_axes == "3"
-    four_axis = o.machine_axes == "4"
-    five_axis = o.machine_axes == "5"
-
-    indexed_four_axis = four_axis and o.strategy_4_axis == "INDEXED"
-    indexed_five_axis = five_axis and o.strategy_5_axis == "INDEXED"
-
+    three_axis, four_axis, five_axis, indexed_four_axis, indexed_five_axis = get_operation_axes(
+        o=operation
+    )
     get_operation_sources(operation)
-
     operation.info.warnings = ""
     check_memory_limit(operation)
 

@@ -12,7 +12,10 @@ from ..utilities.chunk_utils import (
     sample_chunks,
 )
 from ..utilities.logging_utils import log
-from ..utilities.operation_utils import get_layers
+from ..utilities.operation_utils import (
+    get_layers,
+    get_move_and_spin,
+)
 from ..utilities.simple_utils import progress
 
 
@@ -33,6 +36,8 @@ async def block(o):
     incy = 0
     chunk = CamPathChunkBuilder([])
     i = 0
+
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
 
     while maxxp - minxp > 0 and maxyp - minyp > 0:
         y = minyp
@@ -73,9 +78,8 @@ async def block(o):
 
     if o.movement.insideout == "INSIDEOUT":
         chunk.points.reverse()
-    if (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CW") or (
-        o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CCW"
-    ):
+
+    if climb_CW or conventional_CCW:
         for si in range(0, len(chunk.points)):
             s = chunk.points[si]
             chunk.points[si] = (o.max.x + o.min.x - s[0], s[1], s[2])

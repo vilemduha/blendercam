@@ -9,7 +9,10 @@ from math import pi
 import numpy as np
 
 import bpy
-from mathutils import Euler, Vector
+from mathutils import (
+    Euler,
+    Vector,
+)
 
 from ..chunk_builder import (
     CamPathChunk,
@@ -17,7 +20,11 @@ from ..chunk_builder import (
 )
 from ..ui.icons import preview_collections
 from .logging_utils import log
-from .orient_utils import add_orientation_object, remove_orientation_object
+from .operation_utils import get_move_and_spin
+from .orient_utils import (
+    add_orientation_object,
+    remove_orientation_object,
+)
 from .silhouette_utils import silhouette_offset
 from .simple_utils import progress
 
@@ -366,6 +373,10 @@ def parallel_pattern(o, angle):
     e = Euler((0, 0, angle))
     reverse = False
 
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    meander_reverse = reverse and o.movement.type == "MEANDER"
+    step_back_reverse = reverse and o.movement.parallel_step_back
+
     # Original pattern method, slower, but well tested
     # bpy.app.debug_value has a default value of 0 (False), so
     # this check will always pass unless Blender is launched
@@ -382,32 +393,26 @@ def parallel_pattern(o, angle):
             v.rotate(e)
             # shifting for the rotation, so pattern rotates around middle...
             v += vm
+
             for b in range(int(-dim / pathstep), int(dim / pathstep)):
                 v += dirvect
 
                 if o.min.x < v.x < o.max.x and o.min.y < v.y < o.max.y:
                     chunk.points.append((v.x, v.y, zlevel))
-            if (
-                (reverse and o.movement.type == "MEANDER")
-                or (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW")
-                or (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW")
-            ):
+
+            if meander_reverse or conventional_CW or climb_CCW:
                 chunk.points.reverse()
 
             if len(chunk.points) > 0:
                 pathchunks.append(chunk.to_chunk())
-            if (
-                len(pathchunks) > 1
-                and reverse
-                and o.movement.parallel_step_back
-                and not o.use_layers
-            ):
-                # parallel step back - for finishing, best with climb movement, saves cutter life by going into
-                # material with climb, while using move back on the surface to improve finish
-                # (which would otherwise be a conventional move in the material)
 
+            # parallel step back - for finishing, best with climb movement, saves cutter life by going into
+            # material with climb, while using move back on the surface to improve finish
+            # (which would otherwise be a conventional move in the material)
+            if len(pathchunks) > 1 and step_back_reverse and not o.use_layers:
                 if o.movement.type == "CONVENTIONAL" or o.movement.type == "CLIMB":
                     pathchunks[-2].reverse()
+
                 changechunk = pathchunks[-1]
                 pathchunks[-1] = pathchunks[-2]
                 pathchunks[-2] = changechunk
@@ -421,7 +426,6 @@ def parallel_pattern(o, angle):
         e1 = Euler((0, 0, -pi / 2))
         v1 = v.copy()
         v1.rotate(e1)
-
         axis_across_paths = np.array(
             (
                 np.arange(int(-dim / pathd), int(dim / pathd)) * pathd * v1.x + xm,
@@ -429,7 +433,6 @@ def parallel_pattern(o, angle):
                 np.arange(int(-dim / pathd), int(dim / pathd)) * 0,
             )
         )
-
         axis_along_paths = np.array(
             (
                 np.arange(int(-dim / pathstep), int(dim / pathstep)) * pathstep * v.x,
@@ -467,9 +470,6 @@ def parallel_pattern(o, angle):
             )
             chunks.append(nax.swapaxes(0, 1))
 
-        pathchunks = []
-        for ch in chunks:
-            ch = ch.tolist()
-            pathchunks.append(CamPathChunk(ch))
+        pathchunks = [CamPathChunk(chunk.tolist()) for chunk in chunks]
 
     return pathchunks

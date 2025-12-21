@@ -12,7 +12,10 @@ from ..utilities.chunk_utils import (
     sample_chunks_n_axis,
 )
 from ..utilities.logging_utils import log
-from ..utilities.operation_utils import get_layers
+from ..utilities.operation_utils import (
+    get_layers,
+    get_move_and_spin,
+)
 from ..utilities.simple_utils import progress
 
 
@@ -35,9 +38,12 @@ async def parallel_four_axis(o):
     """
 
     log.info("~ Strategy: Parallel 4 Axis ~")
+
     minx, miny, minz, maxx, maxy, maxz = o.min.x, o.min.y, o.min.z, o.max.x, o.max.y, o.max.z
     pathchunks = []
-    zlevel = 1  # minz#this should do layers...
+    zlevel = 1
+    climb_CW, climb_CCW, conventional_CW, conventional_CCW = get_move_and_spin(o)
+    meander_reverse = reverse and o.movement.type == "MEANDER"
 
     # set axes for various options, Z option is obvious nonsense now.
     if o.rotary_axis_1 == "X":
@@ -140,21 +146,15 @@ async def parallel_four_axis(o):
             chunk.depth = radiusend - radius
             pathchunks.append(chunk)
 
-            if (
-                (reverse and o.movement.type == "MEANDER")
-                or (o.movement.type == "CONVENTIONAL" and o.movement.spindle_rotation == "CW")
-                or (o.movement.type == "CLIMB" and o.movement.spindle_rotation == "CCW")
-            ):
+            if meander_reverse or conventional_CW or climb_CCW:
                 chunk.reverse()
 
             reverse = not reverse
 
     path_samples = pathchunks
-
     depth = path_samples[0].depth
     chunks = []
-
     layers = get_layers(o, 0, depth)
-
     chunks.extend(await sample_chunks_n_axis(o, path_samples, layers))
+
     chunks_to_mesh(chunks, o)
