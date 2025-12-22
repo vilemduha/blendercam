@@ -75,25 +75,25 @@ async def medial_axis(o):
     new_cutter_diameter = o.cutter_diameter
     m_o_ob = o.object_name
 
-    # Start the Max Depth calc from the "Start Depth" of the Operation.
-    # Don't cut any deeper than the "End Depth" of the Operation.
-    # The effective Cutter Diameter can be reduced from it's max
-    # since we will be cutting shallower than the original `max_depth`
-    # without this, the Curve is calculated as if the diameter was at
-    # the original `max_depth` and we get the bit pulling away from the
-    # desired cut surface
-    max_depth = (
-        -new_cutter_diameter / 2 - o.skin
-        if o.cutter_type == "BALLNOSE"
-        else (
-            o.max_z - slope * o.cutter_diameter / 2 - o.skin
-            if o.cutter_type == "VCARVE"
-            else o.min_z if max_depth < o.min_z else None
-        )
-    )
-
-    if max_depth is None:
+    if o.cutter_type == "VCARVE":
+        # start the max depth calc from the "start depth" of the operation.
+        max_depth = o.max_z - slope * o.cutter_diameter / 2 - o.skin
+        # don't cut any deeper than the "end depth" of the operation.
+        if max_depth < o.min_z:
+            max_depth = o.min_z
+            # the effective cutter diameter can be reduced from it's max
+            # since we will be cutting shallower than the original max_depth
+            # without this, the curve is calculated as if the diameter was at the original max_depth and we get the bit
+            # pulling away from the desired cut surface
+            new_cutter_diameter = (max_depth - o.max_z) / (-slope) * 2
+    elif o.cutter_type == "BALLNOSE":
+        max_depth = -new_cutter_diameter / 2 - o.skin
+    else:
         raise CamException("Only Ballnose and V-carve Cutters Are Supported for Medial Axis.")
+
+    # remember resolutions of curves, to refine them,
+    # otherwise medial axis computation yields too many branches in curved parts
+    resolutions_before = []
 
     for ob in o.objects:
         if ob.type == "CURVE":
@@ -103,37 +103,29 @@ async def medial_axis(o):
             else:
                 bpy.ops.object.curve_remove_doubles()
 
-    # remember resolutions of curves, to refine them,
-    # otherwise medial axis computation yields too many branches in curved parts
-    resolutions_before = [
-        ob.data.resolution_u if ob.data.resolution_u < 64 else 64
-        for ob in o.objects
-        if ob.type in ["CURVE", "FONT"]
-    ]
+    for ob in o.objects:
+        if ob.type in ["CURVE", "FONT"]:
+            resolutions_before.append(ob.data.resolution_u)
+            if ob.data.resolution_u < 64:
+                ob.data.resolution_u = 64
 
     silhouette_polygon = get_operation_silhouette(o)
     silhouette_is_list = isinstance(silhouette_polygon, list)
     silhouette_is_multipolygon = isinstance(silhouette_polygon, MultiPolygon)
 
-    multipolygon = (
-        silhouette_polygon
-        if silhouette_is_multipolygon
-        else (
-            silhouette_polygon[0]
-            if silhouette_is_list
-            and len(silhouette_polygon) == 1
-            and isinstance(silhouette_polygon[0], MultiPolygon)
-            else MultiPolygon(silhouette_polygon) if silhouette_is_list else None
-        )
-    )
-
-    if multipolygon is None:
+    if silhouette_is_list:
+        if len(silhouette_polygon) == 1 and isinstance(silhouette_polygon[0], MultiPolygon):
+            multipolygon = silhouette_polygon[0]
+        else:
+            multipolygon = MultiPolygon(silhouette_polygon)
+    elif silhouette_is_multipolygon:
+        # just a multipolygon
+        multipolygon = silhouette_polygon
+    else:
         raise CamException("Failed Getting Object Silhouette. Is Input Curve Closed?")
 
     multipolygon_boundary = multipolygon.boundary
     multipolygon_geometry = multipolygon.geoms
-
-    vertices = []
 
     for polygon_index, polygon in enumerate(multipolygon_geometry):
         polygon_index += 1
@@ -145,8 +137,7 @@ async def medial_axis(o):
             o.medial_axis_threshold,
         )
 
-        # chunk_points = [chunk.get_points() for chunk in silhouette_chunks]
-        # vertices = [point for point in chunk_points]
+        vertices = []
 
         for chunk in silhouette_chunks:
             vertices.extend(chunk.get_points())
@@ -184,14 +175,13 @@ async def medial_axis(o):
             formatOutput=True,
         )
 
+        vertr = []
+        filtered_points = []
+
         log.info("Filtering Points...")
 
         newIdx = 0
         point_count = len(points)
-        vertr = [
-            (True, -1) if polygon.contains(Point(point)) else (False, newIdx) for point in points
-        ]
-        filtered_points = []
 
         for point_index, point in enumerate(points):
             point_index += 1
@@ -203,43 +193,56 @@ async def medial_axis(o):
                 sys.stdout.write(prog_message)
                 sys.stdout.flush()
 
-            if o.cutter_type == "VCARVE":
-                # start the z depth calc from the "start depth" of the operation.
-                z = o.max_z - multipolygon.boundary.distance(Point(point)) * slope
-                z = max_depth if z < max_depth else z
-
-            elif o.cutter_type == "BALL" or o.cutter_type == "BALLNOSE":
-                d = multipolygon_boundary.distance(Point(point))
-                r = new_cutter_diameter / 2.0
-                z = -r if d >= r else -r + sqrt(r * r - d * d)
+            if not polygon.contains(Point(point)):
+                vertr.append((True, -1))
             else:
-                z = 0
+                vertr.append((False, newIdx))
 
-            filtered_points.append((point[0], point[1], z))
-            newIdx += 1
+                if o.cutter_type == "VCARVE":
+                    # start the z depth calc from the "start depth" of the operation.
+                    z = o.max_z - multipolygon.boundary.distance(Point(point)) * slope
+                    z = max_depth if z < max_depth else z
+
+                elif o.cutter_type == "BALL" or o.cutter_type == "BALLNOSE":
+                    d = multipolygon_boundary.distance(Point(point))
+                    r = new_cutter_diameter / 2.0
+
+                    if d >= r:
+                        z = -r
+                    else:
+                        z = -r + sqrt(r * r - d * d)
+                else:
+                    z = 0  #
+
+                filtered_points.append((point[0], point[1], z))
+                newIdx += 1
 
         log.info("-")
         log.info("Filtering Edges...")
         log.info("-")
 
-        filtered_edges = [
-            (
-                vertr[edge[0]][1],
-                vertr[edge[1]][1],
-            )
-            for edge in edges
-            if not vertr[edge[0]][0] and not vertr[edge[1]][0]
-        ]
-        line_edges = [
-            LineString(
-                (
-                    filtered_points[vertr[edge[0]][1]],
-                    filtered_points[vertr[edge[1]][1]],
+        filtered_edges = []
+        line_edges = []
+
+        for edge in edges:
+            # Exclude Edges with already excluded Points
+            do = False if vertr[edge[0]][0] or vertr[edge[1]][0] else True
+
+            if do:
+                filtered_edges.append(
+                    (
+                        vertr[edge[0]][1],
+                        vertr[edge[1]][1],
+                    )
                 )
-            )
-            for edge in edges
-            if not vertr[edge[0]][0] and not vertr[edge[1]][0]
-        ]
+                line_edges.append(
+                    LineString(
+                        (
+                            filtered_points[vertr[edge[0]][1]],
+                            filtered_points[vertr[edge[1]][1]],
+                        )
+                    )
+                )
 
         polygon_buffer = polygon.buffer(-new_cutter_diameter / 2, resolution=64)
         lines = linemerge(line_edges)
@@ -267,26 +270,17 @@ async def medial_axis(o):
         o.max_z,
         o.min.z,
     )
-    chunk_layers = (
-        await sort_chunks(chunk_layers, o)
-        if o.first_down
-        else [
-            chunk.copy().clamp_z(layer[1])
-            for chunk in chunks
-            for layer in layers
-            if chunk.is_below_z(layer[0])
-        ]
-    )
+    chunk_layers = []
 
-    # for layer in layers:
-    #     for chunk in chunks:
-    #         if chunk.is_below_z(layer[0]):
-    #             new_chunk = chunk.copy()
-    #             new_chunk.clamp_z(layer[1])
-    #             chunk_layers.append(new_chunk)
+    for layer in layers:
+        for chunk in chunks:
+            if chunk.is_below_z(layer[0]):
+                new_chunk = chunk.copy()
+                new_chunk.clamp_z(layer[1])
+                chunk_layers.append(new_chunk)
 
-    # if o.first_down:
-    #     chunk_layers = await sort_chunks(chunk_layers, o)
+    if o.first_down:
+        chunk_layers = await sort_chunks(chunk_layers, o)
 
     if o.add_mesh_for_medial:  # make curve instead of a path
         join_multiple("medialMesh")
