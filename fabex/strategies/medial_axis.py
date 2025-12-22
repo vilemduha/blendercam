@@ -273,10 +273,20 @@ async def medial_axis(o):
         else [
             chunk.copy().clamp_z(layer[1])
             for chunk in chunks
-            if chunk.is_below_z(layer[0])
             for layer in layers
+            if chunk.is_below_z(layer[0])
         ]
     )
+
+    # for layer in layers:
+    #     for chunk in chunks:
+    #         if chunk.is_below_z(layer[0]):
+    #             new_chunk = chunk.copy()
+    #             new_chunk.clamp_z(layer[1])
+    #             chunk_layers.append(new_chunk)
+
+    # if o.first_down:
+    #     chunk_layers = await sort_chunks(chunk_layers, o)
 
     if o.add_mesh_for_medial:  # make curve instead of a path
         join_multiple("medialMesh")
