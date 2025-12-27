@@ -28,15 +28,25 @@ jobs:
         from pathlib import Path
         import re
         import os
-        v_file=Path("scripts","addons","fabex","version.py")
+
+        # Path to the file with the version number
+        v_file=Path("fabex","version.py")
         version_txt=v_file.read_text()
+
+        # Separate each number in the version into its own variable
         major,minor,patch = re.match(r".*\(\s*(\d+),(\s*\d+),(\s*\d+)\)",version_txt).groups()
+
+        # Convert from String to Integer to add numbers
         major=int(major)
         minor=int(minor)
         patch=int(patch)
+
+        # Get the release type - patch, minor or major
         bump = os.getenv("VERSION_BUMP")
-        if bump == "minor":
-          minor+=1
+
+        # Increase the version and clear lower numbers
+        # When a minor version is released, patch is reset to zero
+        # For a major version, patch and minor are both reset
         if bump=='patch':
           patch+=1
         elif bump=='minor':
@@ -46,23 +56,30 @@ jobs:
           major+=1
           minor=0
           patch=0
+
+        # Write the new number to the version file
         v_file.write_text(f"__version__=({major},{minor},{patch})")
-        # update in bl_info structure (which can't be dynamic because blender...)
-        toml_file=Path("scripts","addons","fabex","blender_manifest.toml")
+
+        # Update in blender_manifest for Blender to read
+        toml_file=Path("fabex","blender_manifest.toml")
         toml_text=toml_file.read_text()
         version_regex= r'version\s=\s"[0-9]+\.[0-9]+\.[0-9]+"'
         toml_text = re.sub(version_regex,f'version = "{major}.{minor}.{patch}"',toml_text)
         toml_file.write_text(toml_text)
-        
+
+        # Write the version number to an env file for the 'make release' action
         env_file = Path(os.getenv('GITHUB_ENV'))  
         env_file.write_text(f"VERSION_TAG={major}.{minor}.{patch}")
+
         print(f"New version: {major}.{minor}.{patch}")
     - name: Make addon zip
       uses: thedoctor0/zip-release@0.7.5
       with:
         type: 'zip'
         filename: 'fabexcnc.zip'
-        directory: './scripts/addons'
+        directory: './'
+        path: 'fabex'
+        exclusions: '/*docs/* /*tests/*'
     - name: Write version number
       if: ${{ inputs.version_bump }} != "overwrite previous tag"
       run: |
@@ -77,7 +94,7 @@ jobs:
     - name: make release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "scripts/addons/fabexcnc.zip"
+        artifacts: "fabexcnc.zip"
         tag: ${{ env.VERSION_TAG }}
         allowUpdates: true
-        body: "To install FabexCNC extension for Blender, download fabexcnc.zip and *don't* extract it. In Blender, go to Preferences, Get Extensions, and select 'Install from Disk' and select the CNCCAM.zip file you downloaded"
+        bodyFile: './docs/RELEASE.md'
