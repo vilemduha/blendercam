@@ -77,7 +77,7 @@ async def curve(o):
         for chunk_layer in chunk_copies:
             chunk = chunk_layer[0]
             layer = chunk_layer[1]
-            chunk.offset_z(o.max_z * 2 - o.min_z + layer[1])
+            chunk.clamp_z(layer[1])
             # Limit Cut Depth to Operation Z Minimum
             chunk.clamp_z(o.min_z)
             # Limit Cut Height to Operation Safe Height
