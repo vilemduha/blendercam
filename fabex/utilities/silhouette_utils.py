@@ -1,4 +1,4 @@
-import time
+import time, bmesh
 
 import numpy as np
 from shapely.ops import unary_union
@@ -87,11 +87,13 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
     Returns:
         shapely.geometry.MultiPolygon: The computed silhouette as a Shapely MultiPolygon.
     """
-
+    # --- ADDED ---
+    allchunks = []
+    # ---------------
     log.info(f"Silhouette Type: {stype}")
 
     if stype == "CURVES":  # curve conversion to polygon format
-        allchunks = []
+        # allchunks = []
 
         for ob in objects:
             chunks = curve_to_chunks(ob)
@@ -101,15 +103,40 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
 
     elif stype == "OBJECTS":
         totfaces = 0
-
+        polys = []  # moved here EH
         for ob in objects:
-            totfaces += len(ob.data.polygons)
+            # --- ADDED EH---
+            if ob.type == "MESH" and len(ob.data.polygons) == 0:
+                # If the mesh has edges but no faces (like a default circle)
+                bm = bmesh.new()
+                bm.from_mesh(ob.data)
+
+                # Try to create a face from the existing edges
+                # edgeloop_fill is great for circles
+                bmesh.ops.edgeloop_fill(bm, edges=bm.edges)
+
+                # Now use this temporary 'filled' bmesh for your silhouette
+                # instead of the empty ob.data
+                mw = ob.matrix_world
+                for face in bm.faces:
+                    s = [(mw @ v.co).xy for v in face.verts]
+                    if len(s) > 2:
+                        p = Polygon(s)
+                        if p.is_valid:
+                            polys.append(p.buffer(0.000001))
+                bm.free()
+            elif ob.type == "CURVE":
+                chunks = curve_to_chunks(ob)
+                allchunks.extend(chunks)
+                # ---------------END EH------------
+            else:
+                totfaces += len(ob.data.polygons)
 
         if totfaces < 20000000:
             # boolean polygons method originaly was 20 000 poly limit, now limitless,
             t = time.time()
             log.info("Shapely Getting Silhouette")
-            polys = []
+            # polys = [] #removed EH
 
             for ob in objects:
                 log.info(f"Object: {ob.name}")
@@ -176,9 +203,38 @@ def get_object_silhouette(stype, objects=None, use_modifiers=False):
             log.info(f"Time: {time.time() - t}")
 
             t = time.time()
-            silhouette = shapely_to_multipolygon(p)
+            # --- FIX STARTS HERE EH---
+            # Ensure p is a MultiPolygon before passing it on
+            p_multi = ensure_multipolygon(p)
+            mp1 = shapely_to_multipolygon(p_multi)
+
+            # Do the same for mp2 just in case chunks_to_shapely returns a Polygon
+            mp2_raw = chunks_to_shapely(allchunks)
+            mp2 = ensure_multipolygon(mp2_raw)
+
+            # The union of two MultiPolygons can still result in a single Polygon
+            # so we wrap the final result as well.
+            result = mp1.union(mp2)
+            silhouette = ensure_multipolygon(result)
+            # --- FIX ENDS HERE EH---
 
     return silhouette
+
+
+# --- ADDED HELPER EH---
+def ensure_multipolygon(geom):
+    """Ensures a geometry is a MultiPolygon, even if it is a single Polygon."""
+    if geom.is_empty:
+        return MultiPolygon()
+    if isinstance(geom, Polygon):
+        return MultiPolygon([geom])
+    if isinstance(geom, MultiPolygon):
+        return geom
+    # Handle GeometryCollections (extract only polygons)
+    if hasattr(geom, "geoms"):
+        polys = [g for g in geom.geoms if isinstance(g, (Polygon, MultiPolygon))]
+        return MultiPolygon(polys)
+    return MultiPolygon()
 
 
 def get_operation_silhouette(operation):

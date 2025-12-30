@@ -101,6 +101,8 @@ class CamPathChunk:
 
     def shift(self, x, y, z):
         self.points = self.points + np.array([x, y, z])
+        # self.startpoints = [(p[0] + x, p[1] + y, p[2] + z) for p in self.startpoints]
+        # self.endpoints = [(p[0] + x, p[1] + y, p[2] + z) for p in self.endpoints]
         for i, p in enumerate(self.startpoints):
             self.startpoints[i] = (p[0] + x, p[1] + y, p[2] + z)
         for i, p in enumerate(self.endpoints):
@@ -165,18 +167,36 @@ class CamPathChunk:
             self.update_poly()
         if other.poly is None:
             other.update_poly()
-        if not self.poly.is_empty and not other.poly.is_empty:
-            # both polygons have >2 points
-            # simplify them if they aren't already, to speed up distance finding
-            if self.simppoly is None:
-                self.simppoly = self.poly.simplify(0.0003).boundary
-            if other.simppoly is None:
-                other.simppoly = other.poly.simplify(0.0003).boundary
-            return self.simppoly.distance(other.simppoly)
-        else:  # this is the old method, preferably should be replaced in most cases except parallel
-            # where this method works probably faster.
-            # print('warning, sorting will be slow due to bad parenting in parentChildDist')
-            return _internal_x_y_distance_to(self.points, other.points, cutoff)
+
+        self.simppoly = (
+            self.poly.simplify(0.0003).boundary
+            if self.simppoly is None and not self.poly.is_empty
+            else self.simppoly
+        )
+        other.simppoly = (
+            other.poly.simplify(0.0003).boundary
+            if other.simppoly is None and not other.poly.is_empty
+            else other.simppoly
+        )
+
+        return (
+            _internal_x_y_distance_to(self.points, other.points, cutoff)
+            if self.poly.is_empty and other.poly.is_empty
+            else self.simppoly.distance(other.simppoly)
+        )
+
+        # if not self.poly.is_empty and not other.poly.is_empty:
+        #     # both polygons have >2 points
+        #     # simplify them if they aren't already, to speed up distance finding
+        #     if self.simppoly is None:
+        #         self.simppoly = self.poly.simplify(0.0003).boundary
+        #     if other.simppoly is None:
+        #         other.simppoly = other.poly.simplify(0.0003).boundary
+        #     return self.simppoly.distance(other.simppoly)
+        # else:  # this is the old method, preferably should be replaced in most cases except parallel
+        #     # where this method works probably faster.
+        #     # print('warning, sorting will be slow due to bad parenting in parentChildDist')
+        #     return _internal_x_y_distance_to(self.points, other.points, cutoff)
 
     def adapt_distance(self, pos, o):
         # reorders chunk so that it starts at the closest point to pos.
@@ -270,7 +290,12 @@ class CamPathChunk:
 
     def append(self, point, startpoint=None, endpoint=None, rotation=None, at_index=None):
         if at_index is None:
-            self.points = np.concatenate((self.points, np.array([point])))
+            self.points = np.concatenate(
+                (
+                    self.points,
+                    np.array([point]),
+                )
+            )
             if startpoint is not None:
                 self.startpoints.append(startpoint)
             if endpoint is not None:
@@ -279,7 +304,11 @@ class CamPathChunk:
                 self.rotations.append(rotation)
         else:
             self.points = np.concatenate(
-                (self.points[0:at_index], np.array([point]), self.points[at_index:])
+                (
+                    self.points[0:at_index],
+                    np.array([point]),
+                    self.points[at_index:],
+                )
             )
             if startpoint is not None:
                 self.startpoints[at_index:at_index] = [startpoint]
@@ -341,16 +370,20 @@ class CamPathChunk:
         while endpoint is None and not (znew == zend and i == 0):
             s = self.points[i]
 
-            if i > 0:
-                s2 = self.points[i - 1]
-                ltraveled += distance_2d(s, s2)
-                ratio = ltraveled / ramplength
-            elif rounds > 0 and i == 0:
-                s2 = self.points[-1]
-                ltraveled += distance_2d(s, s2)
-                ratio = ltraveled / ramplength
-            else:
-                ratio = 0
+            s2 = self.points[i - 1] if i > 0 else self.points[-1] if rounds > 0 and i == 0 else None
+            ltraveled += distance_2d(s, s2) if i > 0 or rounds > 0 and i == 0 else 0
+            ratio = ltraveled / ramplength if i > 0 or rounds > 0 and i == 0 else 0
+
+            # if i > 0:
+            #     s2 = self.points[i - 1]
+            #     ltraveled += distance_2d(s, s2)
+            #     ratio = ltraveled / ramplength
+            # elif rounds > 0 and i == 0:
+            #     s2 = self.points[-1]
+            #     ltraveled += distance_2d(s, s2)
+            #     ratio = ltraveled / ramplength
+            # else:
+            #     ratio = 0
 
             znew = zstart - stepdown * ratio
 
@@ -446,8 +479,6 @@ class CamPathChunk:
                 zigzaglength = ramplength / 2.000
                 turns = 1
 
-                log.info(f"Turns: {turns}")
-
                 if zigzaglength > self.length:
                     turns = ceil(zigzaglength / self.length)
                     ramplength = turns * self.length * 2.0
@@ -491,6 +522,8 @@ class CamPathChunk:
                     )
                 )
 
+                log.info(f"Turns: {turns}")
+
                 for r in range(turns):
                     for p in range(0, len(ramppoints)):
                         p1 = chunk_points[-1]
@@ -500,8 +533,8 @@ class CamPathChunk:
                         ratio = traveled / ramplength
                         znew = zstart - stepdown * ratio
                         # max value here is so that it doesn't go
-                        chunk_points.append((p2[0], p2[1], max(p2[2], znew)))
                         # below surface in the case of 3d paths
+                        chunk_points.append((p2[0], p2[1], max(p2[2], znew)))
 
                 chunk_points.extend(self.points.tolist())
 
@@ -521,8 +554,6 @@ class CamPathChunk:
                         ramplength = estlength
                         zigzaglength = ramplength / 2.000
                         turns = 1
-
-                        log.info(f"Turns: {turns}")
 
                         if zigzaglength > self.length:
                             turns = ceil(zigzaglength / self.length)
@@ -571,6 +602,8 @@ class CamPathChunk:
                         negramppoints.reverse()
                         ramppoints.extend(negramppoints[1:])
                         traveled = 0.0
+
+                        log.info(f"Turns: {turns}")
 
                         for r in range(turns):
                             for p in range(0, len(ramppoints)):

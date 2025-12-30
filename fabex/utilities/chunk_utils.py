@@ -476,10 +476,10 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                     cutter.rotation_euler.x += pi
 
                 cutter.update_tag()
-                # this has to be :( it resets the rigidbody world.
+                # # this has to be :( it resets the rigidbody world.
+                # # No other way to update it probably now :(
+                # # actually 2 frame jumps are needed.
                 bpy.context.scene.frame_set(1)
-                # No other way to update it probably now :(
-                # actually 2 frame jumps are needed.
                 bpy.context.scene.frame_set(2)
                 bpy.context.scene.frame_set(0)
 
@@ -972,9 +972,9 @@ async def sample_chunks(o, pathSamples, layers):
         chunks.extend(layerchunks[i])
     timing_add(totaltime)
 
-    log.info(f"Sampling Time: {samplingtime}")
-    log.info(f"Sorting Time: {sortingtime}")
-    log.info(f"Total Time: {totaltime}")
+    log.info(f"Sampling Time: {samplingtime[0]}")
+    log.info(f"Sorting Time: {sortingtime[0]}")
+    log.info(f"Total Time: {totaltime[0]}")
     log.info("-")
 
     return chunks
