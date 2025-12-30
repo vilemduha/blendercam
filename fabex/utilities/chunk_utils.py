@@ -1083,18 +1083,18 @@ async def sort_chunks(chunks, o, last_pos=None):
 
     log.info("-")
 
-    if o.strategy != "WATERLINE":
-        await ("Sorting Paths", 100.0 * (total - len(chunks)) / total, "%")
     # the getNext() function of CamPathChunk was running out of recursion limits.
     sys.setrecursionlimit(100000)
     sortedchunks = []
     chunks_to_resample = []
-
     lastch = None
     last_progress_time = time.time()
     total = len(chunks)
     i = len(chunks)
     pos = (0, 0, 0) if last_pos is None else last_pos
+
+    if o.strategy != "WATERLINE":
+        await ("Sorting Paths", 100.0 * (total - len(chunks)) / total, "%")
 
     while len(chunks) > 0:
         if o.strategy != "WATERLINE" and time.time() - last_progress_time > 0.1:
