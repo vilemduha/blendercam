@@ -455,7 +455,7 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
             percent = int(100 * n / totlen)
 
             if percent != last_percent:
-                await progress_async("Sampling Paths", percent, "%")
+                await progress_async("Sampling Paths", percent)
                 last_percent = percent
 
             n += 1
@@ -798,7 +798,7 @@ async def sample_chunks(o, pathSamples, layers):
         for s, in_ambient in zip(our_points, ambient_contains):
             if o.strategy != "WATERLINE" and int(100 * n / totlen) != last_percent:
                 last_percent = int(100 * n / totlen)
-                await progress_async("Sampling Paths", last_percent, "%")
+                await progress_async("Sampling Paths", last_percent)
 
             n += 1
             x = s[0]
@@ -1083,22 +1083,22 @@ async def sort_chunks(chunks, o, last_pos=None):
 
     log.info("-")
 
+    if o.strategy != "WATERLINE":
+        await progress_async("Sorting Paths")
     # the getNext() function of CamPathChunk was running out of recursion limits.
     sys.setrecursionlimit(100000)
     sortedchunks = []
     chunks_to_resample = []
+
     lastch = None
     last_progress_time = time.time()
     total = len(chunks)
     i = len(chunks)
     pos = (0, 0, 0) if last_pos is None else last_pos
 
-    if o.strategy != "WATERLINE":
-        await ("Sorting Paths", 100.0 * (total - len(chunks)) / total, "%")
-
     while len(chunks) > 0:
         if o.strategy != "WATERLINE" and time.time() - last_progress_time > 0.1:
-            await progress_async("Sorting Paths", 100.0 * (total - len(chunks)) / total, "%")
+            await progress_async("Sorting Paths", 100.0 * (total - len(chunks)) / total)
             last_progress_time = time.time()
         ch = None
         if len(sortedchunks) == 0 or len(lastch.parents) == 0:
