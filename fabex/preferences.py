@@ -32,6 +32,29 @@ class CamAddonPreferences(AddonPreferences):
         default=False,
     )
 
+    wireframe_color: EnumProperty(
+        name="Wire Color Source",
+        description="Wireframe color comes from Object, Theme or a Random color",
+        items=[
+            (
+                "OBJECT",
+                "Object",
+                "Show object color on wireframe",
+            ),
+            (
+                "THEME",
+                "Theme",
+                "Show Scene wireframes with the theme's wire color",
+            ),
+            (
+                "RANDOM",
+                "Random",
+                "Show random object color on wireframe",
+            ),
+        ],
+        default="OBJECT",
+    )
+
     default_interface_level: EnumProperty(
         name="Interface Level in New File",
         description="Choose visible options",
@@ -320,6 +343,7 @@ class CamAddonPreferences(AddonPreferences):
         if panel:
             col = panel.column(align=True)
             col.label(text="Viewport")
+            col.prop(self, "wireframe_color")
             col.prop(machine, "wire_color", text="Machine Color")
             col.prop(material, "wire_color", text="Material Color")
             col.prop(machine, "path_color", text="Path Color")

@@ -40,7 +40,8 @@ def update_shading(self, context):
     shading = view3d.shading
     overlay = view3d.overlay
 
-    shading.wireframe_color_type = "OBJECT"
+    addon_prefs = context.preferences.addons[base_package].preferences
+    shading.wireframe_color_type = addon_prefs.wireframe_color
 
     if context.scene.interface.shading == "DEFAULT":
         shading.type = "SOLID"

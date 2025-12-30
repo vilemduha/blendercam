@@ -128,10 +128,9 @@ class CAM_OPERATION_Properties(PropertyGroup):
     geometry_source: EnumProperty(
         name="Data Source",
         items=(
-            ("OBJECT", "Object", "a"),
-            # Collections temporarily disabled until bugs can be fixed
-            # ("COLLECTION", "Collection of Objects", "a"),
-            ("IMAGE", "Image", "a"),
+            ("OBJECT", "Object", "a", "OBJECT_DATA", 0),
+            ("COLLECTION", "Collection", "a", "OUTLINER_COLLECTION", 1),
+            ("IMAGE", "Image", "a", "OUTLINER_OB_IMAGE", 2),
         ),
         description="Geometry source",
         default="OBJECT",

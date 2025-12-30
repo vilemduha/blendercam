@@ -42,6 +42,7 @@ from ..utilities.shapely_utils import (
 from ..utilities.simple_utils import (
     activate,
     add_to_group,
+    safe_filename,
 )
 from ..utilities.thread_utils import (
     threadCom,
@@ -330,7 +331,8 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         postprocessor = import_module(module, base_package)
         extension = processor_extension[m.post_processor][1]
 
-        name = operation.name if operation.link_operation_file_names else operation.filename
+        name_raw = operation.name if operation.link_operation_file_names else operation.filename
+        name = safe_filename(name_raw)
         basefilename = (
             bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))] + name + extension
         )
@@ -571,7 +573,9 @@ class PathExport(Operator):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
         path_name = s.cam_names.path_name_full
-        name = operation.name if operation.link_operation_file_names else operation.filename
+
+        name_raw = operation.name if operation.link_operation_file_names else operation.filename
+        name = safe_filename(name_raw)
 
         log.info(f"EXPORTING {name} {bpy.data.objects[path_name].data} {operation}")
 
