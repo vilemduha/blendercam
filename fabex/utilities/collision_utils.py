@@ -220,10 +220,12 @@ def prepare_bullet_collision(o):
     progress("~ Preparing Collisions ~")
 
     log.info(o.name)
+
     active_collection = bpy.context.view_layer.active_layer_collection.collection
     t = time.time()
     s = bpy.context.scene
     s.gravity = (0, 0, 0)
+
     # cleanup rigidbodies wrongly placed somewhere in the scene
     for ob in bpy.context.scene.objects:
         if ob.rigid_body is not None and (
@@ -238,19 +240,18 @@ def prepare_bullet_collision(o):
         collisionob.select_set(state=True)
         bpy.ops.object.duplicate(linked=False)
         collisionob = bpy.context.active_object
-        if (
-            collisionob.type == "CURVE" or collisionob.type == "FONT"
-        ):  # support for curve objects collision
+
+        if collisionob.type in ("CURVE", "FONT"):  # support for curve objects collision
             if collisionob.type == "CURVE":
                 odata = collisionob.data.dimensions
                 collisionob.data.dimensions = "2D"
+
             bpy.ops.object.convert(target="MESH", keep_original=False)
 
         if o.use_modifiers:
             depsgraph = bpy.context.evaluated_depsgraph_get()
             mesh_owner = collisionob.evaluated_get(depsgraph)
             newmesh = mesh_owner.to_mesh()
-
             oldmesh = collisionob.data
             collisionob.modifiers.clear()
             collisionob.data = bpy.data.meshes.new_from_object(
@@ -264,11 +265,11 @@ def prepare_bullet_collision(o):
         if o.optimisation.exact_subdivide_edges:
             subdivide_long_edges(collisionob, o.cutter_diameter * 2)
 
-        bpy.ops.rigidbody.object_add(type="ACTIVE")
         # using active instead of passive because of performance.TODO: check if this works also with 4axis...
+        # this fixed a serious bug and gave big speedup, rbs could move since they are now active...
+        bpy.ops.rigidbody.object_add(type="ACTIVE")
         collisionob.rigid_body.collision_shape = "MESH"
         collisionob.rigid_body.kinematic = True
-        # this fixed a serious bug and gave big speedup, rbs could move since they are now active...
         collisionob.rigid_body.collision_margin = o.skin * BULLET_SCALE
         bpy.ops.transform.resize(
             value=(BULLET_SCALE, BULLET_SCALE, BULLET_SCALE),
@@ -284,6 +285,7 @@ def prepare_bullet_collision(o):
         collisionob.location = collisionob.location * BULLET_SCALE
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         bpy.context.view_layer.objects.active = collisionob
+
         if active_collection in collisionob.users_collection:
             active_collection.objects.unlink(collisionob)
 
@@ -306,13 +308,10 @@ def prepare_bullet_collision(o):
             )
             ob.location = ob.location * BULLET_SCALE
 
-    # # stepping simulation so that objects are up to date
-    # bpy.context.scene.frame_set(0)
-    # bpy.context.scene.frame_set(1)
-    # bpy.context.scene.frame_set(2)
-
-    bpy.ops.rigidbody.world_remove()
-    bpy.ops.rigidbody.world_add()
+    # stepping simulation so that objects are up to date
+    bpy.context.scene.frame_set(0)
+    bpy.context.scene.frame_set(1)
+    bpy.context.scene.frame_set(2)
 
     progress(time.time() - t)
 
