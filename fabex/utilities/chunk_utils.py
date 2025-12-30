@@ -476,12 +476,14 @@ async def sample_chunks_n_axis(o, pathSamples, layers):
                     cutter.rotation_euler.x += pi
 
                 cutter.update_tag()
-                # this has to be :( it resets the rigidbody world.
-                bpy.context.scene.frame_set(1)
-                # No other way to update it probably now :(
-                # actually 2 frame jumps are needed.
-                bpy.context.scene.frame_set(2)
-                bpy.context.scene.frame_set(0)
+                # # this has to be :( it resets the rigidbody world.
+                # bpy.context.scene.frame_set(1)
+                # # No other way to update it probably now :(
+                # # actually 2 frame jumps are needed.
+                # bpy.context.scene.frame_set(2)
+                # bpy.context.scene.frame_set(0)
+                bpy.ops.rigidbody.world_remove()
+                bpy.ops.rigidbody.world_add()
 
             newsample = get_sample_bullet_n_axis(cutter, startp, endp, rotation, cutterdepth)
 

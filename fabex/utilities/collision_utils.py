@@ -305,10 +305,15 @@ def prepare_bullet_collision(o):
                 release_confirm=False,
             )
             ob.location = ob.location * BULLET_SCALE
-    # stepping simulation so that objects are up to date
-    bpy.context.scene.frame_set(0)
-    bpy.context.scene.frame_set(1)
-    bpy.context.scene.frame_set(2)
+
+    # # stepping simulation so that objects are up to date
+    # bpy.context.scene.frame_set(0)
+    # bpy.context.scene.frame_set(1)
+    # bpy.context.scene.frame_set(2)
+
+    bpy.ops.rigidbody.world_remove()
+    bpy.ops.rigidbody.world_add()
+
     progress(time.time() - t)
 
 
