@@ -330,10 +330,9 @@ class CalculatePath(Operator, AsyncOperatorMixin):
         postprocessor = import_module(module, base_package)
         extension = processor_extension[m.post_processor][1]
 
+        name = operation.name if operation.link_operation_file_names else operation.filename
         basefilename = (
-            bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))]
-            + operation.filename
-            + extension
+            bpy.data.filepath[: -len(bpy.path.basename(bpy.data.filepath))] + name + extension
         )
 
         log.info(basefilename)
@@ -344,7 +343,7 @@ class CalculatePath(Operator, AsyncOperatorMixin):
             text_editor = [area.spaces[0] for area in areas if area.type == "TEXT_EDITOR"][0]
 
             with context.temp_override(space=text_editor):
-                text_editor.text = bpy.data.texts[f"{operation.filename}{extension}"]
+                text_editor.text = bpy.data.texts[f"{name}{extension}"]
         except IndexError:
             pass
 
@@ -572,11 +571,12 @@ class PathExport(Operator):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
         path_name = s.cam_names.path_name_full
+        name = operation.name if operation.link_operation_file_names else operation.filename
 
-        log.info(f"EXPORTING {operation.filename} {bpy.data.objects[path_name].data} {operation}")
+        log.info(f"EXPORTING {name} {bpy.data.objects[path_name].data} {operation}")
 
         export_gcode_path(
-            operation.filename,
+            name,
             [bpy.data.objects[path_name].data],
             [operation],
         )

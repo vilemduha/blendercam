@@ -47,36 +47,12 @@ def add_machine_area_object():
         o.name = "CAM_Machine"
         o.data.name = "CAM_Machine"
         bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
-        # o.type = 'SOLID'
         bpy.ops.object.editmode_toggle()
         bpy.ops.mesh.delete(type="ONLY_FACE")
-        bpy.ops.mesh.select_mode(
-            use_extend=False,
-            use_expand=False,
-            type="EDGE",
-            action="TOGGLE",
-        )
-        bpy.ops.mesh.select_all(action="TOGGLE")
-        bpy.ops.mesh.subdivide(
-            number_cuts=32,
-            smoothness=0,
-            quadcorner="STRAIGHT_CUT",
-            fractal=0,
-            fractal_along_normal=0,
-            seed=0,
-        )
-        bpy.ops.mesh.select_nth(nth=2, offset=0)
-        bpy.ops.mesh.delete(type="EDGE")
-        bpy.ops.mesh.primitive_cube_add(
-            align="WORLD",
-            enter_editmode=False,
-            location=(1, 1, -1),
-            rotation=(0, 0, 0),
-        )
 
         bpy.ops.object.editmode_toggle()
         o.display_type = "WIRE"
-        o.color = s.cam_machine.wire_color  # (1, 1, 0, 1)
+        o.color = s.cam_machine.wire_color
         o.hide_render = True
         o.hide_select = True
         s.unit_settings.system = oldunits

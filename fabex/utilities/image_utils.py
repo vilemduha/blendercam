@@ -169,8 +169,8 @@ def image_to_numpy(i):
     na = np.full(shape=(width * height * 4,), fill_value=-10, dtype=np.double)
 
     p = i.pixels[:]
-    # these 2 lines are about 15% faster than na[:]=i.pixels[:].... whyyyyyyyy!!?!?!?!?!
-    # Blender image data access is evil.
+    # # these 2 lines are about 15% faster than na[:]=i.pixels[:].... whyyyyyyyy!!?!?!?!?!
+    # # Blender image data access is evil.
     na[:] = p
     na = na[::4]
     na = na.reshape(height, width)
@@ -516,62 +516,44 @@ def render_sample_image(o):
                 view_layer.use_pass_mist = True
 
                 # If Blender is v5 or greater, use the new Compositor settings
+                # Otherwise, use legacy Compositor settings
                 if blender_version >= 5:
-                    if scene.compositing_node_group == None:
-                        bpy.ops.node.new_compositing_node_group()
-
-                    for group in bpy.data.node_groups:
-                        if group.type == "COMPOSITING" and "Render Layers" in group.nodes:
-                            scene.compositing_node_group = group
-
+                    bpy.ops.node.new_compositing_node_group(name="Fabex Depth Compositor")
+                    scene.compositing_node_group = bpy.data.node_groups["Fabex Depth Compositor"]
                     node_tree = scene.compositing_node_group
-                    nodes = node_tree.nodes
-                    render_layers = nodes["Render Layers"]
-                    reroute = nodes["Reroute"]
+                else:
+                    scene.use_nodes = True
+                    scene.node_tree
 
-                    try:
-                        file_output = nodes["File Output"]
-                    except KeyError:
-                        file_output = node_tree.nodes.new("CompositorNodeOutputFile")
+                node_tree.links.clear()
+                node_tree.nodes.clear()
 
+                render_layers = node_tree.nodes.new("CompositorNodeRLayers")
+                reroute = node_tree.nodes.new("NodeReroute")
+                file_output = node_tree.nodes.new("CompositorNodeOutputFile")
+
+                if blender_version >= 5:
                     file_output.file_output_items.new(socket_type="RGBA", name="")
                     file_output.directory = os.path.dirname(image_name)
                     file_output.file_name = os.path.basename(image_name)
                     file_output.format.media_type = "IMAGE"
-                    file_output.format.file_format = "OPEN_EXR"
-                    file_output.format.color_mode = "RGB"
-                    file_output.format.color_depth = "32"
-
-                    node_tree.links.new(
-                        render_layers.outputs[render_layers.outputs.find("Mist")],
-                        reroute.inputs[0],
-                    )
-
-                    node_tree.links.new(
-                        reroute.outputs[0],
-                        file_output.inputs[0],
-                    )
-
-                # If Blender is v4 or lower, use the legacy Compositor settings
                 else:
-                    scene.use_nodes = True
-                    node_tree = scene.node_tree
-                    node_tree.links.clear()
-                    node_tree.nodes.clear()
+                    file_output.base_path = os.path.dirname(image_name)
+                    file_output.file_slots.new(os.path.basename(image_name))
 
-                    node_in = node_tree.nodes.new("CompositorNodeRLayers")
-                    scene.view_layers[node_in.layer].use_pass_mist = True
+                file_output.format.file_format = "OPEN_EXR"
+                file_output.format.color_mode = "RGB"
+                file_output.format.color_depth = "32"
 
-                    node_out = node_tree.nodes.new("CompositorNodeOutputFile")
-                    node_out.base_path = os.path.dirname(image_name)
-                    node_out.format.file_format = "OPEN_EXR"
-                    node_out.format.color_mode = "RGB"
-                    node_out.format.color_depth = "32"
-                    node_out.file_slots.new(os.path.basename(image_name))
-                    node_tree.links.new(
-                        node_in.outputs[node_in.outputs.find("Mist")],
-                        node_out.inputs[-1],
-                    )
+                node_tree.links.new(
+                    render_layers.outputs[render_layers.outputs.find("Mist")],
+                    reroute.inputs[0],
+                )
+
+                node_tree.links.new(
+                    reroute.outputs[0],
+                    file_output.inputs[0],
+                )
 
                 mist_settings = scene.world.mist_settings
                 mist_settings.depth = 10.0
@@ -616,9 +598,9 @@ def render_sample_image(o):
 
                 bpy.ops.render.render()
 
-                if blender_version < 5:
-                    node_tree.nodes.remove(node_out)
-                    node_tree.nodes.remove(node_in)
+                # if blender_version < 5:
+                #     node_tree.nodes.remove(node_out)
+                #     node_tree.nodes.remove(render_layers)
 
                 camera.select_set(True)
                 bpy.ops.object.delete()

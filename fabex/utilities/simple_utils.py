@@ -182,8 +182,8 @@ def progress(text, n=None):
         n = str(int(n * 1000) / 1000) + "%"
     progress_string = f"{text}{n}"
     log.info(progress_string)
-    sys.stdout.write(f"Progress: {progress_string}\n")
-    sys.stdout.flush()
+    # sys.stdout.write(f"Progress: {progress_string}\n")
+    # sys.stdout.flush()
 
 
 def activate(o):

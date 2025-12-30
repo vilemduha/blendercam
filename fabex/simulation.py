@@ -132,6 +132,7 @@ def create_simulation_object(name, operations, i):
         for material in asset_library.materials:
             if material == material_name:
                 current_file.materials.append(material)
+
     ob.data.materials.append(bpy.data.materials[material_name])
     ob.active_material_index = len(ob.material_slots) - 1
     bpy.context.collection.objects.unlink(ob)
@@ -195,9 +196,9 @@ async def generate_simulation_image(operations, limits):
     sx = maxx - minx
     sy = maxy - miny
     # getting sim detail and others from first op.
-    o = operations[0]
-    simulation_detail = o.optimisation.simulation_detail
-    borderwidth = o.borderwidth
+    first_op = operations[0]
+    simulation_detail = first_op.optimisation.simulation_detail
+    borderwidth = first_op.borderwidth
     resx = math.ceil(sx / simulation_detail) + 2 * borderwidth
     resy = math.ceil(sy / simulation_detail) + 2 * borderwidth
 

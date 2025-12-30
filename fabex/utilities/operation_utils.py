@@ -399,7 +399,7 @@ def update_image_size_y(self, context):
         i = bpy.data.images[self.source_image_name]
         if i is not None:
             size_x = self.source_image_size_x / i.size[0]
-            size_y = int(x_size * i.size[1] * 1000000) / 1000
+            size_y = int(size_x * i.size[1] * 1000000) / 1000
             col.label(text="Image Size on Y Axis: " + unit_value_to_string(size_y, 8))
             col.separator()
 
@@ -516,11 +516,14 @@ def get_chain_operations(chain):
     Returns:
         list: A list of operations associated with the given chain object.
     """
-    chop = []
-    for cho in chain.operations:
-        for so in bpy.context.scene.cam_operations:
-            if so.name == cho.name:
-                chop.append(so)
+    # chop = []
+    # for cho in chain.operations:
+    #     for so in bpy.context.scene.cam_operations:
+    #         if so.name == cho.name:
+    #             chop.append(so)\
+
+    operations = bpy.context.scene.cam_operations
+    chop = [so for so in operations for cho in chain.operations if so.name == cho.name]
     return chop
 
 

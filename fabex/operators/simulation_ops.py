@@ -73,7 +73,6 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
         path_name = s.cam_names.path_name_full
-
         operation_name = path_name  # "cam_path_{}".format(operation.name)
 
         if operation_name in bpy.data.objects:
@@ -81,9 +80,11 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
                 await do_simulation(operation_name, [operation])
             except AsyncCancelledException as e:
                 return {"CANCELLED"}
+
         else:
             self.report({"ERROR"}, "No Computed Path to Simulate")
             return {"FINISHED"}
+
         return {"FINISHED"}
 
     def draw(self, context):
@@ -166,20 +167,24 @@ class CAMSimulateChain(Operator, AsyncOperatorMixin):
         s = bpy.context.scene
         chain = s.cam_chains[s.cam_active_chain]
         chainops = get_chain_operations(chain)
-
         canSimulate = True
+
         for operation in chainops:
             if operation.name not in bpy.data.objects:
                 canSimulate = True  # force true
+
             log.info(f"Operation Name {operation.name}")
+
         if canSimulate:
             try:
                 await do_simulation(chain.name, chainops)
             except AsyncCancelledException as e:
                 return {"CANCELLED"}
+
         else:
             log.info("No Computed Path to Simulate")
             return {"FINISHED"}
+
         return {"FINISHED"}
 
     def draw(self, context):

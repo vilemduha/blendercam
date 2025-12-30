@@ -972,9 +972,9 @@ async def sample_chunks(o, pathSamples, layers):
         chunks.extend(layerchunks[i])
     timing_add(totaltime)
 
-    log.info(f"Sampling Time: {samplingtime}")
-    log.info(f"Sorting Time: {sortingtime}")
-    log.info(f"Total Time: {totaltime}")
+    log.info(f"Sampling Time: {samplingtime[0]}")
+    log.info(f"Sorting Time: {sortingtime[0]}")
+    log.info(f"Total Time: {totaltime[0]}")
     log.info("-")
 
     return chunks
