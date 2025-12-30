@@ -47,7 +47,10 @@ from .utilities.operation_utils import (
     get_change_data,
     check_memory_limit,
 )
-from .utilities.simple_utils import progress
+from .utilities.simple_utils import (
+    progress,
+    safe_filename,
+)
 
 
 async def get_path(context, operation):
@@ -117,10 +120,13 @@ async def get_path(context, operation):
     # export gcode if automatic.
     if operation.auto_export:
         path_name = context.scene.cam_names.path_name_full
+
         if bpy.data.objects.get(path_name) is None:
             return
+
         p = bpy.data.objects[path_name]
-        name = operation.name if operation.link_operation_file_names else operation.filename
+        name_raw = operation.name if operation.link_operation_file_names else operation.filename
+        name = safe_filename(name_raw)
         export_gcode_path(name, [p.data], [operation])
 
     operation.changed = False
