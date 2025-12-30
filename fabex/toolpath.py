@@ -53,6 +53,16 @@ from .utilities.simple_utils import (
 )
 
 
+async def path_profiler(strategy):
+    import cProfile
+
+    pr = cProfile.Profile()
+    pr.enable()
+    await strategy
+    pr.disable()
+    pr.dump_stats(time.strftime("Fabex_%Y%m%d_%H%M.prof"))
+
+
 async def get_path(context, operation):
     """Calculate the path for a given operation in a specified context.
 
@@ -69,10 +79,10 @@ async def get_path(context, operation):
             attributes such as machine_axes, strategy, and
             auto_export.
     """
-    t = time.process_time()
-
     if operation.feedrate > context.scene.cam_machine.feedrate_max:
         raise CamException("Operation Feedrate is greater than Machine Maximum!")
+
+    t = time.process_time()
 
     # these tags are for caching of some of the results. Not working well still
     # - although it can save a lot of time during calculation...
@@ -97,25 +107,22 @@ async def get_path(context, operation):
     log.info(f"Operation Axes: {operation.machine_axes}")
 
     if three_axis:
-        if USE_PROFILER == True:  # profiler
-            import cProfile
-
-            pr = cProfile.Profile()
-            pr.enable()
-            await get_path_3_axis(context, operation)
-            pr.disable()
-            pr.dump_stats(time.strftime("Fabex_%Y%m%d_%H%M.prof"))
+        if USE_PROFILER:  # profiler
+            path_profiler(get_path_3_axis(context, operation))
         else:
             await get_path_3_axis(context, operation)
+
+    elif four_axis:
+        if USE_PROFILER:
+            path_profiler(get_path_4_axis(context, operation))
+        else:
+            await get_path_4_axis(context, operation)
 
     # 5 axis operations are now only 3 axis operations that get rotated...
     elif indexed_five_axis or indexed_four_axis:
         operation.orientation = prepare_indexed(operation)  # TODO RENAME THIS
         await get_path_3_axis(context, operation)  # TODO RENAME THIS
         cleanup_indexed(operation)  # TODO RENAME THIS
-
-    elif four_axis:
-        await get_path_4_axis(context, operation)
 
     # export gcode if automatic.
     if operation.auto_export:
