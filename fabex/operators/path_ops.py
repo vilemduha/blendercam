@@ -480,8 +480,8 @@ class PathsChain(Operator, AsyncOperatorMixin):
             return {"FINISHED"}
 
         for o in chainops:
-            path_name = s.cam_names.path_name_full
-            meshes.append(bpy.data.objects[path_name].data)
+            path_prefix = bpy.context.scene.cam_names.path_prefix
+            meshes.append(bpy.data.objects[f"{path_prefix}_{o.name}"].data)
         export_gcode_path(chain.filename, meshes, chainops)
         return {"FINISHED"}
 
@@ -539,9 +539,8 @@ class PathExportChain(Operator):
         # if len(chainops)<4:
 
         for o in chainops:
-            # bpy.ops.object.calculate_cam_paths_background()
-            path_name = s.cam_names.path_name_full
-            meshes.append(bpy.data.objects[path_name].data)
+            path_prefix = bpy.context.scene.cam_names.path_prefix
+            meshes.append(bpy.data.objects[f"{path_prefix}_{o.name}"].data)
         export_gcode_path(chain.filename, meshes, chainops)
         return {"FINISHED"}
 

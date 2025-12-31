@@ -69,7 +69,7 @@ async def cutout(o):
         "VCARVE": -max_depth * tan(cutter_angle),
         "CYLCONE": -max_depth * tan(cutter_angle) + o.cylcone_diameter / 2,
         "BALLCONE": -max_depth * tan(cutter_angle) + o.ball_radius,
-        "BALLNOSE": sqrt(r**2 - (r + max_depth) ** 2) if -max_depth < r else r,
+        "BALLNOSE": sqrt(max(0, r**2 - (r - abs(max_depth)) ** 2)) if abs(max_depth) < r else r,
     }
 
     try:
