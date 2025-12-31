@@ -273,10 +273,9 @@ class CamPathChunk:
 
     def dedupe_points(self):
         if len(self.points) > 1:
-            keep_points = np.empty(self.points.shape[0], dtype=bool)
-            keep_points[0] = True
-            diff_points = np.sum((self.points[1:] - self.points[:1]) ** 2, axis=1)
-            keep_points[1:] = diff_points > 0.000000001
+            diffs = np.sum((self.points[1:] - self.points[:-1]) ** 2, axis=1)
+            keep_points = np.ones(len(self.points), dtype=bool)
+            keep_points[1:] = diffs > 1e-9
             self.points = self.points[keep_points, :]
 
     def insert(self, at_index, point, startpoint=None, endpoint=None, rotation=None):

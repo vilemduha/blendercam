@@ -1,13 +1,14 @@
 ### AvidCNC_PRO_6060_5x5.py ###
 
 import bpy
+
 d = bpy.context.scene.cam_machine
 s = bpy.context.scene.unit_settings
 
-s.system, s.length_unit = ('IMPERIAL', 'INCHES')
+s.system, s.length_unit = ("IMPERIAL", "INCHES")
 
-d.post_processor = 'CENTROID'
-d.unit_system = 'INCHES'
+d.post_processor = "CENTROID"
+d.unit_system = "INCHES"
 d.use_position_definitions = False
 d.starting_position = (0.0, 0.0, 0.0)
 d.mtc_position = (0.0, 0.0, 0.0)
@@ -19,12 +20,10 @@ d.feedrate_default = 5.08
 d.spindle_min = 1000
 d.spindle_max = 24000
 d.spindle_default = 12000
-d.axis4 = False
-d.axis5 = False
+d.axis_4 = False
+d.axis_5 = False
 d.collet_size = 0.5
 d.output_tool_change = True
 d.output_block_numbers = False
 d.output_tool_definitions = True
-d.output_g43_on_tool_change = False
-
-        
+d.output_G43_on_tool_change = False
