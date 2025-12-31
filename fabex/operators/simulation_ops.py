@@ -72,8 +72,8 @@ class CAMSimulate(Operator, AsyncOperatorMixin):
 
         s = bpy.context.scene
         operation = s.cam_operations[s.cam_active_operation]
-        path_name = s.cam_names.path_name_full
-        operation_name = path_name  # "cam_path_{}".format(operation.name)
+        path_prefix = bpy.context.scene.cam_names.path_prefix
+        operation_name = f"{path_prefix}_{operation.name}"
 
         if operation_name in bpy.data.objects:
             try:
