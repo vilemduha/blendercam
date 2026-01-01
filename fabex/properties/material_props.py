@@ -17,7 +17,6 @@ from ..constants import PRECISION
 
 
 class CAM_MATERIAL_Properties(PropertyGroup):
-
     wire_color: FloatVectorProperty(
         name="Wire Color",
         description="Color of the CAM_Material box in the viewport",
